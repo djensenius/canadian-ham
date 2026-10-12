@@ -19,9 +19,9 @@
     <path d="M340 430 C388 412 442 412 490 430" stroke-width="4"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="108" y="44" font-size="24">reflector</text><text x="282" y="94" font-size="24">director</text><text x="250" y="132" font-size="24">boom</text>
-    <text x="132" y="270" font-size="24">driven</text><text x="278" y="270" font-size="24">feedline</text>
-    <text x="494" y="54" font-size="24">receiver display</text><text x="455" y="160" font-size="24">W</text><text x="453" y="226" font-size="24">M</text><text x="550" y="226" font-size="24">N</text>
+    <text x="108" y="44" font-size="24">reflector</text><text x="282" y="94" font-size="24">director</text><text x="152" y="182" font-size="24">boom</text>
+    <text x="132" y="270" font-size="24">driven</text><text x="270" y="250" font-size="24">feedline</text>
+    <text x="494" y="54" font-size="24">receiver display</text><text x="455" y="166" font-size="24">wide</text><text x="453" y="226" font-size="24">med</text><text x="550" y="226" font-size="24">narrow</text>
     <text x="190" y="336" font-size="24">desired</text><text x="340" y="336" font-size="24">LO</text><text x="490" y="336" font-size="24">image</text><text x="266" y="460" font-size="24">IF</text><text x="416" y="460" font-size="24">IF</text>
   </g>
 </svg>

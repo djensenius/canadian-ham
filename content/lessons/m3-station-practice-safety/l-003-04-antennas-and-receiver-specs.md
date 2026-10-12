@@ -54,7 +54,7 @@ The parasitic elements are not directly fed. Their length and placement shape th
 Alt text: A labelled Yagi antenna appears beside a receiver display with wide, medium, and narrow passband choices, plus an image-frequency marker.
 Text equivalent:
 - Yagi labels are reflector, driven, director, boom, and feedline from the driven element.
-- The receiver display shows three passband shapes labelled W, M, and N under their own curves.
+- The receiver display shows three passband shapes labelled wide, med, and narrow under their own curves.
 - The frequency line labels desired, LO, image, and two IF spacings.
 ::
 
