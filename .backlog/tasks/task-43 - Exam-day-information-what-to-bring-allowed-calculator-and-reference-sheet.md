@@ -1,7 +1,7 @@
 ---
 id: TASK-43
 title: 'Exam day information (what to bring, allowed calculator and reference sheet)'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
