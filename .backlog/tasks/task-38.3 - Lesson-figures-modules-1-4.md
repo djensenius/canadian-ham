@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:44'
+updated_date: '2026-10-12 14:46'
 labels:
   - content
   - apple
@@ -53,4 +53,6 @@ Figure notes batch m1c: L-001-05 international-location-checklist shows travel d
 Figure notes batch m3a: L-003-01 station-filtering-radio-blocks shows HF chain (TX/amp, LPF close to output, SWR, tuner, switch, antenna/dummy) and FM superhet receiver chain (antenna, RF, mixer plus LO, IF filter/amp, limiter, discriminator/AF); verified against lesson text and B-003-001-001..010, B-003-002-001..008, and B-003-003-001..011. L-003-02 cw-ssb-signal-paths shows CW transmitter oscillator-buffer-PA with key, SSB/CW receiver path with LO/BFO, and SSB transmitter path mic-speech-balanced modulator-filter-mixer-final; verified against lesson text and B-003-004-001..008, B-003-005-001..010, and B-003-006-001..008.
 
 Figure notes batch m3b: L-003-03 digital-interface-linear-supply shows laptop/interface/radio RX audio, TX tones, PTT line, and AC-to-DC supply chain with transformer, rectifier, filter capacitor, regulator, output terminals, and output sensing; verified against lesson text and B-003-007-001..007 plus B-003-008-001..010. L-003-04 yagi-receiver-specs shows Yagi reflector/driven/director/boom/feedline, receiver display/filter choices, and desired/LO/image IF spacing markers; verified against lesson text and B-003-009-001..011 plus B-003-010-001..010.
+
+Figure notes batch m3c: L-003-05 signal-quality-cw-ssb-fm shows clean CW carrier/click-risk jagged edge, SSB ALC limit and clipped/splatter cue, and FM centre/deviation/over-deviation; verified against lesson text and B-003-011-001..006, B-003-012-001..010, and B-003-013-001..010. L-003-06 controls-digital-voice-packet shows paddle-to-keyer timing, microphone gain/VOX/speech processing, transceiver receiver noise tools, and packet station-digipeater-station path; verified against lesson text and B-003-014-001..010 plus B-003-015-001..005.
 <!-- SECTION:NOTES:END -->
