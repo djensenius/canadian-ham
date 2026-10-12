@@ -4,6 +4,7 @@ title: 'In-exam tools: basic calculator and reference sheet'
 status: To Do
 assignee: []
 created_date: '2026-10-12 14:38'
+updated_date: '2026-10-12 15:35'
 labels:
   - web
   - apple
@@ -22,3 +23,9 @@ Owner request 2026-10-12: mock exams and practice offer a basic calculator (no f
 <!-- AC:BEGIN -->
 - [ ] #1 All subtasks Done
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Task-43 review follow-up: when the in-app exam tools ship, update the L-001-01 app-practice wording and the Learn Exam day copy so they describe the new calculator/reference-sheet tools accurately instead of only physical/practice conditions.
+<!-- SECTION:NOTES:END -->
