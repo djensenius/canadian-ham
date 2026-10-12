@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 15:33'
+updated_date: '2026-10-12 17:10'
 labels:
   - content
   - web
@@ -53,10 +53,12 @@ Web dist URL audit failed on the new official ISED downloads citation; added tha
 Validation passed: fetched RIC-1 and ISED downloads page on 2026-10-12; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:coverage; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:explanations; pnpm check:links; pnpm --filter @canadian-ham/web test; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice test CODE_SIGNING_ALLOWED=NO; pnpm typecheck; pnpm build:web; pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test; pnpm --filter @canadian-ham/web audit:urls.
 
 Review follow-up from r43: tightening lesson facts versus tips, removing unsourced photo-ID wording, adding web Learn tests, rerunning requested checks including Apple network, and adding task-44 follow-up note.
+
+Review follow-up validation passed: pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:coverage; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:explanations; pnpm check:links; pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; node scripts/check-apple-text-sources.ts; pnpm check:apple-network; pnpm check:apple-l10n (first run timed out while waiting on the build lock, rerun passed); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice test CODE_SIGNING_ALLOWED=NO.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented exam-day guidance from RIC-1 §7.2/§7.2.1 and the ISED downloads page. docs/exam-facts.md now records closed-book, reference-sheet, calculator, virtual-exam, and scrap-paper-caution facts with 2026-10-12 source verification. L-001-01 now teaches exam-day materials in reference style and links to the ISED downloads page. Web and Apple Learn surfaces include a localized Exam day section that links learners into the lesson; Apple UI coverage was updated. Validation passed with content checks, web tests/typecheck/build/audit, Apple text/localization checks, and the targeted iOS UI test.
+Addressed r43 review feedback: removed unsourced photo-ID claims, kept the L-001-01 fact table to sourced exam rules, moved practice/in-person/app guidance into tips prose, clarified that the examiner supplies the exam sheet while learners practise with the downloaded English unlabelled sheet, fixed the summary overclaim and French wording, and added web coverage that the Learn Exam day button opens L-001-01 without rendering/fetching an ISED link. Also added the requested task-44 note for future in-app exam tools copy updates. Validation passed with content checks, web checks, Apple text/localization/network checks, and the targeted iOS UI test.
 <!-- SECTION:FINAL_SUMMARY:END -->
