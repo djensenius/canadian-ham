@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-011-010.\n\nWhy the correct answer is right: Interference can be permitted when the station is directly involved with a distress situation, matching the narrow emergency exception.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the other station is not operating in accordance with the Radiocommunication Regulations\": Another station's rule breach does not authorize you to interfere with it.\n- sourceIndex 2: \"When you both wish to contact the same station\": Competing for the same contact is an ordinary operating conflict, not a distress exception.\n- sourceIndex 3: \"When the other station is interfering with your transmission\": Being interfered with does not give automatic permission to interfere back unless your station is directly involved in distress traffic.",
+    "en": "Question B-001-011-010.\n\nWhy the correct answer is right: Interference can be permitted only when your own station is directly involved with a distress situation, matching the narrow emergency exception.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the other station is not operating in accordance with the Radiocommunication Regulations\": Another station's rule breach does not authorize you to interfere with it.\n- sourceIndex 2: \"When you both wish to contact the same station\": Competing for the same contact is an ordinary operating conflict, not a distress exception.\n- sourceIndex 3: \"When the other station is interfering with your transmission\": Being interfered with does not give automatic permission to interfere back unless your station is directly involved in distress traffic.",
     "fr": null
   },
   "citations": [
