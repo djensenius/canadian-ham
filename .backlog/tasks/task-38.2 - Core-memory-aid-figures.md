@@ -33,7 +33,9 @@ Using the task-38.1 pipeline, draw: metric prefix ladder (giga to pico, x/÷ 1 0
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Add five original currentColor SVG sources for metric prefixes, resistor colour-code bands, series/parallel paths, dB ratio shortcuts, and wavelength/dipole estimate.\n2. Reference each SVG from its matching lesson with alt text and text equivalents for dense ladder/table/colour-code content while leaving illustration briefs as authoring notes.\n3. Regenerate figure assets/metadata, render and inspect qlmanage previews, run figure, content, web, and content-swift checks, then record per-figure evidence without running Apple xbuild.
+1. Add five original currentColor SVG sources for metric prefixes, resistor colour-code bands, series/parallel paths, dB ratio shortcuts, and wavelength/dipole estimate.
+2. Reference each SVG from its matching lesson with alt text and text equivalents for dense ladder/table/colour-code content while leaving illustration briefs as authoring notes.
+3. Regenerate figure assets/metadata, render and inspect qlmanage previews, run figure, content, web, and content-swift checks, then record per-figure evidence without running Apple xbuild.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
