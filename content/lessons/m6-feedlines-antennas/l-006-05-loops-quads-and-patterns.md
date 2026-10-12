@@ -104,7 +104,7 @@ The same total-wire idea applies to delta loops, but the shape is triangular ins
 
 A delta loop is a triangular loop with an overall length of roughly one wavelength. When the bottom side is horizontal, feeding the centre of the bottom side tends to produce horizontal polarization. Feeding a side can produce vertical polarization in common beginner configurations.
 
-A square quad's feed point also affects polarization. Moving the feed from a side parallel to the ground to a side perpendicular to the ground changes the usual polarization from horizontal to vertical.
+A square quad's feed point also affects polarization. Moving the feed from the bottom horizontal side to an upright side changes the usual polarization from horizontal to vertical.
 
 Feed point and height affect impedance and pattern, so practical loop antennas often need a matching device. The formula gives a first cut, not a finished guarantee.
 
