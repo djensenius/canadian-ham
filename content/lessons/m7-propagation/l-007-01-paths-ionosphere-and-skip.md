@@ -43,7 +43,7 @@ Line-of-sight communication is the simplest path. One antenna has a clear enough
 
 The radio horizon sits a little beyond what your eyes can see. The reason is ordinary bending through the troposphere, the lower atmosphere where weather happens.
 
-A ground wave is the part of a signal that follows the Earth's surface and is affected by it. Ground wave matters most at lower frequencies. The lower the frequency, the farther the ground wave can usually travel. On lower HF in daytime, it can reach around 200 km when conditions and antennas cooperate.
+A ground wave is the part of a signal that follows the Earth's surface and is affected by it. Ground wave matters most at lower frequencies. In daytime, the D region absorbs much of the lower-HF sky wave, so regional contacts out to roughly 200 km rely on ground wave when conditions and antennas cooperate.
 
 A sky wave, also called an ionospheric wave, goes upward and is refracted by the ionosphere. The ionosphere is an ionized upper-atmosphere region with charged particles that affect radio waves. It is not a hard mirror; it bends the wave gradually. Exams and operators may still say a sky wave is reflected by the ionosphere as shorthand for the returned path.
 
@@ -120,7 +120,7 @@ Use this table as a compact reference, not as a full band-plan chart.
 | 30 m | About 10.1 MHz | Above the 31 m broadcast band |
 | 20 m | About 14 MHz | A daylight HF planning anchor |
 | 17 m | 18.068 MHz to 18.168 MHz | Useful when comparing a forecast window with real amateur bands |
-| 15 m | About 21 MHz | Upper-HF band used in harmonic examples |
+| 15 m | About 21 MHz | Upper-HF band that opens more readily near solar maximum |
 | 12 m | 24.890 MHz to 24.990 MHz | Another upper-HF band that can open during higher solar activity |
 | 10 m | About 28 MHz | High-HF band often checked with same-band beacons |
 

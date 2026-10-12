@@ -204,7 +204,7 @@ A good approach is:
 | Weak receiver loses signals near a strong off-channel transmitter | Front-end overload or desensitization | More separation or a suitable input filter |
 | False signal appears only when two strong signals are present | Intermodulation in a non-linear junction or receiver front end | Find the mixing source and add a suitable receiver filter |
 | Speaker, telephone, or intercom hears your audio without being tuned | Audio rectification in the affected device or lead | Shorten leads and add ferrites or a plug-in RFI filter at the device |
-| Extra transmitted signals appear outside the necessary bandwidth and are not modulation splatter | Spurious emissions from transmitting equipment | Stop using that setup until filtering, shielding, drive, or repair fixes it |
+| Extra transmitted signals appear outside the necessary bandwidth and do not come from the modulation process (not splatter or key clicks) | Spurious emissions from transmitting equipment | Stop using that setup until filtering, shielding, drive, or repair fixes it |
 
 ## Radio connection
 
