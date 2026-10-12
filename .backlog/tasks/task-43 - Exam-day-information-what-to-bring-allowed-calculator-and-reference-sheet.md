@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 17:15'
+updated_date: '2026-10-12 18:37'
 labels:
   - content
   - web
@@ -57,6 +57,8 @@ Review follow-up from r43: tightening lesson facts versus tips, removing unsourc
 Review follow-up validation passed: pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:coverage; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:explanations; pnpm check:links; pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; node scripts/check-apple-text-sources.ts; pnpm check:apple-network; pnpm check:apple-l10n (first run timed out while waiting on the build lock, rerun passed); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice test CODE_SIGNING_ALLOWED=NO.
 
 Merged origin/main after task-44.2 landed; resolved task-44 by keeping main's In Progress status plus the task-43 follow-up note, kept newer task contents elsewhere, softened L-001-01 reference-sheet wording, and reduced the virtual setup table row to camera, microphone, and stable internet. Post-merge web validation passed: pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test (171 tests); pnpm --filter @canadian-ham/web audit:urls.
+
+Addressed Copilot notes: translated the embedded lesson title in French Learn copy, made Apple lesson paragraph text selectable so the downloads URL can be copied without automatic network access, and extended the French iOS UI test to tap the Exam day link and assert L-001-01 opens. Validation passed: pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test (171 tests); pnpm --filter @canadian-ham/web audit:urls; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; targeted iOS UI test.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
