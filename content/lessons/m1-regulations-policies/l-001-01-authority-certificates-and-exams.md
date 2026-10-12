@@ -35,7 +35,7 @@ By the end of this lesson, you can:
 
 - match the Radiocommunication Act, the Radiocommunication Regulations, ISED, and operating standards to their roles;
 - keep certificate validity, address, inspection, and call-sign-fee facts separate;
-- explain why false information, false distress traffic, unlawful obstruction, and due process belong with legal authority; and
+- explain how offence penalties and due-process protections support trust in radio; and
 - state the Basic-entry, later-qualification, fee, and accommodation facts with their supported conditions.
 
 ## Reference facts: Authority and source roles
@@ -45,7 +45,7 @@ By the end of this lesson, you can:
 | Radiocommunication Act | Authority to make Canadian radiocommunication regulations; authority to publish amateur-station operating standards; source of radiocommunication offences and penalties. |
 | Radiocommunication Regulations | Define the Canadian amateur radio service. |
 | Innovation, Science and Economic Development Canada (ISED) | Administers the Radiocommunication Act. |
-| ISED operating standards | Provide operating standards for amateur stations. |
+| ISED operating standards | RBR-4, the amateur-service operating standards, tells amateur stations how to operate. |
 | Certificate and call sign | Identify the holder's qualifications and station identity for amateur operation. |
 
 ## Reference facts: Certificate records, addresses, and call-sign fees
@@ -87,11 +87,11 @@ By the end of this lesson, you can:
 | ISED office qualification examinations | No charge. |
 | Accredited examiner | May charge a fee to recover examination administration costs. |
 | Accredited-examiner qualifications | Basic, Advanced, and Morse code qualifications. |
-| Disability-related examination delivery | May be oral or tailored to the candidate's ability to complete the examination. |
+| Disability-related examination delivery | Exams or parts of exams may be oral or divided into segments when an accessibility option is needed. |
 | Morse sending accommodation | A disabled candidate may be allowed to recite the examination text in Morse code sounds. |
 | Required examination portions | All required portions of the examination remain part of an accommodated exam. |
 | Reading difficulty or language barrier | Oral examination delivery may be available. |
-| Language-related examination delivery | Supported accommodations are oral delivery and examiner-managed tailoring; interpreter accompaniment is outside those supports. |
+| Language-related examination delivery | Oral delivery may be available; candidates still need to understand the exam terminology without examiner explanation. |
 | Medical evidence | An examiner may request evidence from a practising medical physician before accommodating testing. |
 
 ## How these rules fit together
@@ -107,8 +107,8 @@ Exam rows describe a path. Basic is the first amateur qualification. After the c
 ### Memory trick: life record, address-change notice
 
 - Helps remember: certificate validity and the mailing-address duty are different facts.
-- Trick: think "life for the certificate, 30 days to report a mailing-address change." The same number, 30, also appears in station identification (minutes between IDs).
-- Limit: this is a memory cue only. Use the table when you need the exact deadline in days.
+- Trick: think "life for the certificate, 30 days to report a mailing-address change."
+- Limit: this is a memory cue only. Use the table when you need the exact deadline.
 
 ## Radio connection
 
