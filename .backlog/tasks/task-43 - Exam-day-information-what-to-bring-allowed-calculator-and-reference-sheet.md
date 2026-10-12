@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 14:40'
+updated_date: '2026-10-12 14:41'
 labels:
   - content
   - web
@@ -27,3 +27,12 @@ Owner request 2026-10-12. Add accurate exam-day guidance citing ISED RIC-1 secti
 - [ ] #2 Learners see an 'Exam day' section (in an appropriate lesson and in About or Learn) on web and Apple, plain language, EN UI chrome with French translations, linking to ISED's downloads page for the official reference sheet
 - [ ] #3 Content checks pass; facts verified against RIC-1
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Re-verify RIC-1 section 7.2/7.2.1 and the ISED downloads page, then add the exam-day facts and access date to docs/exam-facts.md.
+2. Extend L-001-01 with a reference-facts table and plain-language Exam day prose, linking learners to the ISED downloads page without restating official questions or answers.
+3. Add a short reachable Exam day note in existing Learn/About surfaces on web and Apple, with French UI translations where needed.
+4. Run content originality, coverage, quiz, explanation, link, web, and Apple localization/text-source checks; record evidence, check ACs, finalize, and commit each focused slice.
+<!-- SECTION:PLAN:END -->
