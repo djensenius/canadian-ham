@@ -32,7 +32,7 @@ Use these rows as exam facts. Before a real trip, maritime operation, or foreign
 By the end of this lesson, you can:
 
 - keep international amateur messages within amateur-purpose or personal content;
-- identify the ITU regulatory role used by the current question set;
+- identify the ITU regulatory role behind international amateur operation;
 - use ITU regions as map references tied to the operating authority actually in force;
 - distinguish United States and CEPT-style visit requirements; and
 - explain why operating location matters for bands, limits, and identification.
@@ -55,7 +55,7 @@ By the end of this lesson, you can:
 | Europe and Africa | ITU Region 1. |
 | Australia, Japan, and Southeast Asia | ITU Region 3. |
 | Canadian operator in Florida | Subject to frequency band limits applicable to United States amateur radio operators. |
-| Canadian operator seven kilometres offshore from Florida | Subject to frequency band limits applicable to United States amateur radio operators. |
+| Canadian operator seven kilometres offshore from Florida | Subject to frequency band limits applicable to United States amateur radio operators because 7 km is inside the United States territorial sea. |
 
 ## Reference facts: United States and CEPT-style visits
 
@@ -70,16 +70,18 @@ By the end of this lesson, you can:
 
 International communication starts with purpose. Amateur-purpose messages and personal remarks fit the service. The ITU row adds the international regulatory source and the administration-objection rule.
 
-Region rows are map references. They help orient the operator, but they do not replace the operating authority for the exact location. The United States rows show that location can make another administration's band limits the relevant limits.
+Region rows are map references. Region 2 includes the Americas, while Region 1 includes Europe and Africa and Region 3 includes Australia, Japan, and Southeast Asia. These labels help orient the operator, but they do not replace the operating authority for the exact location. The United States rows show that location can make another administration's band limits the relevant limits.
 
-The United States and CEPT rows are easy to reverse because both involve a Canadian operator outside Canada. Treat each arrangement as its own pair: the minimum Canadian qualification and the spoken identification order stay tied to that visit arrangement.
+Seven kilometres offshore from Florida is about 3.8 nautical miles. The United States territorial sea extends to 12 nautical miles, about 22 km, so United States amateur limits still govern in that example.
+
+The United States and CEPT rows are easy to reverse because both involve a Canadian operator outside Canada. In North America, your home call comes first, then portable or mobile, then the local area prefix. Under CEPT, the host country's prefix comes first, then stroke, then the Canadian call sign.
 
 Morse-code authorization also belongs to the administration framework. Learn who decides the Morse requirement as an administration fact.
 
-### Memory trick: place first, pattern second
+### Memory trick: home call or host prefix first
 
-- Helps remember: travel-operation identification depends on where the station is operating.
-- Trick: ask "where am I operating?" before asking "what order do I say the call signs or prefixes?"
+- Helps remember: United States and CEPT voice-identification order.
+- Trick: in the United States visit row, start with your Canadian home call; in the CEPT row, start with the host country's prefix.
 - Limit: this is only a study cue. Always check the current official visit rules before a real trip.
 
 ## Radio connection
