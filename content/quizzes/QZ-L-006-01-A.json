@@ -17,9 +17,9 @@
       "prompt": { "en": "An HF tuner has only an unbalanced output, but the antenna will be fed with window line. Where should the balanced-to-unbalanced device go?", "fr": null },
       "choices": [
         { "text": { "en": "At the tuner output before the window line begins", "fr": null }, "isCorrect": true },
-        { "text": { "en": "At any random point along the balanced line", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Midway along the window line so the losses split evenly", "fr": null }, "isCorrect": false },
         { "text": { "en": "Only at the antenna feed point after the window-line run", "fr": null }, "isCorrect": false },
-        { "text": { "en": "At the microphone connector because that is inside the station", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Inside the radio, because the transceiver output is already balanced", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "The transition belongs where balanced and unbalanced parts meet; in this setup, that is where the unbalanced tuner output hands off to the window line.", "fr": null }
     },

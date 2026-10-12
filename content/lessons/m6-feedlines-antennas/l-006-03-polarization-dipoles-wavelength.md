@@ -43,7 +43,7 @@ Polarization is named from the electric field of the radio wave. If the electric
 
 A straight dipole or whip tends to radiate with the same polarization as the element. A vertical whip produces vertical polarization. A horizontal dipole produces horizontal polarization. A Yagi's polarization follows the orientation of its elements, not the direction the boom points.
 
-Matching polarization matters most for local line-of-sight VHF and UHF contacts. A mobile whip is vertical, so a vertical receiving antenna is normally the better match. A ground wave travels along the Earth's surface. Near conductive ground, a horizontal electric field is strongly weakened by ground currents, while a vertical field can use the Earth as the return path. That is why a vertically polarized ground wave remains vertical at the receiving location. For ionospheric HF paths, reflection and refraction can twist the wave, so polarization can be less predictable at the far end.
+Matching polarization matters most for local line-of-sight VHF and UHF contacts. A mobile whip is vertical, so a vertical receiving antenna is normally the better match. A ground wave travels along the Earth's surface. Near conductive ground, a horizontal electric field is strongly weakened by ground currents, while a vertical field meets the conducting ground at right angles, so the ground does not short it out. That is why a vertically polarized ground wave remains vertical at the receiving location. For ionospheric HF paths, reflection and refraction can twist the wave, so polarization can be less predictable at the far end.
 
 ### In the real world: matching a mobile whip
 
