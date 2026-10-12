@@ -15,41 +15,41 @@
     {
       "id": "QZ-L-007-03-A-C1",
       "prompt": {
-        "en": "Which two-metre emergency-coverage plan should be rejected rather than treated as a dependable primary path?",
+        "en": "A VHF signal stays close to the surface because the lower atmosphere bends it gently. Which label best separates that path from ground wave?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "A tested line-of-sight relay path with assigned operators and a fallback frequency.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "A repeater plan with simplex fallback and a recent coverage check.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "A plan that depends on future sporadic-E, auroral, or meteor openings appearing on schedule.",
+            "en": "Tropospheric wave, because lower-atmosphere bending is the key effect.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "A ridge-top temporary station that was checked from both served sites.",
+            "en": "Ground wave, because any path near Earth must be controlled by surface current.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Ionospheric wave, because all bending paths use the upper atmosphere.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Meteor scatter, because any VHF signal beyond the horizon must use a trail.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Routine coverage should rest on tested ordinary paths and fallbacks. Unusual openings are useful opportunities, but they are not a schedulable primary service path.",
+        "en": "Tropospheric wave points to bending in the lower atmosphere. Ground wave follows and is affected by the surface itself, so the two labels are not interchangeable.",
         "fr": null
       }
     },
@@ -97,41 +97,41 @@
     {
       "id": "QZ-L-007-03-A-C3",
       "prompt": {
-        "en": "After an unusual contact, which report best separates observation from diagnosis?",
+        "en": "An HF station hears weak, smeared signals from inside the expected skip zone while operating near the path's upper usable limit. Which explanation best fits?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "It was weak, so it was definitely ground wave and no other details matter.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "It was distant, so all future contacts on the band can be scheduled daily.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Log the band, direction, duration, signal character, and weather or sky clues, then mark the mode as suspected if the evidence is incomplete.",
+            "en": "Scatter is becoming noticeable because the main returned path is marginal near the MUF.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "If a signal is smeared, widen the transmitted signal before recording anything else.",
+            "en": "Ordinary ground wave is strongest near the MUF and always fills the skip zone.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Line-of-sight propagation has replaced the ionosphere, so height no longer matters.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Ducting in the lower atmosphere is the only possible source of weak HF audio.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Good notes keep observations separate from certainty. Band, direction, duration, signal quality, and environmental clues help identify a mode later without turning a guess into a guarantee.",
+        "en": "Near the MUF, the main sky-wave path may be weak and the skip zone may be wide. Small amounts of scattered energy can then be heard as weak, distorted signals.",
         "fr": null
       }
     }

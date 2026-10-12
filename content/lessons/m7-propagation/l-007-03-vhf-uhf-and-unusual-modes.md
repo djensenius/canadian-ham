@@ -71,7 +71,7 @@ Sporadic E is a patchy, dense ionization condition at E-region height. It can re
 
 On an ordinary day, six metres behaves much like a local VHF band. During a sporadic-E opening, it can produce contacts far outside normal line-of-sight range.
 
-The word sporadic matters. These openings can appear quickly, cover a surprising area, and disappear just as quickly. Operators watch beacon clusters, call frequencies, and reports so they notice the opening while it lasts.
+The word sporadic matters. These openings can appear quickly, cover a surprising area, and disappear just as quickly. The six-metre band is about 50 MHz by the 300 / f wavelength rule. Operators watch beacon clusters, call frequencies, and reports so they notice the opening while it lasts.
 
 ### In the real world: a sudden six-metre map
 
@@ -81,7 +81,9 @@ The local VHF repeater coverage has not changed. A good working explanation is a
 
 ## Tropospheric bending, ducting, and scatter
 
-The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. Without an enhanced mode, VHF tropospheric communication is still limited. Treat roughly 800 km as a broad upper planning scale for normal VHF tropospheric range, not a daily promise. A VHF path well beyond that scale is a clue that tropospheric ducting or another enhancement is present.
+The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. The part of a transmitted wave kept near the surface by this lower-atmosphere bending is called the tropospheric wave. That is different from ground wave, which follows and is affected by the surface itself.
+
+Without an enhanced mode, VHF tropospheric communication is still limited. The handheld-to-repeater estimate above was for ordinary line-of-sight service with one low antenna. Treat roughly 800 km as a broad upper planning scale for normal VHF tropospheric range between high, well-equipped weak-signal stations, not a daily promise for handhelds. A VHF path well beyond that scale is a clue that tropospheric ducting or another enhancement is present.
 
 Stronger changes in temperature, humidity, and pressure can bend VHF and UHF signals more than usual. A temperature inversion can form a duct. A duct traps part of the wave so it travels much farther than expected.
 
@@ -103,9 +105,9 @@ CW is often more readable than analog voice through auroral distortion because i
 
 Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect or scatter from the trail for a short burst. The 30 MHz to 100 MHz range fits well. Below about 30 MHz, ordinary ionospheric paths and absorption dominate. Above about 100 MHz, the trails return much less energy and fade faster. Six metres sits in that useful range.
 
-HF scatter can put weak, distorted signals into a skip zone. Only a small part of the transmitted energy is redirected toward the receiver, and multiple paths can smear the signal.
+HF scatter can put weak, distorted signals into a skip zone. Near the MUF, the main sky-wave return is marginal and the skip zone can be wide, so weak scattered energy becomes noticeable. Only a small part of the transmitted energy is redirected toward the receiver, and multiple paths can smear the signal.
 
-### Worked example: choosing the mode for a rough auroral path
+### In the real world: choosing the mode for a rough auroral path
 
 A VHF operator hears signals from the north with a harsh, buzzing tone. FM voice is difficult to understand, but short Morse characters can still be copied.
 
@@ -155,7 +157,8 @@ Description: Draw four labelled sketches on a single page. Panel A shows a six-m
 
 - Ordinary VHF and UHF range starts with antenna height, radio horizon, and clear paths.
 - Sporadic E is patchy E-region ionization and is especially important on six metres.
-- Tropospheric bending slightly extends VHF/UHF range; ordinary VHF tropospheric range is roughly limited to an 800 km planning scale unless enhancement is present.
+- Tropospheric bending slightly extends VHF/UHF range; a tropospheric wave is kept near the surface by lower-atmosphere bending, not by surface-following ground-wave action.
+- Ordinary VHF tropospheric range is roughly limited to an 800 km planning scale for high, well-equipped stations unless enhancement is present.
 - Tropospheric scatter redirects a small amount of VHF/UHF energy beyond the normal horizon.
 - Auroral propagation is often distorted; CW is usually more readable than analog voice FM.
 - Meteor scatter uses brief ionized trails and is most useful from about 30 MHz to 100 MHz, where trails can scatter VHF wavelengths for short bursts.
