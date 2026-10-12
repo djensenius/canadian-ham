@@ -17,8 +17,9 @@ objectives:
   - "Identify the legal sources and ISED role behind amateur radio rules."
   - "Maintain certificate and address records correctly."
   - "Recognize eligibility, examination, fee, and false-statement rules."
+  - "Prepare for exam-day material rules without bringing unauthorized notes."
 prerequisites: []
-estimatedMinutes: 55
+estimatedMinutes: 60
 quizIds:
   - QZ-L-001-01-A
 status: draft
@@ -35,8 +36,9 @@ By the end of this lesson, you can:
 
 - match the Radiocommunication Act, the Radiocommunication Regulations, ISED, and operating standards to their roles;
 - keep certificate validity, address, inspection, and call-sign-fee facts separate;
-- explain how offence penalties and due-process protections support trust in radio; and
-- state the Basic-entry, later-qualification, fee, and accommodation facts with their supported conditions.
+- explain how offence penalties and due-process protections support trust in radio;
+- state the Basic-entry, later-qualification, fee, and accommodation facts with their supported conditions; and
+- prepare for exam-day material rules, including the allowed calculator and reference sheet.
 
 ## Reference facts: Authority and source roles
 
@@ -94,6 +96,16 @@ By the end of this lesson, you can:
 | Language-related examination delivery | The candidate answers personally in English or French; oral delivery is the supported language aid. |
 | Medical evidence | An examiner may request evidence from a practising medical physician before accommodating testing. |
 
+## Reference facts: Exam day materials and virtual exams
+
+| Topic | Fact established for this lesson |
+|---|---|
+| Closed book | The Basic exam is closed book. Reference material must not be used during the exam except for the ISED-approved Basic formula and block diagram sheet. |
+| Permitted reference sheet | The only reference material named by ISED for the Basic exam is the ISED-approved formula and block diagram sheet titled "Reference Material for Amateur Radio Exam – Basic Qualification". |
+| Calculator | A calculator is permitted only if it cannot store formulas or text. |
+| Virtual exam setup | Use a computer with a camera, microphone, and stable internet connection. |
+| Virtual answer sheet | For a virtual exam, the examiner emails a blank answer sheet in advance. Print it, write answers on it during the exam, and follow the examiner's submission instructions. |
+
 ## How these rules fit together
 
 The legal-source rows are the top layer. The Act gives authority, the Regulations define the amateur service, ISED administers the Act, and the operating standards tell amateur stations how to operate.
@@ -103,6 +115,18 @@ Certificate rows combine two ideas. Your certificate lasts for your lifetime, bu
 Offence rows protect trust in radio. False information, false distress traffic, and unlawful obstruction can harm people and services. The same group also includes process protections, such as the limits on dwelling entry and the suspension process.
 
 Exam rows describe a path. Basic is the first amateur qualification. After the certificate is issued, later qualifications can be examined in any order. The RGMC row names a maritime radio certificate; there is no calculation behind it, so memorize the name as a certificate fact. Accommodation rows change delivery, not the required examination content.
+
+Exam-day material rows describe the exam conditions, not the study plan. Study with lessons, notes, and the training version of the reference sheet before the exam. During the exam, switch to closed-book conditions: no notes, no lesson pages, and no app.
+
+ISED's reference sheet is provided for the exam. To practise, download ISED's reference-material ZIP from the Amateur Radio Operator Certificate Services downloads page, then use the English unlabelled exam version. The page is at https://ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/en/downloads
+
+The reference sheet helps with formulas and block diagrams. It does not replace understanding. Practise with the unlabelled version so the real sheet feels familiar without hidden prompts.
+
+Before exam day, follow your examiner's identification instructions and ask whether they allow scrap paper. Keep everything except the allowed calculator and examiner-approved materials away from the exam desk.
+
+Use the app's mock exams as exam-condition practice. A realistic practice run uses one question from each subsection, no lesson notes inside the exam, and the optional timer off unless you choose to use it.
+
+Virtual exams add a room check. The examiner needs to see your workspace. Keep only allowed materials within reach, print the emailed answer sheet before the exam, and leave the camera and microphone on as instructed.
 
 ### Memory trick: life record, address-change notice
 
@@ -118,6 +142,8 @@ Many operators keep a small station binder or folder. It can hold the certificat
 
 The folder is not a magic legal shield. It is a simple habit that keeps the lifetime certificate, address record, inspection duty, and exam path in one place.
 
+Add an exam-day checklist to the folder. Include examiner contact details, identification instructions, a calculator check, and a reminder to practise with the downloaded English unlabelled Basic reference sheet before exam day.
+
 During emergency-support practice, these facts reduce confusion. Operators who separate real distress traffic from drills and keep current certificate records are easier to trust when conditions are stressful.
 
 ## Summary
@@ -127,6 +153,7 @@ During emergency-support practice, these facts reduce confusion. Operators who s
 - False information, false distress, and unlawful obstruction belong with legal consequences and public trust.
 - The certification path links entry eligibility, first certification, later qualifications, and service boundaries.
 - Exam fees and accommodations depend on the exact setting while preserving the required examination content.
+- Exam day is closed book: the only permitted reference material is the ISED Basic sheet, and calculators are allowed only if they cannot store formulas or text.
 
 ## Illustration brief
 

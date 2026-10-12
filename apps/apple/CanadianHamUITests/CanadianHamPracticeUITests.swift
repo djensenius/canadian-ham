@@ -34,6 +34,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         ] {
             app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialScreen", screen])
             XCTAssertTrue(app.staticTexts[expectedText].firstMatch.waitForExistence(timeout: 10), "Expected localized \(screen) screen")
+            if screen == "learn" {
+                XCTAssertTrue(app.staticTexts["Le jour de l’examen"].firstMatch.waitForExistence(timeout: 5), "Expected localized Exam day Learn section")
+                let examDayLink = app.buttons["Lire les conseils pour le jour de l’examen"].firstMatch
+                XCTAssertTrue(examDayLink.waitForExistence(timeout: 5), "Expected localized Exam day lesson link")
+                examDayLink.tap()
+                XCTAssertTrue(app.staticTexts["Authority, certificates, and exams"].firstMatch.waitForExistence(timeout: 10), "Expected Exam day link to open L-001-01")
+            }
             if screen == "settings" {
                 XCTAssertTrue(anyVisibleLabel(in: app, contains: "La progression est enregistrée sur cet appareil"), "Expected localized Settings body copy")
             }
