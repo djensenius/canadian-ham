@@ -795,7 +795,9 @@ final class ProgressStoreTests: XCTestCase {
                 return try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: enabled, layout: .split, localDeviceID: "device").container
             },
             startICloudMonitoring: false,
-            localDeviceID: "device"
+            localDeviceID: "device",
+            defaults: defaults,
+            defaultsDomainName: defaultsSuiteName
         )
         let record = QuestionProgressRecord(
             questionId: "B-001-001-001",
@@ -1312,11 +1314,12 @@ final class ProgressStoreTests: XCTestCase {
         preferences.language = .french
         try store.updatePreferences(preferences)
         try store.importData(emptyProgressExport(bank: bank, language: .english), bank: bank)
+        XCTAssertEqual(standardLanguageDefaultsSnapshot(), before)
         try store.resetAllData()
+        XCTAssertEqual(standardLanguageDefaultsSnapshot(), before)
         preferences = store.preferences
-        preferences.language = .french
+        preferences.language = .english
         try store.updatePreferences(preferences)
-
         XCTAssertEqual(standardLanguageDefaultsSnapshot(), before)
     }
 
@@ -2543,7 +2546,8 @@ final class ProgressStoreTests: XCTestCase {
         ))
         try context.save()
 
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device")
+        let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device", defaults: testDefaults, defaultsDomainName: testDefaultsName)
 
         XCTAssertEqual(try store.lessonProgressRecords(), [existingLesson, archivedLesson])
         XCTAssertEqual(try store.lessonQuizAttempts(), [existingAttempt, archivedAttempt])
@@ -2569,7 +2573,8 @@ final class ProgressStoreTests: XCTestCase {
         ))
         try context.save()
 
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device")
+        let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device", defaults: testDefaults, defaultsDomainName: testDefaultsName)
 
         XCTAssertEqual(try store.lessonProgressRecords(), [existingLesson])
     }
@@ -2657,7 +2662,8 @@ final class ProgressStoreTests: XCTestCase {
         let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
         let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+        let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), defaults: testDefaults, defaultsDomainName: testDefaultsName)
 
         XCTAssertEqual(try store.questionProgressRecords(), [record])
         XCTAssertEqual(try store.examAttempts(), [attempt])
@@ -2743,7 +2749,8 @@ final class ProgressStoreTests: XCTestCase {
             ))
         }
         try context.save()
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+        let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), defaults: testDefaults, defaultsDomainName: testDefaultsName)
 
         try store.saveQuestionProgress([replacementRecord])
         try store.saveExamAttempt(replacementAttempt)
