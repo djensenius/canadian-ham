@@ -2567,16 +2567,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         var trace: [String] = []
         func record(_ label: String) {
-            let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
-            trace.append("\(label): target=\(frameDescription(element.frame)); straddler=\(straddler?.description ?? "none")")
+            trace.append("\(label): target=\(frameDescription(element.frame))")
         }
-        func readyForAudit() -> Bool {
-            isLessonFigureFullyVisibleForAudit(element, in: app)
-                && !hasLessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
-        }
-
         record("start")
-        for attempt in 0..<80 where !readyForAudit() {
+        for attempt in 0..<20 where !isLessonFigureFullyVisibleForAudit(element, in: app) {
             let figureFrame = element.frame
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
             if figureFrame.minY < visibleFrame.minY + 8 {
@@ -2588,11 +2582,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
             } else if figureFrame.height > visibleFrame.height, figureFrame.minY > visibleFrame.minY + 8 {
                 preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.minY - visibleFrame.minY - 8))
                 record("oversized figure top into view \(attempt + 1)")
-            } else if let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) {
-                let protectedMaxY = protectedNavigationFrame(in: app).maxY
-                let nudgeDown = straddler.frame.midY >= protectedMaxY
-                preciseScroll(scrollView, contentDeltaY: nudgeDown ? 12 : -12)
-                record("opaque bar straddler \(attempt + 1)")
             } else {
                 preciseScroll(scrollView, contentDeltaY: -12)
                 record("settle \(attempt + 1)")
@@ -2747,11 +2736,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         var trace: [String] = []
         func record(_ label: String) {
-            let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
-            trace.append("\(label): target=\(frameDescription(target.frame)); straddler=\(straddler?.description ?? "none")")
+            trace.append("\(label): target=\(frameDescription(target.frame))")
         }
         record("start")
-        for attempt in 0..<60 where hasLessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) || !isPartiallyVisibleBelowNavigationBar(target, in: app) {
+        for attempt in 0..<20 where !isPartiallyVisibleBelowNavigationBar(target, in: app) {
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
             if target.exists, target.frame.maxY > visibleFrame.maxY {
                 preciseScroll(scrollView, contentDeltaY: -min(80, target.frame.maxY - visibleFrame.maxY + 8))
@@ -2759,11 +2747,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
             } else if target.exists, target.frame.minY < visibleFrame.minY {
                 preciseScroll(scrollView, contentDeltaY: min(80, visibleFrame.minY - target.frame.minY + 8))
                 record("target below opaque bar \(attempt + 1)")
-            } else if let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) {
-                let protectedMaxY = protectedNavigationFrame(in: app).maxY
-                let nudgeDown = straddler.frame.midY >= protectedMaxY
-                preciseScroll(scrollView, contentDeltaY: nudgeDown ? 12 : -12)
-                record("opaque bar straddler \(attempt + 1)")
             } else {
                 preciseScroll(scrollView, contentDeltaY: -12)
                 record("settle \(attempt + 1)")
