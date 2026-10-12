@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:42'
+updated_date: '2026-10-12 14:44'
 labels:
   - content
   - apple
@@ -51,4 +51,6 @@ Figure notes batch m1b: L-001-03 communications-flowchart shows interference lis
 Figure notes batch m1c: L-001-05 international-location-checklist shows travel desk, message/location/ID-format checklist, ITU Regions 1/2/3, and US/CEPT visit branches; verified against lesson text and B-001-020-001..010 plus B-001-021-001..005, including Region 2 for Canada, Region 3 for Australia/Japan/Southeast Asia, and Region 1 for Europe/Africa. L-001-06 antenna-rf-emc-checklists shows antenna consultation, RF keep-clear factors (power, gain, distance, frequency), field-strength meter, home entertainment gear, and affected control device; verified against lesson text and B-001-023-001..010, B-001-024-001..010, and B-001-025-001..010.
 
 Figure notes batch m3a: L-003-01 station-filtering-radio-blocks shows HF chain (TX/amp, LPF close to output, SWR, tuner, switch, antenna/dummy) and FM superhet receiver chain (antenna, RF, mixer plus LO, IF filter/amp, limiter, discriminator/AF); verified against lesson text and B-003-001-001..010, B-003-002-001..008, and B-003-003-001..011. L-003-02 cw-ssb-signal-paths shows CW transmitter oscillator-buffer-PA with key, SSB/CW receiver path with LO/BFO, and SSB transmitter path mic-speech-balanced modulator-filter-mixer-final; verified against lesson text and B-003-004-001..008, B-003-005-001..010, and B-003-006-001..008.
+
+Figure notes batch m3b: L-003-03 digital-interface-linear-supply shows laptop/interface/radio RX audio, TX tones, PTT line, and AC-to-DC supply chain with transformer, rectifier, filter capacitor, regulator, output terminals, and output sensing; verified against lesson text and B-003-007-001..007 plus B-003-008-001..010. L-003-04 yagi-receiver-specs shows Yagi reflector/driven/director/boom/feedline, receiver display/filter choices, and desired/LO/image IF spacing markers; verified against lesson text and B-003-009-001..011 plus B-003-010-001..010.
 <!-- SECTION:NOTES:END -->
