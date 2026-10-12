@@ -178,6 +178,14 @@ When troubleshooting, ask what role a part is playing. A failed amplifier may ma
 - Thinking a Zener diode boosts voltage. Its Basic-level role is to regulate or maintain a voltage when used in a suitable circuit.
 - Assuming reverse-polarity protection is the same as overcurrent protection. A fuse or current limiter handles excessive current; a diode handles direction in the examples here.
 
+::figure amplifiers-diodes
+Alt text: A clean block diagram showing a weak signal entering an amplifier, a larger matching signal leaving it, and a diode symbol labelled anode and cathode.
+Text equivalent:
+- A weak input signal enters an amplifier; a larger matching signal leaves, with supply energy feeding the amplifier.
+- The diode symbol is labelled anode on the left and cathode on the right.
+- Conventional current is shown from anode to cathode; electron flow is opposite.
+::
+
 ## Illustration brief
 
 Alt text: A clean block diagram showing a weak signal entering an amplifier, a larger matching signal leaving it, and a diode symbol labelled anode and cathode.

@@ -192,6 +192,14 @@ When reading a block diagram or schematic, terminal names give fast clues. Base 
 - Forgetting that source and drain are the channel ends, while the gate controls the channel.
 - Forgetting that tube circuits can contain dangerous high voltages even after power is removed.
 
+::figure control-terminals
+Alt text: Three side-by-side simplified symbols for an NPN transistor, an N-channel FET, and a triode tube, with their control terminals highlighted.
+Text equivalent:
+- Bipolar transistor terminals: collector, base, and emitter; the base is the control terminal.
+- Field-effect transistor terminals: drain, gate, and source; the gate is the control terminal.
+- Triode tube electrodes: plate, grid, and cathode; the grid is the control terminal.
+::
+
 ## Illustration brief
 
 Alt text: Three side-by-side simplified symbols for an NPN transistor, an N-channel FET, and a triode tube, with their control terminals highlighted.
