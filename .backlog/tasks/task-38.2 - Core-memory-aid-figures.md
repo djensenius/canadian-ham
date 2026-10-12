@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 15:03'
+updated_date: '2026-10-12 15:07'
 labels:
   - content
   - apple
@@ -48,4 +48,6 @@ Validation notes: ran pnpm check:figures:fix, pnpm check:figures, node scripts/c
 Review fix for 7134d35: redrew series-parallel-current-paths with the cell in the left leg, removed the parallel short, ended rails at the last branch, moved I total/I1/I2 arrows to their measured locations, and updated L-005-03 alt text/text equivalent. Updated wavelength-dipole-example feed point/practical-first-cut wording, added metric-prefix direction arrows, changed 3/6 dB increases to approximate values, added a task-38.2 originality note, regenerated Apple figure assets, rerendered changed qlmanage PNGs, and visually inspected them.
 
 Review-fix validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links. qlmanage evidence updated for metric-prefix-ladder, series-parallel-current-paths, db-power-ratio-table, and wavelength-dipole-example under docs/evidence/task-38.2/.
+
+Follow-up metric-prefix fix: inserted a visible skipped-nano marker between µ and p in metric-prefix-ladder, kept the µ-to-p ×/÷ 1 000 000 note, updated L-005-01 alt text/text equivalent, regenerated Apple figure assets, rerendered and visually inspected docs/evidence/task-38.2/metric-prefix-ladder.svg.png. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; lesson coverage; lesson originality all.
 <!-- SECTION:NOTES:END -->
