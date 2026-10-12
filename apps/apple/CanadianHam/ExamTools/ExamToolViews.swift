@@ -48,6 +48,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @Binding var selectedTool: ExamTool?
     @ObservedObject var calculator: ExamCalculatorViewModel
     let referenceSheetConfiguration: ReferenceSheetConfiguration
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selectedSheetDetent = PresentationDetent.medium
 
     private var isPresented: Binding<Bool> {
@@ -66,11 +67,12 @@ struct ExamToolPresentationModifier: ViewModifier {
             }
         } else {
             content.sheet(item: $selectedTool) { tool in
-                toolPanel(for: tool, fillsAvailableHeight: false)
+                toolPanel(for: tool, fillsAvailableHeight: true)
                     .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
                     .presentationBackgroundInteraction(.enabled(upThrough: .medium))
                     .presentationDragIndicator(.visible)
-                    .onAppear { selectedSheetDetent = .medium }
+                    .onAppear { selectedSheetDetent = preferredSheetDetent(for: tool) }
+                    .onChange(of: dynamicTypeSize) { _, _ in selectedSheetDetent = preferredSheetDetent(for: tool) }
             }
         }
 #elseif os(macOS)
@@ -88,6 +90,10 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private var horizontalUsesInspector: Bool {
         horizontalSizeClass == .regular
+    }
+
+    private func preferredSheetDetent(for tool: ExamTool) -> PresentationDetent {
+        tool == .calculator && dynamicTypeSize.isAccessibilitySize ? .large : .medium
     }
 #endif
 
@@ -119,6 +125,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier(tool.accessibilityIdentifier)
                 Spacer(minLength: DesignTokens.Spacing.sm)
                 Button {
                     selectedTool = nil
@@ -138,14 +145,15 @@ struct ExamToolPresentationModifier: ViewModifier {
             switch tool {
             case .calculator:
                 CalculatorToolView(viewModel: calculator)
+                    .layoutPriority(1)
             case .referenceSheet:
                 ReferenceSheetToolView(configuration: referenceSheetConfiguration)
+                    .layoutPriority(1)
             }
         }
         .padding(DesignTokens.Spacing.lg)
         .frame(maxWidth: .infinity, maxHeight: fillsAvailableHeight ? .infinity : nil, alignment: .topLeading)
         .background(DesignTokens.Colors.paper)
-        .accessibilityIdentifier(tool.accessibilityIdentifier)
     }
 }
 
@@ -161,6 +169,7 @@ extension View {
 
 struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private let rows: [[CalculatorKey]] = [
         [.allClear, .clearEntry, .backspace, .divide],
@@ -172,50 +181,68 @@ struct CalculatorToolView: View {
     ]
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                Text(viewModel.display) // l10n: verbatim
-                    .font(DesignTokens.FontScale.display.monospacedDigit().weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.45)
-                    .frame(maxWidth: .infinity, minHeight: 72, alignment: .trailing)
-                    .padding(DesignTokens.Spacing.lg)
-                    .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-                    .accessibilityLabel(Text("Calculator result")) // l10n: localized
-                    .accessibilityValue(Text(viewModel.spokenResult)) // l10n: localized
-                    .accessibilityIdentifier("calculator-result")
-
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 56), spacing: DesignTokens.Spacing.sm), count: 4), spacing: DesignTokens.Spacing.sm) {
-                    ForEach(rows.flatMap { $0 }, id: \.rawValue) { key in
-                        calculatorButton(key)
+        GeometryReader { proxy in
+            let layout = CalculatorToolLayout(availableHeight: proxy.size.height, dynamicTypeSize: dynamicTypeSize)
+            Group {
+                if layout.usesScrolling {
+                    ScrollView {
+                        calculatorContent(layout: layout)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    .accessibilityIdentifier("calculator-tool-scroll")
+                } else {
+                    calculatorContent(layout: layout)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
-                .accessibilityIdentifier("calculator-key-grid")
-
-                Text("This calculator stores only the current calculation and does not save formulas, text, or history.")
-                    .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .accessibilityIdentifier("calculator-tool-scroll")
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private func calculatorButton(_ key: CalculatorKey) -> some View {
+    private func calculatorContent(layout: CalculatorToolLayout) -> some View {
+        VStack(alignment: .leading, spacing: layout.sectionSpacing) {
+            Text(viewModel.display) // l10n: verbatim
+                .font(layout.displayFont)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.45)
+                .frame(maxWidth: .infinity, minHeight: layout.displayHeight, alignment: .trailing)
+                .padding(.horizontal, layout.displayHorizontalPadding)
+                .padding(.vertical, layout.displayVerticalPadding)
+                .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+                .accessibilityLabel(Text("Calculator result")) // l10n: localized
+                .accessibilityValue(Text(viewModel.spokenResult)) // l10n: localized
+                .accessibilityIdentifier("calculator-result")
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 44), spacing: layout.keySpacing), count: 4), spacing: layout.keySpacing) {
+                ForEach(rows.flatMap { $0 }, id: \.rawValue) { key in
+                    calculatorButton(key, layout: layout)
+                }
+            }
+            .accessibilityIdentifier("calculator-key-grid")
+
+            if layout.showsHelpText {
+                Text("No formulas, text, or history saved.")
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+            }
+        }
+    }
+
+    private func calculatorButton(_ key: CalculatorKey, layout: CalculatorToolLayout) -> some View {
         Button {
             let announcement = viewModel.press(key)
             AccessibilityNotification.Announcement(announcement).post()
         } label: {
             Text(displayTitle(for: key)) // l10n: verbatim
-                .font(DesignTokens.FontScale.body.weight(.semibold))
+                .font(layout.keyFont)
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .lineLimit(2)
-                .minimumScaleFactor(0.75)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, minHeight: 64)
-                .padding(.vertical, DesignTokens.Spacing.sm)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .frame(maxWidth: .infinity, minHeight: layout.keyHeight)
                 .background(buttonBackground(for: key), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
@@ -299,6 +326,43 @@ struct CalculatorToolView: View {
         case .backspace: String(localized: "Backspace")
         }
     }
+}
+
+private struct CalculatorToolLayout {
+    let availableHeight: CGFloat
+    let dynamicTypeSize: DynamicTypeSize
+
+    var sectionSpacing: CGFloat { usesScrolling ? DesignTokens.Spacing.md : compactSectionSpacing }
+    var keySpacing: CGFloat { usesScrolling ? DesignTokens.Spacing.sm : compactKeySpacing }
+    var displayHeight: CGFloat { usesScrolling ? 72 : compactDisplayHeight }
+    var displayHorizontalPadding: CGFloat { usesScrolling ? DesignTokens.Spacing.lg : DesignTokens.Spacing.md }
+    var displayVerticalPadding: CGFloat { usesScrolling ? DesignTokens.Spacing.lg : compactDisplayVerticalPadding }
+    var keyHeight: CGFloat { usesScrolling ? 64 : max(44, compactKeyHeight) }
+    var displayFont: Font { (usesScrolling ? DesignTokens.FontScale.display : DesignTokens.FontScale.title).monospacedDigit().weight(.bold) }
+    var keyFont: Font { (usesScrolling ? DesignTokens.FontScale.body : DesignTokens.FontScale.caption).weight(.semibold) }
+    var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
+
+    var usesScrolling: Bool {
+        dynamicTypeSize.isAccessibilitySize || compactKeyHeight < 44
+    }
+
+    private var compactKeyHeight: CGFloat {
+        let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
+        let helpTotal: CGFloat = showsCompactHelpText ? 18 + compactSectionSpacing : 0
+        let gridSpacing = compactKeySpacing * CGFloat(rowCount - 1)
+        let gridHeight = max(0, availableHeight - displayTotal - compactSectionSpacing - helpTotal)
+        return (gridHeight - gridSpacing) / CGFloat(rowCount)
+    }
+
+    private var showsCompactHelpText: Bool {
+        !dynamicTypeSize.isAccessibilitySize && availableHeight >= 390
+    }
+
+    private var compactSectionSpacing: CGFloat { 6 }
+    private var compactKeySpacing: CGFloat { 4 }
+    private var compactDisplayHeight: CGFloat { 46 }
+    private var compactDisplayVerticalPadding: CGFloat { 4 }
+    private var rowCount: Int { 6 }
 }
 
 private struct CalculatorKeyboardShortcut: ViewModifier {
