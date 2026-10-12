@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:12'
+updated_date: '2026-10-12 16:21'
 labels:
   - web
 dependencies:
@@ -50,10 +50,12 @@ Final validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 
 After merging current main into task-44.2-web-exam-tools, reran validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 165); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed; pnpm check:schemas passed (46 schema tests / 1049 validation targets); pnpm import:check passed including reference-sheet validation (34 entries).
 
 Review fix pass for r442 started: fix calculator button key handling/modifier shortcuts/state retention, responsive tool layout/drawer/DOM order, toolbar/display/heading/table-label accessibility nits, and add regression tests before rerunning web validation.
+
+Review r442 fixes: calculator key handling now ignores buttons/modifier shortcuts, calculator state lives in ExamTools and survives close/tool switching while clearing on new session key, tool layout reserves the side column only when open, narrow panels are sticky bottom drawers with capped height and content padding, DOM order matches toolbar/content/panel flow, reference sheet heading/table labels are corrected, toolbar role changed to group, output label restored, Escape closes the reference sheet, and Advanced mock exams keep the Basic reference sheet disabled. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented web exam tools for practice and mock exams: non-modal calculator/reference sheet toolbar and responsive panel/drawer, calculator-engine integration with scoped keyboard input, localized display/live output, focus return, original Basic reference-sheet content with lesson-backed validation, and RTL/axe coverage for tools, focus, keyboard, locales, answer operability, widths, themes, and mock timer continuity. Verified with typecheck, full pnpm test, web build, dist URL/CSP audit, schema checks, import checks, and reference-sheet validation.
+Addressed r442 review changes for web exam tools: fixed calculator keyboard/button semantics and shortcuts, state retention, responsive side-panel/drawer layout, DOM/focus/accessibility nits, and added regression tests. Verified with typecheck, full tests, web build, and dist URL/CSP audit.
 <!-- SECTION:FINAL_SUMMARY:END -->
