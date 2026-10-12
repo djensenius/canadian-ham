@@ -1,11 +1,11 @@
 ---
 id: TASK-43
 title: 'Exam day information (what to bring, allowed calculator and reference sheet)'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 15:27'
+updated_date: '2026-10-12 15:33'
 labels:
   - content
   - web
@@ -51,6 +51,8 @@ Updated the existing French Apple UI test to assert the new Learn Exam day secti
 Web dist URL audit failed on the new official ISED downloads citation; added that exact official downloads URL to the audit allowlist and covered it in the audit tests, then reran web typecheck/tests/audit successfully.
 
 Validation passed: fetched RIC-1 and ISED downloads page on 2026-10-12; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:coverage; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:explanations; pnpm check:links; pnpm --filter @canadian-ham/web test; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice test CODE_SIGNING_ALLOWED=NO; pnpm typecheck; pnpm build:web; pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test; pnpm --filter @canadian-ham/web audit:urls.
+
+Review follow-up from r43: tightening lesson facts versus tips, removing unsourced photo-ID wording, adding web Learn tests, rerunning requested checks including Apple network, and adding task-44 follow-up note.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
