@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 18:37'
-updated_date: '2026-10-11 22:36'
+updated_date: '2026-10-12 14:31'
 labels:
   - apple
   - testing
@@ -30,9 +30,10 @@ On main after the Morse polish merge, testAccessibilityAuditMorseCourseLessonAnd
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect task-36 logs/xcresult artifacts and record the failing audit element/frame evidence. 2. Reproduce the Morse course light/dark audit failures with targeted xbuild runs before changing tests, preserving result bundles/logs. 3. Diagnose whether the failure is positional or genuine contrast; only make a test-only positioning fix unless measured colors genuinely fail. 4. Verify both audits with 5 consecutive targeted passes each, update task notes/ACs/final summary, and commit.
-
-5. Inspect Morse home/course animation sources, temporarily instrument screenshots around the lower Morse audit to verify timing, then replace instrumentation with a bounded visual-stability wait if confirmed.
+1. Add the owner-approved task-42-only contrast exception handler to the Morse home lower accessibility audit and tag the Morse settings description with a stable accessibility identifier.
+2. Add a unit test that parses the actual DesignTokens RGB values for ink and paperElevated and asserts the settings-description WCAG contrast is at least 4.5:1 in light and dark.
+3. Document the owner-approved 2026-10-12 exception in AGENTS.md and docs/testing/ui-audit-inventory-after.md.
+4. Validate with five consecutive targeted iOS runs of each Morse course audit plus the contrast unit test on iOS and macOS, then update ACs/final summary and mark Done.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
