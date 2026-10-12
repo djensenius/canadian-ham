@@ -45,4 +45,6 @@ Verified RIC-1 §7.2/§7.2.1 and the ISED downloads page on 2026-10-12; added cl
 Added learner-facing Exam day material rules to L-001-01 in the reference-style format, including the ISED downloads page URL for the unlabelled Basic reference sheet and virtual-exam setup notes.
 
 Added an Exam day card to Learn on web and Apple linking to L-001-01, with web French strings and Apple Localizable.xcstrings translations added via a Python JSON round-trip.
+
+Updated the existing French Apple UI test to assert the new Learn Exam day section and localized link.
 <!-- SECTION:NOTES:END -->
