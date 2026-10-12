@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:31'
+updated_date: '2026-10-12 14:34'
 labels:
   - content
   - apple
@@ -34,3 +34,9 @@ Draw the remaining Illustration brief figures for lessons in m5-basic-electronic
 <!-- SECTION:PLAN:BEGIN -->
 1. Add one original SVG and ::figure reference for each in-scope module 5-8 illustration brief, leaving excluded task-38.1/38.2 lessons untouched.\n2. Verify figure labels, clearances, and technical values against lesson text and content/generated/basic-2025-07-15/questions.json.\n3. Regenerate Apple figure assets/metadata with pnpm check:figures:fix, render every SVG with qlmanage into docs/evidence/task-38.4/, inspect thumbnails, then run figure, content, web, and content-swift checks.\n4. Record per-figure notes and leave Apple xbuild validation acceptance unchecked per lane instructions.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Figures added in first slice: L-005-05 transformer-resonance-meters shows primary/secondary transformer flux coupling, parallel LC high impedance at resonance, voltmeter across load and ammeter in series; verified against B-005-011-001..011, B-005-012-001..011, B-005-013-001..010 and lesson values 240 V/360 W/1.5 A, 240 V x 0.3 A = 72 W, 36 V secondary, 300 mA step-up example. L-006-01 feedline-types-balun shows coax shield/centre conductor as unbalanced, window/open-wire balanced lines, and balun at dipole feed point; verified against B-006-001-001..011, B-006-002-001..011, B-006-003-001..011 including 50-ohm amateur coax and 75-ohm TV coax lesson contrast. L-006-02 swr-loss-matching shows forward/reflected waves, line loss reducing returned reflection, and feed-point matching; verified against B-006-004-001..010, B-006-005-001..011, B-006-006-001..011 including SWR estimates 1.5:1=4%, 2:1≈11%, 3:1=25% and 240/60=4:1 lesson example.
+<!-- SECTION:NOTES:END -->
