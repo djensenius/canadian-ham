@@ -70,7 +70,7 @@ The authority having jurisdiction is the local body or official that enforces th
 
 Grounding and bonding are related but not identical. Grounding connects equipment to earth or to the electrical safety grounding system as required. Bonding connects metal parts together so dangerous voltage differences are reduced.
 
-In a station, chassis ground terminals should meet at a single-point ground or bonding panel. Avoid long daisy chains that depend on every device-to-device jumper.
+In a station, all equipment should be included in the grounding and bonding plan. Chassis ground terminals should meet at a single-point ground or bonding panel. Avoid long daisy chains that depend on every device-to-device jumper.
 
 All ground electrodes on a property should be bonded together with heavy copper grounding conductors according to established practice and local code. Separate unbonded electrodes can rise to different voltages during a fault or lightning event. That can create a dangerous path through station equipment.
 
@@ -127,7 +127,9 @@ When the station is not in use, grounding or disconnecting antenna and rotator c
 
 No amateur installation can be made lightning-proof. Plan so a surge has a low-impedance path outside the operating position. Do not operate or service antennas during storms.
 
-Antenna work adds fall and falling-object hazards. Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting.
+Antenna work adds fall and falling-object hazards. Before any antenna repair, turn off the transmitter and disconnect the transmission line. Grounding the antenna structure does not remove an RF source if the transmitter is still connected.
+
+Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting. Touching an energized antenna or feed point can cause RF burns.
 
 ### Worked example: feedline entry plan
 
@@ -146,7 +148,7 @@ RF energy can heat body tissue when exposure is high enough. Eyes deserve care b
 
 Power density falls rapidly with distance in free space. In a simple free-space point-source model, RF field strength falls in proportion to `1/d`. Power density falls in proportion to `1/d^2`. Doubling distance can greatly reduce exposure before you even consider duty cycle or antenna pattern.
 
-A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces. Better still, move the antenna outdoors and mount it as high as practical, out of reach. Aim directional high-gain antennas away from nearby occupied structures.
+A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces. Better still, move the antenna outdoors and mount it as high as practical, out of reach. Mount directional high-gain antennas higher than nearby occupied structures so the main beam is not aimed through people in those structures.
 
 Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. It covers controlled and uncontrolled exposure situations. No transmitter class is automatically outside RF exposure regulation. This lesson does not invent numeric limits or replace a proper exposure evaluation.
 
@@ -166,7 +168,7 @@ Indoor antennas can work, but the safety margin comes from distance, lower power
 1. A supply cover is opened and a cabinet interlock removes input power. What unsafe assumption must you avoid? Do not assume the unit is harmless; filter capacitors can still hold charge.
 2. A temporary control circuit measures 48 V in a damp work area. How should it be treated? Treat it as hazardous because it is above the usual 30 V shock threshold, and wet conditions can lower body resistance.
 3. A station bonding strap is clamped over painted, corroded metal. What should be corrected? Clean the contact area to bare metal, use proper bonding hardware, keep the bond short, and recheck continuity.
-4. A club schedules roof-antenna maintenance for the same afternoon that thunderstorms are forecast nearby. What conservative change should the team make? Postpone the work and keep antennas disconnected or grounded during storm conditions.
+4. A club schedules roof-antenna maintenance for the same afternoon that thunderstorms are forecast nearby. What conservative change should the team make? Postpone the work, turn off the transmitter, disconnect the feedline before any repair, and keep antennas disconnected or grounded during storm conditions.
 5. An indoor antenna test is upgraded from a low-power whip to a directional antenna. What parts of the RF-safety plan should change? Recheck power, distance, access control, and beam direction.
 
 ## Radio connection
@@ -180,6 +182,7 @@ Safety choices affect station performance too. Good bonding can reduce hum and R
 - Creating separate unbonded ground rods for different station parts.
 - Using a bigger fuse to stop nuisance blowing without finding the fault.
 - Putting a lightning protector at the radio end of a cable run as the only protection.
+- Starting antenna repair while the transmitter and feedline are still connected.
 - Treating handheld and indoor antennas as harmless because they are convenient.
 - Treating an SWR match as an RF exposure assessment.
 
@@ -193,8 +196,9 @@ Description: Draw an original room-and-wall cross-section. Inside, show a transc
 
 - Prevent unauthorized transmitting by controlling power and removable controls.
 - Turn off and unplug mains equipment before fault checks, and respect stored charge in capacitors.
-- Bond station equipment and grounding electrodes to reduce dangerous voltage differences.
+- Bond and ground station equipment and grounding electrodes to reduce dangerous voltage differences.
 - Use correct fuse ratings, chassis safety grounding, and source-side mobile fusing.
+- Before antenna repair, turn off the transmitter and disconnect the transmission line.
 - Lightning protection combines outside entry protection, bonding, grounding, cable handling, and conservative disconnection.
 - RF exposure safety depends on distance, power, antenna gain, operating time, and keeping people away from energized antennas.
 - Safety Code 6 guides RF exposure evaluation when one is needed.
