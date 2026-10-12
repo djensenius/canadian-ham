@@ -31,7 +31,7 @@
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="358" y="108" font-size="40" font-weight="700">daytime HF</text>
-    <text x="326" y="152" font-size="38" font-weight="700">F return</text>
+    <text x="326" y="160" font-size="38" font-weight="700">F return</text>
     <text x="132" y="308" font-size="38" font-weight="700">D absorbs</text>
 
     <text x="760" y="150" font-size="40" font-weight="700">freq window</text>

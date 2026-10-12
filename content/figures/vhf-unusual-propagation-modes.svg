@@ -32,8 +32,8 @@
     <path d="M684 458 C706 440 730 430 758 424" stroke-width="5"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="230" y="60" font-size="40" font-weight="700">1 sporadic E</text>
-    <text x="248" y="104" font-size="36">patchy</text>
+    <text x="230" y="48" font-size="40" font-weight="700">1 sporadic E</text>
+    <text x="248" y="100" font-size="36">patchy</text>
     <text x="248" y="350" font-size="36">six metres</text>
 
     <text x="720" y="60" font-size="40" font-weight="700">2 ducting</text>

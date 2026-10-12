@@ -32,7 +32,7 @@
     <text x="520" y="485" font-size="36">VHF direct</text>
     <text x="204" y="620" font-size="36">ground wave</text>
     <text x="374" y="292" font-size="36" font-weight="700">NVIS</text>
-    <text x="884" y="488" font-size="36" font-weight="700"><tspan x="884" y="488">low</tspan><tspan x="884" y="526">angle</tspan></text>
+    <text x="884" y="488" font-size="36" font-weight="700"><tspan x="884" y="488">low</tspan><tspan x="884" y="530">angle</tspan></text>
     <text x="625" y="622" font-size="36" font-weight="700">skip zone</text>
   </g>
 </svg>

@@ -44,7 +44,7 @@
 
     <text x="760" y="74" font-size="40" font-weight="700">spurious</text>
     <text x="764" y="324" font-size="36">TX</text>
-    <text x="890" y="374" font-size="36">wanted</text>
+    <text x="880" y="392" font-size="36">wanted</text>
     <text x="708" y="190" font-size="36">unwanted</text>
     <text x="708" y="452" font-size="36">unwanted</text>
   </g>
