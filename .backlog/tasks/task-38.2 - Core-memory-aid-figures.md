@@ -1,10 +1,11 @@
 ---
 id: TASK-38.2
 title: Core memory-aid figures
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-10 23:50'
+updated_date: '2026-10-12 14:29'
 labels:
   - content
   - apple
