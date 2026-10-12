@@ -51,11 +51,11 @@ A prefix tells you how many base units are being counted. In Basic exam electron
 | pico | p | a trillionth | 0.47 µF = 470 000 pF |
 
 ::figure metric-prefix-ladder
-Alt text: Metric prefix ladder from giga to pico showing multiply or divide direction notes, including the larger micro-to-pico jump because nano is skipped.
+Alt text: Metric prefix ladder from giga to pico showing multiply or divide direction arrows and a skipped nano marker between micro and pico.
 Text equivalent:
-- Prefix order in the lesson table: G giga, M mega, k kilo, base unit, m milli, µ micro, p pico.
-- Moving toward smaller units multiplies by 1 000 for each adjacent step through micro; moving toward larger units divides by 1 000 for those same steps.
-- The micro-to-pico step is x 1 000 000 toward pico, or ÷ 1 000 000 toward micro, because nano is not included in this table.
+- Prefix order in the lesson table: G giga, M mega, k kilo, base unit, m milli, µ micro, p pico; the figure marks nano as skipped between micro and pico.
+- Moving toward smaller units multiplies by 1 000 for each adjacent active step through micro; moving toward larger units divides by 1 000 for those same steps.
+- The micro-to-pico step is x 1 000 000 toward pico, or ÷ 1 000 000 toward micro, because nano is only shown as a skipped marker and is not included in this table.
 - Example: 14.230 MHz = 14 230 kHz.
 ::
 
