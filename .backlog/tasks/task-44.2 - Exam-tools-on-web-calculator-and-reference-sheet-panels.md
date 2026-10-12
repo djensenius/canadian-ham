@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:31'
+updated_date: '2026-10-12 16:35'
 labels:
   - web
 dependencies:
@@ -56,6 +56,8 @@ Review r442 fixes: calculator key handling now ignores buttons/modifier shortcut
 Second review fix pass for r442-2 started: fix mock column ordering/width, calculator button-focus keyboard mapping, mobile drawer scroll padding/units, output live semantics, same-seed session reset, and stricter layout tests.
 
 Review r442-2 fixes: mock exam desktop grid now gives the question stack the wide first column and the navigator the right narrow column; calculator button focus skips only Enter/Space/Escape while allowing digits/operators/Backspace/Delete and pointer-clicked buttons return focus to the calculator for continued typing; narrow drawer uses 48svh cap with scroll-padding-block-end instead of redundant content padding; calculator output has aria-live=off; reference sheet heading stripping derives from the sheet source; calculator reset keys use session instance ids so same-seed restarts reset. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
+
+Third review fix pass started: remove calculator click focus-return, adjust calculator button-focus tests, make mid-width mock layout stack navigator under question while preserving wide desktop columns, use 100svh desktop panel height, and harden CSS rule-block test parsing.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
