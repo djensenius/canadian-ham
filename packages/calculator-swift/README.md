@@ -15,4 +15,4 @@ Semantics match `@canadian-ham/calculator-engine`:
 - `displayValue` exposes a structured accessibility-friendly value (`mantissa`, `exponent`, `isNegative`, `isError`, `visual`) plus localized spoken strings in English and French. While typing, the spoken strings match the entry on screen rather than converting to scientific notation.
 - State contains only the current calculation: current entry/result, pending operation, repeat-`=` operation, flags, display, and accessibility display value. It does not retain formulas, text notes, or history.
 
-The shared fixture file is `fixtures/calculator/sequences.json`; both this package and `packages/calculator-ts` run it.
+The shared fixture file is `fixtures/calculator/sequences.json`; both this package and `packages/calculator-ts` run it. Its cross-engine fuzz drift snapshots are regenerated from the TypeScript engine with `pnpm --filter @canadian-ham/calculator-engine generate-fuzz-fixture`; use `generate-fuzz-fixture:check` to verify they are current.

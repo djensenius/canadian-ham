@@ -37,14 +37,25 @@ test("fixtures/calculator/sequences.json matches the TypeScript calculator engin
 });
 
 test("seeded calculator fuzz keeps display within the UI bound", () => {
-  const keys: CalculatorKey[] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "+", "-", "×", "÷", "=", "√", "x²", "1/x", "±", "%", "C/CE", "AC", "backspace"];
-  let seed = 0x44_10_12_01;
+  const fuzz = fixture.fuzzDrift;
+  assert.equal(fuzz.seed, 0x44_10_12_01);
+  assert.equal(fuzz.steps, 20_000);
+  assert.equal(fuzz.snapshotEvery, 100);
+  const keys = fuzz.keys as CalculatorKey[];
+  const snapshots = new Map<number, { readonly step: number; readonly key: CalculatorKey; readonly display: string }>(fuzz.snapshots.map((snapshot: any) => [snapshot.step, snapshot]));
+  let seed = fuzz.seed;
   let state = createCalculatorState();
   for (let index = 0; index < 50_000; index += 1) {
     seed = (Math.imul(seed, 1_664_525) + 1_013_904_223) >>> 0;
     const key = keys[seed % keys.length]!;
     state = applyCalculatorKey(state, key);
-    assert.ok([...state.display].length <= 16, `step ${index} key ${key} display ${state.display} exceeds 16 code points`);
+    const step = index + 1;
+    assert.ok([...state.display].length <= 16, `step ${step} key ${key} display ${state.display} exceeds 16 code points`);
+    const snapshot = snapshots.get(step);
+    if (snapshot !== undefined) {
+      assert.equal(key, snapshot.key, `snapshot key drift at step ${step}`);
+      assert.equal(state.display, snapshot.display, `snapshot display drift at step ${step}`);
+    }
   }
 });
 

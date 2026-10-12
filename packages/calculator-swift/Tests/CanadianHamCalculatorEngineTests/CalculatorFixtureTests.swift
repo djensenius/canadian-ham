@@ -13,7 +13,7 @@ final class CalculatorFixtureTests: XCTestCase {
         for testCase in fixture.cases {
             let state = runCalculatorKeys(testCase.keys, locale: testCase.locale ?? .en)
             XCTAssertEqual(state.display, testCase.expectedDisplay, testCase.id)
-            XCTAssertLessThanOrEqual(state.display.count, 16, "\(testCase.id): display \(state.display) exceeds 16 code points")
+            XCTAssertLessThanOrEqual(state.display.unicodeScalars.count, 16, "\(testCase.id): display \(state.display) exceeds 16 code points")
             if let expectedDisplayValue = testCase.expectedDisplayValue {
                 XCTAssertEqual(state.displayValue, expectedDisplayValue, testCase.id)
             }
@@ -21,14 +21,29 @@ final class CalculatorFixtureTests: XCTestCase {
     }
 
     func testSeededCalculatorFuzzKeepsDisplayWithinUIBound() throws {
-        let keys: [CalculatorKey] = [.zero, .one, .two, .three, .four, .five, .six, .seven, .eight, .nine, .decimalPoint, .add, .subtract, .multiply, .divide, .equals, .squareRoot, .square, .reciprocal, .toggleSign, .percent, .clearEntry, .allClear, .backspace]
-        var seed: UInt32 = 0x44101201
+        let data = try Data(contentsOf: calculatorFixtureURL())
+        let fixture = try JSONDecoder().decode(CalculatorFixture.self, from: data)
+        let fuzz = try XCTUnwrap(fixture.fuzzDrift)
+        XCTAssertEqual(fuzz.seed, 0x44101201)
+        XCTAssertEqual(fuzz.steps, 20_000)
+        XCTAssertEqual(fuzz.snapshotEvery, 100)
+        var snapshotsByStep: [Int: CalculatorFixture.FuzzDrift.Snapshot] = [:]
+        for snapshot in fuzz.snapshots {
+            snapshotsByStep[snapshot.step] = snapshot
+        }
+
+        var seed = fuzz.seed
         var state = createCalculatorState()
         for index in 0..<20_000 {
             seed = seed &* 1_664_525 &+ 1_013_904_223
-            let key = keys[Int(seed % UInt32(keys.count))]
+            let key = fuzz.keys[Int(seed % UInt32(fuzz.keys.count))]
             state = applyCalculatorKey(state, key: key)
-            XCTAssertLessThanOrEqual(state.display.count, 16, "step \(index) key \(key.rawValue) display \(state.display) exceeds 16 code points")
+            let step = index + 1
+            XCTAssertLessThanOrEqual(state.display.unicodeScalars.count, 16, "step \(step) key \(key.rawValue) display \(state.display) exceeds 16 code points")
+            if let snapshot = snapshotsByStep[step] {
+                XCTAssertEqual(key, snapshot.key, "snapshot key drift at step \(step)")
+                XCTAssertEqual(state.display, snapshot.display, "snapshot display drift at step \(step)")
+            }
         }
     }
 
@@ -83,9 +98,24 @@ private struct CalculatorFixture: Decodable {
         let expectedDisplayValue: CalculatorDisplayValue?
     }
 
+    struct FuzzDrift: Decodable {
+        struct Snapshot: Decodable {
+            let step: Int
+            let key: CalculatorKey
+            let display: String
+        }
+
+        let seed: UInt32
+        let steps: Int
+        let snapshotEvery: Int
+        let keys: [CalculatorKey]
+        let snapshots: [Snapshot]
+    }
+
     let schemaVersion: Int
     let kind: String
     let cases: [Case]
+    let fuzzDrift: FuzzDrift?
 }
 
 private struct CalculatorFixtureError: Error, CustomStringConvertible {
