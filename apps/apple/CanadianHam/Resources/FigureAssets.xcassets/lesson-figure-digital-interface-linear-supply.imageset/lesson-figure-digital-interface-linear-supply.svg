@@ -18,6 +18,6 @@
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="100" y="60" font-size="24">laptop</text><text x="320" y="56" font-size="24">interface</text><text x="542" y="60" font-size="24">radio</text><text x="430" y="52" font-size="24">RX</text><text x="210" y="184" font-size="24">TX</text><text x="408" y="246" font-size="24">PTT</text>
-    <text x="103" y="414" font-size="24">AC</text><text x="202" y="442" font-size="24">xfmr</text><text x="302" y="414" font-size="24">rect</text><text x="350" y="456" font-size="24">cap</text><text x="480" y="414" font-size="24">reg</text><text x="552" y="282" font-size="24">DC out</text><text x="550" y="456" font-size="24">sense</text>
+    <text x="103" y="414" font-size="24">AC</text><text x="202" y="442" font-size="24">xfmr</text><text x="302" y="414" font-size="24">rect</text><text x="350" y="456" font-size="24">cap</text><text x="480" y="414" font-size="24">reg</text><text x="630" y="390" font-size="24" text-anchor="end">DC out</text><text x="532" y="278" font-size="24">sense</text>
   </g>
 </svg>
