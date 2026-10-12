@@ -1,11 +1,11 @@
 ---
 id: TASK-44.1
 title: 'Calculator engine (TS and Swift, shared fixtures)'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 14:42'
+updated_date: '2026-10-12 14:48'
 labels:
   - web
   - apple
@@ -23,8 +23,8 @@ A pure, deterministic basic-calculator engine in TypeScript (packages/) and Swif
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 TS and Swift engines pass the same shared fixture file (at least 60 cases including chained operations, repeated equals, backspace, sign, percent, errors and rounding)
-- [ ] #2 No storage of formulas or text; state is only the current calculation
+- [x] #1 TS and Swift engines pass the same shared fixture file (at least 60 cases including chained operations, repeated equals, backspace, sign, percent, errors and rounding)
+- [x] #2 No storage of formulas or text; state is only the current calculation
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -35,3 +35,15 @@ A pure, deterministic basic-calculator engine in TypeScript (packages/) and Swif
 3. Wire the TS package into pnpm root test/typecheck and CI; keep the Swift package standalone because UI tasks will link it later.
 4. Run pnpm typecheck, TZ=UTC pnpm test, and DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift, then update task notes/ACs/final status.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented packages/calculator-ts and packages/calculator-swift, plus fixtures/calculator/sequences.json with 80 shared key-sequence cases. Documented left-to-right immediate execution, repeated equals, percent behaviour, errors, locale display and no formula/history storage. Wired @canadian-ham/calculator-engine into root pnpm test and CI. Validation: pnpm --filter @canadian-ham/calculator-engine test passed; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed; pnpm typecheck passed after pnpm install; TZ=UTC pnpm test passed. Apple app suites skipped because no app target/project.yml changes.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added pure TypeScript and Swift calculator engine packages using one shared 80-case fixture file, documented the calculator semantics and no-formula state constraint, and wired TS checks into pnpm/CI. Verified with shared TS fixture tests, Swift package tests, pnpm typecheck, and TZ=UTC pnpm test.
+<!-- SECTION:FINAL_SUMMARY:END -->
