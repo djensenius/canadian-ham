@@ -103,6 +103,16 @@ A filter is described by what it passes and what it attenuates.
 | Band-reject | Attenuates a range and passes frequencies outside that range | Remove a strong service or broadcast band while receiving on nearby lower and higher ranges |
 | Notch | Attenuates one narrow frequency and passes most others | Reduce a single strong carrier close to the desired signal |
 
+::figure filter-response-sketches
+Alt text: Frequency-response sketches for low-pass, high-pass, band-pass, band-reject, and notch filters.
+Text equivalent:
+- Low-pass sketch: pass is on the left side of the graph and attenuation is on the right.
+- High-pass sketch: attenuation is on the left side and pass is on the right.
+- Band-pass sketch: pass is a raised middle band, with attenuation on both sides.
+- Band-reject sketch: pass is on both sides, with a wide middle band attenuated.
+- Notch sketch: pass is on both sides, with one narrow tone attenuated.
+::
+
 The cut-off frequency is the boundary region where a low-pass or high-pass filter changes from mostly passing to mostly attenuating. Real filters do not switch instantly; they transition over a range.
 
 ### Memory trick: pass names say what gets through
@@ -201,16 +211,6 @@ A band-pass filter keeps a multi-station operation manageable. A ferrite choke h
 - Using a notch filter when an entire band of strong signals must be reduced.
 - Ignoring filter impedance and creating a mismatch where the filter is inserted.
 - Judging a filter by its name instead of by what it passes, what it attenuates, and where it is installed.
-
-::figure filter-response-sketches
-Alt text: Frequency-response sketches for low-pass, high-pass, band-pass, band-reject, and notch filters.
-Text equivalent:
-- Low-pass: passes lower frequencies and attenuates higher frequencies.
-- High-pass: attenuates lower frequencies and passes higher frequencies.
-- Band-pass: passes a middle band and attenuates frequencies below and above it.
-- Band-reject: passes frequencies outside a middle band and attenuates that middle band.
-- Notch: passes most frequencies but attenuates one narrow frequency.
-::
 
 ## Illustration brief
 

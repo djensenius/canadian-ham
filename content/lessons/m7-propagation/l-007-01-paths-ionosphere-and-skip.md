@@ -92,6 +92,16 @@ Imagine a side-view drawing with the ground at the bottom and four labels above 
 
 A high-angle NVIS signal that reaches useful F-region conditions may return close to the transmitter. A low-angle DX signal from the same site may return much farther away.
 
+::figure propagation-paths-skip-zone
+Alt text: Side-view Earth diagram showing VHF direct, ground wave, NVIS, and low-angle sky-wave paths through labelled D, E, F1, and F2 regions.
+Text equivalent:
+- The ionosphere labels climb upward as D, E, F1, and F2.
+- A VHF direct path runs between two hilltops.
+- A ground-wave path follows the Earth and fades after a short distance.
+- A steep NVIS path rises to the F-region area and returns nearby.
+- A lower-angle sky-wave path rises to the higher F-region area and returns much farther away; a skip-zone bracket is shown for that low-angle path.
+::
+
 ## Skip distance and skip zone
 
 Skip distance is the distance from the transmitter to the closest point reached by a returning sky wave on a chosen path. The skip zone is the gap after useful ground-wave coverage fades out but before the first sky-wave return point.
@@ -141,16 +151,6 @@ For emergency practice, avoid promising that any mode is automatic. NVIS, repeat
 - Confusing ground wave with sky wave just because both can be heard beyond the visible horizon.
 - Forgetting that the D region is lower than E and F and often causes loss rather than useful long-distance return.
 - Calling every VHF opening "skip" when ordinary line of sight or tropospheric bending may explain it.
-
-::figure propagation-paths-skip-zone
-Alt text: Side-view Earth diagram showing direct VHF, ground wave, NVIS, and low-angle sky-wave paths through labelled D, E, F1, and F2 regions.
-Text equivalent:
-- Ionospheric regions are labelled upward as D, E, F1, and F2.
-- A short VHF line-of-sight path connects two hilltops.
-- A ground wave follows the Earth and fades with distance.
-- A steep NVIS path returns nearby, while a low-angle sky-wave path returns farther away.
-- The skip zone is marked between the end of useful ground-wave coverage and the first sky-wave return.
-::
 
 ## Illustration brief
 

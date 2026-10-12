@@ -1,48 +1,48 @@
 <svg id="daytime-absorption-frequency-window" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img">
-  <title>Daytime absorption and usable frequency window</title>
-  <desc>Two panels show D-region absorption under the Sun and a frequency line from LUF through OWF to MUF.</desc>
+  <title>Daytime D-region absorption and usable frequency window</title>
+  <desc>Two panels show a low HF ray absorbed in the D region, a higher HF ray returning from the F region, and a frequency window labelled LUF, OWF, and MUF.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="96" cy="90" r="42" stroke-width="8"/>
-    <path d="M96 26 C96 12 96 0 96 0" stroke-width="6"/>
-    <path d="M96 154 C96 168 96 182 96 196" stroke-width="6"/>
-    <path d="M32 90 C18 90 8 90 0 90" stroke-width="6"/>
-    <path d="M160 90 C174 90 188 90 202 90" stroke-width="6"/>
-    <path d="M50 44 C40 34 30 24 22 16" stroke-width="6"/>
-    <path d="M142 44 C152 34 162 24 170 16" stroke-width="6"/>
+    <circle cx="88" cy="86" r="40" stroke-width="8"/>
+    <path d="M88 24 C88 38 88 48 88 56" stroke-width="6"/>
+    <path d="M88 116 C88 132 88 146 88 160" stroke-width="6"/>
+    <path d="M26 86 C40 86 52 86 60 86" stroke-width="6"/>
+    <path d="M116 86 C132 86 146 86 160 86" stroke-width="6"/>
+    <path d="M44 42 C54 52 64 62 70 68" stroke-width="6"/>
+    <path d="M132 42 C122 52 112 62 106 68" stroke-width="6"/>
 
-    <path d="M62 480 C170 452 326 452 438 480" stroke-width="8"/>
-    <path d="M64 342 C166 316 330 316 438 342" stroke-width="12"/>
-    <path d="M92 208 C180 180 318 180 408 208" stroke-width="7"/>
-    <path d="M126 480 C180 416 214 386 250 350" stroke-width="8"/>
-    <path d="M250 350 C236 342 224 336 210 330" stroke-width="8"/>
-    <path d="M250 350 C236 360 224 368 210 376" stroke-width="8"/>
-    <path d="M170 480 C228 326 310 310 386 480" stroke-width="8"/>
+    <path d="M58 488 C170 458 326 458 438 488" stroke-width="8"/>
+    <path d="M70 352 C170 326 328 326 430 352" stroke-width="13"/>
+    <path d="M96 196 C188 164 316 164 406 196" stroke-width="7"/>
+    <path d="M132 488 C176 424 206 382 238 350" stroke-width="8"/>
+    <path d="M238 350 L202 340" stroke-width="8"/>
+    <path d="M238 350 L212 378" stroke-width="8"/>
+    <path d="M178 488 C246 208 330 208 404 488" stroke-width="8"/>
+    <path d="M404 488 L374 460" stroke-width="8"/>
+    <path d="M404 488 L362 498" stroke-width="8"/>
 
-    <path d="M516 410 C632 410 770 410 910 410" stroke-width="8"/>
-    <path d="M910 410 L872 390" stroke-width="8"/>
-    <path d="M910 410 L872 430" stroke-width="8"/>
-    <path d="M612 370 C612 392 612 430 612 456" stroke-width="6"/>
-    <path d="M722 370 C722 392 722 430 722 456" stroke-width="6"/>
-    <path d="M824 370 C824 392 824 430 824 456" stroke-width="6"/>
-    <path d="M612 326 C652 302 786 302 824 326" stroke-width="9"/>
-    <path d="M524 486 C552 504 584 504 612 486" stroke-width="7"/>
-    <path d="M824 486 C854 506 884 506 914 486" stroke-width="7"/>
+    <path d="M520 418 C642 418 770 418 916 418" stroke-width="8"/>
+    <path d="M916 418 L880 398" stroke-width="8"/>
+    <path d="M916 418 L880 438" stroke-width="8"/>
+    <path d="M612 378 C612 402 612 434 612 462" stroke-width="6"/>
+    <path d="M786 378 C786 402 786 434 786 462" stroke-width="6"/>
+    <path d="M876 378 C876 402 876 434 876 462" stroke-width="6"/>
+    <path d="M612 336 C660 310 828 310 876 336" stroke-width="9"/>
+    <path d="M530 498 C556 516 586 516 612 498" stroke-width="7"/>
+    <path d="M876 498 C892 512 906 512 922 498" stroke-width="7"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="340" y="58" font-size="40" font-weight="700">daytime path</text>
-    <text x="250" y="304" font-size="38" font-weight="700">D absorbs lows</text>
-    <text x="330" y="142" font-size="38" font-weight="700">F returns</text>
+    <text x="330" y="64" font-size="40" font-weight="700">daytime path</text>
+    <text x="350" y="120" font-size="38" font-weight="700">F return</text>
+    <text x="246" y="250" font-size="38" font-weight="700">D absorbs low HF</text>
 
-
-    <text x="720" y="92" font-size="40" font-weight="700">frequency window</text>
-    <text x="612" y="270" font-size="38" font-weight="700">LUF</text>
-    <text x="722" y="270" font-size="38" font-weight="700">OWF</text>
-    <text x="824" y="270" font-size="38" font-weight="700">MUF</text>
-    <text x="568" y="544" font-size="36">too low</text>
-    <text x="568" y="588" font-size="36">absorbed</text>
-    <text x="718" y="220" font-size="36">usable window</text>
-    <text x="850" y="544" font-size="36">too high</text>
-    <text x="850" y="588" font-size="36">passes</text>
-    <text x="850" y="618" font-size="36">through</text>
+    <text x="720" y="98" font-size="40" font-weight="700">frequency window</text>
+    <text x="720" y="246" font-size="36">usable window</text>
+    <text x="612" y="300" font-size="38" font-weight="700">LUF</text>
+    <text x="760" y="300" font-size="38" font-weight="700">OWF</text>
+    <text x="876" y="300" font-size="38" font-weight="700">MUF</text>
+    <text x="572" y="554" font-size="36">too low</text>
+    <text x="572" y="598" font-size="36">absorbed</text>
+    <text x="828" y="554" font-size="36">too high</text>
+    <text x="828" y="598" font-size="36">through</text>
   </g>
 </svg>

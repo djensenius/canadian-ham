@@ -1,46 +1,46 @@
 <svg id="swr-loss-matching" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img">
-  <title>SWR, feedline loss, and matching placement</title>
-  <desc>A station chain shows forward and reflected waves, with the reflected wave attenuated by a lossy line and a second sketch with the tuner at the feed point.</desc>
+  <title>SWR, feedline loss, and feed-point matching</title>
+  <desc>A station chain shows a forward wave, a reflected wave reduced by a lossy line, and a second sketch with the tuner at the antenna feed point.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="42" y="136" width="124" height="86" rx="14" ry="14" stroke-width="7"/>
-    <rect x="220" y="136" width="110" height="86" rx="14" ry="14" stroke-width="7"/>
-    <rect x="386" y="136" width="118" height="86" rx="14" ry="14" stroke-width="7"/>
-    <path d="M166 180 C184 180 202 180 220 180" stroke-width="8"/>
-    <path d="M330 180 C348 180 368 180 386 180" stroke-width="8"/>
-    <path d="M504 180 C612 180 724 180 824 180" stroke-width="8"/>
-    <path d="M824 180 C824 132 824 104 824 76" stroke-width="8"/>
-    <path d="M772 76 C798 64 850 64 876 76" stroke-width="8"/>
+    <rect x="42" y="154" width="114" height="72" rx="14" ry="14" stroke-width="7"/>
+    <rect x="206" y="154" width="104" height="72" rx="14" ry="14" stroke-width="7"/>
+    <rect x="360" y="154" width="104" height="72" rx="14" ry="14" stroke-width="7"/>
+    <path d="M156 190 C174 190 190 190 206 190" stroke-width="8"/>
+    <path d="M310 190 C326 190 344 190 360 190" stroke-width="8"/>
+    <path d="M464 190 C566 190 686 190 806 190" stroke-width="8"/>
+    <path d="M806 190 C806 150 806 116 806 86" stroke-width="8"/>
+    <path d="M754 86 C782 74 830 74 858 86" stroke-width="8"/>
 
-    <path d="M106 92 C254 80 502 80 742 92" stroke-width="8"/>
-    <path d="M742 92 L704 72" stroke-width="8"/>
-    <path d="M742 92 L704 112" stroke-width="8"/>
-    <path d="M742 266 C562 280 344 280 178 266" stroke-width="8"/>
-    <path d="M178 266 L214 246" stroke-width="8"/>
-    <path d="M178 266 L214 286" stroke-width="8"/>
-    <path d="M468 266 C412 270 360 270 308 266" stroke-width="4"/>
-    <path d="M308 266 L334 252" stroke-width="4"/>
-    <path d="M308 266 L334 280" stroke-width="4"/>
-    <path d="M566 236 C596 220 632 220 662 236 C692 252 728 252 758 236" stroke-width="6"/>
+    <path d="M94 96 C250 82 478 82 674 96" stroke-width="8"/>
+    <path d="M674 96 L638 76" stroke-width="8"/>
+    <path d="M674 96 L638 116" stroke-width="8"/>
+    <path d="M790 292 C720 304 650 304 580 292" stroke-width="10"/>
+    <path d="M580 292 L614 274" stroke-width="10"/>
+    <path d="M580 292 L616 310" stroke-width="10"/>
+    <path d="M552 292 C430 306 314 306 184 292" stroke-width="5"/>
+    <path d="M184 292 L214 278" stroke-width="5"/>
+    <path d="M184 292 L214 306" stroke-width="5"/>
+    <path d="M560 246 C590 230 626 230 656 246 C686 262 722 262 752 246" stroke-width="6"/>
 
-    <rect x="62" y="456" width="130" height="72" rx="14" ry="14" stroke-width="7"/>
-    <rect x="286" y="456" width="126" height="72" rx="14" ry="14" stroke-width="7"/>
-    <path d="M192 492 C222 492 252 492 286 492" stroke-width="8"/>
-    <path d="M412 492 C540 492 668 492 792 492" stroke-width="8"/>
-    <path d="M792 492 C792 454 792 424 792 388" stroke-width="8"/>
-    <path d="M740 388 C768 376 818 376 846 388" stroke-width="8"/>
+    <rect x="56" y="468" width="118" height="70" rx="14" ry="14" stroke-width="7"/>
+    <path d="M174 504 C294 504 478 504 688 504" stroke-width="8"/>
+    <rect x="688" y="468" width="118" height="70" rx="14" ry="14" stroke-width="7"/>
+    <path d="M806 504 C830 504 852 504 876 504" stroke-width="8"/>
+    <path d="M876 504 C876 458 876 424 876 386" stroke-width="8"/>
+    <path d="M824 386 C852 374 900 374 928 386" stroke-width="8"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="104" y="192" font-size="36">rig</text>
-    <text x="275" y="192" font-size="36">SWR</text>
-    <text x="445" y="192" font-size="36">ATU</text>
-    <text x="824" y="48" font-size="36">antenna</text>
-    <text x="420" y="54" font-size="38" font-weight="700">forward wave</text>
-    <text x="330" y="350" font-size="38" font-weight="700">reflected wave fades</text>
-    <text x="590" y="440" font-size="36">lossy line</text>
+    <text x="99" y="199" font-size="36">rig</text>
+    <text x="258" y="199" font-size="36">SWR</text>
+    <text x="412" y="199" font-size="36">ATU</text>
+    <text x="806" y="58" font-size="36">antenna</text>
+    <text x="384" y="54" font-size="38" font-weight="700">forward wave</text>
+    <text x="360" y="360" font-size="38" font-weight="700">reflected wave shrinks</text>
+    <text x="700" y="380" font-size="36">lossy line</text>
 
-    <text x="127" y="436" font-size="36">rig</text>
-    <text x="349" y="436" font-size="36">tuner</text>
-    <text x="792" y="360" font-size="36">feed match</text>
-    <text x="477" y="586" font-size="38" font-weight="700">near-antenna match</text>
+    <text x="115" y="452" font-size="36">rig</text>
+    <text x="747" y="452" font-size="36">tuner</text>
+    <text x="747" y="586" font-size="36">at feed point</text>
+    <text x="840" y="358" font-size="36">antenna</text>
   </g>
 </svg>

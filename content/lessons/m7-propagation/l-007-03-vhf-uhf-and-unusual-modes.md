@@ -105,6 +105,15 @@ Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect
 
 HF scatter can put weak, distorted signals into a skip zone. Only a small part of the transmitted energy is redirected toward the receiver, and multiple paths can smear the signal.
 
+::figure vhf-unusual-propagation-modes
+Alt text: Four mini-panels showing sporadic E, tropospheric ducting, auroral scatter, and meteor scatter paths.
+Text equivalent:
+- Sporadic E panel: a six-metre path returns from a patchy E-region cloud.
+- Ducting panel: a VHF path is trapped between paired weather layers over water.
+- Aurora panel: a small beam points north toward a wavy auroral curtain, with a raspy signal label.
+- Meteor panel: a burst path touches a short meteor trail between the stations.
+::
+
 ### Worked example: choosing the mode for a rough auroral path
 
 A VHF operator hears signals from the north with a harsh, buzzing tone. FM voice is difficult to understand, but short Morse characters can still be copied.
@@ -144,15 +153,6 @@ For station planning, do not rely on unusual modes for routine safety coverage. 
 - Confusing tropospheric ducting with meteor scatter just because both can extend VHF range.
 - Expecting wideband FM voice to sound clean on an auroral path.
 - Forgetting that scatter signals are often weak because only a small portion of energy reaches the receiver.
-
-::figure vhf-unusual-propagation-modes
-Alt text: Four mini-panels showing sporadic E, tropospheric ducting, auroral scatter, and meteor scatter paths.
-Text equivalent:
-- Sporadic E: a six-metre ray returns from a patchy E-region cloud.
-- Tropospheric ducting: a VHF ray is trapped between weather layers over water.
-- Auroral scatter: a directional antenna aims north toward a distorted auroral curtain.
-- Meteor scatter: a short trail creates a brief burst path between stations.
-::
 
 ## Illustration brief
 

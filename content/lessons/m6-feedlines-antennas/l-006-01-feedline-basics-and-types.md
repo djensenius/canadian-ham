@@ -86,6 +86,16 @@ Open-wire line often handles mismatch with less heating than small coax. That do
 
 A centre-fed dipole is a balanced antenna. A coax cable is unbalanced. A balun, short for balanced-to-unbalanced, helps connect those two worlds. A balun can also reduce unwanted current on the outside of the coax shield.
 
+::figure feedline-types-balun
+Alt text: A radio feeding a centre-fed dipole through a balun, with coax, window-line, and open-wire cross-sections below.
+Text equivalent:
+- The top sketch shows a radio sending RF along a line to a balun at the dipole feed gap.
+- The dipole is drawn as two horizontal arms with a labelled centre feed gap.
+- The coax cross-section labels the centre conductor and shield.
+- The window-line cross-section shows two balanced conductors in a plastic web.
+- The open-wire cross-section shows two balanced conductors held apart by spreaders.
+::
+
 ### Worked example: feeding a simple dipole
 
 A backyard dipole is fed by fifty-ohm coax. The dipole legs should carry equal and opposite RF currents. The coax shield, however, is part of an unbalanced line.
@@ -123,15 +133,6 @@ When you troubleshoot, think in blocks: transmitter, jumper, meter, tuner, main 
 - Running balanced line tight against metal and expecting it to behave as though it were in open air.
 - Putting a balun at the radio end when the balanced-to-unbalanced change happens at the antenna feed point.
 - Forgetting that connector condition is part of RF performance.
-
-::figure feedline-types-balun
-Alt text: Three feedline cross-sections showing coax, window line, and open-wire line, with arrows from transceiver to antenna.
-Text equivalent:
-- Coax has a centre conductor and shield; it is shielded and unbalanced.
-- Window line has two parallel conductors held in plastic; it is balanced.
-- Open-wire line has two separated wires on spreaders; it is balanced in open air.
-- A balun belongs at the dipole feed point where the balanced antenna meets unbalanced coax.
-::
 
 ## Illustration brief
 

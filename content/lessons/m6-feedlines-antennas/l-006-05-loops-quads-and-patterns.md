@@ -99,6 +99,15 @@ A delta loop is a triangular loop with an overall length of roughly one waveleng
 
 Feed point and height affect impedance and pattern, so practical loop antennas often need a matching device. The formula gives a first cut, not a finished guarantee.
 
+::figure loop-antenna-patterns
+Alt text: A dipole broadside pattern beside paired square quad loops and a triangular delta loop with H and V feed points marked.
+Text equivalent:
+- The dipole panel shows a short wire through a vertical doughnut-like pattern, with a broadside label above and weak labels near the wire ends.
+- The quad panel shows paired square loops on a boom with a feed point marked on the driven loop.
+- The delta panel shows a triangular loop with H feed at the bottom and V feed on the side.
+- The formula below the loop panels is loop length ≈ 306 / f(MHz).
+::
+
 ### Worked example: original horizontal loop
 
 A full-wave horizontal loop is planned near 10.1 MHz.
@@ -131,15 +140,6 @@ Wire antennas invite experimentation. You may have room for a dipole on one band
 - Forgetting that a quad driven element is a loop, not a single straight half-wave wire.
 - Treating weather survival as separate from electrical design.
 - Using the calculated wire length as a final cut with no allowance for supports, insulation, and ground effects.
-
-::figure loop-antenna-patterns
-Alt text: A dipole doughnut pattern beside a square quad loop and a triangular delta loop, with feed points marked.
-Text equivalent:
-- A dipole radiates broadside to the wire with weak radiation off the ends.
-- A quad driven element is a square loop, approximately a full wavelength around.
-- A delta loop is triangular; bottom-centre feed is shown for horizontal polarization, and side feed is shown for vertical polarization.
-- The practical loop starting length shown is 306 / f(MHz).
-::
 
 ## Illustration brief
 

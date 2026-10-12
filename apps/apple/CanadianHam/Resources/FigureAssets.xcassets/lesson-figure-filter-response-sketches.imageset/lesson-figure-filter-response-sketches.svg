@@ -16,7 +16,7 @@
 
     <path d="M114 594 C114 552 114 510 114 468" stroke-width="5"/>
     <path d="M114 594 C174 594 264 594 346 594" stroke-width="5"/>
-    <path d="M136 486 C170 486 196 486 220 486 C238 548 264 548 282 486 C300 486 320 486 338 486" stroke-width="9"/>
+    <path d="M136 486 C162 486 184 486 206 486 C220 520 236 544 258 544 C280 544 296 520 310 486 C324 486 334 486 344 486" stroke-width="9"/>
 
     <path d="M568 594 C568 552 568 510 568 468" stroke-width="5"/>
     <path d="M568 594 C628 594 718 594 800 594" stroke-width="5"/>
@@ -38,12 +38,12 @@
 
     <text x="230" y="412" font-size="40" font-weight="700">band-reject</text>
     <text x="174" y="454" font-size="36">pass</text>
-    <text x="258" y="642" font-size="36">attenuate</text>
+    <text x="258" y="642" font-size="36">attenuate band</text>
     <text x="322" y="454" font-size="36">pass</text>
 
     <text x="684" y="412" font-size="40" font-weight="700">notch</text>
     <text x="624" y="454" font-size="36">pass</text>
-    <text x="706" y="642" font-size="36">attenuate</text>
+    <text x="706" y="642" font-size="36">attenuate tone</text>
     <text x="768" y="454" font-size="36">pass</text>
 
     <text x="480" y="694" font-size="36">frequency increases left to right</text>

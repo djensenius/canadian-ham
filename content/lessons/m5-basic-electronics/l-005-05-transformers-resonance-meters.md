@@ -142,6 +142,14 @@ A meter should disturb the circuit as little as practical.
 | RF transmitter output power | RF wattmeter | In the RF line as designed | Matched to the RF system |
 | Final power amplifier current | Ammeter | In the appropriate current path | Low resistance |
 
+::figure transformer-resonance-meters
+Alt text: Three panels showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.
+Text equivalent:
+- Transformer panel: primary and secondary windings share a core, with small flux marks below the windings.
+- Parallel LC panel: the inductor and capacitor are connected between the same top and bottom rails; the label says high Z at resonance.
+- Meter panel: the A meter is in series in the top circuit path, the load is in the right branch, and the V meter is connected across the load.
+::
+
 A voltmeter is placed across the part being measured. It should look like a high resistance so very little extra current flows through the meter.
 
 An ammeter is placed in series so the circuit current flows through it. It should look like a low resistance so it does not create a large extra voltage drop.
@@ -183,14 +191,6 @@ Good operators measure before guessing. A wrong meter connection can blow a mete
 - Calling bandwidth the same thing as the single resonant frequency.
 - Connecting a voltmeter in series or an ammeter in parallel.
 - Assuming real transformers are perfect. Warm laminations and other heating show losses.
-
-::figure transformer-resonance-meters
-Alt text: Three small sketches: a transformer with primary and secondary coils, a parallel LC tuned circuit, and correct meter placements.
-Text equivalent:
-- Transformer: AC in the primary changes magnetic flux and induces voltage in the secondary.
-- Parallel LC tuned circuit: the inductor and capacitor are in parallel and the impedance is high at resonance.
-- Meter placement: the ammeter is in series with the load, and the voltmeter is across the load.
-::
 
 ## Illustration brief
 

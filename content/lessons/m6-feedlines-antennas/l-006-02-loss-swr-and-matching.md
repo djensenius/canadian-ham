@@ -99,6 +99,15 @@ An antenna tuner does not tune the air. It transforms impedance so the transceiv
 
 A tuner near the transceiver protects the radio, but it does not remove loss in a feedline carrying high SWR. A tuner or matching transformer near the antenna feed point can reduce mismatch on the main feedline and reduce feedline loss.
 
+::figure swr-loss-matching
+Alt text: A station chain showing forward and reflected waves, plus a second sketch with the tuner at the antenna feed point.
+Text equivalent:
+- Top sketch: the rig, SWR meter, station-end ATU, lossy line, and antenna are in one chain.
+- A forward wave arrow travels from the station toward the antenna.
+- A reflected wave starts thick near the antenna and becomes thinner after the lossy line.
+- Bottom sketch: the rig feeds a long main line to a tuner placed at the antenna feed point.
+::
+
 Matching can be done with inductors, capacitors, transmission-line sections, or transformers. If source and load are purely resistive, maximum power transfer happens when their impedances are equal.
 
 ### Misconception: the tuner changes antenna length
@@ -136,14 +145,6 @@ Modern transceivers protect their output stages. If the load looks unsafe, the r
 - Leaving a long coil of unused small coax in the system and blaming the antenna for weak signals.
 - Ignoring intermittent connectors because the antenna looked fine yesterday.
 - Assuming high SWR stops all radiation; usually it reduces transfer and increases losses, but some power may still radiate.
-
-::figure swr-loss-matching
-Alt text: A station-end SWR meter, tuner, long feedline, and antenna, with reflected-wave arrows fading as they return through a lossy line.
-Text equivalent:
-- A forward wave travels from rig through SWR meter and tuner toward the antenna.
-- A reflected wave returns from the mismatch and is smaller after the lossy line attenuates it.
-- Moving the tuner or matching network near the antenna feed point reduces mismatch on the main feedline.
-::
 
 ## Illustration brief
 
