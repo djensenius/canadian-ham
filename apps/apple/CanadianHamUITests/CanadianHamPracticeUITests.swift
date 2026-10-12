@@ -2866,32 +2866,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func lessonScrollableContentStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> [ProtectedAreaOffender] {
         let protectedMaxY = protectedNavigationFrame(in: app).maxY
-        let textStraddlers = scrollView.staticTexts.allElementsBoundByIndex.compactMap { element in
-            opaqueNavigationBarStraddler(for: element, elementDescription: "staticText", protectedMaxY: protectedMaxY)
-        }
-        let buttonStraddlers = scrollView.buttons.allElementsBoundByIndex.compactMap { element in
-            opaqueNavigationBarStraddler(for: element, elementDescription: "button", protectedMaxY: protectedMaxY)
-        }
-        return textStraddlers + buttonStraddlers
+        return scrollView.debugDescription
+            .split(separator: "\n")
+            .compactMap { opaqueNavigationBarStraddler(fromDebugLine: String($0), protectedMaxY: protectedMaxY) }
     }
 
     private func firstLessonScrollableElementStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> ProtectedAreaOffender? {
-        let protectedMaxY = protectedNavigationFrame(in: app).maxY
-        for element in scrollView.staticTexts.allElementsBoundByIndex {
-            if let straddler = opaqueNavigationBarStraddler(for: element, elementDescription: "staticText", protectedMaxY: protectedMaxY) {
-                return straddler
-            }
-        }
-        for element in scrollView.buttons.allElementsBoundByIndex {
-            if let straddler = opaqueNavigationBarStraddler(for: element, elementDescription: "button", protectedMaxY: protectedMaxY) {
-                return straddler
-            }
-        }
-        return nil
+        lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView).first
     }
 
     private func hasLessonScrollableContentStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> Bool {
-        firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) != nil
+        !lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView).isEmpty
     }
 
     private func hasScrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> Bool {
@@ -2937,11 +2922,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
-    private func opaqueNavigationBarStraddler(for element: XCUIElement, elementDescription: String, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
-        guard elementStraddlesOpaqueNavigationBarLowerEdge(element, protectedMaxY: protectedMaxY) else { return nil }
-        let frame = element.frame
+    private func opaqueNavigationBarStraddler(fromDebugLine line: String, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
+        let pattern = #"^\s*(StaticText|Button),.*\{\{(-?[0-9.]+),\s*(-?[0-9.]+)\},\s*\{([0-9.]+),\s*([0-9.]+)\}\}(.*)$"#
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }
+        let nsLine = line as NSString
+        let range = NSRange(location: 0, length: nsLine.length)
+        guard let match = regex.firstMatch(in: line, range: range), match.numberOfRanges == 7 else { return nil }
+        func cgFloat(at index: Int) -> CGFloat? {
+            guard match.range(at: index).location != NSNotFound else { return nil }
+            return Double(nsLine.substring(with: match.range(at: index))).map(CGFloat.init)
+        }
+        guard
+            let x = cgFloat(at: 2),
+            let y = cgFloat(at: 3),
+            let width = cgFloat(at: 4),
+            let height = cgFloat(at: 5)
+        else { return nil }
+        let frame = CGRect(x: x, y: y, width: width, height: height)
+        guard frame.width > 0, frame.height > 0, frame.minY < protectedMaxY, frame.maxY > protectedMaxY else { return nil }
+        let elementDescription = nsLine.substring(with: match.range(at: 1))
+        let detail = nsLine.substring(with: match.range(at: 6)).trimmingCharacters(in: .whitespacesAndNewlines)
         return ProtectedAreaOffender(
-            description: "\(elementDescription) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame)) lowerEdgeY=\(protectedMaxY)",
+            description: "\(elementDescription) \(detail) frame=\(frameDescription(frame)) lowerEdgeY=\(protectedMaxY)",
             frame: frame,
             isClippedAboveWindow: false
         )
