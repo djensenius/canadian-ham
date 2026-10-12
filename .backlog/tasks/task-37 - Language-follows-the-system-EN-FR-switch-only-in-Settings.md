@@ -1,11 +1,11 @@
 ---
 id: TASK-37
 title: Language follows the system; EN/FR switch only in Settings
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-11 23:18'
+updated_date: '2026-10-12 02:46'
 labels:
   - apple
   - web
@@ -64,10 +64,12 @@ Review-fix implementation complete in commits f36e0c61 and bd032674. Apple: adde
 Validation passed in this fix round: git diff --check; pnpm typecheck; pnpm test; pnpm --filter @canadian-ham/web exec vitest run src/lib/languagePreference.test.ts src/lib/progressStore.test.ts src/App.test.tsx (3 files / 97 tests); pnpm check:schemas; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; targeted iOS unit xbuild for LocalizationCatalogTests/testLanguagePreferenceResolvesSystemAndOverrides plus ProgressStoreTests language migration/import/export tests (8 tests); targeted macOS unit xbuild for the same language/import/export tests plus NativeSettings language binding (9 tests); targeted iOS UI xbuild for French system language/questions, Settings language path/restart note/French feedback title, picker absence, regular-width picker absence, and changed navigation test (5 tests); targeted tvOS UI xbuild for practice language/focus/advance (1 test). VisionOS targeted UI rerun was attempted twice but timed out waiting for the xbuild lock before execution; the branch still compiled visionOS during pnpm check:apple-l10n.
 
 Review r2 reopened task-37. Addressing N1-N6 plus L4/L6/L8 with targeted tests only per policy; full suites remain deferred to merge.
+
+Review r2 fixes complete in commits 1defa682 and f65b26b. Apple no longer applies AppleLanguages on every launch: it writes only on in-app language changes/import/reset and the one-time legacy stored-French migration, records a last-applied value, and adopts differing app-domain AppleLanguages from iOS/macOS Settings into stored preferences. Legacy English migration save failures no longer block startup and retry because the marker remains unset. UI cleanup adds teardown for the French feedback flow, verifies the next compact home test passes immediately after it, covers choosing System default after a French relaunch (English question stem immediately plus restart note), covers hidden restart note, and checks the Settings language control at largest accessibility text size. Web cleanup removed dead interface-language messages/helpers/tests. Catalogue ordering now restores the unrelated keys to main order and keeps the new language import key in sorted import-preference order. Notes for PR: under DebugCloudKit, the legacy-language migration marker is per device, so a first launch on another synced device can still remap a synced explicit English preference before its marker exists; legacy stored Apple fr now becomes an interface French next-launch preference, not just question-language French. Validation passed: git diff --check; pnpm typecheck; targeted web vitest (languagePreference/progressStore/App/i18n) 98 tests; pnpm test 160 web tests plus package tests; pnpm check:schemas; node scripts/check-apple-text-sources.ts; targeted iOS unit ProgressStore language tests 9/9; targeted macOS unit ProgressStore/NativeSettings language tests 10/10; targeted iOS UI French feedback followed immediately by compact home test 2/2; targeted iOS UI System default/restart note, hidden note, largest accessibility text size, and regular-width absence path 4/4. pnpm check:apple-l10n was attempted twice after the catalogue reorder but timed out waiting on the xbuild lock after the text-source/export phases; visionOS targeted UI was not retried because the lock remained unavailable.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed review r1 for task-37: Apple now migrates legacy stored English defaults to system once, applies iOS/iPadOS/macOS interface overrides through AppleLanguages on next launch while question text updates immediately, removes locale overrides, validates imported language values/nulls, restores tvOS auto-focus coverage, and fills the missing Apple/web language tests. Web now matches Apple system-language resolution, mirrors explicit language overrides to localStorage, removes dead language toggle leftovers, and keeps import/export language behavior covered. Verified with targeted web/schema/text-source/l10n/iOS/macOS/tvOS xbuild checks; full suites are deferred to merge per policy.
+Addressed review r2 for task-37: Apple now preserves user per-app language choices from iOS/macOS Settings by adopting app-domain AppleLanguages instead of overwriting them at launch, isolates AppleLanguages tests with injected defaults, makes legacy migration retry-safe, resets French UI-test state, and adds UI coverage for System default, restart-note visibility, largest accessibility text size, and the compact next-test sequence. Removed dead web language helpers and restored localization catalogue ordering. Verified with targeted web/package/schema/text-source/iOS/macOS unit and iOS UI checks; apple-l10n and visionOS remain blocked by the shared xbuild lock and should be rerun by the coordinator/reviewer when free.
 <!-- SECTION:FINAL_SUMMARY:END -->
