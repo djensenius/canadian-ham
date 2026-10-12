@@ -22,9 +22,9 @@ Apply the High findings (and Medium ones that are a sentence or two) from docs/l
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every High finding in docs/lesson-review/m5-m4.md is fixed (or declined with a recorded reason), with question IDs listed in the notes
-- [ ] #2 Every covered question flagged as untaught or answer-key only is now taught with a reason
-- [ ] #3 Coverage, quizzes, originality, explanations and links checks pass; the taught-facts check finds no regressions
+- [x] #1 Every High finding in docs/lesson-review/m5-m4.md is fixed (or declined with a recorded reason), with question IDs listed in the notes
+- [x] #2 Every covered question flagged as untaught or answer-key only is now taught with a reason
+- [x] #3 Coverage, quizzes, originality, explanations and links checks pass; the taught-facts check finds no regressions
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -53,3 +53,9 @@ Skipped as separate structural/workflow tasks per scope: Try-it answer hiding (T
 Taught-facts self-check: reviewed the flagged covered/answer-key-only IDs listed above plus the changed lesson coverage ranges (B-005-001/002, 003/004, 005/006, 007/008/009/010, 011/012/013, B-004-001/002/003/004/005/006) against questions.json correct answers after edits. No previously taught covered fact was removed; new prose preserves all answers while avoiding ISED question/answer restatement.
 Validation passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run (160 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (18 XCTest tests).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Fixed all High M5/M4 lesson findings and quick Medium wording/quiz issues in L-005-01 through L-005-05 and L-004-01 through L-004-03 without coverage moves or structural rewrites. Added task notes mapping findings to question IDs, source/reference-PDF checks, skipped structural items, and taught-facts self-check. Verification passed: coverage, quizzes, lesson originality all, explanations, links, web vitest, and Swift content package tests.
+<!-- SECTION:FINAL_SUMMARY:END -->
