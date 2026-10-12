@@ -53,6 +53,6 @@ final class ExamCalculatorViewModelTests: XCTestCase {
         XCTAssertNil(missing)
 
         let sheet = try XCTUnwrap(try ReferenceSheetLoader.load(configuration: .basic, bundle: Bundle(for: Self.self)))
-        XCTAssertTrue(sheet.markdown.contains("Ohm’s law"))
+        XCTAssertTrue(sheet.markdown.contains("Ohm's law"))
     }
 }
