@@ -65,7 +65,7 @@ struct RootView: View {
             if let bank, let contentLibrary, let progressStore {
                 appContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     .environment(\.canadianHamContentLibrary, contentLibrary)
-                    .preferredColorScheme(colorScheme(for: progressStore.preferences.theme))
+                    .preferredColorScheme(launchColorScheme ?? colorScheme(for: progressStore.preferences.theme))
             } else if let progressStoreError {
                 StoreRecoveryView(message: progressStoreError) {
                     ProgressStoreService.resetPersistentStoreFiles()
@@ -808,6 +808,14 @@ struct RootView: View {
         var label = localized(category.name.text(for: language), language: category.name.resolvedLanguage(for: language))
         label += AttributedString(", \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))")
         return label
+    }
+
+    private var launchColorScheme: ColorScheme? {
+        switch AppLaunchArguments.value(after: "-CanadianHamAppearance") {
+        case "light": .light
+        case "dark": .dark
+        default: nil
+        }
     }
 
     private func colorScheme(for theme: ApplePreferences.Theme) -> ColorScheme? {

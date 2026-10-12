@@ -61,12 +61,12 @@ struct ExamToolPresentationModifier: ViewModifier {
 #if os(iOS)
         if horizontalUsesInspector {
             content.inspector(isPresented: isPresented) {
-                toolPanel
+                toolPanel(fillsAvailableHeight: true)
                     .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
             }
         } else {
             content.sheet(item: $selectedTool) { tool in
-                toolPanel(for: tool)
+                toolPanel(for: tool, fillsAvailableHeight: false)
                     .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
                     .presentationBackgroundInteraction(.enabled(upThrough: .medium))
                     .presentationDragIndicator(.visible)
@@ -75,7 +75,7 @@ struct ExamToolPresentationModifier: ViewModifier {
         }
 #elseif os(macOS)
         content.inspector(isPresented: isPresented) {
-            toolPanel
+            toolPanel(fillsAvailableHeight: true)
                 .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
         }
 #else
@@ -92,11 +92,13 @@ struct ExamToolPresentationModifier: ViewModifier {
 #endif
 
     @ViewBuilder
-    private var toolPanel: some View {
-        if let selectedTool {
-            toolPanel(for: selectedTool)
-        } else {
-            EmptyView()
+    private func toolPanel(fillsAvailableHeight: Bool) -> some View {
+        Group {
+            if let selectedTool {
+                toolPanel(for: selectedTool, fillsAvailableHeight: fillsAvailableHeight)
+            } else {
+                EmptyView()
+            }
         }
     }
 
@@ -110,7 +112,7 @@ struct ExamToolPresentationModifier: ViewModifier {
         }
     }
 
-    private func toolPanel(for tool: ExamTool) -> some View {
+    private func toolPanel(for tool: ExamTool, fillsAvailableHeight: Bool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             HStack(alignment: .center) {
                 toolHeader(for: tool)
@@ -141,7 +143,7 @@ struct ExamToolPresentationModifier: ViewModifier {
             }
         }
         .padding(DesignTokens.Spacing.lg)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: fillsAvailableHeight ? .infinity : nil, alignment: .topLeading)
         .background(DesignTokens.Colors.paper)
         .accessibilityIdentifier(tool.accessibilityIdentifier)
     }

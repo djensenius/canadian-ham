@@ -9,12 +9,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     override func tearDownWithError() throws {
         XCUIApplication().terminate()
-        XCUIDevice.shared.appearance = .light
         try super.tearDownWithError()
     }
 
     func testPracticeCalculatorSheetKeepsAnswersHittableAtMediumDetent() throws {
-        XCUIDevice.shared.appearance = .light
         let app = launchPracticeQuestion()
         defer { app.terminate() }
 
@@ -25,7 +23,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testPracticeReferenceSheetSheetKeepsAnswersHittableWithUnavailableFallback() throws {
-        XCUIDevice.shared.appearance = .light
         let app = launchPracticeQuestion()
         defer { app.terminate() }
 
@@ -36,7 +33,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testMockExamCalculatorKeepsAnswersHittableAndTimerRuns() throws {
-        XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
             "-CanadianHamMockExamSeed", "ui-exam-tools-timer",
@@ -60,7 +56,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     func testRegularWidthUsesInspectorAndKeepsAnswersHittable() throws {
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector layout is covered by the targeted iPad run.")
-        XCUIDevice.shared.appearance = .light
         let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
         defer { app.terminate() }
 
@@ -73,8 +68,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testAccessibilityAuditExamToolsLight() throws {
-        XCUIDevice.shared.appearance = .light
-        let app = launchPracticeQuestion()
+        let app = launchPracticeQuestion(appearance: "light")
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
@@ -85,8 +79,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testAccessibilityAuditExamToolsDark() throws {
-        XCUIDevice.shared.appearance = .dark
-        let app = launchPracticeQuestion()
+        let app = launchPracticeQuestion(appearance: "dark")
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
@@ -97,7 +90,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testLargestDynamicTypeKeepsCalculatorGridReachable() throws {
-        XCUIDevice.shared.appearance = .light
         let app = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
         defer { app.terminate() }
 
@@ -111,7 +103,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testPreciseScrollPositionsAnswerBelowProtectedAreaWithToolOpen() throws {
-        XCUIDevice.shared.appearance = .light
         let app = launchPracticeQuestion()
         defer { app.terminate() }
 
@@ -134,16 +125,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
-    private func launchPracticeQuestion(extraArguments: [String] = []) -> XCUIApplication {
-        launchApp(arguments: extraArguments + [
+    private func launchPracticeQuestion(appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
+        launchApp(appearance: appearance, arguments: extraArguments + [
             "-CanadianHamInitialCategoryID", "B-001",
             "-CanadianHamPracticeQuestionID", "B-001-002-002"
         ])
     }
 
-    private func launchApp(arguments: [String] = []) -> XCUIApplication {
+    private func launchApp(appearance: String = "light", arguments: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-CanadianHamResetDataOnLaunch"] + arguments
+        app.launchArguments = ["-CanadianHamResetDataOnLaunch", "-CanadianHamAppearance", appearance] + arguments
         app.launch()
         return app
     }
@@ -194,11 +185,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func scrollBackgroundUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        let scrollView = scrollView(containing: element, in: app)
         for _ in 0..<maxSwipes where !element.isHittable {
             if element.exists && element.frame.maxY <= visibleFrameExcludingNavigationBar(in: app).minY {
-                preciseBackgroundScroll(in: app, fingerDeltaY: 72)
+                preciseScroll(scrollView, in: app, fingerDeltaY: 72)
             } else {
-                preciseBackgroundScroll(in: app, fingerDeltaY: -72)
+                preciseScroll(scrollView, in: app, fingerDeltaY: -72)
             }
             waitBriefly()
         }
@@ -219,7 +211,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         for _ in 0..<12 where !isFullyVisibleInMiddleBand(element, in: app) || !scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty {
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
             let delta: CGFloat = element.frame.midY > visibleFrame.midY ? -72 : 72
-            preciseBackgroundScroll(in: app, fingerDeltaY: delta)
+            preciseScroll(scrollView, in: app, fingerDeltaY: delta)
             waitBriefly()
         }
         XCTAssertTrue(isFullyVisibleInMiddleBand(element, in: app), "\(context): expected the element in the middle visible band. Frame: \(frameDescription(element.frame))", file: file, line: line)
@@ -227,20 +219,27 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(offenders.isEmpty, "\(context): no scrollable text or buttons should intersect the protected navigation/status area; offenders: \(offenders.joined(separator: "; "))", file: file, line: line)
     }
 
-    private func preciseScroll(_ scrollView: XCUIElement, contentDeltaY: CGFloat) {
-        let limitedMagnitude = min(80, max(8, abs(contentDeltaY)))
-        let fingerDeltaY = contentDeltaY > 0 ? limitedMagnitude : -limitedMagnitude
-        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        let end = start.withOffset(CGVector(dx: 0, dy: fingerDeltaY))
+    private func preciseScroll(_ scrollView: XCUIElement, in app: XCUIApplication, fingerDeltaY: CGFloat) {
+        let limitedDelta = fingerDeltaY > 0 ? min(80, max(8, fingerDeltaY)) : -min(80, max(8, abs(fingerDeltaY)))
+        let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+        let protectedBottom = activeToolPanelTop(in: app).map { $0 - 24 } ?? (visibleFrame.maxY - 24)
+        let usableMinY = visibleFrame.minY + 24
+        let usableMaxY = max(usableMinY, min(visibleFrame.maxY - 24, protectedBottom))
+        let startY = min(max(visibleFrame.midY, usableMinY), usableMaxY)
+        let startX = min(max(scrollView.frame.midX, visibleFrame.minX + 24), visibleFrame.maxX - 24)
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0)).withOffset(CGVector(dx: startX, dy: startY))
+        let end = start.withOffset(CGVector(dx: 0, dy: limitedDelta))
         start.press(forDuration: 0.1, thenDragTo: end, withVelocity: XCUIGestureVelocity.slow, thenHoldForDuration: 0.4)
     }
 
-    private func preciseBackgroundScroll(in app: XCUIApplication, fingerDeltaY: CGFloat) {
-        let window = app.windows.firstMatch
-        let limitedDelta = fingerDeltaY > 0 ? min(80, max(8, fingerDeltaY)) : -min(80, max(8, abs(fingerDeltaY)))
-        let start = window.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.28))
-        let end = start.withOffset(CGVector(dx: 0, dy: limitedDelta))
-        start.press(forDuration: 0.1, thenDragTo: end, withVelocity: XCUIGestureVelocity.slow, thenHoldForDuration: 0.4)
+    private func activeToolPanelTop(in app: XCUIApplication) -> CGFloat? {
+        for identifier in ["exam-tool-calculator-panel", "exam-tool-reference-sheet-panel"] {
+            let panel = app.descendants(matching: .any)[identifier].firstMatch
+            if panel.exists, panel.frame.minY > 0 {
+                return panel.frame.minY
+            }
+        }
+        return nil
     }
 
     private func scrollView(containing element: XCUIElement, in app: XCUIApplication) -> XCUIElement {
