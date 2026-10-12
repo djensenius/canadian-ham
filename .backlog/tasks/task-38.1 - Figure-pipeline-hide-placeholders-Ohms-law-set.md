@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 23:57'
+updated_date: '2026-10-12 00:08'
 labels:
   - content
   - apple
@@ -90,6 +90,8 @@ Pause handoff after xbuild-lock block on 2026-10-11: committed through 71bfcd76.
 Resume validation: merged origin/main on 2026-10-11 (merge commit ac7c72e0) and regenerated apps/apple project with XcodeGen twice; generated project was deterministic with no post-regeneration diff. Next running the pending targeted Apple validation/evidence chain without weakening audits.
 
 Validation retry note: the first post-merge nohup validation was stopped after the dark figure UI test spent over an hour in the positioning helper's per-adjustment protected-area scans before reaching an assertion. Commit 75b00f2d keeps the final protected-area assertion and full default accessibility audits intact, but makes positioning responsive by tracing only the target frame during adjustment; rerunning the same targeted chain next.
+
+Validation retry fix: the responsive helper exposed the real protected-area failure before the first inline figure audit (top lesson bullets intersecting the nav/status protected area). Commit d057d280 restores the original pass condition (target in middle band and no protected-area offenders) using an early-exit offender probe, while keeping detailed final assertions and default audits unchanged.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
