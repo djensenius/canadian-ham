@@ -3,9 +3,14 @@ import CoreGraphics
 
 enum LessonFigureMetadata {
     static let sizes: [String: CGSize] = [
+        "db-power-ratio-table": CGSize(width: 900, height: 620),
+        "metric-prefix-ladder": CGSize(width: 1080, height: 620),
         "ohms-law-power-wheel": CGSize(width: 960, height: 960),
         "ohms-law-triangle": CGSize(width: 640, height: 480),
-        "power-triangle": CGSize(width: 640, height: 480)
+        "power-triangle": CGSize(width: 640, height: 480),
+        "resistor-colour-code": CGSize(width: 900, height: 650),
+        "series-parallel-current-paths": CGSize(width: 1000, height: 690),
+        "wavelength-dipole-example": CGSize(width: 1000, height: 600)
     ]
 
     static func aspectRatio(for id: String) -> CGFloat {

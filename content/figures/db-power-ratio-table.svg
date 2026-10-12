@@ -1,0 +1,32 @@
+<svg id="db-power-ratio-table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img">
+  <title>Decibel power-ratio shortcuts</title>
+  <desc>A table of Basic-level decibel shortcuts for 3, 6, 10, and 20 dB power changes.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="90" y="120" width="720" height="400" stroke-width="6"/>
+    <line x1="290" y1="120" x2="290" y2="520" stroke-width="5"/>
+    <line x1="550" y1="120" x2="550" y2="520" stroke-width="5"/>
+    <line x1="90" y1="200" x2="810" y2="200" stroke-width="5"/>
+    <line x1="90" y1="280" x2="810" y2="280" stroke-width="5"/>
+    <line x1="90" y1="360" x2="810" y2="360" stroke-width="5"/>
+    <line x1="90" y1="440" x2="810" y2="440" stroke-width="5"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="450" y="62" font-size="44" font-weight="700">dB power-ratio shortcuts</text>
+    <text x="190" y="170" font-size="36" font-weight="700">change</text>
+    <text x="420" y="170" font-size="36" font-weight="700">increase</text>
+    <text x="680" y="170" font-size="36" font-weight="700">decrease</text>
+    <text x="190" y="250" font-size="38">3 dB</text>
+    <text x="420" y="250" font-size="38">x 2</text>
+    <text x="680" y="250" font-size="38">÷ 2</text>
+    <text x="190" y="330" font-size="38">6 dB</text>
+    <text x="420" y="330" font-size="38">x 4</text>
+    <text x="680" y="330" font-size="38">÷ 4</text>
+    <text x="190" y="410" font-size="38">10 dB</text>
+    <text x="420" y="410" font-size="38">x 10</text>
+    <text x="680" y="410" font-size="38">÷ 10</text>
+    <text x="190" y="490" font-size="38">20 dB</text>
+    <text x="420" y="490" font-size="38">x 100</text>
+    <text x="680" y="490" font-size="38">÷ 100</text>
+    <text x="450" y="575" font-size="36">dB is a ratio, not watts</text>
+  </g>
+</svg>

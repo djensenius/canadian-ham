@@ -1,0 +1,22 @@
+<svg id="wavelength-dipole-example" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img">
+  <title>Wavelength and half-wave dipole estimate</title>
+  <desc>A formula card for wavelength in metres, with a 14.2 MHz half-wave dipole length example.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="170" y1="310" x2="475" y2="310" stroke-width="10"/>
+    <line x1="525" y1="310" x2="830" y2="310" stroke-width="10"/>
+    <line x1="500" y1="323" x2="500" y2="372" stroke-width="7"/>
+    <line x1="480" y1="372" x2="520" y2="372" stroke-width="7"/>
+    <line x1="170" y1="395" x2="830" y2="395" stroke-width="6"/>
+    <path d="M170 395 L194 383 L194 407 Z" stroke-width="4"/>
+    <path d="M830 395 L806 383 L806 407 Z" stroke-width="4"/>
+    <line x1="500" y1="382" x2="500" y2="408" stroke-width="5"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="500" y="70" font-size="50" font-weight="700">λ(m) = 300 / f(MHz)</text>
+    <text x="500" y="140" font-size="38">14.2 MHz example: λ ≈ 21.1 m</text>
+    <text x="500" y="260" font-size="38">half-wave dipole</text>
+    <text x="500" y="455" font-size="38">≈ 10.6 m total</text>
+    <text x="500" y="510" font-size="38">≈ 5.3 m each side</text>
+    <text x="500" y="565" font-size="38">practical wire trims shorter</text>
+  </g>
+</svg>

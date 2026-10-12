@@ -78,6 +78,15 @@ For Basic-level estimating, use practical power shortcuts:
 | -10 dB | roughly 1/10 power |
 | -30 dB | roughly 1/1000 power |
 
+::figure db-power-ratio-table
+Alt text: Decibel power-ratio shortcut table for 3, 6, 10, and 20 dB changes, with increase and decrease columns.
+Text equivalent:
+- 3 dB: increase x 2, decrease ÷ 2.
+- 6 dB: increase x 4, decrease ÷ 4.
+- 10 dB: increase x 10, decrease ÷ 10.
+- 20 dB: increase x 100, decrease ÷ 100.
+::
+
 ### Worked example: gain
 
 A 4 W handheld feeds a 7 dB gain amplifier. A 7 dB power increase is roughly a fivefold power change.
