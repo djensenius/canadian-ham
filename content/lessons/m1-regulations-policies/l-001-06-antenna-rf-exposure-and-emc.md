@@ -34,7 +34,7 @@ By the end of this lesson, you can:
 
 - identify who decides antenna-siting consultation questions;
 - describe the ISED default consultation steps and local-process exclusions;
-- explain why Safety Code 6 uses different RF exposure limits by frequency and setting;
+- explain why the RF exposure code uses different limits by frequency and setting;
 - name the RF exposure factors and quantities in the reference tables; and
 - apply EMCAB-2 field-strength and equipment-category facts for interference complaints.
 
@@ -86,9 +86,9 @@ Use the timeliness and relevance criteria in the table when responding to writte
 
 The exposure rows describe human RF exposure. A controlled environment is one where RF fields are assessed and people can be aware of the exposure, such as trained operators or workers. An uncontrolled environment covers everyone else, including the general public, so its limits are lower.
 
-The 48 MHz to 300 MHz range matters because a human body is roughly resonant there. At 80 MHz, one half-wavelength is about 1.9 m, which is close to adult body length, so whole-body absorption can be stronger. Below 10 MHz, Safety Code 6 also treats nerve stimulation as an established effect.
+The VHF range named in the table matters because a human body is roughly resonant there. At 80 MHz, one half-wavelength is about 1.9 m, which is close to adult body length, so whole-body absorption can be stronger. At the low-frequency range named in the table, the exposure code also treats nerve stimulation as an established effect.
 
-Transmitter power matters as one factor among gain, distance, and frequency. Hand-held transmitters are still included, and no transmitter category is exempt from the Safety Code 6 exposure check.
+Transmitter power matters as one factor among gain, distance, and frequency. Hand-held transmitters are still included, and no transmitter category is exempt from the RF exposure check.
 
 Electromagnetic compatibility means equipment keeps working in its radio environment. EMCAB-2 rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category.
 

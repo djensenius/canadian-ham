@@ -115,13 +115,13 @@ Learn the below-30-MHz gate with the repeater-output row. Basic by itself covers
 
 Bandwidth, mode, and band-edge rows all describe occupied spectrum. Near an edge, compare the whole signal to the band boundary. A dial display may show the carrier or suppressed carrier; the emitted signal still has width. For the HF band edges, the lower edges form a useful pattern: 3.5, 7, 14, and 28 MHz double, and 21 MHz is 3 x 7 MHz.
 
-The 10.100 MHz to 10.150 MHz segment is the special narrow segment between 7 MHz and 25 MHz. Its bandwidth is below the usual 6 kHz limit in that range, and SSB is not allowed there.
+The special narrow segment named in the bandwidth table is tighter than the usual mid-HF bandwidth limit, and SSB is not allowed there.
 
 Power rows attach a number to a measurement point and quantity. DC input is electrical power going into the final RF stage before RF conversion. Carrier power is steady RF output for non-SSB emissions. PEP captures the crest of an SSB voice envelope. ERP and EIRP move outward to radiated power by including antenna-system gain.
 
-The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station. The 60 m row is special because its limit is ERP expressed as PEP, so antenna gain is part of the comparison.
+The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station. The special-channel row is different because its limit is ERP expressed as PEP, so antenna gain is part of the comparison.
 
-Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. An unmodulated carrier is a plain carrier with no information on it, so below 30 MHz it is limited to brief tests. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
+Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. An unmodulated carrier is a plain carrier with no information on it, so it is limited to brief tests in the range named by the table. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
 
 ### Memory trick: Basic power stays Basic
 
