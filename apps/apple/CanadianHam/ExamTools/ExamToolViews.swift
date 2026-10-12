@@ -578,16 +578,16 @@ private struct ExamToolMarkdownTableView: View {
                 GridRow {
                     ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
                         Text(header) // l10n: content(en)
-                            .font(DesignTokens.FontScale.caption.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .font(DesignTokens.FontScale.body.weight(.bold))
+                            .foregroundColor(DesignTokens.Colors.ink)
                     }
                 }
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
                     GridRow {
                         ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
                             Text(cell) // l10n: content(en)
-                                .font(DesignTokens.FontScale.caption)
-                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .font(DesignTokens.FontScale.body)
+                                .foregroundColor(DesignTokens.Colors.ink)
                         }
                     }
                 }
