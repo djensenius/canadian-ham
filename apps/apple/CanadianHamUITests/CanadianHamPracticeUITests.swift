@@ -1500,7 +1500,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let inlineWheel = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel"].firstMatch
         scrollUntilPartiallyVisible(inlineWheel, in: app, maxSwipes: 80)
         XCTAssertTrue(inlineWheel.exists, "Expected inline Ohm's law wheel image button at largest text size")
-        positionLessonFigureFullyVisibleWithProtectedAreaClear(inlineWheel, in: app, context: "largest text inline Ohm's law wheel")
+        positionLessonFigureForOpaqueNavigationBarAudit(inlineWheel, in: app, context: "largest text inline Ohm's law wheel")
         assertFitsWindowWidth(inlineWheel, in: app, context: "largest text inline Ohm's law wheel")
         attachScreenshot(named: "task38-1-ios-ax5-ohms-law-power-wheel-inline", from: app)
 
@@ -2006,7 +2006,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let figureImageButton = app.descendants(matching: .any)["lesson-figure-\(figureID)"].firstMatch
             scrollUntilPartiallyVisible(figureImageButton, in: app, maxSwipes: 80)
             XCTAssertTrue(figureImageButton.exists, "Expected \(figureID) figure")
-            positionLessonFigureFullyVisibleWithProtectedAreaClear(figureImageButton, in: app, context: "\(appearance.rawValue) \(figureID) inline figure")
+            positionLessonFigureForOpaqueNavigationBarAudit(figureImageButton, in: app, context: "\(appearance.rawValue) \(figureID) inline figure")
             XCTAssertTrue(figureImageButton.label.localizedCaseInsensitiveContains(figureAltText[figureID]!), "Expected figure accessibility label for \(figureID); got \(figureImageButton.label)")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
             try performAudit(on: app, context: "\(appearance.rawValue) \(figureID) inline figure")
@@ -2036,7 +2036,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTAssertEqual(rowElement.label, row)
         }
         let finalTextEquivalentRow = app.staticTexts["lesson-figure-ohms-law-power-wheel-text-equivalent-row-\(wheelTextEquivalentRows.count - 1)"].firstMatch
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) Ohm's law wheel text equivalent expanded", preserving: finalTextEquivalentRow)
+        settleLessonScrollableContentForOpaqueNavigationBar(in: app, context: "\(appearance.rawValue) Ohm's law wheel text equivalent expanded", preserving: finalTextEquivalentRow)
         try performAudit(on: app, context: "\(appearance.rawValue) Ohm's law wheel text equivalent expanded")
     }
 
@@ -2553,7 +2553,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
-    private func positionLessonFigureFullyVisibleWithProtectedAreaClear(
+    private func positionLessonFigureForOpaqueNavigationBarAudit(
         _ element: XCUIElement,
         in app: XCUIApplication,
         context: String,
@@ -2565,28 +2565,57 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTFail("\(context): expected a scroll view before positioning lesson figure", file: file, line: line)
             return
         }
-        settleScrollableContentBelowNavigationBar(
-            in: app,
-            context: context,
-            preserving: element,
-            preserveFullyVisible: true,
-            file: file,
-            line: line
-        )
-        let fullyVisible = isLessonFigureFullyVisibleForAudit(element, in: app)
-        let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-        if !fullyVisible || !offenders.isEmpty {
+        var trace: [String] = []
+        func record(_ label: String) {
+            let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
+            trace.append("\(label): target=\(frameDescription(element.frame)); straddler=\(straddler?.description ?? "none")")
+        }
+        func readyForAudit() -> Bool {
+            isLessonFigureFullyVisibleForAudit(element, in: app)
+                && !hasLessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
+        }
+
+        record("start")
+        for attempt in 0..<80 where !readyForAudit() {
+            let figureFrame = element.frame
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            if figureFrame.minY < visibleFrame.minY + 8 {
+                preciseScroll(scrollView, contentDeltaY: min(80, visibleFrame.minY + 8 - figureFrame.minY))
+                record("figure below opaque bar \(attempt + 1)")
+            } else if figureFrame.height <= visibleFrame.height, figureFrame.maxY > visibleFrame.maxY {
+                preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.maxY - visibleFrame.maxY + 8))
+                record("figure above bottom edge \(attempt + 1)")
+            } else if figureFrame.height > visibleFrame.height, figureFrame.minY > visibleFrame.minY + 8 {
+                preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.minY - visibleFrame.minY - 8))
+                record("oversized figure top into view \(attempt + 1)")
+            } else if let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) {
+                let protectedMaxY = protectedNavigationFrame(in: app).maxY
+                let nudgeDown = straddler.frame.midY >= protectedMaxY
+                preciseScroll(scrollView, contentDeltaY: nudgeDown ? 12 : -12)
+                record("opaque bar straddler \(attempt + 1)")
+            } else {
+                preciseScroll(scrollView, contentDeltaY: -12)
+                record("settle \(attempt + 1)")
+            }
+            waitBriefly()
+        }
+
+        let figureReady = isLessonFigureFullyVisibleForAudit(element, in: app)
+        let straddlers = lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
+        if !figureReady || !straddlers.isEmpty {
             attachScreenshot(named: "task38-1-positioning-failure-\(context)", from: app)
         }
         XCTAssertTrue(
-            fullyVisible,
-            "\(context): expected figure fully visible below the protected navigation/status area. Frame: \(frameDescription(element.frame))",
+            figureReady,
+            "\(context): expected the lesson figure to be fully visible below the opaque navigation/status bar, or top-visible if oversized. Frame: \(frameDescription(element.frame)); trace: \(trace.joined(separator: " -> "))",
             file: file,
             line: line
         )
-        XCTAssertTrue(
-            offenders.isEmpty,
-            "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.map(\.description).joined(separator: "; "))",
+        assertNoLessonScrollableContentStraddlesOpaqueNavigationBar(
+            in: app,
+            scrollView: scrollView,
+            context: context,
+            trace: trace,
             file: file,
             line: line
         )
@@ -2704,6 +2733,71 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    private func settleLessonScrollableContentForOpaqueNavigationBar(
+        in app: XCUIApplication,
+        context: String,
+        preserving target: XCUIElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let scrollView = scrollView(containing: target, in: app)
+        guard scrollView.waitForExistence(timeout: 1) else {
+            XCTFail("\(context): expected a scroll view before settling lesson content below the opaque navigation bar", file: file, line: line)
+            return
+        }
+        var trace: [String] = []
+        func record(_ label: String) {
+            let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
+            trace.append("\(label): target=\(frameDescription(target.frame)); straddler=\(straddler?.description ?? "none")")
+        }
+        record("start")
+        for attempt in 0..<60 where hasLessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) || !isPartiallyVisibleBelowNavigationBar(target, in: app) {
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            if target.exists, target.frame.maxY > visibleFrame.maxY {
+                preciseScroll(scrollView, contentDeltaY: -min(80, target.frame.maxY - visibleFrame.maxY + 8))
+                record("target above bottom edge \(attempt + 1)")
+            } else if target.exists, target.frame.minY < visibleFrame.minY {
+                preciseScroll(scrollView, contentDeltaY: min(80, visibleFrame.minY - target.frame.minY + 8))
+                record("target below opaque bar \(attempt + 1)")
+            } else if let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) {
+                let protectedMaxY = protectedNavigationFrame(in: app).maxY
+                let nudgeDown = straddler.frame.midY >= protectedMaxY
+                preciseScroll(scrollView, contentDeltaY: nudgeDown ? 12 : -12)
+                record("opaque bar straddler \(attempt + 1)")
+            } else {
+                preciseScroll(scrollView, contentDeltaY: -12)
+                record("settle \(attempt + 1)")
+            }
+            waitBriefly()
+        }
+        assertNoLessonScrollableContentStraddlesOpaqueNavigationBar(
+            in: app,
+            scrollView: scrollView,
+            context: context,
+            trace: trace,
+            file: file,
+            line: line
+        )
+    }
+
+    private func assertNoLessonScrollableContentStraddlesOpaqueNavigationBar(
+        in app: XCUIApplication,
+        scrollView: XCUIElement,
+        context: String,
+        trace: [String] = [],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let straddlers = lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
+        let traceDescription = trace.isEmpty ? "" : "; trace: \(trace.joined(separator: " -> "))"
+        XCTAssertTrue(
+            straddlers.isEmpty,
+            "\(context): expected no lesson scrollable text or buttons to straddle the opaque navigation/status bar lower edge; straddlers: \(straddlers.map(\.description).joined(separator: "; "))\(traceDescription)",
+            file: file,
+            line: line
+        )
+    }
+
     private func firstVisibleElement(_ query: XCUIElementQuery, in app: XCUIApplication) -> XCUIElement {
         let windowFrame = app.windows.firstMatch.frame
         for element in query.allElementsBoundByIndex where element.exists && element.frame.intersects(windowFrame) {
@@ -2770,6 +2864,36 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return nil
     }
 
+    private func lessonScrollableContentStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> [ProtectedAreaOffender] {
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY
+        let textStraddlers = scrollView.staticTexts.allElementsBoundByIndex.compactMap { element in
+            opaqueNavigationBarStraddler(for: element, elementDescription: "staticText", protectedMaxY: protectedMaxY)
+        }
+        let buttonStraddlers = scrollView.buttons.allElementsBoundByIndex.compactMap { element in
+            opaqueNavigationBarStraddler(for: element, elementDescription: "button", protectedMaxY: protectedMaxY)
+        }
+        return textStraddlers + buttonStraddlers
+    }
+
+    private func firstLessonScrollableElementStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> ProtectedAreaOffender? {
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY
+        for element in scrollView.staticTexts.allElementsBoundByIndex {
+            if let straddler = opaqueNavigationBarStraddler(for: element, elementDescription: "staticText", protectedMaxY: protectedMaxY) {
+                return straddler
+            }
+        }
+        for element in scrollView.buttons.allElementsBoundByIndex {
+            if let straddler = opaqueNavigationBarStraddler(for: element, elementDescription: "button", protectedMaxY: protectedMaxY) {
+                return straddler
+            }
+        }
+        return nil
+    }
+
+    private func hasLessonScrollableContentStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> Bool {
+        firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) != nil
+    }
+
     private func hasScrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> Bool {
         let windowMinY = app.windows.firstMatch.frame.minY
         let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
@@ -2813,11 +2937,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    private func opaqueNavigationBarStraddler(for element: XCUIElement, elementDescription: String, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
+        guard elementStraddlesOpaqueNavigationBarLowerEdge(element, protectedMaxY: protectedMaxY) else { return nil }
+        let frame = element.frame
+        return ProtectedAreaOffender(
+            description: "\(elementDescription) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame)) lowerEdgeY=\(protectedMaxY)",
+            frame: frame,
+            isClippedAboveWindow: false
+        )
+    }
+
     private func elementIntersectsProtectedArea(_ element: XCUIElement, windowMinY: CGFloat, protectedMaxY: CGFloat) -> Bool {
         guard element.exists else { return false }
         let frame = element.frame
         guard frame.width > 0, frame.height > 0 else { return false }
         return frame.maxY > windowMinY && frame.minY < protectedMaxY
+    }
+
+    private func elementStraddlesOpaqueNavigationBarLowerEdge(_ element: XCUIElement, protectedMaxY: CGFloat) -> Bool {
+        guard element.exists else { return false }
+        let frame = element.frame
+        guard frame.width > 0, frame.height > 0 else { return false }
+        return frame.minY < protectedMaxY && frame.maxY > protectedMaxY
     }
 
     private struct ProtectedAreaOffender {
