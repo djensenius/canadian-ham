@@ -4,6 +4,7 @@ title: 'Figure pipeline, hide placeholders, Ohm''s law set'
 status: To Do
 assignee: []
 created_date: '2026-10-10 20:55'
+updated_date: '2026-10-12 22:21'
 labels:
   - content
   - apple
@@ -28,3 +29,9 @@ Build the shared figure pipeline and prove it with the Ohm's law set. Figures ar
 - [ ] #4 Accessibility: text in figures meets 4.5:1 and graphics 3:1 in light and dark; figures scale with width and stay legible at the largest text sizes (zoom or enlarged view where needed); no meaning by colour alone; audits pass on the lesson screen in light and dark
 - [ ] #5 Figures are original work (not traced from ISED reference material); an originality note is recorded
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Owner decision 2026-10-12 (1A): lesson and Morse screens must not render scroll content under the opaque navigation bar (clip at the bar). No audit exceptions for this family.
+<!-- SECTION:NOTES:END -->
