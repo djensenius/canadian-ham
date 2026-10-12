@@ -2526,7 +2526,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             trace.append("\(label): target=\(frameDescription(element.frame))")
         }
         func positioned() -> Bool {
-            isFullyVisibleInMiddleBand(element, in: app)
+            isFullyVisibleInMiddleBand(element, in: app) && !hasScrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
         }
         record("start")
         if !positioned() {
@@ -2718,6 +2718,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return textOffenders + buttonOffenders
     }
 
+    private func hasScrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> Bool {
+        let windowMinY = app.windows.firstMatch.frame.minY
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
+        for element in scrollView.staticTexts.allElementsBoundByIndex where elementIntersectsProtectedArea(element, windowMinY: windowMinY, protectedMaxY: protectedMaxY) {
+            return true
+        }
+        for element in scrollView.buttons.allElementsBoundByIndex where elementIntersectsProtectedArea(element, windowMinY: windowMinY, protectedMaxY: protectedMaxY) {
+            return true
+        }
+        return false
+    }
+
     private func elementsNearestProtectedBar(in app: XCUIApplication, scrollView: XCUIElement) -> [String] {
         let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
         let windowMinY = app.windows.firstMatch.frame.minY
@@ -2740,15 +2752,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func protectedAreaOffender(for element: XCUIElement, elementDescription: String, windowMinY: CGFloat, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
-        guard element.exists else { return nil }
+        guard elementIntersectsProtectedArea(element, windowMinY: windowMinY, protectedMaxY: protectedMaxY) else { return nil }
         let frame = element.frame
-        guard frame.width > 0, frame.height > 0 else { return nil }
-        guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
         return ProtectedAreaOffender(
             description: "\(elementDescription) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))",
             frame: frame,
             isClippedAboveWindow: frame.minY < windowMinY
         )
+    }
+
+    private func elementIntersectsProtectedArea(_ element: XCUIElement, windowMinY: CGFloat, protectedMaxY: CGFloat) -> Bool {
+        guard element.exists else { return false }
+        let frame = element.frame
+        guard frame.width > 0, frame.height > 0 else { return false }
+        return frame.maxY > windowMinY && frame.minY < protectedMaxY
     }
 
     private struct ProtectedAreaOffender {
