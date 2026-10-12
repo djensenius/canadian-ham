@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:21'
+updated_date: '2026-10-12 15:25'
 labels:
   - content
 dependencies: []
@@ -88,6 +88,39 @@ Validation results:
 - Apple app suites were not run; this was content-only work per task instructions.
 
 Review round for 8ee77cf: merged origin/main into task-46.2-lesson-fixes-m6-m3 and kept this branch's task-46.2 file on the expected task-file conflict. Applying requested accuracy, reason-depth, quiz, low-item, taught-facts-note, and validation fixes.
+
+Review fix round for 8ee77cf:
+- Merged origin/main into task-46.2-lesson-fixes-m6-m3 first; expected conflict was only task-46.2 and I kept this branch's version.
+- Fixed L-003-03 transformer/rectifier voltage wording: 18 V AC gives about 25.5 V peak, roughly 23-24 V after the bridge diodes before ripple/load.
+- Rewrote QZ-L-003-05-A-C3 so the 80 m/below-28-MHz case and 10 m case are both introduced, and the explanation uses regulatory occupied-bandwidth reasoning.
+- Added reasons, not just answer statements: ground-wave vertical polarization (horizontal E-field weakened by ground currents), vertical horizontal-pattern symmetry, transformer broadband matching from turns ratio rather than LC resonance, quad feed-point polarization from current peaks, and RTTY spacing from shift plus keying sidebands.
+- Replaced QZ-L-006-01-A-C1 with the window-line/unbalanced-tuner balun-placement concept check. Rewrote QZ-L-006-04-A-C2/C3 with real misconceptions about vertical directionality and stacked antenna gain.
+- Applied Low review items: separated conductor vs dielectric loss peaks, restored stacking doubling => +3 dB and identical-pair wording in the body, strengthened matched-load absorption wording, removed quad support-complexity wording, restored the trap-harmonic reason, explained foam dielectric as mostly air, used about 0.2 λ wording, and revised QZ-L-003-03-A-C3 to plant the bleeder-resistor misconception.
+
+Per-lesson taught-facts check for this review round:
+- L-006-01: all covered B-006-001/002/003 facts retained; added body coverage for window-line balun placement and kept coax route/buried-route teaching intact.
+- L-006-02: all covered B-006-004/005/006 facts retained; transformer bandwidth, high-SWR loss, and matched-line-length facts now include reasons.
+- L-006-03: all covered B-006-007/008 facts retained; ground-wave vertical-polarization and 300/f facts now include reasons.
+- L-006-04: all covered B-006-009/010/011 facts retained; vertical pattern, Yagi spacing, and stacking facts now include reasons and non-giveaway checks.
+- L-006-05: all covered B-006-012/013 facts retained; trap-harmonic, quad weather, parasitic-loop, loop-length, and feed-point-polarization facts now include reasons.
+- L-003-03: all covered B-003-007/008 facts retained; linear-supply voltage/discharge wording corrected.
+- L-003-05: all covered B-003-011/012/013 facts retained; FM bandwidth/regulatory concept check is coherent.
+- L-003-06: all covered B-003-014/015 facts retained; RTTY spacing and packet reliability facts remain taught with reasons.
+
+Deferred non-High P/T items explicitly not expanded in this follow-up:
+- B-006-006-006 (tuner adds reactance) remains sufficient in current matching/tuner prose; no structural tuner expansion was added.
+- B-006-001-005 (buried/near-soil coax route) remains taught in L-006-01 Try it/routing context but was not expanded into a new body section.
+- B-006-010-008 and B-006-009-003/-004 remain supported by the existing vertical/Yagi directivity prose; no additional coverage move was made.
+- B-003-018-003 remains taught in L-003-07; no cross-lesson coverage move was made.
+
+Validation for review round:
+- node packages/content-tools/src/check-lesson-coverage.ts: passed (100/100 subsections; no duplicates).
+- pnpm --dir packages/content-tools check:quizzes: passed (36 quiz files, 504 official refs, 78 concept checks).
+- pnpm --dir packages/content-tools check:lesson-originality:all: passed after local wording fixes (36 lessons, 984 official questions, 0 issues).
+- pnpm --dir packages/content-tools check:explanations: passed (984 explanations, 2952 per-choice notes).
+- pnpm check:links: passed (Markdown relative links verified).
+- DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift: passed (18 ContentLibraryTests).
+- cd apps/web && npx vitest run: first run failed one unrelated/loading timing test; immediate rerun passed (15 files, 160 tests). Canvas getContext jsdom warnings only.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
