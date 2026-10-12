@@ -3,11 +3,11 @@ id: TASK-46.3
 title: >-
   Lesson accuracy and coverage fixes: M7 and M8 (including a band-name to
   frequency reference table in L-007-01)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:21'
+updated_date: '2026-10-12 15:26'
 labels:
   - content
 dependencies: []
@@ -55,10 +55,19 @@ Skipped as separate-task scope: Try-it answer hiding -> task-46.5; faded practic
 Validation passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run (15 files, 160 tests; jsdom canvas getContext warnings only); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (18 XCTest tests passed plus Swift Testing 0-test suite passed).
 
 Review r463 requested changes after 778a9d8. Merged origin/main first (kept branch task-46.3 conflict version as instructed). Fixing answer-pair/near-copy issues, band table completeness, emission definitions, affected explanation, and concept checks; then rerunning required checks.
+
+Review r463 fixes completed after merging origin/main (kept branch task-46.3 file on conflict):
+- Removed bank-answer pairs from new prose: changed L-007-01 worked hop example from 5 000 km/multi-hop to a 9 000 km/several-hop planning example; removed L-008-02 15 m third harmonic -> 63 MHz and 28 MHz doubled -> 56 MHz examples, replacing with 17 m near 18.1 MHz -> 36.2 MHz; removed the 100 MHz distractor sentence from L-007-02; replaced the explicit 28 MHz beacon example with a same-band beacon principle.
+- Fixed harmonic band-name guidance: L-008-02 now points only to L-007-01's real band-frequency table, not 300 / f; L-007-01 now says band names are approximate and gives the 20 m/14 MHz caveat.
+- Completed the L-007-01 compact reference with RBR-4 Canadian allocation values for 17 m (18.068 MHz to 18.168 MHz), 12 m (24.890 MHz to 24.990 MHz), 6 m (50 MHz to 54 MHz), 2 m (144 MHz to 148 MHz), and 70 cm (430 MHz to 450 MHz), and clarified the 31 m broadcast row as receive-only shortwave context between 40 m and 30 m.
+- Reworked out-of-band/spurious wording by cause in L-008-01, L-008-02, and the triage table: out-of-band is modulation-process energy just outside necessary bandwidth; spurious is other unwanted output outside necessary bandwidth, near or far. Aligned EXP-B-008-003-002 and tightened EXP-B-008-003-003.
+- Paraphrased near-copies in L-008-01 telephone RFI wording, L-007-03 tropospheric-wave wording, and L-008-01 receiver-intermod antenna wording.
+- Rewrote QZ-L-007-03-A C1/C3 and QZ-L-008-01-A C1 to test applied reasoning without restating the bank stems/answers.
+Validation rerun after r463 fixes passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run (15 files, 160 tests; jsdom canvas getContext warnings only); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (18 XCTest tests passed plus Swift Testing 0-test suite passed).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Fixed every High finding from docs/lesson-review/m7-m8.md for M7/M8, added the L-007-01 band-name/frequency reference tied to 300 / f and L-008-02 pointer, taught all flagged untaught/answer-key-only IDs, updated EXP-B-008-003-003, and made quick quiz/concept/prose fixes in scope. Verified against questions.json, RBR-4, extracted ISED reference PDFs, and Space Weather Canada/NRC solar-flux pages. Validation passed: coverage, quizzes, lesson originality :all, explanations, links, web vitest, and Swift content package tests.
+Addressed review r463 after merging origin/main: removed added bank-answer pairs and near-copy wording, completed and clarified the L-007-01 band table with Canadian allocation values, corrected harmonic guidance to use real band frequencies, defined out-of-band versus spurious by cause, aligned B-008-003 explanations, and rewrote the flagged concept checks. Revalidated with coverage, quizzes, lesson originality :all, explanations, links, web vitest, and Swift content package tests.
 <!-- SECTION:FINAL_SUMMARY:END -->
