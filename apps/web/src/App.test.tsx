@@ -777,6 +777,27 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
+  it("shows Exam day guidance in Learn and opens L-001-01 without rendering or fetching an ISED link", async () => {
+    window.location.hash = "#/learn";
+    const store = createStore("learn-exam-day");
+    const user = userEvent.setup();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "learn-exam-day-seed"} />);
+
+    await screen.findByRole("heading", { name: "Learn" });
+    assert.ok(screen.getByRole("heading", { name: "Exam day" }));
+    assert.equal(container.querySelector('a[href*="ised-isde.canada.ca"]'), null);
+
+    await user.click(screen.getByRole("button", { name: "Read exam-day guidance" }));
+
+    await screen.findByRole("heading", { name: "Authority, certificates, and exams" });
+    assert.equal(window.location.hash, "#/learn/M1/L-001-01");
+    assert.equal(container.querySelector('a[href*="ised-isde.canada.ca"]'), null);
+    assert.equal(document.querySelector('link[href*="ised-isde.canada.ca"][rel~="preload"], link[href*="ised-isde.canada.ca"][rel~="prefetch"]'), null);
+    assert.equal(fetchMock.mock.calls.length, 0);
+  });
+
   it("renders lesson Markdown, stores read progress, and has no axe violations", async () => {
     window.location.hash = "#/learn/M5/L-005-01";
     const store = createStore("lesson");
