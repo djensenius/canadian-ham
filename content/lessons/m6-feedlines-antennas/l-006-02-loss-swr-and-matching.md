@@ -110,12 +110,12 @@ Matching can be done with inductors, capacitors, transmission-line sections, or 
 
 ### Worked example: impedance ratio
 
-A balanced antenna feed point is near 200 ohms in a simplified workshop model. The station wants to connect it to 50 ohm coax.
+A folded-dipole feed point is near 300 ohms in a simplified receive experiment. The station wants to connect it to 75 ohm line.
 
-- Given: load impedance = 200 ohms; line impedance = 50 ohms.
+- Given: load impedance = 300 ohms; line impedance = 75 ohms.
 - Find: simplified impedance transformation ratio.
 - Formula: ratio = load impedance / line impedance.
-- Substitute: ratio = 200 / 50.
+- Substitute: ratio = 300 / 75.
 - Answer: ratio = 4.
 - Sanity check: a 4:1 impedance transformer is the first idea to investigate for this simplified resistive case.
 
