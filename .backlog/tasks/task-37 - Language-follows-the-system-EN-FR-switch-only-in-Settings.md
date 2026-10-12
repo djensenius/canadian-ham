@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-12 04:05'
+updated_date: '2026-10-12 14:16'
 labels:
   - apple
   - web
@@ -72,6 +72,8 @@ Review r3 reopened task-37. N1-N4 are confirmed fixed; addressing blocking M-1 p
 Review r3 fixes complete in commits 943a15b1 and ba1ae5b8. M-1: inMemoryForTests now defaults to a unique UserDefaults suite/domain, open(storeURLs:) accepts injected defaults, split-store tests use test defaults, resetAllData defaults to the store's injected defaults, and the unused migration-marker clear helper was removed. Added a guard test proving representative in-memory update/import/reset/update operations do not mutate UserDefaults.standard AppleLanguages, last-applied, or migration-marker values. L-a/L-b and T-1..T-4: reset applies system AppleLanguages only after a successful save and failure preserves the prior language; import only writes AppleLanguages when the language changes; legacy stored French writes AppleLanguages only when there is no persisted AppleLanguages so adoption can preserve external choices; tests cover removed-key adoption, registered-domain ignore, injected-suite import writes, unchanged-language import preserving fr-CA, and existing persistent AppleLanguages during legacy fr migration. L8/teardown: Settings uses a menu picker at accessibility dynamic type sizes, the largest-text UI test runs English and French, scrolls to the language control, asserts full visibility/hittability and full System default/Réglage du système exposure, and runs audits; French teardown relaunch now waits for English or French Home before terminating. Validation passed: git diff --check; node scripts/check-apple-text-sources.ts; targeted iOS ProgressStore language/defaults/split tests 17/17; targeted macOS ProgressStore/NativeSettings language/defaults/split tests 18/18; targeted iOS UI French feedback followed by compact home plus largest text test 3/3; targeted iOS UI System default/restart note plus hidden-note tests 2/2. Web not touched in r3. Coordinator is handling check:apple-l10n and visionOS.
 
 Review r4 (M-1 partial): coordinator passed an isolated defaults suite at the five remaining direct ProgressStoreService(container:…) test sites (iCloud signals factory test, both archived-lesson migration tests, V1 to V2 migration, V2 dedup), so no unit test path uses UserDefaults.standard for AppleLanguages, the last-applied key or the migration marker. The guard test now checks the real domain after each step and ends on a different value (English). Targeted ProgressStoreTests: macOS 84/84, iOS 82/82. Correction: the earlier note claiming all paths were isolated was premature until this commit.
+
+Pre-merge full suites at cf71b182 (merged with main): macOS 128/128; iOS all unit + 83/83 UI; tvOS all; visionOS all. No failures.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
