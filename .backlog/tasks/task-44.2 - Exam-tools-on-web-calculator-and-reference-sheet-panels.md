@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:02'
+updated_date: '2026-10-12 16:04'
 labels:
   - web
 dependencies:
@@ -46,6 +46,8 @@ Coordinator: this lane owns content/reference-sheet/ (an original interim formul
 Implemented original Basic reference-sheet content with a lesson-backed content validation script, web calculator/reference sheet tool panels in practice and mock exams, localized calculator UI/live output, focus-return behavior, responsive side-panel/bottom-drawer styling, and targeted RTL coverage. Targeted validation so far: pnpm --filter @canadian-ham/web typecheck passed; pnpm --filter @canadian-ham/content-tools check:reference-sheet passed; targeted App exam-tool tests passed (5 tests).
 
 Final validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 165); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed; pnpm check:schemas passed (46 schema tests / 1049 validation targets); pnpm import:check passed including the new reference-sheet validation (34 entries). Apple suites skipped because this task changed web/content only.
+
+After merging current main into task-44.2-web-exam-tools, reran validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 165); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed; pnpm check:schemas passed (46 schema tests / 1049 validation targets); pnpm import:check passed including reference-sheet validation (34 entries).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
