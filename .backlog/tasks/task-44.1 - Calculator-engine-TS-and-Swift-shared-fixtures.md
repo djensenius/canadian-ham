@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 14:40'
+updated_date: '2026-10-12 14:42'
 labels:
   - web
   - apple
@@ -26,3 +26,12 @@ A pure, deterministic basic-calculator engine in TypeScript (packages/) and Swif
 - [ ] #1 TS and Swift engines pass the same shared fixture file (at least 60 cases including chained operations, repeated equals, backspace, sign, percent, errors and rounding)
 - [ ] #2 No storage of formulas or text; state is only the current calculation
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add a pure calculator engine package pair under packages/calculator-ts and packages/calculator-swift with matching public key/state APIs and documented basic-calculator semantics (left-to-right chaining, repeated equals, percent rules, error recovery, display formatting).
+2. Add one shared fixtures/calculator/sequences.json file with 60+ key-sequence cases and run it from both TS node tests and Swift XCTest.
+3. Wire the TS package into pnpm root test/typecheck and CI; keep the Swift package standalone because UI tasks will link it later.
+4. Run pnpm typecheck, TZ=UTC pnpm test, and DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift, then update task notes/ACs/final status.
+<!-- SECTION:PLAN:END -->
