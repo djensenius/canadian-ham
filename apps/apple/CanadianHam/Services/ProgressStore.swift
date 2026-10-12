@@ -30,16 +30,46 @@ struct ApplePreferences: Codable, Equatable, Sendable {
         var label: String { rawValue.capitalized }
     }
 
+    enum LanguagePreference: String, Codable, CaseIterable, Identifiable, Sendable {
+        case system
+        case english = "en"
+        case french = "fr"
+
+        var id: String { rawValue }
+
+        func resolvedLanguage(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
+            switch self {
+            case .system:
+                Self.systemLanguage(preferredLanguages: preferredLanguages)
+            case .english:
+                .english
+            case .french:
+                .french
+            }
+        }
+
+        func requiresInterfaceRestart(
+            currentLocalizations: [String] = Bundle.main.preferredLocalizations,
+            preferredLanguages: [String] = Locale.preferredLanguages
+        ) -> Bool {
+            resolvedLanguage(preferredLanguages: preferredLanguages) != BankLanguage.systemPreferred(preferredLanguages: currentLocalizations)
+        }
+
+        static func systemLanguage(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
+            BankLanguage.systemPreferred(preferredLanguages: preferredLanguages)
+        }
+    }
+
     var practiceMode: PracticeMode
     var examTimerEnabled: Bool
-    var language: BankLanguage
+    var language: LanguagePreference
     var theme: Theme
     var activeBankId: CourseBankID
 
     static let `default` = ApplePreferences(
         practiceMode: .immediate,
         examTimerEnabled: false,
-        language: .english,
+        language: .system,
         theme: .system,
         activeBankId: .basic
     )
@@ -252,14 +282,24 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
 }
 
 struct ExportedPreferences: Codable, Equatable, Sendable {
+    static let invalidLanguageValue = "__canadian-ham-invalid-language__"
+
     let practiceMode: String
     let examTimerEnabled: Bool
+    let language: String
     let theme: String
     let morse: ExportedMorseSettings
 
-    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue, morse: ExportedMorseSettings = .default) {
+    init(
+        practiceMode: String,
+        examTimerEnabled: Bool,
+        language: String = ApplePreferences.LanguagePreference.system.rawValue,
+        theme: String = ApplePreferences.Theme.system.rawValue,
+        morse: ExportedMorseSettings = .default
+    ) {
         self.practiceMode = practiceMode
         self.examTimerEnabled = examTimerEnabled
+        self.language = language
         self.theme = theme
         self.morse = morse
     }
@@ -268,6 +308,11 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         practiceMode = try container.decode(String.self, forKey: .practiceMode)
         examTimerEnabled = try container.decode(Bool.self, forKey: .examTimerEnabled)
+        if container.contains(.language) {
+            language = (try container.decodeNil(forKey: .language)) ? Self.invalidLanguageValue : try container.decode(String.self, forKey: .language)
+        } else {
+            language = ApplePreferences.LanguagePreference.system.rawValue
+        }
         theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? ApplePreferences.Theme.system.rawValue
         // Older exports omit morse entirely; an explicit null is invalid (the schema requires an object).
         morse = container.contains(.morse) ? try container.decode(ExportedMorseSettings.self, forKey: .morse) : .default
@@ -523,8 +568,10 @@ enum ProgressStoreError: LocalizedError, Equatable {
 enum ProgressStoreInjectedFailure: Error, Equatable {
     case importAfterDelete
     case importAfterMorseWrite
+    case legacyLanguageMigrationSave
     case lessonQuizSave
     case morseCourseProgressRemoval
+    case resetAfterPreferenceDelete
 }
 #endif
 
@@ -608,6 +655,10 @@ final class ProgressStoreService: ObservableObject {
     @Published private(set) var isICloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
     @Published private(set) var iCloudAccountSignalError: String?
 
+    private static let legacyEnglishLanguageMigrationMarkerKey = "CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete"
+    private static let appleLanguagesLastAppliedPreferenceKey = "CanadianHam.preferences.appleLanguagesLastApplied"
+    private static let appleLanguagesPreferenceKey = "AppleLanguages"
+
     private(set) var container: ModelContainer
     private var context: ModelContext
     private let encoder = JSONEncoder()
@@ -616,10 +667,14 @@ final class ProgressStoreService: ObservableObject {
     private let morseCourseProgressURL: URL
     private let layout: ProgressStoreConfigurationLayout
     private let localDeviceID: String
+    private let defaults: UserDefaults
+    private let defaultsDomainName: String?
     private var modelContainerFactory: ((Bool) throws -> ModelContainer)?
     private var pendingICloudProgressDeletionForReset = false
 #if DEBUG
     var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
+    static var failNextLegacyLanguageMigrationSaveForTesting = false
+    var failNextResetAfterPreferenceDeleteForTesting = false
     var failNextImportAfterDeleteForTesting = false
     var failNextImportAfterMorseWriteForTesting = false
     var failNextLessonQuizSaveForTesting = false
@@ -638,7 +693,9 @@ final class ProgressStoreService: ObservableObject {
         layout: ProgressStoreConfigurationLayout = .automatic,
         modelContainerFactory: ((Bool) throws -> ModelContainer)? = nil,
         startICloudMonitoring: Bool = true,
-        localDeviceID: String = ICloudSyncSettings.localDeviceIdentifier()
+        localDeviceID: String = ICloudSyncSettings.localDeviceIdentifier(),
+        defaults: UserDefaults = .standard,
+        defaultsDomainName: String? = Bundle.main.bundleIdentifier
     ) throws {
         self.container = container
         self.context = ModelContext(container)
@@ -647,6 +704,8 @@ final class ProgressStoreService: ObservableObject {
         self.layout = Self.resolvedLayout(layout)
         self.modelContainerFactory = modelContainerFactory
         self.localDeviceID = localDeviceID
+        self.defaults = defaults
+        self.defaultsDomainName = defaultsDomainName
         self.isICloudSyncEnabled = iCloudSyncEnabled
         try FileManager.default.createDirectory(at: self.morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
@@ -666,7 +725,9 @@ final class ProgressStoreService: ObservableObject {
     static func open(
         storeURLs: ProgressStoreURLs,
         iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn(),
-        layout: ProgressStoreConfigurationLayout = .automatic
+        layout: ProgressStoreConfigurationLayout = .automatic,
+        defaults: UserDefaults = .standard,
+        defaultsDomainName: String? = Bundle.main.bundleIdentifier
     ) throws -> ProgressStoreService {
         do {
             let resolvedLayout = resolvedLayout(layout)
@@ -700,14 +761,22 @@ final class ProgressStoreService: ObservableObject {
                 storeURLs: storeURLs,
                 iCloudSyncEnabled: iCloudSyncEnabled,
                 layout: resolvedLayout,
-                modelContainerFactory: factory
+                modelContainerFactory: factory,
+                defaults: defaults,
+                defaultsDomainName: defaultsDomainName
             )
         } catch {
             throw ProgressStoreError.openFailed(error.localizedDescription)
         }
     }
 
-    static func inMemoryForTests(iCloudSyncEnabled: Bool = false, layout: ProgressStoreConfigurationLayout = .automatic, localDeviceID: String = "test-device") throws -> ProgressStoreService {
+    static func inMemoryForTests(
+        iCloudSyncEnabled: Bool = false,
+        layout: ProgressStoreConfigurationLayout = .automatic,
+        localDeviceID: String = "test-device",
+        defaults: UserDefaults? = nil,
+        defaultsDomainName: String? = nil
+    ) throws -> ProgressStoreService {
         let container = try makeModelContainer(
             iCloudSyncEnabled: iCloudSyncEnabled,
             isStoredInMemoryOnly: true,
@@ -719,6 +788,20 @@ final class ProgressStoreService: ObservableObject {
             .appending(path: UUID().uuidString, directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let urls = ProgressStoreURLs(progressDirectory: directory)
+        let resolvedDefaults: UserDefaults
+        let resolvedDefaultsDomainName: String?
+        if let defaults {
+            resolvedDefaults = defaults
+            resolvedDefaultsDomainName = defaultsDomainName ?? Bundle.main.bundleIdentifier
+        } else {
+            let suiteName = "ProgressStoreTests.\(UUID().uuidString)"
+            guard let testDefaults = UserDefaults(suiteName: suiteName) else {
+                throw ProgressStoreError.openFailed("Unable to create test defaults suite.")
+            }
+            testDefaults.removePersistentDomain(forName: suiteName)
+            resolvedDefaults = testDefaults
+            resolvedDefaultsDomainName = suiteName
+        }
         return try ProgressStoreService(
             container: container,
             storeURLs: urls,
@@ -733,9 +816,62 @@ final class ProgressStoreService: ObservableObject {
                 )
             },
             startICloudMonitoring: false,
-            localDeviceID: localDeviceID
+            localDeviceID: localDeviceID,
+            defaults: resolvedDefaults,
+            defaultsDomainName: resolvedDefaultsDomainName
         )
     }
+
+    static func applyInterfaceLanguagePreference(_ language: ApplePreferences.LanguagePreference, defaults: UserDefaults = .standard) {
+#if os(iOS) || os(macOS)
+        switch language {
+        case .system:
+            defaults.removeObject(forKey: appleLanguagesPreferenceKey)
+        case .english:
+            defaults.set([BankLanguage.english.rawValue], forKey: appleLanguagesPreferenceKey)
+        case .french:
+            defaults.set([BankLanguage.french.rawValue], forKey: appleLanguagesPreferenceKey)
+        }
+        recordLastAppliedInterfaceLanguagePreference(language, defaults: defaults)
+#else
+        _ = language
+        _ = defaults
+#endif
+    }
+
+#if os(iOS) || os(macOS)
+    private static func recordLastAppliedInterfaceLanguagePreference(_ language: ApplePreferences.LanguagePreference, defaults: UserDefaults) {
+        defaults.set(language.rawValue, forKey: appleLanguagesLastAppliedPreferenceKey)
+    }
+
+    private static func lastAppliedInterfaceLanguagePreference(defaults: UserDefaults) -> ApplePreferences.LanguagePreference? {
+        guard let rawValue = defaults.string(forKey: appleLanguagesLastAppliedPreferenceKey) else { return nil }
+        return ApplePreferences.LanguagePreference(rawValue: rawValue)
+    }
+
+    private static func persistentAppleLanguages(defaults: UserDefaults, domainName: String?) -> [String]? {
+        guard let domainName,
+              let appleLanguages = defaults.persistentDomain(forName: domainName)?[appleLanguagesPreferenceKey] as? [String],
+              !appleLanguages.isEmpty
+        else { return nil }
+        return appleLanguages
+    }
+
+    private static func persistentAppleLanguagesPreference(defaults: UserDefaults, domainName: String?) -> ApplePreferences.LanguagePreference {
+        guard let appleLanguages = persistentAppleLanguages(defaults: defaults, domainName: domainName) else { return .system }
+        return languagePreference(fromAppleLanguages: appleLanguages)
+    }
+
+    private static func languagePreference(fromAppleLanguages appleLanguages: [String]) -> ApplePreferences.LanguagePreference {
+        let preferredLocalization = Bundle.preferredLocalizations(
+            from: BankLanguage.allCases.map(\.rawValue),
+            forPreferences: appleLanguages
+        ).first?.lowercased()
+        if preferredLocalization?.hasPrefix(BankLanguage.french.rawValue) == true { return .french }
+        if preferredLocalization?.hasPrefix(BankLanguage.english.rawValue) == true { return .english }
+        return .system
+    }
+#endif
 
     static func configurationPlan(
         iCloudSyncEnabled: Bool,
@@ -962,6 +1098,7 @@ final class ProgressStoreService: ObservableObject {
 
     static func resetPersistentStoreFiles() {
         UserDefaults.standard.removeObject(forKey: activeBankPreferenceKey)
+        applyInterfaceLanguagePreference(.system)
         ICloudSyncSettings.clearStoredOptIn()
         let urls = ProgressStoreURLs.standard
         for url in [urls.persistentStoreURL, urls.preferencesStoreURL] {
@@ -1161,11 +1298,15 @@ final class ProgressStoreService: ObservableObject {
             context.rollback()
             throw error
         }
-        UserDefaults.standard.set(preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+        defaults.set(preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+        if self.preferences.language != preferences.language {
+            Self.applyInterfaceLanguagePreference(preferences.language, defaults: defaults)
+        }
         self.preferences = preferences
     }
 
-    func resetAllData(client: ICloudProgressDeletionClient, defaults: UserDefaults = .standard) async throws {
+    func resetAllData(client: ICloudProgressDeletionClient, defaults passedDefaults: UserDefaults? = nil) async throws {
+        let defaults = passedDefaults ?? self.defaults
         if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset || ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults) {
             pendingICloudProgressDeletionForReset = true
             ICloudSyncSettings.setPendingProgressZoneDeletion(true, defaults: defaults)
@@ -1178,7 +1319,8 @@ final class ProgressStoreService: ObservableObject {
         try resetAllData(defaults: defaults)
     }
 
-    func resetAllData(defaults: UserDefaults = .standard) throws {
+    func resetAllData(defaults passedDefaults: UserDefaults? = nil) throws {
+        let defaults = passedDefaults ?? self.defaults
 #if ICLOUD_SYNC
         if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset || ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults) {
             throw ProgressStoreError.cloudResetRequiresAsyncDeletion
@@ -1197,7 +1339,14 @@ final class ProgressStoreService: ObservableObject {
             if layout == .split {
                 Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
             }
+#if DEBUG
+            if failNextResetAfterPreferenceDeleteForTesting {
+                failNextResetAfterPreferenceDeleteForTesting = false
+                throw ProgressStoreInjectedFailure.resetAfterPreferenceDelete
+            }
+#endif
             try context.save()
+            Self.applyInterfaceLanguagePreference(.system, defaults: defaults)
             // Reset all data also turns iCloud sync back off, but only once the reset has been saved.
             ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
             isICloudSyncEnabled = false
@@ -1238,6 +1387,7 @@ final class ProgressStoreService: ObservableObject {
             preferences: ExportedPreferences(
                 practiceMode: preferences.practiceMode.rawValue,
                 examTimerEnabled: preferences.examTimerEnabled,
+                language: preferences.language.rawValue,
                 theme: preferences.theme.rawValue,
                 morse: morseSettings
             )
@@ -1290,6 +1440,9 @@ final class ProgressStoreService: ObservableObject {
                 nextPreferences.practiceMode = mode
             }
             nextPreferences.examTimerEnabled = data.preferences.examTimerEnabled
+            if let language = ApplePreferences.LanguagePreference(rawValue: data.preferences.language) {
+                nextPreferences.language = language
+            }
             if let theme = ApplePreferences.Theme(rawValue: data.preferences.theme) {
                 nextPreferences.theme = theme
             }
@@ -1323,7 +1476,10 @@ final class ProgressStoreService: ObservableObject {
             }
 #endif
             try context.save()
-            UserDefaults.standard.set(nextPreferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+            defaults.set(nextPreferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+            if preferences.language != nextPreferences.language {
+                Self.applyInterfaceLanguagePreference(nextPreferences.language, defaults: defaults)
+            }
             preferences = nextPreferences
             objectWillChange.send()
         } catch {
@@ -1392,6 +1548,9 @@ final class ProgressStoreService: ObservableObject {
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append(String(localized: "Import preferences.practiceMode is invalid."))
+        }
+        if ApplePreferences.LanguagePreference(rawValue: data.preferences.language) == nil {
+            errors.append(String(localized: "Import preferences.language is invalid."))
         }
         if !ExportedMorseSettings.validTimingProfiles.contains(data.preferences.morse.timingProfile) {
             errors.append(String(localized: "Import preferences.morse.timingProfile is invalid."))
@@ -1907,13 +2066,63 @@ final class ProgressStoreService: ObservableObject {
 
     private func loadPreferences() throws -> ApplePreferences {
         let entity = try preferencesEntity(createIfMissing: true)
+        if migrateLegacyEnglishLanguageDefaultIfNeeded(entity) {
+            adoptExternalInterfaceLanguageSelectionIfNeeded(entity)
+        }
         return ApplePreferences(
             practiceMode: ApplePreferences.PracticeMode(rawValue: entity.practiceMode) ?? .immediate,
             examTimerEnabled: entity.examTimerEnabled,
-            language: BankLanguage(rawValue: entity.language) ?? .english,
+            language: ApplePreferences.LanguagePreference(rawValue: entity.language) ?? .system,
             theme: ApplePreferences.Theme(rawValue: entity.theme) ?? .system,
-            activeBankId: CourseBankID(rawValue: UserDefaults.standard.string(forKey: Self.activeBankPreferenceKey) ?? "") ?? .basic
+            activeBankId: CourseBankID(rawValue: defaults.string(forKey: Self.activeBankPreferenceKey) ?? "") ?? .basic
         )
+    }
+
+    private func migrateLegacyEnglishLanguageDefaultIfNeeded(_ entity: PreferencesEntity) -> Bool {
+        guard !defaults.bool(forKey: Self.legacyEnglishLanguageMigrationMarkerKey) else { return true }
+        switch ApplePreferences.LanguagePreference(rawValue: entity.language) ?? .system {
+        case .english:
+            do {
+                entity.language = ApplePreferences.LanguagePreference.system.rawValue
+#if DEBUG
+                if Self.failNextLegacyLanguageMigrationSaveForTesting {
+                    Self.failNextLegacyLanguageMigrationSaveForTesting = false
+                    throw ProgressStoreInjectedFailure.legacyLanguageMigrationSave
+                }
+#endif
+                try context.save()
+                defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
+            } catch {
+                context.rollback()
+                NSLog("CanadianHam: unable to migrate legacy English language default; will retry on next launch: %@", String(describing: error))
+                return false
+            }
+        case .french:
+            if Self.persistentAppleLanguages(defaults: defaults, domainName: defaultsDomainName) == nil {
+                Self.applyInterfaceLanguagePreference(.french, defaults: defaults)
+            }
+            defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
+        case .system:
+            defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
+        }
+        return true
+    }
+
+    private func adoptExternalInterfaceLanguageSelectionIfNeeded(_ entity: PreferencesEntity) {
+#if os(iOS) || os(macOS)
+        let persistentPreference = Self.persistentAppleLanguagesPreference(defaults: defaults, domainName: defaultsDomainName)
+        guard Self.lastAppliedInterfaceLanguagePreference(defaults: defaults) != persistentPreference else { return }
+        do {
+            entity.language = persistentPreference.rawValue
+            try context.save()
+            Self.recordLastAppliedInterfaceLanguagePreference(persistentPreference, defaults: defaults)
+        } catch {
+            context.rollback()
+            NSLog("CanadianHam: unable to adopt app-level AppleLanguages preference; will retry on next launch: %@", String(describing: error))
+        }
+#else
+        _ = entity
+#endif
     }
 
     private func adoptLegacyDeviceRowsIfNeeded() throws {
@@ -2081,7 +2290,7 @@ final class ProgressStoreService: ObservableObject {
             try upsertMorseCourseProgress(row.progress, deviceId: row.deviceId)
         }
         try context.save()
-        UserDefaults.standard.set(snapshot.preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+        defaults.set(snapshot.preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
         preferences = snapshot.preferences
     }
 

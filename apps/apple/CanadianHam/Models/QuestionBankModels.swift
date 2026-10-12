@@ -76,6 +76,22 @@ enum BankLanguage: String, CaseIterable, Identifiable, Sendable {
             "fr-CA"
         }
     }
+
+    static func systemPreferred(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
+        let preferredLocalization = Bundle.preferredLocalizations(from: allCases.map(\.rawValue), forPreferences: preferredLanguages).first
+        return preferredLocalization?.lowercased().hasPrefix(BankLanguage.french.rawValue) == true ? .french : .english
+    }
+
+    static func resolvedPreference(rawValue: String?, preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
+        switch rawValue {
+        case BankLanguage.english.rawValue:
+            .english
+        case BankLanguage.french.rawValue:
+            .french
+        default:
+            systemPreferred(preferredLanguages: preferredLanguages)
+        }
+    }
 }
 
 struct LocalizedText: Decodable, Hashable, Sendable {

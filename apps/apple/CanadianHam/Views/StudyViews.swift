@@ -1414,6 +1414,7 @@ struct SettingsView: View {
 #if ICLOUD_SYNC
     @State private var confirmingICloudDelete = false
 #endif
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AccessibilityFocusState private var coursePickerFocused: Bool
     @AccessibilityFocusState private var courseSwitchConfirmationFocused: Bool
 
@@ -1464,18 +1465,12 @@ struct SettingsView: View {
                             Text(theme.localizedLabel).tag(theme) // l10n: localized
                         }
                     }
-                    Picker("Question language", selection: Binding(
-                        get: { progressStore.preferences.language },
-                        set: { language in savePreferences { $0.language = language } }
-                    )) {
-                        ForEach(BankLanguage.allCases) { language in
-                            switch language {
-                            case .english:
-                                Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
-                            case .french:
-                                Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
-                            }
-                        }
+                    languagePreferencePicker
+                    if progressStore.preferences.language.requiresInterfaceRestart() {
+                        Text("Restart Canadian Ham to change the interface language.") // l10n: localized
+                            .font(DesignTokens.FontScale.caption)
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+                            .accessibilityIdentifier("language-restart-note")
                     }
                 }
                 .paperCard()
@@ -1569,6 +1564,39 @@ struct SettingsView: View {
         }
         .onChange(of: progressStore.preferences.activeBankId) { _, _ in
             pendingCourseSwitch = nil
+        }
+    }
+
+    @ViewBuilder
+    private var languagePreferencePicker: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            languagePreferencePickerContent
+                .pickerStyle(.menu)
+                .accessibilityIdentifier("language-setting-picker")
+                .accessibilityLabel(Text("Language")) // l10n: localized
+        } else {
+            languagePreferencePickerContent
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("language-setting-picker")
+                .accessibilityLabel(Text("Language")) // l10n: localized
+        }
+    }
+
+    private var languagePreferencePickerContent: some View {
+        Picker("Language", selection: Binding(
+            get: { progressStore.preferences.language },
+            set: { language in savePreferences { $0.language = language } }
+        )) {
+            ForEach(ApplePreferences.LanguagePreference.allCases) { language in
+                switch language {
+                case .system:
+                    Text("System default").tag(language) // l10n: localized
+                case .english:
+                    Text(localized(BankLanguage.english.displayName, language: .english)).tag(language) // l10n: content(en)
+                case .french:
+                    Text(localized(BankLanguage.french.displayName, language: .french)).tag(language) // l10n: content(fr)
+                }
+            }
         }
     }
 

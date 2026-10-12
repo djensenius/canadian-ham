@@ -845,6 +845,7 @@
       "properties": {
         "practiceMode": { "enum": ["immediate", "review-later"] },
         "examTimerEnabled": { "type": "boolean" },
+        "language": { "enum": ["system", "en", "fr"] },
         "theme": { "enum": ["system", "light", "dark"] },
         "activeBankId": { "$ref": "#/$defs/bankId" },
         "morse": {

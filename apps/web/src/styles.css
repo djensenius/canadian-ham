@@ -320,7 +320,6 @@ li {
   max-width: 72ch;
 }
 
-.language-toggle,
 .segmented-control {
   display: flex;
   flex-wrap: wrap;
@@ -332,7 +331,6 @@ li {
   background: var(--ch-color-paper-elevated);
 }
 
-.language-toggle legend,
 .segmented-control legend {
   padding: 0 var(--ch-space-xs);
   color: var(--ch-color-ink-muted);
@@ -340,7 +338,6 @@ li {
   font-weight: 800;
 }
 
-.language-toggle label,
 .segmented-control label,
 .mock-exam label,
 .file-control,
@@ -888,7 +885,6 @@ input[type="checkbox"]:checked::after {
   }
 
   .top-nav,
-  .language-toggle,
   .segmented-control {
     border-radius: var(--ch-radius-md);
   }
