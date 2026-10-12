@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 15:26'
+updated_date: '2026-10-12 15:27'
 labels:
   - content
   - web
@@ -23,9 +23,9 @@ Owner request 2026-10-12. Add accurate exam-day guidance citing ISED RIC-1 secti
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 docs/exam-facts.md records the RIC-1 section 7.2 rules with the source URL and access date
-- [ ] #2 Learners see an 'Exam day' section (in an appropriate lesson and in About or Learn) on web and Apple, plain language, EN UI chrome with French translations, linking to ISED's downloads page for the official reference sheet
-- [ ] #3 Content checks pass; facts verified against RIC-1
+- [x] #1 docs/exam-facts.md records the RIC-1 section 7.2 rules with the source URL and access date
+- [x] #2 Learners see an 'Exam day' section (in an appropriate lesson and in About or Learn) on web and Apple, plain language, EN UI chrome with French translations, linking to ISED's downloads page for the official reference sheet
+- [x] #3 Content checks pass; facts verified against RIC-1
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -49,4 +49,12 @@ Added an Exam day card to Learn on web and Apple linking to L-001-01, with web F
 Updated the existing French Apple UI test to assert the new Learn Exam day section and localized link.
 
 Web dist URL audit failed on the new official ISED downloads citation; added that exact official downloads URL to the audit allowlist and covered it in the audit tests, then reran web typecheck/tests/audit successfully.
+
+Validation passed: fetched RIC-1 and ISED downloads page on 2026-10-12; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:coverage; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:explanations; pnpm check:links; pnpm --filter @canadian-ham/web test; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice test CODE_SIGNING_ALLOWED=NO; pnpm typecheck; pnpm build:web; pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test; pnpm --filter @canadian-ham/web audit:urls.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented exam-day guidance from RIC-1 §7.2/§7.2.1 and the ISED downloads page. docs/exam-facts.md now records closed-book, reference-sheet, calculator, virtual-exam, and scrap-paper-caution facts with 2026-10-12 source verification. L-001-01 now teaches exam-day materials in reference style and links to the ISED downloads page. Web and Apple Learn surfaces include a localized Exam day section that links learners into the lesson; Apple UI coverage was updated. Validation passed with content checks, web tests/typecheck/build/audit, Apple text/localization checks, and the targeted iOS UI test.
+<!-- SECTION:FINAL_SUMMARY:END -->
