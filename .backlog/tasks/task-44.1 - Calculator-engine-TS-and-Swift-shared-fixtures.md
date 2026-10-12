@@ -1,11 +1,11 @@
 ---
 id: TASK-44.1
 title: 'Calculator engine (TS and Swift, shared fixtures)'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 14:48'
+updated_date: '2026-10-12 14:58'
 labels:
   - web
   - apple
@@ -40,6 +40,8 @@ A pure, deterministic basic-calculator engine in TypeScript (packages/) and Swif
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented packages/calculator-ts and packages/calculator-swift, plus fixtures/calculator/sequences.json with 80 shared key-sequence cases. Documented left-to-right immediate execution, repeated equals, percent behaviour, errors, locale display and no formula/history storage. Wired @canadian-ham/calculator-engine into root pnpm test and CI. Validation: pnpm --filter @canadian-ham/calculator-engine test passed; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed; pnpm typecheck passed after pnpm install; TZ=UTC pnpm test passed. Apple app suites skipped because no app target/project.yml changes.
+
+Review fix pass started for requested changes: relative cancellation only for +/-, platform-independent display rounding, 12-significant-digit entry cap, C/CE error clear, accessibility display payload, stale repeat-equals fixes, and added fixture coverage.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
