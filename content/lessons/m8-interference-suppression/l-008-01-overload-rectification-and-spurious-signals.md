@@ -27,7 +27,7 @@ Interference work starts with diagnosis, not blame. A clean amateur signal can s
 
 The skill is to separate those cases calmly. This lesson covers strong-signal overload, audio rectification in household equipment, unwanted signals from transmitting equipment, and common first cures.
 
-Common-mode current is unwanted RF flowing the same way on cable conductors, or on the outside of a coax shield.
+Common-mode current is unwanted RF flowing the same way on cable conductors, or on the outside of a coax shield. Differential-mode current flows out on one conductor and back on the other, in opposite directions. The wanted signal travels this way, but unwanted noise can travel this way too.
 
 ## Learning objectives
 
@@ -62,7 +62,7 @@ A practical first step is to change one thing at a time. Unplug the charger, tur
 
 ## Receiver overload and desensitization
 
-A receiver front end is the input section before later tuned and detector stages. It is designed for weak signals. A very strong nearby signal can drive it outside its normal range even when that signal is not on the tuned frequency.
+A receiver front end is the input section that first selects and amplifies signals before later stages do more filtering and detection. It is designed for weak signals. A very strong nearby signal can drive it outside its normal range even when that signal is not on the tuned frequency.
 
 When the front end is overloaded, several things can happen:
 
@@ -71,7 +71,9 @@ When the front end is overloaded, several things can happen:
 - two strong signals mix and produce a new signal on the frequency of interest; or
 - changing the amateur transmitting band does not change the nature of the interference very much.
 
-Desensitization means the receiver becomes less sensitive because a strong signal uses up the front end's headroom. Intermodulation means signals mix in a non-linear stage and create new sum-and-difference products. Both can be receiver-side effects.
+Desensitization means the receiver becomes less sensitive because a strong signal uses up the front end's headroom, or margin before overload. Intermodulation means signals mix in a non-linear stage and create new sum-and-difference products. The non-linear stage can be inside the receiver, or it can be an external junction such as corroded metalwork, a poor connection, or equipment near a transmitter site.
+
+A small handheld receiver can behave differently after it is connected to a rooftop or mast antenna. The better antenna may deliver several strong off-channel signals to a broad front end, so the receiver creates a false mix on the channel you wanted to hear.
 
 Simple intermodulation checks use sums and differences. Two signals at frequencies f1 and f2 can create products such as f1 + f2, |f1 - f2|, 2 x f1 - f2, or 2 x f2 - f1. For example, a 104.3 MHz FM broadcast signal and an 18.1 MHz HF signal can mix to 104.3 - 18.1 = 86.2 MHz, inside a VHF receiver's tuning range. The arithmetic suggests what to test; it does not prove which device is non-linear.
 
@@ -79,7 +81,7 @@ Simple intermodulation checks use sums and differences. Two signals at frequenci
 
 A club sets up two temporary stations at opposite ends of a park shelter. One station is receiving a weak beacon on a small VHF receiver. Each time the other station transmits nearby on a different VHF channel, the beacon disappears under a rushing sound.
 
-The first station should not immediately accuse the transmitter of generating harmonics. The symptom follows a strong nearby signal and affects a weak desired signal. Add separation, reduce unnecessary gain, and try a suitable receive filter or attenuator at the affected receiver.
+The first station should not immediately accuse the transmitter of generating harmonics. The symptom follows a strong nearby signal and affects a weak desired signal. Add separation, reduce unnecessary gain, and try a suitable receive filter at the affected receiver. Use attenuation only as a fallback, because it weakens the wanted signal too.
 
 ### Worked example: intermod clue
 
@@ -92,13 +94,13 @@ At a sailing-club event, a VHF receiver monitors a weak safety channel on 156.8 
 - Answer: product = 156.8 MHz.
 - Sanity check: the number matches the false signal, so receiver intermodulation is plausible.
 
-The cure is often more separation, less unnecessary gain, or a suitable filter or attenuation at the receiver input. It is not a repair to the monitored channel or to every nearby transmitter.
+The cure is often more separation, less unnecessary gain, or a suitable filter at the receiver input. An RF attenuator can be a fallback test, but it also reduces the wanted signal. This is not a repair to the monitored channel or to every nearby transmitter.
 
 ## Filters at the affected receiver
 
-A filter must be placed where unwanted energy enters the device. If a television or broadcast receiver is overloaded by HF energy, a filter at that receiver input may keep the lower-frequency RF out while allowing the wanted VHF or UHF signal to pass. If a VHF receiver is upset by nearby services outside the desired band, a band-pass filter for the desired range may help.
+A filter must be placed where unwanted energy enters the device. If an FM or television receiver is overloaded by HF energy, a high-pass filter at that receiver input may keep the lower-frequency RF out while allowing the wanted VHF or UHF signal to pass. If a VHF receiver is upset by nearby services outside the desired band, a band-pass filter for the desired range may help. The next lesson gives the full filter vocabulary.
 
-An attenuator can also reduce overload, but it reduces wanted signals too. A narrow intermediate-frequency filter may improve selectivity after the front end, but it cannot fix a front end that is already being driven non-linear. Put the cure before the overloaded stage.
+An attenuator can also reduce overload, but it reduces wanted signals too. Treat the suitable input filter as the first cure when the unwanted frequency can be separated from the wanted one. A narrow intermediate-frequency filter may improve selectivity after the front end, but it cannot fix a front end that is already being driven non-linear. Put the cure before the overloaded stage.
 
 ## Audio rectification
 
@@ -112,6 +114,8 @@ The clues are different from ordinary receiver tuning:
 - SSB may sound like muffled or distorted speech; and
 - CW may sound like clicks, buzzes, or on-and-off hum because the carrier is keyed.
 
+If clean amateur transmissions are being detected by a telephone set or accessory, use an external telephone RFI filter at the phone end of the line. Keep the cure reversible unless a qualified person has permission to work inside equipment.
+
 ### In the real world: powered-speaker pickup
 
 A temporary classroom station uses a compact end-fed antenna outside a window. During voice transmissions, powered computer speakers on the table produce raspy syllables. The symptom is strongest when a spare 3 m audio extension is plugged in. It nearly disappears when that extension is removed.
@@ -121,7 +125,7 @@ Good first steps are to keep the audio lead short, route it away from the antenn
 ### Misconception: every speaker complaint means dirty transmit audio
 
 - Mistaken idea: if a speaker makes distorted words, the transmitter must be overmodulated.
-- Correction: the speaker lead or amplifier input may be detecting RF. Test lead length, ferrites, routing, and dummy-load operation before blaming modulation.
+- Correction: overmodulation is real when a transmitter is driven beyond its clean modulation range, but it is not the first diagnosis for audio rectification. The speaker lead or amplifier input may be detecting RF. Test lead length, ferrites, routing, and dummy-load operation before blaming modulation.
 
 ## Ferrite chokes and bypass capacitors
 
@@ -133,7 +137,7 @@ That limit matters. A snap-on ferrite is not a cure for every noisy charger, LED
 
 Several turns through a suitable ferrite core increase the choking effect. Put the ferrite close to the affected device so the lead cannot act as an antenna after the choke.
 
-A bypass capacitor gives unwanted RF a low-impedance path to the equipment chassis or circuit common while blocking direct current. In interference suppression, a small capacitor is often placed at an input or across a noisy contact so RF is shunted before it reaches a sensitive stage.
+A bypass capacitor gives unwanted RF a low-impedance path to the equipment chassis or circuit common, the shared return point for that circuit, while blocking direct current. In interference suppression, a small capacitor is often placed at an input or across a noisy contact so RF is shunted before it reaches a sensitive stage.
 
 Use parts and installation methods appropriate to the voltage, safety rules, and equipment design. Do not modify someone else's equipment internally unless you are qualified and have permission. Many practical cures are external plug-in filters, snap-on ferrites, cable routing changes, and station-side common-mode control.
 
@@ -145,7 +149,9 @@ Good station bonding, a sensible feedline route, and keeping audio and control c
 
 ## Spurious emissions
 
-A spurious emission is unwanted radio energy outside the intended signal. It may come from poor shielding, faulty stages, unwanted mixing, overdriven circuits, or oscillation inside equipment. Unlike receiver overload, this is a transmitter or transmitter-accessory problem and must be corrected.
+Out-of-band emission is unwanted energy just outside the necessary bandwidth that comes from the modulation process, such as splatter or key clicks. Spurious emissions are other unwanted transmitter outputs outside the necessary bandwidth. They can appear near or far from the signal, and include harmonics, parasitic oscillations, and mixing products.
+
+A spurious emission may come from poor shielding, faulty stages, unwanted mixing, overdriven circuits, or oscillation inside equipment. Unlike receiver overload, this is a transmitter or transmitter-accessory problem and must be corrected.
 
 A clean transmitter has filtering, shielding, and stages adjusted so the wanted signal dominates and unwanted outputs are suppressed. Operating equipment with covers or shields removed can change grounding and shielding enough to let unwanted energy radiate.
 
@@ -165,7 +171,7 @@ The monitor tone only proves that the operator can hear keying locally. The wide
 
 ## Parasitic oscillation
 
-A parasitic problem occurs when a stage starts generating extra RF on its own instead of doing only its intended job. The usual trigger is unintended positive feedback through stray capacitance, lead inductance, layout, or poor neutralization. The extra frequency may sit above or below the intended operating frequency and does not have to be an exact harmonic.
+A parasitic problem occurs when a stage starts generating extra RF on its own instead of doing only its intended job. The usual trigger is unintended positive feedback through stray capacitance, lead inductance, layout, or poor neutralization. Neutralization means cancelling unwanted feedback in an amplifier stage. The extra frequency may sit above or below the intended operating frequency and does not have to be an exact harmonic.
 
 Symptoms can include unstable output, unusual current, reports of interference away from the operating frequency, or trouble that appears only with a particular load or power level. Because parasitics can damage equipment and radiate unwanted energy, stop transmitting until the cause is found.
 
@@ -187,9 +193,18 @@ A good approach is:
 
 1. A doorbell intercom is quiet when its 18 m button cable is unplugged and noisy again when the cable is reconnected. Explain why shortening that run or adding ferrite near the intercom box is a sensible first test. The long cable can pick up RF and deliver it to a non-linear input, so reducing RF current at the affected device tests the pickup path directly.
 2. A sensitive receiver loses weak signals whenever a nearby test transmitter runs 100 W, but the symptom is much less severe at 10 W. What does that power-change trend suggest? A smooth improvement as the strong signal is reduced supports overload or desensitization rather than a fixed-frequency transmitter defect.
-3. Two strong site transmitters at 151.2 MHz and 153.8 MHz are present when a scanner hears a false signal at 156.4 MHz. Compute a possible third-order product and name a practical first test. 2 x 153.8 - 151.2 = 156.4 MHz, so a front-end filter or modest attenuation ahead of the scanner is worth trying.
+3. Two strong site transmitters at 151.2 MHz and 153.8 MHz are present when a scanner hears a false signal at 156.4 MHz. Compute a possible third-order product and name a practical first test. 2 x 153.8 - 151.2 = 156.4 MHz, so try a suitable front-end filter ahead of the scanner first. Modest attenuation is only a fallback because it weakens wanted signals too.
 4. A CW exciter change reduces the RF-envelope rise time from about 6 ms to less than 1 ms, and a monitor several kilohertz away hears ticks. Why is simply sending slower not a cure? The problem is the abrupt edge of each keyed carrier element, so the keying-shape network and following RF stages need correction before on-air use.
 5. A doorbell intercom lead passes close to a transmitting antenna. A ferrite clipped at the station desk changes nothing, but moving the same ferrite to the intercom end helps. Explain why location matters. The lead section after a choke can still pick up RF, so the choke usually belongs close to the affected device or entry point.
+
+## Symptom triage table
+
+| Symptom | Likely cause to test first | First cure to try |
+|---|---|---|
+| Weak receiver loses signals near a strong off-channel transmitter | Front-end overload or desensitization | More separation or a suitable input filter |
+| False signal appears only when two strong signals are present | Intermodulation in a non-linear junction or receiver front end | Find the mixing source and add a suitable receiver filter |
+| Speaker, telephone, or intercom hears your audio without being tuned | Audio rectification in the affected device or lead | Shorten leads and add ferrites or a plug-in RFI filter at the device |
+| Extra transmitted signals appear outside the necessary bandwidth and do not come from the modulation process (not splatter or key clicks) | Spurious emissions from transmitting equipment | Stop using that setup until filtering, shielding, drive, or repair fixes it |
 
 ## Radio connection
 

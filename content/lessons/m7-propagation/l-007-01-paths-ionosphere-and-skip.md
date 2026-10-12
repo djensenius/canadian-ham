@@ -43,11 +43,11 @@ Line-of-sight communication is the simplest path. One antenna has a clear enough
 
 The radio horizon sits a little beyond what your eyes can see. The reason is ordinary bending through the troposphere, the lower atmosphere where weather happens.
 
-A ground wave is the part of a signal that follows the Earth's surface and is affected by it. Ground wave matters most at lower frequencies. On lower HF, it can cover nearby stations that a higher band may not reach.
+A ground wave is the part of a signal that follows the Earth's surface and is affected by it. Ground wave matters most at lower frequencies. In daytime, the D region absorbs much of the lower-HF sky wave, so ground wave is what makes many regional contacts out to roughly 200 km possible when conditions and antennas cooperate. Near-vertical sky wave can also cover that range when the frequency is low enough, as described below.
 
-A sky wave is an HF signal that goes upward and is refracted by the ionosphere. The ionosphere is an ionized upper-atmosphere region with charged particles that affect radio waves. It is not a hard mirror; it bends the wave gradually.
+A sky wave, also called an ionospheric wave, goes upward and is refracted by the ionosphere. The ionosphere is an ionized upper-atmosphere region with charged particles that affect radio waves. It is not a hard mirror; it bends the wave gradually. Exams and operators may still say a sky wave is reflected by the ionosphere as shorthand for the returned path.
 
-Near vertical incidence sky wave, or NVIS, uses a high-angle HF signal. The signal goes mostly upward and returns over a regional area. NVIS can help in hilly or forested terrain, but it still depends on band choice and ionospheric conditions.
+Near vertical incidence sky wave, or NVIS, uses a high-angle HF signal from a low horizontal antenna. The signal goes mostly upward and returns over a regional area. Because the path is nearly vertical, NVIS needs a frequency below the critical frequency that the next lesson defines. NVIS can help in hilly or forested terrain, but it still depends on band choice and ionospheric conditions.
 
 ### In the real world: valley, ridge, and town
 
@@ -72,7 +72,7 @@ The usual beginner picture has these regions, from lower to higher:
 - F region: above E, the main long-distance HF region; and
 - F1 and F2: daytime parts of F, with F2 higher and important for the longest paths.
 
-At night the lower regions weaken quickly, and the F region is less split. A lower HF signal often works better after dark because it loses less energy in the D region before reaching a higher region.
+At night the lower regions weaken quickly, and daytime F1 and F2 merge toward one F region. A lower HF signal often works better after dark because it loses less energy in the D region before reaching a higher region.
 
 ### Memory trick: D, E, F climb upward
 
@@ -86,11 +86,51 @@ At night the lower regions weaken quickly, and the F region is less split. A low
 - Trick: D can stand for daytime and damping.
 - Limit: the D region is not the useful long-distance return layer.
 
-### Worked example: reading a layer sketch
+### In the real world: reading a layer sketch
 
 Imagine a side-view drawing with the ground at the bottom and four labels above it: D, E, F1, and F2. A lower HF signal must pass through D before reaching F. In daylight, that lower layer can remove a lot of energy.
 
 A high-angle NVIS signal that reaches useful F-region conditions may return close to the transmitter. A low-angle DX signal from the same site may return much farther away.
+
+## Reflection, refraction, diffraction, and scattering
+
+These four words are close, but they describe different effects.
+
+| Word | Plain meaning | Propagation use |
+|---|---|---|
+| Reflection | A wave changes direction at a boundary | Part of a sky wave can leave the ground and head upward again for another hop |
+| Refraction | A wave bends gradually while travelling through a changing medium | The ionosphere returns many sky-wave paths by gradual bending |
+| Diffraction | A wave bends around an edge or obstacle | Lower-frequency ground waves can follow terrain better than higher-frequency waves |
+| Scattering | Small pieces of a wave are redirected in many directions | Weak scatter can be heard from places that are not on the main returned path |
+
+## Band names and quick frequency estimates
+
+Amateur band names often use an approximate wavelength in metres. The ISED exam reference sheet gives wavelength in metres = 300 / frequency in MHz, and frequency in MHz = 300 / wavelength in metres. The name is only approximate: the rule gives 15 MHz for a 20 m wavelength, but the amateur band is near 14 MHz. Use real band frequencies for harmonic checks.
+
+### HF and shortwave references
+
+Use this table as a compact reference, not as a full band-plan chart.
+
+| Name | Quick frequency reference | Why it matters here |
+|---|---|---|
+| 160 m | About 1.8 MHz to 2.0 MHz | Lowest-frequency amateur band in this group, with the best ground-wave reach |
+| 80 m | About 3.5 MHz to 4.0 MHz | Lower HF, strongly affected by daytime D-region absorption |
+| 40 m | About 7 MHz | Below the 31 m shortwave broadcast band |
+| 31 m broadcast | About 9.7 MHz by 300 / 31 | Shortwave broadcast band between the 40 m and 30 m amateur bands; receive-only context for amateurs |
+| 30 m | About 10.1 MHz | Above the 31 m broadcast band |
+| 20 m | About 14 MHz | A daylight HF planning anchor |
+| 17 m | 18.068 MHz to 18.168 MHz | Useful when comparing a forecast window with real amateur bands |
+| 15 m | About 21 MHz | Upper-HF band that opens more readily near solar maximum |
+| 12 m | 24.890 MHz to 24.990 MHz | Another upper-HF band that can open during higher solar activity |
+| 10 m | About 28 MHz | High-HF band often checked with same-band beacons |
+
+### VHF and UHF references
+
+| Name | Quick frequency reference | Why it matters here |
+|---|---|---|
+| 6 m | 50 MHz to 54 MHz | Classic amateur band for sporadic E |
+| 2 m | 144 MHz to 148 MHz | Common VHF local and repeater band |
+| 70 cm | 430 MHz to 450 MHz | Common UHF local and repeater band |
 
 ## Skip distance and skip zone
 
@@ -109,9 +149,16 @@ Accessible text formula: lower launch angle plus similar layer height means long
 
 ### Worked example: comparing hop scales
 
-A field station needs to report expected coverage to a served agency. For a mid-distance check-in area, the operator treats an E-region return as a shorter single-hop path, up to about 2 000 km in good conditions.
+A field station needs to report expected coverage to a served agency. A route is about 9 000 km.
 
-For a farther route, the operator looks for an F2-region path. Its single-hop planning scale can be about 4 000 km. The actual opening still depends on frequency, time, and ionization.
+- Given: route distance = 9 000 km; F2 single-hop planning scale = about 4 000 km.
+- Find: whether a single F2 hop is enough on paper.
+- Formula: hops must cover the route distance.
+- Substitute: even two F2-scale hops are about 8 000 km, which is less than 9 000 km.
+- Answer: plan for several hops if HF conditions support the route.
+- Sanity check: extra hops add surface returns and loss, so conditions and antennas still matter.
+
+For a mid-distance check-in area, an E-region return has a shorter single-hop planning scale, up to about 2 000 km in good conditions. The actual opening still depends on frequency, time, and ionization.
 
 ### Misconception: more power fills the skip zone
 
@@ -136,7 +183,7 @@ For emergency practice, avoid promising that any mode is automatic. NVIS, repeat
 
 ## Common mistakes
 
-- Treating the ionosphere as a hard mirror instead of a region that gradually refracts radio waves.
+- Treating the ionosphere as a hard metal-like mirror instead of a region that gradually refracts radio waves.
 - Assuming more transmitter power eliminates a skip zone.
 - Confusing ground wave with sky wave just because both can be heard beyond the visible horizon.
 - Forgetting that the D region is lower than E and F and often causes loss rather than useful long-distance return.
@@ -152,7 +199,7 @@ Description: Draw a gentle curved Earth at the bottom with three stations. Show 
 
 - VHF and UHF usually rely on line-of-sight paths, with the radio horizon slightly beyond the visual horizon.
 - Ground wave follows and is affected by the Earth's surface, and it is most useful at lower frequencies.
-- Sky wave is HF energy refracted by the ionosphere back toward Earth.
+- Sky wave, or ionospheric wave, is energy refracted by the ionosphere back toward Earth.
 - Solar ultraviolet radiation is a major source of ionization; daily ionization is usually highest around midday and lowest shortly before sunrise.
 - D, E, F1, and F2 are ordered upward, and the D region is often a daylight absorber on lower HF.
 - Skip distance is the first sky-wave return distance, and the skip zone is the uncovered gap before that return.

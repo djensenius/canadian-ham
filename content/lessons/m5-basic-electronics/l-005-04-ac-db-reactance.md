@@ -61,11 +61,13 @@ A sine wave is the smooth waveform associated with ideal AC. Household mains fro
 
 ## Decibels as power ratios
 
-The decibel compares two levels. Receiver signal reports may use an S-meter reading such as S9. For stronger signals, the report may add decibels above S9.
+The decibel compares two levels. Receiver signal reports may use an S-meter, the receiver's signal-strength meter. A reading such as S9 can be extended with decibels above S9 for stronger signals.
 
 For example, a monitor reading of S9 plus 18 dB that loses 6 dB would be expected near S9 plus 12 dB. The change is subtracted from the amount above S9.
 
-For Basic-level estimating, use practical power shortcuts:
+For Basic-level estimating, use practical power shortcuts. Decibel values add when power ratios multiply. For example, three +3 dB steps stack to about 8x power. A +10 dB step followed by a -3 dB step leaves about 5x power. Three -10 dB steps stack to 1/10 x 1/10 x 1/10, or 1/1000 power.
+
+When attenuators are cascaded, add their dB losses first and then convert the total. A 13 dB loss uses the tenfold-loss row plus one 3 dB loss step, so its ratio is about 0.1 x 0.5 = 0.05.
 
 | dB change | Power ratio |
 |---:|---:|
@@ -80,42 +82,53 @@ For Basic-level estimating, use practical power shortcuts:
 
 ### Worked example: gain
 
-A 4 W handheld feeds a 7 dB gain amplifier. A 7 dB power increase is roughly a fivefold power change.
+A 4 W handheld feeds a 7 dB gain amplifier.
 
-- Given: starting power = 4 W; gain = about 5:1.
+- Given: starting power = 4 W; gain = 7 dB.
 - Find: estimated output power.
-- Formula: output power = starting power x power ratio.
-- Substitute: 4 W x 5.
+- Formula: 7 dB is 3 dB below the tenfold-gain row, so use that row and then halve it.
+- Substitute: 4 W x tenfold x 0.5.
 - Answer: about 20 W.
 - Sanity check: the estimate is above the starting power but still in a small-amplifier range.
 
 ### Worked example: feedline loss
 
-A transmitter is 30 W and the line loss is 5 dB. A 5 dB loss leaves a bit less than a third of the original power.
+A transmitter is 44 W and the line loss is 7 dB.
 
-- Given: starting power = 30 W; remaining ratio is about 0.3.
+- Given: starting power = 44 W; loss = 7 dB.
 - Find: power reaching the antenna.
-- Formula: antenna power = starting power x remaining ratio.
-- Substitute: 30 W x 0.3.
-- Answer: about 9 W.
+- Formula: 7 dB loss is one 3 dB step less loss than the tenfold-loss row, so use 0.1 / 0.5 = 0.2.
+- Substitute: 44 W x 0.2.
+- Answer: about 8.8 W.
 - Sanity check: a loss must leave less power than the transmitter started with.
 
 ### Worked example: large power reduction
 
-A test setup uses attenuators that leave 0.20 and 0.25 of the incoming power.
+A test setup uses cascaded attenuators with a total loss of 13 dB.
 
-- Given: starting power = 24 W; remaining ratios are 0.20 and 0.25.
+- Given: starting power = 24 W; total loss = 13 dB.
 - Find: final power.
-- Formula: final power = starting power x first ratio x second ratio.
-- Substitute: 24 W x 0.20 x 0.25.
-- Answer: 1.2 W.
-- Sanity check: cascaded attenuators reduce power more than either attenuator alone.
+- Formula: 13 dB loss uses the tenfold-loss row plus one 3 dB loss step, so the ratio is 0.1 x 0.5.
+- Substitute: 24 W x 0.1 x 0.5.
+- Answer: about 1.2 W.
+- Sanity check: adding dB losses is the same as multiplying their power ratios.
 
 ### In the real world: dB on a station checklist
 
 Antenna switches, filters, and feedlines may list gain or loss in dB. A short patch cable with a small loss may not matter much. A long feedline at VHF or UHF can lose enough power to change station performance.
 
 The dB number is a ratio, not a watt value. You need the starting power before you can estimate the final power.
+
+### Worked example: power ratio to S-meter reading
+
+A station is reported as S9 plus 25 dB while transmitting 80 W. The operator reduces power to 40 W.
+
+- Given: 80 W to 40 W is a -3 dB power change.
+- Find: the new S-meter reading above S9.
+- Formula: subtract the dB reduction from the amount above S9.
+- Substitute: 25 dB - 3 dB.
+- Answer: S9 plus 22 dB.
+- Sanity check: the signal is still above S9, but by a smaller amount.
 
 ## Inductors and capacitors in combinations
 
@@ -145,13 +158,13 @@ Equal parts often make the pattern easier to see.
 
 For an air-core coil, inductance depends mainly on the coil's size, its winding count, and its shape. Changing the diameter, length, or turn count changes the magnetic field. That changes the inductance.
 
-For a simple air-spaced capacitor, capacitance depends on plate area and spacing. Larger facing plate area gives more capacitance. More spacing gives less capacitance.
+For a simple air-spaced capacitor, capacitance depends on plate area and spacing. Larger facing plate area gives more capacitance. More spacing gives less capacitance. Replacing the air gap with a suitable dielectric material, such as a plastic film, also changes the capacitance and raises it.
 
 Polarized electrolytic capacitors need correct polarity. Never apply reverse voltage to a polarized electrolytic capacitor.
 
 ### In the real world: power-supply filter capacitor
 
-A filter capacitor in a power supply charges near the voltage peaks after rectification. Between peaks, it gives energy back to the load. That reduces ripple, which is unwanted rise and fall on the DC output.
+A filter capacitor in a power supply charges near the voltage peaks after a diode or rectifier has made the current one-way. Between peaks, it gives energy back to the load. That reduces ripple, which is unwanted rise and fall on the DC output.
 
 This does not make a capacitor a battery. A capacitor stores energy in an electric field and charges or discharges quickly. A battery stores energy chemically and is meant to supply energy for longer.
 
@@ -159,11 +172,11 @@ This does not make a capacitor a battery. A capacitor stores energy in an electr
 
 Reactance is opposition to AC caused by capacitance or inductance. Unlike ordinary resistance, reactance changes with frequency.
 
-Inductive reactance increases as frequency increases. This is why an RF choke can block radio-frequency current while letting lower-frequency or DC current pass more easily.
+Inductive reactance increases as frequency increases. An inductor opposes change in current, so faster AC changes meet more opposition. This is why an RF choke can block radio-frequency current while letting lower-frequency or DC current pass more easily.
 
-Capacitive reactance decreases as frequency increases. This is why a bypass capacitor can provide an easy path for unwanted RF while having little effect on audio when chosen correctly.
+Capacitive reactance decreases as frequency increases. This is why a bypass capacitor can provide an easy path for unwanted RF. At audio frequencies, the same capacitor can have high reactance, so it has little effect on the wanted audio when chosen correctly.
 
-Impedance is the combined effect of resistance and reactance in an AC circuit. You can find it by comparing AC voltage with AC current.
+Impedance is the combined effect of resistance and reactance in an AC circuit. Impedance, often written Z, is E / I for AC: AC voltage divided by AC current.
 
 ### In the real world: ferrite choke on a noisy lead
 
@@ -180,7 +193,7 @@ That is why snap-on ferrites are common on computer leads, charger leads, and st
 
 1. A 14.1 MHz signal has harmonics at integer multiples of that frequency. Which ranges contain its second and third harmonics? The second harmonic is 28.2 MHz, still HF; the third is 42.3 MHz, now VHF.
 2. If a signal level rises by about 7 dB, what rough power ratio can you use? About five times.
-3. If transmitter power goes from 7 W to 21 W, what happened to the power? It became three times larger.
+3. If transmitter power becomes roughly 8x larger, what approximate dB change is that? About +9 dB.
 4. If frequency increases, what happens to inductive reactance? It increases.
 5. If frequency increases, what happens to capacitive reactance? It decreases.
 

@@ -42,9 +42,9 @@ By the end of this lesson, you can:
 
 Feedline loss is commonly stated in decibels per unit length, such as dB per 100 m or dB per 30 m. A longer run has more total loss because the signal travels through more lossy conductor and dielectric.
 
-Higher frequencies usually have more loss in the same cable. At RF, current is concentrated near conductor surfaces, and dielectric losses rise. Small coax that is fine for a short HF jumper may waste a lot of power on a long UHF run.
+Higher frequencies usually have more loss in the same cable. At RF, current is concentrated near conductor surfaces; this is called skin effect. Dielectric losses also rise with frequency. Small coax that is fine for a short HF jumper may waste a lot of power on a long UHF run.
 
-Larger or lower-loss coax has less attenuation, but it costs more and is less flexible. Balanced open-wire line can have very low loss when installed well.
+RG-58 is thin, flexible coax with higher loss in demanding runs. RG-213 is thicker and usually lower-loss, so more transmitter power can reach the antenna on the same route. Larger or lower-loss coax costs more and is less flexible. Balanced open-wire line can have very low loss when installed well.
 
 ### Worked example: doubling cable length
 
@@ -65,13 +65,15 @@ Replacing it with a 12 m run removes 21 m of unnecessary cable. Coiling the spar
 
 ## SWR in plain language
 
-SWR means standing wave ratio. It compares forward and reflected RF voltage waves on a transmission line. An SWR near 1:1 means the line and load are closely matched at the measurement point. A higher reading means more energy is being reflected because the load impedance does not match the line's characteristic impedance.
+SWR means standing wave ratio. It compares forward and reflected RF voltage waves on a transmission line. An SWR near 1:1 means the line and load are closely matched at the measurement point. An SWR below about 1.5:1 is often a fairly good match for ordinary station work. A higher reading means more energy is being reflected because the load impedance does not match the line's characteristic impedance.
+
+A standing wave forms when the forward wave and reflected wave add and cancel at fixed places along the line. That leaves voltage and current peaks and dips along the cable. Current peaks raise conductor heating, and voltage peaks raise dielectric heating, so high SWR increases line loss. Low-loss open-wire line can tolerate high SWR better than small coax because its basic loss is lower.
 
 A low SWR reading is useful, but it is not a complete proof that the antenna system is efficient. A lossy feedline can weaken the reflected wave before it returns to the meter. The station-end meter may look better than the antenna-end mismatch really is.
 
 ### In the real world: reflected-power estimates
 
-Reflection coefficient = (SWR - 1) / (SWR + 1). Reflected power fraction is the reflection coefficient multiplied by itself.
+Reflection coefficient is the reflected voltage wave compared with the forward voltage wave. Use reflection coefficient = (SWR - 1) / (SWR + 1). Reflected power fraction is the reflection coefficient multiplied by itself.
 
 | SWR | Reflection coefficient | Reflected power estimate |
 |---|---:|---:|
@@ -99,7 +101,7 @@ An antenna tuner does not tune the air. It transforms impedance so the transceiv
 
 A tuner near the transceiver protects the radio, but it does not remove loss in a feedline carrying high SWR. A tuner or matching transformer near the antenna feed point can reduce mismatch on the main feedline and reduce feedline loss.
 
-Matching can be done with inductors, capacitors, transmission-line sections, or transformers. If source and load are purely resistive, maximum power transfer happens when their impedances are equal.
+Matching can be done with inductors, capacitors, transmission-line sections, or transformers. A transformer ratio is set mainly by its turns, not by a narrow tuned LC resonance, so a well-designed RF transformer can cover a broad frequency range. If source and load are purely resistive, maximum power transfer happens when their impedances are equal. Once the antenna is correctly matched to the line, changing feedline length does not improve the match.
 
 ### Misconception: the tuner changes antenna length
 
@@ -108,12 +110,12 @@ Matching can be done with inductors, capacitors, transmission-line sections, or 
 
 ### Worked example: impedance ratio
 
-A folded antenna feed point is near 240 ohms. The station uses 60 ohm test cable in a workshop experiment.
+A folded-dipole feed point is near 300 ohms in a simplified receive experiment. The station wants to connect it to 75 ohm line.
 
-- Given: load impedance = 240 ohms; line impedance = 60 ohms.
+- Given: load impedance = 300 ohms; line impedance = 75 ohms.
 - Find: simplified impedance transformation ratio.
 - Formula: ratio = load impedance / line impedance.
-- Substitute: ratio = 240 / 60.
+- Substitute: ratio = 300 / 75.
 - Answer: ratio = 4.
 - Sanity check: a 4:1 impedance transformer is the first idea to investigate for this simplified resistive case.
 
@@ -146,8 +148,9 @@ Description: Draw the transceiver, SWR meter, tuner, feedline, and antenna as se
 ## Summary
 
 - Feedline loss grows with length and usually with frequency.
+- RG-58 is thin and higher-loss; RG-213 is thicker and usually lower-loss.
 - Loss is expressed in decibels per unit length and depends on cable type and installation.
-- SWR compares forward and reflected waves at the measurement point.
+- SWR compares forward and reflected waves at the measurement point, and standing waves create voltage and current peaks along a mismatched line.
 - A better match reflects less power, but low station-end SWR can be misleading when the feedline is lossy.
 - Tuners and transformers transform impedance; they do not make feedline loss vanish.
 - Matching near the antenna feed point can reduce loss in the main feedline.

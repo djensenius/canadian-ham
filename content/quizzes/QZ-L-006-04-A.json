@@ -25,25 +25,25 @@
     },
     {
       "id": "QZ-L-006-04-A-C2",
-      "prompt": { "en": "A vertical antenna is being estimated for 25 MHz using 71.3 / f(MHz). Which value is closest?", "fr": null },
+      "prompt": { "en": "A roof-mounted quarter-wave vertical is centred on a vehicle roof. Which prediction fits the horizontal pattern?", "fr": null },
       "choices": [
-        { "text": { "en": "11.9 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "2.85 m", "fr": null }, "isCorrect": true },
-        { "text": { "en": "5.72 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "0.35 m", "fr": null }, "isCorrect": false }
+        { "text": { "en": "No compass direction is favoured because the vertical element is symmetric around its axis", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The strongest direction is off the hood because the vehicle points that way", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The strongest direction is straight overhead, so nearby ground stations are in a null", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The feedline direction steers the main lobe unless the coax is exactly 50 ohms", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "71.3 divided by 25 is about 2.85 metres for a quarter-wave estimate.", "fr": null }
+      "explanation": { "en": "The vertical element is symmetric around its upright axis, so the simple horizontal pattern does not favour one compass direction over another.", "fr": null }
     },
     {
       "id": "QZ-L-006-04-A-C3",
-      "prompt": { "en": "Why do two stacked identical antennas ideally add about 3 dB over one antenna?", "fr": null },
+      "prompt": { "en": "A club stacks an identical pair of beams and feeds them from the same transmitter. What does the ideal gain increase mean?", "fr": null },
       "choices": [
-        { "text": { "en": "Because stacking changes metres into megahertz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Because it removes the need for feedline", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Because the array concentrates roughly twice the power in useful directions", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Because each connector adds 3 dB of gain", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The main-direction power density is roughly doubled because the pattern is concentrated", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The antenna pair radiates twice the transmitter power into all directions", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The stacked array turns a poor impedance match into a perfect one", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The rear lobe becomes the main source of forward gain", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A doubling of effective radiated power in the desired direction corresponds to about 3 dB before real-world losses.", "fr": null }
+      "explanation": { "en": "Stacking an identical pair can roughly double power density in the main direction before losses by narrowing and shaping the pattern; it does not create extra transmitter power.", "fr": null }
     }
   ]
 }

@@ -43,7 +43,7 @@ Polarization is named from the electric field of the radio wave. If the electric
 
 A straight dipole or whip tends to radiate with the same polarization as the element. A vertical whip produces vertical polarization. A horizontal dipole produces horizontal polarization. A Yagi's polarization follows the orientation of its elements, not the direction the boom points.
 
-Matching polarization matters most for local line-of-sight VHF and UHF contacts. A mobile whip is vertical, so a vertical receiving antenna is normally the better match. For ionospheric HF paths, reflection and refraction can twist the wave, so polarization can be less predictable at the far end.
+Matching polarization matters most for local line-of-sight VHF and UHF contacts. A mobile whip is vertical, so a vertical receiving antenna is normally the better match. A ground wave travels along the Earth's surface. Near conductive ground, a horizontal electric field is strongly weakened by ground currents, while a vertical field meets the conducting ground at right angles, so the ground does not short it out. That is why a vertically polarized ground wave remains vertical at the receiving location. For ionospheric HF paths, reflection and refraction can twist the wave, so polarization can be less predictable at the far end.
 
 ### In the real world: matching a mobile whip
 
@@ -59,7 +59,7 @@ A half-wave dipole in free space is different. It has maximum radiation broadsid
 
 ## Wavelength and frequency
 
-Radio waves in free space travel at about the speed of light. For Basic calculations, use this relationship:
+Radio waves in free space travel at about 300 000 km/s, or 300 000 000 m/s. A megahertz is one million cycles per second, so the metre and megahertz factors reduce to the Basic shortcut:
 
 ```text
 wavelength in metres = 300 / frequency in MHz
@@ -90,9 +90,14 @@ At 440 MHz, the same rule gives λ = 300 / 440 = 0.682 m, or about 68 cm.
 
 The 300 / f formula is a free-space wavelength estimate. The related 150 / f and 75 / f values are free-space half-wave and quarter-wave estimates. They help you check wave size.
 
-Practical wire antennas are not exactly the same as bare fractions of a free-space wavelength. End effects, conductor diameter, insulation, and nearby objects often make HF wire antennas physically shorter than the free-space fraction.
+Practical wire antennas are not exactly the same as bare fractions of a free-space wavelength. End effects, conductor diameter, insulation, and nearby objects often make HF dipoles and quarter-wave wires physically shorter than the free-space fraction.
 
 That is why many practical dipole starting formulas use about 143 / f. The HF quarter-wave starting formula is about 71.3 / f. If answer choices contain both pairs, ask whether the item is about free-space wave size or practical antenna cutting.
+
+### Misconception: every practical antenna is shorter
+
+- Mistaken idea: every practical wire antenna is shorter than the matching free-space fraction.
+- Correction: practical dipoles are often shorter than 150 / f, but full-wave loops and quads use a starting estimate greater than 300 / f. Lesson 5 uses 306 / f for those loops.
 
 ## Dipole length and resonance
 
@@ -119,9 +124,9 @@ After installation, an analyzer can show whether the resonant point is above or 
 
 ## Loading, traps, and end insulators
 
-A short antenna can be made electrically longer by adding inductance in series. That is why a compact HF mobile antenna often uses a loading coil. The coil helps cancel capacitive reactance from an element that is physically short for the band.
+A short antenna can be made electrically longer by adding inductance in series. That is why a compact HF mobile antenna often uses a loading coil. The coil helps cancel capacitive reactance from an element that is physically short for the band. Added series inductance lowers the resonant frequency for a given physical length.
 
-A trap is a parallel coil-and-capacitor circuit placed in an antenna element. At some frequencies it isolates part of the antenna. At other frequencies more of the conductor participates. This can allow multiband operation, but traps add complexity and possible loss. Because a trap antenna works on several bands, it can also let a transmitter's harmonics out more easily than a simple single-band antenna.
+A trap is a parallel coil-and-capacitor circuit placed in an antenna element. At some frequencies it isolates part of the antenna. At other frequencies more of the conductor participates. This can allow multiband operation, but traps add complexity and possible loss.
 
 End insulators on a suspended wire mark where the antenna conductor ends electrically and where the support rope begins. They help keep a wet rope, tree, or support from changing the antenna's electrical length.
 
@@ -155,7 +160,7 @@ Description: Draw two small ink-brush scenes. In the first, a car whip has uprig
 
 - Polarization follows the electric-field orientation relative to the ground.
 - Straight antenna elements generally radiate with the element's orientation.
-- Use λ(m) = 300 / f(MHz) for free-space wavelength estimates.
+- Use λ(m) = 300 / f(MHz) for free-space wavelength estimates based on about 300 000 km/s.
 - Use about 143 / f(MHz) for a practical HF half-wave dipole starting length and about 71.3 / f(MHz) for a practical quarter-wave starting length.
 - Lengthening lowers resonant frequency; shortening raises it.
 - Loading coils, traps, and end insulators all change how the antenna behaves electrically.

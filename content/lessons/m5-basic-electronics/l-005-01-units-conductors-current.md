@@ -55,8 +55,8 @@ When you change from a large unit to a smaller unit, the number gets larger. Whe
 ### Memory trick: prefix ladder
 
 - Helps remember: the usual electronics prefix order from large to small.
-- Trick: giga, mega, kilo, base, milli, micro, pico can be remembered as "Great Mighty Kings Balance Many Micro Picnics."
-- Limit: the sentence only gives the order used in the table. Most adjacent rows differ by 1 000, but this table skips nano, so micro to pico is a jump of 1 000 000.
+- Trick: giga, mega, kilo, base, milli, micro, nano, pico can be remembered as "Great Mighty Kings Make Micro Nano Pico."
+- Limit: the sentence skips the base unit and still has several M words, so use it with the table rather than by itself. This lesson's table skips nano; most adjacent rows differ by 1 000, but micro to pico is a jump of 1 000 000 when nano is not shown.
 
 ### Worked example: MHz to kHz
 
@@ -97,13 +97,18 @@ A phone charger may say 9.0 V at 3.0 A. The volts tell the electrical pressure. 
 
 The same label might also list watts. If it says 27 W, that matches P = I x E because 3.0 A x 9.0 V = 27 W. You will use that power formula in the next lesson.
 
+### Analogy: electrical pressure and voltage
+
+- Helpful part: pressure can push water through a pipe, like voltage can push charge through a circuit.
+- Limit: a cut water pipe can spill water, but a broken wire usually stops current because air is an insulator.
+
 ## Conductors, insulators, and semiconductors
 
-A conductor lets electric charge move easily. Copper, silver, gold, and aluminum are good conductors. Copper is common in radio gear, power cables, and house wiring because it conducts well and is practical to use.
+A conductor lets electric charge move easily. Silver, copper, gold, and aluminum are all good conductors. Copper conducts better than aluminum, and it is common in radio gear, power cables, and house wiring because it conducts well and is practical to use.
 
 An insulator resists current flow. Glass, air, porcelain, many plastics, Teflon, mica, and dry wood are common insulating materials. Insulators hold conductors apart so current goes where the circuit designer intended.
 
-A semiconductor is between those two behaviours. Silicon is the everyday semiconductor example. Carbon can appear in resistive materials, so treat it separately from both good metal conductors and common insulators.
+A semiconductor is between those two behaviours. Silicon is the everyday semiconductor example. Carbon conducts, but much worse than good metals. That is why carbon can be useful in resistive materials, but it is neither a good conductor nor a good insulator.
 
 ### In the real world: a coax cable cross-section
 

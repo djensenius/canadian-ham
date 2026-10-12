@@ -55,7 +55,7 @@ By the end of this lesson, you can:
 
 | Boundary | Fact established for this lesson |
 |---|---|
-| Low-power amateur station | Still must be under supervision of a certificate holder with a call sign. |
+| Even a 2 W amateur station | Still must be under supervision of a certificate holder with a call sign. |
 | Amateur station communications | With stations operated under similar authorizations. |
 | Amplifying a licence-exempt transmitter with amateur equipment | Prohibited. |
 | Amateur equipment outside amateur bands | Transmitting outside amateur bands with amateur equipment, modified or not, is prohibited because the equipment has no certification for other bands. |
@@ -93,7 +93,7 @@ By the end of this lesson, you can:
 | Control situation | Fact established for this lesson |
 |---|---|
 | Responsibility for station operation | Both the control operator and the station owner. |
-| Transmitting from another amateur station | Both the visiting transmitter and the station owner are responsible. |
+| Transmitting from another amateur station | Both the visiting operator and the station owner are responsible. |
 | Station owner responsibility | Operation of the station in accordance with the regulations. |
 | Choice of control operator | Any qualified amateur radio operator chosen by the station owner. |
 | Need for a control operator | Whenever the station is transmitting. |
@@ -110,9 +110,11 @@ The same habit applies to multi-service radios. An amateur certificate covers am
 
 Communication rules ask what the station is carrying. Open amateur communication, business traffic, public broadcasting, secret meaning, and non-amateur audio are different categories. Publishing a digital method handles only the secrecy question; it does not turn business or broadcast content into amateur content.
 
-Station-privilege rows form a small matrix. Basic is enough for some station work. Repeater installation, club-station installation, transmitting hardware that is neither commercially manufactured nor professionally designed (home-built gear), and remote control of key transmitter settings require Basic and Advanced.
+Station-privilege rows form a small matrix. Basic is enough for some station work, including operating a cross-band repeater. Installing a repeater, installing a club station, using transmitting hardware that is neither commercially manufactured nor professionally designed, and remote control of key transmitter settings require Basic and Advanced.
 
-Control rows close the loop. A transmitting station needs a control operator at the control point. The owner remains responsible for the station. A person without a certificate may participate only with the proper qualified person present and supervising.
+A beacon is an amateur station that sends one-way signals for identification or propagation checks. A cross-band repeater receives on one band and retransmits on another band.
+
+Control rows close the loop. A transmitting station needs a control operator at the control point, meaning the place where the operator can control or stop the transmitter. The owner remains responsible for the station. A person without a certificate may participate only with the proper qualified person present and supervising.
 
 ## Radio connection
 
@@ -120,7 +122,7 @@ Control rows close the loop. A transmitting station needs a control operator at 
 
 A club may have one person bringing tools, another person donating a radio, and a third person testing the system into a dummy load. The safe checklist is not "who owns the screwdriver?" It is who holds the needed amateur qualifications, who owns the station, what service the equipment will use, and who is control operator during the test.
 
-The same idea helps at home. Label dual-service radios and channel banks clearly. Keep amateur memories in amateur service, check the selected channel before keying the microphone, and do not let background audio or business talk ride into the microphone.
+The same idea helps at home. Label dual-service radios and channel banks clearly. Keep amateur memories in amateur service, check the selected channel before keying the microphone, and turn down non-amateur background audio so it does not ride into the microphone.
 
 Good station control is also good engineering practice. The person at the controls can stop a transmitter, select the correct band, adjust power, and identify the station before a small mistake becomes an unlawful transmission.
 

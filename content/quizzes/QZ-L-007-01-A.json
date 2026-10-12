@@ -15,41 +15,41 @@
     {
       "id": "QZ-L-007-01-A-C1",
       "prompt": {
-        "en": "A training diagram shows direct VHF, ground wave, NVIS, and low-angle sky-wave rays on the same page. What is the safest way to read the diagram?",
+        "en": "A sky-wave sketch shows a gradual bend in the ionosphere, then part of the energy leaving the ground for another hop. Which wording best fits those two parts?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "They are alternative path models to choose for the route; one contact does not have to use all of them in sequence.",
+            "en": "Refraction in the ionosphere, then reflection from the Earth's surface.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "A signal must leave as ground wave, become NVIS, then finish as low-angle sky wave.",
+            "en": "Diffraction in the ionosphere, then absorption by the Earth's surface.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Any path drawn above the ground should be logged as ordinary line-of-sight VHF.",
+            "en": "Ground-wave bending in the ionosphere, then Faraday rotation at the surface.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The labels show transmitter power levels rather than propagation paths.",
+            "en": "Tropospheric ducting in the ionosphere, then desensitization at the surface.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The sketch compares path models. A real contact uses the path or mix of paths that conditions support; the labels are not a required sequence or a power scale.",
+        "en": "The lesson uses refraction for the gradual ionospheric return and reflection for the surface return that can start another hop. Diffraction and scattering describe different effects.",
         "fr": null
       }
     },
@@ -97,7 +97,7 @@
     {
       "id": "QZ-L-007-01-A-C3",
       "prompt": {
-        "en": "A route is about 6000 km. Use planning scales of about 2000 km for one E-region hop and 4000 km for one F2-region hop. Which plan is the first one with enough distance on paper?",
+        "en": "A route is about 6 000 km. Use planning scales of about 2 000 km for one E-region hop and 4 000 km for one F2-region hop. Which plan has enough distance on paper with the fewest hops?",
         "fr": null
       },
       "choices": [
@@ -131,7 +131,7 @@
         }
       ],
       "explanation": {
-        "en": "One E hop is about 2000 km, two E hops about 4000 km, and one F2 hop about 4000 km. Two F2-scale hops provide enough planning distance for a 6000 km route, if conditions support them.",
+        "en": "One E hop is about 2 000 km, two E hops about 4 000 km, and one F2 hop about 4 000 km. Two F2-scale hops provide enough planning distance for a 6 000 km route, if conditions support them.",
         "fr": null
       }
     }
