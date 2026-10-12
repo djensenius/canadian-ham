@@ -51,10 +51,10 @@ The boom is the mechanical support. The driven element is where the feedline att
 The parasitic elements are not directly fed. Their length and placement shape the pattern.
 
 ::figure yagi-receiver-specs
-Alt text: A labelled Yagi antenna appears beside a receiver display and filter choices, with an image-frequency marker shown above the desired signal.
+Alt text: A labelled Yagi antenna appears beside a receiver display with wide, medium, and narrow passband choices, plus an image-frequency marker.
 Text equivalent:
-- Yagi labels are reflector, driven, director, boom, and feedline.
-- The receiver display has filter labels W, M, and N.
+- Yagi labels are reflector, driven, director, boom, and feedline from the driven element.
+- The receiver display shows three passband shapes labelled W, M, and N under their own curves.
 - The frequency line labels desired, LO, image, and two IF spacings.
 ::
 

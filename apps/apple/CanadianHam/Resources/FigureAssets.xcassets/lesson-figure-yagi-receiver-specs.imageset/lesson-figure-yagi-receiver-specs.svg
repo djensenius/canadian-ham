@@ -2,14 +2,26 @@
   <title>Yagi parts and receiver markers</title>
   <desc>Yagi labels, receiver filter choices, and desired LO image frequency markers.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="74" y1="154" x2="320" y2="154" stroke-width="7"/><line x1="110" y1="74" x2="110" y2="234" stroke-width="7"/><line x1="202" y1="92" x2="202" y2="216" stroke-width="7"/><line x1="286" y1="110" x2="286" y2="198" stroke-width="7"/><line x1="202" y1="154" x2="202" y2="270" stroke-width="5"/>
-    <rect x="386" y="70" width="212" height="158" rx="16" ry="16" stroke-width="6"/><path d="M420 146 C450 116 484 116 514 146" stroke-width="5"/><path d="M420 186 C450 156 484 156 514 186" stroke-width="5"/><path d="M532 176 C546 158 564 158 578 176" stroke-width="5"/><line x1="410" y1="198" x2="580" y2="198" stroke-width="4"/>
-    <line x1="80" y1="370" x2="586" y2="370" stroke-width="5"/><line x1="190" y1="344" x2="190" y2="396" stroke-width="5"/><line x1="340" y1="344" x2="340" y2="396" stroke-width="5"/><line x1="490" y1="344" x2="490" y2="396" stroke-width="5"/><path d="M190 430 C238 412 292 412 340 430" stroke-width="4"/><path d="M340 430 C388 412 442 412 490 430" stroke-width="4"/>
-    <line x1="430" y1="240" x2="430" y2="216" stroke-width="4"/><line x1="506" y1="268" x2="506" y2="176" stroke-width="4"/><line x1="574" y1="240" x2="574" y2="176" stroke-width="4"/>
+    <line x1="68" y1="146" x2="318" y2="146" stroke-width="7"/>
+    <line x1="108" y1="66" x2="108" y2="226" stroke-width="7"/>
+    <line x1="196" y1="86" x2="196" y2="206" stroke-width="7"/>
+    <line x1="282" y1="106" x2="282" y2="186" stroke-width="7"/>
+    <line x1="196" y1="146" x2="196" y2="242" stroke-width="5"/>
+    <rect x="384" y="70" width="220" height="164" rx="16" ry="16" stroke-width="6"/>
+    <path d="M408 138 C432 98 478 98 502 138" stroke-width="5"/>
+    <path d="M418 198 C438 174 468 174 488 198" stroke-width="5"/>
+    <path d="M532 198 C542 184 558 184 568 198" stroke-width="5"/>
+    <line x1="80" y1="370" x2="586" y2="370" stroke-width="5"/>
+    <line x1="190" y1="344" x2="190" y2="396" stroke-width="5"/>
+    <line x1="340" y1="344" x2="340" y2="396" stroke-width="5"/>
+    <line x1="490" y1="344" x2="490" y2="396" stroke-width="5"/>
+    <path d="M190 430 C238 412 292 412 340 430" stroke-width="4"/>
+    <path d="M340 430 C388 412 442 412 490 430" stroke-width="4"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="110" y="52" font-size="24">reflector</text><text x="286" y="88" font-size="24">director</text><text x="150" y="284" font-size="24">driven</text><text x="248" y="118" font-size="24">boom</text><text x="294" y="260" font-size="24">feedline</text>
-    <text x="492" y="54" font-size="24">receiver display</text><text x="430" y="264" font-size="24">W</text><text x="506" y="292" font-size="24">M</text><text x="574" y="264" font-size="24">N</text>
+    <text x="108" y="44" font-size="24">reflector</text><text x="282" y="94" font-size="24">director</text><text x="250" y="132" font-size="24">boom</text>
+    <text x="132" y="270" font-size="24">driven</text><text x="278" y="270" font-size="24">feedline</text>
+    <text x="494" y="54" font-size="24">receiver display</text><text x="455" y="160" font-size="24">W</text><text x="453" y="226" font-size="24">M</text><text x="550" y="226" font-size="24">N</text>
     <text x="190" y="336" font-size="24">desired</text><text x="340" y="336" font-size="24">LO</text><text x="490" y="336" font-size="24">image</text><text x="266" y="460" font-size="24">IF</text><text x="416" y="460" font-size="24">IF</text>
   </g>
 </svg>
