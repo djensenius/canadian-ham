@@ -1,9 +1,11 @@
 ---
 id: TASK-46.2
 title: 'Lesson accuracy and coverage fixes: M6 and M3'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 14:57'
+updated_date: '2026-10-12 15:00'
 labels:
   - content
 dependencies: []
