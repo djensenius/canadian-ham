@@ -47,9 +47,11 @@ harmonic frequency = fundamental frequency x harmonic number
 
 Harmonics from a transmitter are unwanted because they can fall in other services or other amateur bands. A harmonic problem often affects only devices or receivers whose frequency range lines up with a multiple. That differs from broad receiver overload, which tends to be less selective.
 
+If a problem gives a band name instead of a frequency, use the compact band-name table from L-007-01 or the same 300 / f rule. For example, 15 m is about 21 MHz, so a third harmonic is near 63 MHz. A 28 MHz signal doubled is 56 MHz.
+
 Switching supplies can also make harmonics of their switching rate. For example, if a charger switches at 100 kHz, its 70th harmonic is 70 x 100 kHz = 7 000 kHz = 7.0 MHz.
 
-Filtering and shielding reduce the strength of that harmonic, not its frequency. It shows why small power supplies can matter to HF reception.
+Filtering and shielding reduce the strength of that harmonic, not its frequency. This power-supply example shows why small supplies can matter to HF reception.
 
 ### Worked example: finding a harmonic
 
@@ -75,19 +77,19 @@ A transmitter harmonic is different. If an RF signal starts at 3.7 MHz, the next
 - Mistaken idea: a power-line hum during transmitting is the same problem as RF harmonics.
 - Correction: hum and RF harmonics have different causes and frequencies. Check the symptom before choosing a filter.
 
-## Overdrive, flat topping, and splatter
+## Overdrive, overmodulation, flat topping, and splatter
 
 Amplifiers and modulators must operate in their intended linear range. If an SSB transmitter is driven too hard, the peaks can be clipped or flattened. This non-linear operation creates extra side energy and distortion.
 
-On the air, other stations may describe the result as splatter because the signal spreads beyond its necessary bandwidth. When extra RF appears just beyond the bandwidth the transmission needs, that case is out-of-band emission.
+Overmodulation means the audio drive or modulation level is too high for the transmitter to reproduce cleanly. On the air, other stations may describe the result as splatter because the signal spreads beyond its necessary bandwidth. When extra RF appears just beyond the bandwidth the transmission needs, that case is out-of-band emission. Spurious emissions are farther-away unwanted outputs such as harmonics, parasitic oscillations, or mixing products.
 
-Excessive microphone gain is a common cause of SSB overdrive. More audio gain does not make the signal more readable once the transmitter is clipping. It usually makes the signal wider and less pleasant.
+Excessive microphone gain is a common cause of SSB overdrive and overmodulation. More audio gain does not make the signal more readable once the transmitter is clipping. It usually makes the signal wider and less pleasant.
 
 RF power amplifier stages can also generate excessive harmonics if they are overdriven. Proper drive level, correct loading, intact output filtering, and manufacturer-recommended adjustments all matter.
 
 ### In the real world: microphone gain
 
-An operator increases microphone gain until the power meter hardly rises on voice peaks, but reports from nearby channels get worse. Reducing the gain makes the average reading slightly lower, yet the audio becomes clearer and reports improve.
+An operator increases microphone gain past the point where voice peaks produce much extra RF output, but reports from nearby channels get worse. Reducing the gain makes the average reading slightly lower, yet the audio becomes clearer and reports improve.
 
 The original setting was likely pushing stages into non-linear operation. The better setting trades a misleading meter impression for a cleaner signal.
 
@@ -113,7 +115,7 @@ The cut-off frequency is the boundary region where a low-pass or high-pass filte
 
 ## Low-pass filters
 
-A low-pass filter passes frequencies below its cut-off and attenuates frequencies above it. At a transmitter output, a low-pass filter can reduce harmonics that are above the fundamental. In an AC line filter for station equipment, the wanted power frequency is very low, so the filter should pass the power frequency while attenuating RF noise.
+A low-pass filter passes frequencies below its cut-off and attenuates frequencies above it. At a transmitter output, a low-pass filter can reduce harmonics; harmonic frequencies are above the fundamental. In an AC line filter for station equipment, the wanted power frequency is very low, so the filter should pass the power frequency while attenuating RF noise.
 
 ### Worked example: low-pass choice
 
@@ -213,6 +215,7 @@ Description: Draw five small graphs with frequency increasing left to right and 
 - Harmonics are unwanted signals at integer multiples of the operating frequency.
 - A 60 Hz hum is a low-frequency power or audio problem, not proof of transmitter RF harmonics.
 - Overdriven RF stages and excessive audio drive can create harmonics, flat topping, splatter, and out-of-band emission.
+- Overmodulation means the modulation level is too high for clean transmission.
 - Low-pass filters pass lower frequencies and attenuate higher ones.
 - High-pass filters pass higher frequencies and attenuate lower ones.
 - Band-pass filters pass a range; band-reject filters attenuate a range; notch filters attenuate a narrow frequency.
