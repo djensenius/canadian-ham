@@ -184,6 +184,14 @@ Good operators measure before guessing. A wrong meter connection can blow a mete
 - Connecting a voltmeter in series or an ammeter in parallel.
 - Assuming real transformers are perfect. Warm laminations and other heating show losses.
 
+::figure transformer-resonance-meters
+Alt text: Three small sketches: a transformer with primary and secondary coils, a parallel LC tuned circuit, and correct meter placements.
+Text equivalent:
+- Transformer: AC in the primary changes magnetic flux and induces voltage in the secondary.
+- Parallel LC tuned circuit: the inductor and capacitor are in parallel and the impedance is high at resonance.
+- Meter placement: the ammeter is in series with the load, and the voltmeter is across the load.
+::
+
 ## Illustration brief
 
 Alt text: Three small sketches: a transformer with primary and secondary coils, a parallel LC tuned circuit, and correct meter placements.

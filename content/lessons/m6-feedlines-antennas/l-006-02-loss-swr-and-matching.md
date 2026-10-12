@@ -137,6 +137,14 @@ Modern transceivers protect their output stages. If the load looks unsafe, the r
 - Ignoring intermittent connectors because the antenna looked fine yesterday.
 - Assuming high SWR stops all radiation; usually it reduces transfer and increases losses, but some power may still radiate.
 
+::figure swr-loss-matching
+Alt text: A station-end SWR meter, tuner, long feedline, and antenna, with reflected-wave arrows fading as they return through a lossy line.
+Text equivalent:
+- A forward wave travels from rig through SWR meter and tuner toward the antenna.
+- A reflected wave returns from the mismatch and is smaller after the lossy line attenuates it.
+- Moving the tuner or matching network near the antenna feed point reduces mismatch on the main feedline.
+::
+
 ## Illustration brief
 
 Alt text: A station-end SWR meter, tuner, long feedline, and antenna, with reflected-wave arrows fading as they return through a lossy line.

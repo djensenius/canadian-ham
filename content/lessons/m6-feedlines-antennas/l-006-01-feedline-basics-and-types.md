@@ -124,6 +124,15 @@ When you troubleshoot, think in blocks: transmitter, jumper, meter, tuner, main 
 - Putting a balun at the radio end when the balanced-to-unbalanced change happens at the antenna feed point.
 - Forgetting that connector condition is part of RF performance.
 
+::figure feedline-types-balun
+Alt text: Three feedline cross-sections showing coax, window line, and open-wire line, with arrows from transceiver to antenna.
+Text equivalent:
+- Coax has a centre conductor and shield; it is shielded and unbalanced.
+- Window line has two parallel conductors held in plastic; it is balanced.
+- Open-wire line has two separated wires on spreaders; it is balanced in open air.
+- A balun belongs at the dipole feed point where the balanced antenna meets unbalanced coax.
+::
+
 ## Illustration brief
 
 Alt text: Three feedline cross-sections showing coax, window line, and open-wire line, with arrows from transceiver to antenna.

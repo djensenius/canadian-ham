@@ -1,0 +1,45 @@
+<svg id="transformer-resonance-meters" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img">
+  <title>Transformer resonance and meter placement</title>
+  <desc>Three panels show coupled transformer coils, a parallel LC tuned circuit, and voltmeter and ammeter placement.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M78 304 C98 282 119 282 139 304 C159 326 180 326 200 304 C220 282 241 282 261 304" stroke-width="9"/>
+    <path d="M70 245 C90 223 112 223 132 245 C152 267 174 267 194 245 C214 223 236 223 256 245" stroke-width="9"/>
+    <path d="M56 205 C80 188 116 180 158 180 C202 180 238 188 268 205" stroke-width="7"/>
+    <path d="M56 348 C80 365 116 373 158 373 C202 373 238 365 268 348" stroke-width="7"/>
+    <path d="M141 150 C141 224 141 336 141 404" stroke-width="8"/>
+    <path d="M197 150 C197 224 197 336 197 404" stroke-width="8"/>
+    <path d="M158 430 C171 454 171 482 158 506" stroke-width="7"/>
+    <path d="M185 430 C198 454 198 482 185 506" stroke-width="7"/>
+
+    <path d="M420 190 C420 238 420 415 420 464" stroke-width="8"/>
+    <path d="M540 190 C540 238 540 415 540 464" stroke-width="8"/>
+    <path d="M420 222 C442 200 464 200 486 222 C508 244 530 244 552 222" stroke-width="9"/>
+    <path d="M420 430 C442 408 464 408 486 430 C508 452 530 452 552 430" stroke-width="9"/>
+    <path d="M455 295 C472 288 489 288 506 295" stroke-width="8"/>
+    <path d="M455 340 C472 347 489 347 506 340" stroke-width="8"/>
+
+    <path d="M742 172 C790 172 840 172 888 172" stroke-width="8"/>
+    <path d="M742 464 C790 464 840 464 888 464" stroke-width="8"/>
+    <path d="M742 172 C716 222 716 414 742 464" stroke-width="8"/>
+    <path d="M888 172 C914 222 914 414 888 464" stroke-width="8"/>
+    <path d="M792 172 C811 198 811 228 792 254 C773 280 773 310 792 336 C811 362 811 392 792 418 C781 434 779 449 784 464" stroke-width="8"/>
+    <circle cx="814" cy="346" r="58" stroke-width="7"/>
+    <path d="M716 254 C752 254 874 254 914 254" stroke-width="7"/>
+    <path d="M850 254 C850 286 850 318 850 350" stroke-width="7"/>
+    <circle cx="850" cy="350" r="36" stroke-width="7"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="180" y="54" font-size="40" font-weight="700">transformer</text>
+    <text x="166" y="106" font-size="36">primary</text>
+    <text x="222" y="548" font-size="36">secondary</text>
+    <text x="166" y="604" font-size="36">flux link</text>
+
+    <text x="480" y="54" font-size="40" font-weight="700">parallel LC</text>
+    <text x="480" y="536" font-size="36">high Z at resonance</text>
+
+    <text x="806" y="54" font-size="40" font-weight="700">meters</text>
+    <text x="814" y="532" font-size="38" font-weight="700">load</text>
+    <text x="850" y="586" font-size="36">V across</text>
+    <text x="814" y="130" font-size="36">A in series</text>
+  </g>
+</svg>
