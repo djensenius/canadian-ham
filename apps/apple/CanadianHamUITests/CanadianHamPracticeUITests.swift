@@ -2112,8 +2112,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
             // exception to the one stable identifier and let every other audit
             // issue on this screen fail normally.
             let element = issue.element
+            let description = app.staticTexts["morse-settings-description"].firstMatch
+            let matchesDescriptionFrame = description.exists && element?.frame == description.frame
             let isMorseSettingsDescription = element?.identifier == "morse-settings-description"
                 || element?.debugDescription.contains("morse-settings-description") == true
+                || matchesDescriptionFrame
             return issue.auditType == .contrast && isMorseSettingsDescription
         }
     }
