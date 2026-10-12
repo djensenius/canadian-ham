@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:30'
+updated_date: '2026-10-12 14:39'
 labels:
   - content
   - apple
@@ -35,3 +35,9 @@ Using the task-38.1 pipeline, draw: metric prefix ladder (giga to pico, x/÷ 1 0
 <!-- SECTION:PLAN:BEGIN -->
 1. Add five original currentColor SVG sources for metric prefixes, resistor colour-code bands, series/parallel paths, dB ratio shortcuts, and wavelength/dipole estimate.\n2. Reference each SVG from its matching lesson with alt text and text equivalents for dense ladder/table/colour-code content while leaving illustration briefs as authoring notes.\n3. Regenerate figure assets/metadata, render and inspect qlmanage previews, run figure, content, web, and content-swift checks, then record per-figure evidence without running Apple xbuild.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Per-figure notes: metric-prefix-ladder for L-005-01 shows G/M/k/base/m/µ/p, x or ÷ 1 000 for adjacent steps through micro, the skipped-nano µ↔p jump as x or ÷ 1 000 000, and 14.230 MHz = 14 230 kHz; verified against the lesson table/worked examples and Basic B-005-001-001 through B-005-001-011. resistor-colour-code for L-004-03 labels every band by position and colour name (yellow=4, violet=7, red=x 100, gold=±5%) and shows 4 700 Ω with a ±5% range of 4 465 Ω to 4 935 Ω; verified against the lesson examples/table and Basic B-004-006-001 through B-004-006-011. series-parallel-current-paths for L-005-03 shows a single series current path and separate parallel branch currents rejoining as I total = I1 + I2; verified against Basic B-005-005-001, B-005-005-003, B-005-005-005, and B-005-005-011. db-power-ratio-table for L-005-04 shows 3/6/10/20 dB power shortcuts (x or ÷ 2, 4, 10, 100); verified against Basic B-005-008-001, -002, -003, -007, -008, -010, -011 and the lesson dB shortcuts. wavelength-dipole-example for L-006-03 shows λ(m)=300/f(MHz), 14.2 MHz → λ≈21.1 m, half-wave≈10.6 m total and ≈5.3 m each side with practical wire shorter; verified against the lesson wavelength/dipole text and Basic B-006-008-003, -004, -007, and -011. No figure restates an official question or answer.
+<!-- SECTION:NOTES:END -->
