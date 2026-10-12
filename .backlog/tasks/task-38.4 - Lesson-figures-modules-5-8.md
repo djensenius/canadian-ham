@@ -1,9 +1,11 @@
 ---
 id: TASK-38.4
 title: 'Lesson figures: modules 5-8'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 20:55'
+updated_date: '2026-10-12 14:29'
 labels:
   - content
   - apple
