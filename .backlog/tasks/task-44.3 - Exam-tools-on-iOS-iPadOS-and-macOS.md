@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 15:48'
+updated_date: '2026-10-12 15:51'
 labels:
   - apple
 dependencies:
@@ -27,6 +27,12 @@ Apple UI for the calculator and reference sheet in practice and mock exams: iPho
 - [ ] #2 Full default accessibility audits pass with the tools open in light and dark; the largest text size works
 - [ ] #3 The mock exam timer is unaffected
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add an iOS/macOS-only exam-tools model and UI that links CanadianHamCalculatorEngine, handles calculator keys/hardware keyboard, result announcements, and pluggable bundled reference-sheet loading with unavailable fallback.\n2. Integrate non-modal tools into practice and mock exams using the approved compact sheet and regular/mac inspector layout while clearing calculator state when a new practice/mock exam starts.\n3. Add localization entries with the required Python string-catalog round trip and add unit/UI coverage in a new UI-test file for tools, audits, Dynamic Type, precise scrolling, protected areas, and mock timer continuity.\n4. Regenerate the Xcode project twice after project.yml target/package changes, run the Apple l10n/text checks plus targeted iOS/iPad/macOS test commands, update task notes/ACs/final summary, and commit.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
