@@ -142,6 +142,16 @@ For emergency practice, avoid promising that any mode is automatic. NVIS, repeat
 - Forgetting that the D region is lower than E and F and often causes loss rather than useful long-distance return.
 - Calling every VHF opening "skip" when ordinary line of sight or tropospheric bending may explain it.
 
+::figure propagation-paths-skip-zone
+Alt text: Side-view Earth diagram showing direct VHF, ground wave, NVIS, and low-angle sky-wave paths through labelled D, E, F1, and F2 regions.
+Text equivalent:
+- Ionospheric regions are labelled upward as D, E, F1, and F2.
+- A short VHF line-of-sight path connects two hilltops.
+- A ground wave follows the Earth and fades with distance.
+- A steep NVIS path returns nearby, while a low-angle sky-wave path returns farther away.
+- The skip zone is marked between the end of useful ground-wave coverage and the first sky-wave return.
+::
+
 ## Illustration brief
 
 Alt text: Side-view Earth diagram showing direct VHF, ground wave, NVIS, and low-angle sky-wave paths through labelled D, E, F1, and F2 regions.

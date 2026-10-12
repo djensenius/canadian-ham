@@ -152,6 +152,16 @@ When you rotate a Yagi, you rotate the main lobe of its pattern. That can improv
 - Treating every Yagi with the same number of elements as if it had identical gain.
 - Forgetting that a short mobile HF antenna usually needs loading and has tradeoffs.
 
+::figure yagi-vertical-length
+Alt text: Top view of a three-element Yagi with a long reflector, driven element, and shorter director on a boom, plus a forward-arrow main lobe.
+Text equivalent:
+- The reflector is slightly longer and sits behind the driven element.
+- The driven element connects to the feedline.
+- The director is slightly shorter and sits toward the wanted direction.
+- The main lobe points from the reflector through the director.
+- The quarter-wave vertical starting estimate is 71.3 / f(MHz), with sloping radials shown below the element.
+::
+
 ## Illustration brief
 
 Alt text: Top view of a three-element Yagi with a long reflector, driven element, and shorter director on a boom, plus a forward-arrow main lobe.
