@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:27'
+updated_date: '2026-10-12 15:28'
 labels:
   - content
 dependencies: []
@@ -92,10 +92,12 @@ Real taught-facts old-vs-new comparison for changed lesson lines:
 | L-002-02 S-unit prose | Stable 10 W to 40 W quadrupling gives about one S-unit | Yes: old example remains; 6 dB=2x2 and downward 60 W to 15 W example added. |
 | L-002-03 priority/safety prose/table/summary | Distress before emergency/urgency; safety traffic hazard info; break in between transmissions with call sign/situation; notes/illustration show priority order | Yes: emergency-message priority remains without course meta; safety no longer includes unsupported operating conditions; break-in now matches call sign/situation first. |
 | L-002-04 UTC prose/examples | UTC-5 means subtract five hours and adjust date; 2100 UTC to 1600 local; 0300 UTC to previous-date 2200 | Yes: all old UTC facts remain; new text warns not to add and bridges 1600 to 4 PM. |
+
+Validation after review fixes: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift all passed on 2026-10-12.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Fixed M1/M2 High findings and quick Medium accuracy/coverage items in the current reference style. Updated L-001-01 through L-001-06 and L-002-01 through L-002-04 plus b-001-010-008, b-001-011-010 and b-001-021-003 explanations. Verified with lesson coverage, quiz, originality, explanation and link checks; web Vitest; and Swift content package tests. Taught-facts regression check: no separate script exists in this checkout, so covered-question protection was verified by preserving covers/quiz IDs and running coverage/quizzes/originality/explanations/Swift real-content parser checks.
+Review fixes completed after merging origin/main. Restored L-002-01 repeater-range and SSB-contact-spacing taught facts, fixed reviewer should/low items across M1/M2 lessons and b-001-010-008, and recorded an explicit old-vs-new taught-facts comparison in the task notes. Verified with coverage, quiz, originality, explanations, links, web Vitest, and Swift content package tests.
 <!-- SECTION:FINAL_SUMMARY:END -->
