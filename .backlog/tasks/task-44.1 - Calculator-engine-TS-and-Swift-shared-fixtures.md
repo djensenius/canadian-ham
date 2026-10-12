@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 15:24'
+updated_date: '2026-10-12 15:29'
 labels:
   - web
   - apple
@@ -52,10 +52,12 @@ Second review fixes: added pocket-calculator range handling (|x| >= 1e100 -> Err
 Round 3 review fix pass started: implement bounded display formatting rule, decimal-literal power tables, display-bound fixture/fuzz checks, and sign-excluded entry cap.
 
 Round 3 fixes: implemented the requested display-length rule (fixed/scientific classification after 12-significant-digit rounding, scientific output with 10-digit mantissa, display ≤16 code points), changed power tables to decimal-literal parsing, made the 15-character entry cap exclude the sign so ± respects it, and added fixture/test assertions for the display bound. Added seeded fuzz tests using the same LCG: TS 50,000 keys and Swift 20,000 keys. Added the review's display-rule fixtures plus the power-table tie and sign-excluded entry-cap fixture. The review's power-table tie placeholder was corrected after verification against both engines: with the required 10-digit scientific mantissa it displays 1e−12, not 1.000000001e−12. Validation: pnpm --filter @canadian-ham/calculator-engine typecheck passed; pnpm --filter @canadian-ham/calculator-engine test passed (126 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed (3 XCTest tests); git diff --check passed.
+
+Final review notes applied: renamed the prior power-table tie fixture to describe its 12-digit classification coverage, replaced round-tie-scientific-half-away with 24691357810 × 50 = 1.234567891e12, fixed entry-cap-excludes-sign-toggle to type 0. + 12 zeroes, ±, then 1 -> −0.0000000000001, added a 10-digit scientific tie in the >10^22 scale range (1.000000001e−14) and verified it with both engines, changed Swift display-bound assertions to display.unicodeScalars.count, and added a generated fuzzDrift section in fixtures/calculator/sequences.json. The TS generator records every 100th display for the first 20,000 keys using the shared LCG; Swift compares against those snapshots, proving cross-engine drift on the same seeded sequence. Regeneration is documented in both calculator READMEs and exposed as pnpm --filter @canadian-ham/calculator-engine generate-fuzz-fixture / generate-fuzz-fixture:check. Validation: pnpm --filter @canadian-ham/calculator-engine typecheck passed; generate-fuzz-fixture:check passed; pnpm --filter @canadian-ham/calculator-engine test passed (127 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed (3 XCTest tests); git diff --check passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed round 3 review requests: calculator display output is bounded to 16 code points with the specified fixed/scientific rules, power tables parse decimal literals, entry length excludes the sign, shared fixtures cover the requested cases, and both TS/Swift suites include display-bound checks plus seeded fuzz tests. Verified with TS typecheck, TS tests, Swift package tests, and diff check.
+Applied final review notes: added generated cross-engine fuzz drift snapshots, updated and renamed tie/entry fixtures, switched Swift display-bound counting to unicodeScalars, documented fuzz fixture regeneration, and verified with TS typecheck, TS fixture/fuzz tests, Swift fixture/fuzz tests, and diff check.
 <!-- SECTION:FINAL_SUMMARY:END -->
