@@ -28,9 +28,9 @@
     <path d="M930 315 L896 293" stroke-width="11"/>
     <path d="M930 315 L896 337" stroke-width="11"/>
     <path d="M812 200 C844 170 876 138 914 120" stroke-width="6"/>
-    <path d="M812 368 C844 400 876 424 914 440" stroke-width="6"/>
+    <path d="M812 430 C844 468 876 492 914 516" stroke-width="6"/>
     <path d="M914 120 L890 116" stroke-width="6"/>
-    <path d="M914 440 L890 444" stroke-width="6"/>
+    <path d="M914 516 L890 520" stroke-width="6"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="160" y="74" font-size="40" font-weight="700">overload</text>
@@ -38,15 +38,14 @@
     <text x="154" y="382" font-size="36">wanted</text>
     <text x="172" y="306" font-size="36">RX</text>
 
-    <text x="480" y="74" font-size="40" font-weight="700">audio</text>
-    <text x="480" y="122" font-size="40" font-weight="700">rectification</text>
+    <text x="480" y="74" font-size="40" font-weight="700">rectify</text>
     <text x="422" y="150" font-size="36">speaker lead</text>
     <text x="504" y="544" font-size="36">speaker input</text>
 
     <text x="760" y="74" font-size="40" font-weight="700">spurious</text>
-    <text x="760" y="122" font-size="40" font-weight="700">outputs</text>
     <text x="764" y="324" font-size="36">TX</text>
     <text x="850" y="250" font-size="36">wanted</text>
-    <text x="825" y="500" font-size="36">unwanted</text>
+    <text x="650" y="200" font-size="36">unwanted</text>
+    <text x="780" y="560" font-size="36">unwanted</text>
   </g>
 </svg>

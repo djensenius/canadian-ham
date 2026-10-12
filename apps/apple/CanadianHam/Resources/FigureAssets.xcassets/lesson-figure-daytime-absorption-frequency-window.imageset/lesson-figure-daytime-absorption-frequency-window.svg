@@ -13,36 +13,36 @@
     <path d="M58 488 C170 458 326 458 438 488" stroke-width="8"/>
     <path d="M70 352 C170 326 328 326 430 352" stroke-width="13"/>
     <path d="M96 196 C188 164 316 164 406 196" stroke-width="7"/>
-    <path d="M132 488 C176 424 206 382 238 350" stroke-width="8"/>
-    <path d="M238 350 L202 340" stroke-width="8"/>
-    <path d="M238 350 L212 378" stroke-width="8"/>
-    <path d="M178 488 C246 208 330 208 404 488" stroke-width="8"/>
-    <path d="M404 488 L374 460" stroke-width="8"/>
-    <path d="M404 488 L362 498" stroke-width="8"/>
+    <path d="M112 488 C132 430 158 386 190 350" stroke-width="8"/>
+    <path d="M190 350 L154 340" stroke-width="8"/>
+    <path d="M190 350 L166 378" stroke-width="8"/>
+    <path d="M282 488 C310 64 374 64 410 488" stroke-width="8"/>
+    <path d="M410 488 L380 460" stroke-width="8"/>
+    <path d="M410 488 L368 498" stroke-width="8"/>
 
     <path d="M520 418 C642 418 770 418 916 418" stroke-width="8"/>
     <path d="M916 418 L880 398" stroke-width="8"/>
     <path d="M916 418 L880 438" stroke-width="8"/>
-    <path d="M612 378 C612 402 612 434 612 462" stroke-width="6"/>
-    <path d="M786 378 C786 402 786 434 786 462" stroke-width="6"/>
-    <path d="M876 378 C876 402 876 434 876 462" stroke-width="6"/>
-    <path d="M612 336 C660 310 828 310 876 336" stroke-width="9"/>
-    <path d="M530 498 C556 516 586 516 612 498" stroke-width="7"/>
-    <path d="M876 498 C892 512 906 512 922 498" stroke-width="7"/>
+    <path d="M600 378 C600 402 600 434 600 462" stroke-width="6"/>
+    <path d="M830 378 C830 402 830 434 830 462" stroke-width="6"/>
+    <path d="M880 378 C880 402 880 434 880 462" stroke-width="6"/>
+    <path d="M600 336 C660 310 826 310 880 336" stroke-width="9"/>
+    <path d="M528 498 C552 516 578 516 602 498" stroke-width="7"/>
+    <path d="M880 498 C894 512 908 512 922 498" stroke-width="7"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="330" y="64" font-size="40" font-weight="700">daytime path</text>
-    <text x="350" y="120" font-size="38" font-weight="700">F return</text>
-    <text x="246" y="250" font-size="38" font-weight="700">D absorbs low HF</text>
+    <text x="360" y="112" font-size="40" font-weight="700">daytime path</text>
+    <text x="322" y="136" font-size="38" font-weight="700">F return</text>
+    <text x="130" y="300" font-size="38" font-weight="700">D absorbs</text>
 
-    <text x="720" y="98" font-size="40" font-weight="700">frequency window</text>
-    <text x="720" y="246" font-size="36">usable window</text>
-    <text x="612" y="300" font-size="38" font-weight="700">LUF</text>
-    <text x="760" y="300" font-size="38" font-weight="700">OWF</text>
-    <text x="876" y="300" font-size="38" font-weight="700">MUF</text>
-    <text x="572" y="554" font-size="36">too low</text>
-    <text x="572" y="598" font-size="36">absorbed</text>
-    <text x="828" y="554" font-size="36">too high</text>
-    <text x="828" y="598" font-size="36">through</text>
+    <text x="760" y="150" font-size="40" font-weight="700">freq window</text>
+    <text x="716" y="246" font-size="36">usable window</text>
+    <text x="600" y="286" font-size="38" font-weight="700">LUF</text>
+    <text x="800" y="286" font-size="38" font-weight="700">OWF</text>
+    <text x="880" y="286" font-size="38" font-weight="700">MUF</text>
+    <text x="566" y="554" font-size="36">too low</text>
+    <text x="566" y="612" font-size="36">absorbed</text>
+    <text x="822" y="554" font-size="36">too high</text>
+    <text x="822" y="612" font-size="36">through</text>
   </g>
 </svg>

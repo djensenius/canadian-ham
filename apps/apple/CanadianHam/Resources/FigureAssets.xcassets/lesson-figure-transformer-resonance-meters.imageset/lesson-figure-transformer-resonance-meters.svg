@@ -1,53 +1,55 @@
 <svg id="transformer-resonance-meters" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img">
   <title>Transformer, parallel tuned circuit, and meter placement</title>
-  <desc>Three panels show transformer windings on a core, a parallel LC circuit with high impedance at resonance, and ammeter and voltmeter placement around a load.</desc>
+  <desc>Three panels show separate transformer windings on a core, a parallel LC tank, and ammeter and voltmeter placement around a load.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M150 160 C150 236 150 340 150 424" stroke-width="7"/>
-    <path d="M204 160 C204 236 204 340 204 424" stroke-width="7"/>
-    <path d="M96 188 C126 166 160 166 188 188 C216 210 248 210 278 188" stroke-width="8"/>
-    <path d="M96 248 C126 226 160 226 188 248 C216 270 248 270 278 248" stroke-width="8"/>
-    <path d="M96 308 C126 286 160 286 188 308 C216 330 248 330 278 308" stroke-width="8"/>
-    <path d="M96 368 C126 346 160 346 188 368 C216 390 248 390 278 368" stroke-width="8"/>
-    <path d="M130 470 C152 488 176 488 198 470" stroke-width="6"/>
-    <path d="M202 470 C224 488 248 488 270 470" stroke-width="6"/>
+    <path d="M152 176 C152 248 152 336 152 410" stroke-width="7"/>
+    <path d="M206 176 C206 248 206 336 206 410" stroke-width="7"/>
+    <path d="M76 210 C102 188 126 188 152 210" stroke-width="8"/>
+    <path d="M76 270 C102 248 126 248 152 270" stroke-width="8"/>
+    <path d="M76 330 C102 308 126 308 152 330" stroke-width="8"/>
+    <path d="M76 390 C102 368 126 368 152 390" stroke-width="8"/>
+    <path d="M206 210 C232 188 256 188 282 210" stroke-width="8"/>
+    <path d="M206 270 C232 248 256 248 282 270" stroke-width="8"/>
+    <path d="M206 330 C232 308 256 308 282 330" stroke-width="8"/>
+    <path d="M206 390 C232 368 256 368 282 390" stroke-width="8"/>
+    <path d="M126 456 C148 474 172 474 194 456" stroke-width="6"/>
+    <path d="M198 456 C220 474 244 474 266 456" stroke-width="6"/>
 
-    <path d="M382 184 C382 250 382 368 382 434" stroke-width="7"/>
-    <path d="M564 184 C564 250 564 368 564 434" stroke-width="7"/>
-    <path d="M382 210 C422 210 524 210 564 210" stroke-width="7"/>
-    <path d="M382 410 C422 410 524 410 564 410" stroke-width="7"/>
-    <path d="M424 210 C402 236 402 264 424 290 C446 316 446 344 424 370 C414 382 410 396 414 410" stroke-width="8"/>
-    <path d="M504 282 C520 274 536 274 552 282" stroke-width="8"/>
-    <path d="M504 338 C520 346 536 346 552 338" stroke-width="8"/>
+    <path d="M382 210 C430 210 516 210 564 210" stroke-width="7"/>
+    <path d="M382 410 C430 410 516 410 564 410" stroke-width="7"/>
+    <path d="M420 210 C420 228 420 238 420 250" stroke-width="7"/>
+    <path d="M420 250 C394 266 394 292 420 308 C446 324 446 350 420 366 C406 376 406 394 420 410" stroke-width="8"/>
+    <path d="M532 210 C532 238 532 254 532 272" stroke-width="7"/>
+    <path d="M498 272 C520 264 544 264 566 272" stroke-width="8"/>
+    <path d="M498 348 C520 356 544 356 566 348" stroke-width="8"/>
+    <path d="M532 348 C532 370 532 390 532 410" stroke-width="7"/>
 
-    <path d="M682 214 C724 214 766 214 808 214" stroke-width="7"/>
-    <circle cx="744" cy="214" r="34" stroke-width="7"/>
-    <path d="M808 214 C854 214 894 214 922 214" stroke-width="7"/>
-    <path d="M922 214 C922 300 922 398 922 488" stroke-width="7"/>
-    <path d="M922 488 C842 488 762 488 682 488" stroke-width="7"/>
-    <path d="M682 488 C682 398 682 300 682 214" stroke-width="7"/>
-    <path d="M792 488 C792 440 792 392 792 344" stroke-width="6"/>
-    <path d="M866 488 C866 440 866 392 866 344" stroke-width="6"/>
-    <path d="M792 344 C816 328 842 328 866 344" stroke-width="7"/>
-    <path d="M792 386 C816 402 842 402 866 386" stroke-width="7"/>
-    <circle cx="748" cy="394" r="40" stroke-width="7"/>
-    <path d="M748 354 C748 326 748 298 748 270" stroke-width="6"/>
-    <path d="M748 434 C748 454 748 470 748 488" stroke-width="6"/>
+    <path d="M690 180 C714 180 734 180 756 180" stroke-width="7"/>
+    <circle cx="790" cy="180" r="34" stroke-width="7"/>
+    <path d="M824 180 C844 180 856 180 874 180" stroke-width="7"/>
+    <path d="M874 180 C874 220 874 260 874 300" stroke-width="7"/>
+    <path d="M838 300 C860 284 888 284 910 300" stroke-width="7"/>
+    <path d="M838 410 C860 426 888 426 910 410" stroke-width="7"/>
+    <path d="M874 410 C874 448 874 474 874 500" stroke-width="7"/>
+    <path d="M874 500 C812 500 750 500 690 500" stroke-width="7"/>
+    <path d="M690 180 C690 218 690 242 690 266" stroke-width="7"/>
+    <path d="M664 266 C682 258 700 258 718 266" stroke-width="8"/>
+    <path d="M664 326 C682 334 700 334 718 326" stroke-width="8"/>
+    <path d="M690 326 C690 380 690 438 690 500" stroke-width="7"/>
+    <circle cx="774" cy="356" r="34" stroke-width="7"/>
+    <path d="M808 336 C828 320 850 306 874 300" stroke-width="6"/>
+    <path d="M808 376 C828 392 850 406 874 410" stroke-width="6"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="186" y="58" font-size="40" font-weight="700">transformer</text>
-    <text x="100" y="140" font-size="36">primary</text>
-    <text x="330" y="140" font-size="36">secondary</text>
-    <text x="200" y="540" font-size="36">changing flux</text>
+    <text x="180" y="58" font-size="40" font-weight="700">xfmr</text>
+    <text x="112" y="144" font-size="36">P</text>
+    <text x="250" y="144" font-size="36">S</text>
 
-    <text x="473" y="58" font-size="40" font-weight="700">parallel LC</text>
-    <text x="473" y="526" font-size="36">high Z</text>
-    <text x="473" y="572" font-size="36">at resonance</text>
+    <text x="473" y="58" font-size="40" font-weight="700">LC tank</text>
 
-    <text x="802" y="58" font-size="40" font-weight="700">meters</text>
-    <text x="744" y="158" font-size="38" font-weight="700">A meter</text>
-    <text x="748" y="406" font-size="38" font-weight="700">V</text>
-    <text x="830" y="316" font-size="36">load</text>
-    <text x="802" y="548" font-size="36">V across</text>
-    <text x="802" y="594" font-size="36">load</text>
+    <text x="794" y="58" font-size="40" font-weight="700">meters</text>
+    <text x="790" y="118" font-size="36">A meter</text>
+    <text x="650" y="150" font-size="36">source</text>
+    <text x="778" y="560" font-size="36">V across load</text>
   </g>
 </svg>

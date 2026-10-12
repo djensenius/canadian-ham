@@ -17,12 +17,12 @@
     <path d="M780 530 C780 558 780 586 780 612" stroke-width="6"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="190" y="56" font-size="38" font-weight="700">reflector</text>
-    <text x="190" y="104" font-size="36">longer</text>
-    <text x="340" y="86" font-size="38" font-weight="700">driven</text>
-    <text x="340" y="134" font-size="36">feed</text>
-    <text x="520" y="136" font-size="38" font-weight="700">director</text>
-    <text x="520" y="184" font-size="36">shorter</text>
+    <text x="140" y="56" font-size="38" font-weight="700">reflector</text>
+    <text x="140" y="104" font-size="36">longer</text>
+    <text x="348" y="76" font-size="38" font-weight="700">driven</text>
+    <text x="348" y="124" font-size="36">feed</text>
+    <text x="560" y="136" font-size="38" font-weight="700">director</text>
+    <text x="560" y="184" font-size="36">shorter</text>
     <text x="640" y="264" font-size="38" font-weight="700">main lobe</text>
 
     <text x="650" y="430" font-size="38" font-weight="700">vertical</text>

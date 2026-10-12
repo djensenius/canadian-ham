@@ -4,8 +4,6 @@
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
     <rect x="42" y="82" width="132" height="78" rx="14" ry="14" stroke-width="7"/>
     <path d="M174 120 C340 120 500 120 646 120" stroke-width="8"/>
-    <path d="M646 120 L610 100" stroke-width="8"/>
-    <path d="M646 120 L610 140" stroke-width="8"/>
 
     <rect x="650" y="156" width="96" height="70" rx="14" ry="14" stroke-width="7"/>
     <path d="M646 120 C674 130 692 142 698 156" stroke-width="7"/>

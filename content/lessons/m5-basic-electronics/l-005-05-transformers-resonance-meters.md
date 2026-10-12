@@ -143,11 +143,11 @@ A meter should disturb the circuit as little as practical.
 | Final power amplifier current | Ammeter | In the appropriate current path | Low resistance |
 
 ::figure transformer-resonance-meters
-Alt text: Three panels showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.
+Alt text: Multi-panel figure showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.
 Text equivalent:
-- Transformer panel: primary and secondary windings share a core, with small flux marks below the windings.
-- Parallel LC panel: the inductor and capacitor are connected between the same top and bottom rails; the label says high Z at resonance.
-- Meter panel: the A meter is in series in the top circuit path, the load is in the right branch, and the V meter is connected across the load.
+- Transformer panel: separate P and S windings sit on a shared two-bar core, with small flux marks below the windings.
+- Parallel LC panel: an inductor branch and capacitor branch connect between the same top and bottom rails.
+- Meter panel: a source is in the left branch, the A meter is in series on the top wire, the load is in the right branch, and a meter circle is wired across the load.
 ::
 
 A voltmeter is placed across the part being measured. It should look like a high resistance so very little extra current flows through the meter.

@@ -101,7 +101,7 @@ Optimum working frequency, or OWF, is the practical choice a little below the MU
 Alt text: Daytime HF path diagram with D-region absorption, F-region return, and a frequency window labelled LUF, OWF, and MUF.
 Text equivalent:
 - The left panel shows the Sun, a lower D band, and a higher F line.
-- A lower HF ray stops at the D band, labelled D absorbs low HF.
+- A lower HF ray stops at the D band beside the D absorbs label.
 - A higher HF ray passes the D band, reaches the F line, and returns to Earth.
 - The right panel marks LUF at the lower edge of the usable window, OWF closer to MUF, and MUF at the upper edge.
 - Frequencies below the window are labelled too low and absorbed; frequencies above it are labelled too high and through.
