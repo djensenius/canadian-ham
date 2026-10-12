@@ -68,13 +68,15 @@ A random-wire antenna can be simple to install. The station end may also carry R
 
 An end-fed half-wave antenna can be convenient for portable or small-property work. It can often operate on related bands with a suitable matching transformer. The feed point impedance is high, so ordinary coax is not usually attached directly.
 
-Trap antennas can cover several bands by electrically isolating sections at selected frequencies. The cost is added parts, possible loss, and extra limits on power or bandwidth.
+Trap antennas can cover several bands by electrically isolating sections at selected frequencies. The cost is added parts, possible loss, extra limits on power or bandwidth, and a greater chance that transmitter harmonics can be radiated.
 
 ## Quad antennas
 
 A quad uses square loop elements. The driven loop is approximately a full wavelength of wire around its perimeter. A directional quad has multiple loop elements on a boom. Its parasitic loops work somewhat like a Yagi's reflector and director.
 
-A quad can perform well, but it has more wind area and support complexity than a Yagi with straight elements. Weather loading matters. Loops and spreaders can collect ice, flex in wind, and require a stronger support.
+A delta loop with parasitic elements uses the same idea with triangular loops: each element is roughly one wavelength around the triangle. The extra loops act as coupled reflector or director elements.
+
+A quad can perform well, but it has more wind area and support complexity than a Yagi with straight elements. Weather loading is the major disadvantage. Loops and spreaders can collect ice and flex in wind.
 
 ### Worked example: original quad estimate
 
@@ -93,9 +95,16 @@ loop length in metres ≈ 306 / f(MHz)
 
 The same total-wire idea applies to delta loops, but the shape is triangular instead of square. The formula distinction matters. The 300 / f formula estimates free-space wavelength. The 306 / f formula is a practical full-wave loop starting estimate.
 
+### Misconception: loop formulas are shorter too
+
+- Mistaken idea: because dipoles are cut shorter than the free-space half wave, full-wave loops should use less than 300 / f.
+- Correction: practical full-wave loops and quads use about 306 / f, so their starting length is slightly longer than the free-space wavelength estimate.
+
 ## Delta loops and polarization
 
 A delta loop is a triangular loop with an overall length of roughly one wavelength. When the bottom side is horizontal, feeding the centre of the bottom side tends to produce horizontal polarization. Feeding a side can produce vertical polarization in common beginner configurations.
+
+A square quad's feed point also affects polarization. Moving the feed from a side parallel to the ground to a side perpendicular to the ground changes the usual polarization from horizontal to vertical.
 
 Feed point and height affect impedance and pattern, so practical loop antennas often need a matching device. The formula gives a first cut, not a finished guarantee.
 
@@ -129,7 +138,7 @@ Wire antennas invite experimentation. You may have room for a dipole on one band
 - Expecting a dipole to radiate mainly off its ends.
 - Calling any long wire a good match to coax without considering feed point impedance.
 - Forgetting that a quad driven element is a loop, not a single straight half-wave wire.
-- Treating weather survival as separate from electrical design.
+- Treating weather loading as a minor detail for quads and loops.
 - Using the calculated wire length as a final cut with no allowance for supports, insulation, and ground effects.
 
 ## Illustration brief
@@ -142,7 +151,7 @@ Description: Draw three ink-brush panels. First, show a straight dipole with a d
 
 - A dipole radiates broadside to the wire and has weak radiation off the ends.
 - Random-wire and end-fed antennas can be useful but need careful matching and RF return paths.
-- Trap antennas can support multiband use, with added parts and possible tradeoffs.
-- Quad and delta-loop driven elements are approximately a full wavelength around the loop.
+- Trap antennas can support multiband use, with added parts, possible loss, and harmonic-radiation tradeoffs.
+- Quad and delta-loop driven elements are approximately a full wavelength around the loop, and parasitic loop elements can make them directional.
 - Use about 306 / f(MHz) for practical full-wave loop starting length; 300 / f(MHz) is the free-space wavelength estimate.
 - Loop feed-point location influences polarization and impedance.
