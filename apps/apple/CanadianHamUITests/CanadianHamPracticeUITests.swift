@@ -765,6 +765,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         addTeardownBlock { [weak self] in
             guard let self else { return }
             let resetApp = self.launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+            XCTAssertTrue(self.waitForHomeAfterLanguageReset(in: resetApp), "Reset teardown should wait for Home before terminating")
             resetApp.terminate()
         }
         var app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
@@ -798,6 +799,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         addTeardownBlock { [weak self] in
             guard let self else { return }
             let resetApp = self.launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+            XCTAssertTrue(self.waitForHomeAfterLanguageReset(in: resetApp), "Reset teardown should wait for Home before terminating")
             resetApp.terminate()
         }
 
@@ -849,17 +851,31 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testSettingsLanguageControlSupportsLargestAccessibilityTextSize() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: [
-            "-CanadianHamInitialScreen", "settings",
-            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
-        ])
-        defer { app.terminate() }
+        for scenario in [
+            (arguments: [String](), heading: "Settings", systemDefaultLabel: "System default", context: "English"),
+            (arguments: ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"], heading: "Réglages", systemDefaultLabel: "Réglage du système", context: "French")
+        ] {
+            let app = launchApp(arguments: scenario.arguments + [
+                "-CanadianHamInitialScreen", "settings",
+                "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
+            ])
+            defer { app.terminate() }
 
-        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
-        let languageSetting = app.segmentedControls["language-setting-picker"].firstMatch
-        XCTAssertTrue(languageSetting.waitForExistence(timeout: 5), "Language setting should remain reachable at the largest accessibility text size")
-        XCTAssertTrue(languageSetting.buttons["System default"].firstMatch.exists, "System default option should remain exposed at the largest accessibility text size")
-        try performAudit(on: app, context: "Settings language control largest accessibility text size")
+            XCTAssertTrue(app.staticTexts[scenario.heading].firstMatch.waitForExistence(timeout: 10), "\(scenario.context) Settings should load at the largest accessibility text size")
+            let languageSetting = app.descendants(matching: .any)["language-setting-picker"].firstMatch
+            XCTAssertTrue(languageSetting.waitForExistence(timeout: 5), "\(scenario.context) language setting should remain reachable at the largest accessibility text size")
+            scrollUntilHittable(languageSetting, in: app, maxSwipes: 12)
+            assertFullyVisibleBelowNavigationBar(languageSetting, in: app, context: "\(scenario.context) language setting largest accessibility text size")
+            XCTAssertTrue(languageSetting.isHittable, "\(scenario.context) language setting should be hittable at the largest accessibility text size")
+
+            let selectedLanguageText = [languageSetting.label, String(describing: languageSetting.value ?? "")].joined(separator: " ")
+            XCTAssertTrue(
+                selectedLanguageText.contains(scenario.systemDefaultLabel) || anyVisibleLabel(in: app, contains: scenario.systemDefaultLabel),
+                "\(scenario.context) language setting should expose the full System default label at the largest accessibility text size, got: \(selectedLanguageText)"
+            )
+            try performAudit(on: app, context: "\(scenario.context) Settings language control largest accessibility text size")
+            app.terminate()
+        }
     }
 
     func testLanguagePickerIsAbsentOnCategoryListAndPractice() throws {
@@ -2065,6 +2081,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.launchArguments = (resetData ? ["-CanadianHamResetDataOnLaunch"] : []) + arguments
         app.launch()
         return app
+    }
+
+    private func waitForHomeAfterLanguageReset(in app: XCUIApplication) -> Bool {
+        let englishHome = app.staticTexts["Ready for Basic with Honours?"].firstMatch
+        let frenchHome = app.staticTexts["Prêt pour la compétence de base avec distinction?"].firstMatch
+        for _ in 0..<20 {
+            if englishHome.exists || frenchHome.exists {
+                return true
+            }
+            waitBriefly(0.5)
+        }
+        return false
     }
 
     private func performAudit(on app: XCUIApplication, context _: String) throws {
