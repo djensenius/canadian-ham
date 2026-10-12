@@ -1,7 +1,7 @@
 ---
 id: TASK-38.5
 title: 'Figure checker: text overlap, edge and label-proximity checks'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:42'
