@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:04'
+updated_date: '2026-10-12 16:12'
 labels:
   - web
 dependencies:
@@ -48,6 +48,8 @@ Implemented original Basic reference-sheet content with a lesson-backed content 
 Final validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 165); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed; pnpm check:schemas passed (46 schema tests / 1049 validation targets); pnpm import:check passed including the new reference-sheet validation (34 entries). Apple suites skipped because this task changed web/content only.
 
 After merging current main into task-44.2-web-exam-tools, reran validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 165); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed; pnpm check:schemas passed (46 schema tests / 1049 validation targets); pnpm import:check passed including reference-sheet validation (34 entries).
+
+Review fix pass for r442 started: fix calculator button key handling/modifier shortcuts/state retention, responsive tool layout/drawer/DOM order, toolbar/display/heading/table-label accessibility nits, and add regression tests before rerunning web validation.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
