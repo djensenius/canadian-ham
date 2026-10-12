@@ -13,7 +13,7 @@ describe("PWA manifest and service worker assets", () => {
     assert.equal(manifest.theme_color, "#F6EEDC");
     assert.deepEqual(manifest.icons.map((icon) => icon.src), ["./pwa-icon-192.png", "./pwa-icon-512.png"]);
     assert.ok(manifest.icons.every((icon) => icon.type === "image/png"));
-    assert.ok(manifest.icons.every((icon) => icon.purpose === undefined));
+    assert.ok(manifest.icons.every((icon) => icon.purpose === "any maskable"));
   });
 
   it("builds a precache list covering app shell, generated assets, icons, and question bank", () => {

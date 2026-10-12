@@ -47,8 +47,11 @@ targets:
     sources:
       - path: CanadianHam
         excludes:
+          - Resources/AppIcon.icon
           - Resources/Assets.xcassets
           - Resources/CanadianHam.iOS.CloudKit.Info.plist
+      - path: CanadianHam/Resources/AppIcon.icon
+        buildPhase: resources
       - path: CanadianHam/Resources/Assets.xcassets
       - path: CanadianHam/Resources/Localizable.xcstrings
         type: file
@@ -132,6 +135,7 @@ targets:
         PRODUCT_NAME: CanadianHam
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Canadian Ham
+        INFOPLIST_KEY_CFBundleIconName: AppIcon
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
         # App Store validation (iOS 27 SDK): a launch screen and all four iPad
@@ -141,6 +145,7 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad[sdk=iphone*]: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone[sdk=iphone*]: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         CODE_SIGN_ENTITLEMENTS[sdk=macosx*]: CanadianHam/Resources/CanadianHam.macOS.entitlements
         CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: ""
