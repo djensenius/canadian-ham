@@ -1,0 +1,53 @@
+<svg id="vhf-unusual-propagation-modes" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img">
+  <title>Four unusual VHF and UHF propagation modes</title>
+  <desc>Four labelled sketches show sporadic E, tropospheric ducting, auroral scatter, and meteor scatter.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M42 304 C142 286 316 286 430 304" stroke-width="8"/>
+    <ellipse cx="248" cy="154" rx="72" ry="34" stroke-width="8"/>
+    <path d="M92 304 C148 224 196 174 248 154 C300 176 354 228 414 304" stroke-width="7"/>
+    <path d="M114 270 C126 252 142 236 158 222" stroke-width="5"/>
+
+    <path d="M528 304 C628 286 804 286 918 304" stroke-width="8"/>
+    <path d="M542 180 C640 152 810 152 904 180" stroke-width="7"/>
+    <path d="M542 238 C640 212 810 212 904 238" stroke-width="7"/>
+    <path d="M570 210 C650 190 794 190 876 210" stroke-width="8"/>
+    <path d="M876 210 L838 192" stroke-width="8"/>
+    <path d="M876 210 L838 228" stroke-width="8"/>
+    <path d="M556 306 C578 274 608 274 630 306" stroke-width="6"/>
+    <path d="M844 306 C866 274 896 274 918 306" stroke-width="6"/>
+
+    <path d="M42 654 C154 628 330 628 430 654" stroke-width="8"/>
+    <path d="M116 640 C150 586 188 552 238 530" stroke-width="8"/>
+    <path d="M238 530 L198 518" stroke-width="8"/>
+    <path d="M238 530 L212 562" stroke-width="8"/>
+    <path d="M300 458 C320 490 320 536 300 568" stroke-width="6"/>
+    <path d="M330 450 C350 492 350 546 330 588" stroke-width="6"/>
+    <path d="M360 466 C376 500 376 538 360 572" stroke-width="6"/>
+
+    <path d="M528 654 C638 628 810 628 918 654" stroke-width="8"/>
+    <path d="M610 640 C632 606 662 606 684 640" stroke-width="6"/>
+    <path d="M802 640 C824 606 854 606 876 640" stroke-width="6"/>
+    <path d="M656 560 C710 522 766 522 830 560" stroke-width="8"/>
+    <path d="M830 560 L792 546" stroke-width="8"/>
+    <path d="M830 560 L802 586" stroke-width="8"/>
+    <path d="M698 476 C736 492 780 500 830 500" stroke-width="10"/>
+    <path d="M682 466 C702 450 724 438 750 430" stroke-width="5"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="230" y="60" font-size="40" font-weight="700">A sporadic E</text>
+    <text x="248" y="100" font-size="36">patchy</text>
+    <text x="248" y="350" font-size="36">six metres</text>
+
+    <text x="720" y="60" font-size="40" font-weight="700">B ducting</text>
+    <text x="720" y="132" font-size="36">weather layer</text>
+    <text x="720" y="350" font-size="36">over water</text>
+
+    <text x="230" y="420" font-size="40" font-weight="700">C aurora</text>
+    <text x="300" y="696" font-size="36">distorted</text>
+    <text x="156" y="466" font-size="36">aim north</text>
+
+    <text x="720" y="400" font-size="40" font-weight="700">D meteor</text>
+    <text x="850" y="430" font-size="36">burst</text>
+    <text x="890" y="580" font-size="36">path</text>
+  </g>
+</svg>

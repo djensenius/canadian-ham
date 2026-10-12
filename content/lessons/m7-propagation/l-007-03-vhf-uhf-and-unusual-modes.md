@@ -145,6 +145,15 @@ For station planning, do not rely on unusual modes for routine safety coverage. 
 - Expecting wideband FM voice to sound clean on an auroral path.
 - Forgetting that scatter signals are often weak because only a small portion of energy reaches the receiver.
 
+::figure vhf-unusual-propagation-modes
+Alt text: Four mini-panels showing sporadic E, tropospheric ducting, auroral scatter, and meteor scatter paths.
+Text equivalent:
+- Sporadic E: a six-metre ray returns from a patchy E-region cloud.
+- Tropospheric ducting: a VHF ray is trapped between weather layers over water.
+- Auroral scatter: a directional antenna aims north toward a distorted auroral curtain.
+- Meteor scatter: a short trail creates a brief burst path between stations.
+::
+
 ## Illustration brief
 
 Alt text: Four mini-panels showing sporadic E, tropospheric ducting, auroral scatter, and meteor scatter paths.

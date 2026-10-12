@@ -142,6 +142,15 @@ For contesting and emergency exercises alike, the best operator is flexible. Whe
 - Blaming sideband selection for a propagation blackout.
 - Confusing selective fading with ordinary low audio volume or a misadjusted squelch.
 
+::figure daytime-absorption-frequency-window
+Alt text: Daytime HF path diagram with D-region absorption, F-region refraction, and a frequency window labelled LUF below and MUF above.
+Text equivalent:
+- In daylight, the Sun strengthens the lower D region, which absorbs lower HF energy before it reaches the higher ionosphere.
+- Higher usable HF can reach the F region and return while conditions support the path.
+- The frequency line marks LUF at the lower edge, OWF inside the usable window, and MUF at the upper edge.
+- Frequencies below LUF are shown as absorbed; frequencies above MUF are shown as passing through.
+::
+
 ## Illustration brief
 
 Alt text: Daytime HF path diagram with D-region absorption, F-region refraction, and a frequency window labelled LUF below and MUF above.
