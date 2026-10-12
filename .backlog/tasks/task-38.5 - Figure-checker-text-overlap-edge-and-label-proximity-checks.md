@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:42'
-updated_date: '2026-10-12 16:06'
+updated_date: '2026-10-12 16:16'
 labels:
   - content
 dependencies: []
@@ -43,6 +43,8 @@ Validation passed: node scripts/check-figures.mjs --self-test (11 fixtures); pnp
 Follow-up refinement: relaxed text proximity to 0.08 × smaller font only for aligned vertical stacks; offset stacks/side neighbours stay at 0.25 × size and true overlaps still fail. Validation: self-test now has 13 fixtures; current branch pnpm check:figures passes 3 figures; running this script from task-38.2 passes 8 figures. qlmanage thumbnails for task-38.2 resistor-colour-code and metric-prefix-ladder showed no real overlap. Read-only task-38.3 still fails overlap cases in batteries-dc-supplies-ripple, control-terminals, distress-urgency-safety-board, grounding-lightning-rf-safety, records-maps-locators, and yagi-receiver-specs. Read-only task-38.4 still fails daytime-absorption-frequency-window, filter-response-sketches, loop-antenna-patterns, and transformer-resonance-meters.
 
 Review a1805a9 follow-up: fixed items 1-8 by adding a monospace width floor, loud failures for unsupported SVG/text/path features, per-line tspan measurement, S/T and relative path parsing self-tests, restored 0.25× font-size edge clearance, shape pass fixtures, and filled polygon/circle checks. Validation: node --check scripts/check-figures.mjs; node scripts/check-figures.mjs --self-test (33 fixtures); pnpm check:figures on this branch/38.1 (3 SVGs); read-only task-38.2 script run passed 8 SVGs after qlmanage review of newly flagged approved figures showed false positives; read-only task-38.3 still fails amplifiers-diodes, batteries-dc-supplies-ripple, control-terminals, controls-digital-voice-packet; read-only task-38.4 still fails daytime-absorption-frequency-window, interference-troubleshooting-map, loop-antenna-patterns, propagation-paths-skip-zone, transformer-resonance-meters, vhf-unusual-propagation-modes.
+
+Re-review approve-with-notes follow-up: applied notes from r385-2. Fill checks now use per-glyph fill bounds with descender bottoms, near-miss/just-touching fill fixtures, a differing-anchor stack fixture, <style> failures even inside skipped defs, marker-* failures, meaningful S/T and inline-tspan fixtures, dx/dy-only tspan failure, unitless shape geometry, transparent fill handling, accented-capital height, and pnpm check:figures now runs --self-test. Validation: node --check scripts/check-figures.mjs; node scripts/check-figures.mjs --self-test (45 fixtures); pnpm check:figures on this branch/38.1 (3 SVGs); read-only task-38.2 passed 8 SVGs; read-only task-38.3 passed 23 SVGs; read-only task-38.4 passed 13 SVGs.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
