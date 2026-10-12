@@ -5,9 +5,11 @@ enum LessonFigureMetadata {
     static let sizes: [String: CGSize] = [
         "amplifiers-diodes": CGSize(width: 640, height: 480),
         "control-terminals": CGSize(width: 640, height: 480),
+        "morse-rst-contact-flow": CGSize(width: 640, height: 480),
         "ohms-law-power-wheel": CGSize(width: 960, height: 960),
         "ohms-law-triangle": CGSize(width: 640, height: 480),
-        "power-triangle": CGSize(width: 640, height: 480)
+        "power-triangle": CGSize(width: 640, height: 480),
+        "voice-repeater-simplex": CGSize(width: 640, height: 480)
     ]
 
     static func aspectRatio(for id: String) -> CGFloat {

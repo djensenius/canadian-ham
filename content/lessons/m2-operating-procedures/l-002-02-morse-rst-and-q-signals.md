@@ -167,6 +167,14 @@ Morse procedure rewards listening discipline. A clean busy-frequency check befor
 
 RST reports also train you to separate receiver impressions. Readability, strength, and tone are different observations. A good operator reports the path as heard.
 
+::figure morse-rst-contact-flow
+Alt text: A Morse contact flow showing a busy-frequency check, CQ, DE, call signs, a signal report, and sign-off.
+Text equivalent:
+- Contact flow: QRL? and listen; CQ; DE; exchange call signs; exchange RST; sign off with 73.
+- RST separates readability, signal strength, and tone.
+- S-unit power shortcuts depend on the stated meter calibration and stable path conditions.
+::
+
 ## Illustration brief
 
 Alt text: A Morse contact flow showing a busy-frequency check, CQ, DE, call signs, a signal report, and sign-off.

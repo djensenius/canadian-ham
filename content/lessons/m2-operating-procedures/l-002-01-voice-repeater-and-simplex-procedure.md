@@ -157,6 +157,14 @@ A repeater is a shared station with its own receiver, transmitter, controller, t
 
 Simplex is the other half of local operating. A good amateur learns both habits: use the repeater when it adds coverage, and step away from it when direct communication is reliable.
 
+::figure voice-repeater-simplex
+Alt text: A portable radio reaches another portable through a hilltop repeater, then both move to a direct simplex path.
+Text equivalent:
+- Portable A first transmits on the repeater input; the hilltop repeater retransmits on its output to portable B.
+- The operators pause and listen, use the programmed offset and CTCSS tone if required, and confirm the channel is clear.
+- After confirming direct copy, they move to a simplex path instead of tying up the repeater.
+::
+
 ## Illustration brief
 
 Alt text: A portable radio reaches another portable through a hilltop repeater, then both move to a direct simplex path.
