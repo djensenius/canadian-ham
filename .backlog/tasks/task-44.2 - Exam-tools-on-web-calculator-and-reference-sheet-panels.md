@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:27'
+updated_date: '2026-10-12 16:31'
 labels:
   - web
 dependencies:
@@ -54,10 +54,12 @@ Review fix pass for r442 started: fix calculator button key handling/modifier sh
 Review r442 fixes: calculator key handling now ignores buttons/modifier shortcuts, calculator state lives in ExamTools and survives close/tool switching while clearing on new session key, tool layout reserves the side column only when open, narrow panels are sticky bottom drawers with capped height and content padding, DOM order matches toolbar/content/panel flow, reference sheet heading/table labels are corrected, toolbar role changed to group, output label restored, Escape closes the reference sheet, and Advanced mock exams keep the Basic reference sheet disabled. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
 
 Second review fix pass for r442-2 started: fix mock column ordering/width, calculator button-focus keyboard mapping, mobile drawer scroll padding/units, output live semantics, same-seed session reset, and stricter layout tests.
+
+Review r442-2 fixes: mock exam desktop grid now gives the question stack the wide first column and the navigator the right narrow column; calculator button focus skips only Enter/Space/Escape while allowing digits/operators/Backspace/Delete and pointer-clicked buttons return focus to the calculator for continued typing; narrow drawer uses 48svh cap with scroll-padding-block-end instead of redundant content padding; calculator output has aria-live=off; reference sheet heading stripping derives from the sheet source; calculator reset keys use session instance ids so same-seed restarts reset. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed r442 review changes for web exam tools: fixed calculator keyboard/button semantics and shortcuts, state retention, responsive side-panel/drawer layout, DOM/focus/accessibility nits, and added regression tests. Verified with typecheck, full tests, web build, and dist URL/CSP audit.
+Addressed r442-2 review changes for web exam tools: fixed mock question column width/order, calculator keyboard continuation after clicking a key, drawer scroll-padding and svh sizing, output live semantics, same-seed session reset, stricter CSS/DOM tests, and low-item cleanup. Verified with typecheck, full tests, web build, and dist URL/CSP audit.
 <!-- SECTION:FINAL_SUMMARY:END -->
