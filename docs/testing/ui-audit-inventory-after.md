@@ -2,6 +2,10 @@
 
 Generated after the task-31 UI-suite changes (scroll-settling and teardown; launch consolidation was backed out and is task-33). Each row is one `performAccessibilityAudit` call path present in the final UI suites. `lowerHalf` is `true` only for audits that intentionally scroll lower content/details into view before auditing.
 
+## Approved audit exceptions
+
+- **task-42, owner-approved 2026-10-12:** `testAccessibilityAuditMorseCourseLessonAndSummaryLight` and `testAccessibilityAuditMorseCourseLessonAndSummaryDark` may ignore only `.contrast` audit issues whose element has accessibility identifier `morse-settings-description`, and only during the iOS "Morse home lower content" audit. The element is the Morse settings description text ("These local settings control Morse tone, timing, and playback volume without network access."). Reason: Xcode intermittently reports a contrast failure for this fully visible, visually stable element even though the token colours are high contrast. Evidence recorded on task-42: failure frame {{40.0, 489.0}, {309.0, 64.3}} in a 402x874 window; screenshots/crops show the text mid-screen and fully visible; measured `DesignTokens.Colors.ink` contrast is ~14.95:1 on `paper` and ~16.34:1 on `paperElevated` in light, ~14.05:1 on `paper` and ~12.63:1 on `paperElevated` in dark. Guard: `CanadianHamTests.MorseTrainerTests.testMorseSettingsDescriptionInkOnCardBackgroundMeetsWCAGContrast` computes the actual `ink`/`paperElevated` WCAG contrast from `DesignTokens.swift` and asserts at least 4.5:1 in light and dark.
+
 | platform | testName | screenState | appearance | lowerHalf |
 | --- | --- | --- | --- | --- |
 | iOS | testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice | French home | light | false |

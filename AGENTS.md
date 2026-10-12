@@ -44,6 +44,7 @@
 ## Testing policy (all agents)
 Test what changed, once, at the right level. Full Apple suites are slow (20-40 min per
 platform) and share one build lock, so don't run them by reflex.
+- **Approved audit exception:** the only approved `performAccessibilityAudit` issue handler is task-42's owner-approved (2026-10-12) iOS Morse home lower-content exception, which may ignore only `.contrast` findings whose element accessibility identifier is `morse-settings-description`; every other audit issue and every other audit remains unfiltered.
 - **While iterating:** run only what you touched: the relevant web/package tests, Apple unit
   tests, and the specific UI test classes or methods with `-only-testing:` (one platform).
 - **During review (internal reviewer and Copilot):** keep running only the relevant tests: the
