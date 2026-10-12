@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:37'
+updated_date: '2026-10-12 14:38'
 labels:
   - content
   - apple
@@ -45,4 +45,6 @@ Figure notes batch m2a: L-002-01 voice-repeater-simplex shows repeater input/out
 Figure notes batch m2b: L-002-03 distress-urgency-safety-board shows distress as life-threatening with MAYDAY/SOS, urgent as serious help, safety as hazard information, plus spare battery and portable dipole go-kit; verified against lesson text and B-002-008-001..010. L-002-04 records-maps-locators shows UTC/call/band/mode/grid logging, centred azimuthal map, opposite short/long paths, UTC clock, and 4- or 6-character grid note; verified against lesson text and B-002-009-001..010, especially B-002-009-002, B-002-009-003, B-002-009-004, and B-002-009-006 for 180 degrees.
 
 Figure notes batch m1a: L-001-01 authority-records-exams shows Act, Regulations, ISED standards, certificate/call sign, address reminder, and ISED/accredited-examiner exam paths; verified against lesson reference facts and quiz questions B-001-001-001..004, B-001-002-001..009, B-001-003-001..008, B-001-004-001..007, and B-001-022-001..005. L-001-02 station-control-decision-tree shows authorization, radio service, message purpose, control operator, own-licence side branch, non-commercial/open messages, and qualified supervision; verified against lesson text and B-001-005-001..010, B-001-006-001..011, B-001-007-001..011, B-001-008-001..010, and B-001-009-001..011.
+
+Figure notes batch m1b: L-001-03 communications-flowchart shows interference listen/change/stop, distress exception/stand-by, third-party personal/supervised handling, and start/end/30-minute identification; verified against lesson text and B-001-010-001..011, B-001-011-001..010, B-001-012-001..006, B-001-013-001..009, and B-001-014-001..009, especially B-001-013-006 and B-001-013-009. L-001-04 privileges-station-checklist shows certificate-radio-amplifier-antenna chain, qualification/band/bandwidth/output-power/repeater/modulation checks, and band-edge width inset; verified against lesson text and B-001-015-001..010, B-001-016-001..011, B-001-017-001..010, B-001-018-001..010, and B-001-019-001..007.
 <!-- SECTION:NOTES:END -->
