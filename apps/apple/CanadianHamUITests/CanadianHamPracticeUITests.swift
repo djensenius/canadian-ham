@@ -762,6 +762,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testCanPracticeInFrenchAndSeeFeedback() throws {
         XCUIDevice.shared.appearance = .light
+        addTeardownBlock { [weak self] in
+            guard let self else { return }
+            let resetApp = self.launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+            resetApp.terminate()
+        }
         var app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
         XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
         let languageSetting = app.segmentedControls["language-setting-picker"].firstMatch
@@ -786,6 +791,75 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let feedbackTitle = app.staticTexts["answer-feedback-title"].firstMatch
         XCTAssertTrue(feedbackTitle.waitForExistence(timeout: 5), "Feedback title should exist")
         XCTAssertTrue(["Bonne réponse", "Mauvaise réponse"].contains(feedbackTitle.label), "Expected French feedback title text after relaunch, got \(feedbackTitle.label)")
+    }
+
+    func testChoosingSystemDefaultAfterFrenchLaunchSwitchesQuestionsImmediatelyAndShowsRestartNote() throws {
+        XCUIDevice.shared.appearance = .light
+        addTeardownBlock { [weak self] in
+            guard let self else { return }
+            let resetApp = self.launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+            resetApp.terminate()
+        }
+
+        var app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
+        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
+        let initialLanguageSetting = app.segmentedControls["language-setting-picker"].firstMatch
+        XCTAssertTrue(initialLanguageSetting.waitForExistence(timeout: 5), "Language setting should exist in Settings")
+        initialLanguageSetting.buttons["Français"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Restart Canadian Ham to change the interface language."].firstMatch.waitForExistence(timeout: 10))
+        app.terminate()
+
+        app = launchApp(arguments: [
+            "-CanadianHamInitialCategoryID", "B-001",
+            "-CanadianHamPracticeQuestionID", "B-001-002-002"
+        ], resetData: false)
+        let frenchQuestionTexts = try bundledFrenchQuestionTexts(forCategoryID: "B-001")
+        let frenchQuestionPredicate = NSPredicate(format: "label IN %@", Array(frenchQuestionTexts))
+        XCTAssertTrue(app.staticTexts.matching(frenchQuestionPredicate).firstMatch.waitForExistence(timeout: 10), "Expected stored French to show a French question stem after relaunch")
+
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Réglages", in: app)
+        let languageSetting = app.segmentedControls["language-setting-picker"].firstMatch
+        XCTAssertTrue(languageSetting.waitForExistence(timeout: 10), "Language setting should exist in French Settings")
+        languageSetting.buttons["Réglage du système"].firstMatch.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["language-restart-note"].firstMatch.waitForExistence(timeout: 10), "Choosing System default from a French interface should show the restart note")
+
+        tapCompactBack(in: app)
+        tap("S’exercer", in: app)
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        if !answer.waitForExistence(timeout: 3) {
+            tapButton(containing: "Commencer toutes", in: app)
+        }
+        XCTAssertTrue(answer.waitForExistence(timeout: 10), "Practice question should be visible after returning from Settings")
+        let stem = app.descendants(matching: .any)["question-stem"].firstMatch
+        XCTAssertTrue(stem.waitForExistence(timeout: 5), "Question stem should be visible after choosing System default")
+        XCTAssertEqual(stem.label, try bundledEnglishQuestionText(forQuestionID: "B-001-002-002"), "Question text should switch immediately to the system language")
+    }
+
+    func testLanguageRestartNoteHiddenWhenLanguageMatchesInterface() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.segmentedControls["language-setting-picker"].firstMatch.waitForExistence(timeout: 5), "Language setting should exist in Settings")
+        XCTAssertFalse(app.descendants(matching: .any)["language-restart-note"].firstMatch.exists, "Restart note should be hidden when System default matches the current interface language")
+    }
+
+    func testSettingsLanguageControlSupportsLargestAccessibilityTextSize() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "settings",
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
+        let languageSetting = app.segmentedControls["language-setting-picker"].firstMatch
+        XCTAssertTrue(languageSetting.waitForExistence(timeout: 5), "Language setting should remain reachable at the largest accessibility text size")
+        XCTAssertTrue(languageSetting.buttons["System default"].firstMatch.exists, "System default option should remain exposed at the largest accessibility text size")
+        try performAudit(on: app, context: "Settings language control largest accessibility text size")
     }
 
     func testLanguagePickerIsAbsentOnCategoryListAndPractice() throws {

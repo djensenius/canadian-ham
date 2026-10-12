@@ -568,6 +568,7 @@ enum ProgressStoreError: LocalizedError, Equatable {
 enum ProgressStoreInjectedFailure: Error, Equatable {
     case importAfterDelete
     case importAfterMorseWrite
+    case legacyLanguageMigrationSave
     case lessonQuizSave
     case morseCourseProgressRemoval
 }
@@ -654,6 +655,7 @@ final class ProgressStoreService: ObservableObject {
     @Published private(set) var iCloudAccountSignalError: String?
 
     private static let legacyEnglishLanguageMigrationMarkerKey = "CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete"
+    private static let appleLanguagesLastAppliedPreferenceKey = "CanadianHam.preferences.appleLanguagesLastApplied"
     private static let appleLanguagesPreferenceKey = "AppleLanguages"
 
     private(set) var container: ModelContainer
@@ -664,10 +666,13 @@ final class ProgressStoreService: ObservableObject {
     private let morseCourseProgressURL: URL
     private let layout: ProgressStoreConfigurationLayout
     private let localDeviceID: String
+    private let defaults: UserDefaults
+    private let defaultsDomainName: String?
     private var modelContainerFactory: ((Bool) throws -> ModelContainer)?
     private var pendingICloudProgressDeletionForReset = false
 #if DEBUG
     var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
+    static var failNextLegacyLanguageMigrationSaveForTesting = false
     var failNextImportAfterDeleteForTesting = false
     var failNextImportAfterMorseWriteForTesting = false
     var failNextLessonQuizSaveForTesting = false
@@ -686,7 +691,9 @@ final class ProgressStoreService: ObservableObject {
         layout: ProgressStoreConfigurationLayout = .automatic,
         modelContainerFactory: ((Bool) throws -> ModelContainer)? = nil,
         startICloudMonitoring: Bool = true,
-        localDeviceID: String = ICloudSyncSettings.localDeviceIdentifier()
+        localDeviceID: String = ICloudSyncSettings.localDeviceIdentifier(),
+        defaults: UserDefaults = .standard,
+        defaultsDomainName: String? = Bundle.main.bundleIdentifier
     ) throws {
         self.container = container
         self.context = ModelContext(container)
@@ -695,10 +702,11 @@ final class ProgressStoreService: ObservableObject {
         self.layout = Self.resolvedLayout(layout)
         self.modelContainerFactory = modelContainerFactory
         self.localDeviceID = localDeviceID
+        self.defaults = defaults
+        self.defaultsDomainName = defaultsDomainName
         self.isICloudSyncEnabled = iCloudSyncEnabled
         try FileManager.default.createDirectory(at: self.morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
-        Self.applyInterfaceLanguagePreference(self.preferences.language)
         try adoptLegacyDeviceRowsIfNeeded()
         try migrateLearningProgressFromLegacyStorageIfNeeded()
 #if ICLOUD_SYNC
@@ -756,7 +764,13 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
-    static func inMemoryForTests(iCloudSyncEnabled: Bool = false, layout: ProgressStoreConfigurationLayout = .automatic, localDeviceID: String = "test-device") throws -> ProgressStoreService {
+    static func inMemoryForTests(
+        iCloudSyncEnabled: Bool = false,
+        layout: ProgressStoreConfigurationLayout = .automatic,
+        localDeviceID: String = "test-device",
+        defaults: UserDefaults = .standard,
+        defaultsDomainName: String? = Bundle.main.bundleIdentifier
+    ) throws -> ProgressStoreService {
         let container = try makeModelContainer(
             iCloudSyncEnabled: iCloudSyncEnabled,
             isStoredInMemoryOnly: true,
@@ -782,7 +796,9 @@ final class ProgressStoreService: ObservableObject {
                 )
             },
             startICloudMonitoring: false,
-            localDeviceID: localDeviceID
+            localDeviceID: localDeviceID,
+            defaults: defaults,
+            defaultsDomainName: defaultsDomainName
         )
     }
 
@@ -796,15 +812,46 @@ final class ProgressStoreService: ObservableObject {
         case .french:
             defaults.set([BankLanguage.french.rawValue], forKey: appleLanguagesPreferenceKey)
         }
+        recordLastAppliedInterfaceLanguagePreference(language, defaults: defaults)
 #else
         _ = language
         _ = defaults
 #endif
     }
 
+#if os(iOS) || os(macOS)
+    private static func recordLastAppliedInterfaceLanguagePreference(_ language: ApplePreferences.LanguagePreference, defaults: UserDefaults) {
+        defaults.set(language.rawValue, forKey: appleLanguagesLastAppliedPreferenceKey)
+    }
+
+    private static func lastAppliedInterfaceLanguagePreference(defaults: UserDefaults) -> ApplePreferences.LanguagePreference? {
+        guard let rawValue = defaults.string(forKey: appleLanguagesLastAppliedPreferenceKey) else { return nil }
+        return ApplePreferences.LanguagePreference(rawValue: rawValue)
+    }
+
+    private static func persistentAppleLanguagesPreference(defaults: UserDefaults, domainName: String?) -> ApplePreferences.LanguagePreference {
+        guard let domainName,
+              let appleLanguages = defaults.persistentDomain(forName: domainName)?[appleLanguagesPreferenceKey] as? [String],
+              !appleLanguages.isEmpty
+        else { return .system }
+        return languagePreference(fromAppleLanguages: appleLanguages)
+    }
+
+    private static func languagePreference(fromAppleLanguages appleLanguages: [String]) -> ApplePreferences.LanguagePreference {
+        let preferredLocalization = Bundle.preferredLocalizations(
+            from: BankLanguage.allCases.map(\.rawValue),
+            forPreferences: appleLanguages
+        ).first?.lowercased()
+        if preferredLocalization?.hasPrefix(BankLanguage.french.rawValue) == true { return .french }
+        if preferredLocalization?.hasPrefix(BankLanguage.english.rawValue) == true { return .english }
+        return .system
+    }
+#endif
+
 #if DEBUG
     static func clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting(defaults: UserDefaults = .standard) {
         defaults.removeObject(forKey: legacyEnglishLanguageMigrationMarkerKey)
+        defaults.removeObject(forKey: appleLanguagesLastAppliedPreferenceKey)
     }
 #endif
 
@@ -1033,6 +1080,7 @@ final class ProgressStoreService: ObservableObject {
 
     static func resetPersistentStoreFiles() {
         UserDefaults.standard.removeObject(forKey: activeBankPreferenceKey)
+        applyInterfaceLanguagePreference(.system)
         ICloudSyncSettings.clearStoredOptIn()
         let urls = ProgressStoreURLs.standard
         for url in [urls.persistentStoreURL, urls.preferencesStoreURL] {
@@ -1232,8 +1280,10 @@ final class ProgressStoreService: ObservableObject {
             context.rollback()
             throw error
         }
-        UserDefaults.standard.set(preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
-        Self.applyInterfaceLanguagePreference(preferences.language)
+        defaults.set(preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+        if self.preferences.language != preferences.language {
+            Self.applyInterfaceLanguagePreference(preferences.language, defaults: defaults)
+        }
         self.preferences = preferences
     }
 
@@ -1400,8 +1450,8 @@ final class ProgressStoreService: ObservableObject {
             }
 #endif
             try context.save()
-            UserDefaults.standard.set(nextPreferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
-            Self.applyInterfaceLanguagePreference(nextPreferences.language)
+            defaults.set(nextPreferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+            Self.applyInterfaceLanguagePreference(nextPreferences.language, defaults: defaults)
             preferences = nextPreferences
             objectWillChange.send()
         } catch {
@@ -1988,24 +2038,61 @@ final class ProgressStoreService: ObservableObject {
 
     private func loadPreferences() throws -> ApplePreferences {
         let entity = try preferencesEntity(createIfMissing: true)
-        try migrateLegacyEnglishLanguageDefaultIfNeeded(entity)
+        if migrateLegacyEnglishLanguageDefaultIfNeeded(entity) {
+            adoptExternalInterfaceLanguageSelectionIfNeeded(entity)
+        }
         return ApplePreferences(
             practiceMode: ApplePreferences.PracticeMode(rawValue: entity.practiceMode) ?? .immediate,
             examTimerEnabled: entity.examTimerEnabled,
             language: ApplePreferences.LanguagePreference(rawValue: entity.language) ?? .system,
             theme: ApplePreferences.Theme(rawValue: entity.theme) ?? .system,
-            activeBankId: CourseBankID(rawValue: UserDefaults.standard.string(forKey: Self.activeBankPreferenceKey) ?? "") ?? .basic
+            activeBankId: CourseBankID(rawValue: defaults.string(forKey: Self.activeBankPreferenceKey) ?? "") ?? .basic
         )
     }
 
-    private func migrateLegacyEnglishLanguageDefaultIfNeeded(_ entity: PreferencesEntity) throws {
-        let defaults = UserDefaults.standard
-        guard !defaults.bool(forKey: Self.legacyEnglishLanguageMigrationMarkerKey) else { return }
-        if entity.language == ApplePreferences.LanguagePreference.english.rawValue {
-            entity.language = ApplePreferences.LanguagePreference.system.rawValue
-            try context.save()
+    private func migrateLegacyEnglishLanguageDefaultIfNeeded(_ entity: PreferencesEntity) -> Bool {
+        guard !defaults.bool(forKey: Self.legacyEnglishLanguageMigrationMarkerKey) else { return true }
+        switch ApplePreferences.LanguagePreference(rawValue: entity.language) ?? .system {
+        case .english:
+            do {
+                entity.language = ApplePreferences.LanguagePreference.system.rawValue
+#if DEBUG
+                if Self.failNextLegacyLanguageMigrationSaveForTesting {
+                    Self.failNextLegacyLanguageMigrationSaveForTesting = false
+                    throw ProgressStoreInjectedFailure.legacyLanguageMigrationSave
+                }
+#endif
+                try context.save()
+                defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
+            } catch {
+                context.rollback()
+                NSLog("CanadianHam: unable to migrate legacy English language default; will retry on next launch: %@", String(describing: error))
+                return false
+            }
+        case .french:
+            Self.applyInterfaceLanguagePreference(.french, defaults: defaults)
+            defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
+        case .system:
+            defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
         }
-        defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
+        return true
+    }
+
+    private func adoptExternalInterfaceLanguageSelectionIfNeeded(_ entity: PreferencesEntity) {
+#if os(iOS) || os(macOS)
+        let persistentPreference = Self.persistentAppleLanguagesPreference(defaults: defaults, domainName: defaultsDomainName)
+        guard Self.lastAppliedInterfaceLanguagePreference(defaults: defaults) != persistentPreference else { return }
+        do {
+            entity.language = persistentPreference.rawValue
+            try context.save()
+            Self.recordLastAppliedInterfaceLanguagePreference(persistentPreference, defaults: defaults)
+        } catch {
+            context.rollback()
+            NSLog("CanadianHam: unable to adopt app-level AppleLanguages preference; will retry on next launch: %@", String(describing: error))
+        }
+#else
+        _ = entity
+#endif
     }
 
     private func adoptLegacyDeviceRowsIfNeeded() throws {
@@ -2173,7 +2260,7 @@ final class ProgressStoreService: ObservableObject {
             try upsertMorseCourseProgress(row.progress, deviceId: row.deviceId)
         }
         try context.save()
-        UserDefaults.standard.set(snapshot.preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+        defaults.set(snapshot.preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
         preferences = snapshot.preferences
     }
 

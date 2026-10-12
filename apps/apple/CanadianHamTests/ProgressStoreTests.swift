@@ -1013,7 +1013,9 @@ final class ProgressStoreTests: XCTestCase {
 
 #if os(macOS)
     func testNativeSettingsGeneralBindingsUpdatePracticePreferences() throws {
-        let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "nativeSettings")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
         var saveCount = 0
         var failedError: Error?
         let bindings = NativeSettingsPreferenceBindings(
@@ -1073,59 +1075,168 @@ final class ProgressStoreTests: XCTestCase {
     }
 
     func testFreshInstallDefaultsLanguageToSystem() throws {
-        ProgressStoreService.clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting()
-        defer { ProgressStoreService.clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting() }
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "freshLanguage")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
 
-        let store = try ProgressStoreService.inMemoryForTests()
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
 
         XCTAssertEqual(store.preferences.language, .system)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
     }
 
     func testLegacyStoredEnglishLanguageMigratesToSystemOnceAndDoesNotRerun() throws {
-        ProgressStoreService.clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting()
-        defer { ProgressStoreService.clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting() }
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "legacyEnglish")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
         let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.english.rawValue)
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
 
         XCTAssertEqual(store.preferences.language, .system)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
 
         var preferences = store.preferences
         preferences.language = .english
         try store.updatePreferences(preferences)
-        let reopened = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+        let reopened = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
 
         XCTAssertEqual(reopened.preferences.language, .english)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["en"])
     }
 
-    func testLegacyStoredFrenchLanguageStaysFrench() throws {
-        ProgressStoreService.clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting()
-        defer { ProgressStoreService.clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting() }
+    func testLegacyStoredFrenchLanguageStaysFrenchAndAppliesInterfaceLanguageOnce() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "legacyFrench")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
         let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.french.rawValue)
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
 
         XCTAssertEqual(store.preferences.language, .french)
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+#else
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+#endif
+    }
+
+    func testLaunchAdoptsExternalAppleLanguagesSelectionIntoStoredPreference() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "adoptAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(["fr-CA"], forKey: "AppleLanguages")
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr-CA"])
+#else
+        XCTAssertEqual(store.preferences.language, .system)
+#endif
+    }
+
+    func testLaunchKeepsPreferenceWhenAppleLanguagesMatchesLastAppliedValue() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "unchangedAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        ProgressStoreService.applyInterfaceLanguagePreference(.french, defaults: defaults)
+        let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.french.rawValue)
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+
+        XCTAssertEqual(store.preferences.language, .french)
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+#else
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+#endif
+    }
+
+    func testPickerChangeWritesAppleLanguagesButUnchangedPreferencesDoNotRewriteIt() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "pickerAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+
+        var preferences = store.preferences
+        preferences.language = .french
+        try store.updatePreferences(preferences)
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+#else
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+#endif
+
+        preferences.practiceMode = .reviewLater
+        defaults.set(["en"], forKey: "AppleLanguages")
+        try store.updatePreferences(preferences)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["en"])
+    }
+
+    func testResetClearsAppleLanguagesAndLanguagePreference() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "resetAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        var preferences = store.preferences
+        preferences.language = .french
+        try store.updatePreferences(preferences)
+
+        try store.resetAllData(defaults: defaults)
+
+        XCTAssertEqual(store.preferences.language, .system)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+    }
+
+    func testLegacyLanguageMigrationSaveFailureDoesNotBlockStartupAndRetries() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "legacyLanguageFailure")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.english.rawValue)
+        ProgressStoreService.failNextLegacyLanguageMigrationSaveForTesting = true
+        defer { ProgressStoreService.failNextLegacyLanguageMigrationSaveForTesting = false }
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+        XCTAssertEqual(store.preferences.language, .english)
+
+        let reopened = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+        XCTAssertEqual(reopened.preferences.language, .system)
     }
 
     func testAppleInterfaceLanguagePreferenceWritesAppleLanguagesForNextLaunch() throws {
-        let suiteName = "ProgressStoreTests.appleLanguages.\(UUID().uuidString)"
-        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "appleLanguages")
         defer { defaults.removePersistentDomain(forName: suiteName) }
-
-        func storedAppleLanguages() -> [String]? {
-            defaults.persistentDomain(forName: suiteName)?["AppleLanguages"] as? [String]
-        }
 
         ProgressStoreService.applyInterfaceLanguagePreference(.english, defaults: defaults)
 #if os(iOS) || os(macOS)
-        XCTAssertEqual(storedAppleLanguages(), ["en"])
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["en"])
 
         ProgressStoreService.applyInterfaceLanguagePreference(.french, defaults: defaults)
-        XCTAssertEqual(storedAppleLanguages(), ["fr"])
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
 
         ProgressStoreService.applyInterfaceLanguagePreference(.system, defaults: defaults)
-        XCTAssertNil(storedAppleLanguages())
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
 #else
-        XCTAssertNil(storedAppleLanguages())
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
 #endif
     }
 
@@ -2618,6 +2729,17 @@ final class ProgressStoreTests: XCTestCase {
             morseCourseProgress: try store.morseCourseProgress(),
             preferences: store.preferences
         )
+    }
+
+    private func temporaryDefaultsSuite(prefix: String) throws -> (UserDefaults, String) {
+        let suiteName = "ProgressStoreTests.\(prefix).\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defaults.removePersistentDomain(forName: suiteName)
+        return (defaults, suiteName)
+    }
+
+    private func storedAppleLanguages(defaults: UserDefaults, domainName: String) -> [String]? {
+        defaults.persistentDomain(forName: domainName)?["AppleLanguages"] as? [String]
     }
 
     private func preferencesContainer(language: String) throws -> ModelContainer {
