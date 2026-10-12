@@ -34,6 +34,62 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "practice reference sheet")
     }
 
+    func testReferenceSheetUnavailableStateAudits() throws {
+        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamReferenceSheetResourceName", "missing-reference-sheet"])
+        defer { app.terminate() }
+
+        openTool(.referenceSheet, in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-unavailable"].firstMatch.waitForExistence(timeout: 5))
+        try app.performAccessibilityAudit()
+    }
+
+    func testAdvancedPracticeDoesNotOfferBasicReferenceSheet() throws {
+        let app = launchAdvancedPracticeQuestion()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
+        XCTAssertFalse(app.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "Advanced course must not offer the Basic reference sheet")
+    }
+
+    func testCalculatorKeyboardInputIsFocusScoped() throws {
+        let app = launchPracticeQuestion()
+        defer { app.terminate() }
+
+        openTool(.calculator, in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5))
+        app.typeText("1+2\n")
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "3")
+
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        positionElementInMiddleVisibleBand(answer, in: app, context: "answer after keyboard input")
+        answer.tap()
+        app.typeText("9")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "3", "Calculator keyboard input should stop when focus leaves the calculator")
+    }
+
+    func testCalculatorValueSurvivesToolSwitchAndResetsForNewSession() throws {
+        let app = launchPracticeQuestion()
+        defer { app.terminate() }
+
+        openTool(.calculator, in: app)
+        app.typeText("4+5\n")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9")
+        closeTool(in: app)
+        openTool(.referenceSheet, in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-scroll"].firstMatch.waitForExistence(timeout: 5))
+        closeTool(in: app)
+        openTool(.calculator, in: app)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9")
+
+        app.terminate()
+        let freshApp = launchPracticeQuestion(questionID: "B-001-003-001")
+        defer { freshApp.terminate() }
+        openTool(.calculator, in: freshApp)
+        XCTAssertEqual(freshApp.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "0")
+    }
+
     func testMockExamCalculatorKeepsAnswersHittableAndTimerRuns() throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
@@ -131,10 +187,18 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
-    private func launchPracticeQuestion(appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
+    private func launchPracticeQuestion(appearance: String = "light", questionID: String = "B-001-002-002", extraArguments: [String] = []) -> XCUIApplication {
         launchApp(appearance: appearance, arguments: extraArguments + [
             "-CanadianHamInitialCategoryID", "B-001",
-            "-CanadianHamPracticeQuestionID", "B-001-002-002"
+            "-CanadianHamPracticeQuestionID", questionID
+        ])
+    }
+
+    private func launchAdvancedPracticeQuestion() -> XCUIApplication {
+        launchApp(arguments: [
+            "-CanadianHamCourseBankId", "advanced-2025-02-04",
+            "-CanadianHamInitialCategoryID", "A-001",
+            "-CanadianHamPracticeQuestionID", "A-001-001-001"
         ])
     }
 
