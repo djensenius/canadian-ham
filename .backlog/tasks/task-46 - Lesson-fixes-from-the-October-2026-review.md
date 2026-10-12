@@ -1,9 +1,10 @@
 ---
 id: TASK-46
 title: Lesson fixes from the October 2026 review
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-10-12 14:57'
+updated_date: '2026-10-12 15:00'
 labels:
   - content
 dependencies: []
