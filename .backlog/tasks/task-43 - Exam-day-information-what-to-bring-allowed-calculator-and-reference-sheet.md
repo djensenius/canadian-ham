@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 14:45'
+updated_date: '2026-10-12 15:26'
 labels:
   - content
   - web
@@ -47,4 +47,6 @@ Added learner-facing Exam day material rules to L-001-01 in the reference-style 
 Added an Exam day card to Learn on web and Apple linking to L-001-01, with web French strings and Apple Localizable.xcstrings translations added via a Python JSON round-trip.
 
 Updated the existing French Apple UI test to assert the new Learn Exam day section and localized link.
+
+Web dist URL audit failed on the new official ISED downloads citation; added that exact official downloads URL to the audit allowlist and covered it in the audit tests, then reran web typecheck/tests/audit successfully.
 <!-- SECTION:NOTES:END -->
