@@ -50,7 +50,7 @@ On receive, the transceiver demodulates RF into audio tones. The interface or so
 
 Many interfaces also switch the radio between receive and transmit. They may use a push-to-talk line, a data-control signal, or a radio-specific connection. Switching is separate from decoding text or drawing a waterfall display.
 
-Isolation transformers often sit in the audio lines. They pass audio but break direct electrical paths. That can reduce hum, ground-loop current, or computer noise. Level controls or fixed pads keep audio strong enough to decode but not strong enough to overdrive the radio.
+Isolation transformers often sit in the audio lines. They pass audio but break direct electrical paths. That can reduce hum, ground-loop current, or computer noise. Level controls or fixed pads keep audio strong enough to decode but not strong enough to overdrive the radio. A fixed pad is a set attenuator that reduces signal level by a known amount.
 
 Some radios include their own audio codec. A codec converts between analog audio and digital samples. In that design, the connector is only the access point; the codec is the conversion block.
 
@@ -78,7 +78,7 @@ Overvoltage protection must monitor the regulated output. The radio is connected
 
 ### Worked example: transformer and rectifier roles
 
-A bench supply uses a transformer to reduce 120 V AC mains to 18 V AC at its secondary. A bridge rectifier turns that AC waveform into pulsating DC. A filter capacitor charges near the peaks and supplies current between peaks. The regulator holds the output near 13.8 V DC for the radio.
+A bench supply uses a transformer to reduce 120 V AC mains to 18 V AC at its secondary. A bridge rectifier turns that AC waveform into pulsating DC. A filter capacitor charges near the peaks and supplies current between peaks, so the no-load filtered DC can be roughly 23 V to 24 V before diode drops, ripple, and load are considered. The regulator holds the output near 13.8 V DC for the radio.
 
 The numbers are approximate because real supplies include diode drops, ripple, and load changes. The block sequence is the key idea.
 
@@ -90,7 +90,7 @@ The filter has not regulated the final voltage. It has given the regulator a ste
 
 ### In the real world: stored charge after unplugging
 
-Never open or probe inside a mains-powered supply unless you are qualified and equipped for that work. Unplug the supply. Use the service procedure, a proper resistor discharge tool, or a built-in bleeder path where specified. Verify with a meter that stored charge is gone. Do not trust a dark pilot lamp or unlit power LED as proof that capacitors are discharged.
+Never open or probe inside a mains-powered supply unless you are qualified and equipped for that work. Unplug the supply. Use the service procedure and a proper insulated discharge tool with an inline resistor. Verify with a meter that stored charge is gone. A bleeder resistor may help, but it can fail or take longer than expected, so waiting for it is not a safe substitute for controlled discharge and verification. Do not trust a dark pilot lamp or unlit power LED as proof that capacitors are discharged.
 
 ### Worked example: regulator heat
 
