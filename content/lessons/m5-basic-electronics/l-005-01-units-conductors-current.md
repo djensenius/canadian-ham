@@ -56,7 +56,7 @@ When you change from a large unit to a smaller unit, the number gets larger. Whe
 
 - Helps remember: the usual electronics prefix order from large to small.
 - Trick: giga, mega, kilo, base, milli, micro, nano, pico can be remembered as "Great Mighty Kings Make Micro Nano Pico."
-- Limit: this lesson's table skips nano. Most adjacent rows differ by 1 000, but micro to pico is a jump of 1 000 000 when nano is not shown.
+- Limit: the sentence skips the base unit and still has several M words, so use it with the table rather than by itself. This lesson's table skips nano; most adjacent rows differ by 1 000, but micro to pico is a jump of 1 000 000 when nano is not shown.
 
 ### Worked example: MHz to kHz
 
@@ -95,12 +95,12 @@ A small bypass capacitor is marked 470 000 pF.
 
 A phone charger may say 9.0 V at 3.0 A. The volts tell the electrical pressure. The amperes tell the current the charger can supply under that rating.
 
+The same label might also list watts. If it says 27 W, that matches P = I x E because 3.0 A x 9.0 V = 27 W. You will use that power formula in the next lesson.
+
 ### Analogy: electrical pressure and voltage
 
 - Helpful part: pressure can push water through a pipe, like voltage can push charge through a circuit.
 - Limit: a cut water pipe can spill water, but a broken wire usually stops current because air is an insulator.
-
-The same label might also list watts. If it says 27 W, that matches P = I x E because 3.0 A x 9.0 V = 27 W. You will use that power formula in the next lesson.
 
 ## Conductors, insulators, and semiconductors
 

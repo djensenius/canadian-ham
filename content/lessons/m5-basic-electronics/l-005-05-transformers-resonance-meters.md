@@ -150,7 +150,7 @@ A voltmeter is placed across the part being measured. It should look like a high
 
 An ammeter is placed in series so the circuit current flows through it. It should look like a low resistance so it does not create a large extra voltage drop.
 
-Accuracy tells how close a meter reading is to the actual value being measured. Precision describes repeatable, fine distinctions between readings. Resolution is the smallest displayed step. A meter can show many digits and still be inaccurate if it is not calibrated.
+Accuracy tells how close a meter reading is to the actual value being measured. Precision describes how closely repeated readings agree with each other. Resolution is the smallest displayed step. A meter can show many digits and still be inaccurate if it is not calibrated.
 
 ### Memory trick: V across, A along
 

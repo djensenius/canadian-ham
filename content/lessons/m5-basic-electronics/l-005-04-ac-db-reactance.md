@@ -65,9 +65,9 @@ The decibel compares two levels. Receiver signal reports may use an S-meter, the
 
 For example, a monitor reading of S9 plus 18 dB that loses 6 dB would be expected near S9 plus 12 dB. The change is subtracted from the amount above S9.
 
-For Basic-level estimating, use practical power shortcuts. Decibel values add when power ratios multiply. For example, three +3 dB steps stack to about 8x power. A +10 dB step followed by a -3 dB step leaves about 5x power.
+For Basic-level estimating, use practical power shortcuts. Decibel values add when power ratios multiply. For example, three +3 dB steps stack to about 8x power. A +10 dB step followed by a -3 dB step leaves about 5x power. Three -10 dB steps stack to 1/10 x 1/10 x 1/10, or 1/1000 power.
 
-When attenuators are cascaded, add their dB losses first and then convert the total. A 10 dB attenuator followed by a 3 dB attenuator gives a total loss of 13 dB, so a 24 W signal is reduced to about 1.2 W.
+When attenuators are cascaded, add their dB losses first and then convert the total. A 13 dB loss uses the tenfold-loss row plus one 3 dB loss step, so its ratio is about 0.1 x 0.5 = 0.05.
 
 | dB change | Power ratio |
 |---:|---:|
@@ -82,34 +82,34 @@ When attenuators are cascaded, add their dB losses first and then convert the to
 
 ### Worked example: gain
 
-A 4 W handheld feeds a 7 dB gain amplifier. Use the shortcut table: that gain is roughly a fivefold power change.
+A 4 W handheld feeds a 7 dB gain amplifier.
 
-- Given: starting power = 4 W; gain = about 5:1.
+- Given: starting power = 4 W; gain = 7 dB.
 - Find: estimated output power.
-- Formula: output power = starting power x power ratio.
-- Substitute: 4 W x 5.
+- Formula: 7 dB is 3 dB below the tenfold-gain row, so use that row and then halve it.
+- Substitute: 4 W x tenfold x 0.5.
 - Answer: about 20 W.
 - Sanity check: the estimate is above the starting power but still in a small-amplifier range.
 
 ### Worked example: feedline loss
 
-A transmitter is 30 W and the line loss is 5 dB. Use the shortcut table: that loss leaves a little less than one third of the original power.
+A transmitter is 44 W and the line loss is 7 dB.
 
-- Given: starting power = 30 W; remaining ratio is about 0.32.
+- Given: starting power = 44 W; loss = 7 dB.
 - Find: power reaching the antenna.
-- Formula: antenna power = starting power x remaining ratio.
-- Substitute: 30 W x 0.32.
-- Answer: about 9.5 W.
+- Formula: 7 dB loss is one 3 dB step less loss than the tenfold-loss row, so use 0.1 / 0.5 = 0.2.
+- Substitute: 44 W x 0.2.
+- Answer: about 8.8 W.
 - Sanity check: a loss must leave less power than the transmitter started with.
 
 ### Worked example: large power reduction
 
-A test setup uses cascaded attenuators. Use the dB-chain method above before converting back to watts.
+A test setup uses cascaded attenuators with a total loss of 13 dB.
 
-- Given: starting power = 24 W; total loss from the chain above = 13 dB.
+- Given: starting power = 24 W; total loss = 13 dB.
 - Find: final power.
-- Formula: use the combined dB loss, not each attenuator as a separate story.
-- Substitute: apply the 13 dB loss from the chain above.
+- Formula: 13 dB loss uses the tenfold-loss row plus one 3 dB loss step, so the ratio is 0.1 x 0.5.
+- Substitute: 24 W x 0.1 x 0.5.
 - Answer: about 1.2 W.
 - Sanity check: adding dB losses is the same as multiplying their power ratios.
 
@@ -158,7 +158,7 @@ Equal parts often make the pattern easier to see.
 
 For an air-core coil, inductance depends mainly on the coil's size, its winding count, and its shape. Changing the diameter, length, or turn count changes the magnetic field. That changes the inductance.
 
-For a simple air-spaced capacitor, capacitance depends on plate area and spacing. Larger facing plate area gives more capacitance. More spacing gives less capacitance. Replacing the air gap with a suitable dielectric material, such as a plastic film, also changes the capacitance and usually raises it.
+For a simple air-spaced capacitor, capacitance depends on plate area and spacing. Larger facing plate area gives more capacitance. More spacing gives less capacitance. Replacing the air gap with a suitable dielectric material, such as a plastic film, also changes the capacitance and raises it.
 
 Polarized electrolytic capacitors need correct polarity. Never apply reverse voltage to a polarized electrolytic capacitor.
 

@@ -42,10 +42,10 @@
       "id": "QZ-L-005-04-A-C3",
       "prompt": { "en": "Which part is useful when you want high opposition to RF but low opposition at low frequency?", "fr": null },
       "choices": [
-        { "text": { "en": "A capacitor chosen to pass the wanted audio strongly.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A bypass capacitor chosen to shunt RF to ground.", "fr": null }, "isCorrect": false },
         { "text": { "en": "An inductor used as an RF choke.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A resistor chosen only by its colour bands.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A diode used only for DC polarity protection.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "A coupling capacitor sized for the audio path.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A resistor chosen for a DC voltage drop.", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "Inductive reactance increases with frequency, so a choke can impede RF.", "fr": null }
     }

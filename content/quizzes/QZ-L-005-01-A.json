@@ -27,7 +27,7 @@
       "id": "QZ-L-005-01-A-C2",
       "prompt": { "en": "Which statement best describes an insulator in a simple circuit?", "fr": null },
       "choices": [
-        { "text": { "en": "It can still conduct a little under some conditions, but it strongly resists normal current flow.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It strongly resists normal current flow and is used to separate conductors.", "fr": null }, "isCorrect": true },
         { "text": { "en": "It is chosen when a circuit needs the lowest possible resistance path.", "fr": null }, "isCorrect": false },
         { "text": { "en": "It is a material whose conductivity is between metal conductors and insulators.", "fr": null }, "isCorrect": false },
         { "text": { "en": "It is used to carry the return current in a coax shield.", "fr": null }, "isCorrect": false }
