@@ -460,18 +460,18 @@ struct ReferenceSheetToolView: View {
             Button {
                 zoom = max(0.8, zoom - 0.1)
             } label: {
-                AccessibleSecondaryButtonLabel(title: "Zoom out")
+                ReferenceZoomButtonLabel(title: "Zoom out")
             }
-            .buttonStyle(AccessiblePrimaryButtonStyle())
+            .buttonStyle(.plain)
             .disabled(zoom <= 0.8)
             .accessibilityIdentifier("reference-sheet-zoom-out")
 
             Button {
                 zoom = min(1.8, zoom + 0.1)
             } label: {
-                AccessibleSecondaryButtonLabel(title: "Zoom in")
+                ReferenceZoomButtonLabel(title: "Zoom in")
             }
-            .buttonStyle(AccessiblePrimaryButtonStyle())
+            .buttonStyle(.plain)
             .disabled(zoom >= 1.8)
             .accessibilityIdentifier("reference-sheet-zoom-in")
         }
@@ -480,6 +480,23 @@ struct ReferenceSheetToolView: View {
     private func loadDocument() {
         guard document == nil else { return }
         document = try? ReferenceSheetLoader.load(configuration: configuration)
+    }
+}
+
+private struct ReferenceZoomButtonLabel: View {
+    let title: LocalizedStringKey
+    @Environment(\.isEnabled) private var isEnabled
+
+    var body: some View {
+        Text(title) // l10n: localized
+            .font(DesignTokens.FontScale.caption.weight(.semibold))
+            .foregroundStyle(isEnabled ? DesignTokens.Colors.paper : DesignTokens.Colors.inkMuted)
+            .lineLimit(1)
+            .minimumScaleFactor(0.75)
+            .padding(.horizontal, DesignTokens.Spacing.md)
+            .frame(minWidth: 96, minHeight: 44)
+            .background(isEnabled ? DesignTokens.Colors.accentStrong : DesignTokens.Colors.paperInset, in: Capsule())
+            .overlay(Capsule().strokeBorder(isEnabled ? DesignTokens.Colors.accentStrong : DesignTokens.Colors.inkMuted, lineWidth: 1))
     }
 }
 
