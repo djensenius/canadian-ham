@@ -126,11 +126,7 @@ final class MorseTrainerTests: XCTestCase {
     }
 
     func testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins() throws {
-        let tokensURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appending(path: "CanadianHam/Design/Tokens.swift")
-        let tokens = try String(contentsOf: tokensURL, encoding: .utf8)
+        let tokens = try designTokensSource()
         XCTAssertTrue(tokens.contains("paperInset = Color.dynamicToken(light: DesignTokens.RGB(red: 0.937255, green: 0.890196, blue: 0.796078), dark: DesignTokens.RGB(red: 0.094118, green: 0.078431, blue: 0.062745))"))
         XCTAssertTrue(tokens.contains("accent = Color.dynamicToken(light: DesignTokens.RGB(red: 0.647059, green: 0.227451, blue: 0.164706), dark: DesignTokens.RGB(red: 1.000000, green: 0.541176, blue: 0.439216))"))
         XCTAssertLessThanOrEqual(morseBeaconAreaCssPixels, morseFlashMaxAreaCssPixels)
@@ -141,6 +137,34 @@ final class MorseTrainerTests: XCTestCase {
             XCTAssertEqual(safety.reason, .belowAreaThreshold)
             XCTAssertGreaterThanOrEqual(morseContrastRatio(palette.resting, palette.active), 3)
         }
+    }
+
+    func testMorseSettingsDescriptionInkOnCardBackgroundMeetsWCAGContrast() throws {
+        let tokens = try designTokensSource()
+        let ink = try designTokenRGB(named: "ink", in: tokens)
+        let cardBackground = try designTokenRGB(named: "paperElevated", in: tokens)
+
+        let lightRatio = morseContrastRatio(ink.light, cardBackground.light)
+        let darkRatio = morseContrastRatio(ink.dark, cardBackground.dark)
+        XCTAssertGreaterThanOrEqual(lightRatio, 4.5, "Morse settings description ink on light card background regressed below WCAG AA contrast")
+        XCTAssertGreaterThanOrEqual(darkRatio, 4.5, "Morse settings description ink on dark card background regressed below WCAG AA contrast")
+
+        let trainerSourceURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appending(path: "CanadianHam/Morse/MorseTrainerView.swift")
+        let trainerSource = try String(contentsOf: trainerSourceURL, encoding: .utf8)
+        let descriptionRange = try XCTUnwrap(trainerSource.range(of: "Text(\"These local settings control Morse tone, timing, and playback volume without network access.\")"))
+        let descriptionBlock = trainerSource[descriptionRange.lowerBound...].prefix(360)
+        XCTAssertTrue(descriptionBlock.contains(".foregroundStyle(DesignTokens.Colors.ink)"), "The contrast guard must track the description text token")
+        XCTAssertTrue(descriptionBlock.contains(".accessibilityIdentifier(\"morse-settings-description\")"), "The audit exception must stay tied to the stable description identifier")
+
+        let viewsSourceURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appending(path: "CanadianHam/Views/StudyViews.swift")
+        let viewsSource = try String(contentsOf: viewsSourceURL, encoding: .utf8)
+        XCTAssertTrue(viewsSource.contains(".background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))"), "paperCard must continue to use the guarded card background token")
     }
 
     func testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced() throws {
@@ -402,6 +426,35 @@ final class MorseTrainerTests: XCTestCase {
         let lighter = max(leftLuminance, rightLuminance)
         let darker = min(leftLuminance, rightLuminance)
         return (lighter + 0.05) / (darker + 0.05)
+    }
+
+    private struct DynamicMorseRGB {
+        let light: MorseRGB
+        let dark: MorseRGB
+    }
+
+    private func designTokensSource() throws -> String {
+        let tokensURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appending(path: "CanadianHam/Design/Tokens.swift")
+        return try String(contentsOf: tokensURL, encoding: .utf8)
+    }
+
+    private func designTokenRGB(named name: String, in source: String) throws -> DynamicMorseRGB {
+        let escapedName = NSRegularExpression.escapedPattern(for: name)
+        let pattern = #"public static let \#(escapedName) = Color\.dynamicToken\(light: DesignTokens\.RGB\(red: ([0-9.]+), green: ([0-9.]+), blue: ([0-9.]+)\), dark: DesignTokens\.RGB\(red: ([0-9.]+), green: ([0-9.]+), blue: ([0-9.]+)\)\)"#
+        let regex = try NSRegularExpression(pattern: pattern)
+        let fullRange = NSRange(source.startIndex..<source.endIndex, in: source)
+        let match = try XCTUnwrap(regex.firstMatch(in: source, range: fullRange), "Expected to find DesignTokens.Colors.\(name)")
+        let values = try (1...6).map { index in
+            let range = try XCTUnwrap(Range(match.range(at: index), in: source), "Expected RGB capture \(index) for DesignTokens.Colors.\(name)")
+            return try XCTUnwrap(Double(source[range]), "Expected numeric RGB capture \(index) for DesignTokens.Colors.\(name)")
+        }
+        return DynamicMorseRGB(
+            light: MorseRGB(red: values[0], green: values[1], blue: values[2]),
+            dark: MorseRGB(red: values[3], green: values[4], blue: values[5])
+        )
     }
 
     private func minimalMorseCourse() throws -> MorseCourse {
