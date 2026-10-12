@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 15:52'
+updated_date: '2026-10-12 16:00'
 labels:
   - web
 dependencies:
@@ -38,4 +38,6 @@ Web UI for the calculator and reference sheet in practice and mock exams: a side
 
 <!-- SECTION:NOTES:BEGIN -->
 Coordinator: this lane owns content/reference-sheet/ (an original interim formula sheet, swappable for the official ISED sheet once the owner decides on licensing).
+
+Implemented original Basic reference-sheet content with a lesson-backed content validation script, web calculator/reference sheet tool panels in practice and mock exams, localized calculator UI/live output, focus-return behavior, responsive side-panel/bottom-drawer styling, and targeted RTL coverage. Targeted validation so far: pnpm --filter @canadian-ham/web typecheck passed; pnpm --filter @canadian-ham/content-tools check:reference-sheet passed; targeted App exam-tool tests passed (5 tests).
 <!-- SECTION:NOTES:END -->
