@@ -209,6 +209,14 @@ The practical difference is that the circuit may be inside a neighbour's speaker
 - Continuing to transmit after credible evidence of spurious emissions from your station.
 - Arguing with a neighbour before collecting repeatable observations.
 
+::figure interference-troubleshooting-map
+Alt text: A troubleshooting map that separates receiver overload, audio rectification, and transmitter spurious emissions.
+Text equivalent:
+- Receiver overload: a large off-channel signal crowds the receiver input while the wanted signal is small.
+- Audio rectification: a speaker lead can act as an antenna and feed RF to a non-linear detector junction.
+- Spurious outputs: a transmitter has one wanted output and smaller unwanted outputs that must be corrected.
+::
+
 ## Illustration brief
 
 Alt text: A troubleshooting map that separates receiver overload, audio rectification, and transmitter spurious emissions.

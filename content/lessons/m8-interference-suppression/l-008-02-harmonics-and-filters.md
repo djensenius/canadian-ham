@@ -202,6 +202,16 @@ A band-pass filter keeps a multi-station operation manageable. A ferrite choke h
 - Ignoring filter impedance and creating a mismatch where the filter is inserted.
 - Judging a filter by its name instead of by what it passes, what it attenuates, and where it is installed.
 
+::figure filter-response-sketches
+Alt text: Frequency-response sketches for low-pass, high-pass, band-pass, band-reject, and notch filters.
+Text equivalent:
+- Low-pass: passes lower frequencies and attenuates higher frequencies.
+- High-pass: attenuates lower frequencies and passes higher frequencies.
+- Band-pass: passes a middle band and attenuates frequencies below and above it.
+- Band-reject: passes frequencies outside a middle band and attenuates that middle band.
+- Notch: passes most frequencies but attenuates one narrow frequency.
+::
+
 ## Illustration brief
 
 Alt text: Frequency-response sketches for low-pass, high-pass, band-pass, band-reject, and notch filters.
