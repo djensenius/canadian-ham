@@ -6,11 +6,11 @@
     <line x1="108" y1="66" x2="108" y2="226" stroke-width="7"/>
     <line x1="196" y1="86" x2="196" y2="206" stroke-width="7"/>
     <line x1="282" y1="106" x2="282" y2="186" stroke-width="7"/>
-    <line x1="196" y1="146" x2="196" y2="242" stroke-width="5"/>
+    <line x1="196" y1="146" x2="238" y2="232" stroke-width="5"/>
     <rect x="384" y="70" width="220" height="164" rx="16" ry="16" stroke-width="6"/>
-    <path d="M408 138 C432 98 478 98 502 138" stroke-width="5"/>
-    <path d="M418 198 C438 174 468 174 488 198" stroke-width="5"/>
-    <path d="M532 198 C542 184 558 184 568 198" stroke-width="5"/>
+    <path d="M408 136 C432 100 478 100 502 136" stroke-width="5"/>
+    <path d="M418 194 C438 174 468 174 488 194" stroke-width="5"/>
+    <path d="M532 194 C542 184 558 184 568 194" stroke-width="5"/>
     <line x1="80" y1="370" x2="586" y2="370" stroke-width="5"/>
     <line x1="190" y1="344" x2="190" y2="396" stroke-width="5"/>
     <line x1="340" y1="344" x2="340" y2="396" stroke-width="5"/>
@@ -20,8 +20,8 @@
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="108" y="44" font-size="24">reflector</text><text x="282" y="94" font-size="24">director</text><text x="152" y="182" font-size="24">boom</text>
-    <text x="132" y="270" font-size="24">driven</text><text x="270" y="250" font-size="24">feedline</text>
-    <text x="494" y="54" font-size="24">receiver display</text><text x="455" y="166" font-size="24">wide</text><text x="453" y="226" font-size="24">med</text><text x="550" y="226" font-size="24">narrow</text>
+    <text x="156" y="230" font-size="24">driven</text><text x="300" y="250" font-size="24">feedline</text>
+    <text x="494" y="54" font-size="24">receiver display</text><text x="455" y="166" font-size="24">wide</text><text x="453" y="224" font-size="24">med</text><text x="550" y="224" font-size="24">narrow</text>
     <text x="190" y="336" font-size="24">desired</text><text x="340" y="336" font-size="24">LO</text><text x="490" y="336" font-size="24">image</text><text x="266" y="460" font-size="24">IF</text><text x="416" y="460" font-size="24">IF</text>
   </g>
 </svg>

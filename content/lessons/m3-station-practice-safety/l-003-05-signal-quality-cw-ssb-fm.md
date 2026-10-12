@@ -52,9 +52,9 @@ A variable-frequency oscillator lets a CW transmitter tune anywhere across a ran
 ::figure signal-quality-cw-ssb-fm
 Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
 Text equivalent:
-- CW panel: a smooth on envelope and a separate click risk sketch.
-- SSB panel: an envelope below the ALC limit and a flat-clips sketch.
-- FM panel: centre line, deviation arrow, and over-dev arrow.
+- CW panel: a smooth on-off envelope and a square-edged clicks sketch.
+- SSB panel: a clipped waveform flattened at the limit and a splatter label.
+- FM panel: centre line, deviation arrow, and overdev label next to the large arrow.
 ::
 
 

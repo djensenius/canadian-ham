@@ -59,7 +59,7 @@ Alt text: A priority note board showing distress facts and station-readiness ite
 Text equivalent:
 - The board labels distress as life threat, MAYDAY / SOS, and first priority.
 - The lower rows say urgent: serious help and safety: hazard info.
-- The go-kit drawing is labelled battery and dipole.
+- The go-kit drawing includes labelled handheld, battery, and dipole items.
 ::
 
 

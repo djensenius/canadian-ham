@@ -1,15 +1,22 @@
 <svg id="signal-quality-cw-ssb-fm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
   <title>CW SSB and FM signal quality</title>
-  <desc>Three panels show shaped CW keying, SSB level and clipping, and FM deviation.</desc>
+  <desc>Three panels show shaped CW keying, SSB clipping and splatter risk, and FM deviation.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
     <line x1="214" y1="52" x2="214" y2="420" stroke-width="5"/><line x1="426" y1="52" x2="426" y2="420" stroke-width="5"/>
-    <path d="M56 238 C70 198 88 174 108 174 C128 174 146 198 160 238 C174 278 190 298 204 298" stroke-width="6"/><line x1="58" y1="342" x2="202" y2="342" stroke-width="5"/><path d="M62 388 L84 348 L106 388 L128 348 L150 388" stroke-width="5"/>
-    <line x1="256" y1="148" x2="390" y2="148" stroke-width="4"/><path d="M262 240 C286 174 330 174 354 240 C368 278 382 278 398 240" stroke-width="6"/><path d="M262 350 C276 306 298 306 312 328 L312 350 L350 350 L350 328 C364 306 382 306 396 350" stroke-width="6"/>
+    <path d="M58 248 C76 248 84 176 102 176 L166 176 C184 176 190 248 204 248" stroke-width="6"/>
+    <path d="M62 356 L62 294 L150 294 L150 356" stroke-width="6"/>
+    <line x1="256" y1="150" x2="278" y2="150" stroke-width="4"/>
+    <line x1="290" y1="150" x2="312" y2="150" stroke-width="4"/>
+    <line x1="324" y1="150" x2="346" y2="150" stroke-width="4"/>
+    <line x1="358" y1="150" x2="390" y2="150" stroke-width="4"/>
+    <path d="M262 242 C280 182 296 162 314 162 L334 162 C352 162 370 184 392 242" stroke-width="6"/>
+    <path d="M262 334 C282 278 298 258 314 258 L334 258 C350 258 370 280 392 334" stroke-width="6"/>
+    <path d="M276 334 L320 334 L360 356 L394 356" stroke-width="5"/>
     <line x1="486" y1="220" x2="596" y2="220" stroke-width="4"/><path d="M488 170 C518 134 564 134 594 170" stroke-width="5"/><path d="M488 270 C518 306 564 306 594 270" stroke-width="5"/><line x1="536" y1="184" x2="536" y2="256" stroke-width="5"/><polygon points="536,184 524,204 548,204" fill="currentColor" stroke="none"/><polygon points="536,256 524,236 548,236" fill="currentColor" stroke="none"/><line x1="584" y1="142" x2="584" y2="298" stroke-width="5"/><polygon points="584,142 572,162 596,162" fill="currentColor" stroke="none"/><polygon points="584,298 572,278 596,278" fill="currentColor" stroke="none"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="108" y="88" font-size="28" font-weight="700">CW</text><text x="108" y="150" font-size="24">smooth on</text><text x="108" y="420" font-size="24">click risk</text>
-    <text x="320" y="88" font-size="28" font-weight="700">SSB</text><text x="320" y="136" font-size="24">ALC limit</text><text x="320" y="382" font-size="24">flat clips</text>
-    <text x="532" y="88" font-size="28" font-weight="700">FM</text><text x="474" y="206" font-size="24">centre</text><text x="526" y="332" font-size="24">deviation</text><text x="560" y="382" font-size="24">overdev</text>
+    <text x="108" y="88" font-size="28" font-weight="700">CW</text><text x="108" y="154" font-size="24">smooth</text><text x="108" y="388" font-size="24">clicks</text>
+    <text x="320" y="88" font-size="28" font-weight="700">SSB</text><text x="320" y="138" font-size="24">limit</text><text x="320" y="250" font-size="24">clipped</text><text x="338" y="392" font-size="24">splatter</text>
+    <text x="532" y="88" font-size="28" font-weight="700">FM</text><text x="474" y="206" font-size="24">centre</text><text x="520" y="354" font-size="24">deviation</text><text x="566" y="320" font-size="24">overdev</text>
   </g>
 </svg>

@@ -111,7 +111,7 @@ By the end of this lesson, you can:
 Alt text: Station checklist with operator qualification, band, bandwidth, power, repeater, and modulation-quality boxes.
 Text equivalent:
 - The station chain is cert, radio, amp, and antenna.
-- The checklist boxes are band, width, Pout, and voice %, with checkmarks labelled qual, repeater, and modulation.
+- The checklist boxes are band, width, Pout, and voice, with checkmarks labelled qual, repeater, and modulation.
 - The band-edge sketches are labelled inside and spills.
 ::
 

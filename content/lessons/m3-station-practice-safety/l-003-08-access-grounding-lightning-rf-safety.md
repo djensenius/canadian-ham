@@ -82,7 +82,7 @@ RF grounding has an extra complication. A long wire that looks like a ground at 
 Alt text: A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod, and an outside antenna mast.
 Text equivalent:
 - Radio, tuner, and supply boxes bond down to a labelled bonding bar.
-- Coax runs to an entry box labelled single point, then to a surge box and the antenna mast.
+- Coax runs to a box labelled single entry, then to a surge box and the antenna mast.
 - The surge box bonds to the bonding bar and to a labelled ground rod outside.
 ::
 
@@ -195,9 +195,9 @@ Safety choices affect station performance too. Good bonding can reduce hum and R
 
 ## Illustration brief
 
-Alt text: A station safety layout shows locked power control, single-point bonding, outside surge protection, and RF separation from people.
+Alt text: A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod, and an outside antenna mast.
 
-Description: Draw an original room-and-wall cross-section. Inside, show a transceiver, supply, and tuner bonded to one ground bar. At the wall, show an outside coax entry panel with surge protectors bonded to the building grounding system. Add a locked power switch at the station desk, a disconnected microphone icon, a storm-disconnect note, and people standing outside a shaded RF keep-clear area around an antenna.
+Description: Draw an original left-to-right station bonding sketch. Indoors, show the radio, tuner, and supply bonded to one labelled station bonding bar. At the wall, show the coax passing through a labelled single-point entry to a surge arrestor. Bond the entry and surge arrestor to the station bonding bar and to one outside ground rod. Outside, show the coax continuing to an antenna on a mast.
 
 ## Summary
 
