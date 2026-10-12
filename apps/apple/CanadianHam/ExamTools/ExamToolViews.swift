@@ -460,7 +460,7 @@ struct ReferenceSheetToolView: View {
             } label: {
                 AccessibleSecondaryButtonLabel(title: "Zoom out")
             }
-            .buttonStyle(AccessibleSecondaryButtonStyle())
+            .buttonStyle(AccessiblePrimaryButtonStyle())
             .disabled(zoom <= 0.8)
             .accessibilityIdentifier("reference-sheet-zoom-out")
 
@@ -469,7 +469,7 @@ struct ReferenceSheetToolView: View {
             } label: {
                 AccessibleSecondaryButtonLabel(title: "Zoom in")
             }
-            .buttonStyle(AccessibleSecondaryButtonStyle())
+            .buttonStyle(AccessiblePrimaryButtonStyle())
             .disabled(zoom >= 1.8)
             .accessibilityIdentifier("reference-sheet-zoom-in")
         }

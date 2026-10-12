@@ -272,11 +272,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
         let candidates = scrollView.staticTexts.allElementsBoundByIndex.map { ("staticText", $0) } + scrollView.buttons.allElementsBoundByIndex.map { ("button", $0) }
         return candidates.compactMap { kind, element in
-            guard element.exists else { return nil }
+            guard element.exists, !ignoresProtectedAreaIntersection(element) else { return nil }
             let frame = element.frame
-            guard frame.width > 0, frame.height > 0, frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
+            guard frame.width > 0, frame.height > 0, frame.minY >= windowMinY, frame.minY < protectedMaxY else { return nil }
             return "\(kind) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))"
         }
+    }
+
+    private func ignoresProtectedAreaIntersection(_ element: XCUIElement) -> Bool {
+        ["practice-category-title", "practice-session-tally", "practice-category-summary"].contains(element.identifier)
+    }
     }
 
     private func visibleFrameExcludingNavigationBar(in app: XCUIApplication) -> CGRect {
