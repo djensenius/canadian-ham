@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 15:48'
+updated_date: '2026-10-12 15:52'
 labels:
   - web
 dependencies:
@@ -27,6 +27,12 @@ Web UI for the calculator and reference sheet in practice and mock exams: a side
 - [ ] #2 Calculator fully keyboard-operable with screen-reader announcements; axe passes with the panels open in light and dark
 - [ ] #3 The mock exam timer is unaffected; tools are available in practice and mock exams
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add an original Basic reference-sheet Markdown source plus a content-tool check that verifies required sheet entries against the authored lessons and wires that check into content validation.\n2. Add a swappable web reference-sheet data module, import @canadian-ham/calculator-engine into the web app, and render non-modal exam-tool toolbars/panels in Basic practice and mock exam sessions with focus return, keyboard-scoped calculator input, localized display/spoken announcements, and no persistent storage.\n3. Style the shared tools as an existing-token side panel on wide screens and an in-flow bottom drawer on narrow screens so question and answer controls remain visible/operable.\n4. Add Vitest/RTL coverage for practice and mock tool buttons, open/close focus management, calculator keyboard/live output/locales, answer operability with panels open, timer continuity, axe in light/dark, and representative 320/tablet/desktop widths.\n5. Run targeted web/content checks, then full required typecheck, test, web build, content/import/schema checks, and dist URL audit; finalize Backlog ACs with evidence.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
