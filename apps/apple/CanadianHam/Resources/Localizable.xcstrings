@@ -11115,34 +11115,18 @@
         }
       }
     },
-    "Close tools" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fermer les outils"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fermer les outils"
-          }
-        }
-      }
-    },
     "Decimal point" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Séparateur décimal"
+            "value" : "Virgule décimale"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Séparateur décimal"
+            "value" : "Virgule décimale"
           }
         }
       }
@@ -11328,13 +11312,35 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Égale"
+            "value" : "Égal"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Égale"
+            "value" : "Égal"
+          }
+        }
+      }
+    },
+    "Keyboard: digits and operators, Return or = equals, Backspace deletes, Escape clears entry, Delete clears all. No formulas, text, or history saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyboard: digits and operators, Return or = equals, Backspace deletes, Escape clears entry, Delete clears all. No formulas, text, or history saved."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clavier : chiffres et opérateurs; Retour ou = calcule; Retour arrière efface un chiffre; Échap efface l’entrée; Suppr efface tout. Aucune formule, aucun texte ni aucun historique enregistré."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clavier : chiffres et opérateurs; Retour ou = calcule; Retour arrière efface un chiffre; Échap efface l’entrée; Suppr efface tout. Aucune formule, aucun texte ni aucun historique enregistré."
           }
         }
       }
@@ -11351,28 +11357,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Multiplier"
-          }
-        }
-      }
-    },
-    "No formulas, text, or history saved." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No formulas, text, or history saved."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune formule, aucun texte ni aucun historique enregistré."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune formule, aucun texte ni aucun historique enregistré."
           }
         }
       }
@@ -11565,6 +11549,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réduire"
+          }
+        }
+      }
+    },
+    "Close tool" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer l’outil"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer l’outil"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close tool"
           }
         }
       }

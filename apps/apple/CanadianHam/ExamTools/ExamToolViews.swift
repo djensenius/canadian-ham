@@ -145,7 +145,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                         .overlay(Circle().strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(Text("Close tools")) // l10n: localized
+                .accessibilityLabel(Text("Close tool")) // l10n: localized
                 .accessibilityIdentifier("exam-tool-close-button")
             }
 
@@ -159,6 +159,7 @@ struct ExamToolPresentationModifier: ViewModifier {
             }
         }
         .padding(DesignTokens.Spacing.lg)
+        .padding(.top, DesignTokens.Spacing.lg)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(DesignTokens.Colors.paper)
     }
@@ -417,7 +418,7 @@ private struct CalculatorToolLayout {
     }
 
     private var showsCompactHelpText: Bool {
-        !dynamicTypeSize.isAccessibilitySize && availableHeight >= 390
+        !dynamicTypeSize.isAccessibilitySize && availableHeight >= 320
     }
 
     private var compactSectionSpacing: CGFloat { 6 }
@@ -449,7 +450,7 @@ struct ReferenceSheetToolView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Label {
                         Text("Reference sheet unavailable")
-                            .font(DesignTokens.FontScale.title.weight(.bold))
+                            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                             .fixedSize(horizontal: false, vertical: true)
                     } icon: {
                         Image(systemName: "doc.text.magnifyingglass")
