@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:46'
+updated_date: '2026-10-12 15:11'
 labels:
   - content
   - apple
@@ -50,6 +50,8 @@ Figures added in third slice: L-007-02 daytime-absorption-frequency-window shows
 Figures added in fourth slice: L-008-01 interference-troubleshooting-map separates receiver overload, audio rectification, and transmitter spurious outputs; verified against B-008-001-001..011, B-008-002-001..011, B-008-003-001..011 including high-pass at TV receiver, ferrite coils/lead shortening/common-mode choke cures, key clicks, spurious emissions, and parasitic oscillation. L-008-02 filter-response-sketches shows low-pass, high-pass, band-pass, band-reject, and notch frequency responses with pass/attenuate labels; verified against B-008-004-001..011 and B-008-005-001..011 including harmonics as integer multiples, second harmonic example at 56 MHz from 10 m, overdrive/flat topping, filter placement, and impedance matching.
 
 Validation/render evidence: ran pnpm check:figures:fix, pnpm check:figures, node scripts/check-figures.mjs --self-test, content coverage/quizzes/originality:all/explanations/links, web vitest, and content-swift swift test. Rendered all 13 figure SVGs with qlmanage -t -s 800 and inspected the PNGs; final renders are saved under docs/evidence/task-38.4/. AC #2 remains unchecked because Apple in-app/xbuild validation is intentionally deferred in this lane per task instructions.
+
+Review fix a1b5730: redrew the technically incorrect feedline/balun, SWR/loss/matching, transformer/parallel-LC/meter, propagation-path, and daytime-absorption figures; corrected interference, Yagi, loop, VHF modes, and filter response details; moved all task-38.4 figure directives inline beside the relevant lesson sections; rewrote text equivalents to match the final drawings; added the task-38.4 originality note; removed task-38.1 render PNGs from docs/evidence/task-38.4; regenerated Apple assets and qlmanage evidence. Validation rerun: pnpm check:figures:fix; pnpm check:figures; node scripts/check-figures.mjs --self-test; pnpm --dir packages/content-tools check:coverage/check:quizzes/check:lesson-originality:all/check:explanations; pnpm check:links. Re-rendered and inspected all 10 changed SVGs with qlmanage.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
