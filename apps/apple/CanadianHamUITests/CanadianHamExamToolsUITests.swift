@@ -1,5 +1,7 @@
-import UIKit
 import XCTest
+#if os(iOS)
+import UIKit
+#endif
 
 @MainActor
 final class CanadianHamExamToolsUITests: XCTestCase {
@@ -55,7 +57,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testRegularWidthUsesInspectorAndKeepsAnswersHittable() throws {
+#if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector layout is covered by the targeted iPad run.")
+#else
+        throw XCTSkip("Inspector layout is covered by the targeted iPad run.")
+#endif
         let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
         defer { app.terminate() }
 
