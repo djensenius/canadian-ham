@@ -60,6 +60,12 @@ interface DecimalParts {
   readonly scientific: boolean;
 }
 
+interface RoundedDecimal {
+  readonly digits: string;
+  readonly decimalExponent: number;
+  readonly isNegative: boolean;
+}
+
 const DIGIT_KEYS = new Set<CalculatorKey>(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
 const BINARY_OPERATOR_KEYS = new Set<CalculatorKey>(["+", "-", "×", "÷"]);
 const MAX_SIGNIFICANT_DIGITS = 12;
@@ -69,7 +75,8 @@ const CANCELLATION_TOLERANCE = 1e-14;
 const MIN_NONZERO_ABSOLUTE_VALUE = 1e-99;
 const MAX_ABSOLUTE_VALUE = 1e100;
 const TYPOGRAPHIC_MINUS = "−";
-const POWERS_OF_TEN: readonly number[] = Object.freeze(Array.from({ length: 121 }, (_, index) => 10 ** index));
+const SCIENTIFIC_MANTISSA_DIGITS = 10;
+const POWERS_OF_TEN: readonly number[] = Object.freeze(Array.from({ length: 121 }, (_, index) => Number(`1e${index}`)));
 
 export function createCalculatorState(options: CalculatorOptions = {}): CalculatorState {
   return withDisplay({
@@ -540,36 +547,82 @@ function decimalParts(value: number): DecimalParts {
   if (normalizedValue === null || normalizedValue === 0) {
     return { mantissa: "0", exponent: 0, isNegative: false, scientific: false };
   }
-  const isNegative = normalizedValue < 0;
-  const absoluteValue = Math.abs(normalizedValue);
 
-  const scientific = absoluteValue >= 999_999_999_999.5 || absoluteValue < 1e-9;
+  const roundedForClassification = roundedDecimal(normalizedValue, MAX_SIGNIFICANT_DIGITS);
+  const exponent = scientificExponent(roundedForClassification);
+  if (exponent >= 12 || exponent < -9) {
+    return scientificDecimalParts(normalizedValue);
+  }
+
+  if (exponent >= -3) {
+    const zerosBeforeFirstSignificantDigit = exponent < 0 ? -exponent - 1 : 0;
+    const fixedSignificantDigits = Math.min(MAX_SIGNIFICANT_DIGITS, MAX_SIGNIFICANT_DIGITS - zerosBeforeFirstSignificantDigit);
+    return fixedDecimalParts(normalizedValue, fixedSignificantDigits);
+  }
+
+  const zerosBeforeFirstSignificantDigit = -exponent - 1;
+  if (zerosBeforeFirstSignificantDigit + roundedForClassification.digits.length <= MAX_SIGNIFICANT_DIGITS) {
+    return fixedDecimalParts(normalizedValue, MAX_SIGNIFICANT_DIGITS);
+  }
+
+  return scientificDecimalParts(normalizedValue);
+}
+
+function fixedDecimalParts(value: number, significantDigits: number): DecimalParts {
+  const rounded = roundedDecimal(value, significantDigits);
+  return {
+    mantissa: fixedFromDigits(rounded.digits, rounded.decimalExponent),
+    exponent: 0,
+    isNegative: rounded.isNegative,
+    scientific: false,
+  };
+}
+
+function scientificDecimalParts(value: number): DecimalParts {
+  const rounded = roundedDecimal(value, SCIENTIFIC_MANTISSA_DIGITS);
+  return {
+    mantissa: mantissaFromDigits(rounded.digits),
+    exponent: scientificExponent(rounded),
+    isNegative: rounded.isNegative,
+    scientific: true,
+  };
+}
+
+function roundedDecimal(value: number, significantDigits: number): RoundedDecimal {
+  const isNegative = value < 0;
+  const absoluteValue = Math.abs(value);
+  if (!Number.isFinite(absoluteValue) || absoluteValue === 0) {
+    return { digits: "0", decimalExponent: 0, isNegative: false };
+  }
+
   const exponent = Math.floor(Math.log10(absoluteValue));
-  const shift = MAX_SIGNIFICANT_DIGITS - exponent - 1;
+  const shift = significantDigits - exponent - 1;
   const scaled = shift >= 0
     ? absoluteValue * powerOfTen(shift)
     : absoluteValue / powerOfTen(-shift);
   if (!Number.isFinite(scaled)) {
-    return { mantissa: "0", exponent: 0, isNegative: false, scientific: false };
+    return { digits: "0", decimalExponent: 0, isNegative: false };
   }
+
   let coefficient = BigInt(Math.floor(scaled + 0.5));
   let decimalExponent = -shift;
-  const overflow = 10n ** BigInt(MAX_SIGNIFICANT_DIGITS);
+  const overflow = 10n ** BigInt(significantDigits);
   if (coefficient === 0n) {
-    return { mantissa: "0", exponent: 0, isNegative: false, scientific: false };
+    return { digits: "0", decimalExponent: 0, isNegative: false };
   }
   if (coefficient >= overflow) {
     coefficient /= 10n;
     decimalExponent += 1;
   }
 
-  const digits = trimTrailingZeros(coefficient.toString(), decimalExponent);
-  decimalExponent += coefficient.toString().length - digits.length;
-  if (scientific) {
-    const scientificExponent = digits.length + decimalExponent - 1;
-    return { mantissa: mantissaFromDigits(digits), exponent: scientificExponent, isNegative, scientific: true };
-  }
-  return { mantissa: fixedFromDigits(digits, decimalExponent), exponent: 0, isNegative, scientific: false };
+  const coefficientDigits = coefficient.toString();
+  const digits = trimTrailingZeros(coefficientDigits, decimalExponent);
+  decimalExponent += coefficientDigits.length - digits.length;
+  return { digits, decimalExponent, isNegative };
+}
+
+function scientificExponent(rounded: RoundedDecimal): number {
+  return rounded.digits.length + rounded.decimalExponent - 1;
 }
 
 function trimTrailingZeros(digits: string, decimalExponent: number): string {
@@ -668,7 +721,8 @@ function localizeDecimalSeparator(value: string, locale: CalculatorLocale): stri
 }
 
 function entryExceedsLimits(entry: string): boolean {
-  return entry.length > MAX_ENTRY_LENGTH || significantDigitCount(entry) > MAX_SIGNIFICANT_DIGITS;
+  const unsignedEntry = entry.startsWith("-") ? entry.slice(1) : entry;
+  return unsignedEntry.length > MAX_ENTRY_LENGTH || significantDigitCount(entry) > MAX_SIGNIFICANT_DIGITS;
 }
 
 function powerOfTen(exponent: number): number {

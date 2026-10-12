@@ -13,9 +13,22 @@ final class CalculatorFixtureTests: XCTestCase {
         for testCase in fixture.cases {
             let state = runCalculatorKeys(testCase.keys, locale: testCase.locale ?? .en)
             XCTAssertEqual(state.display, testCase.expectedDisplay, testCase.id)
+            XCTAssertLessThanOrEqual(state.display.count, 16, "\(testCase.id): display \(state.display) exceeds 16 code points")
             if let expectedDisplayValue = testCase.expectedDisplayValue {
                 XCTAssertEqual(state.displayValue, expectedDisplayValue, testCase.id)
             }
+        }
+    }
+
+    func testSeededCalculatorFuzzKeepsDisplayWithinUIBound() throws {
+        let keys: [CalculatorKey] = [.zero, .one, .two, .three, .four, .five, .six, .seven, .eight, .nine, .decimalPoint, .add, .subtract, .multiply, .divide, .equals, .squareRoot, .square, .reciprocal, .toggleSign, .percent, .clearEntry, .allClear, .backspace]
+        var seed: UInt32 = 0x44101201
+        var state = createCalculatorState()
+        for index in 0..<20_000 {
+            seed = seed &* 1_664_525 &+ 1_013_904_223
+            let key = keys[Int(seed % UInt32(keys.count))]
+            state = applyCalculatorKey(state, key: key)
+            XCTAssertLessThanOrEqual(state.display.count, 16, "step \(index) key \(key.rawValue) display \(state.display) exceeds 16 code points")
         }
     }
 

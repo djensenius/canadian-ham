@@ -153,6 +153,12 @@ private struct DecimalParts {
     let scientific: Bool
 }
 
+private struct RoundedDecimal {
+    let digits: String
+    let decimalExponent: Int
+    let isNegative: Bool
+}
+
 private let maxSignificantDigits = 12
 private let maxEntryLength = 15
 private let resultSignificantDigits = 15
@@ -160,7 +166,8 @@ private let cancellationTolerance = 1e-14
 private let minNonzeroAbsoluteValue = 1e-99
 private let maxAbsoluteValue = 1e100
 private let typographicMinus = "−"
-private let powersOfTen: [Double] = (0...120).map { Foundation.pow(10, Double($0)) }
+private let scientificMantissaDigits = 10
+private let powersOfTen: [Double] = (0...120).map { Double("1e\($0)")! }
 
 public func createCalculatorState(locale: CalculatorLocale = .en) -> CalculatorState {
     withDisplay(CalculatorState(locale: locale))
@@ -603,37 +610,82 @@ private func decimalParts(for value: Double) -> DecimalParts {
     guard let normalizedValue = normalizeDisplayValue(value), normalizedValue != 0 else {
         return DecimalParts(mantissa: "0", exponent: 0, isNegative: false, scientific: false)
     }
-    let isNegative = normalizedValue < 0
-    let absoluteValue = abs(normalizedValue)
 
-    let scientific = absoluteValue >= 999_999_999_999.5 || absoluteValue < 1e-9
+    let roundedForClassification = roundedDecimal(normalizedValue, significantDigits: maxSignificantDigits)
+    let exponent = scientificExponent(roundedForClassification)
+    if exponent >= 12 || exponent < -9 {
+        return scientificDecimalParts(normalizedValue)
+    }
+
+    if exponent >= -3 {
+        let zerosBeforeFirstSignificantDigit = exponent < 0 ? -exponent - 1 : 0
+        let fixedSignificantDigits = min(maxSignificantDigits, maxSignificantDigits - zerosBeforeFirstSignificantDigit)
+        return fixedDecimalParts(normalizedValue, significantDigits: fixedSignificantDigits)
+    }
+
+    let zerosBeforeFirstSignificantDigit = -exponent - 1
+    if zerosBeforeFirstSignificantDigit + roundedForClassification.digits.count <= maxSignificantDigits {
+        return fixedDecimalParts(normalizedValue, significantDigits: maxSignificantDigits)
+    }
+
+    return scientificDecimalParts(normalizedValue)
+}
+
+private func fixedDecimalParts(_ value: Double, significantDigits: Int) -> DecimalParts {
+    let rounded = roundedDecimal(value, significantDigits: significantDigits)
+    return DecimalParts(
+        mantissa: fixed(fromDigits: rounded.digits, decimalExponent: rounded.decimalExponent),
+        exponent: 0,
+        isNegative: rounded.isNegative,
+        scientific: false
+    )
+}
+
+private func scientificDecimalParts(_ value: Double) -> DecimalParts {
+    let rounded = roundedDecimal(value, significantDigits: scientificMantissaDigits)
+    return DecimalParts(
+        mantissa: mantissa(fromDigits: rounded.digits),
+        exponent: scientificExponent(rounded),
+        isNegative: rounded.isNegative,
+        scientific: true
+    )
+}
+
+private func roundedDecimal(_ value: Double, significantDigits: Int) -> RoundedDecimal {
+    let isNegative = value < 0
+    let absoluteValue = abs(value)
+    if !absoluteValue.isFinite || absoluteValue == 0 {
+        return RoundedDecimal(digits: "0", decimalExponent: 0, isNegative: false)
+    }
+
     let exponent = floor(log10(absoluteValue))
-    let shift = maxSignificantDigits - Int(exponent) - 1
+    let shift = significantDigits - Int(exponent) - 1
     let scaled = shift >= 0
         ? absoluteValue * powerOfTen(shift)
         : absoluteValue / powerOfTen(-shift)
     if !scaled.isFinite {
-        return DecimalParts(mantissa: "0", exponent: 0, isNegative: false, scientific: false)
+        return RoundedDecimal(digits: "0", decimalExponent: 0, isNegative: false)
     }
+
     var coefficient = Int64(floor(scaled + 0.5))
     var decimalExponent = -shift
-    let overflow = Int64(powerOfTen(maxSignificantDigits))
+    let overflow = Int64(powerOfTen(significantDigits))
     if coefficient == 0 {
-        return DecimalParts(mantissa: "0", exponent: 0, isNegative: false, scientific: false)
+        return RoundedDecimal(digits: "0", decimalExponent: 0, isNegative: false)
     }
     if coefficient >= overflow {
         coefficient /= 10
         decimalExponent += 1
     }
 
-    let originalDigits = String(coefficient)
-    let digits = trimTrailingZeros(originalDigits, decimalExponent: decimalExponent)
-    decimalExponent += originalDigits.count - digits.count
-    if scientific {
-        let scientificExponent = digits.count + decimalExponent - 1
-        return DecimalParts(mantissa: mantissa(fromDigits: digits), exponent: scientificExponent, isNegative: isNegative, scientific: true)
-    }
-    return DecimalParts(mantissa: fixed(fromDigits: digits, decimalExponent: decimalExponent), exponent: 0, isNegative: isNegative, scientific: false)
+    let coefficientDigits = String(coefficient)
+    let digits = trimTrailingZeros(coefficientDigits, decimalExponent: decimalExponent)
+    decimalExponent += coefficientDigits.count - digits.count
+    return RoundedDecimal(digits: digits, decimalExponent: decimalExponent, isNegative: isNegative)
+}
+
+private func scientificExponent(_ rounded: RoundedDecimal) -> Int {
+    rounded.digits.count + rounded.decimalExponent - 1
 }
 
 private func trimTrailingZeros(_ digits: String, decimalExponent: Int) -> String {
@@ -737,7 +789,8 @@ private func localizeDecimalSeparator(_ value: String, locale: CalculatorLocale)
 }
 
 private func entryExceedsLimits(_ entry: String) -> Bool {
-    entry.count > maxEntryLength || significantDigitCount(entry) > maxSignificantDigits
+    let unsignedEntry = entry.hasPrefix("-") ? String(entry.dropFirst()) : entry
+    return unsignedEntry.count > maxEntryLength || significantDigitCount(entry) > maxSignificantDigits
 }
 
 private func powerOfTen(_ exponent: Int) -> Double {
