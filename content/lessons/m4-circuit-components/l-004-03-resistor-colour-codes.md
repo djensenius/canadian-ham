@@ -68,7 +68,7 @@ Think of the first two bands as making a two-digit number. Then multiply that nu
 
 If a resistor has no separate tolerance band, treat the tolerance as ±20%.
 
-This table is a reference aid. Real exam reference material may provide a colour-code table, and real bench work often uses a meter to confirm the part.
+This table is a reference aid for this course. The current ISED Basic exam reference sheet does not provide a colour-code table, and real bench work often uses a meter to confirm the part.
 
 ### Memory trick: colour order
 

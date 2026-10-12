@@ -56,27 +56,27 @@
     {
       "id": "QZ-L-004-03-A-C2",
       "prompt": {
-        "en": "You measure a 1 kohm resistor as 1 080 ohms. Which marked part could still be within its tolerance?",
+        "en": "You measure a 1 kilohm resistor as 1 080 ohms. Which marked part could still be within its tolerance?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "A 1 kohm +/-1% part only",
+            "en": "A 1 kilohm ±1% part only",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Both a 1 kohm +/-1% part and a 1 kohm +/-10% part",
+            "en": "Both a 1 kilohm ±1% part and a 1 kilohm ±10% part",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "A 1 kohm +/-10% part only",
+            "en": "A 1 kilohm ±10% part only",
             "fr": null
           },
           "isCorrect": true
@@ -90,14 +90,14 @@
         }
       ],
       "explanation": {
-        "en": "A 1 kohm +/-1% resistor may range from 990 to 1 010 ohms, while +/-10% allows 900 to 1 100 ohms; 1 080 ohms fits only the wider tolerance.",
+        "en": "A 1 kilohm ±1% resistor may range from 990 to 1 010 ohms, while ±10% allows 900 to 1 100 ohms; 1 080 ohms fits only the wider tolerance.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-03-A-C3",
       "prompt": {
-        "en": "A 330 ohm resistor uses orange, orange, brown for its first three bands. Which multiplier colour would make the same first two digits into 3.3 kohms?",
+        "en": "A 330 ohm resistor uses orange, orange, brown for its first three bands. Which multiplier colour would make the same first two digits into 3.3 kilohms?",
         "fr": null
       },
       "choices": [
@@ -131,7 +131,7 @@
         }
       ],
       "explanation": {
-        "en": "Orange-orange gives the digits 33. Red is the x 100 multiplier, so 33 x 100 = 3 300 ohms, or 3.3 kohms.",
+        "en": "Orange-orange gives the digits 33. Red is the x 100 multiplier, so 33 x 100 = 3 300 ohms, or 3.3 kilohms.",
         "fr": null
       }
     }
