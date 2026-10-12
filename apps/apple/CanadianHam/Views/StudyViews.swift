@@ -434,7 +434,7 @@ struct PracticeSessionView: View {
             .background(DesignTokens.Colors.paper)
             .onChange(of: selectedExamTool) { _, next in
                 guard next != nil else { return }
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         proxy.scrollTo("practice-answers-anchor", anchor: .top)
                     }
@@ -872,7 +872,7 @@ struct MockExamView: View {
             .background(DesignTokens.Colors.paper)
             .onChange(of: selectedExamTool) { _, next in
                 guard next != nil else { return }
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         proxy.scrollTo("mock-answers-anchor", anchor: .top)
                     }
