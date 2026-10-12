@@ -90,7 +90,7 @@ By the end of this lesson, you can:
 | Disability-related examination delivery | Exams may be oral or tailored to the candidate's ability, such as dividing the exam into segments when an accessibility option is needed. |
 | Morse sending accommodation | A disabled candidate may be allowed to recite the examination text in Morse code sounds. |
 | Required examination portions | All required portions of the examination remain part of an accommodated exam. |
-| Reading difficulty or language barrier | After a written-exam failure caused by reading difficulty or normal language of use, oral examination delivery may be available. |
+| Reading difficulty or language barrier | After a written-exam failure caused by reading difficulty or because English or French is not the candidate's usual language, oral examination delivery may be available. |
 | Language-related examination delivery | The candidate answers personally in English or French; oral delivery is the supported language aid. |
 | Medical evidence | An examiner may request evidence from a practising medical physician before accommodating testing. |
 

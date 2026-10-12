@@ -70,7 +70,7 @@ By the end of this lesson, you can:
 | 50 MHz to 54 MHz and 144 MHz to 148 MHz | 30 kHz maximum bandwidth. |
 | 28 MHz to 29.7 MHz | 20 kHz maximum bandwidth. |
 | Amateur bands between 7 MHz and 25 MHz, except the special narrow band | 6 kHz maximum bandwidth. |
-| 10.100 MHz to 10.150 MHz | Less than 6 kHz maximum bandwidth. |
+| 10.100 MHz to 10.150 MHz | 1 kHz maximum bandwidth in RBR-4, which is less than 6 kHz. |
 | 10.100 MHz to 10.150 MHz | Single sideband is prohibited. |
 | Transmitting near band edges | The entire occupied bandwidth must remain within the amateur band. |
 | CW / Morse radiotelegraphy | Narrower than SSB voice and FM voice in the mode-width ordering. |
@@ -93,7 +93,7 @@ By the end of this lesson, you can:
 | Basic-only non-SSB emissions for an operator without Advanced | 190 W carrier power. |
 | Advanced, DC input to the final RF stage | 1 000 W. |
 | Advanced, single-sideband peak envelope power | 2 250 W PEP. |
-| Advanced on 60 metres | 100 W ERP expressed as PEP. |
+| Advanced on the special band | On 60 metres, 100 W ERP expressed as PEP. |
 | 630 metres and 2200 metres | Antenna gain must be taken into account because limits are expressed as EIRP. |
 
 ## Reference facts: Repeaters, automatic transmissions, stability, and modulation quality
@@ -115,13 +115,13 @@ Learn the below-30-MHz gate with the repeater-output row. Basic by itself covers
 
 Bandwidth, mode, and band-edge rows all describe occupied spectrum. Near an edge, compare the whole signal to the band boundary. A dial display may show the carrier or suppressed carrier; the emitted signal still has width. For the HF band edges, the lower edges form a useful pattern: 3.5, 7, 14, and 28 MHz double, and 21 MHz is 3 x 7 MHz.
 
-The special narrow segment named in the bandwidth table has a tighter limit than the surrounding HF bands. That is why SSB voice is not allowed there.
+The special narrow segment named in the bandwidth table has a 1 kHz RBR-4 limit. That limit is narrower than an SSB voice signal, so SSB voice is not allowed there.
 
 Power rows attach a number to a measurement point and quantity. DC input is electrical power going into the final RF stage before RF conversion. Carrier power is steady RF output for non-SSB emissions. PEP captures the crest of an SSB voice envelope. ERP and EIRP move outward to radiated power by including antenna-system gain.
 
-The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station. The Advanced-on-special-band row is different because its limit is ERP expressed as PEP, so antenna gain is part of the comparison.
+The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station. The Advanced on the special band row is different because its limit is ERP expressed as PEP, so antenna gain is part of the comparison.
 
-Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. The unmodulated-carrier rule is a narrow test allowance for the range named by the table, not permission to hold a frequency or carry an ordinary contact. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
+Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. The unmodulated-carrier rule is a narrow test allowance for brief checks in the range named by the table. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
 
 ### Memory trick: Basic power stays Basic
 
