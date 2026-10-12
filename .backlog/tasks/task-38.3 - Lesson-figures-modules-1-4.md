@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:31'
+updated_date: '2026-10-12 14:33'
 labels:
   - content
   - apple
@@ -34,3 +34,9 @@ Draw the remaining Illustration brief figures for lessons in m1-regulations-poli
 <!-- SECTION:PLAN:BEGIN -->
 1. Inventory module 1-4 illustration briefs and choose one stable figure id per lesson, excluding L-004-03.\n2. Draw simple original currentColor SVGs with generous text clearance, add matching ::figure directives and text equivalents where dense.\n3. Regenerate figure assets/metadata with pnpm check:figures:fix, render every figure with qlmanage into docs/evidence/task-38.3/, inspect previews, and iterate.\n4. Run figure/content/web/Swift content checks; record per-figure evidence and leave Apple app xbuild validation unchecked for the later integration lane.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Figure notes batch m4: L-004-01 amplifiers-diodes shows weak input/larger output, amplifier supply energy, and diode anode/cathode with conventional-current and electron-flow directions; verified against lesson text and B-004-001/B-004-002 quiz questions B-004-001-001..010 and B-004-002-001..009, especially B-004-002-005 and B-004-002-007. L-004-02 control-terminals shows NPN, N-channel FET, and triode terminals with base/gate/grid circled as controls; verified against lesson text and B-004-003/B-004-004/B-004-005 quiz questions B-004-003-001..011, B-004-004-001..011, and B-004-005-001..009.
+<!-- SECTION:NOTES:END -->
