@@ -364,6 +364,7 @@ private struct LessonReaderView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
+        .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
     }
 
@@ -444,6 +445,18 @@ private struct LessonReaderView: View {
         let ordered = library.orderedLessons()
         guard let index = ordered.firstIndex(where: { $0.id == lesson.id }) else { return nil }
         return ordered[safe: index + offset]
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func lessonReaderOpaqueNavigationBar() -> some View {
+#if os(iOS)
+        toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+#else
+        self
+#endif
     }
 }
 
