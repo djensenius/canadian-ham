@@ -425,7 +425,9 @@ struct ReferenceSheetToolView: View {
                             .padding(.bottom, DesignTokens.Spacing.xl)
                     }
                     .scrollIndicators(.hidden)
+                    .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
+                    .accessibilityValue(Text(document.accessibilityText)) // l10n: content(en)
                     .accessibilityIdentifier("reference-sheet-scroll")
                 }
             } else {
@@ -478,6 +480,15 @@ struct ReferenceSheetToolView: View {
     private func loadDocument() {
         guard document == nil else { return }
         document = try? ReferenceSheetLoader.load(configuration: configuration)
+    }
+}
+
+private extension ReferenceSheetDocument {
+    var accessibilityText: String {
+        markdown
+            .replacingOccurrences(of: "#", with: "")
+            .replacingOccurrences(of: "|", with: " ")
+            .replacingOccurrences(of: "-", with: " ")
     }
 }
 
