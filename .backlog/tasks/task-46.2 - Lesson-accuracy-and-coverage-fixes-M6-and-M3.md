@@ -1,11 +1,11 @@
 ---
 id: TASK-46.2
 title: 'Lesson accuracy and coverage fixes: M6 and M3'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:12'
+updated_date: '2026-10-12 15:21'
 labels:
   - content
 dependencies: []
@@ -86,6 +86,8 @@ Validation results:
 - cd apps/web && npx vitest run: first full run failed 2 existing/flaky course-switch tests, rerun passed (15 files, 160 tests). Canvas getContext jsdom warnings only.
 - DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift: passed (18 ContentLibraryTests).
 - Apple app suites were not run; this was content-only work per task instructions.
+
+Review round for 8ee77cf: merged origin/main into task-46.2-lesson-fixes-m6-m3 and kept this branch's task-46.2 file on the expected task-file conflict. Applying requested accuracy, reason-depth, quiz, low-item, taught-facts-note, and validation fixes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
