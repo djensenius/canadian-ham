@@ -17,6 +17,7 @@ objectives:
   - "Explain what a tuner or matching network changes."
 prerequisites:
   - L-006-01
+  - L-005-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-006-02-A

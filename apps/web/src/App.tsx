@@ -1035,6 +1035,32 @@ interface LessonPageProps {
   readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void;
 }
 
+function LessonPrerequisites({ interfaceLanguage, lesson, onOpenLesson }: { readonly interfaceLanguage: InterfaceLanguage; readonly lesson: LessonMeta; readonly onOpenLesson: (moduleId: string, lessonId: string) => void }) {
+  const prerequisiteLessons = lesson.prerequisites.flatMap((prerequisiteId) => {
+    const prerequisiteLesson = lessonsById.get(prerequisiteId);
+    return prerequisiteLesson === undefined ? [] : [prerequisiteLesson];
+  });
+  if (prerequisiteLessons.length === 0) {
+    return null;
+  }
+  const headingId = `lesson-prerequisites-${lesson.id}`;
+  return (
+    <section className="lesson-prerequisites" aria-labelledby={headingId}>
+      <h3 id={headingId}>{t(interfaceLanguage, "lessonPrerequisitesHeading")}</h3>
+      <ul>
+        {prerequisiteLessons.map((prerequisiteLesson) => (
+          <li key={prerequisiteLesson.id}>
+            <a href={`#/learn/${prerequisiteLesson.moduleId}/${prerequisiteLesson.id}`} onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+              event.preventDefault();
+              onOpenLesson(prerequisiteLesson.moduleId, prerequisiteLesson.id);
+            }}><span lang={englishTextLang(interfaceLanguage)}>{prerequisiteLesson.title.en}</span></a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt }: LessonPageProps) {
   const lesson = lessonsById.get(lessonId);
   const module = modulesById.get(moduleId) ?? (lesson !== undefined ? modulesById.get(lesson.moduleId) : undefined);
@@ -1066,6 +1092,7 @@ function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuest
         <p className="eyebrow">{t(interfaceLanguage, "lessonMeta", lesson.id, lesson.estimatedMinutes, lesson.covers.join(", "))}</p>
         <h2 id="lesson-title" lang={englishTextLang(interfaceLanguage)}>{lesson.title.en}</h2>
         <p>{readRecord === undefined ? t(interfaceLanguage, "lessonNotMarkedYet") : t(interfaceLanguage, "lessonMarkedReadTimes", readRecord.readCount)}</p>
+        <LessonPrerequisites interfaceLanguage={interfaceLanguage} lesson={lesson} onOpenLesson={onOpenLesson} />
         {lesson.status === "outline" ? (
           <section className="coming-soon" aria-labelledby="coming-soon-title">
             <h3 id="coming-soon-title">{t(interfaceLanguage, "lessonComingSoonTitle")}</h3>

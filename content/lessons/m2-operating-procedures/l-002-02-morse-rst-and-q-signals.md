@@ -17,6 +17,7 @@ objectives:
   - "Recognize common Q signals used in amateur procedure."
 prerequisites:
   - L-002-01
+  - L-005-04
 estimatedMinutes: 40
 quizIds:
   - QZ-L-002-02-A

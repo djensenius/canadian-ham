@@ -825,6 +825,36 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(codeRender.container);
   });
 
+  it("renders lesson prerequisites as localized accessible links", async () => {
+    window.location.hash = "#/learn/M4/L-004-01";
+    const store = createStore("lesson-prerequisites");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-prerequisites-seed"} />);
+
+    await screen.findByRole("heading", { name: "Amplifiers and diodes" });
+    const prerequisites = screen.getByRole("region", { name: "Before this lesson" });
+    const prerequisiteLink = within(prerequisites).getByRole("link", { name: "Power and Ohm’s law" });
+    assert.equal(prerequisiteLink.getAttribute("href"), "#/learn/M5/L-005-02");
+    assert.ok(within(prerequisites).getByRole("link", { name: "AC, decibels, capacitors, inductors, and reactance" }));
+    await expectNoAxeViolations(container);
+
+    await user.click(prerequisiteLink);
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    assert.equal(window.location.hash, "#/learn/M5/L-005-02");
+
+    cleanup();
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/learn/M5/L-005-02";
+    const frenchStore = createStore("lesson-prerequisites-fr");
+    const frenchRender = render(<App store={frenchStore} now={() => fixedNow} seedFactory={() => "lesson-prerequisites-fr-seed"} />);
+
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    const frenchPrerequisites = screen.getByRole("region", { name: "Avant cette leçon" });
+    assert.ok(within(frenchPrerequisites).getByRole("link", { name: "Units, conductors, and current" }));
+    assert.ok(frenchRender.container.querySelector(".lesson-prerequisites a span[lang='en']"));
+    await expectNoAxeViolations(frenchRender.container);
+  });
+
   it("automatically includes M4 and M6 lessons from content and renders them", async () => {
     window.location.hash = "#/learn";
     const store = createStore("m4-m6-lessons");

@@ -16,6 +16,7 @@ objectives:
   - "Recognize when Canadian operators are subject to foreign or regional rules."
 prerequisites:
   - L-001-04
+  - L-002-04
 estimatedMinutes: 30
 quizIds:
   - QZ-L-001-05-A

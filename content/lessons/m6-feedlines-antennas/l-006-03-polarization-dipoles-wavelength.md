@@ -16,6 +16,7 @@ objectives:
   - "Estimate wavelength from frequency."
 prerequisites:
   - L-006-02
+  - L-005-04
 estimatedMinutes: 35
 quizIds:
   - QZ-L-006-03-A

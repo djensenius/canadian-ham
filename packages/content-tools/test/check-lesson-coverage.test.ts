@@ -364,6 +364,46 @@ test("coverage fails when a lesson prerequisite does not exist", async () => {
   });
 });
 
+test("coverage fails when a lesson prerequisite is not earlier in recommended order", async () => {
+  await withFixture("later-prerequisite", async (root) => {
+    await writeFixture(root, ({ modules, lessons }) => {
+      modules.get("M1")!.lessonIds.push("L-001-02");
+      lessons.set("L-001-02", {
+        id: "L-001-02",
+        moduleId: "M1",
+        categoryIds: ["B-001"],
+        title: "Second fixture lesson",
+        covers: ["B-001-001"],
+        prerequisites: [],
+        status: "outline",
+      });
+      lessons.get("L-001-01")!.prerequisites.push("L-001-02");
+    });
+
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /prerequisite L-001-02 must come before L-001-01/.test(file.message)));
+  });
+});
+
+test("coverage fails when lesson prerequisites form a cycle", async () => {
+  await withFixture("prerequisite-cycle", async (root) => {
+    await writeFixture(root, ({ modules, lessons }) => {
+      modules.get("M1")!.lessonIds.push("L-001-02");
+      lessons.set("L-001-02", {
+        id: "L-001-02",
+        moduleId: "M1",
+        categoryIds: ["B-001"],
+        title: "Second fixture lesson",
+        covers: ["B-001-001"],
+        prerequisites: ["L-001-01"],
+        status: "outline",
+      });
+      lessons.get("L-001-01")!.prerequisites.push("L-001-02");
+    });
+
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /prerequisite cycle detected: L-001-01 -> L-001-02 -> L-001-01/.test(file.message)));
+  });
+});
+
 test("coverage fails when a lesson covers entry does not match its categoryIds prefix", async () => {
   await withFixture("cover-prefix", async (root) => {
     await writeFixture(root, ({ lessons }) => {

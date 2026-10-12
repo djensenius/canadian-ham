@@ -16,6 +16,7 @@ objectives:
   - "Identify tradeoffs between simple wires and directional loops."
 prerequisites:
   - L-006-04
+  - L-005-05
 estimatedMinutes: 35
 quizIds:
   - QZ-L-006-05-A

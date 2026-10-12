@@ -16,6 +16,8 @@ objectives:
   - "Explain how poor filtering can affect transmitted signals."
 prerequisites:
   - L-003-06
+  - L-003-03
+  - L-005-02
 estimatedMinutes: 35
 quizIds:
   - QZ-L-003-07-A

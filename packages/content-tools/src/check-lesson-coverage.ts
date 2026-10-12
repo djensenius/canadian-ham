@@ -335,6 +335,78 @@ async function readExpectedSubsectionIds(subsectionsPath: string): Promise<strin
   return [...new Set(ids)].sort();
 }
 
+type MalformedFile = { filePath: string; message: string };
+
+function buildRecommendedLessonOrder(modulesById: ReadonlyMap<string, ParsedModule>, lessonsById: ReadonlyMap<string, ParsedLesson>): { orderByLessonId: Map<string, number>; errors: MalformedFile[] } {
+  const orderByLessonId = new Map<string, number>();
+  const errors: MalformedFile[] = [];
+  const orderedModules = [...modulesById.values()].sort((left, right) => left.module.order - right.module.order || left.module.id.localeCompare(right.module.id));
+  let orderIndex = 0;
+
+  for (const { filePath, module } of orderedModules) {
+    const moduleLessonIds = new Set<string>();
+    for (const lessonId of module.lessonIds) {
+      if (moduleLessonIds.has(lessonId)) {
+        errors.push({ filePath, message: `module lessonIds repeats lesson ${lessonId}` });
+      }
+      moduleLessonIds.add(lessonId);
+      if (orderByLessonId.has(lessonId)) {
+        errors.push({ filePath, message: `module lessonIds includes ${lessonId} more than once in the recommended lesson order` });
+      } else if (lessonsById.has(lessonId)) {
+        orderByLessonId.set(lessonId, orderIndex);
+        orderIndex += 1;
+      }
+    }
+  }
+
+  for (const { filePath, lesson } of lessonsById.values()) {
+    if (!orderByLessonId.has(lesson.id)) {
+      errors.push({ filePath, message: `lesson ${lesson.id} is not listed in its module lessonIds, so its recommended order is unknown` });
+    }
+  }
+
+  return { orderByLessonId, errors };
+}
+
+function findPrerequisiteCycle(lessonsById: ReadonlyMap<string, ParsedLesson>): string[] | null {
+  const state = new Map<string, "visiting" | "visited">();
+  const stack: string[] = [];
+
+  function visit(lessonId: string): string[] | null {
+    const currentState = state.get(lessonId);
+    if (currentState === "visiting") {
+      const cycleStart = stack.indexOf(lessonId);
+      return [...stack.slice(Math.max(0, cycleStart)), lessonId];
+    }
+    if (currentState === "visited") {
+      return null;
+    }
+
+    state.set(lessonId, "visiting");
+    stack.push(lessonId);
+    const parsedLesson = lessonsById.get(lessonId);
+    for (const prerequisiteId of parsedLesson?.lesson.prerequisites ?? []) {
+      if (lessonsById.has(prerequisiteId)) {
+        const cycle = visit(prerequisiteId);
+        if (cycle !== null) {
+          return cycle;
+        }
+      }
+    }
+    stack.pop();
+    state.set(lessonId, "visited");
+    return null;
+  }
+
+  for (const lessonId of [...lessonsById.keys()].sort()) {
+    const cycle = visit(lessonId);
+    if (cycle !== null) {
+      return cycle;
+    }
+  }
+  return null;
+}
+
 export async function checkLessonCoverage(options: LessonCoverageOptions = {}): Promise<LessonCoverageReport> {
   const lessonRoot = options.lessonRoot ?? DEFAULT_LESSON_ROOT;
   const expectedSubsectionsPath = options.expectedSubsectionsPath ?? DEFAULT_SUBSECTIONS_PATH;
@@ -392,13 +464,30 @@ export async function checkLessonCoverage(options: LessonCoverageOptions = {}): 
     }
   }
 
+  const lessonOrder = buildRecommendedLessonOrder(modulesById, lessonsById);
+  malformedFiles.push(...lessonOrder.errors);
+  const prerequisiteCycle = findPrerequisiteCycle(lessonsById);
+  if (prerequisiteCycle !== null) {
+    malformedFiles.push({
+      filePath: lessonsById.get(prerequisiteCycle[0]!)?.filePath ?? lessonRoot,
+      message: `lesson prerequisite cycle detected: ${prerequisiteCycle.join(" -> ")}`,
+    });
+  }
+
   for (const { filePath, lesson } of lessonsById.values()) {
     if (!modulesById.has(lesson.moduleId)) {
       malformedFiles.push({ filePath, message: `lesson moduleId references unknown module ${lesson.moduleId}` });
     }
     for (const prerequisiteId of lesson.prerequisites) {
-      if (!lessonsById.has(prerequisiteId)) {
+      const prerequisiteLesson = lessonsById.get(prerequisiteId);
+      if (prerequisiteLesson === undefined) {
         malformedFiles.push({ filePath, message: `lesson prerequisites references unknown lesson ${prerequisiteId}` });
+      } else {
+        const currentOrder = lessonOrder.orderByLessonId.get(lesson.id);
+        const prerequisiteOrder = lessonOrder.orderByLessonId.get(prerequisiteLesson.lesson.id);
+        if (currentOrder !== undefined && prerequisiteOrder !== undefined && prerequisiteOrder >= currentOrder) {
+          malformedFiles.push({ filePath, message: `lesson prerequisite ${prerequisiteId} must come before ${lesson.id} in the recommended lesson order` });
+        }
       }
     }
     for (const subsectionId of lesson.covers) {

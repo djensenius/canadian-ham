@@ -15,7 +15,8 @@ objectives:
   - "Compare ground wave, sky wave, line-of-sight, and NVIS paths."
   - "Name ionospheric regions and what creates ionization."
   - "Explain skip distance, skip zone, and hop length."
-prerequisites: []
+prerequisites:
+  - L-006-03
 estimatedMinutes: 40
 quizIds:
   - QZ-L-007-01-A

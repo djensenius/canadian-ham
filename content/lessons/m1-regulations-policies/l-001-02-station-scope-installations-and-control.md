@@ -19,6 +19,7 @@ objectives:
   - "Assign responsibility for station control and supervision."
 prerequisites:
   - L-001-01
+  - L-003-01
 estimatedMinutes: 60
 quizIds:
   - QZ-L-001-02-A

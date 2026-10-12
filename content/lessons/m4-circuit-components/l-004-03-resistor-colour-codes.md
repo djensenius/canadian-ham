@@ -14,7 +14,8 @@ objectives:
   - "Identify tolerance-band meaning."
   - "Check decoded values against expected circuit use."
 prerequisites:
-  - L-004-02
+  - L-005-01
+  - L-005-03
 estimatedMinutes: 25
 quizIds:
   - QZ-L-004-03-A
