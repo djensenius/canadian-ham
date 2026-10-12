@@ -328,6 +328,11 @@ function webStylesCss(): string {
   return readFileSync(join(dirname(modulePath), "styles.css"), "utf8");
 }
 
+function cssRuleBlock(css: string, selector: string): string {
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`${escapedSelector}\\s*{(?<block>[\\s\\S]*?)\\n}`).exec(css)?.groups?.block ?? "";
+}
+
 function extractInlineThemeScript(html: string): string {
   const match = html.match(/<script>([\s\S]*?)<\/script>/);
   assert.ok(match?.[1]);
@@ -1013,6 +1018,7 @@ describe("App accessibility and flows", () => {
       await waitFor(() => assert.equal(document.activeElement, calculator));
 
       await user.keyboard("1+2{Enter}");
+      assert.equal(screen.getByLabelText("Calculator display: 3").getAttribute("aria-live"), "off");
       assert.equal(screen.getByLabelText("Calculator display: 3").textContent, "3");
       assert.equal(screen.getByTestId("calculator-live-result").textContent, "Calculator result: 3");
 
@@ -1048,12 +1054,18 @@ describe("App accessibility and flows", () => {
     await user.keyboard("{Escape}");
     assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
 
+    await user.click(screen.getByRole("button", { name: "All clear" }));
+    await user.click(seven);
+    await waitFor(() => assert.equal(document.activeElement, screen.getByRole("region", { name: "Calculator" })));
+    await user.keyboard("+2{Enter}");
+    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+
     const calculator = screen.getByRole("region", { name: "Calculator" });
     calculator.focus();
     fireEvent.keyDown(calculator, { key: "1", ctrlKey: true });
     fireEvent.keyDown(calculator, { key: "+", metaKey: true });
     fireEvent.keyDown(calculator, { key: "x", altKey: true });
-    assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
+    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
   });
 
   it("keeps calculator state when switching tools or closing, then clears it for a new practice set", async () => {
@@ -1083,15 +1095,30 @@ describe("App accessibility and flows", () => {
     await screen.findByText(/Seed calculator-state-b/);
     await user.click(screen.getByRole("button", { name: "Calculator" }));
     assert.equal(screen.getByLabelText("Calculator display: 0").textContent, "0");
+
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await screen.findByText(/Seed calculator-state-c/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    await user.keyboard("6");
+    assert.equal(screen.getByLabelText("Calculator display: 6").textContent, "6");
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await screen.findByText(/Seed calculator-state-c/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    assert.equal(screen.getByLabelText("Calculator display: 0").textContent, "0");
   });
 
   it("uses real drawer/side-panel states without reserving an empty tool column and keeps DOM order visual", async () => {
     const css = webStylesCss();
-    assert.match(css, /\.exam-tool-panel\s*{[\s\S]*position: sticky;[\s\S]*bottom: 0;[\s\S]*max-height: min\(24rem, 48vh\);/);
-    assert.match(css, /\.exam-tools-shell--open \.exam-tools-content\s*{[\s\S]*padding-block-end: calc\(min\(24rem, 48vh\) \+ var\(--ch-space-lg\)\);/);
-    assert.match(css, /\.exam-tools-shell--practice\.exam-tools-shell--open\s*{[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 0\.42fr\);/);
-    const baseShellBlock = css.match(/\.exam-tools-shell\s*{(?<block>[\s\S]*?)\n}/)?.groups?.block ?? "";
-    assert.doesNotMatch(baseShellBlock, /grid-template-columns/);
+    const panelRule = cssRuleBlock(css, ".exam-tool-panel");
+    assert.match(panelRule, /position: sticky;/);
+    assert.match(panelRule, /bottom: 0;/);
+    assert.match(panelRule, /max-height: min\(24rem, 48svh\);/);
+    assert.doesNotMatch(cssRuleBlock(css, ".exam-tools-shell--open .exam-tools-content"), /padding-block-end/);
+    assert.match(cssRuleBlock(css, "html:has(.exam-tools-shell--open)"), /scroll-padding-block-end: calc\(min\(24rem, 48svh\) \+ var\(--ch-space-lg\)\);/);
+    assert.match(cssRuleBlock(css, ".exam-tools-shell--practice.exam-tools-shell--open"), /grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 0\.42fr\);/);
+    assert.match(cssRuleBlock(css, ".mock-exam-body"), /grid-template-columns: minmax\(0, 1fr\) minmax\(12rem, 0\.3fr\);/);
+    assert.doesNotMatch(cssRuleBlock(css, ".mock-exam-body"), /gap:/);
+    assert.doesNotMatch(cssRuleBlock(css, ".exam-tools-shell"), /grid-template-columns/);
 
     window.location.hash = "#/practice";
     const store = createStore("exam-tools-dom-order");
@@ -1112,6 +1139,20 @@ describe("App accessibility and flows", () => {
     assert.ok(questionPanel);
     assert.ok(toolbar.compareDocumentPosition(questionPanel) & Node.DOCUMENT_POSITION_FOLLOWING);
     assert.ok(questionPanel.compareDocumentPosition(panel) & Node.DOCUMENT_POSITION_FOLLOWING);
+
+    cleanup();
+    window.location.hash = "#/mock";
+    const mockStore = createStore("mock-tools-dom-order");
+    render(<App store={mockStore} now={() => fixedNow} seedFactory={() => "mock-tools-dom-order"} />);
+    await user.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    const mockQuestionPanel = document.querySelector(".mock-question-stack .question-panel");
+    const navigator = screen.getByRole("navigation", { name: "Question navigator" });
+    assert.ok(mockQuestionPanel);
+    assert.ok(mockQuestionPanel.compareDocumentPosition(navigator) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const mockShell = screen.getByTestId("mock-exam-tools");
+    assert.equal(mockShell.classList.contains("exam-tools-shell--open"), false);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    assert.equal(mockShell.classList.contains("exam-tools-shell--open"), true);
   });
 
   it("disables the Basic reference sheet in Advanced mock exams", async () => {

@@ -525,10 +525,6 @@ li {
   min-width: 0;
 }
 
-.exam-tools-shell--open .exam-tools-content {
-  padding-block-end: calc(min(24rem, 48vh) + var(--ch-space-lg));
-}
-
 .exam-tools-toolbar {
   grid-area: tools;
   display: flex;
@@ -548,7 +544,7 @@ li {
   grid-area: panel;
   display: grid;
   gap: var(--ch-space-lg);
-  max-height: min(24rem, 48vh);
+  max-height: min(24rem, 48svh);
   overflow: auto;
   padding: var(--ch-space-lg);
   border: 1px solid var(--ch-color-border);
@@ -952,10 +948,6 @@ input[type="checkbox"]:checked::after {
       "content panel";
   }
 
-  .exam-tools-shell--open .exam-tools-content {
-    padding-block-end: 0;
-  }
-
   .exam-tool-panel {
     top: var(--ch-space-lg);
     bottom: auto;
@@ -965,14 +957,12 @@ input[type="checkbox"]:checked::after {
 
   .mock-exam-body {
     display: grid;
-    grid-template-columns: minmax(12rem, 0.3fr) minmax(0, 1fr);
-    gap: var(--ch-space-xl);
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.3fr);
     align-items: start;
   }
 
   .mock-question-stack {
     display: grid;
-    gap: var(--ch-space-lg);
     min-width: 0;
   }
 
@@ -994,6 +984,16 @@ input[type="checkbox"]:checked::after {
   display: grid;
   gap: var(--ch-space-lg);
   min-width: 0;
+}
+
+@media (max-width: 55.999rem) {
+  html:has(.exam-tools-shell--open) {
+    scroll-padding-block-end: calc(min(24rem, 48svh) + var(--ch-space-lg));
+  }
+
+  .calculator-help {
+    display: none;
+  }
 }
 
 @media (max-width: 48rem) {

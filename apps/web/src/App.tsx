@@ -86,6 +86,7 @@ interface AppProps {
 }
 
 interface PracticeSession {
+  readonly instanceId: string;
   readonly seed: string;
   readonly scope: PracticeScope;
   readonly mode: PracticeMode;
@@ -96,6 +97,7 @@ interface PracticeSession {
 }
 
 interface MockExamSession {
+  readonly instanceId: string;
   readonly seed: string;
   readonly startedAt: string;
   readonly timerEnabled: boolean;
@@ -279,6 +281,7 @@ function AppContent({
   const savedPreferencesRef = useRef(preferences);
   const latestRequestedPreferencesRef = useRef(preferences);
   const preferencesSaveQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const practiceSessionInstanceRef = useRef(0);
   const preferencesSaveSequenceRef = useRef(0);
   const savedPreferencesSequenceRef = useRef(0);
 
@@ -462,7 +465,9 @@ function AppContent({
       limit: 10,
     });
     setPracticeScope(scope);
+    practiceSessionInstanceRef.current += 1;
     setPracticeSession({
+      instanceId: `practice-${practiceSessionInstanceRef.current}`,
       seed,
       scope,
       mode,
@@ -1454,7 +1459,7 @@ function Practice({
             <ExamTools
               context="practice"
               interfaceLanguage={interfaceLanguage}
-              key={session.seed}
+              key={session.instanceId}
               referenceSheetAvailable={activeBank.course === "basic"}
             >
               <QuestionCard
@@ -1670,6 +1675,14 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
 
 function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { readonly calculatorState: CalculatorState; readonly interfaceLanguage: InterfaceLanguage; readonly onPressKey: (key: CalculatorKey) => void }) {
   const spokenResult = calculatorState.displayValue.spoken[interfaceLanguage];
+  const calculatorRef = useRef<HTMLElement>(null);
+
+  function pressKey(key: CalculatorKey, focusCalculator: boolean): void {
+    onPressKey(key);
+    if (focusCalculator) {
+      window.setTimeout(() => calculatorRef.current?.focus({ preventScroll: true }), 0);
+    }
+  }
 
   function handleKeyDown(event: KeyboardEvent<HTMLElement>): void {
     const key = calculatorKeyFromKeyboardEvent(event);
@@ -1681,9 +1694,9 @@ function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { re
   }
 
   return (
-    <section className="calculator-tool" aria-label={t(interfaceLanguage, "calculatorTitle")} data-exam-tool-focus tabIndex={-1} onKeyDown={handleKeyDown}>
+    <section className="calculator-tool" aria-label={t(interfaceLanguage, "calculatorTitle")} data-exam-tool-focus ref={calculatorRef} tabIndex={-1} onKeyDown={handleKeyDown}>
       <p className="calculator-help">{t(interfaceLanguage, "calculatorKeyboardHelp")}</p>
-      <output className="calculator-display" aria-label={t(interfaceLanguage, "calculatorDisplayAria", spokenResult)}>{calculatorState.display}</output>
+      <output className="calculator-display" aria-live="off" aria-label={t(interfaceLanguage, "calculatorDisplayAria", spokenResult)}>{calculatorState.display}</output>
       <div className="sr-only" aria-live="polite" data-testid="calculator-live-result">{t(interfaceLanguage, "calculatorResultAnnouncement", spokenResult)}</div>
       <div className="calculator-keypad" role="group" aria-label={t(interfaceLanguage, "calculatorKeypadAria")}>
         {calculatorKeyRows.map((row) => row.map((key) => (
@@ -1692,7 +1705,7 @@ function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { re
             className={key === "=" ? "primary-button" : "secondary-button"}
             key={key}
             type="button"
-            onClick={() => onPressKey(key)}
+            onClick={(event) => pressKey(key, event.detail > 0)}
           >{calculatorKeyVisual(interfaceLanguage, key)}</button>
         )))}
       </div>
@@ -1700,13 +1713,16 @@ function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { re
   );
 }
 
-const referenceSheetTitle = "Original Basic formula and reference study aid";
+function firstMarkdownHeading(markdown: string): string | undefined {
+  return /^#\s+(.+)$/m.exec(markdown)?.[1]?.trim();
+}
 
 function ReferenceSheetTool({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
+  const referenceSheetMarkdown = basicReferenceSheetMarkdownForWeb();
   return (
     <section className="reference-sheet-tool" aria-label={t(interfaceLanguage, "referenceSheetTitle")} data-exam-tool-focus lang={englishTextLang(interfaceLanguage)} tabIndex={-1}>
       {interfaceLanguage === "fr" ? <p className="reference-note" lang="fr-CA">{t(interfaceLanguage, "englishOnlyContentNotice")}</p> : null}
-      <MarkdownContent markdown={basicReferenceSheetMarkdownForWeb()} title={referenceSheetTitle} tableLabel={t(interfaceLanguage, "referenceSheetTableAria")} interfaceLanguage={interfaceLanguage} />
+      <MarkdownContent markdown={referenceSheetMarkdown} title={firstMarkdownHeading(referenceSheetMarkdown)} tableLabel={t(interfaceLanguage, "referenceSheetTableAria")} interfaceLanguage={interfaceLanguage} />
     </section>
   );
 }
@@ -1724,7 +1740,7 @@ function calculatorKeyFromKeyboardEvent(event: KeyboardEvent<HTMLElement>): Calc
   if (event.ctrlKey || event.metaKey || event.altKey) {
     return null;
   }
-  if (event.target instanceof HTMLElement && event.target.closest("button") !== null) {
+  if (event.target instanceof HTMLElement && event.target.closest("button") !== null && (event.key === "Enter" || event.key === " " || event.key === "Escape")) {
     return null;
   }
   if (/^[0-9]$/.test(event.key)) {
@@ -1883,6 +1899,7 @@ function MockExam({ activeBank, interfaceLanguage, exam, language, questions, pr
   const examQuestionsById = useMemo(() => questions === null ? new Map<string, Question>() : questionsById(questions), [questions]);
   const confirmRef = useRef<HTMLElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const examInstanceRef = useRef(0);
 
   useEffect(() => {
     if (exam?.timerEnabled && exam.timerRunning) {
@@ -1912,7 +1929,9 @@ function MockExam({ activeBank, interfaceLanguage, exam, language, questions, pr
     const selectedSeed = seed.trim() || seedFactory();
     setSubmittingExam(false);
     setTimerAnnouncement(timerEnabled ? t(interfaceLanguage, "mockTimerStarted") : "");
+    examInstanceRef.current += 1;
     onExamChange({
+      instanceId: `mock-${examInstanceRef.current}`,
       seed: selectedSeed,
       startedAt: now(),
       timerEnabled,
@@ -2027,7 +2046,7 @@ function MockExam({ activeBank, interfaceLanguage, exam, language, questions, pr
       <ExamTools
         context="mock"
         interfaceLanguage={interfaceLanguage}
-        key={exam.seed}
+        key={exam.instanceId}
         referenceSheetAvailable={activeBank.course === "basic"}
       >
         <div className="mock-exam-body">
