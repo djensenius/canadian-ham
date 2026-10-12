@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:29'
+updated_date: '2026-10-12 14:30'
 labels:
   - content
   - apple
@@ -29,3 +29,9 @@ Using the task-38.1 pipeline, draw: metric prefix ladder (giga to pico, x/÷ 1 0
 - [ ] #2 Same accessibility and originality bar as task-38.1; audits pass in light and dark; numbers use space grouping (owner decision A)
 - [ ] #3 The L-005-01 metric-prefix ladder figure shows the micro-to-pico step as x/÷ 1 000 000 (the lesson table skips nano) or adds a nano rung; the brief's 'x 1 000 at every step' arrows are corrected when the figure is drawn
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add five original currentColor SVG sources for metric prefixes, resistor colour-code bands, series/parallel paths, dB ratio shortcuts, and wavelength/dipole estimate.\n2. Reference each SVG from its matching lesson with alt text and text equivalents for dense ladder/table/colour-code content while leaving illustration briefs as authoring notes.\n3. Regenerate figure assets/metadata, render and inspect qlmanage previews, run figure, content, web, and content-swift checks, then record per-figure evidence without running Apple xbuild.
+<!-- SECTION:PLAN:END -->
