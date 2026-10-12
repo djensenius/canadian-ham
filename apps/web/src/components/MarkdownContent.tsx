@@ -37,7 +37,7 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
   }
   if (block.type === "table") {
     return (
-      <div className="markdown-table-wrapper" key={index} role="region" aria-label={t(interfaceLanguage, "markdownTableAria")} tabIndex={0}>
+      <div className="markdown-table-wrapper" key={index} role="region" aria-label={`${t(interfaceLanguage, "markdownTableAria")} ${index + 1}`} tabIndex={0}>
         <table>
           <thead>
             <tr>{block.headers.map((header) => <th key={header} scope="col">{header}</th>)}</tr>

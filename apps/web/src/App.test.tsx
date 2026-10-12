@@ -57,6 +57,11 @@ function createStore(name: string): ProgressStore {
   return store;
 }
 
+function setViewportWidth(width: number): void {
+  Object.defineProperty(window, "innerWidth", { value: width, configurable: true });
+  window.dispatchEvent(new Event("resize"));
+}
+
 function stubReducedMotion(matches: boolean): void {
   Object.defineProperty(window, "matchMedia", {
     value: (query: string) => ({
@@ -955,6 +960,138 @@ describe("App accessibility and flows", () => {
     assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.textContent, "✕");
     assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.getAttribute("aria-hidden"), "true");
     await waitFor(async () => assert.equal((await store.getQuestionProgress()).length, 1));
+  });
+
+  it("keeps practice questions and answers operable with calculator or reference tools open at phone, tablet, and desktop widths", async () => {
+    for (const width of [320, 768, 1280]) {
+      for (const toolName of ["Calculator", "Reference sheet"]) {
+        cleanup();
+        setViewportWidth(width);
+        window.location.hash = "#/practice";
+        const store = createStore(`practice-tools-${width}-${toolName}`);
+        const user = userEvent.setup();
+        render(<App store={store} now={() => fixedNow} seedFactory={() => `practice-tools-${width}-${toolName}`} />);
+
+        await screen.findByRole("heading", { name: "Practice" });
+        await screen.findByText(/Question 1 of/);
+        const toolButton = screen.getByRole("button", { name: toolName });
+        await user.click(toolButton);
+        await screen.findByRole("heading", { name: toolName });
+        assert.ok(document.querySelector(".question-panel")?.textContent?.includes("Question"));
+        const answer = screen.getAllByTestId("answer-choice")[0]!;
+        assert.equal((answer as HTMLButtonElement).disabled, false);
+        await user.click(answer);
+        assert.equal(answer.getAttribute("aria-pressed"), "true");
+        assert.equal(screen.getAllByTestId("answer-choice").length, 4);
+      }
+    }
+  });
+
+  it("opens and closes practice calculator with focus return, scoped keyboard input, spoken live output, and light/dark axe coverage", async () => {
+    for (const theme of ["light", "dark"] as const) {
+      cleanup();
+      setViewportWidth(1280);
+      window.location.hash = "#/practice";
+      const store = createStore(`practice-calculator-${theme}`);
+      await store.putPreferences({ ...defaultPreferences, theme });
+      const user = userEvent.setup();
+      const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => `practice-calculator-${theme}`} />);
+
+      await screen.findByRole("heading", { name: "Practice" });
+      await screen.findByText(/Question 1 of/);
+      const calculatorButton = screen.getByRole("button", { name: "Calculator" });
+      await user.click(calculatorButton);
+      const calculator = await screen.findByRole("region", { name: "Calculator" });
+      await waitFor(() => assert.equal(document.activeElement, calculator));
+
+      await user.keyboard("1+2{Enter}");
+      assert.equal(screen.getByLabelText("Calculator display: 3").textContent, "3");
+      assert.equal(screen.getByTestId("calculator-live-result").textContent, "Calculator result: 3");
+
+      const firstAnswer = screen.getAllByTestId("answer-choice")[0]!;
+      firstAnswer.focus();
+      await user.keyboard("9+9");
+      assert.equal(screen.getByLabelText("Calculator display: 3").textContent, "3");
+      assert.equal((firstAnswer as HTMLButtonElement).disabled, false);
+      await user.click(firstAnswer);
+      assert.equal(firstAnswer.getAttribute("aria-pressed"), "true");
+
+      await expectNoAxeViolations(container);
+      await user.click(screen.getByRole("button", { name: "Close tool" }));
+      await waitFor(() => assert.equal(document.activeElement, calculatorButton));
+    }
+  });
+
+  it("localizes calculator decimal input and live announcements in French", async () => {
+    setViewportWidth(768);
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("practice-calculator-fr");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "practice-calculator-fr"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/);
+    await user.click(screen.getByRole("button", { name: "Calculatrice" }));
+    await screen.findByRole("heading", { name: "Calculatrice" });
+    await user.click(screen.getByRole("button", { name: "Chiffre 1" }));
+    await user.click(screen.getByRole("button", { name: "Virgule décimale" }));
+    await user.click(screen.getByRole("button", { name: "Chiffre 5" }));
+
+    const display = document.querySelector<HTMLElement>(".calculator-display");
+    assert.equal(display?.textContent, "1,5");
+    assert.match(display?.getAttribute("aria-label") ?? "", /1,5/);
+    assert.equal(screen.getByTestId("calculator-live-result").textContent, "Résultat de la calculatrice : 1,5");
+  });
+
+  it("opens the Basic reference sheet with focus return and passes axe in light and dark", async () => {
+    for (const theme of ["light", "dark"] as const) {
+      cleanup();
+      setViewportWidth(theme === "light" ? 320 : 1280);
+      window.location.hash = "#/practice";
+      const store = createStore(`practice-reference-${theme}`);
+      await store.putPreferences({ ...defaultPreferences, theme });
+      const user = userEvent.setup();
+      const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => `practice-reference-${theme}`} />);
+
+      await screen.findByRole("heading", { name: "Practice" });
+      await screen.findByText(/Question 1 of/);
+      const referenceButton = screen.getByRole("button", { name: "Reference sheet" });
+      await user.click(referenceButton);
+      const referencePanel = await screen.findByRole("region", { name: "Reference sheet" });
+      await waitFor(() => assert.equal(document.activeElement, referencePanel));
+      assert.match(referencePanel.textContent ?? "", /Original Basic formula and reference study aid/);
+      assert.match(referencePanel.textContent ?? "", /E = I x R/);
+      assert.match(referencePanel.textContent ?? "", /143 \/ f\(MHz\)/);
+      await expectNoAxeViolations(container);
+      await user.click(screen.getByRole("button", { name: "Close tool" }));
+      await waitFor(() => assert.equal(document.activeElement, referenceButton));
+    }
+  });
+
+  it("keeps mock exam tools non-modal while the timer continues", async () => {
+    setViewportWidth(1280);
+    window.location.hash = "#/mock";
+    const store = createStore("mock-tools-timer");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "mock-tools-timer"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam" });
+    await user.click(screen.getByLabelText("Enable optional timer"));
+    await user.click(screen.getByRole("button", { name: "Start mock exam" }));
+    await screen.findByText(/Question 1 of 100/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    await screen.findByRole("heading", { name: "Calculator" });
+
+    await waitFor(() => assert.match(screen.getByRole("timer").textContent ?? "", /00:01/), { timeout: 1500 });
+    const firstAnswer = screen.getAllByTestId("answer-choice")[0]!;
+    await user.click(firstAnswer);
+    assert.equal(firstAnswer.getAttribute("aria-pressed"), "true");
+    await expectNoAxeViolations(container);
+
+    await user.click(screen.getByRole("button", { name: "Reference sheet" }));
+    await screen.findByRole("heading", { name: "Reference sheet" });
+    assert.match(screen.getByRole("region", { name: "Reference sheet" }).textContent ?? "", /Metric prefixes/);
   });
 
   it("switches to Advanced, persists the course, hides lessons, and generates a 50-question no-Honours mock", async () => {

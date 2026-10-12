@@ -168,6 +168,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@canadian-ham/calculator-engine':
+        specifier: workspace:*
+        version: link:../../packages/calculator-ts
       '@canadian-ham/engine-ts':
         specifier: workspace:*
         version: link:../../packages/engine-ts
