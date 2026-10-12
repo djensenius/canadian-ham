@@ -942,6 +942,11 @@ function Learn({ interfaceLanguage, lessonProgress, onOpenModule, onOpenLesson }
       <h2 id="learn-title">{t(interfaceLanguage, "learnTitle")}</h2>
       <p>{t(interfaceLanguage, "learnIntro")}</p>
       <p className="reference-note">{t(interfaceLanguage, "referenceSheetNote")}</p>
+      <section className="reference-note" aria-labelledby="exam-day-learn-heading">
+        <h3 id="exam-day-learn-heading">{t(interfaceLanguage, "examDayHeading")}</h3>
+        <p>{t(interfaceLanguage, "examDayLearnCopy")}</p>
+        <button type="button" className="secondary-button" onClick={() => onOpenLesson("M1", "L-001-01")}>{t(interfaceLanguage, "examDayLessonLink")}</button>
+      </section>
       <div className="module-grid">
         {modules.map((module) => {
           const moduleLessons = lessonsByModuleId.get(module.id) ?? [];

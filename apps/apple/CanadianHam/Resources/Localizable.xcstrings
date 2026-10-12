@@ -10936,6 +10936,72 @@
           }
         }
       }
+    },
+    "Exam day" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exam day"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jour d’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jour d’examen"
+          }
+        }
+      }
+    },
+    "Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's unlabelled Basic reference sheet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's unlabelled Basic reference sheet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les examens de compétence de base sont à livre fermé. La leçon « Authority, certificates, and exams » explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les examens de compétence de base sont à livre fermé. La leçon « Authority, certificates, and exams » explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base."
+          }
+        }
+      }
+    },
+    "Read exam-day guidance" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read exam-day guidance"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire les conseils pour le jour d’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire les conseils pour le jour d’examen"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
