@@ -36,7 +36,10 @@ Owner decision 2026-10-12 (2A): use the official ISED Basic reference sheet (EN 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Update docs/content-licensing.md only for the owner-approved ISED reference-sheet licensing decision and release block/fallback facts.\n2. Draft docs/release/ised-reference-sheet-request.md from the earlier permission-request tone and repository licensing context.\n3. Inspect the EN reference PDFs and record a technical integration plan in task notes; do not implement web or Apple integration.\n4. Run pnpm check:links, check ACs 1-2 only, commit, and push.
+1. Update docs/content-licensing.md only for the owner-approved ISED reference-sheet licensing decision and release block/fallback facts.
+2. Draft docs/release/ised-reference-sheet-request.md from the earlier permission-request tone and repository licensing context.
+3. Inspect the EN reference PDFs and record a technical integration plan in task notes; do not implement web or Apple integration.
+4. Run pnpm check:links, check ACs 1-2 only, commit, and push.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
