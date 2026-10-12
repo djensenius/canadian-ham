@@ -20,9 +20,24 @@ export interface CalculatorLastOperation {
   readonly rightOperand: number;
 }
 
+export interface CalculatorSpokenDisplay {
+  readonly en: string;
+  readonly fr: string;
+}
+
+export interface CalculatorDisplayValue {
+  readonly mantissa: string | null;
+  readonly exponent: number | null;
+  readonly isNegative: boolean;
+  readonly isError: boolean;
+  readonly visual: string;
+  readonly spoken: CalculatorSpokenDisplay;
+}
+
 export interface CalculatorState {
   readonly locale: CalculatorLocale;
   readonly display: string;
+  readonly displayValue: CalculatorDisplayValue;
   readonly error: boolean;
   readonly accumulator: number | null;
   readonly pendingOperator: CalculatorBinaryOperator | null;
@@ -38,15 +53,25 @@ export interface CalculatorOptions {
   readonly locale?: CalculatorLocale;
 }
 
+interface DecimalParts {
+  readonly mantissa: string;
+  readonly exponent: number;
+  readonly isNegative: boolean;
+  readonly scientific: boolean;
+}
+
 const DIGIT_KEYS = new Set<CalculatorKey>(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
 const BINARY_OPERATOR_KEYS = new Set<CalculatorKey>(["+", "-", "×", "÷"]);
 const MAX_SIGNIFICANT_DIGITS = 12;
 const RESULT_SIGNIFICANT_DIGITS = 15;
+const CANCELLATION_TOLERANCE = 1e-14;
+const TYPOGRAPHIC_MINUS = "−";
 
 export function createCalculatorState(options: CalculatorOptions = {}): CalculatorState {
   return withDisplay({
     locale: options.locale ?? "en",
     display: "0",
+    displayValue: errorDisplayValue("0"),
     error: false,
     accumulator: null,
     pendingOperator: null,
@@ -69,6 +94,9 @@ export function applyCalculatorKey(state: CalculatorState, key: CalculatorKey): 
   }
 
   if (state.error) {
+    if (key === "C/CE") {
+      return createCalculatorState({ locale: state.locale });
+    }
     if (isDigitKey(key)) {
       return inputDigit(createCalculatorState({ locale: state.locale }), key);
     }
@@ -108,26 +136,20 @@ export function applyCalculatorKey(state: CalculatorState, key: CalculatorKey): 
 }
 
 export function displayCalculatorValue(value: number, locale: CalculatorLocale = "en"): string {
-  if (!Number.isFinite(value)) {
-    return "Error";
-  }
+  return displayValueForNumber(value, locale).visual;
+}
 
-  const normalizedValue = Object.is(value, -0) ? 0 : value;
-  const absoluteValue = Math.abs(normalizedValue);
-  if (absoluteValue === 0) {
-    return "0";
-  }
-
-  const scientific = absoluteValue >= 999_999_999_999.5 || absoluteValue < 1e-9;
-  const raw = scientific
-    ? normalizeScientific(normalizedValue.toExponential(MAX_SIGNIFICANT_DIGITS - 1))
-    : normalizeFixed(normalizedValue.toFixed(fractionDigitsFor(absoluteValue)));
-  return localizeDecimalSeparator(raw, locale);
+export function displayCalculatorValueDetails(value: number, locale: CalculatorLocale = "en"): CalculatorDisplayValue {
+  return displayValueForNumber(value, locale);
 }
 
 function inputDigit(state: CalculatorState, key: CalculatorDigitKey): CalculatorState {
   const startFresh = state.justEvaluated && state.pendingOperator === null;
   const base = startFresh ? createCalculatorState({ locale: state.locale }) : state;
+  if (base.entering && wouldExceedEntryLimit(base.currentEntry, key)) {
+    return base;
+  }
+
   let entry: string;
   if (!base.entering) {
     entry = key;
@@ -259,6 +281,7 @@ function applyUnaryOperation(state: CalculatorState, operation: (value: number) 
     entering: false,
     displayedValue: normalizeResult(result),
     awaitingOperand: false,
+    lastOperation: null,
     justEvaluated: false,
   });
 }
@@ -266,10 +289,10 @@ function applyUnaryOperation(state: CalculatorState, operation: (value: number) 
 function toggleSign(state: CalculatorState): CalculatorState {
   if (state.entering) {
     const currentEntry = state.currentEntry.startsWith("-") ? state.currentEntry.slice(1) : `-${state.currentEntry}`;
-    return withDisplay({ ...state, currentEntry, displayedValue: numberFromEntry(currentEntry), awaitingOperand: false, justEvaluated: false });
+    return withDisplay({ ...state, currentEntry, displayedValue: numberFromEntry(currentEntry), awaitingOperand: false, lastOperation: null, justEvaluated: false });
   }
   const displayedValue = normalizeResult(-state.displayedValue);
-  return withDisplay({ ...state, displayedValue, awaitingOperand: false, justEvaluated: false });
+  return withDisplay({ ...state, displayedValue, awaitingOperand: false, lastOperation: null, justEvaluated: false });
 }
 
 function applyPercent(state: CalculatorState): CalculatorState {
@@ -286,6 +309,7 @@ function applyPercent(state: CalculatorState): CalculatorState {
     entering: false,
     displayedValue: normalizeResult(result),
     awaitingOperand: false,
+    lastOperation: null,
     justEvaluated: false,
   });
 }
@@ -297,6 +321,7 @@ function clearEntry(state: CalculatorState): CalculatorState {
     entering: false,
     displayedValue: 0,
     awaitingOperand: false,
+    lastOperation: null,
     justEvaluated: false,
   });
 }
@@ -310,9 +335,6 @@ function backspace(state: CalculatorState): CalculatorState {
   if (currentEntry === "" || currentEntry === "-") {
     currentEntry = state.currentEntry.startsWith("-") ? "-0" : "0";
   }
-  if (currentEntry === "-0" && !state.currentEntry.startsWith("-")) {
-    currentEntry = "0";
-  }
   return withDisplay({ ...state, currentEntry, displayedValue: numberFromEntry(currentEntry), awaitingOperand: false, justEvaluated: false });
 }
 
@@ -320,10 +342,10 @@ function evaluateBinaryOperation(operator: CalculatorBinaryOperator, left: numbe
   let result: number;
   switch (operator) {
     case "+":
-      result = left + right;
+      result = cancelIfSubtractiveNoise(left + right, left, right);
       break;
     case "-":
-      result = left - right;
+      result = cancelIfSubtractiveNoise(left - right, left, right);
       break;
     case "×":
       result = left * right;
@@ -338,6 +360,11 @@ function evaluateBinaryOperation(operator: CalculatorBinaryOperator, left: numbe
   return Number.isFinite(result) ? normalizeResult(result) : null;
 }
 
+function cancelIfSubtractiveNoise(result: number, left: number, right: number): number {
+  const tolerance = Math.max(Math.abs(left), Math.abs(right)) * CANCELLATION_TOLERANCE;
+  return Math.abs(result) <= tolerance ? 0 : result;
+}
+
 function currentValueFor(state: CalculatorState): number {
   return state.entering ? numberFromEntry(state.currentEntry) : state.displayedValue;
 }
@@ -350,13 +377,18 @@ function numberFromEntry(entry: string): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function withDisplay(state: Omit<CalculatorState, "display"> & { readonly display?: string }): CalculatorState {
+function withDisplay(state: Omit<CalculatorState, "display" | "displayValue"> & { readonly display?: string; readonly displayValue?: CalculatorDisplayValue }): CalculatorState {
   const display = state.error
     ? "Error"
     : state.entering
-      ? localizeDecimalSeparator(state.currentEntry, state.locale)
+      ? visualEntry(state.currentEntry, state.locale)
       : displayCalculatorValue(state.displayedValue, state.locale);
-  return { ...state, display };
+  const displayValue = state.error
+    ? errorDisplayValue(display)
+    : state.entering
+      ? displayValueForEntry(state.currentEntry, state.locale, display)
+      : displayValueForNumber(state.displayedValue, state.locale);
+  return { ...state, display, displayValue };
 }
 
 function errorState(state: CalculatorState): CalculatorState {
@@ -375,38 +407,188 @@ function errorState(state: CalculatorState): CalculatorState {
 }
 
 function normalizeResult(value: number): number {
-  if (Object.is(value, -0) || Math.abs(value) < 5e-15) {
+  if (Object.is(value, -0) || value === 0) {
     return 0;
   }
-  const exponent = Math.floor(Math.log10(Math.abs(value)));
-  const factor = 10 ** (RESULT_SIGNIFICANT_DIGITS - exponent - 1);
+  const rounded = roundToSignificantDigits(value, RESULT_SIGNIFICANT_DIGITS);
+  return Object.is(rounded, -0) ? 0 : rounded;
+}
+
+function roundToSignificantDigits(value: number, significantDigits: number): number {
+  const absoluteValue = Math.abs(value);
+  if (!Number.isFinite(absoluteValue) || absoluteValue === 0) {
+    return value;
+  }
+  const exponent = Math.floor(Math.log10(absoluteValue));
+  const factor = 10 ** (significantDigits - exponent - 1);
   if (!Number.isFinite(factor) || factor === 0) {
     return value;
   }
-  return Math.round(value * factor) / factor;
+  return Math.sign(value) * Math.floor((absoluteValue * factor) + 0.5) / factor;
 }
 
-function fractionDigitsFor(absoluteValue: number): number {
+function displayValueForNumber(value: number, locale: CalculatorLocale): CalculatorDisplayValue {
+  if (!Number.isFinite(value)) {
+    return errorDisplayValue("Error");
+  }
+  const normalizedValue = Object.is(value, -0) ? 0 : value;
+  const parts = decimalParts(normalizedValue);
+  const visual = localizeDecimalSeparator(visualFromParts(parts), locale);
+  return displayValueFromParts(parts, visual);
+}
+
+function displayValueForEntry(entry: string, locale: CalculatorLocale, visual: string): CalculatorDisplayValue {
+  const value = numberFromEntry(entry);
+  if (value === 0) {
+    const isNegative = entry.startsWith("-");
+    return displayValueFromParts({ mantissa: "0", exponent: 0, isNegative, scientific: false }, visual);
+  }
+  const parts = decimalParts(value);
+  return displayValueFromParts(parts, visualEntry(entry, locale));
+}
+
+function errorDisplayValue(visual: string): CalculatorDisplayValue {
+  return {
+    mantissa: null,
+    exponent: null,
+    isNegative: false,
+    isError: true,
+    visual,
+    spoken: { en: "Error", fr: "Erreur" },
+  };
+}
+
+function decimalParts(value: number): DecimalParts {
+  const isNegative = value < 0;
+  const absoluteValue = Math.abs(value);
+  if (absoluteValue === 0) {
+    return { mantissa: "0", exponent: 0, isNegative: false, scientific: false };
+  }
+
+  const scientific = absoluteValue >= 999_999_999_999.5 || absoluteValue < 1e-9;
   const exponent = Math.floor(Math.log10(absoluteValue));
-  return Math.max(0, MAX_SIGNIFICANT_DIGITS - exponent - 1);
+  const shift = MAX_SIGNIFICANT_DIGITS - exponent - 1;
+  let coefficient = BigInt(Math.floor((absoluteValue * (10 ** shift)) + 0.5));
+  let decimalExponent = -shift;
+  const overflow = 10n ** BigInt(MAX_SIGNIFICANT_DIGITS);
+  if (coefficient >= overflow) {
+    coefficient /= 10n;
+    decimalExponent += 1;
+  }
+
+  const digits = trimTrailingZeros(coefficient.toString(), decimalExponent);
+  decimalExponent += coefficient.toString().length - digits.length;
+  if (scientific) {
+    const scientificExponent = digits.length + decimalExponent - 1;
+    return { mantissa: mantissaFromDigits(digits), exponent: scientificExponent, isNegative, scientific: true };
+  }
+  return { mantissa: fixedFromDigits(digits, decimalExponent), exponent: 0, isNegative, scientific: false };
 }
 
-function normalizeFixed(value: string): string {
+function trimTrailingZeros(digits: string, decimalExponent: number): string {
+  let result = digits;
+  while (decimalExponent < 0 && result.length > 1 && result.endsWith("0")) {
+    result = result.slice(0, -1);
+    decimalExponent += 1;
+  }
+  return result;
+}
+
+function mantissaFromDigits(digits: string): string {
+  const raw = digits.length === 1 ? digits : `${digits[0]}.${digits.slice(1)}`;
+  return normalizeDecimalString(raw);
+}
+
+function fixedFromDigits(digits: string, decimalExponent: number): string {
+  if (decimalExponent >= 0) {
+    return `${digits}${"0".repeat(decimalExponent)}`;
+  }
+  const pointIndex = digits.length + decimalExponent;
+  if (pointIndex > 0) {
+    return normalizeDecimalString(`${digits.slice(0, pointIndex)}.${digits.slice(pointIndex)}`);
+  }
+  return normalizeDecimalString(`0.${"0".repeat(-pointIndex)}${digits}`);
+}
+
+function normalizeDecimalString(value: string): string {
   if (!value.includes(".")) {
     return value;
   }
-  return value.replace(/\.0+$/, "").replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+  let result = value;
+  while (result.endsWith("0")) {
+    result = result.slice(0, -1);
+  }
+  return result.endsWith(".") ? result.slice(0, -1) : result;
 }
 
-function normalizeScientific(value: string): string {
-  const [mantissa, exponent = "0"] = value.split("e");
-  const normalizedMantissa = normalizeFixed(mantissa ?? "0");
-  const normalizedExponent = String(Number(exponent));
-  return `${normalizedMantissa}e${normalizedExponent}`;
+function visualFromParts(parts: DecimalParts): string {
+  if (parts.mantissa === "0") {
+    return "0";
+  }
+  const sign = parts.isNegative ? TYPOGRAPHIC_MINUS : "";
+  if (parts.scientific) {
+    return `${sign}${parts.mantissa}e${parts.exponent}`;
+  }
+  return `${sign}${parts.mantissa}`;
+}
+
+function displayValueFromParts(parts: DecimalParts, visual: string): CalculatorDisplayValue {
+  return {
+    mantissa: parts.mantissa,
+    exponent: parts.exponent,
+    isNegative: parts.isNegative,
+    isError: false,
+    visual,
+    spoken: spokenDisplay(parts),
+  };
+}
+
+function spokenDisplay(parts: DecimalParts): CalculatorSpokenDisplay {
+  const englishSign = parts.isNegative ? "minus " : "";
+  const frenchSign = parts.isNegative ? "moins " : "";
+  if (parts.scientific) {
+    const englishExponentSign = parts.exponent < 0 ? "minus " : "";
+    const frenchExponentSign = parts.exponent < 0 ? "moins " : "";
+    return {
+      en: `${englishSign}${parts.mantissa} times ten to the ${englishExponentSign}${Math.abs(parts.exponent)}`,
+      fr: `${frenchSign}${parts.mantissa.replace(".", ",")} fois dix puissance ${frenchExponentSign}${Math.abs(parts.exponent)}`,
+    };
+  }
+  return {
+    en: `${englishSign}${parts.mantissa}`,
+    fr: `${frenchSign}${parts.mantissa.replace(".", ",")}`,
+  };
+}
+
+function visualEntry(entry: string, locale: CalculatorLocale): string {
+  const visual = entry.startsWith("-") ? `${TYPOGRAPHIC_MINUS}${entry.slice(1)}` : entry;
+  return localizeDecimalSeparator(visual, locale);
 }
 
 function localizeDecimalSeparator(value: string, locale: CalculatorLocale): string {
   return locale === "fr" ? value.replace(".", ",") : value;
+}
+
+function wouldExceedEntryLimit(entry: string, digit: CalculatorDigitKey): boolean {
+  return significantDigitCount(`${entry}${digit}`) > MAX_SIGNIFICANT_DIGITS;
+}
+
+function significantDigitCount(entry: string): number {
+  let count = 0;
+  let foundNonZero = false;
+  for (const character of entry) {
+    if (character < "0" || character > "9") {
+      continue;
+    }
+    if (!foundNonZero) {
+      if (character === "0") {
+        continue;
+      }
+      foundNonZero = true;
+    }
+    count += 1;
+  }
+  return count;
 }
 
 function isDigitKey(key: CalculatorKey): key is CalculatorDigitKey {

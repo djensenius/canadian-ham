@@ -75,9 +75,38 @@ public struct CalculatorLastOperation: Codable, Equatable, Sendable {
     }
 }
 
+public struct CalculatorSpokenDisplay: Codable, Equatable, Sendable {
+    public let en: String
+    public let fr: String
+
+    public init(en: String, fr: String) {
+        self.en = en
+        self.fr = fr
+    }
+}
+
+public struct CalculatorDisplayValue: Codable, Equatable, Sendable {
+    public let mantissa: String?
+    public let exponent: Int?
+    public let isNegative: Bool
+    public let isError: Bool
+    public let visual: String
+    public let spoken: CalculatorSpokenDisplay
+
+    public init(mantissa: String?, exponent: Int?, isNegative: Bool, isError: Bool, visual: String, spoken: CalculatorSpokenDisplay) {
+        self.mantissa = mantissa
+        self.exponent = exponent
+        self.isNegative = isNegative
+        self.isError = isError
+        self.visual = visual
+        self.spoken = spoken
+    }
+}
+
 public struct CalculatorState: Codable, Equatable, Sendable {
     public let locale: CalculatorLocale
     public let display: String
+    public let displayValue: CalculatorDisplayValue
     public let error: Bool
     public let accumulator: Double?
     public let pendingOperator: CalculatorBinaryOperator?
@@ -91,6 +120,7 @@ public struct CalculatorState: Codable, Equatable, Sendable {
     public init(
         locale: CalculatorLocale = .en,
         display: String = "0",
+        displayValue: CalculatorDisplayValue = CalculatorDisplayValue(mantissa: "0", exponent: 0, isNegative: false, isError: false, visual: "0", spoken: CalculatorSpokenDisplay(en: "0", fr: "0")),
         error: Bool = false,
         accumulator: Double? = nil,
         pendingOperator: CalculatorBinaryOperator? = nil,
@@ -103,6 +133,7 @@ public struct CalculatorState: Codable, Equatable, Sendable {
     ) {
         self.locale = locale
         self.display = display
+        self.displayValue = displayValue
         self.error = error
         self.accumulator = accumulator
         self.pendingOperator = pendingOperator
@@ -115,9 +146,17 @@ public struct CalculatorState: Codable, Equatable, Sendable {
     }
 }
 
+private struct DecimalParts {
+    let mantissa: String
+    let exponent: Int
+    let isNegative: Bool
+    let scientific: Bool
+}
+
 private let maxSignificantDigits = 12
 private let resultSignificantDigits = 15
-private let posixLocale = Locale(identifier: "en_US_POSIX")
+private let cancellationTolerance = 1e-14
+private let typographicMinus = "−"
 
 public func createCalculatorState(locale: CalculatorLocale = .en) -> CalculatorState {
     withDisplay(CalculatorState(locale: locale))
@@ -135,6 +174,9 @@ public func applyCalculatorKey(_ state: CalculatorState, key: CalculatorKey) -> 
     }
 
     if state.error {
+        if key == .clearEntry {
+            return createCalculatorState(locale: state.locale)
+        }
         if let digit = key.digit {
             return inputDigit(createCalculatorState(locale: state.locale), digit)
         }
@@ -176,26 +218,19 @@ public func applyCalculatorKey(_ state: CalculatorState, key: CalculatorKey) -> 
 }
 
 public func displayCalculatorValue(_ value: Double, locale: CalculatorLocale = .en) -> String {
-    guard value.isFinite else { return "Error" }
+    displayCalculatorValueDetails(value, locale: locale).visual
+}
 
-    let normalizedValue = value == 0 ? 0 : value
-    let absoluteValue = abs(normalizedValue)
-    if absoluteValue == 0 {
-        return "0"
-    }
-
-    let scientific = absoluteValue >= 999_999_999_999.5 || absoluteValue < 1e-9
-    let raw: String
-    if scientific {
-        raw = normalizeScientific(String(format: "%.\(maxSignificantDigits - 1)e", locale: posixLocale, normalizedValue))
-    } else {
-        raw = normalizeFixed(String(format: "%.\(fractionDigits(for: absoluteValue))f", locale: posixLocale, normalizedValue))
-    }
-    return localizeDecimalSeparator(raw, locale: locale)
+public func displayCalculatorValueDetails(_ value: Double, locale: CalculatorLocale = .en) -> CalculatorDisplayValue {
+    displayValue(forNumber: value, locale: locale)
 }
 
 private func inputDigit(_ state: CalculatorState, _ digit: String) -> CalculatorState {
     let base = state.justEvaluated && state.pendingOperator == nil ? createCalculatorState(locale: state.locale) : state
+    if base.entering, wouldExceedEntryLimit(entry: base.currentEntry, digit: digit) {
+        return base
+    }
+
     let entry: String
     if !base.entering {
         entry = digit
@@ -315,15 +350,15 @@ private func applyUnaryOperation(_ state: CalculatorState, operation: (Double) -
     guard let result = operation(currentValue(for: state)), result.isFinite else {
         return errorState(state)
     }
-    return replacing(state, currentEntry: "0", entering: false, displayedValue: normalizeResult(result), awaitingOperand: false, justEvaluated: false)
+    return replacing(state, currentEntry: "0", entering: false, displayedValue: normalizeResult(result), awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
 }
 
 private func toggleSign(_ state: CalculatorState) -> CalculatorState {
     if state.entering {
         let entry = state.currentEntry.hasPrefix("-") ? String(state.currentEntry.dropFirst()) : "-\(state.currentEntry)"
-        return replacing(state, currentEntry: entry, entering: true, displayedValue: number(fromEntry: entry), awaitingOperand: false, justEvaluated: false)
+        return replacing(state, currentEntry: entry, entering: true, displayedValue: number(fromEntry: entry), awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
     }
-    return replacing(state, displayedValue: normalizeResult(-state.displayedValue), awaitingOperand: false, justEvaluated: false)
+    return replacing(state, displayedValue: normalizeResult(-state.displayedValue), awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
 }
 
 private func applyPercent(_ state: CalculatorState) -> CalculatorState {
@@ -334,11 +369,11 @@ private func applyPercent(_ state: CalculatorState) -> CalculatorState {
     } else {
         result = currentValue / 100
     }
-    return replacing(state, currentEntry: "0", entering: false, displayedValue: normalizeResult(result), awaitingOperand: false, justEvaluated: false)
+    return replacing(state, currentEntry: "0", entering: false, displayedValue: normalizeResult(result), awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
 }
 
 private func clearEntry(_ state: CalculatorState) -> CalculatorState {
-    replacing(state, currentEntry: "0", entering: false, displayedValue: 0, awaitingOperand: false, justEvaluated: false)
+    replacing(state, currentEntry: "0", entering: false, displayedValue: 0, awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
 }
 
 private func backspace(_ state: CalculatorState) -> CalculatorState {
@@ -347,9 +382,6 @@ private func backspace(_ state: CalculatorState) -> CalculatorState {
     if entry.isEmpty || entry == "-" {
         entry = state.currentEntry.hasPrefix("-") ? "-0" : "0"
     }
-    if entry == "-0", !state.currentEntry.hasPrefix("-") {
-        entry = "0"
-    }
     return replacing(state, currentEntry: entry, entering: true, displayedValue: number(fromEntry: entry), awaitingOperand: false, justEvaluated: false)
 }
 
@@ -357,9 +389,9 @@ private func evaluateBinaryOperation(_ binaryOperator: CalculatorBinaryOperator,
     let result: Double
     switch binaryOperator {
     case .add:
-        result = left + right
+        result = cancelIfSubtractiveNoise(left + right, left: left, right: right)
     case .subtract:
-        result = left - right
+        result = cancelIfSubtractiveNoise(left - right, left: left, right: right)
     case .multiply:
         result = left * right
     case .divide:
@@ -367,6 +399,11 @@ private func evaluateBinaryOperation(_ binaryOperator: CalculatorBinaryOperator,
         result = left / right
     }
     return result.isFinite ? normalizeResult(result) : nil
+}
+
+private func cancelIfSubtractiveNoise(_ result: Double, left: Double, right: Double) -> Double {
+    let tolerance = max(abs(left), abs(right)) * cancellationTolerance
+    return abs(result) <= tolerance ? 0 : result
 }
 
 private func currentValue(for state: CalculatorState) -> Double {
@@ -377,21 +414,29 @@ private func number(fromEntry entry: String) -> Double {
     if entry == "-" || entry.isEmpty || entry == "." || entry == "-." {
         return 0
     }
-    return Double(entry) ?? 0
+    guard let parsed = Double(entry), parsed.isFinite else {
+        return 0
+    }
+    return parsed
 }
 
 private func withDisplay(_ state: CalculatorState) -> CalculatorState {
     let display: String
+    let displayDetails: CalculatorDisplayValue
     if state.error {
         display = "Error"
+        displayDetails = errorDisplayValue(visual: display)
     } else if state.entering {
-        display = localizeDecimalSeparator(state.currentEntry, locale: state.locale)
+        display = visualEntry(state.currentEntry, locale: state.locale)
+        displayDetails = displayValue(forEntry: state.currentEntry, locale: state.locale, visual: display)
     } else {
-        display = displayCalculatorValue(state.displayedValue, locale: state.locale)
+        displayDetails = displayValue(forNumber: state.displayedValue, locale: state.locale)
+        display = displayDetails.visual
     }
     return CalculatorState(
         locale: state.locale,
         display: display,
+        displayValue: displayDetails,
         error: state.error,
         accumulator: state.accumulator,
         pendingOperator: state.pendingOperator,
@@ -425,9 +470,11 @@ private func replacing(
     entering: Bool? = nil,
     displayedValue: Double? = nil,
     awaitingOperand: Bool? = nil,
+    clearLastOperation: Bool = false,
     justEvaluated: Bool? = nil
 ) -> CalculatorState {
-    withDisplay(CalculatorState(
+    let resolvedLastOperation = clearLastOperation ? nil : state.lastOperation
+    return withDisplay(CalculatorState(
         locale: state.locale,
         error: state.error,
         accumulator: state.accumulator,
@@ -436,29 +483,118 @@ private func replacing(
         entering: entering ?? state.entering,
         displayedValue: displayedValue ?? state.displayedValue,
         awaitingOperand: awaitingOperand ?? state.awaitingOperand,
-        lastOperation: state.lastOperation,
+        lastOperation: resolvedLastOperation,
         justEvaluated: justEvaluated ?? state.justEvaluated
     ))
 }
 
 private func normalizeResult(_ value: Double) -> Double {
-    if value == 0 || abs(value) < 5e-15 {
+    if value == 0 {
         return 0
     }
-    let exponent = floor(log10(abs(value)))
-    let factor = pow(10, Double(resultSignificantDigits) - exponent - 1)
+    let rounded = roundToSignificantDigits(value, significantDigits: resultSignificantDigits)
+    return rounded == 0 ? 0 : rounded
+}
+
+private func roundToSignificantDigits(_ value: Double, significantDigits: Int) -> Double {
+    let absoluteValue = abs(value)
+    if !absoluteValue.isFinite || absoluteValue == 0 {
+        return value
+    }
+    let exponent = floor(log10(absoluteValue))
+    let factor = pow(10, Double(significantDigits) - exponent - 1)
     if !factor.isFinite || factor == 0 {
         return value
     }
-    return (value * factor).rounded() / factor
+    let sign = value.sign == .minus ? -1.0 : 1.0
+    return sign * floor((absoluteValue * factor) + 0.5) / factor
 }
 
-private func fractionDigits(for absoluteValue: Double) -> Int {
+private func displayValue(forNumber value: Double, locale: CalculatorLocale) -> CalculatorDisplayValue {
+    guard value.isFinite else { return errorDisplayValue(visual: "Error") }
+    let normalizedValue = value == 0 ? 0 : value
+    let parts = decimalParts(for: normalizedValue)
+    let visual = localizeDecimalSeparator(visual(from: parts), locale: locale)
+    return displayValue(from: parts, visual: visual)
+}
+
+private func displayValue(forEntry entry: String, locale: CalculatorLocale, visual: String) -> CalculatorDisplayValue {
+    let value = number(fromEntry: entry)
+    if value == 0 {
+        return displayValue(from: DecimalParts(mantissa: "0", exponent: 0, isNegative: entry.hasPrefix("-"), scientific: false), visual: visual)
+    }
+    return displayValue(from: decimalParts(for: value), visual: visual)
+}
+
+private func errorDisplayValue(visual: String) -> CalculatorDisplayValue {
+    CalculatorDisplayValue(
+        mantissa: nil,
+        exponent: nil,
+        isNegative: false,
+        isError: true,
+        visual: visual,
+        spoken: CalculatorSpokenDisplay(en: "Error", fr: "Erreur")
+    )
+}
+
+private func decimalParts(for value: Double) -> DecimalParts {
+    let isNegative = value < 0
+    let absoluteValue = abs(value)
+    if absoluteValue == 0 {
+        return DecimalParts(mantissa: "0", exponent: 0, isNegative: false, scientific: false)
+    }
+
+    let scientific = absoluteValue >= 999_999_999_999.5 || absoluteValue < 1e-9
     let exponent = floor(log10(absoluteValue))
-    return max(0, maxSignificantDigits - Int(exponent) - 1)
+    let shift = maxSignificantDigits - Int(exponent) - 1
+    var coefficient = Int64(floor((absoluteValue * pow(10, Double(shift))) + 0.5))
+    var decimalExponent = -shift
+    let overflow = Int64(pow(10, Double(maxSignificantDigits)))
+    if coefficient >= overflow {
+        coefficient /= 10
+        decimalExponent += 1
+    }
+
+    let originalDigits = String(coefficient)
+    let digits = trimTrailingZeros(originalDigits, decimalExponent: decimalExponent)
+    decimalExponent += originalDigits.count - digits.count
+    if scientific {
+        let scientificExponent = digits.count + decimalExponent - 1
+        return DecimalParts(mantissa: mantissa(fromDigits: digits), exponent: scientificExponent, isNegative: isNegative, scientific: true)
+    }
+    return DecimalParts(mantissa: fixed(fromDigits: digits, decimalExponent: decimalExponent), exponent: 0, isNegative: isNegative, scientific: false)
 }
 
-private func normalizeFixed(_ value: String) -> String {
+private func trimTrailingZeros(_ digits: String, decimalExponent: Int) -> String {
+    var result = digits
+    var exponent = decimalExponent
+    while exponent < 0, result.count > 1, result.last == "0" {
+        result.removeLast()
+        exponent += 1
+    }
+    return result
+}
+
+private func mantissa(fromDigits digits: String) -> String {
+    guard digits.count > 1 else { return digits }
+    let first = digits.prefix(1)
+    let rest = digits.dropFirst()
+    return normalizeDecimalString("\(first).\(rest)")
+}
+
+private func fixed(fromDigits digits: String, decimalExponent: Int) -> String {
+    if decimalExponent >= 0 {
+        return digits + String(repeating: "0", count: decimalExponent)
+    }
+    let pointIndex = digits.count + decimalExponent
+    if pointIndex > 0 {
+        let index = digits.index(digits.startIndex, offsetBy: pointIndex)
+        return normalizeDecimalString("\(digits[..<index]).\(digits[index...])")
+    }
+    return normalizeDecimalString("0." + String(repeating: "0", count: -pointIndex) + digits)
+}
+
+private func normalizeDecimalString(_ value: String) -> String {
     var result = value
     guard result.contains(".") else { return result }
     while result.last == "0" {
@@ -470,13 +606,70 @@ private func normalizeFixed(_ value: String) -> String {
     return result
 }
 
-private func normalizeScientific(_ value: String) -> String {
-    let parts = value.lowercased().split(separator: "e", omittingEmptySubsequences: false)
-    let mantissa = normalizeFixed(String(parts.first ?? "0"))
-    let exponent = parts.count > 1 ? Int(parts[1]) ?? 0 : 0
-    return "\(mantissa)e\(exponent)"
+private func visual(from parts: DecimalParts) -> String {
+    if parts.mantissa == "0" {
+        return "0"
+    }
+    let sign = parts.isNegative ? typographicMinus : ""
+    if parts.scientific {
+        return "\(sign)\(parts.mantissa)e\(parts.exponent)"
+    }
+    return "\(sign)\(parts.mantissa)"
+}
+
+private func displayValue(from parts: DecimalParts, visual: String) -> CalculatorDisplayValue {
+    CalculatorDisplayValue(
+        mantissa: parts.mantissa,
+        exponent: parts.exponent,
+        isNegative: parts.isNegative,
+        isError: false,
+        visual: visual,
+        spoken: spokenDisplay(from: parts)
+    )
+}
+
+private func spokenDisplay(from parts: DecimalParts) -> CalculatorSpokenDisplay {
+    let englishSign = parts.isNegative ? "minus " : ""
+    let frenchSign = parts.isNegative ? "moins " : ""
+    if parts.scientific {
+        let englishExponentSign = parts.exponent < 0 ? "minus " : ""
+        let frenchExponentSign = parts.exponent < 0 ? "moins " : ""
+        return CalculatorSpokenDisplay(
+            en: "\(englishSign)\(parts.mantissa) times ten to the \(englishExponentSign)\(abs(parts.exponent))",
+            fr: "\(frenchSign)\(parts.mantissa.replacingOccurrences(of: ".", with: ",")) fois dix puissance \(frenchExponentSign)\(abs(parts.exponent))"
+        )
+    }
+    return CalculatorSpokenDisplay(
+        en: "\(englishSign)\(parts.mantissa)",
+        fr: "\(frenchSign)\(parts.mantissa.replacingOccurrences(of: ".", with: ","))"
+    )
+}
+
+private func visualEntry(_ entry: String, locale: CalculatorLocale) -> String {
+    let visual = entry.hasPrefix("-") ? typographicMinus + String(entry.dropFirst()) : entry
+    return localizeDecimalSeparator(visual, locale: locale)
 }
 
 private func localizeDecimalSeparator(_ value: String, locale: CalculatorLocale) -> String {
     locale == .fr ? value.replacingOccurrences(of: ".", with: ",") : value
+}
+
+private func wouldExceedEntryLimit(entry: String, digit: String) -> Bool {
+    significantDigitCount("\(entry)\(digit)") > maxSignificantDigits
+}
+
+private func significantDigitCount(_ entry: String) -> Int {
+    var count = 0
+    var foundNonZero = false
+    for character in entry {
+        guard character >= "0", character <= "9" else { continue }
+        if !foundNonZero {
+            if character == "0" {
+                continue
+            }
+            foundNonZero = true
+        }
+        count += 1
+    }
+    return count
 }

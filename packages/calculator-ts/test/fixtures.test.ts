@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { runCalculatorKeys, type CalculatorKey, type CalculatorLocale } from "../src/index.ts";
 
+const calculatorKeys = new Set<string>(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "+", "-", "×", "÷", "=", "√", "x²", "1/x", "±", "%", "C/CE", "AC", "backspace"]);
+
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 const fixturePath = join(repoRoot, "fixtures/calculator/sequences.json");
 const fixture = JSON.parse(await readFile(fixturePath, "utf8"));
@@ -19,10 +21,16 @@ test("fixtures/calculator/sequences.json matches the TypeScript calculator engin
     await t.test(testCase.id, () => {
       assert.equal(typeof testCase.id, "string");
       assert.ok(Array.isArray(testCase.keys), `${testCase.id}: keys must be an array`);
+      for (const key of testCase.keys) {
+        assert.equal(calculatorKeys.has(key), true, `${testCase.id}: unknown key ${key}`);
+      }
       const locale = (testCase.locale ?? "en") as CalculatorLocale;
       const keys = testCase.keys as CalculatorKey[];
       const result = runCalculatorKeys(keys, { locale });
       assert.equal(result.display, testCase.expectedDisplay, testCase.id);
+      if (testCase.expectedDisplayValue !== undefined) {
+        assert.deepEqual(result.displayValue, testCase.expectedDisplayValue, testCase.id);
+      }
     });
   }
 });
@@ -35,6 +43,7 @@ test("calculator state does not retain a formula or text history", () => {
     "awaitingOperand",
     "currentEntry",
     "display",
+    "displayValue",
     "displayedValue",
     "entering",
     "error",

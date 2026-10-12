@@ -13,6 +13,9 @@ final class CalculatorFixtureTests: XCTestCase {
         for testCase in fixture.cases {
             let state = runCalculatorKeys(testCase.keys, locale: testCase.locale ?? .en)
             XCTAssertEqual(state.display, testCase.expectedDisplay, testCase.id)
+            if let expectedDisplayValue = testCase.expectedDisplayValue {
+                XCTAssertEqual(state.displayValue, expectedDisplayValue, testCase.id)
+            }
         }
     }
 
@@ -64,6 +67,7 @@ private struct CalculatorFixture: Decodable {
         let locale: CalculatorLocale?
         let keys: [CalculatorKey]
         let expectedDisplay: String
+        let expectedDisplayValue: CalculatorDisplayValue?
     }
 
     let schemaVersion: Int
