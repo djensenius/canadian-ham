@@ -5,13 +5,16 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-12 22:23'
+updated_date: '2026-10-12 22:25'
 labels:
   - content
   - web
   - apple
 dependencies:
   - TASK-44.3
+modified_files:
+  - docs/content-licensing.md
+  - docs/release/ised-reference-sheet-request.md
 parent_task_id: TASK-44
 priority: medium
 ordinal: 111000
@@ -25,8 +28,8 @@ Owner decision 2026-10-12 (2A): use the official ISED Basic reference sheet (EN 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 docs/content-licensing.md records the decision, the risk basis, and that public release is blocked until permission covers the sheet
-- [ ] #2 A ready-to-send follow-up request to ISED (EN, asking for the reference sheets in EN and FR) is drafted for the owner
+- [x] #1 docs/content-licensing.md records the decision, the risk basis, and that public release is blocked until permission covers the sheet
+- [x] #2 A ready-to-send follow-up request to ISED (EN, asking for the reference sheets in EN and FR) is drafted for the owner
 - [ ] #3 Web and Apple exam tools show the official sheet (zoomable, accessible text equivalent) in internal builds; the original sheet remains available as fallback
 <!-- AC:END -->
 
@@ -35,3 +38,11 @@ Owner decision 2026-10-12 (2A): use the official ISED Basic reference sheet (EN 
 <!-- SECTION:PLAN:BEGIN -->
 1. Update docs/content-licensing.md only for the owner-approved ISED reference-sheet licensing decision and release block/fallback facts.\n2. Draft docs/release/ised-reference-sheet-request.md from the earlier permission-request tone and repository licensing context.\n3. Inspect the EN reference PDFs and record a technical integration plan in task notes; do not implement web or Apple integration.\n4. Run pnpm check:links, check ACs 1-2 only, commit, and push.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Docs-only slice complete: updated docs/content-licensing.md with owner decision 2026-10-12 (2A), original-request exclusion of reference sheets, interim internal-TestFlight risk basis matching the question-bank handling, task-1.7/T-009 public-release block until T-007/task-1.1 permission covers the sheet, English-only source status, and fallback content/reference-sheet/basic.md. Drafted docs/release/ised-reference-sheet-request.md for the owner to send to ISED. Validation: pnpm check:links passed.
+
+PDF inspection for integration lane (no integration implemented; depends on task-44.3): inspected content/sources/ised/basic-2025-07-15/reference/*.pdf with file(1), mdls, raw PDF object counts, and a Swift/PDFKit text extraction script because poppler pdfinfo/pdftotext is not installed on this machine. Exam PDF (Reference Material for Amateur Radio Exam Basic EN 2025.pdf): PDF 1.7, 5 pages, PDFKit extracted 1,307 characters total; page 1 has formula text, pages 2-5 mostly headers/titles plus object placeholders for diagrams; raw scan found 12 /Subtype/Image XObjects, fonts, and ToUnicode maps. Training PDF: PDF 1.7, 7 pages, PDFKit extracted 2,610 characters total; page 1 has formula table text, pages 2-7 mostly headings plus diagram/image placeholders; raw scan found 12 image XObjects. Integration plan: use only the exam-version sheet for exam tools. Web should prefer pre-rendered page images for stable offline fidelity/zoom plus a maintained/extracted text equivalent/transcript instead of embedding the PDF directly. Apple can use PDFKit/PDFView for the official PDF fidelity and zoom if accessibility is verified, but still needs a separate accessible text equivalent because the diagram pages are image-based and the PDF text layer is incomplete; fall back to page images plus transcript if PDFKit accessibility is insufficient.
+<!-- SECTION:NOTES:END -->
