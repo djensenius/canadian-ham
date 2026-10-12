@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:56'
+updated_date: '2026-10-12 17:05'
 labels:
   - web
 dependencies:
@@ -62,10 +62,12 @@ Third review fix pass started: remove calculator click focus-return, adjust calc
 Review follow-up after 05ef341: removed pointer/AT click focus-return from calculator keys, kept focused keypad buttons native for Enter/Space while allowing physical digit/operator/Backspace/Delete input, added click/detail and focused-key typing regressions, stacked the mock question map under the question for open panels below 64rem, changed desktop panel height to 100svh, and hardened CSS rule-block parsing in tests. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
 
 Copilot PR #207 fix pass started: remove focused-button Enter override, keep tool labels localized while sheet content is English, let Escape clear entry on calculator buttons, parameterize/test reference-sheet checker, then rerun validation and resolve PR review threads.
+
+Copilot PR #207 fixes: removed the focused-button state-dependent Enter override, changed button-key guard so only Enter/Space bypass calculator mapping while Escape clears entry, kept localized labels separate from English reference-sheet content language, parameterized/exported validateReferenceSheet with fixture failure tests, and retained mid-width mock stacking/100svh panel behavior. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 114, morse-engine 21, calculator-engine 127, web 170); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed the final 05ef341 re-review blocker and notes: removed calculator key focus-return, preserved native focused button behavior while retaining keyboard input, adjusted mid-width mock layout, updated drawer/panel sizing, and strengthened tests. Verified with typecheck, full tests, web build, and dist URL/CSP audit.
+Addressed Copilot PR #207 threads for web exam tools: fixed calculator focused-button key semantics, localized reference-sheet labels with English content scoping, exported and parameterized the reference-sheet checker with failure tests, and verified with typecheck, full tests, web build, and dist URL/CSP audit.
 <!-- SECTION:FINAL_SUMMARY:END -->
