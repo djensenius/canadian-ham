@@ -1,9 +1,10 @@
 ---
 id: TASK-44
 title: 'In-exam tools: basic calculator and reference sheet'
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-10-12 14:38'
+updated_date: '2026-10-12 14:40'
 labels:
   - web
   - apple
