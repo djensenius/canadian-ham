@@ -1,0 +1,37 @@
+<svg id="communications-flowchart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Communications and interference flowchart</title>
+  <desc>Three lanes guide interference, emergency relief, and third-party traffic choices, with a call-sign identification clock.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="72" y1="126" x2="540" y2="126" stroke-width="6"/>
+    <line x1="72" y1="238" x2="540" y2="238" stroke-width="6"/>
+    <line x1="72" y1="350" x2="540" y2="350" stroke-width="6"/>
+    <polygon points="540,126 520,114 520,138" fill="currentColor" stroke="none"/>
+    <polygon points="540,238 520,226 520,250" fill="currentColor" stroke="none"/>
+    <polygon points="540,350 520,338 520,362" fill="currentColor" stroke="none"/>
+    <circle cx="96" cy="126" r="28" stroke-width="5"/>
+    <path d="M216 104 L248 126 L216 148" stroke-width="5"/>
+    <path d="M364 104 L396 126 L364 148" stroke-width="5"/>
+    <path d="M96 210 L120 238 L96 266 L72 238 Z" stroke-width="5"/>
+    <path d="M216 216 L248 238 L216 260" stroke-width="5"/>
+    <path d="M364 216 L396 238 L364 260" stroke-width="5"/>
+    <circle cx="96" cy="350" r="28" stroke-width="5"/>
+    <path d="M216 328 L248 350 L216 372" stroke-width="5"/>
+    <path d="M364 328 L396 350 L364 372" stroke-width="5"/>
+    <circle cx="522" cy="64" r="32" stroke-width="5"/>
+    <line x1="522" y1="64" x2="522" y2="42" stroke-width="4"/>
+    <line x1="522" y1="64" x2="542" y2="74" stroke-width="4"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="120" y="82" font-size="24" font-weight="700">interference</text>
+    <text x="232" y="188" font-size="24">listen</text>
+    <text x="382" y="188" font-size="24">change/stop</text>
+    <text x="220" y="204" font-size="24" font-weight="700">distress</text>
+    <text x="236" y="300" font-size="24">exception</text>
+    <text x="386" y="300" font-size="24">stand by</text>
+    <text x="120" y="300" font-size="24" font-weight="700">third party</text>
+    <text x="246" y="430" font-size="24">personal</text>
+    <text x="396" y="430" font-size="24">supervised</text>
+    <text x="340" y="46" font-size="24">ID 30 min</text>
+    <text x="340" y="76" font-size="24">start/end</text>
+  </g>
+</svg>

@@ -146,6 +146,14 @@ A practical station checklist is qualification, frequency range, occupied bandwi
 - Use the minimum legal power needed and apply the correct power quantity.
 - Repeaters automatically retransmit; frequency stability, frequency measurement, and voice overmodulation controls are part of compliant operation.
 
+::figure privileges-station-checklist
+Alt text: Station checklist with operator qualification, band, bandwidth, power, repeater, and modulation-quality boxes.
+Text equivalent:
+- Station chain: certificate, transceiver, amplifier, and antenna.
+- Checklist items: operator qualification, frequency range, occupied bandwidth, power at transmitter or amplifier output, repeater output, and voice modulation.
+- Band-edge inset: a narrow signal stays inside the edge; a wider signal can spill outside.
+::
+
 ## Illustration brief
 
 Alt text: Station checklist with operator qualification, band, bandwidth, power, repeater, and modulation-quality boxes.

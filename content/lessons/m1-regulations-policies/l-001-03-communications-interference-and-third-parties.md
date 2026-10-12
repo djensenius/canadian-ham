@@ -141,6 +141,15 @@ During public-service work, prepared operators sound calm because they have alre
 - Identify with the station call sign at the required times and use the same identification discipline during tests.
 - Visiting and international third-party operation depend on the specific permission facts in the reference tables.
 
+::figure communications-flowchart
+Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
+Text equivalent:
+- Interference lane: listen first, then change operation or stop if required.
+- Distress and relief lane: narrow emergency exceptions apply; stand by when near relief traffic unless involved.
+- Third-party lane: keep traffic personal, non-commercial, and supervised when needed.
+- Identify at the start and end of contact and at intervals not greater than 30 minutes.
+::
+
 ## Illustration brief
 
 Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
