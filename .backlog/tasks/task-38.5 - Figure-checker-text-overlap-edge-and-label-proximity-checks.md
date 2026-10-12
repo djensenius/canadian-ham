@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:42'
-updated_date: '2026-10-12 15:42'
+updated_date: '2026-10-12 15:43'
 labels:
   - content
 dependencies: []
@@ -26,3 +26,9 @@ Two drawing lanes repeatedly shipped figures with overlapping labels, labels run
 - [ ] #2 check-figures fails on text extending past the viewBox and reports text whose bbox intersects any stroke segment
 - [ ] #3 Self-test covers each new rule; all figures on main and task-38.1 pass or the failures are listed
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Extend check-figures.mjs with SVG text bbox collection (anchors, inherited text properties, tspans) and conservative stroke geometry sampling for supported shapes/paths.\n2. Add validation rules and --self-test fixtures covering pass/fail cases for text spacing, viewBox edges, and stroke intersections.\n3. Document the new figure-authoring/checker rules in docs/figures.md.\n4. Run figure, content, web, and self-test checks; adjust only checker estimates unless rendered source proves a real figure issue; then finalize task metadata and commit.
+<!-- SECTION:PLAN:END -->
