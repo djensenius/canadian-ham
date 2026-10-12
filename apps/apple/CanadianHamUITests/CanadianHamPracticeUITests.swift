@@ -2616,20 +2616,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         if let target {
             for _ in 0..<40 {
-                let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+                let firstOffender = firstScrollableElementIntersectingProtectedArea(in: app, scrollView: scrollView)
                 if preserveFullyVisible {
-                    if offenders.isEmpty, isFullyVisible(target, in: app, requiresHittable: false) {
+                    if firstOffender == nil, isFullyVisible(target, in: app, requiresHittable: false) {
                         assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
                         return
                     }
-                } else if offenders.isEmpty, isPartiallyVisibleBelowNavigationBar(target, in: app) {
+                } else if firstOffender == nil, isPartiallyVisibleBelowNavigationBar(target, in: app) {
                     assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
                     return
                 }
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-                if !offenders.isEmpty {
-                    let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
-                    if hasOffenderClippedAboveWindow {
+                if let firstOffender {
+                    if firstOffender.isClippedAboveWindow {
                         let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
                         let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
                         start.press(forDuration: 0.01, thenDragTo: end)
@@ -2656,13 +2655,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
             return
         }
         for _ in 0..<60 {
-            let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-            if offenders.isEmpty {
+            guard let firstOffender = firstScrollableElementIntersectingProtectedArea(in: app, scrollView: scrollView) else {
                 assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
                 return
             }
-            let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
-            if hasOffenderClippedAboveWindow {
+            if firstOffender.isClippedAboveWindow {
                 let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
                 let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
                 start.press(forDuration: 0.01, thenDragTo: end)
@@ -2755,6 +2752,22 @@ final class CanadianHamPracticeUITests: XCTestCase {
             protectedAreaOffender(for: element, elementDescription: "button", windowMinY: windowMinY, protectedMaxY: protectedMaxY)
         }
         return textOffenders + buttonOffenders
+    }
+
+    private func firstScrollableElementIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> ProtectedAreaOffender? {
+        let windowMinY = app.windows.firstMatch.frame.minY
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
+        for element in scrollView.staticTexts.allElementsBoundByIndex {
+            if let offender = protectedAreaOffender(for: element, elementDescription: "staticText", windowMinY: windowMinY, protectedMaxY: protectedMaxY) {
+                return offender
+            }
+        }
+        for element in scrollView.buttons.allElementsBoundByIndex {
+            if let offender = protectedAreaOffender(for: element, elementDescription: "button", windowMinY: windowMinY, protectedMaxY: protectedMaxY) {
+                return offender
+            }
+        }
+        return nil
     }
 
     private func hasScrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> Bool {
