@@ -74,7 +74,7 @@ Region rows are map references. Region 2 includes the Americas, while Region 1 i
 
 Seven kilometres offshore from Florida is about 3.8 nautical miles. The United States territorial sea extends to 12 nautical miles, about 22 km, so United States amateur limits still govern in that example.
 
-The United States and CEPT rows are easy to reverse because both involve a Canadian operator outside Canada. In North America, your home call comes first, then portable or mobile, then the local area prefix. Under CEPT, the host country's prefix comes first, then stroke, then the Canadian call sign.
+The United States and CEPT rows are easy to reverse because both involve a Canadian operator outside Canada. In the United States, your home call comes first, then portable or mobile, then the local area prefix. Under CEPT, the host country's prefix comes first, then stroke, then the Canadian call sign.
 
 Morse-code authorization also belongs to the administration framework. Learn who decides the Morse requirement as an administration fact.
 

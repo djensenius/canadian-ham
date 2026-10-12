@@ -84,7 +84,7 @@ Antenna-siting rows describe process. The station owner first finds the applicab
 
 Use the timeliness and relevance criteria in the table when responding to written concerns in the default process. The tallest structure that avoids public consultation is the tallest one exempted by the land-use authority or ISED, so check the applicable exemption instead of using one universal height. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
 
-The exposure rows describe human RF exposure. A controlled environment is one where RF fields are assessed and people can be aware of the exposure, such as trained operators or workers. An uncontrolled environment covers everyone else, including the general public, so its limits are lower.
+The exposure rows describe human RF exposure. A controlled environment is one where RF fields are assessed, and the people there are aware of the potential exposure and can control or reduce it, such as trained operators or workers. An uncontrolled environment covers everyone else, including the general public, so its limits are lower.
 
 The VHF range named in the table matters because a human body is roughly resonant there. At 80 MHz, one half-wavelength is about 1.9 m, which is close to adult body length, so whole-body absorption can be stronger. At the low-frequency range named in the table, RF current can stimulate nerves, so the exposure code also treats nerve stimulation as an established effect.
 
