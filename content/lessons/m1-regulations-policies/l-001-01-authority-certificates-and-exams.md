@@ -35,7 +35,7 @@ By the end of this lesson, you can:
 
 - match the Radiocommunication Act, the Radiocommunication Regulations, ISED, and operating standards to their roles;
 - keep certificate validity, address, inspection, and call-sign-fee facts separate;
-- explain why false information, false distress traffic, unlawful obstruction, and due process belong with legal authority; and
+- explain how offence penalties and due-process protections support trust in radio; and
 - state the Basic-entry, later-qualification, fee, and accommodation facts with their supported conditions.
 
 ## Reference facts: Authority and source roles
@@ -45,7 +45,7 @@ By the end of this lesson, you can:
 | Radiocommunication Act | Authority to make Canadian radiocommunication regulations; authority to publish amateur-station operating standards; source of radiocommunication offences and penalties. |
 | Radiocommunication Regulations | Define the Canadian amateur radio service. |
 | Innovation, Science and Economic Development Canada (ISED) | Administers the Radiocommunication Act. |
-| ISED operating standards | Provide operating standards for amateur stations. |
+| ISED operating standards | RBR-4, the amateur-service operating standards, tells amateur stations how to operate. |
 | Certificate and call sign | Identify the holder's qualifications and station identity for amateur operation. |
 
 ## Reference facts: Certificate records, addresses, and call-sign fees
@@ -83,15 +83,15 @@ By the end of this lesson, you can:
 | Later amateur qualifications | After Basic is issued, additional qualifications may be examined in any order. |
 | Morse qualification | 5 words per minute sending and receiving. |
 | Other radio services | Operation in another radio service requires authority for that service. |
-| Named bridge credential | The Canadian Radiocommunication Operator General Certificate Maritime (RGMC) can lead to amateur certification. |
+| Maritime radio certificate path | The Canadian Radiocommunication Operator General Certificate Maritime (RGMC) can lead to amateur certification. |
 | ISED office qualification examinations | No charge. |
 | Accredited examiner | May charge a fee to recover examination administration costs. |
 | Accredited-examiner qualifications | Basic, Advanced, and Morse code qualifications. |
-| Disability-related examination delivery | May be oral or tailored to the candidate's ability to complete the examination. |
+| Disability-related examination delivery | Exams may be oral or tailored to the candidate's ability, such as dividing the exam into segments when an accessibility option is needed. |
 | Morse sending accommodation | A disabled candidate may be allowed to recite the examination text in Morse code sounds. |
 | Required examination portions | All required portions of the examination remain part of an accommodated exam. |
-| Reading difficulty or language barrier | Oral examination delivery may be available. |
-| Language-related examination delivery | Supported accommodations are oral delivery and examiner-managed tailoring; interpreter accompaniment is outside those supports. |
+| Reading difficulty or language barrier | After a written-exam failure caused by reading difficulty or because English or French is not the candidate's usual language, oral examination delivery may be available. |
+| Language-related examination delivery | The candidate answers personally in English or French; oral delivery is the supported language aid. |
 | Medical evidence | An examiner may request evidence from a practising medical physician before accommodating testing. |
 
 ## How these rules fit together
@@ -102,13 +102,13 @@ Certificate rows combine two ideas. Your certificate lasts for your lifetime, bu
 
 Offence rows protect trust in radio. False information, false distress traffic, and unlawful obstruction can harm people and services. The same group also includes process protections, such as the limits on dwelling entry and the suspension process.
 
-Exam rows describe a path. Basic is the first amateur qualification. After the certificate is issued, later qualifications can be examined in any order. Accommodation rows change delivery, not the required examination content.
+Exam rows describe a path. Basic is the first amateur qualification. After the certificate is issued, later qualifications can be examined in any order. The RGMC row names a maritime radio certificate; there is no calculation behind it, so memorize the name as a certificate fact. Accommodation rows change delivery, not the required examination content.
 
 ### Memory trick: life record, address-change notice
 
 - Helps remember: certificate validity and the mailing-address duty are different facts.
-- Trick: think "life for the certificate, 30 days to report a mailing-address change." The same number, 30, also appears in station identification (minutes between IDs).
-- Limit: this is a memory cue only. Use the table when you need the exact deadline in days.
+- Trick: think "life for the certificate, 30 days to report a mailing-address change."
+- Limit: this is a memory cue only. Use the table when you need the exact deadline.
 
 ## Radio connection
 

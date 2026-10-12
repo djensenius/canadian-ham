@@ -87,13 +87,13 @@ There are often two great-circle directions between places: the short path and t
 
 Amateur schedules, log entries, and confirmations commonly use UTC so operators in different time zones can agree on one clock. The reference meridian is Greenwich in the United Kingdom.
 
-A time zone labelled UTC minus 5 hours is five hours behind UTC. To convert a UTC schedule to that local time, subtract five hours and adjust the local date if the subtraction crosses midnight. Logs and confirmations should keep the UTC date and time together so both stations compare the same contact record.
+A time zone labelled UTC minus 5 hours is five hours behind UTC. To convert a UTC schedule to that local time, subtract five hours; adding would move the wrong way. Adjust the local date if the subtraction crosses midnight. Logs and confirmations should keep the UTC date and time together so both stations compare the same contact record.
 
 Stations CHU, WWV, and WWVH provide standard frequency and time references.
 
 ### In the real world: UTC date and local date can differ
 
-If a net is listed at 2100 UTC and your local zone is UTC minus 5 hours, local time is 1600 because 21 - 5 = 16. If a contact is at 0300 UTC, the same subtraction gives 2200 on the previous local date.
+If a net is listed at 2100 UTC and your local zone is UTC minus 5 hours, local time is 1600 because 21 - 5 = 16. On a 12-hour clock, 1600 is 4 PM. If a contact is at 0300 UTC, the same subtraction gives 2200 on the previous local date.
 
 Write the UTC date with the UTC time. That prevents two operators from confirming the same contact under different local dates.
 

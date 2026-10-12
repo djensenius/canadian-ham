@@ -91,7 +91,7 @@ For repeater contacts, report the relayed station's intelligibility and audio qu
 | Strength | 3 | Weak. |
 | Strength | 5 | Fair strength. |
 | Strength | 7 | Moderately strong. |
-| Strength | 9 | Very strong. |
+| Strength | 9 | Extremely strong. |
 | Tone | 9 | Perfect tone. |
 
 A two-number voice report leaves off the tone digit. A three-number Morse report reads the digits in order: readability, strength, and tone. A report marked as S9 plus a decibel value means the signal is stronger than S9 by the stated amount.
@@ -119,7 +119,9 @@ An S-unit is one marked step on a receiver's signal-strength meter. Some receive
 
 ### In the real world: one S-unit as a power clue
 
-If stable conditions let the shortcut apply, raising transmitter power from 10 W to 40 W is a quadrupling. That may move the other station's meter by about one S-unit on a meter using the Basic calibration model.
+If stable conditions let the shortcut apply, raising transmitter power from 10 W to 40 W is a quadrupling. In decibel terms, 6 dB is 3 dB + 3 dB, or about 2 x 2 in power. That may move the other station's meter by about one S-unit on a meter using the Basic calibration model.
+
+The same shortcut works downward. Dropping one S-unit means about 6 dB less power, so 60 W becomes about 15 W: first half to 30 W, then half again to 15 W.
 
 Apply that shortcut only when the receive antenna, propagation path, and measurement conditions remain comparable. Otherwise the S-meter may have changed for reasons outside transmitter power.
 
