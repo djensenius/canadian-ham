@@ -102,7 +102,7 @@ Certificate rows combine two ideas. Your certificate lasts for your lifetime, bu
 
 Offence rows protect trust in radio. False information, false distress traffic, and unlawful obstruction can harm people and services. The same group also includes process protections, such as the limits on dwelling entry and the suspension process.
 
-Exam rows describe a path. Basic is the first amateur qualification. After the certificate is issued, later qualifications can be examined in any order. Accommodation rows change delivery, not the required examination content.
+Exam rows describe a path. Basic is the first amateur qualification. After the certificate is issued, later qualifications can be examined in any order. The RGMC row is a named bridge credential from maritime radio; there is no calculation behind it, so memorize the name as a credential fact. Accommodation rows change delivery, not the required examination content.
 
 ### Memory trick: life record, address-change notice
 
