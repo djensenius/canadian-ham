@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:42'
-updated_date: '2026-10-12 15:43'
+updated_date: '2026-10-12 15:48'
 labels:
   - content
 dependencies: []
@@ -32,3 +32,9 @@ Two drawing lanes repeatedly shipped figures with overlapping labels, labels run
 <!-- SECTION:PLAN:BEGIN -->
 1. Extend check-figures.mjs with SVG text bbox collection (anchors, inherited text properties, tspans) and conservative stroke geometry sampling for supported shapes/paths.\n2. Add validation rules and --self-test fixtures covering pass/fail cases for text spacing, viewBox edges, and stroke intersections.\n3. Document the new figure-authoring/checker rules in docs/figures.md.\n4. Run figure, content, web, and self-test checks; adjust only checker estimates unless rendered source proves a real figure issue; then finalize task metadata and commit.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented conservative text geometry and stroke intersection checks in scripts/check-figures.mjs with inline --self-test fixtures. Rendered the three task-38.1 figures with qlmanage after initial checker false positives; visual review showed no real text/stroke or text/text overlap, so I tuned the stroke check to use estimated ink bounds and cap/lowercase-height text bounds rather than changing figure SVGs. pnpm check:figures now reports 3 SVG sources and 3 lesson references passing.
+<!-- SECTION:NOTES:END -->
