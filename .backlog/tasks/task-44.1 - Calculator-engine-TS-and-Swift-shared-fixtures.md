@@ -1,11 +1,11 @@
 ---
 id: TASK-44.1
 title: 'Calculator engine (TS and Swift, shared fixtures)'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 15:41'
+updated_date: '2026-10-12 15:43'
 labels:
   - web
   - apple
@@ -56,10 +56,12 @@ Round 3 fixes: implemented the requested display-length rule (fixed/scientific c
 Final review notes applied: renamed the prior power-table tie fixture to describe its 12-digit classification coverage, replaced round-tie-scientific-half-away with 24691357810 × 50 = 1.234567891e12, fixed entry-cap-excludes-sign-toggle to type 0. + 12 zeroes, ±, then 1 -> −0.0000000000001, added a 10-digit scientific tie in the >10^22 scale range (1.000000001e−14) and verified it with both engines, changed Swift display-bound assertions to display.unicodeScalars.count, and added a generated fuzzDrift section in fixtures/calculator/sequences.json. The TS generator records every 100th display for the first 20,000 keys using the shared LCG; Swift compares against those snapshots, proving cross-engine drift on the same seeded sequence. Regeneration is documented in both calculator READMEs and exposed as pnpm --filter @canadian-ham/calculator-engine generate-fuzz-fixture / generate-fuzz-fixture:check. Validation: pnpm --filter @canadian-ham/calculator-engine typecheck passed; generate-fuzz-fixture:check passed; pnpm --filter @canadian-ham/calculator-engine test passed (127 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed (3 XCTest tests); git diff --check passed.
 
 Copilot PR #203 fix pass started: add root/CI fuzz fixture freshness check and strengthen drift proof with all-step rolling digest verified by Swift.
+
+Copilot PR #203 comments fixed: CI now runs pnpm --filter @canadian-ham/calculator-engine generate-fuzz-fixture:check with the generated-artifact checks; fuzzDrift now includes an FNV-1a-64 displayDigest over every display string in the first 20,000 seeded steps while retaining sparse snapshots; TS verifies the digest and snapshots, and Swift recomputes and compares the same digest plus snapshots. README regeneration notes now document that the drift fixture includes both sparse snapshots and the all-step digest. Validation: pnpm --filter @canadian-ham/calculator-engine typecheck passed; generate-fuzz-fixture:check passed; pnpm --filter @canadian-ham/calculator-engine test passed (127 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed (3 XCTest tests); git diff --check passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Applied final review notes: added generated cross-engine fuzz drift snapshots, updated and renamed tie/entry fixtures, switched Swift display-bound counting to unicodeScalars, documented fuzz fixture regeneration, and verified with TS typecheck, TS fixture/fuzz tests, Swift fixture/fuzz tests, and diff check.
+Fixed PR #203 Copilot notes by adding CI freshness checking for the calculator fuzz fixture and strengthening cross-engine drift proof with an all-step FNV-1a-64 display digest verified by both TS and Swift. Verified with TS typecheck, fuzz-fixture check, TS tests, Swift tests, and diff check.
 <!-- SECTION:FINAL_SUMMARY:END -->
