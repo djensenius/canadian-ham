@@ -1863,6 +1863,11 @@
     "steps": 20000,
     "snapshotEvery": 100,
     "lcg": "seed = (seed * 1664525 + 1013904223) mod 2^32; key = keys[seed % keys.length]",
+    "displayDigest": {
+      "algorithm": "FNV-1a-64 over every step display's UTF-8 bytes in order, followed by one separator byte per display",
+      "separatorByte": "0x00",
+      "hex": "0e3028a737d4c315"
+    },
     "keys": [
       "0",
       "1",

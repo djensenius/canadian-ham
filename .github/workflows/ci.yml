@@ -143,6 +143,10 @@ jobs:
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm --filter @canadian-ham/engine-ts generate-fixtures:check
 
+      - name: Check calculator fuzz fixture
+        if: needs.changes.outputs.full_checks == 'true'
+        run: pnpm --filter @canadian-ham/calculator-engine generate-fuzz-fixture:check
+
       - name: Test design tokens
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm --filter @canadian-ham/design-tokens test

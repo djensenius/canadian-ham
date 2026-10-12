@@ -22,10 +22,20 @@ interface CalculatorFixtureFile {
     steps: number;
     snapshotEvery: number;
     lcg: string;
+    displayDigest: {
+      algorithm: string;
+      separatorByte: string;
+      hex: string;
+    };
     keys: readonly CalculatorKey[];
     snapshots: readonly FuzzSnapshot[];
   };
 }
+
+const fnv64Offset = 0xcbf29ce484222325n;
+const fnv64Prime = 0x100000001b3n;
+const uint64Mask = 0xffffffffffffffffn;
+const digestSeparatorByte = 0x00;
 
 async function main(): Promise<void> {
   const checkMode = process.argv.includes("--check");
@@ -51,11 +61,13 @@ async function main(): Promise<void> {
 function buildFuzzDriftFixture(): NonNullable<CalculatorFixtureFile["fuzzDrift"]> {
   let seed = fuzzSeed;
   let state = createCalculatorState();
+  let displayDigest = fnv64Offset;
   const snapshots: FuzzSnapshot[] = [];
   for (let index = 0; index < fuzzSteps; index += 1) {
     seed = (Math.imul(seed, 1_664_525) + 1_013_904_223) >>> 0;
     const key = fuzzKeys[seed % fuzzKeys.length]!;
     state = applyCalculatorKey(state, key);
+    displayDigest = updateDisplayDigest(displayDigest, state.display);
     const step = index + 1;
     if (step % snapshotEvery === 0) {
       snapshots.push({ step, key, display: state.display });
@@ -66,9 +78,30 @@ function buildFuzzDriftFixture(): NonNullable<CalculatorFixtureFile["fuzzDrift"]
     steps: fuzzSteps,
     snapshotEvery,
     lcg: "seed = (seed * 1664525 + 1013904223) mod 2^32; key = keys[seed % keys.length]",
+    displayDigest: {
+      algorithm: "FNV-1a-64 over every step display's UTF-8 bytes in order, followed by one separator byte per display",
+      separatorByte: "0x00",
+      hex: hex64(displayDigest),
+    },
     keys: fuzzKeys,
     snapshots,
   };
+}
+
+function updateDisplayDigest(hash: bigint, display: string): bigint {
+  let next = hash;
+  for (const byte of Buffer.from(display, "utf8")) {
+    next = fnv64(next, byte);
+  }
+  return fnv64(next, digestSeparatorByte);
+}
+
+function fnv64(hash: bigint, byte: number): bigint {
+  return ((hash ^ BigInt(byte)) * fnv64Prime) & uint64Mask;
+}
+
+function hex64(value: bigint): string {
+  return value.toString(16).padStart(16, "0");
 }
 
 await main();
