@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:39'
+updated_date: '2026-10-12 14:45'
 labels:
   - content
   - apple
@@ -25,7 +25,7 @@ Draw the remaining Illustration brief figures for lessons in m5-basic-electronic
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every brief in modules 5-8 not covered by task-38.1/38.2 has a drawn figure referenced from its lesson
+- [x] #1 Every brief in modules 5-8 not covered by task-38.1/38.2 has a drawn figure referenced from its lesson
 - [ ] #2 Same accessibility and originality bar as task-38.1; audits pass
 <!-- AC:END -->
 
@@ -45,4 +45,12 @@ Figures added in second slice: L-006-04 yagi-vertical-length shows reflector lon
 Figures added in third slice: L-007-02 daytime-absorption-frequency-window shows Sunlit D-region absorption, F-region return, and frequency window with LUF/OWF/MUF; verified against B-007-004-001..011, B-007-005-001..011, B-007-006-001..011 including 11-year solar cycle, OWF slightly below MUF, and lesson example LUF 5.8 MHz, MUF 18.6 MHz, OWF 15.8 MHz (0.85 x MUF). L-007-03 vhf-unusual-propagation-modes shows sporadic E, tropospheric ducting, auroral scatter, and meteor scatter; verified against B-007-007-001..011 and B-007-008-001..011 including six metres for sporadic E/meteor scatter, auroral E-region/north/CW clues, 800 km normal VHF planning scale, temperature-inversion ducting, and meteor scatter 30-100 MHz.
 
 Figures added in fourth slice: L-008-01 interference-troubleshooting-map separates receiver overload, audio rectification, and transmitter spurious outputs; verified against B-008-001-001..011, B-008-002-001..011, B-008-003-001..011 including high-pass at TV receiver, ferrite coils/lead shortening/common-mode choke cures, key clicks, spurious emissions, and parasitic oscillation. L-008-02 filter-response-sketches shows low-pass, high-pass, band-pass, band-reject, and notch frequency responses with pass/attenuate labels; verified against B-008-004-001..011 and B-008-005-001..011 including harmonics as integer multiples, second harmonic example at 56 MHz from 10 m, overdrive/flat topping, filter placement, and impedance matching.
+
+Validation/render evidence: ran pnpm check:figures:fix, pnpm check:figures, node scripts/check-figures.mjs --self-test, content coverage/quizzes/originality:all/explanations/links, web vitest, and content-swift swift test. Rendered all 13 figure SVGs with qlmanage -t -s 800 and inspected the PNGs; final renders are saved under docs/evidence/task-38.4/. AC #2 remains unchecked because Apple in-app/xbuild validation is intentionally deferred in this lane per task instructions.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added ten original SVG lesson figures for the in-scope modules 5-8 briefs, referenced them from lessons with alt text and text equivalents, regenerated Apple figure assets/metadata, and saved qlmanage render evidence under docs/evidence/task-38.4/. Automated figure, content, web, and content-swift checks pass; Apple xbuild validation was not run per lane instructions.
+<!-- SECTION:FINAL_SUMMARY:END -->
