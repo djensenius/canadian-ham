@@ -107,6 +107,14 @@ By the end of this lesson, you can:
 | Voice modulation maximum | 100%. |
 | Frequency measurement | All amateur stations must be capable of reliably measuring frequency, regardless of emission mode. |
 
+::figure privileges-station-checklist
+Alt text: Station checklist with operator qualification, band, bandwidth, power, repeater, and modulation-quality boxes.
+Text equivalent:
+- The station chain is cert, radio, amp, and antenna.
+- The checklist boxes are band, width, Pout, and mod, with checkmarks labelled qual, repeater, and modulation.
+- The band-edge sketches are labelled inside and spills.
+::
+
 ## How these rules fit together
 
 Privilege rows describe the current control situation. A station can contain equipment for many bands and powers. Another person can have more qualifications. The transmission still has to stay inside the privileges attached to the operator and call sign governing that operation.
@@ -145,14 +153,6 @@ A practical station checklist is qualification, frequency range, occupied bandwi
 - Near a band edge, the entire occupied bandwidth must remain inside the amateur band.
 - Use the minimum legal power needed and apply the correct power quantity.
 - Repeaters automatically retransmit; frequency stability, frequency measurement, and voice overmodulation controls are part of compliant operation.
-
-::figure privileges-station-checklist
-Alt text: Station checklist with operator qualification, band, bandwidth, power, repeater, and modulation-quality boxes.
-Text equivalent:
-- Station chain: certificate, transceiver, amplifier, and antenna.
-- Checklist items: operator qualification, frequency range, occupied bandwidth, power at transmitter or amplifier output, repeater output, and voice modulation.
-- Band-edge inset: a narrow signal stays inside the edge; a wider signal can spill outside.
-::
 
 ## Illustration brief
 

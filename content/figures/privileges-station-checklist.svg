@@ -1,44 +1,20 @@
 <svg id="privileges-station-checklist" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
-  <title>Privileges and station checklist</title>
-  <desc>A station chain is checked for qualification, frequency range, bandwidth, output power, repeater output, and voice modulation.</desc>
+  <title>Privileges station checklist</title>
+  <desc>Station chain, checklist boxes, and band edge sketches.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="36" y="56" width="112" height="54" rx="12" ry="12" stroke-width="5"/>
-    <rect x="176" y="56" width="112" height="54" rx="12" ry="12" stroke-width="5"/>
-    <rect x="316" y="56" width="112" height="54" rx="12" ry="12" stroke-width="5"/>
-    <rect x="456" y="56" width="112" height="54" rx="12" ry="12" stroke-width="5"/>
-    <line x1="148" y1="83" x2="176" y2="83" stroke-width="5"/>
-    <line x1="288" y1="83" x2="316" y2="83" stroke-width="5"/>
-    <line x1="428" y1="83" x2="456" y2="83" stroke-width="5"/>
-    <rect x="56" y="180" width="80" height="58" rx="12" ry="12" stroke-width="5"/>
-    <rect x="166" y="180" width="92" height="58" rx="12" ry="12" stroke-width="5"/>
-    <rect x="288" y="180" width="80" height="58" rx="12" ry="12" stroke-width="5"/>
-    <rect x="398" y="180" width="86" height="58" rx="12" ry="12" stroke-width="5"/>
-    <path d="M72 284 L568 284" stroke-width="5"/>
-    <line x1="96" y1="270" x2="96" y2="298" stroke-width="4"/>
-    <line x1="520" y1="270" x2="520" y2="298" stroke-width="4"/>
-    <path d="M202 284 C224 250 254 250 276 284 C298 318 328 318 350 284" stroke-width="6"/>
-    <path d="M452 284 C484 232 526 232 558 284" stroke-width="6"/>
-    <line x1="202" y1="330" x2="558" y2="330" stroke-width="4"/>
-    <rect x="66" y="374" width="34" height="34" rx="6" ry="6" stroke-width="4"/>
-    <path d="M72 390 L82 400 L96 382" stroke-width="4"/>
-    <rect x="190" y="374" width="34" height="34" rx="6" ry="6" stroke-width="4"/>
-    <path d="M196 390 L206 400 L220 382" stroke-width="4"/>
-    <rect x="334" y="374" width="34" height="34" rx="6" ry="6" stroke-width="4"/>
-    <path d="M340 390 L350 400 L364 382" stroke-width="4"/>
+    <rect x="42" y="52" width="112" height="52" rx="12" ry="12" stroke-width="5"/><rect x="182" y="52" width="112" height="52" rx="12" ry="12" stroke-width="5"/><rect x="322" y="52" width="112" height="52" rx="12" ry="12" stroke-width="5"/><path d="M500 108 L532 46 L564 108" stroke-width="6"/>
+    <line x1="154" y1="78" x2="182" y2="78" stroke-width="5"/><line x1="294" y1="78" x2="322" y2="78" stroke-width="5"/><line x1="434" y1="78" x2="500" y2="78" stroke-width="5"/>
+    <rect x="48" y="156" width="88" height="52" rx="10" ry="10" stroke-width="5"/><rect x="162" y="156" width="100" height="52" rx="10" ry="10" stroke-width="5"/><rect x="288" y="156" width="88" height="52" rx="10" ry="10" stroke-width="5"/><rect x="402" y="156" width="88" height="52" rx="10" ry="10" stroke-width="5"/>
+    <line x1="74" y1="286" x2="288" y2="286" stroke-width="5"/><line x1="92" y1="270" x2="92" y2="302" stroke-width="4"/><line x1="270" y1="270" x2="270" y2="302" stroke-width="4"/><path d="M132 286 C154 250 188 250 210 286 C226 312 250 312 270 286" stroke-width="6"/>
+    <line x1="352" y1="286" x2="580" y2="286" stroke-width="5"/><line x1="370" y1="270" x2="370" y2="302" stroke-width="4"/><line x1="542" y1="270" x2="542" y2="302" stroke-width="4"/><path d="M444 286 C478 230 530 230 570 286" stroke-width="6"/>
+    <rect x="88" y="378" width="34" height="34" rx="5" ry="5" stroke-width="4"/><path d="M94 394 L104 404 L118 386" stroke-width="4"/>
+    <rect x="238" y="378" width="34" height="34" rx="5" ry="5" stroke-width="4"/><path d="M244 394 L254 404 L268 386" stroke-width="4"/>
+    <rect x="388" y="378" width="34" height="34" rx="5" ry="5" stroke-width="4"/><path d="M394 394 L404 404 L418 386" stroke-width="4"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="92" y="90" font-size="24">cert</text>
-    <text x="232" y="90" font-size="24">radio</text>
-    <text x="372" y="90" font-size="24">amp</text>
-    <text x="512" y="90" font-size="24">ant</text>
-    <text x="96" y="218" font-size="24">band</text>
-    <text x="212" y="218" font-size="24">width</text>
-    <text x="328" y="218" font-size="24">Pout</text>
-    <text x="441" y="218" font-size="24">mod</text>
-    <text x="300" y="160" font-size="24">inside edge</text>
-    <text x="508" y="160" font-size="24">spills out</text>
-    <text x="158" y="452" font-size="24">qual</text>
-    <text x="286" y="452" font-size="24">rptr</text>
-    <text x="440" y="452" font-size="24">mod</text>
+    <text x="98" y="86" font-size="24">cert</text><text x="238" y="86" font-size="24">radio</text><text x="378" y="86" font-size="24">amp</text><text x="532" y="144" font-size="24">antenna</text>
+    <text x="92" y="190" font-size="24">band</text><text x="212" y="190" font-size="24">width</text><text x="332" y="190" font-size="24">Pout</text><text x="446" y="190" font-size="24">mod</text>
+    <text x="178" y="336" font-size="24">inside</text><text x="490" y="336" font-size="24">spills</text>
+    <text x="105" y="444" font-size="24">qual</text><text x="255" y="444" font-size="24">repeater</text><text x="405" y="444" font-size="24">modulation</text>
   </g>
 </svg>

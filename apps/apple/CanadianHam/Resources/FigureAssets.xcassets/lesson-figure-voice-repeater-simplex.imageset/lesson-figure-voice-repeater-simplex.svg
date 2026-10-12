@@ -1,35 +1,17 @@
 <svg id="voice-repeater-simplex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
-  <title>Repeater and simplex voice paths</title>
-  <desc>Two portable stations first communicate through a hilltop repeater, then use a direct simplex path.</desc>
+  <title>Repeater input output and simplex paths</title>
+  <desc>Portable stations use an input path with CTCSS and offset to a hilltop repeater, then a direct simplex path.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M48 330 C130 282 210 284 286 330 C366 378 466 374 592 326" stroke-width="8"/>
-    <line x1="320" y1="92" x2="320" y2="202" stroke-width="8"/>
-    <path d="M286 138 C308 114 332 114 354 138" stroke-width="5"/>
-    <path d="M270 114 C304 78 336 78 370 114" stroke-width="4"/>
-    <rect x="276" y="202" width="88" height="54" rx="14" ry="14" stroke-width="6"/>
-    <rect x="76" y="284" width="52" height="88" rx="12" ry="12" stroke-width="6"/>
-    <line x1="102" y1="284" x2="102" y2="246" stroke-width="5"/>
-    <circle cx="102" cy="328" r="13" stroke-width="5"/>
-    <rect x="510" y="284" width="52" height="88" rx="12" ry="12" stroke-width="6"/>
-    <line x1="536" y1="284" x2="536" y2="246" stroke-width="5"/>
-    <circle cx="536" cy="328" r="13" stroke-width="5"/>
-    <path d="M132 270 C185 198 238 158 292 132" stroke-width="6"/>
-    <polygon points="292,132 269,133 282,151" fill="currentColor" stroke="none"/>
-    <path d="M348 132 C415 166 478 214 508 270" stroke-width="6"/>
-    <polygon points="508,270 503,247 486,262" fill="currentColor" stroke="none"/>
-    <path d="M142 394 C258 430 384 430 498 394" stroke-width="6"/>
-    <polygon points="498,394 476,386 481,409" fill="currentColor" stroke="none"/>
+    <path d="M150 330 C220 300 270 230 320 174 C370 230 420 300 490 330" stroke-width="8"/>
+    <line x1="320" y1="82" x2="320" y2="170" stroke-width="7"/><path d="M282 108 C306 84 334 84 358 108" stroke-width="5"/><rect x="278" y="170" width="84" height="48" rx="12" ry="12" stroke-width="6"/>
+    <rect x="76" y="250" width="58" height="92" rx="12" ry="12" stroke-width="6"/><line x1="105" y1="250" x2="105" y2="216" stroke-width="5"/><circle cx="105" cy="296" r="12" stroke-width="4"/>
+    <rect x="506" y="250" width="58" height="92" rx="12" ry="12" stroke-width="6"/><line x1="535" y1="250" x2="535" y2="216" stroke-width="5"/><circle cx="535" cy="296" r="12" stroke-width="4"/>
+    <path d="M134 244 C190 180 246 128 286 108" stroke-width="6"/><polygon points="286,108 264,109 277,128" fill="currentColor" stroke="none"/>
+    <path d="M354 108 C418 138 478 188 506 244" stroke-width="6"/><polygon points="506,244 502,222 484,236" fill="currentColor" stroke="none"/>
+    <path d="M150 390 C260 424 386 424 492 390" stroke-width="6"/><polygon points="492,390 470,382 476,405" fill="currentColor" stroke="none"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="320" y="291" font-size="24" font-weight="700">repeater</text>
-    <text x="102" y="438" font-size="24">portable A</text>
-    <text x="536" y="438" font-size="24">portable B</text>
-    <text x="192" y="132" font-size="24">input</text>
-    <text x="448" y="136" font-size="24">output</text>
-    <text x="320" y="456" font-size="24">simplex</text>
-    <text x="108" y="68" font-size="24">pause</text>
-    <text x="108" y="94" font-size="24">listen</text>
-    <text x="532" y="68" font-size="24">CTCSS</text>
-    <text x="532" y="94" font-size="24">offset</text>
+    <text x="320" y="300" font-size="24" font-weight="700">repeater</text><text x="192" y="128" font-size="24">input</text><text x="448" y="116" font-size="24">output</text>
+    <text x="160" y="84" font-size="24">CTCSS + offset</text><text x="104" y="454" font-size="24">portable A</text><text x="536" y="454" font-size="24">portable B</text><text x="320" y="454" font-size="24">simplex</text>
   </g>
 </svg>

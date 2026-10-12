@@ -108,6 +108,15 @@ By the end of this lesson, you can:
 | United States-issued call sign holder in Canada using voice | Identifies with the call sign, mobile or portable qualifier, and the Canadian prefix for the station's geographic location. |
 | Local non-certified participants at both ends | Both non-certified people are third parties. |
 
+::figure communications-flowchart
+Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
+Text equivalent:
+- The lane labelled interf has listen, then change/stop.
+- The distress lane has exception, then stand by.
+- The 3rd party lane has personal, then supervised.
+- A clock is labelled ID 30.
+::
+
 ## How these rules fit together
 
 Interference rules start with restraint. Listen first, avoid deliberate or harmful interference, and treat a harmful-interference finding as a requirement to stop or change operation. Secondary-service facts add a priority relationship: amateur operation in a shared band protects the primary service.
@@ -140,15 +149,6 @@ During public-service work, prepared operators sound calm because they have alre
 - Amateur message handling for third parties must be unpaid, personal, and non-commercial.
 - Identify with the station call sign at the required times and use the same identification discipline during tests.
 - Visiting and international third-party operation depend on the specific permission facts in the reference tables.
-
-::figure communications-flowchart
-Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
-Text equivalent:
-- Interference lane: listen first, then change operation or stop if required.
-- Distress and relief lane: narrow emergency exceptions apply; stand by when near relief traffic unless involved.
-- Third-party lane: keep traffic personal, non-commercial, and supervised when needed.
-- Give the call sign when a contact opens, again when it closes, and before any half-hour passes.
-::
 
 ## Illustration brief
 

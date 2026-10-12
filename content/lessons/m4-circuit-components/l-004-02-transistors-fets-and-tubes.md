@@ -171,6 +171,14 @@ A triode grid controls electron flow through a vacuum. A FET gate controls condu
 
 The materials are completely different, but the control analogy helps with exam-level recognition.
 
+::figure control-terminals
+Alt text: Three side-by-side simplified symbols for an NPN transistor, an N-channel FET, and a triode tube, with their control terminals highlighted.
+Text equivalent:
+- The NPN sketch labels base, collector, and emitter, with the base control circled.
+- The N-FET sketch labels gate, drain, and source, with the gate control circled.
+- The triode sketch labels cathode, grid, and plate, with the grid between cathode and plate and circled.
+::
+
 ## Try it
 
 1. An NPN symbol in a driver circuit has its emitter arrow pointing away from the base. Use the arrow to confirm the part family and polarity before replacing it.
@@ -191,14 +199,6 @@ When reading a block diagram or schematic, terminal names give fast clues. Base 
 - Calling every three-terminal semiconductor a bipolar transistor. FETs also have three terminals but use gate, source, and drain names.
 - Forgetting that source and drain are the channel ends, while the gate controls the channel.
 - Forgetting that tube circuits can contain dangerous high voltages even after power is removed.
-
-::figure control-terminals
-Alt text: Three side-by-side simplified symbols for an NPN transistor, an N-channel FET, and a triode tube, with their control terminals highlighted.
-Text equivalent:
-- Bipolar transistor terminals: collector, base, and emitter; the base is the control terminal.
-- Field-effect transistor terminals: drain, gate, and source; the gate is the control terminal.
-- Triode tube electrodes: plate, grid, and cathode; the grid is the control terminal.
-::
 
 ## Illustration brief
 

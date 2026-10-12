@@ -104,6 +104,14 @@ heat in regulator ≈ 4.2 V x 2.5 A = 10.5 W
 
 About ten watts of heat is enough to require serious heat sinking.
 
+::figure digital-interface-linear-supply
+Alt text: A split diagram shows a computer audio interface between a transceiver and laptop, plus a linear power supply chain from AC mains to DC output.
+Text equivalent:
+- RX arrows run radio to interface to laptop.
+- TX arrows run laptop to interface to radio, and a PTT line runs from the interface to the radio.
+- The supply chain is AC, xfmr, rect, shunt cap, reg, DC, and sns at the output.
+::
+
 ## Try it
 
 1. A digital station keys the transmitter correctly, but the other station hears silence instead of tones. What separate path should be traced? Trace transmit audio from the software output through the interface to the radio data input.
@@ -122,13 +130,6 @@ Digital-mode problems often begin as audio problems. Too much audio drive can ma
 - Confusing a rectifier with a regulator. The rectifier changes AC to pulsating DC; the regulator holds the output steady.
 - Placing overvoltage sensing before the regulator, where it cannot verify the voltage delivered to the radio.
 - Forgetting that a linear regulator can waste substantial power as heat.
-
-::figure digital-interface-linear-supply
-Alt text: A split diagram shows a computer audio interface between a transceiver and laptop, plus a linear power supply chain from AC mains to DC output.
-Text equivalent:
-- Digital interface: laptop, interface, and transceiver exchange receive audio samples, transmit audio tones, and a push-to-talk control line.
-- Linear supply chain: AC mains, transformer, rectifier, filter capacitor, regulator with heat sink, DC output terminals, and overvoltage sensing at the output.
-::
 
 ## Illustration brief
 

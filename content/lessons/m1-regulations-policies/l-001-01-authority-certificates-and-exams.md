@@ -94,6 +94,13 @@ By the end of this lesson, you can:
 | Language-related examination delivery | Supported accommodations are oral delivery and examiner-managed tailoring; interpreter accompaniment is outside those supports. |
 | Medical evidence | An examiner may request evidence from a practising medical physician before accommodating testing. |
 
+::figure authority-records-exams
+Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.
+Text equivalent:
+- The drawing stacks Act, Regulations, ISED standards, and cert + call sign.
+- An address card branches to two labelled exam boxes: ISED and examiner.
+::
+
 ## How these rules fit together
 
 The legal-source rows are the top layer. The Act gives authority, the Regulations define the amateur service, ISED administers the Act, and the operating standards tell amateur stations how to operate.
@@ -127,14 +134,6 @@ During emergency-support practice, these facts reduce confusion. Operators who s
 - False information, false distress, and unlawful obstruction belong with legal consequences and public trust.
 - The certification path links entry eligibility, first certification, later qualifications, and service boundaries.
 - Exam fees and accommodations depend on the exact setting while preserving the required examination content.
-
-::figure authority-records-exams
-Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.
-Text equivalent:
-- Authority stack: Radiocommunication Act, Radiocommunication Regulations, ISED amateur station standards, and the operator certificate with call sign.
-- The station desk reminder shows keeping the certificate/address record current.
-- The exam pathway can run through an ISED office or an accredited examiner, depending on the setting.
-::
 
 ## Illustration brief
 

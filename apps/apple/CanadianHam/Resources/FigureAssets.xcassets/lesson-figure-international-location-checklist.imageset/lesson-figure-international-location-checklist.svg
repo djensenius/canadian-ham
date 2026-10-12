@@ -1,29 +1,22 @@
 <svg id="international-location-checklist" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
-  <title>International operation and location checklist</title>
-  <desc>A travel operating desk and world-region map connect operating location to United States and CEPT visit reminders.</desc>
+  <title>International operation checklist and ITU regions</title>
+  <desc>Travel checklist branches to US and CEPT cards beside a divided ITU region map with Region 2 in the west.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="34" y="62" width="190" height="110" rx="18" ry="18" stroke-width="6"/>
-    <line x1="74" y1="110" x2="184" y2="110" stroke-width="5"/>
-    <circle cx="420" cy="154" r="102" stroke-width="7"/>
-    <rect x="330" y="308" width="116" height="76" rx="16" ry="16" stroke-width="5"/>
-    <rect x="486" y="308" width="116" height="76" rx="16" ry="16" stroke-width="5"/>
-    <line x1="222" y1="286" x2="330" y2="346" stroke-width="5"/>
-    <polygon points="330,346 307,344 319,325" fill="currentColor" stroke="none"/>
-    <line x1="222" y1="286" x2="486" y2="346" stroke-width="5"/>
-    <polygon points="486,346 464,350 474,329" fill="currentColor" stroke="none"/>
+    <rect x="46" y="62" width="176" height="70" rx="14" ry="14" stroke-width="6"/>
+    <rect x="58" y="184" width="180" height="142" rx="16" ry="16" stroke-width="6"/>
+    <line x1="82" y1="226" x2="214" y2="226" stroke-width="4"/><line x1="82" y1="270" x2="214" y2="270" stroke-width="4"/>
+    <circle cx="448" cy="156" r="104" stroke-width="7"/>
+    <path d="M408 60 C382 112 382 200 408 252" stroke-width="5"/>
+    <path d="M488 60 C514 112 514 200 488 252" stroke-width="5"/>
+    <rect x="328" y="352" width="106" height="62" rx="14" ry="14" stroke-width="6"/>
+    <rect x="494" y="352" width="106" height="62" rx="14" ry="14" stroke-width="6"/>
+    <line x1="238" y1="256" x2="328" y2="382" stroke-width="5"/><polygon points="328,382 306,374 326,360" fill="currentColor" stroke="none"/>
+    <line x1="238" y1="286" x2="494" y2="382" stroke-width="5"/><polygon points="494,382 472,383 484,363" fill="currentColor" stroke="none"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="129" y="40" font-size="24" font-weight="700">travel desk</text>
-    <text x="96" y="146" font-size="24">radio</text>
-    <text x="174" y="146" font-size="24">pass</text>
-    <text x="142" y="236" font-size="24">message</text>
-    <text x="142" y="282" font-size="24">location</text>
-    <text x="142" y="336" font-size="24">ID format</text>
-    <text x="420" y="40" font-size="24" font-weight="700">ITU map</text>
-    <text x="354" y="168" font-size="24">R1</text>
-    <text x="420" y="188" font-size="24">R2</text>
-    <text x="486" y="168" font-size="24">R3</text>
-    <text x="390" y="362" font-size="24">US</text>
-    <text x="544" y="354" font-size="24">CEPT</text>
+    <text x="134" y="40" font-size="24" font-weight="700">travel desk</text><text x="134" y="106" font-size="24">radio pass</text>
+    <text x="148" y="364" font-size="24">message</text><text x="148" y="402" font-size="24">location</text><text x="148" y="440" font-size="24">ID format</text>
+    <text x="448" y="38" font-size="24" font-weight="700">ITU map</text><text x="360" y="310" font-size="24">R2</text><text x="448" y="310" font-size="24">R1</text><text x="536" y="310" font-size="24">R3 east</text>
+    <text x="381" y="392" font-size="24">US</text><text x="547" y="392" font-size="24">CEPT</text>
   </g>
 </svg>

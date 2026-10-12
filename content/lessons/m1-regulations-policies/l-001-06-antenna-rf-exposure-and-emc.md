@@ -78,6 +78,14 @@ By the end of this lesson, you can:
 | Home-entertainment devices outside the strict radio-apparatus category | Associated equipment. |
 | Garage door opener affected by transmissions | Radio-sensitive equipment. |
 
+::figure antenna-rf-emc-checklists
+Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.
+Text equivalent:
+- Consultation panel: house, separate mast, neigh, and folder.
+- RF exposure panel: antenna, keep-clear circle, person outside, and labels P, gain, dist, freq, and clear.
+- EMC check panel: TX, sig, meter, home, and ctrl.
+::
+
 ## How these rules fit together
 
 Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. If there is no local approval process, the ISED default process is the relevant path.
@@ -108,14 +116,6 @@ These rules connect directly to station design. A tidy antenna installation is e
 - Exposure checks combine antenna gain, distance, transmitter power, frequency, and universal consideration of transmitter types.
 - Safety Code 6 limits are expressed as fields, currents, and specific absorption rate; transmitter power is an exposure factor.
 - EMCAB-2 cause decisions use field strength at the affected premises relative to ISED immunity criteria, plus the relevant equipment category.
-
-::figure antenna-rf-emc-checklists
-Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.
-Text equivalent:
-- Antenna consultation panel: house, mast, neighbour, and consultation-path folder.
-- RF exposure panel: person outside a keep-clear area; factors are power, antenna gain, distance, and frequency.
-- EMC panel: transmitter, field-strength meter at neighbouring premises, home entertainment gear, and an affected control device.
-::
 
 ## Illustration brief
 

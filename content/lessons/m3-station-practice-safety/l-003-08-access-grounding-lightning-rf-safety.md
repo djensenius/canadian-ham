@@ -161,6 +161,14 @@ An apartment operator tests a compact indoor antenna for low-power contacts.
 
 Indoor antennas can work, but the safety margin comes from distance, lower power, and controlled access.
 
+::figure grounding-lightning-rf-safety
+Alt text: A station safety layout shows locked power control, single-point bonding, outside surge protection, and RF separation from people.
+Text equivalent:
+- Radio, supply, and tuner connect to one bond that continues to the gnd label.
+- Coax runs from radio through the surge area to the antenna, with a storm off arrow.
+- The drawing also labels lock, mic off, and outside.
+::
+
 ## Try it
 
 1. A supply cover is opened and a cabinet interlock removes input power. What unsafe assumption must you avoid? Do not assume the unit is harmless; filter capacitors can still hold charge.
@@ -182,15 +190,6 @@ Safety choices affect station performance too. Good bonding can reduce hum and R
 - Putting a lightning protector at the radio end of a cable run as the only protection.
 - Treating handheld and indoor antennas as harmless because they are convenient.
 - Treating an SWR match as an RF exposure assessment.
-
-::figure grounding-lightning-rf-safety
-Alt text: A station safety layout shows locked power control, single-point bonding, outside surge protection, and RF separation from people.
-Text equivalent:
-- Inside equipment, including transceiver, supply, and tuner, bonds to one ground bar.
-- Locked power control and unplugged microphone icons show access control.
-- At the wall, coax enters through outside surge protection bonded to the building grounding system, with a storm-disconnect reminder.
-- People are outside the marked RF keep-clear area around the antenna.
-::
 
 ## Illustration brief
 

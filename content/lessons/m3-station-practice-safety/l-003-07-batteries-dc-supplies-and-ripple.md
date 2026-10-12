@@ -165,6 +165,14 @@ A mobile radio draws 17 A on transmit. The battery connection is 2.4 m away one 
 
 Use cable data for the actual wire and current, and include both positive and negative lead lengths.
 
+::figure batteries-dc-supplies-ripple
+Alt text: A battery, fuse, heavy DC leads, regulated supply, and ripple waveform show how station power reaches a transceiver.
+Text equivalent:
+- DC source feeds a fuse in the positive lead near the source, then heavy leads to the transceiver.
+- Insets show good regulation and ripple hum.
+- Battery mini-icons are labelled series and parallel.
+::
+
 ## Try it
 
 1. A radio needs at least 11.8 V at its input during transmit. The field battery is 12.4 V under load. The round-trip lead resistance is 0.035 ohms, and transmit current is 8 A. Will the radio see enough voltage? The lead drop is 8 A x 0.035 ohms = 0.28 V, so the radio sees about 12.12 V.
@@ -186,14 +194,6 @@ Power problems often look like radio problems. Chirp, hum, resets on transmit, a
 - Assuming a small switching supply is quiet just because it powers the radio.
 - Placing the only fuse at the radio end of a long battery lead.
 - Treating the radio's RF output power as a fuse-size calculation.
-
-::figure batteries-dc-supplies-ripple
-Alt text: A battery, fuse, heavy DC leads, regulated supply, and ripple waveform show how station power reaches a transceiver.
-Text equivalent:
-- Battery or DC supply feeds a fuse close to the source, then heavy positive and negative leads to the transceiver.
-- Smooth line represents good regulation; wavy line represents ripple that can cause hum or chirp.
-- Battery mini-icons show series connection and parallel connection.
-::
 
 ## Illustration brief
 

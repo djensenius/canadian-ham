@@ -124,6 +124,14 @@ A training exciter produces a filtered SSB signal near 8.998 MHz. A VFO is set t
 - Answer: output = 14.198 MHz.
 - Sanity check: the mixer moved the sideband signal; it did not change the spoken message.
 
+::figure cw-ssb-signal-paths
+Alt text: Three labelled block diagrams show a CW transmitter, an SSB/CW receiver, and an SSB transmitter with signal-flow arrows.
+Text equivalent:
+- CW row: osc, buf, PA, and key feeding the PA.
+- RX row: ant, RF, mix with LO, IF, prod with BFO, AF, and spkr.
+- SSB row: mic, spch, bal with fixed, filt, mix with VFO, and final.
+::
+
 ## Try it
 
 1. A filtered SSB signal at 9.000 MHz is mixed with a 5.000 MHz VFO, and the transmitter selects the difference product. What output should the next filter pass? It should pass 9.000 MHz - 5.000 MHz = 4.000 MHz and reject the sum product at 14.000 MHz.
@@ -142,14 +150,6 @@ When an SSB signal sounds badly tuned, the receiver may be only a few tens of he
 - Confusing the local oscillator with the BFO. The local oscillator helps create the IF; the BFO helps recover audio.
 - Assuming an SSB sideband filter is an audio tone-control filter. It operates near the transmitter's fixed RF or IF generation frequency.
 - Swapping the balanced modulator and mixer jobs. The balanced modulator creates sideband energy; the mixer moves the filtered signal.
-
-::figure cw-ssb-signal-paths
-Alt text: Three labelled block diagrams show a CW transmitter, an SSB/CW receiver, and an SSB transmitter with signal-flow arrows.
-Text equivalent:
-- CW transmitter row: oscillator, buffer, and power amplifier; the key controls the carrier.
-- SSB/CW receiver row: antenna, RF amplifier, mixer with local oscillator, IF filter and amplifier, product detector with BFO, AF amplifier, and speaker.
-- SSB transmitter row: microphone, speech amplifier, balanced modulator with fixed oscillator, sideband filter, mixer with VFO, and final amplifier.
-::
 
 ## Illustration brief
 

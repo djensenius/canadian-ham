@@ -136,6 +136,13 @@ A training receiver is tuned to 146.520 MHz. It uses a 10.700 MHz IF, and the lo
 
 The mixer makes several products. The IF stages keep the 10.700 MHz difference product and reject the rest.
 
+::figure station-filtering-radio-blocks
+Alt text: Two block diagrams show an HF station accessory chain and an FM superheterodyne receiver chain, with arrows marking signal flow.
+Text equivalent:
+- HF chain: TX/amp, LPF, SWR, tuner, switch, ant, with a branch to dummy.
+- FM receiver chain: ant, RF, mix with LO, IF, amp, lim, and disc.
+::
+
 ## Try it
 
 1. A transmitter on 7.1 MHz can create a second harmonic. Where is that harmonic? It is at 7.1 MHz x 2 = 14.2 MHz.
@@ -155,13 +162,6 @@ Block diagrams turn a vague symptom into a place to look. A harmonic problem poi
 - Treating an SWR meter as if it changes the match; it measures, while the tuner transforms impedance.
 - Thinking FM means the transmitter's amplitude is intentionally varied by speech.
 - Confusing IF amplification with audio amplification. IF stages still handle radio-frequency signals at the intermediate frequency.
-
-::figure station-filtering-radio-blocks
-Alt text: Two block diagrams show an HF station accessory chain and an FM superheterodyne receiver chain, with arrows marking signal flow.
-Text equivalent:
-- HF station chain: transceiver or amplifier, low-pass filter close to the final RF output, SWR meter, tuner, antenna switch, antenna, or dummy load.
-- FM superheterodyne receiver chain: antenna, RF amplifier, mixer with local oscillator, IF filter, IF amplifier, limiter, discriminator/audio stages, and speaker.
-::
 
 ## Illustration brief
 

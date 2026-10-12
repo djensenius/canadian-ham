@@ -1,44 +1,18 @@
 <svg id="grounding-lightning-rf-safety" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
-  <title>Station grounding, lightning, and RF safety layout</title>
-  <desc>A room and wall cross-section shows station bonding, outside surge protection, locked power, storm disconnect, and an RF keep-clear area.</desc>
+  <title>Grounding lightning and RF safety layout</title>
+  <desc>Room wall cross-section with bonded station ground, coax surge protection, storm off, and RF keep-clear area.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="326" y1="48" x2="326" y2="420" stroke-width="7"/>
-    <line x1="42" y1="420" x2="598" y2="420" stroke-width="6"/>
-    <rect x="56" y="118" width="82" height="56" rx="10" ry="10" stroke-width="5"/>
-    <rect x="160" y="118" width="82" height="56" rx="10" ry="10" stroke-width="5"/>
-    <rect x="108" y="214" width="82" height="56" rx="10" ry="10" stroke-width="5"/>
-    <line x1="80" y1="314" x2="260" y2="314" stroke-width="7"/>
-    <line x1="97" y1="174" x2="97" y2="314" stroke-width="4"/>
-    <line x1="201" y1="174" x2="201" y2="314" stroke-width="4"/>
-    <line x1="149" y1="270" x2="149" y2="314" stroke-width="4"/>
-    <rect x="52" y="340" width="78" height="42" rx="8" ry="8" stroke-width="5"/>
-    <circle cx="112" cy="360" r="9" stroke-width="4"/>
-    <path d="M190 352 C210 330 232 330 252 352" stroke-width="5"/>
-    <line x1="194" y1="374" x2="248" y2="374" stroke-width="5"/>
-    <rect x="356" y="154" width="92" height="54" rx="10" ry="10" stroke-width="5"/>
-    <line x1="326" y1="180" x2="356" y2="180" stroke-width="5"/>
-    <line x1="402" y1="208" x2="402" y2="314" stroke-width="5"/>
-    <line x1="380" y1="314" x2="488" y2="314" stroke-width="7"/>
-    <path d="M486 92 L526 42 L566 92" stroke-width="6"/>
-    <line x1="526" y1="42" x2="526" y2="220" stroke-width="5"/>
-    <circle cx="526" cy="220" r="74" stroke-width="5"/>
-    <circle cx="466" cy="352" r="14" stroke-width="4"/>
-    <line x1="466" y1="366" x2="466" y2="402" stroke-width="4"/>
-    <circle cx="574" cy="352" r="14" stroke-width="4"/>
-    <line x1="574" y1="366" x2="574" y2="402" stroke-width="4"/>
-    <path d="M360 92 L410 92" stroke-width="5"/>
-    <path d="M410 92 L394 78" stroke-width="5"/>
-    <path d="M410 92 L394 106" stroke-width="5"/>
+    <line x1="330" y1="48" x2="330" y2="420" stroke-width="7"/><line x1="42" y1="420" x2="600" y2="420" stroke-width="6"/>
+    <rect x="58" y="112" width="82" height="54" rx="10" ry="10" stroke-width="5"/><rect x="166" y="112" width="82" height="54" rx="10" ry="10" stroke-width="5"/><rect x="112" y="214" width="82" height="54" rx="10" ry="10" stroke-width="5"/>
+    <line x1="86" y1="306" x2="330" y2="306" stroke-width="7"/><line x1="99" y1="166" x2="99" y2="306" stroke-width="4"/><line x1="207" y1="166" x2="207" y2="306" stroke-width="4"/><line x1="153" y1="268" x2="153" y2="306" stroke-width="4"/>
+    <rect x="52" y="346" width="78" height="42" rx="8" ry="8" stroke-width="5"/><circle cx="110" cy="367" r="8" stroke-width="4"/><path d="M194 350 C216 330 238 330 260 350" stroke-width="5"/><line x1="198" y1="374" x2="256" y2="374" stroke-width="5"/>
+    <line x1="330" y1="306" x2="430" y2="306" stroke-width="7"/><line x1="430" y1="306" x2="430" y2="374" stroke-width="7"/><line x1="402" y1="374" x2="510" y2="374" stroke-width="7"/>
+    <path d="M108 140 L430 140 L430 174" stroke-width="5"/><rect x="380" y="174" width="100" height="54" rx="10" ry="10" stroke-width="5"/><path d="M430 174 L526 120" stroke-width="5"/><line x1="526" y1="80" x2="526" y2="224" stroke-width="5"/><path d="M486 130 L526 80 L566 130" stroke-width="6"/>
+    <circle cx="526" cy="254" r="60" stroke-width="5"/><circle cx="458" cy="344" r="14" stroke-width="4"/><line x1="458" y1="358" x2="458" y2="394" stroke-width="4"/><circle cx="574" cy="344" r="14" stroke-width="4"/><line x1="574" y1="358" x2="574" y2="394" stroke-width="4"/>
+    <path d="M360 86 L418 86" stroke-width="5"/><path d="M418 86 L400 72" stroke-width="5"/><path d="M418 86 L400 100" stroke-width="5"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="97" y="100" font-size="24">radio</text>
-    <text x="201" y="100" font-size="24">supply</text>
-    <text x="250" y="220" font-size="24">tuner</text>
-    <text x="120" y="454" font-size="24">lock</text>
-    <text x="222" y="404" font-size="24">mic unplug</text>
-    <text x="380" y="140" font-size="24">surge</text>
-    <text x="596" y="130" font-size="24">ant</text>
-    <text x="520" y="454" font-size="24">outside</text>
-    <text x="430" y="38" font-size="24">storm off</text>
+    <text x="99" y="96" font-size="24">radio</text><text x="207" y="96" font-size="24">supply</text><text x="153" y="198" font-size="24">tuner</text><text x="250" y="284" font-size="24">bond</text><text x="96" y="454" font-size="24">lock</text><text x="226" y="454" font-size="24">mic off</text>
+    <text x="360" y="454" font-size="24">surge</text><text x="456" y="454" font-size="24">gnd</text><text x="526" y="64" font-size="24">antenna</text><text x="560" y="454" font-size="24">outside</text><text x="430" y="42" font-size="24">storm off</text>
   </g>
 </svg>

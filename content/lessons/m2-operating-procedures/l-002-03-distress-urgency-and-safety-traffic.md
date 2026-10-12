@@ -86,6 +86,14 @@ A handheld with charged spare batteries is useful only if the operator knows the
 
 For a simple power check, suppose a portable station averages 2 A from a 10 Ah battery during light emergency use. Estimated runtime is 10 Ah / 2 A = 5 h before allowing for battery age, cold weather, and a safety reserve.
 
+::figure distress-urgency-safety-board
+Alt text: A priority note board showing distress facts and station-readiness items.
+Text equivalent:
+- The board labels distress as life threat, MAYDAY / SOS, and first priority.
+- The lower rows say urgent: serious help and safety: hazard info.
+- The go-kit drawing is labelled battery dipole.
+::
+
 ## Records during priority traffic
 
 Emergency notes deserve special care. Write times, call signs, locations, frequencies, names if given, requested assistance, and the action you took. Notes reduce memory errors when you relay details to authorities or another station.
@@ -103,14 +111,6 @@ Station readiness supports that chain. The radio, power source, batteries, porta
 A radio operator in an emergency is valuable because they can listen, classify the traffic carefully, and relay accurately. Calm procedure carries more value than raw transmitter power.
 
 Emergency readiness is also ordinary station maintenance. Charged batteries, a known-good portable antenna, and a way to operate without commercial AC power turn a hobby station into a communication resource when other systems are unavailable.
-
-::figure distress-urgency-safety-board
-Alt text: A priority note board showing distress facts and station-readiness items.
-Text equivalent:
-- Distress is for life-threatening danger and uses MAYDAY by voice or SOS by Morse; it has first priority.
-- Urgent traffic requests serious help without an immediate threat to life.
-- Safety traffic carries hazard information, and a go-kit needs spare power and a portable antenna.
-::
 
 ## Illustration brief
 

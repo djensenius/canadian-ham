@@ -102,6 +102,13 @@ By the end of this lesson, you can:
 | Owner allowing another person to operate | May allow operation under supervision and in the presence of a certificate holder. |
 | Person without an Amateur Radio Operator Certificate | May operate only under supervision and in the presence of a person holding appropriate qualifications. |
 
+::figure station-control-decision-tree
+Alt text: A station-control decision tree showing authorization, service boundary, message purpose, and supervision.
+Text equivalent:
+- The vertical flow is auth, service, purpose, and control op.
+- The side labels are licence, non-commercial open messages, and supervision at control point.
+::
+
 ## How these rules fit together
 
 Start with a two-sided authorization habit. If you work on another person's transmitter, ask two questions: what are you allowed to do, and what authority does the other person hold for that apparatus?
@@ -132,15 +139,6 @@ Good station control is also good engineering practice. The person at the contro
 - Some station privileges require only Basic, while others require Basic and Advanced.
 - A transmitting amateur station needs a control operator at the control point, and the station owner remains responsible.
 - Unqualified people may participate only with qualified supervision and presence.
-
-::figure station-control-decision-tree
-Alt text: A station-control decision tree showing authorization, service boundary, message purpose, and supervision.
-Text equivalent:
-- Check authorization first, then confirm the radio service being used.
-- Other radio services require their own certification or licence.
-- Amateur messages must fit the non-commercial/open amateur-service purpose.
-- A transmitting amateur station needs a qualified control operator at the control point; unqualified participants need qualified supervision and presence.
-::
 
 ## Illustration brief
 

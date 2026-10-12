@@ -1,35 +1,28 @@
 <svg id="communications-flowchart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
-  <title>Communications and interference flowchart</title>
-  <desc>Three lanes guide interference, emergency relief, and third-party traffic choices, with a call-sign identification clock.</desc>
+  <title>Communications choices flowchart</title>
+  <desc>Three labelled lanes for interf., distress relief, and third-party traffic plus station identification timing.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="72" y1="126" x2="540" y2="126" stroke-width="6"/>
-    <line x1="72" y1="238" x2="540" y2="238" stroke-width="6"/>
-    <line x1="72" y1="350" x2="540" y2="350" stroke-width="6"/>
-    <polygon points="540,126 520,114 520,138" fill="currentColor" stroke="none"/>
-    <polygon points="540,238 520,226 520,250" fill="currentColor" stroke="none"/>
-    <polygon points="540,350 520,338 520,362" fill="currentColor" stroke="none"/>
-    <circle cx="96" cy="126" r="28" stroke-width="5"/>
-    <path d="M216 104 L248 126 L216 148" stroke-width="5"/>
-    <path d="M364 104 L396 126 L364 148" stroke-width="5"/>
-    <path d="M96 210 L120 238 L96 266 L72 238 Z" stroke-width="5"/>
-    <path d="M216 216 L248 238 L216 260" stroke-width="5"/>
-    <path d="M364 216 L396 238 L364 260" stroke-width="5"/>
-    <circle cx="96" cy="350" r="28" stroke-width="5"/>
-    <path d="M216 328 L248 350 L216 372" stroke-width="5"/>
-    <path d="M364 328 L396 350 L364 372" stroke-width="5"/>
-    <circle cx="522" cy="64" r="32" stroke-width="5"/>
-    <line x1="522" y1="64" x2="522" y2="42" stroke-width="4"/>
-    <line x1="522" y1="64" x2="542" y2="74" stroke-width="4"/>
+    <line x1="160" y1="128" x2="570" y2="128" stroke-width="6"/><polygon points="570,128 550,116 550,140" fill="currentColor" stroke="none"/>
+    <line x1="160" y1="248" x2="570" y2="248" stroke-width="6"/><polygon points="570,248 550,236 550,260" fill="currentColor" stroke="none"/>
+    <line x1="160" y1="368" x2="570" y2="368" stroke-width="6"/><polygon points="570,368 550,356 550,380" fill="currentColor" stroke="none"/>
+    <circle cx="100" cy="128" r="30" stroke-width="5"/><path d="M82 128 L118 128" stroke-width="5"/>
+    <path d="M84 248 L100 226 L116 248 L100 270 Z" stroke-width="5"/>
+    <circle cx="100" cy="368" r="30" stroke-width="5"/><path d="M82 368 L118 368" stroke-width="5"/>
+    <path d="M250 108 L282 128 L250 148" stroke-width="5"/><path d="M402 108 L434 128 L402 148" stroke-width="5"/>
+    <path d="M250 228 L282 248 L250 268" stroke-width="5"/><path d="M402 228 L434 248 L402 268" stroke-width="5"/>
+    <path d="M250 348 L282 368 L250 388" stroke-width="5"/><path d="M402 348 L434 368 L402 388" stroke-width="5"/>
+    <circle cx="536" cy="52" r="28" stroke-width="5"/><line x1="536" y1="52" x2="536" y2="34" stroke-width="4"/><line x1="536" y1="52" x2="552" y2="62" stroke-width="4"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="120" y="82" font-size="24" font-weight="700">interference</text>
-    <text x="232" y="188" font-size="24">listen</text>
-    <text x="382" y="188" font-size="24">change/stop</text>
-    <text x="240" y="300" font-size="24">exception</text>
-    <text x="430" y="300" font-size="24">stand by</text>
-    <text x="246" y="430" font-size="24">personal</text>
-    <text x="396" y="430" font-size="24">supervised</text>
-    <text x="340" y="46" font-size="24">ID 30 min</text>
-    <text x="340" y="76" font-size="24">start/end</text>
+    <text x="96" y="84" font-size="24" font-weight="700">interf</text>
+    <text x="318" y="102" font-size="24">listen</text>
+    <text x="330" y="44" font-size="24">change/stop</text>
+    <text x="88" y="208" font-size="24" font-weight="700">distress</text>
+    <text x="314" y="206" font-size="24">exception</text>
+    <text x="488" y="206" font-size="24">stand by</text>
+    <text x="96" y="326" font-size="24" font-weight="700">3rd party</text>
+    <text x="300" y="326" font-size="24">personal</text>
+    <text x="490" y="326" font-size="24">supervised</text>
+    <text x="536" y="174" font-size="24">ID 30</text>
   </g>
 </svg>

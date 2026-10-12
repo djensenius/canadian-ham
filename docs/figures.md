@@ -100,3 +100,7 @@ Figure strokes and text use `currentColor` against token paper surfaces. The ren
 ## Originality note for task-38.1
 
 The three Ohm’s law figures added for task-38.1 (`ohms-law-triangle`, `power-triangle`, and `ohms-law-power-wheel`) were drawn from scratch as simple ink-style memory aids using only the standard public-domain formula relationships already stated in the lesson. They were not traced from ISED reference art or copied from third-party study guides.
+
+## Originality note for task-38.3
+
+The 20 module 1-4 figures added for task-38.3 (`authority-records-exams`, `station-control-decision-tree`, `communications-flowchart`, `privileges-station-checklist`, `international-location-checklist`, `antenna-rf-emc-checklists`, `voice-repeater-simplex`, `morse-rst-contact-flow`, `distress-urgency-safety-board`, `records-maps-locators`, `station-filtering-radio-blocks`, `cw-ssb-signal-paths`, `digital-interface-linear-supply`, `yagi-receiver-specs`, `signal-quality-cw-ssb-fm`, `controls-digital-voice-packet`, `batteries-dc-supplies-ripple`, `grounding-lightning-rf-safety`, `amplifiers-diodes`, and `control-terminals`) were redrawn from scratch as simple ink-style teaching diagrams based on the original lesson prose and standard amateur-radio block-diagram conventions. They were not traced from ISED, RAC, manufacturer, or third-party study-guide artwork.

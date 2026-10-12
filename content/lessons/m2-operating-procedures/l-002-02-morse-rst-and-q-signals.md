@@ -113,6 +113,13 @@ An illustrative voice report exchange can be short:
 
 The exact digits are observations at your receiver. Do not make every contact "perfect" out of politeness if the signal is actually hard to copy.
 
+::figure morse-rst-contact-flow
+Alt text: A Morse contact flow showing a busy-frequency check, CQ, DE, call signs, a signal report, and sign-off.
+Text equivalent:
+- The timeline labels are QRL?, CQ, DE, calls, RST, and 73.
+- The side panel has three gauges labelled R, S, and T, with a meter label.
+::
+
 ## S-units and power changes
 
 An S-unit is one marked step on a receiver's signal-strength meter. Some receiver S-meters use 6 dB per S-unit. In the simplified Basic relationship, that step matches a quadrupling or quartering of transmitter power when the path is otherwise stable.
@@ -166,14 +173,6 @@ The Q signals and short groups are purposeful shortcuts. Each one serves an oper
 Morse procedure rewards listening discipline. A clean busy-frequency check before calling, a speed you can copy, and a realistic signal report all help contacts succeed with very little transmitted energy.
 
 RST reports also train you to separate receiver impressions. Readability, strength, and tone are different observations. A good operator reports the path as heard.
-
-::figure morse-rst-contact-flow
-Alt text: A Morse contact flow showing a busy-frequency check, CQ, DE, call signs, a signal report, and sign-off.
-Text equivalent:
-- Contact flow: QRL? and listen; CQ; DE; exchange call signs; exchange RST; sign off with 73.
-- RST separates readability, signal strength, and tone.
-- S-unit power shortcuts depend on the stated meter calibration and stable path conditions.
-::
 
 ## Illustration brief
 

@@ -83,6 +83,14 @@ There are often two great-circle directions between places: the short path and t
 - Trick: turn the beam to the reciprocal direction, half a circle away.
 - Limit: propagation may still favour neither path, so the map is a direction tool, not a contact guarantee.
 
+::figure records-maps-locators
+Alt text: A station log beside an azimuthal map centred on the operator, with a grid locator label.
+Text equivalent:
+- The log column initials are U, C, B, M, R, and G.
+- The azimuthal map shows a short arrow and the opposite long arrow through the centre.
+- The clock is labelled UTC Greenwich and the log has a grid code label.
+::
+
 ## UTC and time standards
 
 Amateur schedules, log entries, and confirmations commonly use UTC so operators in different time zones can agree on one clock. The reference meridian is Greenwich in the United Kingdom.
@@ -108,15 +116,6 @@ Grid locators describe location compactly. Azimuthal maps turn location into bea
 Logs and maps make operating cumulative. A single contact becomes part of a pattern: which antenna worked, what time the path opened, whether long path helped, and whether a neighbour's interference report overlaps your actual transmissions.
 
 Grid locators are especially useful at VHF and UHF because small changes in position can matter. UTC is equally important on HF because contacts may cross date lines and time zones.
-
-::figure records-maps-locators
-Alt text: A station log beside an azimuthal map centred on the operator, with a grid locator label.
-Text equivalent:
-- The log columns shown are UTC, call sign, band, mode, report, and grid.
-- The azimuthal map is centred on the operator.
-- The long-path heading is opposite the short-path heading, 180 degrees away.
-- Grid locators use short location codes; the lesson table gives the exact code lengths, and UTC is tied to Greenwich.
-::
 
 ## Illustration brief
 

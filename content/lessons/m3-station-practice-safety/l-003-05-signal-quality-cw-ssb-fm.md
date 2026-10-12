@@ -141,6 +141,14 @@ A repeater operator reports, "Your signal is full quieting, but your words are t
 
 Check deviation, microphone gain, and microphone distance. If the next report says "loud and rough," back off the audio level.
 
+::figure signal-quality-cw-ssb-fm
+Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
+Text equivalent:
+- CW panel: smooth on/off envelope and a separate click risk sketch.
+- SSB panel: an envelope below the ALC limit and a clipped-peaks sketch.
+- FM panel: centre line, deviation arrow, and over-dev arrow.
+::
+
 ## Try it
 
 1. An AM bench exciter is limited to 2.8 kHz highest audio before it reaches the modulator. What occupied bandwidth should you plan for? Estimate 2 x 2.8 kHz = 5.6 kHz.
@@ -161,14 +169,6 @@ Clean-signal practice prevents interference. A few minutes spent setting CW keyi
 - Reading PEP as average DC input power rather than RF envelope peak power.
 - Using RF power to fix an FM audio-level problem.
 - Forgetting that a quiet FM receiver between signals is usually the squelch doing its job.
-
-::figure signal-quality-cw-ssb-fm
-Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
-Text equivalent:
-- CW panel: a clean carrier turns on smoothly; a jagged edge is marked as click risk.
-- SSB panel: a voice envelope stays below the ALC limit; a clipped envelope is marked as splatter.
-- FM panel: modest deviation stays near centre; a larger swing is marked overdeviation.
-::
 
 ## Illustration brief
 

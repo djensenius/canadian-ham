@@ -127,6 +127,14 @@ An illustrative simplex exchange uses the same identify-clearly habit:
 - VE3ABC: "VA3MOB, this is VE3ABC. I copy you clearly."
 - VA3MOB: "Thanks. We can stay simplex and leave the repeater clear."
 
+::figure voice-repeater-simplex
+Alt text: A portable radio reaches another portable through a hilltop repeater, then both move to a direct simplex path.
+Text equivalent:
+- The input arrow runs from portable A to the hilltop repeater and is labelled CTCSS + offset.
+- The output arrow runs from the repeater to portable B.
+- A separate direct arrow between the portables is labelled simplex.
+::
+
 ## Sidebands, spacing, and clean tests
 
 Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3755 kHz. Operators use these conventions so signals line up as expected and have the expected audio orientation.
@@ -156,14 +164,6 @@ Each procedure protects the same shared resource: a usable amateur frequency.
 A repeater is a shared station with its own receiver, transmitter, controller, timer, access settings, antenna, and coordinated channel. Good operating makes all of those pieces useful to more people.
 
 Simplex is the other half of local operating. A good amateur learns both habits: use the repeater when it adds coverage, and step away from it when direct communication is reliable.
-
-::figure voice-repeater-simplex
-Alt text: A portable radio reaches another portable through a hilltop repeater, then both move to a direct simplex path.
-Text equivalent:
-- Portable A first transmits on the repeater input; the hilltop repeater retransmits on its output to portable B.
-- The operators pause and listen, use the programmed offset and CTCSS tone if required, and confirm the channel is clear.
-- After confirming direct copy, they move to a simplex path instead of tying up the repeater.
-::
 
 ## Illustration brief
 

@@ -122,6 +122,14 @@ SSB needs accurate tuning because the receiver must recreate audio from a signal
 
 AM carries its own carrier for envelope detection, so modest tuning error is usually less critical than with SSB voice. FM receivers recover audio from frequency deviation inside the receiver passband. CW also needs careful tuning, but a small tuning offset mainly changes the pitch of the received tone.
 
+::figure yagi-receiver-specs
+Alt text: A labelled Yagi antenna appears beside a receiver display and filter choices, with an image-frequency marker shown above the desired signal.
+Text equivalent:
+- Yagi labels are reflector, driven, director, boom, and feedline.
+- The receiver display has filter labels wide W, med M, and N.
+- The frequency line labels desired, LO, image, and two IF spacings.
+::
+
 ## Try it
 
 1. A three-element Yagi is rebuilt on a nonconductive boom, but the element lengths and feed point stay the same. Why have the RF roles not moved to the boom? The radiating elements and feed point set the RF roles; the boom holds them in position.
@@ -140,14 +148,6 @@ Turning a Yagi changes the direction where the antenna is most sensitive. Narrow
 - Treating sensitivity, selectivity, and dynamic range as the same specification.
 - Choosing the widest receiver filter because it sounds louder; wider also admits more noise and adjacent signals.
 - Forgetting to convert 455 kHz to 0.455 MHz before adding it to an MHz frequency.
-
-::figure yagi-receiver-specs
-Alt text: A labelled Yagi antenna appears beside a receiver display and filter choices, with an image-frequency marker shown above the desired signal.
-Text equivalent:
-- Yagi labels: boom, longer reflector, driven element with feedline, and shorter director.
-- Receiver display shows signal streaks and wide, medium, and narrow filter choices.
-- Frequency line labels desired signal, local oscillator, and image; the image is separated by the IF spacing relationship shown on the line.
-::
 
 ## Illustration brief
 
