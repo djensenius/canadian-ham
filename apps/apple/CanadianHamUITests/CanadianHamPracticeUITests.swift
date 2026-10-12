@@ -2599,7 +2599,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         record("start")
         for attempt in 0..<28 {
-            let desiredTop = protectedNavigationFrame(in: app).maxY + 20
+            let desiredTop = protectedNavigationFrame(in: app).maxY + 80
             let delta = desiredTop - element.frame.minY
             if abs(delta) <= 8, staticTextElementsNearOpaqueNavigationBarLowerEdge(in: app, scrollView: scrollView, distance: 60).isEmpty {
                 break
