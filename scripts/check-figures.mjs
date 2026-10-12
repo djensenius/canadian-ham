@@ -8,7 +8,6 @@ const repoRoot = process.cwd();
 const figuresDir = path.join(repoRoot, "content", "figures");
 const lessonsDir = path.join(repoRoot, "content", "lessons");
 const appleCatalogDir = path.join(repoRoot, "apps", "apple", "CanadianHam", "Resources", "FigureAssets.xcassets");
-const appleMetadataPath = path.join(repoRoot, "apps", "apple", "CanadianHam", "Generated", "LessonFigureMetadata.swift");
 
 const fix = process.argv.includes("--fix");
 const selfTest = process.argv.includes("--self-test");
@@ -55,410 +54,815 @@ function decodeEntities(value) {
     .replace(/&apos;/g, "'");
 }
 
-function approximateTextWidth(text, fontSize) {
+function stripMarkup(value) {
+  return decodeEntities(value.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim());
+}
+
+function parseStyleAttribute(value) {
+  const declarations = new Map();
+  for (const declaration of (value ?? "").split(";")) {
+    const separator = declaration.indexOf(":");
+    if (separator === -1) {
+      continue;
+    }
+    const property = declaration.slice(0, separator).trim();
+    const propertyValue = declaration.slice(separator + 1).trim();
+    if (property.length > 0 && propertyValue.length > 0) {
+      declarations.set(property, propertyValue);
+    }
+  }
+  return declarations;
+}
+
+function presentationValue(attributes, name) {
+  const style = parseStyleAttribute(attributes.get("style"));
+  return style.get(name) ?? attributes.get(name);
+}
+
+function parseLength(value, fallback = Number.NaN) {
+  if (value === undefined || value === null || value === "") {
+    return fallback;
+  }
+  const match = /^[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/.exec(String(value).trim());
+  return match === null ? fallback : Number(match[0]);
+}
+
+function parseFirstLength(value, fallback = Number.NaN) {
+  if (value === undefined || value === null) {
+    return fallback;
+  }
+  return parseLength(String(value).trim().split(/[\s,]+/)[0], fallback);
+}
+
+function parsePointList(value) {
+  const numbers = [...String(value ?? "").matchAll(/[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g)].map((match) => Number(match[0]));
+  const points = [];
+  for (let index = 0; index + 1 < numbers.length; index += 2) {
+    points.push({ x: numbers[index], y: numbers[index + 1] });
+  }
+  return points;
+}
+
+function isBoldWeight(fontWeight) {
+  const normalized = String(fontWeight ?? "").trim().toLowerCase();
+  return normalized === "bold" || normalized === "bolder" || Number(normalized) >= 600;
+}
+
+function mergeTextStyle(parent, attributes) {
+  const next = { ...parent };
+  const fontSize = presentationValue(attributes, "font-size");
+  const fontWeight = presentationValue(attributes, "font-weight");
+  const textAnchor = presentationValue(attributes, "text-anchor");
+  if (fontSize !== undefined) {
+    next.fontSize = fontSize;
+  }
+  if (fontWeight !== undefined) {
+    next.fontWeight = fontWeight;
+  }
+  if (textAnchor !== undefined) {
+    next.textAnchor = textAnchor;
+  }
+  return next;
+}
+
+function mergeStrokeStyle(parent, attributes) {
+  const next = { ...parent };
+  const stroke = presentationValue(attributes, "stroke");
+  const strokeWidth = presentationValue(attributes, "stroke-width");
+  if (stroke !== undefined) {
+    next.stroke = stroke;
+  }
+  if (strokeWidth !== undefined) {
+    next.strokeWidth = strokeWidth;
+  }
+  return next;
+}
+
+function approximateTextWidth(text, fontSize, fontWeight = "400") {
   const normalized = decodeEntities(text.replace(/<[^>]+>/g, "").trim());
   let units = 0;
+  let upperOrDigitCount = 0;
+  let nonSpaceCount = 0;
   for (const character of normalized) {
     if (/\s/.test(character)) {
       units += 0.35;
-    } else if (/[ilI.,;:/'|]/.test(character)) {
-      units += 0.42;
-    } else if (/[A-Z0-9]/.test(character)) {
-      units += 0.76;
+    } else if (/[MW@#%&]/.test(character)) {
+      units += 0.9;
+      upperOrDigitCount += 1;
+      nonSpaceCount += 1;
+    } else if (/[A-Z]/.test(character)) {
+      units += 0.7;
+      upperOrDigitCount += 1;
+      nonSpaceCount += 1;
+    } else if (/[0-9]/.test(character)) {
+      units += 0.64;
+      upperOrDigitCount += 1;
+      nonSpaceCount += 1;
+    } else if (/[ilI.,;:/'|!]/.test(character)) {
+      units += 0.38;
+      nonSpaceCount += 1;
+    } else if (/[-+=/()\[\]{}x×√²]/.test(character)) {
+      units += 0.55;
+      nonSpaceCount += 1;
     } else {
-      units += 0.72;
+      units += 0.62;
+      nonSpaceCount += 1;
     }
   }
-  return units * fontSize;
+  const uppercaseFactor = nonSpaceCount > 0 && upperOrDigitCount / nonSpaceCount >= 0.5 ? 1.05 : 1;
+  const weightFactor = isBoldWeight(fontWeight) ? 1.08 : 1;
+  return units * fontSize * uppercaseFactor * weightFactor;
 }
 
-function inheritedTextAnchorAt(source, position) {
-  const stack = ["start"];
-  const tagPattern = /<\/?\s*([A-Za-z][A-Za-z0-9:-]*)([^>]*)>/g;
-  for (const match of source.slice(0, position).matchAll(tagPattern)) {
-    const fullTag = match[0];
-    const elementName = match[1].toLowerCase();
-    if (elementName !== "g") {
-      continue;
-    }
-    if (fullTag.startsWith("</")) {
-      if (stack.length > 1) {
-        stack.pop();
-      }
-      continue;
-    }
-    const attributes = parseAttributes(match[2]);
-    const inherited = stack[stack.length - 1] ?? "start";
-    if (!fullTag.endsWith("/>")) {
-      stack.push(attributes.get("text-anchor") ?? inherited);
-    }
-  }
-  return stack[stack.length - 1] ?? "start";
-}
-
-function estimatedTextBoxes(file, source, viewBox) {
-  const boxes = [];
-  const padding = 12;
-  const textPattern = /<text\b([^>]*)>([\s\S]*?)<\/text>/gi;
-  for (const match of source.matchAll(textPattern)) {
-    const attributes = parseAttributes(match[1]);
-    const fontSize = Number(attributes.get("font-size") ?? "16");
-    const x = Number(attributes.get("x") ?? "0");
-    const y = Number(attributes.get("y") ?? "0");
-    const text = decodeEntities(match[2].replace(/<[^>]+>/g, "").trim());
-    if (![fontSize, x, y].every(Number.isFinite) || fontSize <= 0) {
-      fail(`${file}: <text> '${match[2].trim()}' must have numeric x, y, and font-size attributes`);
-      continue;
-    }
-
-    const minimumFontSize = viewBox.width * 0.0367;
-    if (fontSize < minimumFontSize) {
-      fail(`${file}: <text> '${text}' font-size ${fontSize} is below the minimum ${minimumFontSize.toFixed(1)} for an 11pt label at 300pt display width`);
-    }
-    const anchor = attributes.get("text-anchor") ?? inheritedTextAnchorAt(source, match.index ?? 0);
-    const textWidth = approximateTextWidth(text, fontSize);
-    const left = anchor === "middle" ? x - textWidth / 2 : anchor === "end" ? x - textWidth : x;
-    const right = anchor === "middle" ? x + textWidth / 2 : anchor === "end" ? x : x + textWidth;
-    const top = y - fontSize;
-    const bottom = y + fontSize * 0.25;
-    if (left < viewBox.minX + padding || right > viewBox.minX + viewBox.width - padding || top < viewBox.minY + padding || bottom > viewBox.minY + viewBox.height - padding) {
-      fail(`${file}: <text> '${text}' may extend beyond the viewBox padding (estimated bounds ${left.toFixed(1)},${top.toFixed(1)} to ${right.toFixed(1)},${bottom.toFixed(1)})`);
-    }
-    boxes.push({ text, left, right, top, bottom });
-  }
-  return boxes;
-}
-
-function checkTextBounds(file, source) {
-  const viewBox = parseViewBox(source);
-  if (viewBox === null) {
-    fail(`${file}: root <svg> must include a valid viewBox so text bounds can be checked`);
-    return;
-  }
-
-  const textBoxes = estimatedTextBoxes(file, source, viewBox);
-  checkStrokeTextClearance(file, source, textBoxes);
-}
-
-function readNumber(tokens, index) {
-  if (index >= tokens.length || /^[A-Za-z]$/.test(tokens[index])) {
+function textRunBounds(text, x, y, style) {
+  const fontSize = parseLength(style.fontSize, 16);
+  if (![fontSize, x, y].every(Number.isFinite) || fontSize <= 0) {
     return null;
   }
-  const value = Number(tokens[index]);
-  return Number.isFinite(value) ? { value, next: index + 1 } : null;
+  const width = approximateTextWidth(text, fontSize, style.fontWeight);
+  const anchor = ["start", "middle", "end"].includes(style.textAnchor) ? style.textAnchor : "start";
+  const left = anchor === "middle" ? x - width / 2 : anchor === "end" ? x - width : x;
+  const right = anchor === "middle" ? x + width / 2 : anchor === "end" ? x : x + width;
+  const hasDescender = /[gjpqy]/.test(text);
+  const bounds = {
+    left,
+    right,
+    top: y - fontSize * 0.78,
+    bottom: y + fontSize * (hasDescender ? 0.25 : 0.2),
+    fontSize,
+    width
+  };
+  const horizontalBearing = Math.min(width * 0.18, fontSize * 0.12);
+  bounds.strokeBounds = {
+    left: Math.min(left + horizontalBearing, (left + right) / 2),
+    right: Math.max(right - horizontalBearing, (left + right) / 2),
+    top: y - fontSize * 0.7,
+    bottom: y + fontSize * (hasDescender ? 0.18 : 0.12)
+  };
+  return bounds;
 }
 
-function lineSamples(x1, y1, x2, y2, count = 24) {
-  const samples = [];
-  for (let step = 0; step <= count; step += 1) {
-    const t = step / count;
-    samples.push({ x: x1 + (x2 - x1) * t, y: y1 + (y2 - y1) * t });
+function unionBounds(bounds) {
+  return {
+    left: Math.min(...bounds.map((bound) => bound.left)),
+    right: Math.max(...bounds.map((bound) => bound.right)),
+    top: Math.min(...bounds.map((bound) => bound.top)),
+    bottom: Math.max(...bounds.map((bound) => bound.bottom))
+  };
+}
+
+function collectTextBox(file, textAttributes, inheritedStyle, body, failFn) {
+  const textStyle = mergeTextStyle(inheritedStyle, textAttributes);
+  const rootX = parseFirstLength(textAttributes.get("x"));
+  const rootY = parseFirstLength(textAttributes.get("y"));
+  let currentX = rootX;
+  let currentY = rootY;
+  const runs = [];
+  const addRun = (rawText, rawX, rawY, style, context) => {
+    const text = stripMarkup(rawText);
+    if (text.length === 0) {
+      return;
+    }
+    const x = parseFirstLength(rawX);
+    const y = parseFirstLength(rawY);
+    const bounds = textRunBounds(text, x, y, style);
+    if (bounds === null) {
+      failFn(`${file}: <text> '${text}' must have numeric x, y, and font-size attributes${context === undefined ? "" : ` (${context})`}`);
+      return;
+    }
+    runs.push({ text, x, y, style, bounds });
+  };
+
+  let cursor = 0;
+  const tspanPattern = /<tspan\b([^>]*)>([\s\S]*?)<\/tspan>/gi;
+  for (const match of body.matchAll(tspanPattern)) {
+    addRun(body.slice(cursor, match.index), currentX, currentY, textStyle);
+    const tspanAttributes = parseAttributes(match[1]);
+    const tspanStyle = mergeTextStyle(textStyle, tspanAttributes);
+    const nextX = tspanAttributes.has("x") ? parseFirstLength(tspanAttributes.get("x")) : currentX;
+    const nextY = tspanAttributes.has("y") ? parseFirstLength(tspanAttributes.get("y")) : currentY;
+    const dx = parseFirstLength(tspanAttributes.get("dx"), 0);
+    const dy = parseFirstLength(tspanAttributes.get("dy"), 0);
+    currentX = nextX + dx;
+    currentY = nextY + dy;
+    addRun(match[2], currentX, currentY, tspanStyle, "tspan");
+    if (runs.length > 0) {
+      const last = runs[runs.length - 1];
+      currentX = last.x + (last.style.textAnchor === "start" ? last.bounds.width : 0);
+      currentY = last.y;
+    }
+    cursor = match.index + match[0].length;
   }
-  return samples;
+  addRun(body.slice(cursor), currentX, currentY, textStyle);
+
+  if (runs.length === 0) {
+    return null;
+  }
+  const bounds = unionBounds(runs.map((run) => run.bounds));
+  const strokeBounds = unionBounds(runs.map((run) => run.bounds.strokeBounds));
+  const text = runs.map((run) => run.text).join(" ").replace(/\s+/g, " ").trim();
+  return {
+    text,
+    bounds,
+    strokeBounds,
+    fontSize: Math.max(...runs.map((run) => run.bounds.fontSize)),
+    runs
+  };
+}
+
+function tagName(tag) {
+  return /^<\s*\/?\s*([A-Za-z][A-Za-z0-9:_-]*)/.exec(tag)?.[1]?.toLowerCase() ?? "";
+}
+
+function isClosingTag(tag) {
+  return /^<\s*\//.test(tag);
+}
+
+function isSelfClosingTag(tag) {
+  return /\/\s*>$/.test(tag) || /^<\s*!(?:doctype)?/i.test(tag) || /^<\?/.test(tag);
+}
+
+function parseViewBox(file, source, failFn) {
+  const svgMatch = /<svg\b([^>]*)>/i.exec(source);
+  const viewBox = svgMatch === null ? null : /\bviewBox="([^\"]+)"/i.exec(svgMatch[1])?.[1];
+  if (viewBox === undefined || viewBox === null) {
+    failFn(`${file}: root <svg> must include a viewBox so text bounds can be checked`);
+    return null;
+  }
+  const [minX, minY, width, height] = viewBox.trim().split(/[\s,]+/).map(Number);
+  if (![minX, minY, width, height].every(Number.isFinite) || width <= 0 || height <= 0) {
+    failFn(`${file}: root <svg> has an invalid viewBox`);
+    return null;
+  }
+  return { minX, minY, width, height, maxX: minX + width, maxY: minY + height };
+}
+
+function lineSegmentsFromPoints(points, closed = false) {
+  const segments = [];
+  for (let index = 1; index < points.length; index += 1) {
+    segments.push([points[index - 1], points[index]]);
+  }
+  if (closed && points.length > 1) {
+    segments.push([points[points.length - 1], points[0]]);
+  }
+  return segments;
+}
+
+function lineSegmentsFromPathPoints(points) {
+  const segments = [];
+  let previous = null;
+  for (const point of points) {
+    if (point === null) {
+      previous = null;
+      continue;
+    }
+    if (previous !== null) {
+      segments.push([previous, point]);
+    }
+    previous = point;
+  }
+  return segments;
+}
+
+function sampleEllipse(cx, cy, rx, ry, count = 128) {
+  const points = [];
+  for (let index = 0; index < count; index += 1) {
+    const angle = (Math.PI * 2 * index) / count;
+    points.push({ x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry });
+  }
+  return points;
 }
 
 function cubicPoint(p0, p1, p2, p3, t) {
-  const mt = 1 - t;
-  return mt * mt * mt * p0 + 3 * mt * mt * t * p1 + 3 * mt * t * t * p2 + t * t * t * p3;
+  const oneMinusT = 1 - t;
+  return {
+    x: oneMinusT ** 3 * p0.x + 3 * oneMinusT ** 2 * t * p1.x + 3 * oneMinusT * t ** 2 * p2.x + t ** 3 * p3.x,
+    y: oneMinusT ** 3 * p0.y + 3 * oneMinusT ** 2 * t * p1.y + 3 * oneMinusT * t ** 2 * p2.y + t ** 3 * p3.y
+  };
 }
 
 function quadraticPoint(p0, p1, p2, t) {
-  const mt = 1 - t;
-  return mt * mt * p0 + 2 * mt * t * p1 + t * t * p2;
+  const oneMinusT = 1 - t;
+  return {
+    x: oneMinusT ** 2 * p0.x + 2 * oneMinusT * t * p1.x + t ** 2 * p2.x,
+    y: oneMinusT ** 2 * p0.y + 2 * oneMinusT * t * p1.y + t ** 2 * p2.y
+  };
 }
 
-function pathSamples(d) {
-  const tokens = d.match(/[A-Za-z]|[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g) ?? [];
-  const samples = [];
-  let index = 0;
-  let command = "";
-  let x = 0;
-  let y = 0;
-  let startX = 0;
-  let startY = 0;
-  const read = () => {
-    const result = readNumber(tokens, index);
-    if (result === null) {
-      return null;
-    }
-    index = result.next;
-    return result.value;
-  };
-  const hasNumber = () => index < tokens.length && !/^[A-Za-z]$/.test(tokens[index]);
-  const absolute = (value, current, relative) => relative ? current + value : value;
+function vectorAngle(from, to) {
+  const dot = from.x * to.x + from.y * to.y;
+  const determinant = from.x * to.y - from.y * to.x;
+  return Math.atan2(determinant, dot);
+}
 
+function sampleArc(p0, rxInput, ryInput, xAxisRotation, largeArcFlag, sweepFlag, p1, samples = 64) {
+  let rx = Math.abs(rxInput);
+  let ry = Math.abs(ryInput);
+  if (rx === 0 || ry === 0 || (p0.x === p1.x && p0.y === p1.y)) {
+    return [p1];
+  }
+  const phi = (xAxisRotation * Math.PI) / 180;
+  const cosPhi = Math.cos(phi);
+  const sinPhi = Math.sin(phi);
+  const dx = (p0.x - p1.x) / 2;
+  const dy = (p0.y - p1.y) / 2;
+  const x1Prime = cosPhi * dx + sinPhi * dy;
+  const y1Prime = -sinPhi * dx + cosPhi * dy;
+  const radiusScale = (x1Prime ** 2) / (rx ** 2) + (y1Prime ** 2) / (ry ** 2);
+  if (radiusScale > 1) {
+    const scale = Math.sqrt(radiusScale);
+    rx *= scale;
+    ry *= scale;
+  }
+  const numerator = rx ** 2 * ry ** 2 - rx ** 2 * y1Prime ** 2 - ry ** 2 * x1Prime ** 2;
+  const denominator = rx ** 2 * y1Prime ** 2 + ry ** 2 * x1Prime ** 2;
+  const sign = largeArcFlag === sweepFlag ? -1 : 1;
+  const coefficient = sign * Math.sqrt(Math.max(0, numerator / denominator));
+  const cxPrime = coefficient * ((rx * y1Prime) / ry);
+  const cyPrime = coefficient * (-(ry * x1Prime) / rx);
+  const cx = cosPhi * cxPrime - sinPhi * cyPrime + (p0.x + p1.x) / 2;
+  const cy = sinPhi * cxPrime + cosPhi * cyPrime + (p0.y + p1.y) / 2;
+  const startVector = { x: (x1Prime - cxPrime) / rx, y: (y1Prime - cyPrime) / ry };
+  const endVector = { x: (-x1Prime - cxPrime) / rx, y: (-y1Prime - cyPrime) / ry };
+  let startAngle = vectorAngle({ x: 1, y: 0 }, startVector);
+  let deltaAngle = vectorAngle(startVector, endVector);
+  if (!sweepFlag && deltaAngle > 0) {
+    deltaAngle -= Math.PI * 2;
+  } else if (sweepFlag && deltaAngle < 0) {
+    deltaAngle += Math.PI * 2;
+  }
+  const points = [];
+  for (let index = 1; index <= samples; index += 1) {
+    const angle = startAngle + (deltaAngle * index) / samples;
+    points.push({
+      x: cx + cosPhi * rx * Math.cos(angle) - sinPhi * ry * Math.sin(angle),
+      y: cy + sinPhi * rx * Math.cos(angle) + cosPhi * ry * Math.sin(angle)
+    });
+  }
+  return points;
+}
+
+function parsePathData(d) {
+  const tokens = [...String(d ?? "").matchAll(/[AaCcHhLlMmQqVvZz]|[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g)].map((match) => match[0]);
+  const points = [];
+  let index = 0;
+  let command = null;
+  let current = { x: 0, y: 0 };
+  let subpathStart = { x: 0, y: 0 };
+  const isCommand = (token) => /^[AaCcHhLlMmQqVvZz]$/.test(token);
+  const hasNumber = () => index < tokens.length && !isCommand(tokens[index]);
+  const readNumber = () => Number(tokens[index++]);
+  const lineTo = (point) => {
+    current = point;
+    points.push(current);
+  };
   while (index < tokens.length) {
-    if (/^[A-Za-z]$/.test(tokens[index])) {
+    if (isCommand(tokens[index])) {
       command = tokens[index++];
+    }
+    if (command === null) {
+      break;
     }
     const relative = command === command.toLowerCase();
     switch (command.toUpperCase()) {
       case "M": {
-        const nx = read();
-        const ny = read();
-        if (nx === null || ny === null) return samples;
-        x = absolute(nx, x, relative);
-        y = absolute(ny, y, relative);
-        startX = x;
-        startY = y;
-        samples.push({ x, y });
+        if (!hasNumber()) break;
+        const x = readNumber();
+        const y = readNumber();
+        current = { x: relative ? current.x + x : x, y: relative ? current.y + y : y };
+        subpathStart = current;
+        if (points.length > 0) {
+          points.push(null);
+        }
+        points.push(current);
         command = relative ? "l" : "L";
         break;
       }
       case "L": {
-        while (hasNumber()) {
-          const nx = read();
-          const ny = read();
-          if (nx === null || ny === null) return samples;
-          const nextX = absolute(nx, x, relative);
-          const nextY = absolute(ny, y, relative);
-          samples.push(...lineSamples(x, y, nextX, nextY));
-          x = nextX;
-          y = nextY;
-        }
+        if (!hasNumber()) break;
+        const x = readNumber();
+        const y = readNumber();
+        lineTo({ x: relative ? current.x + x : x, y: relative ? current.y + y : y });
         break;
       }
       case "H": {
-        while (hasNumber()) {
-          const nx = read();
-          if (nx === null) return samples;
-          const nextX = absolute(nx, x, relative);
-          samples.push(...lineSamples(x, y, nextX, y));
-          x = nextX;
-        }
+        if (!hasNumber()) break;
+        const x = readNumber();
+        lineTo({ x: relative ? current.x + x : x, y: current.y });
         break;
       }
       case "V": {
-        while (hasNumber()) {
-          const ny = read();
-          if (ny === null) return samples;
-          const nextY = absolute(ny, y, relative);
-          samples.push(...lineSamples(x, y, x, nextY));
-          y = nextY;
-        }
+        if (!hasNumber()) break;
+        const y = readNumber();
+        lineTo({ x: current.x, y: relative ? current.y + y : y });
         break;
       }
       case "C": {
-        while (hasNumber()) {
-          const x1 = read(); const y1 = read(); const x2 = read(); const y2 = read(); const x3 = read(); const y3 = read();
-          if ([x1, y1, x2, y2, x3, y3].some((value) => value === null)) return samples;
-          const cx1 = absolute(x1, x, relative);
-          const cy1 = absolute(y1, y, relative);
-          const cx2 = absolute(x2, x, relative);
-          const cy2 = absolute(y2, y, relative);
-          const nextX = absolute(x3, x, relative);
-          const nextY = absolute(y3, y, relative);
-          for (let step = 0; step <= 40; step += 1) {
-            const t = step / 40;
-            samples.push({ x: cubicPoint(x, cx1, cx2, nextX, t), y: cubicPoint(y, cy1, cy2, nextY, t) });
-          }
-          x = nextX;
-          y = nextY;
+        if (!hasNumber()) break;
+        const p1 = { x: readNumber(), y: readNumber() };
+        const p2 = { x: readNumber(), y: readNumber() };
+        const p3 = { x: readNumber(), y: readNumber() };
+        const control1 = relative ? { x: current.x + p1.x, y: current.y + p1.y } : p1;
+        const control2 = relative ? { x: current.x + p2.x, y: current.y + p2.y } : p2;
+        const end = relative ? { x: current.x + p3.x, y: current.y + p3.y } : p3;
+        for (let sample = 1; sample <= 64; sample += 1) {
+          points.push(cubicPoint(current, control1, control2, end, sample / 64));
         }
+        current = end;
         break;
       }
       case "Q": {
-        while (hasNumber()) {
-          const x1 = read(); const y1 = read(); const x2 = read(); const y2 = read();
-          if ([x1, y1, x2, y2].some((value) => value === null)) return samples;
-          const cx1 = absolute(x1, x, relative);
-          const cy1 = absolute(y1, y, relative);
-          const nextX = absolute(x2, x, relative);
-          const nextY = absolute(y2, y, relative);
-          for (let step = 0; step <= 32; step += 1) {
-            const t = step / 32;
-            samples.push({ x: quadraticPoint(x, cx1, nextX, t), y: quadraticPoint(y, cy1, nextY, t) });
-          }
-          x = nextX;
-          y = nextY;
+        if (!hasNumber()) break;
+        const p1 = { x: readNumber(), y: readNumber() };
+        const p2 = { x: readNumber(), y: readNumber() };
+        const control = relative ? { x: current.x + p1.x, y: current.y + p1.y } : p1;
+        const end = relative ? { x: current.x + p2.x, y: current.y + p2.y } : p2;
+        for (let sample = 1; sample <= 64; sample += 1) {
+          points.push(quadraticPoint(current, control, end, sample / 64));
         }
+        current = end;
+        break;
+      }
+      case "A": {
+        if (!hasNumber()) break;
+        const rx = readNumber();
+        const ry = readNumber();
+        const rotation = readNumber();
+        const largeArc = readNumber() !== 0;
+        const sweep = readNumber() !== 0;
+        const x = readNumber();
+        const y = readNumber();
+        const end = { x: relative ? current.x + x : x, y: relative ? current.y + y : y };
+        points.push(...sampleArc(current, rx, ry, rotation, largeArc, sweep, end));
+        current = end;
         break;
       }
       case "Z": {
-        samples.push(...lineSamples(x, y, startX, startY));
-        x = startX;
-        y = startY;
-        command = "";
+        lineTo(subpathStart);
+        command = null;
         break;
       }
       default:
-        return samples;
-    }
-  }
-  return samples;
-}
-
-function parsePoints(points) {
-  const values = points.trim().split(/[\s,]+/).map(Number);
-  const result = [];
-  for (let index = 0; index + 1 < values.length; index += 2) {
-    if (Number.isFinite(values[index]) && Number.isFinite(values[index + 1])) {
-      result.push({ x: values[index], y: values[index + 1] });
-    }
-  }
-  return result;
-}
-
-function collectStrokeSamples(source) {
-  const samples = [];
-  const stack = [{ stroke: null, strokeWidth: 1 }];
-  const tagPattern = /<\/?\s*([A-Za-z][A-Za-z0-9:-]*)([^>]*)>/g;
-  for (const match of source.matchAll(tagPattern)) {
-    const fullTag = match[0];
-    const elementName = match[1].toLowerCase();
-    if (fullTag.startsWith("</")) {
-      if (elementName === "g" && stack.length > 1) {
-        stack.pop();
-      }
-      continue;
-    }
-    const attributes = parseAttributes(match[2]);
-    const parent = stack[stack.length - 1] ?? { stroke: null, strokeWidth: 1 };
-    const state = {
-      stroke: attributes.get("stroke") ?? parent.stroke,
-      strokeWidth: Number(attributes.get("stroke-width") ?? parent.strokeWidth)
-    };
-    if (!Number.isFinite(state.strokeWidth) || state.strokeWidth <= 0) {
-      state.strokeWidth = parent.strokeWidth;
-    }
-    if (elementName === "g") {
-      if (!fullTag.endsWith("/>")) {
-        stack.push(state);
-      }
-      continue;
-    }
-    if (state.stroke === null || state.stroke === "none") {
-      continue;
-    }
-
-    let elementSamples = [];
-    if (elementName === "path") {
-      elementSamples = pathSamples(attributes.get("d") ?? "");
-    } else if (elementName === "circle") {
-      const cx = Number(attributes.get("cx") ?? 0);
-      const cy = Number(attributes.get("cy") ?? 0);
-      const r = Number(attributes.get("r") ?? 0);
-      if ([cx, cy, r].every(Number.isFinite) && r > 0) {
-        for (let step = 0; step < 192; step += 1) {
-          const angle = (Math.PI * 2 * step) / 192;
-          elementSamples.push({ x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r });
-        }
-      }
-    } else if (elementName === "line") {
-      elementSamples = lineSamples(Number(attributes.get("x1") ?? 0), Number(attributes.get("y1") ?? 0), Number(attributes.get("x2") ?? 0), Number(attributes.get("y2") ?? 0));
-    } else if (elementName === "polyline" || elementName === "polygon") {
-      const points = parsePoints(attributes.get("points") ?? "");
-      for (let index = 0; index + 1 < points.length; index += 1) {
-        elementSamples.push(...lineSamples(points[index].x, points[index].y, points[index + 1].x, points[index + 1].y));
-      }
-      if (elementName === "polygon" && points.length > 2) {
-        elementSamples.push(...lineSamples(points.at(-1).x, points.at(-1).y, points[0].x, points[0].y));
-      }
-    } else if (elementName === "rect") {
-      const x = Number(attributes.get("x") ?? 0);
-      const y = Number(attributes.get("y") ?? 0);
-      const width = Number(attributes.get("width") ?? 0);
-      const height = Number(attributes.get("height") ?? 0);
-      if ([x, y, width, height].every(Number.isFinite) && width > 0 && height > 0) {
-        elementSamples.push(...lineSamples(x, y, x + width, y));
-        elementSamples.push(...lineSamples(x + width, y, x + width, y + height));
-        elementSamples.push(...lineSamples(x + width, y + height, x, y + height));
-        elementSamples.push(...lineSamples(x, y + height, x, y));
-      }
-    } else if (elementName === "ellipse") {
-      const cx = Number(attributes.get("cx") ?? 0);
-      const cy = Number(attributes.get("cy") ?? 0);
-      const rx = Number(attributes.get("rx") ?? 0);
-      const ry = Number(attributes.get("ry") ?? 0);
-      if ([cx, cy, rx, ry].every(Number.isFinite) && rx > 0 && ry > 0) {
-        for (let step = 0; step < 192; step += 1) {
-          const angle = (Math.PI * 2 * step) / 192;
-          elementSamples.push({ x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry });
-        }
-      }
-    }
-    for (const sample of elementSamples) {
-      samples.push({ ...sample, strokeWidth: state.strokeWidth });
-    }
-  }
-  return samples;
-}
-
-function checkStrokeTextClearance(file, source, textBoxes) {
-  const strokeSamples = collectStrokeSamples(source);
-  for (const box of textBoxes) {
-    for (const sample of strokeSamples) {
-      const expansion = sample.strokeWidth / 2 + 2;
-      if (sample.x >= box.left - expansion && sample.x <= box.right + expansion && sample.y >= box.top - expansion && sample.y <= box.bottom + expansion) {
-        fail(`${file}: stroke may touch <text> '${box.text}' (sample ${sample.x.toFixed(1)},${sample.y.toFixed(1)} intersects estimated text bounds expanded by stroke width)`);
+        command = null;
         break;
-      }
     }
   }
+  return points;
 }
 
-function parseViewBox(source) {
-  const svgMatch = /<svg\b([^>]*)>/i.exec(source);
-  const viewBox = svgMatch === null ? null : /\bviewBox="([^"]+)"/i.exec(svgMatch[1])?.[1];
-  if (viewBox === undefined || viewBox === null) {
+function collectStrokeSegments(file, tag, attributes, strokeStyle, failFn) {
+  if (String(strokeStyle.stroke ?? "none").trim().toLowerCase() === "none") {
     return null;
   }
-  const values = viewBox.trim().split(/[\s,]+/).map(Number);
-  if (values.length !== 4 || !values.every(Number.isFinite) || values[2] <= 0 || values[3] <= 0) {
+  const strokeWidth = parseLength(strokeStyle.strokeWidth, 1);
+  if (!Number.isFinite(strokeWidth) || strokeWidth <= 0) {
     return null;
   }
-  return { minX: values[0], minY: values[1], width: values[2], height: values[3] };
+  const invalid = () => {
+    failFn(`${file}: <${tag}> stroke must use numeric geometry attributes so label intersections can be checked`);
+    return null;
+  };
+  let segments = [];
+  if (tag === "line") {
+    const x1 = parseLength(attributes.get("x1"), 0);
+    const y1 = parseLength(attributes.get("y1"), 0);
+    const x2 = parseLength(attributes.get("x2"), 0);
+    const y2 = parseLength(attributes.get("y2"), 0);
+    if (![x1, y1, x2, y2].every(Number.isFinite)) return invalid();
+    segments = [[{ x: x1, y: y1 }, { x: x2, y: y2 }]];
+  } else if (tag === "polyline" || tag === "polygon") {
+    const points = parsePointList(attributes.get("points"));
+    if (points.length < 2) return invalid();
+    segments = lineSegmentsFromPoints(points, tag === "polygon");
+  } else if (tag === "rect") {
+    const x = parseLength(attributes.get("x"), 0);
+    const y = parseLength(attributes.get("y"), 0);
+    const width = parseLength(attributes.get("width"));
+    const height = parseLength(attributes.get("height"));
+    if (![x, y, width, height].every(Number.isFinite) || width < 0 || height < 0) return invalid();
+    segments = lineSegmentsFromPoints([{ x, y }, { x: x + width, y }, { x: x + width, y: y + height }, { x, y: y + height }], true);
+  } else if (tag === "circle") {
+    const cx = parseLength(attributes.get("cx"), 0);
+    const cy = parseLength(attributes.get("cy"), 0);
+    const r = parseLength(attributes.get("r"));
+    if (![cx, cy, r].every(Number.isFinite) || r < 0) return invalid();
+    segments = lineSegmentsFromPoints(sampleEllipse(cx, cy, r, r), true);
+  } else if (tag === "ellipse") {
+    const cx = parseLength(attributes.get("cx"), 0);
+    const cy = parseLength(attributes.get("cy"), 0);
+    const rx = parseLength(attributes.get("rx"));
+    const ry = parseLength(attributes.get("ry"));
+    if (![cx, cy, rx, ry].every(Number.isFinite) || rx < 0 || ry < 0) return invalid();
+    segments = lineSegmentsFromPoints(sampleEllipse(cx, cy, rx, ry), true);
+  } else if (tag === "path") {
+    const points = parsePathData(attributes.get("d"));
+    segments = lineSegmentsFromPathPoints(points);
+    if (segments.length === 0) return invalid();
+  }
+  return segments.length === 0 ? null : { description: `<${tag}>`, strokeWidth, segments };
 }
 
-function validateSvgSafety(file, source) {
-  if (/<!\s*(?:DOCTYPE|ENTITY)\b/i.test(source) || /<!\[CDATA\[/i.test(source)) {
-    fail(`${file}: DOCTYPE, ENTITY, and CDATA declarations are not allowed in lesson SVGs`);
+function pointInRect(point, rect) {
+  return point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom;
+}
+
+function orientation(a, b, c) {
+  const value = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y);
+  if (Math.abs(value) < 1e-9) return 0;
+  return value > 0 ? 1 : 2;
+}
+
+function onSegment(a, b, c) {
+  return b.x <= Math.max(a.x, c.x) && b.x >= Math.min(a.x, c.x) && b.y <= Math.max(a.y, c.y) && b.y >= Math.min(a.y, c.y);
+}
+
+function segmentsIntersect(p1, q1, p2, q2) {
+  const o1 = orientation(p1, q1, p2);
+  const o2 = orientation(p1, q1, q2);
+  const o3 = orientation(p2, q2, p1);
+  const o4 = orientation(p2, q2, q1);
+  if (o1 !== o2 && o3 !== o4) return true;
+  if (o1 === 0 && onSegment(p1, p2, q1)) return true;
+  if (o2 === 0 && onSegment(p1, q2, q1)) return true;
+  if (o3 === 0 && onSegment(p2, p1, q2)) return true;
+  return o4 === 0 && onSegment(p2, q1, q2);
+}
+
+function pointRectDistance(point, rect) {
+  const dx = Math.max(rect.left - point.x, 0, point.x - rect.right);
+  const dy = Math.max(rect.top - point.y, 0, point.y - rect.bottom);
+  return Math.hypot(dx, dy);
+}
+
+function pointSegmentDistance(point, a, b) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  if (dx === 0 && dy === 0) {
+    return Math.hypot(point.x - a.x, point.y - a.y);
   }
-  const allowedElements = new Set(["svg", "title", "desc", "g", "path", "circle", "ellipse", "line", "polyline", "polygon", "rect", "text", "tspan"]);
-  const allowedAttributes = new Set([
-    "id", "xmlns", "viewBox", "role", "fill", "stroke", "stroke-linecap", "stroke-linejoin", "stroke-width", "opacity",
-    "d", "cx", "cy", "r", "rx", "ry", "x", "y", "x1", "y1", "x2", "y2", "width", "height", "points",
-    "font-family", "font-size", "font-weight", "text-anchor"
-  ]);
-  for (const match of source.matchAll(/<\/?\s*([A-Za-z][A-Za-z0-9:-]*)([^>]*)>/g)) {
-    const element = match[1];
-    const elementName = element.toLowerCase();
-    if (!allowedElements.has(elementName)) {
-      fail(`${file}: SVG element <${element}> is not allowed`);
-    }
-    if (match[0].startsWith("</")) {
+  const t = Math.max(0, Math.min(1, ((point.x - a.x) * dx + (point.y - a.y) * dy) / (dx * dx + dy * dy)));
+  return Math.hypot(point.x - (a.x + t * dx), point.y - (a.y + t * dy));
+}
+
+function segmentRectDistance(a, b, rect) {
+  if (pointInRect(a, rect) || pointInRect(b, rect)) {
+    return 0;
+  }
+  const corners = [
+    { x: rect.left, y: rect.top },
+    { x: rect.right, y: rect.top },
+    { x: rect.right, y: rect.bottom },
+    { x: rect.left, y: rect.bottom }
+  ];
+  const edges = lineSegmentsFromPoints(corners, true);
+  if (edges.some(([edgeStart, edgeEnd]) => segmentsIntersect(a, b, edgeStart, edgeEnd))) {
+    return 0;
+  }
+  return Math.min(pointRectDistance(a, rect), pointRectDistance(b, rect), ...corners.map((corner) => pointSegmentDistance(corner, a, b)));
+}
+
+function collectFigureGeometry(file, source, failFn) {
+  const viewBox = parseViewBox(file, source, failFn);
+  if (viewBox === null) {
+    return { viewBox, texts: [], strokes: [] };
+  }
+  const texts = [];
+  const strokes = [];
+  const defaultTextStyle = { fontSize: "16", fontWeight: "400", textAnchor: "start" };
+  const defaultStrokeStyle = { stroke: "none", strokeWidth: "1" };
+  const stack = [{ name: "#document", textStyle: defaultTextStyle, strokeStyle: defaultStrokeStyle }];
+  const supportedStrokeTags = new Set(["line", "polyline", "rect", "circle", "ellipse", "path", "polygon"]);
+  const tagPattern = /<[^>]+>/g;
+  let match;
+  while ((match = tagPattern.exec(source)) !== null) {
+    const token = match[0];
+    if (/^<!--/.test(token) || /^<!\[CDATA/i.test(token)) {
       continue;
     }
-    const attributes = parseAttributes(match[2]);
-    const leftoverAttributes = match[2]
-      .replace(/([A-Za-z_:][-A-Za-z0-9_:.]*)="([^"]*)"/g, "")
-      .replace(/\//g, "")
-      .trim();
-    if (leftoverAttributes.length > 0) {
-      fail(`${file}: SVG tag <${element}> contains unsupported or non-double-quoted attribute syntax '${leftoverAttributes}'`);
+    const name = tagName(token);
+    if (name.length === 0) {
+      continue;
     }
-    if (elementName === "tspan" && attributes.size > 0) {
-      fail(`${file}: <tspan> attributes are not allowed because the checker cannot model positioned tspan text`);
+    if (isClosingTag(token)) {
+      for (let index = stack.length - 1; index > 0; index -= 1) {
+        const frame = stack.pop();
+        if (frame.name === name) {
+          break;
+        }
+      }
+      continue;
     }
-    for (const [name, value] of attributes) {
-      const lowerName = name.toLowerCase();
-      if (lowerName.startsWith("on")) {
-        fail(`${file}: event handler attribute '${name}' is not allowed`);
+    const attributes = parseAttributes(token);
+    const parent = stack[stack.length - 1];
+    const textStyle = mergeTextStyle(parent.textStyle, attributes);
+    const strokeStyle = mergeStrokeStyle(parent.strokeStyle, attributes);
+
+    if (name === "text") {
+      const closePattern = /<\/text\s*>/ig;
+      closePattern.lastIndex = tagPattern.lastIndex;
+      const close = closePattern.exec(source);
+      if (close === null) {
+        failFn(`${file}: <text> is missing a closing </text>`);
+        continue;
       }
-      if (!allowedAttributes.has(name)) {
-        fail(`${file}: SVG attribute '${name}' is not allowed`);
+      const body = source.slice(tagPattern.lastIndex, close.index);
+      const textBox = collectTextBox(file, attributes, parent.textStyle, body, failFn);
+      if (textBox !== null) {
+        texts.push(textBox);
       }
-      if (lowerName === "href" || lowerName === "xlink:href") {
-        fail(`${file}: SVG references via '${name}' are not allowed`);
+      tagPattern.lastIndex = close.index + close[0].length;
+      continue;
+    }
+
+    if (supportedStrokeTags.has(name)) {
+      const stroke = collectStrokeSegments(file, name, attributes, strokeStyle, failFn);
+      if (stroke !== null) {
+        strokes.push(stroke);
       }
-      if ((name === "fill" || name === "stroke") && value !== "currentColor" && value !== "none") {
-        fail(`${file}: ${name} must be currentColor or none, got '${value}'`);
+    }
+
+    if (!isSelfClosingTag(token)) {
+      stack.push({ name, textStyle, strokeStyle });
+    }
+  }
+  return { viewBox, texts, strokes };
+}
+
+function checkTextEdges(file, viewBox, texts, failFn) {
+  const edgeMargin = 2;
+  for (const text of texts) {
+    const { bounds } = text;
+    if (bounds.left < viewBox.minX + edgeMargin || bounds.right > viewBox.maxX - edgeMargin || bounds.top < viewBox.minY + edgeMargin || bounds.bottom > viewBox.maxY - edgeMargin) {
+      failFn(`${file}: <text> '${text.text}' estimated bounds are too close to or beyond the viewBox edge (bounds ${bounds.left.toFixed(1)},${bounds.top.toFixed(1)} to ${bounds.right.toFixed(1)},${bounds.bottom.toFixed(1)}; required inside ${viewBox.minX + edgeMargin},${viewBox.minY + edgeMargin} to ${viewBox.maxX - edgeMargin},${viewBox.maxY - edgeMargin})`);
+    }
+  }
+}
+
+function horizontalCenter(bounds) {
+  return (bounds.left + bounds.right) / 2;
+}
+
+function boundsWidth(bounds) {
+  return bounds.right - bounds.left;
+}
+
+function isAlignedVerticalStack(first, second, horizontalOverlap, verticalOverlap) {
+  if (horizontalOverlap <= 0 || verticalOverlap > 0) {
+    return false;
+  }
+  const narrowerWidth = Math.min(boundsWidth(first.bounds), boundsWidth(second.bounds));
+  if (narrowerWidth <= 0) {
+    return false;
+  }
+  const centerOffset = Math.abs(horizontalCenter(first.bounds) - horizontalCenter(second.bounds));
+  const substantialOverlap = horizontalOverlap >= narrowerWidth * 0.5;
+  return substantialOverlap && centerOffset <= narrowerWidth / 2;
+}
+
+function checkTextProximity(file, texts, failFn) {
+  for (let leftIndex = 0; leftIndex < texts.length; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < texts.length; rightIndex += 1) {
+      const first = texts[leftIndex];
+      const second = texts[rightIndex];
+      const horizontalOverlap = Math.min(first.bounds.right, second.bounds.right) - Math.max(first.bounds.left, second.bounds.left);
+      const verticalOverlap = Math.min(first.bounds.bottom, second.bounds.bottom) - Math.max(first.bounds.top, second.bounds.top);
+      if (horizontalOverlap > 0 && verticalOverlap > 0) {
+        failFn(`${file}: <text> '${first.text}' overlaps <text> '${second.text}' by ${horizontalOverlap.toFixed(1)} × ${verticalOverlap.toFixed(1)} units`);
+        continue;
       }
-      if (value.includes("url(") || (name !== "xmlns" && /^https?:/i.test(value))) {
-        fail(`${file}: external references are not allowed in '${name}'`);
+      const horizontalGap = Math.max(second.bounds.left - first.bounds.right, first.bounds.left - second.bounds.right, 0);
+      const verticalGap = Math.max(second.bounds.top - first.bounds.bottom, first.bounds.top - second.bounds.bottom, 0);
+      const gap = Math.hypot(horizontalGap, verticalGap);
+      const smallerFontSize = Math.min(first.fontSize, second.fontSize);
+      const usesStackClearance = isAlignedVerticalStack(first, second, horizontalOverlap, verticalOverlap);
+      const requiredGap = smallerFontSize * (usesStackClearance ? 0.08 : 0.25);
+      if (gap < requiredGap) {
+        const spacingKind = usesStackClearance ? "stacked-label" : "neighbour";
+        failFn(`${file}: <text> '${first.text}' and <text> '${second.text}' are only ${gap.toFixed(1)} units apart; required at least ${requiredGap.toFixed(1)} units for ${spacingKind} spacing (short by ${(requiredGap - gap).toFixed(1)})`);
       }
     }
   }
+}
+
+function checkTextStrokeIntersections(file, texts, strokes, failFn) {
+  for (const text of texts) {
+    for (const stroke of strokes) {
+      const requiredClearance = stroke.strokeWidth / 2;
+      for (const [start, end] of stroke.segments) {
+        const clearance = segmentRectDistance(start, end, text.strokeBounds);
+        if (clearance <= requiredClearance) {
+          failFn(`${file}: <text> '${text.text}' estimated ink bounds intersect ${stroke.description} stroke (clearance ${clearance.toFixed(1)}; stroke padding ${requiredClearance.toFixed(1)})`);
+          break;
+        }
+      }
+    }
+  }
+}
+
+function checkTextBounds(file, source, failFn = fail) {
+  const geometry = collectFigureGeometry(file, source, failFn);
+  if (geometry.viewBox === null) {
+    return;
+  }
+  checkTextEdges(file, geometry.viewBox, geometry.texts, failFn);
+  checkTextProximity(file, geometry.texts, failFn);
+  checkTextStrokeIntersections(file, geometry.texts, geometry.strokes, failFn);
+}
+
+function validateFigureSource(file, source) {
+  const localErrors = [];
+  checkTextBounds(file, source, (message) => localErrors.push(message));
+  return localErrors;
+}
+
+function runSelfTest() {
+  const fixture = (body, viewBox = "0 0 200 120") => `<svg id="fixture" xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}"><title>Fixture</title><desc>Fixture</desc>${body}</svg>`;
+  const cases = [
+    {
+      name: "spaced text inside viewBox passes",
+      source: fixture(`<g fill="currentColor" text-anchor="middle"><text x="45" y="60" font-size="20">A</text><text x="150" y="60" font-size="20" font-weight="700">B</text></g><line x1="20" y1="105" x2="180" y2="105" stroke="currentColor" stroke-width="4"/>`),
+      expect: []
+    },
+    {
+      name: "text overlap fails",
+      source: fixture(`<g fill="currentColor"><text x="40" y="60" font-size="20">Label</text><text x="55" y="62" font-size="20">Other</text></g>`),
+      expect: [/Label.*overlaps.*Other.*by/]
+    },
+    {
+      name: "text gap under threshold fails",
+      source: fixture(`<g fill="currentColor"><text x="20" y="60" font-size="20">A</text><text x="39" y="60" font-size="20">B</text></g>`),
+      expect: [/A.*B.*required at least/]
+    },
+    {
+      name: "tight aligned vertical stack uses reduced gap threshold",
+      source: fixture(`<g fill="currentColor" text-anchor="middle"><text x="100" y="40" font-size="20">1st</text><text x="100" y="62" font-size="20">digit</text></g>`),
+      expect: []
+    },
+    {
+      name: "offset vertical neighbours keep normal gap threshold",
+      source: fixture(`<g fill="currentColor" text-anchor="middle"><text x="90" y="40" font-size="20">Top</text><text x="112" y="62" font-size="20">Bot</text></g>`),
+      expect: [/Top.*Bot.*required at least.*neighbour/]
+    },
+    {
+      name: "viewBox edge fails",
+      source: fixture(`<text x="1" y="18" font-size="20" fill="currentColor">Edge</text>`),
+      expect: [/Edge.*viewBox edge/]
+    },
+    {
+      name: "line stroke intersection fails",
+      source: fixture(`<line x1="10" y1="60" x2="190" y2="60" stroke="currentColor" stroke-width="6"/><text x="70" y="60" font-size="20" fill="currentColor">Line</text>`),
+      expect: [/Line.*<line> stroke/]
+    },
+    {
+      name: "polyline stroke intersection fails",
+      source: fixture(`<polyline points="10,20 90,60 180,20" stroke="currentColor" stroke-width="6" fill="none"/><text x="70" y="60" font-size="20" fill="currentColor">Poly</text>`),
+      expect: [/Poly.*<polyline> stroke/]
+    },
+    {
+      name: "rect stroke intersection fails",
+      source: fixture(`<rect x="40" y="35" width="100" height="40" stroke="currentColor" stroke-width="6" fill="none"/><text x="50" y="49" font-size="18" fill="currentColor">Rect</text>`),
+      expect: [/Rect.*<rect> stroke/]
+    },
+    {
+      name: "circle stroke intersection fails",
+      source: fixture(`<circle cx="100" cy="60" r="40" stroke="currentColor" stroke-width="6" fill="none"/><text x="95" y="24" font-size="18" fill="currentColor">Circle</text>`),
+      expect: [/Circle.*<circle> stroke/]
+    },
+    {
+      name: "ellipse stroke intersection fails",
+      source: fixture(`<ellipse cx="100" cy="60" rx="70" ry="25" stroke="currentColor" stroke-width="6" fill="none"/><text x="95" y="39" font-size="18" fill="currentColor">Ellipse</text>`),
+      expect: [/Ellipse.*<ellipse> stroke/]
+    },
+    {
+      name: "path curve and arc stroke intersections fail",
+      source: fixture(`<path d="M20 100 C60 20 100 20 140 100 Q155 70 170 100 A20 20 0 0 1 190 80" stroke="currentColor" stroke-width="6" fill="none"/><text x="78" y="42" font-size="18" fill="currentColor">Curve</text><text x="162" y="91" font-size="14" fill="currentColor">Arc</text>`),
+      expect: [/Curve.*<path> stroke/, /Arc.*<path> stroke/]
+    },
+    {
+      name: "tspan anchor and bold width pass",
+      source: fixture(`<g fill="currentColor" text-anchor="middle"><text x="100" y="45" font-size="18" font-weight="700"><tspan x="100" y="45">Top</tspan><tspan x="100" y="82">Bottom</tspan></text></g>`),
+      expect: []
+    }
+  ];
+  const failures = [];
+  for (const testCase of cases) {
+    const actualErrors = validateFigureSource(`self-test:${testCase.name}`, testCase.source);
+    for (const expected of testCase.expect) {
+      if (!actualErrors.some((error) => expected.test(error))) {
+        failures.push(`${testCase.name}: expected error ${expected} but saw ${JSON.stringify(actualErrors)}`);
+      }
+    }
+    if (testCase.expect.length === 0 && actualErrors.length > 0) {
+      failures.push(`${testCase.name}: expected pass but saw ${JSON.stringify(actualErrors)}`);
+    }
+  }
+  if (failures.length > 0) {
+    for (const failure of failures) {
+      console.error(`figure self-test: ${failure}`);
+    }
+    process.exit(1);
+  }
+  console.log(`Figure self-test passed: ${cases.length} inline fixture(s).`);
 }
 
 function readFigures() {
@@ -473,7 +877,6 @@ function readFigures() {
       fail(`${file}: figure filenames must be lower-case stable ids with hyphens only`);
     }
     const source = readFileSync(path.join(figuresDir, file), "utf8");
-    validateSvgSafety(file, source);
     const rootId = /<svg\b[^>]*\bid="([^"]+)"/i.exec(source)?.[1];
     if (rootId !== id) {
       fail(`${file}: root <svg id> must equal filename id '${id}'`);
@@ -496,47 +899,28 @@ function readFigures() {
 function parseFigureReferences(markdown, relativePath) {
   const lines = markdown.replace(/\r\n/g, "\n").split("\n");
   const references = [];
-  const idsOnPage = new Set();
-  let inFence = false;
   for (let index = 0; index < lines.length; index += 1) {
-    const trimmedLine = lines[index]?.trim() ?? "";
-    if (/^```/.test(trimmedLine)) {
-      inFence = !inFence;
-      continue;
-    }
-    if (inFence) {
-      continue;
-    }
-    const match = /^::figure\s+([a-z0-9][a-z0-9-]*)\s*$/.exec(trimmedLine);
+    const match = /^::figure\s+([a-z0-9][a-z0-9-]*)\s*$/.exec(lines[index]?.trim() ?? "");
     if (match === null) {
       continue;
     }
     const id = match[1];
-    if (idsOnPage.has(id)) {
-      fail(`${relativePath}: figure '${id}' is referenced more than once, which would duplicate inline SVG ids`);
-    }
-    idsOnPage.add(id);
     let altText = "";
     let closed = false;
     index += 1;
     for (; index < lines.length; index += 1) {
       const line = lines[index] ?? "";
-      const trimmed = line.trim();
-      if (trimmed === "::") {
+      if (line.trim() === "::") {
         closed = true;
         break;
       }
-      if (trimmed === "" || /^(#{1,6})(?:\s|$)/.test(line)) {
-        index -= 1;
-        break;
-      }
-      const altMatch = /^Alt text:\s*(.+)\s*$/i.exec(trimmed);
+      const altMatch = /^Alt text:\s*(.+)\s*$/i.exec(line.trim());
       if (altMatch !== null) {
         altText = altMatch[1].trim();
       }
     }
     if (!closed) {
-      fail(`${relativePath}: figure '${id}' directive is missing its closing '::' before the next blank line or heading`);
+      fail(`${relativePath}: figure '${id}' directive is missing its closing '::'`);
     }
     if (altText.length === 0) {
       fail(`${relativePath}: figure '${id}' is missing non-empty Alt text`);
@@ -586,22 +970,6 @@ function expectedAssets(figures) {
   return assets;
 }
 
-function appleMetadataSource(figures) {
-  const entries = [...figures.values()].map((figure) => {
-    const viewBox = parseViewBox(figure.source);
-    if (viewBox === null) {
-      return null;
-    }
-    return `        \"${figure.id}\": CGSize(width: ${viewBox.width}, height: ${viewBox.height})`;
-  }).filter((entry) => entry !== null).join(",\n");
-  return `// Generated by scripts/check-figures.mjs. Do not edit by hand.\nimport CoreGraphics\n\nenum LessonFigureMetadata {\n    static let sizes: [String: CGSize] = [\n${entries}\n    ]\n\n    static func aspectRatio(for id: String) -> CGFloat {\n        guard let size = sizes[id], size.width > 0, size.height > 0 else {\n            return 4.0 / 3.0\n        }\n        return size.width / size.height\n    }\n}\n`;
-}
-
-function writeAppleMetadata(figures) {
-  mkdirSync(path.dirname(appleMetadataPath), { recursive: true });
-  writeFileSync(appleMetadataPath, appleMetadataSource(figures));
-}
-
 function writeAssets(figures) {
   rmSync(appleCatalogDir, { recursive: true, force: true });
   mkdirSync(appleCatalogDir, { recursive: true });
@@ -612,7 +980,6 @@ function writeAssets(figures) {
     writeFileSync(path.join(imageset, asset.svgFilename), asset.source);
     writeFileSync(path.join(imageset, "Contents.json"), asset.contents);
   }
-  writeAppleMetadata(figures);
 }
 
 function checkAssets(figures) {
@@ -650,77 +1017,23 @@ function checkAssets(figures) {
       fail(`Apple figure asset '${assetName}' has no matching content/figures SVG`);
     }
   }
-  if (!existsSync(appleMetadataPath)) {
-    fail("Apple figure metadata is missing; run pnpm check:figures:fix");
-  } else if (readFileSync(appleMetadataPath, "utf8") !== appleMetadataSource(figures)) {
-    fail("Apple figure metadata is out of sync with content/figures viewBox sizes");
-  }
-}
-
-function runSelfTest() {
-  const previousErrorCount = errors.length;
-  const safeSvg = `<svg id="safe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><title>Safe</title><desc>Safe</desc><g fill="currentColor" stroke="none" text-anchor="middle"><text x="50" y="55" font-size="20">OK</text></g></svg>`;
-  validateSvgSafety("safe.svg", safeSvg);
-  checkTextBounds("safe.svg", safeSvg);
-  const refs = parseFigureReferences("```\n::figure ignored\nAlt text: Nope\n::\n```\n\n::figure safe\nalt text: Safe alt\n::", "fixture.md");
-  if (refs.length !== 1 || refs[0].id !== "safe" || refs[0].altText !== "Safe alt") {
-    fail("self-test: figure reference parser did not skip fences or parse case-insensitive alt text");
-  }
-  function expectNewError(label, action) {
-    const before = errors.length;
-    action();
-    if (errors.length === before) {
-      fail(`self-test: ${label} was not rejected`);
-      return;
-    }
-    errors.splice(before);
-  }
-  for (const [name, svg] of [
-    ["script.svg", `<svg id="bad" viewBox="0 0 10 10"><script>alert(1)</script></svg>`],
-    ["handler.svg", `<svg id="bad" viewBox="0 0 10 10"><path onclick="x" d="M0 0"/></svg>`],
-    ["style.svg", `<svg id="bad" viewBox="0 0 10 10"><path style="fill:black" d="M0 0"/></svg>`],
-    ["colour.svg", `<svg id="bad" viewBox="0 0 10 10"><path fill="black" d="M0 0"/></svg>`],
-    ["single-quoted-attribute.svg", `<svg id="bad" viewBox="0 0 10 10"><path fill='red' d="M0 0"/></svg>`],
-    ["unquoted-attribute.svg", `<svg id="bad" viewBox="0 0 10 10"><path fill=red d="M0 0"/></svg>`],
-    ["doctype.svg", `<!DOCTYPE svg><svg id="bad" viewBox="0 0 10 10"></svg>`],
-    ["entity.svg", `<!ENTITY x "bad"><svg id="bad" viewBox="0 0 10 10"></svg>`],
-    ["cdata.svg", `<svg id="bad" viewBox="0 0 10 10"><![CDATA[bad]]></svg>`],
-    ["external.svg", `<svg id="bad" viewBox="0 0 10 10"><use href="https://example.com/x.svg#x"/></svg>`]
-  ]) {
-    expectNewError(`unsafe SVG fixture ${name}`, () => validateSvgSafety(name, svg));
-  }
-  expectNewError("minimum text size", () => checkTextBounds("small-text.svg", `<svg id="bad" viewBox="0 0 100 100"><text x="50" y="50" font-size="2">tiny</text></svg>`));
-  expectNewError("text bounds", () => checkTextBounds("out-of-bounds-text.svg", `<svg id="bad" viewBox="0 0 100 100"><text x="2" y="10" font-size="20">Wide</text></svg>`));
-  expectNewError("stroke/text clearance", () => checkTextBounds("stroke-text.svg", `<svg id="bad" viewBox="0 0 100 100"><g stroke="currentColor" fill="none"><line x1="0" y1="50" x2="100" y2="50" stroke-width="10"/></g><text x="40" y="55" font-size="20">Hit</text></svg>`));
-  expectNewError("duplicate figure directive", () => parseFigureReferences("::figure safe\nAlt text: Safe\n::\n\n::figure safe\nAlt text: Safe again\n::", "duplicate.md"));
-  expectNewError("unclosed figure directive", () => parseFigureReferences("::figure safe\nAlt text: Safe\n\nNext paragraph", "unclosed.md"));
-  if (errors.length > previousErrorCount) {
-    throw new Error(errors.slice(previousErrorCount).join("\n"));
-  }
 }
 
 if (selfTest) {
-  try {
-    runSelfTest();
-    console.log("Figure checker self-test passed.");
-  } catch (error) {
-    console.error(error instanceof Error ? error.message : String(error));
+  runSelfTest();
+} else {
+  const figures = readFigures();
+  const references = checkReferences(figures);
+  if (fix) {
+    writeAssets(figures);
+  }
+  checkAssets(figures);
+
+  if (errors.length > 0) {
+    for (const error of errors) {
+      console.error(`figure check: ${error}`);
+    }
     process.exit(1);
   }
-  process.exit(0);
+  console.log(`Figure check passed: ${figures.size} SVG source(s), ${references.length} lesson reference(s), Apple assets ${fix ? "generated and " : ""}in sync.`);
 }
-
-const figures = readFigures();
-const references = checkReferences(figures);
-if (fix) {
-  writeAssets(figures);
-}
-checkAssets(figures);
-
-if (errors.length > 0) {
-  for (const error of errors) {
-    console.error(`figure check: ${error}`);
-  }
-  process.exit(1);
-}
-console.log(`Figure check passed: ${figures.size} SVG source(s), ${references.length} lesson reference(s), Apple assets ${fix ? "generated and " : ""}in sync.`);

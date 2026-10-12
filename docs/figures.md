@@ -81,9 +81,12 @@ The check verifies:
 - every figure reference has non-empty alt text and no duplicate figure id on the same page;
 - each SVG filename is a stable id and the root `<svg id>` matches it;
 - SVGs include `<title>`/`<desc>`, avoid hard-coded colours, use only allowed elements/attributes, and have no script/style/event-handler/external-reference surface;
-- SVG text stays within the `viewBox` padding according to the checker's conservative proportional text-bounds estimate;
-- sampled strokes and circle outlines stay clear of estimated text boxes; and
+- estimated text bounds stay inside the viewBox with a small edge margin;
+- estimated text bounds do not overlap each other; side-by-side or offset labels keep at least `0.25 × min(font-size)` clearance, while aligned vertical stacks may use `0.08 × min(font-size)`;
+- estimated text ink bounds do not intersect stroked `line`, `polyline`, `rect`, `circle`, `ellipse`, or sampled `path` outlines; and
 - generated Apple vector assets and generated Apple figure metadata are in sync with `content/figures/`.
+
+The text estimate intentionally errs wide because Apple CoreSVG can ignore SVG font-family and font-weight. It handles `text-anchor="start|middle|end"`, inherited `font-size`/`font-weight`, bold text, and simple `<tspan>` runs. Path stroke checks sample `M/L/H/V/C/Q/A/Z` commands, absolute or relative, including curves and arcs, and include half the stroke width as padding.
 
 Run the checker self-test when changing the checker itself:
 
