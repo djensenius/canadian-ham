@@ -183,6 +183,33 @@ def inset_mark_icon(mark: Path, background: Path, output: Path, size: int, tmp: 
     ])
 
 
+def render_icon_composer_foreground(foreground: Path, output: Path, tmp: Path) -> None:
+    """Build a transparent Icon Composer foreground that stays legible in OS appearance renders.
+
+    Icon Composer's automatic dark/tinted material treatment preserves raster layer
+    colours, so the bundle foreground carries a narrow cream underlay behind the
+    approved black brush. The checked appiconset light asset remains unchanged;
+    this contrast underlay only affects the .icon document that OS 27 prefers.
+    """
+    alpha = tmp / "icon-composer-foreground-alpha.png"
+    halo_alpha = tmp / "icon-composer-foreground-halo-alpha.png"
+    halo = tmp / "icon-composer-foreground-halo.png"
+    run([MAGICK, str(foreground), "-alpha", "extract", str(alpha)])
+    run([MAGICK, str(alpha), "-morphology", "Dilate", "Disk:5", str(halo_alpha)])
+    run([
+        MAGICK,
+        "-size",
+        f"{SIZE}x{SIZE}",
+        f"xc:{DARK_INK}",
+        str(halo_alpha),
+        "-compose",
+        "CopyOpacity",
+        "-composite",
+        "PNG32:" + str(halo),
+    ])
+    run([MAGICK, str(halo), str(foreground), "-composite", "-strip", "-define", "png:compression-level=9", "PNG32:" + str(output)])
+
+
 def approved_mark_layers() -> tuple[list[str], list[str], list[str]]:
     """Return full, middle, and front draw commands for the owner-approved mark."""
     drawing = SumiDrawing(seed=4511)
@@ -586,6 +613,8 @@ def render_preview_sheet(tmp: Path) -> None:
         ("apple-touch-icon-180.png", 90, 90),
         ("pwa-icon-192.png", 90, 90),
         ("pwa-icon-512.png", 90, 90),
+        ("pwa-maskable-icon-192.png", 90, 90),
+        ("pwa-maskable-icon-512.png", 90, 90),
         ("favicon-16.png", 16, 16),
         ("favicon-32.png", 32, 32),
         ("favicon-64.png", 64, 64),
@@ -696,10 +725,10 @@ def srgb_string(rgb: tuple[int, int, int]) -> str:
     return "srgb:" + ",".join(f"{channel / 255:.5f}" for channel in rgb) + ",1.00000"
 
 
-def write_icon_composer_bundle(foreground: Path) -> None:
+def write_icon_composer_bundle(foreground: Path, tmp: Path) -> None:
     assets_dir = ICON_COMPOSER / "Assets"
     assets_dir.mkdir(parents=True, exist_ok=True)
-    copy_file(foreground, assets_dir / "brushstroke.png")
+    render_icon_composer_foreground(foreground, assets_dir / "brushstroke.png", tmp)
     write_json(
         ICON_COMPOSER / "icon.json",
         {
@@ -768,7 +797,7 @@ def render_icon_composer_preview_images(tmp: Path) -> dict[str, Path]:
     return rendered
 
 
-def install_apple_assets(full_icon: Path, dark_icon: Path, tinted_icon: Path, foreground: Path) -> None:
+def install_apple_assets(full_icon: Path, dark_icon: Path, tinted_icon: Path) -> None:
     copy_file(full_icon, APPLE_ASSETS / "icon-1024.png")
     copy_file(dark_icon, APPLE_ASSETS / "icon-dark-1024.png")
     copy_file(tinted_icon, APPLE_ASSETS / "icon-tinted-1024.png")
@@ -788,7 +817,6 @@ def install_apple_assets(full_icon: Path, dark_icon: Path, tinted_icon: Path, fo
     for name, (width, height) in mac_sizes.items():
         resize_png(full_icon, APPLE_ASSETS / name, width, height)
     write_appiconset_contents()
-    write_icon_composer_bundle(foreground)
 
     tvos_layers = {
         "App Icon - Small.imagestack/Back.imagestacklayer/Content.imageset": ["tvos-small-400x240-back.png", "tvos-small-800x480-back.png"],
@@ -822,6 +850,8 @@ def install_web_assets() -> None:
         "apple-touch-icon-180.png",
         "pwa-icon-192.png",
         "pwa-icon-512.png",
+        "pwa-maskable-icon-192.png",
+        "pwa-maskable-icon-512.png",
     ):
         copy_file(EXPORTS / name, WEB_PUBLIC / name)
 
@@ -883,6 +913,8 @@ def render_all() -> None:
 
         resize_png(EXPORTS / "app-icon-1024.png", EXPORTS / "apple-touch-icon-180.png", 180, 180)
         for name, size in (("pwa-icon-192.png", 192), ("pwa-icon-512.png", 512)):
+            resize_png(EXPORTS / "app-icon-1024.png", EXPORTS / name, size, size)
+        for name, size in (("pwa-maskable-icon-192.png", 192), ("pwa-maskable-icon-512.png", 512)):
             pwa_back = tmp / f"pwa-background-{size}.png"
             render_background_png(pwa_back, tmp, size, size)
             inset_mark_icon(full_mark, pwa_back, EXPORTS / name, size, tmp, inset_scale=0.78)
@@ -890,12 +922,14 @@ def render_all() -> None:
         favicon_svg = EXPORTS / "favicon.svg"
         write_favicon_svg(favicon_svg)
         render_favicon_pngs(favicon_svg)
-        write_icon_composer_bundle(full_mark)
+        write_icon_composer_bundle(full_mark, tmp)
         icon_composer_variants = render_icon_composer_preview_images(tmp)
+        if not icon_composer_variants:
+            print("warning: ictool unavailable; variants-preview.png is using appiconset fallback compositions", file=sys.stderr)
         render_preview_sheet(tmp)
         render_variants_preview_sheet(tmp, icon_composer_variants)
 
-        install_apple_assets(EXPORTS / "app-icon-1024.png", EXPORTS / "app-icon-dark-1024.png", EXPORTS / "app-icon-tinted-1024.png", full_mark)
+        install_apple_assets(EXPORTS / "app-icon-1024.png", EXPORTS / "app-icon-dark-1024.png", EXPORTS / "app-icon-tinted-1024.png")
         install_web_assets()
 
     print(f"Rendered approved app icon exports and installed checked-in consumers from {EXPORTS}")

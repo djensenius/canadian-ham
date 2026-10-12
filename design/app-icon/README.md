@@ -33,6 +33,8 @@ python3 design/app-icon/render_icon.py
 
 The script is deterministic for a given ImageMagick version and macOS system fonts (Georgia and Helvetica for the Top Shelf wordmark and preview labels); exports were last rendered with ImageMagick 7.1.2-32. Production renders differ very slightly from the round-3 concept PNG (wire layer order and a 0.6% wire scale), so the files are not byte-identical. It uses ImageMagick (`/opt/homebrew/bin/magick` when available). It rewrites `design/app-icon/exports/`, installs matching PNGs into the Apple asset catalogues, writes the Icon Composer bundle at `apps/apple/CanadianHam/Resources/AppIcon.icon`, and copies web icons into `apps/web/public/`.
 
+The variants preview uses Xcode's Icon Composer command-line renderer when available at `/Applications/Xcode.app/Contents/Applications/Icon Composer.app/Contents/Executables/ictool` (or on `PATH`). Use the same Xcode/OS 27 toolchain as the Apple build checks when reviewing `variants-preview.png`; if `ictool` is unavailable, the renderer prints a warning and falls back to composed appiconset previews instead of OS-rendered `.icon` previews.
+
 ## Exports
 
 Exports are written to `design/app-icon/exports/`.
@@ -74,9 +76,10 @@ The Top Shelf formats place the hex mark on the left with generous cream space a
 - `favicon.svg`: simplified adaptive vector hex with perimeter, spokes, hub, and `prefers-color-scheme` dark support.
 - `favicon-16.png`, `favicon-32.png`, and `favicon-64.png`: opaque light-mode PNG favicons; no PNG favicon draws the wires, and the 16 px render also drops the spokes, leaving the hex outline and hub for legibility.
 - `apple-touch-icon-180.png`.
-- `pwa-icon-192.png` and `pwa-icon-512.png`: maskable PWA icons with the antenna mark inset into the maskable safe zone.
+- `pwa-icon-192.png` and `pwa-icon-512.png`: full-size PWA icons for `purpose: "any"`.
+- `pwa-maskable-icon-192.png` and `pwa-maskable-icon-512.png`: padded PWA icons with the antenna mark inset into the maskable safe zone for `purpose: "maskable"`.
 
-The renderer copies these files to `apps/web/public/`. `apps/web/index.html` references the SVG favicon, PNG favicon sizes, and Apple touch icon. The generated web manifest references the PWA PNG icons with `purpose: "any maskable"`.
+The renderer copies these files to `apps/web/public/`. `apps/web/index.html` references the SVG favicon, PNG favicon sizes, and Apple touch icon. The generated web manifest references separate full-size `any` PWA PNG icons and padded `maskable` PWA PNG icons.
 
 ### Preview
 
@@ -85,4 +88,4 @@ The renderer copies these files to `apps/web/public/`. `apps/web/index.html` ref
 
 ## Icon Composer bundle
 
-The committed Xcode 26+/27 `.icon` bundle lives at `apps/apple/CanadianHam/Resources/AppIcon.icon`. Its structure matches the owner's other apps: `icon.json` plus `Assets/brushstroke.png`, with glass enabled, individual lighting, a layer-colour shadow, and a cream gradient fill from the Canadian Ham palette. tvOS and visionOS keep their existing layered image-stack assets; dark/tinted app-icon variants are not added there because those platforms use the current layered icon mechanisms rather than the iOS/iPadOS/macOS luminosity appiconset slots.
+The committed Xcode 26+/27 `.icon` bundle lives at `apps/apple/CanadianHam/Resources/AppIcon.icon`. Its structure matches the owner's other apps: `icon.json` plus `Assets/brushstroke.png`, with glass enabled, individual lighting, a layer-colour shadow, and a cream gradient fill from the Canadian Ham palette. The Icon Composer foreground is the approved black brush with a narrow `DARK_INK` cream underlay so `ictool` dark, tinted, and clear OS renders remain legible when OS 27 prefers `AppIcon.icon` over the fallback appiconset. tvOS and visionOS keep their existing layered image-stack assets; dark/tinted app-icon variants are not added there because those platforms use the current layered icon mechanisms rather than the iOS/iPadOS/macOS luminosity appiconset slots.
