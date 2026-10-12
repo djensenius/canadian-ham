@@ -76,4 +76,14 @@ Source verification (accessed 2026-10-12 unless local path noted):
 - ISED RBR-4: https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service (checked bandwidth section and Schedule I for the below-28-MHz occupied-bandwidth framing).
 - Health Canada Safety Code 6: https://www.canada.ca/en/health-canada/services/publications/health-risks-safety/limits-human-exposure-radiofrequency-electromagnetic-energy-range-3-300.html (checked RF exposure framework for existing L-003-08 Safety Code 6 framing).
 - ISED RIC-1: https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/radiocom-information-circulars-ric/ric-1-guide-examiners-accredited-conduct-examinations-amateur-radio-operator-certificates and RIC-3: https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/radiocom-information-circulars-ric/ric-3-information-amateur-radio-service were reachable for current amateur-service/exam context; no new lesson claim depended on an unverified RIC-only fact.
+
+Validation results:
+- node packages/content-tools/src/check-lesson-coverage.ts: passed (100/100 subsections, no duplicates).
+- pnpm --dir packages/content-tools check:quizzes: passed (36 quiz files, 504 official refs, 78 concept checks).
+- pnpm --dir packages/content-tools check:lesson-originality:all: initial run found originality collisions; after wording fixes it passed (36 lessons, 984 official questions, 0 issues).
+- pnpm --dir packages/content-tools check:explanations: passed (984 explanations, 2952 per-choice notes).
+- pnpm check:links: passed (Markdown relative links verified).
+- cd apps/web && npx vitest run: first full run failed 2 existing/flaky course-switch tests, rerun passed (15 files, 160 tests). Canvas getContext jsdom warnings only.
+- DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift: passed (18 ContentLibraryTests).
+- Apple app suites were not run; this was content-only work per task instructions.
 <!-- SECTION:NOTES:END -->
