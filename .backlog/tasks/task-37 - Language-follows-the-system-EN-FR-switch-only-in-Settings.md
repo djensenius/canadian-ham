@@ -1,11 +1,11 @@
 ---
 id: TASK-37
 title: Language follows the system; EN/FR switch only in Settings
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-12 02:46'
+updated_date: '2026-10-12 02:53'
 labels:
   - apple
   - web
@@ -32,7 +32,7 @@ Owner feedback 2026-10-10: the English/French switch is too prominent. By defaul
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Fix Apple launch adoption so app-owned AppleLanguages is only written on explicit app actions while system-level per-app changes are adopted into stored preferences using injected defaults for tests.\n2. Isolate UI/unit tests from real AppleLanguages defaults, add reset teardown for French UI flow, and cover French-to-system immediate question switching plus hidden restart note.\n3. Clean web dead language leftovers, restore localization catalogue ordering, document DebugCloudKit/legacy-French notes, and run targeted validation before finalizing task-37.
+1. Finish r3 Apple defaults isolation: in-memory/open/reset use injected suites by default, guard standard domain against Apple language key mutations, and remove unused migration-marker test hook.\n2. Fix reset/import/legacy-French edge cases and add targeted unit coverage for reset failure, unchanged-language import, injected-suite import, removed-key adoption, registered-domain ignore, and existing-persistent legacy fr adoption.\n3. Strengthen changed UI teardown and largest-text French Settings coverage, run targeted iOS/macOS unit and changed iOS UI tests, then update notes and mark task-37 Done.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -66,6 +66,8 @@ Validation passed in this fix round: git diff --check; pnpm typecheck; pnpm test
 Review r2 reopened task-37. Addressing N1-N6 plus L4/L6/L8 with targeted tests only per policy; full suites remain deferred to merge.
 
 Review r2 fixes complete in commits 1defa682 and f65b26b. Apple no longer applies AppleLanguages on every launch: it writes only on in-app language changes/import/reset and the one-time legacy stored-French migration, records a last-applied value, and adopts differing app-domain AppleLanguages from iOS/macOS Settings into stored preferences. Legacy English migration save failures no longer block startup and retry because the marker remains unset. UI cleanup adds teardown for the French feedback flow, verifies the next compact home test passes immediately after it, covers choosing System default after a French relaunch (English question stem immediately plus restart note), covers hidden restart note, and checks the Settings language control at largest accessibility text size. Web cleanup removed dead interface-language messages/helpers/tests. Catalogue ordering now restores the unrelated keys to main order and keeps the new language import key in sorted import-preference order. Notes for PR: under DebugCloudKit, the legacy-language migration marker is per device, so a first launch on another synced device can still remap a synced explicit English preference before its marker exists; legacy stored Apple fr now becomes an interface French next-launch preference, not just question-language French. Validation passed: git diff --check; pnpm typecheck; targeted web vitest (languagePreference/progressStore/App/i18n) 98 tests; pnpm test 160 web tests plus package tests; pnpm check:schemas; node scripts/check-apple-text-sources.ts; targeted iOS unit ProgressStore language tests 9/9; targeted macOS unit ProgressStore/NativeSettings language tests 10/10; targeted iOS UI French feedback followed immediately by compact home test 2/2; targeted iOS UI System default/restart note, hidden note, largest accessibility text size, and regular-width absence path 4/4. pnpm check:apple-l10n was attempted twice after the catalogue reorder but timed out waiting on the xbuild lock after the text-source/export phases; visionOS targeted UI was not retried because the lock remained unavailable.
+
+Review r3 reopened task-37. N1-N4 are confirmed fixed; addressing blocking M-1 plus L-a/L-b, T-1..T-4, L8, and teardown robustness with targeted tests only. Coordinator is handling apple-l10n and visionOS.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
