@@ -1,11 +1,11 @@
 ---
 id: TASK-44.1
 title: 'Calculator engine (TS and Swift, shared fixtures)'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 15:04'
+updated_date: '2026-10-12 15:09'
 labels:
   - web
   - apple
@@ -44,6 +44,8 @@ Implemented packages/calculator-ts and packages/calculator-swift, plus fixtures/
 Review fix pass started for requested changes: relative cancellation only for +/-, platform-independent display rounding, 12-significant-digit entry cap, C/CE error clear, accessibility display payload, stale repeat-equals fixes, and added fixture coverage.
 
 Review fixes: replaced global small-result zeroing with +/−-only relative cancellation, added platform-independent half-away display rounding, capped entries at 12 significant digits, made C/CE clear Error, added structured displayValue with localized EN/FR spoken strings, fixed stale repeat-equals after unary/clear keys, switched negative visual output to U+2212, and expanded the shared fixture to 103 cases covering small products/squares/reciprocals, rounding ties, entry limits, accessibility display values and low-gap cases. Validation: pnpm --filter @canadian-ham/calculator-engine typecheck passed; pnpm --filter @canadian-ham/calculator-engine test passed (105 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed (2 XCTest tests).
+
+Second review fix pass started: add pocket-calculator range clamps, total entry-length cap, typed-entry spoken display, typographic exponent minus, placeholder cleanup, and CI calculator test de-duplication/local-only comment update.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
