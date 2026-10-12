@@ -698,6 +698,27 @@ function checkTextEdges(file, viewBox, texts, failFn) {
   }
 }
 
+function horizontalCenter(bounds) {
+  return (bounds.left + bounds.right) / 2;
+}
+
+function boundsWidth(bounds) {
+  return bounds.right - bounds.left;
+}
+
+function isAlignedVerticalStack(first, second, horizontalOverlap, verticalOverlap) {
+  if (horizontalOverlap <= 0 || verticalOverlap > 0) {
+    return false;
+  }
+  const narrowerWidth = Math.min(boundsWidth(first.bounds), boundsWidth(second.bounds));
+  if (narrowerWidth <= 0) {
+    return false;
+  }
+  const centerOffset = Math.abs(horizontalCenter(first.bounds) - horizontalCenter(second.bounds));
+  const substantialOverlap = horizontalOverlap >= narrowerWidth * 0.5;
+  return substantialOverlap && centerOffset <= narrowerWidth / 2;
+}
+
 function checkTextProximity(file, texts, failFn) {
   for (let leftIndex = 0; leftIndex < texts.length; leftIndex += 1) {
     for (let rightIndex = leftIndex + 1; rightIndex < texts.length; rightIndex += 1) {
@@ -712,9 +733,12 @@ function checkTextProximity(file, texts, failFn) {
       const horizontalGap = Math.max(second.bounds.left - first.bounds.right, first.bounds.left - second.bounds.right, 0);
       const verticalGap = Math.max(second.bounds.top - first.bounds.bottom, first.bounds.top - second.bounds.bottom, 0);
       const gap = Math.hypot(horizontalGap, verticalGap);
-      const requiredGap = Math.min(first.fontSize, second.fontSize) * 0.25;
+      const smallerFontSize = Math.min(first.fontSize, second.fontSize);
+      const usesStackClearance = isAlignedVerticalStack(first, second, horizontalOverlap, verticalOverlap);
+      const requiredGap = smallerFontSize * (usesStackClearance ? 0.08 : 0.25);
       if (gap < requiredGap) {
-        failFn(`${file}: <text> '${first.text}' and <text> '${second.text}' are only ${gap.toFixed(1)} units apart; required at least ${requiredGap.toFixed(1)} units (short by ${(requiredGap - gap).toFixed(1)})`);
+        const spacingKind = usesStackClearance ? "stacked-label" : "neighbour";
+        failFn(`${file}: <text> '${first.text}' and <text> '${second.text}' are only ${gap.toFixed(1)} units apart; required at least ${requiredGap.toFixed(1)} units for ${spacingKind} spacing (short by ${(requiredGap - gap).toFixed(1)})`);
       }
     }
   }
@@ -768,6 +792,16 @@ function runSelfTest() {
       name: "text gap under threshold fails",
       source: fixture(`<g fill="currentColor"><text x="20" y="60" font-size="20">A</text><text x="39" y="60" font-size="20">B</text></g>`),
       expect: [/A.*B.*required at least/]
+    },
+    {
+      name: "tight aligned vertical stack uses reduced gap threshold",
+      source: fixture(`<g fill="currentColor" text-anchor="middle"><text x="100" y="40" font-size="20">1st</text><text x="100" y="62" font-size="20">digit</text></g>`),
+      expect: []
+    },
+    {
+      name: "offset vertical neighbours keep normal gap threshold",
+      source: fixture(`<g fill="currentColor" text-anchor="middle"><text x="90" y="40" font-size="20">Top</text><text x="112" y="62" font-size="20">Bot</text></g>`),
+      expect: [/Top.*Bot.*required at least.*neighbour/]
     },
     {
       name: "viewBox edge fails",

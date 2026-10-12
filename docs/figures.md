@@ -74,7 +74,7 @@ The check verifies:
 - each SVG filename is a stable id and the root `<svg id>` matches it;
 - SVGs avoid hard-coded hex colours and include `<title>`/`<desc>`;
 - estimated text bounds stay inside the viewBox with a small edge margin;
-- estimated text bounds do not overlap each other and keep at least `0.25 × min(font-size)` clearance;
+- estimated text bounds do not overlap each other; side-by-side or offset labels keep at least `0.25 × min(font-size)` clearance, while aligned vertical stacks may use `0.08 × min(font-size)`;
 - estimated text ink bounds do not intersect stroked `line`, `polyline`, `rect`, `circle`, `ellipse`, or sampled `path` outlines; and
 - generated Apple vector assets are in sync with `content/figures/`.
 
