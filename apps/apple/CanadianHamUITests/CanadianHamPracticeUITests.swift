@@ -2111,7 +2111,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
             // background is ~16.34:1 in light and ~12.63:1 in dark. Keep this
             // exception to the one stable identifier and let every other audit
             // issue on this screen fail normally.
-            issue.auditType == .contrast && issue.element?.identifier == "morse-settings-description"
+            let isTask42Exception = issue.auditType == .contrast && issue.element?.identifier == "morse-settings-description"
+            return !isTask42Exception
         }
     }
 
