@@ -1675,16 +1675,13 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
 
 function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { readonly calculatorState: CalculatorState; readonly interfaceLanguage: InterfaceLanguage; readonly onPressKey: (key: CalculatorKey) => void }) {
   const spokenResult = calculatorState.displayValue.spoken[interfaceLanguage];
-  const calculatorRef = useRef<HTMLElement>(null);
-
-  function pressKey(key: CalculatorKey, focusCalculator: boolean): void {
-    onPressKey(key);
-    if (focusCalculator) {
-      window.setTimeout(() => calculatorRef.current?.focus({ preventScroll: true }), 0);
-    }
-  }
 
   function handleKeyDown(event: KeyboardEvent<HTMLElement>): void {
+    if (event.target instanceof HTMLElement && event.target.closest("button") !== null && event.key === "Enter" && calculatorState.pendingOperator !== null && !calculatorState.awaitingOperand) {
+      event.preventDefault();
+      onPressKey("=");
+      return;
+    }
     const key = calculatorKeyFromKeyboardEvent(event);
     if (key === null) {
       return;
@@ -1694,7 +1691,7 @@ function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { re
   }
 
   return (
-    <section className="calculator-tool" aria-label={t(interfaceLanguage, "calculatorTitle")} data-exam-tool-focus ref={calculatorRef} tabIndex={-1} onKeyDown={handleKeyDown}>
+    <section className="calculator-tool" aria-label={t(interfaceLanguage, "calculatorTitle")} data-exam-tool-focus tabIndex={-1} onKeyDown={handleKeyDown}>
       <p className="calculator-help">{t(interfaceLanguage, "calculatorKeyboardHelp")}</p>
       <output className="calculator-display" aria-live="off" aria-label={t(interfaceLanguage, "calculatorDisplayAria", spokenResult)}>{calculatorState.display}</output>
       <div className="sr-only" aria-live="polite" data-testid="calculator-live-result">{t(interfaceLanguage, "calculatorResultAnnouncement", spokenResult)}</div>
@@ -1705,7 +1702,7 @@ function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { re
             className={key === "=" ? "primary-button" : "secondary-button"}
             key={key}
             type="button"
-            onClick={(event) => pressKey(key, event.detail > 0)}
+            onClick={() => onPressKey(key)}
           >{calculatorKeyVisual(interfaceLanguage, key)}</button>
         )))}
       </div>

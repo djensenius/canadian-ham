@@ -951,7 +951,7 @@ input[type="checkbox"]:checked::after {
   .exam-tool-panel {
     top: var(--ch-space-lg);
     bottom: auto;
-    max-height: calc(100vh - (2 * var(--ch-space-lg)));
+    max-height: calc(100svh - (2 * var(--ch-space-lg)));
     border-radius: var(--ch-radius-lg);
   }
 
@@ -964,6 +964,12 @@ input[type="checkbox"]:checked::after {
   .mock-question-stack {
     display: grid;
     min-width: 0;
+  }
+
+  @media (max-width: 63.999rem) {
+    .exam-tools-shell--mock.exam-tools-shell--open .mock-exam-body {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* At wide widths the navigator is already visible; keep this as a keyboard skip using the visually-hidden-focusable pattern. */

@@ -328,9 +328,27 @@ function webStylesCss(): string {
   return readFileSync(join(dirname(modulePath), "styles.css"), "utf8");
 }
 
-function cssRuleBlock(css: string, selector: string): string {
+function cssRuleBlocks(css: string, selector: string): string[] {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`${escapedSelector}\\s*{(?<block>[\\s\\S]*?)\\n}`).exec(css)?.groups?.block ?? "";
+  const openingPattern = new RegExp(`^(?<indent>\\s*)${escapedSelector}\\s*{\\s*$`);
+  const lines = css.split("\n");
+  const blocks: string[] = [];
+  for (let openingIndex = 0; openingIndex < lines.length; openingIndex += 1) {
+    const openingMatch = openingPattern.exec(lines[openingIndex]!);
+    if (openingMatch === null) {
+      continue;
+    }
+    const indent = openingMatch.groups?.indent ?? "";
+    const closingIndex = lines.findIndex((line, index) => index > openingIndex && line === `${indent}}`);
+    if (closingIndex >= 0) {
+      blocks.push(lines.slice(openingIndex + 1, closingIndex).join("\n"));
+    }
+  }
+  return blocks;
+}
+
+function cssRuleBlock(css: string, selector: string): string {
+  return cssRuleBlocks(css, selector)[0] ?? "";
 }
 
 function extractInlineThemeScript(html: string): string {
@@ -1050,14 +1068,23 @@ describe("App accessibility and flows", () => {
     const seven = screen.getByRole("button", { name: "Digit 7" });
     seven.focus();
     await user.keyboard("{Enter}");
+    assert.equal(document.activeElement, seven);
     assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
-    await user.keyboard("{Escape}");
-    assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
+    await user.keyboard(" ");
+    assert.equal(document.activeElement, seven);
 
     await user.click(screen.getByRole("button", { name: "All clear" }));
-    await user.click(seven);
-    await waitFor(() => assert.equal(document.activeElement, screen.getByRole("region", { name: "Calculator" })));
-    await user.keyboard("+2{Enter}");
+    seven.focus();
+    fireEvent.click(seven, { detail: 1 });
+    assert.equal(document.activeElement, seven);
+    assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
+
+    seven.focus();
+    await user.keyboard("+2");
+    assert.equal(document.activeElement, seven);
+    assert.equal(screen.getByLabelText("Calculator display: 2").textContent, "2");
+    await user.keyboard("{Enter}");
+    assert.equal(document.activeElement, seven);
     assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
 
     const calculator = screen.getByRole("region", { name: "Calculator" });
@@ -1109,15 +1136,18 @@ describe("App accessibility and flows", () => {
 
   it("uses real drawer/side-panel states without reserving an empty tool column and keeps DOM order visual", async () => {
     const css = webStylesCss();
-    const panelRule = cssRuleBlock(css, ".exam-tool-panel");
-    assert.match(panelRule, /position: sticky;/);
-    assert.match(panelRule, /bottom: 0;/);
-    assert.match(panelRule, /max-height: min\(24rem, 48svh\);/);
-    assert.doesNotMatch(cssRuleBlock(css, ".exam-tools-shell--open .exam-tools-content"), /padding-block-end/);
+    const panelRules = cssRuleBlocks(css, ".exam-tool-panel");
+    assert.match(panelRules[0] ?? "", /position: sticky;/);
+    assert.match(panelRules[0] ?? "", /bottom: 0;/);
+    assert.match(panelRules[0] ?? "", /max-height: min\(24rem, 48svh\);/);
+    assert.match(panelRules[1] ?? "", /max-height: calc\(100svh - \(2 \* var\(--ch-space-lg\)\)\);/);
+    assert.equal(cssRuleBlock(css, ".exam-tools-shell--open .exam-tools-content"), "");
     assert.match(cssRuleBlock(css, "html:has(.exam-tools-shell--open)"), /scroll-padding-block-end: calc\(min\(24rem, 48svh\) \+ var\(--ch-space-lg\)\);/);
     assert.match(cssRuleBlock(css, ".exam-tools-shell--practice.exam-tools-shell--open"), /grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 0\.42fr\);/);
     assert.match(cssRuleBlock(css, ".mock-exam-body"), /grid-template-columns: minmax\(0, 1fr\) minmax\(12rem, 0\.3fr\);/);
+    assert.match(cssRuleBlock(css, ".exam-tools-shell--mock.exam-tools-shell--open .mock-exam-body"), /grid-template-columns: 1fr;/);
     assert.doesNotMatch(cssRuleBlock(css, ".mock-exam-body"), /gap:/);
+    assert.match(cssRuleBlocks(css, ".calculator-help").at(-1) ?? "", /display: none;/);
     assert.doesNotMatch(cssRuleBlock(css, ".exam-tools-shell"), /grid-template-columns/);
 
     window.location.hash = "#/practice";
