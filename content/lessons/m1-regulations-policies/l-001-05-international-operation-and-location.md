@@ -71,7 +71,7 @@ Alt text: A travel-operating checklist beside a simplified world map divided int
 Text equivalent:
 - The travel desk card says radio pass.
 - The checklist labels are message, location, and ID format.
-- The ITU map is divided; labels below it show R2 on the west side, R1 in the middle, and R3 east on the east side.
+- The ITU map is divided; labels below it show R2 west, R1, and R3.
 - Location checks branch to labelled US and CEPT cards.
 ::
 

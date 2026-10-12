@@ -111,10 +111,10 @@ By the end of this lesson, you can:
 ::figure communications-flowchart
 Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
 Text equivalent:
-- The lane labelled interf has listen, then change/stop.
+- The lane labelled interf has listen followed by change/stop.
 - The distress lane has exception, then stand by.
 - The 3rd party lane has personal, then supervised.
-- A clock is labelled ID 30.
+- A clock is labelled ID 30 min.
 ::
 
 ## How these rules fit together

@@ -81,7 +81,7 @@ By the end of this lesson, you can:
 ::figure antenna-rf-emc-checklists
 Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.
 Text equivalent:
-- Consultation panel: house, separate mast, neigh, and folder.
+- Consultation panel: house, separate mast, nearby person, and folder.
 - RF exposure panel: antenna, keep-clear circle, person outside, and labels P, gain, dist, freq, and clear.
 - EMC check panel: TX, sig, meter, home, and ctrl.
 ::

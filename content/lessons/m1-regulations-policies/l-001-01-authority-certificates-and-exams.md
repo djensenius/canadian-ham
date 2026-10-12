@@ -98,7 +98,7 @@ By the end of this lesson, you can:
 Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.
 Text equivalent:
 - The drawing stacks Act, Regulations, ISED standards, and cert + call sign.
-- An address card branches to two labelled exam boxes: ISED and examiner.
+- A separate address card says address and 30 days; an exam paths card branches to ISED and examiner.
 ::
 
 ## How these rules fit together

@@ -106,7 +106,7 @@ By the end of this lesson, you can:
 Alt text: A station-control decision tree showing authorization, service boundary, message purpose, and supervision.
 Text equivalent:
 - The vertical flow is auth, service, purpose, and control op.
-- The side labels are licence, non-commercial open messages, and supervision at control point.
+- The side labels are own licence, non-commercial open messages, and qualified supervision.
 ::
 
 ## How these rules fit together

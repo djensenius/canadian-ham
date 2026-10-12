@@ -1,29 +1,30 @@
 <svg id="station-control-decision-tree" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
   <title>Station control decision tree</title>
-  <desc>Flow checks auth, service, purpose, and control operator with side reminders.</desc>
+  <desc>Flow checks authorization, service, purpose, and control operator with side reminders.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="52" y="44" width="210" height="58" rx="14" ry="14" stroke-width="6"/>
-    <rect x="52" y="128" width="210" height="58" rx="14" ry="14" stroke-width="6"/>
-    <rect x="52" y="212" width="210" height="58" rx="14" ry="14" stroke-width="6"/>
-    <rect x="52" y="296" width="210" height="58" rx="14" ry="14" stroke-width="6"/>
-    <line x1="157" y1="102" x2="157" y2="128" stroke-width="5"/><polygon points="157,128 145,110 169,110" fill="currentColor" stroke="none"/>
-    <line x1="157" y1="186" x2="157" y2="212" stroke-width="5"/><polygon points="157,212 145,194 169,194" fill="currentColor" stroke="none"/>
-    <line x1="157" y1="270" x2="157" y2="296" stroke-width="5"/><polygon points="157,296 145,278 169,278" fill="currentColor" stroke="none"/>
-    <rect x="382" y="114" width="186" height="58" rx="14" ry="14" stroke-width="6"/>
-    <line x1="262" y1="157" x2="382" y2="143" stroke-width="5"/><polygon points="382,143 361,135 364,159" fill="currentColor" stroke="none"/>
-    <rect x="360" y="220" width="210" height="78" rx="16" ry="16" stroke-width="6"/>
-    <path d="M386 260 C416 236 446 236 476 260" stroke-width="5"/>
-    <circle cx="522" cy="260" r="24" stroke-width="5"/>
-    <line x1="262" y1="325" x2="360" y2="260" stroke-width="5"/>
+    <rect x="52" y="44" width="220" height="58" rx="14" ry="14" stroke-width="6"/>
+    <rect x="52" y="128" width="220" height="58" rx="14" ry="14" stroke-width="6"/>
+    <rect x="52" y="212" width="220" height="58" rx="14" ry="14" stroke-width="6"/>
+    <rect x="52" y="296" width="220" height="58" rx="14" ry="14" stroke-width="6"/>
+    <line x1="162" y1="102" x2="162" y2="128" stroke-width="5"/><polygon points="162,128 150,110 174,110" fill="currentColor" stroke="none"/>
+    <line x1="162" y1="186" x2="162" y2="212" stroke-width="5"/><polygon points="162,212 150,194 174,194" fill="currentColor" stroke="none"/>
+    <line x1="162" y1="270" x2="162" y2="296" stroke-width="5"/><polygon points="162,296 150,278 174,278" fill="currentColor" stroke="none"/>
+    <rect x="382" y="68" width="194" height="58" rx="14" ry="14" stroke-width="6"/>
+    <line x1="272" y1="73" x2="382" y2="96" stroke-width="5"/><polygon points="382,96 360,82 355,106" fill="currentColor" stroke="none"/>
+    <rect x="350" y="206" width="244" height="76" rx="16" ry="16" stroke-width="6"/>
+    <line x1="272" y1="241" x2="350" y2="241" stroke-width="5"/><polygon points="350,241 330,229 330,253" fill="currentColor" stroke="none"/>
+    <rect x="350" y="326" width="244" height="76" rx="16" ry="16" stroke-width="6"/>
+    <line x1="272" y1="325" x2="350" y2="364" stroke-width="5"/><polygon points="350,364 328,363 339,342" fill="currentColor" stroke="none"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="157" y="82" font-size="24" font-weight="700">auth</text>
-    <text x="157" y="166" font-size="24" font-weight="700">service</text>
-    <text x="157" y="250" font-size="24" font-weight="700">purpose</text>
-    <text x="157" y="334" font-size="24" font-weight="700">control op</text>
-    <text x="475" y="152" font-size="24">licence</text>
-    <text x="465" y="332" font-size="24">non-commercial</text>
-    <text x="465" y="362" font-size="24">open messages</text>
-    <text x="300" y="404" font-size="24">supervision at control point</text>
+    <text x="162" y="82" font-size="24" font-weight="700">auth</text>
+    <text x="162" y="166" font-size="24" font-weight="700">service</text>
+    <text x="162" y="250" font-size="24" font-weight="700">purpose</text>
+    <text x="162" y="334" font-size="24" font-weight="700">control op</text>
+    <text x="479" y="106" font-size="24">own licence</text>
+    <text x="472" y="238" font-size="24">non-commercial</text>
+    <text x="472" y="266" font-size="24">open messages</text>
+    <text x="472" y="358" font-size="24">qualified</text>
+    <text x="472" y="386" font-size="24">supervision</text>
   </g>
 </svg>
