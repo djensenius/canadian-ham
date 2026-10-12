@@ -379,6 +379,9 @@ struct PracticeSessionView: View {
     let headerAccessory: AnyView?
     let onDataChanged: () -> Void
 
+    @State private var selectedExamTool: ExamTool?
+    @StateObject private var calculatorViewModel = ExamCalculatorViewModel()
+
     init(
         bank: QuestionBank,
         progressStore: ProgressStoreService,
@@ -402,33 +405,47 @@ struct PracticeSessionView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if let headerAccessory {
-                    headerAccessory
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    if let headerAccessory {
+                        headerAccessory
+                    }
+                    header
+                    if let errorMessage = state.errorMessage {
+                        MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
+                    } else if hasStalePracticeMode {
+                        ProgressView()
+                            .controlSize(.large)
+                            .accessibilityLabel(Text("Practice")) // l10n: localized
+                            .frame(maxWidth: .infinity, minHeight: 160)
+                    } else if state.items.isEmpty {
+                        ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage)) // l10n: localized
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                    } else if state.reviewSubmitted {
+                        practiceReview
+                    } else {
+                        questionView(state.items[state.currentIndex])
+                    }
                 }
-                header
-                if let errorMessage = state.errorMessage {
-                    MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
-                } else if hasStalePracticeMode {
-                    ProgressView()
-                        .controlSize(.large)
-                        .accessibilityLabel(Text("Practice")) // l10n: localized
-                        .frame(maxWidth: .infinity, minHeight: 160)
-                } else if state.items.isEmpty {
-                    ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage)) // l10n: localized
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                } else if state.reviewSubmitted {
-                    practiceReview
-                } else {
-                    questionView(state.items[state.currentIndex])
+                .padding(.bottom, selectedExamTool == nil ? 0 : 440)
+                .pagePadding()
+            }
+            .background(DesignTokens.Colors.paper)
+            .onChange(of: selectedExamTool) { _, next in
+                guard next != nil else { return }
+                DispatchQueue.main.async {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        proxy.scrollTo("practice-answers-anchor", anchor: .top)
+                    }
                 }
             }
-            .pagePadding()
         }
-        .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
+        .onAppear { calculatorViewModel.updateLocale(language.calculatorLocale) }
+        .onChange(of: language) { _, next in calculatorViewModel.updateLocale(next.calculatorLocale) }
     }
 
     private var header: some View {
@@ -522,6 +539,7 @@ struct PracticeSessionView: View {
         let question = item.question
         let selected = state.selectedByQuestionId[question.id]
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            ExamToolButtons { selectedExamTool = $0 }
             QuestionCard(question: question, language: language)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Answers")
@@ -529,6 +547,7 @@ struct PracticeSessionView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("answers-title")
+                    .id("practice-answers-anchor")
                 ForEach(Array(item.choicePermutation.enumerated()), id: \.offset) { displayIndex, sourceIndex in
                     if let answer = question.answers.first(where: { $0.sourceIndex == sourceIndex }) {
                         AnswerChoiceButton(
@@ -635,6 +654,8 @@ struct PracticeSessionView: View {
             state.answeredCount = 0
             state.correctCount = 0
             state.errorMessage = nil
+            selectedExamTool = nil
+            calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             state.items = []
@@ -818,6 +839,8 @@ struct MockExamView: View {
     @State private var isSubmitting = false
     @State private var showingNavigator = false
     @State private var shouldFocusResultsHeading = false
+    @State private var selectedExamTool: ExamTool?
+    @StateObject private var calculatorViewModel = ExamCalculatorViewModel()
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -828,24 +851,36 @@ struct MockExamView: View {
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if let result = state.result {
-                    examResults(result)
-                } else if state.generatedItems.isEmpty {
-                    startCard
-                } else if let currentItem = state.generatedItems[safe: state.currentIndex], let question = bank.question(id: currentItem.questionId) {
-                    examQuestion(item: currentItem, question: question)
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    if let result = state.result {
+                        examResults(result)
+                    } else if state.generatedItems.isEmpty {
+                        startCard
+                    } else if let currentItem = state.generatedItems[safe: state.currentIndex], let question = bank.question(id: currentItem.questionId) {
+                        examQuestion(item: currentItem, question: question)
+                    }
+                    if let errorMessage = state.errorMessage {
+                        MessagePanel(title: "Mock exam unavailable", message: errorMessage, kind: .warning)
+                    }
                 }
-                if let errorMessage = state.errorMessage {
-                    MessagePanel(title: "Mock exam unavailable", message: errorMessage, kind: .warning)
+                .padding(.bottom, selectedExamTool == nil ? 0 : 440)
+                .pagePadding()
+            }
+            .id(state.result?.id ?? "mock-exam-active")
+            .background(DesignTokens.Colors.paper)
+            .onChange(of: selectedExamTool) { _, next in
+                guard next != nil else { return }
+                DispatchQueue.main.async {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        proxy.scrollTo("mock-answers-anchor", anchor: .top)
+                    }
                 }
             }
-            .pagePadding()
         }
-        .id(state.result?.id ?? "mock-exam-active")
-        .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel)
         .sheet(isPresented: $showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 navigator
@@ -857,7 +892,10 @@ struct MockExamView: View {
             .pagePadding()
             .background(DesignTokens.Colors.paper)
         }
-        .onAppear { refreshForCurrentTimerState() }
+        .onAppear {
+            calculatorViewModel.updateLocale(language.calculatorLocale)
+            refreshForCurrentTimerState()
+        }
         .task(id: localDataReplacementRevision) { resetIfLocalDataWasReplaced() }
         .onReceive(timer) { _ in
             refreshForCurrentTimerState()
@@ -913,6 +951,8 @@ struct MockExamView: View {
             }
             .paperCard()
 
+            ExamToolButtons { selectedExamTool = $0 }
+
             QuestionCard(question: question, language: language)
                 .accessibilityAction(named: Text("Next unanswered")) {
                     jumpToNextUnanswered()
@@ -925,6 +965,8 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("mock-answers-title")
+                    .id("mock-answers-anchor")
                 ForEach(Array(item.choicePermutation.enumerated()), id: \.offset) { displayIndex, sourceIndex in
                     if let answer = question.answers.first(where: { $0.sourceIndex == sourceIndex }) {
                         AnswerChoiceButton(
@@ -1267,8 +1309,10 @@ struct MockExamView: View {
         confirmingSubmit = false
         confirmingEndExam = false
         showingNavigator = false
+        selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
+        calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
     }
 
     private func refreshForCurrentTimerState(now: Date = Date()) {
@@ -1317,6 +1361,8 @@ struct MockExamView: View {
             state.loadedLocalDataReplacementRevision = localDataReplacementRevision
             state.result = nil
             state.errorMessage = nil
+            selectedExamTool = nil
+            calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -1387,8 +1433,10 @@ struct MockExamView: View {
         confirmingSubmit = false
         confirmingEndExam = false
         showingNavigator = false
+        selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
+        calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
     }
 }
 

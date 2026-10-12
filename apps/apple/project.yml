@@ -20,6 +20,8 @@ packages:
     path: ../../packages/content-swift
   CanadianHamMorseEngine:
     path: ../../packages/morse-swift
+  CanadianHamCalculatorEngine:
+    path: ../../packages/calculator-swift
 settings:
   base:
     CURRENT_PROJECT_VERSION: 1
@@ -119,6 +121,16 @@ targets:
           cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/subsections.json" "${advanced_destination}/subsections.json"
           cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/categories.json" "${advanced_destination}/categories.json"
           cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/manifest.json" "${advanced_destination}/manifest.json"
+      - name: Copy optional Basic reference sheet
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          source="${SRCROOT}/../../content/reference-sheet/basic.md"
+          if [ -f "${source}" ]; then
+            destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/reference-sheet"
+            mkdir -p "${destination}"
+            cp "${source}" "${destination}/basic.md"
+          fi
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
@@ -126,6 +138,8 @@ targets:
         product: CanadianHamContent
       - package: CanadianHamMorseEngine
         product: CanadianHamMorseEngine
+      - package: CanadianHamCalculatorEngine
+        product: CanadianHamCalculatorEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.davidjensenius.CanadianHam
@@ -169,6 +183,7 @@ targets:
       - path: CanadianHam/Services/AppleStudyEngine.swift
       - path: CanadianHam/Models/ProgressModels.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/ExamTools/ExamToolModels.swift
       - path: ../../content/lessons
         type: folder
         buildPhase: resources
@@ -186,6 +201,10 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
       - path: ../../fixtures/morse/course.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: CanadianHamTests/Fixtures/basic-reference-sheet.md
         type: file
         buildPhase: resources
         createIntermediateGroups: false
@@ -243,6 +262,8 @@ targets:
         product: CanadianHamContent
       - package: CanadianHamMorseEngine
         product: CanadianHamMorseEngine
+      - package: CanadianHamCalculatorEngine
+        product: CanadianHamCalculatorEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.davidjensenius.CanadianHam.tests
