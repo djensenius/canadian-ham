@@ -42,9 +42,8 @@ export const enMessages = defineMessages({
   englishOnlyLessonNotice: "Lesson available in English only.",
   englishOnlyExplanationNotice: "Explanation available in English only.",
   englishOnlyContentNotice: "Content available in English only.",
-  languageQuestionLegend: "Question language",
-  languageQuestionAria: "Question language",
-  languageInterfaceLegend: "Interface language",
+  languageSettingLegend: "Language",
+  languageSystemDefault: "System default",
   languageEnglish: "English",
   languageFrench: "Français",
   courseSwitcherAria: "Course selection",
@@ -283,9 +282,9 @@ export const enMessages = defineMessages({
   resetComplete: "All local data was reset.",
   errorReset: (error: string) => `Unable to reset local progress: ${error}`,
   themeSaved: (theme: string) => `Theme preference saved: ${theme}.`,
-  interfaceLanguageSaved: (language: string) => `Interface language saved: ${language}.`,
+  languageSaved: (language: string) => `Language preference saved: ${language}.`,
   errorThemeSave: (error: string) => `Unable to save theme preference: ${error}`,
-  errorInterfaceLanguageSave: (error: string) => `Unable to save interface language: ${error}`,
+  errorLanguageSave: (error: string) => `Unable to save language preference: ${error}`,
   morseSectionTitle: "Morse",
   previewLabel: "Preview",
   morseSectionIntro: "Learn and practise Morse code offline. The Koch course, copy practice, and simulated exam are available below.",
@@ -486,9 +485,8 @@ export const frMessages = defineMessages({
   englishOnlyLessonNotice: "Leçon offerte en anglais seulement.",
   englishOnlyExplanationNotice: "Explication offerte en anglais seulement.",
   englishOnlyContentNotice: "Contenu offert en anglais seulement.",
-  languageQuestionLegend: "Langue des questions",
-  languageQuestionAria: "Langue des questions",
-  languageInterfaceLegend: "Langue de l’interface",
+  languageSettingLegend: "Langue",
+  languageSystemDefault: "Réglage du système",
   languageEnglish: "English",
   languageFrench: "Français",
   courseSwitcherAria: "Sélection du cours",
@@ -727,9 +725,9 @@ export const frMessages = defineMessages({
   resetComplete: "Toutes les données locales ont été réinitialisées.",
   errorReset: (error: string) => `Impossible de réinitialiser la progression locale : ${error}`,
   themeSaved: (theme: string) => `Préférence de thème enregistrée : ${theme}.`,
-  interfaceLanguageSaved: (language: string) => `Langue de l’interface enregistrée : ${language}.`,
+  languageSaved: (language: string) => `Préférence de langue enregistrée : ${language}.`,
   errorThemeSave: (error: string) => `Impossible d’enregistrer la préférence de thème : ${error}`,
-  errorInterfaceLanguageSave: (error: string) => `Impossible d’enregistrer la langue de l’interface : ${error}`,
+  errorLanguageSave: (error: string) => `Impossible d’enregistrer la préférence de langue : ${error}`,
   morseSectionTitle: "Morse",
   previewLabel: "Aperçu",
   morseSectionIntro: "Apprenez le code Morse et exercez-vous hors ligne. Le cours Koch, la copie et l’examen simulé sont offerts ci-dessous.",
@@ -922,28 +920,36 @@ export function interfaceLanguageTag(language: InterfaceLanguage): "en-CA" | "fr
   return language === "fr" ? "fr-CA" : "en-CA";
 }
 
-export function readStoredInterfaceLanguage(): InterfaceLanguage {
-  const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
-  if (isInterfaceLanguage(storedLanguage)) {
-    return storedLanguage;
+// localStorage is only a fast-start mirror of the IndexedDB preference; every
+// operation is guarded because getItem/setItem/removeItem can throw in private
+// or hardened browser contexts (as lib/theme.ts also handles).
+export function readStoredInterfaceLanguageOverride(): InterfaceLanguage | null {
+  try {
+    const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
+    return isInterfaceLanguage(storedLanguage) ? storedLanguage : null;
+  } catch {
+    return null;
   }
-  return navigatorLanguageStartsWithFrench() ? "fr" : "en";
 }
 
-export function storeInterfaceLanguage(language: InterfaceLanguage): void {
-  safeLocalStorage()?.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+export function mirrorStoredInterfaceLanguagePreference(language: InterfaceLanguage | "system"): void {
+  if (language === "system") {
+    clearStoredInterfaceLanguage();
+    return;
+  }
+  try {
+    safeLocalStorage()?.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+  } catch {
+    // The IndexedDB preference is authoritative; a failed mirror only costs a brief flash on next load.
+  }
 }
 
 export function clearStoredInterfaceLanguage(): void {
-  safeLocalStorage()?.removeItem(INTERFACE_LANGUAGE_STORAGE_KEY);
-}
-
-function navigatorLanguageStartsWithFrench(): boolean {
-  if (typeof navigator === "undefined") {
-    return false;
+  try {
+    safeLocalStorage()?.removeItem(INTERFACE_LANGUAGE_STORAGE_KEY);
+  } catch {
+    // See mirrorStoredInterfaceLanguagePreference.
   }
-  const preferredLanguage = navigator.language || navigator.languages?.[0] || "";
-  return preferredLanguage.toLowerCase().startsWith("fr");
 }
 
 function safeLocalStorage(): Storage | null {

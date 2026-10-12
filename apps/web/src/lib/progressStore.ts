@@ -1,7 +1,7 @@
 import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import { type MorseCourseProgressExport } from "@canadian-ham/morse-engine";
 
-import { basicBank, bankDataForId, DEFAULT_BANK_ID, isCourseBankId, type BankData, type CourseBankId } from "../data/bank";
+import { basicBank, bankDataForId, DEFAULT_BANK_ID, isCourseBankId, type BankData, type CourseBankId, type Language } from "../data/bank";
 import { defaultMorsePreferences, normalizeMorsePreferences, type WebMorsePreferences } from "./morseSettings";
 import { lessonsById } from "../data/lessons";
 import { lessonQuizzesById } from "../data/quizzes";
@@ -9,10 +9,12 @@ import { lessonQuizzesById } from "../data/quizzes";
 export type PracticeMode = "immediate" | "review-later";
 export type ReadinessPreference = "not-enough-data" | "needs-review" | "pass-ready" | "honours-ready";
 export type ThemePreference = "system" | "light" | "dark";
+export type LanguagePreference = "system" | Language;
 
 export interface WebPreferences {
   readonly practiceMode: PracticeMode;
   readonly examTimerEnabled: boolean;
+  readonly language: LanguagePreference;
   readonly theme: ThemePreference;
   readonly activeBankId: CourseBankId;
   readonly morse: WebMorsePreferences;
@@ -124,6 +126,7 @@ export interface ImportValidationResult {
 export const defaultPreferences: WebPreferences = {
   practiceMode: "immediate",
   examTimerEnabled: false,
+  language: "system",
   theme: "system",
   activeBankId: DEFAULT_BANK_ID,
   morse: defaultMorsePreferences,
@@ -744,6 +747,7 @@ function normalizePreferences(value: unknown): WebPreferences {
   return {
     practiceMode: value.practiceMode === "review-later" ? "review-later" : "immediate",
     examTimerEnabled: typeof value.examTimerEnabled === "boolean" ? value.examTimerEnabled : defaultPreferences.examTimerEnabled,
+    language: value.language === "en" || value.language === "fr" || value.language === "system" ? value.language : defaultPreferences.language,
     theme: value.theme === "light" || value.theme === "dark" || value.theme === "system" ? value.theme : defaultPreferences.theme,
     activeBankId: isCourseBankId(value.activeBankId) ? value.activeBankId : defaultPreferences.activeBankId,
     morse: normalizeMorsePreferences(isRecord(value.morse) ? value.morse : undefined),
@@ -754,6 +758,7 @@ function isPreferences(value: unknown): value is WebPreferences {
   return isRecord(value)
     && (value.practiceMode === "immediate" || value.practiceMode === "review-later")
     && typeof value.examTimerEnabled === "boolean"
+    && (value.language === undefined || value.language === "system" || value.language === "en" || value.language === "fr")
     && (value.theme === undefined || value.theme === "system" || value.theme === "light" || value.theme === "dark")
     && (value.activeBankId === undefined || isCourseBankId(value.activeBankId))
     && (value.morse === undefined || isMorsePreferences(value.morse));

@@ -271,7 +271,7 @@ enum CanadianHamProgressSchemaV3: VersionedSchema {
         var key: String = defaultKey
         var practiceMode: String = "immediate"
         var examTimerEnabled: Bool = false
-        var language: String = "en"
+        var language: String = "system"
         var theme: String = "system"
         var archivedLessonProgressData: Data = Data("[]".utf8)
         var archivedLessonQuizAttemptsData: Data = Data("[]".utf8)

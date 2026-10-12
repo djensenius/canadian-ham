@@ -119,21 +119,22 @@ final class ProgressStoreTests: XCTestCase {
 
     @MainActor
     func testResetAllDataTurnsICloudSyncOptInOff() throws {
-        let store = try ProgressStoreService.inMemoryForTests()
-        defer { ICloudSyncSettings.clearStoredOptIn() }
-        store.updateICloudSyncOptIn(true)
-        XCTAssertTrue(ICloudSyncSettings.storedOptIn())
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "resetOptIn")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        store.updateICloudSyncOptIn(true, defaults: defaults)
+        XCTAssertTrue(ICloudSyncSettings.storedOptIn(defaults: defaults))
 
 #if ICLOUD_SYNC
-        XCTAssertThrowsError(try store.resetAllData()) { error in
+        XCTAssertThrowsError(try store.resetAllData(defaults: defaults)) { error in
             XCTAssertEqual(error as? ProgressStoreError, .cloudResetRequiresAsyncDeletion)
         }
-        XCTAssertTrue(ICloudSyncSettings.storedOptIn(), "Gated builds must use the cloud deletion reset flow before clearing opt-in")
+        XCTAssertTrue(ICloudSyncSettings.storedOptIn(defaults: defaults), "Gated builds must use the cloud deletion reset flow before clearing opt-in")
         XCTAssertTrue(store.isICloudSyncEnabled)
 #else
-        try store.resetAllData()
+        try store.resetAllData(defaults: defaults)
 
-        XCTAssertFalse(ICloudSyncSettings.storedOptIn(), "Reset all data must turn the iCloud opt-in off")
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults), "Reset all data must turn the iCloud opt-in off")
         XCTAssertFalse(store.isICloudSyncEnabled)
 #endif
     }
@@ -794,7 +795,9 @@ final class ProgressStoreTests: XCTestCase {
                 return try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: enabled, layout: .split, localDeviceID: "device").container
             },
             startICloudMonitoring: false,
-            localDeviceID: "device"
+            localDeviceID: "device",
+            defaults: defaults,
+            defaultsDomainName: defaultsSuiteName
         )
         let record = QuestionProgressRecord(
             questionId: "B-001-001-001",
@@ -891,7 +894,7 @@ final class ProgressStoreTests: XCTestCase {
     func testDefaultLayoutResetDoesNotWriteGatedLegacyCopyMarker() throws {
         let directory = try temporaryProgressStoreDirectory()
         let urls = ProgressStoreURLs(progressDirectory: directory)
-        let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+        let store = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
 
         try store.resetAllData()
 
@@ -903,7 +906,7 @@ final class ProgressStoreTests: XCTestCase {
         let urls = ProgressStoreURLs(progressDirectory: directory)
         try Data("not a swiftdata store".utf8).write(to: urls.persistentStoreURL)
 
-        _ = try? ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+        _ = try? openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
 
         XCTAssertFalse(FileManager.default.fileExists(atPath: urls.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)))
     }
@@ -912,18 +915,18 @@ final class ProgressStoreTests: XCTestCase {
         let directory = try temporaryProgressStoreDirectory()
         let urls = ProgressStoreURLs(progressDirectory: directory)
         do {
-            let legacyStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+            let legacyStore = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
             var preferences = legacyStore.preferences
             preferences.practiceMode = .immediate
             preferences.examTimerEnabled = false
             preferences.theme = .system
             try legacyStore.updatePreferences(preferences)
         }
-        _ = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+        _ = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
         XCTAssertTrue(FileManager.default.fileExists(atPath: urls.preferencesStoreURL.path(percentEncoded: false)))
         try FileManager.default.removeItem(at: urls.legacyPreferencesCopyMarkerURL)
         do {
-            let legacyStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+            let legacyStore = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
             var preferences = legacyStore.preferences
             preferences.practiceMode = .reviewLater
             preferences.examTimerEnabled = true
@@ -931,7 +934,7 @@ final class ProgressStoreTests: XCTestCase {
             try legacyStore.updatePreferences(preferences)
         }
 
-        let retriedStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+        let retriedStore = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
 
         XCTAssertEqual(retriedStore.preferences.practiceMode, .reviewLater)
         XCTAssertTrue(retriedStore.preferences.examTimerEnabled)
@@ -943,6 +946,8 @@ final class ProgressStoreTests: XCTestCase {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let directory = try temporaryProgressStoreDirectory()
         let urls = ProgressStoreURLs(progressDirectory: directory)
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "splitStore")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
         let record = QuestionProgressRecord(
             questionId: "B-001-001-001",
             bankId: bank.manifest.bankId,
@@ -970,7 +975,7 @@ final class ProgressStoreTests: XCTestCase {
         )
 
         do {
-            let legacyStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+            let legacyStore = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore, defaults: defaults, defaultsDomainName: suiteName)
             try legacyStore.saveQuestionProgress([record])
             try legacyStore.saveExamAttempt(attempt)
             var preferences = legacyStore.preferences
@@ -984,7 +989,7 @@ final class ProgressStoreTests: XCTestCase {
         }
 
         do {
-            let splitStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+            let splitStore = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .split, defaults: defaults, defaultsDomainName: suiteName)
             XCTAssertEqual(try splitStore.questionProgressRecords(), [record])
             XCTAssertEqual(try splitStore.examAttempts(), [attempt])
             XCTAssertEqual(splitStore.preferences.practiceMode, .reviewLater)
@@ -996,14 +1001,14 @@ final class ProgressStoreTests: XCTestCase {
         }
 
         do {
-            let reopenedSplitStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+            let reopenedSplitStore = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .split, defaults: defaults, defaultsDomainName: suiteName)
             XCTAssertEqual(try reopenedSplitStore.questionProgressRecords(), [record])
             XCTAssertEqual(try reopenedSplitStore.lessonProgressRecords(), [lessonProgress])
             XCTAssertEqual(try reopenedSplitStore.lessonQuizAttempts(), [lessonQuizAttempt])
             try reopenedSplitStore.resetAllData()
         }
 
-        let afterResetReopen = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+        let afterResetReopen = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .split, defaults: defaults, defaultsDomainName: suiteName)
         XCTAssertEqual(try afterResetReopen.questionProgressRecords(), [])
         XCTAssertEqual(try afterResetReopen.examAttempts(), [])
         XCTAssertEqual(afterResetReopen.preferences, .default)
@@ -1013,7 +1018,9 @@ final class ProgressStoreTests: XCTestCase {
 
 #if os(macOS)
     func testNativeSettingsGeneralBindingsUpdatePracticePreferences() throws {
-        let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "nativeSettings")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
         var saveCount = 0
         var failedError: Error?
         let bindings = NativeSettingsPreferenceBindings(
@@ -1024,10 +1031,12 @@ final class ProgressStoreTests: XCTestCase {
 
         bindings.practiceMode.wrappedValue = .reviewLater
         bindings.examTimerEnabled.wrappedValue = true
+        bindings.language.wrappedValue = .french
 
         XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
         XCTAssertTrue(store.preferences.examTimerEnabled)
-        XCTAssertEqual(saveCount, 2)
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(saveCount, 3)
         XCTAssertNil(failedError)
     }
 
@@ -1070,9 +1079,295 @@ final class ProgressStoreTests: XCTestCase {
         cancellable.cancel()
     }
 
+    func testFreshInstallDefaultsLanguageToSystem() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "freshLanguage")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+
+        XCTAssertEqual(store.preferences.language, .system)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+    }
+
+    func testLegacyStoredEnglishLanguageMigratesToSystemOnceAndDoesNotRerun() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "legacyEnglish")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.english.rawValue)
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+
+        XCTAssertEqual(store.preferences.language, .system)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+
+        var preferences = store.preferences
+        preferences.language = .english
+        try store.updatePreferences(preferences)
+        let reopened = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+
+        XCTAssertEqual(reopened.preferences.language, .english)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["en"])
+    }
+
+    func testLegacyStoredFrenchLanguageStaysFrenchAndAppliesInterfaceLanguageOnce() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "legacyFrench")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.french.rawValue)
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+
+        XCTAssertEqual(store.preferences.language, .french)
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+#else
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+#endif
+    }
+
+    func testLaunchAdoptsExternalAppleLanguagesSelectionIntoStoredPreference() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "adoptAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(["fr-CA"], forKey: "AppleLanguages")
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr-CA"])
+#else
+        XCTAssertEqual(store.preferences.language, .system)
+#endif
+    }
+
+    func testLaunchKeepsPreferenceWhenAppleLanguagesMatchesLastAppliedValue() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "unchangedAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        ProgressStoreService.applyInterfaceLanguagePreference(.french, defaults: defaults)
+        let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.french.rawValue)
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+
+        XCTAssertEqual(store.preferences.language, .french)
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+#else
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+#endif
+    }
+
+    func testPickerChangeWritesAppleLanguagesButUnchangedPreferencesDoNotRewriteIt() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "pickerAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+
+        var preferences = store.preferences
+        preferences.language = .french
+        try store.updatePreferences(preferences)
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+#else
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+#endif
+
+        preferences.practiceMode = .reviewLater
+        defaults.set(["en"], forKey: "AppleLanguages")
+        try store.updatePreferences(preferences)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["en"])
+    }
+
+    func testResetClearsAppleLanguagesAndLanguagePreference() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "resetAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        var preferences = store.preferences
+        preferences.language = .french
+        try store.updatePreferences(preferences)
+
+        try store.resetAllData(defaults: defaults)
+
+        XCTAssertEqual(store.preferences.language, .system)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+        XCTAssertEqual(storedAppleLanguageLastApplied(defaults: defaults, domainName: suiteName), ApplePreferences.LanguagePreference.system.rawValue)
+    }
+
+    func testResetFailureKeepsPreviousAppleLanguagesAndPreference() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "resetFailureLanguage")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        var preferences = store.preferences
+        preferences.language = .french
+        try store.updatePreferences(preferences)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+
+        store.failNextResetAfterPreferenceDeleteForTesting = true
+        XCTAssertThrowsError(try store.resetAllData(defaults: defaults)) { error in
+            XCTAssertEqual(error as? ProgressStoreInjectedFailure, .resetAfterPreferenceDelete)
+        }
+
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+        XCTAssertEqual(storedAppleLanguageLastApplied(defaults: defaults, domainName: suiteName), ApplePreferences.LanguagePreference.french.rawValue)
+    }
+
+    func testLaunchAdoptsRemovedAppleLanguagesKeyAsSystemDefault() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "removedAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        var preferences = store.preferences
+        preferences.language = .french
+        try store.updatePreferences(preferences)
+        defaults.removeObject(forKey: "AppleLanguages")
+
+        let reopened = try ProgressStoreService(
+            container: store.container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+
+        XCTAssertEqual(reopened.preferences.language, .system)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+        XCTAssertEqual(storedAppleLanguageLastApplied(defaults: defaults, domainName: suiteName), ApplePreferences.LanguagePreference.system.rawValue)
+    }
+
+    func testLaunchIgnoresRegisteredAppleLanguagesValue() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "registeredAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.register(defaults: ["AppleLanguages": ["fr"]])
+
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+
+        XCTAssertEqual(store.preferences.language, .system)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+        XCTAssertEqual(storedAppleLanguageLastApplied(defaults: defaults, domainName: suiteName), ApplePreferences.LanguagePreference.system.rawValue)
+    }
+
+    func testLegacyStoredFrenchAdoptsExistingPersistentAppleLanguagesInsteadOfOverwriting() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "legacyFrenchExistingAppleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(["en-CA"], forKey: "AppleLanguages")
+        let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.french.rawValue)
+
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+
+        XCTAssertEqual(store.preferences.language, .english)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["en-CA"])
+        XCTAssertEqual(storedAppleLanguageLastApplied(defaults: defaults, domainName: suiteName), ApplePreferences.LanguagePreference.english.rawValue)
+    }
+
+    func testImportWritesAppleLanguagesToInjectedDefaultsWhenLanguageChanges() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "importLanguage")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+
+        try store.importData(emptyProgressExport(bank: bank, language: .french), bank: bank)
+
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+        XCTAssertEqual(storedAppleLanguageLastApplied(defaults: defaults, domainName: suiteName), ApplePreferences.LanguagePreference.french.rawValue)
+    }
+
+    func testImportKeepsPersistedAppleLanguagesWhenLanguageDoesNotChange() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "importUnchangedLanguage")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        var preferences = store.preferences
+        preferences.language = .french
+        try store.updatePreferences(preferences)
+        defaults.set(["fr-CA"], forKey: "AppleLanguages")
+
+        try store.importData(emptyProgressExport(bank: bank, language: .french), bank: bank)
+
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr-CA"])
+        XCTAssertEqual(storedAppleLanguageLastApplied(defaults: defaults, domainName: suiteName), ApplePreferences.LanguagePreference.french.rawValue)
+    }
+
+    func testInMemoryLanguageOperationsDoNotMutateStandardLanguageDefaults() throws {
+        let before = standardLanguageDefaultsSnapshot()
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+
+        var preferences = store.preferences
+        preferences.language = .french
+        try store.updatePreferences(preferences)
+        try store.importData(emptyProgressExport(bank: bank, language: .english), bank: bank)
+        XCTAssertEqual(standardLanguageDefaultsSnapshot(), before)
+        try store.resetAllData()
+        XCTAssertEqual(standardLanguageDefaultsSnapshot(), before)
+        preferences = store.preferences
+        preferences.language = .english
+        try store.updatePreferences(preferences)
+        XCTAssertEqual(standardLanguageDefaultsSnapshot(), before)
+    }
+
+    func testLegacyLanguageMigrationSaveFailureDoesNotBlockStartupAndRetries() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "legacyLanguageFailure")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let container = try preferencesContainer(language: ApplePreferences.LanguagePreference.english.rawValue)
+        ProgressStoreService.failNextLegacyLanguageMigrationSaveForTesting = true
+        defer { ProgressStoreService.failNextLegacyLanguageMigrationSaveForTesting = false }
+        let store = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+        XCTAssertEqual(store.preferences.language, .english)
+
+        let reopened = try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: try temporaryMorseCourseProgressURL(),
+            defaults: defaults,
+            defaultsDomainName: suiteName
+        )
+        XCTAssertEqual(reopened.preferences.language, .system)
+    }
+
+    func testAppleInterfaceLanguagePreferenceWritesAppleLanguagesForNextLaunch() throws {
+        let (defaults, suiteName) = try temporaryDefaultsSuite(prefix: "appleLanguages")
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        ProgressStoreService.applyInterfaceLanguagePreference(.english, defaults: defaults)
+#if os(iOS) || os(macOS)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["en"])
+
+        ProgressStoreService.applyInterfaceLanguagePreference(.french, defaults: defaults)
+        XCTAssertEqual(storedAppleLanguages(defaults: defaults, domainName: suiteName), ["fr"])
+
+        ProgressStoreService.applyInterfaceLanguagePreference(.system, defaults: defaults)
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+#else
+        XCTAssertNil(storedAppleLanguages(defaults: defaults, domainName: suiteName))
+#endif
+    }
+
     func testProgressStoreRoundTripExportImportReset() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
+        XCTAssertEqual(store.preferences.language, .system)
         XCTAssertNotEqual(store.morseCourseProgressURLForTesting, ProgressStoreService.morseCourseProgressURL)
         let record = try applyAnswer(existing: nil, update: AnswerUpdate(
             questionId: "B-001-001-001",
@@ -1084,6 +1379,7 @@ final class ProgressStoreTests: XCTestCase {
         var preferences = store.preferences
         preferences.practiceMode = .reviewLater
         preferences.examTimerEnabled = true
+        preferences.language = .french
         preferences.theme = .dark
         try store.updatePreferences(preferences)
 
@@ -1130,6 +1426,7 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(exported.questionProgress.count, 1)
         XCTAssertEqual(exported.examAttempts.count, 1)
         XCTAssertEqual(exported.preferences.practiceMode, "review-later")
+        XCTAssertEqual(exported.preferences.language, "fr")
         XCTAssertEqual(exported.morseCourseProgress, morseProgress)
 
         let importedStore = try ProgressStoreService.inMemoryForTests()
@@ -1140,6 +1437,7 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try importedStore.examAttempts(), exported.examAttempts)
         XCTAssertEqual(importedStore.preferences.practiceMode, .reviewLater)
         XCTAssertTrue(importedStore.preferences.examTimerEnabled)
+        XCTAssertEqual(importedStore.preferences.language, .french)
         XCTAssertEqual(importedStore.preferences.theme, .dark)
         XCTAssertEqual(try importedStore.morseCourseProgress(), morseProgress)
 
@@ -1294,6 +1592,46 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(partialMorse, bank: bank))
     }
 
+    func testImportRejectsUnsupportedLanguagePreferenceValues() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let cases = [
+            #""de""#,
+            #"null"#
+        ]
+
+        for languageJSON in cases {
+            let json = """
+            {
+              "schema": "canadian-ham.progress-export",
+              "version": 1,
+              "exportedAt": "2026-01-02T05:04:05.000Z",
+              "bankId": "\(bank.manifest.bankId)",
+              "questionProgress": [],
+              "examAttempts": [],
+              "lessonProgress": [],
+              "lessonQuizAttempts": [],
+              "preferences": {
+                "practiceMode": "immediate",
+                "examTimerEnabled": false,
+                "language": \(languageJSON),
+                "theme": "system"
+              }
+            }
+            """
+            let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+            let store = try ProgressStoreService.inMemoryForTests()
+            let errors = store.validate(decoded, bank: bank)
+
+            XCTAssertTrue(errors.contains("Import preferences.language is invalid."), "Expected invalid language error, got: \(errors)")
+            XCTAssertThrowsError(try store.importData(decoded, bank: bank)) { error in
+                guard case ProgressStoreError.validationFailed(let validationErrors) = error else {
+                    return XCTFail("Expected validationFailed, got: \(error)")
+                }
+                XCTAssertTrue(validationErrors.contains("Import preferences.language is invalid."), "Expected invalid language error, got: \(validationErrors)")
+            }
+        }
+    }
+
     func testMorseImportRejectsUnsupportedMorsePreferenceEnums() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let cases = [
@@ -1340,7 +1678,7 @@ final class ProgressStoreTests: XCTestCase {
         let legacyProgress = sampleMorseCourseProgress()
         try JSONEncoder().encode(legacyProgress).write(to: urls.morseCourseProgressURL, options: [.atomic])
 
-        let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+        let store = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
 
         XCTAssertEqual(try store.morseCourseProgress(), legacyProgress)
         XCTAssertFalse(FileManager.default.fileExists(atPath: urls.morseCourseProgressURL.path(percentEncoded: false)))
@@ -1353,7 +1691,7 @@ final class ProgressStoreTests: XCTestCase {
         let urls = ProgressStoreURLs(progressDirectory: directory)
         try Data("not json".utf8).write(to: urls.morseCourseProgressURL, options: [.atomic])
 
-        let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+        let store = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
 
         XCTAssertNil(try store.morseCourseProgress())
         XCTAssertTrue(FileManager.default.fileExists(atPath: urls.morseCourseProgressURL.path(percentEncoded: false)))
@@ -1779,6 +2117,7 @@ final class ProgressStoreTests: XCTestCase {
 
         XCTAssertEqual(decoded.lessonProgress, [])
         XCTAssertEqual(decoded.lessonQuizAttempts, [])
+        XCTAssertEqual(decoded.preferences.language, "system")
         XCTAssertEqual(decoded.preferences.theme, "system")
         XCTAssertTrue(try ProgressStoreService.inMemoryForTests().validate(decoded, bank: bank).isEmpty)
     }
@@ -2207,7 +2546,8 @@ final class ProgressStoreTests: XCTestCase {
         ))
         try context.save()
 
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device")
+        let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device", defaults: testDefaults, defaultsDomainName: testDefaultsName)
 
         XCTAssertEqual(try store.lessonProgressRecords(), [existingLesson, archivedLesson])
         XCTAssertEqual(try store.lessonQuizAttempts(), [existingAttempt, archivedAttempt])
@@ -2233,7 +2573,8 @@ final class ProgressStoreTests: XCTestCase {
         ))
         try context.save()
 
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device")
+        let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device", defaults: testDefaults, defaultsDomainName: testDefaultsName)
 
         XCTAssertEqual(try store.lessonProgressRecords(), [existingLesson])
     }
@@ -2249,7 +2590,7 @@ final class ProgressStoreTests: XCTestCase {
         let urls = ProgressStoreURLs(progressDirectory: directory)
         try FileManager.default.copyItem(at: fixtureURL, to: urls.persistentStoreURL)
 
-        let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+        let store = try openProgressStoreForTests(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
 
         let progress = try store.questionProgressRecords()
         XCTAssertEqual(progress.count, 1)
@@ -2321,7 +2662,8 @@ final class ProgressStoreTests: XCTestCase {
         let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
         let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+        let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), defaults: testDefaults, defaultsDomainName: testDefaultsName)
 
         XCTAssertEqual(try store.questionProgressRecords(), [record])
         XCTAssertEqual(try store.examAttempts(), [attempt])
@@ -2407,7 +2749,8 @@ final class ProgressStoreTests: XCTestCase {
             ))
         }
         try context.save()
-        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+        let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), defaults: testDefaults, defaultsDomainName: testDefaultsName)
 
         try store.saveQuestionProgress([replacementRecord])
         try store.saveExamAttempt(replacementAttempt)
@@ -2514,6 +2857,91 @@ final class ProgressStoreTests: XCTestCase {
             morseCourseProgress: try store.morseCourseProgress(),
             preferences: store.preferences
         )
+    }
+
+    private func temporaryDefaultsSuite(prefix: String) throws -> (UserDefaults, String) {
+        let suiteName = "ProgressStoreTests.\(prefix).\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defaults.removePersistentDomain(forName: suiteName)
+        return (defaults, suiteName)
+    }
+
+    private func openProgressStoreForTests(
+        storeURLs: ProgressStoreURLs,
+        iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn(),
+        layout: ProgressStoreConfigurationLayout = .automatic,
+        defaults: UserDefaults? = nil,
+        defaultsDomainName: String? = nil
+    ) throws -> ProgressStoreService {
+        let resolvedDefaults: UserDefaults
+        let resolvedDomainName: String
+        if let defaults, let defaultsDomainName {
+            resolvedDefaults = defaults
+            resolvedDomainName = defaultsDomainName
+        } else {
+            (resolvedDefaults, resolvedDomainName) = try temporaryDefaultsSuite(prefix: "open")
+        }
+        return try ProgressStoreService.open(
+            storeURLs: storeURLs,
+            iCloudSyncEnabled: iCloudSyncEnabled,
+            layout: layout,
+            defaults: resolvedDefaults,
+            defaultsDomainName: resolvedDomainName
+        )
+    }
+
+    private func storedAppleLanguages(defaults: UserDefaults, domainName: String) -> [String]? {
+        defaults.persistentDomain(forName: domainName)?["AppleLanguages"] as? [String]
+    }
+
+    private func storedAppleLanguageLastApplied(defaults: UserDefaults, domainName: String) -> String? {
+        defaults.persistentDomain(forName: domainName)?["CanadianHam.preferences.appleLanguagesLastApplied"] as? String
+    }
+
+    private func standardLanguageDefaultsSnapshot() -> [String: String] {
+        let domainName = Bundle.main.bundleIdentifier ?? ""
+        let domain = UserDefaults.standard.persistentDomain(forName: domainName) ?? [:]
+        return [
+            "AppleLanguages": String(describing: domain["AppleLanguages"]),
+            "CanadianHam.preferences.appleLanguagesLastApplied": String(describing: domain["CanadianHam.preferences.appleLanguagesLastApplied"]),
+            "CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete": String(describing: domain["CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete"])
+        ]
+    }
+
+    private func emptyProgressExport(bank: QuestionBank, language: ApplePreferences.LanguagePreference) -> ProgressExportV1 {
+        ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T03:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            morseCourseProgress: nil,
+            syncDeviceRows: nil,
+            preferences: ExportedPreferences(
+                practiceMode: ApplePreferences.PracticeMode.immediate.rawValue,
+                examTimerEnabled: false,
+                language: language.rawValue,
+                theme: ApplePreferences.Theme.system.rawValue
+            )
+        )
+    }
+
+    private func preferencesContainer(language: String) throws -> ModelContainer {
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+        let context = ModelContext(container)
+        context.insert(PreferencesEntity(
+            practiceMode: ApplePreferences.PracticeMode.immediate.rawValue,
+            examTimerEnabled: false,
+            language: language,
+            theme: ApplePreferences.Theme.system.rawValue
+        ))
+        try context.save()
+        return container
     }
 
     private func temporaryProgressStoreURL() throws -> URL {
