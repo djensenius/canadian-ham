@@ -2570,33 +2570,30 @@ final class CanadianHamPracticeUITests: XCTestCase {
             trace.append("\(label): target=\(frameDescription(element.frame))")
         }
         record("start")
-        for round in 0..<8 {
-            for attempt in 0..<8 where !isLessonFigureFullyVisibleForAudit(element, in: app) {
+        for round in 0..<16 {
+            for attempt in 0..<10 {
                 let figureFrame = element.frame
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+                let preferredTop = visibleFrame.minY + 24
                 if figureFrame.minY < visibleFrame.minY + 8 {
                     preciseScroll(scrollView, contentDeltaY: min(80, visibleFrame.minY + 8 - figureFrame.minY))
                     record("figure below opaque bar \(round + 1).\(attempt + 1)")
                 } else if figureFrame.height <= visibleFrame.height, figureFrame.maxY > visibleFrame.maxY {
                     preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.maxY - visibleFrame.maxY + 8))
                     record("figure above bottom edge \(round + 1).\(attempt + 1)")
+                } else if figureFrame.height <= visibleFrame.height, figureFrame.minY > preferredTop + 20 {
+                    preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.minY - preferredTop))
+                    record("raise figure near opaque bar \(round + 1).\(attempt + 1)")
                 } else if figureFrame.height > visibleFrame.height, figureFrame.minY > visibleFrame.minY + 8 {
                     preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.minY - visibleFrame.minY - 8))
                     record("oversized figure top into view \(round + 1).\(attempt + 1)")
+                } else if isLessonFigureFullyVisibleForAudit(element, in: app) {
+                    break
                 } else {
                     preciseScroll(scrollView, contentDeltaY: -12)
                     record("settle \(round + 1).\(attempt + 1)")
                 }
                 waitBriefly()
-            }
-            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            let figureFrame = element.frame
-            let bottomSpare = visibleFrame.maxY - figureFrame.maxY
-            if figureFrame.height <= visibleFrame.height, bottomSpare > 96 {
-                preciseScroll(scrollView, contentDeltaY: -min(80, bottomSpare - 80))
-                record("raise figure from lower viewport \(round + 1)")
-                waitBriefly()
-                continue
             }
             guard let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) else { break }
             let protectedMaxY = protectedNavigationFrame(in: app).maxY
