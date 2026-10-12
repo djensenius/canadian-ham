@@ -98,7 +98,7 @@ struct LearnView: View {
                             .font(DesignTokens.FontScale.title.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
-                        Text("Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's unlabelled Basic reference sheet.") // l10n: localized
+                        Text("Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice.") // l10n: localized
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
                         NavigationLink("Read exam-day guidance", value: LearnRoute.lesson("L-001-01"))
