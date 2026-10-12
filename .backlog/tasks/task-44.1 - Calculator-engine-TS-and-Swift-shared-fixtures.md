@@ -1,11 +1,11 @@
 ---
 id: TASK-44.1
 title: 'Calculator engine (TS and Swift, shared fixtures)'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 15:21'
+updated_date: '2026-10-12 15:24'
 labels:
   - web
   - apple
@@ -50,10 +50,12 @@ Second review fix pass started: add pocket-calculator range clamps, total entry-
 Second review fixes: added pocket-calculator range handling (|x| >= 1e100 -> Error; nonzero |x| < 1e-99 -> 0) before formatting/normalization, hardened decimalParts with finite/range guards and power-of-ten table scaling, capped entries at 12 significant digits or 15 total characters, made typed-entry displayValue/spoken strings reflect the entry on screen, switched visual exponent signs to U+2212, replaced the TS zero placeholder, removed the duplicate CI calculator test step, and noted calculator-swift in the local-only CI comment. Shared fixture now has 109 cases including range floor/underflow/overflow, total entry-length cap, and typed-entry spoken cases. Validation: pnpm --filter @canadian-ham/calculator-engine typecheck passed; pnpm --filter @canadian-ham/calculator-engine test passed (111 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed (2 XCTest tests); git diff --check passed.
 
 Round 3 review fix pass started: implement bounded display formatting rule, decimal-literal power tables, display-bound fixture/fuzz checks, and sign-excluded entry cap.
+
+Round 3 fixes: implemented the requested display-length rule (fixed/scientific classification after 12-significant-digit rounding, scientific output with 10-digit mantissa, display ≤16 code points), changed power tables to decimal-literal parsing, made the 15-character entry cap exclude the sign so ± respects it, and added fixture/test assertions for the display bound. Added seeded fuzz tests using the same LCG: TS 50,000 keys and Swift 20,000 keys. Added the review's display-rule fixtures plus the power-table tie and sign-excluded entry-cap fixture. The review's power-table tie placeholder was corrected after verification against both engines: with the required 10-digit scientific mantissa it displays 1e−12, not 1.000000001e−12. Validation: pnpm --filter @canadian-ham/calculator-engine typecheck passed; pnpm --filter @canadian-ham/calculator-engine test passed (126 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed (3 XCTest tests); git diff --check passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed second review requests: calculator engines now clamp to a documented pocket-calculator numeric range, avoid tiny-value formatting crashes, cap total entry length, keep typed-entry accessibility strings aligned with the visual entry, use typographic exponent minus signs, and avoid duplicate CI calculator TS tests. Verified with TS typecheck, TS shared-fixture tests, Swift package tests, and diff check.
+Addressed round 3 review requests: calculator display output is bounded to 16 code points with the specified fixed/scientific rules, power tables parse decimal literals, entry length excludes the sign, shared fixtures cover the requested cases, and both TS/Swift suites include display-bound checks plus seeded fuzz tests. Verified with TS typecheck, TS tests, Swift package tests, and diff check.
 <!-- SECTION:FINAL_SUMMARY:END -->
