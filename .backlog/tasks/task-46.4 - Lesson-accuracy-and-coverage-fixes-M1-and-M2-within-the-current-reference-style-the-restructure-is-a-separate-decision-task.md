@@ -3,9 +3,11 @@ id: TASK-46.4
 title: >-
   Lesson accuracy and coverage fixes: M1 and M2 (within the current reference
   style; the restructure is a separate decision task)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 14:57'
+updated_date: '2026-10-12 15:00'
 labels:
   - content
 dependencies: []

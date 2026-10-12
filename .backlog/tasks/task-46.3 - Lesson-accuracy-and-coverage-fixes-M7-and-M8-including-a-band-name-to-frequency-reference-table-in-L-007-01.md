@@ -3,9 +3,11 @@ id: TASK-46.3
 title: >-
   Lesson accuracy and coverage fixes: M7 and M8 (including a band-name to
   frequency reference table in L-007-01)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 14:57'
+updated_date: '2026-10-12 15:00'
 labels:
   - content
 dependencies: []
