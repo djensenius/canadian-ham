@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 16:17'
+updated_date: '2026-10-12 16:20'
 labels:
   - content
   - apple
@@ -70,6 +70,8 @@ Validation passed after fetching/merging origin/task-38.5-figure-checker (alread
 Follow-up after stricter task-38.5 checker update: merged origin/task-38.5-figure-checker and confirmed 9827527e7f17b848182d28faf3e61abcd9d0986b is an ancestor of HEAD. Fixed four stricter-checker figure findings without changing the checker: moved amplifiers-diodes conventional-current label clear of the filled arrowhead; separated batteries-dc-supplies-ripple DC source and + fuse labels; separated control-terminals emitter and gate labels; separated controls-digital-voice-packet spch and packet frames labels. Re-rendered those four figures with qlmanage and opened each PNG with the read tool. Visual notes: amplifiers-diodes shows conventional current above the arrowhead with clear space and the same-frequency amplifier waves remain clear. batteries-dc-supplies-ripple shows DC source, + fuse, and heavy leads separated and readable. control-terminals shows emitter and gate labels no longer touching while terminal placement remains clear. controls-digital-voice-packet shows spch and packet frames separated with readable packet path labels. Validation passed: pnpm check:figures:fix; pnpm check:figures; node scripts/check-figures.mjs --self-test.
 
 Follow-up visual fixes: redrew grounding-lightning-rf-safety as a simple left-to-right story with indoor radio/tuner/supply bonded to one bonding bar, coax to a single-point entry at the wall, surge box bonded to the bar and outside ground rod, and coax up an antenna mast; removed lock/mic-off/unexplained outside people/large RF circle. Redrew yagi-receiver-specs so the boom label sits by the boom, a short feedline drops from the driven element and is labelled, and the receiver display has visibly different W/M/N passband curves; kept the desired/LO/image IF strip. qlmanage rendered both changed figures at 1200 px to /tmp/task-38.3-visual and docs/evidence/task-38.3; read-tool inspection showed the grounding story labels/paths are clear and the Yagi boom/feedline/passband labels are readable. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test.
+
+Follow-up visual fixes: connected the grounding-lightning-rf-safety bonding bar into the surge/ground-rod path so the indoor bonding bar, surge arrestor, and outside ground rod read as one connected ground. Adjusted yagi-receiver-specs labels: boom now sits below the boom line between reflector and driven element, director remains above the director, driven is left of the driven element lower end, feedline is beside the feedline stub's lower end, and receiver passband labels use wide/med/narrow under their own arcs. Updated yagi text equivalent to match. qlmanage rendered both changed figures at 1200 px to /tmp/task-38.3-visual and docs/evidence/task-38.3; read-tool inspection showed the grounding connection is visible and the Yagi labels/passbands are readable. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
