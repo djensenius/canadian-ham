@@ -2629,12 +2629,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
                 if let firstOffender {
                     if firstOffender.isClippedAboveWindow {
-                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
-                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
+                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
+                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
                         start.press(forDuration: 0.01, thenDragTo: end)
                     } else {
-                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
                         start.press(forDuration: 0.01, thenDragTo: end)
                     }
                 } else if target.exists, target.frame.maxY > visibleFrame.maxY || preserveByScrollingUp {
@@ -2660,12 +2660,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 return
             }
             if firstOffender.isClippedAboveWindow {
-                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
-                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
                 start.press(forDuration: 0.01, thenDragTo: end)
             } else {
-                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
                 start.press(forDuration: 0.01, thenDragTo: end)
             }
             waitBriefly()
