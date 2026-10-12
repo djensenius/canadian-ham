@@ -3,9 +3,11 @@ id: TASK-48
 title: >-
   App icon variants: Icon Composer, dark and tinted (like the owner's other
   apps)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 22:38'
+updated_date: '2026-10-12 22:38'
 labels:
   - apple
   - web
