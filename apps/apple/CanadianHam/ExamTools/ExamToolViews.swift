@@ -580,6 +580,7 @@ private struct ExamToolMarkdownTableView: View {
                         Text(header) // l10n: content(en)
                             .font(DesignTokens.FontScale.body.weight(.bold))
                             .foregroundColor(DesignTokens.Colors.ink)
+                            .fixedSize(horizontal: true, vertical: true)
                     }
                 }
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
@@ -588,6 +589,7 @@ private struct ExamToolMarkdownTableView: View {
                             Text(cell) // l10n: content(en)
                                 .font(DesignTokens.FontScale.body)
                                 .foregroundColor(DesignTokens.Colors.ink)
+                                .fixedSize(horizontal: true, vertical: true)
                         }
                     }
                 }
