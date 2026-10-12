@@ -1,0 +1,40 @@
+<svg id="records-maps-locators" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Station log and azimuthal map</title>
+  <desc>A station log sits beside an azimuthal map centred on the operator, with UTC and grid-locator reminders.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="36" y="72" width="286" height="264" rx="18" ry="18" stroke-width="7"/>
+    <line x1="62" y1="120" x2="296" y2="120" stroke-width="5"/>
+    <line x1="98" y1="138" x2="98" y2="300" stroke-width="4"/>
+    <line x1="156" y1="138" x2="156" y2="300" stroke-width="4"/>
+    <line x1="214" y1="138" x2="214" y2="300" stroke-width="4"/>
+    <line x1="264" y1="138" x2="264" y2="300" stroke-width="4"/>
+    <line x1="64" y1="176" x2="294" y2="176" stroke-width="3"/>
+    <line x1="64" y1="218" x2="294" y2="218" stroke-width="3"/>
+    <line x1="64" y1="260" x2="294" y2="260" stroke-width="3"/>
+    <circle cx="480" cy="210" r="116" stroke-width="7"/>
+    <line x1="480" y1="94" x2="480" y2="326" stroke-width="4"/>
+    <line x1="364" y1="210" x2="596" y2="210" stroke-width="4"/>
+    <circle cx="480" cy="210" r="10" stroke-width="5"/>
+    <line x1="480" y1="210" x2="558" y2="132" stroke-width="6"/>
+    <polygon points="558,132 536,140 550,154" fill="currentColor" stroke="none"/>
+    <line x1="480" y1="210" x2="402" y2="288" stroke-width="6"/>
+    <polygon points="402,288 424,280 410,266" fill="currentColor" stroke="none"/>
+    <circle cx="108" cy="398" r="36" stroke-width="5"/>
+    <line x1="108" y1="398" x2="108" y2="372" stroke-width="4"/>
+    <line x1="108" y1="398" x2="128" y2="408" stroke-width="4"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="180" y="56" font-size="28" font-weight="700">station log</text>
+    <text x="82" y="106" font-size="24">UTC</text>
+    <text x="128" y="106" font-size="24">call</text>
+    <text x="184" y="106" font-size="24">band</text>
+    <text x="238" y="106" font-size="24">mode</text>
+    <text x="276" y="106" font-size="24">grid</text>
+    <text x="480" y="56" font-size="28" font-weight="700">azimuthal map</text>
+    <text x="560" y="76" font-size="24">short</text>
+    <text x="398" y="360" font-size="24">long</text>
+    <text x="480" y="374" font-size="24">op at centre</text>
+    <text x="220" y="462" font-size="24">UTC clock</text>
+    <text x="282" y="398" font-size="24">grid: 4 or 6 chars</text>
+  </g>
+</svg>

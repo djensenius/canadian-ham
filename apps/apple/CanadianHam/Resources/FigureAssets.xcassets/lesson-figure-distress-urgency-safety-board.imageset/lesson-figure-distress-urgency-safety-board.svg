@@ -1,0 +1,30 @@
+<svg id="distress-urgency-safety-board" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Distress, urgency, and safety priority board</title>
+  <desc>A priority board separates distress, urgent, and safety traffic and shows a simple emergency-ready go-kit.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="38" y="48" width="324" height="314" rx="22" ry="22" stroke-width="7"/>
+    <line x1="66" y1="152" x2="334" y2="152" stroke-width="5"/>
+    <line x1="66" y1="242" x2="334" y2="242" stroke-width="5"/>
+    <line x1="66" y1="314" x2="334" y2="314" stroke-width="5"/>
+    <path d="M420 168 C455 128 504 128 540 168" stroke-width="5"/>
+    <line x1="480" y1="96" x2="480" y2="178" stroke-width="7"/>
+    <rect x="448" y="178" width="64" height="52" rx="12" ry="12" stroke-width="6"/>
+    <rect x="418" y="282" width="148" height="92" rx="18" ry="18" stroke-width="6"/>
+    <rect x="436" y="250" width="42" height="74" rx="10" ry="10" stroke-width="5"/>
+    <line x1="457" y1="250" x2="457" y2="224" stroke-width="4"/>
+    <path d="M502 324 C526 292 548 292 572 324" stroke-width="5"/>
+    <line x1="502" y1="324" x2="572" y2="324" stroke-width="5"/>
+    <circle cx="480" cy="204" r="8" stroke-width="4"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="200" y="90" font-size="28" font-weight="700">distress</text>
+    <text x="200" y="122" font-size="24">life threat</text>
+    <text x="200" y="186" font-size="24">MAYDAY / SOS</text>
+    <text x="200" y="218" font-size="24">first priority</text>
+    <text x="200" y="276" font-size="24">urgent: serious help</text>
+    <text x="200" y="348" font-size="24">safety: hazard info</text>
+    <text x="480" y="64" font-size="24">repeater</text>
+    <text x="492" y="408" font-size="24">go-kit ready</text>
+    <text x="492" y="438" font-size="24">battery + dipole</text>
+  </g>
+</svg>

@@ -104,6 +104,14 @@ A radio operator in an emergency is valuable because they can listen, classify t
 
 Emergency readiness is also ordinary station maintenance. Charged batteries, a known-good portable antenna, and a way to operate without commercial AC power turn a hobby station into a communication resource when other systems are unavailable.
 
+::figure distress-urgency-safety-board
+Alt text: A priority note board showing distress facts and station-readiness items.
+Text equivalent:
+- Distress is for life-threatening danger and uses MAYDAY by voice or SOS by Morse; it has first priority.
+- Urgent traffic requests serious help without an immediate threat to life.
+- Safety traffic carries hazard information, and a go-kit needs spare power and a portable antenna.
+::
+
 ## Illustration brief
 
 Alt text: A priority note board showing distress facts and station-readiness items.

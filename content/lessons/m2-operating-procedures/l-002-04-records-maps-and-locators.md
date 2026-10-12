@@ -109,6 +109,15 @@ Logs and maps make operating cumulative. A single contact becomes part of a patt
 
 Grid locators are especially useful at VHF and UHF because small changes in position can matter. UTC is equally important on HF because contacts may cross date lines and time zones.
 
+::figure records-maps-locators
+Alt text: A station log beside an azimuthal map centred on the operator, with a grid locator label.
+Text equivalent:
+- The log columns shown are UTC, call sign, band, mode, report, and grid.
+- The azimuthal map is centred on the operator.
+- The long-path heading is opposite the short-path heading, 180 degrees away.
+- Grid locators use a 4- or 6-character location code, and UTC is tied to Greenwich.
+::
+
 ## Illustration brief
 
 Alt text: A station log beside an azimuthal map centred on the operator, with a grid locator label.
