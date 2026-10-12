@@ -10,6 +10,6 @@
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="98" y="74" font-size="24">weak in</text><text x="323" y="128" font-size="30" font-weight="700">amplifier</text><text x="542" y="210" font-size="24">larger</text><text x="340" y="42" font-size="24">supply</text>
-    <text x="258" y="250" font-size="24">conventional current</text><text x="146" y="374" font-size="24">anode</text><text x="354" y="374" font-size="24">cathode</text><text x="280" y="462" font-size="24">e- flow</text>
+    <text x="258" y="232" font-size="24">conventional current</text><text x="146" y="374" font-size="24">anode</text><text x="354" y="374" font-size="24">cathode</text><text x="280" y="462" font-size="24">e- flow</text>
   </g>
 </svg>

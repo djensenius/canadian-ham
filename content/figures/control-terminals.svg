@@ -11,7 +11,7 @@
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="116" y="70" font-size="30" font-weight="700">NPN</text><text x="54" y="292" font-size="24">base</text><text x="176" y="128" font-size="24">collector</text><text x="180" y="314" font-size="24">emitter</text>
-    <text x="338" y="70" font-size="30" font-weight="700">N-FET</text><text x="266" y="300" font-size="24">gate</text><text x="414" y="112" font-size="24">drain</text><text x="372" y="334" font-size="24">source</text>
+    <text x="338" y="70" font-size="30" font-weight="700">N-FET</text><text x="278" y="292" font-size="24">gate</text><text x="414" y="112" font-size="24">drain</text><text x="372" y="334" font-size="24">source</text>
     <text x="526" y="70" font-size="30" font-weight="700">triode</text><text x="400" y="414" font-size="24">cathode</text><text x="510" y="414" font-size="24">grid</text><text x="590" y="414" font-size="24">plate</text>
   </g>
 </svg>
