@@ -40,6 +40,7 @@ if MAGICK is None:
     MAGICK = Path(found) if found else None
 FONT_SANS = Path("/System/Library/Fonts/Helvetica.ttc")
 FONT_SERIF = Path("/System/Library/Fonts/Supplemental/Georgia.ttf")
+ICON_COMPOSER_TOOL = Path("/Applications/Xcode.app/Contents/Applications/Icon Composer.app/Contents/Executables/ictool")
 
 SIZE = 1024
 INK = "#15120F"
@@ -58,9 +59,20 @@ def run(args: list[object]) -> None:
     subprocess.run([str(arg) for arg in args], check=True)
 
 
+def run_quiet(args: list[object]) -> None:
+    subprocess.run([str(arg) for arg in args], check=True, stdout=subprocess.DEVNULL)
+
+
 def require_magick() -> None:
     if MAGICK is None:
         raise SystemExit("ImageMagick 'magick' or 'convert' is required")
+
+
+def find_icon_composer_tool() -> Path | None:
+    if ICON_COMPOSER_TOOL.exists():
+        return ICON_COMPOSER_TOOL
+    found = shutil.which("ictool")
+    return Path(found) if found else None
 
 
 def write_radial_background(path: Path, width: int, height: int, inner: tuple[int, int, int], outer: tuple[int, int, int]) -> None:
@@ -456,12 +468,13 @@ def render_web_tab_preview(output: Path, favicon: Path, *, dark: bool, tmp: Path
     ])
 
 
-def render_variants_preview_sheet(tmp: Path) -> None:
+def render_variants_preview_sheet(tmp: Path, icon_composer_variants: dict[str, Path]) -> None:
+    has_icon_composer_previews = len(icon_composer_variants) == 4
     variants = [
-        ("iOS light", EXPORTS / "app-icon-1024.png", 168, 168, "round"),
-        ("iOS dark", EXPORTS / "app-icon-dark-1024.png", 168, 168, "round"),
-        ("iOS tinted", EXPORTS / "app-icon-tinted-1024.png", 168, 168, "round"),
-        ("iOS clear foreground", EXPORTS / "app-icon-foreground-1024.png", 168, 168, "clear"),
+        ("iOS light", icon_composer_variants.get("light", EXPORTS / "app-icon-1024.png"), 168, 168, "plain" if has_icon_composer_previews else "round"),
+        ("iOS dark", icon_composer_variants.get("dark", EXPORTS / "app-icon-dark-1024.png"), 168, 168, "plain" if has_icon_composer_previews else "round"),
+        ("iOS tinted", icon_composer_variants.get("tinted", EXPORTS / "app-icon-tinted-1024.png"), 168, 168, "plain" if has_icon_composer_previews else "round"),
+        ("iOS clear", icon_composer_variants.get("clear", EXPORTS / "app-icon-foreground-1024.png"), 168, 168, "clear"),
         ("macOS fallback", EXPORTS / "mac-1024.png", 168, 168, "round"),
         ("Web favicon light", tmp / "web-tab-light.png", 260, 88, "plain"),
         ("Web favicon dark", tmp / "web-tab-dark.png", 260, 88, "plain"),
@@ -717,6 +730,44 @@ def write_icon_composer_bundle(foreground: Path) -> None:
     )
 
 
+def render_icon_composer_preview_images(tmp: Path) -> dict[str, Path]:
+    """Render the checked-in .icon for the review sheet when ictool is available."""
+    ictool = find_icon_composer_tool()
+    if ictool is None or not (ICON_COMPOSER / "icon.json").exists():
+        return {}
+    specs = {
+        "light": ("Default", []),
+        "dark": ("Dark", []),
+        "tinted": ("TintedDark", ["--tint-color", "0.25", "--tint-strength", "0.75"]),
+        "clear": ("ClearLight", []),
+    }
+    rendered: dict[str, Path] = {}
+    for name, (rendition, extra_args) in specs.items():
+        output = tmp / f"icon-composer-{name}.png"
+        run_quiet([
+            ictool,
+            ICON_COMPOSER,
+            "--export-image",
+            "--output-file",
+            output,
+            "--platform",
+            "iOS",
+            "--rendition",
+            rendition,
+            "--width",
+            "1024",
+            "--height",
+            "1024",
+            "--scale",
+            "1",
+            "--design-generation",
+            "27",
+            *extra_args,
+        ])
+        rendered[name] = output
+    return rendered
+
+
 def install_apple_assets(full_icon: Path, dark_icon: Path, tinted_icon: Path, foreground: Path) -> None:
     copy_file(full_icon, APPLE_ASSETS / "icon-1024.png")
     copy_file(dark_icon, APPLE_ASSETS / "icon-dark-1024.png")
@@ -839,8 +890,10 @@ def render_all() -> None:
         favicon_svg = EXPORTS / "favicon.svg"
         write_favicon_svg(favicon_svg)
         render_favicon_pngs(favicon_svg)
+        write_icon_composer_bundle(full_mark)
+        icon_composer_variants = render_icon_composer_preview_images(tmp)
         render_preview_sheet(tmp)
-        render_variants_preview_sheet(tmp)
+        render_variants_preview_sheet(tmp, icon_composer_variants)
 
         install_apple_assets(EXPORTS / "app-icon-1024.png", EXPORTS / "app-icon-dark-1024.png", EXPORTS / "app-icon-tinted-1024.png", full_mark)
         install_web_assets()
