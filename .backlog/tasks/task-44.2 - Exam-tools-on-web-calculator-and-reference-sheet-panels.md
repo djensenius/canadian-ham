@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:21'
+updated_date: '2026-10-12 16:27'
 labels:
   - web
 dependencies:
@@ -52,6 +52,8 @@ After merging current main into task-44.2-web-exam-tools, reran validation: pnpm
 Review fix pass for r442 started: fix calculator button key handling/modifier shortcuts/state retention, responsive tool layout/drawer/DOM order, toolbar/display/heading/table-label accessibility nits, and add regression tests before rerunning web validation.
 
 Review r442 fixes: calculator key handling now ignores buttons/modifier shortcuts, calculator state lives in ExamTools and survives close/tool switching while clearing on new session key, tool layout reserves the side column only when open, narrow panels are sticky bottom drawers with capped height and content padding, DOM order matches toolbar/content/panel flow, reference sheet heading/table labels are corrected, toolbar role changed to group, output label restored, Escape closes the reference sheet, and Advanced mock exams keep the Basic reference sheet disabled. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
+
+Second review fix pass for r442-2 started: fix mock column ordering/width, calculator button-focus keyboard mapping, mobile drawer scroll padding/units, output live semantics, same-seed session reset, and stricter layout tests.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
