@@ -2,43 +2,47 @@
   <title>Transformer, parallel tuned circuit, and meter placement</title>
   <desc>Three panels show separate transformer windings on a core, a parallel LC tank, and ammeter and voltmeter placement around a load.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M152 176 C152 248 152 336 152 410" stroke-width="7"/>
-    <path d="M206 176 C206 248 206 336 206 410" stroke-width="7"/>
-    <path d="M76 210 C102 188 126 188 152 210" stroke-width="8"/>
-    <path d="M76 270 C102 248 126 248 152 270" stroke-width="8"/>
-    <path d="M76 330 C102 308 126 308 152 330" stroke-width="8"/>
-    <path d="M76 390 C102 368 126 368 152 390" stroke-width="8"/>
-    <path d="M206 210 C232 188 256 188 282 210" stroke-width="8"/>
-    <path d="M206 270 C232 248 256 248 282 270" stroke-width="8"/>
-    <path d="M206 330 C232 308 256 308 282 330" stroke-width="8"/>
-    <path d="M206 390 C232 368 256 368 282 390" stroke-width="8"/>
-    <path d="M126 456 C148 474 172 474 194 456" stroke-width="6"/>
-    <path d="M198 456 C220 474 244 474 266 456" stroke-width="6"/>
+    <path d="M150 172 C150 248 150 334 150 414" stroke-width="7"/>
+    <path d="M192 172 C192 248 192 334 192 414" stroke-width="7"/>
+    <path d="M86 176 C86 196 86 198 86 210" stroke-width="7"/>
+    <path d="M86 210 C52 224 52 254 86 268" stroke-width="8"/>
+    <path d="M86 268 C120 282 120 312 86 326" stroke-width="8"/>
+    <path d="M86 326 C52 340 52 370 86 384" stroke-width="8"/>
+    <path d="M86 384 C86 398 86 404 86 418" stroke-width="7"/>
+    <path d="M256 176 C256 196 256 198 256 210" stroke-width="7"/>
+    <path d="M256 210 C290 224 290 254 256 268" stroke-width="8"/>
+    <path d="M256 268 C222 282 222 312 256 326" stroke-width="8"/>
+    <path d="M256 326 C290 340 290 370 256 384" stroke-width="8"/>
+    <path d="M256 384 C256 398 256 404 256 418" stroke-width="7"/>
+    <path d="M126 464 C148 482 172 482 194 464" stroke-width="6"/>
+    <path d="M198 464 C220 482 244 482 266 464" stroke-width="6"/>
 
-    <path d="M382 210 C430 210 516 210 564 210" stroke-width="7"/>
-    <path d="M382 410 C430 410 516 410 564 410" stroke-width="7"/>
+    <path d="M374 210 C424 210 514 210 568 210" stroke-width="7"/>
+    <path d="M374 410 C424 410 514 410 568 410" stroke-width="7"/>
     <path d="M420 210 C420 228 420 238 420 250" stroke-width="7"/>
-    <path d="M420 250 C394 266 394 292 420 308 C446 324 446 350 420 366 C406 376 406 394 420 410" stroke-width="8"/>
-    <path d="M532 210 C532 238 532 254 532 272" stroke-width="7"/>
-    <path d="M498 272 C520 264 544 264 566 272" stroke-width="8"/>
-    <path d="M498 348 C520 356 544 356 566 348" stroke-width="8"/>
-    <path d="M532 348 C532 370 532 390 532 410" stroke-width="7"/>
+    <path d="M420 250 C390 262 390 288 420 300" stroke-width="8"/>
+    <path d="M420 300 C450 312 450 338 420 350" stroke-width="8"/>
+    <path d="M420 350 C390 362 390 388 420 400" stroke-width="8"/>
+    <path d="M420 400 C420 404 420 406 420 410" stroke-width="7"/>
+    <path d="M532 210 C532 236 532 248 532 268" stroke-width="7"/>
+    <path d="M498 268 C520 268 544 268 566 268" stroke-width="8"/>
+    <path d="M498 348 C520 348 544 348 566 348" stroke-width="8"/>
+    <path d="M532 348 C532 374 532 390 532 410" stroke-width="7"/>
 
-    <path d="M690 180 C714 180 734 180 756 180" stroke-width="7"/>
-    <circle cx="790" cy="180" r="34" stroke-width="7"/>
-    <path d="M824 180 C844 180 856 180 874 180" stroke-width="7"/>
-    <path d="M874 180 C874 220 874 260 874 300" stroke-width="7"/>
-    <path d="M838 300 C860 284 888 284 910 300" stroke-width="7"/>
-    <path d="M838 410 C860 426 888 426 910 410" stroke-width="7"/>
-    <path d="M874 410 C874 448 874 474 874 500" stroke-width="7"/>
-    <path d="M874 500 C812 500 750 500 690 500" stroke-width="7"/>
-    <path d="M690 180 C690 218 690 242 690 266" stroke-width="7"/>
-    <path d="M664 266 C682 258 700 258 718 266" stroke-width="8"/>
-    <path d="M664 326 C682 334 700 334 718 326" stroke-width="8"/>
-    <path d="M690 326 C690 380 690 438 690 500" stroke-width="7"/>
-    <circle cx="774" cy="356" r="34" stroke-width="7"/>
-    <path d="M808 336 C828 320 850 306 874 300" stroke-width="6"/>
-    <path d="M808 376 C828 392 850 406 874 410" stroke-width="6"/>
+    <path d="M642 186 C672 186 704 186 728 186" stroke-width="7"/>
+    <circle cx="762" cy="186" r="34" stroke-width="7"/>
+    <path d="M796 186 C820 186 842 186 866 186" stroke-width="7"/>
+    <path d="M866 186 C866 226 866 258 866 292" stroke-width="7"/>
+    <path d="M866 414 C866 446 866 472 866 500" stroke-width="7"/>
+    <path d="M866 500 C792 500 716 500 642 500" stroke-width="7"/>
+    <path d="M642 186 C642 214 642 238 642 262" stroke-width="7"/>
+    <path d="M608 276 C630 276 654 276 676 276" stroke-width="7"/>
+    <path d="M626 318 C638 318 650 318 662 318" stroke-width="7"/>
+    <path d="M642 334 C642 392 642 446 642 500" stroke-width="7"/>
+    <path d="M866 292 C842 306 890 322 866 336 C842 350 890 366 866 380 C842 394 890 408 866 414" stroke-width="8"/>
+    <circle cx="760" cy="354" r="34" stroke-width="7"/>
+    <path d="M794 336 C820 318 842 304 866 292" stroke-width="6"/>
+    <path d="M794 372 C820 390 842 404 866 414" stroke-width="6"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="180" y="58" font-size="40" font-weight="700">xfmr</text>
@@ -46,10 +50,12 @@
     <text x="250" y="144" font-size="36">S</text>
 
     <text x="473" y="58" font-size="40" font-weight="700">LC tank</text>
+    <text x="384" y="330" font-size="36">L</text>
+    <text x="566" y="330" font-size="36">C</text>
 
     <text x="794" y="58" font-size="40" font-weight="700">meters</text>
-    <text x="790" y="118" font-size="36">A meter</text>
-    <text x="650" y="150" font-size="36">source</text>
-    <text x="778" y="560" font-size="36">V across load</text>
+    <text x="762" y="198" font-size="40" font-weight="700">A</text>
+    <text x="760" y="366" font-size="40" font-weight="700">V</text>
+    <text x="914" y="454" font-size="36">load</text>
   </g>
 </svg>

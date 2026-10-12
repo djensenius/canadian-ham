@@ -147,7 +147,7 @@ Alt text: Multi-panel figure showing transformer windings on a core, a parallel 
 Text equivalent:
 - Transformer panel: separate P and S windings sit on a shared two-bar core, with small flux marks below the windings.
 - Parallel LC panel: an inductor branch and capacitor branch connect between the same top and bottom rails.
-- Meter panel: a source is in the left branch, the A meter is in series on the top wire, the load is in the right branch, and a meter circle is wired across the load.
+- Meter panel: a battery source is in the left branch, an A meter is in series on the top wire, the zigzag load is in the right branch, and a V meter is wired across the load.
 ::
 
 A voltmeter is placed across the part being measured. It should look like a high resistance so very little extra current flows through the meter.

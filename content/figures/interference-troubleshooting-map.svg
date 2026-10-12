@@ -11,17 +11,17 @@
     <path d="M112 324 L86 338" stroke-width="6"/>
     <path d="M232 298 C252 298 274 298 294 298" stroke-width="8"/>
 
-    <path d="M422 414 C422 342 422 268 422 196" stroke-width="8"/>
-    <path d="M422 196 C452 178 488 178 518 196" stroke-width="8"/>
+    <path d="M438 414 C438 342 438 268 438 196" stroke-width="8"/>
+    <path d="M438 196 C462 178 494 178 518 196" stroke-width="8"/>
     <path d="M518 196 C518 248 518 300 518 352" stroke-width="7"/>
     <path d="M462 414 C462 384 462 354 462 324" stroke-width="6"/>
     <path d="M462 324 C482 314 502 314 522 324" stroke-width="6"/>
     <path d="M492 324 L544 324 L492 368 Z" stroke-width="7"/>
-    <path d="M552 308 C552 334 552 360 552 386" stroke-width="7"/>
+    <path d="M552 308 C552 342 552 380 552 414" stroke-width="7"/>
     <rect x="438" y="414" width="126" height="76" rx="14" ry="14" stroke-width="7"/>
-    <path d="M350 238 C378 238 402 238 422 238" stroke-width="7"/>
-    <path d="M422 238 L392 220" stroke-width="7"/>
-    <path d="M422 238 L392 256" stroke-width="7"/>
+    <path d="M350 238 C378 238 410 238 438 238" stroke-width="7"/>
+    <path d="M438 238 L408 220" stroke-width="7"/>
+    <path d="M438 238 L408 256" stroke-width="7"/>
 
     <rect x="704" y="274" width="118" height="82" rx="15" ry="15" stroke-width="7"/>
     <path d="M822 315 C858 315 894 315 930 315" stroke-width="11"/>
@@ -39,13 +39,13 @@
     <text x="172" y="306" font-size="36">RX</text>
 
     <text x="480" y="74" font-size="40" font-weight="700">rectify</text>
-    <text x="422" y="150" font-size="36">speaker lead</text>
+    <text x="438" y="150" font-size="36">speaker lead</text>
     <text x="504" y="544" font-size="36">speaker input</text>
 
     <text x="760" y="74" font-size="40" font-weight="700">spurious</text>
     <text x="764" y="324" font-size="36">TX</text>
-    <text x="850" y="250" font-size="36">wanted</text>
-    <text x="650" y="200" font-size="36">unwanted</text>
-    <text x="780" y="560" font-size="36">unwanted</text>
+    <text x="890" y="374" font-size="36">wanted</text>
+    <text x="708" y="190" font-size="36">unwanted</text>
+    <text x="708" y="452" font-size="36">unwanted</text>
   </g>
 </svg>

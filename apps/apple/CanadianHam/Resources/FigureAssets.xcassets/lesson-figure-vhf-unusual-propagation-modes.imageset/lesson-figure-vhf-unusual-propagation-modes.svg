@@ -26,9 +26,9 @@
     <path d="M528 654 C638 628 810 628 918 654" stroke-width="8"/>
     <path d="M612 640 C634 606 666 606 688 640" stroke-width="6"/>
     <path d="M802 640 C824 606 856 606 878 640" stroke-width="6"/>
-    <path d="M650 596 C684 552 724 524 770 506" stroke-width="8"/>
-    <path d="M770 506 C806 526 838 556 868 596" stroke-width="8"/>
-    <path d="M700 468 C740 486 786 494 838 494" stroke-width="10"/>
+    <path d="M650 612 C690 546 730 500 770 486" stroke-width="8"/>
+    <path d="M770 486 C812 506 838 552 850 612" stroke-width="8"/>
+    <path d="M700 486 C740 486 792 486 838 486" stroke-width="10"/>
     <path d="M684 458 C706 440 730 430 758 424" stroke-width="5"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">

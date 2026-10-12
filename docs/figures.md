@@ -9,12 +9,8 @@ Lesson figures are original SVG sources shared by web and Apple. They are supple
 - Set the root `<svg id="...">` to the same id as the filename.
 - Include `<title>` and `<desc>` in the SVG for authoring context.
 - Draw from scratch. Do not trace or copy ISED, RAC, or other third-party reference figures.
-- Use labels as SVG `<text>` where feasible so formula labels remain inspectable in the web source. Before review, confirm the generated Apple asset renders every label in the real app screenshots. Apple's CoreSVG path may ignore SVG `font-family` and `font-weight`, so leave enough clearance for a wider proportional fallback font.
+- Use labels as SVG `<text>` where feasible so formula labels remain inspectable in source.
 - Use `currentColor` for fills and strokes. Do not hard-code colours in SVGs; web and Apple supply ink/paper colours from design tokens.
-- Keep all text comfortably inside the `viewBox` with padding. The check script estimates text bounds and rejects text near the edge.
-- No stroke may cross or touch text. Break dividers around labels/formulas or move labels into clear regions.
-- Keep label text large relative to the `viewBox`: every SVG `<text>` `font-size` must be at least `0.0367 × viewBox width`, which keeps text at least about 11 pt when a figure is displayed 300 pt wide. Use substantially larger text for primary symbol labels. If smaller text is unavoidable, provide a tap-to-enlarge view and a text equivalent.
-- Stay within the SVG subset accepted by `scripts/check-figures.mjs`: no script/style/foreignObject, no event handlers, no external references, and presentation attributes only. Use `fill`/`stroke` values of `currentColor` or `none`.
 
 ## Referencing a figure from a lesson
 
@@ -39,13 +35,11 @@ Text equivalent:
 ::
 ```
 
-The directive parser accepts whitespace after `::figure`, case-insensitive `Alt text:`, and `-`, `*`, or `+` bullets for text-equivalent rows. An unclosed directive ends before a blank line or heading so it cannot hide the rest of the lesson. Keep the existing `## Illustration brief` section in the lesson for authors and originality review. Renderers intentionally hide that author brief from learners. When no `::figure ...` directive is present, learners see no placeholder card.
+Keep the existing `## Illustration brief` section in the lesson for authors and originality review. Renderers intentionally hide that author brief from learners. When no `::figure ...` directive is present, learners see no placeholder card.
 
 ## Web rendering
 
 `apps/web/src/components/MarkdownContent.tsx` parses `::figure` blocks, inlines the matching `content/figures/*.svg` source through Vite `?raw`, and exposes the directive alt text as the image accessible name. The figure container uses `currentColor` and CSS custom properties from `apps/web/src/styles/tokens.css` so light and dark themes use the same source SVG. Formula-dense text equivalents render in a native `<details>` disclosure so learners can open them on demand.
-
-Web sizing comes from the SVG `viewBox`: figures fill the lesson column width and preserve their aspect ratio. Do not add per-figure CSS sizing rules unless a reviewed design exception requires it.
 
 ## Apple rendering
 
@@ -55,11 +49,9 @@ SwiftUI cannot render arbitrary SVG files from `content/figures/` at runtime. In
 pnpm check:figures:fix
 ```
 
-That command copies each source SVG into `apps/apple/CanadianHam/Resources/FigureAssets.xcassets/lesson-figure-<id>.imageset/` with preserved-vector and template-rendering asset metadata, and regenerates `apps/apple/CanadianHam/Generated/LessonFigureMetadata.swift` from each SVG `viewBox`. `apps/apple/project.yml` includes the generated asset catalog in the iOS/iPadOS/macOS app target, and XcodeGen includes the generated Swift metadata. `apps/apple/CanadianHam/Views/LearnViews.swift` renders `Image("lesson-figure-<id>")` as a template image tinted with `DesignTokens.Colors.ink`, inside token-coloured paper surfaces, scaled to the available width using the generated aspect ratio. Tapping the figure opens an enlarged sheet with pinch zoom. Optional text equivalents render in a SwiftUI `DisclosureGroup`.
+That command copies each source SVG into `apps/apple/CanadianHam/Resources/FigureAssets.xcassets/lesson-figure-<id>.imageset/` with preserved-vector and template-rendering asset metadata. `apps/apple/project.yml` includes that generated asset catalog in the iOS/iPadOS/macOS app target. `apps/apple/CanadianHam/Views/LearnViews.swift` renders `Image("lesson-figure-<id>")` as a template image tinted with `DesignTokens.Colors.ink`, inside token-coloured paper surfaces. Optional text equivalents render in a SwiftUI `DisclosureGroup`.
 
-Apple's SVG renderer is stricter than browser SVG. Keep to the checked subset above and verify real app screenshots after adding figures. If a future Apple asset drops SVG `<text>`, update `check:figures:fix` to generate Apple-specific outlined text or render labels as SwiftUI text overlays while keeping web source text inspectable.
-
-After changing `apps/apple/project.yml` or adding generated Swift files, regenerate the project from `apps/apple/` with XcodeGen and run it twice to confirm determinism:
+After changing `apps/apple/project.yml`, regenerate the project from `apps/apple/` with XcodeGen and run it twice to confirm determinism:
 
 ```sh
 cd apps/apple && /opt/homebrew/bin/xcodegen generate --spec project.yml
@@ -81,17 +73,15 @@ The check verifies:
 - every figure reference has non-empty alt text and no duplicate figure id on the same page;
 - each SVG filename is a stable id and the root `<svg id>` matches it;
 - SVGs include `<title>`/`<desc>`, avoid hard-coded colours, use only allowed elements/attributes, and have no script/style/event-handler/external-reference surface;
-- SVG text stays within the `viewBox` padding according to the checker's conservative proportional text-bounds estimate;
-- sampled strokes and circle outlines stay clear of estimated text boxes; and
+- every SVG `<text>` `font-size` is large enough for about 11 pt text at 300 pt display width;
+- estimated text bounds stay inside the viewBox with a small edge margin;
+- estimated text bounds do not overlap each other; side-by-side or offset labels keep at least `0.25 × min(font-size)` clearance, while aligned vertical stacks may use `0.08 × min(font-size)`;
+- estimated text ink bounds do not intersect stroked `line`, `polyline`, `rect`, `circle`, `ellipse`, or sampled `path` outlines; and
 - generated Apple vector assets and generated Apple figure metadata are in sync with `content/figures/`.
 
-Run the checker self-test when changing the checker itself:
+The text estimate intentionally errs wide because Apple CoreSVG can ignore SVG font-family and font-weight. It handles `text-anchor="start|middle|end"`, inherited `font-size`/`font-weight`, bold text, and simple `<tspan>` runs. Path stroke checks sample `M/L/H/V/C/Q/A/Z` commands, absolute or relative, including curves and arcs, and include half the stroke width as padding.
 
-```sh
-node scripts/check-figures.mjs --self-test
-```
-
-`pnpm check:figures` and `node scripts/check-figures.mjs --self-test` are wired into GitHub CI. Use `pnpm check:figures:fix` to regenerate Apple assets, then rerun both commands before committing.
+`pnpm check:figures` and `node scripts/check-figures.mjs --self-test` are wired into GitHub CI. Use `pnpm check:figures:fix` to regenerate Apple assets and metadata, then rerun both commands before committing. Use the self-test when changing checker geometry rules.
 
 ## Contrast and evidence
 

@@ -7,7 +7,9 @@
     <rect x="360" y="154" width="104" height="72" rx="14" ry="14" stroke-width="7"/>
     <path d="M156 190 C174 190 190 190 206 190" stroke-width="8"/>
     <path d="M310 190 C326 190 344 190 360 190" stroke-width="8"/>
-    <path d="M464 190 C566 190 686 190 806 190" stroke-width="8"/>
+    <path d="M464 190 C500 190 526 190 552 190" stroke-width="8"/>
+    <path d="M552 190 C580 174 610 206 638 190 C666 174 696 206 724 190" stroke-width="8"/>
+    <path d="M724 190 C754 190 780 190 806 190" stroke-width="8"/>
     <path d="M806 190 C806 150 806 116 806 86" stroke-width="8"/>
     <path d="M754 86 C782 74 830 74 858 86" stroke-width="8"/>
 
@@ -20,7 +22,6 @@
     <path d="M552 292 C430 306 314 306 184 292" stroke-width="5"/>
     <path d="M184 292 L214 278" stroke-width="5"/>
     <path d="M184 292 L214 306" stroke-width="5"/>
-    <path d="M560 246 C590 230 626 230 656 246 C686 262 722 262 752 246" stroke-width="6"/>
 
     <rect x="56" y="468" width="118" height="70" rx="14" ry="14" stroke-width="7"/>
     <path d="M174 504 C294 504 478 504 688 504" stroke-width="8"/>
@@ -35,8 +36,8 @@
     <text x="412" y="199" font-size="36">ATU</text>
     <text x="806" y="58" font-size="36">antenna</text>
     <text x="384" y="54" font-size="38" font-weight="700">forward wave</text>
+    <text x="638" y="254" font-size="36" font-weight="700">lossy line</text>
     <text x="250" y="356" font-size="38" font-weight="700">reflected</text>
-
 
     <text x="115" y="452" font-size="36">rig</text>
     <text x="747" y="452" font-size="36">tuner</text>
