@@ -65,7 +65,9 @@ The decibel compares two levels. Receiver signal reports may use an S-meter, the
 
 For example, a monitor reading of S9 plus 18 dB that loses 6 dB would be expected near S9 plus 12 dB. The change is subtracted from the amount above S9.
 
-For Basic-level estimating, use practical power shortcuts. Decibel values add when power ratios multiply. For example, +3 dB +3 dB +3 dB is about 2 x 2 x 2, or 8x power. Also, +10 dB -3 dB is about 10 / 2, or 5x power.
+For Basic-level estimating, use practical power shortcuts. Decibel values add when power ratios multiply. For example, three +3 dB steps stack to about 8x power. A +10 dB step followed by a -3 dB step leaves about 5x power.
+
+When attenuators are cascaded, add their dB losses first and then convert the total. A 10 dB attenuator followed by a 3 dB attenuator gives a total loss of 13 dB, so a 24 W signal is reduced to about 1.2 W.
 
 | dB change | Power ratio |
 |---:|---:|
@@ -80,7 +82,7 @@ For Basic-level estimating, use practical power shortcuts. Decibel values add wh
 
 ### Worked example: gain
 
-A 4 W handheld feeds a 7 dB gain amplifier. Treat 7 dB as +10 dB -3 dB, or about 10 / 2 = 5x power.
+A 4 W handheld feeds a 7 dB gain amplifier. Use the shortcut table: that gain is roughly a fivefold power change.
 
 - Given: starting power = 4 W; gain = about 5:1.
 - Find: estimated output power.
@@ -91,7 +93,7 @@ A 4 W handheld feeds a 7 dB gain amplifier. Treat 7 dB as +10 dB -3 dB, or about
 
 ### Worked example: feedline loss
 
-A transmitter is 30 W and the line loss is 5 dB. Treat -5 dB as -3 dB -2 dB, so a quick estimate is a little less than one third of the original power.
+A transmitter is 30 W and the line loss is 5 dB. Use the shortcut table: that loss leaves a little less than one third of the original power.
 
 - Given: starting power = 30 W; remaining ratio is about 0.32.
 - Find: power reaching the antenna.
@@ -102,13 +104,13 @@ A transmitter is 30 W and the line loss is 5 dB. Treat -5 dB as -3 dB -2 dB, so 
 
 ### Worked example: large power reduction
 
-A test setup uses a 10 dB attenuator followed by a 3 dB attenuator.
+A test setup uses cascaded attenuators. Use the dB-chain method above before converting back to watts.
 
-- Given: starting power = 24 W; total change = -10 dB + -3 dB = -13 dB.
+- Given: starting power = 24 W; total loss from the chain above = 13 dB.
 - Find: final power.
-- Formula: -10 dB is about 1/10 power; another -3 dB is about 1/2 of that.
-- Substitute: 24 W / 10 / 2.
-- Answer: 1.2 W.
+- Formula: use the combined dB loss, not each attenuator as a separate story.
+- Substitute: apply the 13 dB loss from the chain above.
+- Answer: about 1.2 W.
 - Sanity check: adding dB losses is the same as multiplying their power ratios.
 
 ### In the real world: dB on a station checklist
@@ -119,13 +121,13 @@ The dB number is a ratio, not a watt value. You need the starting power before y
 
 ### Worked example: power ratio to S-meter reading
 
-A station is reported as S9 plus 25 dB while transmitting 80 W. The operator reduces power to 8 W.
+A station is reported as S9 plus 25 dB while transmitting 80 W. The operator reduces power to 40 W.
 
-- Given: 80 W to 8 W is a power ratio of 1/10, or -10 dB.
+- Given: 80 W to 40 W is a -3 dB power change.
 - Find: the new S-meter reading above S9.
 - Formula: subtract the dB reduction from the amount above S9.
-- Substitute: 25 dB - 10 dB.
-- Answer: S9 plus 15 dB.
+- Substitute: 25 dB - 3 dB.
+- Answer: S9 plus 22 dB.
 - Sanity check: the signal is still above S9, but by a smaller amount.
 
 ## Inductors and capacitors in combinations
@@ -191,7 +193,7 @@ That is why snap-on ferrites are common on computer leads, charger leads, and st
 
 1. A 14.1 MHz signal has harmonics at integer multiples of that frequency. Which ranges contain its second and third harmonics? The second harmonic is 28.2 MHz, still HF; the third is 42.3 MHz, now VHF.
 2. If a signal level rises by about 7 dB, what rough power ratio can you use? About five times.
-3. If transmitter power becomes four times larger, what approximate dB change is that? About +6 dB.
+3. If transmitter power becomes roughly 8x larger, what approximate dB change is that? About +9 dB.
 4. If frequency increases, what happens to inductive reactance? It increases.
 5. If frequency increases, what happens to capacitive reactance? It decreases.
 
