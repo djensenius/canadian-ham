@@ -1,7 +1,7 @@
 ---
 id: TASK-46.1
 title: 'Lesson accuracy and coverage fixes: M5 and M4'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
