@@ -1,10 +1,10 @@
 ---
 id: TASK-13
 title: Optional iCloud sync
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-10 16:40'
+updated_date: '2026-10-12 14:44'
 labels:
   - apple
   - privacy
@@ -45,3 +45,9 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 
 2026-10-10 (task-1.10): decision 4's container ID is confirmed as iCloud.org.davidjensenius.CanadianHam (bundle IDs moved to org.davidjensenius.* for universal purchase); iCloud.com.djensenius.CanadianHam above is superseded.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Research and decisions (13.1), privacy review (13.2), schema V2 (13.3), the gated toggle (13.4) and merge rules, cloud deletion and privacy verification (13.5, PR #192) are done. iCloud sync stays behind the DebugCloudKit gate until the owner's signed-device checks (task-34).
+<!-- SECTION:FINAL_SUMMARY:END -->
