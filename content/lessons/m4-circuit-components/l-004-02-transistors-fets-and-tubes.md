@@ -44,7 +44,7 @@ By the end of this lesson, you can:
 
 ## Bipolar transistors: current-controlled devices
 
-A bipolar transistor is a semiconductor device that can amplify a small signal at low circuit voltages. The word bipolar reminds you that both electrons and holes take part in its operation.
+A bipolar transistor is a semiconductor device that can amplify a small signal at low circuit voltages. The word bipolar reminds you that both electrons and holes take part in its operation. A hole is a missing-electron position in a semiconductor that behaves like a positive charge carrier.
 
 For Basic study, focus on its terminals and behaviour.
 
@@ -56,7 +56,7 @@ The three electrodes are:
 
 In many common explanations, a small base current controls a larger collector-emitter current. That is enough to understand why a transistor can act as an amplifier.
 
-A small changing input at the base can produce a larger changing output in the collector circuit. For smooth amplification, the transistor must be biased in its active region.
+A small changing input at the base can produce a larger changing output in the collector circuit. Bias means the steady DC voltages and currents that set the starting point. For smooth amplification, the transistor must be biased in its active region, between fully off and fully on.
 
 ### Memory trick: transistor terminal jobs
 
