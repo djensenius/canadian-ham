@@ -3,34 +3,39 @@
   "lessonId": "L-005-05",
   "officialQuestionIds": [
     "B-005-011-001",
+    "B-005-011-002",
     "B-005-011-004",
     "B-005-011-008",
     "B-005-012-001",
     "B-005-012-006",
+    "B-005-012-008",
     "B-005-012-011",
     "B-005-013-001",
-    "B-005-013-007"
+    "B-005-013-005",
+    "B-005-013-006",
+    "B-005-013-007",
+    "B-005-013-010"
   ],
   "conceptChecks": [
     {
       "id": "QZ-L-005-05-A-C1",
-      "prompt": { "en": "An ideal transformer has 800 primary turns and 120 secondary turns. If the primary is 240 V, what secondary voltage is expected?", "fr": null },
+      "prompt": { "en": "An ideal transformer has 900 primary turns and 150 secondary turns. If the primary is 180 V, what secondary voltage is expected?", "fr": null },
       "choices": [
-        { "text": { "en": "1 600 V", "fr": null }, "isCorrect": false },
-        { "text": { "en": "36 V", "fr": null }, "isCorrect": true },
-        { "text": { "en": "240 V", "fr": null }, "isCorrect": false },
-        { "text": { "en": "120 V", "fr": null }, "isCorrect": false }
+        { "text": { "en": "30 V", "fr": null }, "isCorrect": true },
+        { "text": { "en": "108 V", "fr": null }, "isCorrect": false },
+        { "text": { "en": "180 V", "fr": null }, "isCorrect": false },
+        { "text": { "en": "1 080 V", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The secondary has 120 / 800 of the primary turns, so 240 V x 0.15 = 36 V.", "fr": null }
+      "explanation": { "en": "The secondary has 150 / 900 of the primary turns, so 180 V x 1/6 = 30 V.", "fr": null }
     },
     {
       "id": "QZ-L-005-05-A-C2",
       "prompt": { "en": "Which statement is true at resonance in a series RLC circuit?", "fr": null },
       "choices": [
-        { "text": { "en": "The circuit must have infinite impedance.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A capacitor is no longer part of the circuit.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Frequency has no effect.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Current is at a maximum.", "fr": null }, "isCorrect": true }
+        { "text": { "en": "The L and C reactances cancel, so current is at a maximum.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The circuit behaves like a parallel tuned trap with high impedance.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The capacitor stops storing energy.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Adding more capacitance would have no effect on tuning.", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "Series resonance gives low impedance at the resonant frequency, so current is highest.", "fr": null }
     },
@@ -38,10 +43,10 @@
       "id": "QZ-L-005-05-A-C3",
       "prompt": { "en": "You need to measure voltage across a load resistor. How should the voltmeter be connected?", "fr": null },
       "choices": [
-        { "text": { "en": "In series with the load as the only current path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Across an open switch far from the load.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "In parallel with the load.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "In parallel with the supply fuse only.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "In series so all load current must flow through the voltmeter.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Across the load, using the meter as a high-resistance branch.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "In place of an RF wattmeter in the feedline.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Across the supply before selecting a meter mode.", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "Voltage is measured across two points, so a voltmeter is placed in parallel with the part.", "fr": null }
     }
