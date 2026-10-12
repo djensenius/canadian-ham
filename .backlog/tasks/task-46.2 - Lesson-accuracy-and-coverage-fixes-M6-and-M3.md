@@ -1,7 +1,7 @@
 ---
 id: TASK-46.2
 title: 'Lesson accuracy and coverage fixes: M6 and M3'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
@@ -87,3 +87,9 @@ Validation results:
 - DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift: passed (18 ContentLibraryTests).
 - Apple app suites were not run; this was content-only work per task instructions.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Fixed all High M6/M3 review findings and quick Medium accuracy/coverage issues across the affected lessons, quizzes, and EXP-B-003-017-009; recorded skipped structural items against task-46.5/46.6/46.7/46.10/46.11. Verified with coverage, quiz, originality, explanation, link, web vitest rerun, and Swift content package checks.
+<!-- SECTION:FINAL_SUMMARY:END -->
