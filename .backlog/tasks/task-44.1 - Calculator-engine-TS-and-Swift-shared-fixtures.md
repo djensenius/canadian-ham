@@ -1,11 +1,11 @@
 ---
 id: TASK-44.1
 title: 'Calculator engine (TS and Swift, shared fixtures)'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 14:58'
+updated_date: '2026-10-12 15:04'
 labels:
   - web
   - apple
@@ -42,10 +42,12 @@ A pure, deterministic basic-calculator engine in TypeScript (packages/) and Swif
 Implemented packages/calculator-ts and packages/calculator-swift, plus fixtures/calculator/sequences.json with 80 shared key-sequence cases. Documented left-to-right immediate execution, repeated equals, percent behaviour, errors, locale display and no formula/history storage. Wired @canadian-ham/calculator-engine into root pnpm test and CI. Validation: pnpm --filter @canadian-ham/calculator-engine test passed; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed; pnpm typecheck passed after pnpm install; TZ=UTC pnpm test passed. Apple app suites skipped because no app target/project.yml changes.
 
 Review fix pass started for requested changes: relative cancellation only for +/-, platform-independent display rounding, 12-significant-digit entry cap, C/CE error clear, accessibility display payload, stale repeat-equals fixes, and added fixture coverage.
+
+Review fixes: replaced global small-result zeroing with +/−-only relative cancellation, added platform-independent half-away display rounding, capped entries at 12 significant digits, made C/CE clear Error, added structured displayValue with localized EN/FR spoken strings, fixed stale repeat-equals after unary/clear keys, switched negative visual output to U+2212, and expanded the shared fixture to 103 cases covering small products/squares/reciprocals, rounding ties, entry limits, accessibility display values and low-gap cases. Validation: pnpm --filter @canadian-ham/calculator-engine typecheck passed; pnpm --filter @canadian-ham/calculator-engine test passed (105 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/calculator-swift passed (2 XCTest tests).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added pure TypeScript and Swift calculator engine packages using one shared 80-case fixture file, documented the calculator semantics and no-formula state constraint, and wired TS checks into pnpm/CI. Verified with shared TS fixture tests, Swift package tests, pnpm typecheck, and TZ=UTC pnpm test.
+Addressed review requests for task-44.1: small scientific results are preserved except relative +/− cancellation, TS/Swift use matching engine-owned half-away display rounding, entries cap at 12 significant digits, C/CE clears Error, displayValue exposes structured and localized accessible output, stale repeat-equals paths are cleared, and the shared fixture now has 103 cases. Verified with calculator TS typecheck, TS fixture suite, and Swift package tests.
 <!-- SECTION:FINAL_SUMMARY:END -->
