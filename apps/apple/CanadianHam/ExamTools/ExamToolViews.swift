@@ -424,6 +424,7 @@ struct ReferenceSheetToolView: View {
                             .frame(maxWidth: .infinity, alignment: .topLeading)
                             .padding(.bottom, DesignTokens.Spacing.xl)
                     }
+                    .scrollIndicators(.hidden)
                     .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
                     .accessibilityIdentifier("reference-sheet-scroll")
                 }
@@ -528,6 +529,7 @@ private struct ExamToolMarkdownView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .padding(DesignTokens.Spacing.sm)
             }
+            .scrollIndicators(.hidden)
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
         case .table(let table):
             ExamToolMarkdownTableView(table: table)
@@ -592,6 +594,7 @@ private struct ExamToolMarkdownTableView: View {
             }
             .padding(DesignTokens.Spacing.md)
         }
+        .scrollIndicators(.hidden)
         .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityElement(children: .contain)

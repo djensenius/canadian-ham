@@ -210,7 +210,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(scrollView.waitForExistence(timeout: 1), "\(context): expected a scroll view", file: file, line: line)
         for _ in 0..<12 where !isFullyVisibleInMiddleBand(element, in: app) || !scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty {
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            let delta: CGFloat = element.frame.midY > visibleFrame.midY ? -72 : 72
+            let hasProtectedAreaOffenders = !scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty
+            let delta: CGFloat = hasProtectedAreaOffenders || element.frame.midY < visibleFrame.midY ? 72 : -72
             preciseScroll(scrollView, in: app, fingerDeltaY: delta)
             waitBriefly()
         }
