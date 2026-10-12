@@ -48,6 +48,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @Binding var selectedTool: ExamTool?
     @ObservedObject var calculator: ExamCalculatorViewModel
     let referenceSheetConfiguration: ReferenceSheetConfiguration
+    @State private var selectedSheetDetent = PresentationDetent.medium
 
     private var isPresented: Binding<Bool> {
         Binding(
@@ -66,9 +67,10 @@ struct ExamToolPresentationModifier: ViewModifier {
         } else {
             content.sheet(item: $selectedTool) { tool in
                 toolPanel(for: tool)
-                    .presentationDetents([.medium, .large])
+                    .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
                     .presentationBackgroundInteraction(.enabled(upThrough: .medium))
                     .presentationDragIndicator(.visible)
+                    .onAppear { selectedSheetDetent = .medium }
             }
         }
 #elseif os(macOS)

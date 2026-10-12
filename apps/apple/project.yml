@@ -204,8 +204,8 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
-      - path: CanadianHamTests/Fixtures/basic-reference-sheet.md
-        type: file
+      - path: ../../content/reference-sheet
+        type: folder
         buildPhase: resources
         createIntermediateGroups: false
     postBuildScripts:
