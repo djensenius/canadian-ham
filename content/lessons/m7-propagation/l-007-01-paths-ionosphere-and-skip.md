@@ -43,7 +43,7 @@ Line-of-sight communication is the simplest path. One antenna has a clear enough
 
 The radio horizon sits a little beyond what your eyes can see. The reason is ordinary bending through the troposphere, the lower atmosphere where weather happens.
 
-A ground wave is the part of a signal that follows the Earth's surface and is affected by it. Ground wave matters most at lower frequencies. In daytime, the D region absorbs much of the lower-HF sky wave, so regional contacts out to roughly 200 km rely on ground wave when conditions and antennas cooperate.
+A ground wave is the part of a signal that follows the Earth's surface and is affected by it. Ground wave matters most at lower frequencies. In daytime, the D region absorbs much of the lower-HF sky wave, so ground wave is what makes many regional contacts out to roughly 200 km possible when conditions and antennas cooperate. Near-vertical sky wave can also cover that range when the frequency is low enough, as described below.
 
 A sky wave, also called an ionospheric wave, goes upward and is refracted by the ionosphere. The ionosphere is an ionized upper-atmosphere region with charged particles that affect radio waves. It is not a hard mirror; it bends the wave gradually. Exams and operators may still say a sky wave is reflected by the ionosphere as shorthand for the returned path.
 

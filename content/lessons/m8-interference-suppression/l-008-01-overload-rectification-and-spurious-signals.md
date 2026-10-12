@@ -27,7 +27,7 @@ Interference work starts with diagnosis, not blame. A clean amateur signal can s
 
 The skill is to separate those cases calmly. This lesson covers strong-signal overload, audio rectification in household equipment, unwanted signals from transmitting equipment, and common first cures.
 
-Common-mode current is unwanted RF flowing the same way on cable conductors, or on the outside of a coax shield. Differential current is the intended out-and-back current inside a circuit or cable pair.
+Common-mode current is unwanted RF flowing the same way on cable conductors, or on the outside of a coax shield. Differential-mode current flows out on one conductor and back on the other, in opposite directions. The wanted signal travels this way, but unwanted noise can travel this way too.
 
 ## Learning objectives
 
