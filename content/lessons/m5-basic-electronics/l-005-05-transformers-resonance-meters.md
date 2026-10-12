@@ -43,7 +43,7 @@ By the end of this lesson, you can:
 
 A transformer has windings coupled by a changing magnetic field. AC in the primary winding creates a changing magnetic field. That changing field induces voltage in the secondary winding.
 
-A stronger current in a conductor produces a stronger magnetic field around it. A permanent magnet is different: it keeps its own field without any current. Permanent magnets are usually made from hard magnetic materials such as steel. Induced voltage is strongest during the fastest current change, not while current is simply sitting at a steady value.
+A stronger current in a conductor produces a stronger magnetic field around it. A permanent magnet is different: it keeps its own field without any current. Permanent magnets are made from ferromagnetic materials that hold magnetism, such as hardened steel. Copper, aluminum, and brass are not useful permanent-magnet materials. Induced voltage is strongest during the fastest current change, not while current is simply sitting at a steady value.
 
 Coupling between wires is strongest when they are close and parallel. Transformer cores and winding arrangements are designed to make coupling useful, but energy transfer is not perfect. Warm iron laminations show that some energy is being lost as heat.
 
@@ -62,6 +62,8 @@ For ideal transformer questions, input power and output power are treated as equ
 Primary power = secondary power
 
 Power is still P = I x E.
+
+A transformer can also change the impedance seen by a circuit. Impedance is E / I for AC. Because the windings can have different voltages and currents, each side can present a different impedance to the circuit connected to it.
 
 ### Worked example: primary current
 
@@ -109,11 +111,13 @@ A 1:4 primary-to-secondary turns ratio steps secondary voltage up to 4 times the
 
 ## Resonance and tuned circuits
 
-A tuned circuit uses an inductor and a capacitor. Resonance occurs when inductive reactance and capacitive reactance are equal in size and opposite in sign. At that frequency, the circuit has a special response.
+A tuned circuit uses an inductor and a capacitor. Resonance occurs when inductive reactance and capacitive reactance are equal in size and opposite in sign. At that frequency, their opposite effects cancel in a series path or circulate energy in a parallel path.
 
-A parallel tuned circuit has high impedance at resonance. A series tuned circuit has low impedance at resonance. In a series RLC circuit tuned to the source frequency, current reaches a maximum.
+A series tuned circuit has low impedance at resonance because the L and C reactances cancel, leaving mainly resistance. Current reaches a maximum in a series RLC circuit tuned to the source frequency.
 
-The resonant frequency is the single centre frequency where the condition is exact. The useful range around it is called bandwidth.
+A parallel tuned circuit has high impedance at resonance. Energy swaps between the inductor's magnetic field and the capacitor's electric field, so the circuit draws little current from the source.
+
+The resonant frequency is the single centre frequency where the condition is exact. More inductance or more capacitance lowers that frequency. The useful range around it is called bandwidth.
 
 Receivers use resonant circuits to select desired signal frequencies and reject others. Adding a resistor to a simple coil-and-air-capacitor tuned circuit can change sharpness and losses.
 
@@ -139,14 +143,14 @@ A meter should disturb the circuit as little as practical.
 | Voltage or potential difference | Voltmeter | In parallel with the component or circuit | High resistance |
 | Current | Ammeter | In series with the circuit | Low resistance |
 | Voltage, current, resistance | Multimeter | Depends on selected mode | Follow the selected function |
-| RF transmitter output power | RF wattmeter | In the RF line as designed | Matched to the RF system |
-| Final power amplifier current | Ammeter | In the appropriate current path | Low resistance |
+| RF transmitter output power | RF wattmeter | In the feedline between the transmitter and load or antenna | Matched to the RF system |
+| Final power amplifier current | Ammeter | In series with the final amplifier DC current path | Low resistance |
 
 A voltmeter is placed across the part being measured. It should look like a high resistance so very little extra current flows through the meter.
 
 An ammeter is placed in series so the circuit current flows through it. It should look like a low resistance so it does not create a large extra voltage drop.
 
-Accuracy tells how close a meter reading is to the actual value being measured.
+Accuracy tells how close a meter reading is to the actual value being measured. Precision describes how closely repeated readings agree with each other. Resolution is the smallest displayed step. A meter can show many digits and still be inaccurate if it is not calibrated.
 
 ### Memory trick: V across, A along
 

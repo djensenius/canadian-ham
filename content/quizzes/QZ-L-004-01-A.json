@@ -56,7 +56,7 @@
     {
       "id": "QZ-L-004-01-A-C2",
       "prompt": {
-        "en": "An SSB transmitter audio stage is overdriven until voice peaks are clipped before modulation. What on-air problem is most likely?",
+        "en": "An audio amplifier is overdriven until the voice waveform has flattened peaks. What problem is most likely?",
         "fr": null
       },
       "choices": [
@@ -69,7 +69,7 @@
         },
         {
           "text": {
-            "en": "Distortion products that can sound harsh and create adjacent-channel splatter",
+            "en": "Distortion products from non-linear operation",
             "fr": null
           },
           "isCorrect": true
@@ -90,7 +90,7 @@
         }
       ],
       "explanation": {
-        "en": "Clipping is non-linear operation: it changes the audio waveform and produces distortion products that can spread the transmitted signal.",
+        "en": "Clipping is non-linear operation: it changes the waveform shape and produces distortion products.",
         "fr": null
       }
     },
