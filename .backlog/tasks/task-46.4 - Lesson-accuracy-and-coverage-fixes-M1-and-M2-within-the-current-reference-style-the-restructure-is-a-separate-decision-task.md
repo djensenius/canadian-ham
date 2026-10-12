@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:33'
+updated_date: '2026-10-12 15:35'
 labels:
   - content
 dependencies: []
@@ -96,10 +96,18 @@ Real taught-facts old-vs-new comparison for changed lesson lines:
 | L-002-04 UTC prose/examples | UTC-5 means subtract five hours and adjust date; 2100 UTC to 1600 local; 0300 UTC to previous-date 2200 | Yes: all old UTC facts remain; new text warns not to add and bridges 1600 to 4 PM. |
 
 Validation after review fixes: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift all passed on 2026-10-12.
+
+Approve-with-notes follow-up (2026-10-12): applied r464-2 notes 1-5.
+- L-001-04 unmodulated-carrier prose is now positive only: it states the allowance is a narrow brief-test allowance in the named range, without restating frequency-holding/contact wrong options.
+- L-001-04 special narrow segment now records the verified RBR-4 Schedule I limit: 10.100-10.150 MHz has 1 kHz maximum bandwidth. The prose says that 1 kHz is narrower than an SSB voice signal, so SSB voice is not allowed there. Source: RBR-4, Schedule I frequency bands and bandwidths, item for 10.100-10.150 MHz (accessed 2026-10-12).
+- L-001-04 row reference now matches the table wording: the table row is "Advanced on the special band" and the prose refers to "The Advanced on the special band row"; the row itself still teaches that it is on 60 metres.
+- L-001-01 language row now says oral delivery may be available after a written-exam failure caused by reading difficulty or because English or French is not the candidate's usual language.
+- Correction to the taught-facts table note: the L-001-02 home radio practice row should not have said every old fact stayed in that same sentence. The specific "business talk" phrase was removed from that sentence, but the covered fact is still taught by L-001-02's Communication rules prose and by the business-communications table row, so no taught fact was dropped.
+- Validation after approve-with-notes follow-up passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Review fixes completed after merging origin/main. Restored L-002-01 repeater-range and SSB-contact-spacing taught facts, fixed reviewer should/low items across M1/M2 lessons and b-001-010-008, and recorded an explicit old-vs-new taught-facts comparison in the task notes. Verified with coverage, quiz, originality, explanations, links, web Vitest, and Swift content package tests.
+Applied approve-with-notes follow-up items 1-5 after the re-review: positive unmodulated-carrier wording, verified 1 kHz RBR-4 limit for 10.100-10.150 MHz, matching special-band row reference, clearer L-001-01 language-row wording, and taught-facts note correction. Re-ran the requested content checks and web Vitest; all passed. Content-only change; no Apple app suites run.
 <!-- SECTION:FINAL_SUMMARY:END -->
