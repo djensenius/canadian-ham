@@ -2598,11 +2598,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
             trace.append("\(label): target=\(frameDescription(element.frame))")
         }
         record("start")
-        for attempt in 0..<28 {
-            let desiredTop = protectedNavigationFrame(in: app).maxY + 20
-            let delta = desiredTop - element.frame.minY
-            if abs(delta) <= 8, staticTextElementsNearOpaqueNavigationBarLowerEdge(in: app, scrollView: scrollView, distance: 60).isEmpty {
+        for attempt in 0..<12 {
+            let nearTopTexts = staticTextElementsNearOpaqueNavigationBarLowerEdge(in: app, scrollView: scrollView, distance: 60)
+            if isLessonFigureFullyVisibleForAudit(element, in: app), nearTopTexts.isEmpty {
                 break
+            }
+            let desiredTop = protectedNavigationFrame(in: app).maxY + 35
+            let delta: CGFloat
+            if !nearTopTexts.isEmpty, element.frame.minY > protectedNavigationFrame(in: app).maxY + 12 {
+                delta = -40
+            } else {
+                delta = desiredTop - element.frame.minY
             }
             preciseScroll(scrollView, contentDeltaY: min(80, max(-80, delta)))
             record("diagnostic top-visible scan \(attempt + 1)")
