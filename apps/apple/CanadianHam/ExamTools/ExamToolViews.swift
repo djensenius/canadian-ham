@@ -108,21 +108,31 @@ struct ExamToolPresentationModifier: ViewModifier {
         }
     }
 
-    @ViewBuilder
-    private func toolHeader(for tool: ExamTool) -> some View {
+    private func toolTitle(for tool: ExamTool) -> LocalizedStringResource {
         switch tool {
-        case .calculator:
-            Label("Calculator", systemImage: tool.systemImage)
-        case .referenceSheet:
-            Label("Reference sheet", systemImage: tool.systemImage)
+        case .calculator: "Calculator"
+        case .referenceSheet: "Reference sheet"
         }
+    }
+
+    private func toolHeader(for tool: ExamTool) -> some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Image(systemName: tool.systemImage)
+                .imageScale(.large)
+            Text(toolTitle(for: tool)) // l10n: localized
+                .lineLimit(1)
+                .minimumScaleFactor(0.55)
+        }
+        .font(DesignTokens.FontScale.body.weight(.bold))
+        .frame(minHeight: 44, alignment: .center)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
     }
 
     private func toolPanel(for tool: ExamTool, fillsAvailableHeight: Bool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             HStack(alignment: .center) {
                 toolHeader(for: tool)
-                    .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier(tool.accessibilityIdentifier)

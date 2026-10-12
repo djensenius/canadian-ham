@@ -222,7 +222,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     private func preciseScroll(_ scrollView: XCUIElement, in app: XCUIApplication, fingerDeltaY: CGFloat) {
         let limitedDelta = fingerDeltaY > 0 ? min(80, max(8, fingerDeltaY)) : -min(80, max(8, abs(fingerDeltaY)))
         let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-        let protectedBottom = activeToolPanelTop(in: app).map { $0 - 24 } ?? (visibleFrame.maxY - 24)
+        let protectedBottom = activeToolPanelTop(in: app).map { $0 - 80 } ?? (visibleFrame.maxY - 24)
         let usableMinY = visibleFrame.minY + 24
         let usableMaxY = max(usableMinY, min(visibleFrame.maxY - 24, protectedBottom))
         let startY = min(max(visibleFrame.midY, usableMinY), usableMaxY)
