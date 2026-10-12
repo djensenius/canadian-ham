@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:00'
+updated_date: '2026-10-12 16:02'
 labels:
   - web
 dependencies:
@@ -23,9 +23,9 @@ Web UI for the calculator and reference sheet in practice and mock exams: a side
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Question and answers remain visible and operable with either tool open at 320 px, tablet and desktop widths (tests)
-- [ ] #2 Calculator fully keyboard-operable with screen-reader announcements; axe passes with the panels open in light and dark
-- [ ] #3 The mock exam timer is unaffected; tools are available in practice and mock exams
+- [x] #1 Question and answers remain visible and operable with either tool open at 320 px, tablet and desktop widths (tests)
+- [x] #2 Calculator fully keyboard-operable with screen-reader announcements; axe passes with the panels open in light and dark
+- [x] #3 The mock exam timer is unaffected; tools are available in practice and mock exams
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -40,4 +40,12 @@ Web UI for the calculator and reference sheet in practice and mock exams: a side
 Coordinator: this lane owns content/reference-sheet/ (an original interim formula sheet, swappable for the official ISED sheet once the owner decides on licensing).
 
 Implemented original Basic reference-sheet content with a lesson-backed content validation script, web calculator/reference sheet tool panels in practice and mock exams, localized calculator UI/live output, focus-return behavior, responsive side-panel/bottom-drawer styling, and targeted RTL coverage. Targeted validation so far: pnpm --filter @canadian-ham/web typecheck passed; pnpm --filter @canadian-ham/content-tools check:reference-sheet passed; targeted App exam-tool tests passed (5 tests).
+
+Final validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 165); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed; pnpm check:schemas passed (46 schema tests / 1049 validation targets); pnpm import:check passed including the new reference-sheet validation (34 entries). Apple suites skipped because this task changed web/content only.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented web exam tools for practice and mock exams: non-modal calculator/reference sheet toolbar and responsive panel/drawer, calculator-engine integration with scoped keyboard input, localized display/live output, focus return, original Basic reference-sheet content with lesson-backed validation, and RTL/axe coverage for tools, focus, keyboard, locales, answer operability, widths, themes, and mock timer continuity. Verified with typecheck, full pnpm test, web build, dist URL/CSP audit, schema checks, import checks, and reference-sheet validation.
+<!-- SECTION:FINAL_SUMMARY:END -->
