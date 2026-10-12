@@ -2589,15 +2589,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 }
                 waitBriefly()
             }
-            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            let figureFrame = element.frame
-            let bottomSpare = visibleFrame.maxY - figureFrame.maxY
-            if figureFrame.height <= visibleFrame.height, bottomSpare > 96 {
-                preciseScroll(scrollView, contentDeltaY: -min(80, bottomSpare - 80))
-                record("raise figure from lower viewport \(round + 1)")
-                waitBriefly()
-                continue
-            }
             guard let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) else { break }
             let protectedMaxY = protectedNavigationFrame(in: app).maxY
             let delta: CGFloat = straddler.frame.midY < protectedMaxY ? -40 : 40
