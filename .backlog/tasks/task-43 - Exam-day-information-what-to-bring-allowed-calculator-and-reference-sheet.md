@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 18:37'
+updated_date: '2026-10-12 21:17'
 labels:
   - content
   - web
@@ -59,6 +59,8 @@ Review follow-up validation passed: pnpm --dir packages/content-tools check:less
 Merged origin/main after task-44.2 landed; resolved task-44 by keeping main's In Progress status plus the task-43 follow-up note, kept newer task contents elsewhere, softened L-001-01 reference-sheet wording, and reduced the virtual setup table row to camera, microphone, and stable internet. Post-merge web validation passed: pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test (171 tests); pnpm --filter @canadian-ham/web audit:urls.
 
 Addressed Copilot notes: translated the embedded lesson title in French Learn copy, made Apple lesson paragraph text selectable so the downloads URL can be copied without automatic network access, and extended the French iOS UI test to tap the Exam day link and assert L-001-01 opens. Validation passed: pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test (171 tests); pnpm --filter @canadian-ham/web audit:urls; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; targeted iOS UI test.
+
+Full Apple suite results after Copilot threads were addressed: iOS full suite ran 83 tests with 3 failures in Morse audit tests (testAccessibilityAuditMorseCourseLessonAndSummaryDark, testAccessibilityAuditMorseCourseLessonAndSummaryLight: known task-42 contrast flake; testAccessibilityAuditMorseSendingResultsLight failed at line 1643 in the full run but passed on targeted reruns). Targeted reruns of those 3 tests: rerun 1 executed 3 with 2 known contrast failures and MorseSendingResultsLight passed; rerun 2 executed 3 with 0 failures. macOS full suite passed 128 tests, tvOS full suite passed 12 tests, visionOS full suite passed 9 tests. Confirmed git diff origin/main -- apps/apple/CanadianHam/Morse apps/apple/CanadianHamUITests changes only the French Learn Exam day assertions/navigation in CanadianHamPracticeUITests; no Morse app code or Morse-specific UI tests changed on this branch.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
