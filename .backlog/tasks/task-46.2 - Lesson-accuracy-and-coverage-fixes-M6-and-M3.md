@@ -1,11 +1,11 @@
 ---
 id: TASK-46.2
 title: 'Lesson accuracy and coverage fixes: M6 and M3'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:25'
+updated_date: '2026-10-12 15:26'
 labels:
   - content
 dependencies: []
@@ -126,5 +126,5 @@ Validation for review round:
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Fixed all High M6/M3 review findings and quick Medium accuracy/coverage issues across the affected lessons, quizzes, and EXP-B-003-017-009; recorded skipped structural items against task-46.5/46.6/46.7/46.10/46.11. Verified with coverage, quiz, originality, explanation, link, web vitest rerun, and Swift content package checks.
+Addressed REQUEST CHANGES on 8ee77cf after merging main: corrected L-003-03 rectifier voltage, made QZ-L-003-05-A-C3 coherent, added physical/regulatory reasons for answer-only coverage items, replaced weak M6 concept checks, applied requested Low wording fixes, recorded per-lesson taught-facts/deferred notes, and reran content, web, and Swift content checks.
 <!-- SECTION:FINAL_SUMMARY:END -->
