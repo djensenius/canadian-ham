@@ -512,7 +512,7 @@ export const frMessages = defineMessages({
   statusAllLocalProgressReset: "Toute la progression locale a été réinitialisée.",
   referenceSheetNote: "À l’examen réel, ISDE fournit une feuille de référence avec les formules et les schémas fonctionnels. Les leçons expliquent tout ce qu’elle contient.",
   examDayHeading: "Le jour de l’examen",
-  examDayLearnCopy: "Les examens de compétence de base sont à livre fermé. La leçon « Authority, certificates, and exams » explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer.",
+  examDayLearnCopy: "Les examens de compétence de base sont à livre fermé. La leçon sur l’autorité, les certificats et les examens explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer.",
   examDayLessonLink: "Lire les conseils pour le jour de l’examen",
   englishOnlyLessonNotice: "Leçon offerte en anglais seulement.",
   englishOnlyExplanationNotice: "Explication offerte en anglais seulement.",

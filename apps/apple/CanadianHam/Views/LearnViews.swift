@@ -529,6 +529,7 @@ private struct LessonMarkdownView: View {
             Text(english(strippingLinks(from: text))) // l10n: content(en)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .textSelection(.enabled)
         case .list(let ordered, let items):
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
