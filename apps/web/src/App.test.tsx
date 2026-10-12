@@ -838,6 +838,10 @@ describe("App accessibility and flows", () => {
     assert.ok(within(prerequisites).getByRole("link", { name: "AC, decibels, capacitors, inductors, and reactance" }));
     await expectNoAxeViolations(container);
 
+    fireEvent.click(prerequisiteLink, { ctrlKey: true });
+    assert.equal(window.location.hash, "#/learn/M4/L-004-01");
+    assert.ok(screen.getByRole("heading", { name: "Amplifiers and diodes" }));
+
     await user.click(prerequisiteLink);
     await screen.findByRole("heading", { name: "Power and Ohm’s law" });
     assert.equal(window.location.hash, "#/learn/M5/L-005-02");

@@ -1051,6 +1051,9 @@ function LessonPrerequisites({ interfaceLanguage, lesson, onOpenLesson }: { read
         {prerequisiteLessons.map((prerequisiteLesson) => (
           <li key={prerequisiteLesson.id}>
             <a href={`#/learn/${prerequisiteLesson.moduleId}/${prerequisiteLesson.id}`} onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+              if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+                return;
+              }
               event.preventDefault();
               onOpenLesson(prerequisiteLesson.moduleId, prerequisiteLesson.id);
             }}><span lang={englishTextLang(interfaceLanguage)}>{prerequisiteLesson.title.en}</span></a>

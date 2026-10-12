@@ -348,6 +348,7 @@ function buildRecommendedLessonOrder(modulesById: ReadonlyMap<string, ParsedModu
     for (const lessonId of module.lessonIds) {
       if (moduleLessonIds.has(lessonId)) {
         errors.push({ filePath, message: `module lessonIds repeats lesson ${lessonId}` });
+        continue;
       }
       moduleLessonIds.add(lessonId);
       if (orderByLessonId.has(lessonId)) {
