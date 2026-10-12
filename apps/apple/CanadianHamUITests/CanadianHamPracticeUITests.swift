@@ -1498,7 +1498,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
         let inlineWheel = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel"].firstMatch
-        scrollUntilExists(inlineWheel, in: app, maxSwipes: 80)
+        scrollUntilPartiallyVisible(inlineWheel, in: app, maxSwipes: 80)
         XCTAssertTrue(inlineWheel.exists, "Expected inline Ohm's law wheel image button at largest text size")
         positionLessonFigureFullyVisibleWithProtectedAreaClear(inlineWheel, in: app, context: "largest text inline Ohm's law wheel")
         assertFitsWindowWidth(inlineWheel, in: app, context: "largest text inline Ohm's law wheel")
@@ -2004,7 +2004,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
         for figureID in ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"] {
             let figureImageButton = app.descendants(matching: .any)["lesson-figure-\(figureID)"].firstMatch
-            scrollUntilExists(figureImageButton, in: app, maxSwipes: 80)
+            scrollUntilPartiallyVisible(figureImageButton, in: app, maxSwipes: 80)
             XCTAssertTrue(figureImageButton.exists, "Expected \(figureID) figure")
             positionLessonFigureFullyVisibleWithProtectedAreaClear(figureImageButton, in: app, context: "\(appearance.rawValue) \(figureID) inline figure")
             XCTAssertTrue(figureImageButton.label.localizedCaseInsensitiveContains(figureAltText[figureID]!), "Expected figure accessibility label for \(figureID); got \(figureImageButton.label)")
