@@ -8,6 +8,7 @@ const repoRoot = process.cwd();
 const figuresDir = path.join(repoRoot, "content", "figures");
 const lessonsDir = path.join(repoRoot, "content", "lessons");
 const appleCatalogDir = path.join(repoRoot, "apps", "apple", "CanadianHam", "Resources", "FigureAssets.xcassets");
+const appleMetadataPath = path.join(repoRoot, "apps", "apple", "CanadianHam", "Generated", "LessonFigureMetadata.swift");
 
 const fix = process.argv.includes("--fix");
 const selfTest = process.argv.includes("--self-test");
@@ -223,8 +224,9 @@ function approximateTextWidth(text, fontSize, fontWeight = "400") {
 function runMetrics(text, fontSize, fontWeight) {
   const width = approximateTextWidth(text, fontSize, fontWeight);
   const hasDescender = /[gjpqy]/.test(text);
+  const hasTallAccent = /[À-ÖØ-Þ]/.test(text);
   const bounds = {
-    top: -fontSize * 0.8,
+    top: -fontSize * (hasTallAccent ? 0.9 : 0.8),
     bottom: fontSize * (hasDescender ? 0.25 : 0.2),
     fontSize,
     width
@@ -232,7 +234,7 @@ function runMetrics(text, fontSize, fontWeight) {
   const horizontalBearing = Math.min(width * 0.18, fontSize * 0.12);
   bounds.strokeInsetLeft = horizontalBearing;
   bounds.strokeInsetRight = horizontalBearing;
-  bounds.strokeTop = -fontSize * 0.72;
+  bounds.strokeTop = -fontSize * (hasTallAccent ? 0.82 : 0.72);
   bounds.strokeBottom = fontSize * (hasDescender ? 0.18 : 0.12);
   return bounds;
 }
@@ -255,10 +257,27 @@ function anchoredLineBounds(line, file, failFn) {
   const right = left + totalWidth;
   let cursor = left;
   const runBounds = [];
+  const fillGlyphBounds = [];
   for (const item of runMetricsList) {
-    const { metrics } = item;
+    const { metrics, run, fontSize } = item;
     const runLeft = cursor;
     const runRight = cursor + metrics.width;
+    const characters = [...run.text];
+    const characterWidth = characters.length === 0 ? 0 : metrics.width / characters.length;
+    characters.forEach((character, characterIndex) => {
+      if (/\s/.test(character)) {
+        return;
+      }
+      const characterLeft = runLeft + characterWidth * characterIndex;
+      const characterRight = characterLeft + characterWidth;
+      const characterInset = Math.min(characterWidth * 0.18, fontSize * 0.12);
+      fillGlyphBounds.push({
+        left: Math.min(characterLeft + characterInset, (characterLeft + characterRight) / 2),
+        right: Math.max(characterRight - characterInset, (characterLeft + characterRight) / 2),
+        top: line.y - fontSize * (/[À-ÖØ-Þ]/.test(character) ? 0.82 : 0.7),
+        bottom: line.y + fontSize * (/[gjpqy]/.test(character) ? 0.25 : 0.12)
+      });
+    });
     runBounds.push({
       left: runLeft,
       right: runRight,
@@ -269,25 +288,20 @@ function anchoredLineBounds(line, file, failFn) {
         right: Math.max(runRight - metrics.strokeInsetRight, (runLeft + runRight) / 2),
         top: line.y + metrics.strokeTop,
         bottom: line.y + metrics.strokeBottom
-      },
-      fillBounds: {
-        left: Math.min(runLeft + metrics.strokeInsetLeft, (runLeft + runRight) / 2),
-        right: Math.max(runRight - metrics.strokeInsetRight, (runLeft + runRight) / 2),
-        top: line.y - metrics.fontSize * 0.7,
-        bottom: line.y + metrics.fontSize * 0.12
       }
     });
     cursor = runRight;
   }
   const bounds = unionBounds(runBounds);
   const strokeBounds = unionBounds(runBounds.map((bound) => bound.strokeBounds));
-  const fillBounds = unionBounds(runBounds.map((bound) => bound.fillBounds));
+  const fillBounds = fillGlyphBounds.length > 0 ? unionBounds(fillGlyphBounds) : strokeBounds;
   const text = line.runs.map((run) => run.text).join("").replace(/\s+/g, " ").trim();
   return {
     text,
     bounds,
     strokeBounds,
     fillBounds,
+    fillGlyphBounds,
     fontSize: Math.max(...runMetricsList.map((item) => item.fontSize)),
     fontWeight: normalizedFontWeight(line.runs[0]?.style.fontWeight),
     textAnchor: anchor,
@@ -354,6 +368,9 @@ function collectTextBoxes(file, textAttributes, inheritedStyle, body, failFn) {
     const tspanAttributes = parseAttributes(match[1]);
     validateUnsupportedAttributes(file, "tspan", tspanAttributes, failFn);
     const tspanStyle = mergeTextStyle(textStyle, tspanAttributes);
+    if ((tspanAttributes.has("dx") || tspanAttributes.has("dy")) && !tspanAttributes.has("x") && !tspanAttributes.has("y")) {
+      failFn(`${file}: <tspan> dx/dy without x or y is not supported; use explicit x/y for positioned tspan lines`);
+    }
     const hasPosition = tspanAttributes.has("x") || tspanAttributes.has("y") || tspanAttributes.has("dy");
     const nextX = tspanAttributes.has("x") ? parseSingleUnitlessLength(tspanAttributes.get("x"), Number.NaN, failFn, `${file}: <tspan> x`) : currentLine.x;
     const nextY = tspanAttributes.has("y") ? parseSingleUnitlessLength(tspanAttributes.get("y"), Number.NaN, failFn, `${file}: <tspan> y`) : currentLine.y;
@@ -406,6 +423,58 @@ function parseViewBox(file, source, failFn) {
     return null;
   }
   return { minX, minY, width, height, maxX: minX + width, maxY: minY + height };
+}
+
+function validateSvgSafety(file, source, failFn = fail) {
+  if (/<!\s*(?:DOCTYPE|ENTITY)\b/i.test(source) || /<!\[CDATA\[/i.test(source)) {
+    failFn(`${file}: DOCTYPE, ENTITY, and CDATA declarations are not allowed in lesson SVGs`);
+  }
+  const allowedElements = new Set([
+    "svg", "title", "desc", "g", "path", "circle", "ellipse", "line", "polyline", "polygon", "rect", "text", "tspan",
+    "defs", "marker", "clippath", "mask", "pattern"
+  ]);
+  const allowedAttributes = new Set([
+    "id", "xmlns", "viewBox", "role", "fill", "stroke", "stroke-linecap", "stroke-linejoin", "stroke-width", "opacity",
+    "d", "cx", "cy", "r", "rx", "ry", "x", "y", "dx", "dy", "x1", "y1", "x2", "y2", "width", "height", "points",
+    "font-family", "font-size", "font-weight", "text-anchor", "class", "style", "transform",
+    "marker-start", "marker-mid", "marker-end", "dominant-baseline", "alignment-baseline", "baseline-shift", "letter-spacing", "textLength", "lengthAdjust", "rotate", "href", "xlink:href"
+  ]);
+  for (const match of source.matchAll(/<\/?\s*([A-Za-z][A-Za-z0-9:-]*)([^>]*)>/g)) {
+    const element = match[1];
+    const elementName = element.toLowerCase();
+    if (!allowedElements.has(elementName)) {
+      failFn(`${file}: SVG element <${element}> is not allowed`);
+    }
+    if (match[0].startsWith("</")) {
+      continue;
+    }
+    const attributes = parseAttributes(match[2]);
+    const leftoverAttributes = match[2]
+      .replace(/([A-Za-z_:][-A-Za-z0-9_:.]*)="([^"]*)"/g, "")
+      .replace(/\//g, "")
+      .trim();
+    if (leftoverAttributes.length > 0) {
+      failFn(`${file}: SVG tag <${element}> contains unsupported or non-double-quoted attribute syntax '${leftoverAttributes}'`);
+    }
+    for (const [name, value] of attributes) {
+      const lowerName = name.toLowerCase();
+      if (lowerName.startsWith("on")) {
+        failFn(`${file}: event handler attribute '${name}' is not allowed`);
+      }
+      if (!allowedAttributes.has(name)) {
+        failFn(`${file}: SVG attribute '${name}' is not allowed`);
+      }
+      if (lowerName === "href" || lowerName === "xlink:href") {
+        failFn(`${file}: SVG references via '${name}' are not allowed`);
+      }
+      if ((name === "fill" || name === "stroke") && value !== "currentColor" && value !== "none") {
+        failFn(`${file}: ${name} must be currentColor or none, got '${value}'`);
+      }
+      if (value.includes("url(") || (name !== "xmlns" && /^https?:/i.test(value))) {
+        failFn(`${file}: external references are not allowed in '${name}'`);
+      }
+    }
+  }
 }
 
 function lineSegmentsFromPoints(points, closed = false) {
@@ -617,7 +686,7 @@ function parsePathData(file, d, failFn) {
     const relative = command === command.toLowerCase();
     switch (command.toUpperCase()) {
       case "M": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const x = readNumber("x");
         const y = readNumber("y");
         const point = { x: relative ? current.x + x : x, y: relative ? current.y + y : y };
@@ -633,7 +702,7 @@ function parsePathData(file, d, failFn) {
         break;
       }
       case "L": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const x = readNumber("x");
         const y = readNumber("y");
         if (!addPoint({ x: relative ? current.x + x : x, y: relative ? current.y + y : y })) return points;
@@ -641,21 +710,21 @@ function parsePathData(file, d, failFn) {
         break;
       }
       case "H": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const x = readNumber("x");
         if (!addPoint({ x: relative ? current.x + x : x, y: current.y })) return points;
         resetControls();
         break;
       }
       case "V": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const y = readNumber("y");
         if (!addPoint({ x: current.x, y: relative ? current.y + y : y })) return points;
         resetControls();
         break;
       }
       case "C": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const p1 = { x: readNumber("x1"), y: readNumber("y1") };
         const p2 = { x: readNumber("x2"), y: readNumber("y2") };
         const p3 = { x: readNumber("x"), y: readNumber("y") };
@@ -672,7 +741,7 @@ function parsePathData(file, d, failFn) {
         break;
       }
       case "S": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const reflected = lastCubicControl === null ? current : { x: current.x * 2 - lastCubicControl.x, y: current.y * 2 - lastCubicControl.y };
         const p2 = { x: readNumber("x2"), y: readNumber("y2") };
         const p3 = { x: readNumber("x"), y: readNumber("y") };
@@ -688,7 +757,7 @@ function parsePathData(file, d, failFn) {
         break;
       }
       case "Q": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const p1 = { x: readNumber("x1"), y: readNumber("y1") };
         const p2 = { x: readNumber("x"), y: readNumber("y") };
         const control = relative ? { x: current.x + p1.x, y: current.y + p1.y } : p1;
@@ -703,7 +772,7 @@ function parsePathData(file, d, failFn) {
         break;
       }
       case "T": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const reflected = lastQuadraticControl === null ? current : { x: current.x * 2 - lastQuadraticControl.x, y: current.y * 2 - lastQuadraticControl.y };
         const p2 = { x: readNumber("x"), y: readNumber("y") };
         const end = relative ? { x: current.x + p2.x, y: current.y + p2.y } : p2;
@@ -717,7 +786,7 @@ function parsePathData(file, d, failFn) {
         break;
       }
       case "A": {
-        if (!hasNumber()) return points;
+        if (!hasNumber()) { failPath(`is missing numeric arguments for command ${command}`); return points; }
         const rx = readNumber("rx");
         const ry = readNumber("ry");
         const rotation = readNumber("rotation");
@@ -751,47 +820,78 @@ function shapeDescription(tag, attributes) {
   return id === undefined ? `<${tag}>` : `<${tag} id="${id}">`;
 }
 
+function parseShapeLength(file, tag, attributes, name, fallback, failFn) {
+  return parseSingleUnitlessLength(attributes.get(name), fallback, failFn, `${file}: <${tag}> ${name}`);
+}
+
+function parseShapePoints(file, tag, attributes, failFn) {
+  const raw = attributes.get("points");
+  if (raw === undefined) {
+    failFn(`${file}: <${tag}> points must be present`);
+    return [];
+  }
+  const tokens = lengthTokens(raw);
+  if (tokens.length < 4 || tokens.length % 2 !== 0) {
+    failFn(`${file}: <${tag}> points must be unitless coordinate pairs`);
+    return [];
+  }
+  const points = [];
+  for (let index = 0; index < tokens.length; index += 2) {
+    if (!isUnitlessNumber(tokens[index]) || !isUnitlessNumber(tokens[index + 1])) {
+      failFn(`${file}: <${tag}> points must be unitless coordinate pairs`);
+      return [];
+    }
+    points.push({ x: Number(tokens[index]), y: Number(tokens[index + 1]) });
+  }
+  return points;
+}
+
+function paintIsVisible(value, fallback = "black") {
+  const normalized = String(value ?? fallback).trim().toLowerCase();
+  return normalized !== "none" && normalized !== "transparent";
+}
+
 function collectShapeObstacles(file, tag, attributes, shapeStyle, failFn) {
   const description = shapeDescription(tag, attributes);
   const invalid = () => {
-    failFn(`${file}: ${description} must use numeric geometry attributes so label intersections can be checked`);
+    failFn(`${file}: ${description} must use numeric unitless geometry attributes so label intersections can be checked`);
     return [];
   };
   let segments = [];
   let fillShape = null;
   if (tag === "line") {
-    const x1 = parseLength(attributes.get("x1"), 0);
-    const y1 = parseLength(attributes.get("y1"), 0);
-    const x2 = parseLength(attributes.get("x2"), 0);
-    const y2 = parseLength(attributes.get("y2"), 0);
+    const x1 = parseShapeLength(file, tag, attributes, "x1", 0, failFn);
+    const y1 = parseShapeLength(file, tag, attributes, "y1", 0, failFn);
+    const x2 = parseShapeLength(file, tag, attributes, "x2", 0, failFn);
+    const y2 = parseShapeLength(file, tag, attributes, "y2", 0, failFn);
     if (![x1, y1, x2, y2].every(Number.isFinite)) return invalid();
     segments = [[{ x: x1, y: y1 }, { x: x2, y: y2 }]];
   } else if (tag === "polyline" || tag === "polygon") {
-    const points = parsePointList(attributes.get("points"));
+    const points = parseShapePoints(file, tag, attributes, failFn);
     if (points.length < 2 || !points.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y))) return invalid();
     segments = lineSegmentsFromPoints(points, tag === "polygon");
     if (tag === "polygon") {
       fillShape = { kind: "polygon-fill", description, points };
     }
   } else if (tag === "rect") {
-    const x = parseLength(attributes.get("x"), 0);
-    const y = parseLength(attributes.get("y"), 0);
-    const width = parseLength(attributes.get("width"));
-    const height = parseLength(attributes.get("height"));
+    const x = parseShapeLength(file, tag, attributes, "x", 0, failFn);
+    const y = parseShapeLength(file, tag, attributes, "y", 0, failFn);
+    const width = parseShapeLength(file, tag, attributes, "width", Number.NaN, failFn);
+    const height = parseShapeLength(file, tag, attributes, "height", Number.NaN, failFn);
     if (![x, y, width, height].every(Number.isFinite) || width < 0 || height < 0) return invalid();
     segments = lineSegmentsFromPoints([{ x, y }, { x: x + width, y }, { x: x + width, y: y + height }, { x, y: y + height }], true);
   } else if (tag === "circle") {
-    const cx = parseLength(attributes.get("cx"), 0);
-    const cy = parseLength(attributes.get("cy"), 0);
-    const r = parseLength(attributes.get("r"));
+    const cx = parseShapeLength(file, tag, attributes, "cx", 0, failFn);
+    const cy = parseShapeLength(file, tag, attributes, "cy", 0, failFn);
+    const r = parseShapeLength(file, tag, attributes, "r", Number.NaN, failFn);
     if (![cx, cy, r].every(Number.isFinite) || r < 0) return invalid();
     segments = lineSegmentsFromPoints(sampleEllipse(cx, cy, r, r), true);
     fillShape = { kind: "circle-fill", description, cx, cy, r };
   } else if (tag === "ellipse") {
-    const cx = parseLength(attributes.get("cx"), 0);
-    const cy = parseLength(attributes.get("cy"), 0);
-    const rx = parseLength(attributes.get("rx"));
-    const ry = parseLength(attributes.get("ry"));
+    const cx = parseShapeLength(file, tag, attributes, "cx", 0, failFn);
+    const cy = parseShapeLength(file, tag, attributes, "cy", 0, failFn);
+    const rx = parseShapeLength(file, tag, attributes, "rx", Number.NaN, failFn);
+    const ry = parseShapeLength(file, tag, attributes, "ry", Number.NaN, failFn);
     if (![cx, cy, rx, ry].every(Number.isFinite) || rx < 0 || ry < 0) return invalid();
     segments = lineSegmentsFromPoints(sampleEllipse(cx, cy, rx, ry), true);
   } else if (tag === "path") {
@@ -801,12 +901,12 @@ function collectShapeObstacles(file, tag, attributes, shapeStyle, failFn) {
   }
 
   const obstacles = [];
-  const strokeWidth = parseLength(shapeStyle.strokeWidth, 1);
-  const hasStroke = String(shapeStyle.stroke ?? "none").trim().toLowerCase() !== "none";
+  const strokeWidth = parseSingleUnitlessLength(shapeStyle.strokeWidth, 1, failFn, `${file}: ${description} stroke-width`);
+  const hasStroke = paintIsVisible(shapeStyle.stroke, "none");
   if (hasStroke && Number.isFinite(strokeWidth) && strokeWidth > 0 && segments.length > 0) {
     obstacles.push({ kind: "stroke", description, strokeWidth, segments });
   }
-  const hasFill = String(shapeStyle.fill ?? "black").trim().toLowerCase() !== "none";
+  const hasFill = paintIsVisible(shapeStyle.fill, "black");
   if (hasFill && fillShape !== null) {
     obstacles.push(fillShape);
   }
@@ -912,6 +1012,11 @@ function validateUnsupportedAttributes(file, tag, attributes, failFn) {
   if (attributes.has("style") || attributes.has("class")) {
     failFn(`${file}: <${tag}> uses style/class styling, which the figure checker does not support; use presentation attributes instead`);
   }
+  for (const markerAttribute of ["marker-start", "marker-mid", "marker-end"]) {
+    if (attributes.has(markerAttribute)) {
+      failFn(`${file}: <${tag}> uses ${markerAttribute}, which can draw unchecked marker geometry and is not supported`);
+    }
+  }
   if (attributes.has("transform")) {
     failFn(`${file}: <${tag}> uses transform, which the figure checker does not support`);
   }
@@ -971,6 +1076,9 @@ function collectFigureGeometry(file, source, failFn) {
     const attributes = parseAttributes(token);
     const parent = stack[stack.length - 1];
     if (parent.skip) {
+      if (name === "style") {
+        failFn(`${file}: <style> is not supported by the figure checker, even inside skipped definitions`);
+      }
       if (!isSelfClosingTag(token)) {
         stack.push({ name, textStyle: parent.textStyle, strokeStyle: parent.strokeStyle, skip: true });
       }
@@ -1029,6 +1137,10 @@ function collectFigureGeometry(file, source, failFn) {
 
 function checkTextEdges(file, viewBox, texts, failFn) {
   for (const text of texts) {
+    const minimumFontSize = viewBox.width * 0.0367;
+    if (text.fontSize < minimumFontSize) {
+      failFn(`${file}: <text> '${text.text}' font-size ${text.fontSize} is below the minimum ${minimumFontSize.toFixed(1)} for an 11pt label at 300pt display width`);
+    }
     const { bounds } = text;
     const edgeMargin = text.fontSize * 0.25;
     if (bounds.left < viewBox.minX + edgeMargin || bounds.right > viewBox.maxX - edgeMargin || bounds.top < viewBox.minY + edgeMargin || bounds.bottom > viewBox.maxY - edgeMargin) {
@@ -1099,11 +1211,11 @@ function checkTextShapeIntersections(file, texts, obstacles, failFn) {
           }
         }
       } else if (obstacle.kind === "polygon-fill") {
-        if (polygonIntersectsRect(obstacle.points, text.fillBounds)) {
+        if (text.fillGlyphBounds.some((glyphBounds) => polygonIntersectsRect(obstacle.points, glyphBounds))) {
           failFn(`${file}: <text> '${text.text}' estimated ink bounds intersect ${obstacle.description} fill`);
         }
       } else if (obstacle.kind === "circle-fill") {
-        if (circleIntersectsRect(obstacle, text.fillBounds)) {
+        if (text.fillGlyphBounds.some((glyphBounds) => circleIntersectsRect(obstacle, glyphBounds))) {
           failFn(`${file}: <text> '${text.text}' estimated ink bounds intersect ${obstacle.description} fill`);
         }
       }
@@ -1123,7 +1235,9 @@ function checkTextBounds(file, source, failFn = fail) {
 
 function validateFigureSource(file, source) {
   const localErrors = [];
-  checkTextBounds(file, source, (message) => localErrors.push(message));
+  const collect = (message) => localErrors.push(message);
+  validateSvgSafety(file, source, collect);
+  checkTextBounds(file, source, collect);
   return localErrors;
 }
 
@@ -1161,6 +1275,11 @@ function runSelfTest() {
       expect: [/Top.*Bot.*required at least.*neighbour/]
     },
     {
+      name: "same x different anchors keep normal gap threshold",
+      source: fixture(`<g fill="currentColor"><text x="100" y="40" font-size="20" text-anchor="start">Top</text><text x="100" y="62" font-size="20" text-anchor="end">Bot</text></g>`),
+      expect: [/Top.*Bot.*required at least.*neighbour/]
+    },
+    {
       name: "left viewBox edge fails",
       source: fixture(`<text x="1" y="40" font-size="20" fill="currentColor">Edge</text>`),
       expect: [/Edge.*viewBox edge/]
@@ -1179,6 +1298,11 @@ function runSelfTest() {
       name: "bottom viewBox edge fails",
       source: fixture(`<text x="60" y="118" font-size="20" fill="currentColor">Bottom</text>`),
       expect: [/Bottom.*viewBox edge/]
+    },
+    {
+      name: "minimum display text size fails",
+      source: fixture(`<text x="120" y="80" font-size="20" fill="currentColor">Tiny</text>`, "0 0 1000 200"),
+      expect: [/Tiny.*11pt label at 300pt display width/]
     },
     {
       name: "end-anchored edge fails",
@@ -1231,9 +1355,16 @@ function runSelfTest() {
       expect: [/arc.*<path> stroke/]
     },
     {
-      name: "smooth S and T path commands are sampled",
-      source: fixture(`<path d="M20 80 C50 20 70 20 100 80 S150 140 180 80 M30 30 Q70 90 110 30 T190 30" stroke="currentColor" stroke-width="6" fill="none"/><text x="92" y="80" font-size="18" fill="currentColor">smooth</text>`),
-      expect: [/smooth.*<path> stroke/]
+      name: "smooth S path command is sampled",
+      source: fixture(`<path d="M20 100 C40 100 60 100 80 100 S120 20 160 100" stroke="currentColor" stroke-width="6" fill="none"/><text x="112" y="74" font-size="18" fill="currentColor">smooth</text>`),
+      expect: [/smooth.*<path> stroke/],
+      reject: [/unsupported command 'S'/]
+    },
+    {
+      name: "smooth T path command is sampled",
+      source: fixture(`<path d="M20 100 Q60 100 80 100 T160 40" stroke="currentColor" stroke-width="6" fill="none"/><text x="116" y="78" font-size="18" fill="currentColor">tcurve</text>`),
+      expect: [/tcurve.*<path> stroke/],
+      reject: [/unsupported command 'T'/]
     },
     {
       name: "shape pass fixtures stay clear",
@@ -1276,6 +1407,16 @@ function runSelfTest() {
       expect: [/poly.*<polygon> fill/, /dot.*<circle> fill/]
     },
     {
+      name: "filled circle near miss passes",
+      source: fixture(`<circle cx="63" cy="65" r="2" fill="currentColor"/><text x="50" y="60" font-size="20" fill="currentColor">g</text>`),
+      expect: []
+    },
+    {
+      name: "filled circle just touching descender fails",
+      source: fixture(`<circle cx="61.8" cy="65" r="2" fill="currentColor"/><text x="50" y="60" font-size="20" fill="currentColor">g</text>`),
+      expect: [/g.*<circle> fill/]
+    },
+    {
       name: "tspan anchor and bold width pass",
       source: fixture(`<g fill="currentColor" text-anchor="middle"><text x="100" y="45" font-size="18" font-weight="700"><tspan x="100" y="45">Top</tspan><tspan x="100" y="82">Bottom</tspan></text></g>`),
       expect: []
@@ -1291,17 +1432,107 @@ function runSelfTest() {
       expect: []
     },
     {
+      name: "inline tspan summed width can fail edge check",
+      source: fixture(`<g fill="currentColor" text-anchor="middle"><text x="120" y="60" font-size="20">Hello <tspan font-weight="700">World</tspan></text></g>`, "0 0 150 120"),
+      expect: [/Hello World.*viewBox edge/]
+    },
+    {
+      name: "tspan dx dy without x y fails loudly",
+      source: fixture(`<text x="40" y="60" font-size="18" fill="currentColor">10<tspan dy="-6">3</tspan></text>`),
+      expect: [/dx\/dy without x or y/]
+    },
+    {
       name: "unsupported features fail loudly",
       source: fixture(`<g transform="translate(1 1)"><path d="M20 60 R40 60" stroke="currentColor"/><text x="20 30" y="50" font-size="20" class="label" dominant-baseline="middle">Bad</text><text x="70" y="50" font-size="1.2em">Unit</text><use href="#x"/></g>`),
       expect: [/transform/, /unsupported command 'R'/, /per-glyph lists/, /font-size.*unitless/, /style\/class/, /dominant-baseline/, /<use>/]
+    },
+    {
+      name: "style attribute fails loudly",
+      source: fixture(`<text x="40" y="60" font-size="18" style="font-weight:700">Styled</text>`),
+      expect: [/style\/class styling/]
+    },
+    {
+      name: "style element fails inside defs",
+      source: fixture(`<defs><style>text{font-size:30px}</style></defs><text x="40" y="60" font-size="18">Styled</text>`),
+      expect: [/<style> is not supported/]
+    },
+    {
+      name: "marker attribute fails loudly",
+      source: fixture(`<line x1="20" y1="60" x2="180" y2="60" marker-end="url(#arrow)" stroke="currentColor"/><text x="50" y="30" font-size="18">Marker</text>`),
+      expect: [/marker-end/]
+    },
+    {
+      name: "doctype declarations fail safety validation",
+      source: `<!DOCTYPE svg><svg id="fixture" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><title>Fixture</title><desc>Fixture</desc><text x="50" y="60" font-size="18">Safe</text></svg>`,
+      expect: [/DOCTYPE, ENTITY, and CDATA/]
+    },
+    {
+      name: "entity declarations fail safety validation",
+      source: `<!ENTITY x "bad"><svg id="fixture" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><title>Fixture</title><desc>Fixture</desc><text x="50" y="60" font-size="18">Safe</text></svg>`,
+      expect: [/DOCTYPE, ENTITY, and CDATA/]
+    },
+    {
+      name: "cdata declarations fail safety validation",
+      source: fixture(`<![CDATA[bad]]><text x="50" y="60" font-size="18">Safe</text>`),
+      expect: [/DOCTYPE, ENTITY, and CDATA/]
+    },
+    {
+      name: "single quoted attributes fail safety validation",
+      source: fixture(`<path fill='red' d="M0 0"/><text x="50" y="60" font-size="18">Safe</text>`),
+      expect: [/non-double-quoted attribute syntax/]
+    },
+    {
+      name: "unquoted attributes fail safety validation",
+      source: fixture(`<path fill=red d="M0 0"/><text x="50" y="60" font-size="18">Safe</text>`),
+      expect: [/non-double-quoted attribute syntax/]
+    },
+    {
+      name: "external references fail safety validation",
+      source: fixture(`<image href="https://example.com/x.svg"/><text x="50" y="60" font-size="18">Safe</text>`),
+      expect: [/external references|SVG references/]
+    },
+    {
+      name: "missing path coordinate fails loudly",
+      source: fixture(`<path d="M20 20 L" stroke="currentColor"/><text x="40" y="60" font-size="18">Missing</text>`),
+      expect: [/missing numeric arguments/]
+    },
+    {
+      name: "bad arc flag fails loudly",
+      source: fixture(`<path d="M20 20 A10 10 0 2 1 40 40" stroke="currentColor"/><text x="40" y="60" font-size="18">Flag</text>`),
+      expect: [/arc large-arc flag must be 0 or 1/]
+    },
+    {
+      name: "shape coordinate units fail loudly",
+      source: fixture(`<line x1="10%" y1="20" x2="80" y2="20" stroke="currentColor"/><circle cx="50" cy="50" r="5px" fill="currentColor"/><text x="40" y="90" font-size="18">Units</text>`),
+      expect: [/<line> x1.*unitless/, /<circle> r.*unitless/]
     }
   ];
   const failures = [];
+  const refs = parseFigureReferences("```\n::figure ignored\nAlt text: Nope\n::\n```\n\n::figure fixture\nalt text: Safe alt\n::", "fixture.md");
+  if (refs.length !== 1 || refs[0].id !== "fixture" || refs[0].altText !== "Safe alt") {
+    failures.push("figure reference parser did not skip fences or parse case-insensitive alt text");
+  }
+  const expectReferenceError = (label, markdown) => {
+    const before = errors.length;
+    parseFigureReferences(markdown, `${label}.md`);
+    if (errors.length === before) {
+      failures.push(`${label}: expected figure reference parser error`);
+      return;
+    }
+    errors.splice(before);
+  };
+  expectReferenceError("duplicate directive", "::figure fixture\nAlt text: Safe\n::\n\n::figure fixture\nAlt text: Safe again\n::");
+  expectReferenceError("unclosed directive", "::figure fixture\nAlt text: Safe\n\nNext paragraph");
   for (const testCase of cases) {
     const actualErrors = validateFigureSource(`self-test:${testCase.name}`, testCase.source);
     for (const expected of testCase.expect) {
       if (!actualErrors.some((error) => expected.test(error))) {
         failures.push(`${testCase.name}: expected error ${expected} but saw ${JSON.stringify(actualErrors)}`);
+      }
+    }
+    for (const rejected of testCase.reject ?? []) {
+      if (actualErrors.some((error) => rejected.test(error))) {
+        failures.push(`${testCase.name}: rejected unexpected error ${rejected} but saw ${JSON.stringify(actualErrors)}`);
       }
     }
     if (testCase.expect.length === 0 && actualErrors.length > 0) {
@@ -1329,6 +1560,7 @@ function readFigures() {
       fail(`${file}: figure filenames must be lower-case stable ids with hyphens only`);
     }
     const source = readFileSync(path.join(figuresDir, file), "utf8");
+    validateSvgSafety(file, source);
     const rootId = /<svg\b[^>]*\bid="([^"]+)"/i.exec(source)?.[1];
     if (rootId !== id) {
       fail(`${file}: root <svg id> must equal filename id '${id}'`);
@@ -1351,28 +1583,47 @@ function readFigures() {
 function parseFigureReferences(markdown, relativePath) {
   const lines = markdown.replace(/\r\n/g, "\n").split("\n");
   const references = [];
+  const idsOnPage = new Set();
+  let inFence = false;
   for (let index = 0; index < lines.length; index += 1) {
-    const match = /^::figure\s+([a-z0-9][a-z0-9-]*)\s*$/.exec(lines[index]?.trim() ?? "");
+    const trimmedLine = lines[index]?.trim() ?? "";
+    if (/^```/.test(trimmedLine)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) {
+      continue;
+    }
+    const match = /^::figure\s+([a-z0-9][a-z0-9-]*)\s*$/.exec(trimmedLine);
     if (match === null) {
       continue;
     }
     const id = match[1];
+    if (idsOnPage.has(id)) {
+      fail(`${relativePath}: figure '${id}' is referenced more than once, which would duplicate inline SVG ids`);
+    }
+    idsOnPage.add(id);
     let altText = "";
     let closed = false;
     index += 1;
     for (; index < lines.length; index += 1) {
       const line = lines[index] ?? "";
-      if (line.trim() === "::") {
+      const trimmed = line.trim();
+      if (trimmed === "::") {
         closed = true;
         break;
       }
-      const altMatch = /^Alt text:\s*(.+)\s*$/i.exec(line.trim());
+      if (trimmed === "" || /^(#{1,6})(?:\s|$)/.test(line)) {
+        index -= 1;
+        break;
+      }
+      const altMatch = /^Alt text:\s*(.+)\s*$/i.exec(trimmed);
       if (altMatch !== null) {
         altText = altMatch[1].trim();
       }
     }
     if (!closed) {
-      fail(`${relativePath}: figure '${id}' directive is missing its closing '::'`);
+      fail(`${relativePath}: figure '${id}' directive is missing its closing '::' before the next blank line or heading`);
     }
     if (altText.length === 0) {
       fail(`${relativePath}: figure '${id}' is missing non-empty Alt text`);
@@ -1422,6 +1673,22 @@ function expectedAssets(figures) {
   return assets;
 }
 
+function appleMetadataSource(figures) {
+  const entries = [...figures.values()].map((figure) => {
+    const viewBox = parseViewBox(figure.file, figure.source, () => {});
+    if (viewBox === null) {
+      return null;
+    }
+    return `        \"${figure.id}\": CGSize(width: ${viewBox.width}, height: ${viewBox.height})`;
+  }).filter((entry) => entry !== null).join(",\n");
+  return `// Generated by scripts/check-figures.mjs. Do not edit by hand.\nimport CoreGraphics\n\nenum LessonFigureMetadata {\n    static let sizes: [String: CGSize] = [\n${entries}\n    ]\n\n    static func aspectRatio(for id: String) -> CGFloat {\n        guard let size = sizes[id], size.width > 0, size.height > 0 else {\n            return 4.0 / 3.0\n        }\n        return size.width / size.height\n    }\n}\n`;
+}
+
+function writeAppleMetadata(figures) {
+  mkdirSync(path.dirname(appleMetadataPath), { recursive: true });
+  writeFileSync(appleMetadataPath, appleMetadataSource(figures));
+}
+
 function writeAssets(figures) {
   rmSync(appleCatalogDir, { recursive: true, force: true });
   mkdirSync(appleCatalogDir, { recursive: true });
@@ -1432,6 +1699,7 @@ function writeAssets(figures) {
     writeFileSync(path.join(imageset, asset.svgFilename), asset.source);
     writeFileSync(path.join(imageset, "Contents.json"), asset.contents);
   }
+  writeAppleMetadata(figures);
 }
 
 function checkAssets(figures) {
@@ -1468,6 +1736,11 @@ function checkAssets(figures) {
     if (!expected.has(assetName)) {
       fail(`Apple figure asset '${assetName}' has no matching content/figures SVG`);
     }
+  }
+  if (!existsSync(appleMetadataPath)) {
+    fail("Apple figure metadata is missing; run pnpm check:figures:fix");
+  } else if (readFileSync(appleMetadataPath, "utf8") !== appleMetadataSource(figures)) {
+    fail("Apple figure metadata is out of sync with content/figures viewBox sizes");
   }
 }
 

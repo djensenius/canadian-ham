@@ -9,12 +9,14 @@ Lesson figures are original SVG sources shared by web and Apple. They are supple
 - Set the root `<svg id="...">` to the same id as the filename.
 - Include `<title>` and `<desc>` in the SVG for authoring context.
 - Draw from scratch. Do not trace or copy ISED, RAC, or other third-party reference figures.
-- Use labels as SVG `<text>` where feasible so formula labels remain inspectable in the web source. Before review, confirm the generated Apple asset renders every label in the real app screenshots. Apple's CoreSVG path may ignore SVG `font-family` and `font-weight`, so leave enough clearance for a wider proportional fallback font.
+- Use labels as SVG `<text>` where feasible so formula labels remain inspectable in the web source. Before review, confirm the generated Apple asset renders every label in the real app screenshots. Apple's CoreSVG path may ignore SVG `font-family` and `font-weight`, so leave enough clearance for a wider fallback font.
 - Use `currentColor` for fills and strokes. Do not hard-code colours in SVGs; web and Apple supply ink/paper colours from design tokens.
-- Keep all text comfortably inside the `viewBox` with padding. The check script estimates text bounds and rejects text near the edge.
-- No stroke may cross or touch text. Break dividers around labels/formulas or move labels into clear regions.
+- Keep all text comfortably inside the `viewBox` with edge margin. The check script estimates text bounds and rejects text that is too close to the edge.
+- Keep neighbouring labels separated. Estimated text bounds must not overlap; side-by-side or offset labels keep at least `0.25 × min(font-size)` clearance, while same-anchor vertical stacks may use `0.08 × min(font-size)`.
+- No stroke may cross or touch text. Break dividers around labels/formulas or move labels into clear regions. The checker compares estimated text ink against stroked `line`, `polyline`, `polygon`, `rect`, `circle`, `ellipse`, and sampled `path` outlines, including relative path commands.
+- Filled `polygon` and `circle` shapes, such as arrowheads or dots, must also stay clear of text ink.
 - Keep label text large relative to the `viewBox`: every SVG `<text>` `font-size` must be at least `0.0367 × viewBox width`, which keeps text at least about 11 pt when a figure is displayed 300 pt wide. Use substantially larger text for primary symbol labels. If smaller text is unavoidable, provide a tap-to-enlarge view and a text equivalent.
-- Stay within the SVG subset accepted by `scripts/check-figures.mjs`: no script/style/foreignObject, no event handlers, no external references, and presentation attributes only. Use `fill`/`stroke` values of `currentColor` or `none`.
+- Stay within the SVG subset accepted by `scripts/check-figures.mjs`: no script/style/foreignObject, no event handlers, no external references, no transforms, no marker references, no nested `<svg>`, presentation attributes only, and unitless geometry/text lengths. Use `fill`/`stroke` values of `currentColor` or `none`. The checker intentionally fails unsupported SVG features rather than guessing.
 
 ## Referencing a figure from a lesson
 
@@ -39,7 +41,7 @@ Text equivalent:
 ::
 ```
 
-The directive parser accepts whitespace after `::figure`, case-insensitive `Alt text:`, and `-`, `*`, or `+` bullets for text-equivalent rows. An unclosed directive ends before a blank line or heading so it cannot hide the rest of the lesson. Keep the existing `## Illustration brief` section in the lesson for authors and originality review. Renderers intentionally hide that author brief from learners. When no `::figure ...` directive is present, learners see no placeholder card.
+The directive parser accepts whitespace after `::figure`, case-insensitive `Alt text:`, and `-`, `*`, or `+` bullets for text-equivalent rows. It ignores directives inside fenced code, rejects duplicate figure ids on the same page, and treats an unclosed directive as ending before a blank line or heading so it cannot hide the rest of the lesson. Keep the existing `## Illustration brief` section in the lesson for authors and originality review. Renderers intentionally hide that author brief from learners. When no `::figure ...` directive is present, learners see no placeholder card.
 
 ## Web rendering
 
@@ -80,14 +82,16 @@ The check verifies:
 - every `::figure` lesson reference outside fenced code resolves to `content/figures/<id>.svg`;
 - every figure reference has non-empty alt text and no duplicate figure id on the same page;
 - each SVG filename is a stable id and the root `<svg id>` matches it;
-- SVGs include `<title>`/`<desc>`, avoid hard-coded colours, use only allowed elements/attributes, and have no script/style/event-handler/external-reference surface;
-- estimated text bounds stay inside the viewBox with about `0.25 × font-size` edge clearance;
+- SVGs include `<title>`/`<desc>`, avoid hard-coded colours, use only allowed elements/attributes, and have no DOCTYPE/ENTITY/CDATA, script/style/event-handler/external-reference surface;
+- estimated text bounds use a monospace-aware width estimate, inherited unitless `font-size`/`font-weight`, bold text, `text-anchor="start|middle|end"`, and simple `<tspan>` runs with explicit `x`/`y` line positions;
+- SVG text stays inside the `viewBox` with about `0.25 × font-size` edge clearance and every `<text>` is large enough for the 11 pt at 300 pt display-width minimum;
 - estimated text bounds do not overlap each other; side-by-side or offset labels keep at least `0.25 × min(font-size)` clearance, while same-anchor vertical stacks may use `0.08 × min(font-size)`;
-- estimated text ink bounds do not intersect stroked `line`, `polyline`, `polygon`, `rect`, `circle`, `ellipse`, or sampled `path` outlines;
-- estimated text ink bounds do not intersect filled `polygon` or `circle` shapes used for arrowheads and dots; and
+- estimated text ink bounds do not intersect stroked `line`, `polyline`, `polygon`, `rect`, `circle`, `ellipse`, or sampled `path` outlines; path checks sample `M/L/H/V/C/Q/S/T/A/Z` commands, absolute or relative, including curves and arcs, and include half the stroke width as padding;
+- estimated text ink bounds do not intersect filled `polygon` or `circle` shapes used for arrowheads and dots;
+- unsupported SVG features fail loudly instead of being approximated: transforms, CSS `style` or `class`, `<style>`, `<use>`, `<symbol>`, nested `<svg>`, `<textPath>`, `<foreignObject>`, `marker-start|mid|end`, baseline/letter-spacing/text-length text attributes, per-glyph coordinate lists, `dx`/`dy`-only tspans, non-unitless sizes/geometry, and unknown path commands are not allowed; and
 - generated Apple vector assets and generated Apple figure metadata are in sync with `content/figures/`.
 
-The text estimate intentionally errs wide for both the web's requested monospace font and Apple's CoreSVG fallback: character widths use the larger of the proportional estimate and `0.6 × character count × font-size`. It handles `text-anchor="start|middle|end"`, inherited `font-size`/`font-weight`, bold text, and simple `<tspan>` runs. Path stroke checks sample `M/L/H/V/C/Q/S/T/A/Z` commands, absolute or relative, including curves and arcs, and include half the stroke width as padding. The checker intentionally fails unsupported SVG features rather than guessing: transforms, CSS `style` or `class`, `<use>`, `<symbol>`, nested `<svg>`, `<textPath>`, `<foreignObject>`, baseline/letter-spacing/text-length text attributes, per-glyph coordinate lists, non-unitless font sizes, and unknown path commands are not allowed. Content in `<defs>`, `<marker>`, `<clipPath>`, `<mask>`, and `<pattern>` is skipped.
+Content in `<defs>`, `<marker>`, `<clipPath>`, `<mask>`, and `<pattern>` is skipped by geometry checks, except `<style>` remains a failure because it can affect the whole figure. Shape coordinates and stroke widths must be unitless.
 
 Run the checker self-test when changing the checker itself:
 
