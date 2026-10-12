@@ -127,7 +127,7 @@ When the station is not in use, grounding or disconnecting antenna and rotator c
 
 No amateur installation can be made lightning-proof. Plan so a surge has a low-impedance path outside the operating position. Do not operate or service antennas during storms.
 
-Antenna work adds fall and falling-object hazards. Before any antenna repair, turn off the transmitter and disconnect the transmission line. Grounding the antenna structure does not remove an RF source if the transmitter is still connected.
+Antenna work adds fall and falling-object hazards. Before any antenna repair, shut the transmitter down and separate the feedline from the station equipment. Grounding the antenna structure does not remove an RF source if the transmitter remains connected.
 
 Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting. Touching an energized antenna or feed point can cause RF burns.
 
@@ -168,7 +168,7 @@ Indoor antennas can work, but the safety margin comes from distance, lower power
 1. A supply cover is opened and a cabinet interlock removes input power. What unsafe assumption must you avoid? Do not assume the unit is harmless; filter capacitors can still hold charge.
 2. A temporary control circuit measures 48 V in a damp work area. How should it be treated? Treat it as hazardous because it is above the usual 30 V shock threshold, and wet conditions can lower body resistance.
 3. A station bonding strap is clamped over painted, corroded metal. What should be corrected? Clean the contact area to bare metal, use proper bonding hardware, keep the bond short, and recheck continuity.
-4. A club schedules roof-antenna maintenance for the same afternoon that thunderstorms are forecast nearby. What conservative change should the team make? Postpone the work, turn off the transmitter, disconnect the feedline before any repair, and keep antennas disconnected or grounded during storm conditions.
+4. A club schedules roof-antenna maintenance for the same afternoon that thunderstorms are forecast nearby. What conservative change should the team make? Postpone the work, shut the transmitter down, separate the feedline from station equipment before any repair, and keep antennas disconnected or grounded during storm conditions.
 5. An indoor antenna test is upgraded from a low-power whip to a directional antenna. What parts of the RF-safety plan should change? Recheck power, distance, access control, and beam direction.
 
 ## Radio connection
@@ -182,7 +182,7 @@ Safety choices affect station performance too. Good bonding can reduce hum and R
 - Creating separate unbonded ground rods for different station parts.
 - Using a bigger fuse to stop nuisance blowing without finding the fault.
 - Putting a lightning protector at the radio end of a cable run as the only protection.
-- Starting antenna repair while the transmitter and feedline are still connected.
+- Starting antenna repair while the transmitter can still energize the feedline.
 - Treating handheld and indoor antennas as harmless because they are convenient.
 - Treating an SWR match as an RF exposure assessment.
 
@@ -198,7 +198,7 @@ Description: Draw an original room-and-wall cross-section. Inside, show a transc
 - Turn off and unplug mains equipment before fault checks, and respect stored charge in capacitors.
 - Bond and ground station equipment and grounding electrodes to reduce dangerous voltage differences.
 - Use correct fuse ratings, chassis safety grounding, and source-side mobile fusing.
-- Before antenna repair, turn off the transmitter and disconnect the transmission line.
+- Before antenna repair, shut the transmitter down and separate the feedline from station equipment.
 - Lightning protection combines outside entry protection, bonding, grounding, cable handling, and conservative disconnection.
 - RF exposure safety depends on distance, power, antenna gain, operating time, and keeping people away from energized antennas.
 - Safety Code 6 guides RF exposure evaluation when one is needed.
