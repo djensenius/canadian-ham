@@ -433,7 +433,7 @@ struct PracticeSessionView: View {
             .background(DesignTokens.Colors.paper)
         }
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
-        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel)
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, referenceSheetConfiguration: referenceSheetConfiguration)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
         .onAppear { calculatorViewModel.updateLocale(language.calculatorLocale) }
         .onChange(of: language) { _, next in calculatorViewModel.updateLocale(next.calculatorLocale) }
@@ -577,6 +577,15 @@ struct PracticeSessionView: View {
 
     private var availableExamTools: [ExamTool] {
         bank.courseBankID == .advanced ? [.calculator] : ExamTool.allCases
+    }
+
+    private var referenceSheetConfiguration: ReferenceSheetConfiguration {
+#if DEBUG
+        if let resourceName = AppLaunchArguments.value(after: "-CanadianHamReferenceSheetResourceName") {
+            return ReferenceSheetConfiguration(resourceName: resourceName, resourceExtension: "md", subdirectory: "reference-sheet")
+        }
+#endif
+        return .basic
     }
 
     private var practiceReview: some View {
@@ -866,7 +875,7 @@ struct MockExamView: View {
             .background(DesignTokens.Colors.paper)
         }
         .navigationTitle("Mock exam")
-        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel)
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, referenceSheetConfiguration: referenceSheetConfiguration)
         .sheet(isPresented: $showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 navigator
@@ -1009,6 +1018,15 @@ struct MockExamView: View {
 
     private var availableExamTools: [ExamTool] {
         bank.courseBankID == .advanced ? [.calculator] : ExamTool.allCases
+    }
+
+    private var referenceSheetConfiguration: ReferenceSheetConfiguration {
+#if DEBUG
+        if let resourceName = AppLaunchArguments.value(after: "-CanadianHamReferenceSheetResourceName") {
+            return ReferenceSheetConfiguration(resourceName: resourceName, resourceExtension: "md", subdirectory: "reference-sheet")
+        }
+#endif
+        return .basic
     }
 
     @ViewBuilder
