@@ -100,3 +100,7 @@ Figure strokes and text use `currentColor` against token paper surfaces. The ren
 ## Originality note for task-38.1
 
 The three Ohm’s law figures added for task-38.1 (`ohms-law-triangle`, `power-triangle`, and `ohms-law-power-wheel`) were drawn from scratch as simple ink-style memory aids using only the standard public-domain formula relationships already stated in the lesson. They were not traced from ISED reference art or copied from third-party study guides.
+
+## Originality note for task-38.2
+
+The five core memory-aid figures added for task-38.2 (`metric-prefix-ladder`, `resistor-colour-code`, `series-parallel-current-paths`, `db-power-ratio-table`, and `wavelength-dipole-example`) were drawn from scratch as simple ink-style study aids using only the standard electronics relationships already stated in the lessons. They were not traced from ISED reference art or copied from third-party study guides.

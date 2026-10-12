@@ -82,10 +82,11 @@ For equal-value resistors, there is a shortcut:
 Rt = R / number of equal branches
 
 ::figure series-parallel-current-paths
-Alt text: Series circuit with one current path and parallel circuit with separate branch current arrows that join again.
+Alt text: Cell feeding resistors in series, and the same cell feeding parallel resistor branches with total and branch current arrows.
 Text equivalent:
-- Series: current has one path through every part, and series resistances add.
-- Parallel: current splits into branch currents and rejoins; total current equals the sum of the branch currents.
+- Series: a cell drives a single loop through the resistors; the same current is measured through each resistor, and series resistances add.
+- Parallel: a cell feeds separate resistor branches; total current is measured on the rail before the first branch, while I1 and I2 are measured beside their branch resistors.
+- The branch currents rejoin, so total current equals I1 plus I2.
 ::
 
 ### Memory trick: product over sum
