@@ -15,41 +15,41 @@
     {
       "id": "QZ-L-007-03-A-C1",
       "prompt": {
-        "en": "Which two-metre emergency-coverage plan should be rejected rather than treated as a dependable primary path?",
+        "en": "A handheld-to-repeater estimate gives only local coverage, but a hilltop weak-signal pair later works many hundreds of kilometres on VHF. What should the log say before claiming an enhanced opening?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "A tested line-of-sight relay path with assigned operators and a fallback frequency.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "A repeater plan with simplex fallback and a recent coverage check.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "A plan that depends on future sporadic-E, auroral, or meteor openings appearing on schedule.",
+            "en": "Record antenna heights, weather, distance, direction, and signal steadiness so the range claim can be tied to the path conditions.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "A ridge-top temporary station that was checked from both served sites.",
+            "en": "Delete the local estimate, because any longer contact proves height and terrain never matter.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Assume the same long path is now dependable for handheld emergency coverage every day.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Log only transmitter power, because lower-atmosphere paths do not depend on weather or antenna location.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Routine coverage should rest on tested ordinary paths and fallbacks. Unusual openings are useful opportunities, but they are not a schedulable primary service path.",
+        "en": "The lesson separates ordinary local planning from longer weak-signal paths. Good notes preserve the evidence: station height, weather, direction, distance, and signal character.",
         "fr": null
       }
     },
@@ -97,41 +97,41 @@
     {
       "id": "QZ-L-007-03-A-C3",
       "prompt": {
-        "en": "After an unusual contact, which report best separates observation from diagnosis?",
+        "en": "During an HF exercise, a control station hears brief smeared bits from a normally missed area, but the traffic is not reliable enough for messages. What is the best operating response?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "It was weak, so it was definitely ground wave and no other details matter.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "It was distant, so all future contacts on the band can be scheduled daily.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Log the band, direction, duration, signal character, and weather or sky clues, then mark the mode as suspected if the evidence is incomplete.",
+            "en": "Log the clue as possible scattered energy and move traffic to a band, relay, or schedule that gives steadier copy.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "If a signal is smeared, widen the transmitted signal before recording anything else.",
+            "en": "Keep sending long messages on that path, because brief smeared copy proves the route is dependable.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Widen the transmitted signal to make all delayed copies arrive with the same phase.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Ignore the band and time in the log, because mixed paths cannot be compared later.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Good notes keep observations separate from certainty. Band, direction, duration, signal quality, and environmental clues help identify a mode later without turning a guess into a guarantee.",
+        "en": "Weak smeared copy can be a useful propagation clue, but it is not a dependable traffic path by itself. The operator should log it and choose a steadier communication plan.",
         "fr": null
       }
     }

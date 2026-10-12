@@ -97,41 +97,41 @@
     {
       "id": "QZ-L-007-02-A-C3",
       "prompt": {
-        "en": "A forecast made before an exercise says solar flux is high and the path should support upper-HF bands. Which conclusion goes too far?",
+        "en": "A straight-up ionosonde test and a shallow long-distance path use the same F region. Why can the shallow path work at a higher frequency than the vertical test?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Higher HF bands are worth checking before moving lower.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Time of day, season, geomagnetic conditions, and path direction can still change the result.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "The listed route is guaranteed all day, so receiver checks and fallback bands are unnecessary.",
+            "en": "The shallow path needs less bending to return to Earth.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "If signals are absent, use on-air evidence and revise the plan.",
+            "en": "The shallow path spends more time in the D region, so absorption becomes useful.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The vertical test ignores sunlight, while the shallow path creates ionization by itself.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The path frequency limit rises because transmitter power changes the critical frequency.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Solar-flux and MUF forecasts guide the first band to try; they do not guarantee a route. Operators still compare actual signals with the forecast and keep a fallback plan ready.",
+        "en": "Critical frequency is a vertical test. At a shallow angle, less bending is needed to return the wave, so the path MUF can be higher than the vertical critical frequency.",
         "fr": null
       }
     }

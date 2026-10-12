@@ -4,6 +4,7 @@ title: Faded practice and stronger concept checks
 status: To Do
 assignee: []
 created_date: '2026-10-12 14:57'
+updated_date: '2026-10-12 15:33'
 labels:
   - content
 dependencies:
@@ -27,3 +28,9 @@ For quantitative lessons, add one partly worked practice problem after each work
 - [ ] #1 Every lesson with calculations has at least one faded practice problem
 - [ ] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+From task-46.3 r463-2 review: QZ-L-007-03-A C1 and C3 were rewritten to avoid copying bank questions, but they should receive a stronger technical redesign in the faded-practice/stronger-concept-check pass. Also check EXP-B-008-004-004's spurious-emissions distractor note: the current 'broad category' wording may conflict with the cause-based out-of-band vs spurious distinction.
+<!-- SECTION:NOTES:END -->
