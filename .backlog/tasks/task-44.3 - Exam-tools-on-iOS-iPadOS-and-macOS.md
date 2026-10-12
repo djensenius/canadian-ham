@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 21:46'
+updated_date: '2026-10-12 22:03'
 labels:
   - apple
 dependencies:
@@ -50,6 +50,8 @@ Stopped per owner instruction for default accessibility-audit false-positive fam
 Continuation after coordinator decision: implemented the real layout fix for calculator sheets instead of treating clipped keys as an audit false positive. The compact sheet now gives the tool panel bounded available height, sizes calculator display/keys from that height with 44 pt minimum key targets, omits the long help text in tight medium-detent space, and automatically prefers the large detent for calculator at accessibility Dynamic Type. Also removed the panel identifier from the whole container and moved it to the header so child identifiers such as reference-sheet-scroll are exposed instead of being overwritten. Verified so far: git diff --check and node scripts/check-apple-text-sources.ts passed. Pushed commit 3c7ce975; targeted xbuild validation still pending behind the Apple build lock.
 
 Final validation after coordinator decision: fixed calculator medium-detent layout by sizing display and key grid from available sheet height with 44 pt minimum key targets; accessibility Dynamic Type calculator opens at the large detent and remains scrollable. Fixed reference sheet exposure by moving panel identifiers off the container so child identifiers survive, loading the bundled basic.md, and exposing the rendered sheet as a zoomable visual view with a single accessible text equivalent. Final targeted checks: iPhone 17 Pro CanadianHamExamToolsUITests full class passed 8 executed / 1 skipped / 0 failures; iPad Pro 13-inch (M5) inspector test testRegularWidthUsesInspectorAndKeepsAnswersHittable passed 1 / 0; macOS unit command passed 132 tests / 0; pnpm check:apple-l10n passed; node scripts/check-apple-text-sources.ts passed; git diff --check passed. Logs are under /tmp/task-44.3-*.log.
+
+Review fix progress: merged origin/main, rebuilt Localizable.xcstrings from main preserving main key order with only task keys appended, removed logs/ from .gitignore, converted Basic reference sheet to a normal app resource (removed optional copy script and regenerated Xcode project twice), gated reference-sheet buttons to Basic only, removed practice/mock auto-scroll and fixed 440 pt padding, added compact-sheet safe-area inset based on measured sheet height, restored reference sheet accessibility children instead of collapsed text, made zoom affect layout/font sizing, restored scroll indicators, capped calculator keys, and switched calculator hardware input away from window-wide keyboardShortcut toward focus-scoped onKeyPress. Pushed c7951bbe. Compile smoke passed: iOS ExamCalculatorViewModelTests 4/0. Remaining: refresh localization after new/changed strings, add/rework UI tests for Advanced gate/keyboard/unavailable/large detent, run target suites.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
