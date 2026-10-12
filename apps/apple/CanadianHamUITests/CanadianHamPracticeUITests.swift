@@ -2570,22 +2570,30 @@ final class CanadianHamPracticeUITests: XCTestCase {
             trace.append("\(label): target=\(frameDescription(element.frame))")
         }
         record("start")
-        for attempt in 0..<20 where !isLessonFigureFullyVisibleForAudit(element, in: app) {
-            let figureFrame = element.frame
-            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            if figureFrame.minY < visibleFrame.minY + 8 {
-                preciseScroll(scrollView, contentDeltaY: min(80, visibleFrame.minY + 8 - figureFrame.minY))
-                record("figure below opaque bar \(attempt + 1)")
-            } else if figureFrame.height <= visibleFrame.height, figureFrame.maxY > visibleFrame.maxY {
-                preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.maxY - visibleFrame.maxY + 8))
-                record("figure above bottom edge \(attempt + 1)")
-            } else if figureFrame.height > visibleFrame.height, figureFrame.minY > visibleFrame.minY + 8 {
-                preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.minY - visibleFrame.minY - 8))
-                record("oversized figure top into view \(attempt + 1)")
-            } else {
-                preciseScroll(scrollView, contentDeltaY: -12)
-                record("settle \(attempt + 1)")
+        for round in 0..<8 {
+            for attempt in 0..<8 where !isLessonFigureFullyVisibleForAudit(element, in: app) {
+                let figureFrame = element.frame
+                let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+                if figureFrame.minY < visibleFrame.minY + 8 {
+                    preciseScroll(scrollView, contentDeltaY: min(80, visibleFrame.minY + 8 - figureFrame.minY))
+                    record("figure below opaque bar \(round + 1).\(attempt + 1)")
+                } else if figureFrame.height <= visibleFrame.height, figureFrame.maxY > visibleFrame.maxY {
+                    preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.maxY - visibleFrame.maxY + 8))
+                    record("figure above bottom edge \(round + 1).\(attempt + 1)")
+                } else if figureFrame.height > visibleFrame.height, figureFrame.minY > visibleFrame.minY + 8 {
+                    preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.minY - visibleFrame.minY - 8))
+                    record("oversized figure top into view \(round + 1).\(attempt + 1)")
+                } else {
+                    preciseScroll(scrollView, contentDeltaY: -12)
+                    record("settle \(round + 1).\(attempt + 1)")
+                }
+                waitBriefly()
             }
+            guard let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) else { break }
+            let protectedMaxY = protectedNavigationFrame(in: app).maxY
+            let delta: CGFloat = straddler.frame.midY < protectedMaxY ? -40 : 40
+            preciseScroll(scrollView, contentDeltaY: delta)
+            record("opaque bar straddler \(round + 1): \(straddler.description)")
             waitBriefly()
         }
 
@@ -2751,6 +2759,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 preciseScroll(scrollView, contentDeltaY: -12)
                 record("settle \(attempt + 1)")
             }
+            waitBriefly()
+        }
+        for attempt in 0..<8 {
+            guard let straddler = firstLessonScrollableElementStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView) else { break }
+            let protectedMaxY = protectedNavigationFrame(in: app).maxY
+            let delta: CGFloat = straddler.frame.midY < protectedMaxY ? -40 : 40
+            preciseScroll(scrollView, contentDeltaY: delta)
+            record("opaque bar straddler \(attempt + 1): \(straddler.description)")
             waitBriefly()
         }
         assertNoLessonScrollableContentStraddlesOpaqueNavigationBar(
