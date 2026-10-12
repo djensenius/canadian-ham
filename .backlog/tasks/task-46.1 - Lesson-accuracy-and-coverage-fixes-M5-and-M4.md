@@ -1,9 +1,11 @@
 ---
 id: TASK-46.1
 title: 'Lesson accuracy and coverage fixes: M5 and M4'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 14:57'
+updated_date: '2026-10-12 15:01'
 labels:
   - content
 dependencies: []
@@ -24,3 +26,9 @@ Apply the High findings (and Medium ones that are a sentence or two) from docs/l
 - [ ] #2 Every covered question flagged as untaught or answer-key only is now taught with a reason
 - [ ] #3 Coverage, quizzes, originality, explanations and links checks pass; the taught-facts check finds no regressions
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Verify m5-m4 findings against the active bank and reference sheet/source material before adding facts.\n2. Make focused paragraph-level fixes in each affected M5/M4 lesson and any flagged explanations/quizzes without changing coverage or lesson structure.\n3. Commit after each lesson slice, record finding-to-fix notes with question IDs and sources.\n4. Run coverage, quiz, originality, explanation, link, web vitest, and content-swift checks; then finalize task ACs and Done.
+<!-- SECTION:PLAN:END -->
