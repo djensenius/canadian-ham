@@ -48,7 +48,7 @@ A handheld beam for a fox hunt or satellite contact does not make the transmitte
 
 Point the main lobe at the wanted signal. You can also point the back or side of the antenna toward a noise source you want to reduce.
 
-Stacking two identical antennas can add about 3 dB in the main direction before real-world losses. The added gain comes from concentrating the combined pattern, not from creating extra transmitter power.
+Stacking a matched antenna pair can add about 3 dB in the main direction before real-world losses. The added gain comes from concentrating the combined pattern, not from creating extra transmitter power.
 
 ### Worked example: dBi and dBd
 
@@ -71,7 +71,7 @@ In a simple Yagi, a reflector is slightly longer than the driven element and sit
 
 Yagis become more practical as frequency rises because their elements are shorter. HF beams are common on upper HF bands where a rotatable structure can fit on a tower or mast. Trap Yagis use resonant traps in the elements so one antenna can operate on several bands.
 
-Element diameter matters. Larger-diameter elements can broaden the useful frequency range. Wider element spacing can raise gain, but it changes the pattern and mechanical size too. For a three-element Yagi, about 0.20 wavelength spacing is the Basic-bank compromise between gain and front-to-back ratio.
+Element diameter matters. Larger-diameter elements can broaden the useful frequency range. Wider element spacing can raise gain, but it changes the pattern and mechanical size too. For a tri-element Yagi, spacing near a fifth of a wavelength balances forward gain with rear rejection.
 
 ### Worked example: original Yagi element estimates
 
@@ -166,7 +166,7 @@ Description: Draw a brush-style top view. Label the rear element "reflector, sli
 - Gain describes concentration compared with a reference antenna.
 - A parasitic element is energized by nearby RF fields, not by a direct feedline connection.
 - Directors are slightly shorter; reflectors are slightly longer, and wider spacing can raise gain.
-- A three-element Yagi spacing near 0.20 wavelength is the Basic-bank compromise convention.
+- A tri-element Yagi spacing near a fifth of a wavelength is the Basic-bank convention for balancing forward gain and rear rejection.
 - Use about 143 / f(MHz) for practical HF half-wave estimates and 71.3 / f(MHz) for practical HF quarter-wave estimates.
 - A quarter-wave vertical is omnidirectional in the horizontal plane in the simple exam model.
 - Some VHF half-wave vertical exam items use 150 / f(MHz) as the stated convention.
