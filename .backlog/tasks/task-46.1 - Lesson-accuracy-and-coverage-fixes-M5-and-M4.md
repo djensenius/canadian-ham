@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:21'
+updated_date: '2026-10-12 15:27'
 labels:
   - content
 dependencies: []
@@ -54,10 +54,18 @@ Taught-facts self-check: reviewed the flagged covered/answer-key-only IDs listed
 Validation passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run (160 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (18 XCTest tests).
 
 Review r461 requested changes after ebd81aa: merged main into branch first (kept branch version of task-46.1 on conflict). Fixing L-005-04 dB worked-method examples plus low/medium review findings, then rerunning content checks and web tests.
+
+Review r461 fixes:
+- Merged main into task-46.1-lesson-fixes-m5-m4 first; conflict was only task-46.1 and I kept the branch version as instructed.
+- L-005-04 dB method: rewrote the gain, feedline-loss, and large-reduction examples to keep the Given/Find/Formula/Substitute pattern and show dB-step construction from the 10 dB/3 dB shortcuts while using non-bank values that pass originality. The 7 dB gain example now explains it as one 3 dB step below the tenfold row and substitutes 4 W x tenfold x 0.5; the 7 dB loss example uses 44 W and 0.1 / 0.5 = 0.2; the 13 dB reduction example uses 24 W x 0.1 x 0.5 = 1.2 W. Added the -30 dB method for B-005-008-011 as three -10 dB steps -> 1/1000 power.
+- Fixed remaining r461 findings: moved the L-005-01 voltage analogy so it no longer splits the charger-label section; clarified the prefix mnemonic limit; changed the dielectric wording to unqualified “raises it”; tightened precision vs resolution wording in L-005-05 and EXP-B-005-013-010; aligned QZ-L-005-01 C2 with the lesson; replaced the remaining giveaway distractors in QZ-L-005-04 C3.
+- Medium findings explicitly skipped as out of this task's sentence-or-two scope: duplicated LED/charger examples (review Medium #3) belongs in follow-up editing/refactoring, broad summary synthesis (Medium #14) belongs with summary/learnability work, and L-005-03 battery/voltage-divider tangents (Medium #15) require content movement/trim decisions outside this scoped fix. Existing structural skips remain TASK-46.5 through TASK-46.11 and task-38 as previously recorded.
+- Reference PDF claim notes, from the local Swift PDFKit extraction of the ISED Basic exam reference PDF: L-005-02 power formula P = I x E is present on page 1; L-005-02 Ohm's-law forms E = I x R, I = E / R, R = E / I are present on page 1; L-005-03 series resistance Rt = R1 + ... and parallel resistance 1/Rt = 1/R1 + ... are present on page 1; L-005-04 inductor/capacitor series/parallel formulas are present on page 1; L-004-03 colour-code table is not present on the exam reference sheet (pages 2-5 are diagrams only).
+- Rerun validation passed after r461 fixes: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run (160 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (18 XCTest tests).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Fixed all High M5/M4 lesson findings and quick Medium wording/quiz issues in L-005-01 through L-005-05 and L-004-01 through L-004-03 without coverage moves or structural rewrites. Added task notes mapping findings to question IDs, source/reference-PDF checks, skipped structural items, and taught-facts self-check. Verification passed: coverage, quizzes, lesson originality all, explanations, links, web vitest, and Swift content package tests.
+Addressed review r461 after merging main into the branch. Restored explicit dB worked-method teaching in L-005-04 using Given/Find/Formula/Substitute and 10 dB/3 dB shortcut construction, fixed all other r461 lesson/quiz/explanation notes, and recorded additional skipped Medium items/reference-sheet claim checks. Verification passed: coverage, quizzes, lesson originality all, explanations, links, web vitest, and Swift content package tests.
 <!-- SECTION:FINAL_SUMMARY:END -->
