@@ -48,6 +48,8 @@ A handheld beam for a fox hunt or satellite contact does not make the transmitte
 
 Point the main lobe at the wanted signal. You can also point the back or side of the antenna toward a noise source you want to reduce.
 
+Stacking two identical antennas can add about 3 dB in the main direction before real-world losses. The added gain comes from concentrating the combined pattern, not from creating extra transmitter power.
+
 ### Worked example: dBi and dBd
 
 A small beam is listed as 8.6 dBi. To compare it with a dipole reference, subtract about 2.1 dB.
@@ -69,11 +71,11 @@ In a simple Yagi, a reflector is slightly longer than the driven element and sit
 
 Yagis become more practical as frequency rises because their elements are shorter. HF beams are common on upper HF bands where a rotatable structure can fit on a tower or mast. Trap Yagis use resonant traps in the elements so one antenna can operate on several bands.
 
-Element diameter matters. Larger-diameter elements can broaden the useful frequency range. Spacing affects gain and pattern shape. For a three-element Yagi, spacing near a small fraction of a wavelength is a design compromise, not a magic maximum.
+Element diameter matters. Larger-diameter elements can broaden the useful frequency range. Wider element spacing can raise gain, but it changes the pattern and mechanical size too. For a three-element Yagi, about 0.20 wavelength spacing is the Basic-bank compromise between gain and front-to-back ratio.
 
 ### Worked example: original Yagi element estimates
 
-For an exercise near 24.2 MHz, use the practical half-wave estimate for the driven element.
+For an exercise near 24.2 MHz, use the practical half-wave estimate for the driven element. The 5% shorter director and 5% longer reflector are the Basic-bank convention for these estimates.
 
 - Given: frequency = 24.2 MHz; director about 5% shorter; reflector about 5% longer.
 - Find: first-cut driven element, director, and reflector lengths.
@@ -86,7 +88,7 @@ Real Yagi dimensions are design-specific. The key relationship is director short
 
 ## Quarter-wave and half-wave verticals
 
-A quarter-wave vertical uses the ground, a vehicle body, or radial wires as the other half of the antenna system. A useful first-cut length for many HF quarter-wave questions is:
+A quarter-wave vertical uses the ground, a vehicle body, or radial wires as the other half of the antenna system. In the horizontal plane, it sends energy equally well in all compass directions in the simple exam model. A useful first-cut length for many HF quarter-wave questions is:
 
 ```text
 quarter-wave length in metres ≈ 71.3 / f(MHz)
@@ -137,7 +139,7 @@ Compact loaded antennas may be narrow-band and less efficient than full-sized an
 1. A Yagi's elements are horizontal. What polarization should you expect? Horizontal, because polarization follows element orientation.
 2. Which parasitic element is a little shorter than the driven element and placed toward the desired signal direction? The director.
 3. Which parasitic element is a little longer than the driven element and sits behind it? The reflector.
-4. A stacked pair of identical antennas is compared with one antenna before real-world losses. What ideal gain change is expected? About 3 dB, because useful radiated power is roughly doubled.
+4. A stacked pair of identical antennas is compared with one antenna before real-world losses. What ideal gain change is expected? About 3 dB, because the combined pattern is concentrated in useful directions.
 5. A quarter-wave vertical is planned for 25 MHz. Which practical starting length should you use? Use 71.3 / 25 = 2.85 m; 75 / 25 = 3.0 m is the free-space quarter-wave check.
 
 ## Radio connection
@@ -150,6 +152,7 @@ When you rotate a Yagi, you rotate the main lobe of its pattern. That can improv
 - Confusing bandwidth with beamwidth.
 - Swapping the jobs of director and reflector.
 - Treating every Yagi with the same number of elements as if it had identical gain.
+- Forgetting that stacking concentrates the pattern; it does not create transmitter power.
 - Forgetting that a short mobile HF antenna usually needs loading and has tradeoffs.
 
 ## Illustration brief
@@ -162,7 +165,9 @@ Description: Draw a brush-style top view. Label the rear element "reflector, sli
 
 - Gain describes concentration compared with a reference antenna.
 - A parasitic element is energized by nearby RF fields, not by a direct feedline connection.
-- Directors are slightly shorter; reflectors are slightly longer.
+- Directors are slightly shorter; reflectors are slightly longer, and wider spacing can raise gain.
+- A three-element Yagi spacing near 0.20 wavelength is the Basic-bank compromise convention.
 - Use about 143 / f(MHz) for practical HF half-wave estimates and 71.3 / f(MHz) for practical HF quarter-wave estimates.
+- A quarter-wave vertical is omnidirectional in the horizontal plane in the simple exam model.
 - Some VHF half-wave vertical exam items use 150 / f(MHz) as the stated convention.
 - Radials reduce ground losses and can help a vertical feed point approach common coax impedances.
