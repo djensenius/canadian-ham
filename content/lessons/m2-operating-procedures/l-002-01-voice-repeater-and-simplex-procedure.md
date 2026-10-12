@@ -129,7 +129,7 @@ An illustrative simplex exchange uses the same identify-clearly habit:
 
 ## Sidebands, spacing, and clean tests
 
-Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3 755 kHz. Those examples fit the practical habit of lower sideband below 10 MHz and upper sideband at 10 MHz and above. Operators use these conventions so signals line up as expected and have the expected audio orientation.
+Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3 755 kHz. Those two anchors help you keep the lower-frequency example separate from the twenty-metre example. Operators use these conventions so signals line up as expected and have the expected audio orientation.
 
 Before transmitting on any frequency, listen carefully. Listening protects contacts already in progress. If propagation changes and interference grows during a contact, moving to another clear frequency is the courteous response.
 
