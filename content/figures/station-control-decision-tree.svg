@@ -1,0 +1,33 @@
+<svg id="station-control-decision-tree" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Station control decision tree</title>
+  <desc>A four-step decision tree checks authorization, radio service, message purpose, and the control operator.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="58" y="50" width="220" height="62" rx="16" ry="16" stroke-width="6"/>
+    <rect x="58" y="146" width="220" height="62" rx="16" ry="16" stroke-width="6"/>
+    <rect x="58" y="242" width="220" height="62" rx="16" ry="16" stroke-width="6"/>
+    <rect x="58" y="338" width="220" height="62" rx="16" ry="16" stroke-width="6"/>
+    <line x1="168" y1="112" x2="168" y2="146" stroke-width="5"/>
+    <polygon points="168,146 156,128 180,128" fill="currentColor" stroke="none"/>
+    <line x1="168" y1="208" x2="168" y2="242" stroke-width="5"/>
+    <polygon points="168,242 156,224 180,224" fill="currentColor" stroke="none"/>
+    <line x1="168" y1="304" x2="168" y2="338" stroke-width="5"/>
+    <polygon points="168,338 156,320 180,320" fill="currentColor" stroke="none"/>
+    <rect x="360" y="72" width="190" height="70" rx="16" ry="16" stroke-width="5"/>
+    <line x1="278" y1="177" x2="360" y2="107" stroke-width="5"/>
+    <polygon points="360,107 338,112 354,130" fill="currentColor" stroke="none"/>
+    <rect x="362" y="210" width="190" height="112" rx="18" ry="18" stroke-width="5"/>
+    <path d="M392 250 C418 226 448 226 474 250" stroke-width="4"/>
+    <path d="M392 282 C418 258 448 258 474 282" stroke-width="4"/>
+    <circle cx="505" cy="266" r="24" stroke-width="5"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="168" y="90" font-size="24" font-weight="700">auth</text>
+    <text x="168" y="186" font-size="24" font-weight="700">service</text>
+    <text x="168" y="282" font-size="24" font-weight="700">purpose</text>
+    <text x="168" y="378" font-size="24" font-weight="700">control op</text>
+    <text x="455" y="114" font-size="24">own licence</text>
+    <text x="455" y="352" font-size="24">non-commercial</text>
+    <text x="455" y="382" font-size="24">open messages</text>
+    <text x="455" y="444" font-size="24">qualified supervision</text>
+  </g>
+</svg>

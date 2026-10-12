@@ -128,6 +128,14 @@ During emergency-support practice, these facts reduce confusion. Operators who s
 - The certification path links entry eligibility, first certification, later qualifications, and service boundaries.
 - Exam fees and accommodations depend on the exact setting while preserving the required examination content.
 
+::figure authority-records-exams
+Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.
+Text equivalent:
+- Authority stack: Radiocommunication Act, Radiocommunication Regulations, ISED amateur station standards, and the operator certificate with call sign.
+- The station desk reminder shows keeping the certificate/address record current.
+- The exam pathway can run through an ISED office or an accredited examiner, depending on the setting.
+::
+
 ## Illustration brief
 
 Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.

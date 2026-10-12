@@ -133,6 +133,15 @@ Good station control is also good engineering practice. The person at the contro
 - A transmitting amateur station needs a control operator at the control point, and the station owner remains responsible.
 - Unqualified people may participate only with qualified supervision and presence.
 
+::figure station-control-decision-tree
+Alt text: A station-control decision tree showing authorization, service boundary, message purpose, and supervision.
+Text equivalent:
+- Check authorization first, then confirm the radio service being used.
+- Other radio services require their own certification or licence.
+- Amateur messages must fit the non-commercial/open amateur-service purpose.
+- A transmitting amateur station needs a qualified control operator at the control point; unqualified participants need qualified supervision and presence.
+::
+
 ## Illustration brief
 
 Alt text: A station-control decision tree showing authorization, service boundary, message purpose, and supervision.
