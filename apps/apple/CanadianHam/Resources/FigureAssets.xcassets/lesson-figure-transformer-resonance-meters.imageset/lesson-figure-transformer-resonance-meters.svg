@@ -33,11 +33,11 @@
     <path d="M866 186 C866 226 866 258 866 292" stroke-width="7"/>
     <path d="M866 414 C866 446 866 472 866 500" stroke-width="7"/>
     <path d="M866 500 C792 500 716 500 642 500" stroke-width="7"/>
-    <path d="M642 186 C642 214 642 238 642 262" stroke-width="7"/>
+    <path d="M642 186 C642 226 642 252 642 276" stroke-width="7"/>
     <path d="M608 276 C630 276 654 276 676 276" stroke-width="7"/>
     <path d="M626 318 C638 318 650 318 662 318" stroke-width="7"/>
-    <path d="M642 334 C642 392 642 446 642 500" stroke-width="7"/>
-    <path d="M866 292 C842 306 890 322 866 336 C842 350 890 366 866 380 C842 394 890 408 866 414" stroke-width="8"/>
+    <path d="M642 318 C642 386 642 446 642 500" stroke-width="7"/>
+    <path d="M866 292 L866 300 L846 310 L886 330 L846 350 L886 370 L846 390 L866 400 L866 414" stroke-width="8"/>
     <circle cx="760" cy="354" r="34" stroke-width="7"/>
     <path d="M794 336 C820 318 842 304 866 292" stroke-width="6"/>
     <path d="M794 372 C820 390 842 404 866 414" stroke-width="6"/>

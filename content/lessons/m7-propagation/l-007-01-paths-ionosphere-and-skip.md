@@ -99,7 +99,7 @@ Text equivalent:
 - A VHF direct path runs between two hilltops.
 - A ground-wave path follows the Earth and fades after a short distance.
 - A steep NVIS path rises to the F-region area and returns nearby.
-- A lower-angle sky-wave path rises to the higher F-region area and returns much farther away; a skip-zone bracket is shown for that low-angle path.
+- A lower-angle sky-wave path rises to the F-region area and returns much farther away; a skip-zone bracket is shown for that low-angle path.
 ::
 
 ## Skip distance and skip zone

@@ -21,8 +21,8 @@
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="160" y="72" font-size="40" font-weight="700">dipole</text>
     <text x="160" y="122" font-size="36">broadside</text>
-    <text x="64" y="270" font-size="36">weak</text>
-    <text x="268" y="286" font-size="36">weak</text>
+    <text x="60" y="260" font-size="36">weak</text>
+    <text x="260" y="260" font-size="36">weak</text>
 
     <text x="468" y="72" font-size="40" font-weight="700">quad loops</text>
     <text x="395" y="420" font-size="36">feed point</text>

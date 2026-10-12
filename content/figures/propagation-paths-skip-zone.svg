@@ -14,9 +14,9 @@
     <path d="M736 522 L700 502" stroke-width="7"/>
     <path d="M736 522 L700 542" stroke-width="7"/>
 
-    <path d="M120 576 C188 566 252 568 342 592" stroke-width="9"/>
-    <path d="M220 574 C232 66 318 66 330 574" stroke-width="8"/>
-    <path d="M220 574 C420 500 650 -250 820 574" stroke-width="8"/>
+    <path d="M120 575 C188 562 252 558 342 559" stroke-width="9"/>
+    <path d="M220 565 C232 66 318 66 330 559" stroke-width="8"/>
+    <path d="M220 565 C420 500 650 -250 820 575" stroke-width="8"/>
     <path d="M820 574 L786 548" stroke-width="8"/>
     <path d="M820 574 L778 586" stroke-width="8"/>
 
@@ -32,7 +32,7 @@
     <text x="520" y="485" font-size="36">VHF direct</text>
     <text x="204" y="620" font-size="36">ground wave</text>
     <text x="374" y="292" font-size="36" font-weight="700">NVIS</text>
-    <text x="884" y="488" font-size="36" font-weight="700"><tspan x="884" y="488">low</tspan><tspan x="884" y="530">angle</tspan></text>
+    <text x="520" y="390" font-size="36" font-weight="700">low angle</text>
     <text x="625" y="622" font-size="36" font-weight="700">skip zone</text>
   </g>
 </svg>

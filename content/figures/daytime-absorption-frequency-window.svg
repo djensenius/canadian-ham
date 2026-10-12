@@ -14,9 +14,9 @@
     <path d="M70 352 C170 326 328 326 430 352" stroke-width="13"/>
     <path d="M96 196 C188 164 316 164 406 196" stroke-width="7"/>
     <path d="M112 488 C132 430 158 386 190 350" stroke-width="8"/>
-    <path d="M190 350 L154 340" stroke-width="8"/>
-    <path d="M190 350 L166 378" stroke-width="8"/>
-    <path d="M282 488 C310 64 374 64 410 488" stroke-width="8"/>
+    <path d="M176 336 C184 344 196 356 204 364" stroke-width="8"/>
+    <path d="M176 364 C184 356 196 344 204 336" stroke-width="8"/>
+    <path d="M282 466 C310 64 374 64 410 488" stroke-width="8"/>
     <path d="M410 488 L380 460" stroke-width="8"/>
     <path d="M410 488 L368 498" stroke-width="8"/>
 
@@ -26,12 +26,13 @@
     <path d="M600 378 C600 402 600 434 600 462" stroke-width="6"/>
     <path d="M838 378 C838 402 838 434 838 462" stroke-width="6"/>
     <path d="M890 378 C890 402 890 434 890 462" stroke-width="6"/>
+    <path d="M620 252 C684 240 812 240 872 252" stroke-width="7"/>
     <path d="M528 498 C552 516 578 516 602 498" stroke-width="7"/>
     <path d="M890 498 C904 512 918 512 932 498" stroke-width="7"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="358" y="108" font-size="40" font-weight="700">daytime HF</text>
-    <text x="326" y="160" font-size="38" font-weight="700">F return</text>
+    <text x="190" y="230" font-size="38" font-weight="700">F return</text>
     <text x="132" y="308" font-size="38" font-weight="700">D absorbs</text>
 
     <text x="760" y="150" font-size="40" font-weight="700">freq window</text>
