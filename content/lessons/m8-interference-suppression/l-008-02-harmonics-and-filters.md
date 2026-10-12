@@ -47,7 +47,7 @@ harmonic frequency = fundamental frequency x harmonic number
 
 Harmonics from a transmitter are unwanted because they can fall in other services or other amateur bands. A harmonic problem often affects only devices or receivers whose frequency range lines up with a multiple. That differs from broad receiver overload, which tends to be less selective.
 
-If a problem gives a band name instead of a frequency, use the compact band-name table from L-007-01 or the same 300 / f rule. For example, 15 m is about 21 MHz, so a third harmonic is near 63 MHz. A 28 MHz signal doubled is 56 MHz.
+If a problem gives a band name instead of a frequency, use the compact band-name table from L-007-01. Band names are only rough wavelength labels. For example, a 17 m signal near 18.1 MHz has a second harmonic near 36.2 MHz.
 
 Switching supplies can also make harmonics of their switching rate. For example, if a charger switches at 100 kHz, its 70th harmonic is 70 x 100 kHz = 7 000 kHz = 7.0 MHz.
 
@@ -81,7 +81,7 @@ A transmitter harmonic is different. If an RF signal starts at 3.7 MHz, the next
 
 Amplifiers and modulators must operate in their intended linear range. If an SSB transmitter is driven too hard, the peaks can be clipped or flattened. This non-linear operation creates extra side energy and distortion.
 
-Overmodulation means the audio drive or modulation level is too high for the transmitter to reproduce cleanly. On the air, other stations may describe the result as splatter because the signal spreads beyond its necessary bandwidth. When extra RF appears just beyond the bandwidth the transmission needs, that case is out-of-band emission. Spurious emissions are farther-away unwanted outputs such as harmonics, parasitic oscillations, or mixing products.
+Overmodulation means the audio drive or modulation level is too high for the transmitter to reproduce cleanly. On the air, other stations may describe the result as splatter because the signal spreads beyond its necessary bandwidth. When extra RF from the modulation process appears just beyond the bandwidth the transmission needs, that case is out-of-band emission. Spurious emissions are other unwanted outputs outside the necessary bandwidth, and can include harmonics, parasitic oscillations, or mixing products.
 
 Excessive microphone gain is a common cause of SSB overdrive and overmodulation. More audio gain does not make the signal more readable once the transmitter is clipping. It usually makes the signal wider and less pleasant.
 

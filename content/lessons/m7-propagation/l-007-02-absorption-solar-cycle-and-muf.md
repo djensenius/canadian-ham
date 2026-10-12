@@ -77,7 +77,7 @@ Sunspots are visible signs of solar magnetic activity. More sunspots usually mea
 
 Solar flux is radio-frequency energy from the Sun measured as a practical activity indicator. The common solar-flux index is measured at a fixed wavelength of 10.7 cm, or 2 800 MHz, so readings can be compared over time. In Canada, NRC reports solar radio flux from the Dominion Radio Astrophysical Observatory near Penticton, BC. A higher solar-flux value often goes with stronger ionization. Forecasts must still account for geomagnetic disturbance, time of day, season, and path direction.
 
-The solar cycle rises and falls over an average of about 11 years. Near a strong high part of the cycle, upper HF and sometimes around 40 MHz or a little higher can produce long-distance openings. Do not treat 100 MHz as normal solar-cycle HF reach. Near a low part, lower HF may still work well, but higher HF bands may be quiet for long periods.
+The solar cycle rises and falls over an average of about 11 years. Near a strong high part of the cycle, upper HF and sometimes around 40 MHz or a little higher can produce long-distance openings. Near a low part, lower HF may still work well, but higher HF bands may be quiet for long periods.
 
 The 20-metre band is a useful daylight planning anchor. It often supports worldwide propagation during low, middle, and high parts of the cycle because 14 MHz commonly stays below the daytime F2 MUF. The exact hours and paths still change.
 
@@ -120,7 +120,7 @@ Season changes the low bands too. Summer daylight is usually hardest on 160 and 
 
 During a sudden ionospheric disturbance, a solar flare's X-rays can quickly increase D-region absorption on sunlit paths. Lower HF usually suffers most. The practical response is not to change sideband or blame microphone gain. Try a higher frequency or wait for the disturbance to pass.
 
-Use evidence from the band you want to use. For a 28 MHz path, a 10-metre beacon from the right direction is useful evidence. Signals on other bands or far-away time-signal frequencies do not prove that the 28 MHz path is open.
+Use evidence from the band you want to use. A beacon in that same amateur band and from the right direction is useful evidence. Signals on other bands or far-away time-signal frequencies do not prove that your planned path is open.
 
 ## Try it
 

@@ -73,7 +73,7 @@ When the front end is overloaded, several things can happen:
 
 Desensitization means the receiver becomes less sensitive because a strong signal uses up the front end's headroom, or margin before overload. Intermodulation means signals mix in a non-linear stage and create new sum-and-difference products. The non-linear stage can be inside the receiver, or it can be an external junction such as corroded metalwork, a poor connection, or equipment near a transmitter site.
 
-A handheld on an outside gain antenna is a common receiver-side trap. The antenna delivers stronger off-channel signals into a broad front end, so mixed signals can appear on the desired frequency even though the handheld worked normally with its rubber antenna.
+A small handheld receiver can behave differently after it is connected to a rooftop or mast antenna. The better antenna may deliver several strong off-channel signals to a broad front end, so the receiver creates a false mix on the channel you wanted to hear.
 
 Simple intermodulation checks use sums and differences. Two signals at frequencies f1 and f2 can create products such as f1 + f2, |f1 - f2|, 2 x f1 - f2, or 2 x f2 - f1. For example, a 104.3 MHz FM broadcast signal and an 18.1 MHz HF signal can mix to 104.3 - 18.1 = 86.2 MHz, inside a VHF receiver's tuning range. The arithmetic suggests what to test; it does not prove which device is non-linear.
 
@@ -114,7 +114,7 @@ The clues are different from ordinary receiver tuning:
 - SSB may sound like muffled or distorted speech; and
 - CW may sound like clicks, buzzes, or on-and-off hum because the carrier is keyed.
 
-If a properly operating station is getting into a nearby telephone, a modular plug-in telephone RFI filter belongs close to the telephone device. Keep it external and reversible unless a qualified person has permission to work inside equipment.
+If clean amateur transmissions are being detected by a telephone set or accessory, use an external telephone RFI filter at the phone end of the line. Keep the cure reversible unless a qualified person has permission to work inside equipment.
 
 ### In the real world: powered-speaker pickup
 
@@ -149,7 +149,7 @@ Good station bonding, a sensible feedline route, and keeping audio and control c
 
 ## Spurious emissions
 
-Out-of-band emission is unwanted energy just outside the necessary bandwidth and usually comes from the modulation process, such as splatter or key clicks. Spurious emissions are unwanted transmitter outputs farther away from the necessary bandwidth. Harmonics, parasitic oscillations, and mixing products are kinds of spurious emissions.
+Out-of-band emission is unwanted energy just outside the necessary bandwidth that comes from the modulation process, such as splatter or key clicks. Spurious emissions are other unwanted transmitter outputs outside the necessary bandwidth. They can appear near or far from the signal, and include harmonics, parasitic oscillations, and mixing products.
 
 A spurious emission may come from poor shielding, faulty stages, unwanted mixing, overdriven circuits, or oscillation inside equipment. Unlike receiver overload, this is a transmitter or transmitter-accessory problem and must be corrected.
 
@@ -204,7 +204,7 @@ A good approach is:
 | Weak receiver loses signals near a strong off-channel transmitter | Front-end overload or desensitization | More separation or a suitable input filter |
 | False signal appears only when two strong signals are present | Intermodulation in a non-linear junction or receiver front end | Find the mixing source and add a suitable receiver filter |
 | Speaker, telephone, or intercom hears your audio without being tuned | Audio rectification in the affected device or lead | Shorten leads and add ferrites or a plug-in RFI filter at the device |
-| Reports appear far from your operating frequency | Spurious emissions from transmitting equipment | Stop using that setup until filtering, shielding, drive, or repair fixes it |
+| Extra transmitted signals appear outside the necessary bandwidth and are not modulation splatter | Spurious emissions from transmitting equipment | Stop using that setup until filtering, shielding, drive, or repair fixes it |
 
 ## Radio connection
 

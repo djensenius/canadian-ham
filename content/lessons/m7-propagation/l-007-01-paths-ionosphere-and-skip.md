@@ -105,18 +105,32 @@ These four words are close, but they describe different effects.
 
 ## Band names and quick frequency estimates
 
-Amateur band names often use an approximate wavelength in metres. The ISED exam reference sheet gives wavelength in metres = 300 / frequency in MHz, and frequency in MHz = 300 / wavelength in metres. Use the table as a compact reference, not as a full band-plan chart.
+Amateur band names often use an approximate wavelength in metres. The ISED exam reference sheet gives wavelength in metres = 300 / frequency in MHz, and frequency in MHz = 300 / wavelength in metres. The name is only approximate: the rule gives 15 MHz for a 20 m wavelength, but the amateur band is near 14 MHz. Use real band frequencies for harmonic checks.
+
+### HF and shortwave references
+
+Use this table as a compact reference, not as a full band-plan chart.
 
 | Name | Quick frequency reference | Why it matters here |
 |---|---|---|
 | 160 m | About 1.8 MHz to 2.0 MHz | Lowest-frequency amateur band in this group, with the best ground-wave reach |
 | 80 m | About 3.5 MHz to 4.0 MHz | Lower HF, strongly affected by daytime D-region absorption |
 | 40 m | About 7 MHz | Below the 31 m shortwave broadcast band |
-| 31 m broadcast | About 9.7 MHz by 300 / 31 | Sits between 40 m and 30 m receiver coverage |
+| 31 m broadcast | About 9.7 MHz by 300 / 31 | Shortwave broadcast band between the 40 m and 30 m amateur bands; receive-only context for amateurs |
 | 30 m | About 10.1 MHz | Above the 31 m broadcast band |
 | 20 m | About 14 MHz | A daylight HF planning anchor |
-| 15 m | About 21 MHz | Harmonics can land in VHF television ranges |
-| 10 m | About 28 MHz | Use 10 m beacons when checking a 28 MHz path |
+| 17 m | 18.068 MHz to 18.168 MHz | Useful when comparing a forecast window with real amateur bands |
+| 15 m | About 21 MHz | Upper-HF band used in harmonic examples |
+| 12 m | 24.890 MHz to 24.990 MHz | Another upper-HF band that can open during higher solar activity |
+| 10 m | About 28 MHz | High-HF band often checked with same-band beacons |
+
+### VHF and UHF references
+
+| Name | Quick frequency reference | Why it matters here |
+|---|---|---|
+| 6 m | 50 MHz to 54 MHz | Classic amateur band for sporadic E |
+| 2 m | 144 MHz to 148 MHz | Common VHF local and repeater band |
+| 70 cm | 430 MHz to 450 MHz | Common UHF local and repeater band |
 
 ## Skip distance and skip zone
 
@@ -135,13 +149,13 @@ Accessible text formula: lower launch angle plus similar layer height means long
 
 ### Worked example: comparing hop scales
 
-A field station needs to report expected coverage to a served agency. A route is about 5 000 km.
+A field station needs to report expected coverage to a served agency. A route is about 9 000 km.
 
-- Given: route distance = 5 000 km; F2 single-hop planning scale = about 4 000 km.
+- Given: route distance = 9 000 km; F2 single-hop planning scale = about 4 000 km.
 - Find: whether a single F2 hop is enough on paper.
 - Formula: hops must cover the route distance.
-- Substitute: a single F2 hop is about 4 000 km, which is less than 5 000 km.
-- Answer: plan for a multi-hop path if HF conditions support it.
+- Substitute: even two F2-scale hops are about 8 000 km, which is less than 9 000 km.
+- Answer: plan for several hops if HF conditions support the route.
 - Sanity check: extra hops add surface returns and loss, so conditions and antennas still matter.
 
 For a mid-distance check-in area, an E-region return has a shorter single-hop planning scale, up to about 2 000 km in good conditions. The actual opening still depends on frequency, time, and ionization.

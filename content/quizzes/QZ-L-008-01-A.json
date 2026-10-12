@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-008-01-A-C1",
-      "prompt": { "en": "A handheld VHF receiver on a high outside antenna hears a false conversation only when two strong nearby services are active. What diagnosis should be tested first?", "fr": null },
+      "prompt": { "en": "At a public-service site, a scanner hears a phantom tone only when a paging transmitter and a data link are both active. Moving the scanner and adding an input filter reduce the symptom. What did those tests point toward?", "fr": null },
       "choices": [
-        { "text": { "en": "Receiver intermodulation from strong off-channel signals reaching a broad front end.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Key clicks from a Morse transmitter, even though no keyed carrier is involved.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A telephone RFI problem, because every mixed signal starts in telephone wiring.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A low-pass transmitter filter fault, because all VHF receiver problems start at the transmitter output.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Mixing in a non-linear input path before the wanted channel was selected.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A keying waveform fault, because two voice or data transmitters always create Morse clicks.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A telephone audio pickup path, because an input filter at the scanner fixed telephone wiring.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A transmitter low-pass filter failure, because receiver location changes prove harmonic radiation.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Two strong signals and a receiver with more antenna gain point to intermodulation or overload at a non-linear front end. A suitable receiver input filter, less unnecessary gain, or more separation is a better first test than transmitter repair.", "fr": null }
+      "explanation": { "en": "The symptom needs two strong sources and improves when less off-channel energy reaches the scanner input. That points to intermodulation or overload in a non-linear input path, not an automatic transmitter repair.", "fr": null }
     },
     {
       "id": "QZ-L-008-01-A-C2",

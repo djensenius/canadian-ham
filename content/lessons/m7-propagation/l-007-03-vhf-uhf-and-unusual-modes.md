@@ -81,7 +81,7 @@ The local VHF repeater coverage has not changed. A good working explanation is a
 
 ## Tropospheric bending, ducting, and scatter
 
-The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. The part of a transmitted wave kept near the surface by this lower-atmosphere bending is called the tropospheric wave. That is different from ground wave, which follows and is affected by the surface itself.
+The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. When that lower-atmosphere bending lets a VHF or UHF path skim farther along Earth than line of sight alone, operators call it a tropospheric-wave path. That is different from ground wave, which follows and is affected by the surface itself.
 
 Without an enhanced mode, VHF tropospheric communication is still limited. The handheld-to-repeater estimate above was for ordinary line-of-sight service with one low antenna. Treat roughly 800 km as a broad upper planning scale for normal VHF tropospheric range between high, well-equipped weak-signal stations, not a daily promise for handhelds. A VHF path well beyond that scale is a clue that tropospheric ducting or another enhancement is present.
 

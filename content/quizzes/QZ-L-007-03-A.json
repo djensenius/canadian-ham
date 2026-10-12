@@ -15,41 +15,41 @@
     {
       "id": "QZ-L-007-03-A-C1",
       "prompt": {
-        "en": "A VHF signal stays close to the surface because the lower atmosphere bends it gently. Which label best separates that path from ground wave?",
+        "en": "A handheld-to-repeater estimate gives only local coverage, but a hilltop weak-signal pair later works many hundreds of kilometres on VHF. What should the log say before claiming an enhanced opening?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Tropospheric wave, because lower-atmosphere bending is the key effect.",
+            "en": "Record antenna heights, weather, distance, direction, and signal steadiness so the range claim can be tied to the path conditions.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Ground wave, because any path near Earth must be controlled by surface current.",
+            "en": "Delete the local estimate, because any longer contact proves height and terrain never matter.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Ionospheric wave, because all bending paths use the upper atmosphere.",
+            "en": "Assume the same long path is now dependable for handheld emergency coverage every day.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Meteor scatter, because any VHF signal beyond the horizon must use a trail.",
+            "en": "Log only transmitter power, because lower-atmosphere paths do not depend on weather or antenna location.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Tropospheric wave points to bending in the lower atmosphere. Ground wave follows and is affected by the surface itself, so the two labels are not interchangeable.",
+        "en": "The lesson separates ordinary local planning from longer weak-signal paths. Good notes preserve the evidence: station height, weather, direction, distance, and signal character.",
         "fr": null
       }
     },
@@ -97,41 +97,41 @@
     {
       "id": "QZ-L-007-03-A-C3",
       "prompt": {
-        "en": "An HF station hears weak, smeared signals from inside the expected skip zone while operating near the path's upper usable limit. Which explanation best fits?",
+        "en": "During an HF exercise, a control station hears brief smeared bits from a normally missed area, but the traffic is not reliable enough for messages. What is the best operating response?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Scatter is becoming noticeable because the main returned path is marginal near the MUF.",
+            "en": "Log the clue as possible scattered energy and move traffic to a band, relay, or schedule that gives steadier copy.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Ordinary ground wave is strongest near the MUF and always fills the skip zone.",
+            "en": "Keep sending long messages on that path, because brief smeared copy proves the route is dependable.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Line-of-sight propagation has replaced the ionosphere, so height no longer matters.",
+            "en": "Widen the transmitted signal to make all delayed copies arrive with the same phase.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Ducting in the lower atmosphere is the only possible source of weak HF audio.",
+            "en": "Ignore the band and time in the log, because mixed paths cannot be compared later.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Near the MUF, the main sky-wave path may be weak and the skip zone may be wide. Small amounts of scattered energy can then be heard as weak, distorted signals.",
+        "en": "Weak smeared copy can be a useful propagation clue, but it is not a dependable traffic path by itself. The operator should log it and choose a steadier communication plan.",
         "fr": null
       }
     }
