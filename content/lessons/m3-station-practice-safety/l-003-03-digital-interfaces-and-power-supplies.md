@@ -123,6 +123,13 @@ Digital-mode problems often begin as audio problems. Too much audio drive can ma
 - Placing overvoltage sensing before the regulator, where it cannot verify the voltage delivered to the radio.
 - Forgetting that a linear regulator can waste substantial power as heat.
 
+::figure digital-interface-linear-supply
+Alt text: A split diagram shows a computer audio interface between a transceiver and laptop, plus a linear power supply chain from AC mains to DC output.
+Text equivalent:
+- Digital interface: laptop, interface, and transceiver exchange receive audio samples, transmit audio tones, and a push-to-talk control line.
+- Linear supply chain: AC mains, transformer, rectifier, filter capacitor, regulator with heat sink, DC output terminals, and overvoltage sensing at the output.
+::
+
 ## Illustration brief
 
 Alt text: A split diagram shows a computer audio interface between a transceiver and laptop, plus a linear power supply chain from AC mains to DC output.

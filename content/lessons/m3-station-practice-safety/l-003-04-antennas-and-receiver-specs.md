@@ -141,6 +141,14 @@ Turning a Yagi changes the direction where the antenna is most sensitive. Narrow
 - Choosing the widest receiver filter because it sounds louder; wider also admits more noise and adjacent signals.
 - Forgetting to convert 455 kHz to 0.455 MHz before adding it to an MHz frequency.
 
+::figure yagi-receiver-specs
+Alt text: A labelled Yagi antenna appears beside a receiver display and filter choices, with an image-frequency marker shown above the desired signal.
+Text equivalent:
+- Yagi labels: boom, longer reflector, driven element with feedline, and shorter director.
+- Receiver display shows signal streaks and wide, medium, and narrow filter choices.
+- Frequency line labels desired signal, local oscillator, and image; the image is separated by the IF spacing relationship shown on the line.
+::
+
 ## Illustration brief
 
 Alt text: A labelled Yagi antenna appears beside a receiver display and filter choices, with an image-frequency marker shown above the desired signal.
