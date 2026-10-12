@@ -362,9 +362,6 @@ private struct LessonReaderView: View {
             }
             .pagePadding()
         }
-#if os(iOS)
-        .scrollEdgeEffectHidden(true, for: .all)
-#endif
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
         .lessonReaderOpaqueNavigationBar()
