@@ -40,10 +40,10 @@
       "choices": [
         { "text": { "en": "Unplug the supply and follow the service procedure before handling internal parts", "fr": null }, "isCorrect": false },
         { "text": { "en": "Verify stored capacitor voltage with a meter after the discharge step", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Short the main filter capacitor with a screwdriver so it discharges instantly", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Treat a bleeder path as only a helper, then use the specified discharge step and meter verification", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Wait for the bleeder resistor, then begin work without a discharge tool or meter check", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Use a controlled discharge step instead of a screwdriver short", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A screwdriver short can cause a dangerous arc and damage parts. Safe service uses de-energizing, controlled discharge, verification, and qualified procedures.", "fr": null }
+      "explanation": { "en": "A bleeder can fail or take longer than expected. Safe service uses de-energizing, controlled discharge, meter verification, and qualified procedures.", "fr": null }
     }
   ]
 }

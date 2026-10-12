@@ -25,25 +25,25 @@
     },
     {
       "id": "QZ-L-006-04-A-C2",
-      "prompt": { "en": "A roof-mounted quarter-wave vertical is used in the simple exam model. How is its horizontal pattern usually described?", "fr": null },
+      "prompt": { "en": "A roof-mounted quarter-wave vertical is centred on a vehicle roof. Which prediction fits the horizontal pattern?", "fr": null },
       "choices": [
-        { "text": { "en": "It is strongest equally in all compass directions around the antenna", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It has its main lobe only off one selected side of the car", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It radiates only straight upward", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It becomes directional only because the feedline is 50 ohms", "fr": null }, "isCorrect": false }
+        { "text": { "en": "No compass direction is favoured because the vertical element is symmetric around its axis", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The strongest direction is off the hood because the vehicle points that way", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The strongest direction is straight overhead, so nearby ground stations are in a null", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The feedline direction steers the main lobe unless the coax is exactly 50 ohms", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "In the Basic model, a quarter-wave vertical is omnidirectional in the horizontal plane; radials or the vehicle body provide the return side of the antenna system.", "fr": null }
+      "explanation": { "en": "The vertical element is symmetric around its upright axis, so the simple horizontal pattern does not favour one compass direction over another.", "fr": null }
     },
     {
       "id": "QZ-L-006-04-A-C3",
-      "prompt": { "en": "Why do two stacked identical antennas ideally add about 3 dB over one antenna?", "fr": null },
+      "prompt": { "en": "A club stacks an identical pair of beams and feeds them from the same transmitter. What does the ideal gain increase mean?", "fr": null },
       "choices": [
-        { "text": { "en": "Because the array concentrates the pattern in useful directions", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Because the transmitters are allowed to exceed the same power limit", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Because stacking cancels all feedline loss", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Because the driven elements stop needing impedance matching", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The main-direction power density is roughly doubled because the pattern is concentrated", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The antenna pair radiates twice the transmitter power into all directions", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The stacked array turns a poor impedance match into a perfect one", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The rear lobe becomes the main source of forward gain", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Stacking can add about 3 dB before losses by concentrating the combined pattern; it does not create transmitter power or remove feedline loss.", "fr": null }
+      "explanation": { "en": "Stacking an identical pair can roughly double power density in the main direction before losses by narrowing and shaping the pattern; it does not create extra transmitter power.", "fr": null }
     }
   ]
 }

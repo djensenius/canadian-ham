@@ -68,7 +68,7 @@ A random-wire antenna can be simple to install. The station end may also carry R
 
 An end-fed half-wave antenna can be convenient for portable or small-property work. It can often operate on related bands with a suitable matching transformer. The feed point impedance is high, so ordinary coax is not usually attached directly.
 
-Trap antennas can cover several bands by electrically isolating sections at selected frequencies. The cost is added parts, possible loss, extra limits on power or bandwidth, and a greater chance that transmitter harmonics can be radiated.
+Trap antennas can cover several bands by electrically isolating sections at selected frequencies. Because the same antenna is meant for multiband use, harmonic energy from a lower band can sometimes find another section that radiates it more readily. The cost is added parts, possible loss, extra power or bandwidth limits, and that harmonic-radiation risk.
 
 ## Quad antennas
 
@@ -76,7 +76,7 @@ A quad uses square loop elements. The driven loop is approximately a full wavele
 
 A delta loop with parasitic elements uses the same idea with triangular loops: each element is roughly one wavelength around the triangle. The extra loops act as coupled reflector or director elements.
 
-A quad can perform well, but it has more wind area and support complexity than a Yagi with straight elements. Weather loading is the major disadvantage. Loops and spreaders can collect ice and flex in wind.
+A quad can perform well, but it has more wind area than a Yagi with straight elements. Weather loading is the major disadvantage. Loops and spreaders can collect ice and flex in wind.
 
 ### Worked example: original quad estimate
 
@@ -104,7 +104,7 @@ The same total-wire idea applies to delta loops, but the shape is triangular ins
 
 A delta loop is a triangular loop with an overall length of roughly one wavelength. When the bottom side is horizontal, feeding the centre of the bottom side tends to produce horizontal polarization. Feeding a side can produce vertical polarization in common beginner configurations.
 
-A square quad's feed point also affects polarization. Moving the feed from the bottom horizontal side to an upright side changes the usual polarization from horizontal to vertical.
+A square quad's feed point also affects polarization. The strongest current points set the main electric-field direction. Moving the feed from the bottom horizontal side to an upright side shifts those current peaks, so the usual polarization changes from horizontal to vertical.
 
 Feed point and height affect impedance and pattern, so practical loop antennas often need a matching device. The formula gives a first cut, not a finished guarantee.
 
@@ -151,7 +151,7 @@ Description: Draw three ink-brush panels. First, show a straight dipole with a d
 
 - A dipole radiates broadside to the wire and has weak radiation off the ends.
 - Random-wire and end-fed antennas can be useful but need careful matching and RF return paths.
-- Trap antennas can support multiband use, with added parts, possible loss, and harmonic-radiation tradeoffs.
+- Trap antennas can support multiband use, with added parts, possible loss, and harmonic-radiation tradeoffs because different sections can work on related bands.
 - Quad and delta-loop driven elements are approximately a full wavelength around the loop, and parasitic loop elements can make them directional.
 - Use about 306 / f(MHz) for practical full-wave loop starting length; 300 / f(MHz) is the free-space wavelength estimate.
 - Loop feed-point location influences polarization and impedance.

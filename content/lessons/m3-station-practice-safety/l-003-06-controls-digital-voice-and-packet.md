@@ -96,7 +96,7 @@ Analog information varies smoothly. A microphone voltage rising and falling with
 
 Digital voice is not analog FM with a new label. A vocoder samples and encodes speech. The transmitter sends digital symbols. The receiver decodes those symbols and rebuilds audio. If the link becomes too weak, digital voice may sound broken or disappear instead of fading smoothly.
 
-Narrow digital modes can share spectrum efficiently. An FT8 transmission is roughly 50 Hz wide, so many FT8 contacts can fit in the space of one SSB voice signal. FT8 can decode signals at a very low signal-to-noise ratio, well below what you could copy by ear. RTTY is wider than very narrow weak-signal modes, so practical centre-to-centre spacing is about 250 Hz to 500 Hz rather than a single tone width.
+Narrow digital modes can share spectrum efficiently. An FT8 transmission is roughly 50 Hz wide, so many FT8 contacts can fit in the space of one SSB voice signal. FT8 can decode signals at a very low signal-to-noise ratio, well below what you could copy by ear. RTTY is wider than very narrow weak-signal modes. A typical mark-space shift plus keying sidebands takes a few hundred hertz of real spectrum, so practical centre-to-centre spacing is about 250 Hz to 500 Hz rather than a single tone width.
 
 ### In the real world: choosing a weak-path mode
 

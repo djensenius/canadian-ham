@@ -78,7 +78,7 @@ Overvoltage protection must monitor the regulated output. The radio is connected
 
 ### Worked example: transformer and rectifier roles
 
-A bench supply uses a transformer to reduce 120 V AC mains to 18 V AC at its secondary. A bridge rectifier turns that AC waveform into pulsating DC. A filter capacitor charges near the peaks and supplies current between peaks, so the no-load filtered DC can be roughly 23 V to 24 V before diode drops, ripple, and load are considered. The regulator holds the output near 13.8 V DC for the radio.
+A bench supply uses a transformer to reduce 120 V AC mains to 18 V AC at its secondary. A bridge rectifier turns that AC waveform into pulsating DC. A filter capacitor charges near the peaks and supplies current between peaks. The peak is about 18 V x 1.414 = 25.5 V, or roughly 23 V to 24 V after the bridge diodes, before ripple and load. The regulator holds the output near 13.8 V DC for the radio.
 
 The numbers are approximate because real supplies include diode drops, ripple, and load changes. The block sequence is the key idea.
 

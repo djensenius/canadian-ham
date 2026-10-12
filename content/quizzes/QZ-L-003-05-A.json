@@ -97,20 +97,20 @@
     {
       "id": "QZ-L-003-05-A-C3",
       "prompt": {
-        "en": "Canadian regulations keep occupied bandwidth below 28 MHz narrow, while a 10 m channel can accept a many-kilohertz FM signal. A station plans 3.0 kHz peak deviation with 2.7 kHz audio. Using Carson's rule first, which plan fits both slots?",
+        "en": "An 80 m voice signal is below 28 MHz, where Canadian occupied-bandwidth limits are narrow. A separate 10 m channel can accept a many-kilohertz FM signal. A station plans 3.0 kHz peak deviation with 2.7 kHz audio. Using Carson's rule first, which plan fits both cases?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Put the FM signal in the 80 m slot because the 3.0 kHz deviation number is close to the slot width",
+            "en": "Put the FM signal on 80 m because the 3.0 kHz deviation number seems close to the narrow limit",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Use SSB for the 80 m slot and reserve that FM setup for the 10 m channel because the estimate is about 11.4 kHz",
+            "en": "Use SSB for 80 m and reserve that FM setup for 10 m because the estimate is about 11.4 kHz",
             "fr": null
           },
           "isCorrect": true
@@ -124,14 +124,14 @@
         },
         {
           "text": {
-            "en": "Use the FM setup in the 80 m slot after a clear audio report, without rechecking occupied bandwidth",
+            "en": "Use the FM setup on 80 m after a clear audio report, without rechecking occupied bandwidth",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The two-step check is bandwidth first, then band choice: 2 x (3.0 + 2.7) is about 11.4 kHz, so that FM voice signal does not fit a narrow HF voice slot, while SSB does.",
+        "en": "The two-step check is bandwidth first, then band choice: 2 x (3.0 + 2.7) is about 11.4 kHz. That FM voice signal exceeds the narrow occupied-bandwidth limit below 28 MHz, while SSB voice can fit there.",
         "fr": null
       }
     }

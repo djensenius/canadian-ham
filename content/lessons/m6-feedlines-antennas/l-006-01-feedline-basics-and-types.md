@@ -43,7 +43,7 @@ A feedline carries RF energy between station blocks. The station end may be a tr
 
 A transmission line has characteristic impedance, often written as Z0. This is not the resistance you would read with an ordinary DC ohmmeter. Z0 comes from the line's shape and insulation. In coax, the important shape is the ratio of shield diameter to centre-conductor diameter. In open-wire line, it is the ratio of conductor spacing to wire diameter.
 
-When the load at the far end equals the line's Z0, the arriving RF is taken up by the load with minimal reflection. With a matched load, changing line length does not change the match seen by the radio. When the load is badly mismatched, the impedance measured at the radio end depends on line length because forward and reflected waves combine along the line.
+When the load at the far end equals the line's Z0, the load ideally absorbs all the arriving energy and reflects essentially none. With a matched load, changing line length does not change the match seen by the radio. When the load is badly mismatched, the impedance measured at the radio end depends on line length because forward and reflected waves combine along the line.
 
 ### In the real world: cutting coax does not change Z0
 
@@ -63,7 +63,7 @@ Coax is unbalanced because one side is normally the shield and is often connecte
 
 The insulation between the centre conductor and shield is the dielectric. The dielectric affects velocity factor, which is the fraction of light speed at which an RF wave travels in that cable.
 
-Foam dielectric can reduce cable loss. Solid dielectric is preferred when coax is wound tightly on a ferrite toroid for a common-mode choke, because the centre conductor is less likely to move and risk a short. For shielding, a continuous solid outer conductor shields best, then double braid, then single braid, with foil construction more fragile in repeated flexing.
+Foam dielectric can reduce cable loss because it is mostly air, and air has less dielectric loss than solid plastic. Solid dielectric is preferred when coax is wound tightly on a ferrite toroid for a common-mode choke, because the centre conductor is less likely to move and risk a short. For shielding, a continuous solid outer conductor shields best, then double braid, then single braid, with foil construction more fragile in repeated flexing.
 
 ### In the real world: TV coax and radio coax
 
@@ -91,6 +91,8 @@ Open-wire line often handles mismatch with less heating than small coax. That do
 ## Balanced and unbalanced parts
 
 A centre-fed dipole is a balanced antenna. A coax cable is unbalanced. A balun, short for balanced-to-unbalanced, helps connect those two worlds. A balun can also reduce unwanted current on the outside of the coax shield.
+
+Put the balun where the balanced and unbalanced parts meet. For a coax-fed dipole, that point is usually the antenna feed point. For window line fed by an unbalanced tuner output, that point is at the tuner output before the balanced line begins.
 
 ### Worked example: feeding a simple dipole
 

@@ -67,7 +67,7 @@ Replacing it with a 12 m run removes 21 m of unnecessary cable. Coiling the spar
 
 SWR means standing wave ratio. It compares forward and reflected RF voltage waves on a transmission line. An SWR near 1:1 means the line and load are closely matched at the measurement point. An SWR below about 1.5:1 is often a fairly good match for ordinary station work. A higher reading means more energy is being reflected because the load impedance does not match the line's characteristic impedance.
 
-A standing wave forms when the forward wave and reflected wave add and cancel at fixed places along the line. That leaves voltage and current peaks and dips along the cable. Current peaks raise conductor and dielectric heating, so high SWR increases line loss. Low-loss open-wire line can tolerate high SWR better than small coax because its basic loss is lower.
+A standing wave forms when the forward wave and reflected wave add and cancel at fixed places along the line. That leaves voltage and current peaks and dips along the cable. Current peaks raise conductor heating, and voltage peaks raise dielectric heating, so high SWR increases line loss. Low-loss open-wire line can tolerate high SWR better than small coax because its basic loss is lower.
 
 A low SWR reading is useful, but it is not a complete proof that the antenna system is efficient. A lossy feedline can weaken the reflected wave before it returns to the meter. The station-end meter may look better than the antenna-end mismatch really is.
 
@@ -101,7 +101,7 @@ An antenna tuner does not tune the air. It transforms impedance so the transceiv
 
 A tuner near the transceiver protects the radio, but it does not remove loss in a feedline carrying high SWR. A tuner or matching transformer near the antenna feed point can reduce mismatch on the main feedline and reduce feedline loss.
 
-Matching can be done with inductors, capacitors, transmission-line sections, or transformers. Transformers can be designed for impedance matching over a wide bandwidth. If source and load are purely resistive, maximum power transfer happens when their impedances are equal. Once the antenna is correctly matched to the line, changing feedline length does not improve the match.
+Matching can be done with inductors, capacitors, transmission-line sections, or transformers. A transformer ratio is set mainly by its turns, not by a narrow tuned LC resonance, so a well-designed RF transformer can cover a broad frequency range. If source and load are purely resistive, maximum power transfer happens when their impedances are equal. Once the antenna is correctly matched to the line, changing feedline length does not improve the match.
 
 ### Misconception: the tuner changes antenna length
 

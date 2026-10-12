@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-01-A-C1",
-      "prompt": { "en": "Two coax types have the same connector but different insulating material between the centre conductor and shield. Which cable property can change because of that material?", "fr": null },
+      "prompt": { "en": "An HF tuner has only an unbalanced output, but the antenna will be fed with window line. Where should the balanced-to-unbalanced device go?", "fr": null },
       "choices": [
-        { "text": { "en": "Velocity factor", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The conductor-loss rating for a fixed length", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The connector's weather seal", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The antenna feed-point height", "fr": null }, "isCorrect": false }
+        { "text": { "en": "At the tuner output before the window line begins", "fr": null }, "isCorrect": true },
+        { "text": { "en": "At any random point along the balanced line", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Only at the antenna feed point after the window-line run", "fr": null }, "isCorrect": false },
+        { "text": { "en": "At the microphone connector because that is inside the station", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Velocity factor is the fraction of light speed for RF in the cable, and the dielectric material is one reason it differs among coax types.", "fr": null }
+      "explanation": { "en": "The transition belongs where balanced and unbalanced parts meet; in this setup, that is where the unbalanced tuner output hands off to the window line.", "fr": null }
     },
     {
       "id": "QZ-L-006-01-A-C2",
