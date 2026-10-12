@@ -1,11 +1,11 @@
 ---
 id: TASK-46.1
 title: 'Lesson accuracy and coverage fixes: M5 and M4'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:15'
+updated_date: '2026-10-12 15:21'
 labels:
   - content
 dependencies: []
@@ -52,6 +52,8 @@ Sources verified (accessed 2026-10-12): active generated bank content/generated/
 Skipped as separate structural/workflow tasks per scope: Try-it answer hiding (TASK-46.5); faded practice, stronger broad concept-check feedback, and full concept-check redesign beyond quick replacements (TASK-46.6); interleaving (TASK-46.7); M1 restructure (TASK-46.8); M2 format change (TASK-46.9); lesson splits/coverage moves including L-005-04 (TASK-46.10); cross-module prerequisite front matter changes for L-004-01/L-004-03 (TASK-46.11); rendered figure production/artist-brief hiding (task-38 lane).
 Taught-facts self-check: reviewed the flagged covered/answer-key-only IDs listed above plus the changed lesson coverage ranges (B-005-001/002, 003/004, 005/006, 007/008/009/010, 011/012/013, B-004-001/002/003/004/005/006) against questions.json correct answers after edits. No previously taught covered fact was removed; new prose preserves all answers while avoiding ISED question/answer restatement.
 Validation passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run (160 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (18 XCTest tests).
+
+Review r461 requested changes after ebd81aa: merged main into branch first (kept branch version of task-46.1 on conflict). Fixing L-005-04 dB worked-method examples plus low/medium review findings, then rerunning content checks and web tests.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
