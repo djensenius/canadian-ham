@@ -154,9 +154,13 @@ private struct DecimalParts {
 }
 
 private let maxSignificantDigits = 12
+private let maxEntryLength = 15
 private let resultSignificantDigits = 15
 private let cancellationTolerance = 1e-14
+private let minNonzeroAbsoluteValue = 1e-99
+private let maxAbsoluteValue = 1e100
 private let typographicMinus = "−"
+private let powersOfTen: [Double] = (0...120).map { Foundation.pow(10, Double($0)) }
 
 public func createCalculatorState(locale: CalculatorLocale = .en) -> CalculatorState {
     withDisplay(CalculatorState(locale: locale))
@@ -227,9 +231,6 @@ public func displayCalculatorValueDetails(_ value: Double, locale: CalculatorLoc
 
 private func inputDigit(_ state: CalculatorState, _ digit: String) -> CalculatorState {
     let base = state.justEvaluated && state.pendingOperator == nil ? createCalculatorState(locale: state.locale) : state
-    if base.entering, wouldExceedEntryLimit(entry: base.currentEntry, digit: digit) {
-        return base
-    }
 
     let entry: String
     if !base.entering {
@@ -241,6 +242,13 @@ private func inputDigit(_ state: CalculatorState, _ digit: String) -> Calculator
     } else {
         entry = "\(base.currentEntry)\(digit)"
     }
+    if entryExceedsLimits(entry) {
+        return base
+    }
+    let displayedValue = number(fromEntry: entry)
+    if !displayedValue.isFinite {
+        return errorState(base)
+    }
     return withDisplay(CalculatorState(
         locale: base.locale,
         error: base.error,
@@ -248,7 +256,7 @@ private func inputDigit(_ state: CalculatorState, _ digit: String) -> Calculator
         pendingOperator: base.pendingOperator,
         currentEntry: entry,
         entering: true,
-        displayedValue: number(fromEntry: entry),
+        displayedValue: displayedValue,
         awaitingOperand: false,
         lastOperation: base.lastOperation,
         justEvaluated: false
@@ -275,11 +283,17 @@ private func inputDecimalPoint(_ state: CalculatorState) -> CalculatorState {
         return base
     }
     let entry = "\(base.currentEntry)."
+    if entryExceedsLimits(entry) {
+        return base
+    }
     return replacing(base, currentEntry: entry, entering: true, displayedValue: number(fromEntry: entry), awaitingOperand: false, justEvaluated: false)
 }
 
 private func inputBinaryOperator(_ state: CalculatorState, _ binaryOperator: CalculatorBinaryOperator) -> CalculatorState {
     let currentValue = currentValue(for: state)
+    if !currentValue.isFinite {
+        return errorState(state)
+    }
     if let pendingOperator = state.pendingOperator, let accumulator = state.accumulator, !state.awaitingOperand {
         guard let result = evaluateBinaryOperation(pendingOperator, left: accumulator, right: currentValue) else {
             return errorState(state)
@@ -347,10 +361,10 @@ private func inputEquals(_ state: CalculatorState) -> CalculatorState {
 }
 
 private func applyUnaryOperation(_ state: CalculatorState, operation: (Double) -> Double?) -> CalculatorState {
-    guard let result = operation(currentValue(for: state)), result.isFinite else {
+    guard let result = operation(currentValue(for: state)), let normalizedResult = normalizeResult(result) else {
         return errorState(state)
     }
-    return replacing(state, currentEntry: "0", entering: false, displayedValue: normalizeResult(result), awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
+    return replacing(state, currentEntry: "0", entering: false, displayedValue: normalizedResult, awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
 }
 
 private func toggleSign(_ state: CalculatorState) -> CalculatorState {
@@ -358,7 +372,10 @@ private func toggleSign(_ state: CalculatorState) -> CalculatorState {
         let entry = state.currentEntry.hasPrefix("-") ? String(state.currentEntry.dropFirst()) : "-\(state.currentEntry)"
         return replacing(state, currentEntry: entry, entering: true, displayedValue: number(fromEntry: entry), awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
     }
-    return replacing(state, displayedValue: normalizeResult(-state.displayedValue), awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
+    guard let displayedValue = normalizeResult(-state.displayedValue) else {
+        return errorState(state)
+    }
+    return replacing(state, displayedValue: displayedValue, awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
 }
 
 private func applyPercent(_ state: CalculatorState) -> CalculatorState {
@@ -369,7 +386,10 @@ private func applyPercent(_ state: CalculatorState) -> CalculatorState {
     } else {
         result = currentValue / 100
     }
-    return replacing(state, currentEntry: "0", entering: false, displayedValue: normalizeResult(result), awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
+    guard let normalizedResult = normalizeResult(result) else {
+        return errorState(state)
+    }
+    return replacing(state, currentEntry: "0", entering: false, displayedValue: normalizedResult, awaitingOperand: false, clearLastOperation: true, justEvaluated: false)
 }
 
 private func clearEntry(_ state: CalculatorState) -> CalculatorState {
@@ -398,7 +418,7 @@ private func evaluateBinaryOperation(_ binaryOperator: CalculatorBinaryOperator,
         guard right != 0 else { return nil }
         result = left / right
     }
-    return result.isFinite ? normalizeResult(result) : nil
+    return normalizeResult(result)
 }
 
 private func cancelIfSubtractiveNoise(_ result: Double, left: Double, right: Double) -> Double {
@@ -415,6 +435,12 @@ private func number(fromEntry entry: String) -> Double {
         return 0
     }
     guard let parsed = Double(entry), parsed.isFinite else {
+        return Double.infinity
+    }
+    if abs(parsed) >= maxAbsoluteValue {
+        return Double.infinity
+    }
+    if parsed != 0, abs(parsed) < minNonzeroAbsoluteValue {
         return 0
     }
     return parsed
@@ -488,11 +514,26 @@ private func replacing(
     ))
 }
 
-private func normalizeResult(_ value: Double) -> Double {
+private func normalizeResult(_ value: Double) -> Double? {
+    if !value.isFinite {
+        return nil
+    }
     if value == 0 {
         return 0
     }
+    if abs(value) >= maxAbsoluteValue {
+        return nil
+    }
+    if abs(value) < minNonzeroAbsoluteValue {
+        return 0
+    }
     let rounded = roundToSignificantDigits(value, significantDigits: resultSignificantDigits)
+    if !rounded.isFinite || abs(rounded) >= maxAbsoluteValue {
+        return nil
+    }
+    if rounded != 0, abs(rounded) < minNonzeroAbsoluteValue {
+        return 0
+    }
     return rounded == 0 ? 0 : rounded
 }
 
@@ -502,28 +543,39 @@ private func roundToSignificantDigits(_ value: Double, significantDigits: Int) -
         return value
     }
     let exponent = floor(log10(absoluteValue))
-    let factor = pow(10, Double(significantDigits) - exponent - 1)
-    if !factor.isFinite || factor == 0 {
+    let shift = significantDigits - Int(exponent) - 1
+    let scaled = shift >= 0
+        ? absoluteValue * powerOfTen(shift)
+        : absoluteValue / powerOfTen(-shift)
+    if !scaled.isFinite {
         return value
     }
+    let roundedCoefficient = floor(scaled + 0.5)
     let sign = value.sign == .minus ? -1.0 : 1.0
-    return sign * floor((absoluteValue * factor) + 0.5) / factor
+    return sign * (shift >= 0
+        ? roundedCoefficient / powerOfTen(shift)
+        : roundedCoefficient * powerOfTen(-shift))
 }
 
 private func displayValue(forNumber value: Double, locale: CalculatorLocale) -> CalculatorDisplayValue {
-    guard value.isFinite else { return errorDisplayValue(visual: "Error") }
-    let normalizedValue = value == 0 ? 0 : value
+    guard let normalizedValue = normalizeDisplayValue(value) else { return errorDisplayValue(visual: "Error") }
     let parts = decimalParts(for: normalizedValue)
     let visual = localizeDecimalSeparator(visual(from: parts), locale: locale)
     return displayValue(from: parts, visual: visual)
 }
 
-private func displayValue(forEntry entry: String, locale: CalculatorLocale, visual: String) -> CalculatorDisplayValue {
-    let value = number(fromEntry: entry)
-    if value == 0 {
-        return displayValue(from: DecimalParts(mantissa: "0", exponent: 0, isNegative: entry.hasPrefix("-"), scientific: false), visual: visual)
-    }
-    return displayValue(from: decimalParts(for: value), visual: visual)
+private func displayValue(forEntry entry: String, locale _: CalculatorLocale, visual: String) -> CalculatorDisplayValue {
+    let isNegative = entry.hasPrefix("-")
+    let unsignedEntry = isNegative ? String(entry.dropFirst()) : entry
+    let mantissa = unsignedEntry.isEmpty || unsignedEntry == "." ? "0" : unsignedEntry
+    return CalculatorDisplayValue(
+        mantissa: mantissa,
+        exponent: 0,
+        isNegative: isNegative,
+        isError: false,
+        visual: visual,
+        spoken: spokenEntry(entry)
+    )
 }
 
 private func errorDisplayValue(visual: String) -> CalculatorDisplayValue {
@@ -537,19 +589,38 @@ private func errorDisplayValue(visual: String) -> CalculatorDisplayValue {
     )
 }
 
+private func normalizeDisplayValue(_ value: Double) -> Double? {
+    if !value.isFinite || abs(value) >= maxAbsoluteValue {
+        return nil
+    }
+    if value == 0 || abs(value) < minNonzeroAbsoluteValue {
+        return 0
+    }
+    return value
+}
+
 private func decimalParts(for value: Double) -> DecimalParts {
-    let isNegative = value < 0
-    let absoluteValue = abs(value)
-    if absoluteValue == 0 {
+    guard let normalizedValue = normalizeDisplayValue(value), normalizedValue != 0 else {
         return DecimalParts(mantissa: "0", exponent: 0, isNegative: false, scientific: false)
     }
+    let isNegative = normalizedValue < 0
+    let absoluteValue = abs(normalizedValue)
 
     let scientific = absoluteValue >= 999_999_999_999.5 || absoluteValue < 1e-9
     let exponent = floor(log10(absoluteValue))
     let shift = maxSignificantDigits - Int(exponent) - 1
-    var coefficient = Int64(floor((absoluteValue * pow(10, Double(shift))) + 0.5))
+    let scaled = shift >= 0
+        ? absoluteValue * powerOfTen(shift)
+        : absoluteValue / powerOfTen(-shift)
+    if !scaled.isFinite {
+        return DecimalParts(mantissa: "0", exponent: 0, isNegative: false, scientific: false)
+    }
+    var coefficient = Int64(floor(scaled + 0.5))
     var decimalExponent = -shift
-    let overflow = Int64(pow(10, Double(maxSignificantDigits)))
+    let overflow = Int64(powerOfTen(maxSignificantDigits))
+    if coefficient == 0 {
+        return DecimalParts(mantissa: "0", exponent: 0, isNegative: false, scientific: false)
+    }
     if coefficient >= overflow {
         coefficient /= 10
         decimalExponent += 1
@@ -612,7 +683,8 @@ private func visual(from parts: DecimalParts) -> String {
     }
     let sign = parts.isNegative ? typographicMinus : ""
     if parts.scientific {
-        return "\(sign)\(parts.mantissa)e\(parts.exponent)"
+        let exponent = parts.exponent < 0 ? "\(typographicMinus)\(abs(parts.exponent))" : String(parts.exponent)
+        return "\(sign)\(parts.mantissa)e\(exponent)"
     }
     return "\(sign)\(parts.mantissa)"
 }
@@ -645,6 +717,16 @@ private func spokenDisplay(from parts: DecimalParts) -> CalculatorSpokenDisplay 
     )
 }
 
+private func spokenEntry(_ entry: String) -> CalculatorSpokenDisplay {
+    let isNegative = entry.hasPrefix("-")
+    let unsignedEntry = isNegative ? String(entry.dropFirst()) : entry
+    let spokenValue = unsignedEntry.isEmpty || unsignedEntry == "." ? "0" : unsignedEntry
+    return CalculatorSpokenDisplay(
+        en: "\(isNegative ? "minus " : "")\(spokenValue)",
+        fr: "\(isNegative ? "moins " : "")\(spokenValue.replacingOccurrences(of: ".", with: ","))"
+    )
+}
+
 private func visualEntry(_ entry: String, locale: CalculatorLocale) -> String {
     let visual = entry.hasPrefix("-") ? typographicMinus + String(entry.dropFirst()) : entry
     return localizeDecimalSeparator(visual, locale: locale)
@@ -654,8 +736,13 @@ private func localizeDecimalSeparator(_ value: String, locale: CalculatorLocale)
     locale == .fr ? value.replacingOccurrences(of: ".", with: ",") : value
 }
 
-private func wouldExceedEntryLimit(entry: String, digit: String) -> Bool {
-    significantDigitCount("\(entry)\(digit)") > maxSignificantDigits
+private func entryExceedsLimits(_ entry: String) -> Bool {
+    entry.count > maxEntryLength || significantDigitCount(entry) > maxSignificantDigits
+}
+
+private func powerOfTen(_ exponent: Int) -> Double {
+    guard powersOfTen.indices.contains(exponent) else { return Double.infinity }
+    return powersOfTen[exponent]
 }
 
 private func significantDigitCount(_ entry: String) -> Int {

@@ -719,7 +719,7 @@
         "0",
         "="
       ],
-      "expectedDisplay": "1e-10"
+      "expectedDisplay": "1e−10"
     },
     {
       "id": "french-decimal-entry",
@@ -776,7 +776,7 @@
         "0",
         "="
       ],
-      "expectedDisplay": "1e-10"
+      "expectedDisplay": "1e−10"
     },
     {
       "id": "french-square-root-display",
@@ -958,7 +958,7 @@
         "1",
         "="
       ],
-      "expectedDisplay": "1e-15"
+      "expectedDisplay": "1e−15"
     },
     {
       "id": "one-e-minus-eighteen-product-preserved",
@@ -988,7 +988,7 @@
         "1",
         "="
       ],
-      "expectedDisplay": "1e-18"
+      "expectedDisplay": "1e−18"
     },
     {
       "id": "small-square-preserved",
@@ -1005,7 +1005,7 @@
         "1",
         "x²"
       ],
-      "expectedDisplay": "1e-16"
+      "expectedDisplay": "1e−16"
     },
     {
       "id": "large-result-reciprocal-preserved",
@@ -1031,7 +1031,7 @@
         "=",
         "1/x"
       ],
-      "expectedDisplay": "1e-15"
+      "expectedDisplay": "1e−15"
     },
     {
       "id": "resonance-style-chain-preserves-small-intermediate",
@@ -1210,7 +1210,7 @@
         "2",
         "3"
       ],
-      "expectedDisplay": "0.000123456789012"
+      "expectedDisplay": "0.0001234567890"
     },
     {
       "id": "zero-point-zero-five-entry",
@@ -1252,13 +1252,13 @@
         "=",
         "±"
       ],
-      "expectedDisplay": "−1.5e-10",
+      "expectedDisplay": "−1.5e−10",
       "expectedDisplayValue": {
         "mantissa": "1.5",
         "exponent": -10,
         "isNegative": true,
         "isError": false,
-        "visual": "−1.5e-10",
+        "visual": "−1.5e−10",
         "spoken": {
           "en": "minus 1.5 times ten to the minus 10",
           "fr": "moins 1,5 fois dix puissance moins 10"
@@ -1369,6 +1369,190 @@
         "="
       ],
       "expectedDisplay": "0"
+    },
+    {
+      "id": "repeated-equals-at-range-floor",
+      "keys": [
+        "1",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "1e−99"
+    },
+    {
+      "id": "repeated-equals-underflows-to-zero",
+      "keys": [
+        "1",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "repeated-square-overflows-to-error",
+      "keys": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "x²",
+        "x²",
+        "x²",
+        "x²"
+      ],
+      "expectedDisplay": "Error",
+      "expectedDisplayValue": {
+        "mantissa": null,
+        "exponent": null,
+        "isNegative": false,
+        "isError": true,
+        "visual": "Error",
+        "spoken": {
+          "en": "Error",
+          "fr": "Erreur"
+        }
+      }
+    },
+    {
+      "id": "entry-total-length-caps-leading-zeroes",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1"
+      ],
+      "expectedDisplay": "0.0000000000000",
+      "expectedDisplayValue": {
+        "mantissa": "0.0000000000000",
+        "exponent": 0,
+        "isNegative": false,
+        "isError": false,
+        "visual": "0.0000000000000",
+        "spoken": {
+          "en": "0.0000000000000",
+          "fr": "0,0000000000000"
+        }
+      }
+    },
+    {
+      "id": "typing-spoken-decimal-matches-entry",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "expectedDisplay": "0.000000000123",
+      "expectedDisplayValue": {
+        "mantissa": "0.000000000123",
+        "exponent": 0,
+        "isNegative": false,
+        "isError": false,
+        "visual": "0.000000000123",
+        "spoken": {
+          "en": "0.000000000123",
+          "fr": "0,000000000123"
+        }
+      }
+    },
+    {
+      "id": "typing-spoken-trailing-zero-matches-entry",
+      "keys": [
+        "1",
+        ".",
+        "5",
+        "0"
+      ],
+      "expectedDisplay": "1.50",
+      "expectedDisplayValue": {
+        "mantissa": "1.50",
+        "exponent": 0,
+        "isNegative": false,
+        "isError": false,
+        "visual": "1.50",
+        "spoken": {
+          "en": "1.50",
+          "fr": "1,50"
+        }
+      }
     }
   ]
 }
