@@ -37,8 +37,8 @@
     <text x="441" y="218" font-size="24">mod</text>
     <text x="300" y="160" font-size="24">inside edge</text>
     <text x="508" y="160" font-size="24">spills out</text>
-    <text x="158" y="452" font-size="24">qualification</text>
-    <text x="286" y="452" font-size="24">repeater</text>
-    <text x="440" y="452" font-size="24">modulation</text>
+    <text x="158" y="452" font-size="24">qual</text>
+    <text x="286" y="452" font-size="24">rptr</text>
+    <text x="440" y="452" font-size="24">mod</text>
   </g>
 </svg>

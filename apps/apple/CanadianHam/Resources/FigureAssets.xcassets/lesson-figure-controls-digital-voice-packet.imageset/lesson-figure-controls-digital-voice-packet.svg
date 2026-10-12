@@ -27,16 +27,16 @@
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="70" y="62" font-size="24">paddle</text>
-    <text x="174" y="62" font-size="24">keyer timing</text>
+    <text x="174" y="62" font-size="24">keyer</text>
     <text x="70" y="192" font-size="24">mic</text>
     <text x="174" y="192" font-size="24">gain</text>
     <text x="279" y="192" font-size="24">VOX</text>
-    <text x="384" y="166" font-size="24">speech proc</text>
+    <text x="384" y="166" font-size="24">speech</text>
     <text x="536" y="112" font-size="24">transceiver</text>
     <text x="536" y="170" font-size="24">noise</text>
     <text x="536" y="202" font-size="24">tools</text>
     <text x="290" y="410" font-size="24">packet</text>
-    <text x="406" y="410" font-size="24">digipeater</text>
+    <text x="406" y="410" font-size="24">digi</text>
     <text x="540" y="410" font-size="24">station</text>
   </g>
 </svg>

@@ -24,7 +24,6 @@
     <circle cx="230" cy="214" r="16" stroke-width="4"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="320" y="42" font-size="26" font-weight="700">HF station chain</text>
     <text x="85" y="54" font-size="24">TX/amp</text>
     <text x="175" y="54" font-size="24">LPF</text>
     <text x="265" y="54" font-size="24">SWR</text>
@@ -35,11 +34,11 @@
     <text x="390" y="236" font-size="26" font-weight="700">FM receiver</text>
     <text x="84" y="366" font-size="24">ant</text>
     <text x="158" y="366" font-size="24">RF</text>
-    <text x="230" y="366" font-size="24">mixer</text>
+    <text x="230" y="366" font-size="24">mix</text>
     <text x="180" y="204" font-size="24">LO</text>
-    <text x="302" y="366" font-size="24">IF filt</text>
-    <text x="374" y="366" font-size="24">IF amp</text>
-    <text x="446" y="366" font-size="24">limiter</text>
-    <text x="518" y="366" font-size="24">disc/AF</text>
+    <text x="302" y="366" font-size="24">IF</text>
+    <text x="374" y="366" font-size="24">amp</text>
+    <text x="446" y="366" font-size="24">lim</text>
+    <text x="518" y="366" font-size="24">AF</text>
   </g>
 </svg>

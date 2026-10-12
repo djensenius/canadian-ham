@@ -26,7 +26,7 @@
     <text x="536" y="438" font-size="24">portable B</text>
     <text x="192" y="132" font-size="24">input</text>
     <text x="448" y="136" font-size="24">output</text>
-    <text x="320" y="456" font-size="24">direct simplex after check</text>
+    <text x="320" y="456" font-size="24">simplex</text>
     <text x="108" y="68" font-size="24">pause</text>
     <text x="108" y="94" font-size="24">listen</text>
     <text x="532" y="68" font-size="24">CTCSS</text>

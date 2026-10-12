@@ -30,6 +30,6 @@
     <text x="139" y="434" font-size="24">anode</text>
     <text x="346" y="434" font-size="24">cathode</text>
     <text x="252" y="260" font-size="24">conventional current</text>
-    <text x="272" y="444" font-size="24">electrons opposite</text>
+    <text x="410" y="462" font-size="24">e- opposite</text>
   </g>
 </svg>

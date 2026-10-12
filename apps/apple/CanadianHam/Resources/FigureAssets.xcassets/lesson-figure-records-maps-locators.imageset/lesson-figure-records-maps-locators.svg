@@ -25,16 +25,15 @@
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="180" y="56" font-size="28" font-weight="700">station log</text>
-    <text x="82" y="106" font-size="24">UTC</text>
-    <text x="128" y="106" font-size="24">call</text>
-    <text x="184" y="106" font-size="24">band</text>
-    <text x="238" y="106" font-size="24">mode</text>
-    <text x="276" y="106" font-size="24">grid</text>
+    <text x="82" y="106" font-size="24">U</text>
+    <text x="128" y="106" font-size="24">C</text>
+    <text x="184" y="106" font-size="24">B</text>
+    <text x="238" y="106" font-size="24">M</text>
+    <text x="276" y="106" font-size="24">G</text>
     <text x="480" y="56" font-size="28" font-weight="700">azimuthal map</text>
     <text x="560" y="76" font-size="24">short</text>
     <text x="398" y="360" font-size="24">long</text>
-    <text x="480" y="374" font-size="24">op at centre</text>
     <text x="220" y="462" font-size="24">UTC clock</text>
-    <text x="282" y="398" font-size="24">grid: 4 or 6 chars</text>
+    <text x="380" y="456" font-size="24">grid code</text>
   </g>
 </svg>

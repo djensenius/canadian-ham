@@ -34,7 +34,7 @@
     <text x="534" y="94" font-size="24">transceiver</text>
     <text x="166" y="252" font-size="24">good regulation</text>
     <text x="440" y="252" font-size="24">ripple</text>
-    <text x="540" y="462" font-size="24">hum/chirp</text>
+    <text x="560" y="392" font-size="24">hum</text>
     <text x="142" y="462" font-size="24">series</text>
     <text x="560" y="462" font-size="24">parallel</text>
   </g>

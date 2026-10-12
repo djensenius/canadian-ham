@@ -25,10 +25,8 @@
     <text x="120" y="82" font-size="24" font-weight="700">interference</text>
     <text x="232" y="188" font-size="24">listen</text>
     <text x="382" y="188" font-size="24">change/stop</text>
-    <text x="220" y="204" font-size="24" font-weight="700">distress</text>
-    <text x="236" y="300" font-size="24">exception</text>
-    <text x="386" y="300" font-size="24">stand by</text>
-    <text x="120" y="300" font-size="24" font-weight="700">third party</text>
+    <text x="240" y="300" font-size="24">exception</text>
+    <text x="430" y="300" font-size="24">stand by</text>
     <text x="246" y="430" font-size="24">personal</text>
     <text x="396" y="430" font-size="24">supervised</text>
     <text x="340" y="46" font-size="24">ID 30 min</text>
