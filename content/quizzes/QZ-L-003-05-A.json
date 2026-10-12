@@ -97,7 +97,7 @@
     {
       "id": "QZ-L-003-05-A-C3",
       "prompt": {
-        "en": "A band-plan note says an 80 m voice slot should stay near 3 kHz, while a 10 m channel can accept a many-kilohertz FM signal. A station plans 3.0 kHz peak deviation with 2.7 kHz audio. Using Carson's rule first, which plan fits both slots?",
+        "en": "Canadian regulations keep occupied bandwidth below 28 MHz narrow, while a 10 m channel can accept a many-kilohertz FM signal. A station plans 3.0 kHz peak deviation with 2.7 kHz audio. Using Carson's rule first, which plan fits both slots?",
         "fr": null
       },
       "choices": [
