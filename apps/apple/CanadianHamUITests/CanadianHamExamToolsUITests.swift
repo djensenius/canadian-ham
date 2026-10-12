@@ -282,7 +282,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     private func ignoresProtectedAreaIntersection(_ element: XCUIElement) -> Bool {
         ["practice-category-title", "practice-session-tally", "practice-category-summary"].contains(element.identifier)
     }
-    }
 
     private func visibleFrameExcludingNavigationBar(in app: XCUIApplication) -> CGRect {
         let windowFrame = app.windows.firstMatch.frame
