@@ -2565,36 +2565,31 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTFail("\(context): expected a scroll view before positioning lesson figure", file: file, line: line)
             return
         }
-        var trace: [String] = []
-        func record(_ label: String) {
-            trace.append("\(label): target=\(frameDescription(element.frame))")
-        }
-        func accepted() -> Bool {
-            isLessonFigureFullyVisibleForAudit(element, in: app) && !hasScrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-        }
-
-        record("start")
-        if accepted() { return }
-        for step in 1...60 where !accepted() {
-            preciseScroll(scrollView, contentDeltaY: -10)
-            waitBriefly(0.05)
-            record("scan up \(step)")
-        }
-        for step in 1...120 where !accepted() {
-            preciseScroll(scrollView, contentDeltaY: 10)
-            waitBriefly(0.05)
-            record("scan down \(step)")
-        }
-        guard accepted() else {
+        settleScrollableContentBelowNavigationBar(
+            in: app,
+            context: context,
+            preserving: element,
+            preserveFullyVisible: true,
+            file: file,
+            line: line
+        )
+        let fullyVisible = isLessonFigureFullyVisibleForAudit(element, in: app)
+        let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+        if !fullyVisible || !offenders.isEmpty {
             attachScreenshot(named: "task38-1-positioning-failure-\(context)", from: app)
-            let nearest = elementsNearestProtectedBar(in: app, scrollView: scrollView).joined(separator: " | ")
-            XCTFail(
-                "\(context): expected figure fully visible below the protected navigation/status area with no scrollable text or buttons intersecting that protected area. Frame: \(frameDescription(element.frame)); nearest-to-bar-at-failure: \(nearest); trace: \(trace.joined(separator: " -> "))",
-                file: file,
-                line: line
-            )
-            return
         }
+        XCTAssertTrue(
+            fullyVisible,
+            "\(context): expected figure fully visible below the protected navigation/status area. Frame: \(frameDescription(element.frame))",
+            file: file,
+            line: line
+        )
+        XCTAssertTrue(
+            offenders.isEmpty,
+            "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.map(\.description).joined(separator: "; "))",
+            file: file,
+            line: line
+        )
     }
 
     private func preciseScroll(_ scrollView: XCUIElement, contentDeltaY: CGFloat) {
