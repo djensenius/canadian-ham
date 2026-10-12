@@ -2,9 +2,11 @@
 
 This document defines how `canadian-ham` separates official ISED data from original project content and how it records permission, attribution, and disclaimers.
 
-The ISED permission request was submitted on 2026-10-02 at 08:34 local time through ISED's online Apply for Crown Copyright Clearance form and is awaiting ISED's reply; no confirmation or reference number has been reported yet. The request used purpose Reproduction and Adaptation, languages English and French using ISED's own versions, Electronic-only format, Non-commercial end use, one electronic edition, and price 0.00 CAD. The requested scope covers the Basic 2025 question bank (delimited TXT and EN/FR PDF), the Advanced bank (delimited TXT and EN/FR PDFs, current edition and future revisions), electronic app data with shuffled choices, publication of the question text in the app's public source code, and future ISED bank revisions; it did not request reference sheets/reference PDFs, commercial use, revision, or translation. Written permission is tracked by task-1.1 and remains pending; no permission has been granted or recorded yet.
+The ISED permission request was submitted on 2026-10-02 at 08:34 local time through ISED's online Apply for Crown Copyright Clearance form and is awaiting ISED's reply; no confirmation or reference number has been reported yet. The request used purpose Reproduction and Adaptation, languages English and French using ISED's own versions, Electronic-only format, Non-commercial end use, one electronic edition, and price 0.00 CAD. The requested scope covers the Basic 2025 question bank (delimited TXT and EN/FR PDF), the Advanced bank (delimited TXT and EN/FR PDFs, current edition and future revisions), electronic app data with shuffled choices, publication of the question text in the app's public source code, and future ISED bank revisions; it explicitly did not request reference sheets/reference PDFs, commercial use, revision, or translation. Written permission is tracked by task-1.1 and remains pending; no permission has been granted or recorded yet.
 
-Until written permission is recorded, the GitHub repository `djensenius/canadian-ham` remains private. ISED's published terms allow reproduction for personal, non-commercial purposes without permission, including the [general terms and conditions](https://ised-isde.canada.ca/site/ised/en/terms-and-conditions) and [copyright written permission guidance](https://www.ised-isde.canada.ca/site/ised/en/copyright-written-permission). The owner has approved committing official ISED source artifacts for private, non-distributed development under the interim policy below as the owner's risk decision, not as legal advice. Public exposure or distribution does not fit that interim rationale and is blocked by the [public-release gate](#public-release-gate).
+Owner decision 2026-10-12 (2A): for internal TestFlight builds only, the app may use the official ISED English exam reference sheet in the in-exam reference panel under the same interim risk basis used for the official question bank: private repository, non-commercial internal distribution to App Store Connect team members only, unmodified ISED material, attribution/disclaimer, offline use, and no data collection. This does not expand the original permission request; a follow-up request must ask ISED to add the reference sheets in English and French. Public release, including task-1.7/T-009, stays blocked until T-007/task-1.1 records written ISED permission whose scope covers the reference sheet. Only the English reference sheets exist in our sources today. The fallback remains the original project study sheet at `content/reference-sheet/basic.md`.
+
+Until written permission is recorded, the GitHub repository `djensenius/canadian-ham` remains private. ISED's published terms allow reproduction for personal, non-commercial purposes without permission, including the [general terms and conditions](https://ised-isde.canada.ca/site/ised/en/terms-and-conditions) and [copyright written permission guidance](https://www.ised-isde.canada.ca/site/ised/en/copyright-written-permission). The owner has approved committing official ISED source artifacts and using the owner-approved internal-TestFlight exception for private, non-public development under the interim policy below as the owner's risk decision, not as legal advice. Public exposure or distribution does not fit that interim rationale and is blocked by the [public-release gate](#public-release-gate).
 
 Related documents:
 
@@ -20,16 +22,17 @@ Record the written permission here when available in project records.
 | Field | Value |
 |---|---|
 | Permission holder | Owner / project maintainer |
-| Request status | Drafted (2026-09-28 owner decision); sent: 2026-10-02 (ISED online Crown copyright clearance form, 08:34); granted: pending |
+| Request status | Original question-bank request drafted (2026-09-28 owner decision); sent: 2026-10-02 (ISED online Crown copyright clearance form, 08:34); granted: pending. Reference-sheet follow-up: owner decision 2026-10-12 (2A); draft in [release/ised-reference-sheet-request.md](release/ised-reference-sheet-request.md); sent/granted: pending |
 | ISED reference number | Pending: fill in permission reference number |
 | Permission date | Pending: fill in permission date |
 | Permission scope | Pending: paste concise scope from written permission |
-| Covered source artifacts | Pending request scope: 2025 Basic question bank delimited TXT and EN/FR PDF; Advanced bank delimited TXT and EN/FR PDFs (current edition and future revisions); purpose Reproduction and Adaptation; non-commercial; electronic app data (the form's material details described verbatim text stored as structured data with answer choices in random order and questions grouped by topic); publication of question text in public source code; future ISED bank revisions. Not requested: reference sheets/reference PDFs, commercial use, revision, or translation |
+| Covered source artifacts | Pending original request scope: 2025 Basic question bank delimited TXT and EN/FR PDF; Advanced bank delimited TXT and EN/FR PDFs (current edition and future revisions); purpose Reproduction and Adaptation; non-commercial; electronic app data (the form's material details described verbatim text stored as structured data with answer choices in random order and questions grouped by topic); publication of question text in public source code; future ISED bank revisions. Explicitly not requested in the original submission: reference sheets/reference PDFs, commercial use, revision, or translation. Pending follow-up request scope: add `Reference Material for Amateur Radio Exam – Basic Qualification` reference sheets in English and French, if ISED has an official French version |
 | Covers verbatim question text as app data | Pending: `yes` only if the written permission explicitly covers bundling the verbatim EN/FR question text as data in the web and Apple apps |
+| Covers official reference sheet in app tools | Pending: `yes` only if the written permission explicitly covers showing/bundling the official Basic exam reference sheet in web and Apple in-exam tools |
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
-| Release review status | Blocked until reference number/date/scope are recorded and the scope explicitly covers the release artifacts |
+| Release review status | Blocked until reference number/date/scope are recorded, the scope explicitly covers the release artifacts, and task-1.7/T-009 permission coverage includes the official reference sheet |
 
-Do not infer permission scope beyond the written clearance. T-007/task-1.1 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data, including the Advanced bank already named in the request. The reference PDFs are retained only as source artifacts and are not shipped in the apps. Until permission is recorded, vendoring is allowed only for private, non-distributed development under the [interim private-development policy](#interim-private-development-policy) (including its internal-TestFlight exception); publication and distribution remain blocked by the [public-release gate](#public-release-gate).
+Do not infer permission scope beyond the written clearance. T-007/task-1.1 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data, including the Advanced bank already named in the request. The original request did not cover reference sheets; T-007/task-1.1 must also record explicit written coverage for the official Basic exam reference sheet before task-1.7/T-009 public release can proceed. Until permission is recorded, vendoring and the owner-approved reference-sheet use are allowed only for private, non-public development under the [interim private-development policy](#interim-private-development-policy) (including its internal-TestFlight exception); publication and distribution remain blocked by the [public-release gate](#public-release-gate). The project-owned fallback is `content/reference-sheet/basic.md`.
 
 ## Interim private-development policy
 
@@ -39,7 +42,7 @@ While the repository is private and no outside collaborators are added, the proj
   - the Basic 2025 delimited TXT;
   - `readme_basic.txt` and `lisezmoi_base.txt` from the Basic 2025 question-bank ZIP;
   - the Basic 2025 question-bank PDF;
-  - the English Basic 2025 reference PDFs, either in the same directory or in a documented reference subfolder under that directory; these PDFs are not shipped in the apps.
+  - the English Basic 2025 reference PDFs, either in the same directory or in a documented reference subfolder under that directory; only the unlabelled exam-version PDF may be used in app tools, and only for owner-approved internal TestFlight builds until written permission covers the reference sheet.
 - `content/sources/ised/advanced-<title-page-date>/` for verbatim Advanced question-bank source files from ISED, including the delimited TXT/ZIP companion files and English/French PDFs named in the permission request. Use the official title-page date once verified for the directory suffix, record the source URLs, and do not make an Advanced bank active in the apps until separate app support is implemented.
 
 These files must be stored verbatim, with SHA-256 checksums recorded in the source manifest, and with the attribution and disclaimer in this document kept in place. The files must not be edited, reformatted, or mixed into original lesson or explanation content.
@@ -50,13 +53,13 @@ ISED's non-commercial reproduction conditions include:
 - identifying ISED as the source department and identifying the source work by title;
 - not representing the reproduction as an official version or as having been made in affiliation with or endorsed by the Government of Canada.
 
-This interim policy is the owner's risk decision and is not legal advice. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution. The one exception is internal TestFlight builds uploaded to App Store Connect and installable only by the owner's App Store Connect team members (see [TestFlight runbook](release/testflight.md)); external testers, public TestFlight links, and App Store submission stay blocked by the gate below.
+This interim policy is the owner's risk decision and is not legal advice. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution. The one exception is internal TestFlight builds uploaded to App Store Connect and installable only by the owner's App Store Connect team members (see [TestFlight runbook](release/testflight.md)); under owner decision 2026-10-12 (2A), that internal-TestFlight exception may include the unmodified English ISED exam reference sheet in the in-exam reference panel on the same interim risk basis as the official question bank. External testers, public TestFlight links, App Store submission, and task-1.7/T-009 public release stay blocked by the gate below until written permission covers the reference sheet.
 
 ## Public-release gate
 
 For release-day execution, use the consolidated [release checklist](release/release-checklist.md#gates) alongside this gate.
 
-All of the following actions are blocked until T-007 records written ISED permission with the reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data. The reference PDFs remain source artifacts and are not shipped in the apps:
+All of the following actions are blocked until T-007/task-1.1 records written ISED permission with the reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data and showing/bundling the official Basic exam reference sheet in app tools. Task-1.7/T-009 public release remains BLOCKED until ISED's written permission covers the reference sheet; the local fallback at `content/reference-sheet/basic.md` does not by itself waive that owner decision:
 
 - making the GitHub repository public or adding outside collaborators;
 - deploying the web app anywhere publicly reachable;
@@ -95,12 +98,12 @@ The repository must keep ISED source data separate from original project content
 
 | Content class | Location | Rules |
 |---|---|---|
-| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/`; `content/sources/ised/advanced-<title-page-date>/` | Store the Basic 2025 TXT, Basic 2025 question-bank PDF, English reference PDFs, and approved Advanced source files verbatim with checksums under the interim private-development policy while the repository remains private. Do not edit. Importer and CI jobs may run against the committed TXT files. The reference PDFs and Advanced PDFs are not shipped in the apps. Public release requires T-007/task-1.1 permission scope to cover included ISED app data. |
+| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/`; `content/sources/ised/advanced-<title-page-date>/` | Store the Basic 2025 TXT, Basic 2025 question-bank PDF, English reference PDFs, and approved Advanced source files verbatim with checksums under the interim private-development policy while the repository remains private. Do not edit. Importer and CI jobs may run against the committed TXT files. Only the English exam reference PDF may be used in internal TestFlight app tools under owner decision 2026-10-12 (2A); the training PDF and Advanced PDFs are not shipped in the apps. Public release requires T-007/task-1.1 permission scope to cover included ISED app data and the official reference sheet. |
 | Generated ISED question data | `content/generated/basic-2025-07-15/`; `content/generated/advanced-<title-page-date>/` | Generated from official source. Preserve text verbatim. Include source manifest. Private development may use it; public release requires T-007 permission scope to cover bundling verbatim question text as app data. Advanced generated data stays inactive in the apps until separate app support is implemented. |
 | Category metadata | `content/categories.json`; `content/categories-advanced.json` | Hand-maintained. English names from verified ISED/RAC materials. French names are ISED's official wording once verified (Basic: CIR-3 §5.1 and the French Amateur Radio Exam Generator; Advanced: CIR-3 §5.3.1–5.3.7 and the French Exam Generator, verified in task-11.10; see `docs/requirements.md`). |
 | Original lessons | `content/lessons/` | Original writing by project. May cite ISED question IDs and RBR-4. Must not copy RAC/Coax study-guide text. |
 | Original explanations | `content/explanations/` | Original writing by project. Separate from ISED records. Must not copy third-party study guides. |
-| Reference material metadata/assets | `content/reference/` | Private development may track metadata and checksums for the English reference PDFs under the interim policy. The PDFs remain in `content/sources` for provenance and are not shipped in the apps. |
+| Reference material metadata/assets | `content/reference/`; `content/reference-sheet/basic.md` | Private development may track metadata and checksums for the English reference PDFs under the interim policy. The PDFs remain in `content/sources` for provenance; only the unlabelled English exam PDF may be shown in internal TestFlight app tools under owner decision 2026-10-12 (2A). The original project study sheet at `content/reference-sheet/basic.md` remains the fallback. |
 
 ## Verbatim ISED question text
 
@@ -141,20 +144,22 @@ Original content must not:
 - French UI may be translated by the project because it is original interface copy, not official ISED question text.
 - Keep attribution, disclaimer, and other legal-review footer/About text English-only in the French UI with `lang="en"` / English accessibility-language tagging until T-007/task-1.1 and the release legal review approve localized legal copy. This avoids presenting unreviewed French drafts as legal wording.
 - French category names are open until verified from an official source.
-- French reference material has not yet been located; do not claim it exists.
+- Only English 2025 Basic reference PDFs exist in our sources. French reference material has not yet been located; do not claim it exists.
 
 ## Reference material policy
 
 The English reference material ZIP contains:
 
-- `Reference Material for Amateur Radio Exam Basic EN 2025.pdf`, SHA-256 `e4e6a0ec35d9ccec2732b6c2a950b3ea721f826d44160b54b4e6298e86b93ae9`; not shipped in the apps.
+- `Reference Material for Amateur Radio Exam Basic EN 2025.pdf`, SHA-256 `e4e6a0ec35d9ccec2732b6c2a950b3ea721f826d44160b54b4e6298e86b93ae9`; source artifact, with the internal-TestFlight exception described below.
 - `Reference Material for Amateur Radio Training Basic EN 2025.pdf`, SHA-256 `2e0bf5e30a621852db0bf3c1e3954bbd60f906b19c531d97eab9b35c8f1a831e`; not shipped in the apps.
 
 Rules:
 
 - Label the training version as study aid material.
 - Label the unlabelled exam version as reference material that may be used while writing the exam.
-- Do not bundle these PDFs in web or Apple app artifacts; they are kept only as source artifacts under `content/sources`.
+- Owner decision 2026-10-12 (2A): internal TestFlight builds may show the unlabelled English exam reference sheet in the practice/mock-exam reference panel, unmodified, attributed, offline, and without data collection, under the same interim risk basis as the official question bank. Do not ship the training PDF in app artifacts.
+- Task-1.7/T-009 public release remains blocked until T-007/task-1.1 records written ISED permission that explicitly covers the official reference sheet. The original project fallback is `content/reference-sheet/basic.md`; keep one implementation switch point so builds can fall back to it if needed.
+- Only the English sheet exists in our sources. Ask ISED whether an official French version exists before claiming or bundling one.
 - Keep checksums in the source manifest.
 - Do not recreate ISED diagrams unless permission scope explicitly allows derivative formats.
 
@@ -179,7 +184,7 @@ Before any public release:
 
 - Permission reference number, date, and scope are recorded above.
 - Permission scope explicitly covers bundling verbatim question text as app data.
-- Reference PDFs are not shipped in release artifacts.
+- Written permission explicitly covers showing/bundling the official Basic exam reference sheet in release artifacts; task-1.7/T-009 remains blocked until this is recorded.
 - Attribution text appears in web and Apple about/settings surfaces.
 - Disclaimer appears in web and Apple about/settings surfaces.
 - Source URLs and checksums are recorded.
@@ -194,6 +199,6 @@ Before any public release:
 - Fill in ISED permission reference number.
 - Fill in ISED permission date.
 - Confirm whether permission explicitly covers bundling verbatim question text as app data, including structured formats with shuffled choices.
-- Confirm whether any future change to ship English reference PDFs in web or Apple apps has explicit permission before implementation; current app artifacts do not ship them.
+- Record ISED's written answer to the reference-sheet follow-up request, including whether the scope covers the official English exam reference sheet in app tools.
 - Verify official French category names before displaying French category headings.
-- Locate French 2025 Basic reference material or document its absence in release notes.
+- Locate or get ISED confirmation for an official French 2025 Basic reference sheet before claiming one exists; only English reference PDFs are currently in our sources.
