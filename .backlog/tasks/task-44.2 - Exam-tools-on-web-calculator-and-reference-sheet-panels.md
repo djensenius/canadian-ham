@@ -1,9 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 14:39'
+updated_date: '2026-10-12 15:48'
 labels:
   - web
 dependencies:
@@ -25,3 +27,9 @@ Web UI for the calculator and reference sheet in practice and mock exams: a side
 - [ ] #2 Calculator fully keyboard-operable with screen-reader announcements; axe passes with the panels open in light and dark
 - [ ] #3 The mock exam timer is unaffected; tools are available in practice and mock exams
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Coordinator: this lane owns content/reference-sheet/ (an original interim formula sheet, swappable for the official ISED sheet once the owner decides on licensing).
+<!-- SECTION:NOTES:END -->

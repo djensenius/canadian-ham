@@ -1,9 +1,11 @@
 ---
 id: TASK-44.3
 title: 'Exam tools on iOS, iPadOS and macOS'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 14:39'
+updated_date: '2026-10-12 15:48'
 labels:
   - apple
 dependencies:
@@ -25,3 +27,9 @@ Apple UI for the calculator and reference sheet in practice and mock exams: iPho
 - [ ] #2 Full default accessibility audits pass with the tools open in light and dark; the largest text size works
 - [ ] #3 The mock exam timer is unaffected
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Coordinator: renders the shared reference sheet from content/reference-sheet/ (created by 44.2); use a test fixture until 44.2 merges.
+<!-- SECTION:NOTES:END -->
