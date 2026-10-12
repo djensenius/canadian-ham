@@ -3,11 +3,11 @@ id: TASK-46.3
 title: >-
   Lesson accuracy and coverage fixes: M7 and M8 (including a band-name to
   frequency reference table in L-007-01)
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:13'
+updated_date: '2026-10-12 15:21'
 labels:
   - content
 dependencies: []
@@ -53,6 +53,8 @@ Taught-facts self-check: reviewed the flagged not-taught/answer-key-only/partial
 Sources verified/accessed 2026-10-12: content/generated/basic-2025-07-15/questions.json for all question IDs; ISED RBR-4 Schedule I amateur bands at https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service for amateur band frequency ranges; ISED Basic reference PDFs in content/sources/ised/basic-2025-07-15/reference/ extracted with Swift PDFKit, confirming F = 300 / lambda and lambda = 300 / F; Space Weather Canada/NRC solar flux pages https://www.spaceweather.gc.ca/forecast-prevision/solar-solaire/solarflux/sx-2-en.php, sx-3-en.php, and sx-4-en.php for 10.7 cm, 2 800 MHz, daily flux data, and DRAO/Penticton/NRC context. No new RIC-1/RIC-3 operating-procedure facts were added.
 Skipped as separate-task scope: Try-it answer hiding -> task-46.5; faded practice and full concept-check/interleaving redesign -> task-46.6/task-46.7 (only quick replacements done here); lesson splits/coverage moves and L-008-01 length reduction/section reshuffle -> task-46.10; cross-module prerequisite front matter -> task-46.11; figure/directive work and visual production -> existing figure lane/task-38; M1/M2 changes -> task-46.4/task-46.8/task-46.9.
 Validation passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; cd apps/web && npx vitest run (15 files, 160 tests; jsdom canvas getContext warnings only); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (18 XCTest tests passed plus Swift Testing 0-test suite passed).
+
+Review r463 requested changes after 778a9d8. Merged origin/main first (kept branch task-46.3 conflict version as instructed). Fixing answer-pair/near-copy issues, band table completeness, emission definitions, affected explanation, and concept checks; then rerunning required checks.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
