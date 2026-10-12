@@ -3,11 +3,11 @@ id: TASK-46.4
 title: >-
   Lesson accuracy and coverage fixes: M1 and M2 (within the current reference
   style; the restructure is a separate decision task)
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:15'
+updated_date: '2026-10-12 15:22'
 labels:
   - content
 dependencies: []
@@ -33,6 +33,8 @@ Apply the High findings (and Medium ones that are a sentence or two) from docs/l
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Verify the M1/M2 review findings against the active question bank and primary sources, including extracting the ISED reference PDFs for reference-sheet claims.\n2. Make narrow paragraph/table/explanation edits for every High finding, plus quick Medium accuracy/definition/example fixes within current M1/M2 reference style.\n3. Run the required content, link, web, and Swift package checks; fix regressions.\n4. Record finding-by-finding notes with question IDs, source URLs/access dates, checked acceptance criteria, final summary, and mark Done.
+
+5. Address reviewer request changes after merging main: restore dropped L-002-01 taught facts, fix should/low findings, perform and record an explicit old-vs-new taught-facts line comparison, rerun checks, then refinalize.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
