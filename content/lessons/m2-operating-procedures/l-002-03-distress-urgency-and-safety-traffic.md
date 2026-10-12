@@ -42,7 +42,7 @@ Distress is tied to immediate danger to life. Formal distress signals are standa
 
 Urgent traffic handles serious requests for assistance with no immediate threat to life. Its purpose is fast assistance while reserving the distress signal for immediate danger to life.
 
-In the priority comparison used in this module, distress immediately precedes emergency or urgency messages. Treat that comparison narrowly and classify each real situation by the facts you hear. Safety traffic warns stations about hazards that affect people, navigation, weather, or operating conditions.
+The bank calls the level just below distress an emergency message; it outranks safety messages. Classify each real situation by the facts you hear. Safety traffic warns stations about hazards that affect people, navigation, or weather.
 
 ### Reference fact: priority terms in this lesson
 
@@ -52,7 +52,7 @@ In the priority comparison used in this module, distress immediately precedes em
 | SOS | Morse distress signal for a life-threatening situation. |
 | Urgent | Serious request for help with no immediate threat to life. |
 | Emergency message | The message level immediately after distress in the priority comparison. |
-| Safety traffic | Hazard information affecting people, navigation, weather, or operating conditions. |
+| Safety traffic | Hazard information affecting people, navigation, or weather. |
 
 ### Memory trick: life first, help next, hazards shared
 
@@ -70,7 +70,7 @@ A station unable to provide direct help still has a role. It can relay accurate 
 
 ### In the real world: the first distress break-in
 
-A useful break-in is short and factual. In a life-threatening situation on a repeater, break in between transmissions: say MAYDAY three times, then give your call sign, location, and the help needed. After that, pause for the station or net control that can organize assistance.
+A useful break-in is short and factual. In a life-threatening situation on a busy repeater, break in between transmissions and state your call sign and situation first. Then give your location and the help needed, and pause for the station or net control that can organize assistance.
 
 The goal is not a polished speech. The goal is enough accurate information for other stations to clear the channel and contact help.
 
@@ -108,12 +108,12 @@ Emergency readiness is also ordinary station maintenance. Charged batteries, a k
 
 Alt text: A priority note board showing distress facts and station-readiness items.
 
-Description: Draw a note board beside a small repeater scene. At the top, show distress traffic as life-threatening and link it to the voice and Morse distress signals. Below it, show urgent traffic as serious help with no immediate threat to life, emergency or urgency messages immediately after distress in the narrow priority comparison, and safety traffic as hazard information. Include a handheld with spare batteries and a simple portable dipole in a go-kit.
+Description: Draw a note board beside a small repeater scene. At the top, show distress traffic as life-threatening and link it to the voice and Morse distress signals. Below it, show urgent traffic as serious help with no immediate threat to life, emergency messages immediately after distress in the priority comparison, and safety traffic as hazard information. Include a handheld with spare batteries and a simple portable dipole in a go-kit.
 
 ## Summary
 
 - Distress, urgency, and safety traffic are classified by the situation they carry.
 - Formal distress signals mark life-threatening traffic so the distress station gets immediate access.
-- The narrow priority comparison places distress directly before the emergency or urgency level.
+- The priority comparison places distress directly before the emergency-message level.
 - A distress break-in needs identification, location, assistance details, authority notification, and continued listening.
 - Station readiness links alternate power, charged batteries, practical portable antennas, and clear written records.
