@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 17:10'
+updated_date: '2026-10-12 17:15'
 labels:
   - content
   - web
@@ -55,6 +55,8 @@ Validation passed: fetched RIC-1 and ISED downloads page on 2026-10-12; pnpm --d
 Review follow-up from r43: tightening lesson facts versus tips, removing unsourced photo-ID wording, adding web Learn tests, rerunning requested checks including Apple network, and adding task-44 follow-up note.
 
 Review follow-up validation passed: pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:coverage; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:explanations; pnpm check:links; pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; node scripts/check-apple-text-sources.ts; pnpm check:apple-network; pnpm check:apple-l10n (first run timed out while waiting on the build lock, rerun passed); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice test CODE_SIGNING_ALLOWED=NO.
+
+Merged origin/main after task-44.2 landed; resolved task-44 by keeping main's In Progress status plus the task-43 follow-up note, kept newer task contents elsewhere, softened L-001-01 reference-sheet wording, and reduced the virtual setup table row to camera, microphone, and stable internet. Post-merge web validation passed: pnpm --filter @canadian-ham/web typecheck; pnpm --filter @canadian-ham/web test (171 tests); pnpm --filter @canadian-ham/web audit:urls.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
