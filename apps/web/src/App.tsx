@@ -1687,6 +1687,7 @@ function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { re
       return;
     }
     event.preventDefault();
+    event.stopPropagation();
     onPressKey(key);
   }
 
@@ -1703,6 +1704,7 @@ function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { re
             key={key}
             type="button"
             onClick={() => onPressKey(key)}
+            onKeyDown={handleKeyDown}
           >{calculatorKeyVisual(interfaceLanguage, key)}</button>
         )))}
       </div>
@@ -1717,9 +1719,9 @@ function firstMarkdownHeading(markdown: string): string | undefined {
 function ReferenceSheetTool({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
   const referenceSheetMarkdown = basicReferenceSheetMarkdownForWeb();
   return (
-    <section className="reference-sheet-tool" aria-label={t(interfaceLanguage, "referenceSheetTitle")} data-exam-tool-focus lang={englishTextLang(interfaceLanguage)} tabIndex={-1}>
+    <section className="reference-sheet-tool" aria-label={t(interfaceLanguage, "referenceSheetTitle")} data-exam-tool-focus tabIndex={-1}>
       {interfaceLanguage === "fr" ? <p className="reference-note" lang="fr-CA">{t(interfaceLanguage, "englishOnlyContentNotice")}</p> : null}
-      <MarkdownContent markdown={referenceSheetMarkdown} title={firstMarkdownHeading(referenceSheetMarkdown)} tableLabel={t(interfaceLanguage, "referenceSheetTableAria")} interfaceLanguage={interfaceLanguage} />
+      <MarkdownContent markdown={referenceSheetMarkdown} title={firstMarkdownHeading(referenceSheetMarkdown)} tableLabel={t(interfaceLanguage, "referenceSheetTableAria")} interfaceLanguage={interfaceLanguage} contentLanguage="en" />
     </section>
   );
 }
@@ -1737,7 +1739,7 @@ function calculatorKeyFromKeyboardEvent(event: KeyboardEvent<HTMLElement>): Calc
   if (event.ctrlKey || event.metaKey || event.altKey) {
     return null;
   }
-  if (event.target instanceof HTMLElement && event.target.closest("button") !== null && (event.key === "Enter" || event.key === " " || event.key === "Escape")) {
+  if (event.target instanceof HTMLElement && event.target.closest("button") !== null && (event.key === "Enter" || event.key === " ")) {
     return null;
   }
   if (/^[0-9]$/.test(event.key)) {

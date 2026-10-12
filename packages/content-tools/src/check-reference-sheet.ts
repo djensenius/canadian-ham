@@ -1,19 +1,27 @@
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { isMainModule } from "./cli.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
-const SHEET_PATH = new URL("../../../content/reference-sheet/basic.md", import.meta.url);
+const DEFAULT_SHEET_PATH = fileURLToPath(new URL("../../../content/reference-sheet/basic.md", import.meta.url));
 
-interface RequiredEntry {
+export interface RequiredReferenceSheetEntry {
   readonly name: string;
   readonly sheetText: string;
   readonly lessonText: string;
   readonly lessonPath: string;
 }
 
-const requiredEntries: readonly RequiredEntry[] = [
+export interface ValidateReferenceSheetOptions {
+  readonly sheetPath?: string | URL;
+  readonly repoRoot?: string | URL;
+  readonly requiredEntries?: readonly RequiredReferenceSheetEntry[];
+  readonly requiredSections?: readonly string[];
+}
+
+export const requiredReferenceSheetEntries: readonly RequiredReferenceSheetEntry[] = [
   { name: "Ohm's law voltage", sheetText: "E = I x R", lessonText: "E = I x R", lessonPath: "content/lessons/m5-basic-electronics/l-005-02-power-ohms-law.md" },
   { name: "Ohm's law current", sheetText: "I = E / R", lessonText: "I = E / R", lessonPath: "content/lessons/m5-basic-electronics/l-005-02-power-ohms-law.md" },
   { name: "Ohm's law resistance", sheetText: "R = E / I", lessonText: "R = E / I", lessonPath: "content/lessons/m5-basic-electronics/l-005-02-power-ohms-law.md" },
@@ -50,7 +58,7 @@ const requiredEntries: readonly RequiredEntry[] = [
   { name: "silver resistor code", sheetText: "silver | — | x 0.01", lessonText: "silver | — | x 0.01", lessonPath: "content/lessons/m4-circuit-components/l-004-03-resistor-colour-codes.md" },
 ];
 
-const requiredSections = [
+export const requiredReferenceSheetSections: readonly string[] = [
   "## Ohm's law",
   "## Power",
   "## Series and parallel resistance",
@@ -60,6 +68,10 @@ const requiredSections = [
   "## Four-band resistor colour code",
 ];
 
+function filePath(value: string | URL): string {
+  return value instanceof URL ? fileURLToPath(value) : value;
+}
+
 function normalizeMarkdownTable(text: string): string {
   return text
     .replace(/\r\n/g, "\n")
@@ -68,34 +80,39 @@ function normalizeMarkdownTable(text: string): string {
     .trim();
 }
 
-async function validateReferenceSheet(): Promise<readonly string[]> {
+export async function validateReferenceSheet(options: ValidateReferenceSheetOptions = {}): Promise<readonly string[]> {
+  const sheetPath = filePath(options.sheetPath ?? DEFAULT_SHEET_PATH);
+  const repoRoot = filePath(options.repoRoot ?? REPO_ROOT);
+  const requiredEntries = options.requiredEntries ?? requiredReferenceSheetEntries;
+  const requiredSections = options.requiredSections ?? requiredReferenceSheetSections;
+  const sheetLabel = path.relative(repoRoot, sheetPath).split(path.sep).join("/") || sheetPath;
   const issues: string[] = [];
-  const sheet = await readFile(SHEET_PATH, "utf8");
+  const sheet = await readFile(sheetPath, "utf8");
   const normalizedSheet = normalizeMarkdownTable(sheet);
 
   if (!sheet.startsWith("# Original Basic formula and reference study aid\n")) {
-    issues.push("content/reference-sheet/basic.md must start with the approved original-study-aid heading.");
+    issues.push(`${sheetLabel} must start with the approved original-study-aid heading.`);
   }
   if (!sheet.includes("Study aid for Canadian Ham practice; the real Basic exam provides the official ISED reference sheet.")) {
-    issues.push("content/reference-sheet/basic.md must state that it is a study aid and that the exam provides the official ISED sheet.");
+    issues.push(`${sheetLabel} must state that it is a study aid and that the exam provides the official ISED sheet.`);
   }
   for (const section of requiredSections) {
     if (!sheet.includes(section)) {
-      issues.push(`content/reference-sheet/basic.md is missing ${section}.`);
+      issues.push(`${sheetLabel} is missing ${section}.`);
     }
   }
   if (/Reference Material for Amateur Radio|block diagram|official ISED reference sheet content/i.test(sheet)) {
-    issues.push("content/reference-sheet/basic.md appears to include official-reference-sheet wording instead of original study-aid content.");
+    issues.push(`${sheetLabel} appears to include official-reference-sheet wording instead of original study-aid content.`);
   }
 
   const lessonCache = new Map<string, string>();
   for (const entry of requiredEntries) {
     if (!normalizedSheet.includes(normalizeMarkdownTable(entry.sheetText))) {
-      issues.push(`content/reference-sheet/basic.md is missing ${entry.name}: ${entry.sheetText}`);
+      issues.push(`${sheetLabel} is missing ${entry.name}: ${entry.sheetText}`);
     }
     let lessonText = lessonCache.get(entry.lessonPath);
     if (lessonText === undefined) {
-      lessonText = await readFile(new URL(`../../../${entry.lessonPath}`, import.meta.url), "utf8");
+      lessonText = await readFile(path.join(repoRoot, entry.lessonPath), "utf8");
       lessonCache.set(entry.lessonPath, lessonText);
     }
     if (!normalizeMarkdownTable(lessonText).includes(normalizeMarkdownTable(entry.lessonText))) {
@@ -107,11 +124,13 @@ async function validateReferenceSheet(): Promise<readonly string[]> {
 }
 
 async function main(): Promise<void> {
-  const issues = await validateReferenceSheet();
+  const [sheetArgument] = process.argv.slice(2);
+  const sheetPath = sheetArgument === undefined ? DEFAULT_SHEET_PATH : path.resolve(process.cwd(), sheetArgument);
+  const issues = await validateReferenceSheet({ sheetPath });
   if (issues.length > 0) {
     throw new Error(["Reference sheet validation failed:", ...issues.map((issue) => `- ${issue}`)].join("\n"));
   }
-  console.log(`check-reference-sheet: validated ${requiredEntries.length} entries against lessons from ${REPO_ROOT}content/reference-sheet/basic.md`);
+  console.log(`check-reference-sheet: validated ${requiredReferenceSheetEntries.length} entries against lessons from ${sheetPath}`);
 }
 
 if (isMainModule(import.meta)) {

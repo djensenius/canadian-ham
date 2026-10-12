@@ -1065,34 +1065,48 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByRole("button", { name: "Calculator" }));
     await screen.findByRole("heading", { name: "Calculator" });
 
-    const seven = screen.getByRole("button", { name: "Digit 7" });
+    const sevenButton = () => screen.getByRole("button", { name: "Digit 7" });
+    let seven = sevenButton();
     seven.focus();
     await user.keyboard("{Enter}");
+    seven = sevenButton();
     assert.equal(document.activeElement, seven);
     assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
     await user.keyboard(" ");
+    seven = sevenButton();
     assert.equal(document.activeElement, seven);
 
     await user.click(screen.getByRole("button", { name: "All clear" }));
+    seven = sevenButton();
     seven.focus();
     fireEvent.click(seven, { detail: 1 });
+    seven = sevenButton();
     assert.equal(document.activeElement, seven);
     assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
 
+    seven = sevenButton();
     seven.focus();
-    await user.keyboard("+2");
+    fireEvent.keyDown(seven, { key: "+" });
+    seven = sevenButton();
+    fireEvent.keyDown(seven, { key: "2" });
+    seven = sevenButton();
     assert.equal(document.activeElement, seven);
     assert.equal(screen.getByLabelText("Calculator display: 2").textContent, "2");
-    await user.keyboard("{Enter}");
+    fireEvent.keyDown(seven, { key: "Enter" });
+    fireEvent.keyUp(seven, { key: "Enter" });
+    fireEvent.click(seven);
+    seven = sevenButton();
     assert.equal(document.activeElement, seven);
-    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+    assert.equal(document.querySelector<HTMLElement>(".calculator-display")?.textContent, "7");
+    await user.keyboard("{Escape}");
+    assert.equal(document.querySelector<HTMLElement>(".calculator-display")?.textContent, "0");
 
     const calculator = screen.getByRole("region", { name: "Calculator" });
     calculator.focus();
     fireEvent.keyDown(calculator, { key: "1", ctrlKey: true });
     fireEvent.keyDown(calculator, { key: "+", metaKey: true });
     fireEvent.keyDown(calculator, { key: "x", altKey: true });
-    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+    assert.equal(screen.getByLabelText("Calculator display: 0").textContent, "0");
   });
 
   it("keeps calculator state when switching tools or closing, then clears it for a new practice set", async () => {
@@ -1220,6 +1234,25 @@ describe("App accessibility and flows", () => {
     assert.equal(display?.textContent, "1,5");
     assert.match(display?.getAttribute("aria-label") ?? "", /1,5/);
     assert.equal(screen.getByTestId("calculator-live-result").textContent, "Résultat de la calculatrice : 1,5");
+  });
+
+  it("keeps French reference sheet labels localized while marking sheet content English", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("reference-sheet-fr-labels");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-sheet-fr-labels"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/);
+    await user.click(screen.getByRole("button", { name: "Feuille de référence" }));
+    const referencePanel = await screen.findByRole("region", { name: "Feuille de référence" });
+    assert.equal(referencePanel.getAttribute("lang"), null);
+    const ohmsHeading = within(referencePanel).getByRole("heading", { level: 3, name: "Ohm's law" });
+    assert.equal(ohmsHeading.getAttribute("lang"), "en");
+    const tableRegion = within(referencePanel).getByRole("region", { name: "Tableau de la feuille de référence 1" });
+    assert.equal(tableRegion.getAttribute("lang"), null);
+    assert.equal(tableRegion.querySelector("table")?.getAttribute("lang"), "en");
   });
 
   it("opens the Basic reference sheet with focus return and passes axe in light and dark", async () => {
