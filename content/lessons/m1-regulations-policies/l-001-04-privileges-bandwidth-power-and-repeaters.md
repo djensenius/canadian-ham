@@ -102,7 +102,7 @@ By the end of this lesson, you can:
 |---|---|
 | Repeater station | Automatically retransmits the signals of other stations. |
 | Unmodulated carrier | May be transmitted only for brief tests on frequencies below 30 MHz. |
-| Frequency stability | Equivalent to crystal control below 148 MHz; crystal control means the transmitter holds frequency with quartz-crystal-like stability. |
+| Frequency stability | Equivalent to crystal control below 148 MHz; with crystal control, a quartz crystal sets the frequency so it drifts very little. |
 | Overmodulation indication or prevention | Required for SSB and for voice-transmission quality control; overmodulation means driving the audio past the clean limit so the signal distorts and can splatter. |
 | Voice modulation maximum | 100%, meaning full modulation without going past the clean voice limit. |
 | Frequency measurement | All amateur stations must be capable of reliably measuring frequency, regardless of emission mode. |
@@ -115,13 +115,13 @@ Learn the below-30-MHz gate with the repeater-output row. Basic by itself covers
 
 Bandwidth, mode, and band-edge rows all describe occupied spectrum. Near an edge, compare the whole signal to the band boundary. A dial display may show the carrier or suppressed carrier; the emitted signal still has width. For the HF band edges, the lower edges form a useful pattern: 3.5, 7, 14, and 28 MHz double, and 21 MHz is 3 x 7 MHz.
 
-The special narrow segment named in the bandwidth table is tighter than the usual mid-HF bandwidth limit, and SSB is not allowed there.
+The special narrow segment named in the bandwidth table has a tighter limit than the surrounding HF bands. That is why SSB voice is not allowed there.
 
 Power rows attach a number to a measurement point and quantity. DC input is electrical power going into the final RF stage before RF conversion. Carrier power is steady RF output for non-SSB emissions. PEP captures the crest of an SSB voice envelope. ERP and EIRP move outward to radiated power by including antenna-system gain.
 
-The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station. The special-channel row is different because its limit is ERP expressed as PEP, so antenna gain is part of the comparison.
+The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station. The Advanced-on-special-band row is different because its limit is ERP expressed as PEP, so antenna gain is part of the comparison.
 
-Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. An unmodulated carrier is a plain carrier with no information on it, so it is limited to brief tests in the range named by the table. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
+Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. The unmodulated-carrier rule is a narrow test allowance for the range named by the table, not permission to hold a frequency or carry an ordinary contact. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
 
 ### Memory trick: Basic power stays Basic
 

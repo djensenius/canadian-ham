@@ -75,22 +75,24 @@ By the end of this lesson, you can:
 |---|---|
 | Stereo-system complaint | Lack of immunity is the cause when field strength at the neighbour's premises is below ISED's specified immunity criteria. |
 | Television-receiver complaint | The amateur transmission is the cause when field strength at the neighbour's premises is above ISED's specified immunity criteria. |
-| Home-entertainment devices outside the strict radio-apparatus category | Associated equipment, such as audio or video equipment used with radio apparatus. |
-| Garage door opener affected by transmissions | Radio-sensitive equipment, meaning equipment whose function can be affected by radio energy. |
+| Home-entertainment devices outside the strict radio-apparatus category | Associated equipment, such as audio or video recorders, playback devices, and amplifiers used with radio apparatus. |
+| Garage door opener affected by transmissions | Radio-sensitive equipment, meaning other non-radio electronic equipment whose function can be affected by radio emissions. |
 
 ## How these rules fit together
 
 Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. CPC-2-0-03 is ISED's antenna-siting procedure, and an exclusion can come from that procedure or from the local process. If there is no local approval process, the ISED default process is the relevant path.
 
-Use the timeliness and relevance criteria in the table when responding to written concerns in the default process. The tallest structure that avoids public consultation is the tallest one exempted by the land-use authority or ISED; there is no one universal height in the lesson. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
+Use the timeliness and relevance criteria in the table when responding to written concerns in the default process. The tallest structure that avoids public consultation is the tallest one exempted by the land-use authority or ISED, so check the applicable exemption instead of using one universal height. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
 
 The exposure rows describe human RF exposure. A controlled environment is one where RF fields are assessed and people can be aware of the exposure, such as trained operators or workers. An uncontrolled environment covers everyone else, including the general public, so its limits are lower.
 
-The VHF range named in the table matters because a human body is roughly resonant there. At 80 MHz, one half-wavelength is about 1.9 m, which is close to adult body length, so whole-body absorption can be stronger. At the low-frequency range named in the table, the exposure code also treats nerve stimulation as an established effect.
+The VHF range named in the table matters because a human body is roughly resonant there. At 80 MHz, one half-wavelength is about 1.9 m, which is close to adult body length, so whole-body absorption can be stronger. At the low-frequency range named in the table, RF current can stimulate nerves, so the exposure code also treats nerve stimulation as an established effect.
 
 Transmitter power matters as one factor among gain, distance, and frequency. Hand-held transmitters are still included, and no transmitter category is exempt from the RF exposure check.
 
-Electromagnetic compatibility means equipment keeps working in its radio environment. EMCAB-2 rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category.
+Electromagnetic compatibility means equipment keeps working in its radio environment. Electromagnetic Compatibility Advisory Bulletin 2 (EMCAB-2) rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category.
+
+The Radiocommunication Act definition of radio-sensitive equipment excludes radio apparatus. EMCAB-2 therefore separates broadcast receivers and associated home-entertainment equipment from other non-radio electronic equipment, such as the garage-door example.
 
 ## Radio connection
 

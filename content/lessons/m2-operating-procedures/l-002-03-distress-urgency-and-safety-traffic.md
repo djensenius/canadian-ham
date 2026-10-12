@@ -42,7 +42,7 @@ Distress is tied to immediate danger to life. Formal distress signals are standa
 
 Urgent traffic handles serious requests for assistance with no immediate threat to life. Its purpose is fast assistance while reserving the distress signal for immediate danger to life.
 
-The bank calls the level just below distress an emergency message; it outranks safety messages. Classify each real situation by the facts you hear. Safety traffic warns stations about hazards that affect people, navigation, or weather.
+In the priority order here, distress is followed by emergency messages, and emergency messages outrank safety messages. Classify each real situation by the facts you hear. Safety traffic warns stations about hazards that affect people, navigation, or weather.
 
 ### Reference fact: priority terms in this lesson
 

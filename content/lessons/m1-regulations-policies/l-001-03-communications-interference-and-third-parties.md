@@ -106,7 +106,7 @@ By the end of this lesson, you can:
 | CEPT amateur licence holders operating in Canada | Granted Advanced privileges by ISED. |
 | United States-issued call sign holder operating in Canada | Must indicate location by city and province at least once during a contact. |
 | United States-issued call sign holder in Canada using voice | Identifies with the call sign, mobile or portable qualifier, and the Canadian prefix for the station's geographic location. |
-| Supervising a non-certified guest during a contact | Keep monitoring and controlling the contact, including if a foreign station joins. |
+| Supervising a non-certified guest during a contact | Keep supervising and monitoring the guest, including if a foreign station joins, because you remain responsible for the station and international third-party traffic depends on the foreign administration not objecting. |
 | Local non-certified participants at both ends | Both non-certified people are third parties. |
 
 ## How these rules fit together
@@ -115,7 +115,7 @@ Interference rules start with restraint. Listen first, avoid deliberate or harmf
 
 Emergency rules are narrow because they respond to immediate communication need. Separate three cases before transmitting: if your own life is at risk, you may use any radiocommunication means and no power ceiling applies; if an unanswered distress call is on an amateur band, you may answer it; organized relief work stays on amateur bands. The safety-of-life broadcasting exception is not ordinary public broadcasting.
 
-Direct involvement with distress traffic is the only narrow exception to the usual rule against deliberate interference. Keep routine traffic, relief-net discipline, and distress response in their own categories.
+Your own station's direct involvement with distress traffic is the only narrow exception to the usual rule against deliberate interference. Keep routine traffic, relief-net discipline, and distress response in their own categories.
 
 Privacy and payment rows keep amateur service non-commercial. A public-service agency message can be legitimate. Some non-broadcast content may be shared for protection, court evidence, or national defence and security; media questions are not one of those reasons. Payment for third-party messages and remuneration for exchanging messages do not fit amateur service.
 
@@ -138,7 +138,7 @@ During public-service work, prepared operators sound calm because they have alre
 ## Summary
 
 - Harmful interference is a serious station problem, and deliberate interference is unacceptable.
-- Secondary amateur operation must protect primary users, and some shared ranges carry reduced protection or heavy licence-exempt use.
+- Secondary amateur operation must protect primary users, and some shared ranges have no interference protection or heavy licence-exempt use.
 - Emergency exceptions are tied to distress, safety of life and property, and essential relief needs.
 - Amateur message handling for third parties must be unpaid, personal, and non-commercial.
 - Identify with the station call sign at the required times and use the same identification discipline during tests.

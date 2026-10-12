@@ -40,7 +40,7 @@ By the end of this lesson, you can:
 
 ## Repeaters are shared relays
 
-A repeater receives on one frequency and retransmits on another. It needs separate input and output frequencies because its strong transmitter would block its receiver if both tried to use the same frequency at the same time. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location.
+A repeater receives on one frequency and retransmits on another. It needs separate input and output frequencies because its strong transmitter would block its receiver if both tried to use the same frequency at the same time. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location. That increases the practical range of portable and mobile stations.
 
 Because many operators share the same relay, repeater procedure is short. Listen before transmitting. Leave a pause after another station unkeys so new traffic can enter. Keep overs brief so other users, including emergency traffic, can get access.
 
@@ -129,13 +129,13 @@ An illustrative simplex exchange uses the same identify-clearly habit:
 
 ## Sidebands, spacing, and clean tests
 
-Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3 755 kHz. Those two anchors help you keep the lower-frequency example separate from the twenty-metre example. Operators use these conventions so signals line up as expected and have the expected audio orientation.
+Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3 755 kHz. Operators choose the expected sideband for the frequency so receiving stations recover normal-sounding audio. Those two anchors help you keep the lower-frequency example separate from the twenty-metre example.
 
 Before transmitting on any frequency, listen carefully. Listening protects contacts already in progress. If propagation changes and interference grows during a contact, moving to another clear frequency is the courteous response.
 
 For lengthy transmitter tests, use a dummy load. A dummy load gives the transmitter a proper load and keeps test energy off the air by turning RF power into heat.
 
-For a brief antenna tuner adjustment before joining a sideband net on HF, tune at a nearby clear spot between 3 kHz and 5 kHz from the active net channel. Return when the net control invites you or when the channel is clear for use. Single-sideband voice signals are about 3 kHz wide, so the spacing rule gives your signal room without covering the net.
+For a brief antenna tuner adjustment before joining a sideband net on HF, tune at a nearby clear spot between 3 kHz and 5 kHz from the active net channel. Return when the net control invites you or when the channel is clear for use. Single-sideband voice signals are about 3 kHz wide, so they need room. From a contact already in progress, allow about 3 kHz separation to reduce interference.
 
 ## Nets, power, and band plans
 
