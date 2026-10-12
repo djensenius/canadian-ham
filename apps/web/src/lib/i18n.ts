@@ -282,10 +282,8 @@ export const enMessages = defineMessages({
   resetComplete: "All local data was reset.",
   errorReset: (error: string) => `Unable to reset local progress: ${error}`,
   themeSaved: (theme: string) => `Theme preference saved: ${theme}.`,
-  interfaceLanguageSaved: (language: string) => `Interface language saved: ${language}.`,
   languageSaved: (language: string) => `Language preference saved: ${language}.`,
   errorThemeSave: (error: string) => `Unable to save theme preference: ${error}`,
-  errorInterfaceLanguageSave: (error: string) => `Unable to save interface language: ${error}`,
   errorLanguageSave: (error: string) => `Unable to save language preference: ${error}`,
   morseSectionTitle: "Morse",
   previewLabel: "Preview",
@@ -727,10 +725,8 @@ export const frMessages = defineMessages({
   resetComplete: "Toutes les données locales ont été réinitialisées.",
   errorReset: (error: string) => `Impossible de réinitialiser la progression locale : ${error}`,
   themeSaved: (theme: string) => `Préférence de thème enregistrée : ${theme}.`,
-  interfaceLanguageSaved: (language: string) => `Langue de l’interface enregistrée : ${language}.`,
   languageSaved: (language: string) => `Préférence de langue enregistrée : ${language}.`,
   errorThemeSave: (error: string) => `Impossible d’enregistrer la préférence de thème : ${error}`,
-  errorInterfaceLanguageSave: (error: string) => `Impossible d’enregistrer la langue de l’interface : ${error}`,
   errorLanguageSave: (error: string) => `Impossible d’enregistrer la préférence de langue : ${error}`,
   morseSectionTitle: "Morse",
   previewLabel: "Aperçu",
@@ -924,14 +920,6 @@ export function interfaceLanguageTag(language: InterfaceLanguage): "en-CA" | "fr
   return language === "fr" ? "fr-CA" : "en-CA";
 }
 
-export function readStoredInterfaceLanguage(): InterfaceLanguage {
-  const storedLanguage = readStoredInterfaceLanguageOverride();
-  if (storedLanguage !== null) {
-    return storedLanguage;
-  }
-  return navigatorLanguageStartsWithFrench() ? "fr" : "en";
-}
-
 export function readStoredInterfaceLanguageOverride(): InterfaceLanguage | null {
   const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
   return isInterfaceLanguage(storedLanguage) ? storedLanguage : null;
@@ -947,14 +935,6 @@ export function mirrorStoredInterfaceLanguagePreference(language: InterfaceLangu
 
 export function clearStoredInterfaceLanguage(): void {
   safeLocalStorage()?.removeItem(INTERFACE_LANGUAGE_STORAGE_KEY);
-}
-
-function navigatorLanguageStartsWithFrench(): boolean {
-  if (typeof navigator === "undefined") {
-    return false;
-  }
-  const preferredLanguage = navigator.languages?.find((language) => language.trim().length > 0) ?? navigator.language ?? "";
-  return preferredLanguage.toLowerCase().startsWith("fr");
 }
 
 function safeLocalStorage(): Storage | null {
