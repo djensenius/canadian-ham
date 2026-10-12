@@ -72,6 +72,7 @@
 		8A06B7AF447073AD26DAC6E9 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		8AD63D2FB881F6C3C07DD025 /* ProgressSyncMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */; };
 		8EC1393EB1FF099433C29317 /* MorseTrainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C0ADA4801D9094289C71DB /* MorseTrainerTests.swift */; };
+		90ACECB8F6E3E51AB46457CE /* OpaqueNavigationBarScrollClipping.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B360E307B76B520AEAF715 /* OpaqueNavigationBarScrollClipping.swift */; };
 		916F171C8628700ACA3A58E0 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		92BA95D6FCD407A66C0ED1E8 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
@@ -231,6 +232,7 @@
 		D3A7620D77ADECDE1CB8E7A0 /* CanadianHamVisionTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamVisionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCAE5A136902875D58354C00 /* LaunchArguments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchArguments.swift; sourceTree = "<group>"; };
 		E7452A4F0FC8FB892C278685 /* engine-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "engine-swift"; path = "../../packages/engine-swift"; sourceTree = SOURCE_ROOT; };
+		E8B360E307B76B520AEAF715 /* OpaqueNavigationBarScrollClipping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpaqueNavigationBarScrollClipping.swift; sourceTree = "<group>"; };
 		EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankModels.swift; sourceTree = "<group>"; };
 		EA4B30848CBC96A261D9B678 /* CanadianHamTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBB9DE0DC8D961680058B71B /* CanadianHamTVUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamTVUITests.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 			children = (
 				BD44BDE3AE8019C65CBB1C42 /* ICloudSyncCopy.swift */,
 				DCAE5A136902875D58354C00 /* LaunchArguments.swift */,
+				E8B360E307B76B520AEAF715 /* OpaqueNavigationBarScrollClipping.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1190,6 +1193,7 @@
 				F29D97E65744F19D2C1D0D8E /* MorseTrainerSettings.swift in Sources */,
 				5DF5007F39C2EFC48596AD6F /* MorseTrainerView.swift in Sources */,
 				28F2DC98A7E9840A41F7C1E4 /* NativeSettingsView.swift in Sources */,
+				90ACECB8F6E3E51AB46457CE /* OpaqueNavigationBarScrollClipping.swift in Sources */,
 				3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */,
 				27736D9704E4F326B1A87197 /* ProgressStore.swift in Sources */,
 				8AD63D2FB881F6C3C07DD025 /* ProgressSyncMerge.swift in Sources */,

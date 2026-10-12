@@ -297,75 +297,80 @@ private struct LessonReaderView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(localized(lesson.title.en, language: .english)) // l10n: content(en)
-                        .font(DesignTokens.FontScale.headline.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityAddTraits(.isHeader)
-                        .accessibilityIdentifier("lesson-reader-title")
-                    if let lessonProgress {
-                        Text(markedReadText(lessonProgress.readCount)) // l10n: localized
-                            .font(DesignTokens.FontScale.caption)
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    } else {
-                        Text("Not marked read yet.")
-                            .font(DesignTokens.FontScale.caption)
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    }
-                }
-                .paperCard()
-
-                if let errorMessage {
-                    MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
-                }
-
-                if lesson.status == .outline {
-                    OutlineLessonView(lesson: lesson, library: library)
-                } else {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                        EnglishOnlyLessonNotice()
-                        LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
-                    }
-                    .paperCard()
-                }
-
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Button { markRead() } label: {
-                        lessonActionLabel(Text("Mark lesson read"))
-                    }
-                    .buttonStyle(.plain)
-                    if let firstQuizID = lesson.quizIds.first {
-                        NavigationLink("Go to quiz", value: LearnRoute.lessonQuiz(firstQuizID))
-                            .buttonStyle(AccessiblePrimaryButtonStyle())
-                            .accessibilityIdentifier("go-to-lesson-quiz-button")
-                    }
-                    if let previous = neighbor(offset: -1) {
-                        NavigationLink(value: LearnRoute.lesson(previous.id)) {
-                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    if let next = neighbor(offset: 1) {
-                        NavigationLink(value: LearnRoute.lesson(next.id)) {
-                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-
-                quizCards
-            }
-            .pagePadding()
+            lessonContent
+                .pagePadding()
         }
+        .clippedBelowOpaqueNavigationBar()
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
         .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
+    }
+
+    private var lessonContent: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
+                    .font(DesignTokens.FontScale.caption.weight(.semibold))
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                Text(localized(lesson.title.en, language: .english)) // l10n: content(en)
+                    .font(DesignTokens.FontScale.headline.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("lesson-reader-title")
+                if let lessonProgress {
+                    Text(markedReadText(lessonProgress.readCount)) // l10n: localized
+                        .font(DesignTokens.FontScale.caption)
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                } else {
+                    Text("Not marked read yet.")
+                        .font(DesignTokens.FontScale.caption)
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                }
+            }
+            .paperCard()
+
+            if let errorMessage {
+                MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
+            }
+
+            if lesson.status == .outline {
+                OutlineLessonView(lesson: lesson, library: library)
+            } else {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                    EnglishOnlyLessonNotice()
+                    LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
+                }
+                .paperCard()
+            }
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                Button { markRead() } label: {
+                    lessonActionLabel(Text("Mark lesson read"))
+                }
+                .buttonStyle(.plain)
+                if let firstQuizID = lesson.quizIds.first {
+                    NavigationLink("Go to quiz", value: LearnRoute.lessonQuiz(firstQuizID))
+                        .buttonStyle(AccessiblePrimaryButtonStyle())
+                        .accessibilityIdentifier("go-to-lesson-quiz-button")
+                }
+                if let previous = neighbor(offset: -1) {
+                    NavigationLink(value: LearnRoute.lesson(previous.id)) {
+                        lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
+                    }
+                    .buttonStyle(.plain)
+                }
+                if let next = neighbor(offset: 1) {
+                    NavigationLink(value: LearnRoute.lesson(next.id)) {
+                        lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            quizCards
+        }
     }
 
     private func lessonActionLabel(_ text: Text) -> some View {
@@ -458,6 +463,7 @@ private extension View {
         self
 #endif
     }
+
 }
 
 private struct OutlineLessonView: View {
