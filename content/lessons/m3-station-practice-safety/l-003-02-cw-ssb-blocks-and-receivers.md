@@ -50,7 +50,7 @@ oscillator -> driver/buffer -> power amplifier -> antenna system
 
 The oscillator generates the RF signal at the frequency that will be transmitted. It must be stable because drift becomes a transmitted error. A driver or buffer isolates the oscillator from load changes caused by later stages.
 
-The station power supply provides direct current. The RF stages create and amplify the RF signal from that energy. The key controls the carrier so Morse characters become on-off RF energy.
+The station power supply provides direct current. The RF stages create and amplify the RF signal from that energy. The oscillator keeps running; the key controls carrier amplitude in a driver or amplifier stage so Morse characters become on-off RF energy. Keying the oscillator itself would invite chirp.
 
 Practical keying needs controlled rise and fall times. Edges that are too abrupt can spread energy as clicks. The power amplifier raises the keyed signal to the intended transmit power.
 
@@ -111,7 +111,7 @@ microphone -> speech amplifier -> balanced modulator -> sideband filter -> mixer
 
 The microphone signal is small, so the speech amplifier raises the audio. The fixed RF oscillator supplies a carrier frequency for the balanced modulator. The balanced modulator combines audio and RF while suppressing most of the carrier. It creates upper and lower sideband energy.
 
-The sideband filter removes the unwanted sideband. The remaining single-sideband signal may still be at an internal frequency. A mixer uses a variable frequency oscillator, or VFO, to move it to the chosen transmit frequency. Driver and final amplifier stages then raise it to useful output power. The final amplifier is also where many SSB transmitters monitor load conditions and protect against excessive SWR.
+The sideband filter removes the unwanted sideband. The remaining single-sideband signal may still be at an internal frequency. A mixer uses a variable frequency oscillator, or VFO, to move it to the chosen transmit frequency. The balanced modulator creates the sideband energy; the mixer moves that filtered RF signal to the operating frequency. Driver and final amplifier stages then raise it to useful output power. The final amplifier is also where many SSB transmitters monitor load conditions and protect against excessive SWR.
 
 ### Worked example: translating an SSB signal
 
