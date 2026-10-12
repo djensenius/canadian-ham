@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-12 15:11'
+updated_date: '2026-10-12 15:12'
 labels:
   - content
 dependencies: []
@@ -30,7 +30,9 @@ Apply the High findings (and Medium ones that are a sentence or two) from docs/l
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Verify M6/M3 findings against the bank, extracted ISED reference material, and primary sources before changing prose.\n2. Patch only local lesson paragraphs, quizzes, and flagged explanations for High findings plus quick Medium fixes; skip structural follow-up tasks with recorded reasons.\n3. Run content/web/Swift checks, record finding-to-fix notes with sources and question IDs, then finalize task-46.2.
+1. Verify M6/M3 findings against the bank, extracted ISED reference material, and primary sources before changing prose.
+2. Patch only local lesson paragraphs, quizzes, and flagged explanations for High findings plus quick Medium fixes; skip structural follow-up tasks with recorded reasons.
+3. Run content/web/Swift checks, record finding-to-fix notes with sources and question IDs, then finalize task-46.2.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
