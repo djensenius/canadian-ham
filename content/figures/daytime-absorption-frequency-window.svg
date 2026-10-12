@@ -40,7 +40,7 @@
     <text x="824" y="270" font-size="38" font-weight="700">MUF</text>
     <text x="568" y="544" font-size="36">too low</text>
     <text x="568" y="588" font-size="36">absorbed</text>
-    <text x="718" y="278" font-size="36">usable window</text>
+    <text x="718" y="220" font-size="36">usable window</text>
     <text x="850" y="544" font-size="36">too high</text>
     <text x="850" y="588" font-size="36">passes</text>
     <text x="850" y="618" font-size="36">through</text>

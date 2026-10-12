@@ -3,9 +3,19 @@ import CoreGraphics
 
 enum LessonFigureMetadata {
     static let sizes: [String: CGSize] = [
+        "daytime-absorption-frequency-window": CGSize(width: 960, height: 640),
+        "feedline-types-balun": CGSize(width: 960, height: 640),
+        "filter-response-sketches": CGSize(width: 960, height: 720),
+        "interference-troubleshooting-map": CGSize(width: 960, height: 640),
+        "loop-antenna-patterns": CGSize(width: 960, height: 640),
         "ohms-law-power-wheel": CGSize(width: 960, height: 960),
         "ohms-law-triangle": CGSize(width: 640, height: 480),
-        "power-triangle": CGSize(width: 640, height: 480)
+        "power-triangle": CGSize(width: 640, height: 480),
+        "propagation-paths-skip-zone": CGSize(width: 960, height: 700),
+        "swr-loss-matching": CGSize(width: 960, height: 640),
+        "transformer-resonance-meters": CGSize(width: 960, height: 640),
+        "vhf-unusual-propagation-modes": CGSize(width: 960, height: 720),
+        "yagi-vertical-length": CGSize(width: 960, height: 640)
     ]
 
     static func aspectRatio(for id: String) -> CGFloat {

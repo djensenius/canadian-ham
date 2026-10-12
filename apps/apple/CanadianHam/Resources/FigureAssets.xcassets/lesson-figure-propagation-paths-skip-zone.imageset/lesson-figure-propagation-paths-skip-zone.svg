@@ -1,0 +1,38 @@
+<svg id="propagation-paths-skip-zone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" role="img">
+  <title>Radio paths, ionosphere regions, and skip zone</title>
+  <desc>A side view shows line-of-sight VHF, ground wave, NVIS, and low-angle sky-wave paths with D, E, F1, and F2 regions.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 568 C230 520 666 520 928 568" stroke-width="11"/>
+    <path d="M70 466 C260 430 696 430 890 466" stroke-width="5"/>
+    <path d="M88 360 C286 324 676 324 866 360" stroke-width="5"/>
+    <path d="M112 252 C300 214 642 214 836 252" stroke-width="5"/>
+    <path d="M140 150 C320 108 612 108 810 150" stroke-width="5"/>
+
+    <path d="M78 536 C96 502 126 502 144 536" stroke-width="7"/>
+    <path d="M702 536 C720 502 750 502 768 536" stroke-width="7"/>
+    <path d="M104 500 C230 466 382 466 514 500" stroke-width="7"/>
+    <path d="M514 500 L480 482" stroke-width="7"/>
+    <path d="M514 500 L476 512" stroke-width="7"/>
+
+    <path d="M126 552 C190 546 236 548 282 560" stroke-width="9"/>
+    <path d="M282 560 C292 562 302 566 312 570" stroke-width="5"/>
+
+    <path d="M238 548 C315 396 391 395 470 548" stroke-width="8"/>
+    <path d="M486 548 C585 302 690 300 808 548" stroke-width="8"/>
+
+    <path d="M308 632 C376 632 462 632 548 632" stroke-width="6"/>
+    <path d="M308 632 C308 620 308 608 308 596" stroke-width="6"/>
+    <path d="M548 632 C548 620 548 608 548 596" stroke-width="6"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="62" y="438" font-size="38" font-weight="700">D</text>
+    <text x="78" y="332" font-size="38" font-weight="700">E</text>
+    <text x="102" y="224" font-size="38" font-weight="700">F1</text>
+    <text x="130" y="122" font-size="38" font-weight="700">F2</text>
+    <text x="360" y="410" font-size="36">VHF line of sight</text>
+    <text x="160" y="660" font-size="36">ground wave</text>
+    <text x="350" y="300" font-size="38" font-weight="700">NVIS</text>
+    <text x="620" y="282" font-size="38" font-weight="700">low angle</text>
+    <text x="428" y="676" font-size="36" font-weight="700">skip zone</text>
+  </g>
+</svg>

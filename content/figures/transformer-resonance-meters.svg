@@ -31,11 +31,12 @@
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="180" y="54" font-size="40" font-weight="700">transformer</text>
     <text x="166" y="106" font-size="36">primary</text>
-    <text x="222" y="548" font-size="36">secondary</text>
+    <text x="166" y="548" font-size="36">secondary</text>
     <text x="166" y="604" font-size="36">flux link</text>
 
     <text x="480" y="54" font-size="40" font-weight="700">parallel LC</text>
-    <text x="480" y="536" font-size="36">high Z at resonance</text>
+    <text x="480" y="548" font-size="36">high Z</text>
+    <text x="480" y="604" font-size="36">at resonance</text>
 
     <text x="806" y="54" font-size="40" font-weight="700">meters</text>
     <text x="814" y="532" font-size="38" font-weight="700">load</text>

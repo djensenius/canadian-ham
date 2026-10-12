@@ -136,7 +136,7 @@ Wire antennas invite experimentation. You may have room for a dipole on one band
 Alt text: A dipole doughnut pattern beside a square quad loop and a triangular delta loop, with feed points marked.
 Text equivalent:
 - A dipole radiates broadside to the wire with weak radiation off the ends.
-- A quad driven element is a square loop, approximately one wavelength around.
+- A quad driven element is a square loop, approximately a full wavelength around.
 - A delta loop is triangular; bottom-centre feed is shown for horizontal polarization, and side feed is shown for vertical polarization.
 - The practical loop starting length shown is 306 / f(MHz).
 ::

@@ -35,8 +35,8 @@
     <text x="445" y="192" font-size="36">ATU</text>
     <text x="824" y="48" font-size="36">antenna</text>
     <text x="420" y="54" font-size="38" font-weight="700">forward wave</text>
-    <text x="424" y="334" font-size="38" font-weight="700">reflected wave fades</text>
-    <text x="662" y="328" font-size="36">lossy line</text>
+    <text x="330" y="350" font-size="38" font-weight="700">reflected wave fades</text>
+    <text x="590" y="440" font-size="36">lossy line</text>
 
     <text x="127" y="436" font-size="36">rig</text>
     <text x="349" y="436" font-size="36">tuner</text>

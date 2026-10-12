@@ -1,0 +1,46 @@
+<svg id="swr-loss-matching" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img">
+  <title>SWR, feedline loss, and matching placement</title>
+  <desc>A station chain shows forward and reflected waves, with the reflected wave attenuated by a lossy line and a second sketch with the tuner at the feed point.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="42" y="136" width="124" height="86" rx="14" ry="14" stroke-width="7"/>
+    <rect x="220" y="136" width="110" height="86" rx="14" ry="14" stroke-width="7"/>
+    <rect x="386" y="136" width="118" height="86" rx="14" ry="14" stroke-width="7"/>
+    <path d="M166 180 C184 180 202 180 220 180" stroke-width="8"/>
+    <path d="M330 180 C348 180 368 180 386 180" stroke-width="8"/>
+    <path d="M504 180 C612 180 724 180 824 180" stroke-width="8"/>
+    <path d="M824 180 C824 132 824 104 824 76" stroke-width="8"/>
+    <path d="M772 76 C798 64 850 64 876 76" stroke-width="8"/>
+
+    <path d="M106 92 C254 80 502 80 742 92" stroke-width="8"/>
+    <path d="M742 92 L704 72" stroke-width="8"/>
+    <path d="M742 92 L704 112" stroke-width="8"/>
+    <path d="M742 266 C562 280 344 280 178 266" stroke-width="8"/>
+    <path d="M178 266 L214 246" stroke-width="8"/>
+    <path d="M178 266 L214 286" stroke-width="8"/>
+    <path d="M468 266 C412 270 360 270 308 266" stroke-width="4"/>
+    <path d="M308 266 L334 252" stroke-width="4"/>
+    <path d="M308 266 L334 280" stroke-width="4"/>
+    <path d="M566 236 C596 220 632 220 662 236 C692 252 728 252 758 236" stroke-width="6"/>
+
+    <rect x="62" y="456" width="130" height="72" rx="14" ry="14" stroke-width="7"/>
+    <rect x="286" y="456" width="126" height="72" rx="14" ry="14" stroke-width="7"/>
+    <path d="M192 492 C222 492 252 492 286 492" stroke-width="8"/>
+    <path d="M412 492 C540 492 668 492 792 492" stroke-width="8"/>
+    <path d="M792 492 C792 454 792 424 792 388" stroke-width="8"/>
+    <path d="M740 388 C768 376 818 376 846 388" stroke-width="8"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="104" y="192" font-size="36">rig</text>
+    <text x="275" y="192" font-size="36">SWR</text>
+    <text x="445" y="192" font-size="36">ATU</text>
+    <text x="824" y="48" font-size="36">antenna</text>
+    <text x="420" y="54" font-size="38" font-weight="700">forward wave</text>
+    <text x="330" y="350" font-size="38" font-weight="700">reflected wave fades</text>
+    <text x="590" y="440" font-size="36">lossy line</text>
+
+    <text x="127" y="436" font-size="36">rig</text>
+    <text x="349" y="436" font-size="36">tuner</text>
+    <text x="792" y="360" font-size="36">feed match</text>
+    <text x="477" y="586" font-size="38" font-weight="700">near-antenna match</text>
+  </g>
+</svg>
