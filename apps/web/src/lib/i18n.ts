@@ -920,9 +920,16 @@ export function interfaceLanguageTag(language: InterfaceLanguage): "en-CA" | "fr
   return language === "fr" ? "fr-CA" : "en-CA";
 }
 
+// localStorage is only a fast-start mirror of the IndexedDB preference; every
+// operation is guarded because getItem/setItem/removeItem can throw in private
+// or hardened browser contexts (as lib/theme.ts also handles).
 export function readStoredInterfaceLanguageOverride(): InterfaceLanguage | null {
-  const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
-  return isInterfaceLanguage(storedLanguage) ? storedLanguage : null;
+  try {
+    const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
+    return isInterfaceLanguage(storedLanguage) ? storedLanguage : null;
+  } catch {
+    return null;
+  }
 }
 
 export function mirrorStoredInterfaceLanguagePreference(language: InterfaceLanguage | "system"): void {
@@ -930,11 +937,19 @@ export function mirrorStoredInterfaceLanguagePreference(language: InterfaceLangu
     clearStoredInterfaceLanguage();
     return;
   }
-  safeLocalStorage()?.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+  try {
+    safeLocalStorage()?.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+  } catch {
+    // The IndexedDB preference is authoritative; a failed mirror only costs a brief flash on next load.
+  }
 }
 
 export function clearStoredInterfaceLanguage(): void {
-  safeLocalStorage()?.removeItem(INTERFACE_LANGUAGE_STORAGE_KEY);
+  try {
+    safeLocalStorage()?.removeItem(INTERFACE_LANGUAGE_STORAGE_KEY);
+  } catch {
+    // See mirrorStoredInterfaceLanguagePreference.
+  }
 }
 
 function safeLocalStorage(): Storage | null {
