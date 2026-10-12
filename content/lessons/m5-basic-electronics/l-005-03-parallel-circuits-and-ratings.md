@@ -161,7 +161,7 @@ The caveat is important: a divider is not a power supply. A load can pull the ou
 
 A resistor wattage rating is about heat dissipation. A physically larger resistor of the same resistance can often dissipate more heat safely.
 
-If three 330 ohm, 0.5 W resistors share power properly, their total safe dissipation can be 1.5 W. This can happen when the circuit applies voltage in a way that shares the load evenly. The value and the wattage are separate ideas.
+If three equal 330 ohm, 0.5 W resistors share power properly, their total safe dissipation can be 1.5 W. The rule is simple: N equal resistors in series or in parallel can dissipate N times the rating of one resistor when the current and heat share evenly. The value and the wattage are separate ideas.
 
 ### Worked example: transformer or supply power
 
@@ -185,16 +185,16 @@ That is why applying too much voltage to a resistor can overheat it quickly.
 - Mistaken idea: a physically larger resistor must have a higher resistance value.
 - Correction: physical size often indicates heat rating. The colour code or marking gives the ohmic value.
 
-### Worked example: dummy load from parallel resistors
+### Worked example: shared power in a test load
 
-A temporary 72 ohm test load can be made from three 216 ohm resistors in parallel.
+A temporary 72 ohm bench test load can be made from three 216 ohm resistors in parallel.
 
 - Given: three equal 216 ohm resistors; each resistor is rated 4 W.
 - Find: total resistance and shared power rating.
 - Formula: Rt = R / branches; total rating = branch rating x branches when sharing is even.
 - Substitute: Rt = 216 / 3; total rating = 4 W x 3.
 - Answer: Rt = 72 ohms and total rating = 12 W.
-- Sanity check: 12 W is above an 8 W test level only if the parts share current and are cooled correctly.
+- Sanity check: the network rating is higher than an 8 W test level, but only if the parts share current and are cooled correctly.
 
 ## Try it
 
