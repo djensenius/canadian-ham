@@ -1,11 +1,11 @@
 ---
 id: TASK-44.3
 title: 'Exam tools on iOS, iPadOS and macOS'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 22:03'
+updated_date: '2026-10-12 22:20'
 labels:
   - apple
 dependencies:
@@ -52,6 +52,8 @@ Continuation after coordinator decision: implemented the real layout fix for cal
 Final validation after coordinator decision: fixed calculator medium-detent layout by sizing display and key grid from available sheet height with 44 pt minimum key targets; accessibility Dynamic Type calculator opens at the large detent and remains scrollable. Fixed reference sheet exposure by moving panel identifiers off the container so child identifiers survive, loading the bundled basic.md, and exposing the rendered sheet as a zoomable visual view with a single accessible text equivalent. Final targeted checks: iPhone 17 Pro CanadianHamExamToolsUITests full class passed 8 executed / 1 skipped / 0 failures; iPad Pro 13-inch (M5) inspector test testRegularWidthUsesInspectorAndKeepsAnswersHittable passed 1 / 0; macOS unit command passed 132 tests / 0; pnpm check:apple-l10n passed; node scripts/check-apple-text-sources.ts passed; git diff --check passed. Logs are under /tmp/task-44.3-*.log.
 
 Review fix progress: merged origin/main, rebuilt Localizable.xcstrings from main preserving main key order with only task keys appended, removed logs/ from .gitignore, converted Basic reference sheet to a normal app resource (removed optional copy script and regenerated Xcode project twice), gated reference-sheet buttons to Basic only, removed practice/mock auto-scroll and fixed 440 pt padding, added compact-sheet safe-area inset based on measured sheet height, restored reference sheet accessibility children instead of collapsed text, made zoom affect layout/font sizing, restored scroll indicators, capped calculator keys, and switched calculator hardware input away from window-wide keyboardShortcut toward focus-scoped onKeyPress. Pushed c7951bbe. Compile smoke passed: iOS ExamCalculatorViewModelTests 4/0. Remaining: refresh localization after new/changed strings, add/rework UI tests for Advanced gate/keyboard/unavailable/large detent, run target suites.
+
+Review fix handoff: branch merged origin/main and pushed through eb326f12. Completed/pushed: H1 catalog rebuilt from main order with only task keys appended; M6 reference sheet is a normal app resource and XcodeGen was regenerated twice; H2 Basic reference sheet buttons are gated off for Advanced; M1/M2 auto-scroll and fixed 440 pt padding removed, compact sheets now report measured height into a safe-area inset; M3 key height capped; M4 scroll indicators restored and tool title no longer shrinks; H5 collapsed reference accessible text/children-ignore removed, tables render accessible row labels; H3 keyboardShortcut removed in favor of focusable/focused/onKeyPress; added UI tests for Advanced gate, keyboard input, unavailable state, and calculator persistence. Passing smoke: git diff --check, node scripts/check-apple-text-sources.ts, iOS ExamCalculatorViewModelTests 4/0. Still failing and needs next worker: targeted iPhone subset from /tmp/task-44.3-ios-review-fix-targets-*.log had 5 failures: light/dark audits still Text clipped (likely tool header/unavailable/reference visual layout), keyboard input test cannot synthesize/type because calculator focus is not receiving hardware input, precise-scroll protected-area test still has answer not hittable, unavailable-state audit Text clipped. Need continue by inspecting /tmp/task-44.3-fail-att and latest xcresult attachments, then rerun iPhone class, iPad, macOS units, check:apple-l10n.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
