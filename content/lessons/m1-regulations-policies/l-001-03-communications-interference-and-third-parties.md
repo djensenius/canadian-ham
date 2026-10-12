@@ -147,7 +147,7 @@ Text equivalent:
 - Interference lane: listen first, then change operation or stop if required.
 - Distress and relief lane: narrow emergency exceptions apply; stand by when near relief traffic unless involved.
 - Third-party lane: keep traffic personal, non-commercial, and supervised when needed.
-- Identify at the start and end of contact and at intervals not greater than 30 minutes.
+- Give the call sign when a contact opens, again when it closes, and before any half-hour passes.
 ::
 
 ## Illustration brief

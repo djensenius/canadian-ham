@@ -115,7 +115,7 @@ Text equivalent:
 - The log columns shown are UTC, call sign, band, mode, report, and grid.
 - The azimuthal map is centred on the operator.
 - The long-path heading is opposite the short-path heading, 180 degrees away.
-- Grid locators use a 4- or 6-character location code, and UTC is tied to Greenwich.
+- Grid locators use short location codes; the lesson table gives the exact code lengths, and UTC is tied to Greenwich.
 ::
 
 ## Illustration brief
