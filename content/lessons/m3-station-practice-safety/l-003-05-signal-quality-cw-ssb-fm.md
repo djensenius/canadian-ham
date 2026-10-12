@@ -162,6 +162,14 @@ Clean-signal practice prevents interference. A few minutes spent setting CW keyi
 - Using RF power to fix an FM audio-level problem.
 - Forgetting that a quiet FM receiver between signals is usually the squelch doing its job.
 
+::figure signal-quality-cw-ssb-fm
+Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
+Text equivalent:
+- CW panel: a clean carrier turns on smoothly; a jagged edge is marked as click risk.
+- SSB panel: a voice envelope stays below the ALC limit; a clipped envelope is marked as splatter.
+- FM panel: modest deviation stays near centre; a larger swing is marked overdeviation.
+::
+
 ## Illustration brief
 
 Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.

@@ -1,0 +1,36 @@
+<svg id="signal-quality-cw-ssb-fm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>CW, SSB, and FM signal quality</title>
+  <desc>Three panels compare clean CW keying, SSB voice peaks below the ALC limit, and FM deviation that grows too wide.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="214" y1="46" x2="214" y2="410" stroke-width="5"/>
+    <line x1="426" y1="46" x2="426" y2="410" stroke-width="5"/>
+    <line x1="42" y1="158" x2="180" y2="158" stroke-width="5"/>
+    <path d="M54 202 C80 178 108 178 134 202 C154 220 168 220 184 202" stroke-width="5"/>
+    <path d="M60 286 L72 250 L86 288 L100 252 L114 288" stroke-width="5"/>
+    <path d="M252 224 C272 154 302 154 322 224 C340 288 372 288 394 224" stroke-width="6"/>
+    <line x1="242" y1="170" x2="404" y2="170" stroke-width="4"/>
+    <path d="M252 330 C278 270 304 270 330 330 C352 382 374 382 396 330" stroke-width="6"/>
+    <line x1="270" y1="318" x2="388" y2="318" stroke-width="7"/>
+    <line x1="470" y1="206" x2="600" y2="206" stroke-width="4"/>
+    <path d="M480 166 C510 128 560 128 590 166" stroke-width="5"/>
+    <path d="M480 246 C510 284 560 284 590 246" stroke-width="5"/>
+    <line x1="526" y1="170" x2="526" y2="242" stroke-width="5"/>
+    <polygon points="526,170 514,190 538,190" fill="currentColor" stroke="none"/>
+    <polygon points="526,242 514,222 538,222" fill="currentColor" stroke="none"/>
+    <line x1="576" y1="128" x2="576" y2="284" stroke-width="5"/>
+    <polygon points="576,128 564,148 588,148" fill="currentColor" stroke="none"/>
+    <polygon points="576,284 564,264 588,264" fill="currentColor" stroke="none"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="108" y="62" font-size="28" font-weight="700">CW</text>
+    <text x="108" y="140" font-size="24">clean</text>
+    <text x="108" y="328" font-size="24">click risk</text>
+    <text x="320" y="62" font-size="28" font-weight="700">SSB</text>
+    <text x="320" y="154" font-size="24">ALC limit</text>
+    <text x="320" y="428" font-size="24">splatter</text>
+    <text x="532" y="62" font-size="28" font-weight="700">FM</text>
+    <text x="570" y="110" font-size="24">ctr</text>
+    <text x="524" y="320" font-size="24">deviation</text>
+    <text x="532" y="428" font-size="24">over-dev</text>
+  </g>
+</svg>

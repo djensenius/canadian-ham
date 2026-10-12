@@ -145,6 +145,15 @@ Front-panel settings are part of station etiquette. A well-adjusted keyer, micro
 - Treating digital modes as immune to overdrive.
 - Confusing a digipeater with an internet gateway or an analog voice repeater.
 
+::figure controls-digital-voice-packet
+Alt text: A station control map links keyer timing, microphone gain, VOX, receiver noise tools, and a packet digipeater block.
+Text equivalent:
+- Paddle feeds an electronic keyer for timing.
+- Microphone feeds gain, VOX, and speech-processing controls before the transceiver.
+- Receiver noise tools are grouped in the transceiver.
+- Packet frames travel from one station through a digipeater to another station.
+::
+
 ## Illustration brief
 
 Alt text: A station control map links keyer timing, microphone gain, VOX, receiver noise tools, and a packet digipeater block.
