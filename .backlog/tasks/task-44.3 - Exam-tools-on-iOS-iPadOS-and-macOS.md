@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 15:51'
+updated_date: '2026-10-12 18:26'
 labels:
   - apple
 dependencies:
@@ -38,4 +38,6 @@ Apple UI for the calculator and reference sheet in practice and mock exams: iPho
 
 <!-- SECTION:NOTES:BEGIN -->
 Coordinator: renders the shared reference sheet from content/reference-sheet/ (created by 44.2); use a test fixture until 44.2 merges.
+
+WIP handoff after first implementation slice: committed and pushed be37f05f on branch task-44.3-apple-exam-tools. Done: added CanadianHamCalculatorEngine to CanadianHam and CanadianHamTests only (not tvOS/visionOS), added ExamToolModels/ExamToolViews, wired practice/mock exam tool buttons, compact sheet/regular inspector presentation, calculator keyboard shortcuts/VoiceOver labels/result accessibility value, pluggable ReferenceSheetConfiguration loader with unavailable fallback, unit tests, a new CanadianHamExamToolsUITests file, Localizable.xcstrings keys via Python JSON round trip, and regenerated XcodeGen twice with project.pbxproj checksum stable on the second run. Verified: git diff --check passed; node scripts/check-apple-text-sources.ts passed; XcodeGen second run kept project.pbxproj unchanged; iOS targeted unit command DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamTests/ExamCalculatorViewModelTests test CODE_SIGNING_ALLOWED=NO passed 4 tests. Failing/partial: pnpm check:apple-l10n passed text-source checks but timed out after 20 min waiting on xbuild lock; full task UI suite is not passing yet. Latest targeted UI run for testPracticeCalculatorSheetKeepsAnswersHittableAtMediumDetent failed because answer-A-button exists at y=154 but is not hittable while the sheet is open; earlier full new UI file run had 8 failures including text-clipped accessibility audits, largest Dynamic Type reciprocal key reachability, mock timer/tool answer hittability, reference unavailable lookup (later improved to static text), preciseScroll, and regular-width inspector hittability. Subsequent fixes improved Dynamic Type key reachability and reference unavailable text lookup, but answer hittability with sheet remains unresolved. Next steps: merge origin/main so content/reference-sheet/basic.md from 44.2 is available, replace/remove the temporary unit-test fixture as appropriate, fix compact sheet answer operability (likely sheet detent/initial detent/background scroll positioning and XCTest gesture strategy), then rerun targeted iOS UI methods, iPad inspector targeted run, macOS unit command, pnpm check:apple-l10n, and node scripts/check-apple-text-sources.ts before finalization.
 <!-- SECTION:NOTES:END -->
