@@ -1,0 +1,45 @@
+<svg id="station-filtering-radio-blocks" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>HF station filtering and FM receiver blocks</title>
+  <desc>Two signal-flow chains show an HF station accessory order and an FM superheterodyne receiver order.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="48" y1="122" x2="590" y2="122" stroke-width="5"/>
+    <polygon points="590,122 570,110 570,134" fill="currentColor" stroke="none"/>
+    <rect x="54" y="88" width="62" height="68" rx="10" ry="10" stroke-width="5"/>
+    <rect x="144" y="88" width="62" height="68" rx="10" ry="10" stroke-width="7"/>
+    <rect x="234" y="88" width="62" height="68" rx="10" ry="10" stroke-width="5"/>
+    <rect x="324" y="88" width="62" height="68" rx="10" ry="10" stroke-width="5"/>
+    <rect x="414" y="88" width="62" height="68" rx="10" ry="10" stroke-width="5"/>
+    <path d="M526 154 L556 88 L586 154" stroke-width="6"/>
+    <rect x="516" y="174" width="78" height="50" rx="10" ry="10" stroke-width="5"/>
+    <line x1="48" y1="304" x2="590" y2="304" stroke-width="5"/>
+    <polygon points="590,304 570,292 570,316" fill="currentColor" stroke="none"/>
+    <path d="M54 336 L84 270 L114 336" stroke-width="5"/>
+    <rect x="132" y="272" width="52" height="64" rx="8" ry="8" stroke-width="5"/>
+    <rect x="204" y="272" width="52" height="64" rx="8" ry="8" stroke-width="5"/>
+    <rect x="276" y="272" width="52" height="64" rx="8" ry="8" stroke-width="5"/>
+    <rect x="348" y="272" width="52" height="64" rx="8" ry="8" stroke-width="5"/>
+    <rect x="420" y="272" width="52" height="64" rx="8" ry="8" stroke-width="5"/>
+    <rect x="492" y="272" width="52" height="64" rx="8" ry="8" stroke-width="5"/>
+    <path d="M230 220 L230 272" stroke-width="4"/>
+    <circle cx="230" cy="214" r="16" stroke-width="4"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="320" y="42" font-size="26" font-weight="700">HF station chain</text>
+    <text x="85" y="54" font-size="24">TX/amp</text>
+    <text x="175" y="54" font-size="24">LPF</text>
+    <text x="265" y="54" font-size="24">SWR</text>
+    <text x="355" y="54" font-size="24">tuner</text>
+    <text x="445" y="54" font-size="24">switch</text>
+    <text x="556" y="54" font-size="24">antenna</text>
+    <text x="555" y="258" font-size="24">dummy</text>
+    <text x="390" y="236" font-size="26" font-weight="700">FM receiver</text>
+    <text x="84" y="366" font-size="24">ant</text>
+    <text x="158" y="366" font-size="24">RF</text>
+    <text x="230" y="366" font-size="24">mixer</text>
+    <text x="180" y="204" font-size="24">LO</text>
+    <text x="302" y="366" font-size="24">IF filt</text>
+    <text x="374" y="366" font-size="24">IF amp</text>
+    <text x="446" y="366" font-size="24">limiter</text>
+    <text x="518" y="366" font-size="24">disc/AF</text>
+  </g>
+</svg>

@@ -156,6 +156,13 @@ Block diagrams turn a vague symptom into a place to look. A harmonic problem poi
 - Thinking FM means the transmitter's amplitude is intentionally varied by speech.
 - Confusing IF amplification with audio amplification. IF stages still handle radio-frequency signals at the intermediate frequency.
 
+::figure station-filtering-radio-blocks
+Alt text: Two block diagrams show an HF station accessory chain and an FM superheterodyne receiver chain, with arrows marking signal flow.
+Text equivalent:
+- HF station chain: transceiver or amplifier, low-pass filter close to the final RF output, SWR meter, tuner, antenna switch, antenna, or dummy load.
+- FM superheterodyne receiver chain: antenna, RF amplifier, mixer with local oscillator, IF filter, IF amplifier, limiter, discriminator/audio stages, and speaker.
+::
+
 ## Illustration brief
 
 Alt text: Two block diagrams show an HF station accessory chain and an FM superheterodyne receiver chain, with arrows marking signal flow.

@@ -143,6 +143,14 @@ When an SSB signal sounds badly tuned, the receiver may be only a few tens of he
 - Assuming an SSB sideband filter is an audio tone-control filter. It operates near the transmitter's fixed RF or IF generation frequency.
 - Swapping the balanced modulator and mixer jobs. The balanced modulator creates sideband energy; the mixer moves the filtered signal.
 
+::figure cw-ssb-signal-paths
+Alt text: Three labelled block diagrams show a CW transmitter, an SSB/CW receiver, and an SSB transmitter with signal-flow arrows.
+Text equivalent:
+- CW transmitter row: oscillator, buffer, and power amplifier; the key controls the carrier.
+- SSB/CW receiver row: antenna, RF amplifier, mixer with local oscillator, IF filter and amplifier, product detector with BFO, AF amplifier, and speaker.
+- SSB transmitter row: microphone, speech amplifier, balanced modulator with fixed oscillator, sideband filter, mixer with VFO, and final amplifier.
+::
+
 ## Illustration brief
 
 Alt text: Three labelled block diagrams show a CW transmitter, an SSB/CW receiver, and an SSB transmitter with signal-flow arrows.

@@ -1,0 +1,51 @@
+<svg id="cw-ssb-signal-paths" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>CW, receiver, and SSB signal paths</title>
+  <desc>Three stacked signal-flow rows show a CW transmitter, an SSB/CW receiver, and an SSB transmitter.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="72" y1="92" x2="568" y2="92" stroke-width="5"/>
+    <polygon points="568,92 548,80 548,104" fill="currentColor" stroke="none"/>
+    <circle cx="118" cy="92" r="18" stroke-width="5"/>
+    <rect x="202" y="66" width="58" height="52" rx="8" ry="8" stroke-width="5"/>
+    <rect x="348" y="66" width="58" height="52" rx="8" ry="8" stroke-width="5"/>
+    <path d="M118 38 L118 74" stroke-width="4"/>
+    <line x1="72" y1="240" x2="568" y2="240" stroke-width="5"/>
+    <polygon points="568,240 548,228 548,252" fill="currentColor" stroke="none"/>
+    <path d="M66 270 L96 206 L126 270" stroke-width="5"/>
+    <circle cx="178" cy="240" r="18" stroke-width="5"/>
+    <rect x="240" y="214" width="50" height="52" rx="8" ry="8" stroke-width="5"/>
+    <rect x="328" y="214" width="50" height="52" rx="8" ry="8" stroke-width="5"/>
+    <rect x="416" y="214" width="50" height="52" rx="8" ry="8" stroke-width="5"/>
+    <circle cx="265" cy="188" r="14" stroke-width="4"/>
+    <path d="M442 188 C460 170 478 170 496 188" stroke-width="4"/>
+    <line x1="72" y1="388" x2="568" y2="388" stroke-width="5"/>
+    <polygon points="568,388 548,376 548,400" fill="currentColor" stroke="none"/>
+    <circle cx="92" cy="388" r="18" stroke-width="5"/>
+    <rect x="150" y="362" width="50" height="52" rx="8" ry="8" stroke-width="5"/>
+    <rect x="238" y="362" width="50" height="52" rx="8" ry="8" stroke-width="5"/>
+    <rect x="326" y="362" width="50" height="52" rx="8" ry="8" stroke-width="5"/>
+    <rect x="414" y="362" width="50" height="52" rx="8" ry="8" stroke-width="5"/>
+    <rect x="502" y="362" width="50" height="52" rx="8" ry="8" stroke-width="5"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="42" y="100" font-size="24">CW</text>
+    <text x="170" y="48" font-size="24">key</text>
+    <text x="118" y="146" font-size="24">osc</text>
+    <text x="231" y="162" font-size="24">buffer</text>
+    <text x="377" y="162" font-size="24">PA</text>
+    <text x="36" y="248" font-size="24">RX</text>
+    <text x="94" y="302" font-size="24">ant</text>
+    <text x="178" y="302" font-size="24">RF</text>
+    <text x="265" y="302" font-size="24">mixer</text>
+    <text x="215" y="176" font-size="24">LO</text>
+    <text x="353" y="302" font-size="24">IF</text>
+    <text x="441" y="302" font-size="24">prod det</text>
+    <text x="530" y="176" font-size="24">BFO</text>
+    <text x="50" y="350" font-size="24">SSB</text>
+    <text x="92" y="450" font-size="24">mic</text>
+    <text x="175" y="450" font-size="24">speech</text>
+    <text x="263" y="450" font-size="24">bal mod</text>
+    <text x="351" y="450" font-size="24">filter</text>
+    <text x="439" y="450" font-size="24">mixer</text>
+    <text x="527" y="450" font-size="24">final</text>
+  </g>
+</svg>

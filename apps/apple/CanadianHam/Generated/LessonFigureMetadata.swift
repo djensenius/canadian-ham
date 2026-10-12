@@ -8,6 +8,7 @@ enum LessonFigureMetadata {
         "authority-records-exams": CGSize(width: 640, height: 480),
         "communications-flowchart": CGSize(width: 640, height: 480),
         "control-terminals": CGSize(width: 640, height: 480),
+        "cw-ssb-signal-paths": CGSize(width: 640, height: 480),
         "distress-urgency-safety-board": CGSize(width: 640, height: 480),
         "international-location-checklist": CGSize(width: 640, height: 480),
         "morse-rst-contact-flow": CGSize(width: 640, height: 480),
@@ -17,6 +18,7 @@ enum LessonFigureMetadata {
         "privileges-station-checklist": CGSize(width: 640, height: 480),
         "records-maps-locators": CGSize(width: 640, height: 480),
         "station-control-decision-tree": CGSize(width: 640, height: 480),
+        "station-filtering-radio-blocks": CGSize(width: 640, height: 480),
         "voice-repeater-simplex": CGSize(width: 640, height: 480)
     ]
 
