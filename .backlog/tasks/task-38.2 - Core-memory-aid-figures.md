@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:39'
+updated_date: '2026-10-12 15:03'
 labels:
   - content
   - apple
@@ -44,4 +44,6 @@ Using the task-38.1 pipeline, draw: metric prefix ladder (giga to pico, x/÷ 1 0
 Per-figure notes: metric-prefix-ladder for L-005-01 shows G/M/k/base/m/µ/p, x or ÷ 1 000 for adjacent steps through micro, the skipped-nano µ↔p jump as x or ÷ 1 000 000, and 14.230 MHz = 14 230 kHz; verified against the lesson table/worked examples and Basic B-005-001-001 through B-005-001-011. resistor-colour-code for L-004-03 labels every band by position and colour name (yellow=4, violet=7, red=x 100, gold=±5%) and shows 4 700 Ω with a ±5% range of 4 465 Ω to 4 935 Ω; verified against the lesson examples/table and Basic B-004-006-001 through B-004-006-011. series-parallel-current-paths for L-005-03 shows a single series current path and separate parallel branch currents rejoining as I total = I1 + I2; verified against Basic B-005-005-001, B-005-005-003, B-005-005-005, and B-005-005-011. db-power-ratio-table for L-005-04 shows 3/6/10/20 dB power shortcuts (x or ÷ 2, 4, 10, 100); verified against Basic B-005-008-001, -002, -003, -007, -008, -010, -011 and the lesson dB shortcuts. wavelength-dipole-example for L-006-03 shows λ(m)=300/f(MHz), 14.2 MHz → λ≈21.1 m, half-wave≈10.6 m total and ≈5.3 m each side with practical wire shorter; verified against the lesson wavelength/dipole text and Basic B-006-008-003, -004, -007, and -011. No figure restates an official question or answer.
 
 Validation notes: ran pnpm check:figures:fix, pnpm check:figures, node scripts/check-figures.mjs --self-test, node packages/content-tools/src/check-lesson-coverage.ts, pnpm --dir packages/content-tools check:quizzes, pnpm --dir packages/content-tools check:lesson-originality:all, pnpm --dir packages/content-tools check:explanations, pnpm check:links, pnpm --filter @canadian-ham/web test, and DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Rendered each new SVG with qlmanage -t -s 800 and visually inspected the PNGs; saved evidence under docs/evidence/task-38.2/. Apple xbuild app audits were intentionally not run in this lane, so the light/dark Apple validation portion remains unchecked/pending.
+
+Review fix for 7134d35: redrew series-parallel-current-paths with the cell in the left leg, removed the parallel short, ended rails at the last branch, moved I total/I1/I2 arrows to their measured locations, and updated L-005-03 alt text/text equivalent. Updated wavelength-dipole-example feed point/practical-first-cut wording, added metric-prefix direction arrows, changed 3/6 dB increases to approximate values, added a task-38.2 originality note, regenerated Apple figure assets, rerendered changed qlmanage PNGs, and visually inspected them.
 <!-- SECTION:NOTES:END -->
