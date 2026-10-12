@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 14:46'
+updated_date: '2026-10-12 14:48'
 labels:
   - content
   - apple
@@ -55,4 +55,6 @@ Figure notes batch m3a: L-003-01 station-filtering-radio-blocks shows HF chain (
 Figure notes batch m3b: L-003-03 digital-interface-linear-supply shows laptop/interface/radio RX audio, TX tones, PTT line, and AC-to-DC supply chain with transformer, rectifier, filter capacitor, regulator, output terminals, and output sensing; verified against lesson text and B-003-007-001..007 plus B-003-008-001..010. L-003-04 yagi-receiver-specs shows Yagi reflector/driven/director/boom/feedline, receiver display/filter choices, and desired/LO/image IF spacing markers; verified against lesson text and B-003-009-001..011 plus B-003-010-001..010.
 
 Figure notes batch m3c: L-003-05 signal-quality-cw-ssb-fm shows clean CW carrier/click-risk jagged edge, SSB ALC limit and clipped/splatter cue, and FM centre/deviation/over-deviation; verified against lesson text and B-003-011-001..006, B-003-012-001..010, and B-003-013-001..010. L-003-06 controls-digital-voice-packet shows paddle-to-keyer timing, microphone gain/VOX/speech processing, transceiver receiver noise tools, and packet station-digipeater-station path; verified against lesson text and B-003-014-001..010 plus B-003-015-001..005.
+
+Figure notes batch m3d: L-003-07 batteries-dc-supplies-ripple shows DC source, fuse close to source, heavy leads to transceiver, regulated and ripple waveforms, and series/parallel battery mini-icons; verified against lesson text and B-003-016-001..010 plus B-003-017-001..010, especially B-003-017-005, B-003-017-007, and B-003-017-010. L-003-08 grounding-lightning-rf-safety shows locked power, unplugged mic, station equipment bonded to a single ground bar, surge panel/building bond, storm disconnect cue, antenna RF keep-clear area, and people outside; verified against lesson text and B-003-018-001..011, B-003-019-001..010, B-003-020-001..010, and B-003-021-001..005.
 <!-- SECTION:NOTES:END -->
