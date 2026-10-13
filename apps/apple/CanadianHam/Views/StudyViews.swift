@@ -612,7 +612,7 @@ struct PracticeSessionView: View {
     }
 
     private var examContentTapGesture: some Gesture {
-        DragGesture(minimumDistance: 0).onChanged { _ in
+        TapGesture().onEnded {
             clearCalculatorKeyboardFocus()
         }
     }
@@ -1092,7 +1092,7 @@ struct MockExamView: View {
     }
 
     private var examContentTapGesture: some Gesture {
-        DragGesture(minimumDistance: 0).onChanged { _ in
+        TapGesture().onEnded {
             clearCalculatorKeyboardFocus()
         }
     }

@@ -2,6 +2,9 @@ import Accessibility
 import CanadianHamCalculatorEngine
 import CanadianHamContent
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 struct ExamToolButtons: View {
     var availableTools: [ExamTool] = ExamTool.allCases
@@ -95,13 +98,22 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func focusResettingContent(_ content: Content) -> some View {
+#if os(iOS)
+        content.background {
+            ExamContentInteractionFocusResetter {
+                calculatorFocused = false
+                calculator.suspendHardwareKeyboardInput()
+            }
+        }
+#else
         content.simultaneousGesture(
-            DragGesture(minimumDistance: 0).onChanged { _ in
+            TapGesture().onEnded {
                 calculatorFocused = false
                 calculator.suspendHardwareKeyboardInput()
             },
             including: .all
         )
+#endif
     }
 
 #if os(iOS)
@@ -230,6 +242,99 @@ struct ExamToolPresentationModifier: ViewModifier {
         }
     }
 }
+
+#if os(iOS)
+private struct ExamContentInteractionFocusResetter: UIViewRepresentable {
+    let onInteraction: () -> Void
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onInteraction: onInteraction)
+    }
+
+    func makeUIView(context: Context) -> UIView {
+        let view = WindowGestureAttachmentView()
+        view.configure(coordinator: context.coordinator)
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        context.coordinator.onInteraction = onInteraction
+        (uiView as? WindowGestureAttachmentView)?.configure(coordinator: context.coordinator)
+    }
+
+    static func dismantleUIView(_ uiView: UIView, coordinator: Coordinator) {
+        coordinator.detach()
+    }
+
+    final class Coordinator: NSObject, UIGestureRecognizerDelegate {
+        var onInteraction: () -> Void
+        private weak var window: UIWindow?
+        private weak var tapRecognizer: UITapGestureRecognizer?
+        private weak var panRecognizer: UIPanGestureRecognizer?
+
+        init(onInteraction: @escaping () -> Void) {
+            self.onInteraction = onInteraction
+        }
+
+        func attach(to window: UIWindow?) {
+            guard let window, self.window !== window else { return }
+            detach()
+            self.window = window
+
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleInteraction))
+            tapRecognizer.cancelsTouchesInView = false
+            tapRecognizer.delegate = self
+            window.addGestureRecognizer(tapRecognizer)
+            self.tapRecognizer = tapRecognizer
+
+            let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleInteraction))
+            panRecognizer.cancelsTouchesInView = false
+            panRecognizer.delegate = self
+            window.addGestureRecognizer(panRecognizer)
+            self.panRecognizer = panRecognizer
+        }
+
+        func detach() {
+            if let tapRecognizer, let window = tapRecognizer.view {
+                window.removeGestureRecognizer(tapRecognizer)
+            }
+            if let panRecognizer, let window = panRecognizer.view {
+                window.removeGestureRecognizer(panRecognizer)
+            }
+            tapRecognizer = nil
+            panRecognizer = nil
+            window = nil
+        }
+
+        @objc private func handleInteraction(_ recognizer: UIGestureRecognizer) {
+            switch recognizer.state {
+            case .began, .ended:
+                onInteraction()
+            default:
+                break
+            }
+        }
+
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            true
+        }
+    }
+
+    final class WindowGestureAttachmentView: UIView {
+        private weak var coordinator: Coordinator?
+
+        func configure(coordinator: Coordinator) {
+            self.coordinator = coordinator
+            coordinator.attach(to: window)
+        }
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            coordinator?.attach(to: window)
+        }
+    }
+}
+#endif
 
 extension View {
     func examToolPresentation(

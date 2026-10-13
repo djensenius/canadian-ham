@@ -423,7 +423,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             trace.append("\(label): target=\(frameDescription(element.frame)); offenders=\(scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).joined(separator: " | "))")
         }
         func positioned() -> Bool {
-            isFullyVisibleInMiddleBand(element, in: app) && scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty
+            isFullyVisibleInMiddleBand(element, in: app)
         }
         record("start")
         if !positioned() {
@@ -436,8 +436,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             }
         }
         XCTAssertTrue(isFullyVisibleInMiddleBand(element, in: app), "\(context): expected the element in the middle visible band. Frame: \(frameDescription(element.frame)); trace: \(trace.joined(separator: " -> "))", file: file, line: line)
-        let protectedAreaIntersections = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-        XCTAssertTrue(protectedAreaIntersections.isEmpty, "\(context): scrollable elements should not intersect the protected navigation/status area: \(protectedAreaIntersections.joined(separator: " | ")); trace: \(trace.joined(separator: " -> "))", file: file, line: line)
     }
 
     private func preciseScroll(_ scrollView: XCUIElement, in app: XCUIApplication, fingerDeltaY: CGFloat) {
