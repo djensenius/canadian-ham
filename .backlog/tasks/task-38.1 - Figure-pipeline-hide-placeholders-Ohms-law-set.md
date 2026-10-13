@@ -1,11 +1,11 @@
 ---
 id: TASK-38.1
 title: 'Figure pipeline, hide placeholders, Ohm''s law set'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-13 11:38'
+updated_date: '2026-10-13 13:41'
 labels:
   - content
   - apple
@@ -104,10 +104,12 @@ Blocked after owner-approved opaque lesson nav implementation. Current HEAD 3cb8
 Blocked: owner decision on audit approach after 1A attempt. Reverted WIP clipping commit 4529951e in 161b9446 and discarded uncommitted experiments per supervisor decision because dynamic AX hiding would be an audit dodge. Evidence from this attempt: approved opaque token lesson nav bar alone left scrollable prose in the AX/audit tree under or near the bar; clipping the ScrollView drawing below the measured opaque bar made screenshots look clipped but did not remove clipped/offscreen text from accessibility snapshots. LazyVStack on lessonContent/LessonMarkdownView did not prevent nearby/offscreen lesson blocks from remaining in the AX tree. AX hiding for clipped blocks was tried locally and rejected; it still did not produce stable passing audits. Representative failures: /tmp/task381-clipping-figures-once2.xcresult failed contrast on dark 'By the end of this lesson, you can:' and light bullet; /tmp/task381-lazy-figures-once.xcresult failed no-straddling with dark bullet/use-P frames y=100.0 h=20.3 and light bullet/use-P frames y=106.7 h=20.3 crossing lowerEdgeY=116; /tmp/task381-lazy-axclip7-figures-once.xcresult after 10 scans still found paragraph 'Power tells how quickly...' frame y=9.7 h=130.3 crossing lowerEdgeY=116 while the figure frame was y=297 h=223.7. Conclusion: clipping drawing/hit testing at the opaque bar is not sufficient for default performAccessibilityAudit because SwiftUI keeps clipped/offscreen lesson text elements in the AX tree; task remains In Progress pending owner decision on the audit approach.
 
 Owner decision 2026-10-12(B) recorded/applied: lesson figure UI audits now run the full default performAccessibilityAudit with a narrow handler that ignores only contrast issues whose element frame is not fully contained in the visible scroll area below the opaque navigation bar; fully visible contrast issues and all non-contrast issues still fail, and each ignored issue is logged. The earlier lesson no-straddling assertion is no longer required for the figure/text-equivalent scan states because normal SwiftUI lesson prose can remain in the accessibility tree under or just behind the opaque bar; these states now rely on the approved exception plus hard assertions that the target figure/preserved row is visible.
+
+Final owner-decision validation passed after occluded-text contrast helper: light Ohm's law lesson figure audit 3/3 passed in /tmp/task381-light-3x.xcresult; dark Ohm's law lesson figure audit 3/3 passed in /tmp/task381-dark-3x.xcresult; AX5 inline fit + real enlarge passed in /tmp/task381-final-ax5.xcresult; illustration brief placeholder hiding passed in /tmp/task381-final-placeholder.xcresult; macOS content-library targeted test passed in /tmp/task381-final-macos.xcresult; pnpm check:apple-l10n passed; contrast token unit test passed in /tmp/task381-contrast-unit.xcresult. Refreshed screenshot evidence copied into docs/evidence/task-38.1/app/.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented task-38.1 and review follow-ups: hidden author illustration briefs, shared and checked SVG figure pipeline, Ohm’s law triangle/power triangle/wheel with text equivalent, parser parity fixtures for web and Swift, generated Apple assets and metadata, width-fitting Apple figures with an enlarged view that opens fitted/centered and supports pinch/double-tap zoom, robust figure checker and docs, refreshed real-app screenshot evidence, and localized UI strings. Verified with figure checks/self-test, web tests, content-swift tests, Apple text/l10n checks, and targeted iOS figure screenshot, placeholder, and largest-text enlarged-view tests. Full iOS/macOS suites are deferred to pre-merge under the updated owner testing policy.
+Implemented the owner-approved 2026-10-12(B) narrow accessibility audit exception for occluded lesson text contrast, documented the approved audit exceptions, added token contrast coverage for lesson body/bullet colours, refreshed app screenshot evidence, and verified with light/dark figure audits 3/3 each plus AX5, placeholder, macOS content-library, apple-l10n, and contrast-unit checks.
 <!-- SECTION:FINAL_SUMMARY:END -->
