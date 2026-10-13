@@ -3,11 +3,11 @@ id: TASK-48
 title: >-
   App icon variants: Icon Composer, dark and tinted (like the owner's other
   apps)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:38'
-updated_date: '2026-10-12 23:55'
+updated_date: '2026-10-13 00:01'
 labels:
   - apple
   - web
@@ -26,7 +26,7 @@ Owner request 2026-10-12: add dark-mode and other icon variants, matching the ow
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 AppIcon.icon and an appiconset with light, dark and tinted variants are wired via apps/apple/project.yml (XcodeGen deterministic) for the iOS/iPadOS/macOS app, matching the owner's other apps
-- [ ] #2 A preview sheet shows light, dark, tinted and clear renderings on iOS and macOS and the web favicon in light and dark; the owner approves it
+- [x] #2 A preview sheet shows light, dark, tinted and clear renderings on iOS and macOS and the web favicon in light and dark; the owner approves it
 - [x] #3 Builds pass for iOS and macOS, App Store validation of icon assets passes (actool), and the web favicon, PWA icons and manifest are updated
 <!-- AC:END -->
 
@@ -47,10 +47,14 @@ AC #3 evidence: actool iOS and macOS asset compilation passed with no warnings i
 AC #2 remains unchecked by request: preview sheet is at design/app-icon/exports/variants-preview.png and still needs owner approval.
 
 Review fix 2026-10-12: adjusted AppIcon.icon foreground so ictool-rendered dark/tinted/clear variants are legible, split PWA any icons from padded maskable icons, documented ictool preview dependency/fallback warning, added CFBundleIconName to the CloudKit iOS Info.plist, added design/app-icon/check_icon_assets.py to verify appiconset filenames and icon.json asset references, and reran validation: py_compile/render/check_icon_assets; actool iOS/macOS; pwa test/build/audit; iOS and macOS xbuild builds.
+
+Owner approval recorded 2026-10-12: owner approved design/app-icon/exports/variants-preview.png at commit 9ec17d8, choosing option A; keep the Liquid Glass outline style in dark and tinted.
+AC #2 evidence: owner visual approval 2026-10-12, option A, for the preview sheet at design/app-icon/exports/variants-preview.png.
+AC #3 evidence after review fixes: python3 -m py_compile design/app-icon/render_icon.py design/app-icon/check_icon_assets.py && python3 design/app-icon/render_icon.py && python3 design/app-icon/check_icon_assets.py passed; actool iOS and macOS passed with no warnings; pnpm --filter @canadian-ham/web test -- src/lib/pwa.test.ts, pnpm build:web, and pnpm --filter @canadian-ham/web audit:urls passed; iOS and macOS xbuild builds passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented app icon variants and supporting web icon updates. Added an Icon Composer AppIcon.icon matching the owner app structure, appiconset light/dark/tinted/mac fallbacks, deterministic renderer exports including an ictool-rendered variants preview, maskable PWA icons, and project.yml wiring. Verified XcodeGen determinism, actool iOS/macOS icon compilation, iOS/macOS xbuild builds, and web tests/build/CSP URL audit. AC #2 is intentionally left unchecked pending owner approval of design/app-icon/exports/variants-preview.png.
+Implemented task-48 app icon variants. Added and wired AppIcon.icon and AppIcon.appiconset light/dark/tinted/mac fallback assets, kept tvOS and visionOS layered assets, updated web favicon/PWA icons with separate any and maskable manifest entries, added icon metadata validation, and documented the renderer/ictool workflow. Review request changes were fixed, and owner approved the preview on 2026-10-12 (option A: keep Liquid Glass outline style for dark/tinted). Verified with renderer and metadata checks, actool iOS/macOS, web test/build/audit, and iOS/macOS xbuild builds.
 <!-- SECTION:FINAL_SUMMARY:END -->
