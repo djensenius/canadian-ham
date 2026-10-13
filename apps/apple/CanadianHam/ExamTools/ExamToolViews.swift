@@ -470,7 +470,8 @@ struct ReferenceSheetToolView: View {
                         .accessibilityHidden(true)
                 }
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
+                .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
+                .accessibilityValue(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
                 .accessibilityIdentifier("reference-sheet-scroll")
             } else {
                 VStack(spacing: DesignTokens.Spacing.sm) {
