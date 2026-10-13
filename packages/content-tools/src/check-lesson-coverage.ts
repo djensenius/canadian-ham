@@ -479,7 +479,17 @@ export async function checkLessonCoverage(options: LessonCoverageOptions = {}): 
     if (!modulesById.has(lesson.moduleId)) {
       malformedFiles.push({ filePath, message: `lesson moduleId references unknown module ${lesson.moduleId}` });
     }
+    const prerequisiteIds = new Set<string>();
+    const repeatedPrerequisiteIds = new Set<string>();
     for (const prerequisiteId of lesson.prerequisites) {
+      if (prerequisiteIds.has(prerequisiteId)) {
+        if (!repeatedPrerequisiteIds.has(prerequisiteId)) {
+          malformedFiles.push({ filePath, message: `lesson prerequisites repeats lesson ${prerequisiteId}` });
+          repeatedPrerequisiteIds.add(prerequisiteId);
+        }
+        continue;
+      }
+      prerequisiteIds.add(prerequisiteId);
       const prerequisiteLesson = lessonsById.get(prerequisiteId);
       if (prerequisiteLesson === undefined) {
         malformedFiles.push({ filePath, message: `lesson prerequisites references unknown lesson ${prerequisiteId}` });

@@ -408,6 +408,19 @@ test("coverage fails when a lesson prerequisite does not exist", async () => {
   });
 });
 
+test("coverage fails when a lesson repeats a prerequisite ID", async () => {
+  await withFixture("duplicate-prerequisite", async (root) => {
+    await writeFixture(root, ({ lessons }) => {
+      lessons.get("L-001-01")!.prerequisites.push("L-005-01", "L-005-01", "L-005-01");
+    });
+
+    await assertCoverageError(root, (error) => {
+      const duplicateErrors = error.report.malformedFiles.filter((file) => /prerequisites repeats lesson L-005-01/.test(file.message));
+      return duplicateErrors.length === 1;
+    });
+  });
+});
+
 test("coverage fails when a lesson prerequisite is not earlier in recommended order", async () => {
   await withFixture("later-prerequisite", async (root) => {
     await writeFixture(root, ({ modules, lessons }) => {
