@@ -54,6 +54,16 @@ The station power supply provides direct current. The RF stages create and ampli
 
 Practical keying needs controlled rise and fall times. Edges that are too abrupt can spread energy as clicks. The power amplifier raises the keyed signal to the intended transmit power.
 
+::figure cw-ssb-signal-paths
+Alt text: Three labelled block diagrams show a CW transmitter, an SSB/CW receiver, and an SSB transmitter with signal-flow arrows.
+Text equivalent:
+- CW row: osc, buf, PA, and key feeding the PA.
+- RX row: ant, RF, mix with LO, IF, prod with BFO, AF, and spkr.
+- SSB row: mic, spch, bal with fixed, filt, mix with VFO, and final.
+::
+
+
+
 ### In the real world: supply sag can make chirp
 
 A CW transmitter sounds steady at low power. At higher power, another operator reports that the note slides at the start of each element. The higher current may pull the DC supply voltage down for an instant.

@@ -104,6 +104,13 @@ By the end of this lesson, you can:
 | Owner allowing another person to operate | May allow operation under supervision and in the presence of a certificate holder. |
 | Person without an Amateur Radio Operator Certificate | May operate only under supervision and in the presence of a person holding appropriate qualifications. |
 
+::figure station-control-decision-tree
+Alt text: A station-control decision tree showing authorization, service boundary, message purpose, and supervision.
+Text equivalent:
+- The vertical flow is auth, service, purpose, and control op.
+- The side labels are own licence, non-commercial open messages, and qualified supervision.
+::
+
 ## How these rules fit together
 
 Start with a two-sided authorization habit. If you work on another person's transmitter, ask two questions: what are you allowed to do, and what authority does the other person hold for that apparatus?

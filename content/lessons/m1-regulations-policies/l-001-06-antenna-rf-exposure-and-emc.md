@@ -81,6 +81,14 @@ By the end of this lesson, you can:
 | Home-entertainment devices outside the strict radio-apparatus category | Associated equipment, such as audio or video recorders, playback devices, and amplifiers used with radio apparatus. |
 | Garage door opener affected by transmissions | Radio-sensitive equipment, meaning other non-radio electronic equipment whose function can be affected by radio emissions. |
 
+::figure antenna-rf-emc-checklists
+Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.
+Text equivalent:
+- Consultation panel: house, separate mast, nearby person, and folder.
+- RF exposure panel: antenna, keep-clear circle, person outside, and labels P, gain, dist, freq, and clear.
+- EMC check panel: TX, sig, meter, home, and ctrl.
+::
+
 ## How these rules fit together
 
 Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. CPC-2-0-03 is ISED's antenna-siting procedure, and an exclusion can come from that procedure or from the local process. If there is no local approval process, the ISED default process is the relevant path.

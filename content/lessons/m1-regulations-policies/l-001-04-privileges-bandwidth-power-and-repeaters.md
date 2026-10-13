@@ -110,6 +110,14 @@ By the end of this lesson, you can:
 | Voice modulation maximum | 100%, meaning full modulation without going past the clean voice limit. |
 | Frequency measurement | All amateur stations must be capable of reliably measuring frequency, regardless of emission mode. |
 
+::figure privileges-station-checklist
+Alt text: Station checklist with operator qualification, band, bandwidth, power, repeater, and modulation-quality boxes.
+Text equivalent:
+- The station chain is cert, radio, amp, and antenna.
+- The checklist boxes are band, width, Pout, and voice, with checkmarks labelled qual, repeater, and modulation.
+- The band-edge sketches are labelled inside and spills.
+::
+
 ## How these rules fit together
 
 Privilege rows describe the current control situation. A station can contain equipment for many bands and powers. Whoever has fewer qualifications sets the limit, whether the more-qualified person owns the equipment or controls it under another call sign.

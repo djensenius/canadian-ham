@@ -3,14 +3,34 @@ import CoreGraphics
 
 enum LessonFigureMetadata {
     static let sizes: [String: CGSize] = [
+        "amplifiers-diodes": CGSize(width: 640, height: 480),
+        "antenna-rf-emc-checklists": CGSize(width: 640, height: 480),
+        "authority-records-exams": CGSize(width: 640, height: 480),
+        "batteries-dc-supplies-ripple": CGSize(width: 640, height: 480),
+        "communications-flowchart": CGSize(width: 640, height: 480),
+        "control-terminals": CGSize(width: 640, height: 480),
+        "controls-digital-voice-packet": CGSize(width: 640, height: 480),
+        "cw-ssb-signal-paths": CGSize(width: 640, height: 480),
         "db-power-ratio-table": CGSize(width: 900, height: 620),
+        "digital-interface-linear-supply": CGSize(width: 640, height: 480),
+        "distress-urgency-safety-board": CGSize(width: 640, height: 480),
+        "grounding-lightning-rf-safety": CGSize(width: 640, height: 480),
+        "international-location-checklist": CGSize(width: 640, height: 480),
         "metric-prefix-ladder": CGSize(width: 1200, height: 720),
+        "morse-rst-contact-flow": CGSize(width: 640, height: 480),
         "ohms-law-power-wheel": CGSize(width: 960, height: 960),
         "ohms-law-triangle": CGSize(width: 640, height: 480),
         "power-triangle": CGSize(width: 640, height: 480),
+        "privileges-station-checklist": CGSize(width: 640, height: 480),
+        "records-maps-locators": CGSize(width: 640, height: 480),
         "resistor-colour-code": CGSize(width: 900, height: 650),
         "series-parallel-current-paths": CGSize(width: 1000, height: 720),
-        "wavelength-dipole-example": CGSize(width: 1000, height: 650)
+        "signal-quality-cw-ssb-fm": CGSize(width: 640, height: 480),
+        "station-control-decision-tree": CGSize(width: 640, height: 480),
+        "station-filtering-radio-blocks": CGSize(width: 640, height: 480),
+        "voice-repeater-simplex": CGSize(width: 640, height: 480),
+        "wavelength-dipole-example": CGSize(width: 1000, height: 650),
+        "yagi-receiver-specs": CGSize(width: 640, height: 480)
     ]
 
     static func aspectRatio(for id: String) -> CGFloat {

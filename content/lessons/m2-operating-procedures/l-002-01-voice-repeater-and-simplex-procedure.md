@@ -129,6 +129,14 @@ An illustrative simplex exchange uses the same identify-clearly habit:
 - VE3ABC: "VA3MOB, this is VE3ABC. I copy you clearly."
 - VA3MOB: "Thanks. We can stay simplex and leave the repeater clear."
 
+::figure voice-repeater-simplex
+Alt text: A portable radio reaches another portable through a hilltop repeater, then both move to a direct simplex path.
+Text equivalent:
+- The input arrow runs from portable A to the hilltop repeater and is labelled CTCSS + offset.
+- The output arrow runs from the repeater to portable B.
+- A separate direct arrow between the portables is labelled simplex.
+::
+
 ## Sidebands, spacing, and clean tests
 
 Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3 755 kHz. Operators choose the expected sideband for the frequency so receiving stations recover normal-sounding audio. Those two anchors help you keep the lower-frequency example separate from the twenty-metre example.

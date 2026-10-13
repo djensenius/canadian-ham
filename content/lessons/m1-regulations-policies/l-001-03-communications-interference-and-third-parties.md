@@ -111,6 +111,15 @@ By the end of this lesson, you can:
 | Supervising a non-certified guest during a contact | Keep supervising and monitoring the guest, including if a foreign station joins, because you remain responsible for the station and international third-party traffic depends on the foreign administration not objecting. |
 | Local non-certified participants at both ends | Both non-certified people are third parties. |
 
+::figure communications-flowchart
+Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
+Text equivalent:
+- The lane labelled interf has listen followed by change/stop.
+- The distress lane has exception, then stand by.
+- The 3rd party lane has personal, then supervised.
+- A clock is labelled ID 30 min.
+::
+
 ## How these rules fit together
 
 Interference rules start with restraint. Listen first, avoid deliberate or harmful interference, and treat a harmful-interference finding as a requirement to stop or change operation. Secondary-service facts add a priority relationship: amateur operation in a shared band protects the primary service.

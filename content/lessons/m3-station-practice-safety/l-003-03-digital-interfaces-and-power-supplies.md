@@ -56,6 +56,16 @@ Isolation transformers often sit in the audio lines. They pass audio but break d
 
 Some radios include their own audio codec. A codec converts between analog audio and digital samples. In that design, the connector is only the access point; the codec is the conversion block.
 
+::figure digital-interface-linear-supply
+Alt text: A split diagram shows a computer audio interface between a transceiver and laptop, plus a linear power supply chain from AC mains to DC output.
+Text equivalent:
+- RX arrows run radio to interface to laptop.
+- TX arrows run laptop to interface to radio, and a PTT line runs from the interface to the radio.
+- The supply chain is AC, xfmr coils, rect, shunt cap, reg with fins, one DC out terminal, and a sense feedback line.
+::
+
+
+
 ### In the real world: setting interface levels
 
 A club laptop sends a digital-mode audio tone that is too strong for the radio data input. The transmitted signal becomes wide and splattery. The cure is not more RF power.

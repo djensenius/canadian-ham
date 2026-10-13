@@ -49,6 +49,16 @@ Key clicks are different. They sound like sharp ticks around the signal. They co
 
 A variable-frequency oscillator lets a CW transmitter tune anywhere across a range, instead of being limited to the few frequencies of the fixed-frequency quartz crystals on hand. That is useful only if the oscillator is electrically and mechanically stable, so the carrier doesn't drift over time. Keep VFOs away from heat, loose hardware, and changing supply conditions.
 
+::figure signal-quality-cw-ssb-fm
+Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
+Text equivalent:
+- CW panel: a smooth on-off envelope and a square-edged clicks sketch.
+- SSB panel: one clipped waveform flattened at the limit with a clipped -> splatter label.
+- FM panel: a centre line, normal small deviation arrows, and over-deviation large arrows beyond dashed limits.
+::
+
+
+
 ### In the real world: diagnosing two CW reports
 
 During a club practice net, one report says, "Your note slides at the start of each element." Another says, "I hear ticks above and below your signal."

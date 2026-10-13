@@ -55,6 +55,16 @@ In the priority order here, distress is followed by emergency messages, and emer
 | Emergency message | The message level immediately after distress in the priority comparison. |
 | Safety traffic | Hazard information affecting people, navigation, or weather. |
 
+::figure distress-urgency-safety-board
+Alt text: A priority note board showing distress facts and station-readiness items.
+Text equivalent:
+- The board labels distress as life threat, MAYDAY / SOS, and first priority.
+- The lower rows say urgent: serious help and safety: hazard info.
+- The go-kit drawing includes labelled handheld, battery, and dipole items.
+::
+
+
+
 ### Memory trick: life first, help next, hazards shared
 
 - Helps remember: the roles of distress, urgency, and safety traffic.
