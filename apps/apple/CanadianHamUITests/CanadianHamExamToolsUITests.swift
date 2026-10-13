@@ -276,7 +276,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
-        let scrollView = scrollView(containing: element, in: app)
+        let calculatorScrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
+        let scrollView = element.identifier.hasPrefix("calculator-key-") && calculatorScrollView.exists ? calculatorScrollView : scrollView(containing: element, in: app)
         for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: true) {
             if element.exists && element.frame.maxY <= visibleFrameExcludingNavigationBar(in: app).minY {
                 scrollView.swipeDown()
@@ -301,7 +302,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     private func scrollCalculatorPanelUntilElementExists(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
         let panel = app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch
-        let scrollView = panel.scrollViews.firstMatch.exists ? panel.scrollViews.firstMatch : app.scrollViews.firstMatch
+        let calculatorScrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
+        let scrollView = calculatorScrollView.exists ? calculatorScrollView : panel.scrollViews.firstMatch.exists ? panel.scrollViews.firstMatch : app.scrollViews.firstMatch
         for _ in 0..<maxSwipes where !element.exists {
             scrollView.swipeUp()
             waitBriefly()
