@@ -367,6 +367,9 @@ function collectTextBoxes(file, textAttributes, inheritedStyle, body, failFn) {
     addRun(body.slice(cursor, match.index), textStyle);
     const tspanAttributes = parseAttributes(match[1]);
     validateUnsupportedAttributes(file, "tspan", tspanAttributes, failFn);
+    if (/<tspan\b/i.test(match[2])) {
+      failFn(`${file}: nested <tspan> elements are not supported; split styled text into sibling tspans`);
+    }
     const tspanStyle = mergeTextStyle(textStyle, tspanAttributes);
     if ((tspanAttributes.has("dx") || tspanAttributes.has("dy")) && !tspanAttributes.has("x") && !tspanAttributes.has("y")) {
       failFn(`${file}: <tspan> dx/dy without x or y is not supported; use explicit x/y for positioned tspan lines`);
@@ -1442,6 +1445,11 @@ function runSelfTest() {
       expect: [/dx\/dy without x or y/]
     },
     {
+      name: "nested tspan fails loudly",
+      source: fixture(`<text x="40" y="60" font-size="18" fill="currentColor"><tspan>Outer <tspan font-size="40">Inner</tspan></tspan></text>`),
+      expect: [/nested <tspan>/]
+    },
+    {
       name: "unsupported features fail loudly",
       source: fixture(`<g transform="translate(1 1)"><path d="M20 60 R40 60" stroke="currentColor"/><text x="20 30" y="50" font-size="20" class="label" dominant-baseline="middle">Bad</text><text x="70" y="50" font-size="1.2em">Unit</text><use href="#x"/></g>`),
       expect: [/transform/, /unsupported command 'R'/, /per-glyph lists/, /font-size.*unitless/, /style\/class/, /dominant-baseline/, /<use>/]
@@ -1749,7 +1757,7 @@ if (selfTest) {
 } else {
   const figures = readFigures();
   const references = checkReferences(figures);
-  if (fix) {
+  if (fix && errors.length === 0) {
     writeAssets(figures);
   }
   checkAssets(figures);

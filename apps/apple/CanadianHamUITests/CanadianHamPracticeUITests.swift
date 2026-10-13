@@ -2237,10 +2237,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
             guard frame.width > 0, frame.height > 0 else { return false }
             guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
             guard auditGeometry.scrollFrame.intersects(frame) else { return false }
+            guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
             guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
 
             XCTContext.runActivity(named: "Ignored occluded lesson scroll-content contrast false positive") { activity in
-                let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame))"
+                let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame)) matchedScrollDescendant=true"
                 let attachment = XCTAttachment(string: note)
                 attachment.lifetime = .keepAlways
                 activity.add(attachment)
@@ -3048,6 +3049,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let scrollFrame: CGRect
         let visibleScrollArea: CGRect
         let navigationBarElementFrames: [CGRect]
+        let scrollView: XCUIElement?
     }
 
     private func lessonAuditGeometryBelowOpaqueNavigationBar(in app: XCUIApplication) -> LessonAuditGeometry {
@@ -3067,7 +3069,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return LessonAuditGeometry(
             scrollFrame: scrollFrame,
             visibleScrollArea: visibleScrollArea,
-            navigationBarElementFrames: navigationBarElementFrames(in: app)
+            navigationBarElementFrames: navigationBarElementFrames(in: app),
+            scrollView: visibleScrollView
         )
     }
 
@@ -3083,13 +3086,42 @@ final class CanadianHamPracticeUITests: XCTestCase {
             }
     }
 
+    private func element(_ element: XCUIElement, withFrame frame: CGRect, isDescendantOf scrollView: XCUIElement?) -> Bool {
+        guard let scrollView, scrollView.exists else { return false }
+        let query: XCUIElementQuery
+        switch element.elementType {
+        case .staticText:
+            query = scrollView.staticTexts
+        case .button:
+            query = scrollView.buttons
+        default:
+            query = scrollView.descendants(matching: element.elementType)
+        }
+        let candidates: [XCUIElement]
+        if !element.identifier.isEmpty {
+            candidates = query.matching(identifier: element.identifier).allElementsBoundByIndex
+        } else if !element.label.isEmpty {
+            candidates = query.matching(NSPredicate(format: "label == %@", element.label)).allElementsBoundByIndex
+        } else {
+            candidates = query.allElementsBoundByIndex
+        }
+        return candidates.contains { candidate in
+            guard candidate.exists else { return false }
+            return self.frame(frame, matches: candidate.frame)
+        }
+    }
+
     private func frame(_ frame: CGRect, matchesAny candidates: [CGRect]) -> Bool {
         candidates.contains { candidate in
-            abs(frame.minX - candidate.minX) <= 1
-                && abs(frame.minY - candidate.minY) <= 1
-                && abs(frame.width - candidate.width) <= 1
-                && abs(frame.height - candidate.height) <= 1
+            self.frame(frame, matches: candidate)
         }
+    }
+
+    private func frame(_ frame: CGRect, matches candidate: CGRect) -> Bool {
+        abs(frame.minX - candidate.minX) <= 1
+            && abs(frame.minY - candidate.minY) <= 1
+            && abs(frame.width - candidate.width) <= 1
+            && abs(frame.height - candidate.height) <= 1
     }
 
     private func protectedNavigationFrame(in app: XCUIApplication) -> CGRect {
