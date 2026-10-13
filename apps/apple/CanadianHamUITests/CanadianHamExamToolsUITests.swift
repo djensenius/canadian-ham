@@ -40,6 +40,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         openTool(.referenceSheet, in: app)
         XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-unavailable"].firstMatch.waitForExistence(timeout: 5))
+        waitForStableToolHeaderFrame(.referenceSheet, in: app)
         try app.performAccessibilityAudit()
     }
 
@@ -135,9 +136,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
+        waitForStableToolHeaderFrame(.calculator, in: app)
         try app.performAccessibilityAudit()
         closeTool(in: app)
         openTool(.referenceSheet, in: app)
+        waitForStableToolHeaderFrame(.referenceSheet, in: app)
         try app.performAccessibilityAudit()
     }
 
@@ -146,9 +149,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
+        waitForStableToolHeaderFrame(.calculator, in: app)
         try app.performAccessibilityAudit()
         closeTool(in: app)
         openTool(.referenceSheet, in: app)
+        waitForStableToolHeaderFrame(.referenceSheet, in: app)
         try app.performAccessibilityAudit()
     }
 
@@ -184,6 +189,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             switch self {
             case .calculator: "exam-tool-calculator-button"
             case .referenceSheet: "exam-tool-referenceSheet-button"
+            }
+        }
+
+        var panelIdentifier: String {
+            switch self {
+            case .calculator: "exam-tool-calculator-panel"
+            case .referenceSheet: "exam-tool-reference-sheet-panel"
             }
         }
     }
@@ -223,6 +235,26 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let close = app.buttons["exam-tool-close-button"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 5), "Expected a close tools button")
         close.tap()
+    }
+
+    private func waitForStableToolHeaderFrame(_ tool: Tool, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let header = app.descendants(matching: .any)[tool.panelIdentifier].firstMatch
+        XCTAssertTrue(header.waitForExistence(timeout: 5), "Expected tool header \(tool.panelIdentifier)", file: file, line: line)
+
+        let deadline = Date().addingTimeInterval(5)
+        var previousFrame = header.frame
+        var consecutiveStableSamples = 0
+        while Date() < deadline, consecutiveStableSamples < 3 {
+            waitBriefly(0.1)
+            let currentFrame = header.frame
+            if currentFrame == previousFrame {
+                consecutiveStableSamples += 1
+            } else {
+                consecutiveStableSamples = 0
+                previousFrame = currentFrame
+            }
+        }
+        XCTAssertEqual(consecutiveStableSamples, 3, "Expected tool header \(tool.panelIdentifier) frame to settle before auditing. Last frame: \(frameDescription(previousFrame))", file: file, line: line)
     }
 
     private func tapStartMockExam(in app: XCUIApplication) {
