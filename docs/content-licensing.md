@@ -202,3 +202,5 @@ Before any public release:
 - Record ISED's written answer to the reference-sheet follow-up request, including whether the scope covers the official English exam reference sheet in app tools.
 - Verify official French category names before displaying French category headings.
 - Locate or get ISED confirmation for an official French 2025 Basic reference sheet before claiming one exists; only English reference PDFs are currently in our sources.
+
+- 2026-10-12: follow-up request to ISED sent by the owner asking to add the Basic reference sheets (EN and FR) to the permission; awaiting reply.
