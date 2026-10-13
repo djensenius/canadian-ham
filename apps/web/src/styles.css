@@ -1533,7 +1533,6 @@ input[type="checkbox"]:checked::after {
   background: var(--ch-color-paper-inset);
 }
 
-.lesson-figure__art:focus-visible,
 .lesson-figure__text-equivalent summary:focus-visible {
   outline: 3px solid var(--ch-color-focus);
   outline-offset: 3px;
