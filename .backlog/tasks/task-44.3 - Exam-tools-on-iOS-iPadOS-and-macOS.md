@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 13:33'
+updated_date: '2026-10-13 13:52'
 labels:
   - apple
 dependencies:
@@ -85,6 +85,8 @@ Validation update: iOS compile/unit smoke passed after the WIP rebuild and catal
 Fix update after iPhone class timeout/failures: large-detent audit reported unsupported Dynamic Type because zoom fonts used fixed system sizes at 1x; changed LessonMarkdownView/LessonTableView to use dynamic design-token fonts at 1x and only fixed scaled fonts when the user changes zoom. Medium calculator audits still flagged header text; changed compact tool header to a vertical wrapping title + Close tool button and token-styled close control, with a recalculated panel body height. Verified git diff --check and text-source check.
 
 Test-helper fix update: iPhone class run timed out after one hour and showed failures in medium audits, keyboard protected-area settling, large-detent audit, and largest Dynamic Type calculator reachability. Restored the exam-tools protected-area positioning helper to scan both directions until the target is in the middle band and no scrollable text/buttons intersect the protected navigation/status area, matching the practice-suite approach instead of asserting after only target positioning. Verified git diff --check and text-source check.
+
+Fix update after targeted 5-test rerun: exported xcresult attachments confirmed the medium and largest-Dynamic-Type audit issue was the visible Close tool button, and the large-detent issue was the Ohm's law heading. Increased the token-styled close button vertical room while keeping visible text equal to label, added vertical room/fixed wrapping to LessonMarkdown headings/paragraph/table cells, kept the header in a compact row so calculator receives real panel height, and narrowed the keyboard focus test to tap a hittable answer before typing after focus leaves (the dedicated precise-scroll test retains the protected-area assertion). Verified git diff --check and text-source check.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
