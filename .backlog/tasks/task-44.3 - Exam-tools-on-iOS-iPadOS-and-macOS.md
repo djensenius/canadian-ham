@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 02:32'
+updated_date: '2026-10-13 02:35'
 labels:
   - apple
 dependencies:
@@ -69,6 +69,8 @@ Stopped after supervisor-directed narrowing attempt. Replaced the custom referen
 H1 result: added a legitimate audit settle wait that polls the active tool header frame every 100 ms until 3 consecutive equal samples (5 s cap) before the three accessibility audits. Reran the three failing iPhone tests twice with xbuild on iPhone 17 Pro: /tmp/task-44.3-h1-audit-run1.log and /tmp/task-44.3-h1-audit-run2.log both failed 3/3 with Text clipped on the same calculator/reference sheet header or unavailable elements. H1 rejected; failures are not caused solely by mid-presentation or detent animation.
 
 H2 result: moved the tool header out of the sheet ScrollView into the static top row beside the close button (wrapping header text preserved). Reran the three failing iPhone audits once with xbuild: /tmp/task-44.3-h2-audit-run1.log still failed 3/3 with Text clipped on calculator/reference-sheet header or unavailable static text. H2 alone rejected; the top ScrollView soft-edge fade is not the sole cause.
+
+H3 result: instrumented the compact-sheet GeometryReader height update path while applying the convergence fix (round measured sheet height to whole points and ignore <1 pt changes). Reran the three failing iPhone audits with xbuild: /tmp/task-44.3-h3-audit-run1.log still failed 3/3 with Text clipped on calculator/reference-sheet header or unavailable static text. The added diagnostic print did not surface in the xbuild console log, but the H1 header-frame settle wait reached stable frames before each audit. Removed the temporary diagnostic print and kept the whole-point height rounding. H3 rejected; stale/jittery compactSheetHeight updates are not sufficient to explain the failures.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
