@@ -120,54 +120,53 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func toolHeader(for tool: ExamTool) -> some View {
-        Text(toolTitle(for: tool)) // l10n: localized
-            .font(DesignTokens.FontScale.body.weight(.bold))
-            .foregroundStyle(DesignTokens.Colors.ink)
-            .fixedSize(horizontal: false, vertical: true)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .accessibilityAddTraits(.isHeader)
-            .accessibilityIdentifier(tool.accessibilityIdentifier)
+        VStack(spacing: DesignTokens.Spacing.sm) {
+            Text(toolTitle(for: tool)) // l10n: localized
+                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier(tool.accessibilityIdentifier)
+            closeToolButton
+        }
+        .frame(maxWidth: .infinity)
     }
 
     private var closeToolButton: some View {
         Button {
             selectedTool = nil
         } label: {
-            Image(systemName: "xmark")
-                .font(DesignTokens.FontScale.body.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .frame(width: 44, height: 44)
-                .background(DesignTokens.Colors.paperInset, in: Circle())
-                .overlay(Circle().strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+            Text("Done") // l10n: localized
+                .font(DesignTokens.FontScale.body.weight(.semibold))
+                .padding(.horizontal, DesignTokens.Spacing.md)
+                .padding(.vertical, DesignTokens.Spacing.sm)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.bordered)
         .accessibilityLabel(Text("Close tool")) // l10n: localized
         .accessibilityIdentifier("exam-tool-close-button")
     }
 
     private func toolPanel(for tool: ExamTool) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 toolHeader(for: tool)
-                closeToolButton
-            }
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    switch tool {
-                    case .calculator:
-                        CalculatorToolView(viewModel: calculator)
-                            .frame(minHeight: 360)
-                    case .referenceSheet:
-                        ReferenceSheetToolView(configuration: referenceSheetConfiguration)
-                    }
+                Divider()
+
+                switch tool {
+                case .calculator:
+                    CalculatorToolView(viewModel: calculator)
+                        .frame(minHeight: 360)
+                case .referenceSheet:
+                    ReferenceSheetToolView(configuration: referenceSheetConfiguration)
                 }
-                .frame(maxWidth: .infinity, alignment: .topLeading)
             }
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
         }
-        .padding(DesignTokens.Spacing.lg)
-        .padding(.top, DesignTokens.Spacing.lg)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(DesignTokens.Colors.paper)
     }
 }
@@ -464,21 +463,24 @@ struct ReferenceSheetToolView: View {
                 .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
                 .accessibilityIdentifier("reference-sheet-scroll")
             } else {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                VStack(spacing: DesignTokens.Spacing.sm) {
                     Text("Reference sheet unavailable") // l10n: localized
                         .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
                         .accessibilityAddTraits(.isHeader)
                     Text("The bundled Basic reference sheet is not installed in this build.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
                 }
-                .padding(DesignTokens.Spacing.lg)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, DesignTokens.Spacing.lg)
+                .padding(.vertical, DesignTokens.Spacing.md)
+                .frame(maxWidth: .infinity)
                 .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
                 .accessibilityIdentifier("reference-sheet-unavailable")

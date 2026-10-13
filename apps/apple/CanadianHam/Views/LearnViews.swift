@@ -615,7 +615,7 @@ struct LessonTableView: View {
             Grid(alignment: .leading, horizontalSpacing: DesignTokens.Spacing.md, verticalSpacing: DesignTokens.Spacing.sm) {
                 GridRow {
                     ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
-                        Text(english(header)) // l10n: content(en)
+                        Text(plainEnglish(header)) // l10n: content(en)
                             .font(DesignTokens.FontScale.caption.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                     }
@@ -624,7 +624,7 @@ struct LessonTableView: View {
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
                     GridRow {
                         ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
-                            Text(english(cell)) // l10n: content(en)
+                            Text(plainEnglish(cell)) // l10n: content(en)
                                 .font(DesignTokens.FontScale.caption)
                                 .foregroundStyle(DesignTokens.Colors.ink)
                         }
@@ -637,6 +637,10 @@ struct LessonTableView: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Lesson table")
+    }
+
+    private func plainEnglish(_ attributed: AttributedString) -> AttributedString {
+        english(String(attributed.characters))
     }
 }
 
