@@ -37,6 +37,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @ObservedObject var calculator: ExamCalculatorViewModel
     let referenceSheetConfiguration: ReferenceSheetConfiguration
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .title3) private var headerTextVerticalPadding: CGFloat = 14
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
 
@@ -126,6 +127,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.center)
+                .padding(.vertical, headerTextVerticalPadding)
                 .frame(maxWidth: .infinity)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier(tool.accessibilityIdentifier)
@@ -450,6 +452,7 @@ private struct CalculatorToolLayout {
 
 struct ReferenceSheetToolView: View {
     let configuration: ReferenceSheetConfiguration
+    @ScaledMetric(relativeTo: .title3) private var unavailableTitleVerticalPadding: CGFloat = 14
     @State private var document: ReferenceSheetDocument?
 
     var body: some View {
@@ -469,6 +472,7 @@ struct ReferenceSheetToolView: View {
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.center)
+                        .padding(.vertical, unavailableTitleVerticalPadding)
                         .frame(maxWidth: .infinity)
                         .accessibilityAddTraits(.isHeader)
                     Text("The bundled Basic reference sheet is not installed in this build.") // l10n: localized
