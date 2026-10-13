@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:42'
-updated_date: '2026-10-13 21:54'
+updated_date: '2026-10-13 21:59'
 labels:
   - content
 dependencies: []
@@ -56,5 +56,5 @@ Copilot PR #212 figure-checker follow-up landed on task-38.1: nested <tspan> ele
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added conservative figure text bounds, text proximity, viewBox edge, and stroke-intersection validation with inline self-tests and docs. Verified all three task-38.1 figures pass after qlmanage visual review and checker tuning; web/content figure-related checks pass.
+Added conservative figure text bounds, text proximity, viewBox edge, stroke/fill-intersection, nested-tspan, and non-destructive --fix validation with self-tests and docs. Merged into task-38.1 and verified on PR #212 with self-test/check:figures plus the temp malformed --fix checksum check.
 <!-- SECTION:FINAL_SUMMARY:END -->
