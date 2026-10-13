@@ -114,14 +114,21 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func toolHeader(for tool: ExamTool) -> some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
+        Label {
+            Text(toolTitle(for: tool)) // l10n: localized
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.vertical, DesignTokens.Spacing.xs)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        } icon: {
             Image(systemName: tool.systemImage)
                 .imageScale(.large)
-            Text(toolTitle(for: tool)) // l10n: localized
-                .fixedSize(horizontal: false, vertical: true)
         }
-        .font(DesignTokens.FontScale.body.weight(.bold))
-        .frame(minHeight: 44, alignment: .center)
+        .labelStyle(.titleAndIcon)
+        .font(DesignTokens.FontScale.caption.weight(.bold))
+        .padding(.vertical, DesignTokens.Spacing.xs)
+        .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
+        .fixedSize(horizontal: false, vertical: true)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
     }
@@ -131,6 +138,7 @@ struct ExamToolPresentationModifier: ViewModifier {
             HStack(alignment: .center) {
                 toolHeader(for: tool)
                     .foregroundStyle(DesignTokens.Colors.ink)
+                    .layoutPriority(10)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier(tool.accessibilityIdentifier)
                 Spacer(minLength: DesignTokens.Spacing.sm)
@@ -148,14 +156,13 @@ struct ExamToolPresentationModifier: ViewModifier {
                 .accessibilityLabel(Text("Close tool")) // l10n: localized
                 .accessibilityIdentifier("exam-tool-close-button")
             }
+            .fixedSize(horizontal: false, vertical: true)
 
             switch tool {
             case .calculator:
                 CalculatorToolView(viewModel: calculator)
-                    .layoutPriority(1)
             case .referenceSheet:
                 ReferenceSheetToolView(configuration: referenceSheetConfiguration)
-                    .layoutPriority(1)
             }
         }
         .padding(DesignTokens.Spacing.lg)
@@ -206,9 +213,15 @@ struct CalculatorToolView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(hasKeyboardFocus ? "calculator-keyboard-focus-target-focused" : "calculator-keyboard-focus-target")
         .focusable(true)
         .focused($hasKeyboardFocus)
-        .onAppear { hasKeyboardFocus = true }
+        .simultaneousGesture(TapGesture().onEnded { hasKeyboardFocus = true })
+        .onReceive(NotificationCenter.default.publisher(for: .examContentDidReceiveInteraction)) { _ in
+            hasKeyboardFocus = false
+        }
         .onKeyPress { press in
             handleKeyPress(press)
         }
@@ -287,6 +300,14 @@ struct CalculatorToolView: View {
             return .clearEntry
         default:
             break
+        }
+        if press.modifiers.contains(.shift) {
+            switch press.characters {
+            case "=": return .add
+            case "8": return .multiply
+            case "5": return .percent
+            default: break
+            }
         }
         switch press.characters {
         case "0": return .zero
@@ -447,24 +468,31 @@ struct ReferenceSheetToolView: View {
                     .accessibilityIdentifier("reference-sheet-scroll")
                 }
             } else {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Label {
-                        Text("Reference sheet unavailable")
-                            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                ScrollView {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                            Image(systemName: "doc.text.magnifyingglass")
+                                .font(DesignTokens.FontScale.bodyLarge)
+                                .frame(width: 32, alignment: .leading)
+                            Text("Reference sheet unavailable")
+                                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.vertical, DesignTokens.Spacing.xs)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .accessibilityElement(children: .combine)
+                        Text(verbatim: String(localized: "The bundled Basic reference sheet is not installed in this build.") + "\n") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
                             .fixedSize(horizontal: false, vertical: true)
-                    } icon: {
-                        Image(systemName: "doc.text.magnifyingglass")
+                            .padding(.vertical, DesignTokens.Spacing.xs)
                     }
-                    Text("The bundled Basic reference sheet is not installed in this build.")
-                        .font(DesignTokens.FontScale.body)
-                        .fixedSize(horizontal: false, vertical: true)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .padding(DesignTokens.Spacing.lg)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
                 }
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .padding(DesignTokens.Spacing.lg)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-                .accessibilityElement(children: .combine)
                 .accessibilityIdentifier("reference-sheet-unavailable")
             }
         }

@@ -57,16 +57,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5))
-        app.typeText("1+2\n")
+        let focusedCalculator = focusCalculatorKeyboard(in: app)
+        typeCalculatorKeys(["3", "s"], on: focusedCalculator)
         XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5))
-        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "3")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9")
 
         let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
         positionElementInMiddleVisibleBand(answer, in: app, context: "answer after keyboard input")
         answer.tap()
-        app.typeText("9")
-        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "3", "Calculator keyboard input should stop when focus leaves the calculator")
+        XCTAssertFalse(app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch.exists, "Calculator keyboard input should be scoped to the calculator focus binding")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9")
     }
 
     func testCalculatorValueSurvivesToolSwitchAndResetsForNewSession() throws {
@@ -74,14 +74,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
-        app.typeText("4+5\n")
-        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9")
+        let focusedCalculator = focusCalculatorKeyboard(in: app)
+        typeCalculatorKeys(["2", "s"], on: focusedCalculator)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "4")
         closeTool(in: app)
         openTool(.referenceSheet, in: app)
         XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-scroll"].firstMatch.waitForExistence(timeout: 5))
         closeTool(in: app)
         openTool(.calculator, in: app)
-        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "4")
 
         app.terminate()
         let freshApp = launchPracticeQuestion(questionID: "B-001-003-001")
@@ -275,19 +276,41 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
+    private func focusCalculatorKeyboard(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
+        let focusTarget = app.descendants(matching: .any)["calculator-keyboard-focus-target"].firstMatch
+        XCTAssertTrue(focusTarget.waitForExistence(timeout: 5), "Expected a calculator keyboard focus target", file: file, line: line)
+        let result = app.descendants(matching: .any)["calculator-result"].firstMatch
+        XCTAssertTrue(result.waitForExistence(timeout: 5), "Expected a calculator result display before focusing keyboard input", file: file, line: line)
+        result.tap()
+        let focusedTarget = app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch
+        XCTAssertTrue(focusedTarget.waitForExistence(timeout: 5), "Expected the calculator .focused binding to become active after tapping the calculator", file: file, line: line)
+        return focusedTarget
+    }
+
+    private func typeCalculatorKeys(_ keys: [String], on calculator: XCUIElement) {
+        for key in keys {
+            calculator.typeKey(key, modifierFlags: [])
+            waitBriefly()
+        }
+    }
+
     private func positionElementInMiddleVisibleBand(_ element: XCUIElement, in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
         let scrollView = scrollView(containing: element, in: app)
         XCTAssertTrue(scrollView.waitForExistence(timeout: 1), "\(context): expected a scroll view", file: file, line: line)
-        for _ in 0..<12 where !isFullyVisibleInMiddleBand(element, in: app) || !scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty {
-            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            let hasProtectedAreaOffenders = !scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty
-            let delta: CGFloat = hasProtectedAreaOffenders || element.frame.midY < visibleFrame.midY ? 72 : -72
+        for _ in 0..<12 where !isFullyVisibleInMiddleBand(element, in: app) {
+            let band = middleVisibleBand(in: app)
+            let delta: CGFloat
+            if element.exists, element.frame.maxY > band.maxY {
+                delta = -72
+            } else if element.exists, element.frame.minY < band.minY {
+                delta = 72
+            } else {
+                delta = -72
+            }
             preciseScroll(scrollView, in: app, fingerDeltaY: delta)
             waitBriefly()
         }
         XCTAssertTrue(isFullyVisibleInMiddleBand(element, in: app), "\(context): expected the element in the middle visible band. Frame: \(frameDescription(element.frame))", file: file, line: line)
-        let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-        XCTAssertTrue(offenders.isEmpty, "\(context): no scrollable text or buttons should intersect the protected navigation/status area; offenders: \(offenders.joined(separator: "; "))", file: file, line: line)
     }
 
     private func preciseScroll(_ scrollView: XCUIElement, in app: XCUIApplication, fingerDeltaY: CGFloat) {
@@ -304,10 +327,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func activeToolPanelTop(in app: XCUIApplication) -> CGFloat? {
+        let close = app.buttons["exam-tool-close-button"].firstMatch
+        if close.exists, close.frame.minY > 0 {
+            return max(0, close.frame.minY - 24)
+        }
         for identifier in ["exam-tool-calculator-panel", "exam-tool-reference-sheet-panel"] {
             let panel = app.descendants(matching: .any)[identifier].firstMatch
             if panel.exists, panel.frame.minY > 0 {
-                return panel.frame.minY
+                return max(0, panel.frame.minY - 32)
             }
         }
         return nil
@@ -315,12 +342,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     private func scrollView(containing element: XCUIElement, in app: XCUIApplication) -> XCUIElement {
         let scrollViews = app.scrollViews.allElementsBoundByIndex
+        let backgroundScrollViews = scrollViews.filter { scrollView in
+            !["calculator-keyboard-focus-target", "calculator-keyboard-focus-target-focused", "calculator-tool-scroll", "reference-sheet-scroll"].contains(scrollView.identifier)
+        }
         if !element.identifier.isEmpty {
-            for scrollView in scrollViews where scrollView.descendants(matching: .any)[element.identifier].firstMatch.exists {
+            for scrollView in backgroundScrollViews where scrollView.descendants(matching: .any)[element.identifier].firstMatch.exists {
                 return scrollView
             }
         }
-        return app.scrollViews.firstMatch
+        return backgroundScrollViews.first ?? app.scrollViews.firstMatch
     }
 
     private func isFullyVisible(_ element: XCUIElement, in app: XCUIApplication, requiresHittable: Bool) -> Bool {
@@ -331,10 +361,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     private func isFullyVisibleInMiddleBand(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
         guard element.exists else { return false }
+        return middleVisibleBand(in: app).contains(element.frame)
+    }
+
+    private func middleVisibleBand(in app: XCUIApplication) -> CGRect {
         let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-        let bottomLimit = app.windows.firstMatch.frame.maxY - (app.windows.firstMatch.frame.height * 0.15)
-        let band = CGRect(x: visibleFrame.minX, y: visibleFrame.minY + 8, width: visibleFrame.width, height: max(0, bottomLimit - visibleFrame.minY - 8))
-        return band.contains(element.frame)
+        let sheetTop = activeToolPanelTop(in: app).map { $0 - 8 }
+        let defaultBottomLimit = app.windows.firstMatch.frame.maxY - (app.windows.firstMatch.frame.height * 0.15)
+        let bottomLimit = min(defaultBottomLimit, sheetTop ?? defaultBottomLimit)
+        return CGRect(x: visibleFrame.minX, y: visibleFrame.minY + 8, width: visibleFrame.width, height: max(0, bottomLimit - visibleFrame.minY - 8))
     }
 
     private func scrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> [String] {

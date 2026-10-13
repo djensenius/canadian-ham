@@ -549,6 +549,7 @@ struct PracticeSessionView: View {
                             showCorrectness: selected != nil && progressStore.preferences.practiceMode == .immediate,
                             disabled: selected != nil && progressStore.preferences.practiceMode == .immediate
                         ) {
+                            NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
                             select(sourceIndex: sourceIndex, question: question)
                         }
                     }
@@ -972,6 +973,7 @@ struct MockExamView: View {
                             showCorrectness: false,
                             disabled: false
                         ) {
+                            NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
                             state.selectedByQuestionId[question.id] = sourceIndex
                         }
                     }

@@ -2,6 +2,10 @@ import CanadianHamCalculatorEngine
 import Foundation
 import SwiftUI
 
+extension Notification.Name {
+    static let examContentDidReceiveInteraction = Notification.Name("CanadianHamExamContentDidReceiveInteraction")
+}
+
 enum ExamTool: String, CaseIterable, Identifiable {
     case calculator
     case referenceSheet
