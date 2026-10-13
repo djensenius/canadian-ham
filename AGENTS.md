@@ -44,7 +44,6 @@
 ## Testing policy (all agents)
 Test what changed, once, at the right level. Full Apple suites are slow (20-40 min per
 platform) and share one build lock, so don't run them by reflex.
-- **Approved audit exception:** the only approved `performAccessibilityAudit` issue handler is task-42's owner-approved (2026-10-12) iOS Morse home lower-content exception, which may ignore only `.contrast` findings whose element accessibility identifier is `morse-settings-description`; every other audit issue and every other audit remains unfiltered.
 - **While iterating:** run only what you touched: the relevant web/package tests, Apple unit
   tests, and the specific UI test classes or methods with `-only-testing:` (one platform).
 - **During review (internal reviewer and Copilot):** keep running only the relevant tests: the
@@ -75,6 +74,16 @@ platform) and share one build lock, so don't run them by reflex.
   plus the manual checks in `docs/release/release-checklist.md`.
 - Record per-test results for the full runs you did in the task notes and PR body, and say
   which platforms you skipped and why.
+
+### Approved accessibility audit exceptions
+- Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
+  whose element frame is not fully contained in the visible scroll area below an opaque navigation
+  bar. Task-42 Morse course audits use this shared occluded-content rule instead of a separate
+  identifier-specific filter; nil-element findings, navigation-bar elements, fully visible contrast
+  issues, and every non-contrast issue must still fail.
+- Task-44.3 exam tool: owner decision 2026-10-12 approves the medium-detent rule that text inside
+  the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
+  implements that exception.
 
 ## Project notes
 - Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.

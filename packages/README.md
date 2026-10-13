@@ -9,6 +9,8 @@ Belongs here:
 - Swift engine package under [`engine-swift/`](engine-swift/).
 - TypeScript Morse timing and grading engine under [`morse-engine/`](morse-engine/).
 - Swift Morse timing and grading package under [`morse-swift/`](morse-swift/).
+- TypeScript calculator engine under [`calculator-ts/`](calculator-ts/).
+- Swift calculator engine under [`calculator-swift/`](calculator-swift/).
 - Shared schema definitions under [`schemas/`](schemas/).
 
 Must not go here:

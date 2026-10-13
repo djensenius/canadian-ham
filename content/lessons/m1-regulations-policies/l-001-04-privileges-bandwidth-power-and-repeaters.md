@@ -19,6 +19,9 @@ objectives:
   - "Recognize repeater, automatic, stability, and modulation-quality requirements."
 prerequisites:
   - L-001-03
+  - L-003-05
+  - L-005-02
+  - L-006-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-001-04-A
@@ -30,7 +33,7 @@ Privileges set the operating edge of the certificate. They answer who may contro
 
 This lesson uses reference tables for official facts and prose for relationships. Pay special attention to measurement words.
 
-Peak envelope power (PEP) describes the crest of an SSB voice envelope. Effective radiated power (ERP) includes antenna-system gain compared with a reference dipole. Equivalent isotropically radiated power (EIRP) uses an ideal isotropic radiator as the reference.
+Peak envelope power (PEP) describes the crest of a modulated RF envelope; the power table uses it for SSB limits. Effective radiated power (ERP) includes antenna-system gain compared with a reference dipole. Equivalent isotropically radiated power (EIRP) uses an ideal isotropic radiator as the reference.
 
 ## Learning objectives
 
@@ -49,7 +52,7 @@ By the end of this lesson, you can:
 | You control another station whose owner has more certificate qualifications | Only the privileges allowed by your qualifications. |
 | Frequencies below 30 MHz | In addition to Basic, the operator needs 80% on Basic, or Advanced, or Morse code. |
 | Radio-controlled models | Certificate holders may operate them on all amateur bands above 30 MHz. |
-| Basic-only repeater use | Holders with only Basic may use repeaters with output at 29.500 MHz and above. |
+| Basic-only repeater use | Holders with only Basic may use repeaters whose output is at 29.500 MHz and above; this row does not open ordinary below-30-MHz transmitting. |
 | Lowest Basic-only repeater output segment | 29.500 MHz to 29.700 MHz. |
 
 ## Reference facts: HF band ranges
@@ -70,7 +73,7 @@ By the end of this lesson, you can:
 | 50 MHz to 54 MHz and 144 MHz to 148 MHz | 30 kHz maximum bandwidth. |
 | 28 MHz to 29.7 MHz | 20 kHz maximum bandwidth. |
 | Amateur bands between 7 MHz and 25 MHz, except the special narrow band | 6 kHz maximum bandwidth. |
-| 10.100 MHz to 10.150 MHz | Less than 6 kHz maximum bandwidth. |
+| 10.100 MHz to 10.150 MHz | 1 kHz maximum bandwidth in RBR-4, which is less than 6 kHz. |
 | 10.100 MHz to 10.150 MHz | Single sideband is prohibited. |
 | Transmitting near band edges | The entire occupied bandwidth must remain within the amateur band. |
 | CW / Morse radiotelegraphy | Narrower than SSB voice and FM voice in the mode-width ordering. |
@@ -93,7 +96,7 @@ By the end of this lesson, you can:
 | Basic-only non-SSB emissions for an operator without Advanced | 190 W carrier power. |
 | Advanced, DC input to the final RF stage | 1 000 W. |
 | Advanced, single-sideband peak envelope power | 2 250 W PEP. |
-| Advanced on 60 metres | 100 W ERP expressed as PEP. |
+| Advanced on the special band | On 60 metres, 100 W ERP expressed as PEP. |
 | 630 metres and 2200 metres | Antenna gain must be taken into account because limits are expressed as EIRP. |
 
 ## Reference facts: Repeaters, automatic transmissions, stability, and modulation quality
@@ -102,24 +105,26 @@ By the end of this lesson, you can:
 |---|---|
 | Repeater station | Automatically retransmits the signals of other stations. |
 | Unmodulated carrier | May be transmitted only for brief tests on frequencies below 30 MHz. |
-| Frequency stability | Equivalent to crystal control below 148 MHz. |
-| Overmodulation indication or prevention | Required for SSB and for voice-transmission quality control. |
-| Voice modulation maximum | 100%. |
+| Frequency stability | Equivalent to crystal control below 148 MHz; with crystal control, a quartz crystal sets the frequency so it drifts very little. |
+| Overmodulation indication or prevention | Required for SSB and for voice-transmission quality control; overmodulation means driving the audio past the clean limit so the signal distorts and can splatter. |
+| Voice modulation maximum | 100%, meaning full modulation without going past the clean voice limit. |
 | Frequency measurement | All amateur stations must be capable of reliably measuring frequency, regardless of emission mode. |
 
 ## How these rules fit together
 
-Privilege rows describe the current control situation. A station can contain equipment for many bands and powers. Another person can have more qualifications. The transmission still has to stay inside the privileges attached to the operator and call sign governing that operation.
+Privilege rows describe the current control situation. A station can contain equipment for many bands and powers. Whoever has fewer qualifications sets the limit, whether the more-qualified person owns the equipment or controls it under another call sign.
 
-Learn the below-30-MHz gate with the repeater allowance. Basic by itself covers amateur bands above 30 MHz. Below 30 MHz normally needs the additional Basic-with-Honours, Advanced, or Morse path. The Basic-only repeater allowance is a specific repeater-output rule beginning at 29.500 MHz.
+Learn the below-30-MHz gate with the repeater-output row. Basic by itself covers amateur bands above 30 MHz. Below 30 MHz normally needs the additional Basic-with-Honours, Advanced, or Morse path. The 29.500 MHz repeater fact is an output-frequency rule for using a repeater; your own transmissions stay above 30 MHz unless you have the below-30-MHz gate.
 
-Bandwidth, mode, and band-edge rows all describe occupied spectrum. Near an edge, compare the whole signal to the band boundary. A dial display may show the carrier or suppressed carrier; the emitted signal still has width.
+Bandwidth, mode, and band-edge rows all describe occupied spectrum. Near an edge, compare the whole signal to the band boundary. A dial display may show the carrier or suppressed carrier; the emitted signal still has width. For the HF band edges, the lower edges form a useful pattern: 3.5, 7, 14, and 28 MHz double, and 21 MHz is 3 x 7 MHz.
+
+The special narrow segment named in the bandwidth table has a 1 kHz RBR-4 limit. That limit is narrower than an SSB voice signal, so SSB voice is not allowed there.
 
 Power rows attach a number to a measurement point and quantity. DC input is electrical power going into the final RF stage before RF conversion. Carrier power is steady RF output for non-SSB emissions. PEP captures the crest of an SSB voice envelope. ERP and EIRP move outward to radiated power by including antenna-system gain.
 
-The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station.
+The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station. The Advanced on the special band row is different because its limit is ERP expressed as PEP, so antenna gain is part of the comparison.
 
-Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. An unmodulated carrier is allowed only for brief tests below 30 MHz. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
+Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. The unmodulated-carrier rule is a narrow test allowance for brief checks in the range named by the table. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
 
 ### Memory trick: Basic power stays Basic
 
@@ -133,14 +138,14 @@ Repeater and signal-quality rows explain station behaviour after the frequency a
 
 A transceiver display might show RF output, while the radio manual may list maximum whole-radio DC current. If the manual says the radio can draw 20 A from a 13.8 V supply, the whole-radio supply draw is P = I x E = 20 A x 13.8 V = 276 W.
 
-That 276 W is not the same as the Basic 250 W DC-input limit. The regulatory DC-input limit is measured at the final RF stage, not at the power cord for the entire radio. Transmitter output limits, such as carrier power and PEP, are measured right where the radio, or a linear amplifier if one is used, hands its power to the feedline, not after a tuner. ERP and EIRP limits are different: they describe radiated power, so they include antenna-system gain.
+That 276 W is not the same as the Basic 250 W DC-input limit. The regulatory DC-input limit is measured at the final RF stage, not at the power cord for the entire radio. A 100 W front-panel RF-output setting also is not the same measurement quantity as DC input to the final RF stage. Transmitter output limits, such as carrier power and PEP, are measured at the transmitter or amplifier output connector, not after a tuner. ERP and EIRP limits are different: they describe radiated power, so they include antenna-system gain.
 
 A practical station checklist is qualification, frequency range, occupied bandwidth, power quantity, identification, and whether the station is automatic or repeated. On modern radios, sidebands, digital bandwidth, amplifier output, and repeater output frequency can all be the value that matters.
 
 ## Summary
 
 - Operating privileges stay tied to the relevant operator and call sign qualifications.
-- Frequencies below 30 MHz require the additional Basic-with-Honours, Advanced, or Morse gate, except for the specific Basic-only repeater-output allowance in the reference table.
+- Frequencies below 30 MHz require the additional Basic-with-Honours, Advanced, or Morse gate; the Basic-only repeater fact is about repeater output frequency, not ordinary below-30-MHz transmitting by the Basic-only operator.
 - Link frequency ranges, bandwidth limits, and mode-fit cues before transmitting.
 - Near a band edge, the entire occupied bandwidth must remain inside the amateur band.
 - Use the minimum legal power needed and apply the correct power quantity.

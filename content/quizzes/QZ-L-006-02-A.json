@@ -27,10 +27,10 @@
       "id": "QZ-L-006-02-A-C2",
       "prompt": { "en": "What is a tuner at the radio mainly doing when it lets a solid-state transmitter run at rated power?", "fr": null },
       "choices": [
-        { "text": { "en": "Changing the ionosphere above the antenna", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Making a poor feedline lossless", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Measuring the antenna pattern", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Transforming impedance so the transmitter sees a suitable load", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Transforming impedance so the transmitter sees a suitable load", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Removing all loss from the feedline between tuner and antenna", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Changing the antenna's physical length and radiation pattern", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Replacing the need to find intermittent connectors", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "A tuner is an impedance-matching network; it does not change the actual radiation pattern or remove all feedline loss.", "fr": null }
     },

@@ -43,7 +43,7 @@ By the end of this lesson, you can:
 
 CW usually sends Morse by turning an RF carrier on and off. A clean keyed signal has a steady frequency. Its keying edges are shaped so they are not too abrupt.
 
-Chirp is a small frequency movement each time the transmitter is keyed. The far-end operator hears the note slide instead of starting cleanly. Chirp can point to supply voltage sag, oscillator pulling, or loose mechanical construction.
+Chirp is a small frequency movement each time the transmitter is keyed. The far-end operator hears the note slide instead of starting cleanly. The first cure to remember is steady power-supply voltage under the changing load of keying. A buffer stage, as in Lesson 2, helps isolate the oscillator from load changes, and loose mechanical construction can also need repair.
 
 Key clicks are different. They sound like sharp ticks around the signal. They come from keying edges that are too abrupt. A key-click filter or proper shaping slows the edge enough to reduce splatter without making the Morse unreadable.
 
@@ -53,7 +53,7 @@ A variable-frequency oscillator lets a CW transmitter tune anywhere across a ran
 
 During a club practice net, one report says, "Your note slides at the start of each element." Another says, "I hear ticks above and below your signal."
 
-- The sliding note points to chirp. Check supply regulation, oscillator loading, and mechanical stability.
+- The sliding note points to chirp. Check supply regulation first, then oscillator loading and mechanical stability.
 - The ticks point to key clicks. Check keying edge shape or click filtering.
 - A harmonic low-pass filter is still useful, but it will not stop an unstable oscillator from moving.
 
@@ -131,13 +131,13 @@ For repeaters and local channels, transmitter deviation should match the system.
 
 Text formula: FM bandwidth by Carson's rule ≈ 2 x (peak deviation + highest audio frequency).
 
-For example, 2.5 kHz deviation with 3 kHz audio estimates to about 2 x (2.5 + 3) = 11 kHz. A typical FM voice signal is somewhere between about 11 kHz and 16 kHz wide, so plan for a channel many kilohertz wide. Higher deviation produces a wider channel by the same formula. Canadian occupied-bandwidth limits below 28 MHz leave only a few kilohertz for voice operation, so wide FM voice does not fit that plan.
+For example, 2.5 kHz deviation with 3 kHz audio estimates to about 2 x (2.5 + 3) = 11 kHz. A typical FM voice signal is somewhere between about 11 kHz and 16 kHz wide, so plan for a channel many kilohertz wide. Higher deviation produces a wider channel by the same formula. Canadian regulations limit occupied bandwidth below 28 MHz, leaving only a few kilohertz for voice operation, so wide FM voice does not fit there.
 
 FM is popular for local VHF and UHF voice because it gives a good signal-to-noise ratio even when the received signal is fairly weak. An FM receiver often has high gain before the discriminator. With no usable signal present, that gain makes speaker noise loud unless squelch mutes it. When multiple FM signals are present, the receiver tends to demodulate the strongest one. This is the capture effect.
 
 ### Worked example: repeater audio report
 
-A repeater operator reports, "Your signal is full quieting, but your words are thin and quiet." The RF path is adequate, so increasing RF power is not the first fix.
+A repeater operator reports, "Your signal is full quieting, but your words are thin and quiet." Full quieting means the FM signal is strong enough that receiver noise is mostly quieted. The RF path is adequate, so increasing RF power is not the first fix.
 
 Check deviation, microphone gain, and microphone distance. If the next report says "loud and rough," back off the audio level.
 
@@ -170,7 +170,7 @@ Description: Draw an original three-panel teaching graphic. Panel one shows a CW
 
 ## Summary
 
-- Chirp is frequency movement during keying; key clicks come from abrupt keying edges.
+- Chirp is frequency movement during keying; steady supply voltage under changing load is the first cure to remember. Key clicks come from abrupt keying edges.
 - AM changes envelope amplitude and produces a carrier plus two sidebands; AM bandwidth is about 2 x highest audio frequency.
 - Final-amplifier DC input power that is not delivered as RF output becomes heat.
 - SSB needs linear amplification and conservative microphone gain.

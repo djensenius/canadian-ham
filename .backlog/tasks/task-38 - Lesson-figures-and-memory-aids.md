@@ -1,9 +1,10 @@
 ---
 id: TASK-38
 title: Lesson figures and memory aids
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-10-10 20:54'
+updated_date: '2026-10-10 20:56'
 labels:
   - content
   - apple

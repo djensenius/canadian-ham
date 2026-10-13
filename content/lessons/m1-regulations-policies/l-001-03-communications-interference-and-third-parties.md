@@ -19,6 +19,8 @@ objectives:
   - "Apply message privacy, compensation, identification, and third-party limits."
 prerequisites:
   - L-001-02
+  - L-002-03
+  - L-008-01
 estimatedMinutes: 45
 quizIds:
   - QZ-L-001-03-A
@@ -50,8 +52,8 @@ By the end of this lesson, you can:
 | Two amateur operators wanting the same frequency | Both station operators have an equal right to operate on the frequency. |
 | Amateur service as secondary user while another service is primary | Amateur operation must protect primary users from interference. |
 | Ministerial finding of harmful interference | The station's operation can be ordered to cease or change. |
-| 430.0 MHz to 450.0 MHz | Amateur operation must protect other radio services from interference in this range. |
-| 902 MHz to 928 MHz | Amateur operation has reduced protection from another service, and the band may be heavily occupied by licence-exempt devices. |
+| 430.0 MHz to 450.0 MHz | Amateur operation must protect other radio services from interference because amateurs are secondary users in this range. |
+| 902 MHz to 928 MHz | Amateur operation is not protected from interference by another service, and the band may be heavily occupied by licence-exempt devices. |
 | Test transmissions | Allowed when they protect amateur stations and other services from interference. |
 
 ## Reference facts: Emergency, disaster, and public-service communication
@@ -67,7 +69,7 @@ By the end of this lesson, you can:
 | Power limits for an amateur operator in distress | No limitations. |
 | Operators outside the active disaster-relief net | Keep the net frequency and nearby frequencies clear. |
 | Recognized public-service agency messages | May be handled during peace time, civil emergencies, and exercises. |
-| Interfering with another station's transmissions | Permitted when the station is directly involved with a distress situation. |
+| Interfering with another station's transmissions | Permitted only when your own station is directly involved with a distress situation. |
 
 ## Reference facts: Privacy, payment, and message handling
 
@@ -106,22 +108,25 @@ By the end of this lesson, you can:
 | CEPT amateur licence holders operating in Canada | Granted Advanced privileges by ISED. |
 | United States-issued call sign holder operating in Canada | Must indicate location by city and province at least once during a contact. |
 | United States-issued call sign holder in Canada using voice | Identifies with the call sign, mobile or portable qualifier, and the Canadian prefix for the station's geographic location. |
+| Supervising a non-certified guest during a contact | Keep supervising and monitoring the guest, including if a foreign station joins, because you remain responsible for the station and international third-party traffic depends on the foreign administration not objecting. |
 | Local non-certified participants at both ends | Both non-certified people are third parties. |
 
 ## How these rules fit together
 
 Interference rules start with restraint. Listen first, avoid deliberate or harmful interference, and treat a harmful-interference finding as a requirement to stop or change operation. Secondary-service facts add a priority relationship: amateur operation in a shared band protects the primary service.
 
-Emergency rules are narrow because they respond to immediate communication need. Distress, safety of life and property, disrupted normal systems, and direct involvement with a distress situation can change what is permitted. Keep routine traffic, relief-net discipline, and distress response in their own categories.
+Emergency rules are narrow because they respond to immediate communication need. Separate three cases before transmitting: if your own life is at risk, you may use any radiocommunication means and no power ceiling applies; if an unanswered distress call is on an amateur band, you may answer it; organized relief work stays on amateur bands. The safety-of-life broadcasting exception is not ordinary public broadcasting.
 
-Privacy and payment rows keep amateur service non-commercial. A public-service agency message can be legitimate. Payment for third-party messages and remuneration for exchanging messages do not fit amateur service.
+Your own station's direct involvement with distress traffic is the only narrow exception to the usual rule against deliberate interference. Keep routine traffic, relief-net discipline, and distress response in their own categories.
+
+Privacy and payment rows keep amateur service non-commercial. A public-service agency message can be legitimate. Some non-broadcast content may be shared for protection, court evidence, or national defence and security; media questions are not one of those reasons. Payment for third-party messages and remuneration for exchanging messages do not fit amateur service.
 
 Third-party and visiting-operator rows add two questions. Who is the message for, and whose operating permission is being used? Ask those before sending the traffic.
 
 ### Memory trick: start, stop, and the interval check
 
 - Helps remember: station identification timing.
-- Trick: identify when the contact starts, when it stops, and at least every 30 minutes in between. 30 is easy to pair with the 30-day address-change notice.
+- Trick: identify when the contact starts, when it stops, and at least every 30 minutes in between.
 - Limit: this does not replace the language and model-control rows in the table.
 
 ## Radio connection
@@ -135,7 +140,7 @@ During public-service work, prepared operators sound calm because they have alre
 ## Summary
 
 - Harmful interference is a serious station problem, and deliberate interference is unacceptable.
-- Secondary amateur operation must protect primary users, and some shared ranges carry reduced protection or heavy licence-exempt use.
+- Secondary amateur operation must protect primary users, and some shared ranges have no interference protection or heavy licence-exempt use.
 - Emergency exceptions are tied to distress, safety of life and property, and essential relief needs.
 - Amateur message handling for third parties must be unpaid, personal, and non-commercial.
 - Identify with the station call sign at the required times and use the same identification discipline during tests.

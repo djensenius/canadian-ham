@@ -4,7 +4,7 @@ Generated after the task-31 UI-suite changes (scroll-settling and teardown; laun
 
 ## Approved audit exceptions
 
-- **task-42, owner-approved 2026-10-12:** `testAccessibilityAuditMorseCourseLessonAndSummaryLight` and `testAccessibilityAuditMorseCourseLessonAndSummaryDark` may ignore only `.contrast` audit issues whose element has accessibility identifier `morse-settings-description`, and only during the iOS "Morse home lower content" audit. The element is the Morse settings description text ("These local settings control Morse tone, timing, and playback volume without network access."). Reason: Xcode intermittently reports a contrast failure for this fully visible, visually stable element even though the token colours are high contrast. Evidence recorded on task-42: failure frame {{40.0, 489.0}, {309.0, 64.3}} in a 402x874 window; screenshots/crops show the text mid-screen and fully visible; measured `DesignTokens.Colors.ink` contrast is ~14.95:1 on `paper` and ~16.34:1 on `paperElevated` in light, ~14.05:1 on `paper` and ~12.63:1 on `paperElevated` in dark. Guard: `CanadianHamTests.MorseTrainerTests.testMorseSettingsDescriptionInkOnCardBackgroundMeetsWCAGContrast` computes the actual `ink`/`paperElevated` WCAG contrast from `DesignTokens.swift` and asserts at least 4.5:1 in light and dark.
+- **task-38.1/task-42, owner-approved 2026-10-12:** lesson and Morse scroll-content audits may use the shared occluded-content contrast rule: the handler may ignore only `.contrast` issues when the failing element is inside the scroll view and its frame is not fully contained in the visible scroll area below the opaque navigation bar. Issues without an element, navigation-bar elements, elements outside the scroll view, fully visible contrast issues, and every non-contrast issue still fail. Task-42 uses this shared rule for `testAccessibilityAuditMorseCourseLessonAndSummaryLight` and `testAccessibilityAuditMorseCourseLessonAndSummaryDark` instead of the former `morse-settings-description` identifier-specific filter. Guard: `CanadianHamTests.MorseTrainerTests.testMorseSettingsDescriptionInkOnCardBackgroundMeetsWCAGContrast` computes the actual `ink`/`paperElevated` WCAG contrast from `DesignTokens.swift` and asserts at least 4.5:1 in light and dark.
 
 | platform | testName | screenState | appearance | lowerHalf |
 | --- | --- | --- | --- | --- |
@@ -78,6 +78,8 @@ Generated after the task-31 UI-suite changes (scroll-settling and teardown; laun
 | iOS | testAccessibilityAuditLearnFlowDark | Learn module list | dark | false |
 | iOS | testAccessibilityAuditLearnFlowDark | Lesson reader top | dark | false |
 | iOS | testAccessibilityAuditLearnFlowDark | Lesson quiz answered | dark | false |
+| iOS | testOhmsLawLessonFiguresAndAccessibilityLight | Ohm's law lesson inline figures, enlarged figures, and expanded figure text equivalent | light | true |
+| iOS | testOhmsLawLessonFiguresAndAccessibilityDark | Ohm's law lesson inline figures, enlarged figures, and expanded figure text equivalent | dark | true |
 | iOS | testAccessibilityAuditMockExamFlowLight | Mock exam question timer | light | false |
 | iOS | testAccessibilityAuditMockExamFlowLight | Mock exam question navigator timer | light | false |
 | iOS | testAccessibilityAuditMockExamFlowLight | Mock exam answered flagged question | light | false |
@@ -126,3 +128,8 @@ Generated after the task-31 UI-suite changes (scroll-settling and teardown; laun
 | visionOS | testAboutAccessibilityAuditLightAndDark | About | dark | false |
 | visionOS | testMorseAccessibilityAuditLightAndDark | Morse | light | false |
 | visionOS | testMorseAccessibilityAuditLightAndDark | Morse | dark | false |
+
+## Approved audit exceptions reflected after task-38.1
+
+- `testOhmsLawLessonFiguresAndAccessibilityLight`, `testOhmsLawLessonFiguresAndAccessibilityDark`, `testAccessibilityAuditMorseCourseLessonAndSummaryLight`, and `testAccessibilityAuditMorseCourseLessonAndSummaryDark` use the owner-approved 2026-10-12 false-positive rule only for scroll content under an opaque navigation bar: the handler may ignore contrast issues only when the failing element is inside the scroll view and its frame is not fully contained in the visible scroll area below the bar. Navigation-bar elements fail, elements outside the scroll view fail, issues without an element fail, fully visible contrast issues fail, and every non-contrast issue fails. Enlarged figure sheets run the plain audit without this handler.
+- Task-44.3's exam-tool medium-detent clipping exception remains separately approved and is tracked in `AGENTS.md`.

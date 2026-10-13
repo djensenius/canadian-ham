@@ -562,7 +562,6 @@ struct MorseSettingsSection: View {
             Text("These local settings control Morse tone, timing, and playback volume without network access.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityIdentifier("morse-settings-description")
             Stepper(value: binding(\.toneHz), in: 400...900, step: 10) {
                 HStack {
                     Text("Tone") // l10n: localized

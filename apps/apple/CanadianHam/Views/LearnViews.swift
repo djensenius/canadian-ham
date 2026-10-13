@@ -93,6 +93,18 @@ struct LearnView: View {
                     Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Text("Exam day") // l10n: localized
+                            .font(DesignTokens.FontScale.title.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text("Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                        NavigationLink("Read exam-day guidance", value: LearnRoute.lesson("L-001-01"))
+                            .buttonStyle(AccessibleSecondaryButtonStyle())
+                    }
+                    .padding(.top, DesignTokens.Spacing.sm)
                     EnglishOnlyLessonNotice()
                 }
                 .paperCard()
@@ -364,6 +376,7 @@ private struct LessonReaderView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
+        .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
     }
 
@@ -447,6 +460,18 @@ private struct LessonReaderView: View {
     }
 }
 
+private extension View {
+    @ViewBuilder
+    func lessonReaderOpaqueNavigationBar() -> some View {
+#if os(iOS)
+        toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+#else
+        self
+#endif
+    }
+}
+
 private struct OutlineLessonView: View {
     let lesson: Lesson
     let library: ContentLibrary
@@ -517,6 +542,7 @@ private struct LessonMarkdownView: View {
             Text(english(strippingLinks(from: text))) // l10n: content(en)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .textSelection(.enabled)
         case .list(let ordered, let items):
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
@@ -541,22 +567,10 @@ private struct LessonMarkdownView: View {
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
         case .table(let table):
             LessonTableView(table: table)
-        case .illustrationBrief(let brief):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Label("Illustration brief", systemImage: "paintbrush")
-                    .font(DesignTokens.FontScale.body.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(localized(brief.description, language: .english)) // l10n: content(en)
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(illustrationAltText(brief)) // l10n: localized
-                    .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
-            }
-            .padding(DesignTokens.Spacing.md)
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel(Text(illustrationAccessibilityLabel(brief))) // l10n: localized
+        case .figure(let figure):
+            LessonFigureView(figure: figure)
+        case .illustrationBrief:
+            EmptyView()
         case .blockquote(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
                 .font(DesignTokens.FontScale.body.italic())
@@ -564,20 +578,6 @@ private struct LessonMarkdownView: View {
                 .padding(DesignTokens.Spacing.md)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         }
-    }
-
-    private func illustrationAltText(_ brief: MarkdownIllustrationBrief) -> AttributedString {
-        var text = AttributedString(String(localized: "Alt text: "))
-        text += english(brief.altText)
-        return text
-    }
-
-    private func illustrationAccessibilityLabel(_ brief: MarkdownIllustrationBrief) -> AttributedString {
-        var text = AttributedString(String(localized: "Illustration brief. "))
-        text += english(brief.altText)
-        text += AttributedString(". ")
-        text += english(brief.description)
-        return text
     }
 
     private func strippingLinks(from value: AttributedString) -> AttributedString {
@@ -591,6 +591,156 @@ private struct LessonMarkdownView: View {
 
     private func plainString(_ value: AttributedString) -> String {
         String(value.characters)
+    }
+}
+
+private struct LessonFigureView: View {
+    let figure: MarkdownFigure
+    @State private var showingEnlargedFigure = false
+
+    private var aspectRatio: CGFloat {
+        LessonFigureMetadata.aspectRatio(for: figure.id)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Button("Enlarge figure") {
+                showingEnlargedFigure = true
+            }
+            .buttonStyle(.bordered)
+            .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarge")
+
+            Button {
+                showingEnlargedFigure = true
+            } label: {
+                figureImage
+                    .frame(maxWidth: .infinity)
+                    .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+            .accessibilityHint(Text("Opens enlarged figure")) // l10n: localized
+            .accessibilityIdentifier("lesson-figure-\(figure.id)")
+
+            if !figure.textEquivalent.isEmpty {
+                DisclosureGroup {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        ForEach(Array(figure.textEquivalent.enumerated()), id: \.offset) { index, item in
+                            Text(english(item)) // l10n: content(en)
+                                .font(DesignTokens.FontScale.body)
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .textSelection(.enabled)
+                                .accessibilityIdentifier("lesson-figure-\(figure.id)-text-equivalent-row-\(index)")
+                        }
+                    }
+                    .padding(.top, DesignTokens.Spacing.sm)
+                } label: {
+                    Text("Figure text equivalent")
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                }
+            }
+        }
+        .padding(DesignTokens.Spacing.md)
+        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        .sheet(isPresented: $showingEnlargedFigure) {
+            EnlargedLessonFigureView(figure: figure, aspectRatio: aspectRatio)
+        }
+    }
+
+    private var figureImage: some View {
+        Image("lesson-figure-\(figure.id)")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .aspectRatio(aspectRatio, contentMode: .fit)
+            .foregroundStyle(DesignTokens.Colors.ink)
+    }
+}
+
+private struct EnlargedLessonFigureView: View {
+    let figure: MarkdownFigure
+    let aspectRatio: CGFloat
+    @Environment(\.dismiss) private var dismiss
+    @State private var scale: CGFloat = 1
+    @State private var lastScale: CGFloat = 1
+
+    var body: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: DesignTokens.Spacing.sm) {
+                Text("Enlarged figure") // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityAddTraits(.isHeader)
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Done") // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .padding(.horizontal, DesignTokens.Spacing.md)
+                        .padding(.vertical, DesignTokens.Spacing.sm)
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
+
+            Divider()
+
+            GeometryReader { geometry in
+                let fitSize = fittedSize(in: geometry.size)
+                ScrollView([.horizontal, .vertical]) {
+                    Image("lesson-figure-\(figure.id)")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .frame(width: fitSize.width, height: fitSize.height)
+                        .scaleEffect(scale)
+                        .frame(width: fitSize.width * scale, height: fitSize.height * scale)
+                        .frame(minWidth: geometry.size.width, minHeight: geometry.size.height)
+                        .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+                        .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged-image")
+                        .onTapGesture(count: 2) {
+                            withAnimation(.easeInOut(duration: 0.18)) {
+                                scale = scale == 1 ? 2 : 1
+                                lastScale = scale
+                            }
+                        }
+                }
+                .background(DesignTokens.Colors.paper)
+                .gesture(
+                    MagnifyGesture()
+                        .onChanged { value in
+                            scale = min(max(lastScale * value.magnification, 1), 4)
+                        }
+                        .onEnded { _ in
+                            lastScale = scale
+                        }
+                )
+            }
+        }
+        .background(DesignTokens.Colors.paper)
+        .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged")
+#if os(macOS)
+        .frame(minWidth: 640, minHeight: 520)
+#endif
+    }
+
+    private func fittedSize(in container: CGSize) -> CGSize {
+        let availableWidth = max(1, container.width - DesignTokens.Spacing.xl * 2)
+        let availableHeight = max(1, container.height - DesignTokens.Spacing.xl * 2)
+        let availableAspectRatio = availableWidth / availableHeight
+        if aspectRatio >= availableAspectRatio {
+            return CGSize(width: availableWidth, height: availableWidth / aspectRatio)
+        }
+        return CGSize(width: availableHeight * aspectRatio, height: availableHeight)
     }
 }
 

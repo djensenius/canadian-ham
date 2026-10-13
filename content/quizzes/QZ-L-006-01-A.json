@@ -14,25 +14,25 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-01-A-C1",
-      "prompt": { "en": "A 50-ohm coax jumper is cut shorter for a portable setup. What stays the same about that cable type?", "fr": null },
+      "prompt": { "en": "An HF tuner has only an unbalanced output, but the antenna will be fed with window line. Where should the balanced-to-unbalanced device go?", "fr": null },
       "choices": [
-        { "text": { "en": "Its characteristic impedance", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Its total attenuation", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Its weatherproofing at the connectors", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Its exact resonant frequency", "fr": null }, "isCorrect": false }
+        { "text": { "en": "At the tuner output before the window line begins", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Midway along the window line so the losses split evenly", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Only at the antenna feed point after the window-line run", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Inside the radio, because the transceiver output is already balanced", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Cutting a uniform cable shorter reduces length-dependent effects such as loss, but it does not change the cable geometry that sets characteristic impedance.", "fr": null }
+      "explanation": { "en": "The transition belongs where balanced and unbalanced parts meet; in this setup, that is where the unbalanced tuner output hands off to the window line.", "fr": null }
     },
     {
       "id": "QZ-L-006-01-A-C2",
       "prompt": { "en": "Why is open-wire line usually kept away from metal gutters and railings?", "fr": null },
       "choices": [
-        { "text": { "en": "Metal nearby automatically improves its balance.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It needs a clear route so its balanced fields remain predictable.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It becomes coaxial cable when it touches metal.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It cannot carry HF signals through air.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Metal nearby can disturb the fields and change the line behaviour.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Metal nearby turns the route into a better balanced-line support.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The line needs nearby metal to set its velocity factor.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Keeping it near metal is the normal way to reduce line loss.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Balanced line depends on the geometry and surrounding fields; nearby conductors can upset the balance and impedance.", "fr": null }
+      "explanation": { "en": "Balanced line depends on geometry and surrounding fields; nearby conductors can upset the balance and impedance.", "fr": null }
     },
     {
       "id": "QZ-L-006-01-A-C3",

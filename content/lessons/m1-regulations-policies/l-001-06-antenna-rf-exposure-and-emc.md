@@ -17,6 +17,9 @@ objectives:
   - "Use EMCAB-2 criteria when assessing interference complaints."
 prerequisites:
   - L-001-05
+  - L-003-08
+  - L-006-04
+  - L-008-01
 estimatedMinutes: 40
 quizIds:
   - QZ-L-001-06-A
@@ -32,9 +35,9 @@ This lesson states verified reference facts. Use it for the exam and for careful
 
 By the end of this lesson, you can:
 
-- identify antenna-siting authority, public consultation paths, exclusions, and concern-handling duties;
-- distinguish municipal process details from ISED default process and final decision authority;
-- connect the named human RF-exposure framework to measured fields, currents, absorption rate, and exposure factors;
+- identify who decides antenna-siting consultation questions;
+- describe the ISED default consultation steps and local-process exclusions;
+- explain why the RF exposure code uses different limits by frequency and setting;
 - name the RF exposure factors and quantities in the reference tables; and
 - apply EMCAB-2 field-strength and equipment-category facts for interference complaints.
 
@@ -46,7 +49,7 @@ By the end of this lesson, you can:
 | Antenna installations, including masts and towers | Authority rests with the Minister of Innovation, Science and Industry. |
 | ISED-defined exclusion criterion | An exclusion can remove the requirement to contact land-use authorities to determine public consultation requirements. |
 | No local land-use approval process | Follow ISED's default public consultation process. |
-| ISED public consultation process boundary | Public meetings are outside the listed ISED default-process elements. |
+| ISED default-process elements | Provide written notice, address relevant questions, comments, and concerns, and give the public an opportunity to respond to the measures taken. |
 | ISED default-process concerns | Address reasonable and relevant concerns provided in writing within the 30-day public comment period. |
 | Municipality with a consultation process | Exclusion by the municipal process OR by CPC-2-0-03 can remove the public-consultation requirement. |
 | Proponent and non-public stakeholder fail to agree | ISED makes the final decision. |
@@ -62,7 +65,7 @@ By the end of this lesson, you can:
 | Greatest RF-energy risk range | 48 MHz to 300 MHz. |
 | Reason for the lowest exposure limit in that range | The human body absorbs RF energy the most in this range. |
 | Maximum safe power output to the antenna of a hand-held VHF or UHF radio | No specified value. |
-| Basic exposure situations | Controlled and uncontrolled environments. |
+| Basic exposure situations | Controlled and uncontrolled environments; uncontrolled areas include the general public and have lower public limits. |
 | Other established adverse effect below 10 MHz | Nerve stimulation. |
 | Hand-held transmitters | Included in Safety Code 6 requirements. |
 | Transmitter exemptions | No transmitters are exempt. |
@@ -75,18 +78,24 @@ By the end of this lesson, you can:
 |---|---|
 | Stereo-system complaint | Lack of immunity is the cause when field strength at the neighbour's premises is below ISED's specified immunity criteria. |
 | Television-receiver complaint | The amateur transmission is the cause when field strength at the neighbour's premises is above ISED's specified immunity criteria. |
-| Home-entertainment devices outside the strict radio-apparatus category | Associated equipment. |
-| Garage door opener affected by transmissions | Radio-sensitive equipment. |
+| Home-entertainment devices outside the strict radio-apparatus category | Associated equipment, such as audio or video recorders, playback devices, and amplifiers used with radio apparatus. |
+| Garage door opener affected by transmissions | Radio-sensitive equipment, meaning other non-radio electronic equipment whose function can be affected by radio emissions. |
 
 ## How these rules fit together
 
-Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. If there is no local approval process, the ISED default process is the relevant path.
+Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. CPC-2-0-03 is ISED's antenna-siting procedure, and an exclusion can come from that procedure or from the local process. If there is no local approval process, the ISED default process is the relevant path.
 
-Use the timeliness and relevance criteria in the table when responding to written concerns in the default process. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
+Use the timeliness and relevance criteria in the table when responding to written concerns in the default process. The tallest structure that avoids public consultation is the tallest one exempted by the land-use authority or ISED, so check the applicable exemption instead of using one universal height. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
 
-The exposure rows describe human RF exposure. They connect the named publisher, the exposure-limit code, exposure situations, frequency-related effects, and universal consideration of transmitter types. Transmitter power matters as one factor among gain, distance, and frequency.
+The exposure rows describe human RF exposure. A controlled environment is one where RF fields are assessed, and the people there are aware of the potential exposure and can control or reduce it, such as trained operators or workers. An uncontrolled environment covers everyone else, including the general public, so its limits are lower.
 
-EMCAB-2 rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category.
+The VHF range named in the table matters because a human body is roughly resonant there. At 80 MHz, one half-wavelength is about 1.9 m, which is close to adult body length, so whole-body absorption can be stronger. At the low-frequency range named in the table, RF current can stimulate nerves, so the exposure code also treats nerve stimulation as an established effect.
+
+Transmitter power matters as one factor among gain, distance, and frequency. Hand-held transmitters are still included, and no transmitter category is exempt from the RF exposure check.
+
+Electromagnetic compatibility means equipment keeps working in its radio environment. Electromagnetic Compatibility Advisory Bulletin 2 (EMCAB-2) rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category.
+
+The Radiocommunication Act definition of radio-sensitive equipment excludes radio apparatus. EMCAB-2 therefore separates broadcast receivers and associated home-entertainment equipment from other non-radio electronic equipment, such as the garage-door example.
 
 ## Radio connection
 
@@ -103,9 +112,9 @@ These rules connect directly to station design. A tidy antenna installation is e
 ## Summary
 
 - Antenna installation and modification can involve ISED procedures, local land-use processes, exclusions, and responsible handling of community concerns.
-- Antenna-installation authority and local consultation process roles fit together in a single siting check.
-- The human RF-exposure publisher and exposure-limit code work together.
-- Exposure checks combine antenna gain, distance, transmitter power, frequency, and universal consideration of transmitter types.
+- The ISED default process uses written notice, written concern handling, and a public reply opportunity.
+- Safety Code 6 uses lower limits where body absorption is stronger or where the public is in an uncontrolled environment.
+- Exposure checks combine antenna gain, distance, transmitter power, frequency, and all transmitter types, including hand-held radios.
 - Safety Code 6 limits are expressed as fields, currents, and specific absorption rate; transmitter power is an exposure factor.
 - EMCAB-2 cause decisions use field strength at the affected premises relative to ISED immunity criteria, plus the relevant equipment category.
 

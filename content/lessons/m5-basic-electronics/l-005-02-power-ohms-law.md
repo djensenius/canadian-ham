@@ -25,7 +25,7 @@ status: draft
 
 In Lesson 1, you learned the names of the quantities. Now we connect them. Ohm’s law describes how voltage, current, and resistance fit together. Power describes how quickly electrical energy is being used. It may be changed into heat, light, sound, RF output, or motion.
 
-The ISED reference sheet uses E for voltage, I for current, R for resistance, and P for power. These lessons use that notation so the formulas match the reference sheet you are given in the exam.
+The ISED reference sheet uses E for voltage, I for current, R for resistance, and P for power. These lessons use that notation so the formulas match the reference sheet you may use in the exam.
 
 ## Learning objectives
 
@@ -44,6 +44,10 @@ Power tells how quickly electrical energy is used or converted. The unit of elec
 The power formula on the reference sheet is:
 
 P = I x E
+
+::figure power-triangle
+Alt text: Power triangle with P above I and E, showing that P = I x E and the rearranged forms come from covering the unknown.
+::
 
 That means power in watts equals current in amperes times voltage in volts.
 
@@ -90,7 +94,28 @@ Ohm’s law links voltage, current, and resistance. The reference sheet gives th
 | Current I | I = E / R | More voltage gives more current; more resistance gives less current. |
 | Resistance R | R = E / I | Resistance is voltage divided by current. |
 
+::figure ohms-law-triangle
+Alt text: Ohm’s law triangle with E above I and R, showing E = I x R, I = E / R, and R = E / I.
+::
+
 Always use volts, amperes, and ohms together. If the current is in milliamperes, convert it to amperes before using Ohm’s law.
+
+::figure ohms-law-power-wheel
+Alt text: Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant.
+Text equivalent:
+- To find P: I x E.
+- To find P: I² x R.
+- To find P: E² / R.
+- To find E: I x R.
+- To find E: P / I.
+- To find E: √(P x R).
+- To find I: E / R.
+- To find I: P / E.
+- To find I: √(P / R).
+- To find R: E / I.
+- To find R: E² / P.
+- To find R: P / I².
+::
 
 ### Memory trick: E over I R
 
@@ -186,7 +211,7 @@ If a radio manual states a 20 A maximum DC draw at 13.8 V, calculate the whole-r
 
 P = I x E = 20 A x 13.8 V = 276 W
 
-That is the power at the radio's DC supply connector, not the Basic regulatory DC input limit. The Basic limit applies to DC input to the transmitter final RF stage. Follow the manufacturer's fuse value for the radio and cable. Do not guess a universal fuse size from RF output power.
+That is the power at the radio's DC supply connector, not the Basic regulatory DC input limit. The final RF stage is the transmitter output amplifier stage that feeds the antenna system. The Basic limit applies to DC input to that stage, not to the whole radio supply connector. Follow the manufacturer's fuse value for the radio and cable. Do not guess a universal fuse size from RF output power.
 
 ## Try it
 

@@ -16,6 +16,8 @@ objectives:
   - "Explain how poor filtering can affect transmitted signals."
 prerequisites:
   - L-003-06
+  - L-003-03
+  - L-005-02
 estimatedMinutes: 35
 quizIds:
   - QZ-L-003-07-A
@@ -138,7 +140,7 @@ A transceiver manual lists a transmit current draw of 19 A on high power. Two su
 
 ## DC wiring, voltage drop, and fuses
 
-Current through a wire causes voltage drop. Long leads and small wire increase the drop. Heavy-gauge wire reduces it.
+Current through a wire causes voltage drop. Long leads and small wire increase the drop. Heavy-gauge wire reduces it. In American wire gauge numbering, a higher gauge number means a thinner wire. For a voltage-drop limit, choose the thinnest wire that still meets the limit; a heavier wire may work but may not be the minimum needed.
 
 Fuses protect wiring and equipment from excessive current and heating. A fuse near the source protects the length of wire that follows it. In a vehicle installation, fuse the positive lead near the battery so a damaged wire cannot carry uncontrolled fault current through the vehicle.
 
@@ -163,7 +165,7 @@ A mobile radio draws 17 A on transmit. The battery connection is 2.4 m away one 
 - Answer: total drop = 0.288 V.
 - Sanity check: that is below a 0.4 V design limit for this original example.
 
-Use cable data for the actual wire and current, and include both positive and negative lead lengths.
+Use cable data for the actual wire and current, and include both positive and negative lead lengths. If a table lists several gauges that meet the drop limit, the minimum acceptable gauge is the thinnest one that still passes, not the heaviest cable in the table.
 
 ## Try it
 
@@ -201,3 +203,4 @@ Description: Draw an original station-power sketch. Show a battery or DC supply 
 - Select station power supplies by voltage, current capability, noise behaviour, and safe installation.
 - Charger power labels use P = I x E, but radio supplies must meet the radio manual's voltage, current, and fuse requirements.
 - Ripple, undersized wire, and missing source fuses can create signal-quality and fire hazards.
+- In wire-gauge numbering, higher numbers mean thinner wire; choose the thinnest gauge that still meets the voltage-drop limit.

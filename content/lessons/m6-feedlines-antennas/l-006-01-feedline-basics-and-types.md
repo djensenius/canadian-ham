@@ -15,7 +15,8 @@ objectives:
   - "Explain the job of a feedline between radio and antenna."
   - "Compare coaxial, twin-lead, and open-wire construction."
   - "Choose feedline based on surroundings and common-mode concerns."
-prerequisites: []
+prerequisites:
+  - L-005-04
 estimatedMinutes: 35
 quizIds:
   - QZ-L-006-01-A
@@ -25,7 +26,7 @@ status: draft
 
 A radio usually does not connect straight to the antenna element. RF energy travels from the transceiver, through a feedline, to the antenna feed point. On receive, the same line carries very small RF signals back to the receiver.
 
-A feedline should guide RF energy instead of becoming an unwanted radiator. The best feedline depends on impedance, balance, loss, weather, nearby metal, and connectors.
+A feedline should guide RF energy instead of becoming an unwanted radiator. Common-mode current is unwanted RF current on the outside of a feedline or on station leads. The best feedline depends on impedance, balance, loss, weather, nearby metal, and connector choices.
 
 ## Learning objectives
 
@@ -41,9 +42,9 @@ By the end of this lesson, you can:
 
 A feedline carries RF energy between station blocks. The station end may be a transmitter, receiver, tuner, or meter. The antenna end is the feed point.
 
-A transmission line has characteristic impedance, often written as Z0. This is not the resistance you would read with an ordinary DC ohmmeter. Z0 comes from the line's shape and insulation: conductor spacing, conductor diameter, and dielectric material.
+A transmission line has characteristic impedance, often written as Z0. This is not the resistance you would read with an ordinary DC ohmmeter. Z0 comes from the line's shape and insulation. In coax, the important shape is the ratio of shield diameter to centre-conductor diameter. In open-wire line, it is the ratio of conductor spacing to wire diameter.
 
-When the load at the far end suits the line, energy is absorbed with minimal reflection. When the load does not suit the line, some energy is reflected back toward the source.
+When the load at the far end equals the line's Z0, the load ideally absorbs all the arriving energy and reflects essentially none. With a matched load, changing line length does not change the match seen by the radio. When the load is badly mismatched, the impedance measured at the radio end depends on line length because forward and reflected waves combine along the line.
 
 ### In the real world: cutting coax does not change Z0
 
@@ -58,6 +59,12 @@ Coaxial cable, usually called coax, has a centre conductor, insulation around th
 Most modern amateur transceivers use fifty-ohm coaxial connections. TV and cable-television systems in homes often use seventy-five-ohm coax. That contrast is useful background, but amateur transmitters, dummy loads, and standing wave ratio, or SWR, meters commonly expect fifty ohms.
 
 Coax is unbalanced because one side is normally the shield and is often connected to equipment ground. That makes coax convenient near equipment, through walls, near masts, and near metal supports. It is also practical when the route must tolerate moisture, ice, or casual contact with building materials.
+
+### Inside the coax
+
+The insulation between the centre conductor and shield is the dielectric. The dielectric affects velocity factor, which is the fraction of light speed at which an RF wave travels in that cable.
+
+Foam dielectric can reduce cable loss because it is mostly air, and air has less dielectric loss than solid plastic. Solid dielectric is preferred when coax is wound tightly on a ferrite toroid for a common-mode choke, because the centre conductor is less likely to move and risk a short. For shielding, a continuous solid outer conductor shields best, then double braid, then single braid, with foil construction more fragile in repeated flexing.
 
 ### In the real world: TV coax and radio coax
 
@@ -85,6 +92,8 @@ Open-wire line often handles mismatch with less heating than small coax. That do
 ## Balanced and unbalanced parts
 
 A centre-fed dipole is a balanced antenna. A coax cable is unbalanced. A balun, short for balanced-to-unbalanced, helps connect those two worlds. A balun can also reduce unwanted current on the outside of the coax shield.
+
+Put the balun where the balanced and unbalanced parts meet. For a coax-fed dipole, that point is usually the antenna feed point. For window line fed by an unbalanced tuner output, that point is at the tuner output before the balanced line begins.
 
 ### Worked example: feeding a simple dipole
 
@@ -121,7 +130,7 @@ When you troubleshoot, think in blocks: transmitter, jumper, meter, tuner, main 
 - Treating characteristic impedance as if it were measured with a DC ohmmeter.
 - Assuming a shorter feedline and a different feedline impedance are the same idea.
 - Running balanced line tight against metal and expecting it to behave as though it were in open air.
-- Putting a balun at the radio end when the balanced-to-unbalanced change happens at the antenna feed point.
+- Putting a balun at a random convenient point instead of where balanced and unbalanced parts meet. For a coax-fed dipole, that is the antenna feed point. For window line fed from an unbalanced tuner, it is the tuner output.
 - Forgetting that connector condition is part of RF performance.
 
 ## Illustration brief
@@ -133,7 +142,8 @@ Description: Draw a simple ink-brush station chain. At left, a transceiver conne
 ## Summary
 
 - A feedline guides RF energy between the radio and the antenna.
-- Characteristic impedance depends on construction and dielectric, not ordinary DC resistance.
+- Characteristic impedance depends on conductor ratios and dielectric, not ordinary DC resistance.
+- Matched loads keep line length from changing the match; mismatched loads make the input impedance depend on line length.
 - Coax is shielded, unbalanced, and practical near equipment and metal.
 - Amateur transmitters commonly use fifty-ohm coax; home TV systems often use seventy-five-ohm coax.
 - Twin-lead, window line, and open-wire line are balanced lines that need clear routing.

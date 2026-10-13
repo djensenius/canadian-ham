@@ -16,7 +16,9 @@ objectives:
   - "Make concise voice contacts on repeaters and simplex channels."
   - "Use phonetics for clear identification."
   - "Listen first and use only the power needed."
-prerequisites: []
+prerequisites:
+  - L-003-05
+  - L-006-02
 estimatedMinutes: 45
 quizIds:
   - QZ-L-002-01-A
@@ -40,7 +42,7 @@ By the end of this lesson, you can:
 
 ## Repeaters are shared relays
 
-A repeater receives on one frequency and retransmits on another. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location. That increases the practical range of portable and mobile stations.
+A repeater receives on one frequency and retransmits on another. It needs separate input and output frequencies because its strong transmitter would block its receiver if both tried to use the same frequency at the same time. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location. That increases the practical range of portable and mobile stations.
 
 Because many operators share the same relay, repeater procedure is short. Listen before transmitting. Leave a pause after another station unkeys so new traffic can enter. Keep overs brief so other users, including emergency traffic, can get access.
 
@@ -60,7 +62,7 @@ An illustrative repeater entry can be this short:
 
 Frequency coordination is the organized recommendation process used on VHF and UHF to reduce conflicts among neighbouring repeaters. It considers repeater channels, offset, coverage area, and local practice.
 
-Many repeaters require a CTCSS tone. CTCSS is a low-frequency access tone sent with your voice transmission. The repeater receiver opens its audio path only for signals carrying the expected tone.
+Many repeaters require a CTCSS tone. CTCSS is a sub-audible, low-frequency access tone sent with your voice transmission. The repeater receiver opens its audio path only for signals carrying the expected tone.
 
 Successful access depends on matching the repeater output frequency, offset direction, input frequency, and tone. On the two-metre FM repeater channels covered here, the standard difference between transmit and receive frequencies is 600 kHz. If a repeater output is 146.940 MHz with a negative offset, the radio transmits on 146.340 MHz because 146.940 MHz - 0.600 MHz = 146.340 MHz.
 
@@ -68,7 +70,7 @@ Successful access depends on matching the repeater output frequency, offset dire
 
 Call signs must be understood through noise, accents, flutter, and weak audio. The International Telecommunication Union phonetic alphabet gives one standard word for each letter. Use it when letters could be confused, and especially when repairing a missed suffix or spelling a complete call sign.
 
-Standard phonetic words give every listener the same spelling system. On repeaters, ordinary plain-language questions keep location and status exchanges clear.
+Standard phonetic words give every listener the same spelling system. On repeaters, ordinary plain-language questions keep location and status exchanges clear, so ask for a location in plain words instead of using 10-codes.
 
 ### Reference fact: ITU phonetic alphabet words used in this lesson
 
@@ -129,13 +131,13 @@ An illustrative simplex exchange uses the same identify-clearly habit:
 
 ## Sidebands, spacing, and clean tests
 
-Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3755 kHz. Operators use these conventions so signals line up as expected and have the expected audio orientation.
+Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3 755 kHz. Operators choose the expected sideband for the frequency so receiving stations recover normal-sounding audio. Those two anchors help you keep the lower-frequency example separate from the twenty-metre example.
 
 Before transmitting on any frequency, listen carefully. Listening protects contacts already in progress. If propagation changes and interference grows during a contact, moving to another clear frequency is the courteous response.
 
 For lengthy transmitter tests, use a dummy load. A dummy load gives the transmitter a proper load and keeps test energy off the air by turning RF power into heat.
 
-For a brief antenna tuner adjustment before joining a sideband net on HF, tune at a nearby clear spot between 3 kHz and 5 kHz from the active net channel. Return only when the net frequency is clear for use. Single-sideband voice signals need room, so allow about 3 kHz from a contact already in progress.
+For a brief antenna tuner adjustment before joining a sideband net on HF, tune at a nearby clear spot between 3 kHz and 5 kHz from the active net channel. Return when the net control invites you or when the channel is clear for use. Single-sideband voice signals are about 3 kHz wide, so they need room. From a contact already in progress, allow about 3 kHz separation to reduce interference.
 
 ## Nets, power, and band plans
 
