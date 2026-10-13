@@ -1,11 +1,11 @@
 ---
 id: TASK-44.3
 title: 'Exam tools on iOS, iPadOS and macOS'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 02:35'
+updated_date: '2026-10-13 04:50'
 labels:
   - apple
 dependencies:
@@ -71,10 +71,12 @@ H1 result: added a legitimate audit settle wait that polls the active tool heade
 H2 result: moved the tool header out of the sheet ScrollView into the static top row beside the close button (wrapping header text preserved). Reran the three failing iPhone audits once with xbuild: /tmp/task-44.3-h2-audit-run1.log still failed 3/3 with Text clipped on calculator/reference-sheet header or unavailable static text. H2 alone rejected; the top ScrollView soft-edge fade is not the sole cause.
 
 H3 result: instrumented the compact-sheet GeometryReader height update path while applying the convergence fix (round measured sheet height to whole points and ignore <1 pt changes). Reran the three failing iPhone audits with xbuild: /tmp/task-44.3-h3-audit-run1.log still failed 3/3 with Text clipped on calculator/reference-sheet header or unavailable static text. The added diagnostic print did not surface in the xbuild console log, but the H1 header-frame settle wait reached stable frames before each audit. Removed the temporary diagnostic print and kept the whole-point height rounding. H3 rejected; stale/jittery compactSheetHeight updates are not sufficient to explain the failures.
+
+Final worker: verified large-detent diagnostic removed the medium-detent Dynamic Type clipping failures for the unavailable state and shifted reference content checks; implemented compact medium reference-sheet preview with accessible value, icon-only compact headers to avoid Dynamic Type clipping, bounded accessibility-size calculator height, and UI-test scrolling updates for the calculator tool. Validation passed: targeted failing iPhone audits twice (/tmp/task-44.3-compact-reference-preview-audits-run1.log, run2.log); full iPhone CanadianHamExamToolsUITests class 12 executed / 1 skipped / 0 failures (/tmp/task-44.3-full-iphone-exam-tools-final5.log); iPad inspector targeted test passed (/tmp/task-44.3-ipad-inspector-final.log); macOS unit command passed 132 tests (/tmp/task-44.3-macos-units-final.log); pnpm check:apple-l10n passed; node scripts/check-apple-text-sources.ts passed; git diff --check passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented Apple exam tools for compact sheets and regular inspectors, fixed medium-detent calculator sizing and reference sheet accessibility exposure, refreshed localization catalog, and verified with targeted iPhone/iPad UI tests, macOS unit tests, and Apple localization/text-source checks.
+Implemented Apple exam tool audit fixes for compact sheets: medium-detent reference sheets now show a compact accessible preview, compact tool headers avoid Dynamic Type clipping, calculator layout remains scrollable at accessibility sizes, and UI tests target the calculator scroll container. Verified with the full iPhone exam-tools UI class, targeted iPad inspector test, macOS unit tests, Apple localization check, text-source check, and git diff check.
 <!-- SECTION:FINAL_SUMMARY:END -->
