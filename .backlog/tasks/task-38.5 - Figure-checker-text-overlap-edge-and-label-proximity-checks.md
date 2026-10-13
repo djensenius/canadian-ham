@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:42'
-updated_date: '2026-10-12 17:54'
+updated_date: '2026-10-13 19:17'
 labels:
   - content
 dependencies: []
@@ -47,6 +47,8 @@ Review a1805a9 follow-up: fixed items 1-8 by adding a monospace width floor, lou
 Re-review approve-with-notes follow-up: applied notes from r385-2. Fill checks now use per-glyph fill bounds with descender bottoms, near-miss/just-touching fill fixtures, a differing-anchor stack fixture, <style> failures even inside skipped defs, marker-* failures, meaningful S/T and inline-tspan fixtures, dx/dy-only tspan failure, unitless shape geometry, transparent fill handling, accented-capital height, and pnpm check:figures now runs --self-test. Validation: node --check scripts/check-figures.mjs; node scripts/check-figures.mjs --self-test (45 fixtures); pnpm check:figures on this branch/38.1 (3 SVGs); read-only task-38.2 passed 8 SVGs; read-only task-38.3 passed 23 SVGs; read-only task-38.4 passed 13 SVGs.
 
 Merged into task-38.1-figure-pipeline after reconciling with task-38.1's Apple metadata generation, directive/DOCTYPE hardening, CI self-test wiring, and docs. Validation on the reconciled branch: node scripts/check-figures.mjs --self-test (52 fixtures); pnpm check:figures; pnpm check:figures:fix produced no diff; pnpm check:schemas; pnpm import:check; content explanation/quiz/coverage/originality checks; pnpm --filter @canadian-ham/web test.
+
+Confirmed task-38.5 is included in PR #212 via the task-38.1 branch and remains Done for merge with task-38.1.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
