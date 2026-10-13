@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 22:20'
+updated_date: '2026-10-13 00:06'
 labels:
   - apple
 dependencies:
@@ -54,6 +54,8 @@ Final validation after coordinator decision: fixed calculator medium-detent layo
 Review fix progress: merged origin/main, rebuilt Localizable.xcstrings from main preserving main key order with only task keys appended, removed logs/ from .gitignore, converted Basic reference sheet to a normal app resource (removed optional copy script and regenerated Xcode project twice), gated reference-sheet buttons to Basic only, removed practice/mock auto-scroll and fixed 440 pt padding, added compact-sheet safe-area inset based on measured sheet height, restored reference sheet accessibility children instead of collapsed text, made zoom affect layout/font sizing, restored scroll indicators, capped calculator keys, and switched calculator hardware input away from window-wide keyboardShortcut toward focus-scoped onKeyPress. Pushed c7951bbe. Compile smoke passed: iOS ExamCalculatorViewModelTests 4/0. Remaining: refresh localization after new/changed strings, add/rework UI tests for Advanced gate/keyboard/unavailable/large detent, run target suites.
 
 Review fix handoff: branch merged origin/main and pushed through eb326f12. Completed/pushed: H1 catalog rebuilt from main order with only task keys appended; M6 reference sheet is a normal app resource and XcodeGen was regenerated twice; H2 Basic reference sheet buttons are gated off for Advanced; M1/M2 auto-scroll and fixed 440 pt padding removed, compact sheets now report measured height into a safe-area inset; M3 key height capped; M4 scroll indicators restored and tool title no longer shrinks; H5 collapsed reference accessible text/children-ignore removed, tables render accessible row labels; H3 keyboardShortcut removed in favor of focusable/focused/onKeyPress; added UI tests for Advanced gate, keyboard input, unavailable state, and calculator persistence. Passing smoke: git diff --check, node scripts/check-apple-text-sources.ts, iOS ExamCalculatorViewModelTests 4/0. Still failing and needs next worker: targeted iPhone subset from /tmp/task-44.3-ios-review-fix-targets-*.log had 5 failures: light/dark audits still Text clipped (likely tool header/unavailable/reference visual layout), keyboard input test cannot synthesize/type because calculator focus is not receiving hardware input, precise-scroll protected-area test still has answer not hittable, unavailable-state audit Text clipped. Need continue by inspecting /tmp/task-44.3-fail-att and latest xcresult attachments, then rerun iPhone class, iPad, macOS units, check:apple-l10n.
+
+Fresh worker update: fixed focus-scoped calculator keyboard UI test path with a focus target and answer interaction clearing calculator focus; precise-scroll answer positioning now passes targeted iPhone test. Verified git diff --check and node scripts/check-apple-text-sources.ts. Passing targeted: iPhone testCalculatorKeyboardInputIsFocusScoped and testPreciseScrollPositionsAnswerBelowProtectedAreaWithToolOpen. Still failing: iPhone accessibility audits light/dark and unavailable state with Text clipped on the tool title/description; full requested iPhone/iPad/macOS/pnpm final runs not completed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
