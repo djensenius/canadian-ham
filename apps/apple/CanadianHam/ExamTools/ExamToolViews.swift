@@ -467,8 +467,10 @@ struct ReferenceSheetToolView: View {
                     LessonMarkdownView(markdown: document.markdown, title: String(localized: "Basic reference sheet"))
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                         .padding(.bottom, DesignTokens.Spacing.xl)
+                        .accessibilityHidden(true)
                 }
-                .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
                 .accessibilityIdentifier("reference-sheet-scroll")
             } else {
                 VStack(spacing: DesignTokens.Spacing.sm) {
@@ -510,5 +512,9 @@ struct ReferenceSheetToolView: View {
     private func loadDocument() {
         guard document == nil else { return }
         document = try? ReferenceSheetLoader.load(configuration: configuration)
+    }
+
+    private func referenceSheetAccessibilityText(for document: ReferenceSheetDocument) -> String {
+        document.markdown
     }
 }
