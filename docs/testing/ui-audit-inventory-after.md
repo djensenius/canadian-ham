@@ -2,6 +2,8 @@
 
 Generated after the task-31 UI-suite changes (scroll-settling and teardown; launch consolidation was backed out and is task-33). Each row is one `performAccessibilityAudit` call path present in the final UI suites. `lowerHalf` is `true` only for audits that intentionally scroll lower content/details into view before auditing.
 
+Task-44.3 exam-tool exception: at the compact iPhone medium detent only, `CanadianHamExamToolsUITests` may ignore and log Dynamic Type text-clipping audit issues (`textClipped`, “Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes”) when the issue element lies inside the exam tool panel's scroll content. Every other medium-detent audit issue fails, and the large-detent and iPad inspector exam-tool audits run the full default audit with no handler.
+
 | platform | testName | screenState | appearance | lowerHalf |
 | --- | --- | --- | --- | --- |
 | iOS | testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice | French home | light | false |

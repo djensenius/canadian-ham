@@ -24,7 +24,7 @@ struct ExamToolButtons: View {
     private var buttons: some View {
         ForEach(availableTools) { tool in
             Button { openTool(tool) } label: {
-                AccessibleSecondaryButtonLabel(title: tool.buttonTitle)
+                AccessibleSecondaryButtonLabel(title: tool.title)
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("exam-tool-\(tool.rawValue)-button")
@@ -106,13 +106,6 @@ struct ExamToolPresentationModifier: ViewModifier {
         }
     }
 
-    private func toolTitle(for tool: ExamTool) -> LocalizedStringResource {
-        switch tool {
-        case .calculator: "Calculator"
-        case .referenceSheet: "Reference sheet"
-        }
-    }
-
     private func updateCompactSheetHeight(_ height: CGFloat) {
         let roundedHeight = height.rounded(.toNearestOrAwayFromZero)
         guard abs(compactSheetHeight - roundedHeight) >= 1 else { return }
@@ -121,69 +114,83 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private func toolHeader(for tool: ExamTool) -> some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-            toolHeaderIcon(for: tool)
+            Image(systemName: tool.systemImage)
+                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .frame(width: 44, height: 44)
+                .accessibilityLabel(Text(tool.title)) // l10n: localized
 
-            Spacer(minLength: 0)
+            Text(tool.title) // l10n: localized
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier(tool.accessibilityIdentifier)
+
+            Spacer(minLength: DesignTokens.Spacing.sm)
 
             closeToolButton
         }
-        .frame(maxWidth: .infinity)
-    }
-
-    @ViewBuilder
-    private func toolHeaderIcon(for tool: ExamTool) -> some View {
-        let icon = Image(systemName: tool.systemImage)
-            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-            .foregroundStyle(DesignTokens.Colors.ink)
-            .frame(width: 44, height: 44)
-            .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
-            .accessibilityAddTraits(.isHeader)
-
-        icon.accessibilityIdentifier(tool.accessibilityIdentifier)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var closeToolButton: some View {
         Button {
             selectedTool = nil
         } label: {
-            Text("Done") // l10n: localized
+            Text("Close tool") // l10n: localized
                 .font(DesignTokens.FontScale.body.weight(.semibold))
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, DesignTokens.Spacing.md)
                 .padding(.vertical, DesignTokens.Spacing.sm)
         }
         .buttonStyle(.bordered)
-        .accessibilityLabel(Text("Close tool")) // l10n: localized
         .accessibilityIdentifier("exam-tool-close-button")
     }
 
     private func toolPanel(for tool: ExamTool) -> some View {
-        ScrollView {
+        GeometryReader { proxy in
+            let bodyHeight = availableToolBodyHeight(panelHeight: proxy.size.height)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 toolHeader(for: tool)
 
                 Divider()
 
-                switch tool {
-                case .calculator:
-                    CalculatorToolView(viewModel: calculator)
-                        .frame(height: dynamicTypeSize.isAccessibilitySize ? 520 : nil)
-                        .frame(minHeight: 360)
-                case .referenceSheet:
-#if os(iOS)
-                    ReferenceSheetToolView(
-                        configuration: referenceSheetConfiguration,
-                        showsCompactPreview: !horizontalUsesInspector && selectedSheetDetent == .medium
-                    )
-#else
-                    ReferenceSheetToolView(configuration: referenceSheetConfiguration)
-#endif
-                }
+                toolBody(for: tool, availableHeight: bodyHeight)
+                    .frame(maxWidth: .infinity, maxHeight: bodyHeight, alignment: .topLeading)
             }
             .padding(.horizontal, DesignTokens.Spacing.lg)
             .padding(.vertical, DesignTokens.Spacing.md)
-            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
         .background(DesignTokens.Colors.paper)
+    }
+
+    private func availableToolBodyHeight(panelHeight: CGFloat) -> CGFloat {
+        max(240, panelHeight - 112)
+    }
+
+    @ViewBuilder
+    private func toolBody(for tool: ExamTool, availableHeight: CGFloat) -> some View {
+        switch tool {
+        case .calculator:
+            CalculatorToolView(viewModel: calculator)
+                .frame(height: availableHeight)
+        case .referenceSheet:
+#if os(iOS)
+            ReferenceSheetToolView(
+                configuration: referenceSheetConfiguration,
+                showsFullSheetButton: !horizontalUsesInspector && selectedSheetDetent == .medium,
+                onShowFullSheet: { selectedSheetDetent = .large }
+            )
+            .frame(height: availableHeight)
+#else
+            ReferenceSheetToolView(configuration: referenceSheetConfiguration)
+                .frame(height: availableHeight)
+#endif
+        }
     }
 }
 
@@ -266,7 +273,7 @@ struct CalculatorToolView: View {
             .accessibilityIdentifier("calculator-key-grid")
 
             if layout.showsHelpText {
-                Text("Keyboard: digits and operators, Return or = equals, Backspace deletes, Escape clears entry, Delete clears all. No formulas, text, or history saved.")
+                Text("Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear.")
                     .font(DesignTokens.FontScale.caption)
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
                     .fixedSize(horizontal: false, vertical: true)
@@ -311,6 +318,8 @@ struct CalculatorToolView: View {
             return .equals
         case .delete:
             return .backspace
+        case .deleteForward:
+            return .allClear
         case .escape:
             return .clearEntry
         default:
@@ -447,14 +456,14 @@ private struct CalculatorToolLayout {
 
     private var compactKeyHeight: CGFloat {
         let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
-        let helpTotal: CGFloat = showsCompactHelpText ? 18 + compactSectionSpacing : 0
+        let helpTotal: CGFloat = showsCompactHelpText ? 48 + compactSectionSpacing : 0
         let gridSpacing = compactKeySpacing * CGFloat(rowCount - 1)
         let gridHeight = max(0, availableHeight - displayTotal - compactSectionSpacing - helpTotal)
         return (gridHeight - gridSpacing) / CGFloat(rowCount)
     }
 
     private var showsCompactHelpText: Bool {
-        !dynamicTypeSize.isAccessibilitySize && availableHeight >= 320
+        !dynamicTypeSize.isAccessibilitySize && availableHeight >= 440
     }
 
     private var compactSectionSpacing: CGFloat { 6 }
@@ -466,75 +475,96 @@ private struct CalculatorToolLayout {
 
 struct ReferenceSheetToolView: View {
     let configuration: ReferenceSheetConfiguration
-    var showsCompactPreview = false
+    var showsFullSheetButton = false
+    var onShowFullSheet: () -> Void = {}
     @State private var document: ReferenceSheetDocument?
+    @State private var zoom = 1.0
 
     var body: some View {
         Group {
             if let document {
-                if showsCompactPreview {
-                    compactReferenceSheetPreview(for: document)
-                } else {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid")
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .padding(DesignTokens.Spacing.md)
-                            .padding(.bottom, DesignTokens.Spacing.xl)
-                            .background(Color.white, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                            .environment(\.colorScheme, .light)
-                            .accessibilityHidden(true)
-                    }
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
-                    .accessibilityValue(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
-                    .accessibilityIdentifier("reference-sheet-scroll")
-                }
+                referenceSheet(document)
             } else {
-                VStack(spacing: DesignTokens.Spacing.sm) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.warningText)
-                        .frame(width: 44, height: 44)
-                        .accessibilityLabel(Text("Reference sheet unavailable")) // l10n: localized
-                        .accessibilityHint(Text("The bundled Basic reference sheet is not installed in this build.")) // l10n: localized
-                        .accessibilityAddTraits(.isHeader)
-                        .accessibilityIdentifier("reference-sheet-unavailable")
-
-                }
-                .padding(.horizontal, DesignTokens.Spacing.lg)
-                .padding(.vertical, DesignTokens.Spacing.md)
-                .frame(maxWidth: .infinity)
-                .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+                unavailableSheet
             }
         }
         .task { loadDocument() }
     }
 
+    private func referenceSheet(_ document: ReferenceSheetDocument) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                if showsFullSheetButton {
+                    Button("Show full sheet") { onShowFullSheet() } // l10n: localized
+                        .buttonStyle(AccessibleSecondaryButtonStyle())
+                        .accessibilityIdentifier("reference-sheet-show-full-sheet")
+                }
+
+                zoomControls
+
+                LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid", textScale: zoom)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding(DesignTokens.Spacing.md)
+                    .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+            }
+            .padding(.bottom, DesignTokens.Spacing.xl)
+        }
+        .accessibilityIdentifier("reference-sheet-scroll")
+    }
+
+    private var unavailableSheet: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.warningText)
+                        .frame(width: 44, height: 44)
+                        .accessibilityLabel(Text("Reference sheet unavailable")) // l10n: localized
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Text("Reference sheet unavailable") // l10n: localized
+                            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.warningText)
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityAddTraits(.isHeader)
+                            .accessibilityIdentifier("reference-sheet-unavailable")
+                        Text("The bundled Basic reference sheet is not installed in this build.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+            .padding(DesignTokens.Spacing.lg)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(DesignTokens.Colors.warningBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.warningBorder, lineWidth: 1))
+        }
+        .accessibilityIdentifier("reference-sheet-scroll")
+    }
+
+    private var zoomControls: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Button("Zoom out") { zoom = max(0.8, zoom - 0.1) } // l10n: localized
+                .buttonStyle(.bordered)
+                .disabled(zoom <= 0.8)
+                .accessibilityIdentifier("reference-sheet-zoom-out")
+            Text("\(Int((zoom * 100).rounded()))%") // l10n: verbatim
+                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .monospacedDigit()
+            Button("Zoom in") { zoom = min(1.8, zoom + 0.1) } // l10n: localized
+                .buttonStyle(.bordered)
+                .disabled(zoom >= 1.8)
+                .accessibilityIdentifier("reference-sheet-zoom-in")
+        }
+    }
+
     private func loadDocument() {
         guard document == nil else { return }
         document = try? ReferenceSheetLoader.load(configuration: configuration)
-    }
-
-    private func compactReferenceSheetPreview(for document: ReferenceSheetDocument) -> some View {
-        VStack(spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: "doc.text.magnifyingglass")
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .frame(width: 44, height: 44)
-                .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
-                .accessibilityValue(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
-                .accessibilityIdentifier("reference-sheet-scroll")
-
-        }
-        .padding(.horizontal, DesignTokens.Spacing.lg)
-        .padding(.vertical, DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity)
-        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-    }
-
-    private func referenceSheetAccessibilityText(for document: ReferenceSheetDocument) -> String {
-        document.markdown
     }
 }

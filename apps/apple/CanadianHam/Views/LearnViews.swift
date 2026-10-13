@@ -500,10 +500,12 @@ private struct OutlineLessonView: View {
 struct LessonMarkdownView: View {
     let markdown: String
     let title: String?
+    let textScale: Double
 
-    init(markdown: String, title: String? = nil) {
+    init(markdown: String, title: String? = nil, textScale: Double = 1.0) {
         self.markdown = markdown
         self.title = title
+        self.textScale = textScale
     }
 
     var body: some View {
@@ -521,13 +523,13 @@ struct LessonMarkdownView: View {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
                 Text(english(strippingLinks(from: text))) // l10n: content(en)
-                    .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .font(level <= 2 ? scaledFont(.title, weight: .bold) : scaledFont(.bodyLarge, weight: .bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
             }
         case .paragraph(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
-                .font(DesignTokens.FontScale.body)
+                .font(scaledFont(.body))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .textSelection(.enabled)
         case .list(let ordered, let items):
@@ -535,10 +537,10 @@ struct LessonMarkdownView: View {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                         Text(ordered ? "\(index + 1)." : "•") // l10n: verbatim
-                            .font(DesignTokens.FontScale.body.weight(.semibold))
+                            .font(scaledFont(.body, weight: .semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                         Text(english(strippingLinks(from: item))) // l10n: content(en)
-                            .font(DesignTokens.FontScale.body)
+                            .font(scaledFont(.body))
                             .foregroundStyle(DesignTokens.Colors.ink)
                     }
                 }
@@ -546,24 +548,24 @@ struct LessonMarkdownView: View {
         case .code(_, let text):
             ScrollView(.horizontal) {
                 Text(english(text)) // l10n: content(en)
-                    .font(.system(.body, design: .monospaced))
+                    .font(.system(size: 17 * textScale, weight: .regular, design: .monospaced))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
                     .padding(DesignTokens.Spacing.md)
             }
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
         case .table(let table):
-            LessonTableView(table: table)
+            LessonTableView(table: table, textScale: textScale)
         case .illustrationBrief(let brief):
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Label("Illustration brief", systemImage: "paintbrush")
-                    .font(DesignTokens.FontScale.body.weight(.bold))
+                    .font(scaledFont(.body, weight: .bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Text(localized(brief.description, language: .english)) // l10n: content(en)
-                    .font(DesignTokens.FontScale.body)
+                    .font(scaledFont(.body))
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Text(illustrationAltText(brief)) // l10n: localized
-                    .font(DesignTokens.FontScale.caption)
+                    .font(scaledFont(.caption))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
             .padding(DesignTokens.Spacing.md)
@@ -572,10 +574,31 @@ struct LessonMarkdownView: View {
             .accessibilityLabel(Text(illustrationAccessibilityLabel(brief))) // l10n: localized
         case .blockquote(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
-                .font(DesignTokens.FontScale.body.italic())
+                .font(scaledFont(.body).italic())
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .padding(DesignTokens.Spacing.md)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        }
+    }
+
+    private enum LessonFontRole {
+        case caption
+        case body
+        case bodyLarge
+        case title
+    }
+
+    private func scaledFont(_ role: LessonFontRole, weight: Font.Weight = .regular) -> Font {
+        let scale = max(0.8, min(1.8, textScale))
+        switch role {
+        case .caption:
+            return .system(size: 12 * scale, weight: weight, design: .default)
+        case .body:
+            return .system(size: 17 * scale, weight: weight, design: .default)
+        case .bodyLarge:
+            return .system(size: 20 * scale, weight: weight, design: .default)
+        case .title:
+            return .system(size: 22 * scale, weight: weight, design: .serif)
         }
     }
 
@@ -609,26 +632,30 @@ struct LessonMarkdownView: View {
 
 struct LessonTableView: View {
     let table: MarkdownTable
+    let textScale: Double
 
     var body: some View {
         ScrollView(.horizontal) {
             Grid(alignment: .leading, horizontalSpacing: DesignTokens.Spacing.md, verticalSpacing: DesignTokens.Spacing.sm) {
                 GridRow {
                     ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
-                        Text(plainEnglish(header)) // l10n: content(en)
-                            .font(DesignTokens.FontScale.caption.weight(.bold))
+                        Text(english(header)) // l10n: content(en)
+                            .font(scaledCaption(weight: .bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                     }
                 }
+                .accessibilityAddTraits(.isHeader)
                 Divider().gridCellColumns(max(table.headers.count, 1))
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
                     GridRow {
                         ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
-                            Text(plainEnglish(cell)) // l10n: content(en)
-                                .font(DesignTokens.FontScale.caption)
+                            Text(english(cell)) // l10n: content(en)
+                                .font(scaledCaption())
                                 .foregroundStyle(DesignTokens.Colors.ink)
                         }
                     }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(rowAccessibilityLabel(row)) // l10n: content(en)
                 }
             }
             .padding(DesignTokens.Spacing.md)
@@ -639,8 +666,17 @@ struct LessonTableView: View {
         .accessibilityLabel("Lesson table")
     }
 
-    private func plainEnglish(_ attributed: AttributedString) -> AttributedString {
-        english(String(attributed.characters))
+    private func scaledCaption(weight: Font.Weight = .regular) -> Font {
+        .system(size: 12 * max(0.8, min(1.8, textScale)), weight: weight, design: .default)
+    }
+
+    private func rowAccessibilityLabel(_ row: [AttributedString]) -> Text {
+        let pairs = row.enumerated().map { index, cell -> String in
+            let header = index < table.headers.count ? String(table.headers[index].characters) : ""
+            let value = String(cell.characters)
+            return header.isEmpty ? value : "\(header), \(value)"
+        }
+        return Text(english(pairs.joined(separator: "; "))) // l10n: content(en)
     }
 }
 

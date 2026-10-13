@@ -12,14 +12,7 @@ enum ExamTool: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var title: LocalizedStringResource {
-        switch self {
-        case .calculator: "Calculator"
-        case .referenceSheet: "Reference sheet"
-        }
-    }
-
-    var buttonTitle: LocalizedStringKey {
+    var title: LocalizedStringKey {
         switch self {
         case .calculator: "Calculator"
         case .referenceSheet: "Reference sheet"
