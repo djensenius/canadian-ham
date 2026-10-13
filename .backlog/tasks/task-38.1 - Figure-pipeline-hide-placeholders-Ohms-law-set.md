@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-13 19:17'
+updated_date: '2026-10-13 21:54'
 labels:
   - content
   - apple
@@ -112,6 +112,8 @@ Review follow-up after b782bc7: narrowing the occluded-content contrast exceptio
 Review follow-up complete: merged origin/main (78f65b7f) and kept branch/newer task notes; resolved Localizable.xcstrings from main's sorted order plus task-38.1 figure keys/removal of stale placeholder keys; XcodeGen ran twice with no generated project diff. Narrowed the lesson audit handler so it fails nav-bar contrast issues and any fully visible/non-scroll contrast issue, and uses plain performAccessibilityAudit() on enlarged sheets. Reverted the generic Morse scroll-settle drag direction to the pre-review behavior instead of rerunning Morse. Low cleanup: removed dead lesson no-straddling helpers and the unused enlarged-figure launch arg, switched to MagnifyGesture, removed web figure tabIndex, and updated docs/figures.md wording. Validation passed: pnpm check:figures; TZ=UTC pnpm --filter @canadian-ham/web test (181); pnpm check:apple-l10n; targeted iOS light/dark lesson figure audits in /tmp/task381-review-figures.xcresult (2 tests). Refreshed light/dark app screenshots in docs/evidence/task-38.1/app/.
 
 Pre-merge full Apple suites for PR #212 passed on 2026-10-13 with DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild in a sequential nohup chain: iOS full suite /tmp/t381-full-ios.log (127 unit + 87 UI tests, 0 failures); macOS full suite /tmp/t381-full-macos.log (129 unit tests, 0 failures); tvOS full suite /tmp/t381-full-tvos.log (4 unit + 12 UI tests, 0 failures); visionOS full suite /tmp/t381-full-visionos.log (4 unit + 9 UI tests, 0 failures). No known-flake reruns were needed.
+
+Copilot PR #212 follow-up: scoped the approved occluded-content contrast exception to contrast elements that match descendants of the selected lesson scroll view; rejected nested SVG tspans with a self-test; gated check:figures --fix asset generation on zero validation/reference errors; corrected Apple figure interaction docs. Validation: node --check scripts/check-figures.mjs; node scripts/check-figures.mjs --self-test (53 fixtures); pnpm check:figures; pnpm check:figures:fix with no asset/metadata diff; temp malformed nested-tspan --fix run exited 1 and left the generated asset checksum unchanged; targeted iOS light/dark Ohm's law figure audits passed in /tmp/t381-copilot-figures3.xcresult (2 tests, 0 failures).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
