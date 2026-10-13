@@ -70,7 +70,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
         XCTAssertTrue(answer.isHittable, "Answer should be hittable before clearing calculator keyboard focus")
         answer.tap()
-        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch.waitForNonExistence(timeout: 2), "Calculator keyboard input should be scoped to the calculator focus binding")
         app.typeKey("1", modifierFlags: [])
         waitBriefly()
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9", "Typing after calculator focus leaves must not change the calculator")

@@ -562,6 +562,7 @@ struct ReferenceSheetToolView: View {
         HStack(spacing: DesignTokens.Spacing.sm) {
             Button("Zoom out") { zoom = max(0.8, zoom - 0.1) } // l10n: localized
                 .buttonStyle(.bordered)
+                .controlSize(.large)
                 .disabled(zoom <= 0.8)
                 .accessibilityIdentifier("reference-sheet-zoom-out")
             Text("\(Int((zoom * 100).rounded()))%") // l10n: verbatim
@@ -570,6 +571,7 @@ struct ReferenceSheetToolView: View {
                 .monospacedDigit()
             Button("Zoom in") { zoom = min(1.8, zoom + 0.1) } // l10n: localized
                 .buttonStyle(.bordered)
+                .controlSize(.large)
                 .disabled(zoom >= 1.8)
                 .accessibilityIdentifier("reference-sheet-zoom-in")
         }
