@@ -16,6 +16,7 @@ objectives:
   - "Place filters where they address the actual unwanted energy."
 prerequisites:
   - L-008-01
+  - L-007-01
 estimatedMinutes: 40
 quizIds:
   - QZ-L-008-02-A

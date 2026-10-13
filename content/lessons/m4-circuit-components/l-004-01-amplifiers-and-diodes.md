@@ -14,7 +14,9 @@ objectives:
   - "State what an amplifier does to a signal."
   - "Explain why linearity matters in radio circuits."
   - "Identify common diode jobs such as rectification, detection, and protection."
-prerequisites: []
+prerequisites:
+  - L-005-02
+  - L-005-04
 estimatedMinutes: 30
 quizIds:
   - QZ-L-004-01-A

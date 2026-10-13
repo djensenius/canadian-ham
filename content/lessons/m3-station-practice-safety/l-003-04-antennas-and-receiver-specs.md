@@ -16,6 +16,7 @@ objectives:
   - "Interpret common receiver specifications and waterfall displays."
 prerequisites:
   - L-003-03
+  - L-006-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-04-A

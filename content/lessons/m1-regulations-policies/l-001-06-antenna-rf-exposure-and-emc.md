@@ -17,6 +17,9 @@ objectives:
   - "Use EMCAB-2 criteria when assessing interference complaints."
 prerequisites:
   - L-001-05
+  - L-003-08
+  - L-006-04
+  - L-008-01
 estimatedMinutes: 40
 quizIds:
   - QZ-L-001-06-A

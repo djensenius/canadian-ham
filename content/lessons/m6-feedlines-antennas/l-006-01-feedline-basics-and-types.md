@@ -15,7 +15,8 @@ objectives:
   - "Explain the job of a feedline between radio and antenna."
   - "Compare coaxial, twin-lead, and open-wire construction."
   - "Choose feedline based on surroundings and common-mode concerns."
-prerequisites: []
+prerequisites:
+  - L-005-04
 estimatedMinutes: 35
 quizIds:
   - QZ-L-006-01-A

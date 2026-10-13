@@ -16,6 +16,8 @@ objectives:
   - "Relate overvoltage monitoring to equipment protection."
 prerequisites:
   - L-003-02
+  - L-004-01
+  - L-005-05
 estimatedMinutes: 40
 quizIds:
   - QZ-L-003-03-A

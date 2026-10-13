@@ -15,7 +15,11 @@ objectives:
   - "Distinguish receiver overload from transmitter faults."
   - "Explain audio rectification in nearby equipment."
   - "Recognize intermodulation and spurious emission symptoms."
-prerequisites: []
+prerequisites:
+  - L-003-01
+  - L-003-05
+  - L-004-01
+  - L-005-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-008-01-A

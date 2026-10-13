@@ -15,6 +15,7 @@ objectives:
   - "Recognize Maidenhead grid locators and long-path direction."
 prerequisites:
   - L-002-01
+  - L-007-01
 estimatedMinutes: 35
 quizIds:
   - QZ-L-002-04-A

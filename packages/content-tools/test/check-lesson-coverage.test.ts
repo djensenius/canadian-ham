@@ -210,6 +210,19 @@ test("coverage passes and reports duplicate subsection coverage", async () => {
   });
 });
 
+test("coverage accepts a valid cross-module prerequisite that comes earlier in study order", async () => {
+  await withFixture("cross-module-prerequisite", async (root) => {
+    await writeFixture(root, ({ lessons }) => {
+      lessons.get("L-001-01")!.prerequisites.push("L-005-01");
+    });
+
+    const report = await runCheck(root);
+
+    assert.equal(report.moduleCount, 8);
+    assert.equal(report.lessonCount, 8);
+  });
+});
+
 test("coverage accepts draft, review, and published status values", async () => {
   await withFixture("statuses", async (root) => {
     await writeFixture(root, ({ modules, lessons }) => {
@@ -324,6 +337,37 @@ test("coverage fails when a module lessonIds entry belongs to another module", a
   });
 });
 
+test("coverage reports one malformed-file error for a duplicate module lessonIds entry", async () => {
+  await withFixture("module-duplicate-lesson", async (root) => {
+    await writeFixture(root, ({ modules }) => {
+      modules.get("M1")!.lessonIds.push("L-001-01");
+    });
+
+    await assertCoverageError(root, (error) => {
+      const duplicateErrors = error.report.malformedFiles.filter((file) => /lessonIds .*L-001-01/.test(file.message));
+      return duplicateErrors.length === 1 && /repeats lesson L-001-01/.test(duplicateErrors[0]!.message);
+    });
+  });
+});
+
+test("coverage fails when a lesson is not listed in its module lessonIds", async () => {
+  await withFixture("lesson-not-listed", async (root) => {
+    await writeFixture(root, ({ lessons }) => {
+      lessons.set("L-001-02", {
+        id: "L-001-02",
+        moduleId: "M1",
+        categoryIds: ["B-001"],
+        title: "Second fixture lesson",
+        covers: ["B-001-001"],
+        prerequisites: [],
+        status: "outline",
+      });
+    });
+
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /lesson L-001-02 is not listed in its module lessonIds/.test(file.message)));
+  });
+});
+
 test("coverage fails when a lesson moduleId does not match its ID prefix", async () => {
   await withFixture("lesson-module-prefix", async (root) => {
     await writeFixture(root, ({ lessons }) => {
@@ -361,6 +405,69 @@ test("coverage fails when a lesson prerequisite does not exist", async () => {
     });
 
     await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /unknown lesson L-001-99/.test(file.message)));
+  });
+});
+
+test("coverage fails when a lesson repeats a prerequisite ID", async () => {
+  await withFixture("duplicate-prerequisite", async (root) => {
+    await writeFixture(root, ({ lessons }) => {
+      lessons.get("L-001-01")!.prerequisites.push("L-005-01", "L-005-01", "L-005-01");
+    });
+
+    await assertCoverageError(root, (error) => {
+      const duplicateErrors = error.report.malformedFiles.filter((file) => /prerequisites repeats lesson L-005-01/.test(file.message));
+      return duplicateErrors.length === 1;
+    });
+  });
+});
+
+test("coverage fails when a lesson prerequisite is not earlier in recommended order", async () => {
+  await withFixture("later-prerequisite", async (root) => {
+    await writeFixture(root, ({ modules, lessons }) => {
+      modules.get("M1")!.lessonIds.push("L-001-02");
+      lessons.set("L-001-02", {
+        id: "L-001-02",
+        moduleId: "M1",
+        categoryIds: ["B-001"],
+        title: "Second fixture lesson",
+        covers: ["B-001-001"],
+        prerequisites: [],
+        status: "outline",
+      });
+      lessons.get("L-001-01")!.prerequisites.push("L-001-02");
+    });
+
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /prerequisite L-001-02 must come before L-001-01/.test(file.message)));
+  });
+});
+
+test("coverage fails when a cross-module prerequisite is not earlier in recommended order", async () => {
+  await withFixture("cross-module-later-prerequisite", async (root) => {
+    await writeFixture(root, ({ lessons }) => {
+      lessons.get("L-005-01")!.prerequisites.push("L-001-01");
+    });
+
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /prerequisite L-001-01 must come before L-005-01/.test(file.message)));
+  });
+});
+
+test("coverage fails when lesson prerequisites form a cycle", async () => {
+  await withFixture("prerequisite-cycle", async (root) => {
+    await writeFixture(root, ({ modules, lessons }) => {
+      modules.get("M1")!.lessonIds.push("L-001-02");
+      lessons.set("L-001-02", {
+        id: "L-001-02",
+        moduleId: "M1",
+        categoryIds: ["B-001"],
+        title: "Second fixture lesson",
+        covers: ["B-001-001"],
+        prerequisites: ["L-001-01"],
+        status: "outline",
+      });
+      lessons.get("L-001-01")!.prerequisites.push("L-001-02");
+    });
+
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /prerequisite cycle detected: L-001-01 -> L-001-02 -> L-001-01/.test(file.message)));
   });
 });
 

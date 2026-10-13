@@ -16,7 +16,9 @@ objectives:
   - "Make concise voice contacts on repeaters and simplex channels."
   - "Use phonetics for clear identification."
   - "Listen first and use only the power needed."
-prerequisites: []
+prerequisites:
+  - L-003-05
+  - L-006-02
 estimatedMinutes: 45
 quizIds:
   - QZ-L-002-01-A
