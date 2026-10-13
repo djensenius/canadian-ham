@@ -1,11 +1,11 @@
 ---
 id: TASK-38.1
 title: 'Figure pipeline, hide placeholders, Ohm''s law set'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-13 14:17'
+updated_date: '2026-10-13 15:01'
 labels:
   - content
   - apple
@@ -108,10 +108,12 @@ Owner decision 2026-10-12(B) recorded/applied: lesson figure UI audits now run t
 Final owner-decision validation passed after occluded-text contrast helper: light Ohm's law lesson figure audit 3/3 passed in /tmp/task381-light-3x.xcresult; dark Ohm's law lesson figure audit 3/3 passed in /tmp/task381-dark-3x.xcresult; AX5 inline fit + real enlarge passed in /tmp/task381-final-ax5.xcresult; illustration brief placeholder hiding passed in /tmp/task381-final-placeholder.xcresult; macOS content-library targeted test passed in /tmp/task381-final-macos.xcresult; pnpm check:apple-l10n passed; contrast token unit test passed in /tmp/task381-contrast-unit.xcresult. Refreshed screenshot evidence copied into docs/evidence/task-38.1/app/.
 
 Review follow-up after b782bc7: narrowing the occluded-content contrast exception, restoring generic scroll-settle drag direction, merging origin/main, and rerunning targeted validation.
+
+Review follow-up complete: merged origin/main (78f65b7f) and kept branch/newer task notes; resolved Localizable.xcstrings from main's sorted order plus task-38.1 figure keys/removal of stale placeholder keys; XcodeGen ran twice with no generated project diff. Narrowed the lesson audit handler so it fails nav-bar contrast issues and any fully visible/non-scroll contrast issue, and uses plain performAccessibilityAudit() on enlarged sheets. Reverted the generic Morse scroll-settle drag direction to the pre-review behavior instead of rerunning Morse. Low cleanup: removed dead lesson no-straddling helpers and the unused enlarged-figure launch arg, switched to MagnifyGesture, removed web figure tabIndex, and updated docs/figures.md wording. Validation passed: pnpm check:figures; TZ=UTC pnpm --filter @canadian-ham/web test (181); pnpm check:apple-l10n; targeted iOS light/dark lesson figure audits in /tmp/task381-review-figures.xcresult (2 tests). Refreshed light/dark app screenshots in docs/evidence/task-38.1/app/.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented the owner-approved 2026-10-12(B) narrow accessibility audit exception for occluded lesson text contrast, documented the approved audit exceptions, added token contrast coverage for lesson body/bullet colours, refreshed app screenshot evidence, and verified with light/dark figure audits 3/3 each plus AX5, placeholder, macOS content-library, apple-l10n, and contrast-unit checks.
+Addressed final review by narrowing the occluded scroll-content contrast exception, auditing enlarged figure sheets without a handler, merging origin/main, cleaning low-risk leftovers, refreshing evidence, and rerunning figure/web/figure-check/l10n validation.
 <!-- SECTION:FINAL_SUMMARY:END -->
