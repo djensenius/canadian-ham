@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-13 00:12'
+updated_date: '2026-10-13 22:06'
 labels:
   - content
 dependencies: []
@@ -29,11 +29,12 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inventory existing lesson front matter and parser/checker/web paths.
-2. Add prerequisite metadata to lessons only where needed, preserving recommended order and no Apple app edits.
-3. Extend content tooling/tests to validate prerequisite existence, acyclicity, and ordering.
-4. Render prerequisites on the web lesson page with localized EN/FR accessible links.
-5. Update lesson README and teaching guide rules, run requested checks, record reasoning/results in Backlog, and commit.
+1. Add Apple LessonReaderView prerequisite navigation using existing lesson.prerequisites and library.lessonsById, placed in the top lesson card before body/outline content.
+2. Add localized Apple strings for the section title/accessibility labels through Localizable.xcstrings using the required Python round-trip format.
+3. Add Apple unit coverage that bundled Lesson models expose prerequisite IDs.
+4. Add targeted iOS UI coverage that opens a prerequisite-bearing lesson, taps a prerequisite link, verifies navigation, and audits light/dark with the existing occluded-contrast helper.
+5. Run targeted Apple/i18n checks; skip tvOS/visionOS lesson builds unless those platform targets include lessons.
+6. Finalize task-46.11 AC #2 with evidence, set Done, commit/push, and prepare the PR without merging.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
