@@ -380,6 +380,7 @@ struct PracticeSessionView: View {
     let onDataChanged: () -> Void
 
     @State private var selectedExamTool: ExamTool?
+    @State private var calculatorFocused = false
     @StateObject private var calculatorViewModel = ExamCalculatorViewModel()
 
     init(
@@ -434,7 +435,7 @@ struct PracticeSessionView: View {
             .background(DesignTokens.Colors.paper)
         }
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
-        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, referenceSheetConfiguration: referenceSheetConfiguration)
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
         .onAppear { calculatorViewModel.updateLocale(language.calculatorLocale) }
         .onChange(of: language) { _, next in calculatorViewModel.updateLocale(next.calculatorLocale) }
@@ -588,8 +589,8 @@ struct PracticeSessionView: View {
     }
 
     private func clearCalculatorKeyboardFocus() {
+        calculatorFocused = false
         calculatorViewModel.suspendHardwareKeyboardInput()
-        NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
     }
 
     private var examContentTapGesture: some Gesture {
@@ -678,6 +679,7 @@ struct PracticeSessionView: View {
             state.correctCount = 0
             state.errorMessage = nil
             selectedExamTool = nil
+            calculatorFocused = false
             calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
@@ -863,6 +865,7 @@ struct MockExamView: View {
     @State private var showingNavigator = false
     @State private var shouldFocusResultsHeading = false
     @State private var selectedExamTool: ExamTool?
+    @State private var calculatorFocused = false
     @StateObject private var calculatorViewModel = ExamCalculatorViewModel()
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -895,7 +898,7 @@ struct MockExamView: View {
             .background(DesignTokens.Colors.paper)
         }
         .navigationTitle("Mock exam")
-        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, referenceSheetConfiguration: referenceSheetConfiguration)
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
         .sheet(isPresented: $showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 navigator
@@ -1048,8 +1051,8 @@ struct MockExamView: View {
     }
 
     private func clearCalculatorKeyboardFocus() {
+        calculatorFocused = false
         calculatorViewModel.suspendHardwareKeyboardInput()
-        NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
     }
 
     private var examContentTapGesture: some Gesture {
@@ -1358,6 +1361,7 @@ struct MockExamView: View {
         selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
+        calculatorFocused = false
         calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
     }
 
@@ -1408,6 +1412,7 @@ struct MockExamView: View {
             state.result = nil
             state.errorMessage = nil
             selectedExamTool = nil
+            calculatorFocused = false
             calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
@@ -1482,6 +1487,7 @@ struct MockExamView: View {
         selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
+        calculatorFocused = false
         calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
     }
 }

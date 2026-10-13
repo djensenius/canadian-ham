@@ -35,6 +35,7 @@ struct ExamToolButtons: View {
 struct ExamToolPresentationModifier: ViewModifier {
     @Binding var selectedTool: ExamTool?
     @ObservedObject var calculator: ExamCalculatorViewModel
+    @Binding var calculatorFocused: Bool
     let referenceSheetConfiguration: ReferenceSheetConfiguration
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selectedSheetDetent = PresentationDetent.medium
@@ -43,7 +44,13 @@ struct ExamToolPresentationModifier: ViewModifier {
     private var isPresented: Binding<Bool> {
         Binding(
             get: { selectedTool != nil },
-            set: { if !$0 { selectedTool = nil } }
+            set: {
+                if !$0 {
+                    calculatorFocused = false
+                    calculator.suspendHardwareKeyboardInput()
+                    selectedTool = nil
+                }
+            }
         )
     }
 
@@ -113,8 +120,10 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private func updateCompactSheetHeight(_ height: CGFloat) {
         let roundedHeight = height.rounded(.toNearestOrAwayFromZero)
-        guard abs(compactSheetHeight - roundedHeight) >= 1 else { return }
-        compactSheetHeight = roundedHeight
+        Task { @MainActor in
+            guard abs(compactSheetHeight - roundedHeight) >= 1 else { return }
+            compactSheetHeight = roundedHeight
+        }
     }
 
     private func toolHeader(for tool: ExamTool) -> some View {
@@ -156,6 +165,8 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private var closeToolButton: some View {
         Button("Close tool") { // l10n: localized
+            calculatorFocused = false
+            calculator.suspendHardwareKeyboardInput()
             selectedTool = nil
         }
         .font(DesignTokens.FontScale.body.weight(.semibold))
@@ -190,7 +201,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     private func toolBody(for tool: ExamTool, availableHeight: CGFloat) -> some View {
         switch tool {
         case .calculator:
-            CalculatorToolView(viewModel: calculator)
+            CalculatorToolView(viewModel: calculator, calculatorFocused: $calculatorFocused)
                 .frame(height: availableHeight)
         case .referenceSheet:
 #if os(iOS)
@@ -212,14 +223,27 @@ extension View {
     func examToolPresentation(
         selectedTool: Binding<ExamTool?>,
         calculator: ExamCalculatorViewModel,
+        calculatorFocused: Binding<Bool>,
         referenceSheetConfiguration: ReferenceSheetConfiguration = .basic
     ) -> some View {
-        modifier(ExamToolPresentationModifier(selectedTool: selectedTool, calculator: calculator, referenceSheetConfiguration: referenceSheetConfiguration))
+        modifier(ExamToolPresentationModifier(selectedTool: selectedTool, calculator: calculator, calculatorFocused: calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration))
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func calculatorKeyPressHandler(enabled: Bool, perform action: @escaping (KeyPress) -> KeyPress.Result) -> some View {
+        if enabled {
+            onKeyPress(action: action)
+        } else {
+            self
+        }
     }
 }
 
 struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
+    @Binding var calculatorFocused: Bool
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @FocusState private var hasKeyboardFocus: Bool
 
@@ -251,21 +275,34 @@ struct CalculatorToolView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
         .accessibilityElement(children: .contain)
-        .accessibilityIdentifier(hasKeyboardFocus ? "calculator-keyboard-focus-target-focused" : "calculator-keyboard-focus-target")
+        .accessibilityIdentifier(calculatorFocused && hasKeyboardFocus ? "calculator-keyboard-focus-target-focused" : "calculator-keyboard-focus-target")
         .focusable(true)
         .focused($hasKeyboardFocus)
+        .onAppear {
+            Task { @MainActor in
+                activateKeyboardFocus()
+            }
+        }
         .simultaneousGesture(TapGesture().onEnded {
-            viewModel.acceptHardwareKeyboardInput()
-            hasKeyboardFocus = true
+            activateKeyboardFocus()
         })
-        .onReceive(NotificationCenter.default.publisher(for: .examContentDidReceiveInteraction)) { _ in
-            viewModel.suspendHardwareKeyboardInput()
-            hasKeyboardFocus = false
+        .onChange(of: calculatorFocused) { _, isFocused in
+            if isFocused {
+                hasKeyboardFocus = true
+            } else {
+                hasKeyboardFocus = false
+                viewModel.suspendHardwareKeyboardInput()
+            }
         }
-        .onChange(of: viewModel.hardwareKeyboardFocusResetID) { _, _ in
-            hasKeyboardFocus = false
+        .onChange(of: hasKeyboardFocus) { _, isFocused in
+            if !isFocused {
+                if calculatorFocused {
+                    calculatorFocused = false
+                }
+                viewModel.suspendHardwareKeyboardInput()
+            }
         }
-        .onKeyPress { press in
+        .calculatorKeyPressHandler(enabled: calculatorFocused && hasKeyboardFocus) { press in
             handleKeyPress(press)
         }
     }
@@ -285,6 +322,9 @@ struct CalculatorToolView: View {
                 .accessibilityLabel(Text("Calculator result")) // l10n: localized
                 .accessibilityValue(Text(viewModel.spokenResult)) // l10n: localized
                 .accessibilityIdentifier("calculator-result")
+                .simultaneousGesture(TapGesture().onEnded {
+                    activateKeyboardFocus()
+                })
 
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 44), spacing: layout.keySpacing), count: 4), spacing: layout.keySpacing) {
                 ForEach(rows.flatMap { $0 }, id: \.rawValue) { key in
@@ -305,6 +345,7 @@ struct CalculatorToolView: View {
 
     private func calculatorButton(_ key: CalculatorKey, layout: CalculatorToolLayout) -> some View {
         Button {
+            activateKeyboardFocus()
             pressKey(key)
         } label: {
             Text(displayTitle(for: key)) // l10n: verbatim
@@ -321,14 +362,22 @@ struct CalculatorToolView: View {
         .accessibilityIdentifier("calculator-key-\(accessibilityIdentifierSuffix(for: key))")
     }
 
+    private func activateKeyboardFocus() {
+        viewModel.acceptHardwareKeyboardInput()
+        calculatorFocused = true
+        hasKeyboardFocus = true
+    }
+
     private func pressKey(_ key: CalculatorKey) {
         let announcement = viewModel.press(key)
         AccessibilityNotification.Announcement(announcement).post()
     }
 
     private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
-        guard hasKeyboardFocus, viewModel.acceptsHardwareKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
-        pressKey(key)
+        guard calculatorFocused, hasKeyboardFocus, viewModel.acceptsHardwareKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
+        Task { @MainActor in
+            pressKey(key)
+        }
         return .handled
     }
 

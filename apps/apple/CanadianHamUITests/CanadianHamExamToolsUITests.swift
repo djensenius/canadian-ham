@@ -401,12 +401,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func focusCalculatorKeyboard(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
-        let focusTarget = app.descendants(matching: .any)["calculator-keyboard-focus-target"].firstMatch
-        XCTAssertTrue(focusTarget.waitForExistence(timeout: 5), "Expected a calculator keyboard focus target", file: file, line: line)
         let result = app.descendants(matching: .any)["calculator-result"].firstMatch
         XCTAssertTrue(result.waitForExistence(timeout: 5), "Expected a calculator result display before focusing keyboard input", file: file, line: line)
-        result.tap()
         let focusedTarget = app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch
+        if focusedTarget.waitForExistence(timeout: 1) {
+            return focusedTarget
+        }
+        result.tap()
         XCTAssertTrue(focusedTarget.waitForExistence(timeout: 5), "Expected the calculator .focused binding to become active after tapping the calculator", file: file, line: line)
         return focusedTarget
     }

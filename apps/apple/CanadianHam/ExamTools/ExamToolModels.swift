@@ -7,10 +7,6 @@ import AppKit
 #endif
 import SwiftUI
 
-extension Notification.Name {
-    static let examContentDidReceiveInteraction = Notification.Name("CanadianHamExamContentDidReceiveInteraction")
-}
-
 enum ExamTool: String, CaseIterable, Identifiable {
     case calculator
     case referenceSheet
@@ -43,7 +39,6 @@ enum ExamTool: String, CaseIterable, Identifiable {
 final class ExamCalculatorViewModel: ObservableObject {
     @Published private(set) var state: CalculatorState
     @Published private(set) var acceptsHardwareKeyboardInput = false
-    @Published private(set) var hardwareKeyboardFocusResetID = 0
 
     init(locale: CalculatorLocale = .en) {
         state = createCalculatorState(locale: locale)
@@ -76,12 +71,14 @@ final class ExamCalculatorViewModel: ObservableObject {
     }
 
     func acceptHardwareKeyboardInput() {
+        guard !acceptsHardwareKeyboardInput else { return }
         acceptsHardwareKeyboardInput = true
     }
 
     func suspendHardwareKeyboardInput() {
-        acceptsHardwareKeyboardInput = false
-        hardwareKeyboardFocusResetID += 1
+        if acceptsHardwareKeyboardInput {
+            acceptsHardwareKeyboardInput = false
+        }
         resignPlatformKeyboardFocus()
     }
 
