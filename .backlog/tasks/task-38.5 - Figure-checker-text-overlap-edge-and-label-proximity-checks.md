@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:42'
-updated_date: '2026-10-13 19:17'
+updated_date: '2026-10-13 21:54'
 labels:
   - content
 dependencies: []
@@ -49,6 +49,8 @@ Re-review approve-with-notes follow-up: applied notes from r385-2. Fill checks n
 Merged into task-38.1-figure-pipeline after reconciling with task-38.1's Apple metadata generation, directive/DOCTYPE hardening, CI self-test wiring, and docs. Validation on the reconciled branch: node scripts/check-figures.mjs --self-test (52 fixtures); pnpm check:figures; pnpm check:figures:fix produced no diff; pnpm check:schemas; pnpm import:check; content explanation/quiz/coverage/originality checks; pnpm --filter @canadian-ham/web test.
 
 Confirmed task-38.5 is included in PR #212 via the task-38.1 branch and remains Done for merge with task-38.1.
+
+Copilot PR #212 figure-checker follow-up landed on task-38.1: nested <tspan> elements now fail with self-test coverage, and --fix skips asset generation whenever validation/reference errors already exist. Validation: node --check scripts/check-figures.mjs; node scripts/check-figures.mjs --self-test (53 fixtures); pnpm check:figures; destructive --fix temp-copy check kept generated asset checksum unchanged on malformed input.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
