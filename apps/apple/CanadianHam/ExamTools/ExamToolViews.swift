@@ -64,8 +64,8 @@ struct ExamToolPresentationModifier: ViewModifier {
                         .background {
                             GeometryReader { proxy in
                                 Color.clear
-                                    .onAppear { compactSheetHeight = proxy.size.height }
-                                    .onChange(of: proxy.size.height) { _, height in compactSheetHeight = height }
+                                    .onAppear { updateCompactSheetHeight(proxy.size.height, source: "appear") }
+                                    .onChange(of: proxy.size.height) { _, height in updateCompactSheetHeight(height, source: "change") }
                             }
                         }
                         .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
@@ -111,6 +111,15 @@ struct ExamToolPresentationModifier: ViewModifier {
         case .calculator: "Calculator"
         case .referenceSheet: "Reference sheet"
         }
+    }
+
+    private func updateCompactSheetHeight(_ height: CGFloat, source: String) {
+        let roundedHeight = height.rounded(.toNearestOrAwayFromZero)
+#if DEBUG
+        print("ExamTool compact sheet height \(source): raw=\(height) rounded=\(roundedHeight) current=\(compactSheetHeight)")
+#endif
+        guard abs(compactSheetHeight - roundedHeight) >= 1 else { return }
+        compactSheetHeight = roundedHeight
     }
 
     private func toolHeader(for tool: ExamTool) -> some View {
