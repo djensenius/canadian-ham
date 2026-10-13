@@ -7,7 +7,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:38'
-updated_date: '2026-10-13 00:01'
+updated_date: '2026-10-13 02:00'
 labels:
   - apple
   - web
@@ -51,6 +51,8 @@ Review fix 2026-10-12: adjusted AppIcon.icon foreground so ictool-rendered dark/
 Owner approval recorded 2026-10-12: owner approved design/app-icon/exports/variants-preview.png at commit 9ec17d8, choosing option A; keep the Liquid Glass outline style in dark and tinted.
 AC #2 evidence: owner visual approval 2026-10-12, option A, for the preview sheet at design/app-icon/exports/variants-preview.png.
 AC #3 evidence after review fixes: python3 -m py_compile design/app-icon/render_icon.py design/app-icon/check_icon_assets.py && python3 design/app-icon/render_icon.py && python3 design/app-icon/check_icon_assets.py passed; actool iOS and macOS passed with no warnings; pnpm --filter @canadian-ham/web test -- src/lib/pwa.test.ts, pnpm build:web, and pnpm --filter @canadian-ham/web audit:urls passed; iOS and macOS xbuild builds passed.
+
+Full Apple suite evidence after Copilot: Copilot review on PR #211 returned approval recommended with 0 open findings, and GraphQL reviewThreads query returned no threads to reply/resolve. Full iOS suite ran sequentially via nohup chain at /tmp/t48-full-ios.log and passed: 126 CanadianHam unit tests + 83 CanadianHamUITests UI tests, 0 failures. Full macOS suite ran next at /tmp/t48-full-macos.log and passed: 128 CanadianHam unit tests, UI tests skipped per project command, 0 failures. No known-flake targeted reruns were needed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
