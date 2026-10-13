@@ -31,7 +31,9 @@ From the repository root:
 python3 design/app-icon/render_icon.py
 ```
 
-The script is deterministic for a given ImageMagick version and macOS system fonts (Georgia and Helvetica for the Top Shelf wordmark and preview labels); exports were last rendered with ImageMagick 7.1.2-32. Production renders differ very slightly from the round-3 concept PNG (wire layer order and a 0.6% wire scale), so the files are not byte-identical. It uses ImageMagick (`/opt/homebrew/bin/magick` when available). It rewrites `design/app-icon/exports/`, installs matching PNGs into the Apple asset catalogues, and copies web icons into `apps/web/public/`. It does not change `apps/apple/project.yml` or target membership.
+The script is deterministic for a given ImageMagick version and macOS system fonts (Georgia and Helvetica for the Top Shelf wordmark and preview labels); exports were last rendered with ImageMagick 7.1.2-32. Production renders differ very slightly from the round-3 concept PNG (wire layer order and a 0.6% wire scale), so the files are not byte-identical. It uses ImageMagick (`/opt/homebrew/bin/magick` when available). It rewrites `design/app-icon/exports/`, installs matching PNGs into the Apple asset catalogues, writes the Icon Composer bundle at `apps/apple/CanadianHam/Resources/AppIcon.icon`, and copies web icons into `apps/web/public/`.
+
+The variants preview uses Xcode's Icon Composer command-line renderer when available at `/Applications/Xcode.app/Contents/Applications/Icon Composer.app/Contents/Executables/ictool` (or on `PATH`). Use the same Xcode/OS 27 toolchain as the Apple build checks when reviewing `variants-preview.png`; if `ictool` is unavailable, the renderer prints a warning and falls back to composed appiconset previews instead of OS-rendered `.icon` previews.
 
 ## Exports
 
@@ -39,10 +41,14 @@ Exports are written to `design/app-icon/exports/`.
 
 ### iOS, iPadOS, macOS
 
-- `app-icon-1024.png`: flattened opaque 1024 x 1024 PNG; no alpha and no pre-rounded corners.
+- `app-icon-1024.png`: flattened opaque 1024 x 1024 light PNG; no alpha and no pre-rounded corners. The light design remains the approved task-4 Yagi brush rendering.
+- `app-icon-foreground-1024.png`: transparent brushstroke foreground layer for Icon Composer.
+- `app-icon-dark-1024.png`: dark-mode fallback with the cream/light mark on the dark warm app field.
+- `app-icon-tinted-1024.png`: opaque greyscale tinted fallback with the mark on black, matching Apple's tinted app-icon guidance and the owner's other app catalogues.
 - `app-icon-60.png` and `app-icon-120.png`: review renders included on the preview sheet to check small-size legibility.
+- `mac-16.png`, `mac-32.png`, `mac-64.png`, `mac-128.png`, `mac-256.png`, `mac-512.png`, and `mac-1024.png`: macOS fallback sizes installed into the appiconset.
 
-The renderer also installs the flattened icon into the existing Apple `AppIcon.appiconset`, including the existing macOS size slots. This catalogue has no dark/tinted appearance slots, so no new icon mechanism is added.
+The renderer installs the light, dark, tinted, and macOS fallback images into `AppIcon.appiconset` using the same structure as the owner's other apps. It also writes `AppIcon.icon` with the transparent brushstroke layer over a cream gradient fill for Liquid Glass light/dark/clear/tinted rendering on supported Apple platforms.
 
 ### visionOS Solid Image Stack
 
@@ -70,14 +76,16 @@ The Top Shelf formats place the hex mark on the left with generous cream space a
 - `favicon.svg`: simplified adaptive vector hex with perimeter, spokes, hub, and `prefers-color-scheme` dark support.
 - `favicon-16.png`, `favicon-32.png`, and `favicon-64.png`: opaque light-mode PNG favicons; no PNG favicon draws the wires, and the 16 px render also drops the spokes, leaving the hex outline and hub for legibility.
 - `apple-touch-icon-180.png`.
-- `pwa-icon-192.png` and `pwa-icon-512.png`.
+- `pwa-icon-192.png` and `pwa-icon-512.png`: full-size PWA icons for `purpose: "any"`.
+- `pwa-maskable-icon-192.png` and `pwa-maskable-icon-512.png`: padded PWA icons with the antenna mark inset into the maskable safe zone for `purpose: "maskable"`.
 
-The renderer copies these files to `apps/web/public/`. `apps/web/index.html` references the SVG favicon, PNG favicon sizes, and Apple touch icon. The generated web manifest continues to reference the PWA PNG icons.
+The renderer copies these files to `apps/web/public/`. `apps/web/index.html` references the SVG favicon, PNG favicon sizes, and Apple touch icon. The generated web manifest references separate full-size `any` PWA PNG icons and padded `maskable` PWA PNG icons.
 
 ### Preview
 
 - `preview-sheet.png`: contact sheet showing the main platform exports together for review, including 60 px and 120 px app-icon renders plus 16 px, 32 px, and 64 px favicon renders.
+- `variants-preview.png`: task-48 review sheet showing iOS light, dark, tinted, and clear/foreground renderings; the macOS fallback; and the web favicon on light and dark tab bars.
 
 ## Icon Composer bundle
 
-An Xcode 26+/27 `.icon` Icon Composer bundle is still not committed because the exact `icon.json` layer-asset format has not been validated in this repository. Follow-up remains: validate the installed Icon Composer format in Xcode's Applications folder and add `design/app-icon/CanadianHam.icon` only after Xcode accepts it.
+The committed Xcode 26+/27 `.icon` bundle lives at `apps/apple/CanadianHam/Resources/AppIcon.icon`. Its structure matches the owner's other apps: `icon.json` plus `Assets/brushstroke.png`, with glass enabled, individual lighting, a layer-colour shadow, and a cream gradient fill from the Canadian Ham palette. The Icon Composer foreground is the approved black brush with a narrow `DARK_INK` cream underlay so `ictool` dark, tinted, and clear OS renders remain legible when OS 27 prefers `AppIcon.icon` over the fallback appiconset. tvOS and visionOS keep their existing layered image-stack assets; dark/tinted app-icon variants are not added there because those platforms use the current layered icon mechanisms rather than the iOS/iPadOS/macOS luminosity appiconset slots.

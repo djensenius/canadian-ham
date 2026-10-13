@@ -1,4 +1,10 @@
 import {
+  applyCalculatorKey,
+  createCalculatorState,
+  type CalculatorKey,
+  type CalculatorState,
+} from "@canadian-ham/calculator-engine";
+import {
   computeReadiness,
   dueCount,
   weakSubsectionIds,
@@ -7,7 +13,6 @@ import {
 } from "@canadian-ham/engine-ts";
 import { Component, createRef, useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode, type RefObject } from "react";
 
-import { LanguageToggle } from "./components/LanguageToggle";
 import { textToTimedMorse } from "@canadian-ham/morse-engine";
 import { MorseCoursePanel } from "./morse/course/MorseCoursePanel";
 
@@ -29,6 +34,7 @@ import {
 import { explanationForQuestion, mainExplanationText, parseChoiceNotes, type Explanation } from "./data/explanations";
 import { lessonNeighbors, lessonsById, lessonsByModuleId, modules, modulesById, type LessonMeta } from "./data/lessons";
 import { buildLessonQuizItems, lessonQuizzesById, type ConceptCheck, type LessonQuiz, type LessonQuizItem } from "./data/quizzes";
+import { basicReferenceSheetMarkdownForWeb } from "./data/referenceSheet";
 import {
   defaultPreferences,
   defaultProgressStore,
@@ -45,8 +51,8 @@ import {
 import {
   clearStoredInterfaceLanguage,
   interfaceLanguageTag,
-  readStoredInterfaceLanguage,
-  storeInterfaceLanguage,
+  mirrorStoredInterfaceLanguagePreference,
+  readStoredInterfaceLanguageOverride,
   t,
   type InterfaceLanguage,
 } from "./lib/i18n";
@@ -54,6 +60,7 @@ import { MorseOutputView, useWebMorseOutput } from "./lib/morseOutput";
 import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences, type WebMorseTimingProfileName } from "./lib/morseSettings";
 import { MorseCopyExamSection, type MorsePlaybackCoordinator } from "./morse/copyExam/MorseCopyExamSection";
 import { MorseSendingPracticeSection } from "./morse/sending/MorseSendingPracticeSection";
+import { resolveLanguagePreference } from "./lib/languagePreference";
 import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
@@ -79,6 +86,7 @@ interface AppProps {
 }
 
 interface PracticeSession {
+  readonly instanceId: string;
   readonly seed: string;
   readonly scope: PracticeScope;
   readonly mode: PracticeMode;
@@ -89,6 +97,7 @@ interface PracticeSession {
 }
 
 interface MockExamSession {
+  readonly instanceId: string;
   readonly seed: string;
   readonly startedAt: string;
   readonly timerEnabled: boolean;
@@ -100,6 +109,8 @@ interface MockExamSession {
   readonly timerRunning: boolean;
   readonly confirmingSubmit: boolean;
 }
+
+type ExamToolKind = "calculator" | "reference";
 
 function defaultNow(): string {
   return new Date().toISOString();
@@ -137,8 +148,8 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
     if (this.state.errorMessage === null) {
       return this.props.children;
     }
-    const recoveryPreferences = this.state.recoveryPreferences ?? { ...defaultPreferences, theme: readStoredThemePreference() };
-    const interfaceLanguage = readStoredInterfaceLanguage();
+    const recoveryPreferences = this.state.recoveryPreferences ?? migrateLegacyStoredLanguagePreference({ ...defaultPreferences, theme: readStoredThemePreference() });
+    const interfaceLanguage = resolveLanguagePreference(recoveryPreferences.language);
     return (
       <div className="app-shell">
         <a className="skip-link" href="#main" onClick={this.handleSkipToMain}>{t(interfaceLanguage, "skipToMainContent")}</a>
@@ -167,11 +178,11 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
                 await this.props.store.putPreferences(nextPreferences);
                 applyThemePreference(nextPreferences.theme);
                 mirrorThemePreference(nextPreferences.theme);
+                mirrorStoredInterfaceLanguagePreference(nextPreferences.language);
                 this.setState({ recoveryPreferences: nextPreferences });
                 return true;
               }}
               interfaceLanguage={interfaceLanguage}
-              onInterfaceLanguageChange={(language) => { storeInterfaceLanguage(language); this.forceUpdate(); }}
               preferences={recoveryPreferences}
               statusMessage=""
               store={this.props.store}
@@ -186,10 +197,15 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
 
 async function readRecoverablePreferences(store: ProgressStore): Promise<WebPreferences> {
   try {
-    return await store.getPreferences();
+    return migrateLegacyStoredLanguagePreference(await store.getPreferences());
   } catch {
-    return { ...defaultPreferences, theme: readStoredThemePreference() };
+    return migrateLegacyStoredLanguagePreference({ ...defaultPreferences, theme: readStoredThemePreference() });
   }
+}
+
+function migrateLegacyStoredLanguagePreference(preferences: WebPreferences): WebPreferences {
+  const legacyLanguage = readStoredInterfaceLanguageOverride();
+  return preferences.language === "system" && legacyLanguage !== null ? { ...preferences, language: legacyLanguage } : preferences;
 }
 
 function routeFromHash(fallback: Route, hash = globalThis.location?.hash ?? ""): Route {
@@ -236,11 +252,9 @@ function AppContent({
   now = defaultNow,
   seedFactory = defaultSeed,
 }: AppProps) {
-  const initialPreferences = () => ({ ...defaultPreferences, theme: readStoredThemePreference() });
+  const initialPreferences = () => migrateLegacyStoredLanguagePreference({ ...defaultPreferences, theme: readStoredThemePreference() });
   const [locationHash, setLocationHash] = useState(() => globalThis.location?.hash ?? "");
   const [route, setRoute] = useState<Route>(() => routeFromHash(initialView));
-  const [language, setLanguage] = useState<Language>("en");
-  const [interfaceLanguage, setInterfaceLanguageState] = useState<InterfaceLanguage>(() => readStoredInterfaceLanguage());
   // Loaded questions are tagged with their course and only exposed while that course is active,
   // so a render never sees the previous course's questions after a switch.
   const [loadedBankQuestions, setLoadedBankQuestions] = useState<{ readonly bankId: CourseBankId; readonly questions: readonly Question[] } | null>(null);
@@ -250,6 +264,8 @@ function AppContent({
   const [lessonProgress, setLessonProgress] = useState<readonly LessonProgressRecord[]>([]);
   const [lessonQuizAttempts, setLessonQuizAttempts] = useState<readonly LessonQuizAttempt[]>([]);
   const [preferences, setPreferencesState] = useState<WebPreferences>(initialPreferences);
+  const language = resolveLanguagePreference(preferences.language);
+  const interfaceLanguage: InterfaceLanguage = language;
   const [practiceScope, setPracticeScope] = useState<PracticeScope>(() => scopeFromInitialId(initialScopeId));
   const [practiceSession, setPracticeSession] = useState<PracticeSession | null>(null);
   const [mockExam, setMockExam] = useState<MockExamSession | null>(null);
@@ -265,6 +281,7 @@ function AppContent({
   const savedPreferencesRef = useRef(preferences);
   const latestRequestedPreferencesRef = useRef(preferences);
   const preferencesSaveQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const practiceSessionInstanceRef = useRef(0);
   const preferencesSaveSequenceRef = useRef(0);
   const savedPreferencesSequenceRef = useRef(0);
 
@@ -289,9 +306,14 @@ function AppContent({
           setExamAttempts(storedAttempts);
           setLessonProgress(storedLessonProgress);
           setLessonQuizAttempts(storedQuizAttempts);
-          savedPreferencesRef.current = storedPreferences;
-          latestRequestedPreferencesRef.current = storedPreferences;
-          setPreferencesState(storedPreferences);
+          const migratedPreferences = migrateLegacyStoredLanguagePreference(storedPreferences);
+          savedPreferencesRef.current = migratedPreferences;
+          latestRequestedPreferencesRef.current = migratedPreferences;
+          setPreferencesState(migratedPreferences);
+          if (migratedPreferences !== storedPreferences) {
+            await store.putPreferences(migratedPreferences);
+          }
+          mirrorStoredInterfaceLanguagePreference(migratedPreferences.language);
           setAlertMessage("");
         }
       } catch (error) {
@@ -443,7 +465,9 @@ function AppContent({
       limit: 10,
     });
     setPracticeScope(scope);
+    practiceSessionInstanceRef.current += 1;
     setPracticeSession({
+      instanceId: `practice-${practiceSessionInstanceRef.current}`,
       seed,
       scope,
       mode,
@@ -473,6 +497,7 @@ function AppContent({
       }
       const savedLatestRequest = saveSequence === preferencesSaveSequenceRef.current;
       if (savedLatestRequest) {
+        mirrorStoredInterfaceLanguagePreference(nextPreferences.language);
         setAlertMessage("");
       }
       return savedLatestRequest;
@@ -561,11 +586,6 @@ function AppContent({
     setAlertMessage(t(interfaceLanguage, "courseChanged", nextBank.course === "advanced" ? t(interfaceLanguage, "courseAdvanced") : t(interfaceLanguage, "courseBasic")));
   }
 
-  function setInterfaceLanguage(nextLanguage: InterfaceLanguage): void {
-    setInterfaceLanguageState(nextLanguage);
-    storeInterfaceLanguage(nextLanguage);
-  }
-
   async function commitProgress(nextProgress: readonly QuestionProgressRecord[]): Promise<void> {
     try {
       await store.putQuestionProgressMany(nextProgress);
@@ -643,7 +663,6 @@ function AppContent({
         <div className="header-actions">
           <CourseSwitcher activeBank={activeBank} fieldsetRef={courseSwitcherRef} interfaceLanguage={interfaceLanguage} onCourseChange={requestCourseChange} />
           <PwaStatus interfaceLanguage={interfaceLanguage} updateDisabled={mockExam !== null} />
-          <LanguageToggle interfaceLanguage={interfaceLanguage} language={language} onLanguageChange={setLanguage} />
         </div>
       </header>
 
@@ -770,6 +789,7 @@ function AppContent({
               }
               savedPreferencesRef.current = importedPreferences;
               latestRequestedPreferencesRef.current = importedPreferences;
+              mirrorStoredInterfaceLanguagePreference(importedPreferences.language);
               setPreferencesState(importedPreferences);
               setPracticeSession(null);
               setMockExam(null);
@@ -792,12 +812,10 @@ function AppContent({
               setLatestResult(null);
               setPendingCourseSwitch(null);
               clearStoredInterfaceLanguage();
-              const resetInterfaceLanguage = readStoredInterfaceLanguage();
-              setInterfaceLanguageState(resetInterfaceLanguage);
+              const resetInterfaceLanguage = resolveLanguagePreference(defaultPreferences.language);
               setAlertMessage("");
               setStatusMessage(t(resetInterfaceLanguage, "statusAllLocalProgressReset"));
             }}
-            onInterfaceLanguageChange={setInterfaceLanguage}
             onSetPreferences={setPreferences}
             activeBank={activeBank}
             preferences={preferences}
@@ -938,6 +956,11 @@ function Learn({ interfaceLanguage, lessonProgress, onOpenModule, onOpenLesson }
       <h2 id="learn-title">{t(interfaceLanguage, "learnTitle")}</h2>
       <p>{t(interfaceLanguage, "learnIntro")}</p>
       <p className="reference-note">{t(interfaceLanguage, "referenceSheetNote")}</p>
+      <section className="reference-note" aria-labelledby="exam-day-learn-heading">
+        <h3 id="exam-day-learn-heading">{t(interfaceLanguage, "examDayHeading")}</h3>
+        <p>{t(interfaceLanguage, "examDayLearnCopy")}</p>
+        <button type="button" className="secondary-button" onClick={() => onOpenLesson("M1", "L-001-01")}>{t(interfaceLanguage, "examDayLessonLink")}</button>
+      </section>
       <div className="module-grid">
         {modules.map((module) => {
           const moduleLessons = lessonsByModuleId.get(module.id) ?? [];
@@ -1012,6 +1035,35 @@ interface LessonPageProps {
   readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void;
 }
 
+function LessonPrerequisites({ interfaceLanguage, lesson, onOpenLesson }: { readonly interfaceLanguage: InterfaceLanguage; readonly lesson: LessonMeta; readonly onOpenLesson: (moduleId: string, lessonId: string) => void }) {
+  const prerequisiteLessons = lesson.prerequisites.flatMap((prerequisiteId) => {
+    const prerequisiteLesson = lessonsById.get(prerequisiteId);
+    return prerequisiteLesson === undefined ? [] : [prerequisiteLesson];
+  });
+  if (prerequisiteLessons.length === 0) {
+    return null;
+  }
+  const headingId = `lesson-prerequisites-${lesson.id}`;
+  return (
+    <section className="lesson-prerequisites" aria-labelledby={headingId}>
+      <h3 id={headingId}>{t(interfaceLanguage, "lessonPrerequisitesHeading")}</h3>
+      <ul>
+        {prerequisiteLessons.map((prerequisiteLesson) => (
+          <li key={prerequisiteLesson.id}>
+            <a href={`#/learn/${prerequisiteLesson.moduleId}/${prerequisiteLesson.id}`} onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+              if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+                return;
+              }
+              event.preventDefault();
+              onOpenLesson(prerequisiteLesson.moduleId, prerequisiteLesson.id);
+            }}><span lang={englishTextLang(interfaceLanguage)}>{prerequisiteLesson.title.en}</span></a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt }: LessonPageProps) {
   const lesson = lessonsById.get(lessonId);
   const module = modulesById.get(moduleId) ?? (lesson !== undefined ? modulesById.get(lesson.moduleId) : undefined);
@@ -1043,6 +1095,7 @@ function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuest
         <p className="eyebrow">{t(interfaceLanguage, "lessonMeta", lesson.id, lesson.estimatedMinutes, lesson.covers.join(", "))}</p>
         <h2 id="lesson-title" lang={englishTextLang(interfaceLanguage)}>{lesson.title.en}</h2>
         <p>{readRecord === undefined ? t(interfaceLanguage, "lessonNotMarkedYet") : t(interfaceLanguage, "lessonMarkedReadTimes", readRecord.readCount)}</p>
+        <LessonPrerequisites interfaceLanguage={interfaceLanguage} lesson={lesson} onOpenLesson={onOpenLesson} />
         {lesson.status === "outline" ? (
           <section className="coming-soon" aria-labelledby="coming-soon-title">
             <h3 id="coming-soon-title">{t(interfaceLanguage, "lessonComingSoonTitle")}</h3>
@@ -1438,28 +1491,35 @@ function Practice({
             <p>{t(interfaceLanguage, "currentSubsection")} <strong>{currentItem.question.subsectionId}</strong></p>
           </aside>
           <div className="practice-main">
-            <QuestionCard
-              choicePermutation={currentItem.choicePermutation}
-              disabled={session.mode === "immediate" && isAnswered}
+            <ExamTools
+              context="practice"
               interfaceLanguage={interfaceLanguage}
-              language={language}
-              onChoose={(displayIndex) => void chooseAnswer(currentItem, displayIndex)}
-              question={currentItem.question}
-              selectedSourceIndex={selectedSourceIndex}
-              showCorrectness={session.mode === "immediate" && isAnswered}
-            />
-            <div className="feedback" role="status" aria-live="polite" ref={feedbackRef} tabIndex={-1}>
-              {session.mode === "immediate" ? immediateFeedback(interfaceLanguage, currentItem.question, currentItem.choicePermutation, selectedSourceIndex, language) : (
-                <p>{t(interfaceLanguage, "practiceReviewLaterHint")}</p>
-              )}
-            </div>
-            <div className="action-row">
-              <button type="button" disabled={session.currentIndex === 0} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex - 1 })}>{t(interfaceLanguage, "previous")}</button>
-              <button type="button" disabled={session.currentIndex >= session.items.length - 1} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex + 1 })}>{t(interfaceLanguage, "next")}</button>
-              {session.mode === "review-later" ? (
-                <button type="button" className="primary-button" disabled={!allAnswered || session.submitted || submittingPractice} onClick={() => void submitReviewLater()}>{submittingPractice ? t(interfaceLanguage, "practiceSubmittingSet") : t(interfaceLanguage, "practiceSubmitSet")}</button>
-              ) : null}
-            </div>
+              key={session.instanceId}
+              referenceSheetAvailable={activeBank.course === "basic"}
+            >
+              <QuestionCard
+                choicePermutation={currentItem.choicePermutation}
+                disabled={session.mode === "immediate" && isAnswered}
+                interfaceLanguage={interfaceLanguage}
+                language={language}
+                onChoose={(displayIndex) => void chooseAnswer(currentItem, displayIndex)}
+                question={currentItem.question}
+                selectedSourceIndex={selectedSourceIndex}
+                showCorrectness={session.mode === "immediate" && isAnswered}
+              />
+              <div className="feedback" role="status" aria-live="polite" ref={feedbackRef} tabIndex={-1}>
+                {session.mode === "immediate" ? immediateFeedback(interfaceLanguage, currentItem.question, currentItem.choicePermutation, selectedSourceIndex, language) : (
+                  <p>{t(interfaceLanguage, "practiceReviewLaterHint")}</p>
+                )}
+              </div>
+              <div className="action-row">
+                <button type="button" disabled={session.currentIndex === 0} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex - 1 })}>{t(interfaceLanguage, "previous")}</button>
+                <button type="button" disabled={session.currentIndex >= session.items.length - 1} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex + 1 })}>{t(interfaceLanguage, "next")}</button>
+                {session.mode === "review-later" ? (
+                  <button type="button" className="primary-button" disabled={!allAnswered || session.submitted || submittingPractice} onClick={() => void submitReviewLater()}>{submittingPractice ? t(interfaceLanguage, "practiceSubmittingSet") : t(interfaceLanguage, "practiceSubmitSet")}</button>
+                ) : null}
+              </div>
+            </ExamTools>
             {session.submitted ? <div ref={reviewRef} tabIndex={-1}><PracticeReview interfaceLanguage={interfaceLanguage} session={session} language={language} /></div> : null}
           </div>
         </div>
@@ -1546,6 +1606,260 @@ function PracticeReview({ interfaceLanguage, session, language }: { readonly int
   );
 }
 
+interface ExamToolsProps {
+  readonly context: "practice" | "mock";
+  readonly interfaceLanguage: InterfaceLanguage;
+  readonly referenceSheetAvailable: boolean;
+  readonly children: ReactNode;
+}
+
+function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, children }: ExamToolsProps) {
+  const [activeTool, setActiveTool] = useState<ExamToolKind | null>(null);
+  const [calculatorState, setCalculatorState] = useState<CalculatorState>(() => createCalculatorState({ locale: interfaceLanguage }));
+  const calculatorButtonRef = useRef<HTMLButtonElement>(null);
+  const referenceButtonRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLButtonElement | null>(null);
+  const panelId = `exam-tools-${context}-panel`;
+
+  useEffect(() => {
+    setCalculatorState(createCalculatorState({ locale: interfaceLanguage }));
+  }, [interfaceLanguage]);
+
+  useEffect(() => {
+    if (activeTool === null) {
+      return;
+    }
+    window.setTimeout(() => {
+      const panel = document.getElementById(panelId);
+      const focusTarget = panel?.querySelector<HTMLElement>("[data-exam-tool-focus]") ?? panel;
+      focusTarget?.focus({ preventScroll: true });
+    }, 0);
+  }, [activeTool, panelId]);
+
+  function pressCalculatorKey(key: CalculatorKey): void {
+    setCalculatorState((current) => applyCalculatorKey(current, key));
+  }
+
+  function openTool(tool: ExamToolKind, button: HTMLButtonElement | null): void {
+    returnFocusRef.current = button;
+    setActiveTool((current) => current === tool ? null : tool);
+  }
+
+  function closeTool(): void {
+    const returnFocus = returnFocusRef.current;
+    setActiveTool(null);
+    window.setTimeout(() => returnFocus?.focus(), 0);
+  }
+
+  function handlePanelKeyDown(event: KeyboardEvent<HTMLElement>): void {
+    if (activeTool === "reference" && event.key === "Escape") {
+      event.preventDefault();
+      closeTool();
+    }
+  }
+
+  const shellClassName = [
+    "exam-tools-shell",
+    `exam-tools-shell--${context}`,
+    activeTool === null ? "" : "exam-tools-shell--open",
+  ].filter(Boolean).join(" ");
+
+  return (
+    <div className={shellClassName} data-testid={`${context}-exam-tools`}>
+      <div className="exam-tools-toolbar" role="group" aria-label={t(interfaceLanguage, "examToolsToolbarAria")}>
+        <button
+          aria-controls={activeTool === "calculator" ? panelId : undefined}
+          aria-expanded={activeTool === "calculator"}
+          className="secondary-button"
+          ref={calculatorButtonRef}
+          type="button"
+          onClick={() => openTool("calculator", calculatorButtonRef.current)}
+        >{t(interfaceLanguage, "examToolCalculator")}</button>
+        <button
+          aria-controls={activeTool === "reference" ? panelId : undefined}
+          aria-disabled={!referenceSheetAvailable}
+          aria-expanded={activeTool === "reference"}
+          className="secondary-button"
+          disabled={!referenceSheetAvailable}
+          ref={referenceButtonRef}
+          type="button"
+          onClick={() => openTool("reference", referenceButtonRef.current)}
+        >{t(interfaceLanguage, "examToolReferenceSheet")}</button>
+      </div>
+      <div className="exam-tools-content">
+        {children}
+      </div>
+      {activeTool === null ? null : (
+        <aside className="exam-tool-panel" data-testid="exam-tool-panel" id={panelId} aria-labelledby={`${panelId}-title`} tabIndex={-1} onKeyDown={handlePanelKeyDown}>
+          <div className="exam-tool-panel__header">
+            <h3 id={`${panelId}-title`}>{activeTool === "calculator" ? t(interfaceLanguage, "calculatorTitle") : t(interfaceLanguage, "referenceSheetTitle")}</h3>
+            <button type="button" className="secondary-button" onClick={closeTool}>{t(interfaceLanguage, "closeExamTool")}</button>
+          </div>
+          {activeTool === "calculator" ? (
+            <CalculatorTool
+              calculatorState={calculatorState}
+              interfaceLanguage={interfaceLanguage}
+              onPressKey={pressCalculatorKey}
+            />
+          ) : <ReferenceSheetTool interfaceLanguage={interfaceLanguage} />}
+        </aside>
+      )}
+    </div>
+  );
+}
+
+function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { readonly calculatorState: CalculatorState; readonly interfaceLanguage: InterfaceLanguage; readonly onPressKey: (key: CalculatorKey) => void }) {
+  const spokenResult = calculatorState.displayValue.spoken[interfaceLanguage];
+
+  function handleKeyDown(event: KeyboardEvent<HTMLElement>): void {
+    if (event.target instanceof HTMLElement && event.target.closest("button") !== null && event.key === "Enter" && calculatorState.pendingOperator !== null && !calculatorState.awaitingOperand) {
+      event.preventDefault();
+      onPressKey("=");
+      return;
+    }
+    const key = calculatorKeyFromKeyboardEvent(event);
+    if (key === null) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    onPressKey(key);
+  }
+
+  return (
+    <section className="calculator-tool" aria-label={t(interfaceLanguage, "calculatorTitle")} data-exam-tool-focus tabIndex={-1} onKeyDown={handleKeyDown}>
+      <p className="calculator-help">{t(interfaceLanguage, "calculatorKeyboardHelp")}</p>
+      <output className="calculator-display" aria-live="off" aria-label={t(interfaceLanguage, "calculatorDisplayAria", spokenResult)}>{calculatorState.display}</output>
+      <div className="sr-only" aria-live="polite" data-testid="calculator-live-result">{t(interfaceLanguage, "calculatorResultAnnouncement", spokenResult)}</div>
+      <div className="calculator-keypad" role="group" aria-label={t(interfaceLanguage, "calculatorKeypadAria")}>
+        {calculatorKeyRows.map((row) => row.map((key) => (
+          <button
+            aria-label={calculatorKeyAriaLabel(interfaceLanguage, key)}
+            className={key === "=" ? "primary-button" : "secondary-button"}
+            key={key}
+            type="button"
+            onClick={() => onPressKey(key)}
+            onKeyDown={handleKeyDown}
+          >{calculatorKeyVisual(interfaceLanguage, key)}</button>
+        )))}
+      </div>
+    </section>
+  );
+}
+
+function firstMarkdownHeading(markdown: string): string | undefined {
+  return /^#\s+(.+)$/m.exec(markdown)?.[1]?.trim();
+}
+
+function ReferenceSheetTool({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
+  const referenceSheetMarkdown = basicReferenceSheetMarkdownForWeb();
+  return (
+    <section className="reference-sheet-tool" aria-label={t(interfaceLanguage, "referenceSheetTitle")} data-exam-tool-focus tabIndex={-1}>
+      {interfaceLanguage === "fr" ? <p className="reference-note" lang="fr-CA">{t(interfaceLanguage, "englishOnlyContentNotice")}</p> : null}
+      <MarkdownContent markdown={referenceSheetMarkdown} title={firstMarkdownHeading(referenceSheetMarkdown)} tableLabel={t(interfaceLanguage, "referenceSheetTableAria")} interfaceLanguage={interfaceLanguage} contentLanguage="en" />
+    </section>
+  );
+}
+
+const calculatorKeyRows: readonly (readonly CalculatorKey[])[] = [
+  ["AC", "C/CE", "backspace", "÷"],
+  ["7", "8", "9", "×"],
+  ["4", "5", "6", "-"],
+  ["1", "2", "3", "+"],
+  ["±", "0", ".", "="],
+  ["%", "√", "x²", "1/x"],
+];
+
+function calculatorKeyFromKeyboardEvent(event: KeyboardEvent<HTMLElement>): CalculatorKey | null {
+  if (event.ctrlKey || event.metaKey || event.altKey) {
+    return null;
+  }
+  if (event.target instanceof HTMLElement && event.target.closest("button") !== null && (event.key === "Enter" || event.key === " ")) {
+    return null;
+  }
+  if (/^[0-9]$/.test(event.key)) {
+    return event.key as CalculatorKey;
+  }
+  if (event.key === "." || event.key === ",") {
+    return ".";
+  }
+  if (event.key === "+") {
+    return "+";
+  }
+  if (event.key === "-") {
+    return "-";
+  }
+  if (event.key === "*" || event.key.toLowerCase() === "x") {
+    return "×";
+  }
+  if (event.key === "/") {
+    return "÷";
+  }
+  if (event.key === "Enter" || event.key === "=") {
+    return "=";
+  }
+  if (event.key === "Backspace") {
+    return "backspace";
+  }
+  if (event.key === "Escape") {
+    return "C/CE";
+  }
+  if (event.key === "Delete") {
+    return "AC";
+  }
+  return null;
+}
+
+function calculatorKeyVisual(interfaceLanguage: InterfaceLanguage, key: CalculatorKey): string {
+  if (key === ".") {
+    return interfaceLanguage === "fr" ? "," : ".";
+  }
+  if (key === "-") {
+    return "−";
+  }
+  if (key === "backspace") {
+    return "⌫";
+  }
+  return key;
+}
+
+function calculatorKeyAriaLabel(interfaceLanguage: InterfaceLanguage, key: CalculatorKey): string {
+  if (/^[0-9]$/.test(key)) {
+    return t(interfaceLanguage, "calculatorDigitKey", key);
+  }
+  switch (key) {
+    case ".":
+      return t(interfaceLanguage, "calculatorDecimalKey");
+    case "+":
+      return t(interfaceLanguage, "calculatorAddKey");
+    case "-":
+      return t(interfaceLanguage, "calculatorSubtractKey");
+    case "×":
+      return t(interfaceLanguage, "calculatorMultiplyKey");
+    case "÷":
+      return t(interfaceLanguage, "calculatorDivideKey");
+    case "=":
+      return t(interfaceLanguage, "calculatorEqualsKey");
+    case "√":
+      return t(interfaceLanguage, "calculatorSquareRootKey");
+    case "x²":
+      return t(interfaceLanguage, "calculatorSquareKey");
+    case "1/x":
+      return t(interfaceLanguage, "calculatorReciprocalKey");
+    case "±":
+      return t(interfaceLanguage, "calculatorSignKey");
+    case "%":
+      return t(interfaceLanguage, "calculatorPercentKey");
+    case "C/CE":
+      return t(interfaceLanguage, "calculatorClearEntryKey");
+    case "AC":
+      return t(interfaceLanguage, "calculatorAllClearKey");
+    case "backspace":
+      return t(interfaceLanguage, "calculatorBackspaceKey");
+  }
+  return key;
+}
+
 export function ExplanationPanel({ explanation, interfaceLanguage = "en", language, choicePermutation }: { readonly explanation: Explanation | null; readonly interfaceLanguage?: InterfaceLanguage; readonly language: Language; readonly choicePermutation?: readonly number[] }) {
   if (explanation === null) {
     return <p className="explanation-panel explanation-panel--missing">{t(interfaceLanguage, "noExplanation")}</p>;
@@ -1619,6 +1933,7 @@ function MockExam({ activeBank, interfaceLanguage, exam, language, questions, pr
   const examQuestionsById = useMemo(() => questions === null ? new Map<string, Question>() : questionsById(questions), [questions]);
   const confirmRef = useRef<HTMLElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const examInstanceRef = useRef(0);
 
   useEffect(() => {
     if (exam?.timerEnabled && exam.timerRunning) {
@@ -1648,7 +1963,9 @@ function MockExam({ activeBank, interfaceLanguage, exam, language, questions, pr
     const selectedSeed = seed.trim() || seedFactory();
     setSubmittingExam(false);
     setTimerAnnouncement(timerEnabled ? t(interfaceLanguage, "mockTimerStarted") : "");
+    examInstanceRef.current += 1;
     onExamChange({
+      instanceId: `mock-${examInstanceRef.current}`,
       seed: selectedSeed,
       startedAt: now(),
       timerEnabled,
@@ -1760,56 +2077,67 @@ function MockExam({ activeBank, interfaceLanguage, exam, language, questions, pr
         </div>
       ) : <p className="timer-off-note">{t(interfaceLanguage, "timerOff")}</p>}
       <button className="secondary-button question-map-link" type="button" onClick={jumpToQuestionMap}>{t(interfaceLanguage, "jumpQuestionMap")}</button>
-      <QuestionCard
-        choicePermutation={item.choicePermutation}
-        disabled={false}
+      <ExamTools
+        context="mock"
         interfaceLanguage={interfaceLanguage}
-        language={language}
-        onChoose={choose}
-        question={question}
-        selectedSourceIndex={selectedSourceIndex}
-        showCorrectness={false}
-      />
-      <div className="action-row">
-        <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? t(interfaceLanguage, "removeFlag") : t(interfaceLanguage, "flagForReview")}</button>
-        <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>{t(interfaceLanguage, "previous")}</button>
-        <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>{t(interfaceLanguage, "next")}</button>
-        <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>{t(interfaceLanguage, "submitExam")}</button>
-      </div>
-      <nav id="question-map" className="question-navigator" aria-label={t(interfaceLanguage, "questionNavigator")} tabIndex={-1}>
-        {exam.generatedItems.map((candidate, index) => {
-          const answered = exam.selectedByQuestionId.has(candidate.questionId);
-          const flagged = exam.flaggedQuestionIds.has(candidate.questionId);
-          return (
-            <button
-              className={index === exam.currentIndex ? "current" : ""}
-              key={candidate.questionId}
-              type="button"
-              aria-current={index === exam.currentIndex ? "step" : undefined}
-              aria-label={t(interfaceLanguage, "questionNavigatorLabel", index + 1, index === exam.currentIndex, answered, flagged)}
-              onClick={() => onExamChange({ ...exam, currentIndex: index })}
-            >
-              {index === exam.currentIndex ? <span aria-hidden="true">● </span> : null}{index + 1}{flagged ? " ⚑" : ""}{answered ? " ✓" : ""}
-            </button>
-          );
-        })}
-      </nav>
-      {exam.confirmingSubmit ? (
-        <section className="confirm-panel" aria-labelledby="submit-confirm-title" role="alertdialog" aria-modal="false" ref={confirmRef} tabIndex={-1}>
-          <h3 id="submit-confirm-title">{t(interfaceLanguage, "submitMockTitle")}</h3>
-          <p>{unanswered.length === 0 ? t(interfaceLanguage, "allQuestionsAnswered") : t(interfaceLanguage, "unansweredScoredIncorrect", unanswered.length)}</p>
-          {unanswered.length > 0 ? (
-            <details open>
-              <summary>{t(interfaceLanguage, "unansweredQuestions")}</summary>
-              <ol>{unanswered.map((candidate) => <li key={candidate.questionId}>{t(interfaceLanguage, "questionNumberWithId", candidate.position, candidate.questionId)}</li>)}</ol>
-            </details>
-          ) : null}
-          <div className="action-row">
-            <button type="button" onClick={() => { onExamChange({ ...exam, confirmingSubmit: false }); window.setTimeout(() => submitButtonRef.current?.focus(), 0); }}>{t(interfaceLanguage, "continueExam")}</button>
-            <button type="button" className="danger" disabled={submittingExam} onClick={() => void confirmSubmit()}>{submittingExam ? t(interfaceLanguage, "submittingExam") : t(interfaceLanguage, "confirmSubmit")}</button>
+        key={exam.instanceId}
+        referenceSheetAvailable={activeBank.course === "basic"}
+      >
+        <div className="mock-exam-body">
+          <div className="mock-question-stack">
+            <QuestionCard
+              choicePermutation={item.choicePermutation}
+              disabled={false}
+              interfaceLanguage={interfaceLanguage}
+              language={language}
+              onChoose={choose}
+              question={question}
+              selectedSourceIndex={selectedSourceIndex}
+              showCorrectness={false}
+            />
+            <div className="action-row">
+              <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? t(interfaceLanguage, "removeFlag") : t(interfaceLanguage, "flagForReview")}</button>
+              <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>{t(interfaceLanguage, "previous")}</button>
+              <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>{t(interfaceLanguage, "next")}</button>
+              <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>{t(interfaceLanguage, "submitExam")}</button>
+            </div>
+            {exam.confirmingSubmit ? (
+              <section className="confirm-panel" aria-labelledby="submit-confirm-title" role="alertdialog" aria-modal="false" ref={confirmRef} tabIndex={-1}>
+                <h3 id="submit-confirm-title">{t(interfaceLanguage, "submitMockTitle")}</h3>
+                <p>{unanswered.length === 0 ? t(interfaceLanguage, "allQuestionsAnswered") : t(interfaceLanguage, "unansweredScoredIncorrect", unanswered.length)}</p>
+                {unanswered.length > 0 ? (
+                  <details open>
+                    <summary>{t(interfaceLanguage, "unansweredQuestions")}</summary>
+                    <ol>{unanswered.map((candidate) => <li key={candidate.questionId}>{t(interfaceLanguage, "questionNumberWithId", candidate.position, candidate.questionId)}</li>)}</ol>
+                  </details>
+                ) : null}
+                <div className="action-row">
+                  <button type="button" onClick={() => { onExamChange({ ...exam, confirmingSubmit: false }); window.setTimeout(() => submitButtonRef.current?.focus(), 0); }}>{t(interfaceLanguage, "continueExam")}</button>
+                  <button type="button" className="danger" disabled={submittingExam} onClick={() => void confirmSubmit()}>{submittingExam ? t(interfaceLanguage, "submittingExam") : t(interfaceLanguage, "confirmSubmit")}</button>
+                </div>
+              </section>
+            ) : null}
           </div>
-        </section>
-      ) : null}
+          <nav id="question-map" className="question-navigator" aria-label={t(interfaceLanguage, "questionNavigator")} tabIndex={-1}>
+            {exam.generatedItems.map((candidate, index) => {
+              const answered = exam.selectedByQuestionId.has(candidate.questionId);
+              const flagged = exam.flaggedQuestionIds.has(candidate.questionId);
+              return (
+                <button
+                  className={index === exam.currentIndex ? "current" : ""}
+                  key={candidate.questionId}
+                  type="button"
+                  aria-current={index === exam.currentIndex ? "step" : undefined}
+                  aria-label={t(interfaceLanguage, "questionNavigatorLabel", index + 1, index === exam.currentIndex, answered, flagged)}
+                  onClick={() => onExamChange({ ...exam, currentIndex: index })}
+                >
+                  {index === exam.currentIndex ? <span aria-hidden="true">● </span> : null}{index + 1}{flagged ? " ⚑" : ""}{answered ? " ✓" : ""}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </ExamTools>
     </section>
   );
 }
@@ -2287,11 +2615,10 @@ interface SettingsProps {
   readonly statusMessage: string;
   readonly onProgressImported: (data: ProgressExportV1) => void;
   readonly onReset: () => void;
-  readonly onInterfaceLanguageChange: (language: InterfaceLanguage) => void;
   readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>;
 }
 
-function Settings({ activeBank, interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onInterfaceLanguageChange, onSetPreferences }: SettingsProps) {
+function Settings({ activeBank, interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onSetPreferences }: SettingsProps) {
   const [errors, setErrors] = useState<readonly string[]>([]);
   const [pendingImport, setPendingImport] = useState<ProgressExportV1 | null>(null);
   const [message, setMessage] = useState(statusMessage);
@@ -2338,7 +2665,7 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
       return;
     }
     try {
-      const parsed = JSON.parse(await readFileText(file)) as unknown;
+      const parsed = JSON.parse(await readFileText(file, interfaceLanguage)) as unknown;
       const result = validateProgressImport(parsed, activeBank);
       if (!result.ok || result.data === undefined) {
         setErrors(result.errors);
@@ -2393,16 +2720,19 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
     }
   }
 
-  function chooseInterfaceLanguage(language: InterfaceLanguage): void {
+  async function chooseLanguage(language: WebPreferences["language"]): Promise<void> {
     try {
-      onInterfaceLanguageChange(language);
+      const savedLatestRequest = await onSetPreferences({ language });
+      if (!savedLatestRequest) {
+        return;
+      }
+      const resolvedLanguage = resolveLanguagePreference(language);
       setErrors([]);
-      setMessage(t(language, "interfaceLanguageSaved", language === "fr" ? t(language, "languageFrench") : t(language, "languageEnglish")));
+      setMessage(t(resolvedLanguage, "languageSaved", languagePreferenceLabel(resolvedLanguage, language)));
     } catch (error) {
-      setErrors([t(interfaceLanguage, "errorInterfaceLanguageSave", formatError(error))]);
+      setErrors([t(interfaceLanguage, "errorLanguageSave", formatError(error))]);
     }
   }
-
 
   return (
     <section className="card settings" aria-labelledby="settings-title">
@@ -2415,10 +2745,11 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
         <label><input type="radio" name="theme" checked={preferences.theme === "light"} onChange={() => void chooseTheme("light")} /> {t(interfaceLanguage, "themeLight")}</label>
         <label><input type="radio" name="theme" checked={preferences.theme === "dark"} onChange={() => void chooseTheme("dark")} /> {t(interfaceLanguage, "themeDark")}</label>
       </fieldset>
-      <fieldset className="segmented-control interface-language-toggle">
-        <legend>{t(interfaceLanguage, "languageInterfaceLegend")}</legend>
-        <label><input type="radio" name="interface-language" checked={interfaceLanguage === "en"} onChange={() => chooseInterfaceLanguage("en")} /> <span lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "languageEnglish")}</span></label>
-        <label><input type="radio" name="interface-language" checked={interfaceLanguage === "fr"} onChange={() => chooseInterfaceLanguage("fr")} /> <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span></label>
+      <fieldset className="segmented-control language-setting-toggle">
+        <legend>{t(interfaceLanguage, "languageSettingLegend")}</legend>
+        <label><input type="radio" name="language-setting" checked={preferences.language === "system"} onChange={() => void chooseLanguage("system")} /> {t(interfaceLanguage, "languageSystemDefault")}</label>
+        <label><input type="radio" name="language-setting" checked={preferences.language === "en"} onChange={() => void chooseLanguage("en")} /> <span lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "languageEnglish")}</span></label>
+        <label><input type="radio" name="language-setting" checked={preferences.language === "fr"} onChange={() => void chooseLanguage("fr")} /> <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span></label>
       </fieldset>
       <div className="action-row">
         <button type="button" onClick={() => void exportProgress()}>{t(interfaceLanguage, "exportProgress")}</button>
@@ -2445,13 +2776,24 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
   );
 }
 
-function readFileText(file: File): Promise<string> {
+function languagePreferenceLabel(interfaceLanguage: InterfaceLanguage, language: WebPreferences["language"]): string {
+  switch (language) {
+    case "system":
+      return t(interfaceLanguage, "languageSystemDefault");
+    case "fr":
+      return t(interfaceLanguage, "languageFrench");
+    case "en":
+      return t(interfaceLanguage, "languageEnglish");
+  }
+}
+
+function readFileText(file: File, interfaceLanguage: InterfaceLanguage): Promise<string> {
   if (typeof file.text === "function") {
     return file.text();
   }
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(reader.error ?? new Error(t(readStoredInterfaceLanguage(), "fileReadError")));
+    reader.onerror = () => reject(reader.error ?? new Error(t(interfaceLanguage, "fileReadError")));
     reader.onload = () => resolve(String(reader.result ?? ""));
     reader.readAsText(file);
   });

@@ -41,7 +41,7 @@ private struct TVLaunchOptions {
         case "disabled", "false", "0": reduceMotionOverride = false
         default: reduceMotionOverride = nil
         }
-        initialLanguage = BankLanguage(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments) ?? "en") ?? .english
+        initialLanguage = BankLanguage.resolvedPreference(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments))
         evidenceFocus = AppLaunchArguments.value(after: "-CanadianHamTVEvidenceFocus", in: arguments).flatMap(TVEvidenceFocus.init(rawValue:))
         #else
         _ = arguments
@@ -51,7 +51,7 @@ private struct TVLaunchOptions {
         answeredSourceIndex = nil
         colorScheme = nil
         reduceMotionOverride = nil
-        initialLanguage = .english
+        initialLanguage = BankLanguage.systemPreferred()
         evidenceFocus = nil
         #endif
     }
@@ -60,7 +60,6 @@ private struct TVLaunchOptions {
 private enum TVEvidenceFocus: String {
     case category
     case answer
-    case language
 }
 
 private enum PlatformScreen: String {
@@ -768,75 +767,6 @@ private struct TVSecondaryButtonStyle: ButtonStyle {
     }
 }
 
-private struct TVLanguageButtonStyle: ButtonStyle {
-    let isSelected: Bool
-
-    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
-    @Environment(\.tvReduceMotionOverride) private var reduceMotionOverride
-    @Environment(\.isFocused) private var isFocused
-
-    private var reduceMotion: Bool { reduceMotionOverride ?? systemReduceMotion }
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-            .foregroundStyle(isSelected ? DesignTokens.Colors.paper : DesignTokens.Colors.ink)
-            .padding(.horizontal, DesignTokens.Spacing.xl)
-            .frame(minWidth: 170, minHeight: 64)
-            .background(isSelected ? DesignTokens.Colors.accent : DesignTokens.Colors.paperInset, in: Capsule())
-            .tvFocusRing(
-                Capsule(),
-                isFocused: isFocused,
-                unfocusedColor: isSelected ? DesignTokens.Colors.accent : DesignTokens.Colors.border,
-                unfocusedLineWidth: 2
-            )
-            .contentShape(Capsule())
-            .focusEffectDisabled()
-            .scaleEffect(reduceMotion ? 1 : (isFocused ? 1.035 : (configuration.isPressed ? 0.97 : 1)))
-    }
-}
-
-private struct TVLanguageToggle: View {
-    @Binding var language: BankLanguage
-    let evidenceFocus: TVEvidenceFocus?
-
-    var body: some View {
-        HStack(spacing: DesignTokens.Spacing.xxl) {
-            TVLanguageButton(option: .english, language: $language, requestsEvidenceFocus: false)
-            TVLanguageButton(option: .french, language: $language, requestsEvidenceFocus: evidenceFocus == .language)
-        }
-        .fixedSize(horizontal: true, vertical: false)
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text("Question language")) // l10n: localized
-        .accessibilityIdentifier("question-language-picker")
-    }
-}
-
-private struct TVLanguageButton: View {
-    let option: BankLanguage
-    @Binding var language: BankLanguage
-    let requestsEvidenceFocus: Bool
-
-    @FocusState private var isFocused: Bool
-
-    var body: some View {
-        Button {
-            language = option
-        } label: {
-            Text(localized(option.displayName, language: option)) // l10n: localized
-        }
-        .buttonStyle(TVLanguageButtonStyle(isSelected: language == option))
-        .focused($isFocused)
-        .accessibilityAddTraits(language == option ? .isSelected : [])
-        .accessibilityIdentifier("question-language-\(option.rawValue)-button")
-        .onAppear {
-            if requestsEvidenceFocus {
-                isFocused = true
-            }
-        }
-    }
-}
-
 private struct TVFeedbackBar: View {
     let selectedAnswer: ShuffledAnswer
     let correctAnswer: ShuffledAnswer
@@ -973,7 +903,6 @@ private struct TVTopBar: View {
             if let leadingAction {
                 leadingButton(leadingAction)
             }
-            TVLanguageToggle(language: $language, evidenceFocus: evidenceFocus)
             Button("About", action: onAbout)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .buttonStyle(TVSecondaryButtonStyle())
@@ -988,7 +917,6 @@ private struct TVTopBar: View {
                 leadingButton(leadingAction)
             }
             Spacer()
-            TVLanguageToggle(language: $language, evidenceFocus: evidenceFocus)
             Button("About", action: onAbout)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .buttonStyle(TVSecondaryButtonStyle())

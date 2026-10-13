@@ -25,12 +25,12 @@
     },
     {
       "id": "QZ-L-005-02-A-C2",
-      "prompt": { "en": "A learner calculates resistance from 7.5 V and 0.015 A. Which setup is correct?", "fr": null },
+      "prompt": { "en": "A learner calculates resistance from 8.4 V and 0.021 A. Which setup is correct?", "fr": null },
       "choices": [
-        { "text": { "en": "R = 7.5 x 0.015", "fr": null }, "isCorrect": false },
-        { "text": { "en": "R = 0.015 / 7.5", "fr": null }, "isCorrect": false },
-        { "text": { "en": "R = 7.5 / 0.015", "fr": null }, "isCorrect": true },
-        { "text": { "en": "R = 7.5 + 0.015", "fr": null }, "isCorrect": false }
+        { "text": { "en": "R = 8.4 x 0.021", "fr": null }, "isCorrect": false },
+        { "text": { "en": "R = 0.021 / 8.4", "fr": null }, "isCorrect": false },
+        { "text": { "en": "R = 8.4 / 0.021", "fr": null }, "isCorrect": true },
+        { "text": { "en": "R = 8.4 + 0.021", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "The reference-sheet form is R = E / I.", "fr": null }
     },

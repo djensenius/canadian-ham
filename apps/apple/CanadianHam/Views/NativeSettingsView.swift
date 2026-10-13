@@ -70,17 +70,26 @@ private struct NativeGeneralSettingsTab: View {
                     .accessibilityIdentifier("native-mock-exam-timer-toggle")
                     .accessibilityLabel(Text("Enable optional mock-exam timer")) // l10n: localized
 
-                Picker("Question language", selection: bindings.language) {
-                    ForEach(BankLanguage.allCases) { language in
+                Picker("Language", selection: bindings.language) {
+                    ForEach(ApplePreferences.LanguagePreference.allCases) { language in
                         switch language {
+                        case .system:
+                            Text("System default").tag(language) // l10n: localized
                         case .english:
-                            Text(localizedNative(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                            Text(localizedNative(BankLanguage.english.displayName, language: .english)).tag(language) // l10n: content(en)
                         case .french:
-                            Text(localizedNative(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                            Text(localizedNative(BankLanguage.french.displayName, language: .french)).tag(language) // l10n: content(fr)
                         }
                     }
                 }
-                .accessibilityLabel(Text("Question language")) // l10n: localized
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("native-language-setting-picker")
+                .accessibilityLabel(Text("Language")) // l10n: localized
+                if progressStore.preferences.language.requiresInterfaceRestart() {
+                    Text("Restart Canadian Ham to change the interface language.") // l10n: localized
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        .accessibilityIdentifier("native-language-restart-note")
+                }
 
                 Picker("Appearance", selection: bindings.theme) {
                     ForEach(ApplePreferences.Theme.allCases) { theme in
@@ -188,7 +197,7 @@ struct NativeSettingsPreferenceBindings {
         binding(get: { $0.examTimerEnabled }, set: { $0.examTimerEnabled = $1 })
     }
 
-    var language: Binding<BankLanguage> {
+    var language: Binding<ApplePreferences.LanguagePreference> {
         binding(get: { $0.language }, set: { $0.language = $1 })
     }
 

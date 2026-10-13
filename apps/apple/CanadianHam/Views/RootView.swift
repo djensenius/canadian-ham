@@ -150,11 +150,11 @@ struct RootView: View {
                 }
         }
         .onAppear {
-            language = progressStore.preferences.language
+            updateLanguage(from: progressStore.preferences)
             applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
         }
-        .onChange(of: progressStore.preferences.language) { _, next in
-            language = next
+        .onChange(of: progressStore.preferences.language) { _, _ in
+            updateLanguage(from: progressStore.preferences)
         }
         .onChange(of: progressStore.preferences.practiceMode) { _, _ in
             practiceSessionStates.clear()
@@ -231,20 +231,14 @@ struct RootView: View {
     private func compactSectionDestination(_ section: CompactSection, bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         switch section {
         case .home:
-            compactLanguageContainer(progressStore: progressStore) {
-                compactHomeView(bank: bank, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-            }
+            compactHomeView(bank: bank, progressStore: progressStore)
+                .background(DesignTokens.Colors.paper)
         case .learn:
-            compactLanguageContainer(progressStore: progressStore) {
-                compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-            }
+            compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                .background(DesignTokens.Colors.paper)
         case .practice:
-            compactLanguageContainer(progressStore: progressStore) {
-                compactPracticeView(bank: bank, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-            }
+            compactPracticeView(bank: bank, progressStore: progressStore)
+                .background(DesignTokens.Colors.paper)
         case .morse:
             MorseTrainerView(settings: $morseSettings, progressStore: progressStore) { nextSettings in
                 morseSettings = nextSettings
@@ -283,19 +277,6 @@ struct RootView: View {
         }
     }
 
-    private func compactLanguageContainer<Content: View>(progressStore: ProgressStoreService, @ViewBuilder content: () -> Content) -> some View {
-        VStack(spacing: 0) {
-            questionLanguagePicker(progressStore: progressStore)
-                .padding(DesignTokens.Spacing.sm)
-                .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                .padding(.horizontal, DesignTokens.Spacing.lg)
-                .padding(.top, DesignTokens.Spacing.md)
-                .padding(.bottom, DesignTokens.Spacing.sm)
-            content()
-        }
-        .background(DesignTokens.Colors.paper)
-    }
-
     @ViewBuilder
     private func compactPracticeView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision) { scope in
@@ -315,22 +296,19 @@ struct RootView: View {
                 language: $language,
                 state: practiceSessionStates.state(for: scope),
                 dataRevision: combinedDataRevision,
-                localDataReplacementRevision: appSettings.localDataReplacementRevision,
-                headerAccessory: AnyView(questionLanguagePicker(progressStore: progressStore))
+                localDataReplacementRevision: appSettings.localDataReplacementRevision
             ) {
                 recordDataChanged()
             }
         case .mockExam:
-            compactLanguageContainer(progressStore: progressStore) {
-                MockExamView(
-                    bank: bank,
-                    progressStore: progressStore,
-                    language: language,
-                    state: mockExamState,
-                    localDataReplacementRevision: appSettings.localDataReplacementRevision
-                ) {
-                    recordDataChanged()
-                }
+            MockExamView(
+                bank: bank,
+                progressStore: progressStore,
+                language: language,
+                state: mockExamState,
+                localDataReplacementRevision: appSettings.localDataReplacementRevision
+            ) {
+                recordDataChanged()
             }
         }
     }
@@ -457,7 +435,6 @@ struct RootView: View {
             .background(DesignTokens.Colors.paper)
             .accessibilityIdentifier("root-sidebar")
             .navigationTitle("Canadian Ham")
-            .toolbar { languageToolbarItem(progressStore: progressStore) }
         } detail: {
             NavigationStack(path: $navigationPath) {
                 detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
@@ -476,11 +453,11 @@ struct RootView: View {
         .frame(minWidth: 980, minHeight: 680)
 #endif
         .onAppear {
-            language = progressStore.preferences.language
+            updateLanguage(from: progressStore.preferences)
             applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
         }
-        .onChange(of: progressStore.preferences.language) { _, next in
-            language = next
+        .onChange(of: progressStore.preferences.language) { _, _ in
+            updateLanguage(from: progressStore.preferences)
         }
         .onChange(of: progressStore.preferences.practiceMode) { _, _ in
             practiceSessionStates.clear()
@@ -502,6 +479,10 @@ struct RootView: View {
 
     private var combinedDataRevision: Int {
         dataRevision + appSettings.dataRevision
+    }
+
+    private func updateLanguage(from preferences: ApplePreferences) {
+        language = preferences.language.resolvedLanguage()
     }
 
     private func clearCachedSessions(localDataReplacementRevision: Int) {
@@ -679,7 +660,9 @@ struct RootView: View {
             applyPracticeProgressFixtureLaunchArguments()
 #endif
             progressStoreError = nil
-            language = progressStore?.preferences.language ?? .english
+            if let progressStore {
+                updateLanguage(from: progressStore.preferences)
+            }
             if let progressStore, bank?.manifest.bankId != progressStore.preferences.activeBankId.rawValue {
                 loadBank(for: progressStore.preferences.activeBankId)
             }
@@ -709,6 +692,10 @@ struct RootView: View {
         }
         if let rawBankId = AppLaunchArguments.value(after: "-CanadianHamCourseBankId"), let bankId = CourseBankID(rawValue: rawBankId) {
             preferences.activeBankId = bankId
+            changed = true
+        }
+        if let rawLanguage = AppLaunchArguments.value(after: "-CanadianHamLanguage"), let language = ApplePreferences.LanguagePreference(rawValue: rawLanguage) {
+            preferences.language = language
             changed = true
         }
         if changed {
@@ -815,40 +802,6 @@ struct RootView: View {
             compactNavigationPath = compactPath(to: .practice, appending: CompactPracticeRoute.practice(.category(requestedCategoryID)))
 #endif
         }
-    }
-
-    private func languageToolbarItem(progressStore: ProgressStoreService) -> some ToolbarContent {
-        ToolbarItem(placement: .automatic) {
-            if selection == .morse {
-                EmptyView()
-            } else {
-                questionLanguagePicker(progressStore: progressStore)
-            }
-        }
-    }
-
-    private func questionLanguagePicker(progressStore: ProgressStoreService) -> some View {
-        Picker("Question language", selection: Binding(
-            get: { language },
-            set: { next in
-                language = next
-                var preferences = progressStore.preferences
-                preferences.language = next
-                try? progressStore.updatePreferences(preferences)
-            }
-        )) {
-            ForEach(BankLanguage.allCases) { language in
-                switch language {
-                case .english:
-                    Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
-                case .french:
-                    Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
-                }
-            }
-        }
-        .pickerStyle(.segmented)
-        .accessibilityLabel("Question language")
-        .accessibilityIdentifier("question-language-picker")
     }
 
     private func categoryAccessibilityLabel(_ category: BankCategory) -> AttributedString {

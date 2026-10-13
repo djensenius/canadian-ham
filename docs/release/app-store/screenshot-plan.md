@@ -34,7 +34,7 @@ For French iPhone/iPad/Mac simulator captures, add these launch arguments before
 -AppleLanguages '(fr)' -AppleLocale fr_CA
 ```
 
-These arguments change the interface language only. The question language is a separate stored preference (default English) with no launch argument on iPhone/iPad/Mac, and `-CanadianHamResetDataOnLaunch` resets it. For French question text: launch once with the reset flag, set Settings → Langue des questions → Français, then relaunch **without** `-CanadianHamResetDataOnLaunch` for the French practice, mock and quiz shots.
+With the language setting at System default (the default, and what `-CanadianHamResetDataOnLaunch` restores), these arguments switch both the interface and the ISED question text to French, so no extra step is needed. Don't set Settings → Langue to English or Français for screenshots: an explicit choice there overrides the launch language.
 
 For Apple TV and Vision Pro French screenshots, add both `-CanadianHamLanguage fr` (question bank) and `-AppleLanguages '(fr)' -AppleLocale fr_CA` (interface); both are required.
 

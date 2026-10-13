@@ -25,7 +25,7 @@ status: draft
 
 In Lesson 1, you learned the names of the quantities. Now we connect them. Ohm’s law describes how voltage, current, and resistance fit together. Power describes how quickly electrical energy is being used. It may be changed into heat, light, sound, RF output, or motion.
 
-The ISED reference sheet uses E for voltage, I for current, R for resistance, and P for power. These lessons use that notation so the formulas match the reference sheet you are given in the exam.
+The ISED reference sheet uses E for voltage, I for current, R for resistance, and P for power. These lessons use that notation so the formulas match the reference sheet you may use in the exam.
 
 ## Learning objectives
 
@@ -211,7 +211,7 @@ If a radio manual states a 20 A maximum DC draw at 13.8 V, calculate the whole-r
 
 P = I x E = 20 A x 13.8 V = 276 W
 
-That is the power at the radio's DC supply connector, not the Basic regulatory DC input limit. The Basic limit applies to DC input to the transmitter final RF stage. Follow the manufacturer's fuse value for the radio and cable. Do not guess a universal fuse size from RF output power.
+That is the power at the radio's DC supply connector, not the Basic regulatory DC input limit. The final RF stage is the transmitter output amplifier stage that feeds the antenna system. The Basic limit applies to DC input to that stage, not to the whole radio supply connector. Follow the manufacturer's fuse value for the radio and cable. Do not guess a universal fuse size from RF output power.
 
 ## Try it
 

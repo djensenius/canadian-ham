@@ -8,8 +8,11 @@
     "B-005-005-008",
     "B-005-005-010",
     "B-005-006-002",
+    "B-005-006-004",
+    "B-005-006-005",
     "B-005-006-007",
-    "B-005-006-008"
+    "B-005-006-008",
+    "B-005-006-010"
   ],
   "conceptChecks": [
     {
@@ -36,14 +39,14 @@
     },
     {
       "id": "QZ-L-005-03-A-C3",
-      "prompt": { "en": "Why might a physically larger resistor be chosen with the same ohm value?", "fr": null },
+      "prompt": { "en": "Four equal 270 ohm, 0.25 W resistors share current evenly in a parallel load. What total heat rating can the network use?", "fr": null },
       "choices": [
-        { "text": { "en": "It can safely dissipate more heat if rated for more watts.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It changes DC into AC.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It always has less resistance than marked.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It removes the need for a fuse.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "0.25 W", "fr": null }, "isCorrect": false },
+        { "text": { "en": "0.50 W", "fr": null }, "isCorrect": false },
+        { "text": { "en": "1.0 W", "fr": null }, "isCorrect": true },
+        { "text": { "en": "4.0 W", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The larger part may have a higher power rating while keeping the same resistance.", "fr": null }
+      "explanation": { "en": "Equal parts that share current and heat can add their wattage ratings: 4 x 0.25 W = 1.0 W.", "fr": null }
     }
   ]
 }

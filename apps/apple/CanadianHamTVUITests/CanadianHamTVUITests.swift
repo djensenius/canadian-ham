@@ -87,35 +87,27 @@ final class CanadianHamTVUITests: XCTestCase {
         attachScreenScreenshot(name: "tvos-about-lower-sections-focus")
     }
 
-    func testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() throws {
-        let app = configuredApp(screen: .practice, appearance: "light")
+    func testPracticeInteractionUsesConfiguredLanguageShowsFeedbackAndAdvances() throws {
+        let app = configuredApp(screen: .practice, appearance: "light", language: "fr")
         app.launch()
         defer { app.terminate() }
 
-        XCTAssertTrue(PlatformAuditScreen.practice.waitElement(in: app).waitForExistence(timeout: 15), "Expected fixed practice question")
+        XCTAssertTrue(app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 15), "Expected fixed practice question in configured French language")
+        XCTAssertFalse(app.buttons["question-language-fr-button"].firstMatch.exists, "tvOS practice should not show a language picker")
 
         let remote = XCUIRemote.shared
-        let frenchLanguage = app.buttons["question-language-fr-button"].firstMatch
-        XCTAssertTrue(frenchLanguage.waitForExistence(timeout: 5), "French language button should exist")
-        pressRemote([.right, .select, .right, .select], remote: remote)
-        XCTAssertTrue(
-            app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 5),
-            "Fixed question should switch to French through tvOS interaction"
-        )
-        waitForSelection(on: frenchLanguage)
-        XCTAssertTrue(frenchLanguage.isSelected, "French language button should become selected after switching languages")
-
         let firstAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
         XCTAssertTrue(firstAnswer.waitForExistence(timeout: 5), "First answer should exist")
+        pressUntilFocused(firstAnswer, remote: remote, buttons: [.down, .right], maxCycles: 6)
+        remote.press(.select)
         let feedback = app.descendants(matching: .any)["answer-feedback"].firstMatch
-        pressUntil(feedback, exists: true, remote: remote, buttons: [.down, .down, .select, .down, .select, .down, .select, .down, .select])
-        XCTAssertTrue(feedback.exists, "Feedback should appear after selecting an answer with the remote")
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5), "Feedback should appear after selecting an answer")
 
         let nextQuestion = app.buttons["next-question-button"].firstMatch
         XCTAssertTrue(nextQuestion.waitForExistence(timeout: 5), "Next question button should exist")
         assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
         waitForFocus(on: nextQuestion)
-        XCTAssertTrue(nextQuestion.hasFocus, "Next question should receive tvOS focus after answering before Select is pressed")
+        XCTAssertTrue(nextQuestion.hasFocus, "Next question should receive focus automatically after answering")
         assertFocusedElementIsOnScreen(nextQuestion, in: app, description: "Next question")
 
         remote.press(.select)
@@ -170,14 +162,6 @@ final class CanadianHamTVUITests: XCTestCase {
                 targetIdentifier: "next-question-button",
                 answeredSourceIndex: 0,
                 attachmentName: "tvos-primary-focus-ring\(suffix)"
-            )
-            try captureFocusRingEvidence(
-                screen: .categories,
-                appearance: appearance,
-                targetIdentifier: "question-language-fr-button",
-                language: "fr",
-                evidenceFocus: "language",
-                attachmentName: "tvos-language-focus-ring\(suffix)"
             )
         }
 

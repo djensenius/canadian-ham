@@ -15,7 +15,10 @@ objectives:
   - "Place low-pass filters in a basic HF station."
   - "Trace audio through an FM transmitter."
   - "Name the main blocks of a superheterodyne receiver."
-prerequisites: []
+prerequisites:
+  - L-006-02
+  - L-004-01
+  - L-005-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-01-A
@@ -49,7 +52,7 @@ SWR means standing wave ratio. It is a match reading based on forward and reflec
 
 A low-pass filter passes the wanted HF signal and reduces higher-frequency harmonics. Harmonics are unwanted signals at whole-number multiples of the intended signal. The filter belongs close to the output stage that can make or amplify those harmonics.
 
-An antenna tuner transforms impedance so the transmitter sees a safer load. It does not remove harmonics. Antenna impedance changes with frequency, so you may need to readjust the tuner after moving to a new frequency. An antenna switch selects the antenna path, test load, or unused position.
+An antenna tuner transforms impedance so the transmitter sees a safer load. It can let a transmitter load into an antenna on a band the antenna was not designed for, within the antenna system's limits. It does not remove harmonics. Antenna impedance changes with frequency, so you may need to readjust the tuner after moving to a new frequency. An antenna switch selects the antenna path, test load, or unused position.
 
 A dummy load is a non-radiating test load. It turns RF power into heat so you can tune or test without intentionally radiating a signal. Real dummy loads have power and time limits. If the case warms, stop and check the rating.
 

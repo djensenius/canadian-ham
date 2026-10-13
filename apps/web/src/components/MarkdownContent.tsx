@@ -16,6 +16,8 @@ interface MarkdownContentProps {
   readonly markdown: string;
   readonly title?: string;
   readonly interfaceLanguage?: InterfaceLanguage;
+  readonly contentLanguage?: "en" | "fr";
+  readonly tableLabel?: string;
 }
 
 type MarkdownBlock =
@@ -28,28 +30,35 @@ type MarkdownBlock =
   | { readonly type: "figure"; readonly id: string; readonly alt: string; readonly textEquivalent: readonly string[] }
   | { readonly type: "illustration"; readonly alt: string; readonly description: string };
 
-export function MarkdownContent({ markdown, title, interfaceLanguage = "en" }: MarkdownContentProps) {
-  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => renderBlock(block, index, interfaceLanguage))}</>;
+export function MarkdownContent({ markdown, title, interfaceLanguage = "en", contentLanguage, tableLabel = t(interfaceLanguage, "markdownTableAria") }: MarkdownContentProps) {
+  let tableIndex = 0;
+  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => {
+    if (block.type === "table") {
+      tableIndex += 1;
+      return renderBlock(block, index, interfaceLanguage, contentLanguage, `${tableLabel} ${tableIndex}`);
+    }
+    return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel);
+  })}</>;
 }
 
-function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage): ReactNode {
+function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string): ReactNode {
   if (block.type === "heading") {
     const Tag = `h${Math.min(block.depth + 1, 6)}` as "h2" | "h3" | "h4" | "h5" | "h6";
-    return <Tag key={index}>{block.text}</Tag>;
+    return <Tag key={index} lang={contentLanguage}>{block.text}</Tag>;
   }
   if (block.type === "paragraph") {
-    return <p key={index}>{block.text}</p>;
+    return <p key={index} lang={contentLanguage}>{block.text}</p>;
   }
   if (block.type === "unordered-list") {
-    return <ul key={index}>{block.items.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}</ul>;
+    return <ul key={index} lang={contentLanguage}>{block.items.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}</ul>;
   }
   if (block.type === "ordered-list") {
-    return <ol key={index}>{block.items.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}</ol>;
+    return <ol key={index} lang={contentLanguage}>{block.items.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}</ol>;
   }
   if (block.type === "table") {
     return (
-      <div className="markdown-table-wrapper" key={index} role="region" aria-label={t(interfaceLanguage, "markdownTableAria")} tabIndex={0}>
-        <table>
+      <div className="markdown-table-wrapper" key={index} role="region" aria-label={tableLabel} tabIndex={0}>
+        <table lang={contentLanguage}>
           <thead>
             <tr>{block.headers.map((header) => <th key={header} scope="col">{header}</th>)}</tr>
           </thead>
@@ -70,7 +79,7 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
         role="group"
         aria-label={block.language === null ? t(interfaceLanguage, "markdownCodeBlockAria") : t(interfaceLanguage, "markdownCodeBlockLanguageAria", block.language)}
         tabIndex={0}
-      ><code>{block.code}</code></pre>
+      ><code lang={contentLanguage}>{block.code}</code></pre>
     );
   }
   if (block.type === "figure") {

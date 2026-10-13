@@ -35,6 +35,12 @@ The recommended learning order is:
 
 This starts with electrical quantities, parts, feedlines, antennas, station blocks, safety, propagation, and interference. Operating procedure comes after learners understand what their station is doing, and regulations come last so rule details can be attached to the technical and operating context they govern.
 
+## Lesson prerequisites
+
+Lesson front matter uses `prerequisites` for lesson IDs that should be studied before a lesson, including cross-module dependencies. Prerequisites must be real lesson IDs, must not form cycles, and must come earlier in the recommended learning order above (module order first, then each module's `lessonIds` order). Do not point a lesson at later material just because the current draft contains a forward reference; either define the term locally or schedule a content fix.
+
+Use direct prerequisites that explain the dependency a learner needs, not a complete list of every transitive earlier lesson. Examples: M4 lessons may point back to M5 electronics lessons for Ohm's law, AC and dB; M6 lessons may point back to M5 impedance, reactance, resonance and dB; M7 points back to M6 wavelength and band-name context; M8 points back to M3/M4/M5 station, filtering, signal-quality and non-linear-device foundations; M2 and M1 point back to the relevant technical and operating lessons they rely on.
+
 ## Coverage check
 
 Run the zero-dependency coverage checker from the repository root:
@@ -43,7 +49,7 @@ Run the zero-dependency coverage checker from the repository root:
 node packages/content-tools/src/check-lesson-coverage.ts
 ```
 
-The checker parses lesson front matter, compares lesson `covers` entries with `content/generated/basic-2025-07-15/subsections.json`, fails on missing or unknown subsection IDs, fails on malformed lesson/module front matter, and reports duplicate subsection coverage for review.
+The checker parses lesson front matter, compares lesson `covers` entries with `content/generated/basic-2025-07-15/subsections.json`, fails on missing or unknown subsection IDs, fails on malformed lesson/module front matter, validates that every prerequisite exists, validates that prerequisites are acyclic and earlier than the dependent lesson in the recommended order, and reports duplicate subsection coverage for review.
 
 ## Reference-style lessons for rule-based modules
 

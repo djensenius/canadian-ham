@@ -14,7 +14,9 @@ objectives:
   - "State what an amplifier does to a signal."
   - "Explain why linearity matters in radio circuits."
   - "Identify common diode jobs such as rectification, detection, and protection."
-prerequisites: []
+prerequisites:
+  - L-005-02
+  - L-005-04
 estimatedMinutes: 30
 quizIds:
   - QZ-L-004-01-A
@@ -93,7 +95,7 @@ A squealing public-address system is an everyday analogy. Sound from the speaker
 
 ## Diodes conduct mainly one way
 
-A semiconductor diode has two electrodes: an anode and a cathode. In ordinary circuit language, the diode conducts when it is forward biased. It blocks, except for tiny leakage or special breakdown behaviour, when it is reverse biased.
+A semiconductor diode has two electrodes: an anode and a cathode. In ordinary circuit language, forward biased means the anode is more positive than the cathode by enough voltage for the diode to conduct. The diode blocks, except for tiny leakage or special breakdown behaviour, when it is reverse biased.
 
 Conventional current is described as flowing from anode to cathode when a diode conducts. Electron flow is opposite: electrons move from cathode toward anode. Both descriptions appear in electronics, so always notice which convention is being used.
 
@@ -157,8 +159,8 @@ A common E12 choice above the ideal value is 390 ohms. Current becomes I = 6.9 V
 
 ## Try it
 
-1. A receiver preselector already chose the station, but the signal is still too small for the mixer. The next block should raise the RF level without changing the station's frequency.
-2. A speech processor receives a few millivolts from a headset mic and must feed a modulator input. Choose an audio gain stage because the information is still sound-frequency speech.
+1. A receiver preselector, or tuned input filter, already chose the station, but the signal is still too small for the mixer, the stage that changes frequency. The next block should raise the RF level without changing the station's frequency.
+2. A speech processor is an audio stage that changes microphone audio before transmission, and a modulator applies that information to a carrier. If the processor receives only a few millivolts from a headset mic, choose an audio gain stage because the information is still sound-frequency speech.
 3. A battery-powered accessory includes a series diode and now measures about one diode drop less at its circuit board. Explain the trade-off: the diode can block a reversed battery, but it also drops some voltage during normal operation.
 4. A waveform leaving an amplifier has clipped peaks. That is a warning sign of non-linearity and distortion.
 5. A small diode circuit changes a sine-like AC waveform into pulses all in one direction. That action is rectification.

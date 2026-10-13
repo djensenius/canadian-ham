@@ -15,10 +15,10 @@
       "id": "QZ-L-006-05-A-C1",
       "prompt": { "en": "A dipole wire runs northeast-southwest in free space. Where is radiation strongest?", "fr": null },
       "choices": [
-        { "text": { "en": "Mainly upward only", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Mainly off the wire ends", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Equally nowhere because a dipole does not radiate", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Broadside to the wire, northwest and southeast", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Broadside to the wire, northwest and southeast", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Mainly along the wire toward northeast and southwest", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Only straight upward because the wire is horizontal", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Only toward the feedline because current enters there", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "A free-space half-wave dipole has maximum radiation broadside to the wire and nulls off the ends.", "fr": null }
     },

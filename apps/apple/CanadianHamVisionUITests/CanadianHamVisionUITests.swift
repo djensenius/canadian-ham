@@ -62,21 +62,13 @@ final class CanadianHamVisionUITests: XCTestCase {
         assertAboutLowerSectionsReachable(in: app, platformName: "visionOS")
     }
 
-    func testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() throws {
-        let app = configuredApp(screen: .practice, appearance: "light")
+    func testPracticeInteractionUsesConfiguredLanguageShowsFeedbackAndAdvances() throws {
+        let app = configuredApp(screen: .practice, appearance: "light", language: "fr")
         app.launch()
         defer { app.terminate() }
 
-        XCTAssertTrue(PlatformAuditScreen.practice.waitElement(in: app).waitForExistence(timeout: 15), "Expected fixed practice question")
-
-        let languagePicker = app.segmentedControls["question-language-picker"].firstMatch
-        let frenchSegment = languagePicker.buttons["Français"].firstMatch
-        XCTAssertTrue(frenchSegment.waitForExistence(timeout: 5), "French language segment should exist")
-        frenchSegment.tap()
-        XCTAssertTrue(
-            app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 5),
-            "Fixed question should switch to French"
-        )
+        XCTAssertTrue(app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 15), "Expected fixed practice question in configured French language")
+        XCTAssertFalse(app.segmentedControls["question-language-picker"].firstMatch.exists, "visionOS practice should not show a language picker")
 
         answerFirstVisibleQuestion(in: app)
         let feedback = app.descendants(matching: .any)["answer-feedback"].firstMatch

@@ -39,12 +39,14 @@ export const enMessages = defineMessages({
   errorSaveMockExam: (error: string) => `Unable to save mock exam locally: ${error}`,
   statusAllLocalProgressReset: "All local progress was reset.",
   referenceSheetNote: "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.",
+  examDayHeading: "Exam day",
+  examDayLearnCopy: "Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice.",
+  examDayLessonLink: "Read exam-day guidance",
   englishOnlyLessonNotice: "Lesson available in English only.",
   englishOnlyExplanationNotice: "Explanation available in English only.",
   englishOnlyContentNotice: "Content available in English only.",
-  languageQuestionLegend: "Question language",
-  languageQuestionAria: "Question language",
-  languageInterfaceLegend: "Interface language",
+  languageSettingLegend: "Language",
+  languageSystemDefault: "System default",
   languageEnglish: "English",
   languageFrench: "Français",
   courseSwitcherAria: "Course selection",
@@ -131,6 +133,7 @@ export const enMessages = defineMessages({
   lessonModuleOverview: "Module overview",
   lessonNotMarkedYet: "Not marked read yet.",
   lessonMarkedReadTimes: (count: number) => `Marked read ${count} time${count === 1 ? "" : "s"}.`,
+  lessonPrerequisitesHeading: "Before this lesson",
   lessonComingSoonTitle: "Coming soon",
   lessonComingSoonCopy: "This outline is bundled now so module order and objectives are visible offline while the full lesson is authored.",
   lessonObjectives: "Objectives",
@@ -181,6 +184,31 @@ export const enMessages = defineMessages({
   seedPrefix: "Seed",
   answeredCount: (answered: number, total: number) => `Answered: ${answered} of ${total}`,
   currentSubsection: "Current subsection:",
+  examToolsToolbarAria: "Exam tools",
+  examToolCalculator: "Calculator",
+  examToolReferenceSheet: "Reference sheet",
+  calculatorTitle: "Calculator",
+  referenceSheetTitle: "Reference sheet",
+  closeExamTool: "Close tool",
+  calculatorKeyboardHelp: "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear.",
+  calculatorDisplayAria: (result: string) => `Calculator display: ${result}`,
+  calculatorResultAnnouncement: (result: string) => `Calculator result: ${result}`,
+  calculatorKeypadAria: "Calculator keys",
+  calculatorDigitKey: (digit: string) => `Digit ${digit}`,
+  calculatorDecimalKey: "Decimal point",
+  calculatorAddKey: "Add",
+  calculatorSubtractKey: "Subtract",
+  calculatorMultiplyKey: "Multiply",
+  calculatorDivideKey: "Divide",
+  calculatorEqualsKey: "Equals",
+  calculatorSquareRootKey: "Square root",
+  calculatorSquareKey: "Square",
+  calculatorReciprocalKey: "Reciprocal",
+  calculatorSignKey: "Change sign",
+  calculatorPercentKey: "Percent",
+  calculatorClearEntryKey: "Clear entry",
+  calculatorAllClearKey: "All clear",
+  calculatorBackspaceKey: "Backspace",
   practiceReviewLaterHint: "Review-later mode: answer all questions, then submit the set to see results.",
   practiceSubmittingSet: "Submitting practice set",
   practiceSubmitSet: "Submit practice set",
@@ -283,9 +311,9 @@ export const enMessages = defineMessages({
   resetComplete: "All local data was reset.",
   errorReset: (error: string) => `Unable to reset local progress: ${error}`,
   themeSaved: (theme: string) => `Theme preference saved: ${theme}.`,
-  interfaceLanguageSaved: (language: string) => `Interface language saved: ${language}.`,
+  languageSaved: (language: string) => `Language preference saved: ${language}.`,
   errorThemeSave: (error: string) => `Unable to save theme preference: ${error}`,
-  errorInterfaceLanguageSave: (error: string) => `Unable to save interface language: ${error}`,
+  errorLanguageSave: (error: string) => `Unable to save language preference: ${error}`,
   morseSectionTitle: "Morse",
   previewLabel: "Preview",
   morseSectionIntro: "Learn and practise Morse code offline. The Koch course, copy practice, and simulated exam are available below.",
@@ -449,6 +477,7 @@ export const enMessages = defineMessages({
   footerIndependent: "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.",
   elapsedSpeech: (minutes: number, seconds: number) => `${minutes} minute${minutes === 1 ? "" : "s"} ${seconds} second${seconds === 1 ? "" : "s"}`,
   markdownTableAria: "Lesson table",
+  referenceSheetTableAria: "Reference sheet table",
   markdownCodeBlockAria: "Lesson code block",
   markdownCodeBlockLanguageAria: (language: string) => `Lesson code block (${language})`,
   markdownFigureTextEquivalent: "Figure text equivalent",
@@ -482,12 +511,14 @@ export const frMessages = defineMessages({
   errorSaveMockExam: (error: string) => `Impossible d’enregistrer l’examen simulé localement : ${error}`,
   statusAllLocalProgressReset: "Toute la progression locale a été réinitialisée.",
   referenceSheetNote: "À l’examen réel, ISDE fournit une feuille de référence avec les formules et les schémas fonctionnels. Les leçons expliquent tout ce qu’elle contient.",
+  examDayHeading: "Le jour de l’examen",
+  examDayLearnCopy: "Les examens de compétence de base sont à livre fermé. La leçon sur l’autorité, les certificats et les examens explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer.",
+  examDayLessonLink: "Lire les conseils pour le jour de l’examen",
   englishOnlyLessonNotice: "Leçon offerte en anglais seulement.",
   englishOnlyExplanationNotice: "Explication offerte en anglais seulement.",
   englishOnlyContentNotice: "Contenu offert en anglais seulement.",
-  languageQuestionLegend: "Langue des questions",
-  languageQuestionAria: "Langue des questions",
-  languageInterfaceLegend: "Langue de l’interface",
+  languageSettingLegend: "Langue",
+  languageSystemDefault: "Réglage du système",
   languageEnglish: "English",
   languageFrench: "Français",
   courseSwitcherAria: "Sélection du cours",
@@ -574,6 +605,7 @@ export const frMessages = defineMessages({
   lessonModuleOverview: "Aperçu du module",
   lessonNotMarkedYet: "Pas encore marquée comme lue.",
   lessonMarkedReadTimes: (count: number) => `Marquée comme lue ${count} fois.`,
+  lessonPrerequisitesHeading: "Avant cette leçon",
   lessonComingSoonTitle: "À venir",
   lessonComingSoonCopy: "Ce plan est inclus afin que l’ordre des modules et les objectifs soient visibles hors ligne pendant la rédaction complète de la leçon.",
   lessonObjectives: "Objectifs",
@@ -624,6 +656,31 @@ export const frMessages = defineMessages({
   seedPrefix: "Graine",
   answeredCount: (answered: number, total: number) => `Réponses : ${answered} sur ${total}`,
   currentSubsection: "Sous-section actuelle :",
+  examToolsToolbarAria: "Outils d’examen",
+  examToolCalculator: "Calculatrice",
+  examToolReferenceSheet: "Feuille de référence",
+  calculatorTitle: "Calculatrice",
+  referenceSheetTitle: "Feuille de référence",
+  closeExamTool: "Fermer l’outil",
+  calculatorKeyboardHelp: "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer.",
+  calculatorDisplayAria: (result: string) => `Affichage de la calculatrice : ${result}`,
+  calculatorResultAnnouncement: (result: string) => `Résultat de la calculatrice : ${result}`,
+  calculatorKeypadAria: "Touches de calculatrice",
+  calculatorDigitKey: (digit: string) => `Chiffre ${digit}`,
+  calculatorDecimalKey: "Virgule décimale",
+  calculatorAddKey: "Additionner",
+  calculatorSubtractKey: "Soustraire",
+  calculatorMultiplyKey: "Multiplier",
+  calculatorDivideKey: "Diviser",
+  calculatorEqualsKey: "Égal",
+  calculatorSquareRootKey: "Racine carrée",
+  calculatorSquareKey: "Carré",
+  calculatorReciprocalKey: "Inverse",
+  calculatorSignKey: "Changer le signe",
+  calculatorPercentKey: "Pourcentage",
+  calculatorClearEntryKey: "Effacer l’entrée",
+  calculatorAllClearKey: "Tout effacer",
+  calculatorBackspaceKey: "Retour arrière",
   practiceReviewLaterHint: "Mode « Réviser plus tard » : répondez à toutes les questions, puis soumettez la série pour voir les résultats.",
   practiceSubmittingSet: "Soumission de la série d’exercices",
   practiceSubmitSet: "Soumettre la série d’exercices",
@@ -726,9 +783,9 @@ export const frMessages = defineMessages({
   resetComplete: "Toutes les données locales ont été réinitialisées.",
   errorReset: (error: string) => `Impossible de réinitialiser la progression locale : ${error}`,
   themeSaved: (theme: string) => `Préférence de thème enregistrée : ${theme}.`,
-  interfaceLanguageSaved: (language: string) => `Langue de l’interface enregistrée : ${language}.`,
+  languageSaved: (language: string) => `Préférence de langue enregistrée : ${language}.`,
   errorThemeSave: (error: string) => `Impossible d’enregistrer la préférence de thème : ${error}`,
-  errorInterfaceLanguageSave: (error: string) => `Impossible d’enregistrer la langue de l’interface : ${error}`,
+  errorLanguageSave: (error: string) => `Impossible d’enregistrer la préférence de langue : ${error}`,
   morseSectionTitle: "Morse",
   previewLabel: "Aperçu",
   morseSectionIntro: "Apprenez le code Morse et exercez-vous hors ligne. Le cours Koch, la copie et l’examen simulé sont offerts ci-dessous.",
@@ -892,6 +949,7 @@ export const frMessages = defineMessages({
   footerIndependent: enMessages.footerIndependent,
   elapsedSpeech: (minutes: number, seconds: number) => `${minutes} minute${minutes === 1 ? "" : "s"} ${seconds} seconde${seconds === 1 ? "" : "s"}`,
   markdownTableAria: "Tableau de leçon",
+  referenceSheetTableAria: "Tableau de la feuille de référence",
   markdownCodeBlockAria: "Bloc de code de leçon",
   markdownCodeBlockLanguageAria: (language: string) => `Bloc de code de leçon (${language})`,
   markdownFigureTextEquivalent: "Équivalent textuel de la figure",
@@ -920,28 +978,36 @@ export function interfaceLanguageTag(language: InterfaceLanguage): "en-CA" | "fr
   return language === "fr" ? "fr-CA" : "en-CA";
 }
 
-export function readStoredInterfaceLanguage(): InterfaceLanguage {
-  const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
-  if (isInterfaceLanguage(storedLanguage)) {
-    return storedLanguage;
+// localStorage is only a fast-start mirror of the IndexedDB preference; every
+// operation is guarded because getItem/setItem/removeItem can throw in private
+// or hardened browser contexts (as lib/theme.ts also handles).
+export function readStoredInterfaceLanguageOverride(): InterfaceLanguage | null {
+  try {
+    const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
+    return isInterfaceLanguage(storedLanguage) ? storedLanguage : null;
+  } catch {
+    return null;
   }
-  return navigatorLanguageStartsWithFrench() ? "fr" : "en";
 }
 
-export function storeInterfaceLanguage(language: InterfaceLanguage): void {
-  safeLocalStorage()?.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+export function mirrorStoredInterfaceLanguagePreference(language: InterfaceLanguage | "system"): void {
+  if (language === "system") {
+    clearStoredInterfaceLanguage();
+    return;
+  }
+  try {
+    safeLocalStorage()?.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+  } catch {
+    // The IndexedDB preference is authoritative; a failed mirror only costs a brief flash on next load.
+  }
 }
 
 export function clearStoredInterfaceLanguage(): void {
-  safeLocalStorage()?.removeItem(INTERFACE_LANGUAGE_STORAGE_KEY);
-}
-
-function navigatorLanguageStartsWithFrench(): boolean {
-  if (typeof navigator === "undefined") {
-    return false;
+  try {
+    safeLocalStorage()?.removeItem(INTERFACE_LANGUAGE_STORAGE_KEY);
+  } catch {
+    // See mirrorStoredInterfaceLanguagePreference.
   }
-  const preferredLanguage = navigator.language || navigator.languages?.[0] || "";
-  return preferredLanguage.toLowerCase().startsWith("fr");
 }
 
 function safeLocalStorage(): Storage | null {

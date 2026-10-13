@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@canadian-ham/calculator-engine": "workspace:*",
     "@canadian-ham/engine-ts": "workspace:*",
     "@canadian-ham/morse-engine": "workspace:*",
     "react": "^19.1.1",
