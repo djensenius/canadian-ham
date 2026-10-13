@@ -141,15 +141,13 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private func toolPanel(for tool: ExamTool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            HStack {
-                Spacer(minLength: 0)
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+                toolHeader(for: tool)
                 closeToolButton
             }
 
             ScrollView {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    toolHeader(for: tool)
-
                     switch tool {
                     case .calculator:
                         CalculatorToolView(viewModel: calculator)
