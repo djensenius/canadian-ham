@@ -464,7 +464,7 @@ struct ReferenceSheetToolView: View {
         Group {
             if let document {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    LessonMarkdownView(markdown: document.markdown, title: String(localized: "Basic reference sheet"))
+                    LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid")
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                         .padding(DesignTokens.Spacing.md)
                         .padding(.bottom, DesignTokens.Spacing.xl)
