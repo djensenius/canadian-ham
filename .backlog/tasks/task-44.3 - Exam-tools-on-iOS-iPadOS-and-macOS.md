@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 13:52'
+updated_date: '2026-10-13 13:56'
 labels:
   - apple
 dependencies:
@@ -87,6 +87,8 @@ Fix update after iPhone class timeout/failures: large-detent audit reported unsu
 Test-helper fix update: iPhone class run timed out after one hour and showed failures in medium audits, keyboard protected-area settling, large-detent audit, and largest Dynamic Type calculator reachability. Restored the exam-tools protected-area positioning helper to scan both directions until the target is in the middle band and no scrollable text/buttons intersect the protected navigation/status area, matching the practice-suite approach instead of asserting after only target positioning. Verified git diff --check and text-source check.
 
 Fix update after targeted 5-test rerun: exported xcresult attachments confirmed the medium and largest-Dynamic-Type audit issue was the visible Close tool button, and the large-detent issue was the Ohm's law heading. Increased the token-styled close button vertical room while keeping visible text equal to label, added vertical room/fixed wrapping to LessonMarkdown headings/paragraph/table cells, kept the header in a compact row so calculator receives real panel height, and narrowed the keyboard focus test to tap a hittable answer before typing after focus leaves (the dedicated precise-scroll test retains the protected-area assertion). Verified git diff --check and text-source check.
+
+Header audit fix update: second targeted rerun still showed textClipped on Calculator title/Close tool and keyboard focus still remained after answer tap. Switched tool titles to a smaller dynamic body-weight header with vertical room, use a vertical header at accessibility sizes, changed Close tool to the standard bordered SwiftUI button (visible title remains Close tool), and adjusted available body-height calculation for accessibility headers. Verified git diff --check and text-source check; targeted rerun pending.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
