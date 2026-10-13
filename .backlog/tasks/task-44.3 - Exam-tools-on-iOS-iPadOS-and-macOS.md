@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 02:21'
+updated_date: '2026-10-13 02:30'
 labels:
   - apple
 dependencies:
@@ -65,6 +65,8 @@ Evidence-first audit rerun (before code changes): `DEVELOPER_DIR=/Applications/X
 | Unavailable-state audit | Label `Reference sheet unavailable`; element image 760x68 px at scale 3 (~253x23 pt content). | Static text inside the unavailable fallback card in the compact sheet body, below the sheet header; not navigation bar/toolbar/inspector. Description text is in the same fixed card body. | Card text starts around x~60 pt, y~529 pt in the app screenshot; the title runs in an HStack with an icon and consumes the remaining row width. | Medium sheet: reference sheet spans roughly y~416-864 pt; grabber y~420-427 pt; unavailable card begins y~490 pt. | No ellipsis at default size and not cut by the sheet edge/grabber. Audit points to larger-Dynamic-Type clipping risk in the card row/body layout, so the fix should let title and description wrap/grow in scrollable content. |
 
 Stopped after supervisor-directed narrowing attempt. Replaced the custom reference-sheet renderer/zoom controls with the shared `LessonMarkdownView`/`LessonTableView`, moved tool titles into scroll content as plain wrapping header Text, and simplified the unavailable state to a ScrollView-contained header/body. Verification: `git diff --check` passed, but the required targeted iPhone rerun still failed 3/3 (`/tmp/task-44.3-supervisor-narrow-1.log`, result bundle `/tmp/task-44.3-supervisor-narrow-1.xcresult`): light/dark audits still report `Text clipped` on `exam-tool-calculator-panel`; unavailable audit still reports `Text clipped` on `exam-tool-reference-sheet-panel`. Per supervisor instruction, stopping because audit failures remain after switching to the shared lesson renderer.
+
+H1 result: added a legitimate audit settle wait that polls the active tool header frame every 100 ms until 3 consecutive equal samples (5 s cap) before the three accessibility audits. Reran the three failing iPhone tests twice with xbuild on iPhone 17 Pro: /tmp/task-44.3-h1-audit-run1.log and /tmp/task-44.3-h1-audit-run2.log both failed 3/3 with Text clipped on the same calculator/reference sheet header or unavailable elements. H1 rejected; failures are not caused solely by mid-presentation or detent animation.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
