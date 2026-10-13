@@ -466,7 +466,10 @@ struct ReferenceSheetToolView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     LessonMarkdownView(markdown: document.markdown, title: String(localized: "Basic reference sheet"))
                         .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .padding(DesignTokens.Spacing.md)
                         .padding(.bottom, DesignTokens.Spacing.xl)
+                        .background(Color.white, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                        .environment(\.colorScheme, .light)
                         .accessibilityHidden(true)
                 }
                 .accessibilityElement(children: .ignore)
