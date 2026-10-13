@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 15:04'
+updated_date: '2026-10-13 15:06'
 labels:
   - apple
 dependencies:
@@ -23,9 +23,9 @@ Apple UI for the calculator and reference sheet in practice and mock exams: iPho
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 With either tool open, the question and answer choices remain visible and operable on iPhone, iPad (portrait, landscape, Split View) and Mac (UI tests assert hittable answers)
-- [x] #2 Full default accessibility audits pass with the tools open in light and dark; the largest text size works
-- [x] #3 The mock exam timer is unaffected
+- [ ] #1 With the calculator open, the question and answer choices remain visible and operable on iPhone, iPad (portrait, landscape, Split View) and Mac (UI tests assert hittable answers); the reference sheet follows in TASK-44.4
+- [ ] #2 Full default accessibility audits pass with the calculator open in light and dark; the largest text size works; the reference sheet follows in TASK-44.4
+- [ ] #3 The mock exam timer is unaffected with the calculator open
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -105,6 +105,8 @@ Fix update: medium audit progressed to non-exempt hit-area failure in reference 
 Fix update: medium reference audit still exceeded the cap due zoom/reference text clipping, so zoom controls are now hidden at the medium detent (medium shows the required Show full sheet action) and remain available in large/inspector; zoom buttons keep 44pt minimum hit areas. Calculator keyboard gating moved into ExamCalculatorViewModel and answer taps in practice/mock explicitly suspend hardware-keyboard input. Verified git diff --check and text-source check.
 
 Latest targeted rerun still failing after commit 94b6e533: xbuild iPhone 17 Pro selected tests (testAccessibilityAuditExamToolsLight, testCalculatorKeyboardInputIsFocusScoped, testLargeDetentReferenceSheetRunsFullAccessibilityAudit) failed 3/3. Medium audit now logs approved textClipped ignores, but later fails with non-exempt Contrast failed in reference content. Keyboard test still shows typing after answer tap changes calculator result from 9 to 1, so hardware input remains active. Large-detent full audit still fails Text clipped on visible reference text. Full validation, screenshots, AC finalization, and Done status are not complete.
+
+Coordinator scope decision applied for fresh worker: task-44.3 ships the calculator only on Apple. Hide the reference-sheet tool from Apple UI using a single configuration flag (ReferenceSheetConfiguration.availableOnApple = false); keep harmless loader/view code for task-44.4 where the official ISED sheet will be added with PDFKit. Updated acceptance criteria wording to calculator-on-Apple with reference sheet deferred to TASK-44.4.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
