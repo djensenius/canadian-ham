@@ -217,6 +217,7 @@ struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @FocusState private var hasKeyboardFocus: Bool
+    @State private var acceptsKeyboardInput = false
 
     private let rows: [[CalculatorKey]] = [
         [.allClear, .clearEntry, .backspace, .divide],
@@ -249,8 +250,12 @@ struct CalculatorToolView: View {
         .accessibilityIdentifier(hasKeyboardFocus ? "calculator-keyboard-focus-target-focused" : "calculator-keyboard-focus-target")
         .focusable(true)
         .focused($hasKeyboardFocus)
-        .simultaneousGesture(TapGesture().onEnded { hasKeyboardFocus = true })
+        .simultaneousGesture(TapGesture().onEnded {
+            acceptsKeyboardInput = true
+            hasKeyboardFocus = true
+        })
         .onReceive(NotificationCenter.default.publisher(for: .examContentDidReceiveInteraction)) { _ in
+            acceptsKeyboardInput = false
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 50_000_000)
                 hasKeyboardFocus = false
@@ -318,7 +323,7 @@ struct CalculatorToolView: View {
     }
 
     private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
-        guard let key = calculatorKey(for: press) else { return .ignored }
+        guard acceptsKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
         pressKey(key)
         return .handled
     }
@@ -508,7 +513,9 @@ struct ReferenceSheetToolView: View {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 if showsFullSheetButton {
                     Button("Show full sheet") { onShowFullSheet() } // l10n: localized
-                        .buttonStyle(AccessibleSecondaryButtonStyle())
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .buttonStyle(.bordered)
+                        .controlSize(.large)
                         .accessibilityIdentifier("reference-sheet-show-full-sheet")
                 }
 

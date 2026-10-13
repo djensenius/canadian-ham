@@ -665,7 +665,7 @@ struct LessonTableView: View {
                             .font(scaledCaption(weight: .bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .fixedSize(horizontal: false, vertical: true)
-                            .padding(.vertical, 2)
+                            .padding(.vertical, 6)
                     }
                 }
                 .accessibilityAddTraits(.isHeader)
@@ -677,7 +677,7 @@ struct LessonTableView: View {
                                 .font(scaledCaption())
                                 .foregroundStyle(DesignTokens.Colors.ink)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .padding(.vertical, 2)
+                                .padding(.vertical, 6)
                         }
                     }
                     .accessibilityElement(children: .combine)
