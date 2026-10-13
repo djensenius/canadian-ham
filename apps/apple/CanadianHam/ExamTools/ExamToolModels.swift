@@ -37,6 +37,7 @@ enum ExamTool: String, CaseIterable, Identifiable {
 @MainActor
 final class ExamCalculatorViewModel: ObservableObject {
     @Published private(set) var state: CalculatorState
+    @Published var acceptsHardwareKeyboardInput = false
 
     init(locale: CalculatorLocale = .en) {
         state = createCalculatorState(locale: locale)
@@ -64,7 +65,12 @@ final class ExamCalculatorViewModel: ObservableObject {
     }
 
     func clearForNewExam(locale: CalculatorLocale? = nil) {
+        acceptsHardwareKeyboardInput = false
         state = createCalculatorState(locale: locale ?? state.locale)
+    }
+
+    func suspendHardwareKeyboardInput() {
+        acceptsHardwareKeyboardInput = false
     }
 
     func updateLocale(_ locale: CalculatorLocale) {

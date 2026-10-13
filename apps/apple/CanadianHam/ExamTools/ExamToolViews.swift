@@ -217,7 +217,6 @@ struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @FocusState private var hasKeyboardFocus: Bool
-    @State private var acceptsKeyboardInput = false
 
     private let rows: [[CalculatorKey]] = [
         [.allClear, .clearEntry, .backspace, .divide],
@@ -251,11 +250,11 @@ struct CalculatorToolView: View {
         .focusable(true)
         .focused($hasKeyboardFocus)
         .simultaneousGesture(TapGesture().onEnded {
-            acceptsKeyboardInput = true
+            viewModel.acceptsHardwareKeyboardInput = true
             hasKeyboardFocus = true
         })
         .onReceive(NotificationCenter.default.publisher(for: .examContentDidReceiveInteraction)) { _ in
-            acceptsKeyboardInput = false
+            viewModel.suspendHardwareKeyboardInput()
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 50_000_000)
                 hasKeyboardFocus = false
@@ -323,7 +322,7 @@ struct CalculatorToolView: View {
     }
 
     private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
-        guard acceptsKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
+        guard viewModel.acceptsHardwareKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
         pressKey(key)
         return .handled
     }
@@ -516,10 +515,12 @@ struct ReferenceSheetToolView: View {
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .buttonStyle(.bordered)
                         .controlSize(.large)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                         .accessibilityIdentifier("reference-sheet-show-full-sheet")
+                } else {
+                    zoomControls
                 }
-
-                zoomControls
 
                 LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid", textScale: zoom)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -566,10 +567,23 @@ struct ReferenceSheetToolView: View {
     }
 
     private var zoomControls: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                zoomButtons
+            }
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                zoomButtons
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var zoomButtons: some View {
             Button("Zoom out") { zoom = max(0.8, zoom - 0.1) } // l10n: localized
                 .buttonStyle(.bordered)
                 .controlSize(.large)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
                 .disabled(zoom <= 0.8)
                 .accessibilityIdentifier("reference-sheet-zoom-out")
             Text("\(Int((zoom * 100).rounded()))%") // l10n: verbatim
@@ -579,9 +593,10 @@ struct ReferenceSheetToolView: View {
             Button("Zoom in") { zoom = min(1.8, zoom + 0.1) } // l10n: localized
                 .buttonStyle(.bordered)
                 .controlSize(.large)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
                 .disabled(zoom >= 1.8)
                 .accessibilityIdentifier("reference-sheet-zoom-in")
-        }
     }
 
     private func loadDocument() {

@@ -550,6 +550,7 @@ struct PracticeSessionView: View {
                             disabled: selected != nil && progressStore.preferences.practiceMode == .immediate
                         ) {
                             NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
+                            calculatorViewModel.suspendHardwareKeyboardInput()
                             select(sourceIndex: sourceIndex, question: question)
                         }
                     }
@@ -974,6 +975,7 @@ struct MockExamView: View {
                             disabled: false
                         ) {
                             NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
+                            calculatorViewModel.suspendHardwareKeyboardInput()
                             state.selectedByQuestionId[question.id] = sourceIndex
                         }
                     }
