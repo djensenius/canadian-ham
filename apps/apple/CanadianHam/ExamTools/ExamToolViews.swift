@@ -122,15 +122,21 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private func toolHeader(for tool: ExamTool) -> some View {
         VStack(spacing: DesignTokens.Spacing.sm) {
-            Text(toolTitle(for: tool)) // l10n: localized
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .multilineTextAlignment(.center)
-                .padding(.vertical, headerTextVerticalPadding)
-                .frame(maxWidth: .infinity)
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier(tool.accessibilityIdentifier)
+            ZStack {
+                Text(toolTitle(for: tool)) // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.center)
+                    .accessibilityHidden(true)
+            }
+            .padding(.vertical, headerTextVerticalPadding)
+            .frame(maxWidth: .infinity)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
+            .accessibilityAddTraits(.isHeader)
+            .accessibilityIdentifier(tool.accessibilityIdentifier)
+
             closeToolButton
         }
         .frame(maxWidth: .infinity)
@@ -453,6 +459,7 @@ private struct CalculatorToolLayout {
 struct ReferenceSheetToolView: View {
     let configuration: ReferenceSheetConfiguration
     @ScaledMetric(relativeTo: .title3) private var unavailableTitleVerticalPadding: CGFloat = 14
+    @ScaledMetric(relativeTo: .body) private var unavailableBodyVerticalPadding: CGFloat = 10
     @State private var document: ReferenceSheetDocument?
 
     var body: some View {
@@ -467,27 +474,39 @@ struct ReferenceSheetToolView: View {
                 .accessibilityIdentifier("reference-sheet-scroll")
             } else {
                 VStack(spacing: DesignTokens.Spacing.sm) {
-                    Text("Reference sheet unavailable") // l10n: localized
-                        .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .multilineTextAlignment(.center)
-                        .padding(.vertical, unavailableTitleVerticalPadding)
-                        .frame(maxWidth: .infinity)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("The bundled Basic reference sheet is not installed in this build.") // l10n: localized
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
+                    ZStack {
+                        Text("Reference sheet unavailable") // l10n: localized
+                            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.center)
+                            .accessibilityHidden(true)
+                    }
+                    .padding(.vertical, unavailableTitleVerticalPadding)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text("Reference sheet unavailable")) // l10n: localized
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("reference-sheet-unavailable")
+
+                    ZStack {
+                        Text("The bundled Basic reference sheet is not installed in this build.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.center)
+                            .accessibilityHidden(true)
+                    }
+                    .padding(.vertical, unavailableBodyVerticalPadding)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text("The bundled Basic reference sheet is not installed in this build.")) // l10n: localized
                 }
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.vertical, DesignTokens.Spacing.md)
                 .frame(maxWidth: .infinity)
                 .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-                .accessibilityIdentifier("reference-sheet-unavailable")
             }
         }
         .task { loadDocument() }
