@@ -548,7 +548,7 @@ struct LessonMarkdownView: View {
         case .code(_, let text):
             ScrollView(.horizontal) {
                 Text(english(text)) // l10n: content(en)
-                    .font(.system(size: 17 * textScale, weight: .regular, design: .monospaced))
+                    .font(monospaceFont())
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
                     .padding(DesignTokens.Spacing.md)
@@ -590,6 +590,18 @@ struct LessonMarkdownView: View {
 
     private func scaledFont(_ role: LessonFontRole, weight: Font.Weight = .regular) -> Font {
         let scale = max(0.8, min(1.8, textScale))
+        if abs(scale - 1.0) < 0.01 {
+            switch role {
+            case .caption:
+                return DesignTokens.FontScale.caption.weight(weight)
+            case .body:
+                return DesignTokens.FontScale.body.weight(weight)
+            case .bodyLarge:
+                return DesignTokens.FontScale.bodyLarge.weight(weight)
+            case .title:
+                return DesignTokens.FontScale.title.weight(weight)
+            }
+        }
         switch role {
         case .caption:
             return .system(size: 12 * scale, weight: weight, design: .default)
@@ -600,6 +612,11 @@ struct LessonMarkdownView: View {
         case .title:
             return .system(size: 22 * scale, weight: weight, design: .serif)
         }
+    }
+
+    private func monospaceFont() -> Font {
+        let scale = max(0.8, min(1.8, textScale))
+        return abs(scale - 1.0) < 0.01 ? .system(.body, design: .monospaced) : .system(size: 17 * scale, weight: .regular, design: .monospaced)
     }
 
     private func illustrationAltText(_ brief: MarkdownIllustrationBrief) -> AttributedString {
@@ -667,7 +684,8 @@ struct LessonTableView: View {
     }
 
     private func scaledCaption(weight: Font.Weight = .regular) -> Font {
-        .system(size: 12 * max(0.8, min(1.8, textScale)), weight: weight, design: .default)
+        let scale = max(0.8, min(1.8, textScale))
+        return abs(scale - 1.0) < 0.01 ? DesignTokens.FontScale.caption.weight(weight) : .system(size: 12 * scale, weight: weight, design: .default)
     }
 
     private func rowAccessibilityLabel(_ row: [AttributedString]) -> Text {

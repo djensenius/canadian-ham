@@ -113,22 +113,22 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func toolHeader(for tool: ExamTool) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-            Image(systemName: tool.systemImage)
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .frame(width: 44, height: 44)
-                .accessibilityLabel(Text(tool.title)) // l10n: localized
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+                Image(systemName: tool.systemImage)
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(width: 44, height: 44)
+                    .accessibilityLabel(Text(tool.title)) // l10n: localized
 
-            Text(tool.title) // l10n: localized
-                .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier(tool.accessibilityIdentifier)
-
-            Spacer(minLength: DesignTokens.Spacing.sm)
+                Text(tool.title) // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier(tool.accessibilityIdentifier)
+            }
 
             closeToolButton
         }
@@ -145,8 +145,11 @@ struct ExamToolPresentationModifier: ViewModifier {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, DesignTokens.Spacing.md)
                 .padding(.vertical, DesignTokens.Spacing.sm)
+                .frame(minHeight: 44)
+                .background(DesignTokens.Colors.paperInset, in: Capsule())
+                .overlay(Capsule().strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(.plain)
         .accessibilityIdentifier("exam-tool-close-button")
     }
 
@@ -169,7 +172,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func availableToolBodyHeight(panelHeight: CGFloat) -> CGFloat {
-        max(240, panelHeight - 112)
+        max(240, panelHeight - 160)
     }
 
     @ViewBuilder
