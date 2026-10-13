@@ -2119,7 +2119,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTAssertTrue(enlargedImage.waitForExistence(timeout: 5), "Expected enlarged \(figureID) image")
             assertFullyVisibleBelowNavigationBar(enlargedImage, in: app, context: "\(appearance.rawValue) enlarged \(figureID) screenshot")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)-enlarged", from: app)
-            try auditIgnoringOccludedLessonTextContrast(app: app)
+            try app.performAccessibilityAudit()
             app.buttons["Done"].firstMatch.tap()
             XCTAssertFalse(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 2), "Expected enlarged \(figureID) figure to close")
         }
@@ -2229,16 +2229,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditIgnoringOccludedLessonTextContrast(app: XCUIApplication) throws {
+        let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
         try app.performAccessibilityAudit { issue in
             guard issue.auditType == .contrast else { return false }
             guard let element = issue.element else { return false }
             let frame = element.frame
             guard frame.width > 0, frame.height > 0 else { return false }
-            let visibleScrollArea = self.lessonAuditVisibleScrollAreaBelowOpaqueNavigationBar(in: app)
-            guard !visibleScrollArea.contains(frame) else { return false }
+            guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
+            guard auditGeometry.scrollFrame.intersects(frame) else { return false }
+            guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
 
-            XCTContext.runActivity(named: "Ignored occluded lesson text contrast false positive") { activity in
-                let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(visibleScrollArea))"
+            XCTContext.runActivity(named: "Ignored occluded lesson scroll-content contrast false positive") { activity in
+                let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame))"
                 let attachment = XCTAttachment(string: note)
                 attachment.lifetime = .keepAlways
                 activity.add(attachment)
@@ -2768,12 +2770,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
                 if let firstOffender {
                     if firstOffender.isClippedAboveWindow {
-                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
-                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
                         start.press(forDuration: 0.01, thenDragTo: end)
                     } else {
-                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
-                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
                         start.press(forDuration: 0.01, thenDragTo: end)
                     }
                 } else if target.exists, target.frame.maxY > visibleFrame.maxY || preserveByScrollingUp {
@@ -2799,12 +2801,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 return
             }
             if firstOffender.isClippedAboveWindow {
-                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
-                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
                 start.press(forDuration: 0.01, thenDragTo: end)
             } else {
-                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
-                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
                 start.press(forDuration: 0.01, thenDragTo: end)
             }
             waitBriefly()
@@ -2882,24 +2884,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
-    private func assertNoLessonScrollableContentStraddlesOpaqueNavigationBar(
-        in app: XCUIApplication,
-        scrollView: XCUIElement,
-        context: String,
-        trace: [String] = [],
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        let straddlers = lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
-        let traceDescription = trace.isEmpty ? "" : "; trace: \(trace.joined(separator: " -> "))"
-        XCTAssertTrue(
-            straddlers.isEmpty,
-            "\(context): expected no lesson scrollable text or buttons to straddle the opaque navigation/status bar lower edge; straddlers: \(straddlers.map(\.description).joined(separator: "; "))\(traceDescription)",
-            file: file,
-            line: line
-        )
-    }
-
     private func firstVisibleElement(_ query: XCUIElementQuery, in app: XCUIApplication) -> XCUIElement {
         let windowFrame = app.windows.firstMatch.frame
         for element in query.allElementsBoundByIndex where element.exists && element.frame.intersects(windowFrame) {
@@ -2966,21 +2950,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return nil
     }
 
-    private func lessonScrollableContentStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> [ProtectedAreaOffender] {
-        let protectedMaxY = protectedNavigationFrame(in: app).maxY
-        return scrollView.debugDescription
-            .split(separator: "\n")
-            .compactMap { opaqueNavigationBarStraddler(fromDebugLine: String($0), protectedMaxY: protectedMaxY) }
-    }
-
-    private func firstLessonScrollableElementStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> ProtectedAreaOffender? {
-        lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView).first
-    }
-
-    private func hasLessonScrollableContentStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> Bool {
-        !lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView).isEmpty
-    }
-
     private func hasScrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> Bool {
         let windowMinY = app.windows.firstMatch.frame.minY
         let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
@@ -2993,27 +2962,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return false
     }
 
-    private func elementsNearestProtectedBar(in app: XCUIApplication, scrollView: XCUIElement) -> [String] {
-        let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
-        let windowMinY = app.windows.firstMatch.frame.minY
-        let candidates = scrollView.staticTexts.allElementsBoundByIndex.map { ("staticText", $0) } + scrollView.buttons.allElementsBoundByIndex.map { ("button", $0) }
-        return candidates
-            .filter { _, element in
-                guard element.exists else { return false }
-                let frame = element.frame
-                return frame.width > 0 && frame.height > 0 && frame.maxY > windowMinY && frame.minY < protectedMaxY + 80
-            }
-            .sorted { lhs, rhs in
-                let left = min(abs(lhs.1.frame.minY - protectedMaxY), abs(lhs.1.frame.maxY - protectedMaxY))
-                let right = min(abs(rhs.1.frame.minY - protectedMaxY), abs(rhs.1.frame.maxY - protectedMaxY))
-                return left < right
-            }
-            .prefix(4)
-            .map { kind, element in
-                "\(kind) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(element.frame))"
-            }
-    }
-
     private func protectedAreaOffender(for element: XCUIElement, elementDescription: String, windowMinY: CGFloat, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
         guard elementIntersectsProtectedArea(element, windowMinY: windowMinY, protectedMaxY: protectedMaxY) else { return nil }
         let frame = element.frame
@@ -3024,46 +2972,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
-    private func opaqueNavigationBarStraddler(fromDebugLine line: String, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
-        let pattern = #"^\s*(StaticText|Button),.*\{\{(-?[0-9.]+),\s*(-?[0-9.]+)\},\s*\{([0-9.]+),\s*([0-9.]+)\}\}(.*)$"#
-        guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }
-        let nsLine = line as NSString
-        let range = NSRange(location: 0, length: nsLine.length)
-        guard let match = regex.firstMatch(in: line, range: range), match.numberOfRanges == 7 else { return nil }
-        func cgFloat(at index: Int) -> CGFloat? {
-            guard match.range(at: index).location != NSNotFound,
-                  let value = Double(nsLine.substring(with: match.range(at: index))) else { return nil }
-            return CGFloat(value)
-        }
-        guard
-            let x = cgFloat(at: 2),
-            let y = cgFloat(at: 3),
-            let width = cgFloat(at: 4),
-            let height = cgFloat(at: 5)
-        else { return nil }
-        let frame = CGRect(x: x, y: y, width: width, height: height)
-        guard frame.width > 0, frame.height > 0, frame.minY < protectedMaxY, frame.maxY > protectedMaxY else { return nil }
-        let elementDescription = nsLine.substring(with: match.range(at: 1))
-        let detail = nsLine.substring(with: match.range(at: 6)).trimmingCharacters(in: .whitespacesAndNewlines)
-        return ProtectedAreaOffender(
-            description: "\(elementDescription) \(detail) frame=\(frameDescription(frame)) lowerEdgeY=\(protectedMaxY)",
-            frame: frame,
-            isClippedAboveWindow: false
-        )
-    }
-
     private func elementIntersectsProtectedArea(_ element: XCUIElement, windowMinY: CGFloat, protectedMaxY: CGFloat) -> Bool {
         guard element.exists else { return false }
         let frame = element.frame
         guard frame.width > 0, frame.height > 0 else { return false }
         return frame.maxY > windowMinY && frame.minY < protectedMaxY
-    }
-
-    private func elementStraddlesOpaqueNavigationBarLowerEdge(_ element: XCUIElement, protectedMaxY: CGFloat) -> Bool {
-        guard element.exists else { return false }
-        let frame = element.frame
-        guard frame.width > 0, frame.height > 0 else { return false }
-        return frame.minY < protectedMaxY && frame.maxY > protectedMaxY
     }
 
     private struct ProtectedAreaOffender {
@@ -3139,7 +3052,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return CGRect(x: windowFrame.minX + 16, y: protectedMaxY + 1, width: max(0, windowFrame.width - 32), height: max(0, windowFrame.maxY - protectedMaxY - 17))
     }
 
-    private func lessonAuditVisibleScrollAreaBelowOpaqueNavigationBar(in app: XCUIApplication) -> CGRect {
+    private struct LessonAuditGeometry {
+        let scrollFrame: CGRect
+        let visibleScrollArea: CGRect
+        let navigationBarElementFrames: [CGRect]
+    }
+
+    private func lessonAuditGeometryBelowOpaqueNavigationBar(in app: XCUIApplication) -> LessonAuditGeometry {
         let windowFrame = app.windows.firstMatch.frame
         let protectedMaxY = protectedNavigationFrame(in: app).maxY
         let visibleScrollView = app.scrollViews.allElementsBoundByIndex.first { scrollView in
@@ -3147,12 +3066,38 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         let scrollFrame = (visibleScrollView?.frame ?? windowFrame).intersection(windowFrame)
         let minY = max(scrollFrame.minY, protectedMaxY)
-        return CGRect(
+        let visibleScrollArea = CGRect(
             x: scrollFrame.minX,
             y: minY,
             width: max(0, scrollFrame.width),
             height: max(0, scrollFrame.maxY - minY)
         )
+        return LessonAuditGeometry(
+            scrollFrame: scrollFrame,
+            visibleScrollArea: visibleScrollArea,
+            navigationBarElementFrames: navigationBarElementFrames(in: app)
+        )
+    }
+
+    private func navigationBarElementFrames(in app: XCUIApplication) -> [CGRect] {
+        let navigationBar = app.navigationBars.firstMatch
+        guard navigationBar.exists else { return [] }
+        return ([navigationBar] + navigationBar.descendants(matching: .any).allElementsBoundByIndex)
+            .compactMap { element in
+                guard element.exists else { return nil }
+                let frame = element.frame
+                guard frame.width > 0, frame.height > 0 else { return nil }
+                return frame
+            }
+    }
+
+    private func frame(_ frame: CGRect, matchesAny candidates: [CGRect]) -> Bool {
+        candidates.contains { candidate in
+            abs(frame.minX - candidate.minX) <= 1
+                && abs(frame.minY - candidate.minY) <= 1
+                && abs(frame.width - candidate.width) <= 1
+                && abs(frame.height - candidate.height) <= 1
+        }
     }
 
     private func protectedNavigationFrame(in app: XCUIApplication) -> CGRect {

@@ -596,12 +596,7 @@ private struct LessonMarkdownView: View {
 
 private struct LessonFigureView: View {
     let figure: MarkdownFigure
-    @State private var showingEnlargedFigure: Bool
-
-    init(figure: MarkdownFigure) {
-        self.figure = figure
-        _showingEnlargedFigure = State(initialValue: AppLaunchArguments.value(after: "-CanadianHamInitialEnlargedFigureID") == figure.id)
-    }
+    @State private var showingEnlargedFigure = false
 
     private var aspectRatio: CGFloat {
         LessonFigureMetadata.aspectRatio(for: figure.id)
@@ -721,9 +716,9 @@ private struct EnlargedLessonFigureView: View {
                 }
                 .background(DesignTokens.Colors.paper)
                 .gesture(
-                    MagnificationGesture()
+                    MagnifyGesture()
                         .onChanged { value in
-                            scale = min(max(lastScale * value, 1), 4)
+                            scale = min(max(lastScale * value.magnification, 1), 4)
                         }
                         .onEnded { _ in
                             lastScale = scale

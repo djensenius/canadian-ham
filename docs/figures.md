@@ -15,7 +15,7 @@ Lesson figures are original SVG sources shared by web and Apple. They are supple
 - Keep neighbouring labels separated. Estimated text bounds must not overlap; side-by-side or offset labels keep at least `0.25 × min(font-size)` clearance, while same-anchor vertical stacks may use `0.08 × min(font-size)`.
 - No stroke may cross or touch text. Break dividers around labels/formulas or move labels into clear regions. The checker compares estimated text ink against stroked `line`, `polyline`, `polygon`, `rect`, `circle`, `ellipse`, and sampled `path` outlines, including relative path commands.
 - Filled `polygon` and `circle` shapes, such as arrowheads or dots, must also stay clear of text ink.
-- Keep label text large relative to the `viewBox`: every SVG `<text>` `font-size` must be at least `0.0367 × viewBox width`, which keeps text at least about 11 pt when a figure is displayed 300 pt wide. Use substantially larger text for primary symbol labels. If smaller text is unavoidable, provide a tap-to-enlarge view and a text equivalent.
+- Keep label text large relative to the `viewBox`: every SVG `<text>` `font-size` must be at least `0.0367 × viewBox width`, which keeps text at least about 11 pt when a figure is displayed 300 pt wide. Use substantially larger text for primary symbol labels. If smaller text is unavoidable, provide an enlarged view and a text equivalent.
 - Stay within the SVG subset accepted by `scripts/check-figures.mjs`: no script/style/foreignObject, no event handlers, no external references, no transforms, no marker references, no nested `<svg>`, presentation attributes only, and unitless geometry/text lengths. Use `fill`/`stroke` values of `currentColor` or `none`. The checker intentionally fails unsupported SVG features rather than guessing.
 
 ## Referencing a figure from a lesson
@@ -34,10 +34,18 @@ For a dense formula figure, add a text equivalent inside the same directive:
 ::figure ohms-law-power-wheel
 Alt text: Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant.
 Text equivalent:
-- To find P: I x E; I² x R; E² / R.
-- To find E: I x R; P / I; √(P x R).
-- To find I: E / R; P / E; √(P / R).
-- To find R: E / I; E² / P; P / I².
+- To find P: I x E.
+- To find P: I² x R.
+- To find P: E² / R.
+- To find E: I x R.
+- To find E: P / I.
+- To find E: √(P x R).
+- To find I: E / R.
+- To find I: P / E.
+- To find I: √(P / R).
+- To find R: E / I.
+- To find R: E² / P.
+- To find R: P / I².
 ::
 ```
 
@@ -57,7 +65,7 @@ SwiftUI cannot render arbitrary SVG files from `content/figures/` at runtime. In
 pnpm check:figures:fix
 ```
 
-That command copies each source SVG into `apps/apple/CanadianHam/Resources/FigureAssets.xcassets/lesson-figure-<id>.imageset/` with preserved-vector and template-rendering asset metadata, and regenerates `apps/apple/CanadianHam/Generated/LessonFigureMetadata.swift` from each SVG `viewBox`. `apps/apple/project.yml` includes the generated asset catalog in the iOS/iPadOS/macOS app target, and XcodeGen includes the generated Swift metadata. `apps/apple/CanadianHam/Views/LearnViews.swift` renders `Image("lesson-figure-<id>")` as a template image tinted with `DesignTokens.Colors.ink`, inside token-coloured paper surfaces, scaled to the available width using the generated aspect ratio. Tapping the figure opens an enlarged sheet with pinch zoom. Optional text equivalents render in a SwiftUI `DisclosureGroup`.
+That command copies each source SVG into `apps/apple/CanadianHam/Resources/FigureAssets.xcassets/lesson-figure-<id>.imageset/` with preserved-vector and template-rendering asset metadata, and regenerates `apps/apple/CanadianHam/Generated/LessonFigureMetadata.swift` from each SVG `viewBox`. `apps/apple/project.yml` includes the generated asset catalog in the iOS/iPadOS/macOS app target, and XcodeGen includes the generated Swift metadata. `apps/apple/CanadianHam/Views/LearnViews.swift` renders `Image("lesson-figure-<id>")` as a template image tinted with `DesignTokens.Colors.ink`, inside token-coloured paper surfaces, scaled to the available width using the generated aspect ratio. The Enlarge figure button, or double-tapping the image, opens a fitted enlarged sheet with pinch zoom and double-tap zoom. Optional text equivalents render as one formula per row in a SwiftUI `DisclosureGroup`.
 
 Apple's SVG renderer is stricter than browser SVG. Keep to the checked subset above and verify real app screenshots after adding figures. If a future Apple asset drops SVG `<text>`, update `check:figures:fix` to generate Apple-specific outlined text or render labels as SwiftUI text overlays while keeping web source text inspectable.
 

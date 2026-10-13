@@ -90,7 +90,6 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
           className="lesson-figure__art"
           role="img"
           aria-label={block.alt}
-          tabIndex={0}
           dangerouslySetInnerHTML={source === undefined ? undefined : { __html: source }}
         >{source === undefined ? block.alt : undefined}</div>
         {block.textEquivalent.length > 0 ? (
