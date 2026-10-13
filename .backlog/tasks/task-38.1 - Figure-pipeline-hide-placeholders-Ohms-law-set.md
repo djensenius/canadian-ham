@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-13 15:01'
+updated_date: '2026-10-13 19:17'
 labels:
   - content
   - apple
@@ -110,6 +110,8 @@ Final owner-decision validation passed after occluded-text contrast helper: ligh
 Review follow-up after b782bc7: narrowing the occluded-content contrast exception, restoring generic scroll-settle drag direction, merging origin/main, and rerunning targeted validation.
 
 Review follow-up complete: merged origin/main (78f65b7f) and kept branch/newer task notes; resolved Localizable.xcstrings from main's sorted order plus task-38.1 figure keys/removal of stale placeholder keys; XcodeGen ran twice with no generated project diff. Narrowed the lesson audit handler so it fails nav-bar contrast issues and any fully visible/non-scroll contrast issue, and uses plain performAccessibilityAudit() on enlarged sheets. Reverted the generic Morse scroll-settle drag direction to the pre-review behavior instead of rerunning Morse. Low cleanup: removed dead lesson no-straddling helpers and the unused enlarged-figure launch arg, switched to MagnifyGesture, removed web figure tabIndex, and updated docs/figures.md wording. Validation passed: pnpm check:figures; TZ=UTC pnpm --filter @canadian-ham/web test (181); pnpm check:apple-l10n; targeted iOS light/dark lesson figure audits in /tmp/task381-review-figures.xcresult (2 tests). Refreshed light/dark app screenshots in docs/evidence/task-38.1/app/.
+
+Pre-merge full Apple suites for PR #212 passed on 2026-10-13 with DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild in a sequential nohup chain: iOS full suite /tmp/t381-full-ios.log (127 unit + 87 UI tests, 0 failures); macOS full suite /tmp/t381-full-macos.log (129 unit tests, 0 failures); tvOS full suite /tmp/t381-full-tvos.log (4 unit + 12 UI tests, 0 failures); visionOS full suite /tmp/t381-full-visionos.log (4 unit + 9 UI tests, 0 failures). No known-flake reruns were needed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
