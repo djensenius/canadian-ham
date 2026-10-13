@@ -250,15 +250,15 @@ struct CalculatorToolView: View {
         .focusable(true)
         .focused($hasKeyboardFocus)
         .simultaneousGesture(TapGesture().onEnded {
-            viewModel.acceptsHardwareKeyboardInput = true
+            viewModel.acceptHardwareKeyboardInput()
             hasKeyboardFocus = true
         })
         .onReceive(NotificationCenter.default.publisher(for: .examContentDidReceiveInteraction)) { _ in
             viewModel.suspendHardwareKeyboardInput()
-            Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 50_000_000)
-                hasKeyboardFocus = false
-            }
+            hasKeyboardFocus = false
+        }
+        .onChange(of: viewModel.hardwareKeyboardFocusResetID) { _, _ in
+            hasKeyboardFocus = false
         }
         .onKeyPress { press in
             handleKeyPress(press)
@@ -322,7 +322,7 @@ struct CalculatorToolView: View {
     }
 
     private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
-        guard viewModel.acceptsHardwareKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
+        guard hasKeyboardFocus, viewModel.acceptsHardwareKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
         pressKey(key)
         return .handled
     }

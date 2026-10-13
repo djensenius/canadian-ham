@@ -532,6 +532,7 @@ struct PracticeSessionView: View {
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             ExamToolButtons(availableTools: availableExamTools) { selectedExamTool = $0 }
             QuestionCard(question: question, language: language)
+                .simultaneousGesture(examContentTapGesture)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Answers")
                     .font(DesignTokens.FontScale.title.weight(.bold))
@@ -549,13 +550,13 @@ struct PracticeSessionView: View {
                             showCorrectness: selected != nil && progressStore.preferences.practiceMode == .immediate,
                             disabled: selected != nil && progressStore.preferences.practiceMode == .immediate
                         ) {
-                            NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
-                            calculatorViewModel.suspendHardwareKeyboardInput()
+                            clearCalculatorKeyboardFocus()
                             select(sourceIndex: sourceIndex, question: question)
                         }
                     }
                 }
             }
+            .simultaneousGesture(examContentTapGesture)
             if let selected, progressStore.preferences.practiceMode == .immediate {
                 PracticeFeedback(question: question, selectedSourceIndex: selected, language: language, choicePermutation: item.choicePermutation)
                 Button(state.currentIndex + 1 == state.items.count ? "Finish session" : "Next question") { // l10n: localized
@@ -578,7 +579,22 @@ struct PracticeSessionView: View {
     }
 
     private var availableExamTools: [ExamTool] {
-        bank.courseBankID == .advanced ? [.calculator] : ExamTool.allCases
+        var tools: [ExamTool] = [.calculator]
+        if bank.courseBankID != .advanced, referenceSheetConfiguration.availableOnApple {
+            tools.append(.referenceSheet)
+        }
+        return tools
+    }
+
+    private func clearCalculatorKeyboardFocus() {
+        calculatorViewModel.suspendHardwareKeyboardInput()
+        NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
+    }
+
+    private var examContentTapGesture: some Gesture {
+        TapGesture().onEnded {
+            clearCalculatorKeyboardFocus()
+        }
     }
 
     private var referenceSheetConfiguration: ReferenceSheetConfiguration {
@@ -951,6 +967,7 @@ struct MockExamView: View {
             ExamToolButtons(availableTools: availableExamTools) { selectedExamTool = $0 }
 
             QuestionCard(question: question, language: language)
+                .simultaneousGesture(examContentTapGesture)
                 .accessibilityAction(named: Text("Next unanswered")) {
                     jumpToNextUnanswered()
                 }
@@ -974,13 +991,13 @@ struct MockExamView: View {
                             showCorrectness: false,
                             disabled: false
                         ) {
-                            NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
-                            calculatorViewModel.suspendHardwareKeyboardInput()
+                            clearCalculatorKeyboardFocus()
                             state.selectedByQuestionId[question.id] = sourceIndex
                         }
                     }
                 }
             }
+            .simultaneousGesture(examContentTapGesture)
 
             HStack {
                 Button { state.currentIndex = max(0, state.currentIndex - 1) } label: {
@@ -1021,7 +1038,22 @@ struct MockExamView: View {
     }
 
     private var availableExamTools: [ExamTool] {
-        bank.courseBankID == .advanced ? [.calculator] : ExamTool.allCases
+        var tools: [ExamTool] = [.calculator]
+        if bank.courseBankID != .advanced, referenceSheetConfiguration.availableOnApple {
+            tools.append(.referenceSheet)
+        }
+        return tools
+    }
+
+    private func clearCalculatorKeyboardFocus() {
+        calculatorViewModel.suspendHardwareKeyboardInput()
+        NotificationCenter.default.post(name: .examContentDidReceiveInteraction, object: nil)
+    }
+
+    private var examContentTapGesture: some Gesture {
+        TapGesture().onEnded {
+            clearCalculatorKeyboardFocus()
+        }
     }
 
     private var referenceSheetConfiguration: ReferenceSheetConfiguration {

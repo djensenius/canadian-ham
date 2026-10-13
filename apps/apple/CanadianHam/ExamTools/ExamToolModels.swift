@@ -37,7 +37,8 @@ enum ExamTool: String, CaseIterable, Identifiable {
 @MainActor
 final class ExamCalculatorViewModel: ObservableObject {
     @Published private(set) var state: CalculatorState
-    @Published var acceptsHardwareKeyboardInput = false
+    @Published private(set) var acceptsHardwareKeyboardInput = false
+    @Published private(set) var hardwareKeyboardFocusResetID = 0
 
     init(locale: CalculatorLocale = .en) {
         state = createCalculatorState(locale: locale)
@@ -65,12 +66,17 @@ final class ExamCalculatorViewModel: ObservableObject {
     }
 
     func clearForNewExam(locale: CalculatorLocale? = nil) {
-        acceptsHardwareKeyboardInput = false
+        suspendHardwareKeyboardInput()
         state = createCalculatorState(locale: locale ?? state.locale)
+    }
+
+    func acceptHardwareKeyboardInput() {
+        acceptsHardwareKeyboardInput = true
     }
 
     func suspendHardwareKeyboardInput() {
         acceptsHardwareKeyboardInput = false
+        hardwareKeyboardFocusResetID += 1
     }
 
     func updateLocale(_ locale: CalculatorLocale) {
@@ -96,11 +102,20 @@ struct ReferenceSheetConfiguration: Equatable, Sendable {
     let resourceName: String
     let resourceExtension: String
     let subdirectory: String?
+    let availableOnApple: Bool
+
+    init(resourceName: String, resourceExtension: String, subdirectory: String?, availableOnApple: Bool = false) {
+        self.resourceName = resourceName
+        self.resourceExtension = resourceExtension
+        self.subdirectory = subdirectory
+        self.availableOnApple = availableOnApple
+    }
 
     static let basic = ReferenceSheetConfiguration(
         resourceName: "basic",
         resourceExtension: "md",
-        subdirectory: "reference-sheet"
+        subdirectory: "reference-sheet",
+        availableOnApple: false
     )
 }
 

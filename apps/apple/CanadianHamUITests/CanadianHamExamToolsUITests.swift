@@ -24,35 +24,19 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "practice calculator sheet")
     }
 
-    func testPracticeReferenceSheetKeepsAnswersHittableWithBundledSheet() throws {
+    func testReferenceSheetToolHiddenUntilTask44Dot4() throws {
         let app = launchPracticeQuestion()
-        defer { app.terminate() }
-
-        openTool(.referenceSheet, in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-scroll"].firstMatch.waitForExistence(timeout: 5), "The app should render the bundled Basic reference sheet when content/reference-sheet/basic.md is present")
-        XCTAssertTrue(app.buttons["reference-sheet-show-full-sheet"].firstMatch.waitForExistence(timeout: 5), "The medium sheet should provide a visible Show full sheet action")
-        assertReferenceSheetTextIsVisible(in: app)
-        waitBriefly(0.8)
-        assertVisibleAnswerButtonsRemainHittable(in: app, context: "practice reference sheet")
-    }
-
-    func testReferenceSheetUnavailableStateAudits() throws {
-        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamReferenceSheetResourceName", "missing-reference-sheet"])
-        defer { app.terminate() }
-
-        openTool(.referenceSheet, in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-unavailable"].firstMatch.waitForExistence(timeout: 5))
-        waitForStableToolHeaderFrame(.referenceSheet, in: app)
-        try app.performAccessibilityAudit()
-    }
-
-    func testAdvancedPracticeDoesNotOfferBasicReferenceSheet() throws {
-        let app = launchAdvancedPracticeQuestion()
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
-        XCTAssertFalse(app.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "Advanced course must not offer the Basic reference sheet")
+        XCTAssertFalse(app.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "task-44.3 ships only the calculator on Apple; the reference sheet follows in task-44.4")
+
+        let advancedApp = launchAdvancedPracticeQuestion()
+        defer { advancedApp.terminate() }
+        XCTAssertTrue(advancedApp.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(advancedApp.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
+        XCTAssertFalse(advancedApp.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "Advanced course must not offer the Basic reference sheet")
     }
 
     func testCalculatorKeyboardInputIsFocusScoped() throws {
@@ -75,7 +59,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9", "Typing after calculator focus leaves must not change the calculator")
     }
 
-    func testCalculatorValueSurvivesToolSwitchAndResetsForNewSession() throws {
+    func testCalculatorValueSurvivesCloseAndReopenAndResetsForNewSession() throws {
         let app = launchPracticeQuestion()
         defer { app.terminate() }
 
@@ -83,9 +67,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let focusedCalculator = focusCalculatorKeyboard(in: app)
         typeCalculatorKeys(["2", "s"], on: focusedCalculator)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "4")
-        closeTool(in: app)
-        openTool(.referenceSheet, in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-scroll"].firstMatch.waitForExistence(timeout: 5))
         closeTool(in: app)
         openTool(.calculator, in: app)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "4")
@@ -143,10 +124,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         openTool(.calculator, in: app)
         waitForStableToolHeaderFrame(.calculator, in: app)
         try performMediumDetentExamToolAudit(on: app, context: "light calculator medium")
-        closeTool(in: app)
-        openTool(.referenceSheet, in: app)
-        waitForStableToolHeaderFrame(.referenceSheet, in: app)
-        try performMediumDetentExamToolAudit(on: app, context: "light reference sheet medium")
     }
 
     func testAccessibilityAuditExamToolsDark() throws {
@@ -156,21 +133,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         openTool(.calculator, in: app)
         waitForStableToolHeaderFrame(.calculator, in: app)
         try performMediumDetentExamToolAudit(on: app, context: "dark calculator medium")
-        closeTool(in: app)
-        openTool(.referenceSheet, in: app)
-        waitForStableToolHeaderFrame(.referenceSheet, in: app)
-        try performMediumDetentExamToolAudit(on: app, context: "dark reference sheet medium")
     }
 
-    func testLargeDetentReferenceSheetRunsFullAccessibilityAudit() throws {
+    func testLargeDetentCalculatorRunsFullAccessibilityAudit() throws {
         let app = launchAuditPracticeQuestion()
         defer { app.terminate() }
 
-        openTool(.referenceSheet, in: app)
-        let showFullSheet = app.buttons["reference-sheet-show-full-sheet"].firstMatch
-        XCTAssertTrue(showFullSheet.waitForExistence(timeout: 5), "Medium detent should expose the Show full sheet button")
-        showFullSheet.tap()
-        assertReferenceSheetTextIsVisible(in: app)
+        openTool(.calculator, in: app)
+        expandCompactSheetToLarge(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5), "The calculator should show keyboard help when the large detent has room")
         waitBriefly(0.8)
         try app.performAccessibilityAudit()
     }
@@ -186,12 +157,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         openTool(.calculator, in: app)
         XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5), "Regular width should present calculator in an inspector side panel")
-        try app.performAccessibilityAudit()
-        closeTool(in: app)
-
-        openTool(.referenceSheet, in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["exam-tool-reference-sheet-panel"].firstMatch.waitForExistence(timeout: 5), "Regular width should present reference sheet in an inspector side panel")
-        assertReferenceSheetTextIsVisible(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5), "The inspector should show calculator keyboard help when it has room")
         try app.performAccessibilityAudit()
     }
 
@@ -217,6 +183,35 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
         positionElementInMiddleVisibleBand(answer, in: app, context: "answer with calculator open")
         XCTAssertTrue(answer.isHittable, "The positioned answer should be hittable with the calculator sheet open")
+    }
+
+    func testCaptureCalculatorEvidenceScreenshots() throws {
+#if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            for appearance in ["light", "dark"] {
+                let app = launchPracticeQuestion(appearance: appearance, extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+                openTool(.calculator, in: app)
+                XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5))
+                waitBriefly(0.8)
+                try saveScreenshot(named: "calculator-ipad-inspector-\(appearance).png")
+                app.terminate()
+            }
+        } else {
+            for appearance in ["light", "dark"] {
+                let app = launchPracticeQuestion(appearance: appearance)
+                openTool(.calculator, in: app)
+                XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5))
+                waitBriefly(0.8)
+                try saveScreenshot(named: "calculator-iphone-medium-\(appearance).png")
+                expandCompactSheetToLarge(in: app)
+                waitBriefly(0.8)
+                try saveScreenshot(named: "calculator-iphone-large-\(appearance).png")
+                app.terminate()
+            }
+        }
+#else
+        throw XCTSkip("Calculator evidence screenshots are captured from iPhone and iPad UI-test runs.")
+#endif
     }
 
     private enum Tool {
@@ -279,12 +274,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         close.tap()
     }
 
-    private func assertReferenceSheetTextIsVisible(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
-        let ohmsLaw = app.staticTexts["Ohm's law"].firstMatch
-        XCTAssertTrue(ohmsLaw.waitForExistence(timeout: 5), "Expected real reference-sheet text to be rendered", file: file, line: line)
-        XCTAssertTrue(app.windows.firstMatch.frame.intersects(ohmsLaw.frame), "Reference-sheet text should be visible on screen. Frame: \(frameDescription(ohmsLaw.frame))", file: file, line: line)
-    }
-
     private func performMediumDetentExamToolAudit(on app: XCUIApplication, context: String) throws {
         assertMediumDetentToolPanelVisibleElements(in: app, context: context)
         var ignoredTextClippedIssues = 0
@@ -302,22 +291,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func isApprovedMediumDetentToolScrollTextClip(_ issue: XCUIAccessibilityAuditIssue, in app: XCUIApplication) -> Bool {
-        guard issue.auditType == .textClipped else { return false }
-        guard let element = issue.element else { return true }
-        let elementFrame = element.frame
-        guard elementFrame.width > 0, elementFrame.height > 0 else { return false }
-        for identifier in ["reference-sheet-scroll", "calculator-tool-scroll"] {
-            let scrollView = app.scrollViews[identifier].firstMatch
-            if scrollView.exists, scrollView.frame.insetBy(dx: -1, dy: -1).intersects(elementFrame) {
-                return true
-            }
-        }
-        return false
+        issue.auditType == .textClipped && issue.element == nil
     }
 
     private func assertMediumDetentToolPanelVisibleElements(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
         let windowFrame = app.windows.firstMatch.frame
-        let header = ["exam-tool-calculator-panel", "exam-tool-reference-sheet-panel"]
+        let header = ["exam-tool-calculator-panel"]
             .map { app.descendants(matching: .any)[$0].firstMatch }
             .first { $0.exists }
         guard let header else {
@@ -352,6 +331,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             }
         }
         XCTAssertEqual(consecutiveStableSamples, 3, "Expected tool header \(tool.panelIdentifier) frame to settle before auditing. Last frame: \(frameDescription(previousFrame))", file: file, line: line)
+    }
+
+    private func expandCompactSheetToLarge(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let header = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+        XCTAssertTrue(header.waitForExistence(timeout: 5), "Expected calculator header before expanding the sheet", file: file, line: line)
+        let windowFrame = app.windows.firstMatch.frame
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0)).withOffset(CGVector(dx: header.frame.midX, dy: header.frame.midY))
+        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0)).withOffset(CGVector(dx: header.frame.midX, dy: windowFrame.minY + 96))
+        start.press(forDuration: 0.1, thenDragTo: end, withVelocity: XCUIGestureVelocity.slow, thenHoldForDuration: 0.2)
+        waitForStableToolHeaderFrame(.calculator, in: app, file: file, line: line)
     }
 
     private func tapStartMockExam(in app: XCUIApplication) {
@@ -468,7 +457,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         if close.exists, close.frame.minY > 0 {
             return max(0, close.frame.minY - 24)
         }
-        for identifier in ["exam-tool-calculator-panel", "exam-tool-reference-sheet-panel"] {
+        for identifier in ["exam-tool-calculator-panel"] {
             let panel = app.descendants(matching: .any)[identifier].firstMatch
             if panel.exists, panel.frame.minY > 0 {
                 return max(0, panel.frame.minY - 32)
@@ -480,7 +469,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     private func scrollView(containing element: XCUIElement, in app: XCUIApplication) -> XCUIElement {
         let scrollViews = app.scrollViews.allElementsBoundByIndex
         let backgroundScrollViews = scrollViews.filter { scrollView in
-            !["calculator-keyboard-focus-target", "calculator-keyboard-focus-target-focused", "calculator-tool-scroll", "reference-sheet-scroll"].contains(scrollView.identifier)
+            !["calculator-keyboard-focus-target", "calculator-keyboard-focus-target-focused", "calculator-tool-scroll"].contains(scrollView.identifier)
         }
         if !element.identifier.isEmpty {
             for scrollView in backgroundScrollViews where scrollView.descendants(matching: .any)[element.identifier].firstMatch.exists {
@@ -534,6 +523,23 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let statusBar = app.statusBars.firstMatch
         let protectedMaxY = max(navBar.exists ? navBar.frame.maxY : windowFrame.minY, statusBar.exists ? statusBar.frame.maxY : windowFrame.minY)
         return CGRect(x: windowFrame.minX, y: windowFrame.minY, width: windowFrame.width, height: max(0, protectedMaxY - windowFrame.minY))
+    }
+
+    private func saveScreenshot(named fileName: String, file: StaticString = #filePath, line: UInt = #line) throws {
+        let directory = evidenceDirectory()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let url = directory.appendingPathComponent(fileName)
+        try XCUIScreen.main.screenshot().pngRepresentation.write(to: url, options: .atomic)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: url.path), "Expected screenshot at \(url.path)", file: file, line: line)
+    }
+
+    private func evidenceDirectory() -> URL {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("docs/evidence/task-44.3", isDirectory: true)
     }
 
     private func frameDescription(_ frame: CGRect) -> String {
