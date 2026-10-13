@@ -121,19 +121,29 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private func toolHeader(for tool: ExamTool) -> some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-            Image(systemName: tool.systemImage)
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .frame(width: 44, height: 44)
-                .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier(tool.accessibilityIdentifier)
+            toolHeaderIcon(for: tool)
 
             Spacer(minLength: 0)
 
             closeToolButton
         }
         .frame(maxWidth: .infinity)
+    }
+
+    @ViewBuilder
+    private func toolHeaderIcon(for tool: ExamTool) -> some View {
+        let icon = Image(systemName: tool.systemImage)
+            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .frame(width: 44, height: 44)
+            .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
+            .accessibilityAddTraits(.isHeader)
+
+        if tool == .referenceSheet {
+            icon.accessibilityIdentifier(tool.accessibilityIdentifier)
+        } else {
+            icon
+        }
     }
 
     private var closeToolButton: some View {
@@ -159,8 +169,12 @@ struct ExamToolPresentationModifier: ViewModifier {
 
                 switch tool {
                 case .calculator:
-                    CalculatorToolView(viewModel: calculator)
-                        .frame(minHeight: 360)
+                    VStack {
+                        CalculatorToolView(viewModel: calculator)
+                            .frame(minHeight: 360)
+                    }
+                    .accessibilityElement(children: .contain)
+                    .accessibilityIdentifier(tool.accessibilityIdentifier)
                 case .referenceSheet:
 #if os(iOS)
                     ReferenceSheetToolView(
