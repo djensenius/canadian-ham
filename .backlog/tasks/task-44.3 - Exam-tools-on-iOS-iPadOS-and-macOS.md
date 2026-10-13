@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 01:51'
+updated_date: '2026-10-13 02:21'
 labels:
   - apple
 dependencies:
@@ -63,6 +63,8 @@ Evidence-first audit rerun (before code changes): `DEVELOPER_DIR=/Applications/X
 | --- | --- | --- | --- | --- | --- |
 | Light/Dark calculator audits | Label `Calculator`; failure element screenshot also includes the +/- icon; attachment element image 251x40 px at scale 3 (~84x13 pt content). | `exam-tool-calculator-panel` on the sheet header label; container is the compact sheet body header HStack with the close button, not the navigation bar/toolbar/inspector body. | App screenshot is 1206x2622 px (iPhone 17 Pro, scale 3). The header node is near the sheet top around x~24-108 pt, y~425-438 pt; the title shares the row with trailing close button. | Medium sheet: rounded sheet spans roughly y~379-864 pt in the screenshot; grabber at y~383-390 pt; calculator header sits below the grabber inside the sheet. | No ellipsis at default size; the title is fully visible. Audit says it may clip at larger Dynamic Type, consistent with a title/icon/close-button row rather than body text cut at a sheet edge. |
 | Unavailable-state audit | Label `Reference sheet unavailable`; element image 760x68 px at scale 3 (~253x23 pt content). | Static text inside the unavailable fallback card in the compact sheet body, below the sheet header; not navigation bar/toolbar/inspector. Description text is in the same fixed card body. | Card text starts around x~60 pt, y~529 pt in the app screenshot; the title runs in an HStack with an icon and consumes the remaining row width. | Medium sheet: reference sheet spans roughly y~416-864 pt; grabber y~420-427 pt; unavailable card begins y~490 pt. | No ellipsis at default size and not cut by the sheet edge/grabber. Audit points to larger-Dynamic-Type clipping risk in the card row/body layout, so the fix should let title and description wrap/grow in scrollable content. |
+
+Stopped after supervisor-directed narrowing attempt. Replaced the custom reference-sheet renderer/zoom controls with the shared `LessonMarkdownView`/`LessonTableView`, moved tool titles into scroll content as plain wrapping header Text, and simplified the unavailable state to a ScrollView-contained header/body. Verification: `git diff --check` passed, but the required targeted iPhone rerun still failed 3/3 (`/tmp/task-44.3-supervisor-narrow-1.log`, result bundle `/tmp/task-44.3-supervisor-narrow-1.xcresult`): light/dark audits still report `Text clipped` on `exam-tool-calculator-panel`; unavailable audit still reports `Text clipped` on `exam-tool-reference-sheet-panel`. Per supervisor instruction, stopping because audit failures remain after switching to the shared lesson renderer.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
