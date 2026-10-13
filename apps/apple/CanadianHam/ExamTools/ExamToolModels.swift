@@ -1,5 +1,10 @@
 import CanadianHamCalculatorEngine
 import Foundation
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 import SwiftUI
 
 extension Notification.Name {
@@ -77,6 +82,15 @@ final class ExamCalculatorViewModel: ObservableObject {
     func suspendHardwareKeyboardInput() {
         acceptsHardwareKeyboardInput = false
         hardwareKeyboardFocusResetID += 1
+        resignPlatformKeyboardFocus()
+    }
+
+    private func resignPlatformKeyboardFocus() {
+#if os(iOS)
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+#elseif os(macOS)
+        NSApp.keyWindow?.makeFirstResponder(nil)
+#endif
     }
 
     func updateLocale(_ locale: CalculatorLocale) {

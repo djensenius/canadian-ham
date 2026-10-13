@@ -136,7 +136,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testLargeDetentCalculatorRunsFullAccessibilityAudit() throws {
-        let app = launchAuditPracticeQuestion()
+        let app = launchAuditPracticeQuestion(extraArguments: ["-CanadianHamExamToolInitialDetent", "large"])
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
@@ -198,15 +198,19 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             }
         } else {
             for appearance in ["light", "dark"] {
-                let app = launchPracticeQuestion(appearance: appearance)
-                openTool(.calculator, in: app)
-                XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5))
+                let mediumApp = launchPracticeQuestion(appearance: appearance)
+                openTool(.calculator, in: mediumApp)
+                XCTAssertTrue(mediumApp.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5))
                 waitBriefly(0.8)
                 try saveScreenshot(named: "calculator-iphone-medium-\(appearance).png")
-                expandCompactSheetToLarge(in: app)
+                mediumApp.terminate()
+
+                let largeApp = launchPracticeQuestion(appearance: appearance, extraArguments: ["-CanadianHamExamToolInitialDetent", "large"])
+                openTool(.calculator, in: largeApp)
+                XCTAssertTrue(largeApp.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5))
                 waitBriefly(0.8)
                 try saveScreenshot(named: "calculator-iphone-large-\(appearance).png")
-                app.terminate()
+                largeApp.terminate()
             }
         }
 #else

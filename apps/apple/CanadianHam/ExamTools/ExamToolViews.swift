@@ -93,7 +93,12 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func preferredSheetDetent(for tool: ExamTool) -> PresentationDetent {
-        tool == .calculator && dynamicTypeSize.isAccessibilitySize ? .large : .medium
+#if DEBUG
+        if AppLaunchArguments.value(after: "-CanadianHamExamToolInitialDetent") == "large" {
+            return .large
+        }
+#endif
+        return tool == .calculator && dynamicTypeSize.isAccessibilitySize ? .large : .medium
     }
 #endif
 

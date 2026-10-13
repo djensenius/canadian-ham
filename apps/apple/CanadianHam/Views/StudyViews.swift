@@ -430,6 +430,7 @@ struct PracticeSessionView: View {
                 }
                 .pagePadding()
             }
+            .simultaneousGesture(examContentTapGesture, including: .subviews)
             .background(DesignTokens.Colors.paper)
         }
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
@@ -890,6 +891,7 @@ struct MockExamView: View {
                 .pagePadding()
             }
             .id(state.result?.id ?? "mock-exam-active")
+            .simultaneousGesture(examContentTapGesture, including: .subviews)
             .background(DesignTokens.Colors.paper)
         }
         .navigationTitle("Mock exam")
