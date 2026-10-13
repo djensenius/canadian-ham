@@ -97,6 +97,16 @@ quarter-wave length in metres ≈ 71.3 / f(MHz)
 
 The free-space quarter-wave value is 75 / f. The 71.3 / f value is the practical starting estimate used for many HF quarter-wave antenna questions. Downward-sloping quarter-wave radials can bring an elevated vertical's feed point closer to a fifty-ohm coax match.
 
+::figure yagi-vertical-length
+Alt text: Top view of a three-element Yagi with a longer reflector, driven element, shorter director, main-lobe arrow, and a quarter-wave vertical with radials.
+Text equivalent:
+- The reflector is labelled longer and sits behind the driven element.
+- The driven element is labelled feed.
+- The director is labelled shorter and sits in front of the driven element.
+- The main-lobe arrow points from the reflector through the director.
+- The separate vertical sketch has sloping radials and the formula 71.3 / f(MHz) beside it.
+::
+
 Some VHF half-wave vertical exam items use the plain free-space half-wave convention:
 
 ```text

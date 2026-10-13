@@ -106,6 +106,16 @@ A filter is described by what it passes and what it attenuates.
 | Band-reject | Attenuates a range and passes frequencies outside that range | Remove a strong service or broadcast band while receiving on nearby lower and higher ranges |
 | Notch | Attenuates one narrow frequency and passes most others | Reduce a single strong carrier close to the desired signal |
 
+::figure filter-response-sketches
+Alt text: Frequency-response sketches for low-pass, high-pass, band-pass, band-reject, and notch filters.
+Text equivalent:
+- Low-pass sketch: pass is on the left side of the graph and attenuation is on the right.
+- High-pass sketch: attenuation is on the left side and pass is on the right.
+- Band-pass sketch: pass is a raised middle band, with attenuation on both sides.
+- Band-reject sketch: pass is on both sides, with a wide middle band attenuated.
+- Notch sketch: pass is on both sides, with one narrow tone attenuated.
+::
+
 The cut-off frequency is the boundary region where a low-pass or high-pass filter changes from mostly passing to mostly attenuating. Real filters do not switch instantly; they transition over a range.
 
 ### Memory trick: pass names say what gets through

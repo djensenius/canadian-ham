@@ -107,6 +107,15 @@ Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect
 
 HF scatter can put weak, distorted signals into a skip zone. Near the MUF, the main sky-wave return is marginal and the skip zone can be wide, so weak scattered energy becomes noticeable. Only a small part of the transmitted energy is redirected toward the receiver, and multiple paths can smear the signal.
 
+::figure vhf-unusual-propagation-modes
+Alt text: Four mini-panels showing sporadic E, tropospheric ducting, auroral scatter, and meteor scatter paths.
+Text equivalent:
+- Sporadic E panel: a six-metre path returns from a patchy E-region cloud.
+- Ducting panel: a VHF path is trapped between paired weather layers over water.
+- Aurora panel: a small beam points north toward a wavy auroral curtain, with a raspy signal label.
+- Meteor panel: a burst path touches a short meteor trail between the stations.
+::
+
 ### In the real world: choosing the mode for a rough auroral path
 
 A VHF operator hears signals from the north with a harsh, buzzing tone. FM voice is difficult to understand, but short Morse characters can still be copied.

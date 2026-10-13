@@ -146,6 +146,14 @@ A meter should disturb the circuit as little as practical.
 | RF transmitter output power | RF wattmeter | In the feedline between the transmitter and load or antenna | Matched to the RF system |
 | Final power amplifier current | Ammeter | In series with the final amplifier DC current path | Low resistance |
 
+::figure transformer-resonance-meters
+Alt text: Multi-panel figure showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.
+Text equivalent:
+- Transformer panel: separate P and S coil windings sit on a shared two-bar core.
+- Parallel LC panel: an inductor branch and capacitor branch connect between the same top and bottom rails.
+- Meter panel: a battery source is in the left branch, an A meter is in series on the top wire, the zigzag load is in the right branch, and a V meter is wired across the load.
+::
+
 A voltmeter is placed across the part being measured. It should look like a high resistance so very little extra current flows through the meter.
 
 An ammeter is placed in series so the circuit current flows through it. It should look like a low resistance so it does not create a large extra voltage drop.

@@ -99,6 +99,16 @@ Lowest usable frequency, or LUF, is the low-frequency limit set mainly by absorp
 
 Optimum working frequency, or OWF, is the practical choice a little below the MUF. Accessible text formula: choose a working frequency below the MUF but above the LUF. Too high may pass through; too low may be absorbed.
 
+::figure daytime-absorption-frequency-window
+Alt text: Daytime HF path diagram with D-region absorption, F-region return, and a frequency window labelled LUF, OWF, and MUF.
+Text equivalent:
+- The left panel shows the Sun, a lower D band, and a higher F line.
+- A lower HF ray stops at the D band beside the D absorbs label.
+- A higher HF ray passes the D band, reaches the F line, and returns to Earth.
+- The right panel marks LUF at the lower edge of the usable window, OWF closer to MUF, and MUF at the upper edge.
+- Frequencies below the window are labelled too low and absorbed; frequencies above it are labelled too high and through.
+::
+
 ### Worked example: picking a working frequency
 
 A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85% of the MUF.
