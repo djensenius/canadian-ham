@@ -66,7 +66,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9")
 
         let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
-        positionElementInMiddleVisibleBand(answer, in: app, context: "answer after keyboard input")
+        XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected an answer to clear calculator keyboard focus")
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        XCTAssertTrue(answer.isHittable, "Answer should be hittable before clearing calculator keyboard focus")
         answer.tap()
         XCTAssertFalse(app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch.exists, "Calculator keyboard input should be scoped to the calculator focus binding")
         app.typeKey("1", modifierFlags: [])

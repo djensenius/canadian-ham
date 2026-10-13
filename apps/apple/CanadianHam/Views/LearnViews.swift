@@ -525,12 +525,15 @@ struct LessonMarkdownView: View {
                 Text(english(strippingLinks(from: text))) // l10n: content(en)
                     .font(level <= 2 ? scaledFont(.title, weight: .bold) : scaledFont(.bodyLarge, weight: .bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.vertical, 2)
                     .accessibilityAddTraits(.isHeader)
             }
         case .paragraph(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
                 .font(scaledFont(.body))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
         case .list(let ordered, let items):
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -542,6 +545,7 @@ struct LessonMarkdownView: View {
                         Text(english(strippingLinks(from: item))) // l10n: content(en)
                             .font(scaledFont(.body))
                             .foregroundStyle(DesignTokens.Colors.ink)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
@@ -576,6 +580,7 @@ struct LessonMarkdownView: View {
             Text(english(strippingLinks(from: text))) // l10n: content(en)
                 .font(scaledFont(.body).italic())
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(DesignTokens.Spacing.md)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         }
@@ -659,6 +664,8 @@ struct LessonTableView: View {
                         Text(english(header)) // l10n: content(en)
                             .font(scaledCaption(weight: .bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.vertical, 2)
                     }
                 }
                 .accessibilityAddTraits(.isHeader)
@@ -669,6 +676,8 @@ struct LessonTableView: View {
                             Text(english(cell)) // l10n: content(en)
                                 .font(scaledCaption())
                                 .foregroundStyle(DesignTokens.Colors.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.vertical, 2)
                         }
                     }
                     .accessibilityElement(children: .combine)
