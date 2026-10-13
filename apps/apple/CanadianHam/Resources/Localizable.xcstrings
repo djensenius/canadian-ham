@@ -2825,28 +2825,6 @@
         }
       }
     },
-    "Alt text: " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alt text: "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte de remplacement : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte de remplacement : "
-          }
-        }
-      }
-    },
     "Answer %@, " : {
       "localizations" : {
         "en" : {
@@ -4997,44 +4975,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
-          }
-        }
-      }
-    },
-    "Illustration brief" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration"
-          }
-        }
-      }
-    },
-    "Illustration brief. " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Illustration brief. "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration. "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration. "
           }
         }
       }
@@ -10999,6 +10939,94 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les examens de compétence de base sont à livre fermé. La leçon sur l’autorité, les certificats et les examens explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer."
+          }
+        }
+      }
+    },
+    "Enlarge figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarge figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir la figure"
+          }
+        }
+      }
+    },
+    "Enlarged figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarged figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure agrandie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure agrandie"
+          }
+        }
+      }
+    },
+    "Figure text equivalent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure text equivalent"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        }
+      }
+    },
+    "Opens enlarged figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens enlarged figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre la figure agrandie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre la figure agrandie"
           }
         }
       }

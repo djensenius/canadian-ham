@@ -33,12 +33,27 @@ public struct MarkdownIllustrationBrief: Equatable, Sendable {
     }
 }
 
+public struct MarkdownFigure: Equatable, Sendable {
+    public let id: String
+    public let altText: String
+    public let textEquivalent: [String]
+    public let sourceLineNumber: Int
+
+    public init(id: String, altText: String, textEquivalent: [String] = [], sourceLineNumber: Int) {
+        self.id = id
+        self.altText = altText
+        self.textEquivalent = textEquivalent
+        self.sourceLineNumber = sourceLineNumber
+    }
+}
+
 public enum LessonBlock: Equatable, Sendable {
     case heading(level: Int, AttributedString)
     case paragraph(AttributedString)
     case list(ordered: Bool, items: [AttributedString])
     case code(language: String?, text: String)
     case table(MarkdownTable)
+    case figure(MarkdownFigure)
     case illustrationBrief(MarkdownIllustrationBrief)
     case blockquote(AttributedString)
 }
@@ -54,6 +69,15 @@ public struct RenderedLessonMarkdown: Equatable, Sendable {
         blocks.compactMap { block in
             if case let .table(table) = block {
                 return table
+            }
+            return nil
+        }
+    }
+
+    public var figures: [MarkdownFigure] {
+        blocks.compactMap { block in
+            if case let .figure(figure) = block {
+                return figure
             }
             return nil
         }
@@ -86,7 +110,7 @@ public struct RenderedLessonMarkdown: Equatable, Sendable {
                 addition = listText
             case let .code(_, text):
                 addition = AttributedString(text)
-            case .table, .illustrationBrief:
+            case .table, .figure, .illustrationBrief:
                 addition = nil
             }
             guard let addition else {
@@ -119,6 +143,15 @@ public enum LessonMarkdownRenderer {
         }) ?? []
     }
 
+    public static func extractFigures(from markdown: String) -> [MarkdownFigure] {
+        (try? parseBlocks(from: markdown).compactMap { block in
+            if case let .figure(figure) = block {
+                return figure
+            }
+            return nil
+        }) ?? []
+    }
+
     public static func extractIllustrationBriefs(from markdown: String) -> [MarkdownIllustrationBrief] {
         (try? parseBlocks(from: markdown).compactMap { block in
             if case let .illustrationBrief(brief) = block {
@@ -144,6 +177,12 @@ public enum LessonMarkdownRenderer {
             if let fence = codeFenceOpening(line) {
                 let parsed = parseCodeBlock(lines: lines, startIndex: index, fenceMarker: fence.marker)
                 blocks.append(.code(language: fence.language, text: parsed.text))
+                index = parsed.nextIndex
+                continue
+            }
+
+            if let parsed = try parseFigure(lines: lines, startIndex: index) {
+                blocks.append(parsed.block)
                 index = parsed.nextIndex
                 continue
             }
@@ -210,6 +249,99 @@ public enum LessonMarkdownRenderer {
             index += 1
         }
         return (codeLines.joined(separator: "\n"), index)
+    }
+
+    private static func figureDirectiveID(_ line: String) -> String? {
+        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        guard let match = trimmed.range(of: #"^::figure\s+([a-z0-9][a-z0-9-]*)\s*$"#, options: .regularExpression) else {
+            return nil
+        }
+        let matched = String(trimmed[match])
+        guard let idRange = matched.range(of: #"[a-z0-9][a-z0-9-]*$"#, options: .regularExpression) else {
+            return nil
+        }
+        return String(matched[idRange])
+    }
+
+    private static func parseFigure(lines: [String], startIndex: Int) throws -> (block: LessonBlock, nextIndex: Int)? {
+        guard let id = figureDirectiveID(lines[startIndex]) else {
+            let trimmed = lines[startIndex].trimmingCharacters(in: .whitespaces)
+            guard trimmed.range(of: #"^::figure\b"#, options: .regularExpression) != nil else {
+                return nil
+            }
+            let parsed = try parseInvalidFigureDirectiveFallback(lines: lines, startIndex: startIndex)
+            return (.paragraph(parsed.text), parsed.nextIndex)
+        }
+        let sourceLineNumber = startIndex + 1
+        var altText: String?
+        var textEquivalent: [String] = []
+        var fallbackLines = [lines[startIndex].trimmingCharacters(in: .whitespaces)]
+        var readingTextEquivalent = false
+        var index = startIndex + 1
+
+        while index < lines.count {
+            let line = lines[index]
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            if trimmed == "::" {
+                return (
+                    .figure(MarkdownFigure(
+                        id: id,
+                        altText: altText?.isEmpty == false ? altText! : id,
+                        textEquivalent: textEquivalent,
+                        sourceLineNumber: sourceLineNumber
+                    )),
+                    index + 1
+                )
+            }
+            if trimmed.isEmpty || markdownHeading(line) != nil {
+                return (.paragraph(try inlineAttributedString(for: fallbackLines.joined(separator: " "))), index)
+            }
+            fallbackLines.append(trimmed)
+            if trimmed.range(of: #"^Alt text:\s*"#, options: [.regularExpression, .caseInsensitive]) != nil {
+                let value = trimmed.replacingOccurrences(of: #"^Alt text:\s*"#, with: "", options: [.regularExpression, .caseInsensitive])
+                altText = try plainInlineString(for: value)
+                readingTextEquivalent = false
+                index += 1
+                continue
+            }
+            if trimmed.range(of: #"^Text equivalent:\s*$"#, options: [.regularExpression, .caseInsensitive]) != nil {
+                readingTextEquivalent = true
+                index += 1
+                continue
+            }
+            if readingTextEquivalent, let item = try bulletText(trimmed) {
+                textEquivalent.append(item)
+            }
+            index += 1
+        }
+
+        return (.paragraph(try inlineAttributedString(for: fallbackLines.joined(separator: " "))), index)
+    }
+
+    private static func parseInvalidFigureDirectiveFallback(lines: [String], startIndex: Int) throws -> (text: AttributedString, nextIndex: Int) {
+        var fallbackLines = [lines[startIndex].trimmingCharacters(in: .whitespaces)]
+        var index = startIndex + 1
+        while index < lines.count {
+            let line = lines[index]
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            if trimmed.isEmpty || markdownHeading(line) != nil {
+                break
+            }
+            fallbackLines.append(trimmed)
+            index += 1
+        }
+        return (try inlineAttributedString(for: fallbackLines.joined(separator: " ")), index)
+    }
+
+    private static func bulletText(_ trimmedLine: String) throws -> String? {
+        guard let markerRange = trimmedLine.range(of: #"^[-*+]\s+"#, options: .regularExpression) else {
+            return nil
+        }
+        return try plainInlineString(for: String(trimmedLine[markerRange.upperBound...]).trimmingCharacters(in: .whitespaces))
+    }
+
+    private static func plainInlineString(for markdown: String) throws -> String {
+        String(try inlineAttributedString(for: markdown).characters)
     }
 
     private static func parseIllustrationBrief(lines: [String], startIndex: Int, headingLevel: Int) -> (brief: MarkdownIllustrationBrief?, nextIndex: Int) {
@@ -323,7 +455,7 @@ public enum LessonMarkdownRenderer {
             if line.trimmingCharacters(in: .whitespaces).isEmpty {
                 break
             }
-            if codeFenceOpening(line) != nil || markdownHeading(line) != nil || isBlockquoteLine(line) || listItem(line) != nil {
+            if codeFenceOpening(line) != nil || figureDirectiveID(line) != nil || markdownHeading(line) != nil || isBlockquoteLine(line) || listItem(line) != nil {
                 break
             }
             if index + 1 < lines.count, parseTableRow(line) != nil, parseTableDelimiter(lines[index + 1], expectedColumnCount: parseTableRow(line)?.count ?? 0) != nil {

@@ -39,6 +39,7 @@
 		40C8A8612A803C82838EFCB2 /* CanadianHamTV-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 487D077D63B8DBAF59046380 /* CanadianHamTV-InfoPlist.strings */; };
 		42B335E4F445B4521F5ACA40 /* ProgressModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB023709CD1B8683292D109F /* ProgressModels.swift */; };
 		43FFC9C735678A6F9AB5032E /* CanadianHamVision-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2CB38B6F805FE75CFAC65C2 /* CanadianHamVision-InfoPlist.strings */; };
+		47F9EBF35283D2B9415C7524 /* LessonFigureMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A86BCCABAA1B3403D777005 /* LessonFigureMetadata.swift */; };
 		4A3F7F0CD01A2A85311ACD13 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		4B93675CC0BC61C3C00C9E04 /* CanadianHamVision-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFF1458062A6B863DA69A0BD /* CanadianHamVision-InfoPlist.strings */; };
 		4CBF95D998062361B45D4394 /* ProgressStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */; };
@@ -120,6 +121,7 @@
 		DA4A30385D268F8D0E95F511 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 9D9113772DD563A33D70898D /* CanadianHamEngine */; };
 		DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 		DA99F3691748E29BFE1A90C6 /* CanadianHamVisionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C184EEC11CE4CD529F8D0EA /* CanadianHamVisionUITests.swift */; };
+		DF6B8F376DDDF80C642514AE /* FigureAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79D037FE5B7CD4B97D40373D /* FigureAssets.xcassets */; };
 		E050A0F858C7D6CB9B14B292 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 736AE7B0E0E83BF1142D58FD /* CanadianHamMorseEngine */; };
 		E4193FF2F1A1DE441EFA3160 /* course.json in Resources */ = {isa = PBXBuildFile; fileRef = 79F451DA18B5F91DD4DCA5BC /* course.json */; };
 		E5B8F95402DD487BCC28516E /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 1F3F655DC0021680B5931CD5 /* CanadianHamEngine */; };
@@ -188,6 +190,7 @@
 		487D077D63B8DBAF59046380 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr-CA.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
 		4EF15EA3BC012EB6FC4367D8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		543DA6642D20EAF6FA88693D /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
+		5A86BCCABAA1B3403D777005 /* LessonFigureMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonFigureMetadata.swift; sourceTree = "<group>"; };
 		5B61FF08B59BD2425E771B49 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
 		5FB02018DEAAC19F488B3B0F /* CanadianHam.iOS.CloudKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.iOS.CloudKit.entitlements; sourceTree = "<group>"; };
 		5FC310E91D274D6ACA4BBA5F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
@@ -200,6 +203,7 @@
 		73750B729415D5254CB490A4 /* subsections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = subsections.json; sourceTree = "<group>"; };
 		7590F40AD4D1EA6C52B38F0F /* CanadianHamTVUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleStudyEngine.swift; sourceTree = "<group>"; };
+		79D037FE5B7CD4B97D40373D /* FigureAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FigureAssets.xcassets; sourceTree = "<group>"; };
 		79F451DA18B5F91DD4DCA5BC /* course.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = course.json; sourceTree = "<group>"; };
 		7CD219C3080FCB9838E25140 /* CanadianHamTVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamTVTests.swift; sourceTree = "<group>"; };
 		7D22DC6BEB5258264EA424D3 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
@@ -382,6 +386,7 @@
 			children = (
 				7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */,
 				930C7B7F4C0244035E067E06 /* Design */,
+				6C7A63FE8ECEA7A99E31268B /* Generated */,
 				715C649D0C483D6BC6DA19FB /* Models */,
 				D330EC6A74F9DEE990818D02 /* Morse */,
 				4255DA0DD15A47613C50E8FA /* Practice */,
@@ -429,6 +434,14 @@
 				FFF1458062A6B863DA69A0BD /* CanadianHamVision-InfoPlist.strings */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		6C7A63FE8ECEA7A99E31268B /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				5A86BCCABAA1B3403D777005 /* LessonFigureMetadata.swift */,
+			);
+			path = Generated;
 			sourceTree = "<group>";
 		};
 		715C649D0C483D6BC6DA19FB /* Models */ = {
@@ -500,6 +513,7 @@
 				5FB02018DEAAC19F488B3B0F /* CanadianHam.iOS.CloudKit.entitlements */,
 				1384BDF3C806AC3EEC29FB6C /* CanadianHam.macOS.CloudKit.entitlements */,
 				8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */,
+				79D037FE5B7CD4B97D40373D /* FigureAssets.xcassets */,
 				10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */,
 				053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */,
 			);
@@ -921,6 +935,7 @@
 				018B9FABEC72D0DC5202DBC0 /* Assets.xcassets in Resources */,
 				9B089F46411317817CD15DA1 /* CanadianHam-InfoPlist.strings in Resources */,
 				A4A6DF61C3775C2EEF581B72 /* CanadianHam-InfoPlist.strings in Resources */,
+				DF6B8F376DDDF80C642514AE /* FigureAssets.xcassets in Resources */,
 				7AC3F901ABC1A7ED3D21F3E4 /* Localizable.xcstrings in Resources */,
 				DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */,
 				CD41A0E943ED3D0B9276D02A /* course.json in Resources */,
@@ -1171,6 +1186,7 @@
 				942070A451CA10AC36A0A7D6 /* ICloudSyncCopy.swift in Sources */,
 				93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */,
 				EA651611EAE395366553C319 /* LearnViews.swift in Sources */,
+				47F9EBF35283D2B9415C7524 /* LessonFigureMetadata.swift in Sources */,
 				59EC5C3A19D8FF6609993C84 /* MorseAudioDriver.swift in Sources */,
 				2B54DF0F27C4978DBAF06D92 /* MorseCopyExamView.swift in Sources */,
 				AFFA52B1C5ECDFD23A77E6A3 /* MorseCourseView.swift in Sources */,

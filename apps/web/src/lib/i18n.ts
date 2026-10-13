@@ -480,8 +480,7 @@ export const enMessages = defineMessages({
   referenceSheetTableAria: "Reference sheet table",
   markdownCodeBlockAria: "Lesson code block",
   markdownCodeBlockLanguageAria: (language: string) => `Lesson code block (${language})`,
-  markdownIllustrationPlaceholder: "Illustration placeholder",
-  markdownIllustrationBrief: "Illustration brief:",
+  markdownFigureTextEquivalent: "Figure text equivalent",
 });
 
 export type MessageCatalogue = typeof enMessages;
@@ -953,8 +952,7 @@ export const frMessages = defineMessages({
   referenceSheetTableAria: "Tableau de la feuille de référence",
   markdownCodeBlockAria: "Bloc de code de leçon",
   markdownCodeBlockLanguageAria: (language: string) => `Bloc de code de leçon (${language})`,
-  markdownIllustrationPlaceholder: "Espace réservé pour l’illustration",
-  markdownIllustrationBrief: "Résumé de l’illustration :",
+  markdownFigureTextEquivalent: "Équivalent textuel de la figure",
 } satisfies MessageCatalogue);
 
 const catalogues: Record<InterfaceLanguage, MessageCatalogue> = {

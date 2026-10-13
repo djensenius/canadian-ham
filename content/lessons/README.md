@@ -102,6 +102,10 @@ The explanation checker includes three distractor-note lints in addition to sche
 - The distractor list must not include `sourceIndex 0`, and it must include a note for every incorrect choice (`sourceIndex` 1-3 in the current Basic bank).
 - The **TEMPLATE** lint strips the quoted choice text, tokenizes each distractor note, and flags any word 6-gram that appears in distractor notes for at least 4 different questions within the same category. Allowed repeated technical phrases, if any, must be documented with reasons in [`../../packages/content-tools/explanation-template-allowlist.json`](../../packages/content-tools/explanation-template-allowlist.json).
 
+## Lesson figures
+
+Lesson Markdown may reference drawn figures with the `::figure <id>` directive. Figure sources live in `content/figures/`, alt text lives in the directive, and the existing `## Illustration brief` section stays in the lesson source for authors but is not shown to learners. See [`../../docs/figures.md`](../../docs/figures.md) for naming, theming, Apple asset generation, text-equivalent, and check-script requirements.
+
 ## Lesson originality check
 
 `check:lesson-originality` is a heuristic guard for keeping original lessons separate from official ISED question text.

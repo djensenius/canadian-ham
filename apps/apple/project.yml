@@ -49,10 +49,12 @@ targets:
         excludes:
           - Resources/AppIcon.icon
           - Resources/Assets.xcassets
+          - Resources/FigureAssets.xcassets
           - Resources/CanadianHam.iOS.CloudKit.Info.plist
       - path: CanadianHam/Resources/AppIcon.icon
         buildPhase: resources
       - path: CanadianHam/Resources/Assets.xcassets
+      - path: CanadianHam/Resources/FigureAssets.xcassets
       - path: CanadianHam/Resources/Localizable.xcstrings
         type: file
         buildPhase: resources

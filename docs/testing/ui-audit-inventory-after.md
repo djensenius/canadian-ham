@@ -74,6 +74,8 @@ Generated after the task-31 UI-suite changes (scroll-settling and teardown; laun
 | iOS | testAccessibilityAuditLearnFlowDark | Learn module list | dark | false |
 | iOS | testAccessibilityAuditLearnFlowDark | Lesson reader top | dark | false |
 | iOS | testAccessibilityAuditLearnFlowDark | Lesson quiz answered | dark | false |
+| iOS | testOhmsLawLessonFiguresAndAccessibilityLight | Ohm's law lesson inline figures, enlarged figures, and expanded figure text equivalent | light | true |
+| iOS | testOhmsLawLessonFiguresAndAccessibilityDark | Ohm's law lesson inline figures, enlarged figures, and expanded figure text equivalent | dark | true |
 | iOS | testAccessibilityAuditMockExamFlowLight | Mock exam question timer | light | false |
 | iOS | testAccessibilityAuditMockExamFlowLight | Mock exam question navigator timer | light | false |
 | iOS | testAccessibilityAuditMockExamFlowLight | Mock exam answered flagged question | light | false |
@@ -122,3 +124,8 @@ Generated after the task-31 UI-suite changes (scroll-settling and teardown; laun
 | visionOS | testAboutAccessibilityAuditLightAndDark | About | dark | false |
 | visionOS | testMorseAccessibilityAuditLightAndDark | Morse | light | false |
 | visionOS | testMorseAccessibilityAuditLightAndDark | Morse | dark | false |
+
+## Approved audit exceptions reflected after task-38.1
+
+- `testOhmsLawLessonFiguresAndAccessibilityLight` and `testOhmsLawLessonFiguresAndAccessibilityDark` use the owner-approved 2026-10-12 false-positive rule only for inline lesson scroll content under an opaque navigation bar: the handler may ignore contrast issues only when the failing element is inside the lesson scroll view and its frame is not fully contained in the visible scroll area below the bar. Navigation-bar elements fail, elements outside the scroll view fail, issues without an element fail, fully visible contrast issues fail, and every non-contrast issue fails. Enlarged figure sheets run the plain audit without this handler.
+- Task-42's Morse settings description exception and task-44.3's exam-tool medium-detent clipping exception remain separately approved and are tracked in `AGENTS.md`.

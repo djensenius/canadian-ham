@@ -126,6 +126,39 @@ final class ContentLibraryTests: XCTestCase {
         }
     }
 
+    func testSharedFigureDirectiveFixtures() throws {
+        let fixtureURL = try repoRootURL().appendingPathComponent("fixtures/markdown-figure-directives.json")
+        let fixtures = try JSONDecoder().decode([FigureDirectiveFixture].self, from: Data(contentsOf: fixtureURL))
+        for fixture in fixtures {
+            let rendered = try LessonMarkdownRenderer.render(fixture.markdown)
+            XCTAssertEqual(simplifiedBlocks(rendered.blocks), fixture.expected, fixture.name)
+        }
+    }
+
+    func testFigureDirectivesForOhmsLawLesson() throws {
+        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
+        let lesson = try XCTUnwrap(library.lessonsById["L-005-02"])
+        let rendered = try LessonMarkdownRenderer.render(lesson.bodyMarkdown)
+
+        XCTAssertEqual(rendered.figures.map(\.id), ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"])
+        let wheel = try XCTUnwrap(rendered.figures.last)
+        XCTAssertTrue(wheel.altText.contains("quadrants for P, E, I, and R"))
+        XCTAssertEqual(wheel.textEquivalent, [
+            "To find P: I x E.",
+            "To find P: I² x R.",
+            "To find P: E² / R.",
+            "To find E: I x R.",
+            "To find E: P / I.",
+            "To find E: √(P x R).",
+            "To find I: E / R.",
+            "To find I: P / E.",
+            "To find I: √(P / R).",
+            "To find R: E / I.",
+            "To find R: E² / P.",
+            "To find R: P / I²."
+        ])
+    }
+
     func testTableParserHandlesAlignmentEscapedPipesAndFencedCode() throws {
         let markdown = """
         ```text
@@ -289,6 +322,38 @@ final class ContentLibraryTests: XCTestCase {
             XCTAssertThrowsError(try ContentLibrary.load(fromDirectory: root)) { error in
                 XCTAssertTrue(String(describing: error).contains("lesson id must match"), String(describing: error))
             }
+        }
+    }
+}
+
+private struct FigureDirectiveFixture: Decodable {
+    let name: String
+    let markdown: String
+    let expected: [SimplifiedMarkdownBlock]
+}
+
+private struct SimplifiedMarkdownBlock: Decodable, Equatable {
+    let type: String
+    let id: String?
+    let altText: String?
+    let textEquivalent: [String]?
+    let text: String?
+    let language: String?
+}
+
+private func simplifiedBlocks(_ blocks: [LessonBlock]) -> [SimplifiedMarkdownBlock] {
+    blocks.map { block in
+        switch block {
+        case .figure(let figure):
+            SimplifiedMarkdownBlock(type: "figure", id: figure.id, altText: figure.altText, textEquivalent: figure.textEquivalent, text: nil, language: nil)
+        case .paragraph(let text):
+            SimplifiedMarkdownBlock(type: "paragraph", id: nil, altText: nil, textEquivalent: nil, text: String(text.characters), language: nil)
+        case .code(let language, let text):
+            SimplifiedMarkdownBlock(type: "code", id: nil, altText: nil, textEquivalent: nil, text: text, language: language)
+        case .heading(_, let text):
+            SimplifiedMarkdownBlock(type: "heading", id: nil, altText: nil, textEquivalent: nil, text: String(text.characters), language: nil)
+        case .list, .table, .illustrationBrief, .blockquote:
+            SimplifiedMarkdownBlock(type: "other", id: nil, altText: nil, textEquivalent: nil, text: nil, language: nil)
         }
     }
 }

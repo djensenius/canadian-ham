@@ -805,11 +805,24 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-seed"} />);
 
     await screen.findByRole("heading", { name: "Units, conductors, and current" });
-    assert.ok(screen.getByRole("img", { name: /horizontal metric-prefix ladder/i }));
+    assert.equal(screen.queryByText("Illustration placeholder"), null);
+    assert.equal(screen.queryByText(/Draw a simple ink-brush ladder/u), null);
     assert.ok(container.querySelector("table th[scope='col']"));
     await user.click(screen.getByRole("button", { name: "Mark lesson read" }));
     await waitFor(async () => assert.equal((await store.getLessonProgress()).length, 1));
     await expectNoAxeViolations(container);
+
+    cleanup();
+    window.location.hash = "#/learn/M5/L-005-02";
+    const figureStore = createStore("lesson-figures");
+    const figureRender = render(<App store={figureStore} now={() => fixedNow} seedFactory={() => "lesson-figure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    assert.ok(screen.getByRole("img", { name: /Power triangle with P above I and E/i }));
+    assert.ok(screen.getByRole("img", { name: /Ohm’s law triangle with E above I and R/i }));
+    assert.ok(screen.getByRole("img", { name: /Ohm’s law and power wheel/i }));
+    assert.ok(screen.getByText("Figure text equivalent"));
+    await expectNoAxeViolations(figureRender.container);
 
     cleanup();
     window.location.hash = "#/learn/M6/L-006-03";

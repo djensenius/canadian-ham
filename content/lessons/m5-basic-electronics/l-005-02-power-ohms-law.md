@@ -45,6 +45,10 @@ The power formula on the reference sheet is:
 
 P = I x E
 
+::figure power-triangle
+Alt text: Power triangle with P above I and E, showing that P = I x E and the rearranged forms come from covering the unknown.
+::
+
 That means power in watts equals current in amperes times voltage in volts.
 
 ### Memory trick: P over I E
@@ -90,7 +94,28 @@ Ohm’s law links voltage, current, and resistance. The reference sheet gives th
 | Current I | I = E / R | More voltage gives more current; more resistance gives less current. |
 | Resistance R | R = E / I | Resistance is voltage divided by current. |
 
+::figure ohms-law-triangle
+Alt text: Ohm’s law triangle with E above I and R, showing E = I x R, I = E / R, and R = E / I.
+::
+
 Always use volts, amperes, and ohms together. If the current is in milliamperes, convert it to amperes before using Ohm’s law.
+
+::figure ohms-law-power-wheel
+Alt text: Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant.
+Text equivalent:
+- To find P: I x E.
+- To find P: I² x R.
+- To find P: E² / R.
+- To find E: I x R.
+- To find E: P / I.
+- To find E: √(P x R).
+- To find I: E / R.
+- To find I: P / E.
+- To find I: √(P / R).
+- To find R: E / I.
+- To find R: E² / P.
+- To find R: P / I².
+::
 
 ### Memory trick: E over I R
 
