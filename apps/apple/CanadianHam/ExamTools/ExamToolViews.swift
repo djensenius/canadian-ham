@@ -113,43 +113,49 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func toolHeader(for tool: ExamTool) -> some View {
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    toolTitleRow(for: tool)
+                    closeToolButton
+                }
+            } else {
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+                    toolTitleRow(for: tool)
+                    Spacer(minLength: 0)
+                    closeToolButton
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func toolTitleRow(for tool: ExamTool) -> some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
             Image(systemName: tool.systemImage)
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .frame(width: 44, height: 44)
                 .accessibilityLabel(Text(tool.title)) // l10n: localized
 
             Text(tool.title) // l10n: localized
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
+                .padding(.vertical, 2)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier(tool.accessibilityIdentifier)
-
-            Spacer(minLength: 0)
-
-            closeToolButton
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var closeToolButton: some View {
-        Button {
+        Button("Close tool") { // l10n: localized
             selectedTool = nil
-        } label: {
-            Text("Close tool") // l10n: localized
-                .font(DesignTokens.FontScale.body.weight(.semibold))
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, DesignTokens.Spacing.lg)
-                .padding(.vertical, DesignTokens.Spacing.lg)
-                .frame(minHeight: 64)
-                .background(DesignTokens.Colors.paperInset, in: Capsule())
-                .overlay(Capsule().strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
-        .buttonStyle(.plain)
+        .font(DesignTokens.FontScale.body.weight(.semibold))
+        .buttonStyle(.bordered)
+        .controlSize(.large)
         .accessibilityIdentifier("exam-tool-close-button")
     }
 
@@ -172,7 +178,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func availableToolBodyHeight(panelHeight: CGFloat) -> CGFloat {
-        max(240, panelHeight - 128)
+        max(220, panelHeight - (dynamicTypeSize.isAccessibilitySize ? 184 : 128))
     }
 
     @ViewBuilder
