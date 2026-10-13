@@ -251,7 +251,10 @@ struct CalculatorToolView: View {
         .focused($hasKeyboardFocus)
         .simultaneousGesture(TapGesture().onEnded { hasKeyboardFocus = true })
         .onReceive(NotificationCenter.default.publisher(for: .examContentDidReceiveInteraction)) { _ in
-            Task { @MainActor in hasKeyboardFocus = false }
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 50_000_000)
+                hasKeyboardFocus = false
+            }
         }
         .onKeyPress { press in
             handleKeyPress(press)

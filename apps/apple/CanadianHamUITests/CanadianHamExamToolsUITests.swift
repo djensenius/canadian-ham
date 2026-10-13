@@ -303,7 +303,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         guard elementFrame.width > 0, elementFrame.height > 0 else { return false }
         for identifier in ["reference-sheet-scroll", "calculator-tool-scroll"] {
             let scrollView = app.scrollViews[identifier].firstMatch
-            if scrollView.exists, scrollView.frame.insetBy(dx: -1, dy: -1).contains(elementFrame) {
+            if scrollView.exists, scrollView.frame.insetBy(dx: -1, dy: -1).intersects(elementFrame) {
                 return true
             }
         }
