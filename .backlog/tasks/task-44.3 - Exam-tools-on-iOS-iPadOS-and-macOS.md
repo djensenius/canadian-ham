@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 02:30'
+updated_date: '2026-10-13 02:32'
 labels:
   - apple
 dependencies:
@@ -67,6 +67,8 @@ Evidence-first audit rerun (before code changes): `DEVELOPER_DIR=/Applications/X
 Stopped after supervisor-directed narrowing attempt. Replaced the custom reference-sheet renderer/zoom controls with the shared `LessonMarkdownView`/`LessonTableView`, moved tool titles into scroll content as plain wrapping header Text, and simplified the unavailable state to a ScrollView-contained header/body. Verification: `git diff --check` passed, but the required targeted iPhone rerun still failed 3/3 (`/tmp/task-44.3-supervisor-narrow-1.log`, result bundle `/tmp/task-44.3-supervisor-narrow-1.xcresult`): light/dark audits still report `Text clipped` on `exam-tool-calculator-panel`; unavailable audit still reports `Text clipped` on `exam-tool-reference-sheet-panel`. Per supervisor instruction, stopping because audit failures remain after switching to the shared lesson renderer.
 
 H1 result: added a legitimate audit settle wait that polls the active tool header frame every 100 ms until 3 consecutive equal samples (5 s cap) before the three accessibility audits. Reran the three failing iPhone tests twice with xbuild on iPhone 17 Pro: /tmp/task-44.3-h1-audit-run1.log and /tmp/task-44.3-h1-audit-run2.log both failed 3/3 with Text clipped on the same calculator/reference sheet header or unavailable elements. H1 rejected; failures are not caused solely by mid-presentation or detent animation.
+
+H2 result: moved the tool header out of the sheet ScrollView into the static top row beside the close button (wrapping header text preserved). Reran the three failing iPhone audits once with xbuild: /tmp/task-44.3-h2-audit-run1.log still failed 3/3 with Text clipped on calculator/reference-sheet header or unavailable static text. H2 alone rejected; the top ScrollView soft-edge fade is not the sole cause.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
