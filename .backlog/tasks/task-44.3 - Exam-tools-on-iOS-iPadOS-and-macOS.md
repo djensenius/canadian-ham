@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 12:31'
+updated_date: '2026-10-13 13:32'
 labels:
   - apple
 dependencies:
@@ -81,6 +81,8 @@ Fresh rebuild WIP: replaced icon-only/hidden reference sheet with visible wrappi
 Catalogue rebuild step: rewrote Localizable.xcstrings from origin/main using the required OrderedDict JSON round trip (indent=2, ensure_ascii=False, separators=(',', ' : '), trailing newline), preserving main key order and appending only task-44.3 keys including Show full sheet/Zoom/updated keyboard help. Verified git diff origin/main -- Localizable.xcstrings shows only additions; text-source check passed.
 
 Validation update: iOS compile/unit smoke passed after the WIP rebuild and catalog fix: ExamCalculatorViewModelTests on iPhone 17 Pro executed 4 tests / 0 failures with xbuild. Next: run targeted/full exam-tools UI and l10n checks.
+
+Fix update after iPhone class timeout/failures: large-detent audit reported unsupported Dynamic Type because zoom fonts used fixed system sizes at 1x; changed LessonMarkdownView/LessonTableView to use dynamic design-token fonts at 1x and only fixed scaled fonts when the user changes zoom. Medium calculator audits still flagged header text; changed compact tool header to a vertical wrapping title + Close tool button and token-styled close control, with a recalculated panel body height. Verified git diff --check and text-source check.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
