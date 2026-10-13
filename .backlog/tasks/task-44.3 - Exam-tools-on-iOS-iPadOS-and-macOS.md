@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 14:26'
+updated_date: '2026-10-13 15:04'
 labels:
   - apple
 dependencies:
@@ -103,6 +103,8 @@ Fix update: medium nil-element textClipped exception now works; next failure was
 Fix update: medium audit progressed to non-exempt hit-area failure in reference controls; Show full sheet now uses a large bordered control and table cells have more vertical text room for large-detent clipping. Calculator keyboard handling now gates on an explicit acceptsKeyboardInput state set by calculator taps and cleared on exam-content interactions, so hardware keys after answer interaction should be ignored even if SwiftUI focus lags. Verified git diff --check and text-source check.
 
 Fix update: medium reference audit still exceeded the cap due zoom/reference text clipping, so zoom controls are now hidden at the medium detent (medium shows the required Show full sheet action) and remain available in large/inspector; zoom buttons keep 44pt minimum hit areas. Calculator keyboard gating moved into ExamCalculatorViewModel and answer taps in practice/mock explicitly suspend hardware-keyboard input. Verified git diff --check and text-source check.
+
+Latest targeted rerun still failing after commit 94b6e533: xbuild iPhone 17 Pro selected tests (testAccessibilityAuditExamToolsLight, testCalculatorKeyboardInputIsFocusScoped, testLargeDetentReferenceSheetRunsFullAccessibilityAudit) failed 3/3. Medium audit now logs approved textClipped ignores, but later fails with non-exempt Contrast failed in reference content. Keyboard test still shows typing after answer tap changes calculator result from 9 to 1, so hardware input remains active. Large-detent full audit still fails Text clipped on visible reference text. Full validation, screenshots, AC finalization, and Done status are not complete.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
