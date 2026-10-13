@@ -470,6 +470,7 @@ struct ReferenceSheetToolView: View {
                         .padding(.bottom, DesignTokens.Spacing.xl)
                         .background(Color.white, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                         .environment(\.colorScheme, .light)
+                        .dynamicTypeSize(.large)
                         .accessibilityHidden(true)
                 }
                 .accessibilityElement(children: .ignore)
