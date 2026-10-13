@@ -398,22 +398,26 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     private func positionElementInMiddleVisibleBand(_ element: XCUIElement, in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
         let scrollView = scrollView(containing: element, in: app)
         XCTAssertTrue(scrollView.waitForExistence(timeout: 1), "\(context): expected a scroll view", file: file, line: line)
-        for _ in 0..<12 where !isFullyVisibleInMiddleBand(element, in: app) {
-            let band = middleVisibleBand(in: app)
-            let delta: CGFloat
-            if element.exists, element.frame.maxY > band.maxY {
-                delta = -72
-            } else if element.exists, element.frame.minY < band.minY {
-                delta = 72
-            } else {
-                delta = -72
-            }
-            preciseScroll(scrollView, in: app, fingerDeltaY: delta)
-            waitBriefly()
+        var trace: [String] = []
+        func record(_ label: String) {
+            trace.append("\(label): target=\(frameDescription(element.frame)); offenders=\(scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).joined(separator: " | "))")
         }
-        XCTAssertTrue(isFullyVisibleInMiddleBand(element, in: app), "\(context): expected the element in the middle visible band. Frame: \(frameDescription(element.frame))", file: file, line: line)
+        func positioned() -> Bool {
+            isFullyVisibleInMiddleBand(element, in: app) && scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty
+        }
+        record("start")
+        if !positioned() {
+            for direction in [CGFloat(1), CGFloat(-1)] where !positioned() {
+                for step in 1...12 where !positioned() {
+                    preciseScroll(scrollView, in: app, fingerDeltaY: direction * 72)
+                    waitBriefly()
+                    record("scan \(direction > 0 ? "down" : "up") \(step)")
+                }
+            }
+        }
+        XCTAssertTrue(isFullyVisibleInMiddleBand(element, in: app), "\(context): expected the element in the middle visible band. Frame: \(frameDescription(element.frame)); trace: \(trace.joined(separator: " -> "))", file: file, line: line)
         let protectedAreaIntersections = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-        XCTAssertTrue(protectedAreaIntersections.isEmpty, "\(context): scrollable elements should not intersect the protected navigation/status area: \(protectedAreaIntersections.joined(separator: " | "))", file: file, line: line)
+        XCTAssertTrue(protectedAreaIntersections.isEmpty, "\(context): scrollable elements should not intersect the protected navigation/status area: \(protectedAreaIntersections.joined(separator: " | ")); trace: \(trace.joined(separator: " -> "))", file: file, line: line)
     }
 
     private func preciseScroll(_ scrollView: XCUIElement, in app: XCUIApplication, fingerDeltaY: CGFloat) {
@@ -482,7 +486,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         return candidates.compactMap { kind, element in
             guard element.exists else { return nil }
             let frame = element.frame
-            guard frame.width > 0, frame.height > 0, frame.minY >= windowMinY, frame.minY < protectedMaxY else { return nil }
+            guard frame.width > 0, frame.height > 0, frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
             return "\(kind) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))"
         }
     }
