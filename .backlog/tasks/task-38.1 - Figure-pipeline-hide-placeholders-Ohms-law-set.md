@@ -1,11 +1,11 @@
 ---
 id: TASK-38.1
 title: 'Figure pipeline, hide placeholders, Ohm''s law set'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-13 13:41'
+updated_date: '2026-10-13 14:17'
 labels:
   - content
   - apple
@@ -106,6 +106,8 @@ Blocked: owner decision on audit approach after 1A attempt. Reverted WIP clippin
 Owner decision 2026-10-12(B) recorded/applied: lesson figure UI audits now run the full default performAccessibilityAudit with a narrow handler that ignores only contrast issues whose element frame is not fully contained in the visible scroll area below the opaque navigation bar; fully visible contrast issues and all non-contrast issues still fail, and each ignored issue is logged. The earlier lesson no-straddling assertion is no longer required for the figure/text-equivalent scan states because normal SwiftUI lesson prose can remain in the accessibility tree under or just behind the opaque bar; these states now rely on the approved exception plus hard assertions that the target figure/preserved row is visible.
 
 Final owner-decision validation passed after occluded-text contrast helper: light Ohm's law lesson figure audit 3/3 passed in /tmp/task381-light-3x.xcresult; dark Ohm's law lesson figure audit 3/3 passed in /tmp/task381-dark-3x.xcresult; AX5 inline fit + real enlarge passed in /tmp/task381-final-ax5.xcresult; illustration brief placeholder hiding passed in /tmp/task381-final-placeholder.xcresult; macOS content-library targeted test passed in /tmp/task381-final-macos.xcresult; pnpm check:apple-l10n passed; contrast token unit test passed in /tmp/task381-contrast-unit.xcresult. Refreshed screenshot evidence copied into docs/evidence/task-38.1/app/.
+
+Review follow-up after b782bc7: narrowing the occluded-content contrast exception, restoring generic scroll-settle drag direction, merging origin/main, and rerunning targeted validation.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
