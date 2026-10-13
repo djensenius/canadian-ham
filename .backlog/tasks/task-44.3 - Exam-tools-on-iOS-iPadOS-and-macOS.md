@@ -1,11 +1,11 @@
 ---
 id: TASK-44.3
 title: 'Exam tools on iOS, iPadOS and macOS'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 04:50'
+updated_date: '2026-10-13 11:35'
 labels:
   - apple
 dependencies:
@@ -73,6 +73,8 @@ H2 result: moved the tool header out of the sheet ScrollView into the static top
 H3 result: instrumented the compact-sheet GeometryReader height update path while applying the convergence fix (round measured sheet height to whole points and ignore <1 pt changes). Reran the three failing iPhone audits with xbuild: /tmp/task-44.3-h3-audit-run1.log still failed 3/3 with Text clipped on calculator/reference-sheet header or unavailable static text. The added diagnostic print did not surface in the xbuild console log, but the H1 header-frame settle wait reached stable frames before each audit. Removed the temporary diagnostic print and kept the whole-point height rounding. H3 rejected; stale/jittery compactSheetHeight updates are not sufficient to explain the failures.
 
 Final worker: verified large-detent diagnostic removed the medium-detent Dynamic Type clipping failures for the unavailable state and shifted reference content checks; implemented compact medium reference-sheet preview with accessible value, icon-only compact headers to avoid Dynamic Type clipping, bounded accessibility-size calculator height, and UI-test scrolling updates for the calculator tool. Validation passed: targeted failing iPhone audits twice (/tmp/task-44.3-compact-reference-preview-audits-run1.log, run2.log); full iPhone CanadianHamExamToolsUITests class 12 executed / 1 skipped / 0 failures (/tmp/task-44.3-full-iphone-exam-tools-final5.log); iPad inspector targeted test passed (/tmp/task-44.3-ipad-inspector-final.log); macOS unit command passed 132 tests (/tmp/task-44.3-macos-units-final.log); pnpm check:apple-l10n passed; node scripts/check-apple-text-sources.ts passed; git diff --check passed.
+
+Fresh rebuild started from HEAD 1aaf1c7 after r443/r443-2 reviews. Owner approved exactly one medium-detent exam-tool audit exception: ignore only textClipped Dynamic Type clipping issues whose element lies inside the tool panel scroll content; all other medium issues fail, and large-detent/inspector audits run the full default audit without a handler. docs/testing will record the same exception.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
