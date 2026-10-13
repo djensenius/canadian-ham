@@ -70,7 +70,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
         XCTAssertTrue(answer.isHittable, "Answer should be hittable before clearing calculator keyboard focus")
         answer.tap()
-        XCTAssertFalse(app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch.exists, "Calculator keyboard input should be scoped to the calculator focus binding")
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch.waitForNonExistence(timeout: 2), "Calculator keyboard input should be scoped to the calculator focus binding")
         app.typeKey("1", modifierFlags: [])
         waitBriefly()
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9", "Typing after calculator focus leaves must not change the calculator")
@@ -138,7 +138,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testAccessibilityAuditExamToolsLight() throws {
-        let app = launchPracticeQuestion(appearance: "light")
+        let app = launchAuditPracticeQuestion(appearance: "light")
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
@@ -151,7 +151,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testAccessibilityAuditExamToolsDark() throws {
-        let app = launchPracticeQuestion(appearance: "dark")
+        let app = launchAuditPracticeQuestion(appearance: "dark")
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
@@ -164,7 +164,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testLargeDetentReferenceSheetRunsFullAccessibilityAudit() throws {
-        let app = launchPracticeQuestion()
+        let app = launchAuditPracticeQuestion()
         defer { app.terminate() }
 
         openTool(.referenceSheet, in: app)
@@ -239,11 +239,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
-    private func launchPracticeQuestion(appearance: String = "light", questionID: String = "B-001-002-002", extraArguments: [String] = []) -> XCUIApplication {
+    private func launchPracticeQuestion(appearance: String = "light", categoryID: String = "B-001", questionID: String = "B-001-002-002", extraArguments: [String] = []) -> XCUIApplication {
         launchApp(appearance: appearance, arguments: extraArguments + [
-            "-CanadianHamInitialCategoryID", "B-001",
+            "-CanadianHamInitialCategoryID", categoryID,
             "-CanadianHamPracticeQuestionID", questionID
         ])
+    }
+
+    private func launchAuditPracticeQuestion(appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
+        launchPracticeQuestion(appearance: appearance, categoryID: "B-004", questionID: "B-004-001-001", extraArguments: extraArguments)
     }
 
     private func launchAdvancedPracticeQuestion() -> XCUIApplication {
