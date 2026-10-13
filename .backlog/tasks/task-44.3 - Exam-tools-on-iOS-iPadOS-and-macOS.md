@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 14:10'
+updated_date: '2026-10-13 14:15'
 labels:
   - apple
 dependencies:
@@ -97,6 +97,8 @@ Test update: largest Dynamic Type calculator targeted test now passes. Medium/la
 Fix update: broadened the approved medium-detent textClipped handler to recognize partially clipped elements that intersect the tool scroll viewport (for bottom-edge content) while still only handling textClipped and logging ignored issues. Delayed calculator FocusState clearing by 50 ms after exam-content interaction so answer taps can move focus out before the keyboard test types again. Verified git diff --check and text-source check.
 
 Supervisor decision applied: XCTest reports the remaining medium-detent Dynamic Type textClipped issue with issue.element == nil, so the medium audit helper now ignores only textClipped nil-element issues (or textClipped elements intersecting calculator/reference scroll view), logs each ignored issue with XCTContext/NSLog, caps ignored issues at 5 per audit, and runs a compensating pre-audit check for visible tool-panel static text/buttons and header containment. docs/testing now documents the nil-element XCTest behavior. Large-detent and inspector audits still have no handler. Verified git diff --check and text-source check.
+
+Fix update: medium nil-element textClipped exception now works; next failure was a non-exempt hit-area audit issue in the medium reference controls, so the zoom buttons now use large bordered controls. The keyboard test now performs the required behavioral assertion by typing after the answer tap and checking the calculator value does not change, instead of relying on the debug focus-marker disappearing. Verified git diff --check and text-source check.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
