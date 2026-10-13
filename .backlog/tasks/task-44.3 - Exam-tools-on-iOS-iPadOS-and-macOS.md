@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 15:06'
+updated_date: '2026-10-13 15:10'
 labels:
   - apple
 dependencies:
@@ -107,6 +107,8 @@ Fix update: medium reference audit still exceeded the cap due zoom/reference tex
 Latest targeted rerun still failing after commit 94b6e533: xbuild iPhone 17 Pro selected tests (testAccessibilityAuditExamToolsLight, testCalculatorKeyboardInputIsFocusScoped, testLargeDetentReferenceSheetRunsFullAccessibilityAudit) failed 3/3. Medium audit now logs approved textClipped ignores, but later fails with non-exempt Contrast failed in reference content. Keyboard test still shows typing after answer tap changes calculator result from 9 to 1, so hardware input remains active. Large-detent full audit still fails Text clipped on visible reference text. Full validation, screenshots, AC finalization, and Done status are not complete.
 
 Coordinator scope decision applied for fresh worker: task-44.3 ships the calculator only on Apple. Hide the reference-sheet tool from Apple UI using a single configuration flag (ReferenceSheetConfiguration.availableOnApple = false); keep harmless loader/view code for task-44.4 where the official ISED sheet will be added with PDFKit. Updated acceptance criteria wording to calculator-on-Apple with reference sheet deferred to TASK-44.4.
+
+Implementation update: added ReferenceSheetConfiguration.availableOnApple=false and filtered both practice/mock exam tool lists to calculator-only for task-44.3; kept the reference-sheet loader/views dormant for TASK-44.4. Reworked calculator focus clearing to use the shared view model reset token plus immediate @FocusState release on exam-content interaction, added exam-content simultaneous tap gestures, narrowed medium-detent audits to the approved nil-element textClipped exception only, removed reference-sheet UI-test paths, and added calculator screenshot evidence capture. Validation so far: git diff --check passed; node scripts/check-apple-text-sources.ts passed; git diff origin/main for Localizable.xcstrings shows additions only; iOS ExamCalculatorViewModelTests passed 4/0.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
