@@ -139,11 +139,7 @@ struct ExamToolPresentationModifier: ViewModifier {
             .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
             .accessibilityAddTraits(.isHeader)
 
-        if tool == .referenceSheet {
-            icon.accessibilityIdentifier(tool.accessibilityIdentifier)
-        } else {
-            icon
-        }
+        icon.accessibilityIdentifier(tool.accessibilityIdentifier)
     }
 
     private var closeToolButton: some View {
@@ -169,13 +165,9 @@ struct ExamToolPresentationModifier: ViewModifier {
 
                 switch tool {
                 case .calculator:
-                    VStack {
-                        CalculatorToolView(viewModel: calculator)
-                            .frame(height: dynamicTypeSize.isAccessibilitySize ? 520 : nil)
-                            .frame(minHeight: 360)
-                    }
-                    .accessibilityElement(children: .contain)
-                    .accessibilityIdentifier(tool.accessibilityIdentifier)
+                    CalculatorToolView(viewModel: calculator)
+                        .frame(height: dynamicTypeSize.isAccessibilitySize ? 520 : nil)
+                        .frame(minHeight: 360)
                 case .referenceSheet:
 #if os(iOS)
                     ReferenceSheetToolView(
