@@ -68,7 +68,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                                     .onChange(of: proxy.size.height) { _, height in updateCompactSheetHeight(height) }
                             }
                         }
-                        .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
+                        .presentationDetents([.large], selection: $selectedSheetDetent)
                         .presentationBackgroundInteraction(.enabled(upThrough: .medium))
                         .presentationDragIndicator(.visible)
                         .onAppear { selectedSheetDetent = preferredSheetDetent(for: tool) }
@@ -93,7 +93,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func preferredSheetDetent(for tool: ExamTool) -> PresentationDetent {
-        tool == .calculator && dynamicTypeSize.isAccessibilitySize ? .large : .medium
+        .large
     }
 #endif
 
