@@ -143,6 +143,15 @@ final class QuestionBankTests: XCTestCase {
         }
     }
 
+    func testBundledLessonModelExposesPrerequisites() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let lesson = try XCTUnwrap(library.lessonsById["L-006-03"])
+        let prerequisite = try XCTUnwrap(library.lessonsById["L-006-02"])
+
+        XCTAssertEqual(lesson.prerequisites, ["L-006-02"])
+        XCTAssertEqual(prerequisite.title.en, "Loss, SWR, and matching")
+    }
+
     private func bundledReadmePaths(in bundle: Bundle) throws -> [String] {
         let resourceURL = try XCTUnwrap(bundle.resourceURL)
         let urls = FileManager.default.enumerator(

@@ -329,6 +329,7 @@ private struct LessonReaderView: View {
                             .font(DesignTokens.FontScale.caption)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
+                    LessonPrerequisitesSection(prerequisites: prerequisiteLessons)
                 }
                 .paperCard()
 
@@ -378,6 +379,10 @@ private struct LessonReaderView: View {
         .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
         .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
+    }
+
+    private var prerequisiteLessons: [Lesson] {
+        lesson.prerequisites.compactMap { library.lessonsById[$0] }
     }
 
     private func lessonActionLabel(_ text: Text) -> some View {
@@ -457,6 +462,44 @@ private struct LessonReaderView: View {
         let ordered = library.orderedLessons()
         guard let index = ordered.firstIndex(where: { $0.id == lesson.id }) else { return nil }
         return ordered[safe: index + offset]
+    }
+}
+
+private struct LessonPrerequisitesSection: View {
+    let prerequisites: [Lesson]
+
+    var body: some View {
+        if !prerequisites.isEmpty {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                Text("Before this lesson") // l10n: localized
+                    .font(DesignTokens.FontScale.title.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("lesson-prerequisites-heading")
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    ForEach(prerequisites, id: \.id) { prerequisite in
+                        NavigationLink(value: LearnRoute.lesson(prerequisite.id)) {
+                            Text(localized(prerequisite.title.en, language: .english)) // l10n: content(en)
+                                .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                                .padding(.horizontal, DesignTokens.Spacing.md)
+                                .padding(.vertical, DesignTokens.Spacing.sm)
+                                .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
+                                        .strokeBorder(DesignTokens.Colors.border, lineWidth: 1)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("Open lesson \(prerequisite.title.en)")) // l10n: localized
+                        .accessibilityIdentifier("lesson-prerequisite-link-\(prerequisite.id)")
+                    }
+                }
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("lesson-prerequisites-section")
+        }
     }
 }
 

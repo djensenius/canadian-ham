@@ -928,6 +928,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.exists)
     }
 
+    func testLessonPrerequisiteNavigationAndAccessibilityLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditLessonPrerequisiteNavigation(appearance: .light)
+    }
+
+    func testLessonPrerequisiteNavigationAndAccessibilityDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditLessonPrerequisiteNavigation(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
     func testLessonQuizResultPersistsAfterRelaunch() throws {
         XCUIDevice.shared.appearance = .light
         var app = launchApp(arguments: [
@@ -2054,6 +2065,32 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollPracticeReviewFeedbackIntoView(in: reviewApp)
         try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review feedback")
         reviewApp.terminate()
+    }
+
+    private func auditLessonPrerequisiteNavigation(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialLessonID", "L-006-03",
+            "-CanadianHamTheme", appearance.rawValue
+        ])
+        defer { app.terminate() }
+
+        let sourceTitle = app.descendants(matching: .any)["lesson-reader-title"].firstMatch
+        XCTAssertTrue(sourceTitle.waitForExistence(timeout: 10), "Expected prerequisite-bearing lesson reader to load")
+        XCTAssertEqual(sourceTitle.label, "Polarization, dipoles, and wavelength")
+        XCTAssertTrue(app.staticTexts["lesson-prerequisites-heading"].firstMatch.waitForExistence(timeout: 5), "Expected Before this lesson section")
+
+        let prerequisiteLink = app.buttons["lesson-prerequisite-link-L-006-02"].firstMatch
+        XCTAssertTrue(prerequisiteLink.waitForExistence(timeout: 5), "Expected prerequisite link for L-006-02")
+        XCTAssertTrue(prerequisiteLink.label.localizedCaseInsensitiveContains("Open lesson Loss, SWR, and matching"), "Expected accessible prerequisite link label, got: \(prerequisiteLink.label)")
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+        scrollUntilHittable(prerequisiteLink, in: app, maxSwipes: 8)
+        XCTAssertTrue(prerequisiteLink.isHittable, "Expected prerequisite link to be hittable")
+        prerequisiteLink.tap()
+
+        let destinationTitle = app.descendants(matching: .any)["lesson-reader-title"].firstMatch
+        XCTAssertTrue(destinationTitle.waitForExistence(timeout: 10), "Expected tapped prerequisite lesson to load")
+        XCTAssertEqual(destinationTitle.label, "Loss, SWR, and matching")
+        try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
     private func auditLearnFlow(appearance: AuditAppearance) throws {
