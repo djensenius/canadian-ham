@@ -37,7 +37,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @ObservedObject var calculator: ExamCalculatorViewModel
     let referenceSheetConfiguration: ReferenceSheetConfiguration
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @ScaledMetric(relativeTo: .title3) private var headerTextVerticalPadding: CGFloat = 14
+    @ScaledMetric(relativeTo: .title3) private var headerTextMinimumHeight: CGFloat = 80
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
 
@@ -123,6 +123,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     private func toolHeader(for tool: ExamTool) -> some View {
         VStack(spacing: DesignTokens.Spacing.sm) {
             ZStack {
+                Color.clear.frame(height: headerTextMinimumHeight)
                 Text(toolTitle(for: tool)) // l10n: localized
                     .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
@@ -130,8 +131,8 @@ struct ExamToolPresentationModifier: ViewModifier {
                     .multilineTextAlignment(.center)
                     .accessibilityHidden(true)
             }
-            .padding(.vertical, headerTextVerticalPadding)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: headerTextMinimumHeight)
+            .contentShape(Rectangle())
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
             .accessibilityAddTraits(.isHeader)
@@ -458,8 +459,8 @@ private struct CalculatorToolLayout {
 
 struct ReferenceSheetToolView: View {
     let configuration: ReferenceSheetConfiguration
-    @ScaledMetric(relativeTo: .title3) private var unavailableTitleVerticalPadding: CGFloat = 14
-    @ScaledMetric(relativeTo: .body) private var unavailableBodyVerticalPadding: CGFloat = 10
+    @ScaledMetric(relativeTo: .title3) private var unavailableTitleMinimumHeight: CGFloat = 80
+    @ScaledMetric(relativeTo: .body) private var unavailableBodyMinimumHeight: CGFloat = 96
     @State private var document: ReferenceSheetDocument?
 
     var body: some View {
@@ -475,6 +476,7 @@ struct ReferenceSheetToolView: View {
             } else {
                 VStack(spacing: DesignTokens.Spacing.sm) {
                     ZStack {
+                        Color.clear.frame(height: unavailableTitleMinimumHeight)
                         Text("Reference sheet unavailable") // l10n: localized
                             .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
@@ -482,14 +484,15 @@ struct ReferenceSheetToolView: View {
                             .multilineTextAlignment(.center)
                             .accessibilityHidden(true)
                     }
-                    .padding(.vertical, unavailableTitleVerticalPadding)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, minHeight: unavailableTitleMinimumHeight)
+                    .contentShape(Rectangle())
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text("Reference sheet unavailable")) // l10n: localized
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("reference-sheet-unavailable")
 
                     ZStack {
+                        Color.clear.frame(height: unavailableBodyMinimumHeight)
                         Text("The bundled Basic reference sheet is not installed in this build.") // l10n: localized
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
@@ -497,8 +500,8 @@ struct ReferenceSheetToolView: View {
                             .multilineTextAlignment(.center)
                             .accessibilityHidden(true)
                     }
-                    .padding(.vertical, unavailableBodyVerticalPadding)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, minHeight: unavailableBodyMinimumHeight)
+                    .contentShape(Rectangle())
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text("The bundled Basic reference sheet is not installed in this build.")) // l10n: localized
                 }
