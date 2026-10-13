@@ -171,6 +171,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                 case .calculator:
                     VStack {
                         CalculatorToolView(viewModel: calculator)
+                            .frame(height: dynamicTypeSize.isAccessibilitySize ? 520 : nil)
                             .frame(minHeight: 360)
                     }
                     .accessibilityElement(children: .contain)
