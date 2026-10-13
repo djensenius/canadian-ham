@@ -129,12 +129,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier(tool.accessibilityIdentifier)
 
-            Text(toolTitle(for: tool)) // l10n: localized
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-                .accessibilityHidden(true)
+            Spacer(minLength: 0)
 
             closeToolButton
         }
@@ -498,21 +493,6 @@ struct ReferenceSheetToolView: View {
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("reference-sheet-unavailable")
 
-                    Text("Reference sheet unavailable") // l10n: localized
-                        .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                        .accessibilityHidden(true)
-
-                    Text("The bundled Basic reference sheet is not installed in this build.") // l10n: localized
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                        .accessibilityHidden(true)
                 }
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.vertical, DesignTokens.Spacing.md)
@@ -539,13 +519,6 @@ struct ReferenceSheetToolView: View {
                 .accessibilityValue(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
                 .accessibilityIdentifier("reference-sheet-scroll")
 
-            Text("Basic reference sheet") // l10n: localized
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
-                .accessibilityHidden(true)
         }
         .padding(.horizontal, DesignTokens.Spacing.lg)
         .padding(.vertical, DesignTokens.Spacing.md)
