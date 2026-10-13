@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 14:02'
+updated_date: '2026-10-13 14:06'
 labels:
   - apple
 dependencies:
@@ -93,6 +93,8 @@ Header audit fix update: second targeted rerun still showed textClipped on Calcu
 Focus fix update: changed calculator focus clearing notification to set FocusState asynchronously on the main actor to avoid publishing during view updates and to let answer taps clear hardware-keyboard focus before the keyboard test types after focus leaves. Verified git diff --check and text-source check.
 
 Test update: largest Dynamic Type calculator targeted test now passes. Medium/large audits were still affected by the background large navigation title in B-001; changed only the audit-specific launches to use B-004 Circuit Components/B-004-001-001 to avoid auditing an unrelated truncated category title behind the tool sheet. Keyboard focus test now waits for the focused marker to disappear before typing after focus leaves. Verified git diff --check and text-source check.
+
+Fix update: broadened the approved medium-detent textClipped handler to recognize partially clipped elements that intersect the tool scroll viewport (for bottom-edge content) while still only handling textClipped and logging ignored issues. Delayed calculator FocusState clearing by 50 ms after exam-content interaction so answer taps can move focus out before the keyboard test types again. Verified git diff --check and text-source check.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
