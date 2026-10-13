@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 11:35'
+updated_date: '2026-10-13 11:59'
 labels:
   - apple
 dependencies:
@@ -75,6 +75,8 @@ H3 result: instrumented the compact-sheet GeometryReader height update path whil
 Final worker: verified large-detent diagnostic removed the medium-detent Dynamic Type clipping failures for the unavailable state and shifted reference content checks; implemented compact medium reference-sheet preview with accessible value, icon-only compact headers to avoid Dynamic Type clipping, bounded accessibility-size calculator height, and UI-test scrolling updates for the calculator tool. Validation passed: targeted failing iPhone audits twice (/tmp/task-44.3-compact-reference-preview-audits-run1.log, run2.log); full iPhone CanadianHamExamToolsUITests class 12 executed / 1 skipped / 0 failures (/tmp/task-44.3-full-iphone-exam-tools-final5.log); iPad inspector targeted test passed (/tmp/task-44.3-ipad-inspector-final.log); macOS unit command passed 132 tests (/tmp/task-44.3-macos-units-final.log); pnpm check:apple-l10n passed; node scripts/check-apple-text-sources.ts passed; git diff --check passed.
 
 Fresh rebuild started from HEAD 1aaf1c7 after r443/r443-2 reviews. Owner approved exactly one medium-detent exam-tool audit exception: ignore only textClipped Dynamic Type clipping issues whose element lies inside the tool panel scroll content; all other medium issues fail, and large-detent/inspector audits run the full default audit without a handler. docs/testing will record the same exception.
+
+Fresh rebuild WIP: replaced icon-only/hidden reference sheet with visible wrapping titles, matching Close tool button, real LessonMarkdownView content at medium/large/inspector with Show full sheet and font-based zoom, visible unavailable message, token colours, calculator sizing from available panel height, deleteForward all-clear mapping, web-matching keyboard help, restored protected-area assertion, added medium audit exception handler plus large-detent/inspector full-audit tests, and documented the exception in docs/testing. Validation so far: git diff --check and node scripts/check-apple-text-sources.ts passed; iOS compile smoke first failed only for missing self in the audit-handler closure, fixed; rerun is pending because xbuild waited on the lock for 20 minutes and timed out without starting.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
