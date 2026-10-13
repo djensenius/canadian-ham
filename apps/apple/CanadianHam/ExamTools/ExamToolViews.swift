@@ -57,12 +57,13 @@ struct ExamToolPresentationModifier: ViewModifier {
     func body(content: Content) -> some View {
 #if os(iOS)
         if horizontalUsesInspector {
-            content.inspector(isPresented: isPresented) {
-                toolPanel
-                    .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
-            }
+            focusResettingContent(content)
+                .inspector(isPresented: isPresented) {
+                    toolPanel
+                        .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
+                }
         } else {
-            content
+            focusResettingContent(content)
                 .safeAreaInset(edge: .bottom) {
                     Color.clear.frame(height: selectedTool == nil ? 0 : compactSheetHeight)
                 }
@@ -83,13 +84,24 @@ struct ExamToolPresentationModifier: ViewModifier {
                 }
         }
 #elseif os(macOS)
-        content.inspector(isPresented: isPresented) {
-            toolPanel
-                .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
-        }
+        focusResettingContent(content)
+            .inspector(isPresented: isPresented) {
+                toolPanel
+                    .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
+            }
 #else
         content
 #endif
+    }
+
+    private func focusResettingContent(_ content: Content) -> some View {
+        content.simultaneousGesture(
+            DragGesture(minimumDistance: 0).onChanged { _ in
+                calculatorFocused = false
+                calculator.suspendHardwareKeyboardInput()
+            },
+            including: .all
+        )
     }
 
 #if os(iOS)
@@ -275,12 +287,12 @@ struct CalculatorToolView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
         .accessibilityElement(children: .contain)
-        .accessibilityIdentifier(calculatorFocused && hasKeyboardFocus ? "calculator-keyboard-focus-target-focused" : "calculator-keyboard-focus-target")
+        .accessibilityIdentifier(calculatorFocused ? "calculator-keyboard-focus-target-focused" : "calculator-keyboard-focus-target")
         .focusable(true)
         .focused($hasKeyboardFocus)
         .onAppear {
-            Task { @MainActor in
-                activateKeyboardFocus()
+            if calculatorFocused {
+                hasKeyboardFocus = true
             }
         }
         .simultaneousGesture(TapGesture().onEnded {
@@ -294,15 +306,7 @@ struct CalculatorToolView: View {
                 viewModel.suspendHardwareKeyboardInput()
             }
         }
-        .onChange(of: hasKeyboardFocus) { _, isFocused in
-            if !isFocused {
-                if calculatorFocused {
-                    calculatorFocused = false
-                }
-                viewModel.suspendHardwareKeyboardInput()
-            }
-        }
-        .calculatorKeyPressHandler(enabled: calculatorFocused && hasKeyboardFocus) { press in
+        .calculatorKeyPressHandler(enabled: calculatorFocused) { press in
             handleKeyPress(press)
         }
     }
@@ -374,7 +378,7 @@ struct CalculatorToolView: View {
     }
 
     private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
-        guard calculatorFocused, hasKeyboardFocus, viewModel.acceptsHardwareKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
+        guard calculatorFocused, viewModel.acceptsHardwareKeyboardInput, let key = calculatorKey(for: press) else { return .ignored }
         Task { @MainActor in
             pressKey(key)
         }

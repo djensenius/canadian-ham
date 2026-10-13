@@ -404,11 +404,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let result = app.descendants(matching: .any)["calculator-result"].firstMatch
         XCTAssertTrue(result.waitForExistence(timeout: 5), "Expected a calculator result display before focusing keyboard input", file: file, line: line)
         let focusedTarget = app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch
-        if focusedTarget.waitForExistence(timeout: 1) {
-            return focusedTarget
-        }
-        result.tap()
-        XCTAssertTrue(focusedTarget.waitForExistence(timeout: 5), "Expected the calculator .focused binding to become active after tapping the calculator", file: file, line: line)
+        XCTAssertTrue(focusedTarget.waitForExistence(timeout: 5), "Expected the calculator keyboard handler to become active after opening the calculator", file: file, line: line)
         return focusedTarget
     }
 

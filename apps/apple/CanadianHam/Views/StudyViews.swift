@@ -532,7 +532,7 @@ struct PracticeSessionView: View {
         let question = item.question
         let selected = state.selectedByQuestionId[question.id]
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            ExamToolButtons(availableTools: availableExamTools) { selectedExamTool = $0 }
+            ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
             QuestionCard(question: question, language: language)
                 .simultaneousGesture(examContentTapGesture)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -555,6 +555,9 @@ struct PracticeSessionView: View {
                             clearCalculatorKeyboardFocus()
                             select(sourceIndex: sourceIndex, question: question)
                         }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            clearCalculatorKeyboardFocus()
+                        })
                     }
                 }
             }
@@ -588,13 +591,28 @@ struct PracticeSessionView: View {
         return tools
     }
 
+    private func openExamTool(_ tool: ExamTool) {
+        selectedExamTool = tool
+        if tool == .calculator {
+            calculatorViewModel.acceptHardwareKeyboardInput()
+            calculatorFocused = true
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 150_000_000)
+                calculatorViewModel.acceptHardwareKeyboardInput()
+                calculatorFocused = true
+            }
+        } else {
+            clearCalculatorKeyboardFocus()
+        }
+    }
+
     private func clearCalculatorKeyboardFocus() {
         calculatorFocused = false
         calculatorViewModel.suspendHardwareKeyboardInput()
     }
 
     private var examContentTapGesture: some Gesture {
-        TapGesture().onEnded {
+        DragGesture(minimumDistance: 0).onChanged { _ in
             clearCalculatorKeyboardFocus()
         }
     }
@@ -969,7 +987,7 @@ struct MockExamView: View {
             }
             .paperCard()
 
-            ExamToolButtons(availableTools: availableExamTools) { selectedExamTool = $0 }
+            ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
 
             QuestionCard(question: question, language: language)
                 .simultaneousGesture(examContentTapGesture)
@@ -999,6 +1017,9 @@ struct MockExamView: View {
                             clearCalculatorKeyboardFocus()
                             state.selectedByQuestionId[question.id] = sourceIndex
                         }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            clearCalculatorKeyboardFocus()
+                        })
                     }
                 }
             }
@@ -1050,13 +1071,28 @@ struct MockExamView: View {
         return tools
     }
 
+    private func openExamTool(_ tool: ExamTool) {
+        selectedExamTool = tool
+        if tool == .calculator {
+            calculatorViewModel.acceptHardwareKeyboardInput()
+            calculatorFocused = true
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 150_000_000)
+                calculatorViewModel.acceptHardwareKeyboardInput()
+                calculatorFocused = true
+            }
+        } else {
+            clearCalculatorKeyboardFocus()
+        }
+    }
+
     private func clearCalculatorKeyboardFocus() {
         calculatorFocused = false
         calculatorViewModel.suspendHardwareKeyboardInput()
     }
 
     private var examContentTapGesture: some Gesture {
-        TapGesture().onEnded {
+        DragGesture(minimumDistance: 0).onChanged { _ in
             clearCalculatorKeyboardFocus()
         }
     }
