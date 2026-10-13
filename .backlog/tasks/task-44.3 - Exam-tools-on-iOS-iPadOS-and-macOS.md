@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-13 12:00'
+updated_date: '2026-10-13 12:31'
 labels:
   - apple
 dependencies:
@@ -79,6 +79,8 @@ Fresh rebuild started from HEAD 1aaf1c7 after r443/r443-2 reviews. Owner approve
 Fresh rebuild WIP: replaced icon-only/hidden reference sheet with visible wrapping titles, matching Close tool button, real LessonMarkdownView content at medium/large/inspector with Show full sheet and font-based zoom, visible unavailable message, token colours, calculator sizing from available panel height, deleteForward all-clear mapping, web-matching keyboard help, restored protected-area assertion, added medium audit exception handler plus large-detent/inspector full-audit tests, and documented the exception in docs/testing. Validation so far: git diff --check and node scripts/check-apple-text-sources.ts passed; iOS compile smoke first failed only for missing self in the audit-handler closure, fixed; rerun is pending because xbuild waited on the lock for 20 minutes and timed out without starting.
 
 Catalogue rebuild step: rewrote Localizable.xcstrings from origin/main using the required OrderedDict JSON round trip (indent=2, ensure_ascii=False, separators=(',', ' : '), trailing newline), preserving main key order and appending only task-44.3 keys including Show full sheet/Zoom/updated keyboard help. Verified git diff origin/main -- Localizable.xcstrings shows only additions; text-source check passed.
+
+Validation update: iOS compile/unit smoke passed after the WIP rebuild and catalog fix: ExamCalculatorViewModelTests on iPhone 17 Pro executed 4 tests / 0 failures with xbuild. Next: run targeted/full exam-tools UI and l10n checks.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
