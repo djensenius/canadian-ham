@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-13 21:54'
+updated_date: '2026-10-13 21:59'
 labels:
   - content
   - apple
@@ -119,5 +119,5 @@ Copilot PR #212 follow-up: scoped the approved occluded-content contrast excepti
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed final review by narrowing the occluded scroll-content contrast exception, auditing enlarged figure sheets without a handler, merging origin/main, cleaning low-risk leftovers, refreshing evidence, and rerunning figure/web/figure-check/l10n validation.
+Implemented the shared lesson figure pipeline, original Ohm's law figure set, hidden learner placeholders, Apple/web rendering, opaque lesson nav audit treatment, and task-38.5 checker integration. Verified with figure/web/l10n checks, targeted iOS figure audits, Copilot follow-up validation, and full iOS/macOS/tvOS/visionOS xbuild suites recorded in PR #212.
 <!-- SECTION:FINAL_SUMMARY:END -->
