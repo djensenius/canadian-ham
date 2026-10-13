@@ -120,7 +120,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func toolHeader(for tool: ExamTool) -> some View {
-        VStack(spacing: DesignTokens.Spacing.sm) {
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
             Image(systemName: tool.systemImage)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
@@ -133,8 +133,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
                 .accessibilityHidden(true)
 
             closeToolButton
