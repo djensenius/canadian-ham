@@ -497,7 +497,7 @@ private struct OutlineLessonView: View {
     }
 }
 
-private struct LessonMarkdownView: View {
+struct LessonMarkdownView: View {
     let markdown: String
     let title: String?
 
@@ -607,7 +607,7 @@ private struct LessonMarkdownView: View {
     }
 }
 
-private struct LessonTableView: View {
+struct LessonTableView: View {
     let table: MarkdownTable
 
     var body: some View {

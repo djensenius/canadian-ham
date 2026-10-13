@@ -114,55 +114,51 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func toolHeader(for tool: ExamTool) -> some View {
-        Label {
-            Text(toolTitle(for: tool)) // l10n: localized
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.vertical, DesignTokens.Spacing.xs)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        } icon: {
-            Image(systemName: tool.systemImage)
-                .imageScale(.large)
+        Text(toolTitle(for: tool)) // l10n: localized
+            .font(DesignTokens.FontScale.body.weight(.bold))
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityAddTraits(.isHeader)
+            .accessibilityIdentifier(tool.accessibilityIdentifier)
+    }
+
+    private var closeToolButton: some View {
+        Button {
+            selectedTool = nil
+        } label: {
+            Image(systemName: "xmark")
+                .font(DesignTokens.FontScale.body.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .frame(width: 44, height: 44)
+                .background(DesignTokens.Colors.paperInset, in: Circle())
+                .overlay(Circle().strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
-        .labelStyle(.titleAndIcon)
-        .font(DesignTokens.FontScale.caption.weight(.bold))
-        .padding(.vertical, DesignTokens.Spacing.xs)
-        .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
-        .fixedSize(horizontal: false, vertical: true)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("Close tool")) // l10n: localized
+        .accessibilityIdentifier("exam-tool-close-button")
     }
 
     private func toolPanel(for tool: ExamTool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            HStack(alignment: .center) {
-                toolHeader(for: tool)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .layoutPriority(10)
-                    .accessibilityAddTraits(.isHeader)
-                    .accessibilityIdentifier(tool.accessibilityIdentifier)
-                Spacer(minLength: DesignTokens.Spacing.sm)
-                Button {
-                    selectedTool = nil
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(DesignTokens.FontScale.body.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .frame(width: 44, height: 44)
-                        .background(DesignTokens.Colors.paperInset, in: Circle())
-                        .overlay(Circle().strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(Text("Close tool")) // l10n: localized
-                .accessibilityIdentifier("exam-tool-close-button")
+            HStack {
+                Spacer(minLength: 0)
+                closeToolButton
             }
-            .fixedSize(horizontal: false, vertical: true)
 
-            switch tool {
-            case .calculator:
-                CalculatorToolView(viewModel: calculator)
-            case .referenceSheet:
-                ReferenceSheetToolView(configuration: referenceSheetConfiguration)
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    toolHeader(for: tool)
+
+                    switch tool {
+                    case .calculator:
+                        CalculatorToolView(viewModel: calculator)
+                            .frame(minHeight: 360)
+                    case .referenceSheet:
+                        ReferenceSheetToolView(configuration: referenceSheetConfiguration)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .topLeading)
             }
         }
         .padding(DesignTokens.Spacing.lg)
@@ -452,253 +448,43 @@ private struct CalculatorToolLayout {
 struct ReferenceSheetToolView: View {
     let configuration: ReferenceSheetConfiguration
     @State private var document: ReferenceSheetDocument?
-    @State private var zoom = 1.0
 
     var body: some View {
         Group {
             if let document {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    zoomControls
-                    ScrollView([.vertical, .horizontal]) {
-                        ExamToolMarkdownView(markdown: document.markdown, title: String(localized: "Basic reference sheet"), zoom: zoom)
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .padding(.bottom, DesignTokens.Spacing.xl)
-                    }
-                    .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
-                    .accessibilityIdentifier("reference-sheet-scroll")
+                    LessonMarkdownView(markdown: document.markdown, title: String(localized: "Basic reference sheet"))
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .padding(.bottom, DesignTokens.Spacing.xl)
                 }
+                .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
+                .accessibilityIdentifier("reference-sheet-scroll")
             } else {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-                            Image(systemName: "doc.text.magnifyingglass")
-                                .font(DesignTokens.FontScale.bodyLarge)
-                                .frame(width: 32, alignment: .leading)
-                            Text("Reference sheet unavailable")
-                                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                                .lineLimit(nil)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.vertical, DesignTokens.Spacing.xs)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .accessibilityElement(children: .combine)
-                        Text(verbatim: String(localized: "The bundled Basic reference sheet is not installed in this build.") + "\n") // l10n: localized
-                            .font(DesignTokens.FontScale.body)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.vertical, DesignTokens.Spacing.xs)
-                    }
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .padding(DesignTokens.Spacing.lg)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Reference sheet unavailable") // l10n: localized
+                        .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("The bundled Basic reference sheet is not installed in this build.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .padding(DesignTokens.Spacing.lg)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
                 .accessibilityIdentifier("reference-sheet-unavailable")
             }
         }
         .task { loadDocument() }
     }
 
-    private var zoomControls: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Button {
-                zoom = max(0.8, zoom - 0.1)
-            } label: {
-                ReferenceZoomButtonLabel(title: "Zoom out")
-            }
-            .buttonStyle(.plain)
-            .disabled(zoom <= 0.8)
-            .accessibilityIdentifier("reference-sheet-zoom-out")
-
-            Button {
-                zoom = min(1.8, zoom + 0.1)
-            } label: {
-                ReferenceZoomButtonLabel(title: "Zoom in")
-            }
-            .buttonStyle(.plain)
-            .disabled(zoom >= 1.8)
-            .accessibilityIdentifier("reference-sheet-zoom-in")
-        }
-    }
-
     private func loadDocument() {
         guard document == nil else { return }
         document = try? ReferenceSheetLoader.load(configuration: configuration)
-    }
-}
-
-private struct ReferenceZoomButtonLabel: View {
-    let title: LocalizedStringKey
-    @Environment(\.isEnabled) private var isEnabled
-
-    var body: some View {
-        Text(title) // l10n: localized
-            .font(DesignTokens.FontScale.caption.weight(.semibold))
-            .foregroundStyle(isEnabled ? DesignTokens.Colors.paper : DesignTokens.Colors.inkMuted)
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.horizontal, DesignTokens.Spacing.md)
-            .frame(minWidth: 96, minHeight: 44)
-            .background(isEnabled ? DesignTokens.Colors.accentStrong : DesignTokens.Colors.paperInset, in: Capsule())
-            .overlay(Capsule().strokeBorder(isEnabled ? DesignTokens.Colors.accentStrong : DesignTokens.Colors.inkMuted, lineWidth: 1))
-    }
-}
-
-private struct ExamToolMarkdownView: View {
-    let markdown: String
-    let title: String?
-    let zoom: Double
-
-    var body: some View {
-        let rendered = (try? LessonMarkdownRenderer.render(markdown)) ?? RenderedLessonMarkdown(blocks: [.paragraph(AttributedString(markdown))])
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md * zoomScale) {
-            ForEach(Array(rendered.blocks.enumerated()), id: \.offset) { _, block in
-                blockView(block)
-            }
-        }
-        .accessibilityElement(children: .contain)
-    }
-
-    private var zoomScale: CGFloat { CGFloat(zoom) }
-
-    @ViewBuilder
-    private func blockView(_ block: LessonBlock) -> some View {
-        switch block {
-        case .heading(let level, let text):
-            if !(level == 1 && title != nil && plainString(text) == title) {
-                Text(strippingLinks(from: text)) // l10n: content(en)
-                    .font(referenceFont(level <= 2 ? 24 : 20, weight: .bold, design: level <= 2 ? .serif : .default))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityAddTraits(.isHeader)
-            }
-        case .paragraph(let text):
-            Text(strippingLinks(from: text)) // l10n: content(en)
-                .font(referenceFont(17))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
-        case .list(let ordered, let items):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs * zoomScale) {
-                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                    HStack(alignment: .top, spacing: DesignTokens.Spacing.sm * zoomScale) {
-                        Text(ordered ? "\(index + 1)." : "•") // l10n: verbatim
-                            .font(referenceFont(17, weight: .semibold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                        Text(strippingLinks(from: item)) // l10n: content(en)
-                            .font(referenceFont(17))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-            }
-        case .code(_, let text):
-            ScrollView(.horizontal) {
-                Text(AttributedString(text)) // l10n: content(en)
-                    .font(referenceFont(17, design: .monospaced))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .padding(DesignTokens.Spacing.sm * zoomScale)
-                    .fixedSize(horizontal: true, vertical: true)
-            }
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
-        case .table(let table):
-            ExamToolMarkdownTableView(table: table, zoom: zoom)
-        case .illustrationBrief(let brief):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm * zoomScale) {
-                Text("Illustration brief")
-                    .font(referenceFont(17, weight: .bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(AttributedString(brief.description)) // l10n: content(en)
-                    .font(referenceFont(17))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text(AttributedString(brief.altText)) // l10n: content(en)
-                    .font(referenceFont(13))
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(DesignTokens.Spacing.md * zoomScale)
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-        case .blockquote(let text):
-            Text(strippingLinks(from: text)) // l10n: content(en)
-                .font(referenceFont(17).italic())
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .padding(.leading, DesignTokens.Spacing.md * zoomScale)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-
-    private func referenceFont(_ size: CGFloat, weight: Font.Weight = .regular, design: Font.Design = .default) -> Font {
-        .system(size: size * zoomScale, weight: weight, design: design)
-    }
-
-    private func strippingLinks(from value: AttributedString) -> AttributedString {
-        var copy = value
-        let ranges = copy.runs.map(\.range)
-        for range in ranges {
-            copy[range].link = nil
-        }
-        return copy
-    }
-
-    private func plainString(_ value: AttributedString) -> String {
-        String(value.characters)
-    }
-}
-
-private struct ExamToolMarkdownTableView: View {
-    let table: MarkdownTable
-    let zoom: Double
-
-    var body: some View {
-        ScrollView(.horizontal) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm * zoomScale) {
-                headerRow
-                ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
-                    tableRow(row)
-                }
-            }
-            .padding(DesignTokens.Spacing.md * zoomScale)
-        }
-        .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text("Reference sheet table")) // l10n: localized
-    }
-
-    private var zoomScale: CGFloat { CGFloat(zoom) }
-    private var columnWidth: CGFloat { 180 * zoomScale }
-
-    private var headerRow: some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.md * zoomScale) {
-            ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
-                Text(header) // l10n: content(en)
-                    .font(.system(size: 17 * zoomScale, weight: .bold))
-                    .foregroundColor(DesignTokens.Colors.ink)
-                    .frame(width: columnWidth, alignment: .leading)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-    }
-
-    private func tableRow(_ row: [AttributedString]) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.md * zoomScale) {
-            ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
-                Text(strippingLinks(from: cell)) // l10n: content(en)
-                    .font(.system(size: 17 * zoomScale))
-                    .foregroundColor(DesignTokens.Colors.ink)
-                    .frame(width: columnWidth, alignment: .leading)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(row.map { String($0.characters) }.joined(separator: ", "))) // l10n: content(en)
-    }
-
-    private func strippingLinks(from value: AttributedString) -> AttributedString {
-        var copy = value
-        let ranges = copy.runs.map(\.range)
-        for range in ranges {
-            copy[range].link = nil
-        }
-        return copy
     }
 }
