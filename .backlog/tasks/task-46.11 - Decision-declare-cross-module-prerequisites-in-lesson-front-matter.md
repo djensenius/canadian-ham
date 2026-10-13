@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-12 22:35'
+updated_date: '2026-10-13 00:12'
 labels:
   - content
 dependencies: []
@@ -48,4 +48,6 @@ Validation passed: pnpm --dir packages/content-tools check:coverage; pnpm --filt
 Dependency note: Apple prerequisite display follows task-38.1 because that task rewrites LessonReaderView; this task remains content and web only until then.
 
 Review follow-up applied: L-001-02 now depends on L-001-01, L-002-01 repeaters, and L-003-06 remote control; dropped L-003-01. L-006-04 now directly lists L-005-05 for resonant traps; removed redundant L-005-04 transitive links from L-006-02/-03/-04. L-008-02 dropped redundant L-003-01 and keeps direct L-008-01 plus L-007-01. Checker duplicate lessonIds reporting and prerequisite-order tests were expanded. Web prerequisite links now leave modifier-clicks to the browser for new-tab/window behavior. Validation passed again: pnpm --dir packages/content-tools check:coverage; pnpm --filter @canadian-ham/content-tools test -- check-lesson-coverage.test.ts; pnpm --filter @canadian-ham/web test -- App.test.tsx; pnpm typecheck; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift.
+
+Copilot follow-up PRRT_kwDOUxZq_M6rpOpj addressed: checker now tracks prerequisite IDs per lesson and reports repeated IDs once per repeated prerequisite; added fixture test for duplicate lesson prerequisite IDs. Validation passed: pnpm --dir packages/content-tools check:coverage; pnpm --filter @canadian-ham/content-tools test -- check-lesson-coverage.test.ts; pnpm --filter @canadian-ham/content-tools typecheck.
 <!-- SECTION:NOTES:END -->
