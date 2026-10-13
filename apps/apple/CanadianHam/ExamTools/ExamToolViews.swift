@@ -168,7 +168,14 @@ struct ExamToolPresentationModifier: ViewModifier {
                     CalculatorToolView(viewModel: calculator)
                         .frame(minHeight: 360)
                 case .referenceSheet:
+#if os(iOS)
+                    ReferenceSheetToolView(
+                        configuration: referenceSheetConfiguration,
+                        showsCompactPreview: !horizontalUsesInspector && selectedSheetDetent == .medium
+                    )
+#else
                     ReferenceSheetToolView(configuration: referenceSheetConfiguration)
+#endif
                 }
             }
             .padding(.horizontal, DesignTokens.Spacing.lg)
@@ -458,25 +465,29 @@ private struct CalculatorToolLayout {
 
 struct ReferenceSheetToolView: View {
     let configuration: ReferenceSheetConfiguration
+    var showsCompactPreview = false
     @State private var document: ReferenceSheetDocument?
 
     var body: some View {
         Group {
             if let document {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid")
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                        .padding(DesignTokens.Spacing.md)
-                        .padding(.bottom, DesignTokens.Spacing.xl)
-                        .background(Color.white, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                        .environment(\.colorScheme, .light)
-                        .dynamicTypeSize(.large)
-                        .accessibilityHidden(true)
+                if showsCompactPreview {
+                    compactReferenceSheetPreview(for: document)
+                } else {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid")
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .padding(DesignTokens.Spacing.md)
+                            .padding(.bottom, DesignTokens.Spacing.xl)
+                            .background(Color.white, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                            .environment(\.colorScheme, .light)
+                            .accessibilityHidden(true)
+                    }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
+                    .accessibilityValue(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
+                    .accessibilityIdentifier("reference-sheet-scroll")
                 }
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
-                .accessibilityValue(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
-                .accessibilityIdentifier("reference-sheet-scroll")
             } else {
                 VStack(spacing: DesignTokens.Spacing.sm) {
                     Image(systemName: "exclamationmark.triangle.fill")
@@ -517,6 +528,31 @@ struct ReferenceSheetToolView: View {
     private func loadDocument() {
         guard document == nil else { return }
         document = try? ReferenceSheetLoader.load(configuration: configuration)
+    }
+
+    private func compactReferenceSheetPreview(for document: ReferenceSheetDocument) -> some View {
+        VStack(spacing: DesignTokens.Spacing.sm) {
+            Image(systemName: "doc.text.magnifyingglass")
+                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .frame(width: 44, height: 44)
+                .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
+                .accessibilityValue(Text(verbatim: referenceSheetAccessibilityText(for: document))) // l10n: content(en)
+                .accessibilityIdentifier("reference-sheet-scroll")
+
+            Text("Basic reference sheet") // l10n: localized
+                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .accessibilityHidden(true)
+        }
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity)
+        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
     }
 
     private func referenceSheetAccessibilityText(for document: ReferenceSheetDocument) -> String {
