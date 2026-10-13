@@ -80,6 +80,15 @@ When attenuators are cascaded, add their dB losses first and then convert the to
 | -10 dB | roughly 1/10 power |
 | -30 dB | roughly 1/1000 power |
 
+::figure db-power-ratio-table
+Alt text: Decibel power-ratio shortcut table for 3, 6, 10, and 20 dB changes, with increase and decrease columns.
+Text equivalent:
+- 3 dB: increase approximately × 2, decrease approximately ÷ 2.
+- 6 dB: increase approximately × 4, decrease approximately ÷ 4.
+- 10 dB: increase × 10, decrease ÷ 10.
+- 20 dB: increase × 100, decrease ÷ 100.
+::
+
 ### Worked example: gain
 
 A 4 W handheld feeds a 7 dB gain amplifier.

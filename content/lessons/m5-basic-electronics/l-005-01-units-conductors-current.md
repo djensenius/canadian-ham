@@ -50,6 +50,15 @@ A prefix tells you how many base units are being counted. In Basic exam electron
 | micro | µ | a millionth | 4 mH = 4 000 µH |
 | pico | p | a trillionth | 0.47 µF = 470 000 pF |
 
+::figure metric-prefix-ladder
+Alt text: Metric prefix ladder from giga to pico showing multiply or divide direction arrows and a skipped nano marker between micro and pico.
+Text equivalent:
+- Prefix order in the lesson table: G giga, M mega, k kilo, base unit, m milli, µ micro, p pico; the figure marks nano as skipped between micro and pico.
+- Moving toward smaller units multiplies by 1 000 for each adjacent active step through micro; moving toward larger units divides by 1 000 for those same steps.
+- The micro-to-pico step is x 1 000 000 toward pico, or ÷ 1 000 000 toward micro, because nano is only shown as a skipped marker and is not included in this table.
+- Example: 14.230 MHz = 14 230 kHz.
+::
+
 When you change from a large unit to a smaller unit, the number gets larger. When you change from a small unit to a larger unit, the number gets smaller.
 
 ### Memory trick: prefix ladder
@@ -167,7 +176,7 @@ If the insulator fails or a conductor touches where it should not, the circuit b
 
 Alt text: A horizontal metric-prefix ladder from giga to pico, with arrows showing when to multiply or divide by 1 000.
 
-Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, m, µ, p. Add a small radio dial labelled 14.230 MHz beside the MHz step and 14 230 kHz beside the kHz step. Use arrows that say "multiply by 1 000" when moving toward smaller units and "divide by 1 000" when moving toward larger units.
+Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, m, µ, p. Add a small radio dial labelled 14.230 MHz beside the MHz step and 14 230 kHz beside the kHz step. Use arrows that say "multiply by 1 000" when moving toward smaller units and "divide by 1 000" when moving toward larger units for adjacent rows through micro; label the micro-to-pico jump as x 1 000 000 or ÷ 1 000 000 because nano is skipped.
 
 ## Summary
 

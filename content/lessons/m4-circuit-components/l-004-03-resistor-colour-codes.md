@@ -50,6 +50,17 @@ A common colour-code resistor has bands grouped closer to one end, with a tolera
 
 Think of the first two bands as making a two-digit number. Then multiply that number. The tolerance band does not change the nominal value. It tells how far the real part may be from that value while still meeting its rating.
 
+::figure resistor-colour-code
+Alt text: Four-band resistor example with every band labelled by position, colour name, value, multiplier, or tolerance, plus a tolerance range line.
+Text equivalent:
+- First digit band: yellow means 4.
+- Second digit band: violet means 7.
+- Multiplier band: red means x 100.
+- Tolerance band: gold means ±5%.
+- Nominal value: 47 x 100 = 4 700 Ω.
+- ±5% range: 4 465 Ω to 4 935 Ω.
+::
+
 ### Colour digits, multipliers, and tolerance
 
 | Colour | Digit | Multiplier | Common tolerance use |
