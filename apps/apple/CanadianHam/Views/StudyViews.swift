@@ -542,7 +542,7 @@ struct PracticeSessionView: View {
         let selected = state.selectedByQuestionId[question.id]
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
-            QuestionCard(question: question, language: language)
+            QuestionCard(question: question, language: language, onInteraction: clearCalculatorKeyboardFocus)
                 .simultaneousGesture(examContentTapGesture)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Answers")
@@ -983,7 +983,7 @@ struct MockExamView: View {
 
             ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
 
-            QuestionCard(question: question, language: language)
+            QuestionCard(question: question, language: language, onInteraction: clearCalculatorKeyboardFocus)
                 .simultaneousGesture(examContentTapGesture)
                 .accessibilityAction(named: Text("Next unanswered")) {
                     jumpToNextUnanswered()
@@ -1941,6 +1941,7 @@ struct ProgressExportDocument: FileDocument {
 struct QuestionCard: View {
     let question: BankQuestion
     let language: BankLanguage
+    var onInteraction: () -> Void = {}
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -1953,10 +1954,12 @@ struct QuestionCard: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .textSelection(.enabled)
                 .accessibilityIdentifier("question-stem")
+                .onTapGesture { onInteraction() }
         }
         .paperCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("question-card")
+        .simultaneousGesture(TapGesture().onEnded { onInteraction() }, including: .subviews)
     }
 }
 

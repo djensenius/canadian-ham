@@ -184,7 +184,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testPreciseScrollPositionsAnswerBelowProtectedAreaWithToolOpen() throws {
-        let app = launchPracticeQuestion()
+        let app = launchPracticeQuestion(categoryID: "B-004", questionID: "B-004-001-001")
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
