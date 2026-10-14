@@ -56,6 +56,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialLessonID", "L-006-03"])
         XCTAssertTrue(app.buttons["Marquer la leçon comme lue"].firstMatch.waitForExistence(timeout: 10), "Expected localized Mark lesson read button")
+        XCTAssertTrue(app.staticTexts["Avant cette leçon"].firstMatch.waitForExistence(timeout: 5), "Expected localized Before this lesson heading")
         app.terminate()
 
         app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
@@ -935,8 +936,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testLessonPrerequisiteNavigationAndAccessibilityDark() throws {
         XCUIDevice.shared.appearance = .dark
+        defer { XCUIDevice.shared.appearance = .light }
         try auditLessonPrerequisiteNavigation(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testLessonQuizResultPersistsAfterRelaunch() throws {
@@ -1615,7 +1616,33 @@ final class CanadianHamPracticeUITests: XCTestCase {
         attachScreenshot(named: "task38-1-ios-ax5-ohms-law-power-wheel-inline", from: app)
 
         let enlargeButton = app.buttons["lesson-figure-ohms-law-power-wheel-enlarge"].firstMatch
-        scrollUntilHittable(enlargeButton, in: app, maxSwipes: 40)
+        func isEnlargeButtonReachableIgnoringHorizontalInset() -> Bool {
+            guard enlargeButton.exists, enlargeButton.isHittable else { return false }
+            let frame = enlargeButton.frame
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            let windowFrame = app.windows.firstMatch.frame
+            return frame.minY >= visibleFrame.minY - 1
+                && frame.maxY <= visibleFrame.maxY + 1
+                && frame.minX >= windowFrame.minX - 1
+                && frame.maxX <= windowFrame.maxX + 1
+        }
+        func scrollEnlargeButtonUntilHittable(maxSwipes: Int) {
+            let scrollView = scrollView(containing: enlargeButton, in: app)
+            guard scrollView.waitForExistence(timeout: 1) else {
+                XCTFail("Expected a scroll view while scrolling Ohm's law Enlarge figure button into view. Identifier: \(enlargeButton.identifier); label: \(enlargeButton.label)")
+                return
+            }
+            for _ in 0..<maxSwipes where !isEnlargeButtonReachableIgnoringHorizontalInset() {
+                let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+                if enlargeButton.exists && enlargeButton.frame.maxY <= visibleFrame.minY {
+                    scrollView.swipeDown()
+                } else {
+                    scrollView.swipeUp()
+                }
+                waitBriefly()
+            }
+        }
+        scrollEnlargeButtonUntilHittable(maxSwipes: 40)
         XCTAssertTrue(enlargeButton.isHittable, "Largest-text user should be able to reach the wheel's Enlarge figure button")
         enlargeButton.tap()
 
@@ -2636,19 +2663,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
         let scrollView = scrollView(containing: element, in: app)
-        guard scrollView.waitForExistence(timeout: 1) else {
-            XCTFail("Expected a scroll view while scrolling element until hittable. Identifier: \(element.identifier); label: \(element.label)")
-            return
-        }
-        for _ in 0..<maxSwipes where !element.isHittable {
-            guard element.exists else {
-                scrollView.swipeUp()
-                waitBriefly()
-                continue
-            }
-            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            let distanceToCenter = visibleFrame.midY - element.frame.midY
-            preciseScroll(scrollView, contentDeltaY: distanceToCenter)
+        for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: true) {
+            scrollView.swipeUp()
             waitBriefly()
         }
     }
