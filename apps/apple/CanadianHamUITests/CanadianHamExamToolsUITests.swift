@@ -188,7 +188,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
-        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        let answer = app.descendants(matching: .any)["answer-D-button"].firstMatch
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
         positionElementInMiddleVisibleBand(answer, in: app, context: "answer with calculator open")
         XCTAssertTrue(answer.isHittable, "The positioned answer should be hittable with the calculator sheet open")

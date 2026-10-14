@@ -104,11 +104,16 @@ struct ExamToolPresentationModifier: ViewModifier {
         content.background {
             ExamContentInteractionFocusResetter(
                 shouldIgnoreLocation: { location, windowBounds in
-                    if let toolPanelFrameInWindow,
-                       toolPanelFrameInWindow.minY > windowBounds.minY + 1 || toolPanelFrameInWindow.width < windowBounds.width * 0.95 {
-                        return toolPanelFrameInWindow.insetBy(dx: -8, dy: -8).contains(location)
+                    if let toolPanelFrameInWindow {
+                        let panelFrame = CGRect(
+                            x: max(windowBounds.minX, toolPanelFrameInWindow.minX - 24),
+                            y: max(windowBounds.minY, toolPanelFrameInWindow.minY - 48),
+                            width: windowBounds.maxX - max(windowBounds.minX, toolPanelFrameInWindow.minX - 24),
+                            height: windowBounds.maxY - max(windowBounds.minY, toolPanelFrameInWindow.minY - 48)
+                        )
+                        return panelFrame.insetBy(dx: -8, dy: -8).contains(location)
                     }
-                    guard compactSheetHeight > 0 else { return false }
+                    guard compactSheetHeight > 0, compactSheetHeight < windowBounds.height * 0.9 else { return false }
                     let sheetFrame = CGRect(
                         x: windowBounds.minX,
                         y: max(windowBounds.minY, windowBounds.maxY - compactSheetHeight - 8),
@@ -191,6 +196,13 @@ struct ExamToolPresentationModifier: ViewModifier {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            GeometryReader { proxy in
+                Color.clear
+                    .onAppear { updateToolPanelFrame(proxy.frame(in: .global)) }
+                    .onChange(of: proxy.frame(in: .global)) { _, frame in updateToolPanelFrame(frame) }
+            }
+        }
     }
 
     private func toolTitleRow(for tool: ExamTool) -> some View {
@@ -239,13 +251,6 @@ struct ExamToolPresentationModifier: ViewModifier {
         .padding(.vertical, DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(DesignTokens.Colors.paper)
-        .background {
-            GeometryReader { proxy in
-                Color.clear
-                    .onAppear { updateToolPanelFrame(proxy.frame(in: .global)) }
-                    .onChange(of: proxy.frame(in: .global)) { _, frame in updateToolPanelFrame(frame) }
-            }
-        }
         .onDisappear { updateToolPanelFrame(nil) }
     }
 
