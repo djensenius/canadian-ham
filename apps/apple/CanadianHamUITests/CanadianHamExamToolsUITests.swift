@@ -83,7 +83,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         answer.tap()
         let finish = app.buttons["next-question-button"].firstMatch
         XCTAssertTrue(finish.waitForExistence(timeout: 5), "Expected the Finish session button")
-        scrollBackgroundUntilHittable(finish, in: app, maxSwipes: 8)
+        scrollUntilHittable(finish, in: app, maxSwipes: 12)
         XCTAssertTrue(finish.isHittable, "Expected the Finish session button to be hittable")
         finish.tap()
 
@@ -533,7 +533,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
         record("start")
         if !positioned() {
-            for direction in [CGFloat(1), CGFloat(-1)] where !positioned() {
+            for direction in [CGFloat(-1), CGFloat(1), CGFloat(-1)] where !positioned() {
                 for step in 1...12 where !positioned() {
                     preciseScroll(scrollView, in: app, fingerDeltaY: direction * 72)
                     waitBriefly()

@@ -103,9 +103,19 @@ struct ExamToolPresentationModifier: ViewModifier {
 #if os(iOS)
         content.background {
             ExamContentInteractionFocusResetter(
-                shouldIgnoreLocation: { location in
-                    guard let toolPanelFrameInWindow else { return false }
-                    return toolPanelFrameInWindow.insetBy(dx: -8, dy: -8).contains(location)
+                shouldIgnoreLocation: { location, windowBounds in
+                    if let toolPanelFrameInWindow,
+                       toolPanelFrameInWindow.minY > windowBounds.minY + 1 || toolPanelFrameInWindow.width < windowBounds.width * 0.95 {
+                        return toolPanelFrameInWindow.insetBy(dx: -8, dy: -8).contains(location)
+                    }
+                    guard compactSheetHeight > 0 else { return false }
+                    let sheetFrame = CGRect(
+                        x: windowBounds.minX,
+                        y: max(windowBounds.minY, windowBounds.maxY - compactSheetHeight - 8),
+                        width: windowBounds.width,
+                        height: compactSheetHeight + 8
+                    )
+                    return sheetFrame.contains(location)
                 },
                 onInteraction: {
                     calculatorFocused = false
@@ -263,7 +273,7 @@ struct ExamToolPresentationModifier: ViewModifier {
 
 #if os(iOS)
 private struct ExamContentInteractionFocusResetter: UIViewRepresentable {
-    let shouldIgnoreLocation: (CGPoint) -> Bool
+    let shouldIgnoreLocation: (CGPoint, CGRect) -> Bool
     let onInteraction: () -> Void
 
     func makeCoordinator() -> Coordinator {
@@ -287,13 +297,13 @@ private struct ExamContentInteractionFocusResetter: UIViewRepresentable {
     }
 
     final class Coordinator: NSObject, UIGestureRecognizerDelegate {
-        var shouldIgnoreLocation: (CGPoint) -> Bool
+        var shouldIgnoreLocation: (CGPoint, CGRect) -> Bool
         var onInteraction: () -> Void
         private weak var window: UIWindow?
         private weak var tapRecognizer: UITapGestureRecognizer?
         private weak var panRecognizer: UIPanGestureRecognizer?
 
-        init(shouldIgnoreLocation: @escaping (CGPoint) -> Bool, onInteraction: @escaping () -> Void) {
+        init(shouldIgnoreLocation: @escaping (CGPoint, CGRect) -> Bool, onInteraction: @escaping () -> Void) {
             self.shouldIgnoreLocation = shouldIgnoreLocation
             self.onInteraction = onInteraction
         }
@@ -339,7 +349,7 @@ private struct ExamContentInteractionFocusResetter: UIViewRepresentable {
 
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
             guard let window = window ?? gestureRecognizer.view else { return true }
-            return !shouldIgnoreLocation(touch.location(in: window))
+            return !shouldIgnoreLocation(touch.location(in: window), window.bounds)
         }
 
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
