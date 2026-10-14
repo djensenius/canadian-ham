@@ -95,22 +95,27 @@ platform) and share one build lock, so don't run them by reflex.
   implements that exception.
 
 ## CI test guard
-- The separate `Test guard` pull-request workflow runs `node scripts/check-test-guard.mjs --self-test`
-  and then `node scripts/check-test-guard.mjs` against the PR merge-base...head diff. The `Test guard`
-  status check should be required in branch protection (coordinator configures this on GitHub).
+- The separate `Test guard` pull-request workflow runs the base branch copy of
+  `scripts/check-test-guard.mjs` when it exists (falling back to the PR copy only while bootstrapping
+  the checker), first with `--self-test` and then against the PR merge-base...head diff. The
+  `Test guard` status check should be required in branch protection (coordinator configures this on
+  GitHub).
 - The guard fails when Apple diffs add, remove or narrow `performAccessibilityAudit` calls or handler
   code, change the named shared audit/positioning helpers listed in `SHARED_HELPERS`, call the approved
   exception helpers, add `.accessibilityHidden(true)`, add `.accessibilityElement(children: .ignore)` or
   `.accessibilityElement()`, add `XCTSkip`/`XCTSkipIf`/`XCTSkipUnless`, add `.minimumScaleFactor(` in app
-  views, or delete Swift `func test...` methods.
+  views, delete Swift `func test...` methods, or change the guard checker/workflow itself.
 - A PR body line exactly matching `Test-guard-approved: task-<number>` or
   `Test-guard-approved: owner decision YYYY-MM-DD` approves intentional findings. The marker must start
   at the beginning of its own line with no bullet or indentation; markers inside fenced code blocks or
   HTML comments are ignored. Reviewers verify that the referenced task or owner decision actually
   approves the guarded change before accepting the marker.
-- The workflow listens for PR body edits, so adding or fixing an approval marker reruns the `Test guard`
-  workflow without pushing another commit. If GitHub does not rerun automatically, rerun the separate
-  `Test guard` workflow/check rather than all CI.
+- The workflow listens for PR body edits, so adding or fixing an approval marker starts a new
+  `Test guard` run without pushing another commit. If GitHub does not start that edited-event run,
+  re-trigger the separate `Test guard` workflow/check after saving the PR body rather than re-running
+  an older failed run with its stale event payload or re-running all CI.
+- The guard is a heuristic backstop, not a substitute for review; reviewers remain responsible for
+  spotting test or audit weakening that does not match its patterns.
 
 ## Project notes
 - Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.
