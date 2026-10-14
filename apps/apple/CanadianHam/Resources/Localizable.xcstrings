@@ -1,110 +1,24 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    ", %@" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", %@"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", %@"
-          }
-        }
-      }
-    },
-    ", current" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", en cours"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", en cours"
-          }
-        }
-      }
-    },
-    ", flagged" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", marquée"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", marquée"
-          }
-        }
-      }
-    },
-    ". Source: " : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ". Source : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ". Source : "
-          }
-        }
-      }
-    },
-    "%@ · %@" : {
+    "%@ Unanswered positions: %@%@." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ · %2$@"
+            "state" : "translated",
+            "value" : "%1$@ Unanswered positions: %2$@%3$@."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ · %@"
+            "value" : "%1$@ Positions sans réponse : %2$@%3$@."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ · %@"
-          }
-        }
-      }
-    },
-    "%@ · %lld min · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ · %2$lld min · %3$@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · %lld min · %@"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · %lld min · %@"
+            "value" : "%1$@ Positions sans réponse : %2$@%3$@."
           }
         }
       }
@@ -175,28 +89,6 @@
         }
       }
     },
-    "%@ Unanswered positions: %@%@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ Unanswered positions: %2$@%3$@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ Positions sans réponse : %2$@%3$@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ Positions sans réponse : %2$@%3$@."
-          }
-        }
-      }
-    },
     "%@ wpm" : {
       "localizations" : {
         "en" : {
@@ -219,6 +111,50 @@
         }
       }
     },
+    "%@ · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %@"
+          }
+        }
+      }
+    },
+    "%@ · %lld min · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$lld min · %3$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %lld min · %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %lld min · %@"
+          }
+        }
+      }
+    },
     "%@, dot/dash ratio %@, timing consistency %lld%%." : {
       "localizations" : {
         "fr" : {
@@ -231,50 +167,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@, ratio point/tiret %@, constance du minutage %lld %%."
-          }
-        }
-      }
-    },
-    "%@: " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@: "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : "
-          }
-        }
-      }
-    },
-    "%@: %lld / %lld (%@%%)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: %2$lld / %3$lld (%4$@%%)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : %lld / %lld (%@ %%)"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : %lld / %lld (%@ %%)"
           }
         }
       }
@@ -921,6 +813,22 @@
         }
       }
     },
+    "%@.lessonId duplicates another Morse lesson record." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+          }
+        }
+      }
+    },
     "%@.lessonId duplicates another lesson progress record." : {
       "localizations" : {
         "en" : {
@@ -943,18 +851,18 @@
         }
       }
     },
-    "%@.lessonId duplicates another Morse lesson record." : {
+    "%@.lessonId must be a Morse lesson ID." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
           }
         }
       }
@@ -977,22 +885,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.lessonId doit être un identifiant de leçon connu."
-          }
-        }
-      }
-    },
-    "%@.lessonId must be a Morse lesson ID." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
           }
         }
       }
@@ -1693,6 +1585,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@.weakSubsectionIds contient l’identifiant de sous-section inconnu %2$@."
+          }
+        }
+      }
+    },
+    "%@: " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : "
+          }
+        }
+      }
+    },
+    "%@: %lld / %lld (%@%%)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$lld / %3$lld (%4$@%%)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : %lld / %lld (%@ %%)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : %lld / %lld (%@ %%)"
           }
         }
       }
@@ -2567,22 +2503,6 @@
         }
       }
     },
-    "%lld." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld."
-          }
-        }
-      }
-    },
     "%lld%%" : {
       "localizations" : {
         "en" : {
@@ -2605,18 +2525,82 @@
         }
       }
     },
-    "•" : {
+    "%lld." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "•"
+            "value" : "%lld."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "•"
+            "value" : "%lld."
+          }
+        }
+      }
+    },
+    ", %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", %@"
+          }
+        }
+      }
+    },
+    ", current" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", en cours"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", en cours"
+          }
+        }
+      }
+    },
+    ", flagged" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", marquée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", marquée"
+          }
+        }
+      }
+    },
+    ". Source: " : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ". Source : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ". Source : "
           }
         }
       }
@@ -2897,22 +2881,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réponse %@, "
-          }
-        }
-      }
-    },
-    "answered" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "avec réponse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "avec réponse"
           }
         }
       }
@@ -3275,28 +3243,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Canadian Ham"
-          }
-        }
-      }
-    },
-    "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
           }
         }
       }
@@ -5191,22 +5137,6 @@
         }
       }
     },
-    "Generate 50 Advanced questions: one from each topic area, mixed into a repeatable order. The optional timer is off by default." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Générer 50 questions de compétence supérieure : une par sujet, mélangées dans un ordre reproductible. Le chronomètre facultatif est désactivé par défaut."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Générer 50 questions de compétence supérieure : une par sujet, mélangées dans un ordre reproductible. Le chronomètre facultatif est désactivé par défaut."
-          }
-        }
-      }
-    },
     "Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default." : {
       "localizations" : {
         "fr" : {
@@ -5219,6 +5149,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Générez 100 questions : une par sous-section, dans un ordre reproductible. La minuterie facultative est désactivée par défaut."
+          }
+        }
+      }
+    },
+    "Generate 50 Advanced questions: one from each topic area, mixed into a repeatable order. The optional timer is off by default." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Générer 50 questions de compétence supérieure : une par sujet, mélangées dans un ordre reproductible. Le chronomètre facultatif est désactivé par défaut."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Générer 50 questions de compétence supérieure : une par sujet, mélangées dans un ordre reproductible. Le chronomètre facultatif est désactivé par défaut."
           }
         }
       }
@@ -5401,6 +5347,110 @@
         }
       }
     },
+    "ISED 5 wpm (PARIS-calibrated)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED 5 wpm (PARIS-calibrated)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
+          }
+        }
+      }
+    },
+    "ISED Amateur Radio Operator Certificate Advanced Qualification question bank, effective %@." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur — compétence supérieure, en vigueur le %1$@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur — compétence supérieure, en vigueur le %1$@."
+          }
+        }
+      }
+    },
+    "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %1$@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
+          }
+        }
+      }
+    },
+    "ISED exam preset" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED exam preset"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préréglage d’examen ISDE"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préréglage d’examen ISDE"
+          }
+        }
+      }
+    },
+    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+          }
+        }
+      }
+    },
     "Iambic paddle emulation" : {
       "localizations" : {
         "fr" : {
@@ -5413,86 +5463,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Émulation de palettes iambiques"
-          }
-        }
-      }
-    },
-    "iCloud progress was deleted." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La progression iCloud a été supprimée."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La progression iCloud a été supprimée."
-          }
-        }
-      }
-    },
-    "iCloud Sync" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchronisation iCloud"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchronisation iCloud"
-          }
-        }
-      }
-    },
-    "iCloud sync status could not be updated." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour."
-          }
-        }
-      }
-    },
-    "iCloud Sync will turn off after you restart the app." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’application."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’application."
-          }
-        }
-      }
-    },
-    "iCloud Sync will turn on after you restart the app." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
           }
         }
       }
@@ -5961,110 +5931,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajouté : %@"
-          }
-        }
-      }
-    },
-    "ISED 5 wpm (PARIS-calibrated)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED 5 wpm (PARIS-calibrated)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
-          }
-        }
-      }
-    },
-    "ISED Amateur Radio Operator Certificate Advanced Qualification question bank, effective %@." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur — compétence supérieure, en vigueur le %1$@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur — compétence supérieure, en vigueur le %1$@."
-          }
-        }
-      }
-    },
-    "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %1$@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
-          }
-        }
-      }
-    },
-    "ISED exam preset" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED exam preset"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préréglage d’examen ISDE"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préréglage d’examen ISDE"
-          }
-        }
-      }
-    },
-    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
           }
         }
       }
@@ -7389,6 +7255,38 @@
         }
       }
     },
+    "No Canadian Ham explanation is bundled for this question yet." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
+          }
+        }
+      }
+    },
+    "No ISED reference sheet is provided for the Advanced exam. Do not use the Basic reference sheet as Advanced exam-allowed material." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."
+          }
+        }
+      }
+    },
     "No accounts, analytics, telemetry, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
       "localizations" : {
         "fr" : {
@@ -7437,22 +7335,6 @@
         }
       }
     },
-    "No Canadian Ham explanation is bundled for this question yet." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
-          }
-        }
-      }
-    },
     "No categories" : {
       "localizations" : {
         "fr" : {
@@ -7497,22 +7379,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune copie saisie."
-          }
-        }
-      }
-    },
-    "No ISED reference sheet is provided for the Advanced exam. Do not use the Basic reference sheet as Advanced exam-allowed material." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."
           }
         }
       }
@@ -7645,22 +7511,6 @@
         }
       }
     },
-    "not enough dots and dashes" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "pas assez de points et de tirets"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "pas assez de points et de tirets"
-          }
-        }
-      }
-    },
     "Not marked read" : {
       "localizations" : {
         "fr" : {
@@ -7709,22 +7559,6 @@
         }
       }
     },
-    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this device." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur cet appareil."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur cet appareil."
-          }
-        }
-      }
-    },
     "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this Mac." : {
       "localizations" : {
         "fr" : {
@@ -7737,6 +7571,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur ce Mac."
+          }
+        }
+      }
+    },
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this device." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur cet appareil."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur cet appareil."
           }
         }
       }
@@ -7827,6 +7677,22 @@
         }
       }
     },
+    "Open Morse settings" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages Morse"
+          }
+        }
+      }
+    },
     "Open a Canadian Ham window to load settings." : {
       "localizations" : {
         "en" : {
@@ -7881,22 +7747,6 @@
         }
       }
     },
-    "Open Morse settings" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrir les réglages Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrir les réglages Morse"
-          }
-        }
-      }
-    },
     "Opens enlarged figure" : {
       "localizations" : {
         "en" : {
@@ -7947,38 +7797,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mode de sortie"
-          }
-        }
-      }
-    },
-    "Pass" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réussite"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réussite"
-          }
-        }
-      }
-    },
-    "Pass-ready" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prêt pour la réussite"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prêt pour la réussite"
           }
         }
       }
@@ -8053,6 +7871,38 @@
         }
       }
     },
+    "Pass" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réussite"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réussite"
+          }
+        }
+      }
+    },
+    "Pass-ready" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt pour la réussite"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt pour la réussite"
+          }
+        }
+      }
+    },
     "Passage length" : {
       "localizations" : {
         "fr" : {
@@ -8123,22 +7973,6 @@
         }
       }
     },
-    "Play character" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jouer le caractère"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jouer le caractère"
-          }
-        }
-      }
-    },
     "Play Morse practice output" : {
       "localizations" : {
         "en" : {
@@ -8157,6 +7991,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lire la sortie d’exercice Morse"
+          }
+        }
+      }
+    },
+    "Play character" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer le caractère"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer le caractère"
           }
         }
       }
@@ -8805,6 +8655,28 @@
         }
       }
     },
+    "RIC-1 literal spacing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RIC-1 literal spacing"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacement littéral RIC-1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacement littéral RIC-1"
+          }
+        }
+      }
+    },
     "Reach 90% accuracy to complete this lesson." : {
       "localizations" : {
         "en" : {
@@ -9285,28 +9157,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réviser les caractères faibles"
-          }
-        }
-      }
-    },
-    "RIC-1 literal spacing" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RIC-1 literal spacing"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espacement littéral RIC-1"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espacement littéral RIC-1"
           }
         }
       }
@@ -10701,28 +10551,6 @@
         }
       }
     },
-    "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
-          }
-        }
-      }
-    },
     "This Apple TV app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent." : {
       "localizations" : {
         "en" : {
@@ -10763,6 +10591,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
+          }
+        }
+      }
+    },
+    "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
           }
         }
       }
@@ -11407,22 +11257,6 @@
         }
       }
     },
-    "unanswered" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sans réponse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sans réponse"
-          }
-        }
-      }
-    },
     "Unit %lld" : {
       "localizations" : {
         "fr" : {
@@ -11651,6 +11485,172 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réduire le zoom"
+          }
+        }
+      }
+    },
+    "answered" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "avec réponse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "avec réponse"
+          }
+        }
+      }
+    },
+    "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
+          }
+        }
+      }
+    },
+    "iCloud Sync" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation iCloud"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation iCloud"
+          }
+        }
+      }
+    },
+    "iCloud Sync will turn off after you restart the app." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’application."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’application."
+          }
+        }
+      }
+    },
+    "iCloud Sync will turn on after you restart the app." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
+          }
+        }
+      }
+    },
+    "iCloud progress was deleted." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression iCloud a été supprimée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression iCloud a été supprimée."
+          }
+        }
+      }
+    },
+    "iCloud sync status could not be updated." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour."
+          }
+        }
+      }
+    },
+    "not enough dots and dashes" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pas assez de points et de tirets"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pas assez de points et de tirets"
+          }
+        }
+      }
+    },
+    "unanswered" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sans réponse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sans réponse"
+          }
+        }
+      }
+    },
+    "•" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "•"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "•"
           }
         }
       }

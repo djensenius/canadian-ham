@@ -460,7 +460,7 @@ private struct LessonReaderView: View {
     }
 }
 
-private extension View {
+extension View {
     @ViewBuilder
     func lessonReaderOpaqueNavigationBar() -> some View {
 #if os(iOS)

@@ -440,6 +440,7 @@ struct PracticeSessionView: View {
 #if os(iOS)
         .navigationBarTitleDisplayMode(.large)
 #endif
+        .lessonReaderOpaqueNavigationBar()
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
         .onAppear { calculatorViewModel.updateLocale(language.calculatorLocale) }
@@ -908,6 +909,7 @@ struct MockExamView: View {
         .id(state.result?.id ?? "mock-exam-active")
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
+        .lessonReaderOpaqueNavigationBar()
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
         .sheet(isPresented: $showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
@@ -1954,13 +1956,12 @@ struct QuestionCard: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .textSelection(.enabled)
                 .accessibilityIdentifier("question-stem")
-                .onTapGesture { onInteraction() }
         }
         .paperCard()
+        .contentShape(Rectangle())
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("question-card")
-        .highPriorityGesture(TapGesture().onEnded { onInteraction() }, including: .subviews)
-        .simultaneousGesture(TapGesture().onEnded { onInteraction() }, including: .subviews)
+        .simultaneousGesture(TapGesture().onEnded { onInteraction() }, including: .gesture)
     }
 }
 

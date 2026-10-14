@@ -89,7 +89,8 @@ platform) and share one build lock, so don't run them by reflex.
   helper rather than adding a separate filter.
 - Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
   whose element frame is not fully contained in the visible scroll area below an opaque navigation
-  bar. Fully visible contrast issues and every non-contrast issue must still fail.
+  bar. Owner decision 2026-10-14 adds practice and mock exam screens to this same occluded-content
+  rule. Fully visible contrast issues and every non-contrast issue must still fail.
 - Task-44.3 exam tool: owner decision 2026-10-12 approves the medium-detent rule that text inside
   the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
   implements that exception.
