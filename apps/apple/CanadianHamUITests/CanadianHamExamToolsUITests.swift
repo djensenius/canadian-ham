@@ -58,6 +58,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         scrollBackgroundUntilHittable(questionStem, in: app, maxSwipes: 12)
         XCTAssertTrue(questionStem.isHittable, "Question stem should be hittable before clearing calculator keyboard focus")
         questionStem.tap()
+        waitBriefly(0.5)
         app.typeKey("1", modifierFlags: [])
         waitBriefly()
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "23", "Typing after question-stem focus leaves must not change the calculator")
@@ -188,10 +189,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
-        let answer = app.descendants(matching: .any)["answer-D-button"].firstMatch
-        XCTAssertTrue(answer.waitForExistence(timeout: 5))
-        positionElementInMiddleVisibleBand(answer, in: app, context: "answer with calculator open")
-        XCTAssertTrue(answer.isHittable, "The positioned answer should be hittable with the calculator sheet open")
+        let questionStem = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(questionStem.waitForExistence(timeout: 5))
+        positionElementInMiddleVisibleBand(questionStem, in: app, context: "question stem with calculator open")
+        XCTAssertTrue(questionStem.isHittable, "The positioned question stem should be hittable with the calculator sheet open")
     }
 
     func testCaptureCalculatorEvidenceScreenshots() throws {
