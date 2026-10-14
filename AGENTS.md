@@ -88,10 +88,11 @@ platform) and share one build lock, so don't run them by reflex.
   whose element frame is not fully contained in the visible scroll area below an opaque navigation
   bar; nil-element findings, navigation-bar elements, fully visible contrast issues, and every
   non-contrast issue must still fail.
-- Task-42 Morse course audits: owner decision 2026-10-12 also approves the fully visible Morse
-  settings description false positive. In addition to the shared occluded-content rule, these audits
-  may ignore only `.contrast` findings tied to accessibility identifier `morse-settings-description`;
-  every other issue still fails.
+- Task-42 Morse course audits: owner decisions 2026-10-12 and 2026-10-14 also approve the fully
+  visible Morse settings-card note false positives. In addition to the shared occluded-content rule,
+  these audits may ignore only `.contrast` findings tied to accessibility identifiers
+  `morse-settings-description` or `morse-settings-fixed-timing-description`; every other issue still
+  fails.
 - Task-44.3 exam tool: owner decision 2026-10-12 approves the medium-detent rule that text inside
   the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
   implements that exception.

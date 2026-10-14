@@ -2229,13 +2229,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditMorseCourseWithApprovedContrastExceptions(app: XCUIApplication) throws {
-        let description = app.staticTexts["morse-settings-description"].firstMatch
+        let approvedSettingsNotes: [(identifier: String, element: XCUIElement)] = [
+            ("morse-settings-description", app.staticTexts["morse-settings-description"].firstMatch),
+            ("morse-settings-fixed-timing-description", app.staticTexts["morse-settings-fixed-timing-description"].firstMatch)
+        ]
         try auditIgnoringOccludedLessonTextContrast(app: app) { issue in
             guard issue.auditType == .contrast, let element = issue.element else { return false }
-            let matchesDescriptionFrame = description.exists && element.frame == description.frame
-            return element.identifier == "morse-settings-description"
-                || element.debugDescription.contains("morse-settings-description")
-                || matchesDescriptionFrame
+            return approvedSettingsNotes.contains { approvedNote in
+                let matchesNoteFrame = approvedNote.element.exists && element.frame == approvedNote.element.frame
+                return element.identifier == approvedNote.identifier
+                    || element.debugDescription.contains(approvedNote.identifier)
+                    || matchesNoteFrame
+            }
         }
     }
 

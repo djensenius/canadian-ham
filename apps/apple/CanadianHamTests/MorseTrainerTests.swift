@@ -169,25 +169,30 @@ final class MorseTrainerTests: XCTestCase {
         }
     }
 
-    func testMorseSettingsDescriptionInkOnCardBackgroundMeetsWCAGContrast() throws {
+    func testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast() throws {
         let tokensURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .appending(path: "CanadianHam/Design/Tokens.swift")
         let tokens = try String(contentsOf: tokensURL, encoding: .utf8)
         let ink = try designTokenRGB(named: "ink", in: tokens)
+        let paper = try designTokenRGB(named: "paper", in: tokens)
         let cardBackground = try designTokenRGB(named: "paperElevated", in: tokens)
 
-        XCTAssertGreaterThanOrEqual(
-            morseContrastRatio(ink.light, cardBackground.light),
-            4.5,
-            "Morse settings description ink on light card background regressed below WCAG AA contrast"
-        )
-        XCTAssertGreaterThanOrEqual(
-            morseContrastRatio(ink.dark, cardBackground.dark),
-            4.5,
-            "Morse settings description ink on dark card background regressed below WCAG AA contrast"
-        )
+        let cases: [(name: String, foreground: MorseRGB, background: MorseRGB)] = [
+            ("Morse settings description ink on light card background", ink.light, cardBackground.light),
+            ("Morse settings description ink on dark card background", ink.dark, cardBackground.dark),
+            ("Morse fixed-timing note ink on light note background", ink.light, paper.light),
+            ("Morse fixed-timing note ink on dark note background", ink.dark, paper.dark)
+        ]
+
+        for contrastCase in cases {
+            XCTAssertGreaterThanOrEqual(
+                morseContrastRatio(contrastCase.foreground, contrastCase.background),
+                4.5,
+                "\(contrastCase.name) regressed below WCAG AA contrast"
+            )
+        }
 
         let trainerSourceURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
@@ -196,15 +201,21 @@ final class MorseTrainerTests: XCTestCase {
         let trainerSource = try String(contentsOf: trainerSourceURL, encoding: .utf8)
         let descriptionRange = try XCTUnwrap(trainerSource.range(of: "Text(\"These local settings control Morse tone, timing, and playback volume without network access.\")"))
         let descriptionBlock = trainerSource[descriptionRange.lowerBound...].prefix(360)
-        XCTAssertTrue(descriptionBlock.contains(".foregroundStyle(DesignTokens.Colors.ink)"), "The contrast guard must track the description text token")
-        XCTAssertTrue(descriptionBlock.contains(".accessibilityIdentifier(\"morse-settings-description\")"), "The audit exception must stay tied to the stable description identifier")
+        XCTAssertTrue(descriptionBlock.contains(".foregroundStyle(DesignTokens.Colors.ink)"), "The contrast guard must track the settings description text token")
+        XCTAssertTrue(descriptionBlock.contains(".accessibilityIdentifier(\"morse-settings-description\")"), "The settings description audit exception must stay tied to the stable identifier")
+
+        let fixedTimingRange = try XCTUnwrap(trainerSource.range(of: "Text(fixedTimingDescription)"))
+        let fixedTimingBlock = trainerSource[fixedTimingRange.lowerBound...].prefix(520)
+        XCTAssertTrue(fixedTimingBlock.contains(".foregroundStyle(DesignTokens.Colors.ink)"), "The contrast guard must track the fixed-timing note text token")
+        XCTAssertTrue(fixedTimingBlock.contains(".accessibilityIdentifier(\"morse-settings-fixed-timing-description\")"), "The fixed-timing audit exception must stay tied to the stable identifier")
+        XCTAssertTrue(fixedTimingBlock.contains(".background(DesignTokens.Colors.paper, in: RoundedRectangle"), "The contrast guard must track the fixed-timing note background token")
 
         let viewsSourceURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .appending(path: "CanadianHam/Views/StudyViews.swift")
         let viewsSource = try String(contentsOf: viewsSourceURL, encoding: .utf8)
-        XCTAssertTrue(viewsSource.contains(".background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))"), "paperCard must continue to use the guarded card background token")
+        XCTAssertTrue(viewsSource.contains(".background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))"), "paperCard must continue to use the guarded settings-description card background token")
     }
 
     func testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced() throws {
