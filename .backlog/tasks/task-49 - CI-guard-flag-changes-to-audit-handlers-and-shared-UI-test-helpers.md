@@ -1,11 +1,11 @@
 ---
 id: TASK-49
 title: 'CI guard: flag changes to audit handlers and shared UI-test helpers'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-14 15:28'
-updated_date: '2026-10-14 15:45'
+updated_date: '2026-10-14 15:51'
 labels:
   - ci
   - apple
@@ -43,6 +43,8 @@ Implemented scripts/check-test-guard.mjs with inline self-tests for each guarded
 Addressing PR #240 review changes: merge-base old-side reads, broader audit/exception-helper detection, stricter approval markers, separate workflow, expanded helper list, robustness fixes, and expanded self-tests.
 
 Review fixes landed for PR #240: the guard now computes merge-base for both diff and old-side reads, uses -w/-M, collapses added/deleted counts to avoid move/rename/comment false positives, guards audit call additions/deletions/narrowing/named handlers and exception-helper calls, accepts only task/owner-decision approval markers outside fences/comments, prints approved findings as warnings, and runs in a separate Test guard workflow on opened/edited/synchronize/reopened. Validation passed: node scripts/check-test-guard.mjs --self-test; node scripts/check-test-guard.mjs --base main --head HEAD; git diff --check main...HEAD.
+
+Final PR #240 review round: replacing range count-cancellation with old/new normalized range comparisons, per-file full-content line-pattern comparisons, base-copy workflow execution, guard self-protection, and requested robustness/self-tests.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
