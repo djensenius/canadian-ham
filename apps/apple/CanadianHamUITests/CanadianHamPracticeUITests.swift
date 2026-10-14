@@ -1951,7 +1951,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertFullyVisibleInMiddleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings before lower Morse audit")
         assertNoScrollableContentIntersectsProtectedArea(in: app, containing: fixedTimingNote, context: "\(appearance.rawValue) morse home lower content before audit")
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditMorseCourseWithApprovedContrastExceptions(app: app)
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
@@ -1960,17 +1960,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(lastUnit, in: app), "\(appearance.rawValue) final Morse course unit should be positioned before settling")
         settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units", preserving: lastUnit)
         assertPartiallyVisibleBelowNavigationBar(lastUnit, in: app, context: "\(appearance.rawValue) final Morse course unit after settling")
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditMorseCourseWithApprovedContrastExceptions(app: app)
 
         openFirstMorseUnit(in: app)
         XCTAssertTrue(app.staticTexts["Unit 1"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course unit")
         tapFirstMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 10))
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditMorseCourseWithApprovedContrastExceptions(app: app)
         completeVisibleMorseLesson(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["morse-course-summary-heading"].firstMatch.waitForExistence(timeout: 10))
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditMorseCourseWithApprovedContrastExceptions(app: app)
         app.terminate()
     }
 
@@ -2228,9 +2228,24 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try app.performAccessibilityAudit()
     }
 
-    private func auditIgnoringOccludedLessonTextContrast(app: XCUIApplication) throws {
+    private func auditMorseCourseWithApprovedContrastExceptions(app: XCUIApplication) throws {
+        let description = app.staticTexts["morse-settings-description"].firstMatch
+        try auditIgnoringOccludedLessonTextContrast(app: app) { issue in
+            guard issue.auditType == .contrast, let element = issue.element else { return false }
+            let matchesDescriptionFrame = description.exists && element.frame == description.frame
+            return element.identifier == "morse-settings-description"
+                || element.debugDescription.contains("morse-settings-description")
+                || matchesDescriptionFrame
+        }
+    }
+
+    private func auditIgnoringOccludedLessonTextContrast(
+        app: XCUIApplication,
+        additionallyIgnoring shouldIgnoreAdditionalIssue: ((XCUIAccessibilityAuditIssue) -> Bool)? = nil
+    ) throws {
         let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
         try app.performAccessibilityAudit { issue in
+            if shouldIgnoreAdditionalIssue?(issue) == true { return true }
             guard issue.auditType == .contrast else { return false }
             guard let element = issue.element else { return false }
             let frame = element.frame

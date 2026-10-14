@@ -195,8 +195,9 @@ final class MorseTrainerTests: XCTestCase {
             .appending(path: "CanadianHam/Morse/MorseTrainerView.swift")
         let trainerSource = try String(contentsOf: trainerSourceURL, encoding: .utf8)
         let descriptionRange = try XCTUnwrap(trainerSource.range(of: "Text(\"These local settings control Morse tone, timing, and playback volume without network access.\")"))
-        let descriptionBlock = trainerSource[descriptionRange.lowerBound...].prefix(320)
+        let descriptionBlock = trainerSource[descriptionRange.lowerBound...].prefix(360)
         XCTAssertTrue(descriptionBlock.contains(".foregroundStyle(DesignTokens.Colors.ink)"), "The contrast guard must track the description text token")
+        XCTAssertTrue(descriptionBlock.contains(".accessibilityIdentifier(\"morse-settings-description\")"), "The audit exception must stay tied to the stable description identifier")
 
         let viewsSourceURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
