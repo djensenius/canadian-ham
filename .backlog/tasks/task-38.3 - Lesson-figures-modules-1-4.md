@@ -1,11 +1,11 @@
 ---
 id: TASK-38.3
 title: 'Lesson figures: modules 1-4'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 16:43'
+updated_date: '2026-10-14 03:29'
 labels:
   - content
   - apple
@@ -26,7 +26,7 @@ Draw the remaining Illustration brief figures for lessons in m1-regulations-poli
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Every brief in modules 1-4 not covered by task-38.2 has a drawn figure referenced from its lesson
-- [ ] #2 Same accessibility and originality bar as task-38.1; audits pass
+- [x] #2 Same accessibility and originality bar as task-38.1; audits pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -76,10 +76,12 @@ Follow-up visual fixes: connected the grounding-lightning-rf-safety bonding bar 
 Review r383-3 follow-up (supersedes older notes that mentioned removed grounding lock/mic/storm/people details): kept the simplified grounding figure and updated its SVG title plus l-003-08 illustration brief to the reduced scope only: station bonding, single entry, surge arrestor, ground rod, and antenna mast. Current visual notes from 1200 px qlmanage/read-tool renders: signal-quality-cw-ssb-fm now shows a CW smooth rise/hold/fall envelope and a square-edged clicks sketch, an SSB waveform clipped flat below a dashed limit with clipped/splatter labels, and overdev next to the large FM arrow. grounding-lightning-rf-safety shows radio/tuner/supply bonded to one bar, the bar bonded to a labelled single entry and surge box, and the surge/mast tied to a ground rod. digital-interface-linear-supply shows TX/RX arrows attached to boxes, separate DC output terminals, sense connected to the upper output terminal, and heat-sink fins on the regulator. controls-digital-voice-packet now labels VOX inside the VOX box. distress-urgency-safety-board keeps MAYDAY/SOS under the distress heading, labels handheld/battery/dipole next to their objects, and draws the dipole as a centre-fed horizontal wire. yagi-receiver-specs has the boom label below the boom, driven/feedline labels near their elements, angled feedline, and wide/med/narrow passband labels. Low review items fixed: moved ID 30 min near the clock, changed voice % to voice, rerouted international branches, moved grid next to the map, moved parallel near its icon, fixed the amplifier battery lead, and shrank the triode grid highlight. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test.
 
 Final coordinator follow-up: updated signal-quality-cw-ssb-fm, digital-interface-linear-supply, and grounding-lightning-rf-safety per the last-round instructions, and kept earlier review-low fixes in the rendered evidence. Current drawn state: signal-quality shows CW smooth and clicks envelopes, one SSB clipped waveform flattened at the dashed limit with clipped and -> splatter labels, and FM centre with normal small deviation plus over-dev large deviation beyond dashed limits. digital-interface-linear-supply shows transformer coils, one DC out terminal, sense feedback from that same terminal back to the regulator, and regulator fins. grounding-lightning-rf-safety routes coax radio to tuner to single entry without passing through supply; supply connects separately to the radio, and the bonding bar/single entry/surge/ground rod are connected. Rendered changed figures at 1200 px with qlmanage and inspected PNGs with the read tool. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test.
+
+Integration validation completed on task-38-figures-integration: module 1-4 figures are covered by CanadianHamLessonFiguresUITests light audits for every figure and dark module sample audits on iOS. Approved review notes were applied to grounding-lightning-rf-safety, yagi-receiver-specs, and signal-quality-cw-ssb-fm; qlmanage PNGs were refreshed/read and pnpm check:figures passes. Evidence screenshots are under docs/evidence/task-38-figures/app/.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Review follow-up addressed for task-38.3: 20 module 1-4 figures redrawn/simplified for technical accuracy and legibility, directives moved inline, text equivalents synced to visible labels, Apple figure assets regenerated, task-38.3 originality note added, and evidence refreshed with only the 20 task-38.3 qlmanage PNGs. AC #2 remains unchecked because Apple app validation/light-dark screenshots are deferred until after task-38.1 merges.
+Module 1-4 figures were integrated, approved visual nits were fixed, Apple assets were regenerated, and AC #2 is verified by targeted iOS light/dark lesson-figure audits plus passing figure/content/web checks.
 <!-- SECTION:FINAL_SUMMARY:END -->
