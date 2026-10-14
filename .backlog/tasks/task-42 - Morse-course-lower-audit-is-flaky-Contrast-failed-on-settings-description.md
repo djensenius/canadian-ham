@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 18:37'
-updated_date: '2026-10-14 14:34'
+updated_date: '2026-10-14 19:22'
 labels:
   - apple
   - testing
@@ -30,10 +30,7 @@ On main after the Morse polish merge, testAccessibilityAuditMorseCourseLessonAnd
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Add the owner-approved task-42-only contrast exception handler to the Morse home lower accessibility audit and tag the Morse settings description with a stable accessibility identifier.
-2. Add a unit test that parses the actual DesignTokens RGB values for ink and paperElevated and asserts the settings-description WCAG contrast is at least 4.5:1 in light and dark.
-3. Document the owner-approved 2026-10-12 exception in AGENTS.md and docs/testing/ui-audit-inventory-after.md.
-4. Validate with five consecutive targeted iOS runs of each Morse course audit plus the contrast unit test on iOS and macOS, then update ACs/final summary and mark Done.
+1. Merge current origin/main so the branch includes the CI test guard.\n2. Apply the owner-approved 2026-10-14 Morse settings-card contrast exception to both stable identifiers: morse-settings-description and morse-settings-fixed-timing-description, while keeping the shared occluded-content rule and failing every other issue.\n3. Extend the Morse token contrast unit guard to cover both settings-card notes, including the fixed-timing note foreground/background tokens.\n4. Update AGENTS.md and docs/testing/ui-audit-inventory-after.md to record the widened approved exception.\n5. Validate the unit guard, then run the Light and Dark Morse course audits five consecutive times each through one xbuild/nohup chain before finalizing task-42.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
