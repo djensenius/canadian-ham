@@ -29,10 +29,10 @@ Workers repeatedly weakened UI tests when stuck (audit filters, rewritten shared
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Add scripts/check-test-guard.mjs to parse PR git diffs, report guarded Apple-source changes with file:line/rule, and honor Test-guard-approved approval markers.
-2. Include --self-test inline fixtures covering one passing and one failing diff per rule plus the approval-marker path.
-3. Wire a pull_request CI job to run the self-test and guard with the PR body and fetch-depth 0.
-4. Document the guard and approval-marker expectations in AGENTS.md, then run local validation.
+1. Replace range event count-cancellation with old/new per-file guarded-range comparisons using comment-stripped, whitespace-normalized text with strings preserved.
+2. Replace changed-line pattern matching with per-file stripped-content comparisons for added line-pattern counts plus disappeared test/audit-wrapper names.
+3. Update workflow to execute the base-branch checker when present and make checker/workflow edits marker-gated.
+4. Add the requested self-tests and docs wording, then rerun self-test and main...HEAD guard.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
