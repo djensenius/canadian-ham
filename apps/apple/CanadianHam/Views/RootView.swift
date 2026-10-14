@@ -378,10 +378,11 @@ struct RootView: View {
                     } action: { selection = .learn }
                 } header: {
                     Text("Study")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
+                        .font(DesignTokens.FontScale.title.weight(.bold))
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
                 }
+                .headerProminence(.increased)
 
                 Section {
                     SidebarButton(selection: .practiceHub, current: selection) {
@@ -427,10 +428,11 @@ struct RootView: View {
                     } action: { selection = .about }
                 } header: {
                     Text("Tools")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
+                        .font(DesignTokens.FontScale.title.weight(.bold))
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
                 }
+                .headerProminence(.increased)
             }
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
