@@ -1,6 +1,6 @@
 <svg id="digital-interface-linear-supply" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
   <title>Digital interface and linear power supply</title>
-  <desc>Audio directions through an interface and a linear supply with transformer, shunt capacitor, regulator heat sink, DC output, and sense feedback.</desc>
+  <desc>Audio directions through an interface and a linear supply with transformer, shunt capacitor across the rails, regulator heat sink, positive and return DC output terminals, and sense feedback.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
     <rect x="44" y="78" width="112" height="70" rx="12" ry="12" stroke-width="6"/><rect x="264" y="74" width="112" height="78" rx="14" ry="14" stroke-width="6"/><rect x="486" y="78" width="112" height="70" rx="12" ry="12" stroke-width="6"/>
     <line x1="486" y1="96" x2="376" y2="96" stroke-width="5"/><polygon points="376,96 396,84 396,108" fill="currentColor" stroke="none"/><line x1="264" y1="118" x2="156" y2="118" stroke-width="5"/><polygon points="156,118 176,106 176,130" fill="currentColor" stroke="none"/>
@@ -12,12 +12,13 @@
     <path d="M226 306 C204 314 204 326 226 334 C204 342 204 354 226 362 C204 370 204 382 226 390" stroke-width="5"/>
     <line x1="268" y1="312" x2="314" y2="346" stroke-width="5"/><line x1="268" y1="380" x2="314" y2="346" stroke-width="5"/><line x1="334" y1="312" x2="334" y2="380" stroke-width="5"/>
     <line x1="396" y1="346" x2="396" y2="404" stroke-width="5"/><line x1="378" y1="404" x2="414" y2="404" stroke-width="5"/><line x1="378" y1="424" x2="414" y2="424" stroke-width="5"/><line x1="396" y1="424" x2="396" y2="442" stroke-width="5"/>
+    <line x1="396" y1="442" x2="600" y2="442" stroke-width="5"/><circle cx="600" cy="442" r="5" stroke-width="4"/>
     <rect x="450" y="318" width="58" height="56" rx="10" ry="10" stroke-width="5"/><line x1="462" y1="318" x2="462" y2="300" stroke-width="4"/><line x1="480" y1="318" x2="480" y2="300" stroke-width="4"/><line x1="498" y1="318" x2="498" y2="300" stroke-width="4"/>
     <line x1="508" y1="346" x2="600" y2="346" stroke-width="5"/><circle cx="600" cy="346" r="5" stroke-width="4"/>
     <path d="M600 346 L584 346 L584 288 L480 288 L480 318" stroke-width="4"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="100" y="60" font-size="24">laptop</text><text x="320" y="56" font-size="24">interface</text><text x="542" y="60" font-size="24">radio</text><text x="430" y="52" font-size="24">RX</text><text x="210" y="184" font-size="24">TX</text><text x="408" y="246" font-size="24">PTT</text>
-    <text x="103" y="414" font-size="24">AC</text><text x="202" y="442" font-size="24">xfmr</text><text x="302" y="414" font-size="24">rect</text><text x="350" y="456" font-size="24">cap</text><text x="480" y="414" font-size="24">reg</text><text x="630" y="390" font-size="24" text-anchor="end">DC out</text><text x="532" y="278" font-size="24">sense</text>
+    <text x="103" y="414" font-size="24">AC</text><text x="202" y="442" font-size="24">xfmr</text><text x="302" y="414" font-size="24">rect</text><text x="350" y="456" font-size="24">cap</text><text x="480" y="414" font-size="24">reg</text><text x="630" y="390" font-size="24" text-anchor="end">DC +</text><text x="630" y="430" font-size="24" text-anchor="end">DC -</text><text x="532" y="278" font-size="24">sense</text>
   </g>
 </svg>

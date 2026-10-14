@@ -61,7 +61,7 @@ Alt text: A split diagram shows a computer audio interface between a transceiver
 Text equivalent:
 - RX arrows run radio to interface to laptop.
 - TX arrows run laptop to interface to radio, and a PTT line runs from the interface to the radio.
-- The supply chain is AC, xfmr coils, rect, shunt cap, reg with fins, one DC out terminal, and a sense feedback line.
+- The supply chain is AC, xfmr coils, rect, shunt cap across the rails, reg with fins, positive and return DC output terminals, and a sense feedback line.
 ::
 
 

@@ -66,7 +66,7 @@ transceiver -> external RF amplifier -> low-pass filter -> SWR meter -> tuner ->
 Alt text: Two block diagrams show an HF station accessory chain and an FM superheterodyne receiver chain, with arrows marking signal flow.
 Text equivalent:
 - HF chain: TX/amp, LPF, SWR, tuner, switch, ant, with a branch to dummy.
-- FM receiver chain: ant, RF, mix with LO, IF, amp, lim, and disc.
+- FM receiver chain: ant, RF, mix with LO, IF, amp, lim, disc, AF amp, and speaker.
 ::
 
 

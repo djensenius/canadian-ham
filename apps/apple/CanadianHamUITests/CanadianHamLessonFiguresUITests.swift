@@ -46,36 +46,88 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         try super.tearDownWithError()
     }
 
-    func testModule1LessonFiguresLight() throws {
-        try verifyLessons(Self.module1Lessons, appearance: .light, evidenceModuleID: "m1")
+    func testModule1LessonFiguresLightPart1() throws {
+        try verifyLessonRange(Self.module1Lessons, 0..<2, appearance: .light, evidenceModuleID: "m1", writeEvidence: true)
     }
 
-    func testModule2LessonFiguresLight() throws {
-        try verifyLessons(Self.module2Lessons, appearance: .light, evidenceModuleID: "m2")
+    func testModule1LessonFiguresLightPart2() throws {
+        try verifyLessonRange(Self.module1Lessons, 2..<4, appearance: .light, evidenceModuleID: "m1")
     }
 
-    func testModule3LessonFiguresLight() throws {
-        try verifyLessons(Self.module3Lessons, appearance: .light, evidenceModuleID: "m3")
+    func testModule1LessonFiguresLightPart3() throws {
+        try verifyLessonRange(Self.module1Lessons, 4..<6, appearance: .light, evidenceModuleID: "m1")
     }
 
-    func testModule4LessonFiguresLight() throws {
-        try verifyLessons(Self.module4Lessons, appearance: .light, evidenceModuleID: "m4")
+    func testModule2LessonFiguresLightPart1() throws {
+        try verifyLessonRange(Self.module2Lessons, 0..<2, appearance: .light, evidenceModuleID: "m2", writeEvidence: true)
     }
 
-    func testModule5LessonFiguresLight() throws {
-        try verifyLessons(Self.module5Lessons, appearance: .light, evidenceModuleID: "m5")
+    func testModule2LessonFiguresLightPart2() throws {
+        try verifyLessonRange(Self.module2Lessons, 2..<4, appearance: .light, evidenceModuleID: "m2")
     }
 
-    func testModule6LessonFiguresLight() throws {
-        try verifyLessons(Self.module6Lessons, appearance: .light, evidenceModuleID: "m6")
+    func testModule3LessonFiguresLightPart1() throws {
+        try verifyLessonRange(Self.module3Lessons, 0..<2, appearance: .light, evidenceModuleID: "m3", writeEvidence: true)
     }
 
-    func testModule7LessonFiguresLight() throws {
-        try verifyLessons(Self.module7Lessons, appearance: .light, evidenceModuleID: "m7")
+    func testModule3LessonFiguresLightPart2() throws {
+        try verifyLessonRange(Self.module3Lessons, 2..<4, appearance: .light, evidenceModuleID: "m3")
+    }
+
+    func testModule3LessonFiguresLightPart3() throws {
+        try verifyLessonRange(Self.module3Lessons, 4..<6, appearance: .light, evidenceModuleID: "m3")
+    }
+
+    func testModule3LessonFiguresLightPart4() throws {
+        try verifyLessonRange(Self.module3Lessons, 6..<8, appearance: .light, evidenceModuleID: "m3")
+    }
+
+    func testModule4LessonFiguresLightPart1() throws {
+        try verifyLessonRange(Self.module4Lessons, 0..<2, appearance: .light, evidenceModuleID: "m4", writeEvidence: true)
+    }
+
+    func testModule4LessonFiguresLightPart2() throws {
+        try verifyLessonRange(Self.module4Lessons, 2..<3, appearance: .light, evidenceModuleID: "m4")
+    }
+
+    func testModule5LessonFiguresLightPart1() throws {
+        try verifyLessonRange(Self.module5Lessons, 0..<1, appearance: .light, evidenceModuleID: "m5", writeEvidence: true)
+    }
+
+    func testModule5LessonFiguresLightPart2() throws {
+        try verifyLessonRange(Self.module5Lessons, 1..<2, appearance: .light, evidenceModuleID: "m5")
+    }
+
+    func testModule5LessonFiguresLightPart3() throws {
+        try verifyLessonRange(Self.module5Lessons, 2..<4, appearance: .light, evidenceModuleID: "m5")
+    }
+
+    func testModule5LessonFiguresLightPart4() throws {
+        try verifyLessonRange(Self.module5Lessons, 4..<5, appearance: .light, evidenceModuleID: "m5")
+    }
+
+    func testModule6LessonFiguresLightPart1() throws {
+        try verifyLessonRange(Self.module6Lessons, 0..<2, appearance: .light, evidenceModuleID: "m6", writeEvidence: true)
+    }
+
+    func testModule6LessonFiguresLightPart2() throws {
+        try verifyLessonRange(Self.module6Lessons, 2..<4, appearance: .light, evidenceModuleID: "m6")
+    }
+
+    func testModule6LessonFiguresLightPart3() throws {
+        try verifyLessonRange(Self.module6Lessons, 4..<5, appearance: .light, evidenceModuleID: "m6")
+    }
+
+    func testModule7LessonFiguresLightPart1() throws {
+        try verifyLessonRange(Self.module7Lessons, 0..<2, appearance: .light, evidenceModuleID: "m7", writeEvidence: true)
+    }
+
+    func testModule7LessonFiguresLightPart2() throws {
+        try verifyLessonRange(Self.module7Lessons, 2..<3, appearance: .light, evidenceModuleID: "m7")
     }
 
     func testModule8LessonFiguresLight() throws {
-        try verifyLessons(Self.module8Lessons, appearance: .light, evidenceModuleID: "m8")
+        try verifyLessonRange(Self.module8Lessons, 0..<2, appearance: .light, evidenceModuleID: "m8", writeEvidence: true)
     }
 
     func testModule1LessonFigureDarkSample() throws {
@@ -110,7 +162,17 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         try verifyLessons([Self.module8Lessons[0].sampledFirstFigure], appearance: .dark, evidenceModuleID: "m8")
     }
 
-    private func verifyLessons(_ lessons: [LessonSpec], appearance: TestAppearance, evidenceModuleID: String) throws {
+    private func verifyLessonRange(
+        _ lessons: [LessonSpec],
+        _ range: Range<Int>,
+        appearance: TestAppearance,
+        evidenceModuleID: String,
+        writeEvidence: Bool = false
+    ) throws {
+        try verifyLessons(Array(lessons[range]), appearance: appearance, evidenceModuleID: evidenceModuleID, writeEvidence: writeEvidence)
+    }
+
+    private func verifyLessons(_ lessons: [LessonSpec], appearance: TestAppearance, evidenceModuleID: String, writeEvidence: Bool = true) throws {
         var wroteEvidenceForModule = false
         for lesson in lessons {
             let app = launchLesson(lesson.lessonID, appearance: appearance)
@@ -125,7 +187,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
                     figureElement.label.localizedCaseInsensitiveContains(figure.altText),
                     "Expected accessibility label for \(figure.id) to contain its alt text. Got: \(figureElement.label)"
                 )
-                if !wroteEvidenceForModule {
+                if writeEvidence && !wroteEvidenceForModule {
                     writeEvidenceScreenshot(named: "\(appearance.rawValue)-\(evidenceModuleID)-\(figure.id)", from: app)
                     wroteEvidenceForModule = true
                 }
