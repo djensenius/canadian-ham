@@ -4,7 +4,7 @@ title: Lesson figures and memory aids
 status: Done
 assignee: []
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-14 03:29'
+updated_date: '2026-10-14 03:38'
 labels:
   - content
   - apple
@@ -29,6 +29,8 @@ Every lesson has an '## Illustration brief' section (36 specs with alt text and 
 
 <!-- SECTION:NOTES:BEGIN -->
 All five subtasks are Done on task-38-figures-integration: task-38.1 and task-38.5 were already Done on main; task-38.2, task-38.3, and task-38.4 were finalized here after iOS light/dark lesson-figure audits and figure/content/web validation.
+
+Worker handoff: PR #238 is open. Full four-platform xbuild suite chain is running under nohup and currently waiting on the shared xbuild lock during the iOS suite. Monitor /tmp/tfig-full-chain.log, /tmp/tfig-full-ios.log, /tmp/tfig-full-macos.log, /tmp/tfig-full-tvos.log, /tmp/tfig-full-visionos.log, and /tmp/tfig-full-status. Copilot status at handoff: no unresolved review threads found via GitHub reviewThreads API; one Copilot review comment is present with Changes recommended for coordinator review.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
