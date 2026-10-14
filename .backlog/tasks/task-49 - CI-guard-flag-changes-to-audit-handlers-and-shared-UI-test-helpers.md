@@ -1,7 +1,7 @@
 ---
 id: TASK-49
 title: 'CI guard: flag changes to audit handlers and shared UI-test helpers'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-14 15:28'
