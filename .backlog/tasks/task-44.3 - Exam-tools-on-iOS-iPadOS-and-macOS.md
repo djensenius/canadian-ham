@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-14 15:31'
+updated_date: '2026-10-14 17:26'
 labels:
   - apple
 dependencies:
@@ -119,6 +119,8 @@ WIP stop per coordinator due xbuild lock. Pushed through 230fc91cc673e45d302946d
 Final continuation: implemented owner-approved iPad regular-width fix by collapsing NavigationSplitView sidebar to detail-only while an inspector tool is open unless the landscape width can keep sidebar+exam+inspector with ~420 pt exam column; previous column visibility is restored when the tool closes. Updated iPad UI tests to cover portrait and landscape, assert answer buttons remain hittable, and assert the question stem frame stays inside the exam column. Refreshed and inspected iPad portrait light/dark and landscape-light evidence screenshots; landscape capture is stored as calculator-ipad-inspector-landscape-light.png. Validation passed: iPad selected inspector/audit/screenshot run executed 3 tests / 0 failures in /tmp/task-44.3-validation-chain-20261014-085517.log; macOS unit command executed 133 tests / 0 failures; pnpm check:apple-l10n passed; node scripts/check-apple-text-sources.ts passed; full iPhone CanadianHamExamToolsUITests class executed 13 tests / 2 skipped / 0 failures; Localizable.xcstrings semantic comparison vs origin/main has 0 missing/changed origin keys and 35 added keys (Xcode export canonicalized ordering, so line diff is not additions-only even though the catalog content is additions-only).
 
 Review fix WIP: corrected AC #1 wording to describe the actual iPhone/iPad UI coverage and macOS shared-inspector/unit coverage (no Mac UI test or Split View claim).
+
+Review-fix continuation stopped with remaining iPhone UI failures after pushed commit ee86047b7563011394349c49e86a7df1bbdd81ad. Implemented/pushed: protected-area helper now asserts offenders in positioned/final assertion, medium audit precheck asserts display/Close/24 keys are hittable, focus resetter ignores tool-panel touches, 150 ms re-grab removed, audits restored to B-001, iPad medium audits skipped, session reset uses in-app new session, calculator view models moved into session state, sidebar collapse is width-based, launch appearance is DEBUG-gated, calculator announcements use interface localized 'Calculator result' prefix, toggle-sign visible EN is 'Change sign', icon is decorative, reference-sheet config uses one default flag, AC #1 wording corrected, task-44.4 follow-up note added, and sidebar comparison files were added but still need replacement per coordinator because they are not a valid visible-sidebar no-tool comparison. Validation: git diff --check and node scripts/check-apple-text-sources.ts passed; pnpm check:apple-l10n could not complete in final state due lock/follow-on failures; targeted iPhone review-fix command still fails testCalculatorKeyboardInputIsFocusScoped and testPreciseScrollPositionsAnswerBelowProtectedAreaWithToolOpen.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
