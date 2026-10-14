@@ -1,11 +1,11 @@
 ---
 id: TASK-49
 title: 'CI guard: flag changes to audit handlers and shared UI-test helpers'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-14 15:28'
-updated_date: '2026-10-14 15:34'
+updated_date: '2026-10-14 15:40'
 labels:
   - ci
   - apple
@@ -39,6 +39,8 @@ Workers repeatedly weakened UI tests when stuck (audit filters, rewritten shared
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented scripts/check-test-guard.mjs with inline self-tests for each guarded rule and approval-marker bypass. Wired a pull_request CI job with fetch-depth 0 and documented the guard/approval expectations in AGENTS.md. Validation passed: node scripts/check-test-guard.mjs --self-test; node scripts/check-test-guard.mjs --base main --head HEAD; git diff --check.
+
+Addressing PR #240 review changes: merge-base old-side reads, broader audit/exception-helper detection, stricter approval markers, separate workflow, expanded helper list, robustness fixes, and expanded self-tests.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
