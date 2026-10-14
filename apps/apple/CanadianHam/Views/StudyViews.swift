@@ -377,6 +377,7 @@ struct PracticeSessionView: View {
     let dataRevision: Int
     let localDataReplacementRevision: Int
     let headerAccessory: AnyView?
+    let onExamToolPresentationChanged: (Bool) -> Void
     let onDataChanged: () -> Void
 
     @State private var selectedExamTool: ExamTool?
@@ -392,6 +393,7 @@ struct PracticeSessionView: View {
         dataRevision: Int,
         localDataReplacementRevision: Int,
         headerAccessory: AnyView? = nil,
+        onExamToolPresentationChanged: @escaping (Bool) -> Void = { _ in },
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
@@ -402,6 +404,7 @@ struct PracticeSessionView: View {
         self.dataRevision = dataRevision
         self.localDataReplacementRevision = localDataReplacementRevision
         self.headerAccessory = headerAccessory
+        self.onExamToolPresentationChanged = onExamToolPresentationChanged
         self.onDataChanged = onDataChanged
     }
 
@@ -439,6 +442,8 @@ struct PracticeSessionView: View {
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
         .onAppear { calculatorViewModel.updateLocale(language.calculatorLocale) }
         .onChange(of: language) { _, next in calculatorViewModel.updateLocale(next.calculatorLocale) }
+        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
+        .onDisappear { onExamToolPresentationChanged(false) }
     }
 
     private var header: some View {
@@ -858,6 +863,7 @@ struct MockExamView: View {
     let language: BankLanguage
     @ObservedObject private var state: MockExamState
     let localDataReplacementRevision: Int
+    let onExamToolPresentationChanged: (Bool) -> Void
     let onDataChanged: () -> Void
 
     init(
@@ -866,6 +872,7 @@ struct MockExamView: View {
         language: BankLanguage,
         state: MockExamState,
         localDataReplacementRevision: Int,
+        onExamToolPresentationChanged: @escaping (Bool) -> Void = { _ in },
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
@@ -873,6 +880,7 @@ struct MockExamView: View {
         self.language = language
         self.state = state
         self.localDataReplacementRevision = localDataReplacementRevision
+        self.onExamToolPresentationChanged = onExamToolPresentationChanged
         self.onDataChanged = onDataChanged
     }
 
@@ -932,6 +940,8 @@ struct MockExamView: View {
             calculatorViewModel.updateLocale(language.calculatorLocale)
             refreshForCurrentTimerState()
         }
+        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
+        .onDisappear { onExamToolPresentationChanged(false) }
         .task(id: localDataReplacementRevision) { resetIfLocalDataWasReplaced() }
         .onReceive(timer) { _ in
             refreshForCurrentTimerState()

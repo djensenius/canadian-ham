@@ -103,18 +103,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testRegularWidthUsesInspectorAndKeepsAnswersHittable() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector layout is covered by the targeted iPad run.")
+        try runRegularWidthInspectorScenario(orientation: .portrait, expectedSidebarVisibility: .collapsed, context: "iPad portrait")
+        try runRegularWidthInspectorScenario(orientation: .landscapeLeft, expectedSidebarVisibility: .visible, context: "iPad landscape")
+        XCUIDevice.shared.orientation = .portrait
 #else
         throw XCTSkip("Inspector layout is covered by the targeted iPad run.")
 #endif
-        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
-        defer { app.terminate() }
-
-        openTool(.calculator, in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5), "Regular width should present exam tools in an inspector side panel")
-        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
-        XCTAssertTrue(answer.waitForExistence(timeout: 5))
-        scrollUntilHittable(answer, in: app, maxSwipes: 8)
-        XCTAssertTrue(answer.isHittable, "Answer buttons should remain operable beside the inspector")
     }
 
     func testAccessibilityAuditExamToolsLight() throws {
@@ -188,6 +182,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testCaptureCalculatorEvidenceScreenshots() throws {
 #if os(iOS)
         if UIDevice.current.userInterfaceIdiom == .pad {
+            XCUIDevice.shared.orientation = .portrait
+            waitBriefly(0.8)
             for appearance in ["light", "dark"] {
                 let app = launchPracticeQuestion(appearance: appearance, extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
                 openTool(.calculator, in: app)
@@ -196,6 +192,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 try saveScreenshot(named: "calculator-ipad-inspector-\(appearance).png")
                 app.terminate()
             }
+            XCUIDevice.shared.orientation = .landscapeLeft
+            waitBriefly(0.8)
+            let landscapeApp = launchPracticeQuestion(appearance: "light", extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+            openTool(.calculator, in: landscapeApp)
+            XCTAssertTrue(landscapeApp.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5))
+            waitBriefly(0.8)
+            try saveScreenshot(named: "calculator-ipad-inspector-landscape-light.png")
+            landscapeApp.terminate()
+            XCUIDevice.shared.orientation = .portrait
         } else {
             for appearance in ["light", "dark"] {
                 let mediumApp = launchPracticeQuestion(appearance: appearance)
@@ -236,6 +241,59 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             }
         }
     }
+
+#if os(iOS)
+    private enum SidebarVisibilityExpectation {
+        case collapsed
+        case visible
+    }
+
+    private func runRegularWidthInspectorScenario(orientation: UIDeviceOrientation, expectedSidebarVisibility: SidebarVisibilityExpectation, context: String, file: StaticString = #filePath, line: UInt = #line) throws {
+        XCUIDevice.shared.orientation = orientation
+        waitBriefly(0.8)
+        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+        defer { app.terminate() }
+
+        openTool(.calculator, in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5), "\(context): regular width should present exam tools in an inspector side panel", file: file, line: line)
+        waitBriefly(0.8)
+        assertSidebarVisibility(expectedSidebarVisibility, in: app, context: context, file: file, line: line)
+        assertQuestionTitleWithinExamColumn(in: app, context: context, file: file, line: line)
+        assertVisibleAnswerButtonsRemainHittable(in: app, context: "\(context) calculator inspector", file: file, line: line)
+    }
+
+    private func assertSidebarVisibility(_ expected: SidebarVisibilityExpectation, in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let sidebar = app.descendants(matching: .any)["root-sidebar"].firstMatch
+        let visible = isSidebarVisible(sidebar, in: app)
+        switch expected {
+        case .collapsed:
+            XCTAssertFalse(visible, "\(context): opening an inspector tool in portrait should collapse the sidebar so the exam column is not dimmed or covered. Sidebar frame: \(frameDescription(sidebar.frame))", file: file, line: line)
+        case .visible:
+            XCTAssertTrue(visible, "\(context): landscape has enough room for sidebar, exam column, and inspector; the sidebar should stay visible. Sidebar frame: \(frameDescription(sidebar.frame))", file: file, line: line)
+        }
+    }
+
+    private func assertQuestionTitleWithinExamColumn(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let questionTitle = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(questionTitle.waitForExistence(timeout: 5), "\(context): expected the question title", file: file, line: line)
+        let inspectorHeader = app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch
+        XCTAssertTrue(inspectorHeader.waitForExistence(timeout: 5), "\(context): expected the calculator inspector header", file: file, line: line)
+
+        let windowFrame = app.windows.firstMatch.frame
+        let sidebar = app.descendants(matching: .any)["root-sidebar"].firstMatch
+        let examColumnMinX = isSidebarVisible(sidebar, in: app) ? sidebar.frame.maxX : windowFrame.minX
+        let examColumnMaxX = min(windowFrame.maxX, inspectorHeader.frame.minX)
+        let examColumn = CGRect(x: examColumnMinX, y: windowFrame.minY, width: max(0, examColumnMaxX - examColumnMinX), height: windowFrame.height)
+        XCTAssertGreaterThanOrEqual(examColumn.width, 420, "\(context): expected an exam column of at least about 420 pt beside the inspector. Exam column: \(frameDescription(examColumn)); window: \(frameDescription(windowFrame)); inspector header: \(frameDescription(inspectorHeader.frame))", file: file, line: line)
+        XCTAssertTrue(examColumn.insetBy(dx: -1, dy: -1).contains(questionTitle.frame), "\(context): question title should be fully within the exam column, not truncated under the inspector. Title: \(frameDescription(questionTitle.frame)); exam column: \(frameDescription(examColumn))", file: file, line: line)
+    }
+
+    private func isSidebarVisible(_ sidebar: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard sidebar.exists else { return false }
+        let windowFrame = app.windows.firstMatch.frame
+        return sidebar.frame.width > 80 && sidebar.frame.height > 80 && sidebar.frame.intersects(windowFrame) && sidebar.frame.minX < windowFrame.midX
+    }
+#endif
 
     private func launchPracticeQuestion(appearance: String = "light", categoryID: String = "B-001", questionID: String = "B-001-002-002", extraArguments: [String] = []) -> XCUIApplication {
         launchApp(appearance: appearance, arguments: extraArguments + [

@@ -1,5 +1,8 @@
 import CanadianHamContent
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 private enum SidebarSelection: Hashable {
     case home
@@ -10,6 +13,15 @@ private enum SidebarSelection: Hashable {
     case morse
     case settings
     case about
+
+    var isExamSessionSelection: Bool {
+        switch self {
+        case .practice, .mockExam:
+            true
+        case .home, .learn, .practiceHub, .morse, .settings, .about:
+            false
+        }
+    }
 }
 
 #if os(iOS)
@@ -51,6 +63,9 @@ struct RootView: View {
     @State private var unfinishedCourseWorkCheckID = UUID()
     @StateObject private var practiceSessionStates = PracticeSessionStateCache()
     @StateObject private var mockExamState = MockExamState()
+    @State private var splitColumnVisibility = NavigationSplitViewVisibility.automatic
+    @State private var preToolSplitColumnVisibility: NavigationSplitViewVisibility?
+    @State private var regularWidthExamToolPresented = false
 #if os(iOS)
     @State private var compactNavigationPath = NavigationPath()
 #endif
@@ -367,7 +382,8 @@ struct RootView: View {
 
     @ViewBuilder
     private func splitContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
-        NavigationSplitView {
+        GeometryReader { proxy in
+            NavigationSplitView(columnVisibility: $splitColumnVisibility) {
             List {
                 Section {
                     SidebarButton(selection: .home, current: selection) {
@@ -448,41 +464,75 @@ struct RootView: View {
                     }
             }
         }
-        .navigationSplitViewStyle(.balanced)
+            .navigationSplitViewStyle(.balanced)
 #if os(iOS)
-        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
 #endif
 #if os(macOS)
-        .frame(minWidth: 980, minHeight: 680)
+            .frame(minWidth: 980, minHeight: 680)
 #endif
-        .onAppear {
-            updateLanguage(from: progressStore.preferences)
-            applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
-        }
-        .onChange(of: progressStore.preferences.language) { _, _ in
-            updateLanguage(from: progressStore.preferences)
-        }
-        .onChange(of: progressStore.preferences.practiceMode) { _, _ in
-            practiceSessionStates.clear()
-        }
-        .onChange(of: progressStore.preferences.activeBankId) { _, next in
-            loadBank(for: next)
-            practiceSessionStates.clear()
-            mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
-        }
-        .onChange(of: appSettings.localDataReplacementRevision) { _, next in
-            clearCachedSessions(localDataReplacementRevision: next)
-        }
-        .onChange(of: selection) { _, next in
-            if next != .learn {
-                navigationPath.removeAll()
+            .onAppear {
+                updateLanguage(from: progressStore.preferences)
+                applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
+                updateRegularWidthExamToolColumnVisibility(containerSize: proxy.size)
+            }
+            .onChange(of: progressStore.preferences.language) { _, _ in
+                updateLanguage(from: progressStore.preferences)
+            }
+            .onChange(of: progressStore.preferences.practiceMode) { _, _ in
+                practiceSessionStates.clear()
+            }
+            .onChange(of: progressStore.preferences.activeBankId) { _, next in
+                loadBank(for: next)
+                practiceSessionStates.clear()
+                mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
+            }
+            .onChange(of: appSettings.localDataReplacementRevision) { _, next in
+                clearCachedSessions(localDataReplacementRevision: next)
+            }
+            .onChange(of: selection) { _, next in
+                if next != .learn {
+                    navigationPath.removeAll()
+                }
+                if !next.isExamSessionSelection {
+                    regularWidthExamToolPresented = false
+                }
+            }
+            .onChange(of: regularWidthExamToolPresented) { _, _ in
+                updateRegularWidthExamToolColumnVisibility(containerSize: proxy.size)
+            }
+            .onChange(of: proxy.size) { _, next in
+                updateRegularWidthExamToolColumnVisibility(containerSize: next)
             }
         }
     }
 
     private var combinedDataRevision: Int {
         dataRevision + appSettings.dataRevision
+    }
+
+    private func updateRegularWidthExamToolColumnVisibility(containerSize: CGSize) {
+#if os(iOS)
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return }
+        let estimatedSidebarWidth: CGFloat = 320
+        let inspectorIdealWidth: CGFloat = 380
+        let minimumExamColumnWidth: CGFloat = 420
+        let canFitSidebarDetailAndInspector = containerSize.width - estimatedSidebarWidth - inspectorIdealWidth >= minimumExamColumnWidth
+
+        guard regularWidthExamToolPresented, !canFitSidebarDetailAndInspector else {
+            if let preToolSplitColumnVisibility {
+                splitColumnVisibility = preToolSplitColumnVisibility
+                self.preToolSplitColumnVisibility = nil
+            }
+            return
+        }
+
+        if preToolSplitColumnVisibility == nil {
+            preToolSplitColumnVisibility = splitColumnVisibility
+        }
+        splitColumnVisibility = .detailOnly
+#endif
     }
 
     private func updateLanguage(from preferences: ApplePreferences) {
@@ -549,7 +599,8 @@ struct RootView: View {
                 language: $language,
                 state: practiceSessionStates.state(for: scope),
                 dataRevision: combinedDataRevision,
-                localDataReplacementRevision: appSettings.localDataReplacementRevision
+                localDataReplacementRevision: appSettings.localDataReplacementRevision,
+                onExamToolPresentationChanged: { regularWidthExamToolPresented = $0 }
             ) {
                 recordDataChanged()
             }
@@ -559,7 +610,8 @@ struct RootView: View {
                 progressStore: progressStore,
                 language: language,
                 state: mockExamState,
-                localDataReplacementRevision: appSettings.localDataReplacementRevision
+                localDataReplacementRevision: appSettings.localDataReplacementRevision,
+                onExamToolPresentationChanged: { regularWidthExamToolPresented = $0 }
             ) {
                 recordDataChanged()
             }
