@@ -1,11 +1,11 @@
 ---
 id: TASK-44.3
 title: 'Exam tools on iOS, iPadOS and macOS'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-14 15:06'
+updated_date: '2026-10-14 15:31'
 labels:
   - apple
 dependencies:
@@ -23,9 +23,9 @@ Apple UI for the calculator and reference sheet in practice and mock exams: iPho
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 With the calculator open, the question and answer choices remain visible and operable on iPhone, iPad (portrait, landscape, Split View) and Mac (UI tests assert hittable answers); the reference sheet follows in TASK-44.4
-- [x] #2 Full default accessibility audits pass with the calculator open in light and dark; the largest text size works; the reference sheet follows in TASK-44.4
-- [x] #3 The mock exam timer is unaffected with the calculator open
+- [ ] #1 With the calculator open, the question and answer choices remain visible and operable on iPhone and iPad (portrait and landscape) with UI coverage; macOS uses the shared inspector code path and unit coverage, and the reference sheet follows in TASK-44.4
+- [ ] #2 Full default accessibility audits pass with the calculator open in light and dark; the largest text size works; the reference sheet follows in TASK-44.4
+- [ ] #3 The mock exam timer is unaffected with the calculator open
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -117,6 +117,8 @@ Fresh worker WIP: implemented and pushed focus reset restructuring through d7166
 WIP stop per coordinator due xbuild lock. Pushed through 230fc91cc673e45d302946d47d6ffc57c069d0d8. Implemented medium-detent calculator fit using actual calculator-body GeometryReader height, 44-64 pt key sizing, hidden help in tight medium space, large detent only for accessibility Dynamic Type, and compact-sheet bottom inset including sheet chrome. Also merged origin/main and kept Localizable.xcstrings diff additions-only. Passed: git diff --check; node scripts/check-apple-text-sources.ts; Localizable additions-only script; targeted iPhone focus+precise tests in /tmp/task-44.3-layout-inset-focus-precise.log; full iPhone CanadianHamExamToolsUITests in /tmp/task-44.3-full-iphone-exam-tools-final.log (13 executed, 2 skipped, 0 failures). iPhone screenshots were refreshed, visually inspected, committed, and pushed. iPad selected run /tmp/task-44.3-ipad-inspector-audit-screenshots-rerun.log passed screenshot capture and inspector hittability but failed inspector audit on Dynamic Type for the root sidebar Tools header; pushed fixes b1c7e7d8 and 230fc91c, but validation is blocked because xbuild has been held by other builds for >4.5h. Remaining commands when lock frees: (1) iPad: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M5)' -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testRegularWidthUsesInspectorAndKeepsAnswersHittable -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testRegularWidthInspectorAccessibilityAudit -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testCaptureCalculatorEvidenceScreenshots -resultBundlePath /tmp/task-44.3-ipad-inspector-audit-screenshots-final.xcresult test CODE_SIGNING_ALLOWED=NO; then inspect and commit/push iPad screenshots. (2) macOS: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES. (3) pnpm check:apple-l10n. (4) node scripts/check-apple-text-sources.ts. (5) reconfirm git diff origin/main -- apps/apple/CanadianHam/Resources/Localizable.xcstrings is additions-only. ACs remain unchecked and task remains In Progress until those validations pass.
 
 Final continuation: implemented owner-approved iPad regular-width fix by collapsing NavigationSplitView sidebar to detail-only while an inspector tool is open unless the landscape width can keep sidebar+exam+inspector with ~420 pt exam column; previous column visibility is restored when the tool closes. Updated iPad UI tests to cover portrait and landscape, assert answer buttons remain hittable, and assert the question stem frame stays inside the exam column. Refreshed and inspected iPad portrait light/dark and landscape-light evidence screenshots; landscape capture is stored as calculator-ipad-inspector-landscape-light.png. Validation passed: iPad selected inspector/audit/screenshot run executed 3 tests / 0 failures in /tmp/task-44.3-validation-chain-20261014-085517.log; macOS unit command executed 133 tests / 0 failures; pnpm check:apple-l10n passed; node scripts/check-apple-text-sources.ts passed; full iPhone CanadianHamExamToolsUITests class executed 13 tests / 2 skipped / 0 failures; Localizable.xcstrings semantic comparison vs origin/main has 0 missing/changed origin keys and 35 added keys (Xcode export canonicalized ordering, so line diff is not additions-only even though the catalog content is additions-only).
+
+Review fix WIP: corrected AC #1 wording to describe the actual iPhone/iPad UI coverage and macOS shared-inspector/unit coverage (no Mac UI test or Split View claim).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
