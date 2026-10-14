@@ -378,6 +378,7 @@ struct RootView: View {
                     } action: { selection = .learn }
                 } header: {
                     Text("Study")
+                        .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
                 }
@@ -426,6 +427,7 @@ struct RootView: View {
                     } action: { selection = .about }
                 } header: {
                     Text("Tools")
+                        .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
                 }
