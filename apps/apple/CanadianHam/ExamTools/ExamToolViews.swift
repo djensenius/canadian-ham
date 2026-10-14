@@ -43,6 +43,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
+    @State private var toolPanelFrameInWindow: CGRect?
 
     private var isPresented: Binding<Bool> {
         Binding(
@@ -52,6 +53,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                     calculatorFocused = false
                     calculator.suspendHardwareKeyboardInput()
                     selectedTool = nil
+                    toolPanelFrameInWindow = nil
                 }
             }
         )
@@ -100,10 +102,16 @@ struct ExamToolPresentationModifier: ViewModifier {
     private func focusResettingContent(_ content: Content) -> some View {
 #if os(iOS)
         content.background {
-            ExamContentInteractionFocusResetter {
-                calculatorFocused = false
-                calculator.suspendHardwareKeyboardInput()
-            }
+            ExamContentInteractionFocusResetter(
+                shouldIgnoreLocation: { location in
+                    guard let toolPanelFrameInWindow else { return false }
+                    return toolPanelFrameInWindow.insetBy(dx: -8, dy: -8).contains(location)
+                },
+                onInteraction: {
+                    calculatorFocused = false
+                    calculator.suspendHardwareKeyboardInput()
+                }
+            )
         }
 #else
         content.simultaneousGesture(
@@ -151,6 +159,12 @@ struct ExamToolPresentationModifier: ViewModifier {
         }
     }
 
+    private func updateToolPanelFrame(_ frame: CGRect?) {
+        Task { @MainActor in
+            toolPanelFrameInWindow = frame
+        }
+    }
+
     private func toolHeader(for tool: ExamTool) -> some View {
         Group {
             if dynamicTypeSize.isAccessibilitySize {
@@ -175,7 +189,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .frame(width: 44, height: 44)
-                .accessibilityLabel(Text(tool.title)) // l10n: localized
+                .accessibilityHidden(true)
 
             Text(tool.title) // l10n: localized
                 .font(DesignTokens.FontScale.body.weight(.bold))
@@ -215,6 +229,14 @@ struct ExamToolPresentationModifier: ViewModifier {
         .padding(.vertical, DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(DesignTokens.Colors.paper)
+        .background {
+            GeometryReader { proxy in
+                Color.clear
+                    .onAppear { updateToolPanelFrame(proxy.frame(in: .global)) }
+                    .onChange(of: proxy.frame(in: .global)) { _, frame in updateToolPanelFrame(frame) }
+            }
+        }
+        .onDisappear { updateToolPanelFrame(nil) }
     }
 
     @ViewBuilder
@@ -241,10 +263,11 @@ struct ExamToolPresentationModifier: ViewModifier {
 
 #if os(iOS)
 private struct ExamContentInteractionFocusResetter: UIViewRepresentable {
+    let shouldIgnoreLocation: (CGPoint) -> Bool
     let onInteraction: () -> Void
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(onInteraction: onInteraction)
+        Coordinator(shouldIgnoreLocation: shouldIgnoreLocation, onInteraction: onInteraction)
     }
 
     func makeUIView(context: Context) -> UIView {
@@ -254,6 +277,7 @@ private struct ExamContentInteractionFocusResetter: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
+        context.coordinator.shouldIgnoreLocation = shouldIgnoreLocation
         context.coordinator.onInteraction = onInteraction
         (uiView as? WindowGestureAttachmentView)?.configure(coordinator: context.coordinator)
     }
@@ -263,12 +287,14 @@ private struct ExamContentInteractionFocusResetter: UIViewRepresentable {
     }
 
     final class Coordinator: NSObject, UIGestureRecognizerDelegate {
+        var shouldIgnoreLocation: (CGPoint) -> Bool
         var onInteraction: () -> Void
         private weak var window: UIWindow?
         private weak var tapRecognizer: UITapGestureRecognizer?
         private weak var panRecognizer: UIPanGestureRecognizer?
 
-        init(onInteraction: @escaping () -> Void) {
+        init(shouldIgnoreLocation: @escaping (CGPoint) -> Bool, onInteraction: @escaping () -> Void) {
+            self.shouldIgnoreLocation = shouldIgnoreLocation
             self.onInteraction = onInteraction
         }
 
@@ -311,6 +337,11 @@ private struct ExamContentInteractionFocusResetter: UIViewRepresentable {
             }
         }
 
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            guard let window = window ?? gestureRecognizer.view else { return true }
+            return !shouldIgnoreLocation(touch.location(in: window))
+        }
+
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
             true
         }
@@ -340,17 +371,6 @@ extension View {
         referenceSheetConfiguration: ReferenceSheetConfiguration = .basic
     ) -> some View {
         modifier(ExamToolPresentationModifier(selectedTool: selectedTool, calculator: calculator, calculatorFocused: calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration))
-    }
-}
-
-private extension View {
-    @ViewBuilder
-    func calculatorKeyPressHandler(enabled: Bool, perform action: @escaping (KeyPress) -> KeyPress.Result) -> some View {
-        if enabled {
-            onKeyPress(action: action)
-        } else {
-            self
-        }
     }
 }
 
@@ -388,7 +408,7 @@ struct CalculatorToolView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
         .accessibilityElement(children: .contain)
-        .accessibilityIdentifier(calculatorFocused ? "calculator-keyboard-focus-target-focused" : "calculator-keyboard-focus-target")
+        .accessibilityIdentifier("calculator-keyboard-focus-target")
         .focusable(true)
         .focused($hasKeyboardFocus)
         .onAppear {
@@ -407,7 +427,7 @@ struct CalculatorToolView: View {
                 viewModel.suspendHardwareKeyboardInput()
             }
         }
-        .calculatorKeyPressHandler(enabled: calculatorFocused) { press in
+        .onKeyPress { press in
             handleKeyPress(press)
         }
     }
@@ -474,7 +494,8 @@ struct CalculatorToolView: View {
     }
 
     private func pressKey(_ key: CalculatorKey) {
-        let announcement = viewModel.press(key)
+        let spokenResult = viewModel.press(key)
+        let announcement = String.localizedStringWithFormat(String(localized: "Calculator result: %@"), spokenResult)
         AccessibilityNotification.Announcement(announcement).post()
     }
 
@@ -602,7 +623,7 @@ struct CalculatorToolView: View {
         case .squareRoot: String(localized: "Square root")
         case .square: String(localized: "Square")
         case .reciprocal: String(localized: "Reciprocal")
-        case .toggleSign: String(localized: "Toggle sign")
+        case .toggleSign: String(localized: "Toggle sign", defaultValue: "Change sign")
         case .percent: String(localized: "Percent")
         case .clearEntry: String(localized: "Clear entry")
         case .allClear: String(localized: "All clear")

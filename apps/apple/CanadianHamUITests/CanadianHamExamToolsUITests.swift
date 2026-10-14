@@ -44,23 +44,27 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
+        let keyTwo = app.buttons["calculator-key-2"].firstMatch
+        XCTAssertTrue(keyTwo.waitForExistence(timeout: 5), "Expected the calculator 2 key")
+        XCTAssertTrue(keyTwo.isHittable, "The calculator 2 key should be hittable before keyboard entry")
+        keyTwo.tap()
         let focusedCalculator = focusCalculatorKeyboard(in: app)
-        typeCalculatorKeys(["3", "s"], on: focusedCalculator)
+        typeCalculatorKeys(["3"], on: focusedCalculator)
         XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5))
-        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "23", "Tapping a calculator key must not let the background focus resetter disable hardware-keyboard input")
 
-        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
-        XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected an answer to clear calculator keyboard focus")
-        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
-        XCTAssertTrue(answer.isHittable, "Answer should be hittable before clearing calculator keyboard focus")
-        answer.tap()
+        let questionStem = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(questionStem.waitForExistence(timeout: 5), "Expected the question stem to clear calculator keyboard focus")
+        scrollBackgroundUntilHittable(questionStem, in: app, maxSwipes: 12)
+        XCTAssertTrue(questionStem.isHittable, "Question stem should be hittable before clearing calculator keyboard focus")
+        questionStem.tap()
         app.typeKey("1", modifierFlags: [])
         waitBriefly()
-        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "9", "Typing after calculator focus leaves must not change the calculator")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "23", "Typing after question-stem focus leaves must not change the calculator")
     }
 
     func testCalculatorValueSurvivesCloseAndReopenAndResetsForNewSession() throws {
-        let app = launchPracticeQuestion()
+        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamPracticeLimit", "1"])
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
@@ -70,12 +74,21 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         closeTool(in: app)
         openTool(.calculator, in: app)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "4")
+        closeTool(in: app)
 
-        app.terminate()
-        let freshApp = launchPracticeQuestion(questionID: "B-001-003-001")
-        defer { freshApp.terminate() }
-        openTool(.calculator, in: freshApp)
-        XCTAssertEqual(freshApp.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "0")
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected an answer to finish the one-question session")
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        XCTAssertTrue(answer.isHittable, "Expected the answer to be hittable before finishing the session")
+        answer.tap()
+        let finish = app.buttons["next-question-button"].firstMatch
+        XCTAssertTrue(finish.waitForExistence(timeout: 5), "Expected the Finish session button")
+        scrollBackgroundUntilHittable(finish, in: app, maxSwipes: 8)
+        XCTAssertTrue(finish.isHittable, "Expected the Finish session button to be hittable")
+        finish.tap()
+
+        openTool(.calculator, in: app)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "0")
     }
 
     func testMockExamCalculatorKeepsAnswersHittableAndTimerRuns() throws {
@@ -112,6 +125,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testAccessibilityAuditExamToolsLight() throws {
+#if os(iOS)
+        try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "The medium-detent audit exception is approved only for compact sheet presentation; iPad uses the inspector audit.")
+#endif
         let app = launchAuditPracticeQuestion(appearance: "light")
         defer { app.terminate() }
 
@@ -121,6 +137,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testAccessibilityAuditExamToolsDark() throws {
+#if os(iOS)
+        try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "The medium-detent audit exception is approved only for compact sheet presentation; iPad uses the inspector audit.")
+#endif
         let app = launchAuditPracticeQuestion(appearance: "dark")
         defer { app.terminate() }
 
@@ -256,6 +275,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertSidebarVisibility(expectedSidebarVisibility, in: app, context: context, file: file, line: line)
         assertQuestionTitleWithinExamColumn(in: app, context: context, file: file, line: line)
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "\(context) calculator inspector", file: file, line: line)
+        closeTool(in: app)
+        waitBriefly(0.8)
+        assertSidebarVisibility(.visible, in: app, context: "\(context) after closing calculator inspector", file: file, line: line)
     }
 
     private func runRegularWidthInspectorAuditScenario(orientation: UIDeviceOrientation, context: String, file: StaticString = #filePath, line: UInt = #line) throws {
@@ -312,7 +334,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func launchAuditPracticeQuestion(appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
-        launchPracticeQuestion(appearance: appearance, categoryID: "B-004", questionID: "B-004-001-001", extraArguments: extraArguments)
+        launchPracticeQuestion(appearance: appearance, categoryID: "B-001", questionID: "B-001-002-002", extraArguments: extraArguments)
     }
 
     private func launchAdvancedPracticeQuestion() -> XCUIApplication {
@@ -371,21 +393,34 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     private func assertMediumDetentToolPanelVisibleElements(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
         let windowFrame = app.windows.firstMatch.frame
-        let header = ["exam-tool-calculator-panel"]
-            .map { app.descendants(matching: .any)[$0].firstMatch }
-            .first { $0.exists }
-        guard let header else {
-            XCTFail("\(context): expected a visible exam-tool panel header before auditing", file: file, line: line)
-            return
-        }
+        let header = app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch
+        XCTAssertTrue(header.waitForExistence(timeout: 5), "\(context): expected a visible calculator panel header before auditing", file: file, line: line)
         XCTAssertTrue(windowFrame.contains(header.frame), "\(context): sheet visible frame should contain the panel header. Header: \(frameDescription(header.frame)); window: \(frameDescription(windowFrame))", file: file, line: line)
-        let panelBounds = CGRect(x: windowFrame.minX, y: max(0, header.frame.minY - 48), width: windowFrame.width, height: windowFrame.maxY - max(0, header.frame.minY - 48))
-        let candidates = app.staticTexts.allElementsBoundByIndex.map { ("staticText", $0) } + app.buttons.allElementsBoundByIndex.map { ("button", $0) }
-        for (kind, element) in candidates where element.exists && element.frame.intersects(panelBounds) {
-            XCTAssertGreaterThan(element.frame.width, 0, "\(context): \(kind) \(element.identifier) should not have an empty frame", file: file, line: line)
-            XCTAssertGreaterThan(element.frame.height, 0, "\(context): \(kind) \(element.identifier) should not have an empty frame", file: file, line: line)
-            XCTAssertTrue(element.isHittable || panelBounds.insetBy(dx: -1, dy: -1).intersects(element.frame), "\(context): \(kind) \(element.identifier) should be hittable or within the panel's visible scroll bounds. Frame: \(frameDescription(element.frame)); panel: \(frameDescription(panelBounds))", file: file, line: line)
+
+        let display = app.descendants(matching: .any)["calculator-result"].firstMatch
+        XCTAssertTrue(display.waitForExistence(timeout: 5), "\(context): expected the calculator display before auditing", file: file, line: line)
+        XCTAssertTrue(display.isHittable, "\(context): calculator display should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(display.frame))", file: file, line: line)
+
+        let close = app.buttons["exam-tool-close-button"].firstMatch
+        XCTAssertTrue(close.waitForExistence(timeout: 5), "\(context): expected Close tool before auditing", file: file, line: line)
+        XCTAssertTrue(close.isHittable, "\(context): Close tool should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(close.frame))", file: file, line: line)
+
+        for identifier in calculatorKeyIdentifiers {
+            let key = app.buttons[identifier].firstMatch
+            XCTAssertTrue(key.waitForExistence(timeout: 5), "\(context): expected \(identifier) before auditing", file: file, line: line)
+            XCTAssertTrue(key.isHittable, "\(context): \(identifier) should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(key.frame))", file: file, line: line)
         }
+    }
+
+    private var calculatorKeyIdentifiers: [String] {
+        [
+            "calculator-key-all-clear", "calculator-key-clear-entry", "calculator-key-backspace", "calculator-key-divide",
+            "calculator-key-7", "calculator-key-8", "calculator-key-9", "calculator-key-multiply",
+            "calculator-key-4", "calculator-key-5", "calculator-key-6", "calculator-key-subtract",
+            "calculator-key-1", "calculator-key-2", "calculator-key-3", "calculator-key-add",
+            "calculator-key-toggle-sign", "calculator-key-0", "calculator-key-decimal", "calculator-key-equals",
+            "calculator-key-square-root", "calculator-key-square", "calculator-key-reciprocal", "calculator-key-percent"
+        ]
     }
 
     private func waitForStableToolHeaderFrame(_ tool: Tool, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
@@ -474,8 +509,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     private func focusCalculatorKeyboard(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
         let result = app.descendants(matching: .any)["calculator-result"].firstMatch
         XCTAssertTrue(result.waitForExistence(timeout: 5), "Expected a calculator result display before focusing keyboard input", file: file, line: line)
-        let focusedTarget = app.descendants(matching: .any)["calculator-keyboard-focus-target-focused"].firstMatch
-        XCTAssertTrue(focusedTarget.waitForExistence(timeout: 5), "Expected the calculator keyboard handler to become active after opening the calculator", file: file, line: line)
+        let focusedTarget = app.descendants(matching: .any)["calculator-keyboard-focus-target"].firstMatch
+        XCTAssertTrue(focusedTarget.waitForExistence(timeout: 5), "Expected the calculator keyboard handler after opening the calculator", file: file, line: line)
         return focusedTarget
     }
 
@@ -494,7 +529,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             trace.append("\(label): target=\(frameDescription(element.frame)); offenders=\(scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).joined(separator: " | "))")
         }
         func positioned() -> Bool {
-            isFullyVisibleInMiddleBand(element, in: app)
+            isFullyVisibleInMiddleBand(element, in: app) && scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty
         }
         record("start")
         if !positioned() {
@@ -507,6 +542,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             }
         }
         XCTAssertTrue(isFullyVisibleInMiddleBand(element, in: app), "\(context): expected the element in the middle visible band. Frame: \(frameDescription(element.frame)); trace: \(trace.joined(separator: " -> "))", file: file, line: line)
+        let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+        XCTAssertTrue(offenders.isEmpty, "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.joined(separator: "; ")); trace: \(trace.joined(separator: " -> "))", file: file, line: line)
     }
 
     private func preciseScroll(_ scrollView: XCUIElement, in app: XCUIApplication, fingerDeltaY: CGFloat) {
@@ -539,7 +576,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     private func scrollView(containing element: XCUIElement, in app: XCUIApplication) -> XCUIElement {
         let scrollViews = app.scrollViews.allElementsBoundByIndex
         let backgroundScrollViews = scrollViews.filter { scrollView in
-            !["calculator-keyboard-focus-target", "calculator-keyboard-focus-target-focused", "calculator-tool-scroll"].contains(scrollView.identifier)
+            !["calculator-keyboard-focus-target", "calculator-tool-scroll"].contains(scrollView.identifier)
         }
         if !element.identifier.isEmpty {
             for scrollView in backgroundScrollViews where scrollView.descendants(matching: .any)[element.identifier].firstMatch.exists {

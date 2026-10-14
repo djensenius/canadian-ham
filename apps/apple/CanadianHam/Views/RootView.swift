@@ -514,7 +514,6 @@ struct RootView: View {
 
     private func updateRegularWidthExamToolColumnVisibility(containerSize: CGSize) {
 #if os(iOS)
-        guard UIDevice.current.userInterfaceIdiom == .pad else { return }
         let estimatedSidebarWidth: CGFloat = 320
         let inspectorIdealWidth: CGFloat = 380
         let minimumExamColumnWidth: CGFloat = 420
@@ -867,11 +866,15 @@ struct RootView: View {
     }
 
     private var launchColorScheme: ColorScheme? {
+#if DEBUG
         switch AppLaunchArguments.value(after: "-CanadianHamAppearance") {
         case "light": .light
         case "dark": .dark
         default: nil
         }
+#else
+        nil
+#endif
     }
 
     private func colorScheme(for theme: ApplePreferences.Theme) -> ColorScheme? {

@@ -336,6 +336,7 @@ final class PracticeSessionState: ObservableObject {
     @Published var answeredCount = 0
     @Published var correctCount = 0
     @Published var errorMessage: String?
+    let calculatorViewModel = ExamCalculatorViewModel()
 
     var hasUnfinishedCourseWork: Bool {
         guard !items.isEmpty, let loadedPracticeMode else { return false }
@@ -382,7 +383,7 @@ struct PracticeSessionView: View {
 
     @State private var selectedExamTool: ExamTool?
     @State private var calculatorFocused = false
-    @StateObject private var calculatorViewModel = ExamCalculatorViewModel()
+    @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
 
     init(
         bank: QuestionBank,
@@ -401,6 +402,7 @@ struct PracticeSessionView: View {
         self.scope = scope
         _language = language
         self.state = state
+        _calculatorViewModel = ObservedObject(wrappedValue: state.calculatorViewModel)
         self.dataRevision = dataRevision
         self.localDataReplacementRevision = localDataReplacementRevision
         self.headerAccessory = headerAccessory
@@ -409,35 +411,35 @@ struct PracticeSessionView: View {
     }
 
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                    if let headerAccessory {
-                        headerAccessory
-                    }
-                    header
-                    if let errorMessage = state.errorMessage {
-                        MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
-                    } else if hasStalePracticeMode {
-                        ProgressView()
-                            .controlSize(.large)
-                            .accessibilityLabel(Text("Practice")) // l10n: localized
-                            .frame(maxWidth: .infinity, minHeight: 160)
-                    } else if state.items.isEmpty {
-                        ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage)) // l10n: localized
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                    } else if state.reviewSubmitted {
-                        practiceReview
-                    } else {
-                        questionView(state.items[state.currentIndex])
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                if let headerAccessory {
+                    headerAccessory
                 }
-                .pagePadding()
+                header
+                if let errorMessage = state.errorMessage {
+                    MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
+                } else if hasStalePracticeMode {
+                    ProgressView()
+                        .controlSize(.large)
+                        .accessibilityLabel(Text("Practice")) // l10n: localized
+                        .frame(maxWidth: .infinity, minHeight: 160)
+                } else if state.items.isEmpty {
+                    ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage)) // l10n: localized
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                } else if state.reviewSubmitted {
+                    practiceReview
+                } else {
+                    questionView(state.items[state.currentIndex])
+                }
             }
-            .simultaneousGesture(examContentTapGesture, including: .subviews)
-            .background(DesignTokens.Colors.paper)
+            .pagePadding()
         }
+        .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.large)
+#endif
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
         .onAppear { calculatorViewModel.updateLocale(language.calculatorLocale) }
@@ -451,6 +453,8 @@ struct PracticeSessionView: View {
             Text(scopeTitleAttributed) // l10n: localized
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("practice-category-title")
             Text(sessionProgressText) // l10n: localized
@@ -546,7 +550,6 @@ struct PracticeSessionView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("answers-title")
-                    .id("practice-answers-anchor")
                 ForEach(Array(item.choicePermutation.enumerated()), id: \.offset) { displayIndex, sourceIndex in
                     if let answer = question.answers.first(where: { $0.sourceIndex == sourceIndex }) {
                         AnswerChoiceButton(
@@ -589,26 +592,12 @@ struct PracticeSessionView: View {
     }
 
     private var availableExamTools: [ExamTool] {
-        var tools: [ExamTool] = [.calculator]
-        if bank.courseBankID != .advanced, referenceSheetConfiguration.availableOnApple {
-            tools.append(.referenceSheet)
-        }
-        return tools
+        appleExamTools(for: bank, referenceSheetConfiguration: referenceSheetConfiguration)
     }
 
     private func openExamTool(_ tool: ExamTool) {
         selectedExamTool = tool
-        if tool == .calculator {
-            calculatorViewModel.acceptHardwareKeyboardInput()
-            calculatorFocused = true
-            Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 150_000_000)
-                calculatorViewModel.acceptHardwareKeyboardInput()
-                calculatorFocused = true
-            }
-        } else {
-            clearCalculatorKeyboardFocus()
-        }
+        calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
     }
 
     private func clearCalculatorKeyboardFocus() {
@@ -623,12 +612,7 @@ struct PracticeSessionView: View {
     }
 
     private var referenceSheetConfiguration: ReferenceSheetConfiguration {
-#if DEBUG
-        if let resourceName = AppLaunchArguments.value(after: "-CanadianHamReferenceSheetResourceName") {
-            return ReferenceSheetConfiguration(resourceName: resourceName, resourceExtension: "md", subdirectory: "reference-sheet")
-        }
-#endif
-        return .basic
+        appleReferenceSheetConfigurationFromLaunchArguments()
     }
 
     private var practiceReview: some View {
@@ -809,12 +793,14 @@ final class MockExamState: ObservableObject {
     @Published var errorMessage: String?
     @Published var timerStatus = String(localized: "Timer off")
     @Published var loadedLocalDataReplacementRevision = 0
+    let calculatorViewModel = ExamCalculatorViewModel()
 
     var hasUnfinishedCourseWork: Bool {
         !generatedItems.isEmpty && result == nil
     }
 
     func resetSession(localDataReplacementRevision: Int) {
+        calculatorViewModel.clearForNewExam()
         seed = ""
         startedAt = ""
         generatedItems = []
@@ -879,6 +865,7 @@ struct MockExamView: View {
         self.progressStore = progressStore
         self.language = language
         self.state = state
+        _calculatorViewModel = ObservedObject(wrappedValue: state.calculatorViewModel)
         self.localDataReplacementRevision = localDataReplacementRevision
         self.onExamToolPresentationChanged = onExamToolPresentationChanged
         self.onDataChanged = onDataChanged
@@ -892,7 +879,7 @@ struct MockExamView: View {
     @State private var shouldFocusResultsHeading = false
     @State private var selectedExamTool: ExamTool?
     @State private var calculatorFocused = false
-    @StateObject private var calculatorViewModel = ExamCalculatorViewModel()
+    @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -903,26 +890,23 @@ struct MockExamView: View {
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                    if let result = state.result {
-                        examResults(result)
-                    } else if state.generatedItems.isEmpty {
-                        startCard
-                    } else if let currentItem = state.generatedItems[safe: state.currentIndex], let question = bank.question(id: currentItem.questionId) {
-                        examQuestion(item: currentItem, question: question)
-                    }
-                    if let errorMessage = state.errorMessage {
-                        MessagePanel(title: "Mock exam unavailable", message: errorMessage, kind: .warning)
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                if let result = state.result {
+                    examResults(result)
+                } else if state.generatedItems.isEmpty {
+                    startCard
+                } else if let currentItem = state.generatedItems[safe: state.currentIndex], let question = bank.question(id: currentItem.questionId) {
+                    examQuestion(item: currentItem, question: question)
                 }
-                .pagePadding()
+                if let errorMessage = state.errorMessage {
+                    MessagePanel(title: "Mock exam unavailable", message: errorMessage, kind: .warning)
+                }
             }
-            .id(state.result?.id ?? "mock-exam-active")
-            .simultaneousGesture(examContentTapGesture, including: .subviews)
-            .background(DesignTokens.Colors.paper)
+            .pagePadding()
         }
+        .id(state.result?.id ?? "mock-exam-active")
+        .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
         .sheet(isPresented: $showingNavigator) {
@@ -1013,7 +997,6 @@ struct MockExamView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("mock-answers-title")
-                    .id("mock-answers-anchor")
                 ForEach(Array(item.choicePermutation.enumerated()), id: \.offset) { displayIndex, sourceIndex in
                     if let answer = question.answers.first(where: { $0.sourceIndex == sourceIndex }) {
                         AnswerChoiceButton(
@@ -1074,26 +1057,12 @@ struct MockExamView: View {
     }
 
     private var availableExamTools: [ExamTool] {
-        var tools: [ExamTool] = [.calculator]
-        if bank.courseBankID != .advanced, referenceSheetConfiguration.availableOnApple {
-            tools.append(.referenceSheet)
-        }
-        return tools
+        appleExamTools(for: bank, referenceSheetConfiguration: referenceSheetConfiguration)
     }
 
     private func openExamTool(_ tool: ExamTool) {
         selectedExamTool = tool
-        if tool == .calculator {
-            calculatorViewModel.acceptHardwareKeyboardInput()
-            calculatorFocused = true
-            Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 150_000_000)
-                calculatorViewModel.acceptHardwareKeyboardInput()
-                calculatorFocused = true
-            }
-        } else {
-            clearCalculatorKeyboardFocus()
-        }
+        calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
     }
 
     private func clearCalculatorKeyboardFocus() {
@@ -1108,12 +1077,7 @@ struct MockExamView: View {
     }
 
     private var referenceSheetConfiguration: ReferenceSheetConfiguration {
-#if DEBUG
-        if let resourceName = AppLaunchArguments.value(after: "-CanadianHamReferenceSheetResourceName") {
-            return ReferenceSheetConfiguration(resourceName: resourceName, resourceExtension: "md", subdirectory: "reference-sheet")
-        }
-#endif
-        return .basic
+        appleReferenceSheetConfigurationFromLaunchArguments()
     }
 
     @ViewBuilder
@@ -2275,6 +2239,33 @@ struct MessagePanel: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(kind == .success ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.warningBorder, lineWidth: 1))
         .accessibilityElement(children: .combine)
     }
+}
+
+private func appleExamTools(for bank: QuestionBank, referenceSheetConfiguration: ReferenceSheetConfiguration) -> [ExamTool] {
+    var tools: [ExamTool] = [.calculator]
+    if bank.courseBankID != .advanced, referenceSheetConfiguration.availableOnApple {
+        tools.append(.referenceSheet)
+    }
+    return tools
+}
+
+@MainActor
+private func shouldFocusCalculator(for tool: ExamTool, calculatorViewModel: ExamCalculatorViewModel) -> Bool {
+    if tool == .calculator {
+        calculatorViewModel.acceptHardwareKeyboardInput()
+        return true
+    }
+    calculatorViewModel.suspendHardwareKeyboardInput()
+    return false
+}
+
+private func appleReferenceSheetConfigurationFromLaunchArguments() -> ReferenceSheetConfiguration {
+#if DEBUG
+    if let resourceName = AppLaunchArguments.value(after: "-CanadianHamReferenceSheetResourceName") {
+        return ReferenceSheetConfiguration(resourceName: resourceName, resourceExtension: "md", subdirectory: "reference-sheet")
+    }
+#endif
+    return .basic
 }
 
 private extension ApplePreferences.PracticeMode {

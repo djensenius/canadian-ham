@@ -115,7 +115,9 @@ struct ReferenceSheetConfiguration: Equatable, Sendable {
     let subdirectory: String?
     let availableOnApple: Bool
 
-    init(resourceName: String, resourceExtension: String, subdirectory: String?, availableOnApple: Bool = false) {
+    static let defaultAvailableOnApple = false
+
+    init(resourceName: String, resourceExtension: String, subdirectory: String?, availableOnApple: Bool = Self.defaultAvailableOnApple) {
         self.resourceName = resourceName
         self.resourceExtension = resourceExtension
         self.subdirectory = subdirectory
@@ -125,8 +127,7 @@ struct ReferenceSheetConfiguration: Equatable, Sendable {
     static let basic = ReferenceSheetConfiguration(
         resourceName: "basic",
         resourceExtension: "md",
-        subdirectory: "reference-sheet",
-        availableOnApple: false
+        subdirectory: "reference-sheet"
     )
 }
 
