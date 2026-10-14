@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-14 15:28'
-updated_date: '2026-10-14 15:33'
+updated_date: '2026-10-14 15:34'
 labels:
   - ci
   - apple
@@ -29,7 +29,10 @@ Workers repeatedly weakened UI tests when stuck (audit filters, rewritten shared
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Add scripts/check-test-guard.mjs to parse PR git diffs, report guarded Apple-source changes with file:line/rule, and honor Test-guard-approved approval markers.\n2. Include --self-test inline fixtures covering one passing and one failing diff per rule plus the approval-marker path.\n3. Wire a pull_request CI job to run the self-test and guard with the PR body and fetch-depth 0.\n4. Document the guard and approval-marker expectations in AGENTS.md, then run local validation.
+1. Add scripts/check-test-guard.mjs to parse PR git diffs, report guarded Apple-source changes with file:line/rule, and honor Test-guard-approved approval markers.
+2. Include --self-test inline fixtures covering one passing and one failing diff per rule plus the approval-marker path.
+3. Wire a pull_request CI job to run the self-test and guard with the PR body and fetch-depth 0.
+4. Document the guard and approval-marker expectations in AGENTS.md, then run local validation.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
