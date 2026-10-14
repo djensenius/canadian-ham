@@ -1,11 +1,11 @@
 ---
 id: TASK-49
 title: 'CI guard: flag changes to audit handlers and shared UI-test helpers'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-14 15:28'
-updated_date: '2026-10-14 15:51'
+updated_date: '2026-10-14 15:56'
 labels:
   - ci
   - apple
@@ -45,10 +45,12 @@ Addressing PR #240 review changes: merge-base old-side reads, broader audit/exce
 Review fixes landed for PR #240: the guard now computes merge-base for both diff and old-side reads, uses -w/-M, collapses added/deleted counts to avoid move/rename/comment false positives, guards audit call additions/deletions/narrowing/named handlers and exception-helper calls, accepts only task/owner-decision approval markers outside fences/comments, prints approved findings as warnings, and runs in a separate Test guard workflow on opened/edited/synchronize/reopened. Validation passed: node scripts/check-test-guard.mjs --self-test; node scripts/check-test-guard.mjs --base main --head HEAD; git diff --check main...HEAD.
 
 Final PR #240 review round: replacing range count-cancellation with old/new normalized range comparisons, per-file full-content line-pattern comparisons, base-copy workflow execution, guard self-protection, and requested robustness/self-tests.
+
+Final review fixes landed: range guarding now compares old/new normalized range bodies with comments stripped and strings preserved; line-pattern checks compare per-file stripped effective contents and disappeared test/audit-wrapper names; workflow runs the base checker when available; checker/workflow edits require an approval marker; CODEOWNERS added for guard files; AGENTS.md clarifies edited-event reruns and heuristic-review responsibility. Validation passed: node --check scripts/check-test-guard.mjs; node scripts/check-test-guard.mjs --self-test; TEST_GUARD_PR_BODY='Test-guard-approved: task-49' node scripts/check-test-guard.mjs --base main --head HEAD; git diff --check main...HEAD.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added the CI test guard and addressed PR #240 review feedback with merge-base diffing, expanded guarded patterns/helpers, stricter approval markers, a separate Test guard workflow, and broader self-tests. Verified with the guard self-test, local main...HEAD guard run, and diff whitespace check; no Apple suites run because this is CI/docs/script-only work.
+Implemented the CI test guard and final review hardening: base-copy workflow execution, self-protection for guard files, range-body comparisons, per-file line-pattern checks, requested bypass self-tests, and documentation updates. Verified with syntax check, expanded self-tests, approved local main...HEAD guard run, and diff whitespace check; no Apple suites run because this is CI/docs/script-only work.
 <!-- SECTION:FINAL_SUMMARY:END -->
