@@ -143,7 +143,8 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func updateCompactSheetHeight(_ height: CGFloat) {
-        let roundedHeight = height.rounded(.toNearestOrAwayFromZero)
+        let compactSheetChromeHeight: CGFloat = 32
+        let roundedHeight = (height + compactSheetChromeHeight).rounded(.toNearestOrAwayFromZero)
         Task { @MainActor in
             guard abs(compactSheetHeight - roundedHeight) >= 1 else { return }
             compactSheetHeight = roundedHeight
@@ -200,25 +201,20 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     private func toolPanel(for tool: ExamTool) -> some View {
-        GeometryReader { proxy in
-            let bodyHeight = availableToolBodyHeight(panelHeight: proxy.size.height)
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                toolHeader(for: tool)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            toolHeader(for: tool)
 
-                Divider()
+            Divider()
 
-                toolBody(for: tool, availableHeight: bodyHeight)
-                    .frame(maxWidth: .infinity, maxHeight: bodyHeight, alignment: .topLeading)
+            GeometryReader { proxy in
+                toolBody(for: tool, availableHeight: proxy.size.height)
+                    .frame(maxWidth: .infinity, maxHeight: proxy.size.height, alignment: .topLeading)
             }
-            .padding(.horizontal, DesignTokens.Spacing.lg)
-            .padding(.vertical, DesignTokens.Spacing.md)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
+        .padding(.horizontal, DesignTokens.Spacing.lg)
+        .padding(.vertical, DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(DesignTokens.Colors.paper)
-    }
-
-    private func availableToolBodyHeight(panelHeight: CGFloat) -> CGFloat {
-        max(220, panelHeight - (dynamicTypeSize.isAccessibilitySize ? 184 : 128))
     }
 
     @ViewBuilder
@@ -630,7 +626,7 @@ private struct CalculatorToolLayout {
     var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
 
     var usesScrolling: Bool {
-        dynamicTypeSize.isAccessibilitySize || compactKeyHeight < 44
+        dynamicTypeSize.isAccessibilitySize
     }
 
     private var compactKeyHeight: CGFloat {
@@ -646,8 +642,8 @@ private struct CalculatorToolLayout {
     }
 
     private var compactSectionSpacing: CGFloat { 6 }
-    private var compactKeySpacing: CGFloat { 4 }
-    private var compactDisplayHeight: CGFloat { 46 }
+    private var compactKeySpacing: CGFloat { 6 }
+    private var compactDisplayHeight: CGFloat { 48 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
     private var rowCount: Int { 6 }
 }
