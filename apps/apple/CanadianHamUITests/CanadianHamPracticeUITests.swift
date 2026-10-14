@@ -2636,8 +2636,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
         let scrollView = scrollView(containing: element, in: app)
-        for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: true) {
-            scrollView.swipeUp()
+        guard scrollView.waitForExistence(timeout: 1) else {
+            XCTFail("Expected a scroll view while scrolling element until hittable. Identifier: \(element.identifier); label: \(element.label)")
+            return
+        }
+        for _ in 0..<maxSwipes where !element.isHittable {
+            guard element.exists else {
+                scrollView.swipeUp()
+                waitBriefly()
+                continue
+            }
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            let distanceToCenter = visibleFrame.midY - element.frame.midY
+            preciseScroll(scrollView, contentDeltaY: distanceToCenter)
             waitBriefly()
         }
     }
