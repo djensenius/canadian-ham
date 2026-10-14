@@ -49,10 +49,14 @@ platform) and share one build lock, so don't run them by reflex.
 - **During review (internal reviewer and Copilot):** keep running only the relevant tests: the
   affected web/package tests and the specific Apple test classes or methods with
   `-only-testing:` for what each fix touches. No full suites during review rounds.
-- **Once per PR, just before merge:** after internal review is approved and all Copilot feedback
-  is addressed (and the branch is merged up to date with main), run the full suite once for each
-  platform whose code changed, then merge. If it fails, fix with targeted tests and rerun only
-  the failed platform's full suite. Which platforms count as changed:
+- **Once per merge batch, just before merge (owner decision 2026-10-14):** Apple PRs that are
+  approved (internal review approved, all Copilot feedback addressed, targeted tests green) wait
+  in a merge batch. The coordinator merges them, in order, onto a short-lived `train-<date>`
+  branch from main and runs the full suite once for each platform any of them changed. If it
+  passes, the PRs merge to main in the same order with no further suite runs. If it fails, the
+  coordinator finds the responsible PR with targeted tests, takes it out of the batch, and reruns
+  only the failed platform's full suite. Web-only and content-only PRs don't wait for a batch.
+  Which platforms count as changed:
   - web or TS package changes: `pnpm typecheck`, `pnpm test`, plus the checks for what changed
     (`pnpm build:web` and the URL/CSP audit for web; `pnpm check:schemas` and `pnpm import:check`
     for content and schemas).
@@ -69,7 +73,11 @@ platform) and share one build lock, so don't run them by reflex.
 - **No Apple suites** for web-only, docs-only or Backlog-only changes, and never rerun suites
   after a commit that only changes `.backlog/` or docs.
 - **Fix rounds:** rerun only the failing or changed tests with `-only-testing:`; the single full
-  run happens at merge time (above).
+  run happens in the merge batch (above).
+- **Lesson figure audits:** the per-lesson figure audits (`CanadianHamLessonFiguresUITests`) run
+  in their own test plan, only when figures, `content/figures/`, lesson Markdown with figure
+  directives, or the lesson reader change (owner decision 2026-10-14; task-33 moves them out of
+  the default plan).
 - **Release candidate (task-1.6):** the full four-platform run with every accessibility audit,
   plus the manual checks in `docs/release/release-checklist.md`.
 - Record per-test results for the full runs you did in the task notes and PR body, and say
@@ -85,6 +93,29 @@ platform) and share one build lock, so don't run them by reflex.
 - Task-44.3 exam tool: owner decision 2026-10-12 approves the medium-detent rule that text inside
   the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
   implements that exception.
+
+## CI test guard
+- The separate `Test guard` pull-request workflow runs the base branch copy of
+  `scripts/check-test-guard.mjs` when it exists (falling back to the PR copy only while bootstrapping
+  the checker), first with `--self-test` and then against the PR merge-base...head diff. The
+  `Test guard` status check should be required in branch protection (coordinator configures this on
+  GitHub).
+- The guard fails when Apple diffs add, remove or narrow `performAccessibilityAudit` calls or handler
+  code, change the named shared audit/positioning helpers listed in `SHARED_HELPERS`, call the approved
+  exception helpers, add `.accessibilityHidden(true)`, add `.accessibilityElement(children: .ignore)` or
+  `.accessibilityElement()`, add `XCTSkip`/`XCTSkipIf`/`XCTSkipUnless`, add `.minimumScaleFactor(` in app
+  views, delete Swift `func test...` methods, or change the guard checker/workflow itself.
+- A PR body line exactly matching `Test-guard-approved: task-<number>` or
+  `Test-guard-approved: owner decision YYYY-MM-DD` approves intentional findings. The marker must start
+  at the beginning of its own line with no bullet or indentation; markers inside fenced code blocks or
+  HTML comments are ignored. Reviewers verify that the referenced task or owner decision actually
+  approves the guarded change before accepting the marker.
+- The workflow listens for PR body edits, so adding or fixing an approval marker starts a new
+  `Test guard` run without pushing another commit. If GitHub does not start that edited-event run,
+  re-trigger the separate `Test guard` workflow/check after saving the PR body rather than re-running
+  an older failed run with its stale event payload or re-running all CI.
+- The guard is a heuristic backstop, not a substitute for review; reviewers remain responsible for
+  spotting test or audit weakening that does not match its patterns.
 
 ## Project notes
 - Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.
