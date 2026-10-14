@@ -5797,6 +5797,22 @@
         }
       }
     },
+    "Lesson" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon"
+          }
+        }
+      }
+    },
     "Lesson quiz" : {
       "localizations" : {
         "fr" : {

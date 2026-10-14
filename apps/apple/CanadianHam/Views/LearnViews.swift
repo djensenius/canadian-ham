@@ -375,7 +375,10 @@ private struct LessonReaderView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
+        .navigationTitle("Lesson")
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
         .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
     }
