@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-14 03:29'
+updated_date: '2026-10-14 16:47'
 labels:
   - content
   - apple
@@ -78,6 +78,8 @@ Review r383-3 follow-up (supersedes older notes that mentioned removed grounding
 Final coordinator follow-up: updated signal-quality-cw-ssb-fm, digital-interface-linear-supply, and grounding-lightning-rf-safety per the last-round instructions, and kept earlier review-low fixes in the rendered evidence. Current drawn state: signal-quality shows CW smooth and clicks envelopes, one SSB clipped waveform flattened at the dashed limit with clipped and -> splatter labels, and FM centre with normal small deviation plus over-dev large deviation beyond dashed limits. digital-interface-linear-supply shows transformer coils, one DC out terminal, sense feedback from that same terminal back to the regulator, and regulator fins. grounding-lightning-rf-safety routes coax radio to tuner to single entry without passing through supply; supply connects separately to the radio, and the bonding bar/single entry/surge/ground rod are connected. Rendered changed figures at 1200 px with qlmanage and inspected PNGs with the read tool. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test.
 
 Integration validation completed on task-38-figures-integration: module 1-4 figures are covered by CanadianHamLessonFiguresUITests light audits for every figure and dark module sample audits on iOS. Approved review notes were applied to grounding-lightning-rf-safety, yagi-receiver-specs, and signal-quality-cw-ssb-fm; qlmanage PNGs were refreshed/read and pnpm check:figures passes. Evidence screenshots are under docs/evidence/task-38-figures/app/.
+
+PR #238 Copilot-round SVG revalidation: the post-Done SVG changes to station-filtering-radio-blocks, digital-interface-linear-supply, communications-flowchart, cw-ssb-signal-paths, and distress-urgency-safety-board were re-rendered into docs/evidence/task-38.3 with qlmanage -t -s 1200 and inspected with the read tool. The app M3 light and dark station-filtering-radio-blocks screenshots were refreshed from the passing iOS rerun attachments. Targeted iOS validation passed 5/5 in Test-CanadianHam-2026.10.14_12-06-52--0400.xcresult: Module 1 light part 2, Module 2 light part 2, Module 3 light part 1, Module 3 light part 2, and Module 3 dark sample. Supporting checks passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; pnpm check:apple-l10n.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
