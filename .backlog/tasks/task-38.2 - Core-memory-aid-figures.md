@@ -1,11 +1,11 @@
 ---
 id: TASK-38.2
 title: Core memory-aid figures
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 15:13'
+updated_date: '2026-10-14 03:29'
 labels:
   - content
   - apple
@@ -26,7 +26,7 @@ Using the task-38.1 pipeline, draw: metric prefix ladder (giga to pico, x/÷ 1 0
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Each listed figure exists, is referenced from its lesson, and has alt text plus a text equivalent where dense
-- [ ] #2 Same accessibility and originality bar as task-38.1; audits pass in light and dark; numbers use space grouping (owner decision A)
+- [x] #2 Same accessibility and originality bar as task-38.1; audits pass in light and dark; numbers use space grouping (owner decision A)
 - [x] #3 The L-005-01 metric-prefix ladder figure shows the micro-to-pico step as x/÷ 1 000 000 (the lesson table skips nano) or adds a nano rung; the brief's 'x 1 000 at every step' arrows are corrected when the figure is drawn
 <!-- AC:END -->
 
@@ -52,4 +52,12 @@ Review-fix validation passed: pnpm check:figures; node scripts/check-figures.mjs
 Follow-up metric-prefix fix: inserted a visible skipped-nano marker between µ and p in metric-prefix-ladder, kept the µ-to-p ×/÷ 1 000 000 note, updated L-005-01 alt text/text equivalent, regenerated Apple figure assets, rerendered and visually inspected docs/evidence/task-38.2/metric-prefix-ladder.svg.png. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; lesson coverage; lesson originality all.
 
 Approved-notes polish: updated dB table decreases to approximately ÷2/÷4 and standardized × in the table/text equivalent; widened/reflowed metric-prefix boxes so milli has room and moved the larger-unit label closer to its arrow; nudged the series arrowhead off the wire; removed the undrawn final-adjustment phrase from the wavelength text equivalent and added an explained-below pointer for 143 / f. Regenerated Apple figure assets, rerendered and visually inspected changed PNGs. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; coverage, quizzes, originality, explanations, and links content checks. Apple xbuild not run per lane.
+
+Integration validation completed on task-38-figures-integration: all core memory-aid figures are covered by CanadianHamLessonFiguresUITests light figure audits and dark module sample audits on iOS. Evidence screenshots are exported under docs/evidence/task-38-figures/app/; content originality now passes with pnpm --dir packages/content-tools check:lesson-originality:all. Figure pipeline checks pass with pnpm check:figures and pnpm check:figures:fix (no generated diff).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Core memory-aid figures were integrated with the full lesson-figure lane. AC #2 is verified by the new iOS CanadianHamLessonFiguresUITests light/dark audits and app screenshots under docs/evidence/task-38-figures/app/, plus passing figure/content/web checks.
+<!-- SECTION:FINAL_SUMMARY:END -->
