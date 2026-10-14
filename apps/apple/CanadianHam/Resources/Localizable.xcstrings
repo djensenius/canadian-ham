@@ -5475,46 +5475,6 @@
         }
       }
     },
-    "Illustration brief" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration"
-          }
-        }
-      }
-    },
-    "Illustration brief. " : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Illustration brief. "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration. "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration. "
-          }
-        }
-      }
-    },
     "Immediate feedback" : {
       "localizations" : {
         "fr" : {
