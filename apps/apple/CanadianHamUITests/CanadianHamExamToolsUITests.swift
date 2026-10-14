@@ -143,16 +143,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testRegularWidthInspectorAccessibilityAudit() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector audit is covered by the targeted iPad run.")
+        try runRegularWidthInspectorAuditScenario(orientation: .portrait, context: "iPad portrait inspector audit")
+        try runRegularWidthInspectorAuditScenario(orientation: .landscapeLeft, context: "iPad landscape inspector audit")
+        XCUIDevice.shared.orientation = .portrait
 #else
         throw XCTSkip("Inspector audit is covered by the targeted iPad run.")
 #endif
-        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
-        defer { app.terminate() }
-
-        openTool(.calculator, in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5), "Regular width should present calculator in an inspector side panel")
-        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5), "The inspector should show calculator keyboard help when it has room")
-        try app.performAccessibilityAudit()
     }
 
     func testLargestDynamicTypeKeepsCalculatorGridReachable() throws {
@@ -260,6 +256,19 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertSidebarVisibility(expectedSidebarVisibility, in: app, context: context, file: file, line: line)
         assertQuestionTitleWithinExamColumn(in: app, context: context, file: file, line: line)
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "\(context) calculator inspector", file: file, line: line)
+    }
+
+    private func runRegularWidthInspectorAuditScenario(orientation: UIDeviceOrientation, context: String, file: StaticString = #filePath, line: UInt = #line) throws {
+        XCUIDevice.shared.orientation = orientation
+        waitBriefly(0.8)
+        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+        defer { app.terminate() }
+
+        openTool(.calculator, in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5), "\(context): regular width should present calculator in an inspector side panel", file: file, line: line)
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5), "\(context): the inspector should show calculator keyboard help when it has room", file: file, line: line)
+        waitBriefly(0.8)
+        try app.performAccessibilityAudit()
     }
 
     private func assertSidebarVisibility(_ expected: SidebarVisibilityExpectation, in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
