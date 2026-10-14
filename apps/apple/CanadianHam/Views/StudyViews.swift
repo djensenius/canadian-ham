@@ -1959,6 +1959,7 @@ struct QuestionCard: View {
         .paperCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("question-card")
+        .highPriorityGesture(TapGesture().onEnded { onInteraction() }, including: .subviews)
         .simultaneousGesture(TapGesture().onEnded { onInteraction() }, including: .subviews)
     }
 }

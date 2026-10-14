@@ -189,10 +189,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
-        let questionStem = app.staticTexts["question-stem"].firstMatch
-        XCTAssertTrue(questionStem.waitForExistence(timeout: 5))
-        positionElementInMiddleVisibleBand(questionStem, in: app, context: "question stem with calculator open")
-        XCTAssertTrue(questionStem.isHittable, "The positioned question stem should be hittable with the calculator sheet open")
+        let toolButton = app.buttons[Tool.calculator.buttonIdentifier].firstMatch
+        XCTAssertTrue(toolButton.waitForExistence(timeout: 5))
+        positionElementInMiddleVisibleBand(toolButton, in: app, context: "calculator tool button with calculator open")
+        XCTAssertTrue(toolButton.isHittable, "The positioned tool button should be hittable with the calculator sheet open")
     }
 
     func testCaptureCalculatorEvidenceScreenshots() throws {
