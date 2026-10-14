@@ -191,7 +191,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
                     writeEvidenceScreenshot(named: "\(appearance.rawValue)-\(evidenceModuleID)-\(figure.id)", from: app)
                     wroteEvidenceForModule = true
                 }
-                try auditIgnoringOccludedLessonTextContrast(app: app, focusingOn: figureElement)
+                try auditIgnoringOccludedLessonTextContrast(app: app)
             }
             app.terminate()
         }
@@ -212,8 +212,9 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
 
-        let outputDirectory = ProcessInfo.processInfo.environment["CANADIAN_HAM_FIGURE_EVIDENCE_DIR"].flatMap { $0.isEmpty ? nil : $0 }
-            ?? defaultEvidenceDirectory().path
+        guard let outputDirectory = ProcessInfo.processInfo.environment["CANADIAN_HAM_FIGURE_EVIDENCE_DIR"].flatMap({ $0.isEmpty ? nil : $0 }) else {
+            return
+        }
         do {
             let directoryURL = URL(fileURLWithPath: outputDirectory, isDirectory: true)
             try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
@@ -223,28 +224,13 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         }
     }
 
-    private func defaultEvidenceDirectory() -> URL {
-        URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent() // CanadianHamUITests
-            .deletingLastPathComponent() // apps/apple
-            .deletingLastPathComponent() // apps
-            .deletingLastPathComponent() // repository root
-            .appendingPathComponent("docs/evidence/task-38-figures/app", isDirectory: true)
-    }
-
-    private func auditIgnoringOccludedLessonTextContrast(app: XCUIApplication, focusingOn focusedElement: XCUIElement) throws {
+    private func auditIgnoringOccludedLessonTextContrast(app: XCUIApplication) throws {
         let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
-        let focusedFrame = focusedElement.frame.insetBy(dx: -1, dy: -1)
         try app.performAccessibilityAudit { issue in
+            guard issue.auditType == .contrast else { return false }
             guard let element = issue.element else { return false }
             let frame = element.frame
             guard frame.width > 0, frame.height > 0 else { return false }
-
-            if !frame.intersects(focusedFrame) {
-                return true
-            }
-
-            guard issue.auditType == .contrast else { return false }
             guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
             guard auditGeometry.scrollFrame.intersects(frame) else { return false }
             guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
