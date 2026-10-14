@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-14 15:28'
-updated_date: '2026-10-14 15:44'
+updated_date: '2026-10-14 15:45'
 labels:
   - ci
   - apple
@@ -22,8 +22,8 @@ Workers repeatedly weakened UI tests when stuck (audit filters, rewritten shared
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 A CI job (in .github/workflows/ci.yml) runs scripts/check-test-guard.mjs on the PR diff and fails on the listed patterns without an approval marker like 'Test-guard-approved: <task or decision>' in the PR body
-- [x] #2 Self-tests cover each pattern and the approval path; documented in AGENTS.md
+- [ ] #1 A CI job (the separate Test guard pull-request workflow) runs scripts/check-test-guard.mjs on the PR diff and fails on the listed patterns without an approval marker like 'Test-guard-approved: task-49' or 'Test-guard-approved: owner decision YYYY-MM-DD' in the PR body
+- [ ] #2 Self-tests cover each pattern, robustness/review cases, and the approval path; documented in AGENTS.md
 <!-- AC:END -->
 
 ## Implementation Plan
