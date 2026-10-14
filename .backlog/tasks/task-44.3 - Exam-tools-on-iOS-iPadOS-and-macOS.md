@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-14 17:26'
+updated_date: '2026-10-14 19:26'
 labels:
   - apple
 dependencies:
@@ -121,6 +121,8 @@ Final continuation: implemented owner-approved iPad regular-width fix by collaps
 Review fix WIP: corrected AC #1 wording to describe the actual iPhone/iPad UI coverage and macOS shared-inspector/unit coverage (no Mac UI test or Split View claim).
 
 Review-fix continuation stopped with remaining iPhone UI failures after pushed commit ee86047b7563011394349c49e86a7df1bbdd81ad. Implemented/pushed: protected-area helper now asserts offenders in positioned/final assertion, medium audit precheck asserts display/Close/24 keys are hittable, focus resetter ignores tool-panel touches, 150 ms re-grab removed, audits restored to B-001, iPad medium audits skipped, session reset uses in-app new session, calculator view models moved into session state, sidebar collapse is width-based, launch appearance is DEBUG-gated, calculator announcements use interface localized 'Calculator result' prefix, toggle-sign visible EN is 'Change sign', icon is decorative, reference-sheet config uses one default flag, AC #1 wording corrected, task-44.4 follow-up note added, and sidebar comparison files were added but still need replacement per coordinator because they are not a valid visible-sidebar no-tool comparison. Validation: git diff --check and node scripts/check-apple-text-sources.ts passed; pnpm check:apple-l10n could not complete in final state due lock/follow-on failures; targeted iPhone review-fix command still fails testCalculatorKeyboardInputIsFocusScoped and testPreciseScrollPositionsAnswerBelowProtectedAreaWithToolOpen.
+
+Fresh worker applied owner decisions: reused the LessonReader opaque token navigation bar on practice/mock exam screens; switched exam-tool large/inspector audits and practice/mock audit flows to the occluded scroll-content contrast rule while keeping the capped medium-detent nil-element textClipped exception; changed the keyboard-focus test to tap an answer and card padding instead of the selectable question text; kept question text selection; replaced the protected-area fine-scan positioning test with simple preciseScroll positioning of an answer fully above the tool sheet; updated AGENTS.md and sorted Localizable.xcstrings with main keys unchanged plus task keys only. Preliminary validation: git diff --check and node scripts/check-apple-text-sources.ts passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
