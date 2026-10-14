@@ -1,31 +1,60 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import {
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import process from "node:process";
 
 const APPLE_PREFIX = "apps/apple/";
-const APPROVAL_MARKER = /^Test-guard-approved:\s*\S.*$/mu;
+const APPROVAL_MARKER_LINE = /^Test-guard-approved:[ \t]*(?:task-\d+|owner decision \d{4}-\d{2}-\d{2})[ \t]*$/u;
+
+const EXCEPTION_HELPERS = [
+  "auditIgnoringOccludedLessonTextContrast",
+  "isApprovedMediumDetentToolScrollTextClip",
+];
 
 const SHARED_HELPERS = [
-  "auditIgnoringOccludedLessonTextContrast",
+  ...EXCEPTION_HELPERS,
   "scrollUntilHittable",
   "preciseScroll",
   "positionElementInMiddleVisibleBand",
   "settleScrollableContentBelowNavigationBar",
   "elementsNearestProtectedBar",
   "assertFullyVisibleBelowNavigationBar",
-  "isApprovedMediumDetentToolScrollTextClip",
+  "lessonAuditGeometryBelowOpaqueNavigationBar",
+  "navigationBarElementFrames",
+  "protectedNavigationFrame",
+  "element",
+  "frame",
 ];
 
 const RULES = {
-  auditHandler: "performAccessibilityAudit handler/trailing-closure changes are guarded",
+  auditHandler: "performAccessibilityAudit call/handler changes are guarded",
+  exceptionHelperCall: "approved-exception helper call changes are guarded",
   sharedHelper: "shared UI-test/audit helper changes are guarded",
   accessibilityHidden: "added .accessibilityHidden(true) is guarded",
-  accessibilityIgnoreChildren: "added .accessibilityElement(children: .ignore) is guarded",
+  accessibilityIgnoreChildren: "added .accessibilityElement(children: .ignore) or .accessibilityElement() is guarded",
   xctSkip: "added XCTSkip/XCTSkipIf/XCTSkipUnless is guarded",
   minimumScaleFactor: "added .minimumScaleFactor( in app views is guarded",
   deletedTestMethod: "deleted test method is guarded",
 };
+
+const FAIL_DIRECTIONS = new Map([
+  [RULES.auditHandler, new Set(["addition", "deletion"])],
+  [RULES.exceptionHelperCall, new Set(["addition", "deletion"])],
+  [RULES.sharedHelper, new Set(["addition", "deletion"])],
+  [RULES.accessibilityHidden, new Set(["addition"])],
+  [RULES.accessibilityIgnoreChildren, new Set(["addition"])],
+  [RULES.xctSkip, new Set(["addition"])],
+  [RULES.minimumScaleFactor, new Set(["addition"])],
+  [RULES.deletedTestMethod, new Set(["deletion"])],
+]);
 
 function parseArgs(argv) {
   const args = {
@@ -69,20 +98,59 @@ Checks guarded Apple test/view changes in the git diff base...head.
 Environment:
   TEST_GUARD_BASE_SHA / BASE_SHA  Base ref (default: main)
   TEST_GUARD_HEAD_SHA / HEAD_SHA  Head ref (default: HEAD)
-  TEST_GUARD_PR_BODY              Pull request body; a line starting
-                                  Test-guard-approved: bypasses failures.`;
+  TEST_GUARD_PR_BODY              Pull request body; a line exactly matching
+                                  Test-guard-approved: task-123
+                                  or Test-guard-approved: owner decision YYYY-MM-DD
+                                  approves findings. Fenced blocks and HTML
+                                  comments are ignored.`;
 }
 
 function hasApprovalMarker(body) {
-  return APPROVAL_MARKER.test(body ?? "");
+  let inFence = false;
+  let inHtmlComment = false;
+
+  for (const line of String(body ?? "").split(/\r?\n/u)) {
+    if (inHtmlComment) {
+      if (line.includes("-->")) {
+        inHtmlComment = false;
+      }
+      continue;
+    }
+
+    const trimmed = line.trimStart();
+    if (/^(?:```|~~~)/u.test(trimmed)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) {
+      continue;
+    }
+
+    const commentStart = line.indexOf("<!--");
+    if (commentStart !== -1) {
+      const beforeComment = line.slice(0, commentStart);
+      if (APPROVAL_MARKER_LINE.test(beforeComment)) {
+        return true;
+      }
+      if (!line.slice(commentStart + 4).includes("-->")) {
+        inHtmlComment = true;
+      }
+      continue;
+    }
+
+    if (APPROVAL_MARKER_LINE.test(line)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function runGit(args, options = {}) {
   const result = spawnSync("git", args, {
-    cwd: process.cwd(),
+    cwd: options.cwd ?? process.cwd(),
     encoding: "utf8",
     maxBuffer: 20 * 1024 * 1024,
-    ...options,
   });
   if (result.status !== 0) {
     const command = `git ${args.join(" ")}`;
@@ -91,20 +159,33 @@ function runGit(args, options = {}) {
   return result.stdout;
 }
 
-function gitDiff(base, head) {
-  return runGit(["diff", "--no-ext-diff", "--no-renames", "--unified=3", `${base}...${head}`, "--", APPLE_PREFIX]);
+function gitMergeBase(base, head, repoRoot = process.cwd()) {
+  return runGit(["merge-base", base, head], { cwd: repoRoot }).trim();
 }
 
-function gitFileAt(ref, filePath) {
+function gitDiff(mergeBase, head, repoRoot = process.cwd()) {
+  return runGit(["diff", "--no-ext-diff", "-w", "-M", "--unified=3", `${mergeBase}...${head}`, "--", APPLE_PREFIX], { cwd: repoRoot });
+}
+
+function gitFileAt(ref, filePath, repoRoot = process.cwd()) {
   const result = spawnSync("git", ["show", `${ref}:${filePath}`], {
-    cwd: process.cwd(),
+    cwd: repoRoot,
     encoding: "utf8",
     maxBuffer: 20 * 1024 * 1024,
   });
-  if (result.status !== 0) {
+  if (result.status === 0) {
+    return result.stdout;
+  }
+
+  const output = `${result.stderr}${result.stdout}`;
+  if (/fatal: path ['"].*['"] exists on disk, but not in /u.test(output)
+      || /fatal: Path ['"].*['"] does not exist in /u.test(output)
+      || /exists on disk, but not in /u.test(output)
+      || /does not exist in /u.test(output)) {
     return "";
   }
-  return result.stdout;
+
+  throw new Error(`git show ${ref}:${filePath} failed:\n${output}`);
 }
 
 function parseUnifiedDiff(diff) {
@@ -113,17 +194,18 @@ function parseUnifiedDiff(diff) {
   let oldLine = 0;
   let newLine = 0;
   let inHunk = false;
+  let seenHunk = false;
 
   for (const rawLine of diff.split("\n")) {
     if (rawLine.startsWith("diff --git ")) {
-      const paths = rawLine.match(/^diff --git a\/(.+) b\/(.+)$/u);
       current = {
-        oldPath: paths?.[1] ?? null,
-        newPath: paths?.[2] ?? null,
+        oldPath: null,
+        newPath: null,
         changes: [],
       };
       files.push(current);
       inHunk = false;
+      seenHunk = false;
       continue;
     }
 
@@ -131,11 +213,11 @@ function parseUnifiedDiff(diff) {
       continue;
     }
 
-    if (rawLine.startsWith("--- ")) {
+    if (!seenHunk && rawLine.startsWith("--- ")) {
       current.oldPath = parseDiffPath(rawLine.slice(4));
       continue;
     }
-    if (rawLine.startsWith("+++ ")) {
+    if (!seenHunk && rawLine.startsWith("+++ ")) {
       current.newPath = parseDiffPath(rawLine.slice(4));
       continue;
     }
@@ -145,6 +227,7 @@ function parseUnifiedDiff(diff) {
       oldLine = Number(hunk[1]);
       newLine = Number(hunk[2]);
       inHunk = true;
+      seenHunk = true;
       continue;
     }
 
@@ -177,10 +260,53 @@ function parseUnifiedDiff(diff) {
 }
 
 function parseDiffPath(rawPath) {
-  if (rawPath === "/dev/null") {
+  const pathPart = rawPath.trimEnd().split("\t")[0];
+  if (pathPart === "/dev/null") {
     return null;
   }
-  return rawPath.replace(/^[ab]\//u, "");
+
+  const decoded = decodeGitPath(pathPart);
+  return decoded.replace(/^[ab]\//u, "");
+}
+
+function decodeGitPath(rawPath) {
+  if (!rawPath.startsWith('"')) {
+    return rawPath;
+  }
+
+  let result = "";
+  for (let index = 1; index < rawPath.length; index += 1) {
+    const character = rawPath[index];
+    if (character === '"') {
+      return result;
+    }
+    if (character !== "\\") {
+      result += character;
+      continue;
+    }
+
+    const next = rawPath[index + 1];
+    if (next === undefined) {
+      result += "\\";
+      continue;
+    }
+    if (next === "n") result += "\n";
+    else if (next === "t") result += "\t";
+    else if (next === "r") result += "\r";
+    else if (next === "b") result += "\b";
+    else if (next === "f") result += "\f";
+    else if (next === "\\" || next === '"') result += next;
+    else if (/[0-7]/u.test(next)) {
+      const octal = rawPath.slice(index + 1).match(/^[0-7]{1,3}/u)?.[0] ?? next;
+      result += String.fromCharCode(Number.parseInt(octal, 8));
+      index += octal.length - 1;
+    } else {
+      result += next;
+    }
+    index += 1;
+  }
+
+  return result;
 }
 
 function splitLines(content) {
@@ -214,7 +340,7 @@ function offsetToLine(starts, offset) {
   return high + 1;
 }
 
-function stripSwiftLine(line, state) {
+function stripSwiftLine(line, state = { blockComment: false, string: false }) {
   let result = "";
   for (let index = 0; index < line.length; index += 1) {
     const current = line[index];
@@ -263,9 +389,29 @@ function stripSwiftLine(line, state) {
   return result;
 }
 
-function namedFunctionRanges(content, names) {
+function isCommentOnlyOrBlank(line) {
+  const trimmed = line.trim();
+  if (trimmed.length === 0) {
+    return true;
+  }
+  if (trimmed.startsWith("//") || trimmed.startsWith("/*") || trimmed.startsWith("*") || trimmed.startsWith("*/")) {
+    return true;
+  }
+  return stripSwiftLine(line, { blockComment: false, string: false }).trim().length === 0;
+}
+
+function normalizedCodeLine(line) {
+  return stripSwiftLine(line, { blockComment: false, string: false }).replace(/\s+/gu, " ").trim();
+}
+
+function namedFunctionRanges(content, names, rule = RULES.sharedHelper) {
+  const uniqueNames = [...new Set(names)].filter((name) => name.length > 0);
+  if (uniqueNames.length === 0) {
+    return [];
+  }
+
   const lines = splitLines(content);
-  const escapedNames = names.map(escapeRegExp).join("|");
+  const escapedNames = uniqueNames.map(escapeRegExp).join("|");
   const functionPattern = new RegExp(`\\bfunc\\s+(${escapedNames})\\b`, "u");
   const ranges = [];
   const state = { blockComment: false, string: false };
@@ -295,13 +441,13 @@ function namedFunctionRanges(content, names) {
       }
     }
 
-    ranges.push({ name: match[1], start: index + 1, end: endLine });
+    ranges.push({ name: match[1], start: index + 1, end: endLine, rule });
   }
 
   return ranges;
 }
 
-function auditHandlerRanges(content) {
+function auditCallRanges(content) {
   const ranges = [];
   const starts = lineStarts(content);
   const token = "performAccessibilityAudit";
@@ -334,28 +480,29 @@ function auditHandlerRanges(content) {
 
     const closeParen = findMatchingDelimiter(content, afterToken, "(", ")");
     if (closeParen === -1) {
+      ranges.push({ name: token, start: offsetToLine(starts, tokenIndex), end: offsetToLine(starts, afterToken), rule: RULES.auditHandler });
       continue;
     }
 
     const firstClosure = findFirstCodeChar(content, "{", afterToken + 1, closeParen);
     const afterParen = nextNonWhitespace(content, closeParen + 1);
     const hasTrailingClosure = afterParen !== -1 && content[afterParen] === "{";
-    const hasHandlerArgument = firstClosure !== -1
-      || hasTopLevelComma(content, afterToken + 1, closeParen)
-      || /\b(?:issueHandler|handler)\s*:/u.test(content.slice(afterToken + 1, closeParen));
-
     if (firstClosure !== -1) {
       const closureEnd = findMatchingDelimiter(content, firstClosure, "{", "}");
       ranges.push({
+        name: token,
         start: offsetToLine(starts, tokenIndex),
         end: offsetToLine(starts, Math.max(closeParen, closureEnd)),
+        rule: RULES.auditHandler,
       });
     } else if (hasTrailingClosure) {
       addBraceRange(ranges, content, starts, tokenIndex, afterParen);
-    } else if (hasHandlerArgument) {
+    } else {
       ranges.push({
+        name: token,
         start: offsetToLine(starts, tokenIndex),
         end: offsetToLine(starts, closeParen),
+        rule: RULES.auditHandler,
       });
     }
   }
@@ -363,11 +510,110 @@ function auditHandlerRanges(content) {
   return ranges;
 }
 
+function auditNamedHandlers(content) {
+  const handlers = new Set();
+  const token = "performAccessibilityAudit";
+  let searchIndex = 0;
+
+  while (searchIndex < content.length) {
+    const tokenIndex = content.indexOf(token, searchIndex);
+    if (tokenIndex === -1) {
+      break;
+    }
+    searchIndex = tokenIndex + token.length;
+
+    const afterToken = nextNonWhitespace(content, tokenIndex + token.length);
+    if (afterToken === -1 || content[afterToken] !== "(") {
+      continue;
+    }
+    const closeParen = findMatchingDelimiter(content, afterToken, "(", ")");
+    if (closeParen === -1) {
+      continue;
+    }
+
+    for (const argument of topLevelArguments(content.slice(afterToken + 1, closeParen))) {
+      const normalized = argument.trim();
+      const handlerMatch = normalized.match(/^(?:handler\s*:\s*|issueHandler\s*:\s*)?([A-Za-z_][A-Za-z0-9_]*)$/u)
+        ?? normalized.match(/^_?\s*([A-Za-z_][A-Za-z0-9_]*)$/u);
+      if (handlerMatch !== null && !["for", "true", "false", "nil"].includes(handlerMatch[1])) {
+        handlers.add(handlerMatch[1]);
+      }
+    }
+  }
+
+  return [...handlers];
+}
+
+function topLevelArguments(argumentText) {
+  const args = [];
+  let start = 0;
+  let parenDepth = 0;
+  let bracketDepth = 0;
+  let braceDepth = 0;
+  let blockComment = false;
+  let lineComment = false;
+  let string = false;
+
+  for (let index = 0; index < argumentText.length; index += 1) {
+    const current = argumentText[index];
+    const next = argumentText[index + 1];
+    if (lineComment) {
+      if (current === "\n") lineComment = false;
+      continue;
+    }
+    if (blockComment) {
+      if (current === "*" && next === "/") {
+        blockComment = false;
+        index += 1;
+      }
+      continue;
+    }
+    if (string) {
+      if (current === "\\") index += 1;
+      else if (current === '"') string = false;
+      continue;
+    }
+    if (current === "/" && next === "/") {
+      lineComment = true;
+      index += 1;
+      continue;
+    }
+    if (current === "/" && next === "*") {
+      blockComment = true;
+      index += 1;
+      continue;
+    }
+    if (current === '"') {
+      string = true;
+      continue;
+    }
+
+    if (current === "(") parenDepth += 1;
+    else if (current === ")") parenDepth -= 1;
+    else if (current === "[") bracketDepth += 1;
+    else if (current === "]") bracketDepth -= 1;
+    else if (current === "{") braceDepth += 1;
+    else if (current === "}") braceDepth -= 1;
+    else if (current === "," && parenDepth === 0 && bracketDepth === 0 && braceDepth === 0) {
+      args.push(argumentText.slice(start, index));
+      start = index + 1;
+    }
+  }
+
+  const last = argumentText.slice(start);
+  if (last.trim().length > 0) {
+    args.push(last);
+  }
+  return args;
+}
+
 function addBraceRange(ranges, content, starts, tokenIndex, braceIndex) {
   const closeBrace = findMatchingDelimiter(content, braceIndex, "{", "}");
   ranges.push({
+    name: "performAccessibilityAudit",
     start: offsetToLine(starts, tokenIndex),
     end: offsetToLine(starts, closeBrace === -1 ? braceIndex : closeBrace),
+    rule: RULES.auditHandler,
   });
 }
 
@@ -488,66 +734,12 @@ function findFirstCodeChar(content, target, start, end) {
   return -1;
 }
 
-function hasTopLevelComma(content, start, end) {
-  let parenDepth = 0;
-  let bracketDepth = 0;
-  let braceDepth = 0;
-  let blockComment = false;
-  let lineComment = false;
-  let string = false;
-
-  for (let index = start; index < end; index += 1) {
-    const current = content[index];
-    const next = content[index + 1];
-    if (lineComment) {
-      if (current === "\n") lineComment = false;
-      continue;
-    }
-    if (blockComment) {
-      if (current === "*" && next === "/") {
-        blockComment = false;
-        index += 1;
-      }
-      continue;
-    }
-    if (string) {
-      if (current === "\\") index += 1;
-      else if (current === '"') string = false;
-      continue;
-    }
-    if (current === "/" && next === "/") {
-      lineComment = true;
-      index += 1;
-      continue;
-    }
-    if (current === "/" && next === "*") {
-      blockComment = true;
-      index += 1;
-      continue;
-    }
-    if (current === '"') {
-      string = true;
-      continue;
-    }
-
-    if (current === "(" ) parenDepth += 1;
-    else if (current === ")") parenDepth -= 1;
-    else if (current === "[") bracketDepth += 1;
-    else if (current === "]") bracketDepth -= 1;
-    else if (current === "{") braceDepth += 1;
-    else if (current === "}") braceDepth -= 1;
-    else if (current === "," && parenDepth === 0 && bracketDepth === 0 && braceDepth === 0) return true;
-  }
-
-  return false;
-}
-
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
 }
 
-function lineInRanges(line, ranges) {
-  return ranges.some((range) => line >= range.start && line <= range.end);
+function rangeContainingLine(line, ranges) {
+  return ranges.find((range) => line >= range.start && line <= range.end) ?? null;
 }
 
 function isAppViewPath(filePath) {
@@ -557,67 +749,117 @@ function isAppViewPath(filePath) {
 }
 
 function checkDiff(diff, getOldContent, getNewContent) {
-  return checkDiffWithApproval(diff, "", getOldContent, getNewContent);
+  const events = collectGuardEvents(diff, getOldContent, getNewContent);
+  return collapseEventsToFindings(events);
 }
 
-function checkDiffWithApproval(diff, prBody, getOldContent, getNewContent) {
-  if (hasApprovalMarker(prBody)) {
-    return [];
-  }
-
-  const findings = [];
-  const seen = new Set();
+function collectGuardEvents(diff, getOldContent, getNewContent) {
+  const events = [];
 
   for (const file of parseUnifiedDiff(diff)) {
     const oldPath = file.oldPath ?? file.path;
     const newPath = file.newPath ?? file.path;
     const oldContent = oldPath === null ? "" : getOldContent(oldPath);
     const newContent = newPath === null ? "" : getNewContent(newPath);
-    const oldHelperRanges = namedFunctionRanges(oldContent, SHARED_HELPERS);
-    const newHelperRanges = namedFunctionRanges(newContent, SHARED_HELPERS);
-    const oldAuditRanges = auditHandlerRanges(oldContent);
-    const newAuditRanges = auditHandlerRanges(newContent);
+    const oldNamedHandlers = auditNamedHandlers(oldContent);
+    const newNamedHandlers = auditNamedHandlers(newContent);
+    const oldRanges = [
+      ...namedFunctionRanges(oldContent, SHARED_HELPERS, RULES.sharedHelper),
+      ...namedFunctionRanges(oldContent, oldNamedHandlers, RULES.auditHandler),
+      ...auditCallRanges(oldContent),
+    ];
+    const newRanges = [
+      ...namedFunctionRanges(newContent, SHARED_HELPERS, RULES.sharedHelper),
+      ...namedFunctionRanges(newContent, newNamedHandlers, RULES.auditHandler),
+      ...auditCallRanges(newContent),
+    ];
 
     for (const change of file.changes) {
       const pathForFinding = change.kind === "deletion" ? (oldPath ?? file.path) : (newPath ?? file.path);
-      if (pathForFinding === null) {
+      if (pathForFinding === null || isCommentOnlyOrBlank(change.text)) {
         continue;
       }
 
-      if (change.kind === "addition") {
-        if (lineInRanges(change.line, newAuditRanges)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.auditHandler);
-        }
-        if (lineInRanges(change.line, newHelperRanges)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.sharedHelper);
-        }
-        if (/\.accessibilityHidden\s*\(\s*true\s*\)/u.test(change.text)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.accessibilityHidden);
-        }
-        if (/\.accessibilityElement\s*\(\s*children\s*:\s*\.ignore\s*\)/u.test(change.text)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.accessibilityIgnoreChildren);
-        }
-        if (/\bXCTSkip(?:If|Unless)?\s*\(/u.test(change.text) || /\bthrow\s+XCTSkip\b/u.test(change.text)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.xctSkip);
-        }
-        if (isAppViewPath(pathForFinding) && /\.minimumScaleFactor\s*\(/u.test(change.text)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.minimumScaleFactor);
-        }
-      } else if (change.kind === "deletion") {
-        if (lineInRanges(change.line, oldAuditRanges)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.auditHandler);
-        }
-        if (lineInRanges(change.line, oldHelperRanges)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.sharedHelper);
-        }
-        if (/^\s*func\s+test[A-Za-z0-9_]*\s*\(/u.test(change.text)) {
-          addFinding(findings, seen, pathForFinding, change.line, RULES.deletedTestMethod);
-        }
+      const code = normalizedCodeLine(change.text);
+      if (code.length === 0) {
+        continue;
+      }
+
+      const ranges = change.kind === "deletion" ? oldRanges : newRanges;
+      const range = rangeContainingLine(change.line, ranges);
+      if (range !== null) {
+        addEvent(events, change.kind, pathForFinding, change.line, range.rule, `${range.name}:${code}`);
+      }
+
+      if (/\bperformAccessibilityAudit\b/u.test(code)) {
+        addEvent(events, change.kind, pathForFinding, change.line, RULES.auditHandler, `performAccessibilityAudit:${code}`);
+      }
+
+      const exceptionHelper = EXCEPTION_HELPERS.find((helper) => new RegExp(`\\b${escapeRegExp(helper)}\\s*\\(`, "u").test(code));
+      if (exceptionHelper !== undefined) {
+        addEvent(events, change.kind, pathForFinding, change.line, RULES.exceptionHelperCall, `${exceptionHelper}:${code}`);
+      }
+
+      if (/\.accessibilityHidden\s*\(\s*true\s*\)/u.test(code)) {
+        addEvent(events, change.kind, pathForFinding, change.line, RULES.accessibilityHidden, "accessibilityHidden(true)");
+      }
+      if (/\.accessibilityElement\s*\(\s*(?:children\s*:\s*\.ignore\s*)?\)/u.test(code)) {
+        addEvent(events, change.kind, pathForFinding, change.line, RULES.accessibilityIgnoreChildren, "accessibilityElement(ignore)");
+      }
+      if (/\bXCTSkip(?:If|Unless)?\s*\(/u.test(code) || /\bthrow\s+XCTSkip\b/u.test(code)) {
+        addEvent(events, change.kind, pathForFinding, change.line, RULES.xctSkip, "XCTSkip");
+      }
+      if (isAppViewPath(pathForFinding) && /\.minimumScaleFactor\s*\(/u.test(code)) {
+        addEvent(events, change.kind, pathForFinding, change.line, RULES.minimumScaleFactor, "minimumScaleFactor");
+      }
+
+      const testMatch = code.match(/^\s*func\s+(test[A-Za-z0-9_]*)\s*\(/u);
+      if (testMatch !== null) {
+        addEvent(events, change.kind, pathForFinding, change.line, RULES.deletedTestMethod, testMatch[1]);
       }
     }
   }
 
-  return findings;
+  return events;
+}
+
+function addEvent(events, direction, filePath, line, rule, key) {
+  events.push({ direction, filePath, line, rule, key });
+}
+
+function collapseEventsToFindings(events) {
+  const buckets = new Map();
+  for (const event of events) {
+    const bucketKey = `${event.rule}\0${event.key}`;
+    const bucket = buckets.get(bucketKey) ?? { additions: [], deletions: [] };
+    if (event.direction === "addition") {
+      bucket.additions.push(event);
+    } else {
+      bucket.deletions.push(event);
+    }
+    buckets.set(bucketKey, bucket);
+  }
+
+  const findings = [];
+  const seen = new Set();
+  for (const [bucketKey, bucket] of buckets) {
+    const rule = bucketKey.split("\0", 1)[0];
+    const failDirections = FAIL_DIRECTIONS.get(rule) ?? new Set(["addition", "deletion"]);
+    const matchedPairs = Math.min(bucket.additions.length, bucket.deletions.length);
+
+    if (failDirections.has("addition")) {
+      for (const event of bucket.additions.slice(matchedPairs)) {
+        addFinding(findings, seen, event.filePath, event.line, event.rule);
+      }
+    }
+    if (failDirections.has("deletion")) {
+      for (const event of bucket.deletions.slice(matchedPairs)) {
+        addFinding(findings, seen, event.filePath, event.line, event.rule);
+      }
+    }
+  }
+
+  return findings.sort((a, b) => a.filePath.localeCompare(b.filePath) || a.line - b.line || a.rule.localeCompare(b.rule));
 }
 
 function addFinding(findings, seen, filePath, line, rule) {
@@ -633,28 +875,61 @@ function formatFinding(finding) {
   return `${finding.filePath}:${finding.line}: ${finding.rule}`;
 }
 
-function runGuard({ base, head, prBody }) {
-  if (hasApprovalMarker(prBody)) {
-    console.log("Test guard approved by PR body marker; guarded Apple test/view changes are allowed for this PR.");
+function formatGithubWarning(finding) {
+  const message = escapeGithubCommand(finding.rule);
+  return `::warning file=${escapeGithubCommand(finding.filePath)},line=${finding.line}::${message}`;
+}
+
+function escapeGithubCommand(value) {
+  return String(value)
+    .replace(/%/gu, "%25")
+    .replace(/\r/gu, "%0D")
+    .replace(/\n/gu, "%0A")
+    .replace(/,/gu, "%2C")
+    .replace(/:/gu, "%3A");
+}
+
+function evaluateFindings(findings, prBody) {
+  const approved = hasApprovalMarker(prBody);
+  return {
+    approved,
+    findings,
+    exitCode: findings.length > 0 && !approved ? 1 : 0,
+  };
+}
+
+function runGuard({ base, head, prBody, repoRoot = process.cwd() }) {
+  const mergeBase = gitMergeBase(base, head, repoRoot);
+  const diff = gitDiff(mergeBase, head, repoRoot);
+  const findings = checkDiff(
+    diff,
+    (filePath) => gitFileAt(mergeBase, filePath, repoRoot),
+    (filePath) => gitFileAt(head, filePath, repoRoot),
+  );
+  const result = evaluateFindings(findings, prBody);
+
+  if (findings.length > 0 && result.approved) {
+    console.warn("Test guard findings approved by PR body marker:");
+    for (const finding of findings) {
+      console.warn(formatGithubWarning(finding));
+      console.warn(`- ${formatFinding(finding)}`);
+    }
     return 0;
   }
 
-  const diff = gitDiff(base, head);
-  const findings = checkDiff(
-    diff,
-    (filePath) => gitFileAt(base, filePath),
-    (filePath) => gitFileAt(head, filePath),
-  );
-
   if (findings.length > 0) {
-    console.error("Test guard failed: guarded Apple test/view changes require a PR body line 'Test-guard-approved: <reason>'.");
+    console.error("Test guard failed: guarded Apple test/view changes require a PR body line 'Test-guard-approved: task-123' or 'Test-guard-approved: owner decision YYYY-MM-DD'.");
     for (const finding of findings) {
       console.error(`- ${formatFinding(finding)}`);
     }
     return 1;
   }
 
-  console.log(`Test guard passed: no guarded Apple test/view changes found in ${base}...${head}.`);
+  if (result.approved) {
+    console.log(`Test guard passed: approval marker present but no guarded Apple test/view changes found in ${mergeBase}...${head}.`);
+  } else {
+    console.log(`Test guard passed: no guarded Apple test/view changes found in ${mergeBase}...${head}.`);
+  }
   return 0;
 }
 
@@ -680,6 +955,10 @@ function diffFixture(oldContent, newContent, filePath = "apps/apple/CanadianHamU
 
 function assertFinds(name, oldContent, newContent, expectedRule, filePath) {
   const diff = diffFixture(oldContent, newContent, filePath);
+  assertFindsInDiff(name, diff, oldContent, newContent, expectedRule);
+}
+
+function assertFindsInDiff(name, diff, oldContent, newContent, expectedRule) {
   const findings = checkDiff(diff, () => oldContent, () => newContent);
   if (!findings.some((finding) => finding.rule === expectedRule)) {
     throw new Error(`${name} missed ${expectedRule}; findings: ${findings.map(formatFinding).join("; ")}`);
@@ -689,7 +968,7 @@ function assertFinds(name, oldContent, newContent, expectedRule, filePath) {
 function assertClean(name, oldContent, newContent, filePath) {
   const diff = diffFixture(oldContent, newContent, filePath);
   const findings = checkDiff(diff, () => oldContent, () => newContent);
-  assert.deepEqual(findings, [], `${name} expected no findings`);
+  assert.deepEqual(findings, [], `${name} expected no findings; got ${findings.map(formatFinding).join("; ")}`);
 }
 
 function runSelfTest() {
@@ -697,7 +976,7 @@ function runSelfTest() {
   const appViewPath = "apps/apple/CanadianHam/GuardView.swift";
 
   assertClean(
-    "plain audit call passes",
+    "plain audit call plus unrelated assertion passes",
     "func testAudit() throws {\n    try app.performAccessibilityAudit()\n}",
     "func testAudit() throws {\n    try app.performAccessibilityAudit()\n    XCTAssertTrue(true)\n}",
     testPath,
@@ -707,6 +986,41 @@ function runSelfTest() {
     "func testAudit() throws {\n    try app.performAccessibilityAudit()\n}",
     "func testAudit() throws {\n    try app.performAccessibilityAudit { issue in\n        return false\n    }\n}",
     RULES.auditHandler,
+    testPath,
+  );
+  assertFinds(
+    "plain audit deletion fails",
+    "func testAudit() throws {\n    try app.performAccessibilityAudit()\n}",
+    "func testAudit() throws {\n    XCTAssertTrue(true)\n}",
+    RULES.auditHandler,
+    testPath,
+  );
+  assertFinds(
+    "audit type narrowing fails",
+    "func testAudit() throws {\n    try app.performAccessibilityAudit()\n}",
+    "func testAudit() throws {\n    try app.performAccessibilityAudit(for: .dynamicType)\n}",
+    RULES.auditHandler,
+    testPath,
+  );
+  assertFinds(
+    "audit named handler fails",
+    "func testAudit() throws {\n    try app.performAccessibilityAudit()\n}",
+    "func testAudit() throws {\n    try app.performAccessibilityAudit(myFilter)\n}",
+    RULES.auditHandler,
+    testPath,
+  );
+  assertFinds(
+    "existing named handler body edit fails",
+    "func testAudit() throws {\n    try app.performAccessibilityAudit(myFilter)\n}\nfunc myFilter(_ issue: XCTAccessibilityAuditIssue) -> Bool {\n    return true\n}",
+    "func testAudit() throws {\n    try app.performAccessibilityAudit(myFilter)\n}\nfunc myFilter(_ issue: XCTAccessibilityAuditIssue) -> Bool {\n    return false\n}",
+    RULES.auditHandler,
+    testPath,
+  );
+  assertFinds(
+    "exception helper call fails",
+    "func testAudit() throws {\n    try app.performAccessibilityAudit()\n}",
+    "func testAudit() throws {\n    try auditIgnoringOccludedLessonTextContrast(app: app)\n}",
+    RULES.exceptionHelperCall,
     testPath,
   );
 
@@ -720,6 +1034,13 @@ function runSelfTest() {
     "shared helper edit fails",
     "private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {\n    app.swipeUp()\n}",
     "private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {\n    app.swipeDown()\n}",
+    RULES.sharedHelper,
+    testPath,
+  );
+  assertFinds(
+    "geometry helper edit fails",
+    "private func lessonAuditGeometryBelowOpaqueNavigationBar(in app: XCUIApplication) -> LessonAuditGeometry {\n    return geometry\n}",
+    "private func lessonAuditGeometryBelowOpaqueNavigationBar(in app: XCUIApplication) -> LessonAuditGeometry {\n    return narrowedGeometry\n}",
     RULES.sharedHelper,
     testPath,
   );
@@ -737,6 +1058,12 @@ function runSelfTest() {
     RULES.accessibilityHidden,
     appViewPath,
   );
+  assertClean(
+    "touching existing accessibilityHidden true cancels by count",
+    "struct GuardView: View { var body: some View { Image(\"a\").accessibilityHidden(true) } }",
+    "struct GuardView: View { var body: some View { Image(\"b\").accessibilityHidden(true) } }",
+    appViewPath,
+  );
 
   assertClean(
     "accessibility combine passes",
@@ -748,6 +1075,13 @@ function runSelfTest() {
     "accessibility ignore children fails",
     "struct GuardView: View { var body: some View { Text(\"A\") } }",
     "struct GuardView: View { var body: some View { Text(\"A\").accessibilityElement(children: .ignore) } }",
+    RULES.accessibilityIgnoreChildren,
+    appViewPath,
+  );
+  assertFinds(
+    "accessibilityElement empty args fails",
+    "struct GuardView: View { var body: some View { Text(\"A\") } }",
+    "struct GuardView: View { var body: some View { Text(\"A\").accessibilityElement() } }",
     RULES.accessibilityIgnoreChildren,
     appViewPath,
   );
@@ -779,6 +1113,12 @@ function runSelfTest() {
     RULES.xctSkip,
     testPath,
   );
+  assertClean(
+    "comment-only XCTSkip passes",
+    "func testExample() throws {\n    XCTAssertTrue(true)\n}",
+    "func testExample() throws {\n    // Do not use XCTSkip(\"blocked\") here.\n    XCTAssertTrue(true)\n}",
+    testPath,
+  );
 
   assertClean(
     "minimumScaleFactor in test path passes",
@@ -795,9 +1135,9 @@ function runSelfTest() {
   );
 
   assertClean(
-    "non-test method deletion passes",
-    "func helper() {\n    XCTAssertTrue(true)\n}\nfunc testStillHere() {\n    XCTAssertTrue(true)\n}",
-    "func helper() {\n    XCTAssertTrue(true)\n}\nfunc testStillHere() {\n    XCTAssertTrue(true)\n}",
+    "test method move cancels by name",
+    "func testMoved() {\n    XCTAssertTrue(true)\n}\nfunc helper() {}",
+    "func helper() {}\nfunc testMoved() {\n    XCTAssertTrue(true)\n}",
     testPath,
   );
   assertFinds(
@@ -808,38 +1148,106 @@ function runSelfTest() {
     testPath,
   );
 
-  assert.equal(hasApprovalMarker("Summary\nTest-guard-approved: task-49 self-test\n"), true);
-  assert.equal(hasApprovalMarker("Summary\nTest-guard-approved:\n"), false);
-
-  assertFinds(
-    "audit handler argument fails",
-    "func testAudit() throws {\n    try app.performAccessibilityAudit()\n}",
-    "func testAudit() throws {\n    try app.performAccessibilityAudit(for: .all, auditHandler)\n}",
-    RULES.auditHandler,
-    testPath,
-  );
-  assertFinds(
-    "existing audit handler body edit fails",
-    "func testAudit() throws {\n    try app.performAccessibilityAudit { issue in\n        return issue.auditType == .contrast\n    }\n}",
-    "func testAudit() throws {\n    try app.performAccessibilityAudit { issue in\n        return false\n    }\n}",
-    RULES.auditHandler,
-    testPath,
-  );
+  assert.equal(hasApprovalMarker("Summary\nTest-guard-approved: task-49\n"), true);
+  assert.equal(hasApprovalMarker("Summary\nTest-guard-approved: owner decision 2026-10-14\n"), true);
+  assert.equal(hasApprovalMarker("Summary\nTest-guard-approved:\n## Checks\n"), false);
+  assert.equal(hasApprovalMarker("Summary\n- Test-guard-approved: task-49\n"), false);
+  assert.equal(hasApprovalMarker("Summary\n```\nTest-guard-approved: task-49\n```\n"), false);
+  assert.equal(hasApprovalMarker("Summary\n<!--\nTest-guard-approved: task-49\n-->\n"), false);
+  assert.equal(hasApprovalMarker("Summary\nTest-guard-approved: other reason\n"), false);
 
   const failingDiff = diffFixture(
     "struct GuardView: View { var body: some View { Text(\"A\") } }",
     "struct GuardView: View { var body: some View { Text(\"A\").accessibilityHidden(true) } }",
     appViewPath,
   );
-  const approvedFindings = checkDiffWithApproval(
+  const approvedFindings = checkDiff(
     failingDiff,
-    "Test-guard-approved: owner decision 2026-10-14",
     () => "struct GuardView: View { var body: some View { Text(\"A\") } }",
     () => "struct GuardView: View { var body: some View { Text(\"A\").accessibilityHidden(true) } }",
   );
-  assert.deepEqual(approvedFindings, [], "approval marker should bypass failing findings");
+  const approvedResult = evaluateFindings(approvedFindings, "Test-guard-approved: owner decision 2026-10-14");
+  assert.equal(approvedResult.exitCode, 0, "approval marker should bypass failing exit code");
+  assert.equal(approvedResult.findings.length > 0, true, "approval path should preserve findings for warnings");
+
+  const oldMulti = `${Array.from({ length: 20 }, (_, index) => `let before${index} = ${index}`).join("\n")}\nprivate func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {\n    app.swipeUp()\n}\n${Array.from({ length: 20 }, (_, index) => `let after${index} = ${index}`).join("\n")}\nfunc testKept() {\n    XCTAssertTrue(true)\n}`;
+  const newMulti = oldMulti
+    .replace("app.swipeUp()", "app.swipeDown()")
+    .replace("XCTAssertTrue(true)", "XCTAssertFalse(false)");
+  const multiDiff = `diff --git a/${testPath} b/${testPath}\n--- a/${testPath}\n+++ b/${testPath}\n@@ -19,7 +19,7 @@\n let before18 = 18\n let before19 = 19\n private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {\n-    app.swipeUp()\n+    app.swipeDown()\n }\n let after0 = 0\n let after1 = 1\n@@ -44,5 +44,5 @@\n let after18 = 18\n let after19 = 19\n func testKept() {\n-    XCTAssertTrue(true)\n+    XCTAssertFalse(false)\n }\n`;
+  assertFindsInDiff("multi-hunk mid-function helper edit fails", multiDiff, oldMulti, newMulti, RULES.sharedHelper);
+
+  runRealGitSelfTests();
 
   console.log("test-guard self-test passed.");
+}
+
+function runRealGitSelfTests() {
+  const root = mkdtempSync(path.join(tmpdir(), "test-guard."));
+  try {
+    gitIn(root, ["init", "-b", "main"]);
+    gitIn(root, ["config", "user.email", "test@example.invalid"]);
+    gitIn(root, ["config", "user.name", "Test Guard"]);
+
+    const testDir = path.join(root, "apps/apple/CanadianHamUITests");
+    mkdirSync(testDir, { recursive: true });
+    const fixturePath = path.join(testDir, "Guard Fixture.swift");
+    const original = `${Array.from({ length: 8 }, (_, index) => `// prelude ${index}`).join("\n")}\nprivate func auditIgnoringOccludedLessonTextContrast(app: XCUIApplication) throws {\n    let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)\n    try app.performAccessibilityAudit { issue in\n        guard issue.auditType == .contrast else { return false }\n        guard !auditGeometry.visibleScrollArea.contains(issue.element!.frame) else { return false }\n        return true\n    }\n}\n`;
+    writeFileSync(fixturePath, original);
+    gitIn(root, ["add", "."]);
+    gitIn(root, ["commit", "-m", "base"]);
+    const mergeBase = gitIn(root, ["rev-parse", "HEAD"]).trim();
+
+    gitIn(root, ["checkout", "-b", "feature"]);
+    writeFileSync(fixturePath, original.replace("        guard !auditGeometry.visibleScrollArea.contains(issue.element!.frame) else { return false }\n", ""));
+    gitIn(root, ["commit", "-am", "delete guarded line"]);
+    const head = gitIn(root, ["rev-parse", "HEAD"]).trim();
+
+    gitIn(root, ["checkout", "main"]);
+    writeFileSync(fixturePath, `// main moved the helper down\n// another new line\n${original}`);
+    gitIn(root, ["commit", "-am", "move old-side lines"]);
+    const base = gitIn(root, ["rev-parse", "HEAD"]).trim();
+
+    const computedMergeBase = gitMergeBase(base, head, root);
+    assert.equal(computedMergeBase, mergeBase, "guard should diff against the merge-base, not base tip");
+    const movedDiff = gitDiff(computedMergeBase, head, root);
+    const movedFindings = checkDiff(
+      movedDiff,
+      (filePath) => gitFileAt(computedMergeBase, filePath, root),
+      (filePath) => gitFileAt(head, filePath, root),
+    );
+    assert.equal(movedFindings.some((finding) => finding.rule === RULES.sharedHelper || finding.rule === RULES.auditHandler), true, "merge-base old-side reads should catch deletion inside moved audit handler");
+
+    gitIn(root, ["checkout", "feature"]);
+    writeFileSync(fixturePath, original);
+    const quotedPath = path.join(testDir, "Quoted Path.swift");
+    writeFileSync(quotedPath, "struct GuardView: View { var body: some View { Text(\"A\").accessibilityHidden(true) } }\n");
+    gitIn(root, ["add", "."]);
+    gitIn(root, ["commit", "-m", "quoted path finding"]);
+    const quotedHead = gitIn(root, ["rev-parse", "HEAD"]).trim();
+    const quotedMergeBase = gitMergeBase(mergeBase, quotedHead, root);
+    const quotedDiff = gitDiff(quotedMergeBase, quotedHead, root);
+    const quotedFindings = checkDiff(
+      quotedDiff,
+      (filePath) => gitFileAt(quotedMergeBase, filePath, root),
+      (filePath) => gitFileAt(quotedHead, filePath, root),
+    );
+    assert.equal(quotedFindings.some((finding) => finding.filePath.endsWith("Quoted Path.swift") && finding.rule === RULES.accessibilityHidden), true, "real git diff fixture should parse paths with spaces");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+function gitIn(repoRoot, args) {
+  const result = spawnSync("git", args, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    maxBuffer: 20 * 1024 * 1024,
+  });
+  if (result.status !== 0) {
+    throw new Error(`git ${args.join(" ")} failed in ${repoRoot}:\n${result.stderr}${result.stdout}`);
+  }
+  return result.stdout;
 }
 
 async function main() {

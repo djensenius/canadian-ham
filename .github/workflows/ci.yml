@@ -74,30 +74,6 @@ jobs:
             echo "Only .backlog/ files changed: full checks are not required."
           fi
 
-  test_guard:
-    name: Test guard
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    if: github.event_name == 'pull_request'
-
-    steps:
-      # actions/checkout v7.0.1
-      - name: Check out repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Test test-guard checker
-        run: node scripts/check-test-guard.mjs --self-test
-
-      - name: Check guarded Apple test/view changes
-        env:
-          TEST_GUARD_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          TEST_GUARD_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          TEST_GUARD_PR_BODY: ${{ github.event.pull_request.body }}
-        run: node scripts/check-test-guard.mjs
-
   ci:
     name: Node and content checks
     runs-on: ubuntu-latest
