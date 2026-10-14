@@ -94,6 +94,17 @@ platform) and share one build lock, so don't run them by reflex.
   the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
   implements that exception.
 
+## CI test guard
+- Pull requests run `node scripts/check-test-guard.mjs --self-test` and then
+  `node scripts/check-test-guard.mjs` against the PR `base...head` diff. The guard fails when
+  Apple diffs add or change `performAccessibilityAudit` handler/trailing-closure code, change the
+  named shared audit/positioning helpers, add `.accessibilityHidden(true)`, add
+  `.accessibilityElement(children: .ignore)`, add `XCTSkip`/`XCTSkipIf`/`XCTSkipUnless`, add
+  `.minimumScaleFactor(` in app views, or delete Swift `func test...` methods.
+- A PR body line `Test-guard-approved: <reason>` bypasses the guard for intentional changes. The
+  reason must reference an owner decision or Backlog task, and reviewers verify that reference before
+  accepting the marker.
+
 ## Project notes
 - Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.
 - Active app question bank remains ISED Basic 2025-07-15; delimited TXT SHA-256 `34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f`.
