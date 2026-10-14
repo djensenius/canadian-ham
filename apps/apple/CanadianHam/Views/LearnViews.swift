@@ -492,7 +492,7 @@ private struct LessonPrerequisitesSection: View {
                                 )
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel(Text("Open lesson \(prerequisite.title.en)")) // l10n: localized
+                        .accessibilityLabel(Text("Open lesson \(Text(english(prerequisite.title.en)))")) // l10n: localized
                         .accessibilityIdentifier("lesson-prerequisite-link-\(prerequisite.id)")
                     }
                 }
