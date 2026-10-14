@@ -1,9 +1,11 @@
 ---
 id: TASK-49
 title: 'CI guard: flag changes to audit handlers and shared UI-test helpers'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-14 15:28'
+updated_date: '2026-10-14 15:28'
 labels:
   - ci
   - apple
