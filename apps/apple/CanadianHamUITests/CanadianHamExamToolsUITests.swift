@@ -362,7 +362,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func isApprovedMediumDetentToolScrollTextClip(_ issue: XCUIAccessibilityAuditIssue, in app: XCUIApplication) -> Bool {
+#if os(iOS)
         issue.auditType == .textClipped && issue.element == nil
+#else
+        false
+#endif
     }
 
     private func assertMediumDetentToolPanelVisibleElements(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
