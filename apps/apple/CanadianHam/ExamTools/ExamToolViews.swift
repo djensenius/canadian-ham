@@ -681,7 +681,7 @@ struct ReferenceSheetToolView: View {
                     zoomControls
                 }
 
-                LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid", textScale: zoom)
+                LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid")
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     .padding(DesignTokens.Spacing.md)
                     .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))

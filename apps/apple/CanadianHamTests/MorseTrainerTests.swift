@@ -143,6 +143,32 @@ final class MorseTrainerTests: XCTestCase {
         }
     }
 
+    func testLessonBodyAndBulletContrastTokensMeetMinimumRatio() throws {
+        let tokensURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appending(path: "CanadianHam/Design/Tokens.swift")
+        let tokens = try String(contentsOf: tokensURL, encoding: .utf8)
+        let ink = try designTokenRGB(named: "ink", in: tokens)
+        let paper = try designTokenRGB(named: "paper", in: tokens)
+        let paperElevated = try designTokenRGB(named: "paperElevated", in: tokens)
+
+        let cases: [(String, MorseRGB, MorseRGB)] = [
+            ("light lesson body ink on paper", ink.light, paper.light),
+            ("dark lesson body ink on paper", ink.dark, paper.dark),
+            ("light lesson body ink on paperElevated card", ink.light, paperElevated.light),
+            ("dark lesson body ink on paperElevated card", ink.dark, paperElevated.dark),
+            ("light lesson bullet ink on paper", ink.light, paper.light),
+            ("dark lesson bullet ink on paper", ink.dark, paper.dark),
+            ("light lesson bullet ink on paperElevated card", ink.light, paperElevated.light),
+            ("dark lesson bullet ink on paperElevated card", ink.dark, paperElevated.dark)
+        ]
+
+        for (name, foreground, background) in cases {
+            XCTAssertGreaterThanOrEqual(morseContrastRatio(foreground, background), 4.5, name)
+        }
+    }
+
     func testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced() throws {
         let sequence = try textToTimedMorse("5", profile: profileForName(.isedParis))
 
@@ -402,6 +428,28 @@ final class MorseTrainerTests: XCTestCase {
         let lighter = max(leftLuminance, rightLuminance)
         let darker = min(leftLuminance, rightLuminance)
         return (lighter + 0.05) / (darker + 0.05)
+    }
+
+    private struct DesignTokenRGBPair {
+        let light: MorseRGB
+        let dark: MorseRGB
+    }
+
+    private func designTokenRGB(named name: String, in tokens: String) throws -> DesignTokenRGBPair {
+        let number = #"([0-9]+(?:\.[0-9]+)?)"#
+        let pattern = #"public static let \#(name) = Color\.dynamicToken\(light: DesignTokens\.RGB\(red: \#(number), green: \#(number), blue: \#(number)\), dark: DesignTokens\.RGB\(red: \#(number), green: \#(number), blue: \#(number)\)\)"#
+        let regex = try NSRegularExpression(pattern: pattern)
+        let nsTokens = tokens as NSString
+        let range = NSRange(location: 0, length: nsTokens.length)
+        let match = try XCTUnwrap(regex.firstMatch(in: tokens, range: range), "Expected to find DesignTokens.Colors.\(name)")
+        func value(at index: Int) throws -> Double {
+            let range = match.range(at: index)
+            return try XCTUnwrap(Double(nsTokens.substring(with: range)), "Expected numeric RGB component for DesignTokens.Colors.\(name)")
+        }
+        return DesignTokenRGBPair(
+            light: MorseRGB(red: try value(at: 1), green: try value(at: 2), blue: try value(at: 3)),
+            dark: MorseRGB(red: try value(at: 4), green: try value(at: 5), blue: try value(at: 6))
+        )
     }
 
     private func minimalMorseCourse() throws -> MorseCourse {

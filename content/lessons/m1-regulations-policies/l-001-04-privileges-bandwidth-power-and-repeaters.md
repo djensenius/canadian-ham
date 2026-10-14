@@ -19,6 +19,9 @@ objectives:
   - "Recognize repeater, automatic, stability, and modulation-quality requirements."
 prerequisites:
   - L-001-03
+  - L-003-05
+  - L-005-02
+  - L-006-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-001-04-A

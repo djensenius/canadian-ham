@@ -19,6 +19,8 @@ objectives:
   - "Apply message privacy, compensation, identification, and third-party limits."
 prerequisites:
   - L-001-02
+  - L-002-03
+  - L-008-01
 estimatedMinutes: 45
 quizIds:
   - QZ-L-001-03-A

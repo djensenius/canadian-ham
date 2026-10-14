@@ -133,6 +133,7 @@ export const enMessages = defineMessages({
   lessonModuleOverview: "Module overview",
   lessonNotMarkedYet: "Not marked read yet.",
   lessonMarkedReadTimes: (count: number) => `Marked read ${count} time${count === 1 ? "" : "s"}.`,
+  lessonPrerequisitesHeading: "Before this lesson",
   lessonComingSoonTitle: "Coming soon",
   lessonComingSoonCopy: "This outline is bundled now so module order and objectives are visible offline while the full lesson is authored.",
   lessonObjectives: "Objectives",
@@ -479,8 +480,7 @@ export const enMessages = defineMessages({
   referenceSheetTableAria: "Reference sheet table",
   markdownCodeBlockAria: "Lesson code block",
   markdownCodeBlockLanguageAria: (language: string) => `Lesson code block (${language})`,
-  markdownIllustrationPlaceholder: "Illustration placeholder",
-  markdownIllustrationBrief: "Illustration brief:",
+  markdownFigureTextEquivalent: "Figure text equivalent",
 });
 
 export type MessageCatalogue = typeof enMessages;
@@ -605,6 +605,7 @@ export const frMessages = defineMessages({
   lessonModuleOverview: "Aperçu du module",
   lessonNotMarkedYet: "Pas encore marquée comme lue.",
   lessonMarkedReadTimes: (count: number) => `Marquée comme lue ${count} fois.`,
+  lessonPrerequisitesHeading: "Avant cette leçon",
   lessonComingSoonTitle: "À venir",
   lessonComingSoonCopy: "Ce plan est inclus afin que l’ordre des modules et les objectifs soient visibles hors ligne pendant la rédaction complète de la leçon.",
   lessonObjectives: "Objectifs",
@@ -951,8 +952,7 @@ export const frMessages = defineMessages({
   referenceSheetTableAria: "Tableau de la feuille de référence",
   markdownCodeBlockAria: "Bloc de code de leçon",
   markdownCodeBlockLanguageAria: (language: string) => `Bloc de code de leçon (${language})`,
-  markdownIllustrationPlaceholder: "Espace réservé pour l’illustration",
-  markdownIllustrationBrief: "Résumé de l’illustration :",
+  markdownFigureTextEquivalent: "Équivalent textuel de la figure",
 } satisfies MessageCatalogue);
 
 const catalogues: Record<InterfaceLanguage, MessageCatalogue> = {

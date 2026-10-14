@@ -17,6 +17,7 @@ objectives:
   - "Recognize Yagi driven elements, directors, reflectors, and traps."
 prerequisites:
   - L-006-03
+  - L-005-05
 estimatedMinutes: 45
 quizIds:
   - QZ-L-006-04-A

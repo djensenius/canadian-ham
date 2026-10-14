@@ -15,7 +15,10 @@ objectives:
   - "Place low-pass filters in a basic HF station."
   - "Trace audio through an FM transmitter."
   - "Name the main blocks of a superheterodyne receiver."
-prerequisites: []
+prerequisites:
+  - L-006-02
+  - L-004-01
+  - L-005-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-01-A

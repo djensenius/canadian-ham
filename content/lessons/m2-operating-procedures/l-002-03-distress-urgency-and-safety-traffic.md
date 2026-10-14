@@ -15,6 +15,7 @@ objectives:
   - "Prepare a station to communicate during power outages."
 prerequisites:
   - L-002-01
+  - L-003-07
 estimatedMinutes: 30
 quizIds:
   - QZ-L-002-03-A

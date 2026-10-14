@@ -805,11 +805,24 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-seed"} />);
 
     await screen.findByRole("heading", { name: "Units, conductors, and current" });
-    assert.ok(screen.getByRole("img", { name: /horizontal metric-prefix ladder/i }));
+    assert.equal(screen.queryByText("Illustration placeholder"), null);
+    assert.equal(screen.queryByText(/Draw a simple ink-brush ladder/u), null);
     assert.ok(container.querySelector("table th[scope='col']"));
     await user.click(screen.getByRole("button", { name: "Mark lesson read" }));
     await waitFor(async () => assert.equal((await store.getLessonProgress()).length, 1));
     await expectNoAxeViolations(container);
+
+    cleanup();
+    window.location.hash = "#/learn/M5/L-005-02";
+    const figureStore = createStore("lesson-figures");
+    const figureRender = render(<App store={figureStore} now={() => fixedNow} seedFactory={() => "lesson-figure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    assert.ok(screen.getByRole("img", { name: /Power triangle with P above I and E/i }));
+    assert.ok(screen.getByRole("img", { name: /Ohm’s law triangle with E above I and R/i }));
+    assert.ok(screen.getByRole("img", { name: /Ohm’s law and power wheel/i }));
+    assert.ok(screen.getByText("Figure text equivalent"));
+    await expectNoAxeViolations(figureRender.container);
 
     cleanup();
     window.location.hash = "#/learn/M6/L-006-03";
@@ -823,6 +836,40 @@ describe("App accessibility and flows", () => {
     assert.equal(codeBlocks[0]?.getAttribute("tabindex"), "0");
     assert.match(codeBlocks[0]?.textContent ?? "", /wavelength in metres = 300 \/ frequency in MHz/);
     await expectNoAxeViolations(codeRender.container);
+  });
+
+  it("renders lesson prerequisites as localized accessible links", async () => {
+    window.location.hash = "#/learn/M4/L-004-01";
+    const store = createStore("lesson-prerequisites");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-prerequisites-seed"} />);
+
+    await screen.findByRole("heading", { name: "Amplifiers and diodes" });
+    const prerequisites = screen.getByRole("region", { name: "Before this lesson" });
+    const prerequisiteLink = within(prerequisites).getByRole("link", { name: "Power and Ohm’s law" });
+    assert.equal(prerequisiteLink.getAttribute("href"), "#/learn/M5/L-005-02");
+    assert.ok(within(prerequisites).getByRole("link", { name: "AC, decibels, capacitors, inductors, and reactance" }));
+    await expectNoAxeViolations(container);
+
+    fireEvent.click(prerequisiteLink, { ctrlKey: true });
+    assert.equal(window.location.hash, "#/learn/M4/L-004-01");
+    assert.ok(screen.getByRole("heading", { name: "Amplifiers and diodes" }));
+
+    await user.click(prerequisiteLink);
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    assert.equal(window.location.hash, "#/learn/M5/L-005-02");
+
+    cleanup();
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/learn/M5/L-005-02";
+    const frenchStore = createStore("lesson-prerequisites-fr");
+    const frenchRender = render(<App store={frenchStore} now={() => fixedNow} seedFactory={() => "lesson-prerequisites-fr-seed"} />);
+
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    const frenchPrerequisites = screen.getByRole("region", { name: "Avant cette leçon" });
+    assert.ok(within(frenchPrerequisites).getByRole("link", { name: "Units, conductors, and current" }));
+    assert.ok(frenchRender.container.querySelector(".lesson-prerequisites a span[lang='en']"));
+    await expectNoAxeViolations(frenchRender.container);
   });
 
   it("automatically includes M4 and M6 lessons from content and renders them", async () => {

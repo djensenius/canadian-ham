@@ -75,6 +75,17 @@ platform) and share one build lock, so don't run them by reflex.
 - Record per-test results for the full runs you did in the task notes and PR body, and say
   which platforms you skipped and why.
 
+### Approved accessibility audit exceptions
+- Task-42 Morse settings description: a narrow contrast exception is approved for the known Morse
+  settings description false positive; task-42 should generalize it onto the shared occluded-content
+  helper rather than adding a separate filter.
+- Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
+  whose element frame is not fully contained in the visible scroll area below an opaque navigation
+  bar. Fully visible contrast issues and every non-contrast issue must still fail.
+- Task-44.3 exam tool: owner decision 2026-10-12 approves the medium-detent rule that text inside
+  the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
+  implements that exception.
+
 ## Project notes
 - Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.
 - Active app question bank remains ISED Basic 2025-07-15; delimited TXT SHA-256 `34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f`.

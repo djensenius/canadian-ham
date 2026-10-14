@@ -19,6 +19,7 @@ objectives:
   - "Recognize extra precautions for UHF and microwave work."
 prerequisites:
   - L-003-07
+  - L-006-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-08-A

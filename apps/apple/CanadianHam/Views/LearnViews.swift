@@ -376,6 +376,7 @@ private struct LessonReaderView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
+        .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
     }
 
@@ -459,6 +460,18 @@ private struct LessonReaderView: View {
     }
 }
 
+private extension View {
+    @ViewBuilder
+    func lessonReaderOpaqueNavigationBar() -> some View {
+#if os(iOS)
+        toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+#else
+        self
+#endif
+    }
+}
+
 private struct OutlineLessonView: View {
     let lesson: Lesson
     let library: ContentLibrary
@@ -500,12 +513,10 @@ private struct OutlineLessonView: View {
 struct LessonMarkdownView: View {
     let markdown: String
     let title: String?
-    let textScale: Double
 
-    init(markdown: String, title: String? = nil, textScale: Double = 1.0) {
+    init(markdown: String, title: String? = nil) {
         self.markdown = markdown
         self.title = title
-        self.textScale = textScale
     }
 
     var body: some View {
@@ -523,119 +534,50 @@ struct LessonMarkdownView: View {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
                 Text(english(strippingLinks(from: text))) // l10n: content(en)
-                    .font(level <= 2 ? scaledFont(.title, weight: .bold) : scaledFont(.bodyLarge, weight: .bold))
+                    .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.vertical, 2)
                     .accessibilityAddTraits(.isHeader)
             }
         case .paragraph(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
-                .font(scaledFont(.body))
+                .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
         case .list(let ordered, let items):
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                         Text(ordered ? "\(index + 1)." : "•") // l10n: verbatim
-                            .font(scaledFont(.body, weight: .semibold))
+                            .font(DesignTokens.FontScale.body.weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                         Text(english(strippingLinks(from: item))) // l10n: content(en)
-                            .font(scaledFont(.body))
+                            .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
-                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
         case .code(_, let text):
             ScrollView(.horizontal) {
                 Text(english(text)) // l10n: content(en)
-                    .font(monospaceFont())
+                    .font(.system(.body, design: .monospaced))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
                     .padding(DesignTokens.Spacing.md)
             }
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
         case .table(let table):
-            LessonTableView(table: table, textScale: textScale)
-        case .illustrationBrief(let brief):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Label("Illustration brief", systemImage: "paintbrush")
-                    .font(scaledFont(.body, weight: .bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(localized(brief.description, language: .english)) // l10n: content(en)
-                    .font(scaledFont(.body))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(illustrationAltText(brief)) // l10n: localized
-                    .font(scaledFont(.caption))
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
-            }
-            .padding(DesignTokens.Spacing.md)
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel(Text(illustrationAccessibilityLabel(brief))) // l10n: localized
+            LessonTableView(table: table)
+        case .figure(let figure):
+            LessonFigureView(figure: figure)
+        case .illustrationBrief:
+            EmptyView()
         case .blockquote(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
-                .font(scaledFont(.body).italic())
+                .font(DesignTokens.FontScale.body.italic())
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
                 .padding(DesignTokens.Spacing.md)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         }
-    }
-
-    private enum LessonFontRole {
-        case caption
-        case body
-        case bodyLarge
-        case title
-    }
-
-    private func scaledFont(_ role: LessonFontRole, weight: Font.Weight = .regular) -> Font {
-        let scale = max(0.8, min(1.8, textScale))
-        if abs(scale - 1.0) < 0.01 {
-            switch role {
-            case .caption:
-                return DesignTokens.FontScale.caption.weight(weight)
-            case .body:
-                return DesignTokens.FontScale.body.weight(weight)
-            case .bodyLarge:
-                return DesignTokens.FontScale.bodyLarge.weight(weight)
-            case .title:
-                return DesignTokens.FontScale.title.weight(weight)
-            }
-        }
-        switch role {
-        case .caption:
-            return .system(size: 12 * scale, weight: weight, design: .default)
-        case .body:
-            return .system(size: 17 * scale, weight: weight, design: .default)
-        case .bodyLarge:
-            return .system(size: 20 * scale, weight: weight, design: .default)
-        case .title:
-            return .system(size: 22 * scale, weight: weight, design: .serif)
-        }
-    }
-
-    private func monospaceFont() -> Font {
-        let scale = max(0.8, min(1.8, textScale))
-        return abs(scale - 1.0) < 0.01 ? .system(.body, design: .monospaced) : .system(size: 17 * scale, weight: .regular, design: .monospaced)
-    }
-
-    private func illustrationAltText(_ brief: MarkdownIllustrationBrief) -> AttributedString {
-        var text = AttributedString(String(localized: "Alt text: "))
-        text += english(brief.altText)
-        return text
-    }
-
-    private func illustrationAccessibilityLabel(_ brief: MarkdownIllustrationBrief) -> AttributedString {
-        var text = AttributedString(String(localized: "Illustration brief. "))
-        text += english(brief.altText)
-        text += AttributedString(". ")
-        text += english(brief.description)
-        return text
     }
 
     private func strippingLinks(from value: AttributedString) -> AttributedString {
@@ -652,9 +594,158 @@ struct LessonMarkdownView: View {
     }
 }
 
-struct LessonTableView: View {
+private struct LessonFigureView: View {
+    let figure: MarkdownFigure
+    @State private var showingEnlargedFigure = false
+
+    private var aspectRatio: CGFloat {
+        LessonFigureMetadata.aspectRatio(for: figure.id)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Button("Enlarge figure") {
+                showingEnlargedFigure = true
+            }
+            .buttonStyle(.bordered)
+            .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarge")
+
+            Button {
+                showingEnlargedFigure = true
+            } label: {
+                figureImage
+                    .frame(maxWidth: .infinity)
+                    .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+            .accessibilityHint(Text("Opens enlarged figure")) // l10n: localized
+            .accessibilityIdentifier("lesson-figure-\(figure.id)")
+
+            if !figure.textEquivalent.isEmpty {
+                DisclosureGroup {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        ForEach(Array(figure.textEquivalent.enumerated()), id: \.offset) { index, item in
+                            Text(english(item)) // l10n: content(en)
+                                .font(DesignTokens.FontScale.body)
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .textSelection(.enabled)
+                                .accessibilityIdentifier("lesson-figure-\(figure.id)-text-equivalent-row-\(index)")
+                        }
+                    }
+                    .padding(.top, DesignTokens.Spacing.sm)
+                } label: {
+                    Text("Figure text equivalent")
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                }
+            }
+        }
+        .padding(DesignTokens.Spacing.md)
+        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        .sheet(isPresented: $showingEnlargedFigure) {
+            EnlargedLessonFigureView(figure: figure, aspectRatio: aspectRatio)
+        }
+    }
+
+    private var figureImage: some View {
+        Image("lesson-figure-\(figure.id)")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .aspectRatio(aspectRatio, contentMode: .fit)
+            .foregroundStyle(DesignTokens.Colors.ink)
+    }
+}
+
+private struct EnlargedLessonFigureView: View {
+    let figure: MarkdownFigure
+    let aspectRatio: CGFloat
+    @Environment(\.dismiss) private var dismiss
+    @State private var scale: CGFloat = 1
+    @State private var lastScale: CGFloat = 1
+
+    var body: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: DesignTokens.Spacing.sm) {
+                Text("Enlarged figure") // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityAddTraits(.isHeader)
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Done") // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .padding(.horizontal, DesignTokens.Spacing.md)
+                        .padding(.vertical, DesignTokens.Spacing.sm)
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
+
+            Divider()
+
+            GeometryReader { geometry in
+                let fitSize = fittedSize(in: geometry.size)
+                ScrollView([.horizontal, .vertical]) {
+                    Image("lesson-figure-\(figure.id)")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .frame(width: fitSize.width, height: fitSize.height)
+                        .scaleEffect(scale)
+                        .frame(width: fitSize.width * scale, height: fitSize.height * scale)
+                        .frame(minWidth: geometry.size.width, minHeight: geometry.size.height)
+                        .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+                        .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged-image")
+                        .onTapGesture(count: 2) {
+                            withAnimation(.easeInOut(duration: 0.18)) {
+                                scale = scale == 1 ? 2 : 1
+                                lastScale = scale
+                            }
+                        }
+                }
+                .background(DesignTokens.Colors.paper)
+                .gesture(
+                    MagnifyGesture()
+                        .onChanged { value in
+                            scale = min(max(lastScale * value.magnification, 1), 4)
+                        }
+                        .onEnded { _ in
+                            lastScale = scale
+                        }
+                )
+            }
+        }
+        .background(DesignTokens.Colors.paper)
+        .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged")
+#if os(macOS)
+        .frame(minWidth: 640, minHeight: 520)
+#endif
+    }
+
+    private func fittedSize(in container: CGSize) -> CGSize {
+        let availableWidth = max(1, container.width - DesignTokens.Spacing.xl * 2)
+        let availableHeight = max(1, container.height - DesignTokens.Spacing.xl * 2)
+        let availableAspectRatio = availableWidth / availableHeight
+        if aspectRatio >= availableAspectRatio {
+            return CGSize(width: availableWidth, height: availableWidth / aspectRatio)
+        }
+        return CGSize(width: availableHeight * aspectRatio, height: availableHeight)
+    }
+}
+
+private struct LessonTableView: View {
     let table: MarkdownTable
-    let textScale: Double
 
     var body: some View {
         ScrollView(.horizontal) {
@@ -662,26 +753,19 @@ struct LessonTableView: View {
                 GridRow {
                     ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
                         Text(english(header)) // l10n: content(en)
-                            .font(scaledCaption(weight: .bold))
+                            .font(DesignTokens.FontScale.caption.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.vertical, 6)
                     }
                 }
-                .accessibilityAddTraits(.isHeader)
                 Divider().gridCellColumns(max(table.headers.count, 1))
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
                     GridRow {
                         ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
                             Text(english(cell)) // l10n: content(en)
-                                .font(scaledCaption())
+                                .font(DesignTokens.FontScale.caption)
                                 .foregroundStyle(DesignTokens.Colors.ink)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.vertical, 6)
                         }
                     }
-                    .accessibilityElement(children: .combine)
-                    .accessibilityLabel(rowAccessibilityLabel(row)) // l10n: content(en)
                 }
             }
             .padding(DesignTokens.Spacing.md)
@@ -690,20 +774,6 @@ struct LessonTableView: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Lesson table")
-    }
-
-    private func scaledCaption(weight: Font.Weight = .regular) -> Font {
-        let scale = max(0.8, min(1.8, textScale))
-        return abs(scale - 1.0) < 0.01 ? DesignTokens.FontScale.caption.weight(weight) : .system(size: 12 * scale, weight: weight, design: .default)
-    }
-
-    private func rowAccessibilityLabel(_ row: [AttributedString]) -> Text {
-        let pairs = row.enumerated().map { index, cell -> String in
-            let header = index < table.headers.count ? String(table.headers[index].characters) : ""
-            let value = String(cell.characters)
-            return header.isEmpty ? value : "\(header), \(value)"
-        }
-        return Text(english(pairs.joined(separator: "; "))) // l10n: content(en)
     }
 }
 

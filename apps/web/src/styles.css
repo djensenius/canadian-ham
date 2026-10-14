@@ -1382,9 +1382,10 @@ input[type="checkbox"]:checked::after {
 
 .module-card,
 .lesson-row,
+.lesson-prerequisites,
 .lesson-quiz,
 .explanation-panel,
-.illustration-placeholder {
+.lesson-figure {
   padding: var(--ch-space-lg);
   border: 1px solid var(--ch-color-border);
   border-radius: var(--ch-radius-md);
@@ -1442,8 +1443,20 @@ input[type="checkbox"]:checked::after {
 .lesson-article > ol,
 .lesson-article > .markdown-table-wrapper,
 .lesson-article > .markdown-code-block,
-.lesson-article > .illustration-placeholder {
+.lesson-article > .lesson-figure {
   margin-block-end: var(--ch-space-lg);
+}
+
+.lesson-prerequisites {
+  margin-block: var(--ch-space-lg);
+}
+
+.lesson-prerequisites h3 {
+  margin-block-start: 0;
+}
+
+.lesson-prerequisites ul {
+  margin-block-end: 0;
 }
 
 .lesson-actions,
@@ -1508,18 +1521,38 @@ input[type="checkbox"]:checked::after {
   font: inherit;
 }
 
-.illustration-placeholder__art {
-  display: grid;
-  min-height: 10rem;
-  place-items: center;
-  margin-block-end: var(--ch-space-md);
-  border: 2px dashed var(--ch-color-border);
+.lesson-figure {
+  color: var(--ch-color-ink);
+}
+
+.lesson-figure__art {
+  overflow-x: auto;
+  padding: var(--ch-space-md);
+  border: 1px solid var(--ch-color-border);
   border-radius: var(--ch-radius-md);
   background: var(--ch-color-paper-inset);
-  color: var(--ch-color-ink-muted);
-  font-family: var(--ch-font-display);
-  font-size: var(--ch-type-title-size);
-  text-align: center;
+}
+
+.lesson-figure__text-equivalent summary:focus-visible {
+  outline: 3px solid var(--ch-color-focus);
+  outline-offset: 3px;
+}
+
+.lesson-figure__art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+.lesson-figure__text-equivalent {
+  margin-block-start: var(--ch-space-md);
+  color: var(--ch-color-ink);
+}
+
+.lesson-figure__text-equivalent summary {
+  cursor: pointer;
+  font-weight: 700;
 }
 
 .explanation-panel {
