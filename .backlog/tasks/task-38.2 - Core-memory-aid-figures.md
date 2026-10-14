@@ -25,9 +25,9 @@ Using the task-38.1 pipeline, draw: metric prefix ladder (giga to pico, x/÷ 1 0
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Each listed figure exists, is referenced from its lesson, and has alt text plus a text equivalent where dense
-- [ ] #2 Same accessibility and originality bar as task-38.1; light audits pass for every core figure and the agreed dark coverage is one sampled figure per module; numbers use space grouping (owner decision A)
-- [ ] #3 The L-005-01 metric-prefix ladder figure shows the micro-to-pico step as x/÷ 1 000 000 (the lesson table skips nano) or adds a nano rung; the brief's 'x 1 000 at every step' arrows are corrected when the figure is drawn
+- [x] #1 Each listed figure exists, is referenced from its lesson, and has alt text plus a text equivalent where dense
+- [x] #2 Same accessibility and originality bar as task-38.1; light audits pass for every core figure and the agreed dark coverage is one sampled figure per module; numbers use space grouping (owner decision A)
+- [x] #3 The L-005-01 metric-prefix ladder figure shows the micro-to-pico step as x/÷ 1 000 000 (the lesson table skips nano) or adds a nano rung; the brief's 'x 1 000 at every step' arrows are corrected when the figure is drawn
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -54,10 +54,12 @@ Follow-up metric-prefix fix: inserted a visible skipped-nano marker between µ a
 Approved-notes polish: updated dB table decreases to approximately ÷2/÷4 and standardized × in the table/text equivalent; widened/reflowed metric-prefix boxes so milli has room and moved the larger-unit label closer to its arrow; nudged the series arrowhead off the wire; removed the undrawn final-adjustment phrase from the wavelength text equivalent and added an explained-below pointer for 143 / f. Regenerated Apple figure assets, rerendered and visually inspected changed PNGs. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; coverage, quizzes, originality, explanations, and links content checks. Apple xbuild not run per lane.
 
 Integration validation completed on task-38-figures-integration: all core memory-aid figures are covered by CanadianHamLessonFiguresUITests light figure audits and dark module sample audits on iOS. Evidence screenshots are exported under docs/evidence/task-38-figures/app/; content originality now passes with pnpm --dir packages/content-tools check:lesson-originality:all. Figure pipeline checks pass with pnpm check:figures and pnpm check:figures:fix (no generated diff).
+
+PR #238 review evidence clarification: task-38.2 dark-mode scope was the agreed integration sampling model, not one dark audit per individual core figure. The iOS suite audits every core figure in light and audits one representative dark figure per module; for the core-memory-aid module that dark sample is metric-prefix-ladder in Module 5. The updated AC #2 wording now records that scope explicitly. Latest relevant validation still passes through the task-38 integration lane and pnpm check:figures.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Core memory-aid figures were integrated with the full lesson-figure lane. AC #2 is verified by the new iOS CanadianHamLessonFiguresUITests light/dark audits and app screenshots under docs/evidence/task-38-figures/app/, plus passing figure/content/web checks.
+Core memory-aid figures were integrated with the full lesson-figure lane. AC #2 is verified by iOS CanadianHamLessonFiguresUITests light audits for every core figure plus the agreed one-dark-sample-per-module coverage, app screenshots under docs/evidence/task-38-figures/app/, and passing figure/content/web checks.
 <!-- SECTION:FINAL_SUMMARY:END -->
