@@ -59,7 +59,7 @@ In the priority order here, distress is followed by emergency messages, and emer
 Alt text: A priority note board showing distress facts and station-readiness items.
 Text equivalent:
 - The board labels distress as life threat, MAYDAY / SOS, and first priority.
-- The lower rows say urgent: serious help and safety: hazard info.
+- The lower rows say emergency message after distress, urgent: serious help, and safety: hazard info.
 - The go-kit drawing includes labelled handheld, battery, and dipole items.
 ::
 

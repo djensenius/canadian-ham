@@ -58,7 +58,7 @@ Practical keying needs controlled rise and fall times. Edges that are too abrupt
 Alt text: Three labelled block diagrams show a CW transmitter, an SSB/CW receiver, and an SSB transmitter with signal-flow arrows.
 Text equivalent:
 - CW row: osc, buf, PA, and key feeding the PA.
-- RX row: ant, RF, mix with LO, IF, prod with BFO, AF, and spkr.
+- RX row: ant, RF, mix with LO, IF filter, IF amp, prod with BFO, AF, and spkr.
 - SSB row: mic, spch, bal with fixed, filt, mix with VFO, and final.
 ::
 

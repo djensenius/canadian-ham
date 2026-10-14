@@ -117,7 +117,7 @@ Text equivalent:
 - The lane labelled interf has listen followed by change/stop.
 - The distress lane has exception, then stand by.
 - The 3rd party lane has personal, then supervised.
-- A clock is labelled ID 30 min.
+- A clock is labelled ID start, end, and maximum 30-minute intervals.
 ::
 
 ## How these rules fit together
