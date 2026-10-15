@@ -348,7 +348,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         let initialSidebarVisible = isSidebarVisible(app.descendants(matching: .any)["root-sidebar"].firstMatch, in: app)
-        XCTAssertTrue(initialSidebarVisible, "\(context): regular-width launch should start with the sidebar visible before opening the inspector", file: file, line: line)
+        switch expectedSidebarVisibility {
+        case .collapsed:
+            XCTAssertFalse(initialSidebarVisible, "\(context): portrait starts with the system sidebar collapsed before opening the inspector on this width", file: file, line: line)
+        case .visible:
+            XCTAssertTrue(initialSidebarVisible, "\(context): landscape should start with the sidebar visible before opening the inspector", file: file, line: line)
+        }
         openTool(.calculator, in: app)
         XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5), "\(context): regular width should present exam tools in an inspector side panel", file: file, line: line)
         waitBriefly(0.8)
@@ -661,6 +666,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func activeToolPanelTop(in app: XCUIApplication) -> CGFloat? {
+        let windowFrame = app.windows.firstMatch.frame
+        for identifier in ["exam-tool-calculator-panel"] {
+            let panel = app.descendants(matching: .any)[identifier].firstMatch
+            if panel.exists, panel.frame.minX > windowFrame.midX, panel.frame.width < windowFrame.width * 0.7 {
+                return nil
+            }
+        }
         let close = app.buttons["exam-tool-close-button"].firstMatch
         if close.exists, close.frame.minY > 0 {
             return max(0, close.frame.minY - 24)
