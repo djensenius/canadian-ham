@@ -1951,7 +1951,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertFullyVisibleInMiddleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings before lower Morse audit")
         assertNoScrollableContentIntersectsProtectedArea(in: app, containing: fixedTimingNote, context: "\(appearance.rawValue) morse home lower content before audit")
-        try auditMorseHomeLowerContentWithApprovedSettingsNoteExceptions(app: app)
+        try performMorseHomeLowerContentAudit(on: app)
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
@@ -2228,53 +2228,33 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try app.performAccessibilityAudit()
     }
 
-    private func auditMorseHomeLowerContentWithApprovedSettingsNoteExceptions(app: XCUIApplication) throws {
-        let approvedSettingsNotes: [(identifier: String, element: XCUIElement)] = [
-            ("morse-settings-description", app.staticTexts["morse-settings-description"].firstMatch),
-            ("morse-settings-fixed-timing-description", app.staticTexts["morse-settings-fixed-timing-description"].firstMatch)
+    private func performMorseHomeLowerContentAudit(on app: XCUIApplication) throws {
+        let approvedSettingsNoteIdentifiers = [
+            "morse-settings-description",
+            "morse-settings-fixed-timing-description"
         ]
-        try auditIgnoringOccludedLessonTextContrast(app: app) { issue in
+        try app.performAccessibilityAudit { issue in
             guard issue.auditType == .contrast, let element = issue.element else { return false }
-            guard let approvedNote = approvedSettingsNotes.first(where: { approvedNote in
-                let matchesNoteFrame = approvedNote.element.exists && element.frame == approvedNote.element.frame
-                return self.element(element, hasOwnIdentifier: approvedNote.identifier) || matchesNoteFrame
-            }) else { return false }
+            let identifier = element.identifier
+            guard approvedSettingsNoteIdentifiers.contains(identifier) else { return false }
 
-            self.logIgnoredMorseSettingsNoteContrastIssue(element: element, approvedIdentifier: approvedNote.identifier)
+            self.logIgnoredMorseSettingsNoteContrastIssue(issue: issue, element: element, matchPath: "exact identifier")
             return true
         }
     }
 
-    private func element(_ element: XCUIElement, hasOwnIdentifier identifier: String) -> Bool {
-        if element.identifier == identifier { return true }
-        guard let attributesLine = firstAttributesLine(in: element.debugDescription) else { return false }
-        return attributesLine.contains("identifier: '\(identifier)'")
-            || attributesLine.contains("identifier: \"\(identifier)\"")
-    }
-
-    private func firstAttributesLine(in debugDescription: String) -> String? {
-        debugDescription
-            .split(separator: "\n", omittingEmptySubsequences: false)
-            .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
-            .first { $0.hasPrefix("Attributes:") }
-    }
-
-    private func logIgnoredMorseSettingsNoteContrastIssue(element: XCUIElement, approvedIdentifier: String) {
+    private func logIgnoredMorseSettingsNoteContrastIssue(issue: XCUIAccessibilityAuditIssue, element: XCUIElement, matchPath: String) {
         XCTContext.runActivity(named: "Ignored approved Morse settings-note contrast false positive") { activity in
-            let note = "label=\(element.label) identifier=\(element.identifier) approvedIdentifier=\(approvedIdentifier) frame=\(self.frameDescription(element.frame))"
+            let note = "matchPath=\(matchPath) compactDescription=\(issue.compactDescription) label=\(element.label) identifier=\(element.identifier) frame=\(self.frameDescription(element.frame))"
             let attachment = XCTAttachment(string: note)
             attachment.lifetime = .keepAlways
             activity.add(attachment)
         }
     }
 
-    private func auditIgnoringOccludedLessonTextContrast(
-        app: XCUIApplication,
-        additionallyIgnoring shouldIgnoreAdditionalIssue: ((XCUIAccessibilityAuditIssue) -> Bool)? = nil
-    ) throws {
+    private func auditIgnoringOccludedLessonTextContrast(app: XCUIApplication) throws {
         let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
         try app.performAccessibilityAudit { issue in
-            if shouldIgnoreAdditionalIssue?(issue) == true { return true }
             guard issue.auditType == .contrast else { return false }
             guard let element = issue.element else { return false }
             let frame = element.frame

@@ -89,10 +89,10 @@ platform) and share one build lock, so don't run them by reflex.
   bar; nil-element findings, navigation-bar elements, fully visible contrast issues, and every
   non-contrast issue must still fail.
 - Task-42 Morse course home lower-content audit: owner decisions 2026-10-12 and 2026-10-14 also
-  approve the fully visible Morse settings-card note false positives. In addition to the shared
-  occluded-content rule, only the Morse home lower-content audit may ignore `.contrast` findings tied
-  to accessibility identifiers `morse-settings-description` or
-  `morse-settings-fixed-timing-description`; every other issue still fails.
+  approve the fully visible Morse settings-card note false positives. Only the Morse home
+  lower-content audit may ignore `.contrast` findings whose `issue.element` identifier exactly equals
+  `morse-settings-description` or `morse-settings-fixed-timing-description`; every other issue still
+  fails.
 - Task-44.3 exam tool: owner decision 2026-10-12 approves the medium-detent rule that text inside
   the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
   implements that exception.

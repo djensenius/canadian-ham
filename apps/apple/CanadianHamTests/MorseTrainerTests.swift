@@ -210,6 +210,10 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertTrue(fixedTimingBlock.contains(".accessibilityIdentifier(\"morse-settings-fixed-timing-description\")"), "The fixed-timing audit exception must stay tied to the stable identifier")
         XCTAssertTrue(fixedTimingBlock.contains(".background(DesignTokens.Colors.paper, in: RoundedRectangle"), "The contrast guard must track the fixed-timing note background token")
 
+        let settingsSectionRange = try XCTUnwrap(trainerSource.range(of: "MorseSettingsSection(settings: $settings, openMorse: {})"))
+        let settingsSectionBlock = trainerSource[settingsSectionRange.lowerBound...].prefix(180)
+        XCTAssertTrue(settingsSectionBlock.contains(".paperCard()"), "MorseSettingsSection must stay wrapped in paperCard() so the description uses the guarded card background token")
+
         let viewsSourceURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
