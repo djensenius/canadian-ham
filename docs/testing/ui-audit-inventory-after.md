@@ -2,7 +2,10 @@
 
 Generated after the task-31 UI-suite changes (scroll-settling and teardown; launch consolidation was backed out and is task-33). Each row is one `performAccessibilityAudit` call path present in the final UI suites. `lowerHalf` is `true` only for audits that intentionally scroll lower content/details into view before auditing.
 
-Task-44.3 exam-tool exception: at the compact iPhone medium detent only, `CanadianHamExamToolsUITests` may ignore and log XCTest's nil-element Dynamic Type text-clipping audit issue (`textClipped`, raw audit type `131072`, “Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes”) while the calculator sheet is open. The nil-element `textClipped` exception is used only inside the medium-detent exam-tool audit helper, capped at five ignored issues per audit, and paired with a compensating pre-audit check that visible tool-panel static text and buttons have non-empty frames and are hittable or within the panel's visible bounds. Every other medium-detent audit issue fails, including any `textClipped` issue with an attached element. The large-detent and iPad inspector calculator audits run the full default audit with no handler. The Apple reference-sheet tool is hidden for task-44.3 and follows in TASK-44.4.
+Task-44.3 exam-tool exceptions reflected here:
+- Compact iPhone medium-detent calculator audits (`testAccessibilityAuditExamToolsLight` and `testAccessibilityAuditExamToolsDark`) use the owner-approved task-44.3 nil-element Dynamic Type clipping exception only: XCTest `textClipped` issues with `issue.element == nil` may be ignored and logged, capped at five ignored issues per audit, and paired with a compensating pre-audit hittability check for the calculator display, Close tool, and all 24 calculator keys. Every other medium-detent issue fails.
+- Large-detent, largest Dynamic Type, and iPad inspector calculator audits use the same opaque-navigation-bar occluded-content contrast rule as `auditIgnoringOccludedLessonTextContrast`: only contrast issues whose element is inside the first visible scroll view and not fully contained in the visible scroll area below the opaque navigation bar may be ignored. Fully visible contrast issues and every non-contrast issue fail.
+- Practice and mock exam screen audits use the same occluded-content contrast rule after owner decision 2026-10-14. The mock exam navigator sheet audits run the plain default audit because they pass without the occluded-content rule. The Apple reference-sheet tool is hidden for task-44.3 and follows in TASK-44.4.
 
 | platform | testName | screenState | appearance | lowerHalf |
 | --- | --- | --- | --- | --- |
@@ -106,6 +109,16 @@ Task-44.3 exam-tool exception: at the compact iPhone medium detent only, `Canadi
 | iOS | testAccessibilityAuditAdvancedCourseScreensDark | Advanced mock results | dark | false |
 | iOS | testCourseSwitchConfirmationKeepsMockExamWhenCancelledLight | Course switch confirmation | light | false |
 | iOS | testCourseSwitchConfirmationAuditsDark | Course switch confirmation | dark | false |
+| iOS | testAccessibilityAuditExamToolsLight | Calculator compact medium detent | light | false |
+| iOS | testAccessibilityAuditExamToolsDark | Calculator compact medium detent | dark | false |
+| iOS | testLargeDetentCalculatorRunsFullAccessibilityAuditLightAndDark | Calculator compact large detent | light | false |
+| iOS | testLargeDetentCalculatorRunsFullAccessibilityAuditLightAndDark | Calculator compact large detent | dark | false |
+| iOS | testLargestDynamicTypeKeepsCalculatorGridReachableLightAndDark | Calculator largest Dynamic Type | light | false |
+| iOS | testLargestDynamicTypeKeepsCalculatorGridReachableLightAndDark | Calculator largest Dynamic Type | dark | false |
+| iPadOS | testRegularWidthInspectorAccessibilityAuditLightAndDark | Calculator inspector portrait | light | false |
+| iPadOS | testRegularWidthInspectorAccessibilityAuditLightAndDark | Calculator inspector landscape | light | false |
+| iPadOS | testRegularWidthInspectorAccessibilityAuditLightAndDark | Calculator inspector portrait | dark | false |
+| iPadOS | testRegularWidthInspectorAccessibilityAuditLightAndDark | Calculator inspector landscape | dark | false |
 | tvOS | testCategoryGridAccessibilityAuditLightAndDark | Categories | light | false |
 | tvOS | testCategoryGridAccessibilityAuditLightAndDark | Categories | dark | false |
 | tvOS | testPracticeAccessibilityAuditLightAndDark | Practice | light | false |
@@ -130,4 +143,6 @@ Task-44.3 exam-tool exception: at the compact iPhone medium detent only, `Canadi
 ## Approved audit exceptions reflected after task-38.1
 
 - `testOhmsLawLessonFiguresAndAccessibilityLight` and `testOhmsLawLessonFiguresAndAccessibilityDark` use the owner-approved 2026-10-12 false-positive rule only for inline lesson scroll content under an opaque navigation bar: the handler may ignore contrast issues only when the failing element is inside the lesson scroll view and its frame is not fully contained in the visible scroll area below the bar. Navigation-bar elements fail, elements outside the scroll view fail, issues without an element fail, fully visible contrast issues fail, and every non-contrast issue fails. Enlarged figure sheets run the plain audit without this handler.
-- Task-42's Morse settings description exception and task-44.3's exam-tool medium-detent clipping exception remain separately approved and are tracked in `AGENTS.md`.
+- Practice and mock exam screens use the same owner-approved occluded-content contrast rule after owner decision 2026-10-14. The two mock navigator sheet audits remain plain default audits because they pass without the exception.
+- Task-44.3 compact medium-detent calculator audits use only the approved nil-element `textClipped` Dynamic Type exception with the 24-key/display/Close-tool hittability precheck described above. The large-detent, largest Dynamic Type, and iPad inspector calculator audits use the occluded-content contrast rule, not the medium-detent text-clipping exception.
+- Task-42's Morse settings description exception remains separately approved and is tracked in `AGENTS.md`.
