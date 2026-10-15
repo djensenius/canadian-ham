@@ -2161,7 +2161,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try auditIgnoringOccludedExamTextContrast(app: timerApp, context: "\(appearance.rawValue) mock exam question timer")
         tap("Questions", in: timerApp)
         XCTAssertTrue(timerApp.staticTexts["Question navigator"].waitForExistence(timeout: 5))
-        try auditIgnoringOccludedExamTextContrast(app: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")
+        try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")
         timerApp.terminate()
 
         let app = launchApp(arguments: [
@@ -2185,7 +2185,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) mock exam answered flagged question")
         tap("Questions", in: app)
         XCTAssertTrue(app.staticTexts["Question navigator"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the navigator sheet before auditing")
-        try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
         tap("Done", in: app)
         let next = app.buttons["mock-next-button"].firstMatch
         XCTAssertTrue(next.isEnabled, "Answered-flagged audit fixture should keep mock Next enabled")
@@ -2229,14 +2229,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditIgnoringOccludedLessonTextContrast(app: XCUIApplication) throws {
-        try auditIgnoringOccludedScrollContentContrast(app: app, context: "lesson")
-    }
-
-    private func auditIgnoringOccludedExamTextContrast(app: XCUIApplication, context: String) throws {
-        try auditIgnoringOccludedScrollContentContrast(app: app, context: context)
-    }
-
-    private func auditIgnoringOccludedScrollContentContrast(app: XCUIApplication, context: String) throws {
         let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
         try app.performAccessibilityAudit { issue in
             guard issue.auditType == .contrast else { return false }
@@ -2248,14 +2240,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
             guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
             guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
 
-            XCTContext.runActivity(named: "Ignored occluded scroll-content contrast false positive") { activity in
-                let note = "context=\(context) label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame)) matchedScrollDescendant=true"
+            XCTContext.runActivity(named: "Ignored occluded lesson scroll-content contrast false positive") { activity in
+                let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame)) matchedScrollDescendant=true"
                 let attachment = XCTAttachment(string: note)
                 attachment.lifetime = .keepAlways
                 activity.add(attachment)
             }
             return true
         }
+    }
+
+    private func auditIgnoringOccludedExamTextContrast(app: XCUIApplication, context _: String) throws {
+        try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
     private func openMockExamStart(in app: XCUIApplication) {
