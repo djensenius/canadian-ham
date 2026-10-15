@@ -215,7 +215,9 @@ final class MorseTrainerTests: XCTestCase {
             .deletingLastPathComponent()
             .appending(path: "CanadianHam/Views/StudyViews.swift")
         let viewsSource = try String(contentsOf: viewsSourceURL, encoding: .utf8)
-        XCTAssertTrue(viewsSource.contains(".background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))"), "paperCard must continue to use the guarded settings-description card background token")
+        let paperCardRange = try XCTUnwrap(viewsSource.range(of: "func paperCard()"))
+        let paperCardBlock = viewsSource[paperCardRange.lowerBound...].prefix(420)
+        XCTAssertTrue(paperCardBlock.contains(".background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))"), "paperCard() must continue to use the guarded settings-description card background token")
     }
 
     func testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced() throws {
