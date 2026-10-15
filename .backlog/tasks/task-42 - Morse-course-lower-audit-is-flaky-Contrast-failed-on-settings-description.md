@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-11 18:37'
-updated_date: '2026-10-15 13:47'
+updated_date: '2026-10-15 19:06'
 labels:
   - apple
   - testing
@@ -57,10 +57,12 @@ Handoff after supervisor stop due xbuild lock: combined implementation is pushed
 Blocked during final validation after merge e29ea688740889033d48dfca2bfbd8b3ddfe539c: the requested single nohup iPhone 17 Pro chain passed the Morse settings contrast unit guard and Light audit runs 1-4, then Light run 5 failed at CanadianHamPracticeUITests.swift:2247 with Contrast failed on `morse-settings-fixed-timing-description`, not the approved `morse-settings-description` exception. Log: /tmp/t42-validation-chain-20261014-085225.log. Failing xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-efrzkhuqjhxzruczkrbjyuwjvlgv/Logs/Test/Test-CanadianHam-2026.10.14_10-26-01--0400.xcresult. Exported failure attachments: /tmp/t42-validation-failure-attachments-20261014-102601/40391AAC-BC25-4CA1-AA4E-6E3097124556.png (full screenshot), /tmp/t42-validation-failure-attachments-20261014-102601/6ADB9790-D88C-412D-B1FA-EE44D4D69407.png (element crop), /tmp/t42-validation-failure-attachments-20261014-102601/EF670297-CED9-4585-BC75-8255327D0A4C.txt (issue description). The full screenshot shows the fixed-timing description text fully visible near the lower edge of the Morse settings card. Per task instruction, stopping without checking ACs, setting Done, opening a PR, or widening the exception.
 
 Final validation after owner decision 2026-10-14 and commit d77db222: single nohup chain /tmp/t42-validation-chain-20261014-152345.log passed CanadianHamTests/MorseTrainerTests/testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast, then passed 5 consecutive targeted Light runs and 5 consecutive targeted Dark runs of CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummary on iPhone 17 Pro. No fully visible element outside the two approved Morse settings-card note identifiers failed.
+
+PR #243 review fix: committed 0af18667 to remove the bare debugDescription substring match, match only exact element identifier/own Attributes line/exact frame, log ignored settings-note findings with XCTContext (label, identifier, frame), limit the two-identifier exception to the Morse home lower-content audit, anchor the paperCard token guard on func paperCard(), and fix the audit inventory token path. Review validation used one nohup chain /tmp/t42-review-validation-chain-20261015-095312.log: unit guard passed, Light passed 5 consecutive targeted runs, and Dark passed 5 consecutive targeted runs on iPhone 17 Pro.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented the owner-approved 2026-10-14 widening of the Morse course accessibility-audit contrast exception so only contrast issues tied to morse-settings-description or morse-settings-fixed-timing-description are ignored, in addition to the shared occluded-content contrast rule; all other audit issues still fail. Extended the token contrast guard to cover the settings description ink/paperElevated tokens and fixed-timing note ink/paper tokens, and updated AGENTS.md plus docs/testing/ui-audit-inventory-after.md. Verified with /tmp/t42-validation-chain-20261014-152345.log: the unit guard passed, then 5 consecutive Light and 5 consecutive Dark targeted Morse course audits passed on iPhone 17 Pro.
+Implemented task-42 and PR #243 review fixes: the approved Morse settings-card contrast exception is now restricted to the Morse home lower-content audit and matches only exact own identifier/own Attributes-line identifier/exact frame for morse-settings-description or morse-settings-fixed-timing-description, with XCTContext logging for ignored findings. The shared occluded-content rule remains for the other Morse course audit steps. The token guard covers both settings notes and anchors paperCard() directly; AGENTS.md and the audit inventory docs are updated. Verified with /tmp/t42-review-validation-chain-20261015-095312.log: unit guard passed, then 5 consecutive Light and 5 consecutive Dark targeted Morse course audits passed on iPhone 17 Pro.
 <!-- SECTION:FINAL_SUMMARY:END -->
