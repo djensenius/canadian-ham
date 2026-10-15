@@ -65,7 +65,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
         XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected an answer to clear calculator keyboard focus")
-        positionElementFullyVisibleAboveToolSheet(answer, in: app, context: "answer A before clearing calculator keyboard focus")
+#if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        } else {
+            positionElementFullyVisibleAboveToolSheet(answer, in: app, context: "answer A before clearing calculator keyboard focus")
+        }
+#else
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+#endif
         XCTAssertTrue(answer.isHittable, "Answer should be hittable before clearing calculator keyboard focus")
         answer.tap()
         waitBriefly(0.5)

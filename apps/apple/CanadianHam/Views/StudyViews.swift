@@ -598,6 +598,12 @@ struct PracticeSessionView: View {
     private func openExamTool(_ tool: ExamTool) {
         selectedExamTool = tool
         calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
+        if tool == .calculator {
+            Task { @MainActor in
+                calculatorViewModel.acceptHardwareKeyboardInput()
+                calculatorFocused = true
+            }
+        }
     }
 
     private func clearCalculatorKeyboardFocus() {
@@ -1064,6 +1070,12 @@ struct MockExamView: View {
     private func openExamTool(_ tool: ExamTool) {
         selectedExamTool = tool
         calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
+        if tool == .calculator {
+            Task { @MainActor in
+                calculatorViewModel.acceptHardwareKeyboardInput()
+                calculatorFocused = true
+            }
+        }
     }
 
     private func clearCalculatorKeyboardFocus() {
