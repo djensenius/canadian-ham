@@ -97,8 +97,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
-        let focusedCalculator = focusCalculatorKeyboard(in: app)
-        typeCalculatorKeys(["2", "+", "2", "="], on: focusedCalculator)
+        XCTAssertTrue(focusCalculatorKeyboard(in: app).exists)
+        tapCalculatorKey("calculator-key-2", in: app)
+        tapCalculatorKey("calculator-key-add", in: app)
+        tapCalculatorKey("calculator-key-2", in: app)
+        tapCalculatorKey("calculator-key-equals", in: app)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "4")
         closeTool(in: app)
         openTool(.calculator, in: app)
@@ -603,6 +606,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let focusedTarget = app.descendants(matching: .any)["calculator-keyboard-focus-target"].firstMatch
         XCTAssertTrue(focusedTarget.waitForExistence(timeout: 5), "Expected the calculator keyboard handler after opening the calculator", file: file, line: line)
         return focusedTarget
+    }
+
+    private func tapCalculatorKey(_ identifier: String, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let key = app.buttons[identifier].firstMatch
+        XCTAssertTrue(key.waitForExistence(timeout: 5), "Expected calculator key \(identifier)", file: file, line: line)
+        scrollExamToolUntilHittable(key, in: app, maxSwipes: 8)
+        XCTAssertTrue(key.isHittable, "Expected calculator key \(identifier) to be hittable", file: file, line: line)
+        key.tap()
     }
 
     private func typeCalculatorKeys(_ keys: [String], on calculator: XCUIElement) {
