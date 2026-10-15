@@ -2,8 +2,6 @@ import CanadianHamCalculatorEngine
 import Foundation
 #if os(iOS)
 import UIKit
-#elseif os(macOS)
-import AppKit
 #endif
 import SwiftUI
 
@@ -79,34 +77,24 @@ final class ExamCalculatorViewModel: ObservableObject {
         if acceptsHardwareKeyboardInput {
             acceptsHardwareKeyboardInput = false
         }
-        resignPlatformKeyboardFocus()
-    }
-
-    private func resignPlatformKeyboardFocus() {
 #if os(iOS)
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-#elseif os(macOS)
-        NSApp.keyWindow?.makeFirstResponder(nil)
+        resignPlatformKeyboardFocus()
 #endif
     }
 
-    func updateLocale(_ locale: CalculatorLocale) {
-        guard state.locale != locale else { return }
-        state = CalculatorState(
-            locale: locale,
-            display: state.display,
-            displayValue: state.displayValue,
-            error: state.error,
-            accumulator: state.accumulator,
-            pendingOperator: state.pendingOperator,
-            currentEntry: state.currentEntry,
-            entering: state.entering,
-            displayedValue: state.displayedValue,
-            awaitingOperand: state.awaitingOperand,
-            lastOperation: state.lastOperation,
-            justEvaluated: state.justEvaluated
-        )
+#if os(iOS)
+    private func resignPlatformKeyboardFocus() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+#endif
+
+    func updateLocale(_ locale: CalculatorLocale) {
+        state = updateCalculatorLocale(state, locale: locale)
+    }
+}
+
+func canadianHamInterfaceCalculatorLocale(bundle: Bundle = .main) -> CalculatorLocale {
+    bundle.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true ? .fr : .en
 }
 
 struct ReferenceSheetConfiguration: Equatable, Sendable {

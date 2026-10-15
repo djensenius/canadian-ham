@@ -443,8 +443,7 @@ struct PracticeSessionView: View {
         .lessonReaderOpaqueNavigationBar()
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
-        .onAppear { calculatorViewModel.updateLocale(language.calculatorLocale) }
-        .onChange(of: language) { _, next in calculatorViewModel.updateLocale(next.calculatorLocale) }
+        .onAppear { calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale()) }
         .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
         .onDisappear { onExamToolPresentationChanged(false) }
     }
@@ -688,7 +687,7 @@ struct PracticeSessionView: View {
             state.errorMessage = nil
             selectedExamTool = nil
             calculatorFocused = false
-            calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
+            calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             state.items = []
@@ -923,7 +922,7 @@ struct MockExamView: View {
             .background(DesignTokens.Colors.paper)
         }
         .onAppear {
-            calculatorViewModel.updateLocale(language.calculatorLocale)
+            calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
             refreshForCurrentTimerState()
         }
         .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
@@ -1374,7 +1373,7 @@ struct MockExamView: View {
         shouldFocusResultsHeading = false
         isSubmitting = false
         calculatorFocused = false
-        calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
+        calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
     }
 
     private func refreshForCurrentTimerState(now: Date = Date()) {
@@ -1425,7 +1424,7 @@ struct MockExamView: View {
             state.errorMessage = nil
             selectedExamTool = nil
             calculatorFocused = false
-            calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
+            calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -1500,7 +1499,7 @@ struct MockExamView: View {
         shouldFocusResultsHeading = false
         isSubmitting = false
         calculatorFocused = false
-        calculatorViewModel.clearForNewExam(locale: language.calculatorLocale)
+        calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
     }
 }
 

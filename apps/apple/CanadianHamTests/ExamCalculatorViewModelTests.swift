@@ -45,6 +45,25 @@ final class ExamCalculatorViewModelTests: XCTestCase {
         XCTAssertNotEqual(viewModel.displayValue.spoken.fr, viewModel.displayValue.spoken.en)
     }
 
+    func testUpdateLocaleRefreshesDisplayAndSpokenStringImmediately() {
+        let viewModel = ExamCalculatorViewModel(locale: .en)
+        _ = viewModel.press(.one)
+        _ = viewModel.press(.decimalPoint)
+        _ = viewModel.press(.five)
+        XCTAssertEqual(viewModel.display, "1.5")
+        XCTAssertEqual(viewModel.spokenResult, viewModel.displayValue.spoken.en)
+
+        viewModel.updateLocale(.fr)
+
+        XCTAssertEqual(viewModel.locale, .fr)
+        XCTAssertEqual(viewModel.display, "1,5")
+        XCTAssertEqual(viewModel.spokenResult, viewModel.displayValue.spoken.fr)
+
+        viewModel.updateLocale(.en)
+        XCTAssertEqual(viewModel.display, "1.5")
+        XCTAssertEqual(viewModel.spokenResult, viewModel.displayValue.spoken.en)
+    }
+
     func testReferenceSheetLoaderReturnsNilWhenBundledFileIsMissingAndLoadsBasicSheet() throws {
         let missing = try ReferenceSheetLoader.load(
             configuration: ReferenceSheetConfiguration(resourceName: "missing-reference-sheet", resourceExtension: "md", subdirectory: nil),

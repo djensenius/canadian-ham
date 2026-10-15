@@ -523,7 +523,7 @@ struct CalculatorToolView: View {
     }
 
     private func calculatorKey(for press: KeyPress) -> CalculatorKey? {
-        guard press.modifiers.subtracting(.shift).isEmpty else { return nil }
+        guard press.modifiers.intersection([.command, .control, .option]).isEmpty else { return nil }
         switch press.key {
         case .return:
             return .equals
@@ -535,14 +535,6 @@ struct CalculatorToolView: View {
             return .clearEntry
         default:
             break
-        }
-        if press.modifiers.contains(.shift) {
-            switch press.characters {
-            case "=": return .add
-            case "8": return .multiply
-            case "5": return .percent
-            default: break
-            }
         }
         switch press.characters {
         case "0": return .zero
@@ -557,15 +549,10 @@ struct CalculatorToolView: View {
         case "9": return .nine
         case ".", ",": return .decimalPoint
         case "+": return .add
-        case "-", "−": return .subtract
-        case "*", "×", "x", "X": return .multiply
-        case "/", "÷": return .divide
+        case "-": return .subtract
+        case "*", "x", "X": return .multiply
+        case "/": return .divide
         case "=": return .equals
-        case "%": return .percent
-        case "r", "R", "√": return .squareRoot
-        case "s", "S": return .square
-        case "i", "I": return .reciprocal
-        case "n", "N": return .toggleSign
         default:
             return nil
         }
@@ -582,6 +569,7 @@ struct CalculatorToolView: View {
 
     private func displayTitle(for key: CalculatorKey) -> String {
         switch key {
+        case .decimalPoint: viewModel.locale == .fr ? "," : "."
         case .subtract: "−"
         case .backspace: "⌫"
         default: key.rawValue
