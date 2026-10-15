@@ -17,16 +17,12 @@ Review source: `/Users/david/.cache/canadian-ham-reviews/r443-4.md`.
 
 ## H3 sidebar screenshots
 
-- Current screenshot files committed in `7814b1bc`:
+- Real landscape iPad sidebar comparison was refreshed and committed in `c6aebb97bcc9fa74271c1d5972429b0927c6e97a`:
   - `docs/evidence/task-44.3/sidebar-headers-before.png`
   - `docs/evidence/task-44.3/sidebar-headers-after.png`
-- Capture log path: `/tmp/task-44.3-sidebar-capture-20261015-165304/`.
-- Evidence observed before the context warning: the first portrait capture showed the real Canadian Ham app (not SpringBoard) with the sidebar and visible `Study` / `Practice categories` headers. However, the branch portrait capture did not show the sidebar after restoring exact `.automatic`; this does not satisfy H3 yet.
-- A landscape recapture is currently queued/running to get comparable real app sidebar screenshots on the same iPad simulator:
-  - Script/log: `/tmp/task-44.3-sidebar-capture-landscape.sh`, `/tmp/task-44.3-sidebar-capture-landscape.nohup.log`
-  - Current run dir: `/tmp/task-44.3-sidebar-capture-20261015-171356/`
-  - Status so far: `worktree-main 0`, `capture-origin-main 0`; branch capture was waiting/running when last checked.
-- Per coordinator steering, do not read images/large logs in this worker; use `tail`/`grep` only. A fresh worker may need to inspect the final PNGs if this worker runs out of context.
+- Capture log path: `/tmp/task-44.3-sidebar-capture-20261015-171356/`.
+- `tail`/`sips` evidence after capture: both before/after files are 2500x1900 PNGs; `worktree-main 0`, `capture-origin-main 0`, and `capture-branch 0` in that log directory. Earlier portrait image inspection confirmed the origin/main capture was the real Canadian Ham app rather than SpringBoard; after coordinator steering, do not read more images in this worker.
+- A fresh reviewer/worker may still need to visually confirm the final PNGs show `Study`, `Practice categories`, and `Tools` comparably, because this worker was instructed not to read images after the handoff update.
 
 ## LOW 6 empty band under back button
 
