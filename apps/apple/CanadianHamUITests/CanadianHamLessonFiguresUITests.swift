@@ -126,8 +126,12 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         try verifyLessonRange(Self.module7Lessons, 2..<3, appearance: .light, evidenceModuleID: "m7")
     }
 
-    func testModule8LessonFiguresLight() throws {
-        try verifyLessonRange(Self.module8Lessons, 0..<2, appearance: .light, evidenceModuleID: "m8", writeEvidence: true)
+    func testModule8LessonFiguresLightPart1() throws {
+        try verifyLessonRange(Self.module8Lessons, 0..<1, appearance: .light, evidenceModuleID: "m8", writeEvidence: true)
+    }
+
+    func testModule8LessonFiguresLightPart2() throws {
+        try verifyLessonRange(Self.module8Lessons, 1..<2, appearance: .light, evidenceModuleID: "m8")
     }
 
     func testModule1LessonFigureDarkSample() throws {

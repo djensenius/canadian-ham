@@ -375,12 +375,19 @@ private struct LessonReaderView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle("Lesson")
+        .navigationTitle(lessonModuleNavigationTitle) // l10n: localized
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
         .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
+    }
+
+    private var lessonModuleNavigationTitle: String {
+        guard let module = library.modulesById[lesson.moduleId] else {
+            return String(localized: "Lesson")
+        }
+        return String(localized: "Module \(module.order)")
     }
 
     private func lessonActionLabel(_ text: Text) -> some View {

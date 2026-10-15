@@ -6469,6 +6469,22 @@
         }
       }
     },
+    "Module %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Module %lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Module %lld"
+          }
+        }
+      }
+    },
     "Module %lld · %@" : {
       "localizations" : {
         "en" : {
