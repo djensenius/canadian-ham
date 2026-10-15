@@ -1,11 +1,11 @@
 ---
 id: TASK-44.3
 title: 'Exam tools on iOS, iPadOS and macOS'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-14 19:26'
+updated_date: '2026-10-15 17:32'
 labels:
   - apple
 dependencies:
@@ -23,9 +23,9 @@ Apple UI for the calculator and reference sheet in practice and mock exams: iPho
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 With the calculator open, the question and answer choices remain visible and operable on iPhone and iPad (portrait and landscape) with UI coverage; macOS uses the shared inspector code path and unit coverage, and the reference sheet follows in TASK-44.4
-- [ ] #2 Full default accessibility audits pass with the calculator open in light and dark; the largest text size works; the reference sheet follows in TASK-44.4
-- [ ] #3 The mock exam timer is unaffected with the calculator open
+- [x] #1 With the calculator open, the question and answer choices remain visible and operable on iPhone and iPad (portrait and landscape) with UI coverage; macOS uses the shared inspector code path and unit coverage, and the reference sheet follows in TASK-44.4
+- [x] #2 Full default accessibility audits pass with the calculator open in light and dark; the largest text size works; the reference sheet follows in TASK-44.4
+- [x] #3 The mock exam timer is unaffected with the calculator open
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -123,10 +123,12 @@ Review fix WIP: corrected AC #1 wording to describe the actual iPhone/iPad UI co
 Review-fix continuation stopped with remaining iPhone UI failures after pushed commit ee86047b7563011394349c49e86a7df1bbdd81ad. Implemented/pushed: protected-area helper now asserts offenders in positioned/final assertion, medium audit precheck asserts display/Close/24 keys are hittable, focus resetter ignores tool-panel touches, 150 ms re-grab removed, audits restored to B-001, iPad medium audits skipped, session reset uses in-app new session, calculator view models moved into session state, sidebar collapse is width-based, launch appearance is DEBUG-gated, calculator announcements use interface localized 'Calculator result' prefix, toggle-sign visible EN is 'Change sign', icon is decorative, reference-sheet config uses one default flag, AC #1 wording corrected, task-44.4 follow-up note added, and sidebar comparison files were added but still need replacement per coordinator because they are not a valid visible-sidebar no-tool comparison. Validation: git diff --check and node scripts/check-apple-text-sources.ts passed; pnpm check:apple-l10n could not complete in final state due lock/follow-on failures; targeted iPhone review-fix command still fails testCalculatorKeyboardInputIsFocusScoped and testPreciseScrollPositionsAnswerBelowProtectedAreaWithToolOpen.
 
 Fresh worker applied owner decisions: reused the LessonReader opaque token navigation bar on practice/mock exam screens; switched exam-tool large/inspector audits and practice/mock audit flows to the occluded scroll-content contrast rule while keeping the capped medium-detent nil-element textClipped exception; changed the keyboard-focus test to tap an answer and card padding instead of the selectable question text; kept question text selection; replaced the protected-area fine-scan positioning test with simple preciseScroll positioning of an answer fully above the tool sheet; updated AGENTS.md and sorted Localizable.xcstrings with main keys unchanged plus task keys only. Preliminary validation: git diff --check and node scripts/check-apple-text-sources.ts passed.
+
+Final validation at HEAD 3876866c0c78115552af9090f5fcf2471a9ec5a3: full iPhone CanadianHamExamToolsUITests passed 13 executed / 2 skipped / 0 failures in /tmp/task-44.3-resume-validation-20261015-094832/iphone-exam-tools-class.log; iPad portrait/landscape inspector/audit/screenshot selected run passed 3 / 0 in /tmp/task-44.3-resume-validation-20261015-094832/ipad-exam-tools-portrait-landscape.log; practice/mock audits passed 4 / 0 in /tmp/task-44.3-validation-20261014-152801/iphone-practice-mock-audits.log; macOS units passed 133 / 0 in /tmp/task-44.3-resume-validation-20261015-094832/macos-units.log; pnpm check:apple-l10n passed in /tmp/task-44.3-validation-20261014-152801/pnpm-check-apple-l10n.log; node scripts/check-apple-text-sources.ts passed in /tmp/task-44.3-resume-validation-20261015-094832/apple-text-sources.log; Localizable semantic check shows 0 missing/changed origin keys, 36 added, sorted. Test guard intentionally flags guarded audit/helper/skip/accessibility/minimumScaleFactor changes; these are approved by task-44.3 and owner decisions 2026-10-12/2026-10-14 and require the PR marker, not code weakening.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented the owner-approved iPad inspector behavior for Apple calculator-only exam tools: portrait regular-width iPad collapses the sidebar while the non-modal inspector is shown, restores prior visibility on close, and landscape keeps the sidebar when sidebar/detail/inspector can fit with an exam column of about 420 pt. Updated iPad coverage for portrait/landscape answer hittability and question-title containment, refreshed screenshot evidence, completed localization catalog cleanup, and validated with targeted iPad inspector/audit/screenshots, macOS unit tests, Apple localization/text-source checks, and the full iPhone exam-tools UI-test class.
+Shipped Apple calculator-only exam tools for task-44.3: compact iPhone sheet, iPad inspector/sidebar handling, macOS shared inspector path, focus-scoped hardware-keyboard input, VoiceOver/result announcements, Dynamic Type layout, localized strings, screenshot/sidebar evidence, and owner-approved opaque-nav/occluded-content audit handling. Reference sheet remains hidden/deferred to TASK-44.4. Verified with full iPhone CanadianHamExamToolsUITests (13 executed, 2 skipped, 0 failures), practice/mock audits (4/0), iPad portrait/landscape inspector/audit/screenshots (3/0), macOS unit tests (133/0), pnpm check:apple-l10n, node scripts/check-apple-text-sources.ts, Localizable semantic check, and test guard review of approved guarded changes.
 <!-- SECTION:FINAL_SUMMARY:END -->
