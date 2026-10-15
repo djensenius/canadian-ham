@@ -1,23 +1,54 @@
 # task-44.3 review-fix handoff
 
 Branch: `task-44.3-apple-exam-tools`
+Current HEAD after committing work so far: `7814b1bc` (`docs: update review fix evidence`).
 
 Review source: `/Users/david/.cache/canadian-ham-reviews/r443-4.md`.
 
-Current review-fix status:
-- Started from `d6db28419e98e85a167bf806c7300dcb90783e36`.
-- High helper group committed in `e0544e8c1dc60d932f5c369ce5bd8c38630e576e`: restored `auditIgnoringOccludedLessonTextContrast` in `CanadianHamPracticeUITests.swift` byte-identical to `origin/main`; deleted the broader exam-tools multi-scroll occluded filter; exam-tool large/largest/iPad inspector audits now call `auditIgnoringOccludedLessonTextContrast`; local ExamTools scroll helpers were renamed to avoid shadowing shared helper names.
-- Calculator behavior group committed in `f780a9f7f48480bb18fd77e7fe8f0ed73e7cd19a`: matched web keyboard mapping, switched calculator display/spoken values to interface locale, made keyboard-focus resignation iOS-only, and added locale-refresh unit coverage.
-- UI coverage group in progress: dark large-detent/largest Dynamic Type/iPad inspector audit loops, calculator open auto-focus UI coverage, mock-exam reset UI coverage, and exact sidebar-visibility restore test expectations.
+## Findings resolved so far
 
-Remaining requested work after the UI coverage group:
-- Capture real origin/main vs branch iPad sidebar header screenshots and verify the PNGs show the app.
-- Update audit inventory docs.
-- Add dark runs for large-detent, largest Dynamic Type and iPad inspector audits.
-- Match web keyboard mapping and calculator interface-locale behavior; add unit/UI coverage.
-- Restore exact sidebar column visibility and update iPad tests.
-- Delete this task's old `docs/evidence/task-44.3/resume-handoff.md` process note.
-- Add new mock reset and app-level typeKey auto-focus UI tests.
-- Check iPhone empty band/back-button evidence.
-- Rebuild `Localizable.xcstrings` deterministically from origin/main order plus new keys.
-- Run only affected tests with `xbuild` via nohup chains and no direct `xcodebuild`.
+- HIGH H1: Done in `e0544e8c1dc60d932f5c369ce5bd8c38630e576e`. `auditIgnoringOccludedLessonTextContrast` in `CanadianHamPracticeUITests.swift` was restored byte-identical to `origin/main` for the function body, activity name, and note text.
+- HIGH H2: Done in `e0544e8c1dc60d932f5c369ce5bd8c38630e576e`. The separate broader exam-tools occluded filter was deleted. ExamTools large/largest/iPad inspector audits now call the shared `auditIgnoringOccludedLessonTextContrast` logic in the new test file. The local ExamTools helpers were renamed from `scrollUntilHittable`/`preciseScroll` to `scrollExamToolUntilHittable`/`preciseExamToolScroll` to avoid shadowing shared helper names.
+  - H2 scroll-view question evidence so far: no affected audit rerun yet after switching to the shared first-visible-scroll-view helper. If the shared helper chooses the wrong scroll view while a tool is open, stop and report with evidence; do not add another filter.
+- MEDIUM M3/M4 and LOW 8: Done in `f780a9f7f48480bb18fd77e7fe8f0ed73e7cd19a`. Calculator keyboard mapping now follows the web mapping (reject Command/Control/Option only; no Shift branch; removed r/s/i/n shortcuts), calculator display/spoken value uses interface locale via `canadianHamInterfaceCalculatorLocale()`, the decimal key shows `,` for French, `updateLocale` refreshes display via `updateCalculatorLocale`, unit coverage was added, and first-responder resignation is iOS-only.
+- MEDIUM M2, MEDIUM M5, LOW 2, LOW 3, LOW 4, LOW 5 partial: Done in `1f499300fb00a1fa116287d5cc2789d6b5142fb5`. Added dark loops for large-detent, largest Dynamic Type, and iPad inspector audits; restored exact sidebar column visibility; portrait iPad test records/asserts before state; renamed the overstated positioning test; added app-level `app.typeKey("7")` calculator auto-focus UI test; added UI test that starting a new mock exam resets calculator state. Some iPad non-skipped coverage is added but final iPad validation remains to run.
+- LOW 1, LOW 9, MEDIUM M1: Done in `7814b1bc`. Deleted `docs/evidence/task-44.3/resume-handoff.md`; rebuilt `Localizable.xcstrings` deterministically from `origin/main` order with the 36 task keys inserted in sorted position; updated `docs/testing/ui-audit-inventory-after.md` to describe the real medium-detent exception, occluded-content rule use, plain navigator audits, and added rows for new exam-tool audit paths.
+- LOW 7: Code adjusted in `e0544e8c`: the two mock navigator sheet audits reverted to plain `performAudit` because the reviewer asked to keep them plain if they pass. They still need validation in the practice/mock audit rerun.
+
+## H3 sidebar screenshots
+
+- Current screenshot files committed in `7814b1bc`:
+  - `docs/evidence/task-44.3/sidebar-headers-before.png`
+  - `docs/evidence/task-44.3/sidebar-headers-after.png`
+- Capture log path: `/tmp/task-44.3-sidebar-capture-20261015-165304/`.
+- Evidence observed before the context warning: the first portrait capture showed the real Canadian Ham app (not SpringBoard) with the sidebar and visible `Study` / `Practice categories` headers. However, the branch portrait capture did not show the sidebar after restoring exact `.automatic`; this does not satisfy H3 yet.
+- A landscape recapture is currently queued/running to get comparable real app sidebar screenshots on the same iPad simulator:
+  - Script/log: `/tmp/task-44.3-sidebar-capture-landscape.sh`, `/tmp/task-44.3-sidebar-capture-landscape.nohup.log`
+  - Current run dir: `/tmp/task-44.3-sidebar-capture-20261015-171356/`
+  - Status so far: `worktree-main 0`, `capture-origin-main 0`; branch capture was waiting/running when last checked.
+- Per coordinator steering, do not read images/large logs in this worker; use `tail`/`grep` only. A fresh worker may need to inspect the final PNGs if this worker runs out of context.
+
+## LOW 6 empty band under back button
+
+- Not resolved. I have not yet captured/compared the iPhone same-flow origin/main vs branch screenshots for the empty band under the back button.
+- Existing reviewer observation: branch iPhone screenshots show an ~80 pt empty band, likely large-title area; must verify whether the same band exists on origin/main in the same flow. If not pre-existing, fix it; if pre-existing, report with screenshots.
+
+## Remaining work
+
+1. Finish/verify H3 sidebar before/after screenshots once the landscape capture finishes. Confirm they show the app, not SpringBoard, and are comparable (`Study`, `Practice categories`, `Tools` where possible).
+2. Check LOW 6 empty band under back button with same-flow origin/main vs branch evidence.
+3. Run validation with `nohup` chains, waiting for xbuild lock and never killing other builds:
+   - iPhone full `CanadianHamExamToolsUITests` class.
+   - Practice/mock audits (`testAccessibilityAuditPracticeSessionLight/Dark`, `testAccessibilityAuditMockExamFlowLight/Dark`).
+   - iPad tests, including remaining non-skipped tests with `-only-testing` as requested.
+   - macOS unit tests (shared code changed: calculator engine Swift + app model/views).
+   - `pnpm check:apple-l10n`.
+   - `node scripts/check-apple-text-sources.ts`.
+   - `node scripts/check-test-guard.mjs --base origin/main --head HEAD`.
+4. Update Backlog notes/AC/final summary only after validation.
+5. Report final SHA, per-test results, and findings-resolution table.
+
+## Current running/queued work
+
+- Landscape sidebar capture still running/queued at last check: `/tmp/task-44.3-sidebar-capture-landscape.nohup.log` and `/tmp/task-44.3-sidebar-capture-20261015-171356/`.
+- Other unrelated xbuild jobs were holding the shared lock; do not kill them.
