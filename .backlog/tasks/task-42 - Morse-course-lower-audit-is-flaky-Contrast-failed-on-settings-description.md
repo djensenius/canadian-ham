@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-11 18:37'
-updated_date: '2026-10-15 19:06'
+updated_date: '2026-10-15 22:57'
 labels:
   - apple
   - testing
@@ -59,10 +59,12 @@ Blocked during final validation after merge e29ea688740889033d48dfca2bfbd8b3ddfe
 Final validation after owner decision 2026-10-14 and commit d77db222: single nohup chain /tmp/t42-validation-chain-20261014-152345.log passed CanadianHamTests/MorseTrainerTests/testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast, then passed 5 consecutive targeted Light runs and 5 consecutive targeted Dark runs of CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummary on iPhone 17 Pro. No fully visible element outside the two approved Morse settings-card note identifiers failed.
 
 PR #243 review fix: committed 0af18667 to remove the bare debugDescription substring match, match only exact element identifier/own Attributes line/exact frame, log ignored settings-note findings with XCTContext (label, identifier, frame), limit the two-identifier exception to the Morse home lower-content audit, anchor the paperCard token guard on func paperCard(), and fix the audit inventory token path. Review validation used one nohup chain /tmp/t42-review-validation-chain-20261015-095312.log: unit guard passed, Light passed 5 consecutive targeted runs, and Dark passed 5 consecutive targeted runs on iPhone 17 Pro.
+
+PR #243 re-review fix: committed d8bf4914f5a379c3876da8854e17d7d5092981b5 to make auditIgnoringOccludedLessonTextContrast byte-identical to origin/main again, replace the Morse home lower-content audit with a test-local exact-identifier-only handler, remove Attributes-line and frame fallbacks, log matchPath/compactDescription/label/identifier/frame for ignored settings-note findings, assert MorseSettingsSection remains wrapped in paperCard(), and update docs to say exact identifier only. Evidence: /tmp/t42-rereview-validation-chain-20261015-162115.log passed the unit guard plus 5 consecutive Light and 5 consecutive Dark targeted Morse course audits; exact-identifier-only handler fired during successful runs, confirming issue.element.identifier matches the approved identifiers.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented task-42 and PR #243 review fixes: the approved Morse settings-card contrast exception is now restricted to the Morse home lower-content audit and matches only exact own identifier/own Attributes-line identifier/exact frame for morse-settings-description or morse-settings-fixed-timing-description, with XCTContext logging for ignored findings. The shared occluded-content rule remains for the other Morse course audit steps. The token guard covers both settings notes and anchors paperCard() directly; AGENTS.md and the audit inventory docs are updated. Verified with /tmp/t42-review-validation-chain-20261015-095312.log: unit guard passed, then 5 consecutive Light and 5 consecutive Dark targeted Morse course audits passed on iPhone 17 Pro.
+Implemented task-42 and PR #243 re-review fixes: the shared occluded-content helper is byte-identical to origin/main, the Morse home lower-content audit uses a test-local exact-identifier-only contrast exception for morse-settings-description and morse-settings-fixed-timing-description, all fallbacks were removed, and ignored findings are logged with match path, compact description, label, identifier and frame. The token guard now also asserts MorseSettingsSection remains wrapped in paperCard(), and docs state exact identifier only. Verified with /tmp/t42-rereview-validation-chain-20261015-162115.log: the unit guard passed, then 5 consecutive Light and 5 consecutive Dark targeted Morse course audits passed on iPhone 17 Pro; shared helper comparison against origin/main was byte-identical, and the test guard findings are approved by the PR body marker.
 <!-- SECTION:FINAL_SUMMARY:END -->
