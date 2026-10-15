@@ -39,6 +39,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertFalse(advancedApp.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "Advanced course must not offer the Basic reference sheet")
     }
 
+    func testCalculatorAutoFocusesHardwareKeyboardOnOpen() throws {
+        let app = launchPracticeQuestion()
+        defer { app.terminate() }
+
+        openTool(.calculator, in: app)
+        app.typeKey("7", modifierFlags: [])
+        waitBriefly()
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "7", "Opening the calculator should focus hardware-keyboard input without tapping inside the panel")
+    }
+
     func testCalculatorKeyboardInputIsFocusScoped() throws {
         let app = launchPracticeQuestion(extraArguments: ["-CanadianHamPracticeMode", "review-later"])
         defer { app.terminate() }
@@ -88,7 +98,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         openTool(.calculator, in: app)
         let focusedCalculator = focusCalculatorKeyboard(in: app)
-        typeCalculatorKeys(["2", "s"], on: focusedCalculator)
+        typeCalculatorKeys(["2", "+", "2", "="], on: focusedCalculator)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "4")
         closeTool(in: app)
         openTool(.calculator, in: app)
@@ -132,6 +142,36 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "mock calculator sheet")
     }
 
+    func testCalculatorValueResetsForNewMockExam() throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-exam-tools-mock-reset",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        defer { app.terminate() }
+
+        tapStartMockExam(in: app)
+        openTool(.calculator, in: app)
+        let focusedCalculator = focusCalculatorKeyboard(in: app)
+        typeCalculatorKeys(["7"], on: focusedCalculator)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "7")
+        closeTool(in: app)
+
+        let endExam = app.buttons["end-mock-exam-button"].firstMatch
+        XCTAssertTrue(endExam.waitForExistence(timeout: 5), "Expected End exam button")
+        scrollExamToolUntilHittable(endExam, in: app, maxSwipes: 12)
+        XCTAssertTrue(endExam.isHittable, "Expected End exam to be hittable")
+        endExam.tap()
+        let alert = app.alerts["End mock exam?"].firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5), "Expected end-exam confirmation")
+        alert.buttons["End exam"].tap()
+
+        tapStartMockExam(in: app)
+        openTool(.calculator, in: app)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "0", "Starting a new mock exam should reset calculator state")
+    }
+
     func testRegularWidthUsesInspectorAndKeepsAnswersHittable() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector layout is covered by the targeted iPad run.")
@@ -167,39 +207,47 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try performMediumDetentExamToolAudit(on: app, context: "dark calculator medium")
     }
 
-    func testLargeDetentCalculatorRunsFullAccessibilityAudit() throws {
-        let app = launchAuditPracticeQuestion(extraArguments: ["-CanadianHamExamToolInitialDetent", "large"])
-        defer { app.terminate() }
+    func testLargeDetentCalculatorRunsFullAccessibilityAuditLightAndDark() throws {
+        for appearance in ["light", "dark"] {
+            let app = launchAuditPracticeQuestion(appearance: appearance, extraArguments: ["-CanadianHamExamToolInitialDetent", "large"])
+            defer { app.terminate() }
 
-        openTool(.calculator, in: app)
-        expandCompactSheetToLarge(in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5), "The calculator should show keyboard help when the large detent has room")
-        waitBriefly(0.8)
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+            openTool(.calculator, in: app)
+            expandCompactSheetToLarge(in: app)
+            XCTAssertTrue(app.descendants(matching: .any)["calculator-keyboard-help"].firstMatch.waitForExistence(timeout: 5), "The calculator should show keyboard help when the large detent has room")
+            waitBriefly(0.8)
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+            app.terminate()
+        }
     }
 
-    func testRegularWidthInspectorAccessibilityAudit() throws {
+    func testRegularWidthInspectorAccessibilityAuditLightAndDark() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector audit is covered by the targeted iPad run.")
-        try runRegularWidthInspectorAuditScenario(orientation: .portrait, context: "iPad portrait inspector audit")
-        try runRegularWidthInspectorAuditScenario(orientation: .landscapeLeft, context: "iPad landscape inspector audit")
+        for appearance in ["light", "dark"] {
+            try runRegularWidthInspectorAuditScenario(orientation: .portrait, appearance: appearance, context: "iPad portrait inspector audit \(appearance)")
+            try runRegularWidthInspectorAuditScenario(orientation: .landscapeLeft, appearance: appearance, context: "iPad landscape inspector audit \(appearance)")
+        }
         XCUIDevice.shared.orientation = .portrait
 #else
         throw XCTSkip("Inspector audit is covered by the targeted iPad run.")
 #endif
     }
 
-    func testLargestDynamicTypeKeepsCalculatorGridReachable() throws {
-        let app = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
-        defer { app.terminate() }
+    func testLargestDynamicTypeKeepsCalculatorGridReachableLightAndDark() throws {
+        for appearance in ["light", "dark"] {
+            let app = launchPracticeQuestion(appearance: appearance, extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
+            defer { app.terminate() }
 
-        openTool(.calculator, in: app)
-        let reciprocal = app.buttons["calculator-key-reciprocal"].firstMatch
-        scrollCalculatorPanelUntilElementExists(reciprocal, in: app, maxSwipes: 10)
-        XCTAssertTrue(reciprocal.exists, "The lower calculator keys should exist at the largest accessibility text size")
-        scrollExamToolUntilHittable(reciprocal, in: app, maxSwipes: 10)
-        XCTAssertTrue(reciprocal.isHittable, "The calculator grid should remain usable by scrolling at the largest accessibility text size")
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+            openTool(.calculator, in: app)
+            let reciprocal = app.buttons["calculator-key-reciprocal"].firstMatch
+            scrollCalculatorPanelUntilElementExists(reciprocal, in: app, maxSwipes: 10)
+            XCTAssertTrue(reciprocal.exists, "The lower calculator keys should exist at the largest accessibility text size")
+            scrollExamToolUntilHittable(reciprocal, in: app, maxSwipes: 10)
+            XCTAssertTrue(reciprocal.isHittable, "The calculator grid should remain usable by scrolling at the largest accessibility text size")
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+            app.terminate()
+        }
     }
 
     func testPreciseScrollPositionsAnswerAboveToolSheet() throws {
@@ -288,6 +336,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
         defer { app.terminate() }
 
+        let initialSidebarVisible = isSidebarVisible(app.descendants(matching: .any)["root-sidebar"].firstMatch, in: app)
+        XCTAssertTrue(initialSidebarVisible, "\(context): regular-width launch should start with the sidebar visible before opening the inspector", file: file, line: line)
         openTool(.calculator, in: app)
         XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5), "\(context): regular width should present exam tools in an inspector side panel", file: file, line: line)
         waitBriefly(0.8)
@@ -296,13 +346,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "\(context) calculator inspector", file: file, line: line)
         closeTool(in: app)
         waitBriefly(0.8)
-        assertSidebarVisibility(.visible, in: app, context: "\(context) after closing calculator inspector", file: file, line: line)
+        XCTAssertEqual(isSidebarVisible(app.descendants(matching: .any)["root-sidebar"].firstMatch, in: app), initialSidebarVisible, "\(context): closing the inspector should restore the sidebar visibility that existed before opening it", file: file, line: line)
     }
 
-    private func runRegularWidthInspectorAuditScenario(orientation: UIDeviceOrientation, context: String, file: StaticString = #filePath, line: UInt = #line) throws {
+    private func runRegularWidthInspectorAuditScenario(orientation: UIDeviceOrientation, appearance: String, context: String, file: StaticString = #filePath, line: UInt = #line) throws {
         XCUIDevice.shared.orientation = orientation
         waitBriefly(0.8)
-        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+        let app = launchPracticeQuestion(appearance: appearance, extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
         defer { app.terminate() }
 
         openTool(.calculator, in: app)

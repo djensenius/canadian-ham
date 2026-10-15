@@ -7,9 +7,10 @@ Review source: `/Users/david/.cache/canadian-ham-reviews/r443-4.md`.
 Current review-fix status:
 - Started from `d6db28419e98e85a167bf806c7300dcb90783e36`.
 - High helper group committed in `e0544e8c1dc60d932f5c369ce5bd8c38630e576e`: restored `auditIgnoringOccludedLessonTextContrast` in `CanadianHamPracticeUITests.swift` byte-identical to `origin/main`; deleted the broader exam-tools multi-scroll occluded filter; exam-tool large/largest/iPad inspector audits now call `auditIgnoringOccludedLessonTextContrast`; local ExamTools scroll helpers were renamed to avoid shadowing shared helper names.
-- Calculator behavior group in progress: matching web keyboard mapping, interface-locale calculator display/spoken values, iOS-only keyboard focus resignation, and locale-refresh unit coverage.
+- Calculator behavior group committed in `f780a9f7f48480bb18fd77e7fe8f0ed73e7cd19a`: matched web keyboard mapping, switched calculator display/spoken values to interface locale, made keyboard-focus resignation iOS-only, and added locale-refresh unit coverage.
+- UI coverage group in progress: dark large-detent/largest Dynamic Type/iPad inspector audit loops, calculator open auto-focus UI coverage, mock-exam reset UI coverage, and exact sidebar-visibility restore test expectations.
 
-Remaining requested work after the calculator behavior group:
+Remaining requested work after the UI coverage group:
 - Capture real origin/main vs branch iPad sidebar header screenshots and verify the PNGs show the app.
 - Update audit inventory docs.
 - Add dark runs for large-detent, largest Dynamic Type and iPad inspector audits.
