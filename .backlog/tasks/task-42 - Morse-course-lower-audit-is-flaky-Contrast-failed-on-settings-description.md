@@ -1,7 +1,7 @@
 ---
 id: TASK-42
 title: Morse course lower audit is flaky (Contrast failed on settings description)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-11 18:37'
@@ -22,9 +22,9 @@ On main after the Morse polish merge, testAccessibilityAuditMorseCourseLessonAnd
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The failing element and its on-screen position at failure are identified from the xcresult (exported issue and screenshot) and recorded
-- [ ] #2 Root cause fixed with test-only positioning (or a genuine contrast fix if the colours really fail, measured), without loosening the audit, adding handlers or changing visuals without owner approval
-- [ ] #3 Both audits pass 5 consecutive targeted runs each
+- [x] #1 The failing element and its on-screen position at failure are identified from the xcresult (exported issue and screenshot) and recorded
+- [x] #2 Root cause fixed with test-only positioning (or a genuine contrast fix if the colours really fail, measured), without loosening the audit, adding handlers or changing visuals without owner approval
+- [x] #3 Both audits pass 5 consecutive targeted runs each
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -58,3 +58,9 @@ Blocked during final validation after merge e29ea688740889033d48dfca2bfbd8b3ddfe
 
 Final validation after owner decision 2026-10-14 and commit d77db222: single nohup chain /tmp/t42-validation-chain-20261014-152345.log passed CanadianHamTests/MorseTrainerTests/testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast, then passed 5 consecutive targeted Light runs and 5 consecutive targeted Dark runs of CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummary on iPhone 17 Pro. No fully visible element outside the two approved Morse settings-card note identifiers failed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented the owner-approved 2026-10-14 widening of the Morse course accessibility-audit contrast exception so only contrast issues tied to morse-settings-description or morse-settings-fixed-timing-description are ignored, in addition to the shared occluded-content contrast rule; all other audit issues still fail. Extended the token contrast guard to cover the settings description ink/paperElevated tokens and fixed-timing note ink/paper tokens, and updated AGENTS.md plus docs/testing/ui-audit-inventory-after.md. Verified with /tmp/t42-validation-chain-20261014-152345.log: the unit guard passed, then 5 consecutive Light and 5 consecutive Dark targeted Morse course audits passed on iPhone 17 Pro.
+<!-- SECTION:FINAL_SUMMARY:END -->
