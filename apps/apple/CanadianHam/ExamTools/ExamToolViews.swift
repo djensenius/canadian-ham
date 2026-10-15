@@ -428,7 +428,7 @@ struct CalculatorToolView: View {
         .focused($hasKeyboardFocus)
         .onAppear {
             if calculatorFocused {
-                hasKeyboardFocus = true
+                focusKeyboardAfterLayout()
             }
         }
         .simultaneousGesture(TapGesture().onEnded {
@@ -436,7 +436,7 @@ struct CalculatorToolView: View {
         })
         .onChange(of: calculatorFocused) { _, isFocused in
             if isFocused {
-                hasKeyboardFocus = true
+                focusKeyboardAfterLayout()
             } else {
                 hasKeyboardFocus = false
                 viewModel.suspendHardwareKeyboardInput()
@@ -506,6 +506,15 @@ struct CalculatorToolView: View {
         viewModel.acceptHardwareKeyboardInput()
         calculatorFocused = true
         hasKeyboardFocus = true
+    }
+
+    private func focusKeyboardAfterLayout() {
+        Task { @MainActor in
+            await Task.yield()
+            guard calculatorFocused else { return }
+            viewModel.acceptHardwareKeyboardInput()
+            hasKeyboardFocus = true
+        }
     }
 
     private func pressKey(_ key: CalculatorKey) {
