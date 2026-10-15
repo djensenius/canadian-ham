@@ -521,7 +521,7 @@ struct RootView: View {
 
         guard regularWidthExamToolPresented, !canFitSidebarDetailAndInspector else {
             if let preToolSplitColumnVisibility {
-                splitColumnVisibility = preToolSplitColumnVisibility
+                splitColumnVisibility = preToolSplitColumnVisibility == .automatic ? .all : preToolSplitColumnVisibility
                 self.preToolSplitColumnVisibility = nil
             }
             return
