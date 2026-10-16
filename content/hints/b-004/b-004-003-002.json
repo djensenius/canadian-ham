@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-002",
+  "questionId": "B-004-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the basic active component introduced at the start of this lesson.",
+      "fr": "Revoyez le composant actif de base présenté au début de cette leçon."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "bipolar-transistors-current-controlled-devices"
+  },
+  "singleLevelReason": "Definition recall: a second hint would state the component name directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

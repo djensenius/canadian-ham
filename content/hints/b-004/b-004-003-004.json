@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-004",
+  "questionId": "B-004-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the effect shown in the small audio stage example.",
+      "fr": "Revoyez l’effet montré dans l’exemple du petit étage audio."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "in-the-real-world-transistor-as-a-small-audio-amplifier"
+  },
+  "singleLevelReason": "Term recall: a second hint would name the effect directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

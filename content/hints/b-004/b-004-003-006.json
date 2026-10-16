@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-006",
+  "questionId": "B-004-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what the lettered polarity labels belong to in the active-device section.",
+      "fr": "Revoyez à quoi appartiennent les étiquettes de polarité à lettres dans la section sur les composants actifs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "npn-and-pnp-polarity"
+  },
+  "singleLevelReason": "Component-label recall: a second hint would identify the device family.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
