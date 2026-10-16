@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-021-003",
+  "questionId": "B-001-021-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review coastal location rules for Canadian operators outside Canada.",
+      "fr": "Revoyez les règles d'emplacement côtier pour les opérateurs canadiens hors du Canada."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-05",
+    "sectionAnchor": "reference-facts-itu-regions-and-operating-location"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
