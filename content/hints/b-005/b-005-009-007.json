@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-009-007",
+  "questionId": "B-005-009-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the safety rule for polarized electrolytic capacitors.",
+      "fr": "Revoyez la règle de sécurité pour les condensateurs électrolytiques polarisés."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "what-sets-inductance-and-capacitance"
+  },
+  "singleLevelReason": "Pure precaution recall: a second hint would state the forbidden connection condition.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
