@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Sort the choices by material family first; ceramics, gases, and dry polymers are often used where current should not flow.",
-      "fr": "Classez d'abord les choix par famille de matériaux; les céramiques, les gaz et les polymères secs servent souvent là où le courant ne doit pas passer."
+      "en": "Think about where each material is used in a station: holding wires apart, or carrying current?",
+      "fr": "Pensez à l'usage de chaque matériau dans une station : tenir les fils séparés ou transporter le courant?"
     },
     {
       "level": 2,
