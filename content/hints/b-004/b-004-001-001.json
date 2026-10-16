@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-001",
+  "questionId": "B-004-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the lesson topic on signal-level stages and what job they do in a radio chain.",
+      "fr": "Revoyez le sujet de la leçon sur les étages de niveau de signal et leur rôle dans une chaîne radio."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "amplifiers-raise-signal-level"
+  },
+  "singleLevelReason": "Definition recall: any content hint would name or closely describe the circuit type.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

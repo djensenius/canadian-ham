@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-008",
+  "questionId": "B-004-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what a stage label about level increase tells you about the stage's action.",
+      "fr": "Revoyez ce qu’une indication d’augmentation de niveau révèle sur l’action d’un étage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "amplifiers-raise-signal-level"
+  },
+  "singleLevelReason": "Term relationship recall: a second hint would name the property directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

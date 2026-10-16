@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-005",
+  "questionId": "B-004-001-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the modest speech band used for clear communications audio.",
+      "fr": "Revoyez la bande vocale modeste utilisée pour une phonie de communication claire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "amplifiers-raise-signal-level"
+  },
+  "singleLevelReason": "Numeric recall: a second hint would give away the range or eliminate the distractor ranges.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

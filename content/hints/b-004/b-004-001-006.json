@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-006",
+  "questionId": "B-004-001-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how signal-level stages may be designed for different electrical quantities.",
+      "fr": "Revoyez comment les étages de niveau de signal peuvent être conçus pour différentes grandeurs électriques."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "amplifiers-raise-signal-level"
+  },
+  "singleLevelReason": "List recall: a second hint would name the remaining quantity or eliminate the other properties.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
