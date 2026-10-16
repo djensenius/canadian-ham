@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 12:53'
+updated_date: '2026-10-16 12:55'
 labels:
   - content
 dependencies:
@@ -82,4 +82,6 @@ Rewrote B-001-004 by hand after quality steering: 7 hints (0 two-level, 7 single
 Rewrote B-001-005 by hand after quality steering: 6 hints (5 two-level, 1 single-level B: B-001-005-004). Validation: pnpm check:hints -- --subsection B-001-005 --require-complete passed. Pausing for sample review before continuing B-001-006 onward.
 
 Corrected rewritten sample counts for review: B-001-002 has 3 two-level and 6 single-level B; B-001-003 has 4 two-level and 4 single-level B; B-001-004 has 0 two-level and 7 single-level B; B-001-005 has 5 two-level and 1 single-level B. B-001-006 onward currently has no hint files on this branch pending review and manual rewrite.
+
+Re-audited B-001-002 through B-001-005 after sample review using the no-decisive-fact self-test. Updated README with the self-test and examples. Current sample counts: B-001-002 0 two-level / 9 single-level B; B-001-003 1 two-level / 7 single-level B; B-001-004 0 two-level / 7 single-level B; B-001-005 0 two-level / 6 single-level B. Validation: subsection checks for B-001-002, -003, -004, -005 all passed with --require-complete.
 <!-- SECTION:NOTES:END -->
