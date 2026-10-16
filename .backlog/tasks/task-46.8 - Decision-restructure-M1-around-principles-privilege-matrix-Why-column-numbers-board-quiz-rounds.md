@@ -26,8 +26,7 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 - [ ] #1 Owner decision recorded
 - [ ] #2 M1 lessons are organised around stated principles with the privilege matrix, Why column and numbers board; every covered question remains taught (taught-facts check)
 - [ ] #3 Lesson quizzes are delivered in section-sized rounds on web and Apple
-- [ ] #4 M1 lessons are restructured around principles with a privilege matrix, a Why column, a numbers board and quiz rounds, following docs/teaching-guide.md
-- [ ] #5 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
+- [ ] #4 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
 <!-- AC:END -->
 
 ## Implementation Notes
