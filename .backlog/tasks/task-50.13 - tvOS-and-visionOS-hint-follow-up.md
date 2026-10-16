@@ -4,7 +4,7 @@ title: tvOS and visionOS hint follow-up
 status: To Do
 assignee: []
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 08:12'
+updated_date: '2026-10-16 11:50'
 labels:
   - apple
 dependencies:
@@ -28,4 +28,6 @@ Bring the Hint tool to tvOS and visionOS after the first Apple iOS/iPadOS/macOS 
 - [ ] #3 Progress and spaced-review semantics match the web and iOS/iPadOS/macOS implementations.
 - [ ] #4 Reference-sheet pointer labels from referenceSheetSection are shown only on tvOS/visionOS surfaces where the reference sheet is available and hidden otherwise.
 - [ ] #5 tvOS and visionOS consume the bundled Apple content-package hint data for offline use with the active Basic bank.
+- [ ] #6 A localized "Review in lesson" link from lessonLink opens the linked lesson at sectionAnchor without discarding the in-progress practice/review session.
+- [ ] #7 The hint tool handles one-level hint files by presenting only Hint 1, with no empty or broken Hint 2 affordance.
 <!-- AC:END -->
