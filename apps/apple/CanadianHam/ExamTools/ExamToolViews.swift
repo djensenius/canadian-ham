@@ -63,6 +63,7 @@ struct ExamToolPresentationModifier: ViewModifier {
 #if os(iOS)
         if horizontalUsesInspector {
             focusResettingContent(content)
+                .background { inspectorKeyboardResponder }
                 .inspector(isPresented: isPresented) {
                     toolPanel
                         .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
@@ -144,6 +145,22 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private var horizontalUsesInspector: Bool {
         horizontalSizeClass == .regular
+    }
+
+    @ViewBuilder
+    private var inspectorKeyboardResponder: some View {
+        if horizontalUsesInspector {
+            CalculatorKeyboardResponder(isActive: selectedTool == .calculator && calculatorFocused && calculator.acceptsHardwareKeyboardInput) { key in
+                pressCalculatorHardwareKey(key)
+            }
+            .frame(width: 0, height: 0)
+        }
+    }
+
+    private func pressCalculatorHardwareKey(_ key: CalculatorKey) {
+        let spokenResult = calculator.press(key)
+        let announcement = String.localizedStringWithFormat(String(localized: "Calculator result: %@"), spokenResult)
+        AccessibilityNotification.Announcement(announcement).post()
     }
 
     private func preferredSheetDetent(for tool: ExamTool) -> PresentationDetent {
@@ -644,7 +661,103 @@ struct CalculatorToolView: View {
     }
 }
 
-private struct CalculatorToolLayout {
+#if os(iOS)
+private struct CalculatorKeyboardResponder: UIViewRepresentable {
+    let isActive: Bool
+    let onKey: (CalculatorKey) -> Void
+
+    func makeUIView(context: Context) -> KeyInputView {
+        let view = KeyInputView()
+        view.update(isActive: isActive, onKey: onKey)
+        return view
+    }
+
+    func updateUIView(_ uiView: KeyInputView, context: Context) {
+        uiView.update(isActive: isActive, onKey: onKey)
+    }
+
+    final class KeyInputView: UIView {
+        private var isActive = false
+        private var onKey: (CalculatorKey) -> Void = { _ in }
+
+        override var canBecomeFirstResponder: Bool { true }
+
+        func update(isActive: Bool, onKey: @escaping (CalculatorKey) -> Void) {
+            self.isActive = isActive
+            self.onKey = onKey
+            syncFirstResponder()
+        }
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            syncFirstResponder()
+        }
+
+        override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+            var handled = false
+            for press in presses {
+                guard isActive, let key = calculatorKey(for: press) else { continue }
+                handled = true
+                onKey(key)
+            }
+            if !handled {
+                super.pressesBegan(presses, with: event)
+            }
+        }
+
+        private func syncFirstResponder() {
+            guard window != nil else { return }
+            if isActive {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self, self.isActive, self.window != nil, !self.isFirstResponder else { return }
+                    self.becomeFirstResponder()
+                }
+            } else if isFirstResponder {
+                resignFirstResponder()
+            }
+        }
+
+        private func calculatorKey(for press: UIPress) -> CalculatorKey? {
+            guard let key = press.key,
+                  key.modifierFlags.intersection([.command, .control, .alternate]).isEmpty else { return nil }
+            switch key.keyCode {
+            case .keyboardReturnOrEnter, .keypadEnter:
+                return .equals
+            case .keyboardDeleteOrBackspace:
+                return .backspace
+            case .keyboardDeleteForward:
+                return .allClear
+            case .keyboardEscape:
+                return .clearEntry
+            default:
+                break
+            }
+            switch key.characters {
+            case "0": return .zero
+            case "1": return .one
+            case "2": return .two
+            case "3": return .three
+            case "4": return .four
+            case "5": return .five
+            case "6": return .six
+            case "7": return .seven
+            case "8": return .eight
+            case "9": return .nine
+            case ".", ",": return .decimalPoint
+            case "+": return .add
+            case "-": return .subtract
+            case "*", "x", "X": return .multiply
+            case "/": return .divide
+            case "=": return .equals
+            default:
+                return nil
+            }
+        }
+    }
+}
+#endif
+
+struct CalculatorToolLayout {
     let availableHeight: CGFloat
     let dynamicTypeSize: DynamicTypeSize
 
