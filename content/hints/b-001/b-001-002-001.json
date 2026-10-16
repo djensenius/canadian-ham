@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review certificate address records and who can update them.",
-      "fr": "Revoyez les dossiers d’adresse des certificats et qui peut les mettre à jour."
+      "en": "Review certificate address records.",
+      "fr": "Revoyez les dossiers d'adresse des certificats."
     }
   ],
   "lessonLink": {
