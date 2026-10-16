@@ -4,6 +4,7 @@ title: Web hint tool in practice exam tools
 status: To Do
 assignee: []
 created_date: '2026-10-16 07:58'
+updated_date: '2026-10-16 08:12'
 labels:
   - web
 dependencies:
@@ -15,6 +16,7 @@ dependencies:
   - TASK-50.8
   - TASK-50.9
   - TASK-50.10
+  - TASK-50.15
 parent_task_id: TASK-50
 priority: high
 type: task
@@ -33,4 +35,6 @@ Add the Hint tool to the existing web practice/review exam-tools panel after Bas
 - [ ] #2 Opening Hint 1 then Hint 2 follows the approved ladder, announces state accessibly, and does not reveal official answer text.
 - [ ] #3 Answering after any opened hint records answered with help, does not advance mastery or weak-area clearing, and schedules the question sooner in spaced review.
 - [ ] #4 Web tests cover availability by session type, accessibility/keyboard behaviour, EN/FR display, and progress/spaced-review effects.
+- [ ] #5 Reference-sheet pointer labels from referenceSheetSection are shown only when the web reference sheet is available for the session and hidden otherwise.
+- [ ] #6 Hint data is bundled into the web build so practice/review hints work offline with the active Basic bank.
 <!-- AC:END -->
