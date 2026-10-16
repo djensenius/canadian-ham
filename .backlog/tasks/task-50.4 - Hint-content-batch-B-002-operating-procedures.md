@@ -58,4 +58,6 @@ Completed B-002-003 voice/simplex hints: 8 two-level, 3 single-level recall/defi
 Completed B-002-004 operating courtesy/testing hints: 9 two-level, 2 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-004 --require-complete passed. Commit: 181602eb0867203425f7b5a682d5dd8f40ca2077.
 
 Completed B-002-005 Morse procedure hints: 3 two-level, 8 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-005 --require-complete passed. Commit: b010c423d4c5602eec9b4c76ca579ec716140981.
+
+Completed B-002-006 signal-report/RST hints: 9 two-level, 2 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-006 --require-complete passed. Commit: 1d3f1aaa7bc5ff1d6b8532808059f88f8deba382.
 <!-- SECTION:NOTES:END -->
