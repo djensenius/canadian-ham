@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:24'
+updated_date: '2026-10-16 14:25'
 labels:
   - content
 dependencies:
@@ -68,4 +68,6 @@ Completed B-005-008: wrote 11 hint files (10 two-level dB method, 1 single-level
 Completed B-005-009: wrote 11 hint files (8 two-level L/C combination method, 3 single-level recall); pnpm check:hints -- --subsection B-005-009 --require-complete passed.
 
 Completed B-005-010: wrote 11 hint files (9 two-level reactance method/concept, 2 single-level term recall); pnpm check:hints -- --subsection B-005-010 --require-complete passed.
+
+Completed B-005-011: wrote 11 hint files (6 two-level transformer method/concept, 5 single-level recall); pnpm check:hints -- --subsection B-005-011 --require-complete passed.
 <!-- SECTION:NOTES:END -->
