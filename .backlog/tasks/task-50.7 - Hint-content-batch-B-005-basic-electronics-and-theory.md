@@ -56,4 +56,6 @@ Calibration fixes applied after review: neutralized B-005-002-002 L1 and B-005-0
 Completed B-005-003: wrote 11 hint files (6 two-level concept/method, 5 single-level recall); pnpm check:hints -- --subsection B-005-003 --require-complete passed.
 
 Completed B-005-004: wrote 11 two-level Ohm's law method hints; pnpm check:hints -- --subsection B-005-004 --require-complete passed.
+
+Completed B-005-005: wrote 11 two-level series/parallel method hints; pnpm check:hints -- --subsection B-005-005 --require-complete passed.
 <!-- SECTION:NOTES:END -->
