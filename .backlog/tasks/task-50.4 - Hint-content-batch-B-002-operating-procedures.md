@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:18'
+updated_date: '2026-10-16 14:19'
 labels:
   - content
 dependencies:
@@ -50,4 +50,6 @@ Write and review original EN/FR hint content for B-002 operating procedure quest
 Completed B-002-001 repeater procedure hints: 10 two-level, 1 single-level recall. Validation: pnpm check:hints -- --subsection B-002-001 --require-complete passed. Commit: e329dfe5a406ad4f20e980f17dcd62ed6a53cf6e.
 
 Completed B-002-002 phonetic alphabet hints: 0 two-level, 11 single-level recall. Validation: pnpm check:hints -- --subsection B-002-002 --require-complete passed. Commit: 41811b2e7127bac3941007c17149bdb22b1f61a5. Calibration stop reached after first two subsections.
+
+Applied calibration fixes: converted B-002-001-003 to a one-level definition pointer, rewrote B-002-001-005 H2 to teach CTCSS use/context instead of paraphrasing the definition, softened B-002-002-001 and -002 voice-spelling pointers, and recorded the definition-question rule in content/hints/README.md. Validation: pnpm check:hints -- --subsection B-002-001 --require-complete and --subsection B-002-002 --require-complete passed. Commit: 83fe19e5b8019df6e592711c7495b0bed343a1d0.
 <!-- SECTION:NOTES:END -->
