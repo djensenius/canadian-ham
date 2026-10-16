@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review which bands are used before the separated tolerance band.",
-      "fr": "Revoyez quelles bandes sont utilisées avant la bande de tolérance séparée."
+      "en": "Review the band jobs for a four-band resistor.",
+      "fr": "Revoyez les rôles des bandes d'une résistance à quatre bandes."
     }
   ],
   "lessonLink": {

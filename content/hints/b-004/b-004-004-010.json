@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the comparison between bipolar terminals and FET output-end roles.",
-      "fr": "Revoyez la comparaison entre les bornes bipolaires et les rôles de sortie d’un FET."
+      "en": "Review the comparison between bipolar terminals and FET terminals.",
+      "fr": "Revoyez la comparaison entre les bornes bipolaires et les bornes d'un FET."
     }
   ],
   "lessonLink": {

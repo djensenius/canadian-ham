@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the shared control action among the active-device families.",
-      "fr": "Revoyez l’action de commande partagée par les familles de composants actifs."
+      "en": "Review what the lesson introduction says transistors and tubes have in common.",
+      "fr": "Revoyez ce que l'introduction de la leçon dit du point commun entre les transistors et les tubes."
     }
   ],
   "lessonLink": {
     "lessonId": "L-004-02",
-    "sectionAnchor": "tube-and-fet-similarity"
+    "sectionAnchor": "triode-vacuum-tubes"
   },
   "singleLevelReason": "Common-feature recall: a second hint would state the shared function directly.",
   "referenceSheetSection": null,

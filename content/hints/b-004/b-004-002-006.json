@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the single-diode waveform described in the rectifier section.",
-      "fr": "Revoyez la forme d’onde à une seule diode décrite dans la section sur le redresseur."
+      "en": "Review what a single diode does to an AC waveform.",
+      "fr": "Revoyez ce qu'une seule diode fait à une forme d'onde alternative."
     }
   ],
   "lessonLink": {

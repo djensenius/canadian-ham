@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Use the four-band place-value method: the two value bands make digits, and the multiplier band sets the scale.",
-      "fr": "Utilisez la méthode de valeur de position à quatre bandes : les deux bandes de valeur donnent les chiffres, et la bande de multiplicateur fixe l’échelle."
+      "en": "Read a colour-coded resistor band by band in order: value digit, value digit, multiplier.",
+      "fr": "Lisez une résistance codée par couleurs bande par bande dans l'ordre : chiffre de valeur, chiffre de valeur, multiplicateur."
     },
     {
       "level": 2,
-      "en": "For 120 ohms and 1200 ohms, the value digits match; decide which band changes the scale by one zero.",
-      "fr": "Pour 120 ohms et 1200 ohms, les chiffres de valeur concordent; déterminez quelle bande change l’échelle d’un zéro."
+      "en": "Write the band colours for 120 ohms and for 1200 ohms side by side using the colour-code table, then compare them.",
+      "fr": "Écrivez côte à côte les couleurs des bandes pour 120 ohms et pour 1200 ohms à l'aide du tableau du code de couleurs, puis comparez-les."
     }
   ],
   "lessonLink": {

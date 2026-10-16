@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the channel-material naming in the FET section.",
-      "fr": "Revoyez la façon de nommer le matériau du canal dans la section sur les FET."
+      "en": "Review how the FET section names the semiconductor between source and drain.",
+      "fr": "Revoyez comment la section sur les FET nomme le semi-conducteur entre la source et le drain."
     }
   ],
   "lessonLink": {

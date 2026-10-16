@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Use the four-band place-value method: left value digit, right value digit, multiplier, then tolerance.",
-      "fr": "Utilisez la méthode de valeur de position à quatre bandes : chiffre de valeur de gauche, chiffre de valeur de droite, multiplicateur, puis tolérance."
+      "en": "Read a colour-coded resistor band by band in order: value digit, value digit, multiplier.",
+      "fr": "Lisez une résistance codée par couleurs bande par bande dans l'ordre : chiffre de valeur, chiffre de valeur, multiplicateur."
     },
     {
       "level": 2,
-      "en": "For 33 ohms and 39 ohms, the left value digit and scale match; track which value-digit position changes.",
-      "fr": "Pour 33 ohms et 39 ohms, le chiffre de valeur de gauche et l’échelle concordent; repérez quelle position de chiffre de valeur change."
+      "en": "Write the band colours for 33 ohms and for 39 ohms side by side using the colour-code table, then compare them.",
+      "fr": "Écrivez côte à côte les couleurs des bandes pour 33 ohms et pour 39 ohms à l'aide du tableau du code de couleurs, puis comparez-les."
     }
   ],
   "lessonLink": {

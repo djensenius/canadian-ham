@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Start with red then violet as 27; use yellow as x 10 000 before converting the result to a larger ohm unit.",
-      "fr": "Commencez par rouge puis violet comme 27; utilisez jaune comme x 10 000 avant de convertir le résultat vers une unité d’ohms plus grande."
+      "en": "Put the first two colours in order as a two-digit number, append as many zeros as the third colour's number, then express the total with a suitable metric prefix.",
+      "fr": "Placez les deux premières couleurs dans l'ordre pour former un nombre à deux chiffres, ajoutez autant de zéros que la valeur de la troisième couleur, puis exprimez le total avec un préfixe métrique approprié."
     }
   ],
   "lessonLink": {

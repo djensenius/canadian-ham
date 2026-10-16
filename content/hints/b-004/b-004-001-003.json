@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the receiver path right at the antenna input, before later stages change or recover information.",
-      "fr": "Revoyez le trajet de réception à l’entrée d’antenne, avant que les étages suivants changent ou récupèrent l’information."
+      "en": "Review the receiver signal path that starts at the antenna input.",
+      "fr": "Revoyez le trajet du signal de réception qui commence à l'entrée d'antenne."
     }
   ],
   "lessonLink": {

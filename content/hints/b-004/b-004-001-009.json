@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how a positive dB level label is used in a signal chain.",
-      "fr": "Revoyez comment une indication de niveau positive en dB est utilisée dans une chaîne de signal."
+      "en": "Review how a gain label in dB is used in a signal chain.",
+      "fr": "Revoyez comment une indication de gain en dB est utilisée dans une chaîne de signal."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how the two channel-end terminals are described in the FET section.",
-      "fr": "Revoyez comment les deux bornes aux extrémités du canal sont décrites dans la section sur les FET."
+      "en": "Review the FET terminal list and what each terminal does with charge carriers.",
+      "fr": "Revoyez la liste des bornes du FET et ce que chaque borne fait des porteurs de charge."
     }
   ],
   "lessonLink": {
