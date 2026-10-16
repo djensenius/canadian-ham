@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-004-010",
+  "questionId": "B-004-004-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the comparison between bipolar terminals and FET output-end roles.",
+      "fr": "Revoyez la comparaison entre les bornes bipolaires et les rôles de sortie d’un FET."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "gate-control-and-channel-current"
+  },
+  "singleLevelReason": "Terminal-comparison recall: a second hint would name the corresponding bipolar electrode.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

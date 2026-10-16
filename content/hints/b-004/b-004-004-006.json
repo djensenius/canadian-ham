@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-004-006",
+  "questionId": "B-004-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the misconception callout about this device family's control terminal.",
+      "fr": "Revoyez l’encadré de misconception au sujet de la borne de commande de cette famille de composants."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "misconception-a-fet-gate-is-a-low-resistance-input"
+  },
+  "singleLevelReason": "Concept recall: a second hint would restate the high-impedance property.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
