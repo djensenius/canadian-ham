@@ -1,9 +1,11 @@
 ---
 id: TASK-50.1
 title: 'Hint content schema, loader and checker'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
+updated_date: '2026-10-16 07:59'
 labels:
   - content
 dependencies: []
@@ -34,3 +36,12 @@ Define the durable content contract for per-question Basic hints before large-sc
 - [ ] #4 The checker includes a self-test covering valid hints, leakage failures, missing EN/FR, invalid reference pointers, and n-gram false-positive tuning for common numbers/units.
 - [ ] #5 The new checker is wired into package scripts and CI alongside explanations and schema checks.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Mirror explanations with content/hints/<category>/<questionId>.json and add hint.schema.json plus valid/invalid fixtures/schema validation wiring.
+2. Add a shared TypeScript hint loader under packages/content-tools/src with stable ordering and lookup helpers over content/hints.
+3. Add check-hints.ts with structure, active Basic references, EN/FR completeness, reference-section allowlist, normalized answer/option/question-fragment leakage checks, and a --self-test.
+4. Wire check:hints into package scripts and CI, then validate with focused tests/checks before writing pilot content.
+<!-- SECTION:PLAN:END -->
