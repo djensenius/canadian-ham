@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-006-003",
+  "questionId": "B-004-006-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the job of the separated band at the end of a common four-band marking.",
+      "fr": "Revoyez le rôle de la bande séparée à l’extrémité d’un marquage courant à quatre bandes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "reading-direction-and-band-jobs"
+  },
+  "singleLevelReason": "Band-role recall: a second hint would state the fourth band's meaning directly.",
+  "referenceSheetSection": "resistor-colour-code",
+  "licenseClass": "original"
+}

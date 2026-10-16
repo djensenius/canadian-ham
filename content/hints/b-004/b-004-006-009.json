@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-006-009",
+  "questionId": "B-004-006-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the resistor rating used for drift per degree.",
+      "fr": "Revoyez la caractéristique d’une résistance utilisée pour la dérive par degré."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "what-the-colour-code-does-not-tell-you"
+  },
+  "singleLevelReason": "Definition recall: a second hint would name the rating directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-004-006-010",
+  "questionId": "B-004-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the four-band place-value method: the two value bands make digits, and the multiplier band sets the scale.",
+      "fr": "Utilisez la méthode de valeur de position à quatre bandes : les deux bandes de valeur donnent les chiffres, et la bande de multiplicateur fixe l’échelle."
+    },
+    {
+      "level": 2,
+      "en": "For 120 ohms and 1200 ohms, the value digits match; decide which band changes the scale by one zero.",
+      "fr": "Pour 120 ohms et 1200 ohms, les chiffres de valeur concordent; déterminez quelle bande change l’échelle d’un zéro."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "differentiating-similar-values"
+  },
+  "referenceSheetSection": "resistor-colour-code",
+  "licenseClass": "original"
+}

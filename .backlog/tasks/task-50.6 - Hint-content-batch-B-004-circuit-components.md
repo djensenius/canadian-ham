@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:46'
+updated_date: '2026-10-16 14:51'
 labels:
   - content
 dependencies:
@@ -46,3 +46,13 @@ Write and review original EN/FR hint content for B-004 circuit component questio
 3. After each B-004 subsection, run the subsection hint checker with --require-complete, record any required two-level justifications in task notes, and commit that subsection.
 4. Run the category hint checker, self-test, schema, explanations, originality, typecheck, and test commands; update task notes/final status and open the requested PR.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Two-level justifications for B-004-006:
+B-004-006-004: learner must compute/derive the tolerance range around 100 ohms; the hint never states the range endpoints.
+B-004-006-005: learner must compute/derive which value-band position changes between 33 ohms and 39 ohms; the hint never states the band ordinal.
+B-004-006-010: learner must compute/derive which band changes the multiplier scale between 120 ohms and 1200 ohms; the hint never states the band ordinal.
+B-004-006-011: learner must compute/derive the resistor value from colour digits and multiplier; the hint never states the final resistance value.
+<!-- SECTION:NOTES:END -->

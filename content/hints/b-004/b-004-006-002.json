@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-006-002",
+  "questionId": "B-004-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review which bands are used before the separated tolerance band.",
+      "fr": "Revoyez quelles bandes sont utilisées avant la bande de tolérance séparée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "reading-direction-and-band-jobs"
+  },
+  "singleLevelReason": "Band-role recall: a second hint would state what the first value bands encode.",
+  "referenceSheetSection": "resistor-colour-code",
+  "licenseClass": "original"
+}
