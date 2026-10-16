@@ -55,7 +55,7 @@ Validation passed:
 - pnpm build:web
 - node scripts/check-apple-text-sources.ts
 - pnpm check:apple-l10n (also built CanadianHamTV and CanadianHamVision)
-- DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAboutShowsReleaseAttributionDisclaimerAndBankVersion test CODE_SIGNING_ALLOWED=NO\n- rg forbidden platform-intro phrases across user-facing web/Apple source returned no matches.\nApp Store listing drafts were reviewed; existing platform lists were left in metadata because they describe App Store platform availability.
+- DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAboutShowsReleaseAttributionDisclaimerAndBankVersion test CODE_SIGNING_ALLOWED=NO\n- rg forbidden platform-intro phrases across user-facing web/Apple source returned no matches.\n\nApp Store listing drafts were reviewed; existing platform lists were left in metadata because they describe App Store platform availability.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
