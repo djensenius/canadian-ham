@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-008-008",
+  "questionId": "B-002-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For emergency HF, choose antenna styles that a portable operator can carry and put up in the field.",
+      "fr": "Pour le HF d’urgence, choisissez des styles d’antenne qu’un opérateur portable peut transporter et installer sur le terrain."
+    },
+    {
+      "level": 2,
+      "en": "The practical choice is simple to pack, support, and connect without a large fixed structure.",
+      "fr": "Le choix pratique est simple à emballer, à soutenir et à raccorder sans grande structure fixe."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "prepared-stations-are-useful-stations"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-008-001",
+  "questionId": "B-002-008-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Formal distress signals are reserved for the highest-priority radio situation.",
+      "fr": "Les signaux de détresse officiels sont réservés à la situation radio de priorité la plus élevée."
+    },
+    {
+      "level": 2,
+      "en": "Ask whether there is immediate danger to life. Serious help without that immediate danger belongs to a lower priority class.",
+      "fr": "Demandez-vous s’il y a un danger immédiat pour la vie. Une aide sérieuse sans ce danger immédiat relève d’une catégorie de priorité inférieure."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "distress-urgency-and-safety-roles"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

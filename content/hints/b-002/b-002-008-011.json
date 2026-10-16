@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-008-011",
+  "questionId": "B-002-008-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "If you cannot help directly, your station may still support the emergency chain.",
+      "fr": "Si vous ne pouvez pas aider directement, votre station peut quand même soutenir la chaîne d’urgence."
+    },
+    {
+      "level": 2,
+      "en": "Pass the information to people who can act, and keep listening in case your station becomes useful later.",
+      "fr": "Transmettez l’information aux personnes qui peuvent agir et continuez la veille radio si votre station devient utile plus tard."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "breaking-into-routine-traffic"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-008-005",
+  "questionId": "B-002-008-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Distress traffic needs immediate access, but clear facts still matter more than dramatic wording.",
+      "fr": "Le trafic de détresse a besoin d’un accès immédiat, mais des faits clairs comptent plus que des mots dramatiques."
+    },
+    {
+      "level": 2,
+      "en": "Use a clear gap, identify your station, and state the situation so others can organize help.",
+      "fr": "Utilisez un espace clair, identifiez votre station et exposez la situation afin que les autres puissent organiser l’aide."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "breaking-into-routine-traffic"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
