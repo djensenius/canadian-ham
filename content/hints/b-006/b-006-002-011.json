@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-002-011",
+  "questionId": "B-006-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the balanced line that uses spreaders rather than a solid plastic web.",
+      "fr": "Revoyez la ligne symétrique qui utilise des entretoises plutôt qu’une bande de plastique continue."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "balanced-lines-twin-lead-window-line-and-open-wire-line"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

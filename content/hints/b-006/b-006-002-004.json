@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-002-004",
+  "questionId": "B-006-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the course connects balanced antenna parts to station hardware that is not balanced.",
+      "fr": "Revoyez comment le cours relie les parties symétriques de l’antenne au matériel de station qui ne l’est pas."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "balanced-and-unbalanced-parts"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

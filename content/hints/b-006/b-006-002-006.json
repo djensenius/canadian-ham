@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-002-006",
+  "questionId": "B-006-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what makes a station feedline asymmetrical in ordinary equipment installations.",
+      "fr": "Revoyez ce qui rend une ligne de station asymétrique dans les installations ordinaires."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "coaxial-cable"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}
