@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Installing someone else's amateur transmitter involves two people, not just the person holding the tools.",
-      "fr": "Installer l'émetteur de radioamateur d'une autre personne implique deux personnes, pas seulement celle qui tient les outils."
-    },
-    {
-      "level": 2,
-      "en": "The rule protects both sides of the job: the installer must be qualified for the amateur work, and the recipient must be qualified for the station being installed.",
-      "fr": "La règle protège les deux côtés du travail : l'installateur doit être qualifié pour le travail radioamateur, et la personne qui reçoit la station doit être qualifiée pour celle-ci."
+      "en": "This item belongs to the regulated work-for-another-person rules, not to technical skill alone.",
+      "fr": "Cet élément relève des règles réglementées du travail pour autrui, et non seulement de l'habileté technique."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-work-done-for-another-person"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state how many people must hold the required credential."
 }

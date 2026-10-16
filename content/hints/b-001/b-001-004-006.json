@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "An amateur certificate governs amateur privileges; other radio services keep their own authorization systems.",
-      "fr": "Un certificat radioamateur régit les privilèges radioamateurs ; les autres services radio gardent leurs propres systèmes d'autorisation."
+      "en": "This item tests whether amateur credentials transfer across radio services; use the service-boundary rule.",
+      "fr": "Cet élément vérifie si les titres radioamateurs se transfèrent entre services radio ; utilisez la règle de frontière entre services."
     }
   ],
   "lessonLink": {

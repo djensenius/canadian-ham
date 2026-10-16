@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Repairing another person's transmitter is still regulated work on an amateur transmitter, not just a bench job.",
-      "fr": "Réparer l'émetteur d'une autre personne reste un travail réglementé sur un émetteur de radioamateur, pas seulement un travail d'atelier."
-    },
-    {
-      "level": 2,
-      "en": "Use the two-sided authorization idea: the person doing regulated amateur work and the person whose transmitter it is both matter.",
-      "fr": "Utilisez l'idée d'autorisation à deux côtés : la personne qui fait le travail radioamateur réglementé et celle à qui appartient l'émetteur comptent toutes les deux."
+      "en": "Repair work for someone else is in the same authorization family as installation and service work.",
+      "fr": "Le travail de réparation pour autrui fait partie de la même famille d'autorisation que l'installation et la mise en service."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-work-done-for-another-person"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state how many people must hold the required credential."
 }

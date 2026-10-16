@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Once the first certificate exists, later qualifications are independent branches rather than a locked sequence.",
-      "fr": "Une fois le premier certificat obtenu, les compétences ultérieures sont des branches indépendantes plutôt qu'une séquence verrouillée."
+      "en": "This is a sequencing recall item from the exam-path section; keep first issue and later add-ons separate.",
+      "fr": "C'est un rappel de séquence tiré de la section sur le parcours d'examen ; gardez séparées la première délivrance et les compétences ajoutées plus tard."
     }
   ],
   "lessonLink": {

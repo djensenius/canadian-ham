@@ -44,6 +44,8 @@ A good Hint 1 is specific to the question's concept without naming or eliminatin
 
 A good Hint 2 teaches the reasoning or distinction the question turns on. Shared distinctions are allowed only when the questions truly share the same idea, and even then the wording should be tailored to the current question. For pure recall facts where any useful Hint 2 would give away the answer, use a one-level ladder and include `singleLevelReason`.
 
+Before accepting any hint, apply this self-test: could a learner who does not know the material pick the right option from this hint alone, or from Hint 1 plus Hint 2 together? If yes, soften the hint so the learner still has to recall or reason out the decisive fact, or use a one-level ladder. For example, "not a waiting period before operating" eliminates waiting-period options, "more than one possible consequence" points directly at a combined penalty option, "independent branches rather than a locked sequence" is a near-synonym for an any-order answer, and "both sides of authority matter" gives away a both-people authorization answer.
+
 ## Reviewer checklist
 
 For each batch, reviewers should verify that hints:

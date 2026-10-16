@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Truthfulness is a baseline operating duty, even when a joke, poor on-air conduct, or pressure for help is involved.",
-      "fr": "La véracité est une obligation de base en exploitation, même en présence d'une blague, d'un mauvais comportement en ondes ou d'une pression pour obtenir de l'aide."
+      "en": "This item tests the false-information rule; be careful with motives that sound humorous, defensive, or urgent.",
+      "fr": "Cet élément vérifie la règle sur les renseignements faux ; méfiez-vous des motifs qui semblent humoristiques, défensifs ou urgents."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state the absence of any allowed exception."
+  "singleLevelReason": "A second hint would state whether any exception is allowed."
 }

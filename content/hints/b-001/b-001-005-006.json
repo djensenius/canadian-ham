@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Putting another person's transmitter into service is the step that makes it ready to operate, so both sides of authority matter.",
-      "fr": "Mettre en service l'émetteur d'une autre personne est l'étape qui le rend prêt à fonctionner ; les deux côtés de l'autorisation comptent donc."
-    },
-    {
-      "level": 2,
-      "en": "The rule is not only about equipment ownership. The person activating the amateur transmitter and the person receiving that service each need amateur authority.",
-      "fr": "La règle ne concerne pas seulement la propriété de l'équipement. La personne qui active l'émetteur de radioamateur et celle qui reçoit ce service ont chacune besoin d'une autorité radioamateur."
+      "en": "Putting equipment into service for someone else is a regulated work-for-another-person case, not an ownership-only question.",
+      "fr": "Mettre de l'équipement en service pour autrui est un cas réglementé de travail pour autrui, pas seulement une question de propriété."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-work-done-for-another-person"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state how many people must hold the required credential."
 }

@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "When a qualified operator works on someone else's radio apparatus, check whether the apparatus is already covered by permission for that person.",
-      "fr": "Lorsqu'un opérateur qualifié travaille sur l'appareil radio d'une autre personne, vérifiez si cet appareil est déjà couvert par une permission pour cette personne."
-    },
-    {
-      "level": 2,
-      "en": "The helper's qualification is only one side of the rule. The person receiving the work must have authority for the specific apparatus before the work fits the regulation.",
-      "fr": "La qualification de la personne qui aide n'est qu'un côté de la règle. La personne qui reçoit le travail doit avoir l'autorité pour l'appareil précis avant que le travail respecte le règlement."
+      "en": "This work-for-another-person rule has two parts: the worker's qualification and the apparatus owner's authority.",
+      "fr": "Cette règle de travail pour autrui comporte deux parties : la qualification de la personne qui travaille et l'autorité du propriétaire de l'appareil."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-work-done-for-another-person"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state which side of the two-part rule decides this item."
 }

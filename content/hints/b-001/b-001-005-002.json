@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Reprogramming a transmitter for someone else's amateur use shifts attention to the authority of the intended user.",
-      "fr": "Reprogrammer un émetteur pour l'usage radioamateur d'une autre personne ramène l'attention vers l'autorité de l'utilisateur prévu."
-    },
-    {
-      "level": 2,
-      "en": "For a radio being prepared for another person's station, the key permission belongs with that person, not only with the person doing the programming.",
-      "fr": "Pour une radio préparée pour la station d'une autre personne, la permission essentielle appartient à cette personne, pas seulement à celle qui fait la programmation."
+      "en": "This item is about preparing someone else's radio for amateur use; use the work-for-another-person rule.",
+      "fr": "Cet élément porte sur la préparation de la radio d'autrui pour un usage radioamateur ; utilisez la règle du travail pour autrui."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-work-done-for-another-person"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal whose certificate or qualification matters for this item."
 }

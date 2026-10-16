@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Suspension rules include both reasons to act and fairness in the process; the false statement removes the fairness part.",
-      "fr": "Les règles de suspension comprennent à la fois des motifs d'agir et l'équité du processus ; l'énoncé faux retire la partie équitable."
+      "en": "Suspension rules include both grounds for action and due-process safeguards.",
+      "fr": "Les règles de suspension comprennent à la fois des motifs d'action et des garanties d'équité procédurale."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would point directly to the statement that removes notice and a chance to respond."
+  "singleLevelReason": "A second hint would identify which statement breaks the due-process pattern."
 }

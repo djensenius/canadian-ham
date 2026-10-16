@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Unlawful obstruction can block safety or other lawful communications, so it belongs with the serious offence consequences.",
-      "fr": "Une obstruction illégitime peut bloquer des communications de sécurité ou d'autres communications légitimes ; elle relève donc des conséquences liées aux infractions graves."
-    },
-    {
-      "level": 2,
-      "en": "Read a penalty that lists alternatives plus a combined outcome as allowing either consequence alone or the combined result.",
-      "fr": "Lisez une peine qui présente des choix et un résultat combiné comme permettant une conséquence seule ou le résultat combiné."
+      "en": "This offence concerns blocking radio communication without a lawful reason; think about the penalty pattern for serious radio offences.",
+      "fr": "Cette infraction concerne le fait de bloquer une radiocommunication sans raison légitime ; pensez au modèle de peine des infractions radio graves."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-offences-penalties-and-process-boundaries"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the penalty's structure or numeric limits."
 }

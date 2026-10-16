@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A move changes the official contact record; keep that record current even if the station can still operate.",
-      "fr": "Un déménagement modifie le dossier officiel de contact ; gardez ce dossier à jour même si la station peut encore fonctionner."
-    },
-    {
-      "level": 2,
-      "en": "The rule is a notice duty tied to the mailing record. It is not a waiting period before operating from the new place.",
-      "fr": "La règle est une obligation d'avis liée au dossier postal. Ce n'est pas une période d'attente avant d'exploiter depuis le nouvel endroit."
+      "en": "This item tests the address-record duty that continues after the certificate is issued.",
+      "fr": "Cet élément vérifie l'obligation liée au dossier d'adresse qui continue après la délivrance du certificat."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-certificate-records-addresses-and-call-sign-fees"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the notification action, deadline, or recipient."
 }

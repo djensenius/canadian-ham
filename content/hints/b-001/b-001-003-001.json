@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "An amateur certificate does not make every frequency available; the authorized bands are the legal boundary.",
-      "fr": "Un certificat radioamateur ne rend pas toutes les fréquences disponibles ; les bandes autorisées forment la limite légale."
-    },
-    {
-      "level": 2,
-      "en": "Power level and brief duration do not create authority outside those boundaries. Responsibility stays with the person controlling the transmission.",
-      "fr": "La puissance et la courte durée ne créent pas d'autorisation hors de ces limites. La responsabilité reste liée à la personne qui contrôle l'émission."
+      "en": "This item tests band authority: where amateur privileges begin and end.",
+      "fr": "Cet élément vérifie l'autorité liée aux bandes : là où les privilèges radioamateurs commencent et se terminent."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-offences-penalties-and-process-boundaries"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal whether the transmission is allowed or name the responsible role."
 }

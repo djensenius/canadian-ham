@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Among outside radio credentials, the bridge is the broad maritime operator credential rather than a restricted-service certificate.",
-      "fr": "Parmi les titres radio externes, le pont est le certificat maritime général plutôt qu'un certificat de service restreint."
+      "en": "This item tests a special bridge from another radio certificate; the exact title matters.",
+      "fr": "Cet élément vérifie un pont spécial depuis un autre certificat radio ; le titre exact compte."
     }
   ],
   "lessonLink": {

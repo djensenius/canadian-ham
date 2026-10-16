@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "The added code qualification does not transfer amateur authority to the station recipient.",
-      "fr": "La compétence en code ajoutée ne transfère pas l'autorité radioamateur au destinataire de la station."
+      "en": "This item tests whether an added qualification changes the work-for-another-person rule.",
+      "fr": "Cet élément vérifie si une compétence ajoutée change la règle du travail pour autrui."
     }
   ],
   "lessonLink": {

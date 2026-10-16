@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "The certificate should stay tied to the official contact record, not just to where you happen to carry equipment.",
-      "fr": "Le certificat devrait rester lié au dossier officiel de contact, pas seulement à l'endroit où vous transportez l'équipement."
-    },
-    {
-      "level": 2,
-      "en": "Record keeping and physical proof work together: the authority needs a stable place connected to the holder's filed information.",
-      "fr": "La tenue du dossier et la preuve matérielle vont ensemble : l'autorité a besoin d'un lieu stable lié aux renseignements déposés par le titulaire."
+      "en": "This is a recordkeeping question about where the certificate is kept between inspections.",
+      "fr": "C'est une question de tenue de dossier sur l'endroit où le certificat est conservé entre les inspections."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-certificate-records-addresses-and-call-sign-fees"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the required location tied to the official record."
 }

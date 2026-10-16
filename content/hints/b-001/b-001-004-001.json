@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "For entry eligibility, do not assume the amateur service adds a birthday threshold by default.",
-      "fr": "Pour l'admissibilité d'entrée, ne supposez pas que le service de radioamateur ajoute automatiquement un seuil d'anniversaire."
+      "en": "This item tests the Basic eligibility row; avoid importing assumptions from other licensing systems.",
+      "fr": "Cet élément vérifie la ligne d'admissibilité à la compétence de base ; évitez d'importer des suppositions provenant d'autres systèmes de permis."
     }
   ],
   "lessonLink": {
