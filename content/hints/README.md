@@ -50,6 +50,8 @@ For B-001 recall items, there is often no space between a useful content hint an
 
 Keep two-level A+C hints where a method, formula, conversion, or principle helps the learner work the question. The option self-test applies to stating facts or results, not to teaching a method the learner still has to apply. Do not state the computed result, name the matching option, or eliminate options by listing them. If a method hint includes a selection rule such as "nearest", "just below", or "starts there", work it against all four options in EN and FR before accepting it.
 
+For definition questions such as "What is X?", Hint 2 must not paraphrase the definition. Either teach a use or context that still leaves the learner to recall the definition, or use a one-level B pointer when any useful second hint would identify or eliminate an option.
+
 For example, a band-name question can use the wavelength relationship without giving the range:
 
 - Hint 1: "A band's name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m)."

@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "The receiving equipment listens for a very low continuous tone before it opens its squelch for that signal.",
-      "fr": "L’équipement récepteur attend une tonalité continue très basse avant d’ouvrir son silencieux pour ce signal."
+      "en": "Repeaters often require this access feature so stations matching the access setting are heard. Think about where such a tone should sit so it does not distract listeners.",
+      "fr": "Les répéteurs exigent souvent cette fonction d’accès afin que les stations correspondant au réglage soient entendues. Pensez à l’endroit où une telle tonalité devrait se situer pour ne pas distraire les auditeurs."
     }
   ],
   "lessonLink": {

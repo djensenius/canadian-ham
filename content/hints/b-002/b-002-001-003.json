@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Focus on why many VHF and UHF repeaters in nearby areas need planned channel choices.",
-      "fr": "Pensez à la raison pour laquelle plusieurs répéteurs VHF et UHF de régions voisines ont besoin de canaux planifiés."
-    },
-    {
-      "level": 2,
-      "en": "The planning compares channels, offsets, and coverage before systems are put on the air, so shared spectrum stays usable.",
-      "fr": "La planification compare les canaux, les décalages et la couverture avant la mise en service des systèmes, afin que le spectre partagé reste utilisable."
+      "en": "Review the VHF and UHF repeater channel-planning topic.",
+      "fr": "Revoyez le sujet de la planification des canaux des répéteurs VHF et UHF."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "coordination-tones-and-offsets"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }
