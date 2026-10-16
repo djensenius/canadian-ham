@@ -56,9 +56,9 @@ Text equivalent:
 - First digit band: yellow means 4.
 - Second digit band: violet means 7.
 - Multiplier band: red means x 100.
-- Tolerance band: gold means ±5%.
+- Tolerance band: gold means ± 5 %.
 - Nominal value: 47 x 100 = 4 700 Ω.
-- ±5% range: 4 465 Ω to 4 935 Ω.
+- ± 5 % range: 4 465 Ω to 4 935 Ω.
 ::
 
 ### Colour digits, multipliers, and tolerance
@@ -66,19 +66,19 @@ Text equivalent:
 | Colour | Digit | Multiplier | Common tolerance use |
 |---|---:|---:|---:|
 | black | 0 | x 1 | — |
-| brown | 1 | x 10 | ±1% |
-| red | 2 | x 100 | ±2% |
+| brown | 1 | x 10 | ± 1 % |
+| red | 2 | x 100 | ± 2 % |
 | orange | 3 | x 1 000 | — |
 | yellow | 4 | x 10 000 | — |
-| green | 5 | x 100 000 | ±0.5% |
-| blue | 6 | x 1 000 000 | ±0.25% |
-| violet | 7 | x 10 000 000 | ±0.1% |
-| grey | 8 | x 100 000 000 | ±0.05% |
+| green | 5 | x 100 000 | ± 0.5 % |
+| blue | 6 | x 1 000 000 | ± 0.25 % |
+| violet | 7 | x 10 000 000 | ± 0.1 % |
+| grey | 8 | x 100 000 000 | ± 0.05 % |
 | white | 9 | x 1 000 000 000 | — |
-| gold | — | x 0.1 | ±5% |
-| silver | — | x 0.01 | ±10% |
+| gold | — | x 0.1 | ± 5 % |
+| silver | — | x 0.01 | ± 10 % |
 
-If a resistor has no separate tolerance band, treat the tolerance as ±20%.
+If a resistor has no separate tolerance band, treat the tolerance as ± 20 %.
 
 This table is a reference aid for this course. The current ISED Basic exam reference sheet does not provide a colour-code table, and real bench work often uses a meter to confirm the part.
 
@@ -96,7 +96,7 @@ An offensive historical colour-code mnemonic exists. Never quote it or use it fo
 
 A resistor has yellow, violet, red, and gold bands.
 
-- Given: yellow = 4; violet = 7; red multiplier = x 100; gold tolerance = ±5%.
+- Given: yellow = 4; violet = 7; red multiplier = x 100; gold tolerance = ± 5 %.
 - Find: nominal resistance and tolerance range.
 - Formula: value = two-digit number x multiplier; tolerance amount = value x 0.05.
 - Substitute: value = 47 x 100 = 4 700 ohms; tolerance amount = 4 700 x 0.05 = 235 ohms.
@@ -107,7 +107,7 @@ A resistor has yellow, violet, red, and gold bands.
 
 A resistor has red, red, brown, and gold bands.
 
-- Given: red = 2; red = 2; brown multiplier = x 10; gold tolerance = ±5%.
+- Given: red = 2; red = 2; brown multiplier = x 10; gold tolerance = ± 5 %.
 - Find: nominal resistance and tolerance range.
 - Formula: value = two-digit number x multiplier; tolerance amount = value x 0.05.
 - Substitute: value = 22 x 10 = 220 ohms; tolerance amount = 220 x 0.05 = 11 ohms.
@@ -118,7 +118,7 @@ A resistor has red, red, brown, and gold bands.
 
 A resistor has brown, black, orange, and gold bands.
 
-- Given: brown = 1; black = 0; orange multiplier = x 1 000; gold tolerance = ±5%.
+- Given: brown = 1; black = 0; orange multiplier = x 1 000; gold tolerance = ± 5 %.
 - Find: nominal resistance.
 - Formula: value = two-digit number x multiplier.
 - Substitute: value = 10 x 1 000.
@@ -129,7 +129,7 @@ A resistor has brown, black, orange, and gold bands.
 
 A resistor has blue, grey, brown, and silver bands.
 
-- Given: blue = 6; grey = 8; brown multiplier = x 10; silver tolerance = ±10%.
+- Given: blue = 6; grey = 8; brown multiplier = x 10; silver tolerance = ± 10 %.
 - Find: nominal resistance.
 - Formula: value = two-digit number x multiplier.
 - Substitute: value = 68 x 10.
@@ -140,7 +140,7 @@ A resistor has blue, grey, brown, and silver bands.
 
 A resistor has green, blue, black, and brown bands.
 
-- Given: green = 5; blue = 6; black multiplier = x 1; brown tolerance = ±1%.
+- Given: green = 5; blue = 6; black multiplier = x 1; brown tolerance = ± 1 %.
 - Find: nominal resistance.
 - Formula: value = two-digit number x multiplier.
 - Substitute: value = 56 x 1.
@@ -149,7 +149,7 @@ A resistor has green, blue, black, and brown bands.
 
 ## Tolerance ranges
 
-Tolerance is not an error you add on purpose. It is the allowed manufacturing variation around the nominal value. A smaller percentage means higher precision. For example, a ±0.5% resistor is more precise than a ±10% resistor, because its allowed spread is narrower.
+Tolerance is not an error you add on purpose. It is the allowed manufacturing variation around the nominal value. A smaller percentage means higher precision. For example, a ± 0.5 % resistor is more precise than a ± 10 % resistor, because its allowed spread is narrower.
 
 For a tolerance range:
 
@@ -215,10 +215,10 @@ A resistor marked yellow violet red has the same value digits, but multiplier x 
 
 ## Try it
 
-1. Orange orange brown gold: digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ±5% tolerance.
-2. Yellow violet orange gold: digits 4 and 7, multiplier x 1 000, so nominal value is 47 kilohms with ±5% tolerance.
-3. Brown green black brown: digits 1 and 5, multiplier x 1, so nominal value is 15 ohms with ±1% tolerance.
-4. A ±1% part is more precise than a ±10% part because the allowed percentage spread is smaller.
+1. Orange orange brown gold: digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ± 5 % tolerance.
+2. Yellow violet orange gold: digits 4 and 7, multiplier x 1 000, so nominal value is 47 kilohms with ± 5 % tolerance.
+3. Brown green black brown: digits 1 and 5, multiplier x 1, so nominal value is 15 ohms with ± 1 % tolerance.
+4. A ± 1 % part is more precise than a ± 10 % part because the allowed percentage spread is smaller.
 5. If two resistors share the same first two digit bands but one has a larger multiplier, the multiplier band is what changed the value.
 
 ## Radio connection
