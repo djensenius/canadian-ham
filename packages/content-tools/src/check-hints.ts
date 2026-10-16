@@ -397,11 +397,16 @@ function officialCandidatePhrases(officialTokens: readonly string[], includeDist
 
 function answerPhraseCounts(answerTexts: readonly string[], includeDistinctiveTwoWordRuns: boolean): Map<string, number> {
   const counts = new Map<string, number>();
-  for (const answerText of answerTexts) {
-    const answerPhrases = new Set(officialCandidatePhrases(officialSignificantTokens(answerText), includeDistinctiveTwoWordRuns).map(phraseKey));
-    for (const answerPhrase of answerPhrases) {
-      counts.set(answerPhrase, (counts.get(answerPhrase) ?? 0) + 1);
+  const tokenizedAnswers = answerTexts.map((answerText) => officialSignificantTokens(answerText));
+  const candidateKeys = new Set<string>();
+  for (const answerTokens of tokenizedAnswers) {
+    for (const answerPhrase of officialCandidatePhrases(answerTokens, includeDistinctiveTwoWordRuns)) {
+      candidateKeys.add(phraseKey(answerPhrase));
     }
+  }
+  for (const candidateKey of candidateKeys) {
+    const candidate = candidateKey.split(" ");
+    counts.set(candidateKey, tokenizedAnswers.filter((answerTokens) => containsTokenPhrase(answerTokens, candidate)).length);
   }
   return counts;
 }
@@ -1263,6 +1268,41 @@ export async function runHintCheckerSelfTest(): Promise<void> {
       { sourceIndex: 3, isCorrect: false, text: { en: "A map projection centred on the geographic North Pole", fr: "Une projection cartographique centrée sur le pôle Nord géographique" } },
     ],
   })]);
+
+  await withSelfTestFixture("b-001-003-003-shared-fine", async (root) => {
+    const regressionQuestion = question({
+      id: "B-001-003-003",
+      subsectionId: "B-001-003",
+      text: {
+        en: "Transmitting a false or fraudulent distress signal or message is prohibited. The person found guilty is liable to what penalty?",
+        fr: "Émettre faussement ou frauduleusement un signal de détresse ou un message est interdit. Quelle est la peine encourue par une personne reconnue coupable de cette infraction?",
+      },
+      answers: [
+        { sourceIndex: 0, isCorrect: true, text: { en: "A fine, not exceeding $5 000, or a prison term not exceeding one year, or both", fr: "Une amende maximale de 5 000 $, ou un emprisonnement maximal d'un an, ou les deux à la fois" } },
+        { sourceIndex: 1, isCorrect: false, text: { en: "A fine of $10 000", fr: "Une amende de 10 000 $" } },
+        { sourceIndex: 2, isCorrect: false, text: { en: "A prison term of two years", fr: "Un emprisonnement de deux ans" } },
+        { sourceIndex: 3, isCorrect: false, text: { en: "A fine not exceeding $1 000", fr: "Une amende maximale de 1 000 $" } },
+      ],
+    });
+    const regressionHint = hint({
+      id: "HINT-B-001-003-003",
+      questionId: "B-001-003-003",
+      hints: [
+        { level: 1, en: "Consider fine before choosing.", fr: "Pensez à l'amende avant de choisir." },
+      ],
+      lessonLink: { lessonId: "L-001-01", sectionAnchor: "shared-setup" },
+      singleLevelReason: "Fixture regression uses one level to isolate shared-option wording.",
+    });
+    await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), `${JSON.stringify([regressionQuestion], null, 2)}\n`, "utf8");
+    await writeFile(path.join(root, "content/hints/b-001/b-001-003-003.json"), `${JSON.stringify(regressionHint, null, 2)}\n`, "utf8");
+    await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\ntitle:\n  en: "Fixture Lesson"\ncovers:\n  - B-001-003\n---\n# Fixture Lesson\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
+    await checkHints({
+      hintRoot: path.join(root, "content/hints"),
+      questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      lessonRoot: path.join(root, "content/lessons"),
+      requireComplete: true,
+    });
+  });
 
   await assertSelfTestRejects("short-question-fragment", hint({ hints: [
     { level: 1, en: "Ask which department administers the Radiocommunication Act.", fr: "Pensez à l'administration civile." },
