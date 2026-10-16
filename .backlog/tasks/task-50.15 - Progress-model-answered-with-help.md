@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:12'
-updated_date: '2026-10-16 21:04'
+updated_date: '2026-10-16 21:48'
 labels:
   - engine
 dependencies: []
@@ -38,3 +38,9 @@ Question hints need a durable progress state before UI work records hinted answe
 4. Add/update parity, migration/back-compat, TS and Swift tests for hinted correct, hinted incorrect, repeated hinted-to-unaided sequences, and older records without the field.
 5. Document the semantics and run the requested package, schema, import, parity, Swift, and affected Apple checks before finalizing.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented answered-with-help as an additional flag alongside correct/incorrect outcomes. Scheduling rule chosen and documented: any answered-with-help attempt is proficiency-no-credit and uses the same immediate review scheduling as an incorrect answer (box 0, dueAt = now), while correctAttempts/recentResults still preserve actual accuracy. Added parallel recentAnsweredWithHelp so weak-area logic can treat helped correct answers as not proficiency-correct.
+<!-- SECTION:NOTES:END -->
