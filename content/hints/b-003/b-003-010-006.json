@@ -11,14 +11,14 @@
     },
     {
       "level": 2,
-      "en": "The given IF is 455 kHz, which is 0.455 MHz. Add that offset to the receive frequency; do not use image spacing.",
-      "fr": "La FI donnée est 455 kHz, soit 0,455 MHz. Ajoutez ce décalage à la fréquence reçue; n’utilisez pas l’écart de fréquence image."
+      "en": "Express 455 kHz in MHz, then add it to the receive frequency.",
+      "fr": "Exprimez 455 kHz en MHz, puis ajoutez-le à la fréquence de réception."
     }
   ],
   "lessonLink": {
     "lessonId": "L-003-04",
     "sectionAnchor": "local-oscillator-and-image-basics"
   },
-  "referenceSheetSection": null,
+  "referenceSheetSection": "metric-prefixes",
   "licenseClass": "original"
 }

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why some voice modes need especially precise tuning to rebuild natural audio.",
-      "fr": "Revoyez pourquoi certains modes vocaux exigent une syntonisation particulièrement précise pour reconstruire un son naturel."
+      "en": "Review tuning accuracy by emission mode.",
+      "fr": "Revoyez la précision de syntonisation selon le mode d'émission."
     }
   ],
   "lessonLink": {
