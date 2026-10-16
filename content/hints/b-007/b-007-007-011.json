@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-007-011",
+  "questionId": "B-007-007-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the enhanced lower-atmosphere mode discussion.",
+      "fr": "Revoyez l’explication des modes améliorés dans la basse atmosphère."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "tropospheric-bending-ducting-and-scatter"
+  },
+  "singleLevelReason": "Mode recall: a second hint would identify or eliminate the enhanced propagation mode; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

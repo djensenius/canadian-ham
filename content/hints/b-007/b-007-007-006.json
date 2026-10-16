@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-007-006",
+  "questionId": "B-007-007-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the section on sudden VHF ionospheric openings.",
+      "fr": "Revoyez la section sur les ouvertures ionosphériques VHF soudaines."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "sporadic-e-and-six-metres"
+  },
+  "singleLevelReason": "Band recall: a second hint would identify or eliminate an amateur band; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
