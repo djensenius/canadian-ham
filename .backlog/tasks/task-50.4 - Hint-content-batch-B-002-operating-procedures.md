@@ -68,6 +68,8 @@ Completed B-002-008 emergency procedure hints: 8 two-level, 3 single-level recal
 Completed B-002-009 records/maps/time hints: 5 two-level, 6 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-009 --require-complete passed. Commit: 5781e1b72e6ce6b37253d06844fef3ab27d23b8b.
 
 Full batch completed. Counts: B-002-001 9 two-level/2 single-level; B-002-002 0/11; B-002-003 8/3; B-002-004 9/2; B-002-005 3/8; B-002-006 9/2; B-002-007 0/11; B-002-008 8/3; B-002-009 5/6. Total: 51 two-level, 48 single-level. Validation passed: pnpm check:hints -- --category B-002 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Review AC #2/#4/#5 remain for content reviewer/PR review.
+
+Opened PR #268: https://github.com/djensenius/canadian-ham/pull/268 and requested @copilot review via gh pr edit 268 --add-reviewer @copilot.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
