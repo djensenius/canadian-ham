@@ -64,6 +64,33 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 #endif
     }
 
+    func testForcedRegularIPhoneLandscapeMediumSheetScrollsEveryCalculatorKey() throws {
+#if os(iOS)
+        try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "Forced-regular iPhone landscape sheet scrolling is covered by the targeted iPhone run.")
+        XCUIDevice.shared.orientation = .landscapeLeft
+        waitBriefly(0.8)
+        defer { XCUIDevice.shared.orientation = .portrait }
+
+        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+        defer { app.terminate() }
+
+        openTool(.calculator, in: app)
+        assertCalculatorPresentedAsSheet(in: app, context: "forced-regular iPhone landscape key reachability")
+        let calculatorScrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
+        XCTAssertTrue(calculatorScrollView.waitForExistence(timeout: 5), "The short landscape medium sheet should enable calculator scrolling instead of shrinking keys below 44 pt")
+
+        for identifier in calculatorKeyIdentifiers {
+            let key = app.buttons[identifier].firstMatch
+            scrollCalculatorPanelUntilElementExists(key, in: app, maxSwipes: 10)
+            XCTAssertTrue(key.exists, "Expected calculator key \(identifier) to exist in the scrollable landscape sheet")
+            scrollExamToolUntilHittable(key, in: app, maxSwipes: 10)
+            XCTAssertTrue(key.isHittable, "Calculator key \(identifier) should be hittable after scrolling the landscape medium sheet. Frame: \(frameDescription(key.frame))")
+        }
+#else
+        throw XCTSkip("Forced-regular iPhone landscape sheet scrolling is iOS-only.")
+#endif
+    }
+
     func testReferenceSheetToolHiddenUntilTask44Dot4() throws {
         let app = launchPracticeQuestion()
         defer { app.terminate() }
@@ -191,6 +218,31 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let advancedTimer = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@ AND label != %@", "Timer running", initialTimerLabel)).firstMatch
         XCTAssertTrue(advancedTimer.waitForExistence(timeout: 5), "The mock-exam timer should continue while a tool is open; initial label was \(initialTimerLabel)")
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "mock calculator sheet")
+    }
+
+    func testMockExamQuestionsNavigatorPresentsAfterCalculatorSheet() throws {
+#if os(iOS)
+        try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "Compact iPhone navigator-sheet coordination is covered by the targeted iPhone run.")
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-exam-tools-navigator",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "3"
+        ])
+        defer { app.terminate() }
+
+        tapStartMockExam(in: app)
+        openTool(.calculator, in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5), "Expected the calculator sheet before opening the question navigator")
+        let questions = app.buttons["mock-questions-button"].firstMatch
+        XCTAssertTrue(questions.waitForExistence(timeout: 5), "Expected compact mock exam Questions control")
+        scrollBackgroundUntilHittable(questions, in: app, maxSwipes: 12)
+        XCTAssertTrue(questions.isHittable, "Questions should remain tappable while the calculator sheet is open")
+        questions.tap()
+        XCTAssertTrue(app.staticTexts["Question navigator"].firstMatch.waitForExistence(timeout: 5), "Tapping Questions while the calculator sheet is open should dismiss the tool sheet and then present the navigator")
+#else
+        throw XCTSkip("Compact mock-exam navigator sheet coordination is iOS-only.")
+#endif
     }
 
     func testCalculatorValueResetsForNewMockExam() throws {
@@ -567,7 +619,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         for identifier in calculatorKeyIdentifiers {
             let key = app.buttons[identifier].firstMatch
+            scrollCalculatorPanelUntilElementExists(key, in: app, maxSwipes: 10)
             XCTAssertTrue(key.waitForExistence(timeout: 5), "\(context): expected \(identifier) before auditing", file: file, line: line)
+            scrollExamToolUntilHittable(key, in: app, maxSwipes: 10)
             XCTAssertTrue(key.isHittable, "\(context): \(identifier) should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(key.frame))", file: file, line: line)
         }
     }

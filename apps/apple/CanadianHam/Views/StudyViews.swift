@@ -883,6 +883,7 @@ struct MockExamView: View {
     @State private var confirmingEndExam = false
     @State private var isSubmitting = false
     @State private var showingNavigator = false
+    @State private var pendingNavigatorPresentation = false
     @State private var shouldFocusResultsHeading = false
     @State private var selectedExamTool: ExamTool?
     @State private var calculatorFocused = false
@@ -916,7 +917,13 @@ struct MockExamView: View {
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
         .lessonReaderOpaqueNavigationBar()
-        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
+        .examToolPresentation(
+            selectedTool: $selectedExamTool,
+            calculator: calculatorViewModel,
+            calculatorFocused: $calculatorFocused,
+            referenceSheetConfiguration: referenceSheetConfiguration,
+            onDismiss: presentPendingNavigatorSheetIfNeeded
+        )
         .sheet(isPresented: $showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 navigator
@@ -932,7 +939,7 @@ struct MockExamView: View {
             calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
             refreshForCurrentTimerState()
         }
-        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
+        .onChange(of: selectedExamTool) { _, next in handleExamToolPresentationChange(next) }
         .onDisappear { onExamToolPresentationChanged(false) }
         .task(id: localDataReplacementRevision) { resetIfLocalDataWasReplaced() }
         .onReceive(timer) { _ in
@@ -1151,12 +1158,34 @@ struct MockExamView: View {
     @ViewBuilder
     private var questionsButton: some View {
         if usesNavigatorSheet {
-            Button { showingNavigator = true } label: {
+            Button { presentNavigatorSheet() } label: {
                 AccessibleSecondaryButtonLabel(title: "Questions")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("mock-questions-button")
         }
+    }
+
+    private func presentNavigatorSheet() {
+        guard usesNavigatorSheet else { return }
+        if selectedExamTool != nil {
+            pendingNavigatorPresentation = true
+            calculatorFocused = false
+            calculatorViewModel.suspendHardwareKeyboardInput()
+            selectedExamTool = nil
+        } else {
+            showingNavigator = true
+        }
+    }
+
+    private func handleExamToolPresentationChange(_ nextTool: ExamTool?) {
+        onExamToolPresentationChanged(nextTool != nil)
+    }
+
+    private func presentPendingNavigatorSheetIfNeeded() {
+        guard pendingNavigatorPresentation else { return }
+        pendingNavigatorPresentation = false
+        showingNavigator = true
     }
 
     @ViewBuilder
@@ -1383,6 +1412,7 @@ struct MockExamView: View {
         confirmingSubmit = false
         confirmingEndExam = false
         showingNavigator = false
+        pendingNavigatorPresentation = false
         selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
@@ -1509,6 +1539,7 @@ struct MockExamView: View {
         confirmingSubmit = false
         confirmingEndExam = false
         showingNavigator = false
+        pendingNavigatorPresentation = false
         selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false

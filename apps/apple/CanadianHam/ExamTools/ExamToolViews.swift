@@ -40,6 +40,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @ObservedObject var calculator: ExamCalculatorViewModel
     @Binding var calculatorFocused: Bool
     let referenceSheetConfiguration: ReferenceSheetConfiguration
+    let onDismiss: () -> Void
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
@@ -73,7 +74,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                 .safeAreaInset(edge: .bottom) {
                     Color.clear.frame(height: selectedTool == nil ? 0 : compactSheetHeight)
                 }
-                .sheet(item: $selectedTool) { tool in
+                .sheet(item: $selectedTool, onDismiss: onDismiss) { tool in
                     toolPanel(for: tool)
                         .background {
                             GeometryReader { proxy in
@@ -400,9 +401,10 @@ extension View {
         selectedTool: Binding<ExamTool?>,
         calculator: ExamCalculatorViewModel,
         calculatorFocused: Binding<Bool>,
-        referenceSheetConfiguration: ReferenceSheetConfiguration = .basic
+        referenceSheetConfiguration: ReferenceSheetConfiguration = .basic,
+        onDismiss: @escaping () -> Void = {}
     ) -> some View {
-        modifier(ExamToolPresentationModifier(selectedTool: selectedTool, calculator: calculator, calculatorFocused: calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration))
+        modifier(ExamToolPresentationModifier(selectedTool: selectedTool, calculator: calculator, calculatorFocused: calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, onDismiss: onDismiss))
     }
 }
 
@@ -811,21 +813,32 @@ struct CalculatorToolLayout {
     var displayHeight: CGFloat { usesScrolling ? 72 : compactDisplayHeight }
     var displayHorizontalPadding: CGFloat { usesScrolling ? DesignTokens.Spacing.lg : DesignTokens.Spacing.md }
     var displayVerticalPadding: CGFloat { usesScrolling ? DesignTokens.Spacing.lg : compactDisplayVerticalPadding }
-    var keyHeight: CGFloat { usesScrolling ? 64 : min(64, max(44, compactKeyHeight)) }
+    var keyHeight: CGFloat { usesScrolling ? 64 : min(64, max(minimumKeyHeight, compactKeyHeight)) }
     var displayFont: Font { (usesScrolling ? DesignTokens.FontScale.display : DesignTokens.FontScale.title).monospacedDigit().weight(.bold) }
     var keyFont: Font { (usesScrolling ? DesignTokens.FontScale.body : DesignTokens.FontScale.caption).weight(.semibold) }
     var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
 
     var usesScrolling: Bool {
-        dynamicTypeSize.isAccessibilitySize
+        dynamicTypeSize.isAccessibilitySize || compactContentHeightAtMinimumTargets > availableHeight
     }
 
     private var compactKeyHeight: CGFloat {
+        let gridHeight = max(0, availableHeight - compactNonGridContentHeight)
+        return (gridHeight - compactGridSpacing) / CGFloat(rowCount)
+    }
+
+    private var compactContentHeightAtMinimumTargets: CGFloat {
+        compactNonGridContentHeight + (minimumKeyHeight * CGFloat(rowCount)) + compactGridSpacing
+    }
+
+    private var compactNonGridContentHeight: CGFloat {
         let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
         let helpTotal: CGFloat = showsCompactHelpText ? 48 + compactSectionSpacing : 0
-        let gridSpacing = compactKeySpacing * CGFloat(rowCount - 1)
-        let gridHeight = max(0, availableHeight - displayTotal - compactSectionSpacing - helpTotal)
-        return (gridHeight - gridSpacing) / CGFloat(rowCount)
+        return displayTotal + compactSectionSpacing + helpTotal
+    }
+
+    private var compactGridSpacing: CGFloat {
+        compactKeySpacing * CGFloat(rowCount - 1)
     }
 
     private var showsCompactHelpText: Bool {
@@ -836,6 +849,7 @@ struct CalculatorToolLayout {
     private var compactKeySpacing: CGFloat { 6 }
     private var compactDisplayHeight: CGFloat { 48 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
+    private var minimumKeyHeight: CGFloat { 44 }
     private var rowCount: Int { 6 }
 }
 
