@@ -323,7 +323,8 @@ function buildWeakSubsectionsFixture(): unknown {
     makeProgress("B-001-009-002", [true, true, false, false, false]),
   ];
   const pooledSingleAttemptRecords = [makeProgress("B-001-010-001", [false])];
-  const hintedCorrectDoesNotClearRecords = [makeProgress("B-001-011-001", [false, true], [false, true])];
+  const helpedCorrectChangesWeakOutcomeRecords = [makeProgress("B-001-011-001", [false, true, true, true], [false, false, true, false])];
+  const helpedCorrectAllFalseControlRecords = [makeProgress("B-001-012-001", [false, true, true, true], [false, false, false, false])];
 
   return {
     schemaVersion: 1,
@@ -357,9 +358,14 @@ function buildWeakSubsectionsFixture(): unknown {
         expectedOutput: { weakSubsectionIds: weakSubsectionIds(pooledSingleAttemptRecords) },
       },
       {
-        id: "weak-subsections-hinted-correct-does-not-clear-weak-area",
-        input: { records: hintedCorrectDoesNotClearRecords, latestExamItems: [] },
-        expectedOutput: { weakSubsectionIds: weakSubsectionIds(hintedCorrectDoesNotClearRecords) },
+        id: "weak-subsections-hinted-correct-changes-proficiency-outcome-to-weak",
+        input: { records: helpedCorrectChangesWeakOutcomeRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedCorrectChangesWeakOutcomeRecords) },
+      },
+      {
+        id: "weak-subsections-same-results-with-no-help-stay-above-threshold",
+        input: { records: helpedCorrectAllFalseControlRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedCorrectAllFalseControlRecords) },
       },
     ],
   };

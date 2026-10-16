@@ -302,24 +302,28 @@
       }
     },
     {
-      "id": "weak-subsections-hinted-correct-does-not-clear-weak-area",
+      "id": "weak-subsections-hinted-correct-changes-proficiency-outcome-to-weak",
       "input": {
         "records": [
           {
             "questionId": "B-001-011-001",
             "bankId": "basic-2025-07-15",
-            "attempts": 2,
-            "correctAttempts": 1,
+            "attempts": 4,
+            "correctAttempts": 3,
             "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
             "lastResult": "correct",
-            "lastAnsweredWithHelp": true,
+            "lastAnsweredWithHelp": false,
             "recentResults": [
               false,
+              true,
+              true,
               true
             ],
             "recentAnsweredWithHelp": [
               false,
-              true
+              false,
+              true,
+              false
             ],
             "leitner": {
               "box": 1,
@@ -334,6 +338,43 @@
         "weakSubsectionIds": [
           "B-001-011"
         ]
+      }
+    },
+    {
+      "id": "weak-subsections-same-results-with-no-help-stay-above-threshold",
+      "input": {
+        "records": [
+          {
+            "questionId": "B-001-012-001",
+            "bankId": "basic-2025-07-15",
+            "attempts": 4,
+            "correctAttempts": 3,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "correct",
+            "lastAnsweredWithHelp": false,
+            "recentResults": [
+              false,
+              true,
+              true,
+              true
+            ],
+            "recentAnsweredWithHelp": [
+              false,
+              false,
+              false,
+              false
+            ],
+            "leitner": {
+              "box": 1,
+              "dueAt": "2026-01-02T00:00:00.000Z"
+            },
+            "notes": null
+          }
+        ],
+        "latestExamItems": []
+      },
+      "expectedOutput": {
+        "weakSubsectionIds": []
       }
     }
   ]
