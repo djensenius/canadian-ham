@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-004-009",
+  "questionId": "B-007-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the selective-fading bandwidth note.",
+      "fr": "Revoyez la note sur la largeur de bande dans l’évanouissement sélectif."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "absorption-and-fading"
+  },
+  "singleLevelReason": "Comparison recall: a second hint would identify or eliminate the bandwidth relationship; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

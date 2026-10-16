@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-001-008",
+  "questionId": "B-007-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the band-reference table together with ground-coverage trends.",
+      "fr": "Revoyez le tableau de référence des bandes avec les tendances de portée de l’onde de sol."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "hf-and-shortwave-references"
+  },
+  "singleLevelReason": "Band comparison recall: a second hint would identify or eliminate a band by its frequency or wavelength; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

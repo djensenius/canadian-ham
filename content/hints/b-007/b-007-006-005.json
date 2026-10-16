@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-007-006-005",
+  "questionId": "B-007-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use λ(m) = 300 / f(MHz) to translate 28 MHz into an approximate band name.",
+      "fr": "Utilisez λ(m) = 300 / f(MHz) pour convertir 28 MHz en nom de bande approximatif."
+    },
+    {
+      "level": 2,
+      "en": "Compare your computed band name with the candidate listening tests, then prefer evidence from the same path and band.",
+      "fr": "Comparez le nom de bande obtenu avec les essais d’écoute proposés, puis privilégiez une preuve venant du même trajet et de la même bande."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "what-to-try-when-a-path-fails"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

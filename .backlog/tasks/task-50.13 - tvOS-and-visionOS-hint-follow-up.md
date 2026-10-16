@@ -4,7 +4,7 @@ title: tvOS and visionOS hint follow-up
 status: To Do
 assignee: []
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 12:07'
+updated_date: '2026-10-16 15:31'
 labels:
   - apple
 dependencies:
@@ -30,4 +30,5 @@ Bring the Hint tool to tvOS and visionOS after the first Apple iOS/iPadOS/macOS 
 - [ ] #5 tvOS and visionOS consume the bundled Apple content-package hint data for offline use with the active Basic bank.
 - [ ] #6 A localized "Review in lesson" link from lessonLink appears with the last available hint level (Hint 2 for two-level files, Hint 1 for one-level files), notes in French UI that current lesson bodies are English-only, opens the linked lesson at sectionAnchor without discarding the in-progress practice/review session, and the tvOS/visionOS lesson readers generate anchors with the shared fixtures/lesson-heading-anchors.json algorithm and Swift fixture test.
 - [ ] #7 The hint tool handles one-level hint files by presenting only Hint 1, with no empty or broken Hint 2 affordance.
+- [ ] #8 The lesson link uses a generic localized label ("Review in lesson" / « Revoir dans la leçon ») and never shows the linked section heading or lesson title before the question is answered, because some headings contain answer words (e.g. "Sporadic E and six metres")
 <!-- AC:END -->

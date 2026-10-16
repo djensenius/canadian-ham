@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-007-001",
+  "questionId": "B-007-007-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the six-metre unusual-opening section.",
+      "fr": "Revoyez la section sur les ouvertures inhabituelles sur six mètres."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "sporadic-e-and-six-metres"
+  },
+  "singleLevelReason": "Layer recall: a second hint would identify or eliminate an ionospheric region; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

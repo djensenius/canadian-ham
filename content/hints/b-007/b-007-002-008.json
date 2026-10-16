@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-002-008",
+  "questionId": "B-007-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the layer-order section and the role of each region.",
+      "fr": "Revoyez la section sur l’ordre des couches et le rôle de chaque couche."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "the-ionosphere-in-layers"
+  },
+  "singleLevelReason": "Layer-geometry recall: a second hint would identify or eliminate a layer or property; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
