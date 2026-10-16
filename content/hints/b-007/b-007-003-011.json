@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-007-003-011",
+  "questionId": "B-007-003-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Sketch the same launch angle with two different refracting heights.",
+      "fr": "Tracez le même angle de départ avec deux hauteurs de réfraction différentes."
+    },
+    {
+      "level": 2,
+      "en": "Compare where each path first returns along the ground while keeping the angle idea unchanged.",
+      "fr": "Comparez l’endroit où chaque trajet revient d’abord au sol en gardant l’idée d’angle inchangée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "skip-distance-and-skip-zone"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-007-003-006",
+  "questionId": "B-007-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Sketch the launch angle against a fixed layer height before comparing return points.",
+      "fr": "Tracez l’angle de départ avec une hauteur de couche fixe avant de comparer les points de retour."
+    },
+    {
+      "level": 2,
+      "en": "For each candidate, keep only one variable changing and decide from the sketch where the first return point moves.",
+      "fr": "Pour chaque choix, ne laissez changer qu’une seule variable et déduisez du croquis où se déplace le premier point de retour."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "skip-distance-and-skip-zone"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

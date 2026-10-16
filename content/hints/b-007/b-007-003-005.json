@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-003-005",
+  "questionId": "B-007-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Compare the route distance with the single-hop planning scales in the hop discussion.",
+      "fr": "Comparez la distance du trajet aux échelles de planification d’un seul saut dans l’explication des sauts."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "worked-example-comparing-hop-scales"
+  },
+  "singleLevelReason": "Method item with a recall result: a second hint would state the needed path count or eliminate propagation modes; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
