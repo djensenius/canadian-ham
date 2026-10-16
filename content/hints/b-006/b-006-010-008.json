@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-010-008",
+  "questionId": "B-006-010-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the common coax impedance expected at the base of a simple ground-plane antenna.",
+      "fr": "Revoyez l’impédance coaxiale courante attendue à la base d’une simple antenne à plan de sol."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "quarter-wave-and-half-wave-verticals"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall or concept item: a second hint would define the correct choice or eliminate distractors; topic pointer and lesson link only."
+}
