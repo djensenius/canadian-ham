@@ -21,7 +21,7 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Owner decision recorded
+- [x] #1 Owner decision recorded
 - [ ] #2 M2 lessons use the explanatory format from content/lessons/README.md with no loss of covered facts
 - [ ] #3 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
 <!-- AC:END -->
