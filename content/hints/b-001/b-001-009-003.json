@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-009-003",
+  "questionId": "B-001-009-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Identify the role in the transmitting setup before deciding who carries responsibility.",
+      "fr": "Identifiez le rôle dans la configuration d'émission avant de déterminer qui porte la responsabilité."
+    },
+    {
+      "level": 2,
+      "en": "For each transmission, keep the owner, the person at the controls, and any supervised guest as separate roles. The person able to stop or change the transmitter is central.",
+      "fr": "Pour chaque émission, séparez le propriétaire, la personne aux commandes et tout invité supervisé. La personne qui peut arrêter ou modifier l'émetteur est centrale."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-operator-and-station-owner"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
