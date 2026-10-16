@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 13:06'
+updated_date: '2026-10-16 13:08'
 labels:
   - content
 dependencies:
@@ -130,4 +130,6 @@ B-001-023 manually written as calibrated topic-pointer B hints: 10 hints (0 two-
 B-001-024 manually written as calibrated topic-pointer B hints: 10 hints (0 two-level, 10 single-level B). Validation: pnpm check:hints -- --subsection B-001-024 --require-complete passed.
 
 B-001-025 manually written as calibrated topic-pointer B hints: 4 hints (0 two-level, 4 single-level B). Validation: pnpm check:hints -- --subsection B-001-025 --require-complete passed.
+
+Completed all remaining B-001 hint files. Counts by subsection (two-level/B): B-001-002 0/9; B-001-003 0/8; B-001-004 0/7; B-001-005 0/6; B-001-006 0/6; B-001-007 0/11; B-001-008 0/8; B-001-009 0/9; B-001-010 0/10; B-001-011 0/10; B-001-012 0/4; B-001-013 0/11; B-001-014 0/11; B-001-015 6/5; B-001-016 0/11; B-001-017 0/10; B-001-018 0/4; B-001-019 0/6; B-001-020 0/5; B-001-021 0/9; B-001-022 0/5; B-001-023 0/10; B-001-024 0/10; B-001-025 0/4. Remaining-batch total: 6 two-level method hints and 189 single-level B topic pointers (195 files). Category total including pilot B-001-001: 8 two-level and 191 B (199 files). Final validation passed: pnpm check:hints -- --category B-001 --require-complete; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
 <!-- SECTION:NOTES:END -->
