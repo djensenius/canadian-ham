@@ -1,7 +1,7 @@
 ---
 id: TASK-51
 title: 'Plain study-guide wording: remove platform-specific intros'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
@@ -23,9 +23,9 @@ Owner request 2026-10-16: treat the app as an amateur radio study guide and drop
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Home and section intros on web and every Apple platform read as a plain study guide, with no device-family, platform or bank-date wording
-- [ ] #2 Necessary facts stay where they belong (About: bank version and attribution; Settings: storage and privacy), and the App Store listing drafts are checked for the same issue
-- [ ] #3 EN and FR updated; pnpm check:apple-l10n, check-apple-text-sources, web tests and the affected Apple UI tests pass
+- [x] #1 Home and section intros on web and every Apple platform read as a plain study guide, with no device-family, platform or bank-date wording
+- [x] #2 Necessary facts stay where they belong (About: bank version and attribution; Settings: storage and privacy), and the App Store listing drafts are checked for the same issue
+- [x] #3 EN and FR updated; pnpm check:apple-l10n, check-apple-text-sources, web tests and the affected Apple UI tests pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -48,4 +48,18 @@ Before/after copy updated:
 - Apple About privacy: removed “This Apple/Apple TV/Apple Vision Pro app” wording while preserving offline/privacy/storage/session facts.
 - visionOS category subtitle: removed “for visionOS”.
 - App Store listing drafts checked; platform lists were retained because the listing metadata documents Apple platform availability as requested.
+
+Validation passed:
+- pnpm typecheck
+- pnpm test
+- pnpm build:web
+- node scripts/check-apple-text-sources.ts
+- pnpm check:apple-l10n (also built CanadianHamTV and CanadianHamVision)
+- DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAboutShowsReleaseAttributionDisclaimerAndBankVersion test CODE_SIGNING_ALLOWED=NO\n- rg forbidden platform-intro phrases across user-facing web/Apple source returned no matches.\nApp Store listing drafts were reviewed; existing platform lists were left in metadata because they describe App Store platform availability.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Rewrote web and Apple study-guide intros, home eyebrow copy, Learn and Morse descriptions, Apple About privacy descriptions, and the visionOS category subtitle to avoid device-family, web/native, and bank-date framing while preserving About bank/version/attribution/privacy facts and Settings/storage/device-capability wording. Updated Localizable.xcstrings through a Python JSON round trip and verified with web checks, Apple localization/text-source checks, tvOS/visionOS builds through check:apple-l10n, and the affected iOS About UI test.
+<!-- SECTION:FINAL_SUMMARY:END -->
