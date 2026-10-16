@@ -23,7 +23,7 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Owner decision recorded
+- [x] #1 Owner decision recorded
 - [ ] #2 Splits and moves done with coverage, quizzes, explanations, figures and links updated; saved lesson progress migrates on web and Apple
 - [ ] #3 L-005-04 and M8 are split into smaller lessons, B-001-014 moves to L-001-05, and L-004-03 comes first in M4
 - [ ] #4 Lesson coverage shows every question still covered exactly as intended, and all content checks pass
