@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-010-005",
+  "questionId": "B-001-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "First classify the event: shared-band priority, disturbance, deliberate action, test, or official direction.",
+      "fr": "Classez d'abord l'événement : priorité dans une bande partagée, perturbation, geste délibéré, essai ou directive officielle."
+    },
+    {
+      "level": 2,
+      "en": "Good operating starts by protecting other users. Lower-priority status means extra care for the protected user, while testing and disputes still require avoiding harmful effects.",
+      "fr": "Une bonne exploitation commence par la protection des autres utilisateurs. Un statut de priorité inférieure exige plus de prudence envers l'utilisateur protégé, et les essais ou désaccords doivent quand même éviter les effets nuisibles."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
