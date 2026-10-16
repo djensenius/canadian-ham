@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:51'
+updated_date: '2026-10-16 14:54'
 labels:
   - content
 dependencies:
@@ -32,10 +32,10 @@ Write and review original EN/FR hint content for B-004 circuit component questio
 <!-- AC:BEGIN -->
 - [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
 - [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
-- [ ] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
 - [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
 - [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
-- [ ] #6 All in-scope B-004 circuit components active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
+- [x] #6 All in-scope B-004 circuit components active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -55,4 +55,20 @@ B-004-006-004: learner must compute/derive the tolerance range around 100 ohms; 
 B-004-006-005: learner must compute/derive which value-band position changes between 33 ohms and 39 ohms; the hint never states the band ordinal.
 B-004-006-010: learner must compute/derive which band changes the multiplier scale between 120 ohms and 1200 ohms; the hint never states the band ordinal.
 B-004-006-011: learner must compute/derive the resistor value from colour digits and multiplier; the hint never states the final resistance value.
+
+Validation passed after implementation:
+- pnpm check:hints -- --category B-004 --require-complete (63/63 active B-004 hints)
+- pnpm check:hints:self-test
+- pnpm check:schemas
+- pnpm --filter @canadian-ham/content-tools check:explanations
+- pnpm --filter @canadian-ham/content-tools check:lesson-originality:all
+- pnpm typecheck
+- pnpm test
+Manual self-review: applied EN/FR literal-option self-test, checked hint prose avoids reference-sheet pointer text/copying, and checked the four two-level numeric/method hints do not state final answer values or band ordinals. Content-review acceptance criteria remain for reviewer.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented 63 original EN/FR hint files for active B-004 circuit components questions: 59 single-level recall pointers with singleLevelReason and 4 two-level resistor-method hints with task-note justifications. Automated hint, schema, explanation, originality, typecheck, and test checks passed. Ready for content review.
+<!-- SECTION:FINAL_SUMMARY:END -->
