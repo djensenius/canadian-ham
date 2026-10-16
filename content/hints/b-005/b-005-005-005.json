@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Series current has only one path, so each resistor adds its opposition to the same path.",
-      "fr": "En série, le courant n'a qu'un seul trajet; chaque résistance ajoute son opposition à ce même trajet."
+      "en": "In a series network, the same current must pass through every resistor in turn.",
+      "fr": "Dans un montage en série, le même courant doit traverser chaque résistance à tour de rôle."
     },
     {
       "level": 2,

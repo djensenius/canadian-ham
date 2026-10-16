@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "In a parallel tuned circuit at resonance, energy circulates between L and C instead of being drawn heavily from the source.",
-      "fr": "Dans un circuit accordé en parallèle à la résonance, l'énergie circule entre L et C au lieu d'être fortement tirée de la source."
+      "en": "At resonance in a parallel tuned circuit, the L and C branch currents are equal and opposite. Think about what that means for the current taken from the source.",
+      "fr": "À la résonance d’un circuit accordé parallèle, les courants des branches L et C sont égaux et opposés. Pensez à ce que cela signifie pour le courant fourni par la source."
     },
     {
       "level": 2,
-      "en": "Use Z = E / I as seen by the source, with the source current described in Hint 1.",
-      "fr": "Utilisez Z = E / I vu par la source, avec le courant de source décrit dans l’indice 1."
+      "en": "Use Z = E / I as seen by the source, with the source current you reasoned out from Hint 1.",
+      "fr": "Utilisez Z = E / I vu par la source, avec le courant de source que vous avez déduit de l’indice 1."
     }
   ],
   "lessonLink": {

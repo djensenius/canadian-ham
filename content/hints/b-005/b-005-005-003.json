@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Parallel resistors create extra current paths, so the circuit becomes easier for current overall.",
-      "fr": "Des résistances en parallèle créent des trajets de courant supplémentaires; l'ensemble laisse donc passer le courant plus facilement."
+      "en": "In a parallel network, each resistor gives the current a separate path from the source.",
+      "fr": "Dans un montage en parallèle, chaque résistance offre au courant un chemin distinct depuis la source."
     },
     {
       "level": 2,

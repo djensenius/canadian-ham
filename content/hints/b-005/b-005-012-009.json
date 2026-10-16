@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "In a receiver, tuned circuits favour one part of the spectrum before later stages process it.",
-      "fr": "Dans un récepteur, les circuits accordés favorisent une partie du spectre avant que les étages suivants la traitent."
-    },
-    {
-      "level": 2,
-      "en": "Think about what a tuned circuit does to signals at and away from its resonant frequency.",
-      "fr": "Pensez à ce qu'un circuit accordé fait aux signaux à sa fréquence de résonance et loin de celle-ci."
+      "en": "Review the role of tuned circuits in a receiver.",
+      "fr": "Revoyez le rôle des circuits accordés dans un récepteur."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "resonance-and-tuned-circuits"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Any principle about what a tuned circuit does in a receiver restates the correct option; topic pointer and lesson link only."
 }

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A voltmeter measures E across the part or circuit being checked.",
-      "fr": "Un voltmètre mesure E aux bornes de la pièce ou du circuit vérifié."
+      "en": "Decide what quantity a voltmeter compares: a difference between two points, or a flow through one point.",
+      "fr": "Déterminez ce que compare un voltmètre : une différence entre deux points, ou un débit à travers un point."
     },
     {
       "level": 2,
