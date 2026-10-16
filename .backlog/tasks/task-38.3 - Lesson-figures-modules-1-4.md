@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-14 16:47'
+updated_date: '2026-10-16 00:10'
 labels:
   - content
   - apple
@@ -80,6 +80,8 @@ Final coordinator follow-up: updated signal-quality-cw-ssb-fm, digital-interface
 Integration validation completed on task-38-figures-integration: module 1-4 figures are covered by CanadianHamLessonFiguresUITests light audits for every figure and dark module sample audits on iOS. Approved review notes were applied to grounding-lightning-rf-safety, yagi-receiver-specs, and signal-quality-cw-ssb-fm; qlmanage PNGs were refreshed/read and pnpm check:figures passes. Evidence screenshots are under docs/evidence/task-38-figures/app/.
 
 PR #238 Copilot-round SVG revalidation: the post-Done SVG changes to station-filtering-radio-blocks, digital-interface-linear-supply, communications-flowchart, cw-ssb-signal-paths, and distress-urgency-safety-board were re-rendered into docs/evidence/task-38.3 with qlmanage -t -s 1200 and inspected with the read tool. The app M3 light and dark station-filtering-radio-blocks screenshots were refreshed from the passing iOS rerun attachments. Targeted iOS validation passed 5/5 in Test-CanadianHam-2026.10.14_12-06-52--0400.xcresult: Module 1 light part 2, Module 2 light part 2, Module 3 light part 1, Module 3 light part 2, and Module 3 dark sample. Supporting checks passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; pnpm check:apple-l10n.
+
+Owner decision 2026-10-15 for PR #238 M4 table-cell audit: use option A1. Tolerance values stay visible in the lesson and use SI spacing (for example, ± 0.5 %, ± 5 %, ± 10 %) in L-004-03 tables and prose; app-side LessonTableCellAccessibility WIP remains discarded.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
