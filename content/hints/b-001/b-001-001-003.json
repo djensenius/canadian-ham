@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Classify the role first: this asks for the civilian federal organization that runs the radio-rule framework.",
-      "fr": "Classez d'abord le rôle : on cherche l'organisation fédérale civile qui administre le cadre des règles de radiocommunication."
+      "en": "Classify the role first by asking who administers the radio-rule framework.",
+      "fr": "Classez d'abord le rôle en vous demandant qui administre le cadre des règles de radiocommunication."
     }
   ],
   "lessonLink": {

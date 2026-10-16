@@ -10,7 +10,7 @@ Each Basic question hint file uses `packages/schemas/hint.schema.json`:
 - `status`: content workflow state.
 - `hints`: one or two entries with original English and French text. Level 1 is required; level 2 is optional only for approved single-level recall cases.
 - `singleLevelReason`: required when `hints` contains only level 1. Record why a useful level 2 would give away the answer.
-- `lessonLink`: `{ lessonId, sectionAnchor? }` pointing to the lesson section that teaches the hint topic. The checker verifies that the lesson exists, covers the question's subsection, and exposes the heading anchor rendered by the lesson readers. The shared slug rules are: lowercase, strip inline code markers and HTML tags, drop punctuation except hyphens, and replace each whitespace character with `-`; duplicate headings receive `-1`, `-2`, and so on. The depth-1 lesson title and `Illustration brief` author section are not linkable.
+- `lessonLink`: `{ lessonId, sectionAnchor? }` pointing to the lesson section that teaches the hint topic. The checker verifies that the lesson exists, covers the question's subsection, and exposes the heading anchor the lesson readers will render (task-50.11–50.13). The shared slug rules are: lowercase, strip inline Markdown links/emphasis/code markers and HTML tags, drop punctuation except hyphens, and replace each whitespace character with `-`; duplicate headings receive `-1`, `-2`, and so on. The depth-1 lesson title and `Illustration brief` author section are not linkable.
 - `referenceSheetSection`: a section key for UI-provided reference-sheet pointers, or `null`/omitted when no pointer applies. Hint prose should remain generic so apps can hide the pointer when the reference sheet is unavailable.
 - `licenseClass`: `original`.
 
@@ -47,4 +47,4 @@ For each batch, reviewers should verify that hints:
 - do not list distractor numeric values as eliminations, such as "it is not 24 V";
 - link to the lesson section that teaches the distinction or setup and verify that the linked heading is still present.
 
-The checker covers common direct copies, numeric correct-answer values, selected aliases, distinctive partial copies, lesson-link existence, and single-level reasons. Unit conversions and distractor values listed by value remain reviewer responsibilities.
+The checker covers common direct copies, numeric correct-answer values, selected aliases, distinctive partial copies, lesson-link existence, and single-level reasons. Unit conversions, distractor values listed by value, and correct-answer numbers that all appear in two or more options remain reviewer responsibilities.

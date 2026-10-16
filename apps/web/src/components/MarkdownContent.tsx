@@ -107,9 +107,8 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
 }
 
 export function lessonHeadingAnchorSlug(headingText: string): string {
-  return headingText
+  return stripInlineMarkdown(headingText)
     .trim()
-    .replace(/`([^`]+)`/g, "$1")
     .replace(/<[^>]+>/g, "")
     .toLowerCase()
     .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")

@@ -42,7 +42,7 @@ const NUMERIC_UNIT_TOKENS = new Set([
   "m", "mm", "cm", "km", "metre", "metres", "meter", "meters",
   "pf", "picofarad", "picofarads", "uf", "µf", "μf", "microfarad", "microfarads", "nf", "nanofarad", "nanofarads", "f", "farad", "farads",
   "h", "mh", "uh", "µh", "μh", "henry", "henries", "millihenry", "millihenries", "microhenry", "microhenries",
-  "wpm", "mots", "min", "minute", "minutes", "year", "years", "an", "ans", "degree", "degrees", "degre", "degres", "time", "times", "fois",
+  "wpm", "mots", "min", "minute", "minutes", "day", "days", "jour", "jours", "hour", "hours", "heure", "heures", "year", "years", "an", "ans", "degree", "degrees", "degre", "degres", "time", "times", "fois",
 ]);
 const LOW_INFORMATION_TOKENS = new Set([...STOP_WORD_TOKENS, ...NUMERIC_UNIT_TOKENS]);
 const REFERENCE_SHEET_WORDS = ["reference sheet", "reference material", "formula sheet", "feuille de référence", "document de référence"];
@@ -221,6 +221,17 @@ function markdownLines(text: string): Array<{ line: string; lineNumber: number }
   return lines;
 }
 
+function stripInlineMarkdown(value: string): string {
+  return value
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/\*([^\s*](?:[^*]*[^\s*])?)\*/g, "$1")
+    .replace(/(^|[^\w])_([^\s_](?:[^\s_]*[^\s_])?)_(?=$|[^\w])/g, "$1$2")
+    .replace(/\\([\\`*_[\]{}()#+\-.!|])/g, "$1");
+}
+
 function addAnchor(anchors: Set<string>, seen: Map<string, number>, headingText: string): void {
   const baseSlug = slugForLessonHeading(headingText);
   if (baseSlug.length === 0) {
@@ -231,31 +242,36 @@ function addAnchor(anchors: Set<string>, seen: Map<string, number>, headingText:
   anchors.add(previousCount === 0 ? baseSlug : `${baseSlug}-${previousCount}`);
 }
 
+function fencedCodeEndIndex(lines: readonly { readonly line: string; readonly lineNumber: number }[], startIndex: number): number | null {
+  if (!/^ {0,3}```(?:[ \t]*([^`\s]+))?[ \t]*$/.test(lines[startIndex]?.line ?? "")) {
+    return null;
+  }
+  for (let index = startIndex + 1; index < lines.length; index += 1) {
+    if (/^ {0,3}```[ \t]*$/.test(lines[index]?.line ?? "")) {
+      return index;
+    }
+  }
+  return null;
+}
+
 export function lessonReaderHeadingAnchors(markdown: string, title?: string): Set<string> {
   const anchors = new Set<string>();
   const seen = new Map<string, number>();
-  let fence: { marker: "`"; length: number } | null = null;
+  const lines = markdownLines(markdown);
 
-  for (const { line } of markdownLines(markdown)) {
-    const fenceMatch = line.match(/^ {0,3}(`{3,})(.*)$/);
-    if (fence !== null) {
-      if (fenceMatch && fenceMatch[1]?.startsWith(fence.marker) && fenceMatch[1].length >= fence.length && fenceMatch[2]?.trim() === "") {
-        fence = null;
-      }
-      continue;
-    }
-    if (fenceMatch) {
-      const marker = fenceMatch[1]!;
-      fence = { marker: marker[0] as "`", length: marker.length };
+  for (let index = 0; index < lines.length; index += 1) {
+    const fenceEndIndex = fencedCodeEndIndex(lines, index);
+    if (fenceEndIndex !== null) {
+      index = fenceEndIndex;
       continue;
     }
 
-    const heading = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(line);
+    const heading = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(lines[index]?.line ?? "");
     if (heading === null) {
       continue;
     }
     const depth = heading[1]!.length;
-    const text = heading[2]?.trim() ?? "";
+    const text = stripInlineMarkdown(heading[2]?.trim() ?? "").trim();
     if (text.length === 0 || /^illustration brief$/iu.test(text)) {
       continue;
     }
@@ -473,23 +489,25 @@ function findQuestionFragmentLeakage(hintText: string, questionText: string): st
 type NumericValue = {
   readonly number: string;
   readonly text: string;
+  readonly hasAttachedContext: boolean;
 };
 
 const NUMERIC_UNIT_PATTERN = [
   "millivolts?", "kilovolts?", "volts?", "mv", "kv", "v",
-  "milliamperes?", "milliamps?", "amperes?", "amps?", "ma", "a",
+  "milliamperes?", "milliamps?", "amperes?", "amps?", "ma",
   "megohms?", "kilohms?", "kohms?", "ohms?",
   "milliwatts?", "kilowatts?", "watts?", "mw", "kw", "w",
   "ghz", "mhz", "khz", "hz", "dbi", "dbd", "dbm", "dbw", "db",
-  "kilometres?", "kilometers?", "metres?", "meters?", "km", "cm", "mm", "m",
+  "kilometres?", "kilometers?", "metres?", "meters?", "km", "cm", "mm",
   "microfarads?", "picofarads?", "nanofarads?", "farads?", "µf", "μf", "uf", "pf", "nf", "f",
-  "microhenries", "microhenrys", "millihenries", "millihenrys", "henries", "henrys", "µh", "μh", "uh", "mh", "h",
-  "mots/min", "wpm", "minutes?", "years?", "ans?", "degrés", "degres", "degrees?", "fois", "times?",
+  "microhenries", "microhenrys", "millihenries", "millihenrys", "henries", "henrys", "µh", "μh", "uh", "mh",
+  "mots/min", "wpm", "minutes?", "days?", "jours?", "hours?", "heures?", "years?", "ans?", "degrés", "degres", "degrees?", "fois", "times?",
+  "a", "h", "m",
 ].join("|");
 
 function numericValuePattern(language: "en" | "fr"): RegExp {
   const groupedSeparator = language === "en" ? "[ ,\\u00a0]" : "[ \\u00a0]";
-  return new RegExp(`(?<![\\p{L}\\p{N}.,])(?<number>(?:\\d{1,3}(?:${groupedSeparator}\\d{3})+|\\d+(?!${groupedSeparator}\\d))(?:\\.\\d+)?)(?:\\s*(?<unit>${NUMERIC_UNIT_PATTERN}))?(?![\\p{L}\\p{N}.])`, "giu");
+  return new RegExp(`(?<![\\p{L}\\p{N}.,])(?<currencyBefore>[$])?\\s*(?<number>(?:\\d{1,3}(?:${groupedSeparator}\\d{3})+|\\d+(?!${groupedSeparator}\\d))(?:\\.\\d+)?)(?:[\\s-]*(?<unit>${NUMERIC_UNIT_PATTERN}))?(?:\\s*(?<percent>%))?(?:\\s*(?<currencyAfter>[$]))?(?![\\p{L}\\p{N}]|\\.\\d)`, "giu");
 }
 
 function canonicalNumber(value: string): string {
@@ -518,7 +536,11 @@ function numericValues(value: string, language: "en" | "fr"): NumericValue[] {
       continue;
     }
     seen.add(number);
-    values.push({ number, text: match[0].trim() });
+    values.push({
+      number,
+      text: match[0].trim(),
+      hasAttachedContext: (match.groups?.unit ?? match.groups?.currencyBefore ?? match.groups?.currencyAfter ?? match.groups?.percent) !== undefined,
+    });
   }
   return values;
 }
@@ -555,13 +577,17 @@ function numericValueOptionCounts(answerTexts: readonly string[], language: "en"
 
 function findCorrectNumericAnswerLeakage(hintText: string, questionText: string, answerText: string, answerTexts: readonly string[], language: "en" | "fr"): NumericValue | null {
   const answerValues = numericValues(answerText, language);
-  if (answerValues.length === 0 || !answerHasCheckableNumericValue(answerText, questionText, answerTexts, language)) {
+  if (answerValues.length === 0) {
     return null;
   }
+  const answerIsNumericallyCheckable = answerHasCheckableNumericValue(answerText, questionText, answerTexts, language);
   const optionCounts = numericValueOptionCounts(answerTexts, language);
   const questionNumbers = new Set(numericValues(questionText, language).map((value) => value.number));
   const hintNumbers = new Set(numericValues(hintText, language).map((value) => value.number));
   for (const answerValue of answerValues) {
+    if (!answerIsNumericallyCheckable && !answerValue.hasAttachedContext) {
+      continue;
+    }
     if ((optionCounts.get(answerValue.number) ?? 0) >= 2) {
       continue;
     }
@@ -1180,6 +1206,7 @@ export async function runHintCheckerSelfTest(): Promise<void> {
     { name: "1500-khz", answer: "1 500 kHz", questionWithValue: "The question gives 1 500 kHz and asks what value to carry forward.", leakingHint: "Use 1500 kHz as the final value." },
     { name: "1500-khz-en-comma", answer: "1 500 kHz", questionWithValue: "The question gives 1 500 kHz and asks what value to carry forward.", leakingHint: "Use 1,500 kHz as the final value." },
     { name: "0-5-a", answer: "0.5 A", questionWithValue: "The question gives 0.5 A and asks what value to carry forward.", leakingHint: "Use 0.5 A as the final value." },
+    { name: "50-period", answer: "50", questionWithValue: "The question gives 50 and asks what value to carry forward.", leakingHint: "Use 50." },
     { name: "50-ohms", answer: "50 ohms", questionWithValue: "The question gives a 50 ohms load and asks what value to carry forward.", leakingHint: "Use 50 in the relationship." },
     { name: "5-08-metres", answer: "5.08 metres", questionWithValue: "The question gives 5.08 metres and asks what value to carry forward.", leakingHint: "The setup gives about 5.08 metres." },
     { name: "10-microfarads", answer: "10 microfarads", questionWithValue: "The question gives 10 microfarads and asks what value to carry forward.", leakingHint: "The capacitance is 10 microfarads." },
@@ -1228,6 +1255,45 @@ export async function runHintCheckerSelfTest(): Promise<void> {
       { sourceIndex: 1, isCorrect: false, text: { en: "10 wpm", fr: "10 mots/min" } },
       { sourceIndex: 2, isCorrect: false, text: { en: "15 wpm", fr: "15 mots/min" } },
       { sourceIndex: 3, isCorrect: false, text: { en: "20 wpm", fr: "20 mots/min" } },
+    ],
+  })]);
+
+  await assertSelfTestRejects("numeric-answer-fr-degres", hint({ hints: [
+    { level: 1, en: "Set up the angle before answering.", fr: "Utilisez 180 degrés." },
+    { level: 2, en: "Keep the phase relationship separate from the display shape.", fr: "Gardez la relation de phase distincte de la forme affichée." },
+  ] }), "correct answer numeric value", [question({
+    text: { en: "Fixture angle question?", fr: "Question fictive d'angle?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "180 degrees", fr: "180 degrés" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "90 degrees", fr: "90 degrés" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "45 degrees", fr: "45 degrés" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "0 degrees", fr: "0 degré" } },
+    ],
+  })]);
+
+  await assertSelfTestRejects("numeric-answer-days-fallback", hint({ hints: [
+    { level: 1, en: "Complete the update within 30 days.", fr: "Complétez la mise à jour dans les 30 jours." },
+    { level: 2, en: "Use the notification timing rule.", fr: "Utilisez la règle de délai d'avis." },
+  ] }), "correct answer numeric value", [question({
+    text: { en: "Fixture notification question?", fr: "Question fictive d'avis?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "you must notify Innovation, Science and Economic Development Canada within 30 days of a change of mailing address", fr: "vous devez aviser Innovation, Sciences et Développement économique Canada dans les 30 jours suivant un changement d'adresse postale" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "you must notify the office within 14 days", fr: "vous devez aviser le bureau dans les 14 jours" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "you must notify the office within 60 days", fr: "vous devez aviser le bureau dans les 60 jours" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "you must notify the office within 90 days", fr: "vous devez aviser le bureau dans les 90 jours" } },
+    ],
+  })]);
+
+  await assertSelfTestRejects("numeric-answer-currency-fallback", hint({ hints: [
+    { level: 1, en: "The penalty can be up to $5 000.", fr: "La pénalité peut atteindre 5 000 $." },
+    { level: 2, en: "Use the penalty ceiling in the rule.", fr: "Utilisez le plafond de pénalité de la règle." },
+  ] }), "correct answer numeric value", [question({
+    text: { en: "Fixture penalty question?", fr: "Question fictive de pénalité?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "A fine, not exceeding $5 000, or a prison term not exceeding one year, or both", fr: "Une amende maximale de 5 000 $, ou un emprisonnement maximal d'un an, ou les deux à la fois" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "A fine, not exceeding $10 000", fr: "Une amende maximale de 10 000 $" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "A fine, not exceeding $1 000", fr: "Une amende maximale de 1 000 $" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "A written warning", fr: "Un avertissement écrit" } },
     ],
   })]);
 
