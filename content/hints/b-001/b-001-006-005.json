@@ -1,0 +1,17 @@
+{
+  "id": "HINT-B-001-006-005",
+  "questionId": "B-001-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "This NOT-correct item tests whether one apparatus authorization follows into other radio services.",
+      "fr": "Cet élément FAUX vérifie si une autorisation d'appareil se transfère à d'autres services radio."
+    }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would identify the statement that crosses service boundaries."
+}

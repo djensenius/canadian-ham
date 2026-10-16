@@ -1,0 +1,17 @@
+{
+  "id": "HINT-B-001-006-003",
+  "questionId": "B-001-006-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "This item asks whether amateur equipment can be used to boost a different authorization class.",
+      "fr": "Cet élément demande si de l'équipement radioamateur peut servir à renforcer une autre catégorie d'autorisation."
+    }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state whether that cross-service use is allowed."
+}

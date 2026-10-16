@@ -1,0 +1,17 @@
+{
+  "id": "HINT-B-001-006-006",
+  "questionId": "B-001-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For dual-use memories, separate amateur programming from the non-amateur service authority for the radio.",
+      "fr": "Pour les mémoires à double usage, séparez la programmation radioamateur de l'autorisation du service non radioamateur pour la radio."
+    }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the required non-amateur service conditions."
+}

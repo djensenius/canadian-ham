@@ -1,0 +1,17 @@
+{
+  "id": "HINT-B-001-006-001",
+  "questionId": "B-001-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Even tiny transmitters remain amateur stations; study the supervision rule, not just the output power.",
+      "fr": "Même les très petits émetteurs restent des stations de radioamateur ; étudiez la règle de supervision, pas seulement la puissance de sortie."
+    }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the required supervision and identity conditions."
+}

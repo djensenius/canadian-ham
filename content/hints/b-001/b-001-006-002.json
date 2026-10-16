@@ -1,0 +1,17 @@
+{
+  "id": "HINT-B-001-006-002",
+  "questionId": "B-001-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "This item tests the service-to-service boundary for ordinary amateur communication.",
+      "fr": "Cet élément vérifie la frontière entre services pour les communications radioamateurs ordinaires."
+    }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would identify which stations are within the allowed communication boundary."
+}
