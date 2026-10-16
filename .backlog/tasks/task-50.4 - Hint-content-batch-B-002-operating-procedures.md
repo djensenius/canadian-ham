@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:21'
+updated_date: '2026-10-16 14:22'
 labels:
   - content
 dependencies:
@@ -56,4 +56,6 @@ Applied calibration fixes: converted B-002-001-003 to a one-level definition poi
 Completed B-002-003 voice/simplex hints: 8 two-level, 3 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-003 --require-complete passed. Commit: b15b00095c99154a23eb8f89ae4a59c2849e54db.
 
 Completed B-002-004 operating courtesy/testing hints: 9 two-level, 2 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-004 --require-complete passed. Commit: 181602eb0867203425f7b5a682d5dd8f40ca2077.
+
+Completed B-002-005 Morse procedure hints: 3 two-level, 8 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-005 --require-complete passed. Commit: b010c423d4c5602eec9b4c76ca579ec716140981.
 <!-- SECTION:NOTES:END -->
