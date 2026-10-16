@@ -1,10 +1,11 @@
 ---
 id: TASK-50.4
 title: 'Hint content batch: B-002 operating procedures'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 11:50'
+updated_date: '2026-10-16 14:16'
 labels:
   - content
 dependencies:
@@ -36,3 +37,9 @@ Write and review original EN/FR hint content for B-002 operating procedure quest
 - [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
 - [ ] #6 All in-scope B-002 operating procedures active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read hint rules, teaching guide, B-001 examples, M2 lessons, B-002 explanations, and question metadata before writing.\n2. Implement B-002 one subsection at a time by hand, choosing two-level hints where reasoning is possible and single-level topic pointers for pure recall.\n3. After each subsection, run pnpm check:hints for that subsection with --require-complete, commit, push, and append progress notes.\n4. Stop after the first two subsections with six EN/FR calibration samples including questions, options, and correct answers before continuing.\n5. After approval, finish remaining subsections and run the full required validation suite before PR handoff.
+<!-- SECTION:PLAN:END -->
