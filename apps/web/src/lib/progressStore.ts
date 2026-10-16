@@ -427,8 +427,9 @@ export function deduplicateDeviceLessonProgressForSync(rows: readonly DeviceLess
 
 function filterSyncDeviceRowsForExport(rows: ProgressSyncDeviceRows | undefined, bank: BankData): ProgressSyncDeviceRows | undefined {
   if (rows === undefined) return undefined;
-  if (rows.questionProgress.some((row) => row.record.bankId !== bank.bankId)) return undefined;
-  if (rows.examAttempts.some((row) => row.attempt.bankId !== bank.bankId)) return undefined;
+  if (!Array.isArray(rows.questionProgress) || !Array.isArray(rows.examAttempts) || !Array.isArray(rows.lessonProgress) || !Array.isArray(rows.morseCourseProgress)) return undefined;
+  if (rows.questionProgress.some((row) => !isRecord(row) || !isRecord(row.record) || row.record.bankId !== bank.bankId)) return undefined;
+  if (rows.examAttempts.some((row) => !isRecord(row) || !isRecord(row.attempt) || row.attempt.bankId !== bank.bankId)) return undefined;
   if (!bank.hasLessons && (rows.lessonProgress.length > 0 || (rows.lessonQuizAttempts?.length ?? 0) > 0)) return undefined;
   return rows;
 }
@@ -734,9 +735,16 @@ function recentAnsweredWithHelpForRecord(record: Pick<QuestionProgressRecord, "r
 }
 
 function normalizeProgressSyncDeviceRows(rows: ProgressSyncDeviceRows): ProgressSyncDeviceRows {
+  if (!Array.isArray(rows.questionProgress)) {
+    return rows;
+  }
   return {
     ...rows,
-    questionProgress: rows.questionProgress.map((row) => ({ ...row, record: normalizeQuestionProgressRecordDefaults(row.record) })),
+    questionProgress: rows.questionProgress.map((row) => (
+      isRecord(row) && isRecord(row.record)
+        ? { ...row, record: normalizeQuestionProgressRecordDefaults(row.record) }
+        : row
+    )) as DeviceQuestionProgressRecord[],
   };
 }
 

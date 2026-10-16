@@ -195,6 +195,21 @@ describe("ProgressStore", () => {
     assert.deepEqual(deduplicateDeviceLessonProgressForSync([...fixture.lessonProgress.deviceRows, ...fixture.lessonProgress.deviceRows]), fixture.lessonProgress.expected);
   });
 
+  it("does not throw while normalizing malformed sync question rows", () => {
+    const malformedRows = {
+      questionProgress: [{ deviceId: "iphone" }, "bad-row"],
+      examAttempts: [],
+      lessonProgress: [],
+      lessonQuizAttempts: [],
+      morseCourseProgress: [],
+    };
+
+    const validation = validateProgressImport(validExport({ syncDeviceRows: malformedRows as never }));
+
+    assert.equal(validation.ok, true);
+    assert.deepEqual(validation.data?.syncDeviceRows, malformedRows);
+  });
+
   it("imports older question progress and sync rows without answered-with-help fields as false", async () => {
     const { lastAnsweredWithHelp: _lastAnsweredWithHelp, recentAnsweredWithHelp: _recentAnsweredWithHelp, ...legacyRecord } = record;
     const legacyExport = validExport({
