@@ -64,6 +64,12 @@ const fixtureCases = [
     expectedInvalidSubstring: "licenseClass: expected const",
   },
   {
+    name: "hint",
+    schema: "hint.schema.json",
+    fixture: "hint.json",
+    expectedInvalidSubstring: "licenseClass: expected const",
+  },
+  {
     name: "progress export v1",
     schema: "progress-export-v1.schema.json",
     fixture: "progress-export-v1.json",
@@ -91,6 +97,17 @@ test("progress export v1: valid legacy Basic fixture without bankId fields valid
 test("progress export v1: valid Advanced fixture validates", () => {
   const data = readJsonFixture("valid", "progress-export-v1-advanced.json");
   assert.deepEqual(validateDataAgainstSchema(data, "progress-export-v1.schema.json"), []);
+});
+
+test("hint schema: valid one-level fixture with reason validates", () => {
+  const data = readJsonFixture("valid", "hint-single-level.json");
+  assert.deepEqual(validateDataAgainstSchema(data, "hint.schema.json"), []);
+});
+
+test("hint schema: one-level fixture without reason rejects", () => {
+  const data = readJsonFixture("invalid", "hint-single-level-missing-reason.json");
+  const errors = validateDataAgainstSchema(data, "hint.schema.json");
+  assert(errors.some((error) => error.includes("expected exactly one oneOf branch to match")), errors.join("\n"));
 });
 
 for (const fixtureCase of fixtureCases) {

@@ -2583,6 +2583,22 @@
         }
       }
     },
+    "Before this lesson" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avant cette leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avant cette leçon"
+          }
+        }
+      }
+    },
     "•" : {
       "localizations" : {
         "fr" : {
