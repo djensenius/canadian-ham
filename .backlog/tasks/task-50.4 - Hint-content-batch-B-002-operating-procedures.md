@@ -1,11 +1,11 @@
 ---
 id: TASK-50.4
 title: 'Hint content batch: B-002 operating procedures'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:36'
+updated_date: '2026-10-16 15:39'
 labels:
   - content
 dependencies:
@@ -31,10 +31,10 @@ Write and review original EN/FR hint content for B-002 operating procedure quest
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
-- [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [x] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
 - [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
-- [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
-- [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [x] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [x] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
 - [x] #6 All in-scope B-002 operating procedures active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
 
@@ -72,10 +72,12 @@ Full batch completed. Counts: B-002-001 9 two-level/2 single-level; B-002-002 0/
 Opened PR #268: https://github.com/djensenius/canadian-ham/pull/268 and requested @copilot review via gh pr edit 268 --add-reviewer @copilot.
 
 PR #268 review response: applied every B-002 finding from ~/.cache/canadian-ham-reviews/r268.md. Converted procedure/courtesy/definition leaks to single-level neutral pointers, kept only method-based two-level hints, fixed FR terminology and B-002-009-010 FR time wording, added the procedure/courtesy leak rule to content/hints/README.md, and ran literal option self-test across all 73 touched hint files in EN/FR per level and combined levels. New counts: B-002-001 0/11, B-002-002 0/11, B-002-003 1/10, B-002-004 2/9, B-002-005 0/11, B-002-006 8/3, B-002-007 0/11, B-002-008 1/10, B-002-009 3/8; total 15 two-level/84 single-level. Validation passed: pnpm check:hints -- --category B-002 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Review response commit: 07bf3815f02ff0e1e90781a8245b81726e3c84af.
+
+Coordinator closeout 2026-10-16: batch content review completed (review files ~/.cache/canadian-ham-reviews/r268*.md), all findings fixed and coordinator spot-checked against ISED options; merged in PR #268.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented original EN/FR hints for all 99 active B-002 questions plus the definition-question style rule in content/hints/README.md. Verified completeness and leakage with full B-002 hint checks and the required schema, explanation, originality, typecheck, and test suite; content review criteria remain pending PR review.
+Hand-written EN/FR hints for every active question in this category, reviewed (no answer leakage, no elimination, neutral section-level pointers, verified method hints), merged in PR #268.
 <!-- SECTION:FINAL_SUMMARY:END -->
