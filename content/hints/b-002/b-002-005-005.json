@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-005-005",
+  "questionId": "B-002-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the separator used between the called party and the sender in Morse procedure.",
+      "fr": "Revoyez le séparateur utilisé entre la partie appelée et l’expéditeur dans la procédure Morse."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "reference-fact-morse-procedural-groups"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

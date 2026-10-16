@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-005-003",
+  "questionId": "B-002-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Your sending speed invites a reply at about the same pace.",
+      "fr": "Votre vitesse d’envoi invite une réponse à peu près au même rythme."
+    },
+    {
+      "level": 2,
+      "en": "Choose a pace that lets you copy the answer, rather than the fastest speed your equipment or hand can manage.",
+      "fr": "Choisissez un rythme qui vous permet de copier la réponse, plutôt que la vitesse maximale que votre équipement ou votre main peut produire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "morse-calling-basics"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

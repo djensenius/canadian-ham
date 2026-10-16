@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-005-001",
+  "questionId": "B-002-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A Morse general call must be recognizable but still concise enough to respect the frequency.",
+      "fr": "Un appel général en Morse doit être reconnaissable tout en restant assez concis pour respecter la fréquence."
+    },
+    {
+      "level": 2,
+      "en": "Look for the pattern that repeats the invitation, uses the separator, and gives the sender’s station ID with balanced repetition.",
+      "fr": "Cherchez le modèle qui répète l’invitation, utilise le séparateur et donne l’identification de la station émettrice avec une répétition équilibrée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "reference-fact-morse-calling-patterns"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

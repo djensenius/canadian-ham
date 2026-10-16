@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-005-007",
+  "questionId": "B-002-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Morse shorthand used for faraway contacts and stations.",
+      "fr": "Revoyez l’abréviation Morse utilisée pour les contacts et stations lointains."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "reference-fact-morse-procedural-groups"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

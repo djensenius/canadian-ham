@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-005-002",
+  "questionId": "B-002-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Answering a routine Morse call identifies both stations without starting a long new general call.",
+      "fr": "Répondre à un appel Morse de routine identifie les deux stations sans lancer un long nouvel appel général."
+    },
+    {
+      "level": 2,
+      "en": "Begin with the station you are answering, use the separator, then give your own station ID with matching concise repetition.",
+      "fr": "Commencez par la station à laquelle vous répondez, utilisez le séparateur, puis donnez l’identification de votre station avec une répétition concise et équilibrée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "reference-fact-morse-calling-patterns"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

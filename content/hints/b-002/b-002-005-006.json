@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-005-006",
+  "questionId": "B-002-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Morse procedural group that invites a reply after a transmission.",
+      "fr": "Revoyez le groupe de procédure Morse qui invite une réponse après une émission."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "reference-fact-morse-procedural-groups"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
