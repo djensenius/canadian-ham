@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hint.schema.json",
+  "title": "Question hint JSON",
+  "type": "object",
+  "required": ["id", "questionId", "bankId", "status", "hints", "licenseClass"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^HINT-B-\\d{3}-\\d{3}-\\d{3}$"
+    },
+    "questionId": { "$ref": "common.schema.json#/$defs/basicQuestionId" },
+    "bankId": { "$ref": "common.schema.json#/$defs/basicBankId" },
+    "status": { "$ref": "common.schema.json#/$defs/contentStatus" },
+    "hints": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "type": "object",
+          "required": ["level", "en", "fr"],
+          "properties": {
+            "level": { "const": 1 },
+            "en": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+            "fr": { "$ref": "common.schema.json#/$defs/nonEmptyString" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["level", "en", "fr"],
+          "properties": {
+            "level": { "const": 2 },
+            "en": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
+            "fr": { "$ref": "common.schema.json#/$defs/nonEmptyString" }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "items": false
+    },
+    "referenceSheetSection": {
+      "type": ["string", "null"],
+      "enum": [
+        "ohms-law",
+        "power",
+        "series-parallel-resistance",
+        "decibel-power-shortcuts",
+        "wavelength-dipole-length",
+        "metric-prefixes",
+        "resistor-colour-code",
+        null
+      ]
+    },
+    "licenseClass": { "const": "original" }
+  },
+  "additionalProperties": false
+}

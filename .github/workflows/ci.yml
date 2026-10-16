@@ -175,6 +175,8 @@ jobs:
         if: needs.changes.outputs.full_checks == 'true'
         run: |
           node packages/content-tools/src/check-explanations.ts
+          node packages/content-tools/src/check-hints.ts --self-test
+          node packages/content-tools/src/check-hints.ts
           node packages/content-tools/src/check-quizzes.ts
           node packages/content-tools/src/check-lesson-coverage.ts
           node packages/content-tools/src/check-lesson-originality.ts --all

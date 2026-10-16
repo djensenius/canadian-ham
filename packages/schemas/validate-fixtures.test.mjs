@@ -64,6 +64,12 @@ const fixtureCases = [
     expectedInvalidSubstring: "licenseClass: expected const",
   },
   {
+    name: "hint",
+    schema: "hint.schema.json",
+    fixture: "hint.json",
+    expectedInvalidSubstring: "licenseClass: expected const",
+  },
+  {
     name: "progress export v1",
     schema: "progress-export-v1.schema.json",
     fixture: "progress-export-v1.json",

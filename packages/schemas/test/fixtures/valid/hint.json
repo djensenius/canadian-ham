@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-001-001",
+  "questionId": "B-001-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Think about the licence document and the permission it gives before any station operation.",
+      "fr": "Pensez au document d'autorisation et à la permission qu'il donne avant toute exploitation de station."
+    },
+    {
+      "level": 2,
+      "en": "Set aside equipment details and focus on the legal authority that lets a person transmit as an amateur.",
+      "fr": "Laissez de côté les détails d'équipement et concentrez-vous sur l'autorité légale qui permet à une personne d'émettre comme radioamateur."
+    }
+  ],
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
