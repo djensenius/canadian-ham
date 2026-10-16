@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 12:57'
+updated_date: '2026-10-16 12:58'
 labels:
   - content
 dependencies:
@@ -92,4 +92,6 @@ B-001-007 manually written after calibration: 11 hints (0 two-level, 11 single-l
 B-001-008 manually written after calibration: 8 hints (0 two-level, 8 single-level B). Validation: pnpm check:hints -- --subsection B-001-008 --require-complete passed.
 
 B-001-009 manually written after calibration: 9 hints (0 two-level, 9 single-level B). Validation: pnpm check:hints -- --subsection B-001-009 --require-complete passed.
+
+B-001-010 manually written after calibration: 10 hints (0 two-level, 10 single-level B). Validation: pnpm check:hints -- --subsection B-001-010 --require-complete passed. Pausing per steering for six-sample review before B-001-011 onward.
 <!-- SECTION:NOTES:END -->
