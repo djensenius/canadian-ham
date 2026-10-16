@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:19'
+updated_date: '2026-10-16 14:20'
 labels:
   - content
 dependencies:
@@ -52,4 +52,6 @@ Completed B-002-001 repeater procedure hints: 10 two-level, 1 single-level recal
 Completed B-002-002 phonetic alphabet hints: 0 two-level, 11 single-level recall. Validation: pnpm check:hints -- --subsection B-002-002 --require-complete passed. Commit: 41811b2e7127bac3941007c17149bdb22b1f61a5. Calibration stop reached after first two subsections.
 
 Applied calibration fixes: converted B-002-001-003 to a one-level definition pointer, rewrote B-002-001-005 H2 to teach CTCSS use/context instead of paraphrasing the definition, softened B-002-002-001 and -002 voice-spelling pointers, and recorded the definition-question rule in content/hints/README.md. Validation: pnpm check:hints -- --subsection B-002-001 --require-complete and --subsection B-002-002 --require-complete passed. Commit: 83fe19e5b8019df6e592711c7495b0bed343a1d0.
+
+Completed B-002-003 voice/simplex hints: 8 two-level, 3 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-003 --require-complete passed. Commit: b15b00095c99154a23eb8f89ae4a59c2849e54db.
 <!-- SECTION:NOTES:END -->
