@@ -90,4 +90,6 @@ B-001-006 manually written after calibration: 6 hints (0 two-level, 6 single-lev
 B-001-007 manually written after calibration: 11 hints (0 two-level, 11 single-level B). Validation: pnpm check:hints -- --subsection B-001-007 --require-complete passed.
 
 B-001-008 manually written after calibration: 8 hints (0 two-level, 8 single-level B). Validation: pnpm check:hints -- --subsection B-001-008 --require-complete passed.
+
+B-001-009 manually written after calibration: 9 hints (0 two-level, 9 single-level B). Validation: pnpm check:hints -- --subsection B-001-009 --require-complete passed.
 <!-- SECTION:NOTES:END -->
