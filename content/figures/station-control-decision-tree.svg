@@ -9,8 +9,8 @@
     <line x1="162" y1="102" x2="162" y2="128" stroke-width="5"/><polygon points="162,128 150,110 174,110" fill="currentColor" stroke="none"/>
     <line x1="162" y1="186" x2="162" y2="212" stroke-width="5"/><polygon points="162,212 150,194 174,194" fill="currentColor" stroke="none"/>
     <line x1="162" y1="270" x2="162" y2="296" stroke-width="5"/><polygon points="162,296 150,278 174,278" fill="currentColor" stroke="none"/>
-    <rect x="382" y="68" width="194" height="58" rx="14" ry="14" stroke-width="6"/>
-    <line x1="272" y1="73" x2="382" y2="96" stroke-width="5"/><polygon points="382,96 360,82 355,106" fill="currentColor" stroke="none"/>
+    <rect x="360" y="54" width="236" height="96" rx="14" ry="14" stroke-width="6"/>
+    <line x1="272" y1="73" x2="360" y2="96" stroke-width="5"/><polygon points="360,96 338,82 333,106" fill="currentColor" stroke="none"/>
     <rect x="350" y="206" width="244" height="76" rx="16" ry="16" stroke-width="6"/>
     <line x1="272" y1="241" x2="350" y2="241" stroke-width="5"/><polygon points="350,241 330,229 330,253" fill="currentColor" stroke="none"/>
     <rect x="350" y="326" width="244" height="76" rx="16" ry="16" stroke-width="6"/>
@@ -21,7 +21,9 @@
     <text x="162" y="166" font-size="24" font-weight="700">service</text>
     <text x="162" y="250" font-size="24" font-weight="700">purpose</text>
     <text x="162" y="334" font-size="24" font-weight="700">control op</text>
-    <text x="479" y="106" font-size="24">own licence</text>
+    <text x="478" y="86" font-size="24">certificate</text>
+    <text x="478" y="114" font-size="24">or service</text>
+    <text x="478" y="142" font-size="24">authority</text>
     <text x="472" y="238" font-size="24">non-commercial</text>
     <text x="472" y="266" font-size="24">open messages</text>
     <text x="472" y="358" font-size="24">qualified</text>

@@ -51,10 +51,14 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule1LessonFiguresLightPart2() throws {
-        try verifyLessonRange(Self.module1Lessons, 2..<4, appearance: .light, evidenceModuleID: "m1")
+        try verifyLessonRange(Self.module1Lessons, 2..<3, appearance: .light, evidenceModuleID: "m1")
     }
 
     func testModule1LessonFiguresLightPart3() throws {
+        try verifyLessonRange(Self.module1Lessons, 3..<4, appearance: .light, evidenceModuleID: "m1")
+    }
+
+    func testModule1LessonFiguresLightPart4() throws {
         try verifyLessonRange(Self.module1Lessons, 4..<6, appearance: .light, evidenceModuleID: "m1")
     }
 
@@ -509,7 +513,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         LessonSpec(moduleID: "M3", lessonID: "L-003-05", figures: [FigureSpec(id: "signal-quality-cw-ssb-fm", altText: "Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.")]),
         LessonSpec(moduleID: "M3", lessonID: "L-003-06", figures: [FigureSpec(id: "controls-digital-voice-packet", altText: "A station control map links keyer timing, microphone gain, VOX, receiver noise tools, and a packet digipeater block.")]),
         LessonSpec(moduleID: "M3", lessonID: "L-003-07", figures: [FigureSpec(id: "batteries-dc-supplies-ripple", altText: "A battery, fuse, heavy DC leads, regulated supply, and ripple waveform show how station power reaches a transceiver.")]),
-        LessonSpec(moduleID: "M3", lessonID: "L-003-08", figures: [FigureSpec(id: "grounding-lightning-rf-safety", altText: "A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod, and an outside antenna mast.")])
+        LessonSpec(moduleID: "M3", lessonID: "L-003-08", figures: [FigureSpec(id: "grounding-lightning-rf-safety", altText: "A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod bonded to the building grounding electrode system, and an outside antenna mast.")])
     ]
 
     private static let module4Lessons: [LessonSpec] = [

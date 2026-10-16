@@ -1,6 +1,6 @@
 <svg id="grounding-lightning-rf-safety" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
   <title>Station bonding single-point entry and surge grounding</title>
-  <desc>Left-to-right station bonding story with indoor equipment, single-point entry, surge arrestor, ground rod, and outside antenna mast.</desc>
+  <desc>Left-to-right station bonding story with indoor equipment, single-point entry, surge arrestor, ground rod bonded to the building grounding electrode system, and outside antenna mast.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
     <line x1="356" y1="48" x2="356" y2="168" stroke-width="7"/>
     <line x1="356" y1="300" x2="356" y2="420" stroke-width="7"/>
@@ -22,6 +22,11 @@
     <line x1="504" y1="404" x2="544" y2="404" stroke-width="5"/>
     <line x1="512" y1="420" x2="536" y2="420" stroke-width="5"/>
     <line x1="520" y1="436" x2="528" y2="436" stroke-width="5"/>
+    <line x1="226" y1="404" x2="504" y2="404" stroke-width="5"/>
+    <line x1="226" y1="398" x2="226" y2="436" stroke-width="7"/>
+    <line x1="206" y1="436" x2="246" y2="436" stroke-width="5"/>
+    <line x1="214" y1="452" x2="238" y2="452" stroke-width="5"/>
+    <line x1="222" y1="468" x2="230" y2="468" stroke-width="5"/>
     <path d="M516 205 L566 154 L566 88" stroke-width="5"/>
     <line x1="566" y1="88" x2="566" y2="266" stroke-width="5"/>
     <path d="M526 138 L566 88 L606 138" stroke-width="6"/>
@@ -32,7 +37,7 @@
     <text x="83" y="104" font-size="24">radio</text><text x="187" y="104" font-size="24">tuner</text><text x="291" y="104" font-size="24">supply</text>
     <text x="178" y="286" font-size="24">bonding bar</text>
     <text x="364" y="204" font-size="24">single</text><text x="364" y="232" font-size="24">entry</text>
-    <text x="474" y="214" font-size="24">surge</text><text x="524" y="462" font-size="24">ground rod</text>
+    <text x="474" y="214" font-size="24">surge</text><text x="226" y="348" font-size="24">building</text><text x="226" y="376" font-size="24">electrode</text><text x="524" y="462" font-size="24">ground rod</text>
     <text x="566" y="72" font-size="24">antenna</text>
   </g>
 </svg>

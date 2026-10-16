@@ -80,11 +80,11 @@ A driven earth electrode is often copper-clad steel. The steel provides strength
 RF grounding has an extra complication. A long wire that looks like a ground at DC can have high impedance at radio frequencies. A third-floor wire down a building may not cure RF burns at the desk. The fix may involve antenna balance, common-mode choking, a better bonding layout, or moving the antenna.
 
 ::figure grounding-lightning-rf-safety
-Alt text: A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod, and an outside antenna mast.
+Alt text: A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod bonded to the building grounding electrode system, and an outside antenna mast.
 Text equivalent:
 - Radio, tuner, and supply boxes bond down to a labelled bonding bar.
 - Coax runs to a box labelled single entry, then to a surge box and the antenna mast.
-- The surge box bonds to the bonding bar and to a labelled ground rod outside.
+- The surge box bonds to the bonding bar and to a labelled ground rod outside, and that rod bonds to the building grounding electrode system.
 ::
 
 
@@ -199,9 +199,9 @@ Safety choices affect station performance too. Good bonding can reduce hum and R
 
 ## Illustration brief
 
-Alt text: A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod, and an outside antenna mast.
+Alt text: A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod bonded to the building grounding electrode system, and an outside antenna mast.
 
-Description: Draw an original left-to-right station bonding sketch. Indoors, show the radio, tuner, and supply bonded to one labelled station bonding bar. At the wall, show the coax passing through a labelled single-point entry to a surge arrestor. Bond the entry and surge arrestor to the station bonding bar and to one outside ground rod. Outside, show the coax continuing to an antenna on a mast.
+Description: Draw an original left-to-right station bonding sketch. Indoors, show the radio, tuner, and supply bonded to one labelled station bonding bar. At the wall, show the coax passing through a labelled single-point entry to a surge arrestor. Bond the entry and surge arrestor to the station bonding bar and to one outside ground rod, then bond that rod to the building grounding electrode system. Outside, show the coax continuing to an antenna on a mast.
 
 ## Summary
 
