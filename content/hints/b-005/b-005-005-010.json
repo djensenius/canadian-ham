@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-005-010",
+  "questionId": "B-005-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Parallel branches have the same voltage, so branch current follows I = E / R.",
+      "fr": "Les branches en parallèle ont la même tension; le courant de branche suit donc I = E / R."
+    },
+    {
+      "level": 2,
+      "en": "With the same E, the branch carrying twice the current must have the reciprocal change in R.",
+      "fr": "Avec le même E, la branche qui transporte deux fois le courant doit avoir la variation réciproque de R."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "current-sharing-in-parallel"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-005-003",
+  "questionId": "B-005-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Parallel resistors create extra current paths, so the circuit becomes easier for current overall.",
+      "fr": "Des résistances en parallèle créent des trajets de courant supplémentaires; l'ensemble laisse donc passer le courant plus facilement."
+    },
+    {
+      "level": 2,
+      "en": "Compare the network to the easiest single path: adding another path cannot make the total opposition higher than that path.",
+      "fr": "Comparez le réseau au trajet unique le plus facile : ajouter un autre trajet ne peut pas rendre l'opposition totale plus élevée que ce trajet."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "parallel-resistors-make-more-paths"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}

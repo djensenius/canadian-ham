@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-005-005",
+  "questionId": "B-005-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Series current has only one path, so each resistor adds its opposition to the same path.",
+      "fr": "En série, le courant n'a qu'un seul trajet; chaque résistance ajoute son opposition à ce même trajet."
+    },
+    {
+      "level": 2,
+      "en": "Use Rt = R1 + R2 + ...; adding positive resistor values makes the total exceed any individual part.",
+      "fr": "Utilisez Rt = R1 + R2 + ...; additionner des valeurs positives rend le total plus grand que chaque pièce prise seule."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "series-resistors-add"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}

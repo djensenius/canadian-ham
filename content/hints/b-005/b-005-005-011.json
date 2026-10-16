@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-005-011",
+  "questionId": "B-005-005-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "In a parallel network, the source current splits among the separate paths and rejoins after them.",
+      "fr": "Dans un réseau en parallèle, le courant de source se divise entre les trajets séparés et se rejoint après eux."
+    },
+    {
+      "level": 2,
+      "en": "To find the total, combine the currents in all the paths rather than using just one path or adding resistances first.",
+      "fr": "Pour trouver le total, combinez les courants de tous les trajets au lieu d'utiliser un seul trajet ou d'additionner d'abord les résistances."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "parallel-resistors-make-more-paths"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}
