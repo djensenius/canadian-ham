@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-001-004",
+  "questionId": "B-006-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the coax geometry idea behind two cables sharing the same RF value.",
+      "fr": "Revoyez l’idée de géométrie du câble coaxial qui permet à deux câbles de partager la même valeur RF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "what-a-feedline-does"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

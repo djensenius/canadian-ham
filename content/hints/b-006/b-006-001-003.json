@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-001-003",
+  "questionId": "B-006-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why cutting a feedline changes attenuation but not the cable family’s RF value.",
+      "fr": "Revoyez pourquoi raccourcir une ligne change l’atténuation, mais non la valeur RF de ce type de câble."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "in-the-real-world-cutting-coax-does-not-change-z0"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

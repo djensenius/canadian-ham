@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-001-001",
+  "questionId": "B-006-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the station block that carries RF between the radio and the antenna feed point.",
+      "fr": "Revoyez le bloc de station qui transporte l’énergie RF entre la radio et le point d’alimentation de l’antenne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "what-a-feedline-does"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

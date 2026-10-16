@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-001-002",
+  "questionId": "B-006-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what sets a feedline’s characteristic value before a load is attached.",
+      "fr": "Revoyez ce qui fixe la valeur caractéristique d’une ligne avant qu’une charge y soit branchée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "what-a-feedline-does"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

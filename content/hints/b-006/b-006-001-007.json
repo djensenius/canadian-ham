@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-001-007",
+  "questionId": "B-006-001-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the insulating material inside coax and how it affects wave speed in the cable.",
+      "fr": "Revoyez le matériau isolant dans le câble coaxial et son effet sur la vitesse de l’onde dans le câble."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "inside-the-coax"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

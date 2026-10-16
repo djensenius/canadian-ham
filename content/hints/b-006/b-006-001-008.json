@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-001-008",
+  "questionId": "B-006-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the open-wire geometry variables that set its characteristic value.",
+      "fr": "Revoyez les variables de géométrie d’une ligne à fils nus qui fixent sa valeur caractéristique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "what-a-feedline-does"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}
