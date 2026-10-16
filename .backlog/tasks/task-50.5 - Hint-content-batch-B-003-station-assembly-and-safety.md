@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:19'
+updated_date: '2026-10-16 15:29'
 labels:
   - content
 dependencies:
@@ -42,6 +42,8 @@ Write and review original EN/FR hint content for B-003 station assembly and safe
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Read hint authoring guidance, reviewed batches, module lessons, explanations, reference sheet, and active B-003 questions/options.\n2. Author original EN/FR hint files under content/hints/b-003 by subsection, using single-level topic pointers except true calculation/method questions.\n3. For any two-level method hints, record the mandatory non-leak note in task notes and validate with subsection hint checks.\n4. Run required batch validation checks and summarize coverage, risks, and review needs.
+
+Review-fix pass: replace each reviewed leaky B-003 single-level hint with the approved neutral section pointer, fix the 013-006 Carson method and 017-009 gauge selection wording, run per-subsection hint checks with EN/FR option self-test notes, then run full batch validation and update PR #274.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
