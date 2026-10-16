@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review mode restrictions in the special narrow HF segment.",
-      "fr": "Revoyez les restrictions de mode dans le segment HF étroit spécial."
+      "en": "A mode is excluded from a band whose maximum bandwidth is narrower than the signal the mode needs.",
+      "fr": "Un mode est exclu d’une bande dont la largeur de bande maximale est plus étroite que le signal dont ce mode a besoin."
+    },
+    {
+      "level": 2,
+      "en": "An SSB voice signal needs roughly 2 to 3 kHz. Recall the bandwidth limit for each listed band and look for one whose limit is below that width.",
+      "fr": "Un signal vocal BLU occupe environ 2 à 3 kHz. Rappelez-vous la largeur de bande maximale de chaque bande proposée et cherchez celle dont la limite est inférieure à cette largeur."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-04",
-    "sectionAnchor": "reference-facts-bandwidth-and-mode-fit-cues"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

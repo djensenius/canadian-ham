@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review where transmitter power is verified after exposure and radiated-power checks.",
-      "fr": "Revoyez où la puissance d’émetteur est vérifiée après les contrôles d’exposition et de puissance rayonnée."
+      "en": "A transmitter power limit is defined at one specific measurement point; parts of the station after that point add losses or change the power.",
+      "fr": "Une limite de puissance d’émetteur est définie à un point de mesure précis; les éléments de la station après ce point ajoutent des pertes ou modifient la puissance."
+    },
+    {
+      "level": 2,
+      "en": "Trace the RF path from the power supply to the antenna. At each point, ask whether the reading still reflects only what the transmitting equipment produces, or also changes added by other parts of the station.",
+      "fr": "Suivez le trajet RF du bloc d’alimentation jusqu’à l’antenne. À chaque point, demandez-vous si la mesure reflète seulement ce que produit l’équipement d’émission, ou aussi les changements ajoutés par d’autres parties de la station."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-04",
-    "sectionAnchor": "reference-facts-power-quantities-and-limits"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review who may serve as control operator.",
-      "fr": "Revoyez qui peut agir comme opérateur de contrôle."
+      "en": "Review responsible-operator duties during station operation.",
+      "fr": "Revoyez les fonctions de l’opérateur responsable pendant l’exploitation d’une station."
     }
   ],
   "lessonLink": {

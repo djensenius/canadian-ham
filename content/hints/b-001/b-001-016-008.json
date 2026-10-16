@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review band-edge precautions before transmitting.",
-      "fr": "Revoyez les précautions aux limites de bande avant d'émettre."
+      "en": "The dial shows one frequency, but every signal occupies a span of spectrum around it: sidebands, FM deviation, or digital tones.",
+      "fr": "L’affichage indique une seule fréquence, mais tout signal occupe une plage du spectre autour de celle-ci : bandes latérales, excursion FM ou tonalités numériques."
+    },
+    {
+      "level": 2,
+      "en": "Near a band edge, sketch that span around your dial frequency and check whether any part of it crosses the edge. Then ask which precaution deals with that.",
+      "fr": "Près d’une limite de bande, tracez cette plage autour de la fréquence affichée et vérifiez si une partie dépasse la limite. Demandez-vous ensuite quelle précaution règle ce problème."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-04",
-    "sectionAnchor": "reference-facts-bandwidth-and-mode-fit-cues"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

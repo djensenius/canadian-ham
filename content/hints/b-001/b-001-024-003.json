@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the frequency range with greatest RF exposure risk.",
-      "fr": "Revoyez la plage de fréquences présentant le plus grand risque d’exposition RF."
+      "en": "Treat the human body like a simple antenna: it is resonant when its length is about half a wavelength.",
+      "fr": "Considérez le corps humain comme une antenne simple : il est en résonance lorsque sa longueur correspond à environ une demi-longueur d’onde."
+    },
+    {
+      "level": 2,
+      "en": "Take an adult height of about 1.75 m as half a wavelength, double it to get λ, convert with f (MHz) ≈ 300 / λ (m), and see which range contains your result.",
+      "fr": "Prenez une taille adulte d’environ 1,75 m comme demi-longueur d’onde, doublez-la pour obtenir λ, convertissez avec f (MHz) ≈ 300 / λ (m) et voyez quelle plage contient votre résultat."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-06",
-    "sectionAnchor": "reference-facts-safety-code-6-and-rf-exposure"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

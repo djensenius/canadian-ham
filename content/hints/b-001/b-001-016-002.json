@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review maximum bandwidth rules for the upper HF phone segment.",
-      "fr": "Revoyez les règles de largeur de bande maximale pour le segment supérieur HF de phonie."
+      "en": "Review maximum-bandwidth rules across the HF bands.",
+      "fr": "Revoyez les règles de largeur de bande maximale dans les bandes HF."
     }
   ],
   "lessonLink": {

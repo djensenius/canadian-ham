@@ -40,22 +40,22 @@ The checker deliberately treats some short distractor words as meaningful when t
 
 Bad hints tell the learner to sort the question into generic buckets, reuse the same setup across many unrelated questions, or say to use the table row. For example, "Decide whether this is prohibited conduct, a process safeguard, or a consequence" is too generic for a false-distress penalty question, and "use the table row" is just a lookup instruction.
 
-A good Hint 1 is specific to the question's concept without naming or eliminating an option. For a false-distress penalty question, a better Hint 1 is: "Misusing distress signals endangers lives, so the Act treats it as one of the more serious radio offences, and the penalty can combine more than one kind of punishment." It points at seriousness and structure without stating the exact penalty.
+A good Hint 1 is specific to the question's concept without naming or eliminating an option. For a false-distress penalty question, a better Hint 1 is: "Misusing distress signals endangers lives, so review how the Act treats serious radio offences before recalling the penalty framework." It points at the topic without stating the exact penalty structure.
 
 A good Hint 2 teaches the reasoning or distinction the question turns on. Shared distinctions are allowed only when the questions truly share the same idea, and even then the wording should be tailored to the current question. For pure recall facts where any useful Hint 2 would give away the answer, use a one-level ladder and include `singleLevelReason`.
 
 Before accepting any hint, apply this self-test: could a learner who does not know the material pick the right option from this hint alone, or from Hint 1 plus Hint 2 together? Read the four options and ask whether the hint makes any one option more likely than the others. If yes, soften the hint so the learner still has to recall or reason out the decisive fact, or use a one-level ladder. For example, "not a waiting period before operating" eliminates waiting-period options, "more than one possible consequence" points directly at a combined penalty option, "independent branches rather than a locked sequence" is a near-synonym for an any-order answer, and "both sides of authority matter" gives away a both-people authorization answer.
 
-For B-001 recall items, there is often no space between a useful content hint and the answer. In those cases, use B: Hint 1 is a neutral, learner-facing topic pointer that names the lesson topic, not the rule, and the lesson link carries the teaching location. Do not write meta text such as "This item tests" or lookup text such as "use the row." Good B-001 topic pointers include "Review how the rules treat low-power amateur stations" and "Review the band-sharing rules for the amateur service." Use a `singleLevelReason` such as "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+For B-001 recall items, there is often no space between a useful content hint and the answer. In those cases, use B: Hint 1 is a neutral, learner-facing topic pointer that names the lesson topic, not the rule, and the lesson link carries the teaching location. Do not write meta text such as "This item tests" or lookup text such as "use the row." Do not reuse a lesson-table row label as the pointer when the label contains the fact the learner is being asked to recall. Good B-001 topic pointers include "Review how the rules treat low-power amateur stations" and "Review the band-sharing rules for the amateur service." Use a `singleLevelReason` such as "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 
-Keep two-level A+C hints where a method, formula, conversion, or principle helps the learner work the question. The option self-test applies to stating facts or results, not to teaching a method the learner still has to apply. Do not state the computed result, name the matching option, or eliminate options by listing them.
+Keep two-level A+C hints where a method, formula, conversion, or principle helps the learner work the question. The option self-test applies to stating facts or results, not to teaching a method the learner still has to apply. Do not state the computed result, name the matching option, or eliminate options by listing them. If a method hint includes a selection rule such as "nearest", "just below", or "starts there", work it against all four options in EN and FR before accepting it.
 
 For example, a band-name question can use the wavelength relationship without giving the range:
 
 - Hint 1: "A band's name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m)."
-- Hint 2: "Work out the frequency for 10 m, then look for the range that sits just below that value."
+- Hint 2: "Work out the frequency for 10 m, then compare the candidate ranges using the band-name method and the band table."
 
-Use the lesson link to point to the band table. Pure recall still uses B: topic pointer plus lesson link only.
+Use the lesson link to point to the method or band table section that supports the reasoning. Pure recall still uses B: topic pointer plus lesson link only.
 
 ## Reviewer checklist
 

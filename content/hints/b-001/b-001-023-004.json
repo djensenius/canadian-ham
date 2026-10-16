@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the default consultation process when no local process exists.",
-      "fr": "Revoyez le processus de consultation par défaut lorsqu’il n’existe aucun processus local."
+      "en": "Review antenna-siting consultation paths.",
+      "fr": "Revoyez les voies de consultation sur l’emplacement des antennes."
     }
   ],
   "lessonLink": {

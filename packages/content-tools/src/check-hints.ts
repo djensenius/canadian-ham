@@ -413,10 +413,15 @@ function answerPhraseCounts(answerTexts: readonly string[], includeDistinctiveTw
 
 function distinctiveOfficialCandidatePhrases(officialText: string, context: OfficialPhraseLeakageContext, includeDistinctiveTwoWordRuns: boolean): string[][] {
   const questionTokens = questionSignificantTokens(context.questionText);
+  const officialTokens = officialSignificantTokens(officialText);
+  const officialFullPhraseKey = phraseKey(officialTokens);
   const phraseCounts = answerPhraseCounts(context.answerTexts, includeDistinctiveTwoWordRuns);
-  return officialCandidatePhrases(officialSignificantTokens(officialText), includeDistinctiveTwoWordRuns).filter((candidate) => {
+  return officialCandidatePhrases(officialTokens, includeDistinctiveTwoWordRuns).filter((candidate) => {
     if (containsTokenPhrase(questionTokens, candidate)) {
       return false;
+    }
+    if (includeDistinctiveTwoWordRuns && phraseKey(candidate) === officialFullPhraseKey) {
+      return true;
     }
     return (phraseCounts.get(phraseKey(candidate)) ?? 0) < 2;
   });
@@ -1303,6 +1308,19 @@ export async function runHintCheckerSelfTest(): Promise<void> {
       requireComplete: true,
     });
   });
+
+  await assertSelfTestRejects("short-correct-answer-shared-by-options", hint({ hints: [
+    { level: 1, en: "Canadian visitors need only Basic before operating.", fr: "Pensez à la compétence de visite." },
+    { level: 2, en: "Use the visiting-operator privilege row.", fr: "Utilisez la ligne sur les privilèges de visite." },
+  ] }), "correct answer text", [question({
+    text: { en: "What Canadian qualification must a visitor hold?", fr: "Quelle compétence canadienne un visiteur doit-il détenir?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "Basic", fr: "Compétence de base" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "Basic with Honours", fr: "Compétence de base avec distinction" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "Basic with Morse code", fr: "Compétence de base avec code Morse" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "Advanced", fr: "Compétence supérieure" } },
+    ],
+  })]);
 
   await assertSelfTestRejects("short-question-fragment", hint({ hints: [
     { level: 1, en: "Ask which department administers the Radiocommunication Act.", fr: "Pensez à l'administration civile." },

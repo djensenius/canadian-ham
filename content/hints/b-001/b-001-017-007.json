@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review DC input power limits for Advanced operation.",
-      "fr": "Revoyez les limites de puissance d’entrée en courant continu pour l’exploitation avec compétence supérieure."
+      "en": "Each power limit pairs a quantity with a certificate row: DC input to the final stage, SSB peak-envelope power, or carrier power for other emissions.",
+      "fr": "Chaque limite de puissance associe une grandeur à une ligne de compétence : puissance d’alimentation CC de l’étage final, puissance de sortie en crête de modulation (PEP) en BLU ou puissance porteuse pour les autres émissions."
+    },
+    {
+      "level": 2,
+      "en": "Name the quantity and the certificate row in the question before looking at numbers. Several options are real limits from a different row or quantity, so check that your number comes from the matching row.",
+      "fr": "Nommez la grandeur et la ligne de compétence visées avant de regarder les nombres. Plusieurs options sont de vraies limites tirées d’une autre ligne ou d’une autre grandeur; vérifiez que votre nombre vient de la ligne correspondante."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-04",
-    "sectionAnchor": "reference-facts-power-quantities-and-limits"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

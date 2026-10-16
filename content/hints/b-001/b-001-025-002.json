@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review EMCAB-2 criteria for television-receiver complaints.",
-      "fr": "Revoyez les critères ACEM-2 pour les plaintes concernant les récepteurs de télévision."
+      "en": "EMCAB-2 compares the measured field at the affected equipment with the immunity level that equipment is expected to tolerate.",
+      "fr": "L’ACEM-2 compare le champ mesuré à l’appareil touché au niveau d’immunité que cet appareil devrait tolérer."
+    },
+    {
+      "level": 2,
+      "en": "Picture both sides of that threshold and decide when the transmitted signal is over the line instead of the receiver’s immunity being the weak link.",
+      "fr": "Imaginez les deux côtés de ce seuil et déterminez quand le signal émis dépasse la limite, plutôt que l’immunité du récepteur soit le maillon faible."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-06",
-    "sectionAnchor": "reference-facts-emcab-2-interference-criteria"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

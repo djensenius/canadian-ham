@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review maximum modulation level for amateur voice communications.",
-      "fr": "Revoyez le niveau maximal de modulation pour les communications vocales radioamateurs."
+      "en": "Modulation percentage measures how deeply audio varies the RF envelope; past a certain depth the envelope is cut off and the signal distorts and splatters.",
+      "fr": "Le taux de modulation mesure à quel point l’audio fait varier l’enveloppe RF; au-delà d’une certaine profondeur, l’enveloppe est écrêtée et le signal se déforme et déborde."
+    },
+    {
+      "level": 2,
+      "en": "Find the depth at which the envelope just touches zero without being cut off; that is the clean ceiling for voice.",
+      "fr": "Trouvez la profondeur à laquelle l’enveloppe touche tout juste zéro sans être écrêtée : c’est le plafond propre pour la voix."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-04",
-    "sectionAnchor": "reference-facts-repeaters-automatic-transmissions-stability-and-modulation-quality"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

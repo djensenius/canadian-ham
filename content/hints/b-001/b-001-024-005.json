@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review hand-held VHF/UHF power-output facts in Safety Code 6.",
-      "fr": "Revoyez les faits du Code de sécurité 6 sur la puissance de sortie des appareils portatifs VHF/UHF."
+      "en": "Review RF-exposure field quantities.",
+      "fr": "Revoyez les grandeurs de champ liées à l’exposition RF."
     }
   ],
   "lessonLink": {

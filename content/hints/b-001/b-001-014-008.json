@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review who counts as a third party when non-certified people are at both ends.",
-      "fr": "Revoyez qui compte comme tiers lorsque des personnes non certifiées se trouvent aux deux bouts."
+      "en": "Apply the definition: a third party is someone who takes part in amateur communication without holding amateur certification.",
+      "fr": "Appliquez la définition : un tiers est une personne qui participe à une communication radioamateur sans détenir de certificat d’opérateur radioamateur."
+    },
+    {
+      "level": 2,
+      "en": "List everyone in the scenario and test each person against that definition.",
+      "fr": "Dressez la liste de toutes les personnes du scénario et vérifiez chacune d’elles par rapport à cette définition."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-03",
-    "sectionAnchor": "reference-facts-third-party-and-visiting-operator-communication"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

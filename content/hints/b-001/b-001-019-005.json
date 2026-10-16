@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review station measurement capabilities required for all emission modes.",
-      "fr": "Revoyez les capacités de mesure de station requises pour tous les modes d’émission."
+      "en": "Whatever the mode, every rule about bands, segments and band edges assumes you know where your signal is.",
+      "fr": "Quel que soit le mode, toutes les règles sur les bandes, les segments et les limites supposent que vous savez où se trouve votre signal."
+    },
+    {
+      "level": 2,
+      "en": "Ask which single measurement confirms you are inside an authorized band for CW, SSB, FM and digital alike.",
+      "fr": "Demandez-vous quelle mesure unique confirme que vous êtes dans une bande autorisée, en CW, BLU, FM comme en numérique."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-04",
-    "sectionAnchor": "reference-facts-repeaters-automatic-transmissions-stability-and-modulation-quality"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review voice-mode fit in the special narrow HF segment.",
-      "fr": "Revoyez la compatibilité du mode vocal dans le segment HF étroit spécial."
+      "en": "A mode may be used on a band only if the signal’s occupied bandwidth fits within that band’s maximum bandwidth.",
+      "fr": "Un mode ne peut être utilisé dans une bande que si la largeur de bande occupée par le signal respecte la largeur de bande maximale de cette bande."
+    },
+    {
+      "level": 2,
+      "en": "For each option, place the frequency in its band, recall that band’s bandwidth limit, and compare it with the typical width of that mode from the lesson’s mode-width ordering. Look for the pair where the signal cannot fit.",
+      "fr": "Pour chaque option, situez la fréquence dans sa bande, rappelez-vous la largeur de bande maximale de cette bande et comparez-la à la largeur habituelle de ce mode selon l’ordre vu dans la leçon. Cherchez la combinaison où le signal ne peut pas tenir."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-04",
-    "sectionAnchor": "reference-facts-bandwidth-and-mode-fit-cues"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

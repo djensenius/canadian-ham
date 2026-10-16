@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the full station-identification timing pattern.",
-      "fr": "Revoyez le modèle complet de moment pour l’identification de station."
+      "en": "Decide first whether the identification rule is built around a whole contact or around each single transmission.",
+      "fr": "Déterminez d’abord si la règle d’identification s’applique à un contact entier ou à chaque émission."
+    },
+    {
+      "level": 2,
+      "en": "Sketch a long contact of short exchanges on a timeline. Mark every point where a listener would need to hear your call sign, then compare each option’s timing with your marks.",
+      "fr": "Tracez un long contact fait de courts échanges sur une ligne du temps. Marquez chaque moment où un auditeur devrait entendre votre indicatif d’appel, puis comparez le calendrier de chaque option à vos marques."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-03",
-    "sectionAnchor": "reference-facts-station-identification"
+    "sectionAnchor": "memory-trick-start-stop-and-the-interval-check"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

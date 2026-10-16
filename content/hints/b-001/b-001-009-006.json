@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review where the control operator must be during transmission.",
-      "fr": "Revoyez où l’opérateur de contrôle doit se trouver pendant l’émission."
+      "en": "The responsible operator’s job is to be able to change or stop the transmission immediately.",
+      "fr": "Le rôle de l’opérateur responsable est de pouvoir modifier ou arrêter l’émission immédiatement."
+    },
+    {
+      "level": 2,
+      "en": "For each location offered, ask whether the operator there could actually do that while the station is transmitting.",
+      "fr": "Pour chaque emplacement proposé, demandez-vous si l’opérateur pourrait réellement le faire pendant que la station émet."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-02",
-    "sectionAnchor": "reference-facts-control-operator-and-station-owner"
+    "sectionAnchor": "how-these-rules-fit-together"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }
