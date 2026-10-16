@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-003-007",
+  "questionId": "B-005-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the power relationship P = I x E.",
+      "fr": "Utilisez la relation de puissance P = I x E."
+    },
+    {
+      "level": 2,
+      "en": "Match the two quantity names represented by I and E; the other pairs mix in component properties instead.",
+      "fr": "Associez les deux grandeurs représentées par I et E; les autres paires y mêlent plutôt des propriétés de composants."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "power-how-fast-energy-is-used"
+  },
+  "referenceSheetSection": "power",
+  "licenseClass": "original"
+}

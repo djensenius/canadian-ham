@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-003-010",
+  "questionId": "B-005-003-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the troubleshooting term for an unbroken path that current can follow.",
+      "fr": "Revoyez le terme de dépannage qui désigne un trajet non interrompu que le courant peut suivre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "open-closed-and-short-circuits"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would directly identify the circuit condition.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

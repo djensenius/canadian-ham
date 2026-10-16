@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-003-002",
+  "questionId": "B-005-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A higher wattage rating means electrical energy is being used at a higher rate.",
+      "fr": "Une puissance nominale en watts plus élevée signifie que l'énergie électrique est utilisée plus rapidement."
+    },
+    {
+      "level": 2,
+      "en": "Compare only the watt ratings and choose the largest rating; no extra formula is needed.",
+      "fr": "Comparez seulement les valeurs en watts et choisissez la plus grande; aucune autre formule n'est nécessaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "power-how-fast-energy-is-used"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
