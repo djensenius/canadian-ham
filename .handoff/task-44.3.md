@@ -22,7 +22,8 @@ Progress in this worktree since takeover:
 - Targeted validation after the fix:
   - iPad autofocus: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M5)' -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testCalculatorAutoFocusesHardwareKeyboardOnOpen -resultBundlePath /tmp/task-44.3-ipad-autofocus-parent-responder.xcresult test CODE_SIGNING_ALLOWED=NO` passed.
   - iPhone autofocus: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testCalculatorAutoFocusesHardwareKeyboardOnOpen -resultBundlePath /tmp/task-44.3-iphone-autofocus-fix.xcresult test CODE_SIGNING_ALLOWED=NO` passed.
-- Reverted incidental calculator evidence PNG churn from the class screenshot runs; only source changes remain for this progress commit.
+- Full iPad class validation after the fix passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M5)' -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests -resultBundlePath /tmp/task-44.3-ipad-exam-tools-after-key-fix.xcresult test CODE_SIGNING_ALLOWED=NO` passed, 15 tests / 2 skipped / 0 failures. Log: `/tmp/task-44.3-ipad-exam-tools-after-key-fix.log`.
+- Reverted incidental calculator evidence PNG churn from the class screenshot runs; no dirty screenshot files remain after this step.
 
 ## Important constraints still in force
 
@@ -35,14 +36,12 @@ Progress in this worktree since takeover:
 
 ## Remaining work
 
-1. Commit and push the current iPad autofocus fix plus this handoff update.
-2. Rerun only the previously failing iPad validation at the appropriate scope. Minimum expected rerun: full iPad `CanadianHamExamToolsUITests` class on `iPad Pro 13-inch (M5)` because the previous class run failed there.
-3. H3 sidebar evidence: recapture `docs/evidence/task-44.3/sidebar-headers-before.png` from `origin/main` and `docs/evidence/task-44.3/sidebar-headers-after.png` from this branch, same iPad simulator/orientation/appearance/screen, with the sidebar visible in both and headers `Study`, `Practice categories`, and `Tools` comparable. Use a temporary detached main worktree and remove it afterwards. Confirm the final two PNGs once.
-4. Low 6: compare the same iPhone flow on `origin/main` vs this branch for the empty band under the back button. If absent on main, fix the regression; if present on main, record screenshots/evidence without opening unnecessary images.
-5. Keep only intentional final evidence; revert incidental PNG churn.
-6. Final validation still needed after remaining changes:
+1. H3 sidebar evidence: recapture `docs/evidence/task-44.3/sidebar-headers-before.png` from `origin/main` and `docs/evidence/task-44.3/sidebar-headers-after.png` from this branch, same iPad simulator/orientation/appearance/screen, with the sidebar visible in both and headers `Study`, `Practice categories`, and `Tools` comparable. Use a temporary detached main worktree and remove it afterwards. Confirm the final two PNGs once.
+2. Low 6: compare the same iPhone flow on `origin/main` vs this branch for the empty band under the back button. If absent on main, fix the regression; if present on main, record screenshots/evidence without opening unnecessary images.
+3. Keep only intentional final evidence; revert incidental PNG churn.
+4. Final validation still needed after remaining changes:
    - `pnpm check:apple-l10n`
    - `node scripts/check-apple-text-sources.ts`
    - `TEST_GUARD_PR_BODY=$'Test-guard-approved: owner decision 2026-10-14\n' node scripts/check-test-guard.mjs --base origin/main --head HEAD`
    - Confirm shared helpers byte-identical to `origin/main`.
-7. Update Backlog task-44.3 notes/final summary/status via the backlog CLI and write `/tmp/pr-44.3-body.md` with the marker, per-test results, and merge-batch note covering all four platforms because the string catalogue changed.
+5. Update Backlog task-44.3 notes/final summary/status via the backlog CLI and write `/tmp/pr-44.3-body.md` with the marker, per-test results, and merge-batch note covering all four platforms because the string catalogue changed.
