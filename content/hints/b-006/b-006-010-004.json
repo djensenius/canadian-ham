@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-010-004",
+  "questionId": "B-006-010-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the mobile-vertical comparison between a longer VHF/UHF whip and a quarter-wave whip.",
+      "fr": "Revoyez la comparaison des antennes verticales mobiles entre un fouet VHF/UHF plus long et un fouet quart d’onde."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "mobile-verticals-and-loading-coils"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

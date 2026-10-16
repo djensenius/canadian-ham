@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-008-003",
+  "questionId": "B-006-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the wavelength shortcut: λ(m) = 300 / f(MHz).",
+      "fr": "Utilisez le raccourci de longueur d’onde : λ(m) = 300 / f(MHz)."
+    },
+    {
+      "level": 2,
+      "en": "Substitute f = 25 MHz, divide, and keep the result in metres.",
+      "fr": "Remplacez f par 25 MHz, divisez, puis gardez le résultat en mètres."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "wavelength-and-frequency"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

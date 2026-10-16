@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-009-009",
+  "questionId": "B-006-009-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the free-space pattern of a half-wave dipole before thinking about real ground.",
+      "fr": "Revoyez le diagramme en espace libre d’un dipôle demi-onde avant de penser au sol réel."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "directivity-and-gain"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

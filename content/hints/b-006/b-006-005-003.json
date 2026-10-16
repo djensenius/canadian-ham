@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-005-003",
+  "questionId": "B-006-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the first fault to suspect when meter readings jump around.",
+      "fr": "Revoyez la première défaillance à soupçonner lorsque les lectures du ROS-mètre sautent."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "faults-that-change-readings"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

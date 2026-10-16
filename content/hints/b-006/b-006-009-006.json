@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-009-006",
+  "questionId": "B-006-009-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the standard gain comparison between a dipole and an isotropic antenna.",
+      "fr": "Revoyez la comparaison de gain standard entre un dipôle et une antenne isotrope."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "directivity-and-gain"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Numeric recall item: a second hint would state or point directly at the tested value; topic pointer and lesson link only."
+}

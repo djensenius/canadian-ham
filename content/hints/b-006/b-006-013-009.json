@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-013-009",
+  "questionId": "B-006-013-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the practical loop estimate: loop length ≈ 306 / f(MHz).",
+      "fr": "Utilisez l'estimation pratique : longueur de boucle ≈ 306 / f(MHz)."
+    },
+    {
+      "level": 2,
+      "en": "Substitute f = 7.15 MHz and keep the total wire length.",
+      "fr": "Remplacez f par 7,15 MHz et gardez la longueur totale du fil."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "worked-example-original-horizontal-loop"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

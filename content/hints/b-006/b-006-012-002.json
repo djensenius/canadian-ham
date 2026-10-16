@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-012-002",
+  "questionId": "B-006-012-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the practical drawbacks of random-wire antennas.",
+      "fr": "Revoyez les inconvénients pratiques d'une antenne à fil quelconque."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "random-wires-and-end-fed-antennas"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

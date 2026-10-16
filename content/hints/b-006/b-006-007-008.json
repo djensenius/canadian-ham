@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-007-008",
+  "questionId": "B-006-007-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review antenna polarization for VHF mobile stations.",
+      "fr": "Revoyez la polarisation des antennes pour les stations mobiles VHF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "in-the-real-world-matching-a-mobile-whip"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

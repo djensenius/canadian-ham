@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-002-009",
+  "questionId": "B-006-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the physical construction shared by the balanced line examples in the lesson.",
+      "fr": "Revoyez la construction physique commune aux exemples de lignes symétriques du cours."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "balanced-lines-twin-lead-window-line-and-open-wire-line"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}
