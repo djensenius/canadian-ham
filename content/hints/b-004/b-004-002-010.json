@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-002-010",
+  "questionId": "B-004-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the bias condition described for normal diode current in the one-way section.",
+      "fr": "Revoyez la condition de polarisation décrite pour le courant normal d’une diode dans la section à sens unique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "diodes-conduct-mainly-one-way"
+  },
+  "singleLevelReason": "Term recall: a second hint would name or eliminate the bias condition.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

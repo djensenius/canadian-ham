@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-002-008",
+  "questionId": "B-004-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the special-purpose semiconductor indicator in the diode lesson.",
+      "fr": "Revoyez l’indicateur à semi-conducteur spécialisé dans la leçon sur les diodes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "special-purpose-diodes"
+  },
+  "singleLevelReason": "Component recall: a second hint would name the light-producing part.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

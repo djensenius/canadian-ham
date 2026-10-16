@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-002-001",
+  "questionId": "B-004-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the real-world power-input example for a series diode.",
+      "fr": "Revoyez l’exemple concret d’entrée d’alimentation avec une diode en série."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "in-the-real-world-reverse-polarity-protection"
+  },
+  "singleLevelReason": "Application recall: a second hint would state the protection job or eliminate the other protection choices.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
