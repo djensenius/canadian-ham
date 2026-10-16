@@ -6,8 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the 10 metre amateur band range.",
-      "fr": "Revoyez la plage de la bande radioamateur de 10 mètres."
+      "en": "A band's name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m).",
+      "fr": "Le nom d'une bande correspond approximativement à sa longueur d'onde. Convertissez avec f (MHz) ≈ 300 / λ (m)."
+    },
+    {
+      "level": 2,
+      "en": "Work out the approximate frequency for 10 m, then choose the Canadian range nearest that value; the exact edges are table facts.",
+      "fr": "Calculez la fréquence approximative pour 10 m, puis choisissez la plage canadienne la plus proche de cette valeur ; les limites exactes sont des faits de tableau."
     }
   ],
   "lessonLink": {
@@ -15,6 +20,5 @@
     "sectionAnchor": "reference-facts-hf-band-ranges"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

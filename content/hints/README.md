@@ -48,7 +48,14 @@ Before accepting any hint, apply this self-test: could a learner who does not kn
 
 For B-001 recall items, there is often no space between a useful content hint and the answer. In those cases, use B: Hint 1 is a neutral, learner-facing topic pointer that names the lesson topic, not the rule, and the lesson link carries the teaching location. Do not write meta text such as "This item tests" or lookup text such as "use the row." Good B-001 topic pointers include "Review how the rules treat low-power amateur stations" and "Review the band-sharing rules for the amateur service." Use a `singleLevelReason` such as "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 
-Keep two-level A+C hints only where a principle really helps the learner reason and both levels, alone and together, pass the option self-test.
+Keep two-level A+C hints where a method, formula, conversion, or principle helps the learner work the question. The option self-test applies to stating facts or results, not to teaching a method the learner still has to apply. Do not state the computed result, name the matching option, or eliminate options by listing them.
+
+For example, a band-name question can use the wavelength relationship without giving the range:
+
+- Hint 1: "A band's name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m)."
+- Hint 2: "Work out the frequency for 10 m, then look for the range that sits just below that value."
+
+Use the lesson link to point to the band table. Pure recall still uses B: topic pointer plus lesson link only.
 
 ## Reviewer checklist
 
