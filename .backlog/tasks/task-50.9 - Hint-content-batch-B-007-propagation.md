@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:19'
+updated_date: '2026-10-16 15:30'
 labels:
   - content
 dependencies:
@@ -52,6 +52,8 @@ Write and review original EN/FR hint content for B-007 propagation questions.
 Implemented B-007 hint files for all 87 active questions (B-007-001: 10, B-007-002 through B-007-008: 11 each). Two-level method files: B-007-003-006: learner must compute/derive skip-distance direction from fixed-height launch-angle geometry; the hint never states decrease/closer. B-007-003-010: learner must compute/derive farthest first-return point from same-height angle sketch; the hint never states smallest angle/longest distance. B-007-003-011: learner must compute/derive skip-distance direction from same-angle layer-height geometry; the hint never states increase/farther. B-007-006-005: learner must compute/derive approximate band name from 28 MHz using 300/f and match same-band evidence; the hint never states 10 metres or beacon as the answer property. Manual option self-test/read-through: checked EN/FR options against each hint level; single-level reasons used where any second hint would identify a path, layer, time, season, mode, value, or effect. Review notes: avoided copying reference-sheet prose; only B-007-006-005 uses referenceSheetSection wavelength-dipole-length and formula wording, with no copied option text. Unit/numeric check: no hint states the correct numeric hop values (4 000 km/2 000 km), cycle length (11 years), normal VHF range (800 km), meteor range (30-100 MHz), or distractor numeric values; B-007-006-005 uses 28 MHz from the question and leaves the 300/f result unstated.
 
 Validation passed: per-subsection pnpm check:hints -- --subsection B-007-001 through B-007-008 --require-complete before each subsection commit; final pnpm check:hints -- --category B-007 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Content reviewer AC #2 remains pending for the parent review gate.
+
+Review round for PR #273 (r273.md): fixed all high/medium/low reviewer findings by neutralizing 37 B-007 hint pointers. Converted B-007-003-006, B-007-003-010, and B-007-003-011 from two-level sketch ladders to single-level topic pointers with singleLevelReason because the available method named launch angle or the geometry reason clause. Remaining two-level method file after this round: B-007-006-005: learner must compute/derive approximate band name from 28 MHz using 300/f and match same-band evidence; the hint never states 10 metres or beacon as the answer property. Read EN/FR options for every touched file and applied the literal option self-test while editing. Validation passed after fixes: pnpm check:hints -- --category B-007 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
