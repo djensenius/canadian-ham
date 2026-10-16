@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how packet stations can be connected through intermediate radio nodes.",
-      "fr": "Revoyez comment les stations par paquets peuvent être reliées par des nœuds radio intermédiaires."
+      "en": "Review packet, digipeaters and reliability.",
+      "fr": "Revoyez la transmission par paquets, les digipeaters et la fiabilité."
     }
   ],
   "lessonLink": {

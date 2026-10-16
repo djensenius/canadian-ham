@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what automatic repeat requests add to a digital link after a damaged frame.",
-      "fr": "Revoyez ce que les demandes automatiques de répétition ajoutent à une liaison numérique après une trame endommagée."
+      "en": "Review packet, digipeaters and reliability.",
+      "fr": "Revoyez la transmission par paquets, les digipeaters et la fiabilité."
     }
   ],
   "lessonLink": {

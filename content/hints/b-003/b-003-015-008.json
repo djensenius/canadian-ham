@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the clean-signal check for sound-card transmit audio.",
-      "fr": "Revoyez la vérification de signal propre pour l’audio d’émission par carte son."
+      "en": "Review packet, digipeaters and reliability.",
+      "fr": "Revoyez la transmission par paquets, les digipeaters et la fiabilité."
     }
   ],
   "lessonLink": {

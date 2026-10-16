@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why packet messaging can report success or failure instead of silently corrupting traffic.",
-      "fr": "Revoyez pourquoi la messagerie par paquets peut signaler la réussite ou l’échec au lieu de corrompre silencieusement le trafic."
+      "en": "Review packet, digipeaters and reliability.",
+      "fr": "Revoyez la transmission par paquets, les digipeaters et la fiabilité."
     }
   ],
   "lessonLink": {
