@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review which supply rating must cover transmit demand at the radio’s required voltage.",
-      "fr": "Revoyez quelle caractéristique d’alimentation doit couvrir la demande en émission à la tension requise par la radio."
+      "en": "Review station DC supplies.",
+      "fr": "Revoyez les alimentations CC de station."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how poor supply filtering can show up in a keyed CW signal.",
-      "fr": "Revoyez comment un mauvais filtrage d’alimentation peut apparaître dans un signal CW manipulé."
+      "en": "Review station DC supplies.",
+      "fr": "Revoyez les alimentations CC de station."
     }
   ],
   "lessonLink": {

@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "The battery distance is one way. Double it for the circuit path, test each listed wire value against the drop limit, then choose the minimum gauge that passes.",
-      "fr": "La distance jusqu’à la batterie est un aller simple. Doublez-la pour le trajet du circuit, testez chaque valeur de fil par rapport à la limite de chute, puis choisissez le calibre minimal qui convient."
+      "en": "The battery distance is one way. Double it for the circuit path, test each listed wire value against the drop limit, then choose the thinnest wire (the highest gauge number) whose total drop stays within the limit.",
+      "fr": "La distance jusqu'à la batterie est un aller simple. Doublez-la pour le trajet du circuit, testez chaque valeur de fil par rapport à la limite de chute, puis choisissez le fil le plus mince (le numéro de calibre le plus élevé) dont la chute totale respecte la limite."
     }
   ],
   "lessonLink": {

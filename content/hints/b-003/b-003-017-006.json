@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the portability tradeoff for switch-mode station supplies.",
-      "fr": "Revoyez le compromis de portabilité des alimentations de station à découpage."
+      "en": "Review station DC supplies.",
+      "fr": "Revoyez les alimentations CC de station."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the practical noise tradeoff between linear and switching station supplies.",
-      "fr": "Revoyez le compromis pratique de bruit entre les alimentations linéaires et à découpage de station."
+      "en": "Review station DC supplies.",
+      "fr": "Revoyez les alimentations CC de station."
     }
   ],
   "lessonLink": {
