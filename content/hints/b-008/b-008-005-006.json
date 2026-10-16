@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-005-006",
+  "questionId": "B-008-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the lesson treats power-line filtering for RF noise in station equipment.",
+      "fr": "Revoyez comment la leçon présente le filtrage du secteur pour le bruit RF dans l’équipement de station."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "low-pass-filters"
+  },
+  "singleLevelReason": "Application recall: a second hint would state the response type that fits mains filtering.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

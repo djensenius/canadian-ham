@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-001",
+  "questionId": "B-008-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review suppression devices for home entertainment equipment.",
+      "fr": "Revoyez les dispositifs de réduction du brouillage pour le matériel audiovisuel domestique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "ferrite-chokes-and-bypass-capacitors"
+  },
+  "singleLevelReason": "Device recall: a second hint would identify the component construction directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

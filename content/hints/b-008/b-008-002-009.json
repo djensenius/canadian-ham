@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-009",
+  "questionId": "B-008-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the cures for RF pickup on speaker leads.",
+      "fr": "Revoyez les mesures contre la captation de RF par les fils de haut-parleurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "in-the-real-world-powered-speaker-pickup"
+  },
+  "singleLevelReason": "Practical recall: a second hint would state the wiring change that selects the option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
