@@ -64,4 +64,6 @@ Completed B-002-006 signal-report/RST hints: 9 two-level, 2 single-level recall/
 Completed B-002-007 Q-signal hints: 0 two-level, 11 single-level recall. Validation: pnpm check:hints -- --subsection B-002-007 --require-complete passed. Commit: 4235a0a9a21abb5489f0d7692f9e0d8db7fe7785.
 
 Completed B-002-008 emergency procedure hints: 8 two-level, 3 single-level recall/priority. Validation: pnpm check:hints -- --subsection B-002-008 --require-complete passed. Commit: 190586a344775ce6a54d94d09c62769a1f3dea6b.
+
+Completed B-002-009 records/maps/time hints: 5 two-level, 6 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-009 --require-complete passed. Commit: 5781e1b72e6ce6b37253d06844fef3ab27d23b8b.
 <!-- SECTION:NOTES:END -->
