@@ -57,8 +57,8 @@ function hint(overrides: Record<string, unknown> = {}) {
       },
       {
         level: 2,
-        en: "Set aside cables and displays; focus on the part that prevents frequency drift.",
-        fr: "Écartez les câbles et les afficheurs; concentrez-vous sur la partie qui évite la dérive de fréquence.",
+        en: "Frequency stays stable when the controlling part prevents drift during the contact.",
+        fr: "La fréquence reste stable quand la partie de commande évite la dérive pendant le contact.",
       },
     ],
     referenceSheetSection: null,

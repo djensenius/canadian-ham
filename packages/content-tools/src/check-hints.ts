@@ -24,16 +24,35 @@ const HINT_ID_PREFIX = "HINT-";
 // from the question text.
 const MIN_QUESTION_FRAGMENT_GRAM_SIZE = 3;
 const MAX_QUESTION_FRAGMENT_GRAM_SIZE = 6;
+const DISTINCTIVE_OFFICIAL_PHRASE_GRAM_SIZE = 2;
 const LONG_OFFICIAL_PHRASE_GRAM_SIZE = 3;
 const STOP_WORD_TOKENS = new Set([
   "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "how", "in", "is", "it", "its", "of", "on", "or", "that", "the", "this", "to", "what", "when", "where", "which", "why", "with",
   "au", "aux", "ce", "cet", "cette", "ces", "d", "de", "des", "du", "en", "est", "et", "l", "la", "le", "les", "leur", "leurs", "ou", "par", "pour", "qu", "que", "quel", "quelle", "quels", "quelles", "qui", "s", "son", "sont", "sur", "un", "une",
 ]);
 const NUMERIC_UNIT_TOKENS = new Set([
-  "v", "volt", "volts", "a", "amp", "amps", "ampere", "amperes", "ohm", "ohms", "w", "watt", "watts", "hz", "khz", "mhz", "ghz", "db", "m", "mm", "cm", "km", "pf", "uf", "µf", "μf", "nf", "f",
+  "v", "volt", "volts", "mv", "millivolt", "millivolts", "kv", "kilovolt", "kilovolts", "a", "amp", "amps", "ampere", "amperes", "ma", "milliamp", "milliamps", "milliampere", "milliamperes", "ohm", "ohms", "kohm", "kohms", "w", "watt", "watts", "mw", "milliwatt", "milliwatts", "kw", "kilowatt", "kilowatts", "hz", "khz", "mhz", "ghz", "db", "m", "mm", "cm", "km", "pf", "uf", "µf", "μf", "nf", "f",
 ]);
 const LOW_INFORMATION_TOKENS = new Set([...STOP_WORD_TOKENS, ...NUMERIC_UNIT_TOKENS]);
 const REFERENCE_SHEET_WORDS = ["reference sheet", "reference material", "formula sheet", "feuille de référence", "document de référence"];
+const OFFICIAL_ANSWER_ALIASES = [
+  {
+    officialPhrases: ["Innovation Science Economic Development Canada", "Innovation Sciences Développement économique Canada"],
+    aliases: ["ISED", "ISDE"],
+  },
+  {
+    officialPhrases: ["Radiocommunication Act", "Loi sur la radiocommunication"],
+    aliases: ["Radiocommunications Act", "Loi sur les radiocommunications"],
+  },
+  {
+    officialPhrases: ["Standards Operation Radio Stations Amateur Radio Service", "Normes relatives exploitation stations radio service radioamateur"],
+    aliases: ["RBR-4"],
+  },
+  {
+    officialPhrases: ["National Defence", "Défense nationale"],
+    aliases: ["DND"],
+  },
+] as const;
 
 export type LocalizedText = {
   readonly en: string;
@@ -168,20 +187,93 @@ function shouldCheckOfficialPhrase(officialText: string): boolean {
   return meaningfulTokens.length >= 2 || (meaningfulTokens.length === 1 && meaningfulTokens[0]!.length >= 5);
 }
 
-function checkOfficialPhraseLeakage(hintText: string, officialText: string): boolean {
+type OfficialPhraseLeakageContext = {
+  readonly questionText: string;
+  readonly answerTexts: readonly string[];
+};
+
+function phraseKey(value: readonly string[]): string {
+  return value.join(" ");
+}
+
+function officialCandidatePhrases(officialTokens: readonly string[], includeDistinctiveTwoWordRuns: boolean): string[][] {
+  if (officialTokens.length === 0) {
+    return [];
+  }
+  if (officialTokens.length === 1) {
+    const token = officialTokens[0]!;
+    return token.length >= 5 ? [[token]] : [];
+  }
+  const candidates = new Map<string, string[]>();
+  const addCandidate = (candidate: readonly string[]): void => {
+    if (candidate.length > 0) {
+      candidates.set(phraseKey(candidate), [...candidate]);
+    }
+  };
+
+  addCandidate(officialTokens);
+  if (officialTokens.length > LONG_OFFICIAL_PHRASE_GRAM_SIZE) {
+    const gramSizes = includeDistinctiveTwoWordRuns ? [DISTINCTIVE_OFFICIAL_PHRASE_GRAM_SIZE, LONG_OFFICIAL_PHRASE_GRAM_SIZE] : [LONG_OFFICIAL_PHRASE_GRAM_SIZE];
+    for (const gramSize of gramSizes) {
+      for (const gram of ngrams(officialTokens, gramSize)) {
+        addCandidate(gram.split(" "));
+      }
+    }
+  }
+  return [...candidates.values()];
+}
+
+function answerPhraseCounts(answerTexts: readonly string[], includeDistinctiveTwoWordRuns: boolean): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const answerText of answerTexts) {
+    const answerPhrases = new Set(officialCandidatePhrases(officialSignificantTokens(answerText), includeDistinctiveTwoWordRuns).map(phraseKey));
+    for (const answerPhrase of answerPhrases) {
+      counts.set(answerPhrase, (counts.get(answerPhrase) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
+
+function distinctiveOfficialCandidatePhrases(officialText: string, context: OfficialPhraseLeakageContext, includeDistinctiveTwoWordRuns: boolean): string[][] {
+  const questionTokens = questionSignificantTokens(context.questionText);
+  const phraseCounts = answerPhraseCounts(context.answerTexts, includeDistinctiveTwoWordRuns);
+  return officialCandidatePhrases(officialSignificantTokens(officialText), includeDistinctiveTwoWordRuns).filter((candidate) => {
+    if (containsTokenPhrase(questionTokens, candidate)) {
+      return false;
+    }
+    return (phraseCounts.get(phraseKey(candidate)) ?? 0) < 2;
+  });
+}
+
+function checkOfficialPhraseLeakage(hintText: string, officialText: string, context: OfficialPhraseLeakageContext, includeDistinctiveTwoWordRuns: boolean): boolean {
   if (!shouldCheckOfficialPhrase(officialText)) {
     return false;
   }
   const hintTokens = officialSignificantTokens(hintText);
+  return distinctiveOfficialCandidatePhrases(officialText, context, includeDistinctiveTwoWordRuns).some((candidate) => containsTokenPhrase(hintTokens, candidate));
+}
+
+function aliasSignificantTokens(value: string): string[] {
+  return tokens(value).filter((token) => token.length > 1 && !STOP_WORD_TOKENS.has(token));
+}
+
+function findOfficialAliasLeakage(hintText: string, questionText: string, officialText: string): string | null {
   const officialTokens = officialSignificantTokens(officialText);
-  if (containsTokenPhrase(hintTokens, officialTokens)) {
-    return true;
+  const hintTokens = aliasSignificantTokens(hintText);
+  const questionTokens = aliasSignificantTokens(questionText);
+  for (const aliasGroup of OFFICIAL_ANSWER_ALIASES) {
+    const applies = aliasGroup.officialPhrases.some((officialPhrase) => containsTokenPhrase(officialTokens, officialSignificantTokens(officialPhrase)));
+    if (!applies) {
+      continue;
+    }
+    for (const alias of aliasGroup.aliases) {
+      const aliasTokens = aliasSignificantTokens(alias);
+      if (!containsTokenPhrase(questionTokens, aliasTokens) && containsTokenPhrase(hintTokens, aliasTokens)) {
+        return alias;
+      }
+    }
   }
-  if (officialTokens.length === 1) {
-    return hintTokens.includes(officialTokens[0]!);
-  }
-  const gramSize = officialTokens.length <= LONG_OFFICIAL_PHRASE_GRAM_SIZE ? officialTokens.length : LONG_OFFICIAL_PHRASE_GRAM_SIZE;
-  return ngrams(officialTokens, gramSize).some((gram) => containsTokenPhrase(hintTokens, gram.split(" ")));
+  return null;
 }
 
 function ngrams(values: readonly string[], size: number): string[] {
@@ -225,7 +317,7 @@ type NumericValue = {
   readonly text: string;
 };
 
-const NUMERIC_VALUE_PATTERN = /(?<![\p{L}\p{N}.])(?<number>(?:\d{1,3}(?:[ \u00a0]\d{3})+|\d+)(?:\.\d+)?)(?:\s*(?<unit>v|volts?|a|amps?|amperes?|ohms?|w|watts?|hz|khz|mhz|ghz|db|m|mm|cm|km|pf|uf|µf|μf|nf|f))?(?![\p{L}\p{N}.])/giu;
+const NUMERIC_VALUE_PATTERN = /(?<![\p{L}\p{N}.])(?<number>(?:\d{1,3}(?:[ \u00a0]\d{3})+|\d+)(?:\.\d+)?)(?:\s*(?<unit>v|volts?|mv|millivolts?|kv|kilovolts?|a|amps?|amperes?|ma|milliamps?|milliamperes?|ohms?|kohms?|w|watts?|mw|milliwatts?|kw|kilowatts?|hz|khz|mhz|ghz|db|m|mm|cm|km|pf|uf|µf|μf|nf|f))?(?![\p{L}\p{N}.])/giu;
 
 function canonicalNumber(value: string): string {
   const compact = value.replace(/[ \u00a0]/g, "");
@@ -238,8 +330,12 @@ function canonicalNumber(value: string): string {
   return normalizedFraction.length === 0 ? normalizedInteger : `${normalizedInteger}.${normalizedFraction}`;
 }
 
+function normalizeNumericText(value: string): string {
+  return normalizeText(value).replace(/(\d),(\d)/gu, "$1.$2");
+}
+
 function numericValues(value: string): NumericValue[] {
-  const normalized = normalizeText(value);
+  const normalized = normalizeNumericText(value);
   const values: NumericValue[] = [];
   const seen = new Set<string>();
   for (const match of normalized.matchAll(NUMERIC_VALUE_PATTERN)) {
@@ -253,14 +349,33 @@ function numericValues(value: string): NumericValue[] {
   return values;
 }
 
-function findCorrectNumericAnswerLeakage(hintText: string, questionText: string, answerText: string): NumericValue | null {
+function answerIsMostlyNumericValue(answerText: string): boolean {
+  return numericValues(answerText).length > 0 && officialSignificantTokens(answerText).length === 0;
+}
+
+function numericValueOptionCounts(answerTexts: readonly string[]): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const answerText of answerTexts) {
+    const optionValues = new Set(numericValues(answerText).map((value) => value.number));
+    for (const optionValue of optionValues) {
+      counts.set(optionValue, (counts.get(optionValue) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
+
+function findCorrectNumericAnswerLeakage(hintText: string, questionText: string, answerText: string, answerTexts: readonly string[]): NumericValue | null {
   const answerValues = numericValues(answerText);
-  if (answerValues.length === 0) {
+  if (answerValues.length === 0 || !answerIsMostlyNumericValue(answerText)) {
     return null;
   }
+  const optionCounts = numericValueOptionCounts(answerTexts);
   const questionNumbers = new Set(numericValues(questionText).map((value) => value.number));
   const hintNumbers = new Set(numericValues(hintText).map((value) => value.number));
   for (const answerValue of answerValues) {
+    if ((optionCounts.get(answerValue.number) ?? 0) >= 2) {
+      continue;
+    }
     if (!questionNumbers.has(answerValue.number) && hintNumbers.has(answerValue.number)) {
       return answerValue;
     }
@@ -327,11 +442,20 @@ function validateHintLocation(hint: LoadedQuestionHint, relativePath: string, qu
   }
 }
 
+function validHintStepsForLeakage(hint: LoadedQuestionHint): QuestionHint["hints"][number][] {
+  if (!Array.isArray(hint.hints)) {
+    return [];
+  }
+  return hint.hints.filter((step): step is QuestionHint["hints"][number] => isRecord(step) && (step.level === 1 || step.level === 2) && isNonEmptyString(step.en) && isNonEmptyString(step.fr));
+}
+
 function validateHintLeakage(hint: LoadedQuestionHint, relativePath: string, question: QuestionRecord, issues: string[]): void {
-  for (const step of hint.hints) {
+  for (const step of validHintStepsForLeakage(hint)) {
     for (const language of ["en", "fr"] as const) {
       const hintText = step[language];
       const label = `${relativePath}: level ${step.level} ${language}`;
+      const answerTexts = question.answers.map((answer) => answer.text[language]);
+      const leakageContext = { questionText: question.text[language], answerTexts };
       if (REFERENCE_SHEET_WORDS.some((word) => normalizeText(hintText).includes(normalizeText(word)))) {
         issues.push(`${label}: reference-sheet pointer text belongs in UI metadata, not hint prose`);
       }
@@ -341,15 +465,19 @@ function validateHintLeakage(hint: LoadedQuestionHint, relativePath: string, que
       }
       for (const answer of question.answers) {
         const answerText = answer.text[language];
+        const kind = answer.isCorrect ? "correct answer" : `answer option sourceIndex ${answer.sourceIndex}`;
         if (answer.isCorrect) {
-          const numericLeak = findCorrectNumericAnswerLeakage(hintText, question.text[language], answerText);
+          const numericLeak = findCorrectNumericAnswerLeakage(hintText, question.text[language], answerText, answerTexts);
           if (numericLeak !== null) {
             issues.push(`${label}: contains correct answer numeric value ${JSON.stringify(numericLeak.text)} from ${JSON.stringify(answerText)}`);
           }
         }
-        if (checkOfficialPhraseLeakage(hintText, answerText)) {
-          const kind = answer.isCorrect ? "correct answer" : `answer option sourceIndex ${answer.sourceIndex}`;
+        if (checkOfficialPhraseLeakage(hintText, answerText, leakageContext, answer.isCorrect)) {
           issues.push(`${label}: contains ${kind} text ${JSON.stringify(answerText)}`);
+        }
+        const aliasLeak = findOfficialAliasLeakage(hintText, question.text[language], answerText);
+        if (aliasLeak !== null) {
+          issues.push(`${label}: contains ${kind} alias ${JSON.stringify(aliasLeak)} for ${JSON.stringify(answerText)}`);
         }
       }
     }
@@ -408,7 +536,7 @@ export async function checkHints(options: HintCheckOptions = {}): Promise<HintCh
       continue;
     }
     validateHintLocation(hint, relativePath, question, issues);
-    if (shapeIsValid) {
+    if (shapeIsValid || validHintStepsForLeakage(hint).length > 0) {
       validateHintLeakage(hint, relativePath, question, issues);
     }
   }
@@ -512,8 +640,8 @@ function hint(overrides: Partial<QuestionHint> = {}): QuestionHint {
       },
       {
         level: 2,
-        en: "Ignore cables and displays; choose the block that controls frequency stability.",
-        fr: "Ignorez les câbles et les afficheurs; choisissez le bloc qui contrôle la stabilité de fréquence.",
+        en: "Frequency stays stable when one circuit block sets the radio-frequency rhythm instead of drifting.",
+        fr: "La fréquence reste stable quand un bloc de circuit fixe le rythme radiofréquence au lieu de dériver.",
       },
     ],
     referenceSheetSection: null,
@@ -536,6 +664,18 @@ async function withSelfTestFixture(name: string, run: (root: string) => Promise<
 async function writeSelfTestFixture(root: string, hintRecord: QuestionHint, questions: readonly QuestionRecord[] = [question()]): Promise<void> {
   await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), `${JSON.stringify(questions, null, 2)}\n`, "utf8");
   await writeFile(path.join(root, "content/hints/b-001/b-001-001-001.json"), `${JSON.stringify(hintRecord, null, 2)}\n`, "utf8");
+}
+
+
+async function assertSelfTestAccepts(name: string, hintRecord: QuestionHint, questions: readonly QuestionRecord[] = [question()]): Promise<void> {
+  await withSelfTestFixture(name, async (root) => {
+    await writeSelfTestFixture(root, hintRecord, questions);
+    await checkHints({
+      hintRoot: path.join(root, "content/hints"),
+      questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      requireComplete: true,
+    });
+  });
 }
 
 async function assertSelfTestRejects(name: string, hintRecord: QuestionHint, expectedIssue: string, questions: readonly QuestionRecord[] = [question()]): Promise<void> {
@@ -639,6 +779,66 @@ export async function runHintCheckerSelfTest(): Promise<void> {
     { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
   ] })]);
 
+  await assertSelfTestRejects("distinctive-two-word-answer-copy", hint({ hints: [
+    { level: 1, en: "Economic Development is the phrase to remember.", fr: "Pensez au portefeuille civil." },
+    { level: 2, en: "Use the civilian regulator clue.", fr: "Utilisez l'indice de réglementation civile." },
+  ] }), "correct answer text", [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "Innovation, Science and Economic Development Canada", fr: "Innovation, Sciences et Développement économique Canada" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "Transport Canada", fr: "Transports Canada" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "Communications Security Establishment Canada", fr: "Le Centre de la sécurité des télécommunications Canada" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
+  ] })]);
+
+  await assertSelfTestRejects("answer-alias-ised", hint({ hints: [
+    { level: 1, en: "ISED is the acronym to look for.", fr: "Pensez au portefeuille civil." },
+    { level: 2, en: "Use the civilian regulator clue.", fr: "Utilisez l'indice de réglementation civile." },
+  ] }), "correct answer alias", [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "Innovation, Science and Economic Development Canada", fr: "Innovation, Sciences et Développement économique Canada" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "Transport Canada", fr: "Transports Canada" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "Communications Security Establishment Canada", fr: "Le Centre de la sécurité des télécommunications Canada" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
+  ] })]);
+
+  await assertSelfTestRejects("answer-alias-isde-fr", hint({ hints: [
+    { level: 1, en: "Think about the civilian regulator.", fr: "ISDE est le sigle à chercher." },
+    { level: 2, en: "Use the civilian regulator clue.", fr: "Utilisez l'indice de réglementation civile." },
+  ] }), "correct answer alias", [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "Innovation, Science and Economic Development Canada", fr: "Innovation, Sciences et Développement économique Canada" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "Transport Canada", fr: "Transports Canada" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "Communications Security Establishment Canada", fr: "Le Centre de la sécurité des télécommunications Canada" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
+  ] })]);
+
+  await assertSelfTestRejects("answer-alias-radiocommunications-act", hint({ hints: [
+    { level: 1, en: "Radiocommunications Act is the variant to remember.", fr: "Pensez à la source juridique." },
+    { level: 2, en: "Use the legal hierarchy.", fr: "Utilisez la hiérarchie juridique." },
+  ] }), "correct answer alias", [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "The Radiocommunication Act", fr: "La Loi sur la radiocommunication" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "The Broadcasting Act", fr: "La Loi sur la radiodiffusion" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "The Radio Regulations", fr: "Le règlement radio" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "A station standard", fr: "Une norme de station" } },
+  ] })]);
+
+  await assertSelfTestRejects("answer-alias-rbr-4", hint({ hints: [
+    { level: 1, en: "RBR-4 is the document label to look for.", fr: "Pensez aux normes de station." },
+    { level: 2, en: "Use the station-operation document clue.", fr: "Utilisez l'indice sur l'exploitation des stations." },
+  ] }), "correct answer alias", [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "The Standards for the Operation of Radio Stations in the Amateur Radio Service", fr: "Les Normes relatives à l'exploitation des stations radio du service de radioamateur" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "The Radiocommunication Act", fr: "La Loi sur la radiocommunication" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "The Radiocommunication Regulations", fr: "Le Règlement sur la radiocommunication" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "A radio policy", fr: "Une politique radio" } },
+  ] })]);
+
+  await assertSelfTestRejects("option-alias-dnd", hint({ hints: [
+    { level: 1, en: "DND is not the civilian regulator.", fr: "Pensez au portefeuille civil." },
+    { level: 2, en: "Use the civilian regulator clue.", fr: "Utilisez l'indice de réglementation civile." },
+  ] }), "answer option sourceIndex 3 alias", [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "Innovation, Science and Economic Development Canada", fr: "Innovation, Sciences et Développement économique Canada" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "Transport Canada", fr: "Transports Canada" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "Communications Security Establishment Canada", fr: "Le Centre de la sécurité des télécommunications Canada" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
+  ] })]);
+
   await assertSelfTestRejects("significant-option-token-run-fr", hint({ hints: [
     { level: 1, en: "Think about the civilian regulator.", fr: "Regardez au Centre de la sécurité des télécommunications Canada." },
     { level: 2, en: "Use the legal hierarchy.", fr: "Utilisez la hiérarchie juridique." },
@@ -648,6 +848,32 @@ export async function runHintCheckerSelfTest(): Promise<void> {
     { sourceIndex: 2, isCorrect: false, text: { en: "Communications Security Establishment Canada", fr: "Le Centre de la sécurité des télécommunications Canada" } },
     { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
   ] })]);
+
+  await assertSelfTestAccepts("option-run-copied-from-question", hint({ hints: [
+    { level: 1, en: "Think about where the amateur radio service is described in the legal framework.", fr: "Pensez au niveau du cadre juridique." },
+    { level: 2, en: "Use the relationship between statutes, regulations, and standards.", fr: "Utilisez le lien entre les lois, les règlements et les normes." },
+  ] }), [question({
+    text: { en: "Which document defines the Canadian amateur radio service?", fr: "Quel document définit le service de radioamateur au Canada?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "The Radiocommunication Regulations", fr: "Le Règlement sur la radiocommunication" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "The Radiocommunication Act", fr: "La Loi sur la radiocommunication" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "The Standards for the Operation of Radio Stations in the Amateur Radio Service", fr: "Les Normes relatives à l'exploitation des stations radio du service de radioamateur" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "The Radio Systems Policies", fr: "La Politique des systèmes radio" } },
+    ],
+  })]);
+
+  await assertSelfTestAccepts("option-run-shared-by-options", hint({ hints: [
+    { level: 1, en: "An azimuthal map uses a map projection centred for a purpose.", fr: "Pensez au type de projection cartographique." },
+    { level: 2, en: "Use the station location context before reading the map.", fr: "Utilisez le contexte de l'emplacement de la station." },
+  ] }), [question({
+    text: { en: "What is an azimuthal map?", fr: "Qu'est-ce qu'une carte géographique azimutale?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "A map projection centred on a given location", fr: "Une projection cartographique centrée sur un emplacement donné" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "A map projection displaying Maidenhead grid squares", fr: "Une projection cartographique montrant des grilles" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "A map projection centred on the magnetic North Pole", fr: "Une projection cartographique centrée sur le pôle Nord magnétique" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "A map projection centred on the geographic North Pole", fr: "Une projection cartographique centrée sur le pôle Nord géographique" } },
+    ],
+  })]);
 
   await assertSelfTestRejects("short-question-fragment", hint({ hints: [
     { level: 1, en: "Ask which department administers the Radiocommunication Act.", fr: "Pensez à l'administration civile." },
@@ -696,6 +922,58 @@ export async function runHintCheckerSelfTest(): Promise<void> {
       });
     });
   }
+
+  await assertSelfTestAccepts("numeric-non-value-safety-code-6", hint({ hints: [
+    { level: 1, en: "Use Safety Code 6 as the exposure framework before judging the statement.", fr: "Utilisez le Code de sécurité 6 comme cadre d'exposition avant de juger l'énoncé." },
+    { level: 2, en: "Compare the statement with the exposure factors the code considers.", fr: "Comparez l'énoncé avec les facteurs d'exposition que le code considère." },
+  ] }), [question({
+    text: { en: "Which statement is NOT correct?", fr: "Lequel des énoncés suivants est FAUX?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "Hand-held transmitters are excluded from Safety Code 6 requirements", fr: "Les émetteurs portatifs sont exemptés des exigences du Code de sécurité 6" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "Antenna gain and distance influence exposure to radio energy", fr: "Le gain d'antenne et la distance influencent l'exposition à l'énergie radio" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "Safety Code 6 uses different units for field strength", fr: "Le Code de sécurité 6 utilise des unités différentes pour le champ" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "Safety Code 6 specifies lower limits for uncontrolled areas", fr: "Le Code de sécurité 6 stipule des limites plus basses pour les environnements non contrôlés" } },
+    ],
+  })]);
+
+  await assertSelfTestAccepts("numeric-non-value-rbr-4", hint({ hints: [
+    { level: 1, en: "RBR-4 is a document label here, not a calculation result.", fr: "RBR-4 est ici un titre de document, pas un résultat de calcul." },
+    { level: 2, en: "Use the document context before deciding.", fr: "Utilisez le contexte du document avant de décider." },
+  ] }), [question({
+    text: { en: "Which document label applies to the amateur operating standards?", fr: "Quelle étiquette de document s'applique aux normes d'exploitation radioamateur?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "RBR-4", fr: "RBR-4" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "CPC-2-0-03", fr: "CPC-2-0-03" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "RIC-3", fr: "CIR-3" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "EMCAB-2", fr: "CPCEM-2" } },
+    ],
+  })]);
+
+  await assertSelfTestRejects("numeric-answer-fr-decimal-comma", hint({ hints: [
+    { level: 1, en: "Set up the current relationship before calculating.", fr: "La relation donne 0,5 A avant l'arrondi." },
+    { level: 2, en: "Use the current formula.", fr: "Utilisez la formule du courant." },
+  ] }), "correct answer numeric value", [question({
+    text: { en: "Fixture current question?", fr: "Question de courant fictive?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "0.5 A", fr: "0,5 A" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "1 A", fr: "1 A" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "5 A", fr: "5 A" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "10 A", fr: "10 A" } },
+    ],
+  })]);
+
+  await assertSelfTestAccepts("numeric-answer-fr-thousands-comma-not-split", hint({ hints: [
+    { level: 1, en: "Use the repeater sub-band boundary rather than a bare integer.", fr: "Ne traitez pas 500 comme une valeur indépendante." },
+    { level: 2, en: "Keep the frequency as one MHz value.", fr: "Gardez la fréquence comme une seule valeur en MHz." },
+  ] }), [question({
+    text: { en: "Fixture frequency question?", fr: "Question de fréquence fictive?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "29.500 MHz", fr: "29,500 MHz" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "29.700 MHz", fr: "29,700 MHz" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "50 MHz", fr: "50 MHz" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "144 MHz", fr: "144 MHz" } },
+    ],
+  })]);
 }
 
 async function main(): Promise<void> {
