@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-005-003",
+  "questionId": "B-008-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the filter family used when only a selected range is meant to get through.",
+      "fr": "Revoyez la famille de filtres utilisée lorsqu’une seule plage choisie doit passer."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "filter-vocabulary"
+  },
+  "singleLevelReason": "Definition recall: another hint would name the filter type or repeat its response.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

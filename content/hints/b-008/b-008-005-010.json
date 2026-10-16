@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-005-010",
+  "questionId": "B-008-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review filter selection for protecting a receiver assigned to one amateur band during adjacent-band activity.",
+      "fr": "Revoyez le choix de filtre pour protéger un récepteur assigné à une bande amateur pendant de l’activité sur les bandes adjacentes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "band-pass-band-reject-and-notch-filters"
+  },
+  "singleLevelReason": "Application recall: a second hint would identify the filter response that preserves the assigned band.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

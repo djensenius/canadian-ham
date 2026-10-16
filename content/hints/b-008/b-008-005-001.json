@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-005-001",
+  "questionId": "B-008-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the frequency-response sketches for the filter families.",
+      "fr": "Revoyez les croquis de réponse en fréquence des familles de filtres."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "filter-vocabulary"
+  },
+  "singleLevelReason": "Definition recall: another hint would describe the exact response in the correct option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

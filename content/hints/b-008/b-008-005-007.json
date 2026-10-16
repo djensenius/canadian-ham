@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-005-007",
+  "questionId": "B-008-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the filter family used for a very selective receiver cure.",
+      "fr": "Revoyez la famille de filtres utilisée pour une mesure très sélective au récepteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "band-pass-band-reject-and-notch-filters"
+  },
+  "singleLevelReason": "Filter-choice recall: another hint would identify the narrow-filter option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
