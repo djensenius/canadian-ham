@@ -4,7 +4,7 @@ title: 'Hint content batch: B-006 feeders and antennas'
 status: To Do
 assignee: []
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 08:29'
+updated_date: '2026-10-16 11:50'
 labels:
   - content
 dependencies:
@@ -29,10 +29,10 @@ Write and review original EN/FR hint content for B-006 feeder and antenna questi
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 All in-scope B-006 active Basic questions have exactly two EN hints and two FR hints.
-- [ ] #2 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
-- [ ] #3 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
-- [ ] #4 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
-- [ ] #5 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
-- [ ] #6 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [ ] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [ ] #6 All in-scope B-006 feeders and antennas active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
