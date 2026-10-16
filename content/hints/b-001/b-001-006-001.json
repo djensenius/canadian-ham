@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-006-001",
+  "questionId": "B-001-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Ask whether the activity stays inside amateur authority or crosses into another regulated radio use.",
+      "fr": "Demandez-vous si l'activité reste dans l'autorisation radioamateur ou passe à un autre usage radio réglementé."
+    },
+    {
+      "level": 2,
+      "en": "Power level, memory programming, and equipment modification do not change the permission category. The station still needs the right authority for the radio use being attempted.",
+      "fr": "La puissance, la programmation des mémoires et les modifications d'appareil ne changent pas la catégorie d'autorisation. La station doit tout de même avoir l'autorité voulue pour l'usage radio visé."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-amateur-service-boundaries"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
