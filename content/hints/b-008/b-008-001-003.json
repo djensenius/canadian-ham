@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-003",
+  "questionId": "B-008-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the section that compares broad symptoms with frequency-specific transmitter clues.",
+      "fr": "Revoyez la section qui compare les symptômes larges avec les indices liés à des fréquences précises de l’émetteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "receiver-overload-and-desensitization"
+  },
+  "singleLevelReason": "Symptom classification: a second hint would name the matching diagnosis or rule out the narrow-frequency choices.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

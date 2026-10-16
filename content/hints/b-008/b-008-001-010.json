@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-008-001-010",
+  "questionId": "B-008-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the receiver-mixing arithmetic from the lesson: combine the two listed RF frequencies and compare the result with the affected channel range.",
+      "fr": "Utilisez le calcul de mélange au récepteur vu dans la leçon : combinez les deux fréquences RF indiquées et comparez le résultat avec la plage du canal touché."
+    },
+    {
+      "level": 2,
+      "en": "Try the frequency difference, then choose the cure that acts before the affected receiver input can create that product.",
+      "fr": "Essayez la différence de fréquence, puis choisissez la mesure qui agit avant que l’entrée du récepteur touché puisse créer ce produit."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "worked-example-intermod-clue"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

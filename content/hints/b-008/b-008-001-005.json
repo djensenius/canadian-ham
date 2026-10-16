@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-005",
+  "questionId": "B-008-001-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what can happen to a weak wanted signal when a nearby station is active.",
+      "fr": "Revoyez ce qui peut arriver à un faible signal voulu quand une station voisine est active."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "receiver-overload-and-desensitization"
+  },
+  "singleLevelReason": "Symptom recall: any second hint would describe the correct receiver condition.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

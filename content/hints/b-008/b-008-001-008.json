@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-008",
+  "questionId": "B-008-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the vocabulary for strong-signal products created inside receiver circuitry.",
+      "fr": "Revoyez le vocabulaire des produits de signaux forts créés dans les circuits d’un récepteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "receiver-overload-and-desensitization"
+  },
+  "singleLevelReason": "Definition recall: a second hint would restate the term asked for.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

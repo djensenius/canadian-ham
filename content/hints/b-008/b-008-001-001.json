@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-001",
+  "questionId": "B-008-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the lesson topic on what happens at a receiver input when nearby RF is too large for normal operation.",
+      "fr": "Revoyez le sujet de la leçon sur ce qui arrive à l’entrée d’un récepteur quand la RF voisine est trop grande pour un fonctionnement normal."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "receiver-overload-and-desensitization"
+  },
+  "singleLevelReason": "Concept recall: a second hint would state the cause or eliminate the transmitter-fault choices.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-002",
+  "questionId": "B-008-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the troubleshooting observations used to separate receiver input trouble from transmitter-output trouble.",
+      "fr": "Revoyez les observations de dépannage qui séparent un problème à l’entrée du récepteur d’un problème à la sortie de l’émetteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "troubleshooting-mindset"
+  },
+  "singleLevelReason": "Diagnosis recall: another hint would identify the decisive observation among the options.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

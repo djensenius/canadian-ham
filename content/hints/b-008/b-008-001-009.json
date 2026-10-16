@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-009",
+  "questionId": "B-008-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the strong-nearby-transmitter symptoms that can affect mobile receivers.",
+      "fr": "Revoyez les symptômes dus à un émetteur très proche qui peuvent toucher des récepteurs mobiles."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "receiver-overload-and-desensitization"
+  },
+  "singleLevelReason": "Scenario recall: any more specific hint would identify the proximity-related cause.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
