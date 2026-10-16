@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-015-004",
+  "questionId": "B-001-015-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review band privileges for radio-controlled models.",
+      "fr": "Revoyez les privilèges de bande pour les modèles radiocommandés."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-operator-privileges-and-below-30-mhz-access"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
