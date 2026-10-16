@@ -1,10 +1,11 @@
 ---
 id: TASK-50.3
 title: 'Hint content batch: B-001 remaining regulation subsections'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 12:40'
+updated_date: '2026-10-16 12:43'
 labels:
   - content
 dependencies:
@@ -36,6 +37,12 @@ Write and review original EN/FR hint content for B-001 after the B-001-001 pilot
 - [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
 - [ ] #6 All in-scope B-001 remaining regulation active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Fix the hint checker shared-option exemption and add the B-001-003-003 regression self-test, then run its focused validation.\n2. For each remaining B-001 subsection, read the lesson/explanation/question source for that subsection, author original EN/FR hint files with real lesson anchors, run the subsection completion check, commit/push, and append a task-note progress line.\n3. After all B-001 subsections pass, run the category and repository checks, record counts/samples in task notes, finalize task criteria, and open the PR with Copilot requested.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
