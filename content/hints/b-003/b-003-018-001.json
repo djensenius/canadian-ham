@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review positive power-control methods for preventing unauthorized home-station operation.",
-      "fr": "Revoyez les méthodes de contrôle positif de l’alimentation pour prévenir l’utilisation non autorisée d’une station à domicile."
+      "en": "Review station access and electrical shock.",
+      "fr": "Revoyez l'accès à la station et les chocs électriques."
     }
   ],
   "lessonLink": {

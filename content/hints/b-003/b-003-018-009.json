@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the first safety requirement before touching a victim at a high-voltage source.",
-      "fr": "Revoyez la première exigence de sécurité avant de toucher une victime près d’une source haute tension."
+      "en": "Review station access and electrical shock.",
+      "fr": "Revoyez l'accès à la station et les chocs électriques."
     }
   ],
   "lessonLink": {
