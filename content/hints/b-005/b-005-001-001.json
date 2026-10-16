@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-001-001",
+  "questionId": "B-005-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the metric-prefix ladder: mega is one 1 000 step above kilo, so moving from MHz to kHz makes the number larger.",
+      "fr": "Utilisez l'échelle des préfixes métriques : méga est une étape de 1 000 au-dessus de kilo; de MHz vers kHz, le nombre augmente."
+    },
+    {
+      "level": 2,
+      "en": "Set it up as the MHz value x 1 000; keep the final unit as kHz after the conversion.",
+      "fr": "Posez la conversion ainsi : la valeur en MHz x 1 000; gardez kHz comme unité à la fin."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "the-metric-prefix-ladder"
+  },
+  "referenceSheetSection": "metric-prefixes",
+  "licenseClass": "original"
+}

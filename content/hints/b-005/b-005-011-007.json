@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-011-007",
+  "questionId": "B-005-011-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "With no losses, use the same power on the secondary and rearrange P = I x E.",
+      "fr": "Sans pertes, utilisez la même puissance au secondaire et réarrangez P = I x E."
+    },
+    {
+      "level": 2,
+      "en": "Set up secondary current as I = 10 W / 5 V, then keep the unit as amperes.",
+      "fr": "Posez le courant secondaire comme I = 10 W / 5 V, puis gardez l'ampère comme unité."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "transformer-power-calculations"
+  },
+  "referenceSheetSection": "power",
+  "licenseClass": "original"
+}

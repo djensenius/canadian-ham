@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-013-005",
+  "questionId": "B-005-013-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A voltmeter should disturb the circuit as little as possible while measuring E across a component.",
+      "fr": "Un voltmètre doit perturber le circuit le moins possible pendant qu'il mesure E aux bornes d'un composant."
+    },
+    {
+      "level": 2,
+      "en": "Use I = E / R for the meter path: what kind of R keeps the meter's own current tiny?",
+      "fr": "Utilisez I = E / R pour le trajet de l'appareil de mesure : quel type de R garde le courant propre à l'appareil très petit ?"
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "meters-and-how-to-connect-them"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

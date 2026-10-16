@@ -53,6 +53,8 @@ Keep two-level A+C hints where a method, formula, conversion, or principle helps
 
 For definition questions such as "What is X?", Hint 2 must not paraphrase the definition. Either teach a use or context that still leaves the learner to recall the definition, or use a one-level B pointer when any useful second hint would identify or eliminate an option.
 
+For concept questions in technical categories, a "principle" that is just the answer's content restated is a leak. Use a neutral topic pointer unless the learner still has a real method to compute or derive. For example, a voltage-drop definition question should use "Review what happens to E across each part of a working circuit" as a single-level pointer, not a second hint that says current through opposition leaves less electrical pressure after that section.
+
 For example, a band-name question can use the wavelength relationship without giving the range:
 
 - Hint 1: "A band's name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m)."

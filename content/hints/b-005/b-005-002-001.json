@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-002-001",
+  "questionId": "B-005-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Think about what each material is used for in electrical equipment.",
+      "fr": "Pensez à l’usage de chaque matériau dans l’équipement électrique."
+    },
+    {
+      "level": 2,
+      "en": "Check whether every item in a group is a metal; one non-metal is enough to spoil the group for this purpose.",
+      "fr": "Vérifiez si chaque élément du groupe est un métal; un seul non-métal suffit à écarter le groupe pour cet usage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "conductors-insulators-and-semiconductors"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-011-011",
+  "questionId": "B-005-011-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the practical signs of transformer losses in the transformers section.",
+      "fr": "Revoyez les signes pratiques des pertes de transformateur dans la section sur les transformateurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "transformers-and-magnetic-fields"
+  },
+  "singleLevelReason": "Pure observation recall: a second hint would name the physical sign of transformer loss.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

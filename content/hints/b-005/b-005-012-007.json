@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-007",
+  "questionId": "B-005-012-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "In series resonance, the L and C effects cancel along the single current path.",
+      "fr": "En résonance série, les effets de L et de C se compensent le long du trajet unique du courant."
+    },
+    {
+      "level": 2,
+      "en": "Once L and C cancel, ask what is left in Z = E / I to limit the current.",
+      "fr": "Une fois L et C compensés, demandez-vous ce qui reste dans Z = E / I pour limiter le courant."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

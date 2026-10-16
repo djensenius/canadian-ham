@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-007",
+  "questionId": "B-005-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the E, I, and R symbols used in the simple-circuit formulas.",
+      "fr": "Revoyez les symboles E, I et R utilisés dans les formules des circuits simples."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "current-resistance-and-conductance"
+  },
+  "singleLevelReason": "Pure symbol recall: a second hint would state which circuit quantity the symbol represents.",
+  "referenceSheetSection": "ohms-law",
+  "licenseClass": "original"
+}

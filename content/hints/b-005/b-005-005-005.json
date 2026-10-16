@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-005-005",
+  "questionId": "B-005-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "In a series network, the same current must pass through every resistor in turn.",
+      "fr": "Dans un montage en série, le même courant doit traverser chaque résistance à tour de rôle."
+    },
+    {
+      "level": 2,
+      "en": "Try a quick case: add 10, 20 and 30 ohms and compare the total with each part.",
+      "fr": "Essayez un cas rapide : additionnez 10, 20 et 30 ohms, puis comparez le total avec chaque résistance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "series-resistors-add"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}
