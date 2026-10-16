@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-017-003",
+  "questionId": "B-001-017-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review where transmitter power is verified after exposure and radiated-power checks.",
+      "fr": "Revoyez où la puissance d’émetteur est vérifiée après les contrôles d’exposition et de puissance rayonnée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-power-quantities-and-limits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
