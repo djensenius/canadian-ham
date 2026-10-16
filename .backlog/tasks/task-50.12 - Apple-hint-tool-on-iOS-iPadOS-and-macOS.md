@@ -4,7 +4,7 @@ title: 'Apple hint tool on iOS, iPadOS and macOS'
 status: To Do
 assignee: []
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 08:12'
+updated_date: '2026-10-16 11:49'
 labels:
   - apple
 dependencies:
@@ -30,4 +30,6 @@ Add the Hint tool to iOS/iPadOS/macOS practice and review sessions after task-44
 - [ ] #3 Apple accessibility tests cover the tool open state and hinted-answer flow on the affected platforms without widening to tvOS/visionOS.
 - [ ] #4 Reference-sheet pointer labels from referenceSheetSection are shown only on Apple surfaces where the reference sheet is available and hidden otherwise.
 - [ ] #5 Hint data is bundled into the Apple content package for iOS, iPadOS, and macOS offline use with the active Basic bank.
+- [ ] #6 A localized "Review in lesson" link from lessonLink opens the linked lesson at sectionAnchor without discarding the in-progress practice/review session.
+- [ ] #7 The hint tool handles one-level hint files by presenting only Hint 1, with no empty or broken Hint 2 affordance.
 <!-- AC:END -->
