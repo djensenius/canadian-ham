@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-003-003",
+  "questionId": "B-006-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why amateur stations often choose the shielded feedline for varied real-world routes.",
+      "fr": "Revoyez pourquoi les stations radioamateur choisissent souvent une ligne blindée pour des trajets réels variés."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "choosing-a-feedline-for-the-route"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-003-004",
+  "questionId": "B-006-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the connector-name examples for larger HF coax jumpers and transceivers.",
+      "fr": "Revoyez les exemples de noms de connecteurs pour les plus gros cavaliers coaxiaux HF et les émetteurs-récepteurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "common-connector-names"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall or concept item: a second hint would define the correct choice or eliminate distractors; topic pointer and lesson link only."
+}
