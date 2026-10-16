@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-007-003",
+  "questionId": "B-002-007-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Q-signal list for clear-frequency checks.",
+      "fr": "Revoyez la liste des signaux Q pour les vérifications de fréquence libre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "reference-fact-q-signals-used-and-compared-in-this-lesson"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
