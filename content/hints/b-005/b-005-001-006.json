@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-001-006",
+  "questionId": "B-005-001-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the prefix kilo changes a base unit such as the ohm.",
+      "fr": "Revoyez comment le préfixe kilo change une unité de base comme l'ohm."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "the-metric-prefix-ladder"
+  },
+  "singleLevelReason": "Pure prefix recall: a second hint would state the numeric prefix value and identify the answer.",
+  "referenceSheetSection": "metric-prefixes",
+  "licenseClass": "original"
+}

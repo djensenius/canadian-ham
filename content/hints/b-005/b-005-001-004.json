@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-001-004",
+  "questionId": "B-005-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Pico is much smaller than micro, so converting pF to µF makes the number much smaller.",
+      "fr": "Pico est beaucoup plus petit que micro; de pF vers µF, le nombre devient donc beaucoup plus petit."
+    },
+    {
+      "level": 2,
+      "en": "Use microfarads = picofarads / 1 000 000; place the given pF value into that setup without changing the physical capacitance.",
+      "fr": "Utilisez microfarads = picofarads / 1 000 000; insérez la valeur donnée en pF sans changer la capacitance physique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "the-metric-prefix-ladder"
+  },
+  "referenceSheetSection": "metric-prefixes",
+  "licenseClass": "original"
+}
