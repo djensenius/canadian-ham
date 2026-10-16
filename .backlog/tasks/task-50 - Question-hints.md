@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:57'
-updated_date: '2026-10-16 11:49'
+updated_date: '2026-10-16 12:06'
 labels: []
 dependencies: []
 documentation:
@@ -34,4 +34,6 @@ Owner-approved feature (2026-10-15): add per-question hints for the active ISED 
 Review follow-up hint style rules (owner rule: Hint 2 never gives the answer): hints must never eliminate answer options, paraphrase/list wrong options, or name/point at the correct answer's distinctive words. Hint 1 nudges toward the concept or principle. Hint 2 teaches the underlying relationship or setup well enough to reason from, and recall questions should explain how layers fit together without singling out the current option. Each hint must stand alone because practice order is random. Hints must not state facts that answer another question in the same subsection. French text must be natural and consistent, including ISED terminology such as "stations de radioamateur".
 
 Owner recall-ladder ruling applied (2026-10-16): default A+C means Hint 2 teaches distinctions among the involved concepts and links to the lesson section, while not connecting the asked-for function to this question's option. The old subsection rule is relaxed to "never directly state another question's answer"; shared distinctions are allowed. B is allowed when a recall question cannot have a useful non-giveaway Hint 2: the file may contain only Hint 1, and must include singleLevelReason plus lessonLink.
+
+Review follow-up (task-50 hints): lessonLink is required on every hint file by schema and checker, including calculation batches such as TASK-50.7 and TASK-50.8. Reference-sheet availability affects only referenceSheetSection pointer labels, not lessonLink metadata.
 <!-- SECTION:NOTES:END -->
