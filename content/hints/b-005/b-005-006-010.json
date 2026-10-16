@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-006-010",
+  "questionId": "B-005-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Two equal resistors in parallel give half the value of one branch, while two bodies can share heat.",
+      "fr": "Deux résistances égales en parallèle donnent la moitié de la valeur d'une branche, tandis que deux boîtiers peuvent partager la chaleur."
+    },
+    {
+      "level": 2,
+      "en": "Compare 100 ohms / 2 with the original value, then consider that two equal ratings are available instead of one.",
+      "fr": "Comparez 100 ohms / 2 avec la valeur d'origine, puis tenez compte de deux puissances nominales égales au lieu d'une seule."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "power-ratings-and-heat"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}

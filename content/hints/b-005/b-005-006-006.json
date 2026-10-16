@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-006-006",
+  "questionId": "B-005-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For fixed resistance, raising E also raises I because I = E / R.",
+      "fr": "Pour une résistance fixe, augmenter E augmente aussi I, car I = E / R."
+    },
+    {
+      "level": 2,
+      "en": "Power is P = I x E, so combine the voltage change and the matching current change.",
+      "fr": "La puissance suit P = I x E; combinez donc le changement de tension et le changement correspondant de courant."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "principle-voltage-doubled-power-changes-four-times"
+  },
+  "referenceSheetSection": "power",
+  "licenseClass": "original"
+}

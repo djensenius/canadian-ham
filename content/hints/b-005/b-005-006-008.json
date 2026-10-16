@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-006-008",
+  "questionId": "B-005-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Rearrange P = I x E to find current: I = P / E.",
+      "fr": "Réarrangez P = I x E pour trouver le courant : I = P / E."
+    },
+    {
+      "level": 2,
+      "en": "Substitute the lamp values as I = 30 W / 12 V, then keep the unit as amperes.",
+      "fr": "Remplacez les valeurs de la lampe par I = 30 W / 12 V, puis gardez l'ampère comme unité."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "power-ratings-and-heat"
+  },
+  "referenceSheetSection": "power",
+  "licenseClass": "original"
+}

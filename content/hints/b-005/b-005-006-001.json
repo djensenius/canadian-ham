@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-006-001",
+  "questionId": "B-005-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why resistor body size matters in the power-ratings section.",
+      "fr": "Revoyez pourquoi la taille du boîtier d'une résistance compte dans la section sur les puissances nominales."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "power-ratings-and-heat"
+  },
+  "singleLevelReason": "Pure concept recall: a second hint would closely describe the correct rating advantage.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

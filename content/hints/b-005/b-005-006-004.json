@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-006-004",
+  "questionId": "B-005-006-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "When equal resistors share power properly, their wattage ratings add.",
+      "fr": "Quand des résistances égales se partagent correctement la puissance, leurs puissances nominales s'additionnent."
+    },
+    {
+      "level": 2,
+      "en": "Use the count of resistor bodies times the rating of one body; do not change the ohmic value for this rating step.",
+      "fr": "Multipliez le nombre de boîtiers par la puissance nominale d'un seul; ne modifiez pas la valeur ohmique pour cette étape de cote."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "power-ratings-and-heat"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
