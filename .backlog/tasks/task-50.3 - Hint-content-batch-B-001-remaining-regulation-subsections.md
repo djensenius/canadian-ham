@@ -70,4 +70,6 @@ B-001-010 done: 10 hints (10 two-level, 0 single-level B). Validation: pnpm chec
 B-001-011 done: 10 hints (10 two-level, 0 single-level B). Validation: pnpm check:hints -- --subsection B-001-011 --require-complete passed.
 
 B-001-012 done: 4 hints (4 two-level, 0 single-level B). Validation: pnpm check:hints -- --subsection B-001-012 --require-complete passed.
+
+Steering cleanup: removed already-pushed template hints for B-001-006 through B-001-012 pending manual rewrite; discarded untracked generated B-001-013 through B-001-025 files and removed the temporary generator script. Rewriting B-001-002 through B-001-005 next for sample review.
 <!-- SECTION:NOTES:END -->
