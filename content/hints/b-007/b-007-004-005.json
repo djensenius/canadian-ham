@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-004-005",
+  "questionId": "B-007-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how changing path phases affect an evening net.",
+      "fr": "Revoyez comment les phases de trajets changeantes influencent un réseau du soir."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "worked-example-fading-in-an-evening-net"
+  },
+  "singleLevelReason": "Effect recall: a second hint would identify or eliminate a received-signal change; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

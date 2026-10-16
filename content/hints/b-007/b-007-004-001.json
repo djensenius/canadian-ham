@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-004-001",
+  "questionId": "B-007-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the lower-ionosphere daytime behaviour in the absorption section.",
+      "fr": "Revoyez le comportement de la basse ionosphère de jour dans la section sur l’absorption."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "absorption-and-fading"
+  },
+  "singleLevelReason": "Layer-effect recall: a second hint would identify or eliminate a layer or effect; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
