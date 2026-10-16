@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-006-011",
+  "questionId": "B-007-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the low-band seasonal planning note in the path-failure section.",
+      "fr": "Revoyez la note de planification saisonnière des bandes basses dans la section sur les trajets qui échouent."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "what-to-try-when-a-path-fails"
+  },
+  "singleLevelReason": "Band/condition recall: a second hint would identify or eliminate a band or condition; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

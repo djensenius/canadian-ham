@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-006-008",
+  "questionId": "B-007-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how daylight ionization changes the frequency window.",
+      "fr": "Revoyez comment l’ionisation diurne change la fenêtre de fréquences."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "muf-luf-critical-frequency-and-owf"
+  },
+  "singleLevelReason": "Trend recall: a second hint would identify or eliminate the direction of the daily frequency change; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

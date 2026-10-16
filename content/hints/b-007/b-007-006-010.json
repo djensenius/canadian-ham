@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-006-010",
+  "questionId": "B-007-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the working-frequency choice sits inside the usable window.",
+      "fr": "Revoyez comment le choix de la fréquence de travail se place dans la fenêtre utilisable."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "muf-luf-critical-frequency-and-owf"
+  },
+  "singleLevelReason": "Comparison recall: a second hint would identify or eliminate the relationship to the limit; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

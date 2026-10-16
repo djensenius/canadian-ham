@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-006-002",
+  "questionId": "B-007-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what changes the usable-frequency window in the MUF section.",
+      "fr": "Revoyez ce qui modifie la fenêtre de fréquences utilisables dans la section sur la FMU."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "muf-luf-critical-frequency-and-owf"
+  },
+  "singleLevelReason": "Cause recall: a second hint would identify or eliminate the MUF driver; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
