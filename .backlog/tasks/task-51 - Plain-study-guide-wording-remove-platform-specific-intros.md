@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-16 08:07'
+updated_date: '2026-10-16 08:15'
 labels:
   - web
   - apple
@@ -36,3 +36,16 @@ Owner request 2026-10-16: treat the app as an amateur radio study guide and drop
 3. Update tests that assert old copy, using the required Python JSON round-trip for Localizable.xcstrings.
 4. Run the required web, localization, text-source, and targeted Apple checks; record before/after strings and finish TASK-51.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Before/after copy updated:
+- Web/Apple Basic home intro: “Practice/Study with the committed/bundled 2025-07-15 Basic EN/FR/ISED question bank … on iPhone, iPad, and Mac / in this browser” -> “Study for the Canadian Amateur Radio Basic Qualification with the official ISED question bank.” FR -> “Étudiez en vue de la compétence de base radioamateur canadienne avec la banque de questions officielle d’ISDE.”
+- Web/Apple Advanced home intro: dated bundled-bank/device/browser wording -> “Study for the Canadian Amateur Radio Advanced Qualification with the official ISED question bank. Advanced progress is tracked separately from Basic.” FR updated naturally.
+- Apple Learn intro: removed “matching the web app”; now “Lessons are currently authored in English; official practice questions follow your Language setting.”
+- Apple Morse sending intro: removed Mac/iPad/iPhone device-family phrasing while keeping keyboard/touch instructions.
+- Apple About privacy: removed “This Apple/Apple TV/Apple Vision Pro app” wording while preserving offline/privacy/storage/session facts.
+- visionOS category subtitle: removed “for visionOS”.
+- App Store listing drafts checked; platform lists were retained because the listing metadata documents Apple platform availability as requested.
+<!-- SECTION:NOTES:END -->
