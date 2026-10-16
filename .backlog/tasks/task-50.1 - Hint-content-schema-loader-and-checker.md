@@ -1,11 +1,11 @@
 ---
 id: TASK-50.1
 title: 'Hint content schema, loader and checker'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 07:59'
+updated_date: '2026-10-16 08:02'
 labels:
   - content
 dependencies: []
@@ -30,11 +30,11 @@ Define the durable content contract for per-question Basic hints before large-sc
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A JSON schema and schema fixtures validate hint files with id, questionId, bankId, status, exactly two localized hint levels, optional referenceSheetSection, and licenseClass original.
-- [ ] #2 A TypeScript loader exposes hint records from content/hints with stable sorting and question-id lookup for apps/tools.
-- [ ] #3 A content-tools checker validates structure, active Basic question references, EN/FR completeness, no answer/option/question leakage with normalized matching, reference-sheet pointer rules, and original-content separation.
-- [ ] #4 The checker includes a self-test covering valid hints, leakage failures, missing EN/FR, invalid reference pointers, and n-gram false-positive tuning for common numbers/units.
-- [ ] #5 The new checker is wired into package scripts and CI alongside explanations and schema checks.
+- [x] #1 A JSON schema and schema fixtures validate hint files with id, questionId, bankId, status, exactly two localized hint levels, optional referenceSheetSection, and licenseClass original.
+- [x] #2 A TypeScript loader exposes hint records from content/hints with stable sorting and question-id lookup for apps/tools.
+- [x] #3 A content-tools checker validates structure, active Basic question references, EN/FR completeness, no answer/option/question leakage with normalized matching, reference-sheet pointer rules, and original-content separation.
+- [x] #4 The checker includes a self-test covering valid hints, leakage failures, missing EN/FR, invalid reference pointers, and n-gram false-positive tuning for common numbers/units.
+- [x] #5 The new checker is wired into package scripts and CI alongside explanations and schema checks.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -45,3 +45,17 @@ Define the durable content contract for per-question Basic hints before large-sc
 3. Add check-hints.ts with structure, active Basic references, EN/FR completeness, reference-section allowlist, normalized answer/option/question-fragment leakage checks, and a --self-test.
 4. Wire check:hints into package scripts and CI, then validate with focused tests/checks before writing pilot content.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented content/hints layout and README, hint.schema.json with fixtures/schema validation, packages/content-tools/src/hints.ts loader, check-hints.ts with --self-test, and CI/package script wiring. Leakage tuning uses exact meaningful answer/option phrase matching plus six-token significant question n-grams after dropping low-information numbers/units to reduce false positives.
+
+Validation passed for task-50.1: pnpm --filter @canadian-ham/content-tools typecheck; pnpm --filter @canadian-ham/content-tools test (125 tests); pnpm check:hints:self-test; pnpm check:hints; pnpm check:schemas.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented the Basic question-hint content contract: schema and fixtures, content/hints layout, TypeScript loader, check-hints checker/self-test with leakage/reference pointer/completeness support, and CI/script wiring. Verified with content-tools typecheck/tests, hint self-test/checker, and schema tests.
+<!-- SECTION:FINAL_SUMMARY:END -->
