@@ -56,6 +56,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialLessonID", "L-006-03"])
         XCTAssertTrue(app.buttons["Marquer la leçon comme lue"].firstMatch.waitForExistence(timeout: 10), "Expected localized Mark lesson read button")
+        XCTAssertTrue(app.staticTexts["Avant cette leçon"].firstMatch.waitForExistence(timeout: 5), "Expected localized Before this lesson heading")
         app.terminate()
 
         app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
@@ -928,6 +929,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.exists)
     }
 
+    func testLessonPrerequisiteNavigationAndAccessibilityLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditLessonPrerequisiteNavigation(appearance: .light)
+    }
+
+    func testLessonPrerequisiteNavigationAndAccessibilityDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        defer { XCUIDevice.shared.appearance = .light }
+        try auditLessonPrerequisiteNavigation(appearance: .dark)
+    }
+
     func testLessonQuizResultPersistsAfterRelaunch() throws {
         XCUIDevice.shared.appearance = .light
         var app = launchApp(arguments: [
@@ -1604,7 +1616,33 @@ final class CanadianHamPracticeUITests: XCTestCase {
         attachScreenshot(named: "task38-1-ios-ax5-ohms-law-power-wheel-inline", from: app)
 
         let enlargeButton = app.buttons["lesson-figure-ohms-law-power-wheel-enlarge"].firstMatch
-        scrollUntilHittable(enlargeButton, in: app, maxSwipes: 40)
+        func isEnlargeButtonReachableIgnoringHorizontalInset() -> Bool {
+            guard enlargeButton.exists, enlargeButton.isHittable else { return false }
+            let frame = enlargeButton.frame
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            let windowFrame = app.windows.firstMatch.frame
+            return frame.minY >= visibleFrame.minY - 1
+                && frame.maxY <= visibleFrame.maxY + 1
+                && frame.minX >= windowFrame.minX - 1
+                && frame.maxX <= windowFrame.maxX + 1
+        }
+        func scrollEnlargeButtonUntilHittable(maxSwipes: Int) {
+            let scrollView = scrollView(containing: enlargeButton, in: app)
+            guard scrollView.waitForExistence(timeout: 1) else {
+                XCTFail("Expected a scroll view while scrolling Ohm's law Enlarge figure button into view. Identifier: \(enlargeButton.identifier); label: \(enlargeButton.label)")
+                return
+            }
+            for _ in 0..<maxSwipes where !isEnlargeButtonReachableIgnoringHorizontalInset() {
+                let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+                if enlargeButton.exists && enlargeButton.frame.maxY <= visibleFrame.minY {
+                    scrollView.swipeDown()
+                } else {
+                    scrollView.swipeUp()
+                }
+                waitBriefly()
+            }
+        }
+        scrollEnlargeButtonUntilHittable(maxSwipes: 40)
         XCTAssertTrue(enlargeButton.isHittable, "Largest-text user should be able to reach the wheel's Enlarge figure button")
         enlargeButton.tap()
 
@@ -2054,6 +2092,32 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollPracticeReviewFeedbackIntoView(in: reviewApp)
         try auditIgnoringOccludedExamTextContrast(app: reviewApp, context: "\(appearance.rawValue) practice review feedback")
         reviewApp.terminate()
+    }
+
+    private func auditLessonPrerequisiteNavigation(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialLessonID", "L-006-03",
+            "-CanadianHamTheme", appearance.rawValue
+        ])
+        defer { app.terminate() }
+
+        let sourceTitle = app.descendants(matching: .any)["lesson-reader-title"].firstMatch
+        XCTAssertTrue(sourceTitle.waitForExistence(timeout: 10), "Expected prerequisite-bearing lesson reader to load")
+        XCTAssertEqual(sourceTitle.label, "Polarization, dipoles, and wavelength")
+        XCTAssertTrue(app.staticTexts["lesson-prerequisites-heading"].firstMatch.waitForExistence(timeout: 5), "Expected Before this lesson section")
+
+        let prerequisiteLink = app.buttons["lesson-prerequisite-link-L-006-02"].firstMatch
+        XCTAssertTrue(prerequisiteLink.waitForExistence(timeout: 5), "Expected prerequisite link for L-006-02")
+        XCTAssertTrue(prerequisiteLink.label.localizedCaseInsensitiveContains("Open lesson Loss, SWR, and matching"), "Expected accessible prerequisite link label, got: \(prerequisiteLink.label)")
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+        scrollUntilHittable(prerequisiteLink, in: app, maxSwipes: 8)
+        XCTAssertTrue(prerequisiteLink.isHittable, "Expected prerequisite link to be hittable")
+        prerequisiteLink.tap()
+
+        let destinationTitle = app.descendants(matching: .any)["lesson-reader-title"].firstMatch
+        XCTAssertTrue(destinationTitle.waitForExistence(timeout: 10), "Expected tapped prerequisite lesson to load")
+        XCTAssertEqual(destinationTitle.label, "Loss, SWR, and matching")
+        try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
     private func auditLearnFlow(appearance: AuditAppearance) throws {

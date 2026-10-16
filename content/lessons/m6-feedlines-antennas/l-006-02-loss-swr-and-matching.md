@@ -101,6 +101,15 @@ An antenna tuner does not tune the air. It transforms impedance so the transceiv
 
 A tuner near the transceiver protects the radio, but it does not remove loss in a feedline carrying high SWR. A tuner or matching transformer near the antenna feed point can reduce mismatch on the main feedline and reduce feedline loss.
 
+::figure swr-loss-matching
+Alt text: A station chain showing forward and reflected waves, plus a second sketch with the tuner at the antenna feed point.
+Text equivalent:
+- Top sketch: the rig, SWR meter, station-end ATU, lossy line, and antenna are in one chain.
+- A forward wave arrow travels from the station toward the antenna.
+- A reflected wave starts thick near the antenna and becomes thinner after the lossy line.
+- Bottom sketch: the rig feeds a long main line to a tuner placed at the antenna feed point.
+::
+
 Matching can be done with inductors, capacitors, transmission-line sections, or transformers. A transformer ratio is set mainly by its turns, not by a narrow tuned LC resonance, so a well-designed RF transformer can cover a broad frequency range. If source and load are purely resistive, maximum power transfer happens when their impedances are equal. Once the antenna is correctly matched to the line, changing feedline length does not improve the match.
 
 ### Misconception: the tuner changes antenna length

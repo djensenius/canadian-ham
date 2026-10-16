@@ -106,6 +106,34 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
   return null;
 }
 
+export function lessonHeadingAnchorSlug(headingText: string): string {
+  return stripInlineMarkdown(headingText)
+    .trim()
+    .replace(/<[^>]+>/g, "")
+    .toLowerCase()
+    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+    .trim()
+    .replace(/\s/g, "-");
+}
+
+export function lessonHeadingAnchors(markdown: string, title?: string): string[] {
+  const seen = new Map<string, number>();
+  const anchors: string[] = [];
+  for (const block of parseMarkdownBlocks(markdown, title)) {
+    if (block.type !== "heading") {
+      continue;
+    }
+    const baseSlug = lessonHeadingAnchorSlug(block.text);
+    if (baseSlug.length === 0) {
+      continue;
+    }
+    const previousCount = seen.get(baseSlug) ?? 0;
+    seen.set(baseSlug, previousCount + 1);
+    anchors.push(previousCount === 0 ? baseSlug : `${baseSlug}-${previousCount}`);
+  }
+  return anchors;
+}
+
 export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownBlock[] {
   const normalized = markdown.replace(/\r\n/g, "\n");
   const lines = normalized.split("\n");

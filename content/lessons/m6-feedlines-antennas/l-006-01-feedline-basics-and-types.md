@@ -95,6 +95,16 @@ A centre-fed dipole is a balanced antenna. A coax cable is unbalanced. A balun, 
 
 Put the balun where the balanced and unbalanced parts meet. For a coax-fed dipole, that point is usually the antenna feed point. For window line fed by an unbalanced tuner output, that point is at the tuner output before the balanced line begins.
 
+::figure feedline-types-balun
+Alt text: A radio feeding a centre-fed dipole through a balun, with coax, window-line, and open-wire cross-sections below.
+Text equivalent:
+- The top sketch shows a radio sending RF along a line to a balun at the dipole feed gap.
+- The dipole is drawn as two horizontal arms with a labelled centre feed gap.
+- The coax cross-section labels the centre conductor and shield.
+- The window-line cross-section shows two balanced conductors in a plastic web.
+- The open-wire cross-section shows two balanced conductors held apart by spreaders.
+::
+
 ### Worked example: feeding a simple dipole
 
 A backyard dipole is fed by fifty-ohm coax. The dipole legs should carry equal and opposite RF currents. The coax shield, however, is part of an unbalanced line.

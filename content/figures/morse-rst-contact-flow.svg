@@ -1,0 +1,16 @@
+<svg id="morse-rst-contact-flow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Morse contact and RST flow</title>
+  <desc>Morse contact timeline and RST gauge reminders.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="54" y1="244" x2="466" y2="244" stroke-width="6"/><polygon points="466,244 446,232 446,256" fill="currentColor" stroke="none"/>
+    <line x1="88" y1="220" x2="88" y2="268" stroke-width="5"/><line x1="160" y1="220" x2="160" y2="268" stroke-width="5"/><line x1="232" y1="220" x2="232" y2="268" stroke-width="5"/><line x1="304" y1="220" x2="304" y2="268" stroke-width="5"/><line x1="376" y1="220" x2="376" y2="268" stroke-width="5"/><line x1="448" y1="220" x2="448" y2="268" stroke-width="5"/>
+    <circle cx="80" cy="128" r="6" stroke-width="5"/><line x1="110" y1="128" x2="142" y2="128" stroke-width="5"/><circle cx="170" cy="128" r="6" stroke-width="5"/><circle cx="200" cy="128" r="6" stroke-width="5"/><line x1="230" y1="128" x2="262" y2="128" stroke-width="5"/><line x1="292" y1="128" x2="326" y2="128" stroke-width="5"/>
+    <rect x="510" y="92" width="88" height="268" rx="18" ry="18" stroke-width="6"/>
+    <path d="M530 160 C550 132 570 132 590 160" stroke-width="5"/><path d="M530 236 C550 208 570 208 590 236" stroke-width="5"/><path d="M530 312 C550 284 570 284 590 312" stroke-width="5"/>
+    <line x1="558" y1="160" x2="578" y2="132" stroke-width="5"/><line x1="558" y1="236" x2="584" y2="222" stroke-width="5"/><line x1="558" y1="312" x2="578" y2="288" stroke-width="5"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="198" y="92" font-size="24">dots and dashes</text><text x="88" y="310" font-size="24">QRL?</text><text x="160" y="310" font-size="24">CQ</text><text x="232" y="310" font-size="24">DE</text><text x="304" y="310" font-size="24">calls</text><text x="376" y="310" font-size="24">RST</text><text x="448" y="310" font-size="24">73</text>
+    <text x="554" y="126" font-size="24">R</text><text x="554" y="202" font-size="24">S</text><text x="554" y="278" font-size="24">T</text><text x="554" y="396" font-size="24">meter</text>
+  </g>
+</svg>

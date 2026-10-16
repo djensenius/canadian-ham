@@ -106,9 +106,16 @@ By the end of this lesson, you can:
 | Virtual exam setup | Use a computer with a camera, microphone, and stable internet connection. |
 | Virtual answer sheet | For a virtual exam, the examiner emails a blank answer sheet in advance. Print it, write answers on it during the exam, and follow the examiner's submission instructions. |
 
+::figure authority-records-exams
+Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.
+Text equivalent:
+- The drawing stacks Act, Regulations, ISED standards, and cert + call sign.
+- A separate address card says address and 30 days; an exam paths card branches to ISED and examiner.
+::
+
 ## How these rules fit together
 
-The legal-source rows are the top layer. The Act gives authority, the Regulations define the amateur service, ISED administers the Act, and the operating standards tell amateur stations how to operate.
+These legal sources work side by side, not as a chain. The Radiocommunication Act grants the powers, and ISED administers the Act. Under it, the Radiocommunication Regulations set binding service rules, including the amateur-service definition, and ISED issues technical operating standards such as RBR-4, which amateur stations follow when operating.
 
 Certificate rows combine two ideas. Your certificate lasts for your lifetime, but record duties continue. Keep the station copy, keep the address current, and be ready to show the certificate or a copy when a radio inspector properly asks.
 
@@ -157,6 +164,6 @@ During emergency-support practice, these facts reduce confusion. Operators who s
 
 ## Illustration brief
 
-Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.
+Alt text: A diagram of parallel authority roles beside station records and exam pathways.
 
-Description: Draw four stacked cards labelled "Act: legal authority," "Regulations: service definition," "ISED standards: station operation," and "Certificate and call sign: operator identity." Beside the stack, show a station desk with a certificate folder, an address-update reminder, and an exam checklist split into "ISED office" and "accredited examiner" branches. Use plain labels and original wording.
+Description: Draw the Radiocommunication Act as the source of powers. Give it two parallel branches: "Regulations: service definition and binding rules" and "ISED technical standards: station operation, including RBR-4." Show ISED administering the Act as a separate role. Beside the authority diagram, show a station desk with a folder labelled "Certificate and call sign", an address-update reminder, and an exam checklist split into "ISED office" and "accredited examiner" branches. Use plain labels and original wording.

@@ -13,6 +13,8 @@
     "check:quizzes": "node src/check-quizzes.ts",
     "check:quizzes:module": "node src/check-quizzes.ts",
     "check:explanations": "node src/check-explanations.ts",
+    "check:hints": "node src/check-hints.ts",
+    "check:hints:self-test": "node src/check-hints.ts --self-test",
     "check:lesson-originality": "node src/check-lesson-originality.ts ../../content/lessons/m5-basic-electronics",
     "check:lesson-originality:all": "node src/check-lesson-originality.ts --all",
     "check:reference-sheet": "node src/check-reference-sheet.ts",

@@ -1,10 +1,10 @@
 ---
 id: TASK-12
 title: Morse code 5 wpm trainer
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-03 12:03'
+updated_date: '2026-10-16 08:04'
 labels:
   - web
   - apple
@@ -41,3 +41,9 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 
 Owner decisions (2026-10-02, after trying the preview): (1) Morse becomes its own top-level section on every platform instead of a Settings toggle; this replaces 'off by default until v1 Basic ships'. (2) On macOS, settings move to the native Settings window. (3) Expand learning into a Duolingo-style course (task-12.5) and add listen-and-type copy practice alongside the exam (task-12.6).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+All 20 Morse subtasks are done: timing engine, audio/visual/haptic outputs, Koch course, copy practice and simulated 5 wpm exam, sending practice, top-level section, accessibility audits. Closed by the coordinator during board cleanup 2026-10-16.
+<!-- SECTION:FINAL_SUMMARY:END -->

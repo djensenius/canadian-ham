@@ -1,0 +1,31 @@
+<svg id="yagi-vertical-length" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img">
+  <title>Yagi element roles and quarter-wave vertical formula</title>
+  <desc>A top-view three-element Yagi labels reflector, driven element, director, main lobe, and a quarter-wave vertical with sloping radials.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M118 318 C230 312 372 312 520 318" stroke-width="8"/>
+    <path d="M190 152 C198 230 198 412 190 490" stroke-width="11"/>
+    <path d="M340 186 C348 250 348 392 340 456" stroke-width="11"/>
+    <path d="M492 224 C500 270 500 370 492 416" stroke-width="11"/>
+    <path d="M340 318 C310 344 280 372 250 398" stroke-width="6"/>
+    <path d="M530 318 C596 318 672 318 748 318" stroke-width="14"/>
+    <path d="M748 318 L700 286" stroke-width="14"/>
+    <path d="M748 318 L700 350" stroke-width="14"/>
+
+    <path d="M780 400 C780 438 780 488 780 530" stroke-width="10"/>
+    <path d="M780 530 C738 552 708 576 684 604" stroke-width="8"/>
+    <path d="M780 530 C822 552 852 576 876 604" stroke-width="8"/>
+    <path d="M780 530 C780 558 780 586 780 612" stroke-width="6"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="140" y="56" font-size="38" font-weight="700">reflector</text>
+    <text x="140" y="104" font-size="36">longer</text>
+    <text x="348" y="76" font-size="38" font-weight="700">driven</text>
+    <text x="348" y="124" font-size="36">feed</text>
+    <text x="560" y="136" font-size="38" font-weight="700">director</text>
+    <text x="560" y="184" font-size="36">shorter</text>
+    <text x="640" y="264" font-size="38" font-weight="700">main lobe</text>
+
+    <text x="650" y="430" font-size="38" font-weight="700">vertical</text>
+    <text x="600" y="530" font-size="36">71.3 / f(MHz)</text>
+  </g>
+</svg>

@@ -109,6 +109,15 @@ A square quad's feed point also affects polarization. The strongest current poin
 
 Feed point and height affect impedance and pattern, so practical loop antennas often need a matching device. The formula gives a first cut, not a finished guarantee.
 
+::figure loop-antenna-patterns
+Alt text: A dipole broadside pattern beside paired square quad loops and a triangular delta loop with H and V feed points marked.
+Text equivalent:
+- The dipole panel shows a short wire through a vertical doughnut-like pattern, with a broadside label above and weak labels near the wire ends.
+- The quad panel shows paired square loops on a boom with a feed point marked on the driven loop.
+- The delta panel shows a triangular loop with H feed at the bottom and V feed on the side.
+- The formula below the loop panels is loop length ≈ 306 / f(MHz).
+::
+
 ### Worked example: original horizontal loop
 
 A full-wave horizontal loop is planned near 10.1 MHz.

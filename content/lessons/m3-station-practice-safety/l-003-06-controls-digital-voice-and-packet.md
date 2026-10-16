@@ -41,6 +41,16 @@ By the end of this lesson, you can:
 
 A straight key depends on the operator's hand for timing. An electronic keyer still needs operator skill, but it automatically controls dit and dah length after the paddle is moved. That helps make readable characters at a steady speed.
 
+::figure controls-digital-voice-packet
+Alt text: A station control map links keyer timing, microphone gain, VOX, receiver noise tools, and a packet digipeater block.
+Text equivalent:
+- Paddle feeds keyer and TX key; microphone feeds gain and spch.
+- VOX controls the transmit path, and the radio box is labelled noise tools.
+- Packet frames go from station A to digipeater to station B.
+::
+
+
+
 A microphone is also a station control. Before using a different microphone, adjust microphone gain and check the transmitted audio. A dynamic microphone uses a coil and magnet principle, like a small loudspeaker working in reverse. Crystal microphones use a piezoelectric element. Condenser and electret microphones are capacitor-style elements that may need bias voltage and different gain.
 
 ### Worked example: setting up a new hand microphone

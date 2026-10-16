@@ -133,6 +133,16 @@ Use this table as a compact reference, not as a full band-plan chart.
 | 2 m | 144 MHz to 148 MHz | Common VHF local and repeater band |
 | 70 cm | 430 MHz to 450 MHz | Common UHF local and repeater band |
 
+::figure propagation-paths-skip-zone
+Alt text: Side-view Earth diagram showing VHF direct, ground wave, NVIS, and low-angle sky-wave paths through labelled D, E, F1, and F2 regions.
+Text equivalent:
+- The ionosphere labels climb upward as D, E, F1, and F2.
+- A VHF direct path runs between two hilltops.
+- A ground-wave path follows the Earth and fades after a short distance.
+- A steep NVIS path rises to the F-region area and returns nearby.
+- A lower-angle sky-wave path rises to the F-region area and returns much farther away; a skip-zone bracket is shown for that low-angle path.
+::
+
 ## Skip distance and skip zone
 
 Skip distance is the distance from the transmitter to the closest point reached by a returning sky wave on a chosen path. The skip zone is the gap after useful ground-wave coverage fades out but before the first sky-wave return point.
