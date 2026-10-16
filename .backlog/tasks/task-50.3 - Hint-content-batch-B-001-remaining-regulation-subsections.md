@@ -50,4 +50,6 @@ Write and review original EN/FR hint content for B-001 after the B-001-001 pilot
 Before writing this batch: fix the checker's shared-option exemption to count each candidate phrase's containment across all tokenized options, not only options that generated it. Copilot PR #259 thread PRRT_kwDOUxZq_M6tNLSW: B-001-003-003 'fine' appears in three options, but only 'A fine of $10 000' generates it, so 'Consider fine before choosing.' is wrongly rejected. Safe false positive; add a regression self-test.
 
 B-001-002 done: 9 hints (8 two-level, 1 single-level B: B-001-002-002). Validation: pnpm check:hints -- --subsection B-001-002 --require-complete passed.
+
+B-001-003 done: 8 hints (8 two-level, 0 single-level B). Validation: pnpm check:hints -- --subsection B-001-003 --require-complete passed.
 <!-- SECTION:NOTES:END -->
