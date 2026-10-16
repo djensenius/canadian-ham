@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 08:02'
+updated_date: '2026-10-16 11:50'
 labels:
   - content
 dependencies: []
@@ -52,10 +52,12 @@ Define the durable content contract for per-question Basic hints before large-sc
 Implemented content/hints layout and README, hint.schema.json with fixtures/schema validation, packages/content-tools/src/hints.ts loader, check-hints.ts with --self-test, and CI/package script wiring. Leakage tuning uses exact meaningful answer/option phrase matching plus six-token significant question n-grams after dropping low-information numbers/units to reduce false positives.
 
 Validation passed for task-50.1: pnpm --filter @canadian-ham/content-tools typecheck; pnpm --filter @canadian-ham/content-tools test (125 tests); pnpm check:hints:self-test; pnpm check:hints; pnpm check:schemas.
+
+Review follow-up after the 2026-10-16 recall-ladder ruling: hint.schema.json, the TypeScript loader, and check-hints now allow one or two hint levels; one-level files require singleLevelReason; every hint file requires lessonLink; check-hints validates the lesson ID and optional sectionAnchor against content/lessons heading anchors.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented the Basic question-hint content contract: schema and fixtures, content/hints layout, TypeScript loader, check-hints checker/self-test with leakage/reference pointer/completeness support, and CI/script wiring. Verified with content-tools typecheck/tests, hint self-test/checker, and schema tests.
+Implemented and review-updated the Basic question-hint content contract: schema/fixtures, TypeScript loader, check-hints checker/self-test with leakage, reference pointer, one-or-two-level, singleLevelReason, and lessonLink validation, plus CI/script wiring. Verified with content-tools tests/typecheck, hint self-test/checker, schema tests, import checks, and lesson originality checks.
 <!-- SECTION:FINAL_SUMMARY:END -->
