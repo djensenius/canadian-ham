@@ -76,4 +76,6 @@ Completed B-005-012: wrote 11 hint files (9 two-level resonance/tuned-circuit co
 Completed B-005-013: wrote 10 hint files (4 two-level meter-placement concept, 6 single-level recall); pnpm check:hints -- --subsection B-005-013 --require-complete passed.
 
 Finished B-005 hint content: 142/142 active questions covered (101 two-level, 41 single-level). Full validation passed: pnpm check:hints -- --category B-005 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. PR handoff will include per-subsection counts and samples.
+
+Opened PR #269 (task-50.7: B-005 hints) with per-subsection counts, 10 EN/FR samples with options, and checks run; added @copilot as reviewer.
 <!-- SECTION:NOTES:END -->
