@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 12:08'
+updated_date: '2026-10-16 12:18'
 labels:
   - content
 dependencies:
@@ -46,28 +46,20 @@ Write the first production hint batch for all active Basic questions in subsecti
 ## Implementation Notes
 
 <!-- SECTION:NOTES:BEGIN -->
-Implemented pilot hints for all 4 B-001-001 questions in content/hints/b-001. Each file has two EN/FR levels; no referenceSheetSection applies. Also made check-hints tolerate the standard pnpm bare -- argument separator used by root scripts.
+Implemented pilot hints for all 4 B-001-001 questions in content/hints/b-001. The pilot now follows the owner recall-ladder ruling from 2026-10-16: A+C by default, with one-level B files allowed when a non-giveaway Hint 2 is impossible. No referenceSheetSection applies.
 
-The original owner-tone sample pairs that used option elimination were superseded during review. Current pilot wording follows the no-elimination style, but B-001-001 is a pure-recall hierarchy subsection and the owner is deciding how recall-question ladders should work before these pairs are treated as final.
+Current pilot hint set:
 
-Review follow-up: the pilot was rewritten for no-elimination style; the final pairs come after the owner's recall-ladder ruling.
+- B-001-001-001 uses two levels and links to L-001-01#how-these-rules-fit-together. L1 EN: "Start with the source of legal power before looking at the more detailed radio rules that flow from it." FR: "Commencez par la source du pouvoir juridique avant d'examiner les règles de radiocommunication plus détaillées qui en découlent." L2 EN: "An Act grants legal powers. Under those powers, regulations set binding rules and the department issues technical operating standards; the department also administers the Act." FR: "Une loi confère des pouvoirs juridiques. En vertu de ces pouvoirs, les règlements fixent des règles obligatoires et le ministère publie des normes techniques d'exploitation ; le ministère applique aussi la loi."
+- B-001-001-002 uses two levels and links to L-001-01#reference-facts-authority-and-source-roles. L1 EN: "Focus on the authority behind a technical operating document, not on the document's title." FR: "Concentrez-vous sur l'autorité qui permet d'établir une norme technique d'exploitation, et non sur son titre." L2 is the same Act/regulations/department standards distinction used by 001.
+- B-001-001-003 is single-level and links to L-001-01#how-these-rules-fit-together. L1 EN: "Classify the role first by asking who administers the radio-rule framework." FR: "Classez d'abord le rôle en vous demandant qui administre le cadre des règles de radiocommunication." singleLevelReason: "Distinguishing the departments by mandate would identify ISED or eliminate the others."
+- B-001-001-004 is single-level and links to L-001-01#how-these-rules-fit-together. L1 EN: "First ask what type of legal text sets a formal definition." FR: "Demandez-vous d'abord quel type de texte juridique fixe une définition officielle." singleLevelReason: "Any Hint 2 explaining where legal definitions of radio services live identifies the Regulations."
 
-Validation passed for task-50.2: pnpm check:hints -- --subsection B-001-001 --require-complete; pnpm check:hints; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm import:check; pnpm install --frozen-lockfile; pnpm typecheck; pnpm test; pnpm check:hints:self-test. Initial pnpm typecheck failed before workspace dev dependencies were installed (tsc not found), then passed after pnpm install --frozen-lockfile.
-
-Owner recall-ladder ruling applied in review follow-up. Final B-001-001 pilot uses two levels for all four questions, with lessonLink `{ lessonId: "L-001-01", sectionAnchor: "how-these-rules-fit-together" }`:
-
-- B-001-001-001 L1 EN: "Start with the source of legal power before looking at the more detailed radio rules that flow from it." FR: "Commencez par la source du pouvoir juridique avant d'examiner les règles de radiocommunication plus détaillées qui en découlent." L2 EN: "The framework has layers: an Act gives legal authority; regulations are binding rules made under that authority; departmental standards are technical operating documents; the department administers the system." FR: "Le cadre s'organise en niveaux : une loi confère l'autorité juridique; les règlements sont des règles obligatoires prises sous cette autorité; les normes ministérielles sont des documents techniques d'exploitation; le ministère administre l'ensemble."
-- B-001-001-002 L1 EN: "Focus on the authority behind a technical operating document, not on the document's title." FR: "Concentrez-vous sur l'autorité qui permet d'établir une norme technique d'exploitation, et non sur son titre." L2 same distinctions text and lesson link as above.
-- B-001-001-003 L1 EN: "Classify the role first: this asks for the civilian federal organization that runs the radio-rule framework." FR: "Classez d'abord le rôle : on cherche l'organisation fédérale civile qui administre le cadre des règles radio." L2 same distinctions text and lesson link as above.
-- B-001-001-004 L1 EN: "Sort the fact by function: legal authority, binding categories, technical operating instructions, or the administering organization." FR: "Pour les définitions précises, triez le fait selon sa fonction : autorité juridique, catégories obligatoires, consignes techniques d'exploitation ou organisation responsable de l'administration." L2 same distinctions text and lesson link as above.
-
-Validation after rewrite: pnpm typecheck; pnpm test; pnpm check:hints:self-test; pnpm check:hints -- --subsection B-001-001 --require-complete; pnpm check:schemas; pnpm import:check; pnpm --filter @canadian-ham/content-tools check:lesson-originality; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all.
-
-Superseded note: the earlier note saying the owner was still deciding recall-question ladders is obsolete. The owner ruling of 2026-10-16 now applies: A+C by default, with B single-level allowed when a second level would leak the answer. The current pilot uses two levels for B-001-001-001/002 and one level with singleLevelReason for B-001-001-003/004.
+Validation passed for task-50.2: pnpm check:hints -- --subsection B-001-001 --require-complete; pnpm check:hints; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm import:check; pnpm install --frozen-lockfile; pnpm typecheck; pnpm test; pnpm check:hints:self-test. Initial pnpm typecheck failed before workspace dev dependencies were installed (tsc not found), then passed after pnpm install --frozen-lockfile. Review follow-up validation also passed: pnpm typecheck; pnpm test; pnpm check:hints:self-test; pnpm check:hints -- --subsection B-001-001 --require-complete; pnpm check:schemas; pnpm import:check; pnpm --filter @canadian-ham/content-tools check:lesson-originality; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Wrote and review-updated the B-001-001 pilot hint files, EN and FR, under the 2026-10-16 owner recall-ladder ruling. The final pilot uses two-level ladders that teach Act/regulation/departmental-standard/department distinctions without option elimination, adds lessonLink to L-001-01#how-these-rules-fit-together, and verifies with hint, schema, import, originality, typecheck, and test checks.
+Wrote and review-updated the B-001-001 pilot hint files, EN and FR, under the 2026-10-16 owner recall-ladder ruling. The final pilot uses two-level ladders for B-001-001-001/002, one-level hints with singleLevelReason for B-001-001-003/004, points B-001-001-002 at L-001-01#reference-facts-authority-and-source-roles, and verifies with hint, schema, import, originality, typecheck, and test checks.
 <!-- SECTION:FINAL_SUMMARY:END -->
