@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-002-006",
+  "questionId": "B-001-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Classify this as a record duty, document custody, inspection response, or administrative charge before looking for the detail.",
+      "fr": "Classez d'abord la situation : tenue du dossier, conservation du document, réponse à l'inspection ou frais administratifs."
+    },
+    {
+      "level": 2,
+      "en": "Certificate administration has separate buckets: keeping records current, keeping proof available, responding to an inspector, and handling charges. Pick the bucket first, then use the table row.",
+      "fr": "L'administration du certificat sépare la mise à jour du dossier, la preuve disponible, la réponse à l'inspecteur et les frais. Choisissez d'abord la catégorie, puis la ligne du tableau."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "reference-facts-certificate-records-addresses-and-call-sign-fees"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

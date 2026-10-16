@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-002-002",
+  "questionId": "B-001-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Treat this as the duration row for the certificate record, not as an address or charge rule.",
+      "fr": "Traitez ceci comme la ligne sur la durée du certificat, et non comme une règle d'adresse ou de frais."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "reference-facts-certificate-records-addresses-and-call-sign-fees"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint for this direct duration recall item would point to the lifetime-validity answer."
+}
