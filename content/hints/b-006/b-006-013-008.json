@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-013-008",
+  "questionId": "B-006-013-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how moving a square loop’s feed point changes the usual polarization.",
+      "fr": "Revoyez comment déplacer le point d’alimentation d’une boucle carrée change habituellement la polarisation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "delta-loops-and-polarization"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

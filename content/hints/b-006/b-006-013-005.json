@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-013-005",
+  "questionId": "B-006-013-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the practical full-wave loop estimate: loop length ≈ 306 / f(MHz).",
+      "fr": "Utilisez l’estimation pratique d’une boucle pleine onde : longueur de boucle ≈ 306 / f(MHz)."
+    },
+    {
+      "level": 2,
+      "en": "Substitute f = 28.7 MHz and keep the total length around the triangle.",
+      "fr": "Remplacez f par 28,7 MHz et gardez la longueur totale autour du triangle."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "quad-antennas"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

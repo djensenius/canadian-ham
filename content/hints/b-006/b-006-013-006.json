@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-013-006",
+  "questionId": "B-006-013-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the mechanical weather tradeoff of square-loop beams compared with straight-element beams.",
+      "fr": "Revoyez le compromis mécanique face aux intempéries des faisceaux à boucles carrées par rapport aux faisceaux à éléments droits."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "quad-antennas"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}
