@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what kind of signal is passed between the computer interface and the transceiver.",
-      "fr": "Revoyez le type de signal transmis entre l’interface d’ordinateur et l’émetteur-récepteur."
+      "en": "Review digital-mode station interfaces.",
+      "fr": "Revoyez les interfaces de station pour les modes numériques."
     }
   ],
   "lessonLink": {

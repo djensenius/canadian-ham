@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the transmit audio path from computer software toward the radio input.",
-      "fr": "Revoyez le trajet audio d’émission depuis le logiciel vers l’entrée radio."
+      "en": "Review digital-mode station interfaces.",
+      "fr": "Revoyez les interfaces de station pour les modes numériques."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the control line that changes a digital-mode station between listening and sending.",
-      "fr": "Revoyez la ligne de commande qui fait passer une station numérique de l’écoute à l’émission."
+      "en": "Review digital-mode station interfaces.",
+      "fr": "Revoyez les interfaces de station pour les modes numériques."
     }
   ],
   "lessonLink": {
