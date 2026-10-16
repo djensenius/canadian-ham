@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-008-011",
+  "questionId": "B-002-008-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what to do after hearing distress traffic you cannot assist directly.",
+      "fr": "Revoyez quoi faire après avoir entendu du trafic de détresse si vous ne pouvez pas aider directement."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "breaking-into-routine-traffic"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
+}

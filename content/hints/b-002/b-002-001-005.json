@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-001-005",
+  "questionId": "B-002-001-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the tone systems used with FM repeaters.",
+      "fr": "Revoyez les systèmes de tonalité utilisés avec les répéteurs FM."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "coordination-tones-and-offsets"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
+}

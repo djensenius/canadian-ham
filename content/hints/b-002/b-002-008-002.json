@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-008-002",
+  "questionId": "B-002-008-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the priority classes for emergency traffic.",
+      "fr": "Revoyez les classes de priorité du trafic radio."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "distress-urgency-and-safety-roles"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Priority-order recall: any second hint identifies or eliminates an option; topic pointer and lesson link only."
+}

@@ -30,6 +30,7 @@ Apply these constraints to every hint file:
 - Hints must never eliminate answer options. Do not paraphrase, list, contrast with, or otherwise point at wrong options.
 - Do not name the correct answer, copy distinctive words from it, or point at those distinctive words with near-synonyms.
 - Do not connect the asked-for function to one option in any hint level or across levels. Shared distinctions are fine; directly stating another question's answer is not.
+- For procedure and courtesy questions such as "why", "what should you do", or "which is good practice", a principle that maps onto the answer's components is a leak. For example, explaining that a directed repeater call needs the addressee first and then the source gives away the calling pattern, and saying brief repeater overs let urgent traffic enter gives away the courtesy action. Use a one-level neutral topic pointer instead.
 - Each hint must stand alone. Do not say "same as the previous question" or depend on practice order, because questions are randomized.
 - Use natural French with one term per concept across files. Prefer ISED terminology, including `stations de radioamateur`.
 - Reference-sheet pointers belong in `referenceSheetSection`, not in hint prose. The UI decides whether a pointer label is available.
@@ -49,6 +50,8 @@ Before accepting any hint, apply this self-test: could a learner who does not kn
 For B-001 recall items, there is often no space between a useful content hint and the answer. In those cases, use B: Hint 1 is a neutral, learner-facing topic pointer that names the lesson topic, not the rule, and the lesson link carries the teaching location. Do not write meta text such as "This item tests" or lookup text such as "use the row." Do not reuse a lesson-table row label as the pointer when the label contains the fact the learner is being asked to recall. Good B-001 topic pointers include "Review how the rules treat low-power amateur stations" and "Review the band-sharing rules for the amateur service." Use a `singleLevelReason` such as "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 
 Keep two-level A+C hints where a method, formula, conversion, or principle helps the learner work the question. The option self-test applies to stating facts or results, not to teaching a method the learner still has to apply. Do not state the computed result, name the matching option, or eliminate options by listing them. If a method hint includes a selection rule such as "nearest", "just below", or "starts there", work it against all four options in EN and FR before accepting it.
+
+For definition questions such as "What is X?", Hint 2 must not paraphrase the definition. Either teach a use or context that still leaves the learner to recall the definition, or use a one-level B pointer when any useful second hint would identify or eliminate an option.
 
 For example, a band-name question can use the wavelength relationship without giving the range:
 
