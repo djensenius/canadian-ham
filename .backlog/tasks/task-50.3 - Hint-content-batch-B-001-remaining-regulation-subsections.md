@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 13:04'
+updated_date: '2026-10-16 13:06'
 labels:
   - content
 dependencies:
@@ -110,4 +110,6 @@ B-001-015 manually written as calibrated topic-pointer B hints: 11 hints (0 two-
 Softened several B-001-011 and B-001-014 topic pointers before the B-001-015 review stop to avoid implying distress/visitor answer options. Validation: subsection checks for B-001-011 through B-001-015 all passed again.
 
 Updated README with method-hint rule and upgraded B-001-015 HF band-range recall to two-level wavelength-method hints (B-001-015-005 through -010). Validation: pnpm check:hints -- --subsection B-001-015 --require-complete passed.
+
+B-001-016 manually written as calibrated topic-pointer B hints: 11 hints (0 two-level, 11 single-level B). Validation: pnpm check:hints -- --subsection B-001-016 --require-complete passed.
 <!-- SECTION:NOTES:END -->
