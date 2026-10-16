@@ -1,10 +1,11 @@
 ---
 id: TASK-50.7
 title: 'Hint content batch: B-005 basic electronics and theory'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 11:50'
+updated_date: '2026-10-16 14:15'
 labels:
   - content
 dependencies:
@@ -36,3 +37,9 @@ Write and review original EN/FR hint content for B-005 electronics and theory qu
 - [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
 - [ ] #6 All in-scope B-005 basic electronics and theory active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read the B-005 source questions, M5 lessons, explanations, reference-sheet keys, and calibrated B-001 hint examples.\n2. Write hand-authored EN/FR hints for B-005 one subsection at a time, using formula/setup ladders where useful and single-level topic pointers only for pure recall.\n3. After each subsection, run pnpm check:hints with --subsection and --require-complete, commit, push, and record progress notes.\n4. Stop after B-005-001 and B-005-002 for calibration with six EN/FR samples before continuing.
+<!-- SECTION:PLAN:END -->
