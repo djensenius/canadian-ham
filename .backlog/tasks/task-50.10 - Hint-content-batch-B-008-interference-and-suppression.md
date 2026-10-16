@@ -34,4 +34,5 @@ Write and review original EN/FR hint content for B-008 interference and suppress
 - [ ] #3 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
 - [ ] #4 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
 - [ ] #5 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [ ] #6 After this final content batch, CI requires full Basic-bank hint completeness with check:hints -- --require-complete (or equivalent) before UI integration proceeds.
 <!-- AC:END -->
