@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-001-003",
+  "questionId": "B-001-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Think of the civilian spectrum manager: the federal department that handles radio licensing, call signs, and compliance.",
+      "fr": "Pensez au gestionnaire civil du spectre : le ministère fédéral qui s'occupe des licences radio, des indicatifs d'appel et de la conformité."
+    },
+    {
+      "level": 2,
+      "en": "Match the law to the industry-and-spectrum portfolio, not to a department focused on vehicles, military operations, or signals intelligence.",
+      "fr": "Associez la loi au portefeuille de l'industrie et du spectre, et non à un ministère axé sur les véhicules, les opérations militaires ou le renseignement d'origine électromagnétique."
+    }
+  ],
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

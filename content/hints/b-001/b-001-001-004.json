@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-001-004",
+  "questionId": "B-001-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Definitions usually live one layer below the broad statute. Look for the detailed Canadian rule text that explains what a radio service means.",
+      "fr": "Les définitions se trouvent souvent un niveau sous la loi générale. Cherchez le texte canadien de règles détaillées qui explique le sens d'un service radio."
+    },
+    {
+      "level": 2,
+      "en": "Set aside the enabling law, station-operation standards, and policy documents. The definition comes from the detailed rulebook for Canadian radio services.",
+      "fr": "Écartez la loi habilitante, les normes d'exploitation des stations et les documents de politique. La définition vient du recueil de règles détaillées pour les services radio canadiens."
+    }
+  ],
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

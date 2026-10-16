@@ -357,7 +357,9 @@ function parseArgs(argv: readonly string[]): HintCheckOptions & { readonly selfT
   const options: MutableHintCheckOptions & { selfTest: boolean } = { selfTest: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index]!;
-    if (arg === "--self-test") {
+    if (arg === "--") {
+      continue;
+    } else if (arg === "--self-test") {
       options.selfTest = true;
     } else if (arg === "--category") {
       options.categoryId = requireValue(argv, ++index, arg);
