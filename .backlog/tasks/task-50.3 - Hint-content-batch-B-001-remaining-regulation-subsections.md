@@ -62,4 +62,6 @@ B-001-006 done: 6 hints (6 two-level, 0 single-level B). Validation: pnpm check:
 B-001-007 done: 11 hints (11 two-level, 0 single-level B). Validation: pnpm check:hints -- --subsection B-001-007 --require-complete passed.
 
 B-001-008 done: 8 hints (8 two-level, 0 single-level B). Validation: pnpm check:hints -- --subsection B-001-008 --require-complete passed.
+
+B-001-009 done: 9 hints (9 two-level, 0 single-level B). Validation: pnpm check:hints -- --subsection B-001-009 --require-complete passed.
 <!-- SECTION:NOTES:END -->
