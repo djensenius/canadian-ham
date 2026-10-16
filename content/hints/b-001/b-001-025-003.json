@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-025-003",
+  "questionId": "B-001-025-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review EMCAB-2 equipment categories for home-entertainment devices.",
+      "fr": "Revoyez les catégories d’équipement ACEM-2 pour les appareils de divertissement domestique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-06",
+    "sectionAnchor": "reference-facts-emcab-2-interference-criteria"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

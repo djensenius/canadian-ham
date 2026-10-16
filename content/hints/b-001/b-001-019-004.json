@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-019-004",
+  "questionId": "B-001-019-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Modulation percentage measures how deeply audio varies the RF envelope; past a certain depth the envelope is cut off and the signal distorts and splatters.",
+      "fr": "Le taux de modulation mesure à quel point l’audio fait varier l’enveloppe RF; au-delà d’une certaine profondeur, l’enveloppe est écrêtée et le signal se déforme et déborde."
+    },
+    {
+      "level": 2,
+      "en": "Find the depth at which the envelope just touches zero without being cut off; that is the clean ceiling for voice.",
+      "fr": "Trouvez la profondeur à laquelle l’enveloppe touche tout juste zéro sans être écrêtée : c’est le plafond propre pour la voix."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "how-these-rules-fit-together"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

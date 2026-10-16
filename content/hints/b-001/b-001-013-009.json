@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-013-009",
+  "questionId": "B-001-013-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Decide which events in a conversation should always carry an identification, then add how long a listener might wait between them.",
+      "fr": "Déterminez quels moments d’une conversation doivent toujours porter une identification, puis ajoutez le temps qu’un auditeur pourrait attendre entre eux."
+    },
+    {
+      "level": 2,
+      "en": "Sketch a long conversation as a timeline. Mark the required identification points and the maximum gap between them, then compare each option’s timing with your marks.",
+      "fr": "Tracez une longue conversation sur une ligne du temps. Marquez les points d’identification requis et l’écart maximal entre eux, puis comparez le calendrier de chaque option à vos marques."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "memory-trick-start-stop-and-the-interval-check"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

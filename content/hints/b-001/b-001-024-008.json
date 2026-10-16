@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-024-008",
+  "questionId": "B-001-024-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the scope and factors covered by RF exposure rules.",
+      "fr": "Revoyez la portée et les facteurs couverts par les règles d’exposition RF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-06",
+    "sectionAnchor": "reference-facts-safety-code-6-and-rf-exposure"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

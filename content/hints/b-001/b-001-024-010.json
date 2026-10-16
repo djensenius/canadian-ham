@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-024-010",
+  "questionId": "B-001-024-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review Safety Code 6 RF-exposure rules.",
+      "fr": "Revoyez les règles d’exposition RF du Code de sécurité 6."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-06",
+    "sectionAnchor": "reference-facts-safety-code-6-and-rf-exposure"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

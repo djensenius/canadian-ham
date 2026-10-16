@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-017-001",
+  "questionId": "B-001-017-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the operating-power rules.",
+      "fr": "Revoyez les règles de puissance d’exploitation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-power-quantities-and-limits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
