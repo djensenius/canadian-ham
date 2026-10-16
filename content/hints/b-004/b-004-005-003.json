@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-005-003",
+  "questionId": "B-004-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the shared control action among the active-device families.",
+      "fr": "Revoyez l’action de commande partagée par les familles de composants actifs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "tube-and-fet-similarity"
+  },
+  "singleLevelReason": "Common-feature recall: a second hint would state the shared function directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

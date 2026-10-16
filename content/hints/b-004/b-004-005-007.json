@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-005-007",
+  "questionId": "B-004-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review where electrons start in the tube section.",
+      "fr": "Revoyez où les électrons prennent naissance dans la section sur les tubes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "triode-vacuum-tubes"
+  },
+  "singleLevelReason": "Electrode-role recall: a second hint would name the emitting electrode.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

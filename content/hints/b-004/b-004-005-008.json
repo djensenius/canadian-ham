@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-005-008",
+  "questionId": "B-004-005-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what the tube envelope contains in the triode section.",
+      "fr": "Revoyez ce que contient l’enveloppe du tube dans la section sur la triode."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "triode-vacuum-tubes"
+  },
+  "singleLevelReason": "Pure recall: a second hint would state the contents directly or eliminate the gases.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
