@@ -418,7 +418,7 @@ struct CalculatorToolView: View {
         [.four, .five, .six, .subtract],
         [.one, .two, .three, .add],
         [.toggleSign, .zero, .decimalPoint, .equals],
-        [.squareRoot, .square, .reciprocal, .percent],
+        [.percent, .squareRoot, .square, .reciprocal],
     ]
 
     var body: some View {
@@ -563,6 +563,7 @@ struct CalculatorToolView: View {
             break
         }
         switch press.characters {
+        case "\r", "\n": return .equals
         case "0": return .zero
         case "1": return .one
         case "2": return .two
@@ -694,15 +695,33 @@ private struct CalculatorKeyboardResponder: UIViewRepresentable {
         }
 
         override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-            var handled = false
-            for press in presses {
-                guard isActive, let key = calculatorKey(for: press) else { continue }
-                handled = true
+            let handledPresses = handledCalculatorPresses(in: presses)
+            for press in handledPresses {
+                guard let key = calculatorKey(for: press) else { continue }
                 onKey(key)
             }
-            if !handled {
-                super.pressesBegan(presses, with: event)
+            if handledPresses.count != presses.count {
+                super.pressesBegan(presses.subtracting(handledPresses), with: event)
             }
+        }
+
+        override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+            let handledPresses = handledCalculatorPresses(in: presses)
+            if handledPresses.count != presses.count {
+                super.pressesEnded(presses.subtracting(handledPresses), with: event)
+            }
+        }
+
+        override func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+            let handledPresses = handledCalculatorPresses(in: presses)
+            if handledPresses.count != presses.count {
+                super.pressesCancelled(presses.subtracting(handledPresses), with: event)
+            }
+        }
+
+        private func handledCalculatorPresses(in presses: Set<UIPress>) -> Set<UIPress> {
+            guard isActive else { return [] }
+            return Set(presses.filter { calculatorKey(for: $0) != nil })
         }
 
         private func syncFirstResponder() {

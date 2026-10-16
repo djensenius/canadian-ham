@@ -469,12 +469,10 @@ struct RootView: View {
             .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
 #endif
-#if os(macOS)
-            .frame(minWidth: 980, minHeight: 680)
-#endif
             .onAppear {
                 updateLanguage(from: progressStore.preferences)
                 applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
+                applyInitialSplitColumnVisibilityLaunchArgument()
                 updateRegularWidthExamToolColumnVisibility(containerSize: proxy.size)
             }
             .onChange(of: progressStore.preferences.language) { _, _ in
@@ -506,10 +504,26 @@ struct RootView: View {
                 updateRegularWidthExamToolColumnVisibility(containerSize: next)
             }
         }
+#if os(macOS)
+        .frame(minWidth: 980, minHeight: 680)
+#endif
     }
 
     private var combinedDataRevision: Int {
         dataRevision + appSettings.dataRevision
+    }
+
+    private func applyInitialSplitColumnVisibilityLaunchArgument() {
+#if DEBUG && os(iOS)
+        switch AppLaunchArguments.value(after: "-CanadianHamInitialSplitColumnVisibility") {
+        case "all":
+            splitColumnVisibility = .all
+        case "detailOnly":
+            splitColumnVisibility = .detailOnly
+        default:
+            break
+        }
+#endif
     }
 
     private func updateRegularWidthExamToolColumnVisibility(containerSize: CGSize) {

@@ -558,7 +558,8 @@ struct PracticeSessionView: View {
                             language: language,
                             selectedSourceIndex: selected,
                             showCorrectness: selected != nil && progressStore.preferences.practiceMode == .immediate,
-                            disabled: selected != nil && progressStore.preferences.practiceMode == .immediate
+                            disabled: selected != nil && progressStore.preferences.practiceMode == .immediate,
+                            onKeyboardFocus: clearCalculatorKeyboardFocus
                         ) {
                             clearCalculatorKeyboardFocus()
                             select(sourceIndex: sourceIndex, question: question)
@@ -1012,7 +1013,8 @@ struct MockExamView: View {
                             language: language,
                             selectedSourceIndex: state.selectedByQuestionId[question.id] ?? nil,
                             showCorrectness: false,
-                            disabled: false
+                            disabled: false,
+                            onKeyboardFocus: clearCalculatorKeyboardFocus
                         ) {
                             clearCalculatorKeyboardFocus()
                             state.selectedByQuestionId[question.id] = sourceIndex
@@ -1954,10 +1956,10 @@ struct ProgressExportDocument: FileDocument {
 struct QuestionCard: View {
     let question: BankQuestion
     let language: BankLanguage
-    var onInteraction: () -> Void = {}
+    var onInteraction: (() -> Void)? = nil
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        let card = VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text(question.id) // l10n: verbatim
                 .font(DesignTokens.FontScale.body.monospaced())
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -1972,7 +1974,12 @@ struct QuestionCard: View {
         .contentShape(Rectangle())
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("question-card")
-        .simultaneousGesture(TapGesture().onEnded { onInteraction() }, including: .gesture)
+
+        if let onInteraction {
+            card.simultaneousGesture(TapGesture().onEnded { onInteraction() }, including: .all)
+        } else {
+            card
+        }
     }
 }
 
@@ -1983,7 +1990,9 @@ struct AnswerChoiceButton: View {
     let selectedSourceIndex: Int?
     let showCorrectness: Bool
     let disabled: Bool
+    var onKeyboardFocus: (() -> Void)? = nil
     let action: () -> Void
+    @FocusState private var isKeyboardFocused: Bool
 
     private var letter: String { ["A", "B", "C", "D"][safe: displayIndex] ?? "\(displayIndex + 1)" }
     private var isSelected: Bool { selectedSourceIndex == answer.sourceIndex }
@@ -2026,6 +2035,12 @@ struct AnswerChoiceButton: View {
         .accessibilityLabel(accessibilityLabel) // l10n: content(question)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("answer-\(letter)-button")
+        .focused($isKeyboardFocused)
+        .onChange(of: isKeyboardFocused) { _, isFocused in
+            if isFocused {
+                onKeyboardFocus?()
+            }
+        }
     }
 
     private var statusText: String? {

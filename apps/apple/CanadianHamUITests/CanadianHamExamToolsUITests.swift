@@ -90,6 +90,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         typeCalculatorKeys(["4"], on: focusedCalculator)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "24", "Calculator should accept hardware input again after tapping back into the calculator")
 
+        assertQuestionStemRemainsSelectable(in: app)
+
         let questionCard = app.descendants(matching: .any)["question-card"].firstMatch
         XCTAssertTrue(questionCard.waitForExistence(timeout: 5), "Expected the question card before tapping non-text exam content")
         scrollBackgroundUntilHittable(questionCard, in: app, maxSwipes: 12)
@@ -186,8 +188,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testRegularWidthUsesInspectorAndKeepsAnswersHittable() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector layout is covered by the targeted iPad run.")
-        try runRegularWidthInspectorScenario(orientation: .portrait, expectedSidebarVisibility: .collapsed, context: "iPad portrait")
-        try runRegularWidthInspectorScenario(orientation: .landscapeLeft, expectedSidebarVisibility: .visible, context: "iPad landscape")
+        try runRegularWidthInspectorScenario(orientation: .portrait, expectedInitialSidebarVisibility: .collapsed, expectedOpenSidebarVisibility: .collapsed, context: "iPad portrait")
+        try runRegularWidthInspectorScenario(orientation: .portrait, expectedInitialSidebarVisibility: .visible, expectedOpenSidebarVisibility: .collapsed, extraArguments: ["-CanadianHamInitialSplitColumnVisibility", "all"], context: "iPad portrait visible sidebar")
+        try runRegularWidthInspectorScenario(orientation: .landscapeLeft, expectedInitialSidebarVisibility: .visible, expectedOpenSidebarVisibility: .visible, context: "iPad landscape")
         XCUIDevice.shared.orientation = .portrait
 #else
         throw XCTSkip("Inspector layout is covered by the targeted iPad run.")
@@ -274,6 +277,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     func testCaptureCalculatorEvidenceScreenshots() throws {
 #if os(iOS)
+        try XCTSkipUnless(evidenceDirectory() != nil, "Set CANADIAN_HAM_EXAM_TOOLS_EVIDENCE_DIR to write calculator evidence screenshots.")
         if UIDevice.current.userInterfaceIdiom == .pad {
             XCUIDevice.shared.orientation = .portrait
             waitBriefly(0.8)
@@ -341,23 +345,26 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         case visible
     }
 
-    private func runRegularWidthInspectorScenario(orientation: UIDeviceOrientation, expectedSidebarVisibility: SidebarVisibilityExpectation, context: String, file: StaticString = #filePath, line: UInt = #line) throws {
+    private func runRegularWidthInspectorScenario(
+        orientation: UIDeviceOrientation,
+        expectedInitialSidebarVisibility: SidebarVisibilityExpectation,
+        expectedOpenSidebarVisibility: SidebarVisibilityExpectation,
+        extraArguments: [String] = [],
+        context: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws {
         XCUIDevice.shared.orientation = orientation
         waitBriefly(0.8)
-        let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+        let app = launchPracticeQuestion(extraArguments: extraArguments + ["-CanadianHamForceRegularHorizontalSizeClass"])
         defer { app.terminate() }
 
         let initialSidebarVisible = isSidebarVisible(app.descendants(matching: .any)["root-sidebar"].firstMatch, in: app)
-        switch expectedSidebarVisibility {
-        case .collapsed:
-            XCTAssertFalse(initialSidebarVisible, "\(context): portrait starts with the system sidebar collapsed before opening the inspector on this width", file: file, line: line)
-        case .visible:
-            XCTAssertTrue(initialSidebarVisible, "\(context): landscape should start with the sidebar visible before opening the inspector", file: file, line: line)
-        }
+        assertSidebarVisibility(expectedInitialSidebarVisibility, in: app, context: "\(context) before opening calculator", file: file, line: line)
         openTool(.calculator, in: app)
         XCTAssertTrue(app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch.waitForExistence(timeout: 5), "\(context): regular width should present exam tools in an inspector side panel", file: file, line: line)
         waitBriefly(0.8)
-        assertSidebarVisibility(expectedSidebarVisibility, in: app, context: context, file: file, line: line)
+        assertSidebarVisibility(expectedOpenSidebarVisibility, in: app, context: "\(context) with calculator open", file: file, line: line)
         assertQuestionTitleWithinExamColumn(in: app, context: context, file: file, line: line)
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "\(context) calculator inspector", file: file, line: line)
         closeTool(in: app)
@@ -383,9 +390,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let visible = isSidebarVisible(sidebar, in: app)
         switch expected {
         case .collapsed:
-            XCTAssertFalse(visible, "\(context): opening an inspector tool in portrait should collapse the sidebar so the exam column is not dimmed or covered. Sidebar frame: \(frameDescription(sidebar.frame))", file: file, line: line)
+            XCTAssertFalse(visible, "\(context): expected the sidebar collapsed so the exam column is not dimmed or covered. Sidebar frame: \(frameDescription(sidebar.frame))", file: file, line: line)
         case .visible:
-            XCTAssertTrue(visible, "\(context): landscape has enough room for sidebar, exam column, and inspector; the sidebar should stay visible. Sidebar frame: \(frameDescription(sidebar.frame))", file: file, line: line)
+            XCTAssertTrue(visible, "\(context): expected the sidebar visible. Sidebar frame: \(frameDescription(sidebar.frame))", file: file, line: line)
         }
     }
 
@@ -526,7 +533,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             "calculator-key-4", "calculator-key-5", "calculator-key-6", "calculator-key-subtract",
             "calculator-key-1", "calculator-key-2", "calculator-key-3", "calculator-key-add",
             "calculator-key-toggle-sign", "calculator-key-0", "calculator-key-decimal", "calculator-key-equals",
-            "calculator-key-square-root", "calculator-key-square", "calculator-key-reciprocal", "calculator-key-percent"
+            "calculator-key-percent", "calculator-key-square-root", "calculator-key-square", "calculator-key-reciprocal"
         ]
     }
 
@@ -611,6 +618,19 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             scrollView.swipeUp()
             waitBriefly()
         }
+    }
+
+    private func assertQuestionStemRemainsSelectable(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let questionStem = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(questionStem.waitForExistence(timeout: 5), "Expected selectable question text", file: file, line: line)
+        positionElementFullyVisibleAboveToolSheet(questionStem, in: app, context: "selectable question text", file: file, line: line)
+        questionStem.press(forDuration: 1.0)
+        let selectionAction = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label == %@ OR label == %@", "Copy", "Select All"))
+            .firstMatch
+        XCTAssertTrue(selectionAction.waitForExistence(timeout: 3), "Long-pressing the question stem should expose text-selection actions instead of being swallowed by the calculator focus tap gesture", file: file, line: line)
+        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15)).tap()
+        waitBriefly(0.3)
     }
 
     private func focusCalculatorKeyboard(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
@@ -812,20 +832,22 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func saveScreenshot(named fileName: String, file: StaticString = #filePath, line: UInt = #line) throws {
-        let directory = evidenceDirectory()
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = fileName
+        attachment.lifetime = .keepAlways
+        add(attachment)
+
+        let directory = try XCTUnwrap(evidenceDirectory(), "Set CANADIAN_HAM_EXAM_TOOLS_EVIDENCE_DIR before saving calculator evidence screenshots.", file: file, line: line)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let url = directory.appendingPathComponent(fileName)
-        try XCUIScreen.main.screenshot().pngRepresentation.write(to: url, options: .atomic)
+        try screenshot.pngRepresentation.write(to: url, options: .atomic)
         XCTAssertTrue(FileManager.default.fileExists(atPath: url.path), "Expected screenshot at \(url.path)", file: file, line: line)
     }
 
-    private func evidenceDirectory() -> URL {
-        URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("docs/evidence/task-44.3", isDirectory: true)
+    private func evidenceDirectory() -> URL? {
+        ProcessInfo.processInfo.environment["CANADIAN_HAM_EXAM_TOOLS_EVIDENCE_DIR"]
+            .flatMap { $0.isEmpty ? nil : URL(fileURLWithPath: $0, isDirectory: true) }
     }
 
     private func frameDescription(_ frame: CGRect) -> String {
