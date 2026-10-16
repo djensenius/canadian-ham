@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-002-010",
+  "questionId": "B-007-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the daylight sub-region note in the layer-order section.",
+      "fr": "Revoyez la note sur les sous-régions de jour dans la section sur l’ordre des couches."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "the-ionosphere-in-layers"
+  },
+  "singleLevelReason": "Name recall: a second hint would identify or eliminate the sub-region labels; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

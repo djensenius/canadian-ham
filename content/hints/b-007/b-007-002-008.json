@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-002-008",
+  "questionId": "B-007-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how region height affects long path geometry.",
+      "fr": "Revoyez comment la hauteur d’une région influence la géométrie des trajets longs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "skip-distance-and-skip-zone"
+  },
+  "singleLevelReason": "Layer-geometry recall: a second hint would identify or eliminate a layer or property; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

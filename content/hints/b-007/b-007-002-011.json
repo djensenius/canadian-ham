@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-002-011",
+  "questionId": "B-007-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the layer-order memory trick.",
+      "fr": "Revoyez le truc mnémotechnique sur l’ordre des couches."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "memory-trick-d-e-f-climb-upward"
+  },
+  "singleLevelReason": "Layer-order recall: a second hint would identify or eliminate a layer position; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
