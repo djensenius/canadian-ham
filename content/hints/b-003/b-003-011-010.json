@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the final-amplifier power budget: useful RF output plus the energy that must be handled in the stage.",
-      "fr": "Revoyez le bilan de puissance de l’amplificateur final : sortie RF utile plus l’énergie que l’étage doit gérer."
+      "en": "Review AM envelope, sidebands and final-amplifier power.",
+      "fr": "Revoyez l'enveloppe AM, les bandes latérales et la puissance de l'amplificateur final."
     }
   ],
   "lessonLink": {
