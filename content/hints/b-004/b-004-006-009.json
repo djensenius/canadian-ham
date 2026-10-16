@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the resistor rating used for drift per degree.",
-      "fr": "Revoyez la caractéristique d’une résistance utilisée pour la dérive par degré."
+      "en": "Review the resistor ratings that colour bands do not tell you.",
+      "fr": "Revoyez les caractéristiques des résistances que les bandes de couleur n’indiquent pas."
     }
   ],
   "lessonLink": {

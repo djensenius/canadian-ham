@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what a bipolar part is doing when it is deliberately driven between its two hard states.",
-      "fr": "Revoyez ce qu’un composant bipolaire fait lorsqu’il est volontairement poussé entre ses deux états extrêmes."
+      "en": "Review the transistor-switching subsection.",
+      "fr": "Revoyez la sous-section sur la commutation par transistor."
     }
   ],
   "lessonLink": {
