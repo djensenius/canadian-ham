@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:20'
+updated_date: '2026-10-16 14:21'
 labels:
   - content
 dependencies:
@@ -54,4 +54,6 @@ Completed B-005-002 calibration slice: wrote 11 hint files (3 two-level concept/
 Calibration fixes applied after review: neutralized B-005-002-002 L1 and B-005-002-006 pointer; re-ran B-005-001 and B-005-002 subsection checks successfully. Continuing through remaining B-005 subsections.
 
 Completed B-005-003: wrote 11 hint files (6 two-level concept/method, 5 single-level recall); pnpm check:hints -- --subsection B-005-003 --require-complete passed.
+
+Completed B-005-004: wrote 11 two-level Ohm's law method hints; pnpm check:hints -- --subsection B-005-004 --require-complete passed.
 <!-- SECTION:NOTES:END -->
