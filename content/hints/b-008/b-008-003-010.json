@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-010",
+  "questionId": "B-008-003-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the amplifier-instability cause described in the layout and neutralization discussion.",
+      "fr": "Revoyez la cause d’instabilité d’amplificateur décrite avec l’implantation et la neutralisation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "parasitic-oscillation"
+  },
+  "singleLevelReason": "Cause recall: another hint would state which feedback direction causes the problem.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

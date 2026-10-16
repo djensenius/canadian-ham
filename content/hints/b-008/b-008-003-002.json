@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-002",
+  "questionId": "B-008-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the transmitter-output category for unwanted signals near or away from the intended channel.",
+      "fr": "Revoyez la catégorie de sortie de l’émetteur pour les signaux indésirables près ou loin du canal voulu."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "spurious-emissions"
+  },
+  "singleLevelReason": "Classification recall: another hint would name the transmitter-output category.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-005",
+  "questionId": "B-008-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the difference between local Morse switching noise and distant reports about the transmitted envelope.",
+      "fr": "Revoyez la différence entre le bruit local de commutation en Morse et les rapports éloignés sur l’enveloppe transmise."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "key-clicks-and-waveform-shape"
+  },
+  "singleLevelReason": "Morse symptom recall: a second hint would state the local source named in the option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-011",
+  "questionId": "B-008-003-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review where unintended amplifier self-oscillation can appear relative to the intended operating frequency.",
+      "fr": "Revoyez où une auto-oscillation indésirable d’amplificateur peut apparaître par rapport à la fréquence d’exploitation voulue."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "parasitic-oscillation"
+  },
+  "singleLevelReason": "Range recall: any second hint would state the frequency relationship asked for.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

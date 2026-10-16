@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-007",
+  "questionId": "B-008-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Morse transmitter section on keying waveform and occupied bandwidth.",
+      "fr": "Revoyez la section sur la forme d’onde de manipulation Morse et la largeur de bande occupée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "key-clicks-and-waveform-shape"
+  },
+  "singleLevelReason": "Cause recall: another hint would name the waveform problem that selects the option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

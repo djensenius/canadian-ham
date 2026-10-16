@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-008",
+  "questionId": "B-008-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review which transmitter stages are checked when Morse reports point to the keying waveform.",
+      "fr": "Revoyez quels étages de l’émetteur sont vérifiés quand les rapports en Morse pointent vers la forme d’onde de manipulation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "key-clicks-and-waveform-shape"
+  },
+  "singleLevelReason": "Repair recall: any second hint would name the parts to check.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
