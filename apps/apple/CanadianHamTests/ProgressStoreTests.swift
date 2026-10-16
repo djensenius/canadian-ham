@@ -2597,7 +2597,7 @@ final class ProgressStoreTests: XCTestCase {
 
     func testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         let context = ModelContext(container)
@@ -2649,7 +2649,7 @@ final class ProgressStoreTests: XCTestCase {
     }
 
     func testMigratesArchivedLessonProgressKeepsMaxOwnReadCount() throws {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         let context = ModelContext(container)
@@ -2752,7 +2752,7 @@ final class ProgressStoreTests: XCTestCase {
             try context.save()
         }
 
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "directInit")
@@ -2781,9 +2781,70 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try verificationContext.fetch(FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == record.questionId })).count, 2)
     }
 
+    func testMigratesProgressStoreV3ToV4PadsAndPersistsAnsweredWithHelpFields() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let storeURL = try temporaryProgressStoreURL()
+        let encoder = JSONEncoder()
+        let recentResults = [true, false]
+
+        do {
+            let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+            let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
+            let container = try ModelContainer(for: schema, configurations: [configuration])
+            let context = ModelContext(container)
+            context.insert(CanadianHamProgressSchemaV3.QuestionProgressEntity(
+                questionId: "B-001-001-001",
+                bankId: bank.manifest.bankId,
+                attempts: 2,
+                correctAttempts: 1,
+                lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+                lastResult: AnswerResult.incorrect.rawValue,
+                recentResultsData: try encoder.encode(recentResults),
+                leitnerBox: 2,
+                dueAt: "2026-01-05T03:04:05.000Z",
+                notes: "v3",
+                deviceId: "device"
+            ))
+            try context.save()
+        }
+
+        let hintedRecord: QuestionProgressRecord
+        do {
+            let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
+            let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
+            let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+            let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "v3v4Migration")
+            let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device", defaults: testDefaults, defaultsDomainName: testDefaultsName)
+            let migrated = try XCTUnwrap(store.questionProgressRecords().first)
+            XCTAssertFalse(migrated.lastAnsweredWithHelp)
+            XCTAssertEqual(migrated.recentAnsweredWithHelp, [false, false])
+
+            hintedRecord = try applyAnswer(existing: migrated, update: AnswerUpdate(
+                questionId: migrated.questionId,
+                bankId: migrated.bankId,
+                isCorrect: true,
+                now: "2026-01-02T04:04:05.000Z",
+                answeredWithHelp: true
+            ))
+            try store.saveQuestionProgress([hintedRecord])
+        }
+
+        do {
+            let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
+            let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
+            let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+            let (testDefaults, testDefaultsName) = try temporaryDefaultsSuite(prefix: "v3v4Reload")
+            let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device", defaults: testDefaults, defaultsDomainName: testDefaultsName)
+            let reloaded = try XCTUnwrap(store.questionProgressRecords().first)
+            XCTAssertEqual(reloaded, hintedRecord)
+            XCTAssertTrue(reloaded.lastAnsweredWithHelp)
+            XCTAssertEqual(reloaded.recentAnsweredWithHelp.last, true)
+        }
+    }
+
     func testProgressStoreDeduplicatesV2EntitiesWithoutUniqueConstraints() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         let context = ModelContext(container)
@@ -3023,7 +3084,7 @@ final class ProgressStoreTests: XCTestCase {
     }
 
     private func preferencesContainer(language: String) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         let context = ModelContext(container)

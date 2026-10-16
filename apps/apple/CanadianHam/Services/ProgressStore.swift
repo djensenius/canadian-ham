@@ -918,7 +918,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let configuration: ModelConfiguration
         if isStoredInMemoryOnly {
             configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
@@ -929,7 +929,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func makeSplitModelContainer(iCloudSyncEnabled: Bool, isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let plan = configurationPlan(iCloudSyncEnabled: iCloudSyncEnabled)
         let progressSchema = Schema([QuestionProgressEntity.self, ExamAttemptEntity.self, LessonProgressEntity.self, LessonQuizAttemptEntity.self, MorseCourseProgressEntity.self])
         let preferencesSchema = Schema([PreferencesEntity.self])
