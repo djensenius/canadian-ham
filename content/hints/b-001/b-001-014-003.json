@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-014-003",
+  "questionId": "B-001-014-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review Canada’s rule for international third-party communication.",
+      "fr": "Revoyez la règle canadienne sur les communications internationales de tiers."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-third-party-and-visiting-operator-communication"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

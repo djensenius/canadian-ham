@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-014-008",
+  "questionId": "B-001-014-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review who counts as a third party when non-certified people are at both ends.",
+      "fr": "Revoyez qui compte comme tiers lorsque des personnes non certifiées se trouvent aux deux bouts."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-third-party-and-visiting-operator-communication"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
