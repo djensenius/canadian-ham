@@ -85,14 +85,34 @@ function isNodeError(error: unknown): error is NodeJS.ErrnoException {
   return error instanceof Error && "code" in error;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function sortKey(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+async function readQuestionHint(filePath: string): Promise<LoadedQuestionHint> {
+  const source = await readFile(filePath, "utf8");
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(source);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`${filePath}: failed to parse JSON: ${message}`);
+  }
+  const record = isRecord(parsed) ? parsed : {};
+  return { ...record, filePath } as LoadedQuestionHint;
+}
+
 export async function loadQuestionHints(options: LoadQuestionHintsOptions = {}): Promise<readonly LoadedQuestionHint[]> {
   const hintRoot = options.hintRoot ?? DEFAULT_HINT_ROOT;
   const hints: LoadedQuestionHint[] = [];
   for (const filePath of await findJsonFiles(hintRoot)) {
-    const parsed = JSON.parse(await readFile(filePath, "utf8")) as QuestionHint;
-    hints.push({ ...parsed, filePath });
+    hints.push(await readQuestionHint(filePath));
   }
-  return hints.sort((a, b) => a.questionId.localeCompare(b.questionId) || a.id.localeCompare(b.id) || a.filePath.localeCompare(b.filePath));
+  return hints.sort((a, b) => sortKey(a.questionId).localeCompare(sortKey(b.questionId)) || sortKey(a.id).localeCompare(sortKey(b.id)) || a.filePath.localeCompare(b.filePath));
 }
 
 export function questionHintsByQuestionId(hints: readonly QuestionHint[]): ReadonlyMap<string, QuestionHint> {

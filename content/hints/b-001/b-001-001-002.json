@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Use the same hierarchy as for making radio rules. Operating standards can be published because a higher federal statute delegates that power.",
-      "fr": "Utilisez la même hiérarchie que pour établir des règles radio. Les normes d'exploitation peuvent être publiées parce qu'une loi fédérale supérieure délègue ce pouvoir."
+      "en": "Focus on authority, not on the wording of the standard. Publishing a standard depends on delegated legal power.",
+      "fr": "Concentrez-vous sur le pouvoir, pas sur le libellé de la norme. La publication d'une norme dépend d'un pouvoir juridique délégué."
     },
     {
       "level": 2,
-      "en": "Do not choose the standards themselves or the rule text that defines the service. Trace the publishing authority back to the broad Canadian radio law.",
-      "fr": "Ne choisissez pas les normes elles-mêmes ni le texte de règles qui définit le service. Remontez le pouvoir de publication jusqu'à la grande loi canadienne sur la radio."
+      "en": "In the Canadian radio hierarchy, operating standards for amateur stations sit below the legal source that lets the department issue them.",
+      "fr": "Dans la hiérarchie canadienne de la radiocommunication, les normes d'exploitation des stations de radioamateur se trouvent sous la source juridique qui permet au ministère de les publier."
     }
   ],
   "referenceSheetSection": null,

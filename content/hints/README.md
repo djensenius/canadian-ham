@@ -13,3 +13,18 @@ Each Basic question hint file uses `packages/schemas/hint.schema.json`:
 - `licenseClass`: `original`.
 
 Hints must not copy official ISED question text, answer option text, or reference-sheet content.
+
+## Hint style rules
+
+The owner rule is: Hint 2 never gives the answer. Apply these constraints to every hint file:
+
+- Hints must never eliminate answer options. Do not paraphrase, list, contrast with, or otherwise point at wrong options.
+- Do not name the correct answer, copy distinctive words from it, or point at those distinctive words with near-synonyms.
+- Hint 1 nudges toward the concept, formula, relationship, or reference-sheet area.
+- Hint 2 teaches the underlying relationship or setup well enough for the learner to reason from it. For recall questions, explain how the pieces fit together, such as Act → Regulations → standards → department, without singling out this question's option.
+- Each hint must stand alone. Do not say "same as the previous question" or depend on practice order, because questions are randomized.
+- Do not state a fact that answers another question in the same subsection.
+- Use natural French with one term per concept across files. Prefer ISED terminology, including `stations de radioamateur`.
+- Reference-sheet pointers belong in `referenceSheetSection`, not in hint prose. The UI decides whether a pointer label is available.
+
+The checker deliberately treats some short distractor words as meaningful when they are the whole option. That can create safe false positives for common words such as "never"/"jamais"; rewrite the hint instead of weakening the checker unless a reviewer approves a narrower rule.

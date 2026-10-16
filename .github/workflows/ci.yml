@@ -177,6 +177,7 @@ jobs:
           node packages/content-tools/src/check-explanations.ts
           node packages/content-tools/src/check-hints.ts --self-test
           node packages/content-tools/src/check-hints.ts
+          node packages/content-tools/src/check-hints.ts --subsection B-001-001 --require-complete
           node packages/content-tools/src/check-quizzes.ts
           node packages/content-tools/src/check-lesson-coverage.ts
           node packages/content-tools/src/check-lesson-originality.ts --all

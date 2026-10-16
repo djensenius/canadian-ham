@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Definitions usually live one layer below the broad statute. Look for the detailed Canadian rule text that explains what a radio service means.",
-      "fr": "Les définitions se trouvent souvent un niveau sous la loi générale. Cherchez le texte canadien de règles détaillées qui explique le sens d'un service radio."
+      "en": "Look for the layer that turns the broad legal power into working definitions for Canadian radio services.",
+      "fr": "Cherchez le niveau qui transforme le pouvoir juridique général en définitions pratiques pour les services de radiocommunication canadiens."
     },
     {
       "level": 2,
-      "en": "Set aside the enabling law, station-operation standards, and policy documents. The definition comes from the detailed rulebook for Canadian radio services.",
-      "fr": "Écartez la loi habilitante, les normes d'exploitation des stations et les documents de politique. La définition vient du recueil de règles détaillées pour les services radio canadiens."
+      "en": "Use the hierarchy: the top legal source grants power; detailed rules define service categories; station standards then describe how stations operate.",
+      "fr": "Utilisez la hiérarchie : la source juridique supérieure donne le pouvoir; les règles détaillées définissent les catégories de services; les normes des stations expliquent ensuite l'exploitation des stations."
     }
   ],
   "referenceSheetSection": null,

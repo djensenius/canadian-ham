@@ -258,6 +258,30 @@ test("generated bank subsections reject non-importer lesson and title fields", (
   );
 });
 
+test("hint schema rejects each ladder constraint independently", () => {
+  const hint = readValidFixture("hint.json");
+  assertSchemaRejects(
+    { ...hint, hints: [{ ...hint.hints[0], level: 2 }, hint.hints[1]] },
+    "hint.schema.json",
+    "$.hints[0].level: expected const 1",
+  );
+  assertSchemaRejects(
+    { ...hint, hints: [hint.hints[0]] },
+    "hint.schema.json",
+    "$.hints: expected at least 2 item(s)",
+  );
+  assertSchemaRejects(
+    { ...hint, referenceSheetSection: "unknown-section" },
+    "hint.schema.json",
+    "$.referenceSheetSection: expected one of",
+  );
+  assertSchemaRejects(
+    { ...hint, licenseClass: "copied" },
+    "hint.schema.json",
+    "$.licenseClass: expected const",
+  );
+});
+
 function readValidFixture(fixture) {
   return JSON.parse(fs.readFileSync(path.join(validFixturesDir, fixture), "utf8"));
 }

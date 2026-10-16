@@ -1,11 +1,15 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { checkHints, HintCheckError, runHintCheckerSelfTest } from "../src/check-hints.ts";
-import { hintForQuestion, loadQuestionHints, questionHintsByQuestionId } from "../src/hints.ts";
+import { requiredReferenceSheetSections } from "../src/check-reference-sheet.ts";
+import { hintForQuestion, loadQuestionHints, questionHintsByQuestionId, referenceSheetSectionKeys, referenceSheetSectionLabels } from "../src/hints.ts";
+
+const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
 
 async function withFixture(testName: string, run: (root: string) => Promise<void>): Promise<void> {
   const root = await mkdtemp(path.join(tmpdir(), `canadian-ham-hints-test-${testName}-`));
@@ -79,6 +83,35 @@ test("hint loader sorts records and exposes question lookup helpers", async () =
     assert.equal(questionHintsByQuestionId(hints).get("B-001-001-001")?.id, "HINT-B-001-001-001");
     assert.equal(hintForQuestion(hints, "missing"), null);
   });
+});
+
+test("hint loader reports parse errors with the file path and tolerates missing sort keys", async () => {
+  await withFixture("loader-errors", async (root) => {
+    const hintRoot = path.join(root, "content/hints");
+    const badPath = path.join(hintRoot, "b-001/bad.json");
+    await writeFile(badPath, "{not-json", "utf8");
+    await assert.rejects(
+      () => loadQuestionHints({ hintRoot }),
+      (error: unknown) => error instanceof Error && error.message.includes(badPath) && error.message.includes("failed to parse JSON"),
+    );
+
+    await writeFile(badPath, `${JSON.stringify({ id: "HINT-B-001-001-999", licenseClass: "original" })}\n`, "utf8");
+    await writeFile(path.join(hintRoot, "b-001/b-001-001-001.json"), `${JSON.stringify(hint())}\n`, "utf8");
+
+    const hints = await loadQuestionHints({ hintRoot });
+    assert.equal(hints.length, 2);
+    assert.equal(hints.at(-1)?.questionId, "B-001-001-001");
+  });
+});
+
+test("reference-sheet section keys stay aligned between schema, labels, and sheet headings", async () => {
+  const schemaPath = path.join(repoRoot, "packages/schemas/hint.schema.json");
+  const schema = JSON.parse(await readFile(schemaPath, "utf8")) as { properties: { referenceSheetSection: { enum: unknown[] } } };
+  const schemaKeys = schema.properties.referenceSheetSection.enum.filter((value): value is string => typeof value === "string");
+
+  assert.deepEqual(schemaKeys, [...referenceSheetSectionKeys]);
+  assert.deepEqual(Object.keys(referenceSheetSectionLabels).sort(), [...referenceSheetSectionKeys].sort());
+  assert.deepEqual(requiredReferenceSheetSections, referenceSheetSectionKeys.map((key) => `## ${referenceSheetSectionLabels[key].en}`));
 });
 
 test("hint check accepts valid EN/FR two-step hints", async () => {

@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Think about the highest legal layer. A federal statute gives Canada the authority to create detailed radio rules.",
-      "fr": "Pensez au niveau juridique le plus élevé. Une loi fédérale donne au Canada le pouvoir de créer des règles radio détaillées."
+      "en": "Start at the top of the legal stack. One federal source lets later radio rules be created.",
+      "fr": "Commencez en haut de la hiérarchie juridique. Une source fédérale permet de créer les règles de radiocommunication qui suivent."
     },
     {
       "level": 2,
-      "en": "Set aside broadcasting, international coordination, and day-to-day amateur station operation. Choose the broad Canadian law those lower rules sit under.",
-      "fr": "Écartez la radiodiffusion, la coordination internationale et l'exploitation quotidienne des stations radioamateurs. Cherchez la grande loi canadienne placée au-dessus de ces règles."
+      "en": "Canada's radio framework works downward: Parliament grants power, then detailed rules and standards apply that power to services and stations.",
+      "fr": "Le cadre canadien de la radiocommunication descend par niveaux : le Parlement donne un pouvoir, puis les règles détaillées et les normes appliquent ce pouvoir aux services et aux stations."
     }
   ],
   "referenceSheetSection": null,
