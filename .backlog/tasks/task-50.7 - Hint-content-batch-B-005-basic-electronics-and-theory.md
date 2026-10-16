@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:18'
+updated_date: '2026-10-16 14:19'
 labels:
   - content
 dependencies:
@@ -50,4 +50,6 @@ Write and review original EN/FR hint content for B-005 electronics and theory qu
 Completed B-005-001 calibration slice: wrote 11 hint files (9 two-level method, 2 single-level prefix recall); pnpm check:hints -- --subsection B-005-001 --require-complete passed.
 
 Completed B-005-002 calibration slice: wrote 11 hint files (3 two-level concept/method, 8 single-level recall); pnpm check:hints -- --subsection B-005-002 --require-complete passed. Stopping for calibration with sample questions/options as requested.
+
+Calibration fixes applied after review: neutralized B-005-002-002 L1 and B-005-002-006 pointer; re-ran B-005-001 and B-005-002 subsection checks successfully. Continuing through remaining B-005 subsections.
 <!-- SECTION:NOTES:END -->
