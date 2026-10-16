@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Before choosing, decide whose permission matters: the person doing the work, the person receiving the work, or the apparatus owner.",
-      "fr": "Avant de choisir, demandez-vous quelle permission compte : celle de la personne qui fait le travail, celle qui le reçoit ou celle du propriétaire de l'appareil."
-    },
-    {
-      "level": 2,
-      "en": "When equipment is handled for someone else, the rule checks two sides of the job. Keep the helper's credentials separate from the apparatus owner's authority.",
-      "fr": "Lorsqu'un appareil est traité pour quelqu'un d'autre, la règle vérifie deux côtés du travail. Gardez les titres de l'aidant séparés de l'autorisation du propriétaire de l'appareil."
+      "en": "The added code qualification does not transfer amateur authority to the station recipient.",
+      "fr": "La compétence en code ajoutée ne transfère pas l'autorité radioamateur au destinataire de la station."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-work-done-for-another-person"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state the recipient's required credential for this recall item."
 }

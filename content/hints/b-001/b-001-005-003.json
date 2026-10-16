@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Before choosing, decide whose permission matters: the person doing the work, the person receiving the work, or the apparatus owner.",
-      "fr": "Avant de choisir, demandez-vous quelle permission compte : celle de la personne qui fait le travail, celle qui le reçoit ou celle du propriétaire de l'appareil."
+      "en": "Installing someone else's amateur transmitter involves two people, not just the person holding the tools.",
+      "fr": "Installer l'émetteur de radioamateur d'une autre personne implique deux personnes, pas seulement celle qui tient les outils."
     },
     {
       "level": 2,
-      "en": "When equipment is handled for someone else, the rule checks two sides of the job. Keep the helper's credentials separate from the apparatus owner's authority.",
-      "fr": "Lorsqu'un appareil est traité pour quelqu'un d'autre, la règle vérifie deux côtés du travail. Gardez les titres de l'aidant séparés de l'autorisation du propriétaire de l'appareil."
+      "en": "The rule protects both sides of the job: the installer must be qualified for the amateur work, and the recipient must be qualified for the station being installed.",
+      "fr": "La règle protège les deux côtés du travail : l'installateur doit être qualifié pour le travail radioamateur, et la personne qui reçoit la station doit être qualifiée pour celle-ci."
     }
   ],
   "lessonLink": {
