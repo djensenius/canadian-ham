@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what forms on a line when its load does not match the line’s characteristic value.",
-      "fr": "Revoyez ce qui se forme sur une ligne lorsque sa charge ne correspond pas à sa valeur caractéristique."
+      "en": "Review SWR in plain language.",
+      "fr": "Revoyez l'explication du ROS en termes simples."
     }
   ],
   "lessonLink": {

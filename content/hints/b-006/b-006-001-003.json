@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why cutting a feedline changes attenuation but not the cable family’s RF value.",
-      "fr": "Revoyez pourquoi raccourcir une ligne change l’atténuation, mais non la valeur RF de ce type de câble."
+      "en": "Review what determines a feedline's characteristic impedance.",
+      "fr": "Revoyez ce qui détermine l'impédance caractéristique d'une ligne de transmission."
     }
   ],
   "lessonLink": {
     "lessonId": "L-006-01",
-    "sectionAnchor": "in-the-real-world-cutting-coax-does-not-change-z0"
+    "sectionAnchor": "what-a-feedline-does"
   },
   "referenceSheetSection": null,
   "licenseClass": "original",

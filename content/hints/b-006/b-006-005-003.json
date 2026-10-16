@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the first fault to suspect when meter readings jump around as the system moves.",
-      "fr": "Revoyez la première défaillance à soupçonner lorsque les lectures du compteur sautent pendant que le système bouge."
+      "en": "Review the first fault to suspect when meter readings jump around.",
+      "fr": "Revoyez la première défaillance à soupçonner lorsque les lectures du ROS-mètre sautent."
     }
   ],
   "lessonLink": {

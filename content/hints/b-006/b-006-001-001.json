@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the station block that carries RF between the radio and the antenna feed point.",
-      "fr": "Revoyez le bloc de station qui transporte l’énergie RF entre la radio et le point d’alimentation de l’antenne."
+      "en": "Review the path between the radio and the antenna feed point.",
+      "fr": "Revoyez le trajet entre la radio et le point d'alimentation de l'antenne."
     }
   ],
   "lessonLink": {

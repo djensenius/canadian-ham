@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the dipole-resonance adjustment trend before choosing how to move lower in frequency.",
-      "fr": "Revoyez la tendance d’ajustement de la résonance d’un dipôle avant de choisir comment descendre en fréquence."
+      "en": "A practical dipole is about 143 / f(MHz) long; convert kHz to MHz first.",
+      "fr": "Un dipôle pratique mesure environ 143 / f(MHz); convertissez d'abord les kHz en MHz."
+    },
+    {
+      "level": 2,
+      "en": "Work out the length at the starting and target frequencies, then compare them.",
+      "fr": "Calculez la longueur à la fréquence de départ et à la fréquence visée, puis comparez-les."
     }
   ],
   "lessonLink": {
     "lessonId": "L-006-03",
     "sectionAnchor": "dipole-length-and-resonance"
   },
-  "referenceSheetSection": "wavelength-dipole-length",
-  "licenseClass": "original",
-  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+  "referenceSheetSection": null,
+  "licenseClass": "original"
 }

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the matched-line condition before deciding whether line length changes the match.",
-      "fr": "Revoyez l’état d’une ligne adaptée avant de décider si sa longueur change l’adaptation."
+      "en": "Review how line length is treated in matched systems.",
+      "fr": "Revoyez comment la longueur de ligne est traitée dans les systèmes adaptés."
     }
   ],
   "lessonLink": {

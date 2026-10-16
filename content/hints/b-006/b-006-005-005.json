@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why standing waves make a lossy feedline waste more RF energy.",
-      "fr": "Revoyez pourquoi les ondes stationnaires font gaspiller plus d’énergie RF dans une ligne avec pertes."
+      "en": "Review the practical effects of a high SWR.",
+      "fr": "Revoyez les effets pratiques d'un ROS élevé."
     }
   ],
   "lessonLink": {

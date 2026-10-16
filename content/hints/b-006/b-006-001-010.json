@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the two geometric quantities used for open-wire feedline characteristic value.",
-      "fr": "Revoyez les deux grandeurs géométriques utilisées pour la valeur caractéristique d’une ligne à fils nus."
+      "en": "Review what determines an open-wire line's characteristic impedance.",
+      "fr": "Revoyez ce qui détermine l'impédance caractéristique d'une ligne ouverte (dite « en échelle »)."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Use the practical quarter-wave starting length: length ≈ 71.3 / f(MHz).",
-      "fr": "Utilisez la longueur de départ pratique d’un quart d’onde : longueur ≈ 71,3 / f(MHz)."
+      "en": "A practical quarter-wave is half the practical half-wave starting estimate, 143 / f(MHz).",
+      "fr": "Un quart d'onde pratique est la moitié de l'estimation de départ d'une demi-onde pratique, 143 / f(MHz)."
     },
     {
       "level": 2,

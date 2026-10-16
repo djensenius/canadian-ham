@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the frequency trend for internal conductor and dielectric losses.",
-      "fr": "Revoyez la tendance observée lorsqu’une ligne réelle transporte une fréquence plus élevée."
+      "en": "Review how and why feedline loss changes with frequency.",
+      "fr": "Revoyez comment et pourquoi la perte d'une ligne varie avec la fréquence."
     }
   ],
   "lessonLink": {

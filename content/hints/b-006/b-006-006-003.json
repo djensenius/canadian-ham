@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the matching device used when a very high feed-point value must feed ordinary coax.",
-      "fr": "Revoyez le dispositif d’adaptation utilisé lorsqu’une valeur très élevée au point d’alimentation doit alimenter un câble coaxial ordinaire."
+      "en": "Review matching networks and tuners.",
+      "fr": "Revoyez les réseaux d'adaptation et les blocs d'accord."
     }
   ],
   "lessonLink": {

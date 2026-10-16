@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Use the practical full-wave loop estimate: loop length ≈ 306 / f(MHz).",
-      "fr": "Utilisez l’estimation pratique d’une boucle pleine onde : longueur de boucle ≈ 306 / f(MHz)."
+      "en": "Use the practical loop estimate: loop length ≈ 306 / f(MHz).",
+      "fr": "Utilisez l'estimation pratique : longueur de boucle ≈ 306 / f(MHz)."
     },
     {
       "level": 2,
-      "en": "Substitute f = 21.4 MHz and keep the total wire length, not one side.",
-      "fr": "Remplacez f par 21,4 MHz et gardez la longueur totale du fil, pas celle d’un côté."
+      "en": "Substitute f = 21.4 MHz and keep the total wire length around the loop.",
+      "fr": "Remplacez f par 21,4 MHz et gardez la longueur totale du fil autour de la boucle."
     }
   ],
   "lessonLink": {

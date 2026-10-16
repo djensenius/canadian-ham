@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why sloping radials change the feed-point value of an elevated vertical.",
-      "fr": "Revoyez pourquoi des radians inclinés changent la valeur au point d’alimentation d’une verticale surélevée."
+      "en": "Review ground-plane radial arrangements.",
+      "fr": "Revoyez les dispositions des conducteurs radiaux d'un plan de sol."
     }
   ],
   "lessonLink": {

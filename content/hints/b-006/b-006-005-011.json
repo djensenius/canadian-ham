@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why loss in the line can make the station-end reading look better than the antenna-end condition.",
-      "fr": "Revoyez pourquoi les pertes dans la ligne peuvent rendre la lecture côté station meilleure que l’état réel côté antenne."
+      "en": "Review how feedline loss affects SWR readings taken at the transmitter.",
+      "fr": "Revoyez l'effet des pertes de ligne sur le ROS lu à l'émetteur."
     }
   ],
   "lessonLink": {

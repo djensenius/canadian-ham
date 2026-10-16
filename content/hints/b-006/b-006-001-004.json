@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the coax geometry idea behind two cables sharing the same RF value.",
-      "fr": "Revoyez l’idée de géométrie du câble coaxial qui permet à deux câbles de partager la même valeur RF."
+      "en": "Review what determines a coaxial cable's characteristic impedance.",
+      "fr": "Revoyez ce qui détermine l'impédance caractéristique d'un câble coaxial."
     }
   ],
   "lessonLink": {

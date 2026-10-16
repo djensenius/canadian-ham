@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the standard dipole-reference offset from the ideal point-source reference.",
-      "fr": "Revoyez l’écart de référence standard entre le dipôle et la source ponctuelle idéale."
+      "en": "Review the standard gain comparison between a dipole and an isotropic antenna.",
+      "fr": "Revoyez la comparaison de gain standard entre un dipôle et une antenne isotrope."
     }
   ],
   "lessonLink": {

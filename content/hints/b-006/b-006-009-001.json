@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how a nearby unfed element gets RF energy in a directional antenna.",
-      "fr": "Revoyez comment un élément voisin non alimenté reçoit de l’énergie RF dans une antenne directionnelle."
+      "en": "Review parasitic elements in directional antennas.",
+      "fr": "Revoyez les éléments parasites dans les antennes directionnelles."
     }
   ],
   "lessonLink": {

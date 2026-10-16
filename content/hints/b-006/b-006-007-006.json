@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the reference antenna idea that cannot be built as a real station antenna.",
-      "fr": "Revoyez l’idée d’antenne de référence qui ne peut pas être construite comme antenne réelle de station."
+      "en": "Review the reference antennas used in gain comparisons.",
+      "fr": "Revoyez les antennes de référence utilisées dans les comparaisons de gain."
     }
   ],
   "lessonLink": {

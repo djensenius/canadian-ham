@@ -6,8 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the speed constant behind the wavelength shortcut.",
-      "fr": "Revoyez la constante de vitesse derrière le raccourci de longueur d’onde."
+      "en": "The shortcut λ(m) = 300 / f(MHz) is speed = wavelength × frequency with pre-scaled units.",
+      "fr": "Le raccourci λ(m) = 300 / f(MHz) vient de vitesse = longueur d'onde × fréquence, avec des unités déjà adaptées."
+    },
+    {
+      "level": 2,
+      "en": "Pick a convenient frequency in MHz, find its wavelength from the shortcut, then convert wavelength × frequency into the units used by the choices.",
+      "fr": "Choisissez une fréquence pratique en MHz, trouvez sa longueur d'onde avec le raccourci, puis convertissez longueur d'onde × fréquence dans les unités des choix."
     }
   ],
   "lessonLink": {
@@ -15,6 +20,5 @@
     "sectionAnchor": "wavelength-and-frequency"
   },
   "referenceSheetSection": "wavelength-dipole-length",
-  "licenseClass": "original",
-  "singleLevelReason": "Numeric recall item: a second hint would state or point directly at the tested value; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

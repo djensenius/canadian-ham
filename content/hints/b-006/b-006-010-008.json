@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the common coax impedance expected at the base of a simple ground-plane antenna.",
-      "fr": "Revoyez l’impédance coaxiale courante attendue à la base d’une simple antenne à plan de sol."
+      "en": "Review feedline choices for ground-plane antennas.",
+      "fr": "Revoyez les choix de lignes pour les antennes à plan de sol."
     }
   ],
   "lessonLink": {

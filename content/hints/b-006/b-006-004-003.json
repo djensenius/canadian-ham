@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the lesson example about removing unnecessary extra cable length.",
-      "fr": "Revoyez l’exemple du cours sur le retrait d’un détour inutile dans le trajet RF."
+      "en": "Review the practical examples of feedline loss.",
+      "fr": "Revoyez les exemples pratiques de pertes dans les lignes."
     }
   ],
   "lessonLink": {
     "lessonId": "L-006-02",
-    "sectionAnchor": "in-the-real-world-trimming-excess-cable"
+    "sectionAnchor": "feedline-loss"
   },
   "referenceSheetSection": null,
   "licenseClass": "original",

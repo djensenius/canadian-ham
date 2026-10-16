@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the practical below-HF quarter-wave starting formula.",
-      "fr": "Revoyez la formule pratique de départ pour un quart d’onde sous 30 MHz."
+      "en": "Review the practical HF (below 30 MHz) quarter-wave starting formula.",
+      "fr": "Revoyez la formule pratique de départ d'un quart d'onde HF sous 30 MHz."
     }
   ],
   "lessonLink": {

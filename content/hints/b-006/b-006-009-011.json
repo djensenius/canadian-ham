@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "To compare dBi with a dipole reference, subtract about 2.1 dB.",
-      "fr": "Pour comparer les dBi à une référence dipôle, soustrayez environ 2,1 dB."
+      "en": "Recall the dipole's gain over an isotropic source from the lesson; dBd = dBi − that offset.",
+      "fr": "Rappelez-vous le gain du dipôle par rapport à une source isotrope dans le cours; dBd = dBi − cet écart."
     },
     {
       "level": 2,
-      "en": "Set it up as 4.1 dBi - 2.1 dB; the difference is the gain over the dipole reference.",
-      "fr": "Posez le calcul ainsi : 4,1 dBi - 2,1 dB; la différence est le gain par rapport à la référence dipôle."
+      "en": "Subtract that offset from 4.1 dBi.",
+      "fr": "Soustrayez cet écart de 4,1 dBi."
     }
   ],
   "lessonLink": {

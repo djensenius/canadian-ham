@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what happens to delivered antenna power when a higher-loss cable replaces a lower-loss one.",
-      "fr": "Revoyez ce qui arrive à la puissance livrée à l’antenne lorsqu’un câble à pertes plus élevées remplace un câble à pertes plus faibles."
+      "en": "Review how RG-58 and RG-213 differ.",
+      "fr": "Revoyez en quoi le RG-58 et le RG-213 diffèrent."
     }
   ],
   "lessonLink": {

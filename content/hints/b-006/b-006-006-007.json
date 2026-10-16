@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why RF transformers are useful matching parts beyond one narrow tuned point.",
-      "fr": "Revoyez pourquoi les transformateurs RF sont des pièces d’adaptation utiles au-delà d’un seul point d’accord étroit."
+      "en": "Review the different ways to match impedance at RF.",
+      "fr": "Revoyez les façons d'adapter l'impédance en RF."
     }
   ],
   "lessonLink": {

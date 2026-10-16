@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the open-wire geometry variables that set its characteristic value.",
-      "fr": "Revoyez les variables de géométrie d’une ligne à fils nus qui fixent sa valeur caractéristique."
+      "en": "Review what determines an open-wire line's characteristic impedance.",
+      "fr": "Revoyez ce qui détermine l'impédance caractéristique d'une ligne ouverte (dite « en échelle »)."
     }
   ],
   "lessonLink": {

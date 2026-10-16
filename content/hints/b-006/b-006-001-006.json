@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the matched-load idea for a resistive termination on a feedline.",
-      "fr": "Revoyez l’idée de charge adaptée pour une terminaison résistive sur une ligne de transmission."
+      "en": "Review what happens to RF energy that reaches the far end of a feedline.",
+      "fr": "Revoyez ce qu'il advient de l'énergie RF qui atteint l'extrémité d'une ligne."
     }
   ],
   "lessonLink": {

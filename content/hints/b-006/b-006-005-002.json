@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how the lesson describes a low but not perfect SWR reading for ordinary station work.",
-      "fr": "Revoyez comment le cours décrit une lecture de ROS basse, sans être parfaite, pour l’exploitation courante."
+      "en": "Review how SWR readings are interpreted at the station.",
+      "fr": "Revoyez comment interpréter les lectures de ROS à la station."
     }
   ],
   "lessonLink": {

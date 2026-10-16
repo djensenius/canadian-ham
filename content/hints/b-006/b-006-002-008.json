@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the device placed where coax hands off to a balanced two-conductor line.",
-      "fr": "Revoyez le dispositif placé là où le câble coaxial passe à une ligne symétrique à deux conducteurs."
+      "en": "Review the devices used between different feedline types.",
+      "fr": "Revoyez les dispositifs utilisés entre différents types de lignes."
     }
   ],
   "lessonLink": {

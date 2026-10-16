@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what trap sections let one antenna do on related bands.",
-      "fr": "Revoyez ce que les sections à pièges permettent à une seule antenne de faire sur des bandes apparentées."
+      "en": "Review the tradeoffs of trap antennas.",
+      "fr": "Revoyez les compromis des antennes à pièges."
     }
   ],
   "lessonLink": {

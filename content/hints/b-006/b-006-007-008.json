@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why local VHF and UHF contacts work best when antenna orientations agree.",
-      "fr": "Revoyez pourquoi les contacts locaux en VHF et UHF fonctionnent mieux lorsque les orientations d’antenne concordent."
+      "en": "Review antenna polarization for VHF mobile stations.",
+      "fr": "Revoyez la polarisation des antennes pour les stations mobiles VHF."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the Basic-bank spacing convention for a three-element Yagi compromise.",
-      "fr": "Revoyez la convention de la banque d’examen pour l’espacement de compromis d’une Yagi à trois éléments."
+      "en": "Review the element-spacing tradeoff for a three-element Yagi.",
+      "fr": "Revoyez le compromis d'espacement des éléments pour une Yagi à trois éléments."
     }
   ],
   "lessonLink": {

@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Stacking an identical pair ideally adds about 3 dB in the main direction.",
-      "fr": "Jumeler deux antennes identiques ajoute idéalement environ 3 dB dans la direction principale."
+      "en": "Stacking two identical antennas ideally doubles the power density in the main direction; convert that doubling to dB.",
+      "fr": "Jumeler deux antennes identiques double idéalement la densité de puissance dans la direction principale; convertissez ce doublement en dB."
     },
     {
       "level": 2,
-      "en": "Start from 10 dBi, add the stacking increment, and keep the dBi reference.",
-      "fr": "Partez de 10 dBi, ajoutez l’incrément de jumelage et conservez la référence dBi."
+      "en": "Add that dB step to 10 dBi and keep the dBi reference.",
+      "fr": "Ajoutez ce pas en dB à 10 dBi et conservez la référence dBi."
     }
   ],
   "lessonLink": {

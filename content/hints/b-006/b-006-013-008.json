@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how moving a square loop’s feed point changes the usual polarization.",
-      "fr": "Revoyez comment déplacer le point d’alimentation d’une boucle carrée change habituellement la polarisation."
+      "en": "Review how feed-point location affects a quad.",
+      "fr": "Revoyez l'effet de l'emplacement du point d'alimentation sur une quad."
     }
   ],
   "lessonLink": {

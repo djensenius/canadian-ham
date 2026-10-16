@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how element construction affects the useful frequency span of a Yagi.",
-      "fr": "Revoyez comment la construction des éléments affecte la plage de fréquences utile d’une Yagi."
+      "en": "Review Yagi bandwidth tradeoffs.",
+      "fr": "Revoyez les compromis de largeur de bande d'une Yagi."
     }
   ],
   "lessonLink": {

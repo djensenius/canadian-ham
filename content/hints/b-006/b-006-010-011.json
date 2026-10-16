@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the RF return path used to reduce earth losses at a ground-mounted vertical.",
-      "fr": "Revoyez le chemin de retour RF utilisé pour réduire les pertes dans la terre avec une verticale montée au sol."
+      "en": "Review ground losses at a ground-mounted vertical.",
+      "fr": "Revoyez les pertes dans le sol avec une verticale montée au sol."
     }
   ],
   "lessonLink": {

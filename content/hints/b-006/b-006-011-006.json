@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the Yagi spacing tradeoff discussed for forward performance.",
-      "fr": "Revoyez le compromis d’espacement des éléments d’une Yagi discuté pour le rendement vers l’avant."
+      "en": "Review Yagi element-spacing tradeoffs.",
+      "fr": "Revoyez les compromis d'espacement des éléments d'une Yagi."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how the course connects balanced antenna parts to station hardware that is not balanced.",
-      "fr": "Revoyez comment le cours relie les parties symétriques de l’antenne au matériel de station qui ne l’est pas."
+      "en": "Review the devices used between a feedline and an antenna.",
+      "fr": "Revoyez les dispositifs placés entre une ligne et une antenne."
     }
   ],
   "lessonLink": {

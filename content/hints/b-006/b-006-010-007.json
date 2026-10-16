@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the radial arrangement used with an elevated quarter-wave vertical for a coax-friendly match.",
-      "fr": "Revoyez la disposition des radians utilisée avec une verticale quart d’onde surélevée pour une adaptation compatible avec le coaxial."
+      "en": "Review ground-plane radial arrangements.",
+      "fr": "Revoyez les dispositions des conducteurs radiaux d'un plan de sol."
     }
   ],
   "lessonLink": {
