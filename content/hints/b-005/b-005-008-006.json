@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-008-006",
+  "questionId": "B-005-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what a dB value compares between signal levels.",
+      "fr": "Revoyez ce qu'une valeur en dB compare entre des niveaux de signal."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "singleLevelReason": "Pure concept recall: a second hint would state the comparison type directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

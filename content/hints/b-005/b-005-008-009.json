@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-008-009",
+  "questionId": "B-005-008-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Break the gain into repeated basic doubling steps, then apply them to the starting power.",
+      "fr": "Décomposez le gain en étapes de doublement de base répétées, puis appliquez-les à la puissance de départ."
+    },
+    {
+      "level": 2,
+      "en": "Use three basic positive steps: start with 2 W and double it three times without rounding to another option.",
+      "fr": "Utilisez trois petits pas positifs : partez de 2 W et doublez cette valeur trois fois sans arrondir vers une autre option."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original"
+}
