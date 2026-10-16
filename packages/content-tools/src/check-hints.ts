@@ -30,8 +30,8 @@ const MAX_QUESTION_FRAGMENT_GRAM_SIZE = 6;
 const DISTINCTIVE_OFFICIAL_PHRASE_GRAM_SIZE = 2;
 const LONG_OFFICIAL_PHRASE_GRAM_SIZE = 3;
 const STOP_WORD_TOKENS = new Set([
-  "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "how", "in", "is", "it", "its", "of", "on", "or", "that", "the", "this", "to", "what", "when", "where", "which", "why", "with",
-  "au", "aux", "ce", "cet", "cette", "ces", "d", "de", "des", "du", "en", "est", "et", "l", "la", "le", "les", "leur", "leurs", "ou", "par", "pour", "qu", "que", "quel", "quelle", "quels", "quelles", "qui", "s", "son", "sont", "sur", "un", "une",
+  "a", "about", "above", "after", "all", "an", "and", "any", "are", "as", "at", "be", "because", "before", "below", "between", "by", "can", "did", "do", "does", "down", "each", "either", "every", "for", "from", "had", "has", "have", "he", "her", "here", "his", "how", "if", "in", "into", "is", "it", "its", "many", "may", "me", "more", "most", "must", "my", "no", "not", "of", "off", "on", "one", "or", "our", "out", "over", "she", "should", "some", "than", "that", "the", "their", "them", "then", "there", "these", "they", "this", "those", "through", "to", "under", "up", "we", "what", "when", "where", "which", "while", "why", "will", "with", "within", "without", "would", "you", "your",
+  "afin", "ainsi", "alors", "apres", "au", "aucun", "aucune", "aux", "avant", "avec", "c", "ca", "ce", "ceci", "cela", "celle", "celles", "celui", "ces", "cet", "cette", "ceux", "chez", "ci", "comme", "d", "dans", "de", "des", "donc", "du", "elle", "elles", "en", "entre", "est", "et", "etre", "il", "ils", "j", "je", "l", "la", "le", "les", "leur", "leurs", "lors", "lui", "m", "ma", "mais", "me", "mes", "moins", "mon", "n", "ne", "ni", "nos", "notre", "nous", "ont", "ou", "par", "pas", "pendant", "plus", "pour", "qu", "quand", "que", "quel", "quelle", "quelles", "quels", "qui", "s", "sa", "se", "ses", "si", "son", "sont", "sous", "sur", "t", "ta", "te", "tes", "tu", "un", "une", "vers", "vos", "votre", "vous",
 ]);
 const NUMERIC_UNIT_TOKENS = new Set([
   "v", "volt", "volts", "mv", "millivolt", "millivolts", "kv", "kilovolt", "kilovolts",
@@ -357,8 +357,7 @@ function containsTokenPhrase(haystackTokens: readonly string[], needleTokens: re
 }
 
 function shouldCheckOfficialPhrase(officialText: string): boolean {
-  const meaningfulTokens = officialSignificantTokens(officialText);
-  return meaningfulTokens.length >= 2 || (meaningfulTokens.length === 1 && meaningfulTokens[0]!.length >= 5);
+  return officialSignificantTokens(officialText).length > 0;
 }
 
 type OfficialPhraseLeakageContext = {
@@ -375,8 +374,7 @@ function officialCandidatePhrases(officialTokens: readonly string[], includeDist
     return [];
   }
   if (officialTokens.length === 1) {
-    const token = officialTokens[0]!;
-    return token.length >= 5 ? [[token]] : [];
+    return [[officialTokens[0]!]];
   }
   const candidates = new Map<string, string[]>();
   const addCandidate = (candidate: readonly string[]): void => {
@@ -386,7 +384,7 @@ function officialCandidatePhrases(officialTokens: readonly string[], includeDist
   };
 
   addCandidate(officialTokens);
-  if (officialTokens.length > LONG_OFFICIAL_PHRASE_GRAM_SIZE) {
+  if (officialTokens.length >= LONG_OFFICIAL_PHRASE_GRAM_SIZE) {
     const gramSizes = includeDistinctiveTwoWordRuns ? [DISTINCTIVE_OFFICIAL_PHRASE_GRAM_SIZE, LONG_OFFICIAL_PHRASE_GRAM_SIZE] : [LONG_OFFICIAL_PHRASE_GRAM_SIZE];
     for (const gramSize of gramSizes) {
       for (const gram of ngrams(officialTokens, gramSize)) {
@@ -752,6 +750,17 @@ function filteredHints(hints: readonly LoadedQuestionHint[], questionsById: Read
   });
 }
 
+function filterDescription(options: HintCheckOptions): string {
+  const filters: string[] = [];
+  if (options.categoryId !== undefined) {
+    filters.push(`category ${options.categoryId}`);
+  }
+  if (options.subsectionId !== undefined) {
+    filters.push(`subsection ${options.subsectionId}`);
+  }
+  return filters.join(" and ");
+}
+
 export async function checkHints(options: HintCheckOptions = {}): Promise<HintCheckReport> {
   const hintRoot = options.hintRoot ?? DEFAULT_HINT_ROOT;
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTION_PATH;
@@ -760,6 +769,9 @@ export async function checkHints(options: HintCheckOptions = {}): Promise<HintCh
   const questionsById = await loadQuestions(questionsPath);
   const lessonsById = await loadLessons(lessonRoot, issues);
   const selectedQuestions = filteredQuestions(questionsById.values(), options);
+  if ((options.categoryId !== undefined || options.subsectionId !== undefined) && selectedQuestions.length === 0) {
+    issues.push(`filters matched no active Basic questions: ${filterDescription(options)}`);
+  }
   const selectedQuestionIds = new Set(selectedQuestions.map((question) => question.id));
   const allHints = await loadQuestionHints({ hintRoot });
   const hints = filteredHints(allHints, questionsById, options);
@@ -956,6 +968,26 @@ async function assertSelfTestRejects(name: string, hintRecord: QuestionHint, exp
   });
 }
 
+async function assertSelfTestRejectsWithOptions(name: string, options: HintCheckOptions, expectedIssue: string, questions: readonly QuestionRecord[] = [question()]): Promise<void> {
+  await withSelfTestFixture(name, async (root) => {
+    await writeSelfTestFixture(root, hint(), questions);
+    try {
+      await checkHints({
+        hintRoot: path.join(root, "content/hints"),
+        questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+        lessonRoot: path.join(root, "content/lessons"),
+        ...options,
+      });
+    } catch (error: unknown) {
+      if (error instanceof HintCheckError && error.report.issues.some((issue) => issue.includes(expectedIssue))) {
+        return;
+      }
+      throw error;
+    }
+    throw new Error(`${name}: expected hint check to reject ${expectedIssue}`);
+  });
+}
+
 export async function runHintCheckerSelfTest(): Promise<void> {
   await withSelfTestFixture("valid", async (root) => {
     await writeSelfTestFixture(root, hint());
@@ -966,6 +998,10 @@ export async function runHintCheckerSelfTest(): Promise<void> {
       requireComplete: true,
     });
   });
+
+  await assertSelfTestRejectsWithOptions("empty-subsection-filter", { subsectionId: "B-999-999", requireComplete: true }, "filters matched no active Basic questions");
+
+  await assertSelfTestRejectsWithOptions("conflicting-category-subsection-filters", { categoryId: "B-002", subsectionId: "B-001-001", requireComplete: true }, "filters matched no active Basic questions");
 
   await assertSelfTestRejects("correct-answer", hint({ hints: [
     { level: 1, en: "Think about a stable oscillator before answering.", fr: "Pensez à un bloc de fréquence régulier avant de répondre." },
@@ -1099,6 +1135,46 @@ export async function runHintCheckerSelfTest(): Promise<void> {
     { sourceIndex: 0, isCorrect: true, text: { en: "Innovation, Science and Economic Development Canada", fr: "Innovation, Sciences et Développement économique Canada" } },
     { sourceIndex: 1, isCorrect: false, text: { en: "Transport Canada", fr: "Transports Canada" } },
     { sourceIndex: 2, isCorrect: false, text: { en: "Communications Security Establishment Canada", fr: "Le Centre de la sécurité des télécommunications Canada" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
+  ] })]);
+
+  await assertSelfTestRejects("short-single-token-answer-copy", hint({ hints: [
+    { level: 1, en: "Choose SSB after reading the setup.", fr: "Choisissez BLU après avoir lu le contexte." },
+    { level: 2, en: "Use the mode clue.", fr: "Utilisez l'indice sur le mode." },
+  ] }), "correct answer text", [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "SSB", fr: "BLU" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "AM", fr: "MA" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "FM", fr: "MF" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "CW", fr: "CW" } },
+  ] })]);
+
+  await assertSelfTestAccepts("short-function-word-answer-copy", hint({ hints: [
+    { level: 1, en: "The one is this.", fr: "C'est cela." },
+    { level: 2, en: "That is where it is.", fr: "C'est là." },
+  ] }), [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "The one", fr: "C'est cela" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "The other", fr: "L'autre" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "This one", fr: "Celui-ci" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "That one", fr: "Celui-là" } },
+  ] })]);
+
+  await assertSelfTestRejects("three-token-answer-two-word-run", hint({ hints: [
+    { level: 1, en: "Telecommunication Union is the phrase to remember.", fr: "Pensez à l'organisme international." },
+    { level: 2, en: "Use the international coordination clue.", fr: "Utilisez l'indice de coordination internationale." },
+  ] }), "correct answer text", [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "International Telecommunication Union", fr: "Union internationale des télécommunications" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "Industry Canada", fr: "Industrie Canada" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "Transport Canada", fr: "Transports Canada" } },
+    { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
+  ] })]);
+
+  await assertSelfTestAccepts("three-token-answer-two-word-run-shared-by-options", hint({ hints: [
+    { level: 1, en: "Compare the Telecommunication Union role with domestic authorities.", fr: "Comparez le rôle international avec les autorités nationales." },
+    { level: 2, en: "Use the difference between international coordination and domestic administration.", fr: "Utilisez la différence entre la coordination internationale et l'administration nationale." },
+  ] }), [question({ answers: [
+    { sourceIndex: 0, isCorrect: true, text: { en: "International Telecommunication Union", fr: "Union internationale des télécommunications" } },
+    { sourceIndex: 1, isCorrect: false, text: { en: "Regional Telecommunication Union", fr: "Union régionale des télécommunications" } },
+    { sourceIndex: 2, isCorrect: false, text: { en: "Transport Canada", fr: "Transports Canada" } },
     { sourceIndex: 3, isCorrect: false, text: { en: "National Defence", fr: "Défense nationale" } },
   ] })]);
 
@@ -1310,10 +1386,10 @@ export async function runHintCheckerSelfTest(): Promise<void> {
     ],
   })]);
 
-  await assertSelfTestAccepts("numeric-non-value-rbr-4", hint({ hints: [
+  await assertSelfTestRejects("document-label-answer-text", hint({ hints: [
     { level: 1, en: "RBR-4 is a document label here, not a calculation result.", fr: "RBR-4 est ici un titre de document, pas un résultat de calcul." },
     { level: 2, en: "Use the document context before deciding.", fr: "Utilisez le contexte du document avant de décider." },
-  ] }), [question({
+  ] }), "correct answer text", [question({
     text: { en: "Which document label applies to the amateur operating standards?", fr: "Quelle étiquette de document s'applique aux normes d'exploitation radioamateur?" },
     answers: [
       { sourceIndex: 0, isCorrect: true, text: { en: "RBR-4", fr: "RBR-4" } },
