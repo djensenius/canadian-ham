@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Decide whether the situation is prohibited conduct, a process safeguard, or a consequence question before choosing.",
-      "fr": "Déterminez d'abord s'il s'agit d'une conduite interdite, d'une garantie de procédure ou d'une conséquence."
-    },
-    {
-      "level": 2,
-      "en": "This lesson separates unlawful conduct from consequences and from inspection or suspension safeguards. Match the scenario to that layer before looking for details.",
-      "fr": "La leçon sépare les conduites illégales, les conséquences et les garanties liées à l'inspection ou à la suspension. Associez d'abord le scénario à cette couche."
+      "en": "Suspension rules include both reasons to act and fairness in the process; the false statement removes the fairness part.",
+      "fr": "Les règles de suspension comprennent à la fois des motifs d'agir et l'équité du processus ; l'énoncé faux retire la partie équitable."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-offences-penalties-and-process-boundaries"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would point directly to the statement that removes notice and a chance to respond."
 }
