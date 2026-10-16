@@ -3,7 +3,21 @@
   "$id": "hint.schema.json",
   "title": "Question hint JSON",
   "type": "object",
-  "required": ["id", "questionId", "bankId", "status", "hints", "licenseClass"],
+  "required": ["id", "questionId", "bankId", "status", "hints", "lessonLink", "licenseClass"],
+  "oneOf": [
+    {
+      "required": ["singleLevelReason"],
+      "properties": {
+        "hints": { "maxItems": 1 }
+      }
+    },
+    {
+      "properties": {
+        "hints": { "minItems": 2 },
+        "singleLevelReason": false
+      }
+    }
+  ],
   "properties": {
     "id": {
       "type": "string",
@@ -14,7 +28,7 @@
     "status": { "$ref": "common.schema.json#/$defs/contentStatus" },
     "hints": {
       "type": "array",
-      "minItems": 2,
+      "minItems": 1,
       "maxItems": 2,
       "prefixItems": [
         {
@@ -40,6 +54,22 @@
       ],
       "items": false
     },
+    "lessonLink": {
+      "type": "object",
+      "required": ["lessonId"],
+      "properties": {
+        "lessonId": {
+          "type": "string",
+          "pattern": "^L-\\d{3}-\\d{2}$"
+        },
+        "sectionAnchor": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "singleLevelReason": { "$ref": "common.schema.json#/$defs/nonEmptyString" },
     "referenceSheetSection": {
       "type": ["string", "null"],
       "enum": [

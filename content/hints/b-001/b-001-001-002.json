@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Focus on authority, not on the wording of the standard. Publishing a standard depends on delegated legal power.",
-      "fr": "Concentrez-vous sur le pouvoir, pas sur le libellé de la norme. La publication d'une norme dépend d'un pouvoir juridique délégué."
+      "en": "Focus on the authority behind a technical operating document, not on the document's title.",
+      "fr": "Concentrez-vous sur l'autorité qui permet d'établir une norme technique d'exploitation, et non sur son titre."
     },
     {
       "level": 2,
-      "en": "In the Canadian radio hierarchy, operating standards for amateur stations sit below the legal source that lets the department issue them.",
-      "fr": "Dans la hiérarchie canadienne de la radiocommunication, les normes d'exploitation des stations de radioamateur se trouvent sous la source juridique qui permet au ministère de les publier."
+      "en": "The framework has layers: an Act gives legal authority; regulations are binding rules made under that authority; departmental standards are technical operating documents; the department administers the system.",
+      "fr": "Le cadre s'organise en niveaux : une loi confère l'autorité juridique; les règlements sont des règles obligatoires prises sous cette autorité; les normes ministérielles sont des documents techniques d'exploitation; le ministère administre l'ensemble."
     }
   ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "how-these-rules-fit-together"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original"
 }

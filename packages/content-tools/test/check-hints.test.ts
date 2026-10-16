@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { checkHints, HintCheckError, runHintCheckerSelfTest } from "../src/check-hints.ts";
+import { checkHints, HintCheckError, runHintCheckerSelfTest, slugForLessonHeading } from "../src/check-hints.ts";
 import { requiredReferenceSheetSections } from "../src/check-reference-sheet.ts";
 import { hintForQuestion, loadQuestionHints, questionHintsByQuestionId, referenceSheetSectionKeys, referenceSheetSectionLabels } from "../src/hints.ts";
 
@@ -16,6 +16,7 @@ async function withFixture(testName: string, run: (root: string) => Promise<void
   try {
     await mkdir(path.join(root, "content/hints/b-001"), { recursive: true });
     await mkdir(path.join(root, "content/generated/basic-2025-07-15"), { recursive: true });
+    await mkdir(path.join(root, "content/lessons/m1-regulations-policies"), { recursive: true });
     await run(root);
   } finally {
     await rm(root, { recursive: true, force: true });
@@ -61,6 +62,7 @@ function hint(overrides: Record<string, unknown> = {}) {
         fr: "La fréquence reste stable quand la partie de commande évite la dérive pendant le contact.",
       },
     ],
+    lessonLink: { lessonId: "L-001-01", sectionAnchor: "shared-setup" },
     referenceSheetSection: null,
     licenseClass: "original",
     ...overrides,
@@ -70,6 +72,7 @@ function hint(overrides: Record<string, unknown> = {}) {
 async function writeFixture(root: string, hintRecord = hint(), questionRecords = [question()]): Promise<void> {
   await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), `${JSON.stringify(questionRecords, null, 2)}\n`, "utf8");
   await writeFile(path.join(root, "content/hints/b-001/b-001-001-001.json"), `${JSON.stringify(hintRecord, null, 2)}\n`, "utf8");
+  await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\n---\n# Fixture Lesson\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
 }
 
 test("hint loader sorts records and exposes question lookup helpers", async () => {
@@ -114,6 +117,11 @@ test("reference-sheet section keys stay aligned between schema, labels, and shee
   assert.deepEqual(requiredReferenceSheetSections, referenceSheetSectionKeys.map((key) => `## ${referenceSheetSectionLabels[key].en}`));
 });
 
+test("lesson heading slugs match the GitHub-style lesson-link rules", () => {
+  assert.equal(slugForLessonHeading("A  `B` <em>C</em>!"), "a--b-c");
+  assert.equal(slugForLessonHeading("Reference facts: Authority and source roles"), "reference-facts-authority-and-source-roles");
+});
+
 test("hint check accepts valid EN/FR two-step hints", async () => {
   await withFixture("valid", async (root) => {
     await writeFixture(root);
@@ -121,12 +129,61 @@ test("hint check accepts valid EN/FR two-step hints", async () => {
     const report = await checkHints({
       hintRoot: path.join(root, "content/hints"),
       questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      lessonRoot: path.join(root, "content/lessons"),
       requireComplete: true,
     });
 
     assert.equal(report.hintFileCount, 1);
     assert.equal(report.hintQuestionCount, 1);
     assert.equal(report.checkedQuestionCount, 1);
+  });
+});
+
+test("hint check accepts one-level hints only with a reason and validates lesson links", async () => {
+  await withFixture("single-level", async (root) => {
+    const oneLevel = hint({
+      hints: [{ level: 1, en: "Think about the broad setup before choosing.", fr: "Pensez au contexte général avant de choisir." }],
+      singleLevelReason: "A second hint would name the deciding document for this recall question.",
+    });
+    await writeFixture(root, oneLevel);
+
+    const report = await checkHints({
+      hintRoot: path.join(root, "content/hints"),
+      questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      lessonRoot: path.join(root, "content/lessons"),
+      requireComplete: true,
+    });
+    assert.equal(report.hintQuestionCount, 1);
+  });
+
+  await withFixture("single-level-missing-reason", async (root) => {
+    await writeFixture(root, hint({
+      hints: [{ level: 1, en: "Think about the broad setup before choosing.", fr: "Pensez au contexte général avant de choisir." }],
+    }));
+
+    await assert.rejects(
+      () => checkHints({
+        hintRoot: path.join(root, "content/hints"),
+        questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+        lessonRoot: path.join(root, "content/lessons"),
+      }),
+      (error: unknown) => error instanceof HintCheckError
+        && error.report.issues.some((issue) => issue.includes("singleLevelReason must be non-empty")),
+    );
+  });
+
+  await withFixture("bad-lesson-link", async (root) => {
+    await writeFixture(root, hint({ lessonLink: { lessonId: "L-001-01", sectionAnchor: "missing-section" } }));
+
+    await assert.rejects(
+      () => checkHints({
+        hintRoot: path.join(root, "content/hints"),
+        questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+        lessonRoot: path.join(root, "content/lessons"),
+      }),
+      (error: unknown) => error instanceof HintCheckError
+        && error.report.issues.some((issue) => issue.includes("lessonLink.sectionAnchor missing-section does not exist")),
+    );
   });
 });
 
@@ -143,6 +200,7 @@ test("hint check rejects answer and question wording leakage", async () => {
       () => checkHints({
         hintRoot: path.join(root, "content/hints"),
         questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+        lessonRoot: path.join(root, "content/lessons"),
       }),
       (error: unknown) => error instanceof HintCheckError
         && error.report.issues.some((issue) => issue.includes("correct answer text"))

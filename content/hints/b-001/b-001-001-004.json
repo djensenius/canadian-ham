@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Look for the layer that turns the broad legal power into working definitions for Canadian radio services.",
-      "fr": "Cherchez le niveau qui transforme le pouvoir juridique général en définitions pratiques pour les services de radiocommunication canadiens."
+      "en": "Sort the fact by function: legal authority, binding categories, technical operating instructions, or the administering organization.",
+      "fr": "Pour les définitions précises, triez le fait selon sa fonction : autorité juridique, catégories obligatoires, consignes techniques d'exploitation ou organisation responsable de l'administration."
     },
     {
       "level": 2,
-      "en": "Use the hierarchy: the top legal source grants power; detailed rules define service categories; station standards then describe how stations operate.",
-      "fr": "Utilisez la hiérarchie : la source juridique supérieure donne le pouvoir; les règles détaillées définissent les catégories de services; les normes des stations expliquent ensuite l'exploitation des stations."
+      "en": "The framework has layers: an Act gives legal authority; regulations are binding rules made under that authority; departmental standards are technical operating documents; the department administers the system.",
+      "fr": "Le cadre s'organise en niveaux : une loi confère l'autorité juridique; les règlements sont des règles obligatoires prises sous cette autorité; les normes ministérielles sont des documents techniques d'exploitation; le ministère administre l'ensemble."
     }
   ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "how-these-rules-fit-together"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original"
 }

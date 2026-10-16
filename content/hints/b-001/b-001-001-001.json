@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Start at the top of the legal stack. One federal source lets later radio rules be created.",
-      "fr": "Commencez en haut de la hiérarchie juridique. Une source fédérale permet de créer les règles de radiocommunication qui suivent."
+      "en": "Start with the source of legal power before looking at the more detailed radio rules that flow from it.",
+      "fr": "Commencez par la source du pouvoir juridique avant d'examiner les règles de radiocommunication plus détaillées qui en découlent."
     },
     {
       "level": 2,
-      "en": "Canada's radio framework works downward: Parliament grants power, then detailed rules and standards apply that power to services and stations.",
-      "fr": "Le cadre canadien de la radiocommunication descend par niveaux : le Parlement donne un pouvoir, puis les règles détaillées et les normes appliquent ce pouvoir aux services et aux stations."
+      "en": "The framework has layers: an Act gives legal authority; regulations are binding rules made under that authority; departmental standards are technical operating documents; the department administers the system.",
+      "fr": "Le cadre s'organise en niveaux : une loi confère l'autorité juridique; les règlements sont des règles obligatoires prises sous cette autorité; les normes ministérielles sont des documents techniques d'exploitation; le ministère administre l'ensemble."
     }
   ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "how-these-rules-fit-together"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original"
 }

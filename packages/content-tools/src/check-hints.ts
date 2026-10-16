@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,6 +10,7 @@ import { loadQuestionHints, referenceSheetSectionKeys, type LoadedQuestionHint, 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_HINT_ROOT = path.join(REPO_ROOT, "content/hints");
 const DEFAULT_QUESTION_PATH = path.join(REPO_ROOT, ACTIVE_GENERATED_DIR, "questions.json");
+const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
 const EXPECTED_BANK_ID = ACTIVE_BANK_ID;
 const EXPECTED_LICENSE_CLASS = "original";
 const HINT_ID_PREFIX = "HINT-";
@@ -74,9 +75,16 @@ type QuestionRecord = {
   readonly answers: readonly AnswerRecord[];
 };
 
+type LessonRecord = {
+  readonly id: string;
+  readonly filePath: string;
+  readonly anchors: ReadonlySet<string>;
+};
+
 export type HintCheckOptions = {
   readonly hintRoot?: string;
   readonly questionsPath?: string;
+  readonly lessonRoot?: string;
   readonly categoryId?: string;
   readonly subsectionId?: string;
   readonly requireComplete?: boolean;
@@ -131,6 +139,89 @@ async function loadQuestions(questionsPath: string): Promise<Map<string, Questio
     questions.set(item.id, { id: item.id, bankId: item.bankId, categoryId: item.categoryId, subsectionId: item.subsectionId, text: item.text, answers });
   }
   return questions;
+}
+
+async function findMarkdownFiles(root: string, current = root): Promise<string[]> {
+  let entries;
+  try {
+    entries = await readdir(current, { withFileTypes: true });
+  } catch (error: unknown) {
+    if (current === root && error instanceof Error && "code" in error && error.code === "ENOENT") {
+      return [];
+    }
+    throw error;
+  }
+
+  const files: string[] = [];
+  for (const entry of entries) {
+    const entryPath = path.join(current, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...await findMarkdownFiles(root, entryPath));
+    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+      files.push(entryPath);
+    }
+  }
+  return files.sort((a, b) => a.localeCompare(b));
+}
+
+function parseLessonId(markdown: string): string | null {
+  if (!markdown.startsWith("---\n")) {
+    return null;
+  }
+  const closeIndex = markdown.indexOf("\n---", 4);
+  if (closeIndex === -1) {
+    return null;
+  }
+  const frontMatter = markdown.slice(4, closeIndex);
+  if (!/^type:\s*lesson\s*$/m.test(frontMatter)) {
+    return null;
+  }
+  return /^id:\s*([A-Za-z0-9-]+)\s*$/m.exec(frontMatter)?.[1] ?? null;
+}
+
+export function slugForLessonHeading(headingText: string): string {
+  return headingText
+    .trim()
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/<[^>]+>/g, "")
+    .toLowerCase()
+    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+    .trim()
+    .replace(/\s/g, "-");
+}
+
+function lessonHeadingAnchors(markdown: string): Set<string> {
+  const anchors = new Set<string>();
+  const seen = new Map<string, number>();
+  const headingPattern = /^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$/gm;
+  for (const match of markdown.matchAll(headingPattern)) {
+    const baseSlug = slugForLessonHeading(match[1] ?? "");
+    if (baseSlug.length === 0) {
+      continue;
+    }
+    const previousCount = seen.get(baseSlug) ?? 0;
+    seen.set(baseSlug, previousCount + 1);
+    anchors.add(previousCount === 0 ? baseSlug : `${baseSlug}-${previousCount}`);
+  }
+  return anchors;
+}
+
+async function loadLessons(lessonRoot: string, issues: string[]): Promise<Map<string, LessonRecord>> {
+  const lessons = new Map<string, LessonRecord>();
+  for (const filePath of await findMarkdownFiles(lessonRoot)) {
+    const markdown = await readFile(filePath, "utf8");
+    const id = parseLessonId(markdown);
+    if (id === null) {
+      continue;
+    }
+    const previous = lessons.get(id);
+    if (previous !== undefined) {
+      issues.push(`${filePath}: duplicate lesson id ${id}; first seen in ${previous.filePath}`);
+      continue;
+    }
+    lessons.set(id, { id, filePath, anchors: lessonHeadingAnchors(markdown) });
+  }
+  return lessons;
 }
 
 function normalizeText(value: string): string {
@@ -403,9 +494,15 @@ function validateHintShape(hint: LoadedQuestionHint, relativePath: string, issue
   if (hint.licenseClass !== EXPECTED_LICENSE_CLASS) {
     issues.push(`${relativePath}: licenseClass must be ${EXPECTED_LICENSE_CLASS}`);
   }
-  if (!Array.isArray(hint.hints) || hint.hints.length !== 2) {
-    issues.push(`${relativePath}: hints must contain exactly two entries`);
+  if (!Array.isArray(hint.hints) || hint.hints.length < 1 || hint.hints.length > 2) {
+    issues.push(`${relativePath}: hints must contain one or two entries`);
     return false;
+  }
+  if (hint.hints.length === 1 && !isNonEmptyString(hint.singleLevelReason)) {
+    issues.push(`${relativePath}: singleLevelReason must be non-empty when only one hint level is present`);
+  }
+  if (hint.hints.length === 2 && hint.singleLevelReason !== undefined) {
+    issues.push(`${relativePath}: singleLevelReason is only allowed for one-level hints`);
   }
   for (const [index, step] of hint.hints.entries()) {
     const expectedLevel = index + 1;
@@ -424,6 +521,16 @@ function validateHintShape(hint: LoadedQuestionHint, relativePath: string, issue
       issues.push(`${label}.fr must be non-empty`);
     }
   }
+  if (!isRecord(hint.lessonLink)) {
+    issues.push(`${relativePath}: lessonLink must be an object`);
+  } else {
+    if (!isNonEmptyString(hint.lessonLink.lessonId)) {
+      issues.push(`${relativePath}: lessonLink.lessonId must be non-empty`);
+    }
+    if (hint.lessonLink.sectionAnchor !== undefined && !isNonEmptyString(hint.lessonLink.sectionAnchor)) {
+      issues.push(`${relativePath}: lessonLink.sectionAnchor must be non-empty when present`);
+    }
+  }
   if (hint.referenceSheetSection !== undefined && hint.referenceSheetSection !== null && !(referenceSheetSectionKeys as readonly string[]).includes(hint.referenceSheetSection)) {
     issues.push(`${relativePath}: referenceSheetSection must be one of ${referenceSheetSectionKeys.join(", ")} or null`);
   }
@@ -439,6 +546,20 @@ function validateHintLocation(hint: LoadedQuestionHint, relativePath: string, qu
   const normalizedPath = relativePath.split(path.sep).join("/");
   if (!normalizedPath.endsWith(expectedFile)) {
     issues.push(`${relativePath}: expected location to end with ${expectedFile}`);
+  }
+}
+
+function validateHintLessonLink(hint: LoadedQuestionHint, relativePath: string, lessonsById: ReadonlyMap<string, LessonRecord>, issues: string[]): void {
+  if (!isRecord(hint.lessonLink) || !isNonEmptyString(hint.lessonLink.lessonId)) {
+    return;
+  }
+  const lesson = lessonsById.get(hint.lessonLink.lessonId);
+  if (lesson === undefined) {
+    issues.push(`${relativePath}: lessonLink.lessonId ${hint.lessonLink.lessonId} is not an existing lesson`);
+    return;
+  }
+  if (hint.lessonLink.sectionAnchor !== undefined && isNonEmptyString(hint.lessonLink.sectionAnchor) && !lesson.anchors.has(hint.lessonLink.sectionAnchor)) {
+    issues.push(`${relativePath}: lessonLink.sectionAnchor ${hint.lessonLink.sectionAnchor} does not exist in ${path.relative(REPO_ROOT, lesson.filePath).split(path.sep).join("/")}`);
   }
 }
 
@@ -507,8 +628,10 @@ function filteredHints(hints: readonly LoadedQuestionHint[], questionsById: Read
 export async function checkHints(options: HintCheckOptions = {}): Promise<HintCheckReport> {
   const hintRoot = options.hintRoot ?? DEFAULT_HINT_ROOT;
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTION_PATH;
+  const lessonRoot = options.lessonRoot ?? DEFAULT_LESSON_ROOT;
   const issues: string[] = [];
   const questionsById = await loadQuestions(questionsPath);
+  const lessonsById = await loadLessons(lessonRoot, issues);
   const selectedQuestions = filteredQuestions(questionsById.values(), options);
   const selectedQuestionIds = new Set(selectedQuestions.map((question) => question.id));
   const allHints = await loadQuestionHints({ hintRoot });
@@ -536,6 +659,7 @@ export async function checkHints(options: HintCheckOptions = {}): Promise<HintCh
       continue;
     }
     validateHintLocation(hint, relativePath, question, issues);
+    validateHintLessonLink(hint, relativePath, lessonsById, issues);
     if (shapeIsValid || validHintStepsForLeakage(hint).length > 0) {
       validateHintLeakage(hint, relativePath, question, issues);
     }
@@ -568,6 +692,7 @@ export async function checkHints(options: HintCheckOptions = {}): Promise<HintCh
 type MutableHintCheckOptions = {
   hintRoot?: string;
   questionsPath?: string;
+  lessonRoot?: string;
   categoryId?: string;
   subsectionId?: string;
   requireComplete?: boolean;
@@ -591,11 +716,13 @@ function parseArgs(argv: readonly string[]): HintCheckOptions & { readonly selfT
       options.hintRoot = path.resolve(process.cwd(), requireValue(argv, ++index, arg));
     } else if (arg === "--questions") {
       options.questionsPath = path.resolve(process.cwd(), requireValue(argv, ++index, arg));
+    } else if (arg === "--lesson-root") {
+      options.lessonRoot = path.resolve(process.cwd(), requireValue(argv, ++index, arg));
     } else {
       throw new Error(`unknown argument ${arg}`);
     }
   }
-  return { selfTest: options.selfTest, hintRoot: options.hintRoot, questionsPath: options.questionsPath, categoryId: options.categoryId, subsectionId: options.subsectionId, requireComplete: options.requireComplete };
+  return { selfTest: options.selfTest, hintRoot: options.hintRoot, questionsPath: options.questionsPath, lessonRoot: options.lessonRoot, categoryId: options.categoryId, subsectionId: options.subsectionId, requireComplete: options.requireComplete };
 }
 
 function requireValue(argv: readonly string[], index: number, flag: string): string {
@@ -644,6 +771,7 @@ function hint(overrides: Partial<QuestionHint> = {}): QuestionHint {
         fr: "La fréquence reste stable quand un bloc de circuit fixe le rythme radiofréquence au lieu de dériver.",
       },
     ],
+    lessonLink: { lessonId: "L-001-01", sectionAnchor: "shared-setup" },
     referenceSheetSection: null,
     licenseClass: "original",
     ...overrides,
@@ -655,6 +783,7 @@ async function withSelfTestFixture(name: string, run: (root: string) => Promise<
   try {
     await mkdir(path.join(root, "content/hints/b-001"), { recursive: true });
     await mkdir(path.join(root, "content/generated/basic-2025-07-15"), { recursive: true });
+    await mkdir(path.join(root, "content/lessons/m1-regulations-policies"), { recursive: true });
     await run(root);
   } finally {
     await rm(root, { recursive: true, force: true });
@@ -664,6 +793,7 @@ async function withSelfTestFixture(name: string, run: (root: string) => Promise<
 async function writeSelfTestFixture(root: string, hintRecord: QuestionHint, questions: readonly QuestionRecord[] = [question()]): Promise<void> {
   await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), `${JSON.stringify(questions, null, 2)}\n`, "utf8");
   await writeFile(path.join(root, "content/hints/b-001/b-001-001-001.json"), `${JSON.stringify(hintRecord, null, 2)}\n`, "utf8");
+  await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\n---\n# Fixture Lesson\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
 }
 
 
@@ -673,6 +803,7 @@ async function assertSelfTestAccepts(name: string, hintRecord: QuestionHint, que
     await checkHints({
       hintRoot: path.join(root, "content/hints"),
       questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      lessonRoot: path.join(root, "content/lessons"),
       requireComplete: true,
     });
   });
@@ -685,6 +816,7 @@ async function assertSelfTestRejects(name: string, hintRecord: QuestionHint, exp
       await checkHints({
         hintRoot: path.join(root, "content/hints"),
         questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+        lessonRoot: path.join(root, "content/lessons"),
         requireComplete: true,
       });
     } catch (error: unknown) {
@@ -703,6 +835,7 @@ export async function runHintCheckerSelfTest(): Promise<void> {
     await checkHints({
       hintRoot: path.join(root, "content/hints"),
       questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      lessonRoot: path.join(root, "content/lessons"),
       requireComplete: true,
     });
   });
@@ -728,6 +861,29 @@ export async function runHintCheckerSelfTest(): Promise<void> {
   ] }), "hints[0].fr must be non-empty");
 
   await assertSelfTestRejects("bad-reference", hint({ referenceSheetSection: "bad-section" as ReferenceSheetSectionKey }), "referenceSheetSection must be one of");
+
+  await assertSelfTestAccepts("single-level-with-reason", hint({
+    hints: [
+      { level: 1, en: "Think about the broad setup before choosing.", fr: "Pensez au contexte général avant de choisir." },
+    ],
+    singleLevelReason: "A second hint would name the deciding document for this recall question.",
+  }));
+
+  await assertSelfTestRejects("single-level-missing-reason", hint({
+    hints: [
+      { level: 1, en: "Think about the broad setup before choosing.", fr: "Pensez au contexte général avant de choisir." },
+    ],
+  }), "singleLevelReason must be non-empty");
+
+  await assertSelfTestRejects("two-level-with-single-level-reason", hint({ singleLevelReason: "Not needed with two levels." }), "singleLevelReason is only allowed");
+
+  await assertSelfTestRejects("missing-lesson-link", { ...hint(), lessonLink: undefined } as unknown as QuestionHint, "lessonLink must be an object");
+
+  await assertSelfTestRejects("unknown-lesson-link", hint({ lessonLink: { lessonId: "L-999-99" } }), "lessonLink.lessonId L-999-99 is not an existing lesson");
+
+  await assertSelfTestRejects("unknown-lesson-anchor", hint({ lessonLink: { lessonId: "L-001-01", sectionAnchor: "missing-section" } }), "lessonLink.sectionAnchor missing-section does not exist");
+
+  await assertSelfTestAccepts("lesson-link-without-anchor", hint({ lessonLink: { lessonId: "L-001-01" } }));
 
   await assertSelfTestRejects("missing-en-key", hint({ hints: [
     { level: 1, fr: "Pensez au bloc de fréquence." } as unknown as QuestionHint["hints"][number],
@@ -918,6 +1074,7 @@ export async function runHintCheckerSelfTest(): Promise<void> {
       await checkHints({
         hintRoot: path.join(root, "content/hints"),
         questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+        lessonRoot: path.join(root, "content/lessons"),
         requireComplete: true,
       });
     });

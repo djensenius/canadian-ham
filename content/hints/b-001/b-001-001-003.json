@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Think of civilian spectrum management. The responsible body is the federal department that administers radio permissions and compliance.",
-      "fr": "Pensez à la gestion civile du spectre. L'organisme responsable est le ministère fédéral qui administre les autorisations radio et la conformité."
+      "en": "Classify the role first: this asks for the civilian federal organization that runs the radio-rule framework.",
+      "fr": "Classez d'abord le rôle : on cherche l'organisation fédérale civile qui administre le cadre des règles radio."
     },
     {
       "level": 2,
-      "en": "Radio administration belongs with the civil portfolio that manages spectrum use, technical permissions, and enforcement for Canada's communications marketplace.",
-      "fr": "L'administration radio relève du portefeuille civil qui gère l'utilisation du spectre, les autorisations techniques et l'application des règles dans le marché canadien des communications."
+      "en": "The framework has layers: an Act gives legal authority; regulations are binding rules made under that authority; departmental standards are technical operating documents; the department administers the system.",
+      "fr": "Le cadre s'organise en niveaux : une loi confère l'autorité juridique; les règlements sont des règles obligatoires prises sous cette autorité; les normes ministérielles sont des documents techniques d'exploitation; le ministère administre l'ensemble."
     }
   ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "how-these-rules-fit-together"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original"
 }

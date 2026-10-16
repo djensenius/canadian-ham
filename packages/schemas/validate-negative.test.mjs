@@ -268,7 +268,27 @@ test("hint schema rejects each ladder constraint independently", () => {
   assertSchemaRejects(
     { ...hint, hints: [hint.hints[0]] },
     "hint.schema.json",
-    "$.hints: expected at least 2 item(s)",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    { ...hint, hints: [] },
+    "hint.schema.json",
+    "$.hints: expected at least 1 item(s)",
+  );
+  assertSchemaRejects(
+    { ...hint, singleLevelReason: "Only for one-level hints." },
+    "hint.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    { ...hint, lessonLink: { sectionAnchor: "how-these-rules-fit-together" } },
+    "hint.schema.json",
+    "$.lessonLink: missing required property lessonId",
+  );
+  assertSchemaRejects(
+    { ...hint, lessonLink: { lessonId: "NOT-A-LESSON" } },
+    "hint.schema.json",
+    "$.lessonLink.lessonId: expected string to match",
   );
   assertSchemaRejects(
     { ...hint, referenceSheetSection: "unknown-section" },

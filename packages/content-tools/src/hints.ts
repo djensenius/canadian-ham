@@ -40,12 +40,21 @@ export interface QuestionHintStep {
   readonly fr: string;
 }
 
+export interface LessonLink {
+  readonly lessonId: string;
+  readonly sectionAnchor?: string;
+}
+
+export type QuestionHintSteps = readonly [QuestionHintStep] | readonly [QuestionHintStep, QuestionHintStep];
+
 export interface QuestionHint {
   readonly id: string;
   readonly questionId: string;
   readonly bankId: string;
   readonly status: string;
-  readonly hints: readonly [QuestionHintStep, QuestionHintStep];
+  readonly hints: QuestionHintSteps;
+  readonly lessonLink: LessonLink;
+  readonly singleLevelReason?: string;
   readonly referenceSheetSection?: ReferenceSheetSectionKey | null;
   readonly licenseClass: "original";
 }
