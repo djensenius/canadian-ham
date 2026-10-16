@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:12'
-updated_date: '2026-10-16 21:48'
+updated_date: '2026-10-16 22:19'
 labels:
   - engine
 dependencies: []
@@ -43,4 +43,6 @@ Question hints need a durable progress state before UI work records hinted answe
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented answered-with-help as an additional flag alongside correct/incorrect outcomes. Scheduling rule chosen and documented: any answered-with-help attempt is proficiency-no-credit and uses the same immediate review scheduling as an incorrect answer (box 0, dueAt = now), while correctAttempts/recentResults still preserve actual accuracy. Added parallel recentAnsweredWithHelp so weak-area logic can treat helped correct answers as not proficiency-correct.
+
+Opened PR #277 with Apple xbuild engine parity and macOS unit checks marked pending because /tmp/task-50.15-apple-checks.sh is still queued behind the shared xbuild lock. Non-Apple checks completed: pnpm typecheck, pnpm test, pnpm check:schemas, pnpm import:check, swift test in packages/engine-swift, and TS engine fixture tests.
 <!-- SECTION:NOTES:END -->
