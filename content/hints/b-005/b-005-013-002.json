@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "An ammeter measures I, so the circuit current must pass through the meter.",
-      "fr": "Un ampèremètre mesure I; le courant du circuit doit donc passer par l'appareil de mesure."
+      "en": "Review how test meters are connected to a circuit.",
+      "fr": "Revoyez comment les appareils de mesure se raccordent à un circuit."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "Meter-connection recall: a second hint would define or name the connection."
+  "singleLevelReason": "Any principle about what the meter must carry identifies the connection option; topic pointer and lesson link only."
 }

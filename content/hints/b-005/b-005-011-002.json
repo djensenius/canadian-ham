@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Impedance is tied to the E-over-I relationship seen at a winding.",
-      "fr": "L'impédance est liée au rapport E sur I vu à un côté du transformateur."
-    },
-    {
-      "level": 2,
-      "en": "Write Z = E / I for each winding and apply the turns-ratio idea to E and to I.",
-      "fr": "Écrivez Z = E / I pour le côté primaire et pour le côté secondaire, puis appliquez l'idée du rapport de spires à E et à I."
+      "en": "Review how a transformer's turns ratio affects its windings.",
+      "fr": "Revoyez l’effet du rapport de spires d’un transformateur sur ses enroulements."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "transformer-power-calculations"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Any E-and-I reasoning for the windings restates the correct mechanism; topic pointer and lesson link only."
 }
