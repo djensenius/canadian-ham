@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-007-009",
+  "questionId": "B-006-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how a straight dipole’s installed orientation relates to the wave it launches.",
+      "fr": "Revoyez le lien entre l’orientation installée d’un dipôle droit et l’onde qu’il émet."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "polarization"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

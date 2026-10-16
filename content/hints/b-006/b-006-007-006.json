@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-007-006",
+  "questionId": "B-006-007-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the reference antenna idea that cannot be built as a real station antenna.",
+      "fr": "Revoyez l’idée d’antenne de référence qui ne peut pas être construite comme antenne réelle de station."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "isotropic-and-dipole-reference-ideas"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}
