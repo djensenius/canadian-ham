@@ -67,7 +67,7 @@ struct LearnView: View {
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored.")
+                    Text("Advanced lessons are coming. Use Advanced practice and mock exams in the meantime.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                 }

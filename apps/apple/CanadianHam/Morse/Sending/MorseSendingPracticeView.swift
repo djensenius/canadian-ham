@@ -50,7 +50,7 @@ struct MorseSendingPracticeView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("Practise tap timing with a straight key or iambic-style paddles. Focus this screen first, then hold Space for the straight key; use J for dots and K for dashes, or use the large touch targets.") // l10n: localized
+                Text("With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 morseTokenButton("Exam-style check") { openExamStyleCheck() }

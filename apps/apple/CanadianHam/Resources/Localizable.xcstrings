@@ -2749,18 +2749,18 @@
         }
       }
     },
-    "Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored." : {
+    "Advanced lessons are coming. Use Advanced practice and mock exams in the meantime." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
+            "value" : "Les leçons de compétence supérieure sont à venir. Entre-temps, utilisez les exercices et les examens simulés de compétence supérieure."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
+            "value" : "Les leçons de compétence supérieure sont à venir. Entre-temps, utilisez les exercices et les examens simulés de compétence supérieure."
           }
         }
       }
@@ -7765,22 +7765,6 @@
         }
       }
     },
-    "Practise tap timing with a straight key or iambic-style paddles. Focus this screen first, then hold Space for the straight key; use J for dots and K for dashes, or use the large touch targets." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets, ou utilisez les grandes cibles tactiles."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets, ou utilisez les grandes cibles tactiles."
-          }
-        }
-      }
-    },
     "Preferences saved locally." : {
       "localizations" : {
         "en" : {
@@ -9533,34 +9517,34 @@
         }
       }
     },
-    "Study for the Canadian Amateur Radio Advanced Qualification with the official ISED question bank. Advanced progress is tracked separately from Basic." : {
+    "Study for the Amateur Radio Operator Certificate with Advanced Qualification using the official ISED question bank. Advanced progress is tracked separately from Basic." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez en vue de la compétence supérieure radioamateur canadienne avec la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence supérieure avec la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez en vue de la compétence supérieure radioamateur canadienne avec la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence supérieure avec la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
           }
         }
       }
     },
-    "Study for the Canadian Amateur Radio Basic Qualification with the official ISED question bank." : {
+    "Study for the Amateur Radio Operator Certificate with Basic Qualification using the official ISED question bank." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez en vue de la compétence de base radioamateur canadienne avec la banque de questions officielle d’ISDE."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence de base avec la banque de questions officielle d’ISDE."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez en vue de la compétence de base radioamateur canadienne avec la banque de questions officielle d’ISDE."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence de base avec la banque de questions officielle d’ISDE."
           }
         }
       }
@@ -10619,6 +10603,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Révision des caractères faibles"
+          }
+        }
+      }
+    },
+    "With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour le manipulateur droit; utilisez J pour les points et K pour les traits. Sinon, utilisez les grandes cibles tactiles."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour le manipulateur droit; utilisez J pour les points et K pour les traits. Sinon, utilisez les grandes cibles tactiles."
           }
         }
       }

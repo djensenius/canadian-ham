@@ -40,7 +40,7 @@ struct HomeView: View {
                         .font(DesignTokens.FontScale.display.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text(bank.courseBankID == .advanced ? "Study for the Canadian Amateur Radio Advanced Qualification with the official ISED question bank. Advanced progress is tracked separately from Basic." : "Study for the Canadian Amateur Radio Basic Qualification with the official ISED question bank.") // l10n: localized
+                    Text(bank.courseBankID == .advanced ? "Study for the Amateur Radio Operator Certificate with Advanced Qualification using the official ISED question bank. Advanced progress is tracked separately from Basic." : "Study for the Amateur Radio Operator Certificate with Basic Qualification using the official ISED question bank.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     homeActionLayout
