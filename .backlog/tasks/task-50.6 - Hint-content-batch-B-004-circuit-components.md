@@ -1,11 +1,11 @@
 ---
 id: TASK-50.6
 title: 'Hint content batch: B-004 circuit components'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:05'
+updated_date: '2026-10-16 15:39'
 labels:
   - content
 dependencies:
@@ -30,11 +30,11 @@ Write and review original EN/FR hint content for B-004 circuit component questio
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
-- [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [x] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
 - [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
-- [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
-- [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [x] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [x] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
 - [x] #6 All in-scope B-004 circuit components active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
 
@@ -67,10 +67,12 @@ Validation passed after implementation:
 Manual self-review: applied EN/FR literal-option self-test, checked hint prose avoids reference-sheet pointer text/copying, and checked the four two-level numeric/method hints do not state final answer values or band ordinals. Content-review acceptance criteria remain for reviewer.
 
 Review fix round for PR #271 (batch review r271): addressed all listed B-004 findings across 33 hint files. Reworked 006-005/006-010/006-011 two-level colour-code hints so Hint 2 sets up the table/method without naming matching digits, multiplier band, or final value; 006-005 resolves orange-orange-black vs orange-white-black (second band), 006-010 resolves brown-red-brown vs brown-red-red (third band), and 006-011 leaves 27 + four zeros -> 270 kΩ for the learner. Rewrote answer-bearing single-level pointers to neutral section-level topics in EN/FR, applied the literal option self-test in both languages, fixed FR terminology/calques, and updated 005-003 lesson link to triode-vacuum-tubes. Counts remain 63/63 B-004 hints: 59 single-level and 4 two-level. Validation passed: pnpm check:hints -- --category B-004 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
+
+Coordinator closeout 2026-10-16: batch content review completed (review files ~/.cache/canadian-ham-reviews/r271*.md), all findings fixed and coordinator spot-checked against ISED options; merged in PR #271.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented 63 original EN/FR hint files for active B-004 circuit components questions: 59 single-level recall pointers with singleLevelReason and 4 two-level resistor-method hints with task-note justifications. Automated hint, schema, explanation, originality, typecheck, and test checks passed. Ready for content review.
+Hand-written EN/FR hints for every active question in this category, reviewed (no answer leakage, no elimination, neutral section-level pointers, verified method hints), merged in PR #271.
 <!-- SECTION:FINAL_SUMMARY:END -->
