@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-009-001",
+  "questionId": "B-003-009-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the parts of a basic Yagi antenna.",
+      "fr": "Revoyez les pièces d'une antenne Yagi de base."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-04",
+    "sectionAnchor": "the-basic-yagi"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

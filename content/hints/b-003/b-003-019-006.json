@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-019-006",
+  "questionId": "B-003-019-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review power-supply safety devices and stored charge.",
+      "fr": "Revoyez les dispositifs de sécurité de l'alimentation et les charges emmagasinées."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "fuses-chassis-safety-and-stored-charge"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

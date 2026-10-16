@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-020-002",
+  "questionId": "B-003-020-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review lightning, tower and antenna-contact safety.",
+      "fr": "Revoyez la sécurité liée à la foudre, aux pylônes et au contact avec les antennes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "lightning-towers-and-antenna-contact"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

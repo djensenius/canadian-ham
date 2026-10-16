@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-003-021-008",
+  "questionId": "B-003-021-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the free-space distance-scaling discussion for RF exposure.",
+      "fr": "Revoyez la discussion sur le changement avec la distance en espace libre pour l’exposition RF."
+    },
+    {
+      "level": 2,
+      "en": "Work from the spreading-area model: as distance changes, imagine the same power spread over a larger spherical surface, then compare the choices.",
+      "fr": "Partez du modèle d’étalement sur une surface : quand la distance change, imaginez la même puissance répartie sur une plus grande surface sphérique, puis comparez les choix."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "rf-exposure-and-nearby-people"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

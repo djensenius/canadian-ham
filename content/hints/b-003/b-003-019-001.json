@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-019-001",
+  "questionId": "B-003-019-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review station grounding and bonding.",
+      "fr": "Revoyez la mise à la terre et les liaisons de la station."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "grounding-and-bonding"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
