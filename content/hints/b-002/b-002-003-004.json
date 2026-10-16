@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-003-004",
+  "questionId": "B-002-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Choose direct operation when the repeater is no longer adding a useful path.",
+      "fr": "Choisissez l’exploitation directe lorsque le répéteur n’ajoute plus de trajet utile."
+    },
+    {
+      "level": 2,
+      "en": "If two stations can copy one another without the relay, moving off the relay leaves it available for stations that need it.",
+      "fr": "Si deux stations peuvent se copier sans le relais, quitter le relais le laisse disponible aux stations qui en ont besoin."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "simplex-and-repeater-courtesy"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
