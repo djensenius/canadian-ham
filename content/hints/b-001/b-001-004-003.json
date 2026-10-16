@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-004-003",
+  "questionId": "B-001-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Separate entry requirements, the first exam step, later credentials, code testing, and authority outside the hobby before choosing.",
+      "fr": "Séparez les conditions d'entrée, la première étape d'examen, les titres ultérieurs, l'épreuve de code et l'autorisation hors loisir avant de choisir."
+    },
+    {
+      "level": 2,
+      "en": "The certification path starts with an entry step, then later credentials branch independently. Accessibility and non-amateur authority facts are separate from that sequence.",
+      "fr": "Le parcours de certification commence par une étape d'entrée, puis les titres ultérieurs se traitent séparément. L'accessibilité et les autorisations non radioamateurs forment des faits distincts."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "reference-facts-basic-eligibility-qualifications-exams-and-accommodations"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

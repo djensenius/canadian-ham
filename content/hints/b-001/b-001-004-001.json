@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-004-001",
+  "questionId": "B-001-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Treat this as an entry-eligibility row, not as an exam sequence or charge rule.",
+      "fr": "Traitez ceci comme une ligne d'admissibilité d'entrée, et non comme une séquence d'examen ou une règle de frais."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "reference-facts-basic-eligibility-qualifications-exams-and-accommodations"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint for this direct eligibility recall item would give away the age-limit fact."
+}
