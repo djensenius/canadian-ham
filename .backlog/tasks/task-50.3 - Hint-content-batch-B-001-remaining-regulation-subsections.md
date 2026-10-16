@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 13:09'
+updated_date: '2026-10-16 13:29'
 labels:
   - content
 dependencies:
@@ -134,4 +134,6 @@ B-001-025 manually written as calibrated topic-pointer B hints: 4 hints (0 two-l
 Completed all remaining B-001 hint files. Counts by subsection (two-level/B): B-001-002 0/9; B-001-003 0/8; B-001-004 0/7; B-001-005 0/6; B-001-006 0/6; B-001-007 0/11; B-001-008 0/8; B-001-009 0/9; B-001-010 0/10; B-001-011 0/10; B-001-012 0/4; B-001-013 0/11; B-001-014 0/11; B-001-015 6/5; B-001-016 0/11; B-001-017 0/10; B-001-018 0/4; B-001-019 0/6; B-001-020 0/5; B-001-021 0/9; B-001-022 0/5; B-001-023 0/10; B-001-024 0/10; B-001-025 0/4. Remaining-batch total: 6 two-level method hints and 189 single-level B topic pointers (195 files). Category total including pilot B-001-001: 8 two-level and 191 B (199 files). Final validation passed: pnpm check:hints -- --category B-001 --require-complete; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
 
 Opened PR #267 (task-50.3: B-001 hints) with per-subsection counts, 10 EN/FR samples including 3 method hints and option lists, and checks run. Added @copilot reviewer.
+
+Addressed PR #267 batch review at head 62a0bfd7. Rewrote all listed leaking/leaning B-001 topic pointers; upgraded reviewed method-capable questions to two-level hints (remaining batch now 33 two-level / 162 B single-level; category total 35 two-level / 164 B); fixed B-001-015-006/-007/-008 band-method selection issues; updated FR terminology; tightened shared short-correct-answer checker with a self-test; updated README and PR body with counts, 8 review-round samples, and a finding-to-fix table. Validation passed: pnpm check:hints:self-test; pnpm check:hints -- --category B-001 --require-complete; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Commit: ab41e98d868f19afa54bb3d431ae50fbcd835488.
 <!-- SECTION:NOTES:END -->
