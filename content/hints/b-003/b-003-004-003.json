@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why the CW oscillator is isolated from changing loads in later stages.",
-      "fr": "Revoyez pourquoi l’oscillateur CW est isolé des charges variables dans les étages suivants."
+      "en": "Review CW transmitter stages.",
+      "fr": "Revoyez les étages d'un émetteur CW."
     }
   ],
   "lessonLink": {

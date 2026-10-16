@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how Morse characters are produced from a CW carrier in the basic block diagram.",
-      "fr": "Revoyez comment les caractères Morse sont produits à partir d’une porteuse CW dans le schéma élémentaire."
+      "en": "Review CW transmitter stages.",
+      "fr": "Revoyez les étages d'un émetteur CW."
     }
   ],
   "lessonLink": {
