@@ -120,4 +120,6 @@ B-001-018 manually written as calibrated topic-pointer B hints: 4 hints (0 two-l
 B-001-019 manually written as calibrated topic-pointer B hints: 6 hints (0 two-level, 6 single-level B). Validation: pnpm check:hints -- --subsection B-001-019 --require-complete passed.
 
 B-001-020 manually written as calibrated topic-pointer B hints: 5 hints (0 two-level, 5 single-level B). Validation: pnpm check:hints -- --subsection B-001-020 --require-complete passed.
+
+B-001-021 manually written as calibrated topic-pointer B hints: 9 hints (0 two-level, 9 single-level B). Validation: pnpm check:hints -- --subsection B-001-021 --require-complete passed.
 <!-- SECTION:NOTES:END -->
