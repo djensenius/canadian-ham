@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why local VHF and UHF voice commonly uses FM in weak-signal conditions.",
-      "fr": "Revoyez pourquoi la phonie locale VHF et UHF utilise souvent la FM dans des conditions de signaux faibles."
+      "en": "Review FM deviation, squelch and capture effect.",
+      "fr": "Revoyez l'excursion FM, le silencieux et l'effet de capture."
     }
   ],
   "lessonLink": {

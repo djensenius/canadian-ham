@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what remains from an FM transmitter when the speech path supplies no audio.",
-      "fr": "Revoyez ce qui reste d’un émetteur FM lorsque le trajet de parole ne fournit aucun audio."
+      "en": "Review FM deviation, squelch and capture effect.",
+      "fr": "Revoyez l'excursion FM, le silencieux et l'effet de capture."
     }
   ],
   "lessonLink": {

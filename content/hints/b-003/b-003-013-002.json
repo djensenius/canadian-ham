@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how transmitter deviation affects the loudness heard through an FM repeater.",
-      "fr": "Revoyez comment l’excursion de l’émetteur influence le volume entendu par un répéteur FM."
+      "en": "Review FM deviation, squelch and capture effect.",
+      "fr": "Revoyez l'excursion FM, le silencieux et l'effet de capture."
     }
   ],
   "lessonLink": {

@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the FM bandwidth estimate for typical voice deviation.",
-      "fr": "Revoyez l’estimation de largeur de bande FM pour une excursion vocale typique."
+      "en": "Estimate FM bandwidth with Carson's rule: about 2 × (peak deviation + highest audio frequency).",
+      "fr": "Estimez la largeur de bande FM avec la règle de Carson : environ 2 × (excursion de crête + plus haute fréquence audio)."
+    },
+    {
+      "level": 2,
+      "en": "Use the given deviation and a typical voice audio limit of about 3 kHz. Add them, double the sum, then find the range that contains your estimate.",
+      "fr": "Utilisez l'excursion donnée et une limite audio vocale typique d'environ 3 kHz ; additionnez-les, doublez la somme, puis trouvez l'intervalle qui contient votre estimation."
     }
   ],
   "lessonLink": {
     "lessonId": "L-003-05",
     "sectionAnchor": "fm-deviation-squelch-and-capture-effect"
   },
-  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
   "referenceSheetSection": null,
   "licenseClass": "original"
 }
