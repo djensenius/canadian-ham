@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Check whether the reported frequency is an integer multiple of the operating frequency.",
-      "fr": "Vérifiez si la fréquence rapportée est un multiple entier de la fréquence d’exploitation."
+      "en": "Compare the reported frequency with your operating frequency: work out their ratio.",
+      "fr": "Comparez la fréquence rapportée à votre fréquence d'exploitation : calculez leur rapport."
     },
     {
       "level": 2,
-      "en": "Divide the reported frequency by the operating frequency; use a whole-number result to classify the unwanted output.",
-      "fr": "Divisez la fréquence rapportée par la fréquence d’exploitation; utilisez un résultat entier pour classer la sortie indésirable."
+      "en": "Recall what the lesson calls an unwanted output at that many times the operating frequency.",
+      "fr": "Rappelez-vous comment la leçon nomme une sortie indésirable à ce nombre de fois la fréquence d'exploitation."
     }
   ],
   "lessonLink": {

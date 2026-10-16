@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what can happen to a weak wanted signal when a nearby station is active.",
-      "fr": "Revoyez ce qui peut arriver à un faible signal voulu quand une station voisine est active."
+      "en": "Review how interference is diagnosed between stations set up at the same site.",
+      "fr": "Revoyez comment diagnostiquer le brouillage entre stations installées au même endroit."
     }
   ],
   "lessonLink": {

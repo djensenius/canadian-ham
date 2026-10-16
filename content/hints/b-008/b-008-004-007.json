@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Translate the 15 m band to its approximate MHz range, then test an integer multiple against the TV channel range.",
-      "fr": "Convertissez la bande de 15 m en plage approximative en MHz, puis testez un multiple entier avec la plage du canal de télévision."
+      "en": "Convert the 15 m band to its real frequency limits from the band table (not 300 / λ) and compare them with the channel 3 range.",
+      "fr": "Convertissez la bande de 15 m en limites de fréquences réelles à partir du tableau des bandes (et non avec 300 / λ), puis comparez-les à la plage du canal 3."
     },
     {
       "level": 2,
-      "en": "Multiply the band edges by the same whole number and compare the resulting range with channel 3.",
-      "fr": "Multipliez les limites de bande par le même nombre entier et comparez la plage obtenue au canal 3."
+      "en": "Find how many times those limits must be multiplied to land in channel 3, then recall what the lesson calls an output at that many times the operating frequency.",
+      "fr": "Trouvez par combien il faut multiplier ces limites pour tomber dans le canal 3, puis rappelez-vous comment la leçon nomme une sortie à ce nombre de fois la fréquence d'exploitation."
     }
   ],
   "lessonLink": {

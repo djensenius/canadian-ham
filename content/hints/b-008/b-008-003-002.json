@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the transmitter-output category for unwanted signals near or away from the intended channel.",
-      "fr": "Revoyez la catégorie de sortie de l’émetteur pour les signaux indésirables près ou loin du canal voulu."
+      "en": "Review transmitter problems that affect nearby frequencies.",
+      "fr": "Revoyez les problèmes d'émetteur qui touchent les fréquences voisines."
     }
   ],
   "lessonLink": {

@@ -6,15 +6,19 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the filter choice for one troublesome band when reception is still needed on both sides of it.",
-      "fr": "Revoyez le choix de filtre pour une bande problématique quand la réception reste nécessaire des deux côtés."
+      "en": "Place the interfering band and both wanted bands on one frequency line: use the band table, and 300 / λ for the 31 m broadcast band.",
+      "fr": "Placez la bande brouilleuse et les deux bandes voulues sur un même axe de fréquences : utilisez le tableau des bandes, et 300 / λ pour la bande de radiodiffusion de 31 m."
+    },
+    {
+      "level": 2,
+      "en": "Compare that line with each filter family's response sketch and find the response that matches what must be removed and kept.",
+      "fr": "Comparez cet axe avec la courbe de réponse de chaque famille de filtres et trouvez celle qui correspond à ce qu'il faut retirer et garder."
     }
   ],
   "lessonLink": {
     "lessonId": "L-008-02",
-    "sectionAnchor": "band-pass-band-reject-and-notch-filters"
+    "sectionAnchor": "filter-vocabulary"
   },
-  "singleLevelReason": "Application recall: another hint would state the response that removes the middle range.",
   "referenceSheetSection": null,
   "licenseClass": "original"
 }

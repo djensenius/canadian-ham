@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the named transmitter-output problems that must be corrected before further operation.",
-      "fr": "Revoyez les problèmes nommés de sortie d’émetteur qui doivent être corrigés avant de continuer à émettre."
+      "en": "Review the names given to transmitter emission problems.",
+      "fr": "Revoyez les noms donnés aux problèmes d'émission d'un émetteur."
     }
   ],
   "lessonLink": {

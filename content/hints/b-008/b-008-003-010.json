@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the amplifier-instability cause described in the layout and neutralization discussion.",
-      "fr": "Revoyez la cause d’instabilité d’amplificateur décrite avec l’implantation et la neutralisation."
+      "en": "Review the parasitic oscillation section.",
+      "fr": "Revoyez la section sur les oscillations parasites."
     }
   ],
   "lessonLink": {

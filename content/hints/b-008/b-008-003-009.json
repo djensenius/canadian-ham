@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the amplifier-instability subsection and its vocabulary for extra self-generated RF.",
-      "fr": "Revoyez la sous-section sur l’instabilité d’amplificateur et son vocabulaire pour la RF supplémentaire produite par l’étage lui-même."
+      "en": "Review the vocabulary for unwanted oscillations in transmitter stages.",
+      "fr": "Revoyez le vocabulaire des oscillations indésirables dans les étages d'émetteur."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the cable treatment used when audio or telephone leads carry unwanted RF into equipment.",
-      "fr": "Revoyez le traitement des câbles lorsque des fils audio ou téléphoniques amènent de la RF indésirable dans un appareil."
+      "en": "Review the suppression devices for audio and telephone wiring.",
+      "fr": "Revoyez les dispositifs de réduction du brouillage pour les fils audio et téléphoniques."
     }
   ],
   "lessonLink": {

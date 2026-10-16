@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the SSB transmitter section on non-linear operation and signal spreading near the intended signal.",
-      "fr": "Revoyez la section sur l’émetteur BLU, le fonctionnement non linéaire et l’élargissement près du signal voulu."
+      "en": "Review the causes of splatter.",
+      "fr": "Revoyez les causes de l'élargissement des bandes (« splatter »)."
     }
   ],
   "lessonLink": {

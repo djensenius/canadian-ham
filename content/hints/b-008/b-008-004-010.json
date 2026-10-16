@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Use each band name as an approximate frequency range, then test the multiplication named in each option.",
-      "fr": "Utilisez chaque nom de bande comme une plage de fréquences approximative, puis testez la multiplication indiquée dans chaque choix."
+      "en": "Convert each band in the options to its real amateur frequency limits from the band table, not the 300 / λ estimate.",
+      "fr": "Convertissez chaque bande des choix en ses limites de fréquences amateur réelles à partir du tableau des bandes, et non avec l'estimation 300 / λ."
     },
     {
       "level": 2,
-      "en": "Convert the band names to MHz before multiplying; compare each resulting range with 56 MHz without rounding a mismatch into a match.",
-      "fr": "Convertissez les noms de bandes en MHz avant de multiplier; comparez chaque plage obtenue avec 56 MHz sans arrondir un écart pour en faire une correspondance."
+      "en": "Multiply each band's limits by the harmonic number in its option and check whether 56 MHz falls inside the result.",
+      "fr": "Multipliez les limites de chaque bande par le rang harmonique indiqué dans le choix et vérifiez si 56 MHz se trouve dans la plage obtenue."
     }
   ],
   "lessonLink": {

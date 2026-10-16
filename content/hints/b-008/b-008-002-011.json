@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review station-side cures when the feedline becomes part of an unwanted RF-current path.",
-      "fr": "Revoyez les mesures côté station lorsque la ligne d’alimentation fait partie d’un trajet de courant RF indésirable."
+      "en": "Review station-side cures for interference to nearby audio equipment.",
+      "fr": "Revoyez les mesures côté station contre le brouillage du matériel audio voisin."
     }
   ],
   "lessonLink": {

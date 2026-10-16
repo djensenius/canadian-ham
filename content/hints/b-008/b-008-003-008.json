@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review which transmitter stages are checked when Morse reports point to the keying waveform.",
-      "fr": "Revoyez quels étages de l’émetteur sont vérifiés quand les rapports en Morse pointent vers la forme d’onde de manipulation."
+      "en": "Review the cures for key clicks.",
+      "fr": "Revoyez les mesures contre les claquements de manipulation."
     }
   ],
   "lessonLink": {

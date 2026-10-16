@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the filter choice for an SDR that needs shortwave signals while rejecting much higher-frequency energy.",
-      "fr": "Revoyez le choix de filtre pour une radio logicielle qui doit recevoir les ondes courtes tout en rejetant de l’énergie à des fréquences beaucoup plus élevées."
+      "en": "Review the filter families and their common interference uses.",
+      "fr": "Revoyez les familles de filtres et leurs usages courants contre le brouillage."
     }
   ],
   "lessonLink": {

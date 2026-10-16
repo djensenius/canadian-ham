@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the section that compares broad symptoms with frequency-specific transmitter clues.",
-      "fr": "Revoyez la section qui compare les symptômes larges avec les indices liés à des fréquences précises de l’émetteur."
+      "en": "Review the troubleshooting observations for neighbour TV interference.",
+      "fr": "Revoyez les observations de dépannage pour le brouillage d'un téléviseur voisin."
     }
   ],
   "lessonLink": {
     "lessonId": "L-008-01",
-    "sectionAnchor": "receiver-overload-and-desensitization"
+    "sectionAnchor": "troubleshooting-mindset"
   },
   "singleLevelReason": "Symptom classification: a second hint would name the matching diagnosis or rule out the narrow-frequency choices.",
   "referenceSheetSection": null,

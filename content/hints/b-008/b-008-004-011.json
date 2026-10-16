@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the RF power-amplifier condition that pushes a stage away from clean operation.",
-      "fr": "Revoyez la condition de l’amplificateur de puissance RF qui éloigne un étage d’un fonctionnement propre."
+      "en": "Review the causes of harmonics in RF power amplifiers.",
+      "fr": "Revoyez les causes d'harmoniques dans un amplificateur de puissance RF."
     }
   ],
   "lessonLink": {
