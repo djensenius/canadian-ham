@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the part of the HF accessory chain that chooses which path the transmitter uses.",
-      "fr": "Revoyez la partie de la chaîne d’accessoires HF qui choisit le trajet utilisé par l’émetteur."
+      "en": "Review the HF station chain.",
+      "fr": "Revoyez la chaîne d'une station HF."
     }
   ],
   "lessonLink": {

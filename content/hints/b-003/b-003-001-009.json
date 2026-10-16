@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how frequency changes affect the matching part of an HF station.",
-      "fr": "Revoyez comment les changements de fréquence touchent la partie d’adaptation d’une station HF."
+      "en": "Review the HF station chain.",
+      "fr": "Revoyez la chaîne d'une station HF."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the HF chain again, paying attention to which active RF source is last before the station accessories.",
-      "fr": "Revoyez encore la chaîne HF, en portant attention à la dernière source RF active avant les accessoires de station."
+      "en": "Review the HF station chain.",
+      "fr": "Revoyez la chaîne d'une station HF."
     }
   ],
   "lessonLink": {
