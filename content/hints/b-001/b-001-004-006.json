@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests whether amateur credentials transfer across radio services; use the service-boundary rule.",
-      "fr": "Cet élément vérifie si les titres radioamateurs se transfèrent entre services radio ; utilisez la règle de frontière entre services."
+      "en": "Review whether amateur authority transfers to other radio services.",
+      "fr": "Revoyez si l’autorité radioamateur se transfère à d’autres services radio."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state whether the amateur authorization extends to another service."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

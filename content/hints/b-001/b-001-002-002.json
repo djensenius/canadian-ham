@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Separate the certificate's duration from ongoing duties such as address updates and inspection requests.",
-      "fr": "Séparez la durée du certificat des obligations continues comme les mises à jour d'adresse et les demandes d'inspection."
+      "en": "Review the certificate validity facts.",
+      "fr": "Revoyez les faits sur la validité du certificat."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "Any second hint for this direct duration recall item would reveal whether the certificate has an expiry cycle."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

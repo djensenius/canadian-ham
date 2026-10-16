@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Focus on the dishonesty of claiming an emergency. The regulatory term describes the truthfulness of the message.",
-      "fr": "Concentrez-vous sur la malhonnêteté d'une urgence inventée. Le terme réglementaire décrit la véracité du message."
+      "en": "Review the offence wording for fake distress traffic.",
+      "fr": "Revoyez la formulation de l’infraction liée au faux trafic de détresse."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint for this direct terminology item would name or closely paraphrase the regulatory term."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

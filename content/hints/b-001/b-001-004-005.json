@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This is the code-qualification speed from the eligibility table; remember it as the modest entry code test, not an old high-speed benchmark.",
-      "fr": "Il s'agit de la vitesse de compétence en code dans le tableau d'admissibilité ; retenez-la comme l'épreuve d'entrée modeste, et non comme un ancien seuil de grande vitesse."
+      "en": "Review the Morse qualification speed requirement.",
+      "fr": "Revoyez l’exigence de vitesse pour la compétence en code Morse."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "Any second hint for this numeric recall item would reveal the exact speed."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

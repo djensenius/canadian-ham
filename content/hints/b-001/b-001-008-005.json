@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests installation authority for a shared amateur station.", "fr": "Cet élément vérifie l'autorité d'installation pour une station de radioamateur partagée." }
+    {
+      "level": 1,
+      "en": "Review qualification rules for installing club stations.",
+      "fr": "Revoyez les règles de qualification pour installer des stations de club."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-station-privileges-and-construction"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the minimum qualification."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item is about preventing unintended non-amateur audio from riding along with your transmission.", "fr": "Cet élément porte sur la prévention d'un son non radioamateur transmis par inadvertance avec votre émission." }
+    {
+      "level": 1,
+      "en": "Review how to prevent non-amateur audio from being retransmitted.",
+      "fr": "Revoyez comment éviter la retransmission de sons non radioamateurs."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would identify the practical audio-control step."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

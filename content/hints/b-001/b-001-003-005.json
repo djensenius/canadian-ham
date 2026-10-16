@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Suspension rules include both grounds for action and due-process safeguards.",
-      "fr": "Les règles de suspension comprennent à la fois des motifs d'action et des garanties d'équité procédurale."
+      "en": "Review certificate suspension grounds and process safeguards.",
+      "fr": "Revoyez les motifs de suspension du certificat et les garanties de procédure."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would identify which statement breaks the due-process pattern."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

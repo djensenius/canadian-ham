@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "Club-net topics still have to fit the amateur-service purpose, even when the conversation is friendly and organized.", "fr": "Les sujets d'un réseau de club doivent quand même respecter le but du service de radioamateur, même si la conversation est amicale et organisée." }
+    {
+      "level": 1,
+      "en": "Review which club-net topics fit amateur radio.",
+      "fr": "Revoyez quels sujets de réseau de club conviennent à la radioamateur."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal which topic crosses the amateur-service purpose boundary."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

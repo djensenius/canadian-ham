@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests the geographic scope of a Canadian amateur certificate.", "fr": "Cet élément vérifie la portée géographique d'un certificat radioamateur canadien." }
+    {
+      "level": 1,
+      "en": "Review where Canadian certificate holders may operate in Canada.",
+      "fr": "Revoyez où les titulaires d’un certificat canadien peuvent exploiter au Canada."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-station-privileges-and-construction"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the operating area."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

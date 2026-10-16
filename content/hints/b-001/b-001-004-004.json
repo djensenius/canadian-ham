@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This is a sequencing recall item from the exam-path section; keep first issue and later add-ons separate.",
-      "fr": "C'est un rappel de séquence tiré de la section sur le parcours d'examen ; gardez séparées la première délivrance et les compétences ajoutées plus tard."
+      "en": "Review the sequence rules for later qualifications.",
+      "fr": "Revoyez les règles de séquence pour les compétences ultérieures."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would disclose the ordering rule for later qualifications."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

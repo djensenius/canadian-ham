@@ -6,12 +6,15 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests certification limits for amateur equipment outside amateur allocations.",
-      "fr": "Cet élément vérifie les limites d'homologation de l'équipement radioamateur hors des attributions radioamateurs."
+      "en": "Review certification limits for amateur equipment outside amateur bands.",
+      "fr": "Revoyez les limites d’homologation de l’équipement radioamateur hors des bandes radioamateurs."
     }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-amateur-service-boundaries"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal whether any outside-band use is permitted."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

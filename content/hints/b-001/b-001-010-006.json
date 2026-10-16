@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests what an official harmful-interference finding can require of the station.", "fr": "Cet élément vérifie ce qu'une décision officielle d'interférence préjudiciable peut exiger de la station." }
+    {
+      "level": 1,
+      "en": "Review ministerial powers after a harmful-interference finding.",
+      "fr": "Revoyez les pouvoirs ministériels après une décision d’interférence préjudiciable."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state the order that can be given."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

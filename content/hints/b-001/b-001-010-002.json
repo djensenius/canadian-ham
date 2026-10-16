@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests intentional interference during normal amateur operation.", "fr": "Cet élément vérifie l'interférence intentionnelle pendant l'exploitation radioamateur normale." }
+    {
+      "level": 1,
+      "en": "Review the rule for intentional signal disruption.",
+      "fr": "Revoyez la règle sur la perturbation intentionnelle des signaux."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state whether deliberate interference is allowed."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

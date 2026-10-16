@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This work-for-another-person rule has two parts: the worker's qualification and the apparatus owner's authority.",
-      "fr": "Cette règle de travail pour autrui comporte deux parties : la qualification de la personne qui travaille et l'autorité du propriétaire de l'appareil."
+      "en": "Review the work-for-another-person rule for radio apparatus.",
+      "fr": "Revoyez la règle du travail pour autrui sur les appareils radio."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state which side of the two-part rule decides this item."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

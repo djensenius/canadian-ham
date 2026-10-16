@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests the Basic eligibility row; avoid importing assumptions from other licensing systems.",
-      "fr": "Cet élément vérifie la ligne d'admissibilité à la compétence de base ; évitez d'importer des suppositions provenant d'autres systèmes de permis."
+      "en": "Review Basic eligibility requirements.",
+      "fr": "Revoyez les exigences d’admissibilité à la compétence de base."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal whether an age limit exists."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

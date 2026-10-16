@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Putting equipment into service for someone else is a regulated work-for-another-person case, not an ownership-only question.",
-      "fr": "Mettre de l'équipement en service pour autrui est un cas réglementé de travail pour autrui, pas seulement une question de propriété."
+      "en": "Review the work-for-another-person rule for placing a transmitter in service.",
+      "fr": "Revoyez la règle du travail pour autrui lors de la mise en service d’un émetteur."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state how many people must hold the required credential."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

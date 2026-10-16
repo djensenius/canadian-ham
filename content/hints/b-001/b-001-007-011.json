@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests the commercial boundary of amateur communications.", "fr": "Cet élément vérifie la limite commerciale des communications radioamateurs." }
+    {
+      "level": 1,
+      "en": "Review the amateur-service boundary for business communications.",
+      "fr": "Revoyez la limite du service de radioamateur concernant les communications d’affaires."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state whether that communication purpose is allowed."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

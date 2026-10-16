@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Keep the first-certificate path separate from later add-on qualifications.",
-      "fr": "Gardez le parcours du premier certificat séparé des compétences ajoutées plus tard."
+      "en": "Review the first-exam step in the amateur certification path.",
+      "fr": "Revoyez la première étape d’examen du parcours de certification radioamateur."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would identify the required first examination by name."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

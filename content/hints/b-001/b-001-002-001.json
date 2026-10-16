@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "An address update is about keeping the official certificate record reachable.",
-      "fr": "Une mise à jour d'adresse sert à garder le dossier officiel du certificat joignable."
+      "en": "Review certificate address records and who can update them.",
+      "fr": "Revoyez les dossiers d’adresse des certificats et qui peut les mettre à jour."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would point directly to the authority that maintains the address record."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

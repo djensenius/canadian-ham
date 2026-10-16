@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This call-sign change follows a move to a new jurisdiction, so treat it as an administrative record update.",
-      "fr": "Ce changement d'indicatif d'appel suit un déménagement vers une nouvelle administration ; traitez-le comme une mise à jour administrative du dossier."
+      "en": "Review the fee facts for a move-related call-sign prefix change.",
+      "fr": "Revoyez les faits sur les frais liés à un changement de préfixe d’indicatif après un déménagement."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint for this fee recall item would disclose whether an amount is charged."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

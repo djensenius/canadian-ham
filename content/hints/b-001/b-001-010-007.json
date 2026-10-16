@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This is a secondary-status band recall item; use the UHF sharing row from the lesson.", "fr": "C'est un rappel de bande à statut secondaire ; utilisez la ligne de partage UHF de la leçon." }
+    {
+      "level": 1,
+      "en": "Review the band-sharing rules for the amateur service.",
+      "fr": "Revoyez les règles de partage des bandes pour le service de radioamateur."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the frequency range."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

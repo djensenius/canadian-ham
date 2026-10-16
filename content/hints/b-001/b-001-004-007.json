@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Eligibility for this certificate is broader than many people assume; think about what the administrator needs to process a candidate.",
-      "fr": "L'admissibilité à ce certificat est plus large que beaucoup de gens le pensent ; réfléchissez à ce dont l'administrateur a besoin pour traiter une candidature."
+      "en": "Review candidate requirements for amateur certification.",
+      "fr": "Revoyez les exigences applicables aux candidats à la certification radioamateur."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would identify the candidate condition and eliminate the citizenship distractors."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

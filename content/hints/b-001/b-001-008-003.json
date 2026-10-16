@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests kit assembly privilege, which is different from designing custom transmitting hardware.", "fr": "Cet élément vérifie le privilège d'assemblage de trousses, qui diffère de la conception de matériel d'émission personnalisé." }
+    {
+      "level": 1,
+      "en": "Review qualification rules for assembling professional-design transmitter kits.",
+      "fr": "Revoyez les règles de qualification pour assembler des trousses d’émetteur de conception professionnelle."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-station-privileges-and-construction"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the minimum qualification."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

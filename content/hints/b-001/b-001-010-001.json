@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item asks for the interference category, not a station-identification rule.", "fr": "Cet élément demande la catégorie d'interférence, et non une règle d'identification de station." }
+    {
+      "level": 1,
+      "en": "Review the basic interference terms.",
+      "fr": "Revoyez les termes de base sur l’interférence."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would name the interference category."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests how a station owner may involve a guest while keeping station control lawful.", "fr": "Cet élément vérifie comment un propriétaire de station peut faire participer un invité tout en gardant le contrôle de la station conforme." }
+    {
+      "level": 1,
+      "en": "Review supervised guest operation at a station.",
+      "fr": "Revoyez l’exploitation supervisée par un invité à une station."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-operator-and-station-owner"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the supervision and presence safeguards."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

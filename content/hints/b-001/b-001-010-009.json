@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests the condition that makes on-air testing acceptable.", "fr": "Cet élément vérifie la condition qui rend acceptable un essai en ondes." }
+    {
+      "level": 1,
+      "en": "Review when test transmissions are allowed.",
+      "fr": "Revoyez quand les émissions d’essai sont permises."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state the interference-protection condition."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

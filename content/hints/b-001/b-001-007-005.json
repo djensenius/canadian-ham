@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "For a new digital method, the rule turns on openness of the method, not just who invented it.", "fr": "Pour une nouvelle méthode numérique, la règle dépend du caractère ouvert de la méthode, pas seulement de la personne qui l'a inventée." }
+    {
+      "level": 1,
+      "en": "Review the rule for new digital encoding techniques.",
+      "fr": "Revoyez la règle sur les nouvelles techniques d’encodage numérique."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state the publication condition for the encoding technique."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

@@ -6,12 +6,15 @@
   "hints": [
     {
       "level": 1,
-      "en": "For dual-use memories, separate amateur programming from the non-amateur service authority for the radio.",
-      "fr": "Pour les mémoires à double usage, séparez la programmation radioamateur de l'autorisation du service non radioamateur pour la radio."
+      "en": "Review dual-service radio conditions for land-mobile use.",
+      "fr": "Revoyez les conditions applicables aux radios à double service pour l’usage mobile terrestre."
     }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-amateur-service-boundaries"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the required non-amateur service conditions."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

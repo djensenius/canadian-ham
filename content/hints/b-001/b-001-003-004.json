@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item asks where offences are established in the legal hierarchy.",
-      "fr": "Cet élément demande où les infractions sont établies dans la hiérarchie juridique."
+      "en": "Review where radiocommunication offences and penalties are set out.",
+      "fr": "Revoyez où sont établies les infractions et les peines en radiocommunication."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint about the legal-source hierarchy would identify the document."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

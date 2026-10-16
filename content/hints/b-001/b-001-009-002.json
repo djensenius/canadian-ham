@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests responsibility during guest operation at another station.", "fr": "Cet élément vérifie la responsabilité lors de l'exploitation comme invité à une autre station." }
+    {
+      "level": 1,
+      "en": "Review who is responsible when you operate someone else’s station.",
+      "fr": "Revoyez qui est responsable lorsque vous exploitez la station d’une autre personne."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-operator-and-station-owner"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal whether responsibility stays with one person or more than one person."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

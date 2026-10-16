@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This is an unprotected shared-band recall item; use the row that also warns about licence-exempt occupancy.", "fr": "C'est un rappel sur une bande partagée non protégée ; utilisez la ligne qui avertit aussi d'une occupation par des appareils exempts de licence." }
+    {
+      "level": 1,
+      "en": "Review the interference-protection rules for shared bands.",
+      "fr": "Revoyez les règles de protection contre l’interférence dans les bandes partagées."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the frequency range."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Focus on whether the request is voluntary rather than required by a move to another province or territory.",
-      "fr": "Concentrez-vous sur le caractère volontaire de la demande plutôt que sur une nécessité liée à un déménagement dans une autre province ou un autre territoire."
+      "en": "Review the fee facts for a voluntary call-sign change.",
+      "fr": "Revoyez les faits sur les frais liés à un changement volontaire d’indicatif d’appel."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint for this fee recall item would reveal the exact fee."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

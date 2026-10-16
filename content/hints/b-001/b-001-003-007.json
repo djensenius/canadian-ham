@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests the false-information rule; be careful with motives that sound humorous, defensive, or urgent.",
-      "fr": "Cet élément vérifie la règle sur les renseignements faux ; méfiez-vous des motifs qui semblent humoristiques, défensifs ou urgents."
+      "en": "Review the false-information rule.",
+      "fr": "Revoyez la règle sur les renseignements faux."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state whether any exception is allowed."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

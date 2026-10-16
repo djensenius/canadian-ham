@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests a special bridge from another radio certificate; the exact title matters.",
-      "fr": "Cet élément vérifie un pont spécial depuis un autre certificat radio ; le titre exact compte."
+      "en": "Review the outside certificate bridge to amateur certification.",
+      "fr": "Revoyez le pont depuis un autre certificat vers la certification radioamateur."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would name or closely paraphrase the certificate title."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

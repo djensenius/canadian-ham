@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests installing repeater infrastructure, not merely using one.", "fr": "Cet élément vérifie l'installation d'une infrastructure de relais, et non sa simple utilisation." }
+    {
+      "level": 1,
+      "en": "Review qualification rules for installing single-band voice repeaters.",
+      "fr": "Revoyez les règles de qualification pour installer des relais vocaux monobandes."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-station-privileges-and-construction"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the minimum qualification."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

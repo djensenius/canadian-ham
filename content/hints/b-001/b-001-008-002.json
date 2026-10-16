@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item asks about the station type associated with one-way signals for identification or propagation checks.", "fr": "Cet élément porte sur le type de station associé aux signaux à sens unique pour l'identification ou les vérifications de propagation." }
+    {
+      "level": 1,
+      "en": "Review station types that transmit one-way communications.",
+      "fr": "Revoyez les types de stations qui émettent des communications à sens unique."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-station-privileges-and-construction"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would name the station type."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

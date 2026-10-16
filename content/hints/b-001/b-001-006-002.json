@@ -6,12 +6,15 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests the service-to-service boundary for ordinary amateur communication.",
-      "fr": "Cet élément vérifie la frontière entre services pour les communications radioamateurs ordinaires."
+      "en": "Review ordinary communication boundaries in the amateur service.",
+      "fr": "Revoyez les limites des communications ordinaires dans le service de radioamateur."
     }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-amateur-service-boundaries"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would identify which stations are within the allowed communication boundary."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

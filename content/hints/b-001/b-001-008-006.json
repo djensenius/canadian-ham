@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests custom transmitting hardware, where design and manufacture status matter.", "fr": "Cet élément vérifie le matériel d'émission personnalisé, où le statut de conception et de fabrication compte." }
+    {
+      "level": 1,
+      "en": "Review qualification rules for custom transmitting hardware.",
+      "fr": "Revoyez les règles de qualification pour le matériel d’émission personnalisé."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-station-privileges-and-construction"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the minimum qualification."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests the address-record duty that continues after the certificate is issued.",
-      "fr": "Cet élément vérifie l'obligation liée au dossier d'adresse qui continue après la délivrance du certificat."
+      "en": "Review the contact-record update rule.",
+      "fr": "Revoyez la règle de mise à jour des coordonnées."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the notification action, deadline, or recipient."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

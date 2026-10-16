@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests whether an added qualification changes the work-for-another-person rule.",
-      "fr": "Cet élément vérifie si une compétence ajoutée change la règle du travail pour autrui."
+      "en": "Review how added qualifications fit the work-for-another-person rule.",
+      "fr": "Revoyez comment les compétences ajoutées s’inscrivent dans la règle du travail pour autrui."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state the recipient's required credential for this recall item."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

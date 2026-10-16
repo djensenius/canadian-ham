@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Misusing distress signals endangers lives, so the Act treats it as a serious radio offence; think about the penalty pattern for serious radio offences.",
-      "fr": "L'usage abusif des signaux de détresse met des vies en danger ; la loi le traite donc comme une infraction radio grave. Pensez au modèle de peine des infractions radio graves."
+      "en": "Review the penalty facts for false distress traffic.",
+      "fr": "Revoyez les faits sur les peines liées au faux trafic de détresse."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the penalty's structure or numeric limits."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

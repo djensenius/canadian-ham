@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests the line between technical encoding and hidden meaning.", "fr": "Cet élément vérifie la limite entre l'encodage technique et le sens caché." }
+    {
+      "level": 1,
+      "en": "Review encoded-message rules for amateur transmissions.",
+      "fr": "Revoyez les règles sur les messages encodés dans les émissions radioamateurs."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the condition that keeps an encoded message acceptable."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

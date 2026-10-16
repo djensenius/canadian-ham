@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests how an unqualified participant may take part without becoming the station authority.", "fr": "Cet élément vérifie comment une personne non qualifiée peut participer sans devenir l'autorité de la station." }
+    {
+      "level": 1,
+      "en": "Review how a person without certification may participate.",
+      "fr": "Revoyez comment une personne sans certification peut participer."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-operator-and-station-owner"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the supervision and presence safeguards."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

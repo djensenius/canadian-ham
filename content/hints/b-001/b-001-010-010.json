@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This is the shared-band row where other devices may be common; recall the frequency range attached to that warning.", "fr": "C'est la ligne de bande partagée où d'autres appareils peuvent être courants ; rappelez-vous la plage de fréquences liée à cet avertissement." }
+    {
+      "level": 1,
+      "en": "Review the shared-band notes about licence-exempt devices.",
+      "fr": "Revoyez les notes sur les bandes partagées et les appareils exempts de licence."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the frequency range."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

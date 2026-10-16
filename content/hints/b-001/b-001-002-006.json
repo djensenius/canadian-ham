@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Treat the first certificate as part of initial certification, not as a later custom call-sign request.",
-      "fr": "Traitez le premier certificat comme une partie de la certification initiale, et non comme une demande personnalisée ultérieure d'indicatif d'appel."
+      "en": "Review the fee facts for first certification.",
+      "fr": "Revoyez les faits sur les frais de première certification."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint for this fee recall item would disclose whether an amount is charged."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

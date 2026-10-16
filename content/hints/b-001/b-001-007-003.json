@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "For a NOT-correct item, look for the statement that crosses the amateur-service purpose boundary.", "fr": "Pour un élément FAUX, cherchez l'énoncé qui franchit la limite du but du service de radioamateur." }
+    {
+      "level": 1,
+      "en": "Review the amateur-service boundary for on-air business.",
+      "fr": "Revoyez la limite du service de radioamateur concernant les affaires en ondes."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would identify the prohibited communication purpose."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests the operating moment when station control must be assigned.", "fr": "Cet élément vérifie le moment d'exploitation où le contrôle de la station doit être attribué." }
+    {
+      "level": 1,
+      "en": "Review when a station needs a control operator.",
+      "fr": "Revoyez quand une station a besoin d’un opérateur de contrôle."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-operator-and-station-owner"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the exact operating condition."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

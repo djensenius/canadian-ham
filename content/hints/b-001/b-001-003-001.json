@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item tests band authority: where amateur privileges begin and end.",
-      "fr": "Cet élément vérifie l'autorité liée aux bandes : là où les privilèges radioamateurs commencent et se terminent."
+      "en": "Review the offence rules for transmitting outside amateur bands.",
+      "fr": "Revoyez les règles d’infraction liées aux émissions hors des bandes radioamateurs."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal whether the transmission is allowed or name the responsible role."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

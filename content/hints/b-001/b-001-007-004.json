@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests the narrow one-way communication allowances in the amateur service.", "fr": "Cet élément vérifie les permissions limitées de communication à sens unique dans le service de radioamateur." }
+    {
+      "level": 1,
+      "en": "Review one-way communication limits in the amateur service.",
+      "fr": "Revoyez les limites des communications à sens unique dans le service de radioamateur."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal which one-way communication falls outside the allowances."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

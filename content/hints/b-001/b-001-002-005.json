@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This inspection rule gives a short response window to produce proof; it is not an instant-on-the-spot demand.",
-      "fr": "Cette règle d'inspection accorde un court délai pour produire la preuve ; ce n'est pas une exigence immédiate sur place."
+      "en": "Review the radio-inspector request deadline for certificate proof.",
+      "fr": "Revoyez le délai de réponse à une demande de preuve de certificat par un inspecteur radio."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "Any second hint for this numeric recall item would reveal the exact hour count or an equivalent conversion."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This is a recordkeeping question about where the certificate is kept between inspections.",
-      "fr": "C'est une question de tenue de dossier sur l'endroit où le certificat est conservé entre les inspections."
+      "en": "Review the certificate recordkeeping location rules.",
+      "fr": "Revoyez les règles sur le lieu de conservation du certificat."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the required location tied to the official record."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

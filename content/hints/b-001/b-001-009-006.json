@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests where the person in control must be able to manage or stop the transmitter.", "fr": "Cet élément vérifie où la personne aux commandes doit pouvoir gérer ou arrêter l'émetteur." }
+    {
+      "level": 1,
+      "en": "Review where the control operator must be during transmission.",
+      "fr": "Revoyez où l’opérateur de contrôle doit se trouver pendant l’émission."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-operator-and-station-owner"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would name the required location."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

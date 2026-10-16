@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item is about document custody and inspection practicality, not about expiry or fees.",
-      "fr": "Cet élément porte sur la conservation du document et l'aspect pratique d'une inspection, et non sur l'expiration ou les frais."
+      "en": "Review where certificate proof is kept for station records.",
+      "fr": "Revoyez où la preuve du certificat est conservée pour les dossiers de station."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would identify the required place to keep the certificate."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

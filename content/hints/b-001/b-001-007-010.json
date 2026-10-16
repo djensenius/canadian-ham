@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item asks about recognized open operating shorthand, not private content.", "fr": "Cet élément porte sur une abréviation d'exploitation reconnue et ouverte, et non sur du contenu privé." }
+    {
+      "level": 1,
+      "en": "Review open operating shorthand in amateur communication.",
+      "fr": "Revoyez les abréviations d’exploitation ouvertes dans les communications radioamateurs."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would name the type of shorthand."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

@@ -4,10 +4,17 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "hints": [
-    { "level": 1, "en": "This item tests the line between amateur communication and public broadcasting.", "fr": "Cet élément vérifie la limite entre la communication radioamateur et la radiodiffusion au public." }
+    {
+      "level": 1,
+      "en": "Review the amateur-service rule on public broadcasting.",
+      "fr": "Revoyez la règle du service de radioamateur sur la radiodiffusion au public."
+    }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would disclose whether ordinary public broadcasting is allowed."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

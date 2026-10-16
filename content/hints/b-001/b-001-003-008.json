@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "This offence concerns blocking radio communication without a lawful reason; think about the penalty pattern for serious radio offences.",
-      "fr": "Cette infraction concerne le fait de bloquer une radiocommunication sans raison légitime ; pensez au modèle de peine des infractions radio graves."
+      "en": "Review the penalty facts for obstructing radiocommunication.",
+      "fr": "Revoyez les faits sur les peines liées à l’entrave aux radiocommunications."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would reveal the penalty's structure or numeric limits."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

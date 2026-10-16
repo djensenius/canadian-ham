@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Repair work for someone else is in the same authorization family as installation and service work.",
-      "fr": "Le travail de réparation pour autrui fait partie de la même famille d'autorisation que l'installation et la mise en service."
+      "en": "Review the work-for-another-person rule for repairing a transmitter.",
+      "fr": "Revoyez la règle du travail pour autrui lors de la réparation d’un émetteur."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state how many people must hold the required credential."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }

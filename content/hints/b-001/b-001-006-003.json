@@ -6,12 +6,15 @@
   "hints": [
     {
       "level": 1,
-      "en": "This item asks whether amateur equipment can be used to boost a different authorization class.",
-      "fr": "Cet élément demande si de l'équipement radioamateur peut servir à renforcer une autre catégorie d'autorisation."
+      "en": "Review how amateur equipment interacts with licence-exempt transmitters.",
+      "fr": "Revoyez comment l’équipement radioamateur interagit avec les émetteurs exempts de licence."
     }
   ],
-  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-amateur-service-boundaries" },
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-amateur-service-boundaries"
+  },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint would state whether that cross-service use is allowed."
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
 }
