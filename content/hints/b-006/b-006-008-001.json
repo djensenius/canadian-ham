@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-008-001",
+  "questionId": "B-006-008-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the dipole-resonance adjustment trend before choosing how to move lower in frequency.",
+      "fr": "Revoyez la tendance d’ajustement de la résonance d’un dipôle avant de choisir comment descendre en fréquence."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "dipole-length-and-resonance"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}
