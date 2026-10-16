@@ -1,10 +1,11 @@
 ---
 id: TASK-50.10
 title: 'Hint content batch: B-008 interference and suppression'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 11:50'
+updated_date: '2026-10-16 15:12'
 labels:
   - content
 dependencies:
@@ -43,3 +44,9 @@ Write and review original EN/FR hint content for B-008 interference and suppress
 - [ ] #6 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
 - [ ] #7 All in-scope B-008 interference and suppression active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read the hint authoring rules, teaching/reference materials, existing reviewed hint examples, B-008 lessons, explanations, and active question data.\n2. Add hand-written EN/FR hint files for all active B-008 questions, using single-level hints except for true computation/derivation items.\n3. Run subsection/category hint checks and required content/project checks, then assess full-bank completeness and update CI only if the whole bank is complete.\n4. Record implementation notes, validation evidence, and any pending CI/full-bank/review status in the Backlog task.
+<!-- SECTION:PLAN:END -->
