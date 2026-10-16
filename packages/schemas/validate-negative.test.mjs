@@ -87,6 +87,19 @@ test("progress export schema rejects Basic lesson quizzes that reference Advance
   );
 });
 
+test("progress export schema rejects invalid answered-with-help fields", () => {
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-answered-with-help-non-boolean.json"),
+    "progress-export-v1.schema.json",
+    "$.questionProgress[0].lastAnsweredWithHelp: expected type \"boolean\"",
+  );
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-recent-answered-with-help-too-long.json"),
+    "progress-export-v1.schema.json",
+    "$.questionProgress[0].recentAnsweredWithHelp: expected at most 5 item(s)",
+  );
+});
+
 test("progress export schema rejects Advanced exports that carry lesson data", () => {
   const advancedExport = { ...validProgressExport, bankId: "advanced-2025-02-04" };
   assertSchemaRejects(

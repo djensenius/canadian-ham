@@ -116,7 +116,7 @@ Example manifest (deterministic: no generated timestamps):
 
 ## Data schemas
 
-Schema definitions should be versioned. JSON examples below show the intended shape, not final JSON Schema syntax.
+Schema definitions should be versioned. JSON examples below show the intended shape, not final JSON Schema syntax. Additive optional progress-export fields may stay on the current version when older imports and rows load unchanged with documented defaults.
 
 ### Question
 
