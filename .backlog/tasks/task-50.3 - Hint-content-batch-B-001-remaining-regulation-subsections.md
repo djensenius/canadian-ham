@@ -98,4 +98,6 @@ B-001-010 manually written after calibration: 10 hints (0 two-level, 10 single-l
 Re-audited B-001-002 through B-001-010 using the literal option self-test. Converted all in-scope files in those subsections to single-level B topic pointers and added the B-001 topic-pointer rule/examples to README. Validation: subsection checks for B-001-002 through B-001-010 all passed with --require-complete.
 
 B-001-011 manually written as calibrated topic-pointer B hints: 10 hints (0 two-level, 10 single-level B). Validation: pnpm check:hints -- --subsection B-001-011 --require-complete passed.
+
+B-001-012 manually written as calibrated topic-pointer B hints: 4 hints (0 two-level, 4 single-level B). Validation: pnpm check:hints -- --subsection B-001-012 --require-complete passed.
 <!-- SECTION:NOTES:END -->
