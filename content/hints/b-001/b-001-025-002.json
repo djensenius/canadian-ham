@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Picture both sides of that threshold and decide when the transmitted signal is over the line instead of the receiver’s immunity being the weak link.",
-      "fr": "Imaginez les deux côtés de ce seuil et déterminez quand le signal émis dépasse la limite, plutôt que l’immunité du récepteur soit le maillon faible."
+      "en": "Picture both sides of that threshold and decide in which case the transmission is treated as the cause rather than the affected equipment’s immunity.",
+      "fr": "Imaginez les deux côtés de ce seuil et déterminez dans quel cas l’émission est considérée comme la cause plutôt que l’immunité de l’appareil touché."
     }
   ],
   "lessonLink": {

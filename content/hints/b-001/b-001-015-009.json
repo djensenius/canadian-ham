@@ -6,18 +6,18 @@
   "hints": [
     {
       "level": 1,
-      "en": "A band’s name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m).",
-      "fr": "Le nom d’une bande correspond approximativement à sa longueur d’onde. Convertissez avec f (MHz) ≈ 300 / λ (m)."
+      "en": "A band’s name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m), then check whether an HF edge pattern gives a better match than the rough conversion alone.",
+      "fr": "Le nom d’une bande correspond approximativement à sa longueur d’onde. Convertissez avec f (MHz) ≈ 300 / λ (m), puis vérifiez si une régularité des limites HF donne une meilleure correspondance que la conversion approximative seule."
     },
     {
       "level": 2,
-      "en": "Work out 300 ÷ 15. Then use the band table to check which candidate range is the Canadian amateur allocation for that band; the conversion is a starting check, not the deciding shortcut.",
-      "fr": "Calculez 300 ÷ 15. Utilisez ensuite le tableau des bandes pour vérifier quelle plage proposée correspond à l’attribution canadienne de cette bande; la conversion sert de point de départ, pas de raccourci décisif."
+      "en": "For the 15 m band, compare the rough result with the lesson pattern that places one HF lower edge at three times the 40 m lower edge. Then choose the candidate range that starts at that patterned edge.",
+      "fr": "Pour la bande de 15 m, comparez le résultat approximatif avec la régularité de la leçon qui place une limite inférieure HF à trois fois celle de la bande de 40 m. Choisissez ensuite la plage proposée qui commence à cette limite."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-04",
-    "sectionAnchor": "how-these-rules-fit-together"
+    "sectionAnchor": "reference-facts-hf-band-ranges"
   },
   "referenceSheetSection": null,
   "licenseClass": "original"

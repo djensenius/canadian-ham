@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "300 ÷ 20 gives the frequency the name suggests, but band names are rounded. Use the doubling pattern of HF lower edges: as the band name halves from 40 m to 20 m, the lower edge doubles. Find the 20 m lower edge that way and look for the range that starts there.",
-      "fr": "300 ÷ 20 donne la fréquence suggérée par le nom, mais les noms de bande sont arrondis. Utilisez la régularité des limites inférieures HF : quand le nom passe de 40 m à 20 m, la limite inférieure double. Trouvez ainsi la limite inférieure de la bande de 20 m et cherchez la plage qui commence à cette valeur."
+      "en": "300 ÷ 20 gives the frequency the name suggests, but band names are rounded. Use the 40 m lower edge from the band table and the doubling pattern of HF lower edges: as the band name halves from 40 m to 20 m, the lower edge doubles. Find the 20 m lower edge that way and look for the range that starts there.",
+      "fr": "300 ÷ 20 donne la fréquence suggérée par le nom, mais les noms de bande sont arrondis. Utilisez la limite inférieure de la bande de 40 m dans le tableau des bandes et la régularité de doublement des limites inférieures HF : quand le nom passe de 40 m à 20 m, la limite inférieure double. Trouvez ainsi la limite inférieure de la bande de 20 m et cherchez la plage qui commence à cette valeur."
     }
   ],
   "lessonLink": {

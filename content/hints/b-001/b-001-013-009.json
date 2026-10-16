@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Decide first whether the identification rule is built around a whole contact or around each single transmission.",
-      "fr": "Déterminez d’abord si la règle d’identification s’applique à un contact entier ou à chaque émission."
+      "en": "Decide which events in a conversation should always carry an identification, then add how long a listener might wait between them.",
+      "fr": "Déterminez quels moments d’une conversation doivent toujours porter une identification, puis ajoutez le temps qu’un auditeur pourrait attendre entre eux."
     },
     {
       "level": 2,
-      "en": "Sketch a long contact of short exchanges on a timeline. Mark every point where a listener would need to hear your call sign, then compare each option’s timing with your marks.",
-      "fr": "Tracez un long contact fait de courts échanges sur une ligne du temps. Marquez chaque moment où un auditeur devrait entendre votre indicatif d’appel, puis comparez le calendrier de chaque option à vos marques."
+      "en": "Sketch a long conversation as a timeline. Mark the required identification points and the maximum gap between them, then compare each option’s timing with your marks.",
+      "fr": "Tracez une longue conversation sur une ligne du temps. Marquez les points d’identification requis et l’écart maximal entre eux, puis comparez le calendrier de chaque option à vos marques."
     }
   ],
   "lessonLink": {

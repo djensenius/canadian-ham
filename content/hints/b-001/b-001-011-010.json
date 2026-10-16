@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how special traffic changes the usual operating limits.",
-      "fr": "Revoyez comment certains trafics particuliers modifient les limites d’exploitation habituelles."
+      "en": "Review the rules on deliberate interference.",
+      "fr": "Revoyez les règles sur le brouillage délibéré."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-03",
-    "sectionAnchor": "reference-facts-emergency-disaster-and-public-service-communication"
+    "sectionAnchor": "reference-facts-interference-and-shared-bands"
   },
   "referenceSheetSection": null,
   "licenseClass": "original",

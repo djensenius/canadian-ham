@@ -53,7 +53,7 @@ Keep two-level A+C hints where a method, formula, conversion, or principle helps
 For example, a band-name question can use the wavelength relationship without giving the range:
 
 - Hint 1: "A band's name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m)."
-- Hint 2: "Work out the frequency for 10 m, then compare the candidate ranges using the band-name method and the band table."
+- Hint 2: "Work out the frequency for 10 m, then compare how the candidate ranges line up with the conversion and the nearby HF-band pattern."
 
 Use the lesson link to point to the method or band table section that supports the reasoning. Pure recall still uses B: topic pointer plus lesson link only.
 
