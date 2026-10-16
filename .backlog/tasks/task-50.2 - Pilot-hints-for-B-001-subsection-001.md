@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 11:50'
+updated_date: '2026-10-16 12:06'
 labels:
   - content
 dependencies:
@@ -62,6 +62,8 @@ Owner recall-ladder ruling applied in review follow-up. Final B-001-001 pilot us
 - B-001-001-004 L1 EN: "Sort the fact by function: legal authority, binding categories, technical operating instructions, or the administering organization." FR: "Pour les définitions précises, triez le fait selon sa fonction : autorité juridique, catégories obligatoires, consignes techniques d'exploitation ou organisation responsable de l'administration." L2 same distinctions text and lesson link as above.
 
 Validation after rewrite: pnpm typecheck; pnpm test; pnpm check:hints:self-test; pnpm check:hints -- --subsection B-001-001 --require-complete; pnpm check:schemas; pnpm import:check; pnpm --filter @canadian-ham/content-tools check:lesson-originality; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all.
+
+Superseded note: the earlier note saying the owner was still deciding recall-question ladders is obsolete. The owner ruling of 2026-10-16 now applies: A+C by default, with B single-level allowed when a second level would leak the answer. The current pilot uses two levels for B-001-001-001/002 and one level with singleLevelReason for B-001-001-003/004.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
