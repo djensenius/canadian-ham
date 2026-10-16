@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-009-011",
+  "questionId": "B-002-009-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the CHU, WWV and WWVH topic.",
+      "fr": "Revoyez le sujet de CHU, WWV et WWVH."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-04",
+    "sectionAnchor": "utc-and-time-standards"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

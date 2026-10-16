@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-005-003",
+  "questionId": "B-002-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the guidance on Morse CQ sending speed.",
+      "fr": "Revoyez les consignes sur la vitesse d’envoi d’un CQ en Morse."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "morse-calling-basics"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
+}
