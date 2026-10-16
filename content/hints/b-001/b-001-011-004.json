@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-011-004",
+  "questionId": "B-001-011-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the safety-related exception to the broadcasting rule.",
+      "fr": "Revoyez l’exception liée à la sécurité dans la règle sur la radiodiffusion."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-emergency-disaster-and-public-service-communication"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

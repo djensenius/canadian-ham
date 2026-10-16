@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-011-008",
+  "questionId": "B-001-011-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review relief-net discipline for operators outside the net.",
+      "fr": "Revoyez la discipline d’un réseau de secours pour les opérateurs qui n’en font pas partie."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-emergency-disaster-and-public-service-communication"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

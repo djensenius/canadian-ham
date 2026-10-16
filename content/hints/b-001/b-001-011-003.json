@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-011-003",
+  "questionId": "B-001-011-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review distress-call exceptions on amateur bands.",
+      "fr": "Revoyez les exceptions liées aux appels de détresse sur les bandes radioamateurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-emergency-disaster-and-public-service-communication"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
