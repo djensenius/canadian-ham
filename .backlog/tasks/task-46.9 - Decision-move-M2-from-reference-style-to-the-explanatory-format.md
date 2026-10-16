@@ -4,7 +4,7 @@ title: Move M2 from reference style to the explanatory format
 status: To Do
 assignee: []
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-16 08:04'
+updated_date: '2026-10-16 08:05'
 labels:
   - content
 dependencies: []
@@ -23,8 +23,7 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 <!-- AC:BEGIN -->
 - [ ] #1 Owner decision recorded
 - [ ] #2 M2 lessons use the explanatory format from content/lessons/README.md with no loss of covered facts
-- [ ] #3 M2 lessons use the explanatory format from docs/teaching-guide.md instead of reference lists
-- [ ] #4 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
+- [ ] #3 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
 <!-- AC:END -->
 
 ## Implementation Notes
