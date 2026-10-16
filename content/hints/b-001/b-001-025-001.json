@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-025-001",
+  "questionId": "B-001-025-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review EMCAB-2 criteria for stereo-system complaints.",
+      "fr": "Revoyez les critères ACEM-2 pour les plaintes concernant les chaînes stéréo."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-06",
+    "sectionAnchor": "reference-facts-emcab-2-interference-criteria"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
