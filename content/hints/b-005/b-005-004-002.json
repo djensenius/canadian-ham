@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-004-002",
+  "questionId": "B-005-004-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the Ohm's law triangle with E over I and R.",
+      "fr": "Utilisez le triangle de la loi d'Ohm avec E au-dessus de I et R."
+    },
+    {
+      "level": 2,
+      "en": "Cover I, the unknown. The remaining symbols show E over R, so choose the wording that matches that relationship.",
+      "fr": "Couvrez I, l'inconnue. Les symboles restants montrent E au-dessus de R; choisissez l'énoncé qui correspond à cette relation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "ohms-law"
+  },
+  "referenceSheetSection": "ohms-law",
+  "licenseClass": "original"
+}

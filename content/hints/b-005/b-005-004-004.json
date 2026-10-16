@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-004-004",
+  "questionId": "B-005-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the Ohm's law triangle with E over I and R.",
+      "fr": "Utilisez le triangle de la loi d'Ohm avec E au-dessus de I et R."
+    },
+    {
+      "level": 2,
+      "en": "Cover E, the unknown. I and R are side by side, so choose the wording that combines them that way.",
+      "fr": "Couvrez E, l'inconnue. I et R sont côte à côte; choisissez l'énoncé qui les combine ainsi."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "ohms-law"
+  },
+  "referenceSheetSection": "ohms-law",
+  "licenseClass": "original"
+}

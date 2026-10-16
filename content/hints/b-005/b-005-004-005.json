@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-004-005",
+  "questionId": "B-005-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "To find resistance, use Ohm's law as R = E / I.",
+      "fr": "Pour trouver la résistance, utilisez la loi d'Ohm sous la forme R = E / I."
+    },
+    {
+      "level": 2,
+      "en": "Substitute the source voltage and current as R = 12 V / 0.25 A, then keep the unit as ohms.",
+      "fr": "Remplacez les valeurs par R = 12 V / 0,25 A, puis gardez l'ohm comme unité."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "ohms-law"
+  },
+  "referenceSheetSection": "ohms-law",
+  "licenseClass": "original"
+}

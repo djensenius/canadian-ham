@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-004-001",
+  "questionId": "B-005-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use Ohm's law for voltage: E = I x R.",
+      "fr": "Utilisez la loi d'Ohm pour la tension : E = I x R."
+    },
+    {
+      "level": 2,
+      "en": "Substitute the given current and resistance as E = 0.5 A x 2 ohms, then keep the unit as volts.",
+      "fr": "Remplacez les valeurs données par E = 0,5 A x 2 ohms, puis gardez le volt comme unité."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "ohms-law"
+  },
+  "referenceSheetSection": "ohms-law",
+  "licenseClass": "original"
+}
