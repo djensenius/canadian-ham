@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-006-011",
+  "questionId": "B-002-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Read a two-number voice report left to right: copy quality first, then meter strength.",
+      "fr": "Lisez un rapport vocal à deux chiffres de gauche à droite : qualité de copie d’abord, puis force au compteur."
+    },
+    {
+      "level": 2,
+      "en": "Use the low end of each lesson scale for the two digits, then combine the two observations.",
+      "fr": "Utilisez le bas de chaque échelle de la leçon pour les deux chiffres, puis combinez les deux observations."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "reference-fact-signal-report-digits-used-in-this-lesson"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

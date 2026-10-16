@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-006-005",
+  "questionId": "B-002-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Split the report into its two basic digits and the extra amount above the S-meter reference.",
+      "fr": "Séparez le rapport en ses deux chiffres de base et la quantité supplémentaire au-dessus de la référence du S-mètre."
+    },
+    {
+      "level": 2,
+      "en": "Read the first digit as copy quality, the second as the S reading, and the plus value as a decibel addition to that reference.",
+      "fr": "Lisez le premier chiffre comme qualité de copie, le deuxième comme lecture S, et la valeur plus comme une addition en décibels à cette référence."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "signal-reports-rs-and-rst"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original"
+}

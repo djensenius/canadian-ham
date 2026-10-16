@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-006-006",
+  "questionId": "B-002-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Report what you actually receive, but keep the report about the station being relayed.",
+      "fr": "Rapportez ce que vous recevez réellement, mais gardez le rapport centré sur la station relayée."
+    },
+    {
+      "level": 2,
+      "en": "A repeater path includes the user's audio into the relay and the relay output to you; describe the retransmitted station as heard at your receiver.",
+      "fr": "Un trajet par répéteur comprend l’audio de l’utilisateur vers le relais et la sortie du relais vers vous; décrivez la station retransmise telle que reçue par votre récepteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "signal-reports-rs-and-rst"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
