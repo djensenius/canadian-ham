@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-008-010",
+  "questionId": "B-007-008-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the four wave-behaviour words and the unusual-modes clue list.",
+      "fr": "Revoyez les quatre mots décrivant le comportement des ondes et la liste d’indices des modes inhabituels."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "recognizing-the-clues"
+  },
+  "singleLevelReason": "Term recall: a second hint would name or distinguish the wave behaviour among options; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
