@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-007-003",
+  "questionId": "B-001-007-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "For a NOT-correct item, look for the statement that crosses the amateur-service purpose boundary.", "fr": "Pour un élément FAUX, cherchez l'énoncé qui franchit la limite du but du service de radioamateur." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would identify the prohibited communication purpose."
+}

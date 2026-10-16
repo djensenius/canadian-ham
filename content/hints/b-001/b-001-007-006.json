@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-007-006",
+  "questionId": "B-001-007-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests the line between technical encoding and hidden meaning.", "fr": "Cet élément vérifie la limite entre l'encodage technique et le sens caché." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the condition that keeps an encoded message acceptable."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-007-011",
+  "questionId": "B-001-007-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests the commercial boundary of amateur communications.", "fr": "Cet élément vérifie la limite commerciale des communications radioamateurs." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state whether that communication purpose is allowed."
+}

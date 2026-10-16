@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-007-009",
+  "questionId": "B-001-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests hidden-meaning traffic in the amateur service.", "fr": "Cet élément vérifie le trafic à sens caché dans le service de radioamateur." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state whether secret meaning is permitted."
+}

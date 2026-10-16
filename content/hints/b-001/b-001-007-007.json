@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-007-007",
+  "questionId": "B-001-007-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "Operating shorthand is treated differently from hidden traffic; focus on whether the meaning remains open.", "fr": "Les abréviations d'exploitation sont traitées différemment du trafic caché ; concentrez-vous sur le fait que le sens reste ouvert ou non." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state the secrecy condition for abbreviations and procedural signals."
+}
