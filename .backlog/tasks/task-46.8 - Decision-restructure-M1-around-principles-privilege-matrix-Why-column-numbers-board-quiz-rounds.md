@@ -23,7 +23,7 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Owner decision recorded
+- [x] #1 Owner decision recorded
 - [ ] #2 M1 lessons are organised around stated principles with the privilege matrix, Why column and numbers board; every covered question remains taught (taught-facts check)
 - [ ] #3 Lesson quizzes are delivered in section-sized rounds on web and Apple
 - [ ] #4 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
