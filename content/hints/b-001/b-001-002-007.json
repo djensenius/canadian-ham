@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Classify this as a record duty, document custody, inspection response, or administrative charge before looking for the detail.",
-      "fr": "Classez d'abord la situation : tenue du dossier, conservation du document, réponse à l'inspection ou frais administratifs."
+      "en": "The certificate should stay tied to the official contact record, not just to where you happen to carry equipment.",
+      "fr": "Le certificat devrait rester lié au dossier officiel de contact, pas seulement à l'endroit où vous transportez l'équipement."
     },
     {
       "level": 2,
-      "en": "Certificate administration has separate buckets: keeping records current, keeping proof available, responding to an inspector, and handling charges. Pick the bucket first, then use the table row.",
-      "fr": "L'administration du certificat sépare la mise à jour du dossier, la preuve disponible, la réponse à l'inspecteur et les frais. Choisissez d'abord la catégorie, puis la ligne du tableau."
+      "en": "Record keeping and physical proof work together: the authority needs a stable place connected to the holder's filed information.",
+      "fr": "La tenue du dossier et la preuve matérielle vont ensemble : l'autorité a besoin d'un lieu stable lié aux renseignements déposés par le titulaire."
     }
   ],
   "lessonLink": {

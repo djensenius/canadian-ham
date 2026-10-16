@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Treat this as the duration row for the certificate record, not as an address or charge rule.",
-      "fr": "Traitez ceci comme la ligne sur la durée du certificat, et non comme une règle d'adresse ou de frais."
+      "en": "Separate the certificate's duration from ongoing duties such as address updates and inspection requests.",
+      "fr": "Séparez la durée du certificat des obligations continues comme les mises à jour d'adresse et les demandes d'inspection."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint for this direct duration recall item would point to the lifetime-validity answer."
+  "singleLevelReason": "Any second hint for this direct duration recall item would reveal whether the certificate has an expiry cycle."
 }

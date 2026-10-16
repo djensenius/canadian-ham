@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Classify this as a record duty, document custody, inspection response, or administrative charge before looking for the detail.",
-      "fr": "Classez d'abord la situation : tenue du dossier, conservation du document, réponse à l'inspection ou frais administratifs."
+      "en": "An address update is about keeping the official certificate record reachable.",
+      "fr": "Une mise à jour d'adresse sert à garder le dossier officiel du certificat joignable."
     },
     {
       "level": 2,
-      "en": "Certificate administration has separate buckets: keeping records current, keeping proof available, responding to an inspector, and handling charges. Pick the bucket first, then use the table row.",
-      "fr": "L'administration du certificat sépare la mise à jour du dossier, la preuve disponible, la réponse à l'inspecteur et les frais. Choisissez d'abord la catégorie, puis la ligne du tableau."
+      "en": "Ask who maintains the national operator record. The notice goes to the authority that can change that record, not to a study or hobby contact.",
+      "fr": "Demandez-vous qui tient le dossier national des opérateurs. L'avis va à l'autorité qui peut modifier ce dossier, et non à un contact d'étude ou de loisir."
     }
   ],
   "lessonLink": {

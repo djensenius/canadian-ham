@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Classify this as a record duty, document custody, inspection response, or administrative charge before looking for the detail.",
-      "fr": "Classez d'abord la situation : tenue du dossier, conservation du document, réponse à l'inspection ou frais administratifs."
-    },
-    {
-      "level": 2,
-      "en": "Certificate administration has separate buckets: keeping records current, keeping proof available, responding to an inspector, and handling charges. Pick the bucket first, then use the table row.",
-      "fr": "L'administration du certificat sépare la mise à jour du dossier, la preuve disponible, la réponse à l'inspecteur et les frais. Choisissez d'abord la catégorie, puis la ligne du tableau."
+      "en": "Treat the first certificate as part of initial certification, not as a later custom call-sign request.",
+      "fr": "Traitez le premier certificat comme une partie de la certification initiale, et non comme une demande personnalisée ultérieure d'indicatif d'appel."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-certificate-records-addresses-and-call-sign-fees"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint for this fee recall item would disclose whether an amount is charged."
 }

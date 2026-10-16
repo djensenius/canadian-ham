@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Classify this as a record duty, document custody, inspection response, or administrative charge before looking for the detail.",
-      "fr": "Classez d'abord la situation : tenue du dossier, conservation du document, réponse à l'inspection ou frais administratifs."
+      "en": "A move changes the official contact record; keep that record current even if the station can still operate.",
+      "fr": "Un déménagement modifie le dossier officiel de contact ; gardez ce dossier à jour même si la station peut encore fonctionner."
     },
     {
       "level": 2,
-      "en": "Certificate administration has separate buckets: keeping records current, keeping proof available, responding to an inspector, and handling charges. Pick the bucket first, then use the table row.",
-      "fr": "L'administration du certificat sépare la mise à jour du dossier, la preuve disponible, la réponse à l'inspecteur et les frais. Choisissez d'abord la catégorie, puis la ligne du tableau."
+      "en": "The rule is a notice duty tied to the mailing record. It is not a waiting period before operating from the new place.",
+      "fr": "La règle est une obligation d'avis liée au dossier postal. Ce n'est pas une période d'attente avant d'exploiter depuis le nouvel endroit."
     }
   ],
   "lessonLink": {
