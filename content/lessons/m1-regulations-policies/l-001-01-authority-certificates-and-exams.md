@@ -108,7 +108,7 @@ By the end of this lesson, you can:
 
 ## How these rules fit together
 
-The legal-source rows are the top layer. The Act gives authority, the Regulations define the amateur service, ISED administers the Act, and the operating standards tell amateur stations how to operate.
+The legal-source rows use a parallel authority model, not a stack. The Radiocommunication Act grants the powers. Under it, the Radiocommunication Regulations set binding service rules, including the amateur-service definition, and ISED issues technical operating standards such as RBR-4. ISED also administers the Act.
 
 Certificate rows combine two ideas. Your certificate lasts for your lifetime, but record duties continue. Keep the station copy, keep the address current, and be ready to show the certificate or a copy when a radio inspector properly asks.
 
@@ -157,6 +157,6 @@ During emergency-support practice, these facts reduce confusion. Operators who s
 
 ## Illustration brief
 
-Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.
+Alt text: A parallel diagram of Canadian amateur radio authority, records, and exam pathways.
 
-Description: Draw four stacked cards labelled "Act: legal authority," "Regulations: service definition," "ISED standards: station operation," and "Certificate and call sign: operator identity." Beside the stack, show a station desk with a certificate folder, an address-update reminder, and an exam checklist split into "ISED office" and "accredited examiner" branches. Use plain labels and original wording.
+Description: Draw the Radiocommunication Act as the source of powers, with two parallel branches for "Regulations: service definition and binding rules" and "ISED technical standards: station operation, including RBR-4." Show ISED administering the Act as a separate role. Beside the authority diagram, show a station desk with a certificate folder, an address-update reminder, and an exam checklist split into "ISED office" and "accredited examiner" branches. Use plain labels and original wording.
