@@ -76,4 +76,6 @@ Steering cleanup: removed already-pushed template hints for B-001-006 through B-
 Rewrote B-001-002 by hand after quality steering: 9 hints (4 two-level, 5 single-level B: B-001-002-002, -004, -005, -006, -008, -009? correction: 6 single-level). Validation: pnpm check:hints -- --subsection B-001-002 --require-complete passed.
 
 Rewrote B-001-003 by hand after quality steering: 8 hints (5 two-level, 3 single-level B: B-001-003-002, B-001-003-004, B-001-003-005, B-001-003-007? correction: 4 single-level). Validation: pnpm check:hints -- --subsection B-001-003 --require-complete passed.
+
+Rewrote B-001-004 by hand after quality steering: 7 hints (0 two-level, 7 single-level B). Validation: pnpm check:hints -- --subsection B-001-004 --require-complete passed.
 <!-- SECTION:NOTES:END -->
