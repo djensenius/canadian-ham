@@ -21,8 +21,12 @@
           "correctAttempts": 1,
           "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false
           ],
           "leitner": {
             "box": 1,
@@ -42,8 +46,12 @@
           "correctAttempts": 1,
           "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false
           ],
           "leitner": {
             "box": 1,
@@ -66,9 +74,14 @@
           "correctAttempts": 2,
           "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false
           ],
           "leitner": {
             "box": 2,
@@ -88,9 +101,14 @@
           "correctAttempts": 2,
           "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false
           ],
           "leitner": {
             "box": 2,
@@ -113,10 +131,16 @@
           "correctAttempts": 3,
           "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false
           ],
           "leitner": {
             "box": 3,
@@ -136,10 +160,16 @@
           "correctAttempts": 3,
           "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false
           ],
           "leitner": {
             "box": 3,
@@ -162,11 +192,18 @@
           "correctAttempts": 4,
           "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false,
+            false
           ],
           "leitner": {
             "box": 4,
@@ -186,11 +223,18 @@
           "correctAttempts": 4,
           "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false,
+            false
           ],
           "leitner": {
             "box": 4,
@@ -213,12 +257,20 @@
           "correctAttempts": 5,
           "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true,
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false,
+            false,
+            false
           ],
           "leitner": {
             "box": 5,
@@ -238,12 +290,20 @@
           "correctAttempts": 5,
           "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true,
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false,
+            false,
+            false
           ],
           "leitner": {
             "box": 5,
@@ -266,12 +326,20 @@
           "correctAttempts": 6,
           "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true,
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false,
+            false,
+            false
           ],
           "leitner": {
             "box": 5,
@@ -291,10 +359,16 @@
           "correctAttempts": 3,
           "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
           "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false
           ],
           "leitner": {
             "box": 3,
@@ -317,11 +391,146 @@
           "correctAttempts": 3,
           "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
           "lastResult": "incorrect",
+          "lastAnsweredWithHelp": false,
           "recentResults": [
             true,
             true,
             true,
             false
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false,
+            false
+          ],
+          "leitner": {
+            "box": 0,
+            "dueAt": "2026-01-02T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    },
+    {
+      "id": "leitner-hinted-correct-preserves-accuracy-but-gives-no-mastery-credit-and-is-due-immediately",
+      "input": {
+        "existing": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "attempts": 3,
+          "correctAttempts": 3,
+          "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+          "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
+          "recentResults": [
+            true,
+            true,
+            true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false
+          ],
+          "leitner": {
+            "box": 3,
+            "dueAt": "2026-01-09T00:00:00.000Z"
+          },
+          "notes": null
+        },
+        "update": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": true,
+          "answeredWithHelp": true,
+          "now": "2026-01-02T00:00:00.000Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "attempts": 4,
+          "correctAttempts": 4,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "correct",
+          "lastAnsweredWithHelp": true,
+          "recentResults": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false,
+            true
+          ],
+          "leitner": {
+            "box": 0,
+            "dueAt": "2026-01-02T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    },
+    {
+      "id": "leitner-hinted-incorrect-records-help-and-is-due-immediately",
+      "input": {
+        "existing": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "attempts": 3,
+          "correctAttempts": 3,
+          "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+          "lastResult": "correct",
+          "lastAnsweredWithHelp": false,
+          "recentResults": [
+            true,
+            true,
+            true
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false
+          ],
+          "leitner": {
+            "box": 3,
+            "dueAt": "2026-01-09T00:00:00.000Z"
+          },
+          "notes": null
+        },
+        "update": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": false,
+          "answeredWithHelp": true,
+          "now": "2026-01-02T00:00:00.000Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "attempts": 4,
+          "correctAttempts": 3,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "incorrect",
+          "lastAnsweredWithHelp": true,
+          "recentResults": [
+            true,
+            true,
+            true,
+            false
+          ],
+          "recentAnsweredWithHelp": [
+            false,
+            false,
+            false,
+            true
           ],
           "leitner": {
             "box": 0,
@@ -367,8 +576,13 @@
             "correctAttempts": 1,
             "lastAttemptedAt": "2026-01-02T01:00:00.000Z",
             "lastResult": "incorrect",
+            "lastAnsweredWithHelp": false,
             "recentResults": [
               true,
+              false
+            ],
+            "recentAnsweredWithHelp": [
+              false,
               false
             ],
             "leitner": {
@@ -384,12 +598,63 @@
             "correctAttempts": 0,
             "lastAttemptedAt": "2026-01-02T01:05:00.000Z",
             "lastResult": "incorrect",
+            "lastAnsweredWithHelp": false,
             "recentResults": [
+              false
+            ],
+            "recentAnsweredWithHelp": [
               false
             ],
             "leitner": {
               "box": 0,
               "dueAt": "2026-01-02T01:05:00.000Z"
+            },
+            "notes": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "leitner-repeated-hinted-then-unaided-correct-promotes-only-after-unaided-answer",
+      "input": {
+        "initialRecords": [],
+        "updates": [
+          {
+            "questionId": "B-006-004-014",
+            "bankId": "basic-2025-07-15",
+            "isCorrect": true,
+            "answeredWithHelp": true,
+            "now": "2026-01-02T00:00:00.000Z"
+          },
+          {
+            "questionId": "B-006-004-014",
+            "bankId": "basic-2025-07-15",
+            "isCorrect": true,
+            "now": "2026-01-02T01:00:00.000Z"
+          }
+        ]
+      },
+      "expectedOutput": {
+        "records": [
+          {
+            "questionId": "B-006-004-014",
+            "bankId": "basic-2025-07-15",
+            "attempts": 2,
+            "correctAttempts": 2,
+            "lastAttemptedAt": "2026-01-02T01:00:00.000Z",
+            "lastResult": "correct",
+            "lastAnsweredWithHelp": false,
+            "recentResults": [
+              true,
+              true
+            ],
+            "recentAnsweredWithHelp": [
+              true,
+              false
+            ],
+            "leitner": {
+              "box": 1,
+              "dueAt": "2026-01-03T01:00:00.000Z"
             },
             "notes": null
           }
@@ -420,7 +685,11 @@
             "correctAttempts": 0,
             "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
             "lastResult": "incorrect",
+            "lastAnsweredWithHelp": false,
             "recentResults": [
+              false
+            ],
+            "recentAnsweredWithHelp": [
               false
             ],
             "leitner": {
@@ -436,8 +705,12 @@
             "correctAttempts": 1,
             "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
             "lastResult": "correct",
+            "lastAnsweredWithHelp": false,
             "recentResults": [
               true
+            ],
+            "recentAnsweredWithHelp": [
+              false
             ],
             "leitner": {
               "box": 1,
@@ -452,8 +725,12 @@
             "correctAttempts": 1,
             "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
             "lastResult": "correct",
+            "lastAnsweredWithHelp": false,
             "recentResults": [
               true
+            ],
+            "recentAnsweredWithHelp": [
+              false
             ],
             "leitner": {
               "box": 1,

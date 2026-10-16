@@ -255,7 +255,7 @@ The system shall store per-question and per-subsection progress locally.
 
 Acceptance criteria:
 
-- Progress includes attempts, correct attempts, last attempted timestamp, last result, Leitner box, due date, and `recentResults`; `recentResults` keeps at most five booleans, ordered oldest to newest.
+- Progress includes attempts, correct attempts, last attempted timestamp, last result, answered-with-help flags, Leitner box, due date, and `recentResults`; `recentResults` and `recentAnsweredWithHelp` keep at most five booleans, ordered oldest to newest. A correct answer submitted with help preserves accuracy but gives no mastery credit, does not clear weak areas, and is scheduled for immediate review.
 - Progress can be exported to JSON and imported on another device/browser by user action.
 - Reset all data deletes local progress and preferences.
 

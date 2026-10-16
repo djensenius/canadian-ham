@@ -23,7 +23,9 @@ export interface QuestionProgressRecord {
   readonly correctAttempts: number;
   readonly lastAttemptedAt: string;
   readonly lastResult: "correct" | "incorrect";
+  readonly lastAnsweredWithHelp: boolean;
   readonly recentResults: readonly boolean[];
+  readonly recentAnsweredWithHelp: readonly boolean[];
   readonly leitner: LeitnerState;
   readonly notes?: string | null;
 }
@@ -33,6 +35,7 @@ export interface AnswerUpdate {
   readonly bankId: string;
   readonly isCorrect: boolean;
   readonly now: string;
+  readonly answeredWithHelp?: boolean;
 }
 
 export interface LatestExamResultItem {
@@ -47,8 +50,10 @@ export function applyAnswer(
 ): QuestionProgressRecord {
   requireCanonicalUtcTimestamp(update.now, "update.now");
   const previousBox = existing?.leitner.box ?? 0;
-  const nextBox = update.isCorrect ? Math.min(previousBox + 1, 5) : 0;
-  const dueAt = update.isCorrect ? addUtcSeconds(update.now, LEITNER_INTERVALS_BY_BOX[nextBox]) : normalizeIso(update.now);
+  const answeredWithHelp = update.answeredWithHelp ?? false;
+  const givesMasteryCredit = update.isCorrect && !answeredWithHelp;
+  const nextBox = givesMasteryCredit ? Math.min(previousBox + 1, 5) : 0;
+  const dueAt = givesMasteryCredit ? addUtcSeconds(update.now, LEITNER_INTERVALS_BY_BOX[nextBox]) : normalizeIso(update.now);
   return {
     questionId: update.questionId,
     bankId: update.bankId,
@@ -56,7 +61,9 @@ export function applyAnswer(
     correctAttempts: (existing?.correctAttempts ?? 0) + (update.isCorrect ? 1 : 0),
     lastAttemptedAt: normalizeIso(update.now),
     lastResult: update.isCorrect ? "correct" : "incorrect",
+    lastAnsweredWithHelp: answeredWithHelp,
     recentResults: appendRecentResult(existing?.recentResults ?? [], update.isCorrect),
+    recentAnsweredWithHelp: appendRecentResult(existing?.recentAnsweredWithHelp ?? [], answeredWithHelp),
     leitner: {
       box: nextBox,
       dueAt,
@@ -96,16 +103,17 @@ export function dueCount(records: readonly QuestionProgressRecord[], now: string
 }
 
 export function weakSubsectionIds(
-  records: readonly Pick<QuestionProgressRecord, "questionId" | "recentResults">[],
+  records: readonly (Pick<QuestionProgressRecord, "questionId" | "recentResults"> & { readonly recentAnsweredWithHelp?: readonly boolean[] })[],
   latestExamItems: readonly LatestExamResultItem[] = [],
 ): string[] {
   const subsectionAttempts = new Map<string, { correct: number; total: number }>();
   for (const record of records) {
     const subsectionId = subsectionIdFromQuestionId(record.questionId);
     const current = subsectionAttempts.get(subsectionId) ?? { correct: 0, total: 0 };
-    for (const result of record.recentResults) {
+    const recentAnsweredWithHelp = record.recentAnsweredWithHelp ?? [];
+    for (const [index, result] of record.recentResults.entries()) {
       current.total += 1;
-      if (result) {
+      if (result && recentAnsweredWithHelp[index] !== true) {
         current.correct += 1;
       }
     }

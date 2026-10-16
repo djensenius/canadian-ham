@@ -75,7 +75,9 @@ enum ProgressSyncMerge {
             correctAttempts: deviceRows.map(\.record.correctAttempts).reduce(0, +),
             lastAttemptedAt: latest.record.lastAttemptedAt,
             lastResult: latest.record.lastResult,
+            lastAnsweredWithHelp: latest.record.lastAnsweredWithHelp,
             recentResults: Array(latest.record.recentResults.suffix(5)),
+            recentAnsweredWithHelp: Array(latest.record.recentAnsweredWithHelp.suffix(5)),
             leitner: latest.record.leitner,
             notes: latest.record.notes
         )
@@ -200,9 +202,13 @@ enum ProgressSyncMerge {
         if l.leitner.dueAt != r.leitner.dueAt { return l.leitner.dueAt < r.leitner.dueAt }
         if l.leitner.box != r.leitner.box { return l.leitner.box < r.leitner.box }
         if l.lastResult != r.lastResult { return l.lastResult.rawValue < r.lastResult.rawValue }
+        if l.lastAnsweredWithHelp != r.lastAnsweredWithHelp { return !l.lastAnsweredWithHelp && r.lastAnsweredWithHelp }
         let lResults = l.recentResults.map { $0 ? "1" : "0" }.joined()
         let rResults = r.recentResults.map { $0 ? "1" : "0" }.joined()
         if lResults != rResults { return lResults < rResults }
+        let lHelp = l.recentAnsweredWithHelp.map { $0 ? "1" : "0" }.joined()
+        let rHelp = r.recentAnsweredWithHelp.map { $0 ? "1" : "0" }.joined()
+        if lHelp != rHelp { return lHelp < rHelp }
         return (l.notes ?? "") < (r.notes ?? "")
     }
 

@@ -148,7 +148,7 @@ export class ProgressStore {
   constructor(private readonly dbName = DEFAULT_DB_NAME) {}
 
   async getQuestionProgress(): Promise<QuestionProgressRecord[]> {
-    return this.getAll<QuestionProgressRecord>("questionProgress");
+    return (await this.getAll<QuestionProgressRecord>("questionProgress")).map((record) => normalizeQuestionProgressRecordDefaults(record));
   }
 
   async putQuestionProgress(record: QuestionProgressRecord): Promise<void> {
@@ -268,7 +268,7 @@ export class ProgressStore {
       const quizAttemptStore = transaction.objectStore("lessonQuizAttempts");
       const morseCourseStore = transaction.objectStore("morseCourseProgress");
       for (const record of [...existingQuestionProgress, ...data.questionProgress]) {
-        questionStore.put(record);
+        questionStore.put(normalizeQuestionProgressRecordDefaults(record));
       }
       for (const attempt of [...existingExamAttempts, ...data.examAttempts]) {
         attemptStore.put(attempt);
@@ -290,7 +290,7 @@ export class ProgressStore {
       if (data.syncDeviceRows === undefined) {
         transaction.objectStore("syncMetadata").delete(SYNC_DEVICE_ROWS_KEY);
       } else {
-        transaction.objectStore("syncMetadata").put({ key: SYNC_DEVICE_ROWS_KEY, value: data.syncDeviceRows });
+        transaction.objectStore("syncMetadata").put({ key: SYNC_DEVICE_ROWS_KEY, value: normalizeProgressSyncDeviceRows(data.syncDeviceRows) });
       }
     });
   }
@@ -387,13 +387,15 @@ export function mergeQuestionProgressForSync(records: readonly QuestionProgressR
 
 export function mergeDeviceQuestionProgressForSync(rows: readonly DeviceQuestionProgressRecord[]): QuestionProgressRecord {
   if (rows.length === 0) throw new Error("Cannot merge an empty question-progress group.");
-  const deviceRows = [...groupBy(rows, (row) => row.deviceId).values()].map((group) => [...group].sort(deviceQuestionProgressTieBreak).at(-1)!);
+  const normalizedRows = rows.map((row) => ({ ...row, record: normalizeQuestionProgressRecordDefaults(row.record) }));
+  const deviceRows = [...groupBy(normalizedRows, (row) => row.deviceId).values()].map((group) => [...group].sort(deviceQuestionProgressTieBreak).at(-1)!);
   const latest = [...deviceRows].sort(deviceQuestionProgressTieBreak).at(-1)!;
   return {
     ...latest.record,
     attempts: deviceRows.reduce((sum, row) => sum + row.record.attempts, 0),
     correctAttempts: deviceRows.reduce((sum, row) => sum + row.record.correctAttempts, 0),
     recentResults: latest.record.recentResults.slice(-5),
+    recentAnsweredWithHelp: recentAnsweredWithHelpForRecord(latest.record).slice(-5),
     notes: latest.record.notes ?? undefined,
   };
 }
@@ -448,7 +450,9 @@ function deviceQuestionProgressTieBreak(a: DeviceQuestionProgressRecord, b: Devi
     || codePointCompare(a.record.leitner.dueAt, b.record.leitner.dueAt)
     || a.record.leitner.box - b.record.leitner.box
     || codePointCompare(a.record.lastResult, b.record.lastResult)
+    || codePointCompare(a.record.lastAnsweredWithHelp ? "1" : "0", b.record.lastAnsweredWithHelp ? "1" : "0")
     || codePointCompare(a.record.recentResults.map((value) => (value ? "1" : "0")).join(""), b.record.recentResults.map((value) => (value ? "1" : "0")).join(""))
+    || codePointCompare(recentAnsweredWithHelpForRecord(a.record).map((value) => (value ? "1" : "0")).join(""), recentAnsweredWithHelpForRecord(b.record).map((value) => (value ? "1" : "0")).join(""))
     || codePointCompare(a.record.notes ?? "", b.record.notes ?? "");
 }
 
@@ -620,7 +624,7 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
       lessonProgress: lessonProgress as LessonProgressRecord[],
       lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
       morseCourseProgress: raw.morseCourseProgress as MorseCourseProgressExport | undefined,
-      ...(isRecord(raw.syncDeviceRows) ? { syncDeviceRows: raw.syncDeviceRows as unknown as ProgressSyncDeviceRows } : {}),
+      ...(isRecord(raw.syncDeviceRows) ? { syncDeviceRows: normalizeProgressSyncDeviceRows(raw.syncDeviceRows as unknown as ProgressSyncDeviceRows) } : {}),
       preferences: normalizePreferences(raw.preferences),
     },
   };
@@ -703,7 +707,37 @@ function validateMorseCourseProgress(value: unknown): string[] {
 }
 
 function normalizeQuestionProgressRecord(record: unknown, bank: BankData): unknown {
-  return isRecord(record) ? { ...record, bankId: record.bankId ?? bank.bankId } : record;
+  return isRecord(record) ? normalizeQuestionProgressRecordDefaults({ ...record, bankId: record.bankId ?? bank.bankId }) : record;
+}
+
+function normalizeQuestionProgressRecordDefaults(record: QuestionProgressRecord): QuestionProgressRecord;
+function normalizeQuestionProgressRecordDefaults(record: Record<string, unknown>): Record<string, unknown>;
+function normalizeQuestionProgressRecordDefaults(record: QuestionProgressRecord | Record<string, unknown>): QuestionProgressRecord | Record<string, unknown> {
+  if (!Array.isArray(record.recentResults)) {
+    return {
+      ...record,
+      lastAnsweredWithHelp: record.lastAnsweredWithHelp === true,
+      recentAnsweredWithHelp: [],
+    };
+  }
+  return {
+    ...record,
+    lastAnsweredWithHelp: record.lastAnsweredWithHelp === true,
+    recentAnsweredWithHelp: recentAnsweredWithHelpForRecord(record),
+  };
+}
+
+function recentAnsweredWithHelpForRecord(record: Pick<QuestionProgressRecord, "recentResults" | "recentAnsweredWithHelp"> | Record<string, unknown>): boolean[] {
+  const recentResults = Array.isArray(record.recentResults) ? record.recentResults : [];
+  const source = Array.isArray(record.recentAnsweredWithHelp) ? record.recentAnsweredWithHelp : [];
+  return recentResults.map((_, index) => source[index] === true);
+}
+
+function normalizeProgressSyncDeviceRows(rows: ProgressSyncDeviceRows): ProgressSyncDeviceRows {
+  return {
+    ...rows,
+    questionProgress: rows.questionProgress.map((row) => ({ ...row, record: normalizeQuestionProgressRecordDefaults(row.record) })),
+  };
 }
 
 function normalizeExamAttempt(attempt: unknown, bank: BankData): unknown {
@@ -803,6 +837,15 @@ function validateQuestionProgressRecord(value: unknown, index: number, bank: Ban
   }
   if (!Array.isArray(value.recentResults) || !value.recentResults.every((result) => typeof result === "boolean") || value.recentResults.length > 5) {
     errors.push(`${prefix}.recentResults must be an array of up to five booleans.`);
+  }
+  if (value.lastAnsweredWithHelp !== undefined && typeof value.lastAnsweredWithHelp !== "boolean") {
+    errors.push(`${prefix}.lastAnsweredWithHelp must be a boolean when present.`);
+  }
+  if (value.recentAnsweredWithHelp !== undefined && (!Array.isArray(value.recentAnsweredWithHelp) || !value.recentAnsweredWithHelp.every((result) => typeof result === "boolean") || value.recentAnsweredWithHelp.length > 5)) {
+    errors.push(`${prefix}.recentAnsweredWithHelp must be an array of up to five booleans when present.`);
+  }
+  if (Array.isArray(value.recentResults) && Array.isArray(value.recentAnsweredWithHelp) && value.recentAnsweredWithHelp.length !== value.recentResults.length) {
+    errors.push(`${prefix}.recentAnsweredWithHelp must have the same length as recentResults when present.`);
   }
   if (!isRecord(value.leitner)) {
     errors.push(`${prefix}.leitner must be an object.`);
@@ -1058,7 +1101,7 @@ function validateExamAttemptItem(value: unknown, prefix: string, bank: BankData)
 function pushCanonicalTimestampError(errors: string[], value: string, fieldName: string): void {
   try {
     // Route import validation through the engine's canonical timestamp parser.
-    dueCount([{ questionId: "B-001-001-001", bankId: DEFAULT_BANK_ID, attempts: 0, correctAttempts: 0, lastAttemptedAt: value, lastResult: "incorrect", recentResults: [], leitner: { box: 0, dueAt: value } }], value);
+    dueCount([{ questionId: "B-001-001-001", bankId: DEFAULT_BANK_ID, attempts: 0, correctAttempts: 0, lastAttemptedAt: value, lastResult: "incorrect", lastAnsweredWithHelp: false, recentResults: [], recentAnsweredWithHelp: [], leitner: { box: 0, dueAt: value } }], value);
   } catch (error) {
     errors.push(`${fieldName} must use canonical UTC timestamp format YYYY-MM-DDTHH:MM:SS.sssZ (${error instanceof Error ? error.message : String(error)}).`);
   }

@@ -29,7 +29,9 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
     public let correctAttempts: Int
     public let lastAttemptedAt: String
     public let lastResult: AnswerResult
+    public let lastAnsweredWithHelp: Bool
     public let recentResults: [Bool]
+    public let recentAnsweredWithHelp: [Bool]
     public let leitner: LeitnerState
     public let notes: String?
 
@@ -40,7 +42,9 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
         case correctAttempts
         case lastAttemptedAt
         case lastResult
+        case lastAnsweredWithHelp
         case recentResults
+        case recentAnsweredWithHelp
         case leitner
         case notes
     }
@@ -52,7 +56,9 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
         correctAttempts: Int,
         lastAttemptedAt: String,
         lastResult: AnswerResult,
+        lastAnsweredWithHelp: Bool = false,
         recentResults: [Bool],
+        recentAnsweredWithHelp: [Bool]? = nil,
         leitner: LeitnerState,
         notes: String? = nil
     ) {
@@ -62,7 +68,9 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
         self.correctAttempts = correctAttempts
         self.lastAttemptedAt = lastAttemptedAt
         self.lastResult = lastResult
+        self.lastAnsweredWithHelp = lastAnsweredWithHelp
         self.recentResults = recentResults
+        self.recentAnsweredWithHelp = recentAnsweredWithHelp ?? Array(repeating: false, count: recentResults.count)
         self.leitner = leitner
         self.notes = notes
     }
@@ -75,7 +83,9 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
         correctAttempts = try container.decode(Int.self, forKey: .correctAttempts)
         lastAttemptedAt = try container.decode(String.self, forKey: .lastAttemptedAt)
         lastResult = try container.decode(AnswerResult.self, forKey: .lastResult)
+        lastAnsweredWithHelp = try container.decodeIfPresent(Bool.self, forKey: .lastAnsweredWithHelp) ?? false
         recentResults = try container.decode([Bool].self, forKey: .recentResults)
+        recentAnsweredWithHelp = try container.decodeIfPresent([Bool].self, forKey: .recentAnsweredWithHelp) ?? Array(repeating: false, count: recentResults.count)
         leitner = try container.decode(LeitnerState.self, forKey: .leitner)
         notes = try container.decodeIfPresent(String.self, forKey: .notes)
     }
@@ -88,7 +98,9 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
         try container.encode(correctAttempts, forKey: .correctAttempts)
         try container.encode(lastAttemptedAt, forKey: .lastAttemptedAt)
         try container.encode(lastResult, forKey: .lastResult)
+        try container.encode(lastAnsweredWithHelp, forKey: .lastAnsweredWithHelp)
         try container.encode(recentResults, forKey: .recentResults)
+        try container.encode(recentAnsweredWithHelp, forKey: .recentAnsweredWithHelp)
         try container.encode(leitner, forKey: .leitner)
         if let notes {
             try container.encode(notes, forKey: .notes)
@@ -103,12 +115,31 @@ public struct AnswerUpdate: Codable, Equatable, Sendable {
     public let bankId: String
     public let isCorrect: Bool
     public let now: String
+    public let answeredWithHelp: Bool
 
-    public init(questionId: String, bankId: String, isCorrect: Bool, now: String) {
+    private enum CodingKeys: String, CodingKey {
+        case questionId
+        case bankId
+        case isCorrect
+        case now
+        case answeredWithHelp
+    }
+
+    public init(questionId: String, bankId: String, isCorrect: Bool, now: String, answeredWithHelp: Bool = false) {
         self.questionId = questionId
         self.bankId = bankId
         self.isCorrect = isCorrect
         self.now = now
+        self.answeredWithHelp = answeredWithHelp
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        questionId = try container.decode(String.self, forKey: .questionId)
+        bankId = try container.decode(String.self, forKey: .bankId)
+        isCorrect = try container.decode(Bool.self, forKey: .isCorrect)
+        now = try container.decode(String.self, forKey: .now)
+        answeredWithHelp = try container.decodeIfPresent(Bool.self, forKey: .answeredWithHelp) ?? false
     }
 }
 
@@ -130,9 +161,10 @@ public func applyAnswer(existing: QuestionProgressRecord?, update: AnswerUpdate)
     guard (0...5).contains(previousBox) else {
         throw EngineError("leitner.box out of range: \(previousBox)")
     }
-    let nextBox = update.isCorrect ? min(previousBox + 1, 5) : 0
+    let givesMasteryCredit = update.isCorrect && !update.answeredWithHelp
+    let nextBox = givesMasteryCredit ? min(previousBox + 1, 5) : 0
     let dueAt: String
-    if update.isCorrect {
+    if givesMasteryCredit {
         guard let interval = leitnerIntervalsByBox[nextBox] else {
             throw EngineError("leitner.box out of range: \(nextBox)")
         }
@@ -148,7 +180,9 @@ public func applyAnswer(existing: QuestionProgressRecord?, update: AnswerUpdate)
         correctAttempts: (existing?.correctAttempts ?? 0) + (update.isCorrect ? 1 : 0),
         lastAttemptedAt: update.now,
         lastResult: update.isCorrect ? .correct : .incorrect,
+        lastAnsweredWithHelp: update.answeredWithHelp,
         recentResults: appendRecentResult(existing?.recentResults ?? [], newest: update.isCorrect),
+        recentAnsweredWithHelp: appendRecentResult(existing?.recentAnsweredWithHelp ?? [], newest: update.answeredWithHelp),
         leitner: LeitnerState(box: nextBox, dueAt: dueAt),
         notes: existing?.notes ?? nil
     )
@@ -196,9 +230,11 @@ public func weakSubsectionIds(records: [QuestionProgressRecord], latestExamItems
     for record in records {
         let subsectionId = subsectionIdFromQuestionId(record.questionId)
         var current = subsectionAttempts[subsectionId] ?? (correct: 0, total: 0)
-        for result in record.recentResults {
+        for (index, result) in record.recentResults.enumerated() {
             current.total += 1
-            if result {
+            if result, record.recentAnsweredWithHelp.indices.contains(index), !record.recentAnsweredWithHelp[index] {
+                current.correct += 1
+            } else if result, !record.recentAnsweredWithHelp.indices.contains(index) {
                 current.correct += 1
             }
         }

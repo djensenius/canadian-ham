@@ -52,7 +52,9 @@
         "correctAttempts": 3,
         "lastAttemptedAt": "2026-01-02T03:04:05.000Z",
         "lastResult": "incorrect",
+        "lastAnsweredWithHelp": false,
         "recentResults": [true, false, true],
+        "recentAnsweredWithHelp": [false, false, false],
         "leitner": { "box": 2, "dueAt": "2026-01-04T03:04:05.000Z" },
         "notes": "device-b"
       }

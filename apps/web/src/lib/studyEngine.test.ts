@@ -20,7 +20,9 @@ function progressRecord(questionId: string, recentResults: readonly boolean[], d
     correctAttempts: recentResults.filter(Boolean).length,
     lastAttemptedAt: now,
     lastResult: recentResults.at(-1) ? "correct" : "incorrect",
+    lastAnsweredWithHelp: false,
     recentResults,
+    recentAnsweredWithHelp: recentResults.map(() => false),
     leitner: { box: 0, dueAt },
     notes: null,
   };
@@ -40,6 +42,18 @@ describe("web study engine integration", () => {
       records = applyPracticeAnswer(records, "B-001-001-001", 0, `2026-01-02T0${hour}:00:00.000Z`);
     }
     assert.deepEqual(records[0]?.recentResults, [false, true, true, true, true]);
+  });
+
+  it("records answered-with-help as a flag without mastery credit", () => {
+    const records = applyPracticeAnswer([], "B-001-001-001", 0, now, bankId, true);
+
+    assert.equal(records[0]?.correctAttempts, 1);
+    assert.equal(records[0]?.lastResult, "correct");
+    assert.equal(records[0]?.lastAnsweredWithHelp, true);
+    assert.deepEqual(records[0]?.recentResults, [true]);
+    assert.deepEqual(records[0]?.recentAnsweredWithHelp, [true]);
+    assert.equal(records[0]?.leitner.box, 0);
+    assert.equal(records[0]?.leitner.dueAt, now);
   });
 
   it("builds due-review scope from due stored records only", () => {

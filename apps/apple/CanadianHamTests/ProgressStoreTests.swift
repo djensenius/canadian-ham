@@ -1592,6 +1592,99 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(partialMorse, bank: bank))
     }
 
+    func testProgressImportDecodesOlderAnsweredWithHelpFieldsAsFalse() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bank.manifest.bankId)",
+          "questionProgress": [
+            {
+              "questionId": "B-001-001-001",
+              "bankId": "\(bank.manifest.bankId)",
+              "attempts": 1,
+              "correctAttempts": 1,
+              "lastAttemptedAt": "2026-01-02T03:04:05.000Z",
+              "lastResult": "correct",
+              "recentResults": [true],
+              "leitner": { "box": 1, "dueAt": "2026-01-03T03:04:05.000Z" },
+              "notes": null
+            }
+          ],
+          "examAttempts": [],
+          "lessonProgress": [],
+          "lessonQuizAttempts": [],
+          "syncDeviceRows": {
+            "questionProgress": [
+              {
+                "deviceId": "iphone",
+                "record": {
+                  "questionId": "B-001-001-001",
+                  "bankId": "\(bank.manifest.bankId)",
+                  "attempts": 1,
+                  "correctAttempts": 1,
+                  "lastAttemptedAt": "2026-01-02T03:04:05.000Z",
+                  "lastResult": "correct",
+                  "recentResults": [true],
+                  "leitner": { "box": 1, "dueAt": "2026-01-03T03:04:05.000Z" },
+                  "notes": null
+                }
+              }
+            ],
+            "examAttempts": [],
+            "lessonProgress": [],
+            "lessonQuizAttempts": [],
+            "morseCourseProgress": []
+          },
+          "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system" }
+        }
+        """
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+        let store = try ProgressStoreService.inMemoryForTests(localDeviceID: "ipad")
+
+        XCTAssertTrue(store.validate(decoded, bank: bank).isEmpty)
+        try store.importData(decoded, bank: bank)
+
+        let expected = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            lastAnsweredWithHelp: false,
+            recentResults: [true],
+            recentAnsweredWithHelp: [false],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        XCTAssertEqual(try store.questionProgressRecords(), [expected])
+        XCTAssertEqual(try store.exportData(bank: bank, exportedAt: "2026-01-02T06:04:05.000Z").syncDeviceRows?.questionProgress, [DeviceQuestionProgressRecord(deviceId: "iphone", record: expected)])
+    }
+
+    func testSwiftDataQuestionProgressEntityDefaultsHelpFieldsForLightweightMigration() throws {
+        let store = try ProgressStoreService.inMemoryForTests()
+        let context = ModelContext(store.container)
+        let entity = QuestionProgressEntity(
+            questionId: "B-001-001-001",
+            bankId: basicBankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: AnswerResult.correct.rawValue,
+            recentResultsData: try JSONEncoder().encode([true]),
+            leitnerBox: 1,
+            dueAt: "2026-01-03T03:04:05.000Z"
+        )
+        context.insert(entity)
+        try context.save()
+
+        let fetched = try XCTUnwrap(context.fetch(FetchDescriptor<QuestionProgressEntity>()).first)
+        XCTAssertFalse(fetched.lastAnsweredWithHelp)
+        XCTAssertEqual(try JSONDecoder().decode([Bool].self, from: fetched.recentAnsweredWithHelpData), [])
+    }
+
     func testImportRejectsUnsupportedLanguagePreferenceValues() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let cases = [

@@ -18,7 +18,11 @@
         "box": 1,
         "dueAt": "2026-01-03T03:00:00.000Z"
       },
-      "notes": null
+      "notes": null,
+      "lastAnsweredWithHelp": false,
+      "recentAnsweredWithHelp": [
+        false
+      ]
     }
   ],
   "examAttempts": [
@@ -131,7 +135,11 @@
             "box": 1,
             "dueAt": "2026-01-03T03:00:00.000Z"
           },
-          "notes": null
+          "notes": null,
+          "lastAnsweredWithHelp": false,
+          "recentAnsweredWithHelp": [
+            false
+          ]
         }
       }
     ],
