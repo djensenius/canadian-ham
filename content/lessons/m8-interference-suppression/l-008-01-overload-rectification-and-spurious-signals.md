@@ -159,6 +159,14 @@ A spurious emission may come from poor shielding, faulty stages, unwanted mixing
 
 A clean transmitter has filtering, shielding, and stages adjusted so the wanted signal dominates and unwanted outputs are suppressed. Operating equipment with covers or shields removed can change grounding and shielding enough to let unwanted energy radiate.
 
+::figure interference-troubleshooting-map
+Alt text: A troubleshooting map that separates receiver overload, audio rectification, and transmitter spurious emissions.
+Text equivalent:
+- Overload panel: a large off-channel arrow and a smaller wanted arrow enter the receiver input.
+- Audio rectification panel: a speaker lead picks up RF and feeds a diode-like detector at a speaker input.
+- Spurious outputs panel: the transmitter has a thick wanted output arrow plus smaller unwanted output paths above and below it.
+::
+
 ## Key clicks and waveform shape
 
 In Morse transmission, the carrier should rise and fall smoothly enough that the signal occupies a reasonable bandwidth. If the carrier turns on and off too abruptly, the sharp edges contain extra side energy. Distant receivers hear this as clicks near the signal.

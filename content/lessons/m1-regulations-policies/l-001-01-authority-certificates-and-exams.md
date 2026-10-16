@@ -106,6 +106,13 @@ By the end of this lesson, you can:
 | Virtual exam setup | Use a computer with a camera, microphone, and stable internet connection. |
 | Virtual answer sheet | For a virtual exam, the examiner emails a blank answer sheet in advance. Print it, write answers on it during the exam, and follow the examiner's submission instructions. |
 
+::figure authority-records-exams
+Alt text: A stacked diagram of Canadian amateur radio authority, records, and exam pathways.
+Text equivalent:
+- The drawing stacks Act, Regulations, ISED standards, and cert + call sign.
+- A separate address card says address and 30 days; an exam paths card branches to ISED and examiner.
+::
+
 ## How these rules fit together
 
 These legal sources work side by side, not as a chain. The Radiocommunication Act grants the powers, and ISED administers the Act. Under it, the Radiocommunication Regulations set binding service rules, including the amateur-service definition, and ISED issues technical operating standards such as RBR-4, which amateur stations follow when operating.

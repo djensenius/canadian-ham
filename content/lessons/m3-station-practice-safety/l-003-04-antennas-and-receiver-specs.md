@@ -51,6 +51,16 @@ The boom is the mechanical support. The driven element is where the feedline att
 
 The parasitic elements are not directly fed. Their length and placement shape the pattern.
 
+::figure yagi-receiver-specs
+Alt text: A labelled Yagi antenna appears beside a receiver display with wide, medium, and narrow passband choices, plus an image-frequency marker.
+Text equivalent:
+- Yagi labels are reflector, driven, director, boom, and feedline from the driven element.
+- The receiver display shows three passband shapes labelled wide, med, and narrow under their own curves.
+- The frequency line labels desired, LO, image, and two IF spacings.
+::
+
+
+
 ### Worked example: identifying parts from a sketch
 
 A sketch shows three horizontal rods on a boom. The centre rod has the coax attached. The rear rod is 5.4 m long, the centre rod is 5.1 m long, and the forward rod is 4.8 m long.

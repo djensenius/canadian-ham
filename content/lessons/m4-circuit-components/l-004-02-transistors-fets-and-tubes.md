@@ -171,6 +171,14 @@ A triode grid controls electron flow through a vacuum. A FET gate controls condu
 
 The materials are completely different, but the control analogy helps with exam-level recognition.
 
+::figure control-terminals
+Alt text: Three side-by-side simplified symbols for an NPN transistor, an N-channel FET, and a triode tube, with their control terminals highlighted.
+Text equivalent:
+- The NPN sketch labels base, collector, and emitter, with the base control circled.
+- The N-FET sketch labels gate, drain, and source, with the gate control circled.
+- The triode sketch labels cathode, grid, and plate, with the grid between cathode and plate and circled.
+::
+
 ## Try it
 
 1. An NPN symbol in a driver circuit has its emitter arrow pointing away from the base. Use the arrow to confirm the part family and polarity before replacing it.

@@ -51,6 +51,16 @@ Lithium-based packs can provide high capacity for their mass. They require the c
 
 A battery is not an ideal voltage source. It has internal resistance, so its terminal voltage drops under load. The drop becomes larger with high current, cold temperature, discharged state, small wiring, or an old battery.
 
+::figure batteries-dc-supplies-ripple
+Alt text: A battery, fuse, heavy DC leads, regulated supply, and ripple waveform show how station power reaches a transceiver.
+Text equivalent:
+- DC source feeds a + fuse near the source, then heavy leads to the radio.
+- Insets show good regulation and ripple hum.
+- Battery mini-icons are labelled series and parallel.
+::
+
+
+
 ### In the real world: four cells for a portable accessory
 
 A small accessory can use four 1.5 V cells in series.

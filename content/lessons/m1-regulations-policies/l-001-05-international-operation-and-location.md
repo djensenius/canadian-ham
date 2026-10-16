@@ -67,6 +67,15 @@ By the end of this lesson, you can:
 | Canadian operator using a CEPT Amateur Radio Licence in a participating country | Advanced is the minimum Canadian qualification for this visit arrangement. |
 | CEPT participating country using voice | Transmit the visited country's prefix, then "stroke," then the Canadian call sign. |
 
+::figure international-location-checklist
+Alt text: A travel-operating checklist beside a simplified world map divided into three ITU regions.
+Text equivalent:
+- The travel desk card says radio pass.
+- The checklist labels are message, location, and ID format.
+- The ITU map is divided; labels below it show R2 west, R1, and R3.
+- Location checks branch to labelled US and CEPT cards.
+::
+
 ## How these rules fit together
 
 International communication starts with purpose. Amateur-purpose messages and personal remarks fit the service. The ITU row adds the international regulatory source and the administration-objection rule.

@@ -107,6 +107,14 @@ The circuit symbol is a triangle-like wedge touching a line. The line marks the 
 - Trick: the cathode is on the line, or bar, side of the symbol.
 - Limit: this helps with the schematic symbol. Always check the datasheet or package marking for a real part.
 
+::figure amplifiers-diodes
+Alt text: A clean block diagram showing a weak signal entering an amplifier, a larger matching signal leaving it, and a diode symbol labelled anode and cathode.
+Text equivalent:
+- A weak sine wave enters the amplifier and a larger same-frequency sine wave leaves.
+- The supply symbol is connected to the amplifier.
+- The diode is labelled anode and cathode, with conventional current one way and e- flow the opposite way.
+::
+
 ## Rectifiers, detectors, and protectors
 
 Rectification is changing alternating current into current that flows one way. A single diode can pass one half of an AC waveform, producing pulsating DC. A power supply normally follows the rectifier with filtering so the result becomes smoother DC.

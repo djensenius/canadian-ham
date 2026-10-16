@@ -5813,6 +5813,22 @@
         }
       }
     },
+    "Lesson" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon"
+          }
+        }
+      }
+    },
     "Lesson quiz" : {
       "localizations" : {
         "fr" : {
@@ -6465,6 +6481,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mode : %@. Bilan de la séance : %@."
+          }
+        }
+      }
+    },
+    "Module %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Module %lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Module %lld"
           }
         }
       }

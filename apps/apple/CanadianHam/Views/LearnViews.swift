@@ -376,13 +376,23 @@ private struct LessonReaderView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
+        .navigationTitle(lessonModuleNavigationTitle) // l10n: localized
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
         .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
     }
 
     private var prerequisiteLessons: [Lesson] {
         lesson.prerequisites.compactMap { library.lessonsById[$0] }
+    }
+
+    private var lessonModuleNavigationTitle: String {
+        guard let module = library.modulesById[lesson.moduleId] else {
+            return String(localized: "Lesson")
+        }
+        return String(localized: "Module \(module.order)")
     }
 
     private func lessonActionLabel(_ text: Text) -> some View {
