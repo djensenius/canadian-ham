@@ -144,7 +144,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     private var horizontalUsesInspector: Bool {
-        horizontalSizeClass == .regular
+        horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad
     }
 
     @ViewBuilder
@@ -685,6 +685,9 @@ private struct CalculatorKeyboardResponder: UIViewRepresentable {
         override var canBecomeFirstResponder: Bool { true }
 
         func update(isActive: Bool, onKey: @escaping (CalculatorKey) -> Void) {
+            if self.isActive && !isActive {
+                swallowedPresses.removeAll()
+            }
             self.isActive = isActive
             self.onKey = onKey
             syncFirstResponder()
@@ -708,6 +711,14 @@ private struct CalculatorKeyboardResponder: UIViewRepresentable {
             }
         }
 
+        override func pressesChanged(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+            let handledPresses = presses.intersection(swallowedPresses)
+            let unhandledPresses = presses.subtracting(handledPresses)
+            if !unhandledPresses.isEmpty {
+                super.pressesChanged(unhandledPresses, with: event)
+            }
+        }
+
         override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
             let handledPresses = presses.intersection(swallowedPresses)
             swallowedPresses.subtract(handledPresses)
@@ -724,6 +735,14 @@ private struct CalculatorKeyboardResponder: UIViewRepresentable {
             if !unhandledPresses.isEmpty {
                 super.pressesCancelled(unhandledPresses, with: event)
             }
+        }
+
+        override func resignFirstResponder() -> Bool {
+            let didResign = super.resignFirstResponder()
+            if didResign {
+                swallowedPresses.removeAll()
+            }
+            return didResign
         }
 
         private func handledCalculatorPresses(in presses: Set<UIPress>) -> Set<UIPress> {

@@ -383,7 +383,7 @@ struct RootView: View {
     @ViewBuilder
     private func splitContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         GeometryReader { proxy in
-            let columnVisibility: Binding<NavigationSplitViewVisibility>? = shouldUseBoundSplitColumnVisibility(containerSize: proxy.size) ? $splitColumnVisibility : nil
+            let columnVisibility: Binding<NavigationSplitViewVisibility>? = shouldUseBoundSplitColumnVisibility ? $splitColumnVisibility : nil
             splitNavigationView(
                 bank: bank,
                 contentLibrary: contentLibrary,
@@ -545,21 +545,24 @@ struct RootView: View {
         dataRevision + appSettings.dataRevision
     }
 
-    private func shouldUseBoundSplitColumnVisibility(containerSize: CGSize) -> Bool {
+    private var shouldUseBoundSplitColumnVisibility: Bool {
 #if os(iOS)
+        Self.usesBoundSplitColumnVisibility
+#else
+        false
+#endif
+    }
+
+#if os(iOS)
+    private static let usesBoundSplitColumnVisibility: Bool = {
 #if DEBUG
-        let hasInitialVisibilityLaunchArgument = initialSplitColumnVisibilityLaunchArgument != nil
+        let hasInitialVisibilityLaunchArgument = AppLaunchArguments.value(after: "-CanadianHamInitialSplitColumnVisibility") != nil
 #else
         let hasInitialVisibilityLaunchArgument = false
 #endif
-        // A bound column-visibility value changes SwiftUI's forced-regular iPhone default and can hide the sidebar;
-        // keep that path unbound unless a test hook or an open exam-tool inspector needs explicit control.
-        let usesDefaultBoundRegularWidthVisibility = UIDevice.current.userInterfaceIdiom == .pad
-        return usesDefaultBoundRegularWidthVisibility || hasInitialVisibilityLaunchArgument || preToolSplitColumnVisibility != nil || shouldCollapseSidebarForRegularWidthExamTool(containerSize: containerSize)
-#else
-        return false
+        return UIDevice.current.userInterfaceIdiom == .pad || hasInitialVisibilityLaunchArgument
+    }()
 #endif
-    }
 
 #if DEBUG && os(iOS)
     private var initialSplitColumnVisibilityLaunchArgument: NavigationSplitViewVisibility? {
@@ -584,6 +587,7 @@ struct RootView: View {
 
     private func updateRegularWidthExamToolColumnVisibility(containerSize: CGSize) {
 #if os(iOS)
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return }
         guard shouldCollapseSidebarForRegularWidthExamTool(containerSize: containerSize) else {
             if let preToolSplitColumnVisibility {
                 splitColumnVisibility = preToolSplitColumnVisibility
@@ -601,6 +605,7 @@ struct RootView: View {
 
 #if os(iOS)
     private func shouldCollapseSidebarForRegularWidthExamTool(containerSize: CGSize) -> Bool {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return false }
         let estimatedSidebarWidth: CGFloat = 320
         let inspectorIdealWidth: CGFloat = 380
         let minimumExamColumnWidth: CGFloat = 420

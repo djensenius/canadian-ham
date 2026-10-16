@@ -24,6 +24,46 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "practice calculator sheet")
     }
 
+    func testForcedRegularIPhoneLandscapeCalculatorUsesSheetAndKeepsSelection() throws {
+#if os(iOS)
+        try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "Forced-regular iPhone sheet persistence is covered by the targeted iPhone run.")
+        XCUIDevice.shared.orientation = .landscapeLeft
+        waitBriefly(0.8)
+        defer { XCUIDevice.shared.orientation = .portrait }
+
+        let app = launchPracticeQuestion(extraArguments: [
+            "-CanadianHamForceRegularHorizontalSizeClass",
+            "-CanadianHamPracticeMode", "review-later"
+        ])
+        defer { app.terminate() }
+
+        let question = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(question.waitForExistence(timeout: 10), "Expected the practice question before opening the calculator")
+        let initialQuestionText = question.label
+
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected answer A before selecting an answer")
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        XCTAssertTrue(answer.isHittable, "Expected answer A to be hittable before selecting it")
+        answer.tap()
+        waitBriefly()
+        XCTAssertTrue(answer.isSelected, "Answer A should be selected before opening the calculator")
+        let selectedAnswerLabel = answer.label
+
+        openTool(.calculator, in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5), "Expected the calculator sheet UI after opening the calculator")
+        assertCalculatorPresentedAsSheet(in: app, context: "forced-regular iPhone landscape after open")
+        waitBriefly(1.0)
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.exists, "The calculator sheet should still be open after SwiftUI settles")
+        assertCalculatorPresentedAsSheet(in: app, context: "forced-regular iPhone landscape after settle")
+        XCTAssertEqual(question.label, initialQuestionText, "Opening the calculator sheet must not rebuild to a different question")
+        XCTAssertEqual(answer.label, selectedAnswerLabel, "Opening the calculator sheet must preserve the selected answer label")
+        XCTAssertTrue(answer.isSelected, "Opening the calculator sheet must preserve the selected answer state")
+#else
+        throw XCTSkip("Forced-regular iPhone sheet persistence is iOS-only.")
+#endif
+    }
+
     func testReferenceSheetToolHiddenUntilTask44Dot4() throws {
         let app = launchPracticeQuestion()
         defer { app.terminate() }
@@ -455,6 +495,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let close = app.buttons["exam-tool-close-button"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 5), "Expected a close tools button")
         close.tap()
+    }
+
+    private func assertCalculatorPresentedAsSheet(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let windowFrame = app.windows.firstMatch.frame
+        let header = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+        XCTAssertTrue(header.waitForExistence(timeout: 5), "\(context): expected the calculator panel header", file: file, line: line)
+        XCTAssertNotNil(activeToolPanelTop(in: app), "\(context): expected a bottom sheet, not a trailing inspector", file: file, line: line)
+        XCTAssertLessThan(header.frame.minX, windowFrame.midX, "\(context): iPhone regular-width landscape should keep tools in the bottom sheet rather than a trailing inspector. Header: \(frameDescription(header.frame)); window: \(frameDescription(windowFrame))", file: file, line: line)
     }
 
     private func performMediumDetentExamToolAudit(on app: XCUIApplication, context: String) throws {
