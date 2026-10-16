@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-010-004",
+  "questionId": "B-001-010-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests frequency sharing between amateurs; wanting a channel does not create ownership of it.", "fr": "Cet élément vérifie le partage de fréquence entre radioamateurs ; vouloir un canal n'en crée pas la propriété." }
+  ],
+  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the right each operator has."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-010-005",
+  "questionId": "B-001-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item asks for the formal label for a serious interference effect.", "fr": "Cet élément demande le terme officiel pour un effet d'interférence grave." }
+  ],
+  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would name the interference category."
+}

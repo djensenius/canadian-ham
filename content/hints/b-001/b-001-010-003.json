@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-010-003",
+  "questionId": "B-001-010-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "In shared spectrum, the priority label tells you which service must be protected.", "fr": "Dans le spectre partagé, l'étiquette de priorité indique quel service doit être protégé." }
+  ],
+  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the operating condition for the lower-priority service."
+}

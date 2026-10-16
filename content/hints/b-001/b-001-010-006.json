@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-010-006",
+  "questionId": "B-001-010-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests what an official harmful-interference finding can require of the station.", "fr": "Cet élément vérifie ce qu'une décision officielle d'interférence préjudiciable peut exiger de la station." }
+  ],
+  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state the order that can be given."
+}

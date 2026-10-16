@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-010-007",
+  "questionId": "B-001-010-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This is a secondary-status band recall item; use the UHF sharing row from the lesson.", "fr": "C'est un rappel de bande à statut secondaire ; utilisez la ligne de partage UHF de la leçon." }
+  ],
+  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the frequency range."
+}

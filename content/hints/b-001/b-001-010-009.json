@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-010-009",
+  "questionId": "B-001-010-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests the condition that makes on-air testing acceptable.", "fr": "Cet élément vérifie la condition qui rend acceptable un essai en ondes." }
+  ],
+  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state the interference-protection condition."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-010-010",
+  "questionId": "B-001-010-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This is the shared-band row where other devices may be common; recall the frequency range attached to that warning.", "fr": "C'est la ligne de bande partagée où d'autres appareils peuvent être courants ; rappelez-vous la plage de fréquences liée à cet avertissement." }
+  ],
+  "lessonLink": { "lessonId": "L-001-03", "sectionAnchor": "reference-facts-interference-and-shared-bands" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the frequency range."
+}
