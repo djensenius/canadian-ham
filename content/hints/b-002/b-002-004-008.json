@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Propagation can turn a clear channel into a shared one; the courteous response avoids a power contest.",
-      "fr": "La propagation peut transformer un canal libre en canal partagé; la réponse courtoise évite une compétition de puissance."
-    },
-    {
-      "level": 2,
-      "en": "When another clear spot is available, changing channel solves the overlap better than arguing or raising power.",
-      "fr": "Lorsqu’un autre endroit libre est disponible, changer de canal règle le chevauchement mieux que discuter ou augmenter la puissance."
+      "en": "Review how to respond when propagation brings interference into a contact.",
+      "fr": "Revoyez comment réagir lorsque la propagation amène de l’interférence dans un contact."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "sidebands-spacing-and-clean-tests"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

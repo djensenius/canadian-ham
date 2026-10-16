@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Joining an existing repeater conversation is a request for entry, not a way to start a separate contact over it.",
-      "fr": "Se joindre à une conversation déjà en cours sur un répéteur est une demande d’entrée, et non une façon de lancer un autre contact par-dessus."
-    },
-    {
-      "level": 2,
-      "en": "Use the clear gap between overs to identify yourself once, then let the existing group bring you in.",
-      "fr": "Utilisez l’espace clair entre les tours pour vous identifier une seule fois, puis laissez le groupe déjà présent vous inviter."
+      "en": "Review the procedure for entering a repeater conversation.",
+      "fr": "Revoyez la procédure pour vous joindre à une conversation sur un répéteur."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "in-the-real-world-entering-a-repeater-conversation"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

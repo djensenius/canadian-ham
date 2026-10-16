@@ -12,7 +12,7 @@
     {
       "level": 2,
       "en": "Subtract the offset from the UTC schedule, then convert the 24-hour result to local clock form.",
-      "fr": "Soustrayez le décalage de l’horaire UTC, puis convertissez le résultat sur 24 heures en heure locale usuelle."
+      "fr": "Soustrayez le décalage de l'heure UTC prévue, puis vérifiez si le résultat change la date locale."
     }
   ],
   "lessonLink": {

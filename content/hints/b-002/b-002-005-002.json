@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Answering a routine Morse call identifies both stations without starting a long new general call.",
-      "fr": "Répondre à un appel Morse de routine identifie les deux stations sans lancer un long nouvel appel général."
-    },
-    {
-      "level": 2,
-      "en": "Begin with the station you are answering, use the separator, then give your own station ID with matching concise repetition.",
-      "fr": "Commencez par la station à laquelle vous répondez, utilisez le séparateur, puis donnez l’identification de votre station avec une répétition concise et équilibrée."
+      "en": "Review the Morse pattern for answering a routine CQ.",
+      "fr": "Revoyez le modèle Morse pour répondre à un CQ de routine."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-fact-morse-calling-patterns"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

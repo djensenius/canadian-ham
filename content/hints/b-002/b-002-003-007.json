@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "A repeater has two RF sides; the useful test is whether you can hear the other station before the relay retransmits it.",
-      "fr": "Un répéteur a deux côtés RF; le test utile consiste à savoir si vous entendez l’autre station avant que le relais la retransmette."
+      "en": "A repeater listens on one frequency and retransmits on another.",
+      "fr": "Un répéteur écoute sur une fréquence et retransmet sur une autre."
     },
     {
       "level": 2,
-      "en": "Monitor the side that carries the other station into the relay. Clear copy there suggests a direct path may work.",
-      "fr": "Surveillez le côté qui amène l’autre station vers le relais. Une copie claire à cet endroit indique qu’un trajet direct peut fonctionner."
+      "en": "Direct contact depends on hearing the other station's own transmitter. Work out which of the repeater's two frequencies carries that signal.",
+      "fr": "Le contact direct dépend de la réception de l’émetteur de l’autre station. Déterminez laquelle des deux fréquences du répéteur transporte ce signal."
     }
   ],
   "lessonLink": {

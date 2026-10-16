@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Long path uses the reciprocal direction from the short path.",
-      "fr": "Le long trajet utilise la direction réciproque du court trajet."
+      "en": "Short and long path are the two ways around the same great circle.",
+      "fr": "Le court trajet et le long trajet sont les deux façons de faire le tour du même grand cercle."
     },
     {
       "level": 2,
-      "en": "On a compass, a reciprocal heading is half a circle away from the original heading.",
-      "fr": "Sur une boussole, un cap réciproque se trouve à un demi-tour du cap d’origine."
+      "en": "Picture leaving your station along each route and compare the two starting directions on a compass.",
+      "fr": "Imaginez que vous quittez votre station par chaque route, puis comparez les deux directions de départ sur une boussole."
     }
   ],
   "lessonLink": {

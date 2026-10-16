@@ -6,8 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the spacing rule for single-sideband voice contacts already in progress.",
-      "fr": "Revoyez la règle d’espacement pour les contacts vocaux en bande latérale unique déjà en cours."
+      "en": "Spacing from an SSB contact should reflect how much spectrum an SSB voice signal occupies.",
+      "fr": "L’espacement par rapport à un contact BLU devrait refléter la largeur de spectre qu’un signal vocal BLU occupe."
+    },
+    {
+      "level": 2,
+      "en": "Recall the typical SSB voice bandwidth from the lesson and use it as the minimum gap.",
+      "fr": "Rappelez-vous la largeur typique d’un signal vocal BLU dans la leçon et utilisez-la comme écart minimal."
     }
   ],
   "lessonLink": {
@@ -15,6 +20,5 @@
     "sectionAnchor": "sidebands-spacing-and-clean-tests"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original",
-  "singleLevelReason": "Numeric recall: any second hint would identify or eliminate an option; topic pointer and lesson link only."
+  "licenseClass": "original"
 }

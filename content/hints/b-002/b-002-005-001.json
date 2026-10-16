@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A Morse general call must be recognizable but still concise enough to respect the frequency.",
-      "fr": "Un appel général en Morse doit être reconnaissable tout en restant assez concis pour respecter la fréquence."
-    },
-    {
-      "level": 2,
-      "en": "Look for the pattern that repeats the invitation, uses the separator, and gives the sender’s station ID with balanced repetition.",
-      "fr": "Cherchez le modèle qui répète l’invitation, utilise le séparateur et donne l’identification de la station émettrice avec une répétition équilibrée."
+      "en": "Review the Morse CQ calling pattern.",
+      "fr": "Revoyez le modèle d’appel CQ en Morse."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-fact-morse-calling-patterns"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

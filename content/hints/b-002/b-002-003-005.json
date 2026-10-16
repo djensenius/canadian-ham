@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Match the band choice to the job: nearby contacts do not need the bands prized for faraway paths.",
-      "fr": "Adaptez le choix de bande au besoin : les contacts proches n’ont pas besoin des bandes recherchées pour les trajets lointains."
-    },
-    {
-      "level": 2,
-      "en": "When local paths work higher in frequency, using them keeps the longer-distance bands less crowded for contacts that need those paths.",
-      "fr": "Lorsque les trajets locaux fonctionnent sur des fréquences plus élevées, les utiliser garde les bandes de plus longue distance moins encombrées pour les contacts qui en ont besoin."
+      "en": "Review the band-choice guidance for local contacts.",
+      "fr": "Revoyez les consignes de choix de bande pour les contacts locaux."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "simplex-and-repeater-courtesy"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

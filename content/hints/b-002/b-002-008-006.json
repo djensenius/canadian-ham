@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Emergency readiness matters most when normal infrastructure is not available.",
-      "fr": "La préparation aux urgences compte surtout lorsque l’infrastructure normale n’est pas disponible."
-    },
-    {
-      "level": 2,
-      "en": "If mains electricity fails, alternate power keeps the station available for communication instead of shutting the radio down.",
-      "fr": "Si l’électricité du réseau tombe en panne, une alimentation de rechange garde la station disponible pour communiquer au lieu d’arrêter la radio."
+      "en": "Review station readiness for emergencies.",
+      "fr": "Revoyez la préparation de la station aux urgences."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "prepared-stations-are-useful-stations"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

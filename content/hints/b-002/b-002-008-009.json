@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Routine communication yields to distress traffic, but the first response should still gather usable facts.",
-      "fr": "La communication de routine cède la place au trafic de détresse, mais la première réponse doit quand même recueillir des faits utiles."
-    },
-    {
-      "level": 2,
-      "en": "Acknowledge the distressed station, then find out where help is needed and what kind of assistance is required.",
-      "fr": "Accusez réception de la station en détresse, puis découvrez où l’aide est nécessaire et quel type d’assistance est requis."
+      "en": "Review what routine stations do when distress traffic breaks in.",
+      "fr": "Revoyez ce que font les stations en communication de routine lorsque du trafic de détresse interrompt."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "breaking-into-routine-traffic"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

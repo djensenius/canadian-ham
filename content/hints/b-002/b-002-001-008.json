@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Think about channel access on a shared relay when traffic priority can change suddenly.",
-      "fr": "Pensez à l’accès au canal d’un relais partagé lorsque la priorité du trafic peut changer soudainement."
-    },
-    {
-      "level": 2,
-      "en": "Brief overs create frequent openings, so urgent or higher-priority traffic can get in quickly.",
-      "fr": "Des tours brefs créent des ouvertures fréquentes, afin que le trafic urgent ou prioritaire puisse entrer rapidement."
+      "en": "Review repeater operating courtesy.",
+      "fr": "Revoyez la courtoisie d’exploitation sur répéteur."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "repeaters-are-shared-relays"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

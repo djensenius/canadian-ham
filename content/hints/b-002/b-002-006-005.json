@@ -11,14 +11,14 @@
     },
     {
       "level": 2,
-      "en": "Read the first digit as copy quality, the second as the S reading, and the plus value as a decibel addition to that reference.",
-      "fr": "Lisez le premier chiffre comme qualité de copie, le deuxième comme lecture S, et la valeur plus comme une addition en décibels à cette référence."
+      "en": "Read each digit on its own scale, then decide what the plus figure is measured against.",
+      "fr": "Lisez chaque chiffre sur sa propre échelle, puis déterminez par rapport à quoi la valeur « plus » est mesurée."
     }
   ],
   "lessonLink": {
     "lessonId": "L-002-02",
     "sectionAnchor": "signal-reports-rs-and-rst"
   },
-  "referenceSheetSection": "decibel-power-shortcuts",
+  "referenceSheetSection": null,
   "licenseClass": "original"
 }

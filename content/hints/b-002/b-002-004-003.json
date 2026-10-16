@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A tuning signal near a sideband net should be close enough for adjustment but outside the active voice passband.",
-      "fr": "Un signal de syntonisation près d’un réseau BLU doit être assez proche pour le réglage, mais hors de la bande passante vocale active."
+      "en": "An SSB voice signal occupies a slice of spectrum, not a single spot.",
+      "fr": "Un signal vocal BLU occupe une tranche de spectre, pas un point unique."
     },
     {
       "level": 2,

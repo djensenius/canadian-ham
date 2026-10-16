@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "If you cannot help directly, your station may still support the emergency chain.",
-      "fr": "Si vous ne pouvez pas aider directement, votre station peut quand même soutenir la chaîne d’urgence."
-    },
-    {
-      "level": 2,
-      "en": "Pass the information to people who can act, and keep listening in case your station becomes useful later.",
-      "fr": "Transmettez l’information aux personnes qui peuvent agir et continuez la veille radio si votre station devient utile plus tard."
+      "en": "Review what to do after hearing distress traffic you cannot assist directly.",
+      "fr": "Revoyez quoi faire après avoir entendu du trafic de détresse si vous ne pouvez pas aider directement."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "breaking-into-routine-traffic"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

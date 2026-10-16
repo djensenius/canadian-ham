@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Think about where transmitter energy should go during a bench test or adjustment.",
-      "fr": "Pensez à l’endroit où l’énergie de l’émetteur devrait aller pendant un essai ou un réglage à l’atelier."
-    },
-    {
-      "level": 2,
-      "en": "A proper non-radiating load lets the radio see a safe load while keeping the test signal off shared frequencies.",
-      "fr": "Une charge non rayonnante appropriée présente une charge sûre à la radio tout en gardant le signal d’essai hors des fréquences partagées."
+      "en": "Review the dummy load topic in the testing section.",
+      "fr": "Revoyez le sujet de la charge fictive dans la section sur les essais."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "sidebands-spacing-and-clean-tests"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }

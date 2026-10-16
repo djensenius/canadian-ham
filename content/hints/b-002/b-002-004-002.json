@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Good operating uses only enough signal for reliable communication.",
-      "fr": "Une bonne exploitation utilise seulement le signal nécessaire pour une communication fiable."
-    },
-    {
-      "level": 2,
-      "en": "If the other station already copies you easily, lower the RF level to a reasonable margin instead of making the signal unnecessarily strong.",
-      "fr": "Si l’autre station vous copie déjà facilement, abaissez le niveau RF à une marge raisonnable plutôt que de produire un signal inutilement fort."
+      "en": "Review operating courtesy during an established contact.",
+      "fr": "Revoyez la courtoisie d’exploitation pendant un contact établi."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "nets-power-and-band-plans"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

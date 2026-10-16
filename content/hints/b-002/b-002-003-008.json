@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Repeater channels are shared system resources, even when you are trying to communicate directly.",
-      "fr": "Les canaux de répéteur sont des ressources de système partagées, même lorsque vous tentez de communiquer directement."
-    },
-    {
-      "level": 2,
-      "en": "If your direct conversation lands on a relay channel, your signal can disrupt operators using that paired system.",
-      "fr": "Si votre conversation directe se trouve sur un canal de relais, votre signal peut déranger les opérateurs qui utilisent ce système apparié."
+      "en": "Review simplex and repeater courtesy.",
+      "fr": "Revoyez la courtoisie en simplex et sur répéteur."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "simplex-and-repeater-courtesy"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

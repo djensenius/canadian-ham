@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the map projection used for station-centred bearings.",
-      "fr": "Revoyez la projection cartographique utilisée pour les relèvements centrés sur une station."
+      "en": "Review the azimuthal map topic.",
+      "fr": "Revoyez le sujet des cartes azimutales."
     }
   ],
   "lessonLink": {

@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Your sending speed invites a reply at about the same pace.",
-      "fr": "Votre vitesse d’envoi invite une réponse à peu près au même rythme."
-    },
-    {
-      "level": 2,
-      "en": "Choose a pace that lets you copy the answer, rather than the fastest speed your equipment or hand can manage.",
-      "fr": "Choisissez un rythme qui vous permet de copier la réponse, plutôt que la vitesse maximale que votre équipement ou votre main peut produire."
+      "en": "Review the guidance on Morse CQ sending speed.",
+      "fr": "Revoyez les consignes sur la vitesse d’envoi d’un CQ en Morse."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "morse-calling-basics"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

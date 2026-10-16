@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A repeater pause is a courtesy gap on a shared channel.",
-      "fr": "Une pause sur un répéteur est un espace de courtoisie sur un canal partagé."
-    },
-    {
-      "level": 2,
-      "en": "During the gap, another station can identify before the next over begins, including traffic with higher priority.",
-      "fr": "Pendant cet espace, une autre station peut s’identifier avant le prochain tour, y compris pour du trafic prioritaire."
+      "en": "Review repeater operating courtesy.",
+      "fr": "Revoyez la courtoisie d’exploitation sur répéteur."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "repeaters-are-shared-relays"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

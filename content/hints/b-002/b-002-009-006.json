@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "If the short-path direction is weak, try the reciprocal great-circle path.",
-      "fr": "Si la direction du court trajet est faible, essayez le grand cercle réciproque."
+      "en": "Short and long path are the two ways around the same great circle.",
+      "fr": "Le court trajet et le long trajet sont les deux façons de faire le tour du même grand cercle."
     },
     {
       "level": 2,
-      "en": "A reciprocal beam heading is half a circle from the heading you are already using.",
-      "fr": "Un cap d’antenne réciproque se trouve à un demi-tour du cap que vous utilisez déjà."
+      "en": "Picture leaving your station along each route and compare the two starting directions on a compass.",
+      "fr": "Imaginez que vous quittez votre station par chaque route, puis comparez les deux directions de départ sur une boussole."
     }
   ],
   "lessonLink": {

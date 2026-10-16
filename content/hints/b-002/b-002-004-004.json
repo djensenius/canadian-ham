@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "For long transmitter tests, the best test signal is one that does not leave the station.",
-      "fr": "Pour les essais prolongés d’un émetteur, le meilleur signal d’essai est celui qui ne quitte pas la station."
-    },
-    {
-      "level": 2,
-      "en": "Use a proper RF load that absorbs the transmitter output as heat instead of sending it to an antenna.",
-      "fr": "Utilisez une charge RF appropriée qui absorbe la sortie de l’émetteur sous forme de chaleur au lieu de l’envoyer à une antenne."
+      "en": "Review the practices for long transmitter tests.",
+      "fr": "Revoyez les pratiques pour les essais prolongés d’émetteurs."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "sidebands-spacing-and-clean-tests"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }

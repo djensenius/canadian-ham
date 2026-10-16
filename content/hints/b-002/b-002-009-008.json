@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "When this map is centred on your station, directions radiate outward from you.",
-      "fr": "Lorsque cette carte est centrée sur votre station, les directions rayonnent vers l’extérieur à partir de vous."
-    },
-    {
-      "level": 2,
-      "en": "Use it to decide which way a place lies from your station, especially when aiming or understanding direction.",
-      "fr": "Utilisez-la pour déterminer de quel côté un lieu se trouve par rapport à votre station, surtout pour orienter une antenne ou comprendre une direction."
+      "en": "Review the azimuthal map topic.",
+      "fr": "Revoyez le sujet des cartes azimutales."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "bearings-azimuthal-maps-and-long-path"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }

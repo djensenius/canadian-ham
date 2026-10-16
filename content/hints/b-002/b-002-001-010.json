@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "For ordinary repeater voice, choose plain language over code-style shortcuts.",
-      "fr": "En phonie ordinaire sur répéteur, choisissez le langage clair plutôt que des raccourcis sous forme de codes."
-    },
-    {
-      "level": 2,
-      "en": "A location question should be understandable to any listener without knowing a special number code.",
-      "fr": "Une question sur l’emplacement devrait être comprise par toute personne à l’écoute sans connaître de code numérique spécial."
+      "en": "Review repeater etiquette for asking about another station's whereabouts.",
+      "fr": "Revoyez l’étiquette sur répéteur pour demander où se trouve une autre station."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "voice-identification-and-phonetics"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

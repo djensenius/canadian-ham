@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Think of CTCSS as an access key sent along with an FM voice signal.",
-      "fr": "Voyez le CTCSS comme une clé d’accès transmise avec un signal vocal FM."
-    },
-    {
-      "level": 2,
-      "en": "Repeaters often require this access feature so stations matching the access setting are heard. Think about where such a tone should sit so it does not distract listeners.",
-      "fr": "Les répéteurs exigent souvent cette fonction d’accès afin que les stations correspondant au réglage soient entendues. Pensez à l’endroit où une telle tonalité devrait se situer pour ne pas distraire les auditeurs."
+      "en": "Review the tone systems used with FM repeaters.",
+      "fr": "Revoyez les systèmes de tonalité utilisés avec les répéteurs FM."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "coordination-tones-and-offsets"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }

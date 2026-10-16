@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Distress traffic needs immediate access, but clear facts still matter more than dramatic wording.",
-      "fr": "Le trafic de détresse a besoin d’un accès immédiat, mais des faits clairs comptent plus que des mots dramatiques."
-    },
-    {
-      "level": 2,
-      "en": "Use a clear gap, identify your station, and state the situation so others can organize help.",
-      "fr": "Utilisez un espace clair, identifiez votre station et exposez la situation afin que les autres puissent organiser l’aide."
+      "en": "Review the procedure for a distress break-in on a busy repeater.",
+      "fr": "Revoyez la procédure pour interrompre en détresse sur un répéteur occupé."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "breaking-into-routine-traffic"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

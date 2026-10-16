@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Choose direct operation when the repeater is no longer adding a useful path.",
-      "fr": "Choisissez l’exploitation directe lorsque le répéteur n’ajoute plus de trajet utile."
-    },
-    {
-      "level": 2,
-      "en": "If two stations can copy one another without the relay, moving off the relay leaves it available for stations that need it.",
-      "fr": "Si deux stations peuvent se copier sans le relais, quitter le relais le laisse disponible aux stations qui en ont besoin."
+      "en": "Review when simplex is the better courtesy choice.",
+      "fr": "Revoyez quand le simplex est le meilleur choix par courtoisie."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "simplex-and-repeater-courtesy"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Answering an open voice call is shorter than making one, because the calling station is already listening.",
-      "fr": "Répondre à un appel général en phonie est plus court que le lancer, parce que la station appelante est déjà à l’écoute."
-    },
-    {
-      "level": 2,
-      "en": "Make both stations clear: begin with the station you are answering, use the connector phrase, then identify yourself without extra ceremony.",
-      "fr": "Rendez les deux stations claires : commencez par la station à laquelle vous répondez, utilisez la phrase de liaison, puis identifiez-vous sans cérémonie inutile."
+      "en": "Review the voice pattern for answering a CQ.",
+      "fr": "Revoyez le modèle en phonie pour répondre à un CQ."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-fact-voice-calling-patterns"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

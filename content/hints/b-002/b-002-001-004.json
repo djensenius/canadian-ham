@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Think of this timer as a backstop for protecting a shared relay and its channel.",
-      "fr": "Voyez cette minuterie comme une protection de dernier recours pour un relais partagé et son canal."
-    },
-    {
-      "level": 2,
-      "en": "If one transmitter stays keyed, the controller must keep the relay from staying on without end.",
-      "fr": "Si un émetteur reste en émission, le contrôleur doit empêcher le relais de rester en marche indéfiniment."
+      "en": "Review the controller features of a repeater.",
+      "fr": "Revoyez les fonctions du contrôleur d’un répéteur."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "repeaters-are-shared-relays"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }

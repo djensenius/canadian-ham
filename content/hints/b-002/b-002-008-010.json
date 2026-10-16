@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the priority order for distress, emergency, and safety traffic.",
-      "fr": "Revoyez l’ordre de priorité du trafic de détresse, d’urgence et de sécurité."
+      "en": "Review the priority order for message traffic.",
+      "fr": "Revoyez l’ordre de priorité du trafic de messages."
     }
   ],
   "lessonLink": {

@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A handheld radio's limiting resource during an incident is often stored energy.",
-      "fr": "La ressource limitante d’une radio portative pendant un incident est souvent l’énergie emmagasinée."
-    },
-    {
-      "level": 2,
-      "en": "Plan for enough charged power sources to keep the radio operating after the first one runs down.",
-      "fr": "Prévoyez assez de sources d’alimentation chargées pour garder la radio en service après l’épuisement de la première."
+      "en": "Review station readiness for emergencies.",
+      "fr": "Revoyez la préparation de la station aux urgences."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "prepared-stations-are-useful-stations"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

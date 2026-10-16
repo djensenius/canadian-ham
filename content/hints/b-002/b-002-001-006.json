@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A directed repeater call has a different job from CQ: it targets one listener clearly.",
-      "fr": "Un appel dirigé sur répéteur n’a pas le même rôle qu’un CQ : il vise clairement une station."
-    },
-    {
-      "level": 2,
-      "en": "Make the addressee clear first, then make the source of the call clear for everyone else on the channel.",
-      "fr": "Rendez d’abord le destinataire clair, puis rendez la source de l’appel claire pour toutes les autres stations du canal."
+      "en": "Review the pattern for a directed call on a repeater.",
+      "fr": "Revoyez le modèle d’un appel dirigé sur un répéteur."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-fact-voice-calling-patterns"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Separate Canadian legal requirements from practical reasons to keep operating records.",
-      "fr": "Distinguez les exigences juridiques canadiennes des raisons pratiques de tenir des dossiers d’exploitation."
-    },
-    {
-      "level": 2,
-      "en": "The false statement is the one that turns a voluntary operating record into a legal obligation.",
-      "fr": "L’énoncé faux est celui qui transforme un dossier d’exploitation volontaire en obligation juridique."
+      "en": "Review the station logbook topic.",
+      "fr": "Revoyez le sujet du journal de station."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "contact-confirmations-and-logs"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }

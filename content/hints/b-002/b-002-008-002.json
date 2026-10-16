@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Classify priority traffic by the immediacy and severity of the risk.",
-      "fr": "Classez le trafic prioritaire selon l’immédiateté et la gravité du risque."
-    },
-    {
-      "level": 2,
-      "en": "Immediate danger to life is the top class; serious help without that immediacy falls below it, while hazard notices are a different role.",
-      "fr": "Un danger immédiat pour la vie est la catégorie la plus élevée; une aide sérieuse sans cette immédiateté vient en dessous, tandis que les avis de danger ont un autre rôle."
+      "en": "Review the priority classes for emergency traffic.",
+      "fr": "Revoyez les classes de priorité du trafic radio."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "distress-urgency-and-safety-roles"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Priority-order recall: any second hint identifies or eliminates an option; topic pointer and lesson link only."
 }

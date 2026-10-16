@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A channel that sounds quiet at your receiver may still have another role in a local paired system.",
-      "fr": "Un canal qui semble libre à votre récepteur peut tout de même avoir un autre rôle dans un système local apparié."
-    },
-    {
-      "level": 2,
-      "en": "Before using a direct channel, check whether your transmission would land on the receiving side of a nearby relay.",
-      "fr": "Avant d’utiliser un canal direct, vérifiez si votre émission aboutirait du côté réception d’un relais voisin."
+      "en": "Review the guidance on choosing a VHF/UHF simplex channel.",
+      "fr": "Revoyez les consignes pour choisir un canal simplex VHF/UHF."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "simplex-and-repeater-courtesy"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

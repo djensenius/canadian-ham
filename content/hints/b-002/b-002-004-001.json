@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Before adding your signal, protect any activity that may already be present.",
-      "fr": "Avant d’ajouter votre signal, protégez toute activité qui pourrait déjà être présente."
-    },
-    {
-      "level": 2,
-      "en": "Use your receiver first. Transmit only after you have checked that the channel is clear enough for your call.",
-      "fr": "Utilisez d’abord votre récepteur. Émettez seulement après avoir vérifié que le canal est assez libre pour votre appel."
+      "en": "Review the first step before transmitting on any frequency.",
+      "fr": "Revoyez la première étape avant d’émettre sur n’importe quelle fréquence."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "sidebands-spacing-and-clean-tests"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

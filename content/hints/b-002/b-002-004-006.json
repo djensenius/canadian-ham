@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A scheduled net does not automatically own a channel that is already in use.",
-      "fr": "Un réseau prévu n’est pas automatiquement propriétaire d’un canal déjà utilisé."
-    },
-    {
-      "level": 2,
-      "en": "Start with courtesy to the current users. If sharing is not workable, choose a clear channel instead of overpowering them.",
-      "fr": "Commencez par la courtoisie envers les utilisateurs présents. Si le partage n’est pas possible, choisissez un canal libre plutôt que de les couvrir."
+      "en": "Review net etiquette when the scheduled frequency is busy.",
+      "fr": "Revoyez l’étiquette de réseau lorsque la fréquence prévue est occupée."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "nets-power-and-band-plans"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

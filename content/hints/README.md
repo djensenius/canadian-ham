@@ -30,6 +30,7 @@ Apply these constraints to every hint file:
 - Hints must never eliminate answer options. Do not paraphrase, list, contrast with, or otherwise point at wrong options.
 - Do not name the correct answer, copy distinctive words from it, or point at those distinctive words with near-synonyms.
 - Do not connect the asked-for function to one option in any hint level or across levels. Shared distinctions are fine; directly stating another question's answer is not.
+- For procedure and courtesy questions such as "why", "what should you do", or "which is good practice", a principle that maps onto the answer's components is a leak. For example, explaining that a directed repeater call needs the addressee first and then the source gives away the calling pattern, and saying brief repeater overs let urgent traffic enter gives away the courtesy action. Use a one-level neutral topic pointer instead.
 - Each hint must stand alone. Do not say "same as the previous question" or depend on practice order, because questions are randomized.
 - Use natural French with one term per concept across files. Prefer ISED terminology, including `stations de radioamateur`.
 - Reference-sheet pointers belong in `referenceSheetSection`, not in hint prose. The UI decides whether a pointer label is available.

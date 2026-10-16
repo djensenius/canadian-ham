@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "When a regular net is about to need a channel, courtesy weighs more than holding your place.",
-      "fr": "Lorsqu’un réseau régulier aura bientôt besoin d’un canal, la courtoisie compte plus que le fait de garder sa place."
-    },
-    {
-      "level": 2,
-      "en": "If your contact can continue elsewhere, moving frees the scheduled activity without conflict.",
-      "fr": "Si votre contact peut se poursuivre ailleurs, vous déplacer libère l’activité prévue sans conflit."
+      "en": "Review courtesy toward scheduled nets.",
+      "fr": "Revoyez la courtoisie envers les réseaux prévus."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "nets-power-and-band-plans"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

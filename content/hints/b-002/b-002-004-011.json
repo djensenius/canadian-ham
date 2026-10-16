@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "The first operating step happens before your transmitter adds anything to the channel.",
-      "fr": "La première étape d’exploitation se fait avant que votre émetteur ajoute quoi que ce soit au canal."
-    },
-    {
-      "level": 2,
-      "en": "Use the receive side to learn whether communication is already under way, then decide whether your call can proceed.",
-      "fr": "Utilisez le côté réception pour savoir si le canal est déjà occupé, puis décidez si votre appel peut se faire."
+      "en": "Review the first step before transmitting on any frequency.",
+      "fr": "Revoyez la première étape avant d’émettre sur n’importe quelle fréquence."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "sidebands-spacing-and-clean-tests"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

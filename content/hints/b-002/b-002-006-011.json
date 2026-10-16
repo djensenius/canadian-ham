@@ -7,12 +7,12 @@
     {
       "level": 1,
       "en": "Read a two-number voice report left to right: copy quality first, then meter strength.",
-      "fr": "Lisez un rapport vocal à deux chiffres de gauche à droite : qualité de copie d’abord, puis force au compteur."
+      "fr": "Lisez un rapport vocal à deux chiffres de gauche à droite : lisibilité d’abord, puis intensité au S-mètre."
     },
     {
       "level": 2,
-      "en": "Use the low end of each lesson scale for the two digits, then combine the two observations.",
-      "fr": "Utilisez le bas de chaque échelle de la leçon pour les deux chiffres, puis combinez les deux observations."
+      "en": "Look up each digit on its own scale, then combine the two descriptions.",
+      "fr": "Repérez chaque chiffre sur sa propre échelle, puis combinez les deux descriptions."
     }
   ],
   "lessonLink": {

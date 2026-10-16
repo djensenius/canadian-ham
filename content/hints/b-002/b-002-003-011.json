@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A directed voice call is meant for one station, so it should not sound like a general CQ.",
-      "fr": "Un appel dirigé en phonie vise une seule station; il ne devrait donc pas ressembler à un CQ général."
-    },
-    {
-      "level": 2,
-      "en": "Make the intended listener clear first, then use the standard connector and identify the station making the call.",
-      "fr": "Rendez d’abord la station visée claire, puis utilisez la liaison standard et identifiez la station qui appelle."
+      "en": "Review the voice pattern for a directed call.",
+      "fr": "Revoyez le modèle en phonie pour un appel dirigé."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-fact-voice-calling-patterns"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

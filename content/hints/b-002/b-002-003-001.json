@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A general voice call needs enough repetition to be recognized, but it should still be concise.",
-      "fr": "Un appel général en phonie doit être assez répété pour être reconnu, tout en restant concis."
-    },
-    {
-      "level": 2,
-      "en": "The lesson pattern balances the invitation and your station ID around the connector phrase, rather than using very long runs.",
-      "fr": "Le modèle de la leçon équilibre l’invitation et l’identification de votre station autour de la phrase de liaison, au lieu d’utiliser de très longues séries."
+      "en": "Review the voice CQ calling pattern.",
+      "fr": "Revoyez le modèle d’appel CQ en phonie."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-fact-voice-calling-patterns"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }

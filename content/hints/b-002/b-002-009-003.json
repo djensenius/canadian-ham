@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review grid locators used in VHF contest exchanges.",
-      "fr": "Revoyez les locators de grille utilisés dans les échanges de concours VHF."
+      "en": "Review grid squares in VHF contest exchanges.",
+      "fr": "Revoyez les grilles (« grid squares ») échangées dans les concours VHF."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "Definition and numeric recall: any second hint identifies or eliminates an option; topic pointer and lesson link only."
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }

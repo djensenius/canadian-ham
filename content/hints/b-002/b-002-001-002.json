@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Think of the repeater as a shared relay placed where it can hear and be heard well.",
-      "fr": "Voyez le répéteur comme un relais partagé installé à un endroit où il peut bien entendre et être bien entendu."
-    },
-    {
-      "level": 2,
-      "en": "Trace a weak station into the relay and back out from the relay’s better antenna site. The benefit comes from that RF path.",
-      "fr": "Suivez le trajet d’une station faible vers le relais, puis de l’antenne mieux située du relais vers l’extérieur. L’avantage vient de ce trajet RF."
+      "en": "Review the role repeaters play in VHF and UHF operating.",
+      "fr": "Revoyez le rôle des répéteurs dans l’exploitation VHF et UHF."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "repeaters-are-shared-relays"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
 }

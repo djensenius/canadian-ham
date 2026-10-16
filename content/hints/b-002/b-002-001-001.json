@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Treat this as a directed repeater call, not as an open invitation to everyone listening.",
-      "fr": "Traitez cela comme un appel dirigé sur répéteur, et non comme une invitation ouverte à toutes les stations à l’écoute."
-    },
-    {
-      "level": 2,
-      "en": "The intended listener needs to know the call is for them, and the channel also needs to know who is calling.",
-      "fr": "La station visée doit savoir que l’appel lui est destiné, et le canal doit aussi savoir qui appelle."
+      "en": "Review the voice calling patterns used on repeaters.",
+      "fr": "Revoyez les modèles d’appel en phonie utilisés sur les répéteurs."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-fact-voice-calling-patterns"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
 }
