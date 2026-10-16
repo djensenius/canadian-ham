@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-002",
+  "questionId": "B-005-012-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "In a parallel tuned circuit at resonance, energy circulates between L and C instead of being drawn heavily from the source.",
+      "fr": "Dans un circuit accordé en parallèle à la résonance, l'énergie circule entre L et C au lieu d'être fortement tirée de la source."
+    },
+    {
+      "level": 2,
+      "en": "If little current is drawn from the source, the source sees a large opposition at that frequency.",
+      "fr": "Si peu de courant est tiré de la source, celle-ci voit une grande opposition à cette fréquence."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

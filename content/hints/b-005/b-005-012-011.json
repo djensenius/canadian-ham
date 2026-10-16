@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-011",
+  "questionId": "B-005-012-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "In a series RLC path at resonance, the reactive effects cancel in the current path.",
+      "fr": "Dans un trajet RLC série à la résonance, les effets réactifs se compensent dans le trajet du courant."
+    },
+    {
+      "level": 2,
+      "en": "With the opposition at its smallest, use Ohm's law intuition: less opposition for the same source lets current rise to its peak.",
+      "fr": "Quand l'opposition est minimale, utilisez l'intuition de la loi d'Ohm : moins d'opposition pour la même source laisse le courant monter à son sommet."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

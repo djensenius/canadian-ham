@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-001",
+  "questionId": "B-005-012-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A tuned circuit reaches resonance when the L and C effects balance each other.",
+      "fr": "Un circuit accordé atteint la résonance quand les effets de L et de C s'équilibrent."
+    },
+    {
+      "level": 2,
+      "en": "Look for the condition where the two frequency-dependent oppositions have matching size, rather than one effect acting alone.",
+      "fr": "Cherchez la condition où les deux oppositions dépendantes de la fréquence ont la même grandeur, plutôt qu'un seul effet agissant seul."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-008",
+  "questionId": "B-005-012-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "The ideal resonant frequency is set by the L and C values, not by every part added to the circuit.",
+      "fr": "La fréquence de résonance idéale est fixée par les valeurs L et C, pas par chaque pièce ajoutée au circuit."
+    },
+    {
+      "level": 2,
+      "en": "Choose the change that does not alter coil inductance or capacitor capacitance; changing either stored-energy value shifts the tuning.",
+      "fr": "Choisissez le changement qui ne modifie ni l'inductance de la bobine ni la capacitance du condensateur; changer l'une de ces valeurs déplace l'accord."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-012-005",
+  "questionId": "B-005-012-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the name of the single centre point where a tuned circuit reaches its resonance condition.",
+      "fr": "Revoyez le nom du point central unique où un circuit accordé atteint sa condition de résonance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name the frequency term in the options.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

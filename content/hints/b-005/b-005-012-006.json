@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-006",
+  "questionId": "B-005-012-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Parallel resonance is the case where the source draws little current while energy swaps between the two reactive parts.",
+      "fr": "La résonance parallèle est le cas où la source fournit peu de courant pendant que l'énergie s'échange entre les deux pièces réactives."
+    },
+    {
+      "level": 2,
+      "en": "Low source current for a given E means the circuit presents a large E-over-I value at resonance.",
+      "fr": "Un faible courant de source pour un E donné signifie que le circuit présente une grande valeur E sur I à la résonance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

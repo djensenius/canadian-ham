@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-010",
+  "questionId": "B-005-012-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "At resonance, the L and C effects balance in size and act in opposite directions.",
+      "fr": "À la résonance, les effets de L et de C s'équilibrent en grandeur et agissent en sens opposés."
+    },
+    {
+      "level": 2,
+      "en": "Look for the condition that includes both matching strength and cancellation direction, not only one kind of opposition.",
+      "fr": "Cherchez la condition qui comprend à la fois une force correspondante et un sens de compensation, pas seulement un seul type d'opposition."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
