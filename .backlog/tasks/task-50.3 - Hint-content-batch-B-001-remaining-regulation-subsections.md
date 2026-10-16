@@ -114,4 +114,6 @@ Updated README with method-hint rule and upgraded B-001-015 HF band-range recall
 B-001-016 manually written as calibrated topic-pointer B hints: 11 hints (0 two-level, 11 single-level B). Validation: pnpm check:hints -- --subsection B-001-016 --require-complete passed.
 
 B-001-017 manually written as calibrated topic-pointer B hints: 10 hints (0 two-level, 10 single-level B). Validation: pnpm check:hints -- --subsection B-001-017 --require-complete passed.
+
+B-001-018 manually written as calibrated topic-pointer B hints: 4 hints (0 two-level, 4 single-level B). Validation: pnpm check:hints -- --subsection B-001-018 --require-complete passed.
 <!-- SECTION:NOTES:END -->
