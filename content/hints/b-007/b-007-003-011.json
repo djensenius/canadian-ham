@@ -6,15 +6,11 @@
   "hints": [
     {
       "level": 1,
-      "en": "Sketch the same launch angle with two different refracting heights.",
-      "fr": "Tracez le même angle de départ avec deux hauteurs de réfraction différentes."
-    },
-    {
-      "level": 2,
-      "en": "Compare where each path first returns along the ground while keeping the angle idea unchanged.",
-      "fr": "Comparez l’endroit où chaque trajet revient d’abord au sol en gardant l’idée d’angle inchangée."
+      "en": "Review what sets skip distance in the skip-distance and skip-zone section.",
+      "fr": "Revoyez ce qui détermine la distance de saut dans la section sur la distance de saut et la zone de silence."
     }
   ],
+  "singleLevelReason": "The available method would reveal the geometry reason clause while settling the direction; topic pointer and lesson link only.",
   "lessonLink": {
     "lessonId": "L-007-01",
     "sectionAnchor": "skip-distance-and-skip-zone"

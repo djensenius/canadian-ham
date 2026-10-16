@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the four wave-behaviour words and the unusual-modes clue list.",
-      "fr": "Revoyez les quatre mots décrivant le comportement des ondes et la liste d’indices des modes inhabituels."
+      "en": "Review the scatter discussion in the VHF lesson.",
+      "fr": "Revoyez l’explication de la diffusion dans la leçon VHF."
     }
   ],
   "lessonLink": {
     "lessonId": "L-007-03",
-    "sectionAnchor": "recognizing-the-clues"
+    "sectionAnchor": "tropospheric-bending-ducting-and-scatter"
   },
   "singleLevelReason": "Term recall: a second hint would name or distinguish the wave behaviour among options; topic pointer and lesson link only.",
   "referenceSheetSection": null,

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the coverage-gap boundaries in the hop discussion.",
-      "fr": "Revoyez les limites des zones de couverture inégale dans l’explication des sauts."
+      "en": "Review the skip-distance and skip-zone section.",
+      "fr": "Revoyez la section sur la distance de saut et la zone de silence."
     }
   ],
   "lessonLink": {

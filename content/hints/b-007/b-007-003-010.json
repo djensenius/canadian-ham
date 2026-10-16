@@ -6,15 +6,11 @@
   "hints": [
     {
       "level": 1,
-      "en": "Sketch two sky paths that reach a similar region height but leave at different angles.",
-      "fr": "Tracez deux trajets par le ciel qui atteignent une hauteur de région semblable, mais avec des angles de départ différents."
-    },
-    {
-      "level": 2,
-      "en": "Keep the layer height the same and let the drawing show which first return point is farthest.",
-      "fr": "Gardez la même hauteur de couche et laissez le dessin montrer quel premier point de retour est le plus éloigné."
+      "en": "Review what sets skip distance in the skip-distance and skip-zone section.",
+      "fr": "Revoyez ce qui détermine la distance de saut dans la section sur la distance de saut et la zone de silence."
     }
   ],
+  "singleLevelReason": "Any method hint names launch angle, which appears in only one option; topic pointer and lesson link only.",
   "lessonLink": {
     "lessonId": "L-007-01",
     "sectionAnchor": "skip-distance-and-skip-zone"

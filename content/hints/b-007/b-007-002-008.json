@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how region height affects long path geometry.",
-      "fr": "Revoyez comment la hauteur d’une région influence la géométrie des trajets longs."
+      "en": "Review the layer-order section and the role of each region.",
+      "fr": "Revoyez la section sur l’ordre des couches et le rôle de chaque couche."
     }
   ],
   "lessonLink": {
     "lessonId": "L-007-01",
-    "sectionAnchor": "skip-distance-and-skip-zone"
+    "sectionAnchor": "the-ionosphere-in-layers"
   },
   "singleLevelReason": "Layer-geometry recall: a second hint would identify or eliminate a layer or property; topic pointer and lesson link only.",
   "referenceSheetSection": null,

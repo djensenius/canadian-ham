@@ -6,15 +6,11 @@
   "hints": [
     {
       "level": 1,
-      "en": "Sketch the launch angle against a fixed layer height before comparing return points.",
-      "fr": "Tracez l’angle de départ avec une hauteur de couche fixe avant de comparer les points de retour."
-    },
-    {
-      "level": 2,
-      "en": "For each candidate, keep only one variable changing and decide from the sketch where the first return point moves.",
-      "fr": "Pour chaque choix, ne laissez changer qu’une seule variable et déduisez du croquis où se déplace le premier point de retour."
+      "en": "Review what sets skip distance in the skip-distance and skip-zone section.",
+      "fr": "Revoyez ce qui détermine la distance de saut dans la section sur la distance de saut et la zone de silence."
     }
   ],
+  "singleLevelReason": "The available method would reveal the geometry reason clause while settling the direction; topic pointer and lesson link only.",
   "lessonLink": {
     "lessonId": "L-007-01",
     "sectionAnchor": "skip-distance-and-skip-zone"

@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the long-distance path descriptions and hop scales.",
-      "fr": "Revoyez les descriptions des trajets à grande distance et les échelles de saut."
+      "en": "Review how far each main radio path usually carries an HF signal.",
+      "fr": "Revoyez jusqu’où chacun des principaux trajets radio porte habituellement un signal HF."
     }
   ],
   "lessonLink": {
     "lessonId": "L-007-01",
-    "sectionAnchor": "worked-example-comparing-hop-scales"
+    "sectionAnchor": "the-main-radio-paths"
   },
   "singleLevelReason": "Concept recall: a second hint would identify or eliminate a path, layer, mode, value, or effect; topic pointer and lesson link only.",
   "referenceSheetSection": null,

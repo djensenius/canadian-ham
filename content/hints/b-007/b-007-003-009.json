@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the four wave-behaviour words in the propagation vocabulary table.",
-      "fr": "Revoyez les quatre mots décrivant le comportement des ondes dans le tableau de vocabulaire de propagation."
+      "en": "Review the skip-distance and skip-zone section.",
+      "fr": "Revoyez la section sur la distance de saut et la zone de silence."
     }
   ],
   "lessonLink": {
     "lessonId": "L-007-01",
-    "sectionAnchor": "reflection-refraction-diffraction-and-scattering"
+    "sectionAnchor": "skip-distance-and-skip-zone"
   },
   "singleLevelReason": "Term recall: a second hint would name or distinguish the wave behaviour among options; topic pointer and lesson link only.",
   "referenceSheetSection": null,

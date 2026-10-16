@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how daylight ionization changes the frequency window.",
-      "fr": "Revoyez comment l’ionisation diurne change la fenêtre de fréquences."
+      "en": "Review how the daily rise and fall of sunlight affects HF conditions.",
+      "fr": "Revoyez comment la hausse et la baisse quotidiennes de l’ensoleillement influencent les conditions HF."
     }
   ],
   "lessonLink": {
     "lessonId": "L-007-02",
-    "sectionAnchor": "muf-luf-critical-frequency-and-owf"
+    "sectionAnchor": "solar-activity-and-the-solar-cycle"
   },
   "singleLevelReason": "Trend recall: a second hint would identify or eliminate the direction of the daily frequency change; topic pointer and lesson link only.",
   "referenceSheetSection": null,
