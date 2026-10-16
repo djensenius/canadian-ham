@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-016-009",
+  "questionId": "B-001-016-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review wide-mode fit on VHF amateur bands.",
+      "fr": "Revoyez la compatibilité des modes larges dans les bandes VHF radioamateurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-bandwidth-and-mode-fit-cues"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
