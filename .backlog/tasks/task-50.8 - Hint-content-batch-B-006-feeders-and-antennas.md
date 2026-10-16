@@ -4,6 +4,7 @@ title: 'Hint content batch: B-006 feeders and antennas'
 status: To Do
 assignee: []
 created_date: '2026-10-16 07:58'
+updated_date: '2026-10-16 08:12'
 labels:
   - content
 dependencies:
@@ -32,4 +33,5 @@ Write and review original EN/FR hint content for B-006 feeder and antenna questi
 - [ ] #2 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
 - [ ] #3 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
 - [ ] #4 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [ ] #5 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
 <!-- AC:END -->
