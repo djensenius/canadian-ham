@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:26'
+updated_date: '2026-10-16 14:27'
 labels:
   - content
 dependencies:
@@ -74,4 +74,6 @@ Completed B-005-011: wrote 11 hint files (6 two-level transformer method/concept
 Completed B-005-012: wrote 11 hint files (9 two-level resonance/tuned-circuit concept hints, 2 single-level recall); pnpm check:hints -- --subsection B-005-012 --require-complete passed.
 
 Completed B-005-013: wrote 10 hint files (4 two-level meter-placement concept, 6 single-level recall); pnpm check:hints -- --subsection B-005-013 --require-complete passed.
+
+Finished B-005 hint content: 142/142 active questions covered (101 two-level, 41 single-level). Full validation passed: pnpm check:hints -- --category B-005 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. PR handoff will include per-subsection counts and samples.
 <!-- SECTION:NOTES:END -->
