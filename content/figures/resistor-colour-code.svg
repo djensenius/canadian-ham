@@ -34,10 +34,10 @@
     <text x="505" y="144" font-size="34">x 100</text>
     <text x="760" y="60" font-size="34" font-weight="700">tolerance</text>
     <text x="760" y="102" font-size="34">gold</text>
-    <text x="760" y="144" font-size="34">±5%</text>
+    <text x="760" y="144" font-size="34">± 5 %</text>
     <text x="450" y="370" font-size="38">yellow violet red gold</text>
     <text x="450" y="420" font-size="38">47 x 100 = 4 700 Ω</text>
-    <text x="450" y="465" font-size="34">±5% tolerance range</text>
+    <text x="450" y="465" font-size="34">± 5 % tolerance range</text>
     <text x="230" y="560" font-size="34">4 465 Ω</text>
     <text x="450" y="560" font-size="34">4 700 Ω</text>
     <text x="670" y="560" font-size="34">4 935 Ω</text>

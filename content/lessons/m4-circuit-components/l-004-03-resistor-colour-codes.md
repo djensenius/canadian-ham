@@ -167,7 +167,7 @@ Read the colour bands first. Then confirm critical values with an ohmmeter. This
 
 ### Misconception: tolerance is a setting
 
-- Mistaken idea: a 5% tolerance means you should add 5% to the value when installing the part.
+- Mistaken idea: a 5 % tolerance means you should add 5 % to the value when installing the part.
 - Correction: tolerance is the allowed manufacturing range around the nominal value. You do not add it on purpose.
 
 ## What the colour code does not tell you
