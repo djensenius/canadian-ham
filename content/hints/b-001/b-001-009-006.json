@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-009-006",
+  "questionId": "B-001-009-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests where the person in control must be able to manage or stop the transmitter.", "fr": "Cet élément vérifie où la personne aux commandes doit pouvoir gérer ou arrêter l'émetteur." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would name the required location."
+}

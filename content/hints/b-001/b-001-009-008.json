@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-009-008",
+  "questionId": "B-001-009-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests how a station owner may involve a guest while keeping station control lawful.", "fr": "Cet élément vérifie comment un propriétaire de station peut faire participer un invité tout en gardant le contrôle de la station conforme." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the supervision and presence safeguards."
+}

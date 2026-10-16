@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-009-007",
+  "questionId": "B-001-009-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "Family relationship does not replace the station-control qualification rule.", "fr": "Le lien familial ne remplace pas la règle de qualification pour le contrôle de la station." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state what an unqualified family member lacks for unsupervised transmitting."
+}

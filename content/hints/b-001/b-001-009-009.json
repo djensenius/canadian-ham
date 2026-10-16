@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-009-009",
+  "questionId": "B-001-009-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests how an unqualified participant may take part without becoming the station authority.", "fr": "Cet élément vérifie comment une personne non qualifiée peut participer sans devenir l'autorité de la station." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the supervision and presence safeguards."
+}

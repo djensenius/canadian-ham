@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-009-004",
+  "questionId": "B-001-009-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests who the owner may choose to direct transmissions.", "fr": "Cet élément vérifie qui le propriétaire peut choisir pour diriger les émissions." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would identify the qualification condition for that person."
+}

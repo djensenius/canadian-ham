@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-009-003",
+  "questionId": "B-001-009-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests the station owner's ongoing duty, not a one-time paperwork task.", "fr": "Cet élément vérifie l'obligation continue du propriétaire de station, et non une formalité ponctuelle." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would state what the owner must ensure about operation."
+}

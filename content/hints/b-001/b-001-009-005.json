@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-009-005",
+  "questionId": "B-001-009-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests the operating moment when station control must be assigned.", "fr": "Cet élément vérifie le moment d'exploitation où le contrôle de la station doit être attribué." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-control-operator-and-station-owner" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the exact operating condition."
+}
