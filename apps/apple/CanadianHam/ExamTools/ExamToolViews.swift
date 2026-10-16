@@ -819,7 +819,7 @@ struct CalculatorToolLayout {
     var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
 
     var usesScrolling: Bool {
-        dynamicTypeSize.isAccessibilitySize || compactContentHeightAtMinimumTargets > availableHeight
+        dynamicTypeSize.isAccessibilitySize || compactContentHeightAtMinimumTargets + compactFitSafetyMargin > availableHeight
     }
 
     private var compactKeyHeight: CGFloat {
@@ -849,6 +849,7 @@ struct CalculatorToolLayout {
     private var compactKeySpacing: CGFloat { 6 }
     private var compactDisplayHeight: CGFloat { 48 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
+    private var compactFitSafetyMargin: CGFloat { 24 }
     private var minimumKeyHeight: CGFloat { 44 }
     private var rowCount: Int { 6 }
 }

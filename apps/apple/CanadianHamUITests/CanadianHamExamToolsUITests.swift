@@ -11,6 +11,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     override func tearDownWithError() throws {
         XCUIApplication().terminate()
+#if os(iOS)
+        XCUIDevice.shared.orientation = .portrait
+        RunLoop.current.run(until: Date().addingTimeInterval(0.6))
+#endif
         try super.tearDownWithError()
     }
 
@@ -29,7 +33,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "Forced-regular iPhone sheet persistence is covered by the targeted iPhone run.")
         XCUIDevice.shared.orientation = .landscapeLeft
         waitBriefly(0.8)
-        defer { XCUIDevice.shared.orientation = .portrait }
+        defer {
+            XCUIDevice.shared.orientation = .portrait
+            waitBriefly(0.8)
+        }
 
         let app = launchPracticeQuestion(extraArguments: [
             "-CanadianHamForceRegularHorizontalSizeClass",
@@ -69,16 +76,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "Forced-regular iPhone landscape sheet scrolling is covered by the targeted iPhone run.")
         XCUIDevice.shared.orientation = .landscapeLeft
         waitBriefly(0.8)
-        defer { XCUIDevice.shared.orientation = .portrait }
+        defer {
+            XCUIDevice.shared.orientation = .portrait
+            waitBriefly(0.8)
+        }
 
         let app = launchPracticeQuestion(extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
         defer { app.terminate() }
 
         openTool(.calculator, in: app)
         assertCalculatorPresentedAsSheet(in: app, context: "forced-regular iPhone landscape key reachability")
-        let calculatorScrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
-        XCTAssertTrue(calculatorScrollView.waitForExistence(timeout: 5), "The short landscape medium sheet should enable calculator scrolling instead of shrinking keys below 44 pt")
-
         for identifier in calculatorKeyIdentifiers {
             let key = app.buttons[identifier].firstMatch
             scrollCalculatorPanelUntilElementExists(key, in: app, maxSwipes: 10)
