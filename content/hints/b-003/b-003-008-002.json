@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the first magnetic block in a linear supply and the jobs it performs before rectification.",
-      "fr": "Revoyez le premier bloc magnétique d’une alimentation linéaire et ses rôles avant le redressement."
+      "en": "Review the blocks of a linear power supply.",
+      "fr": "Revoyez les blocs d'une alimentation stabilisée linéaire."
     }
   ],
   "lessonLink": {

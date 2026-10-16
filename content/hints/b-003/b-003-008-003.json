@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the supply block that changes an alternating waveform into one-polarity current.",
-      "fr": "Revoyez le bloc d’alimentation qui transforme une forme d’onde alternative en courant d’une seule polarité."
+      "en": "Review the blocks of a linear power supply.",
+      "fr": "Revoyez les blocs d'une alimentation stabilisée linéaire."
     }
   ],
   "lessonLink": {

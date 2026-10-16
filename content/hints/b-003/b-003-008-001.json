@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review where protection sensing must look in a regulated supply to protect the connected radio.",
-      "fr": "Revoyez où la détection de protection doit regarder dans une alimentation régulée pour protéger la radio raccordée."
+      "en": "Review the blocks of a linear power supply.",
+      "fr": "Revoyez les blocs d'une alimentation stabilisée linéaire."
     }
   ],
   "lessonLink": {

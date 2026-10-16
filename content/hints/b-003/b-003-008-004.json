@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the smoothing block after rectification in a linear supply.",
-      "fr": "Revoyez le bloc de lissage après le redressement dans une alimentation linéaire."
+      "en": "Review the blocks of a linear power supply.",
+      "fr": "Revoyez les blocs d'une alimentation stabilisée linéaire."
     }
   ],
   "lessonLink": {

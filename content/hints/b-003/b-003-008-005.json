@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the final control block that holds output voltage steady as load changes.",
-      "fr": "Revoyez le dernier bloc de commande qui garde la tension de sortie stable lorsque la charge varie."
+      "en": "Review the blocks of a linear power supply.",
+      "fr": "Revoyez les blocs d'une alimentation stabilisée linéaire."
     }
   ],
   "lessonLink": {

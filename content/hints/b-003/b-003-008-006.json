@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review which linear-supply block deliberately drops voltage while carrying load current.",
-      "fr": "Revoyez quel bloc d’une alimentation linéaire chute volontairement une tension tout en portant le courant de charge."
+      "en": "Review the blocks of a linear power supply.",
+      "fr": "Revoyez les blocs d'une alimentation stabilisée linéaire."
     }
   ],
   "lessonLink": {
