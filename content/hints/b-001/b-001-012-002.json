@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-012-002",
+  "questionId": "B-001-012-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review when amateur-station communications may be divulged or used.",
+      "fr": "Revoyez quand les communications de stations de radioamateur peuvent être divulguées ou utilisées."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-privacy-payment-and-message-handling"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
