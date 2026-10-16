@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-009-010",
+  "questionId": "B-006-009-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what reference antenna the suffix in dBi names.",
+      "fr": "Revoyez quelle antenne de référence est nommée par le suffixe dBi."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "directivity-and-gain"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}
