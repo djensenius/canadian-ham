@@ -52,7 +52,7 @@ export function applyAnswer(
   const previousBox = existing?.leitner.box ?? 0;
   const answeredWithHelp = update.answeredWithHelp ?? false;
   const givesMasteryCredit = update.isCorrect && !answeredWithHelp;
-  const nextBox = givesMasteryCredit ? Math.min(previousBox + 1, 5) : 0;
+  const nextBox = givesMasteryCredit ? Math.min(previousBox + 1, 5) : update.isCorrect ? previousBox : 0;
   const dueAt = givesMasteryCredit ? addUtcSeconds(update.now, LEITNER_INTERVALS_BY_BOX[nextBox]) : normalizeIso(update.now);
   return {
     questionId: update.questionId,
@@ -63,7 +63,7 @@ export function applyAnswer(
     lastResult: update.isCorrect ? "correct" : "incorrect",
     lastAnsweredWithHelp: answeredWithHelp,
     recentResults: appendRecentResult(existing?.recentResults ?? [], update.isCorrect),
-    recentAnsweredWithHelp: appendRecentResult(existing?.recentAnsweredWithHelp ?? [], answeredWithHelp),
+    recentAnsweredWithHelp: appendRecentResult(alignedRecentAnsweredWithHelp(existing), answeredWithHelp),
     leitner: {
       box: nextBox,
       dueAt,
@@ -85,6 +85,12 @@ export function applyAnswerSequence(
 
 export function appendRecentResult(existing: readonly boolean[], newest: boolean): boolean[] {
   return [...existing, newest].slice(-5);
+}
+
+function alignedRecentAnsweredWithHelp(existing: QuestionProgressRecord | null | undefined): boolean[] {
+  const recentResults = existing?.recentResults ?? [];
+  const source = existing?.recentAnsweredWithHelp ?? [];
+  return recentResults.map((_, index) => source[index] === true);
 }
 
 export function isDue(record: Pick<QuestionProgressRecord, "leitner">, now: string): boolean {
@@ -112,8 +118,12 @@ export function weakSubsectionIds(
     const current = subsectionAttempts.get(subsectionId) ?? { correct: 0, total: 0 };
     const recentAnsweredWithHelp = record.recentAnsweredWithHelp ?? [];
     for (const [index, result] of record.recentResults.entries()) {
+      const wasHelped = recentAnsweredWithHelp[index] === true;
+      if (result && wasHelped) {
+        continue;
+      }
       current.total += 1;
-      if (result && recentAnsweredWithHelp[index] !== true) {
+      if (result) {
         current.correct += 1;
       }
     }

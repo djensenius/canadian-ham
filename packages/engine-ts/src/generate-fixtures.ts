@@ -416,7 +416,7 @@ function buildLeitnerFixture(): unknown {
       expectedOutput: { record: applyAnswer(existingBox3, { questionId: "B-006-004-008", bankId, isCorrect: false, now }) },
     },
     {
-      id: "leitner-hinted-correct-preserves-accuracy-but-gives-no-mastery-credit-and-is-due-immediately",
+      id: "leitner-hinted-correct-preserves-accuracy-keeps-current-box-and-is-due-immediately",
       input: { existing: existingBox3, update: { questionId: "B-006-004-008", bankId, isCorrect: true, answeredWithHelp: true, now } },
       expectedOutput: { record: applyAnswer(existingBox3, { questionId: "B-006-004-008", bankId, isCorrect: true, answeredWithHelp: true, now }) },
     },

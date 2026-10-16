@@ -413,7 +413,7 @@
       }
     },
     {
-      "id": "leitner-hinted-correct-preserves-accuracy-but-gives-no-mastery-credit-and-is-due-immediately",
+      "id": "leitner-hinted-correct-preserves-accuracy-keeps-current-box-and-is-due-immediately",
       "input": {
         "existing": {
           "questionId": "B-006-004-008",
@@ -469,7 +469,7 @@
             true
           ],
           "leitner": {
-            "box": 0,
+            "box": 3,
             "dueAt": "2026-01-02T00:00:00.000Z"
           },
           "notes": null

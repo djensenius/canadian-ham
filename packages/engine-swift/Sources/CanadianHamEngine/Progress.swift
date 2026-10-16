@@ -162,7 +162,7 @@ public func applyAnswer(existing: QuestionProgressRecord?, update: AnswerUpdate)
         throw EngineError("leitner.box out of range: \(previousBox)")
     }
     let givesMasteryCredit = update.isCorrect && !update.answeredWithHelp
-    let nextBox = givesMasteryCredit ? min(previousBox + 1, 5) : 0
+    let nextBox = givesMasteryCredit ? min(previousBox + 1, 5) : (update.isCorrect ? previousBox : 0)
     let dueAt: String
     if givesMasteryCredit {
         guard let interval = leitnerIntervalsByBox[nextBox] else {
@@ -182,7 +182,7 @@ public func applyAnswer(existing: QuestionProgressRecord?, update: AnswerUpdate)
         lastResult: update.isCorrect ? .correct : .incorrect,
         lastAnsweredWithHelp: update.answeredWithHelp,
         recentResults: appendRecentResult(existing?.recentResults ?? [], newest: update.isCorrect),
-        recentAnsweredWithHelp: appendRecentResult(existing?.recentAnsweredWithHelp ?? [], newest: update.answeredWithHelp),
+        recentAnsweredWithHelp: appendRecentResult(alignedRecentAnsweredWithHelp(existing), newest: update.answeredWithHelp),
         leitner: LeitnerState(box: nextBox, dueAt: dueAt),
         notes: existing?.notes ?? nil
     )
@@ -205,6 +205,13 @@ public func appendRecentResult(_ existing: [Bool], newest: Bool) -> [Bool] {
         return combined
     }
     return Array(combined.suffix(5))
+}
+
+private func alignedRecentAnsweredWithHelp(_ existing: QuestionProgressRecord?) -> [Bool] {
+    guard let existing else { return [] }
+    return existing.recentResults.enumerated().map { index, _ in
+        existing.recentAnsweredWithHelp.indices.contains(index) ? existing.recentAnsweredWithHelp[index] : false
+    }
 }
 
 public func isDue(_ record: QuestionProgressRecord, now: String) throws -> Bool {
@@ -231,10 +238,12 @@ public func weakSubsectionIds(records: [QuestionProgressRecord], latestExamItems
         let subsectionId = subsectionIdFromQuestionId(record.questionId)
         var current = subsectionAttempts[subsectionId] ?? (correct: 0, total: 0)
         for (index, result) in record.recentResults.enumerated() {
+            let wasHelped = record.recentAnsweredWithHelp.indices.contains(index) ? record.recentAnsweredWithHelp[index] : false
+            if result, wasHelped {
+                continue
+            }
             current.total += 1
-            if result, record.recentAnsweredWithHelp.indices.contains(index), !record.recentAnsweredWithHelp[index] {
-                current.correct += 1
-            } else if result, !record.recentAnsweredWithHelp.indices.contains(index) {
+            if result {
                 current.correct += 1
             }
         }
