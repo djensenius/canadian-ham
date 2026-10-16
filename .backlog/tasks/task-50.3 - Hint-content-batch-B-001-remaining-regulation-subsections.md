@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 13:01'
+updated_date: '2026-10-16 13:02'
 labels:
   - content
 dependencies:
@@ -96,4 +96,6 @@ B-001-009 manually written after calibration: 9 hints (0 two-level, 9 single-lev
 B-001-010 manually written after calibration: 10 hints (0 two-level, 10 single-level B). Validation: pnpm check:hints -- --subsection B-001-010 --require-complete passed. Pausing per steering for six-sample review before B-001-011 onward.
 
 Re-audited B-001-002 through B-001-010 using the literal option self-test. Converted all in-scope files in those subsections to single-level B topic pointers and added the B-001 topic-pointer rule/examples to README. Validation: subsection checks for B-001-002 through B-001-010 all passed with --require-complete.
+
+B-001-011 manually written as calibrated topic-pointer B hints: 10 hints (0 two-level, 10 single-level B). Validation: pnpm check:hints -- --subsection B-001-011 --require-complete passed.
 <!-- SECTION:NOTES:END -->
