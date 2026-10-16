@@ -1,9 +1,11 @@
 ---
 id: TASK-50
 title: Question hints
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:57'
+updated_date: '2026-10-16 08:12'
 labels: []
 dependencies: []
 documentation:
@@ -25,3 +27,9 @@ Owner-approved feature (2026-10-15): add per-question hints for the active ISED 
 - [ ] #1 The Basic bank has tracked subtasks for schema/checking, pilot content, category content batches, web UI, Apple UI, tvOS/visionOS follow-up, and lesson-quiz follow-up.
 - [ ] #2 Implementation order and owner decisions from 2026-10-15 are recorded so future workers do not add hints to mock exams or lesson quizzes without approval.
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Review follow-up hint style rules (owner rule: Hint 2 never gives the answer): hints must never eliminate answer options, paraphrase/list wrong options, or name/point at the correct answer's distinctive words. Hint 1 nudges toward the concept or principle. Hint 2 teaches the underlying relationship or setup well enough to reason from, and recall questions should explain how layers fit together without singling out the current option. Each hint must stand alone because practice order is random. Hints must not state facts that answer another question in the same subsection. French text must be natural and consistent, including ISED terminology such as "stations de radioamateur".
+<!-- SECTION:NOTES:END -->
