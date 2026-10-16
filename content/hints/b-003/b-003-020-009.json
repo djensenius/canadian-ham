@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review open-wire feedline touch safety while RF is present.",
-      "fr": "Revoyez la sécurité de contact avec une ligne ouverte lorsque de la RF est présente."
+      "en": "Review lightning, tower and antenna-contact safety.",
+      "fr": "Revoyez la sécurité liée à la foudre, aux pylônes et au contact avec les antennes."
     }
   ],
   "lessonLink": {
