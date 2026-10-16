@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-011-011",
+  "questionId": "B-005-011-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the practical sign that a transformer core is losing some energy instead of transferring it all.",
+      "fr": "Revoyez le signe pratique qu'un noyau de transformateur perd une partie de l'énergie au lieu de tout la transférer."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "transformers-and-magnetic-fields"
+  },
+  "singleLevelReason": "Pure observation recall: a second hint would name the physical sign of transformer loss.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

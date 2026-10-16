@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-011-002",
+  "questionId": "B-005-011-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Impedance is tied to the E-over-I relationship seen at a winding.",
+      "fr": "L'impédance est liée au rapport E sur I vu à un enroulement."
+    },
+    {
+      "level": 2,
+      "en": "A transformer can present one E-and-I relationship on one side and another relationship on the other side while transferring power magnetically.",
+      "fr": "Un transformateur peut présenter une relation entre E et I d'un côté et une autre relation de l'autre côté tout en transférant l'énergie par magnétisme."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "transformer-power-calculations"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

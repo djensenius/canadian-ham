@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-011-001",
+  "questionId": "B-005-011-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Neglecting losses, use the input power and primary voltage with I = P / E.",
+      "fr": "En négligeant les pertes, utilisez la puissance d'entrée et la tension primaire avec I = P / E."
+    },
+    {
+      "level": 2,
+      "en": "Set up primary current as I = 250 W / 120 V, then choose the closest ampere value.",
+      "fr": "Posez le courant primaire comme I = 250 W / 120 V, puis choisissez la valeur en ampères la plus proche."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "transformer-power-calculations"
+  },
+  "referenceSheetSection": "power",
+  "licenseClass": "original"
+}
