@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-001",
+  "questionId": "B-008-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the external cable cures for home audio and video equipment picking up HF energy.",
+      "fr": "Revoyez les mesures externes sur les câbles quand du matériel audio-vidéo capte de l’énergie HF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "ferrite-chokes-and-bypass-capacitors"
+  },
+  "singleLevelReason": "Device recall: a second hint would identify the component construction directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-008",
+  "questionId": "B-008-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the cable treatment used when audio or telephone leads carry unwanted RF into equipment.",
+      "fr": "Revoyez le traitement des câbles lorsque des fils audio ou téléphoniques amènent de la RF indésirable dans un appareil."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "ferrite-chokes-and-bypass-capacitors"
+  },
+  "singleLevelReason": "Device recall: another hint would name the suppression part or its material.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

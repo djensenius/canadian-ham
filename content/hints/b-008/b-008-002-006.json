@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-006",
+  "questionId": "B-008-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the clue where normal tuning does not explain the unwanted audio.",
+      "fr": "Revoyez l’indice où la syntonisation normale n’explique pas le son indésirable."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "audio-rectification"
+  },
+  "singleLevelReason": "Symptom recall: another hint would identify the mechanism and eliminate tuned-frequency choices.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

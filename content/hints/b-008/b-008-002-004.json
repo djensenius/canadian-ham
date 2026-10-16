@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-004",
+  "questionId": "B-008-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the audio-equipment clues for nearby keyed-carrier transmissions picked up unintentionally.",
+      "fr": "Revoyez les indices dans le matériel audio lorsque des émissions à porteuse manipulée proches sont captées sans intention."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "audio-rectification"
+  },
+  "singleLevelReason": "Symptom recall: another hint would state the sound pattern that selects the option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-003",
+  "questionId": "B-008-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the audio-equipment clues for nearby voice transmissions picked up unintentionally.",
+      "fr": "Revoyez les indices dans le matériel audio lorsque des émissions vocales proches sont captées sans intention."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "audio-rectification"
+  },
+  "singleLevelReason": "Symptom recall: a second hint would state the sound that matches the voice mode.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

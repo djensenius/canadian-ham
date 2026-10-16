@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-011",
+  "questionId": "B-008-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review station-side cures when the feedline becomes part of an unwanted RF-current path.",
+      "fr": "Revoyez les mesures côté station lorsque la ligne d’alimentation fait partie d’un trajet de courant RF indésirable."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "common-mode-current-and-station-cures"
+  },
+  "singleLevelReason": "Remedy recall: another hint would name the station-line device directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
