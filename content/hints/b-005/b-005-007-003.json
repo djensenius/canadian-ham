@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-007-003",
+  "questionId": "B-005-007-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "The word audio ties the range to sound, not to RF conversion or receiver specifications.",
+      "fr": "Le mot audio rattache cette gamme au son, et non à une conversion RF ni aux caractéristiques d'un récepteur."
+    },
+    {
+      "level": 2,
+      "en": "Ask what a listener can perceive in that range; the label comes from human hearing.",
+      "fr": "Demandez-vous ce qu'une personne peut percevoir dans cette gamme; le nom vient de l'audition humaine."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

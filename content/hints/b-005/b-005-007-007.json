@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-007-007",
+  "questionId": "B-005-007-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Frequency and wavelength move in opposite directions for a radio signal in the same medium.",
+      "fr": "La fréquence et la longueur d'onde varient en sens opposés pour un signal radio dans le même milieu."
+    },
+    {
+      "level": 2,
+      "en": "Use f ≈ 300 / λ: if λ gets smaller, the denominator is smaller, so f moves the other way.",
+      "fr": "Utilisez f ≈ 300 / λ : si λ devient plus petite, le dénominateur est plus petit, donc f va dans l'autre sens."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-007-011",
+  "questionId": "B-005-007-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Compare the second signal with the fundamental by checking for an exact whole-number multiple.",
+      "fr": "Comparez le deuxième signal au fondamental en vérifiant s'il s'agit d'un multiple entier exact."
+    },
+    {
+      "level": 2,
+      "en": "Set up the ratio 4 kHz / 2 kHz; the resulting whole-number relationship tells you the signal type.",
+      "fr": "Posez le rapport 4 kHz / 2 kHz; la relation entière obtenue indique le type de signal."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

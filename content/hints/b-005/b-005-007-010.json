@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-007-010",
+  "questionId": "B-005-007-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the smooth AC waveform associated with household receptacle power.",
+      "fr": "Revoyez la forme d'onde CA lisse associée à l'alimentation d'une prise domestique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name the waveform shape.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
