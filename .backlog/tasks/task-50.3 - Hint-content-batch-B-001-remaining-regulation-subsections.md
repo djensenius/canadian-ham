@@ -86,4 +86,6 @@ Corrected rewritten sample counts for review: B-001-002 has 3 two-level and 6 si
 Re-audited B-001-002 through B-001-005 after sample review using the no-decisive-fact self-test. Updated README with the self-test and examples. Current sample counts: B-001-002 0 two-level / 9 single-level B; B-001-003 1 two-level / 7 single-level B; B-001-004 0 two-level / 7 single-level B; B-001-005 0 two-level / 6 single-level B. Validation: subsection checks for B-001-002, -003, -004, -005 all passed with --require-complete.
 
 B-001-006 manually written after calibration: 6 hints (0 two-level, 6 single-level B). Validation: pnpm check:hints -- --subsection B-001-006 --require-complete passed.
+
+B-001-007 manually written after calibration: 11 hints (0 two-level, 11 single-level B). Validation: pnpm check:hints -- --subsection B-001-007 --require-complete passed.
 <!-- SECTION:NOTES:END -->
