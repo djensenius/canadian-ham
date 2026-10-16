@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Separate entry requirements, the first exam step, later credentials, code testing, and authority outside the hobby before choosing.",
-      "fr": "Séparez les conditions d'entrée, la première étape d'examen, les titres ultérieurs, l'épreuve de code et l'autorisation hors loisir avant de choisir."
-    },
-    {
-      "level": 2,
-      "en": "The certification path starts with an entry step, then later credentials branch independently. Accessibility and non-amateur authority facts are separate from that sequence.",
-      "fr": "Le parcours de certification commence par une étape d'entrée, puis les titres ultérieurs se traitent séparément. L'accessibilité et les autorisations non radioamateurs forment des faits distincts."
+      "en": "Think about what the certification system needs to maintain a reachable official record in Canada.",
+      "fr": "Pensez à ce dont le système de certification a besoin pour tenir un dossier officiel joignable au Canada."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-basic-eligibility-qualifications-exams-and-accommodations"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would identify the candidate condition and eliminate the citizenship distractors."
 }

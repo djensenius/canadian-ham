@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Treat this as an entry-eligibility row, not as an exam sequence or charge rule.",
-      "fr": "Traitez ceci comme une ligne d'admissibilité d'entrée, et non comme une séquence d'examen ou une règle de frais."
+      "en": "For entry eligibility, do not assume the amateur service adds a birthday threshold by default.",
+      "fr": "Pour l'admissibilité d'entrée, ne supposez pas que le service de radioamateur ajoute automatiquement un seuil d'anniversaire."
     }
   ],
   "lessonLink": {
@@ -16,5 +16,5 @@
   },
   "referenceSheetSection": null,
   "licenseClass": "original",
-  "singleLevelReason": "A second hint for this direct eligibility recall item would give away the age-limit fact."
+  "singleLevelReason": "A second hint would reveal whether an age limit exists."
 }

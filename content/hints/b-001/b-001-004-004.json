@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Separate entry requirements, the first exam step, later credentials, code testing, and authority outside the hobby before choosing.",
-      "fr": "Séparez les conditions d'entrée, la première étape d'examen, les titres ultérieurs, l'épreuve de code et l'autorisation hors loisir avant de choisir."
-    },
-    {
-      "level": 2,
-      "en": "The certification path starts with an entry step, then later credentials branch independently. Accessibility and non-amateur authority facts are separate from that sequence.",
-      "fr": "Le parcours de certification commence par une étape d'entrée, puis les titres ultérieurs se traitent séparément. L'accessibilité et les autorisations non radioamateurs forment des faits distincts."
+      "en": "Once the first certificate exists, later qualifications are independent branches rather than a locked sequence.",
+      "fr": "Une fois le premier certificat obtenu, les compétences ultérieures sont des branches indépendantes plutôt qu'une séquence verrouillée."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-basic-eligibility-qualifications-exams-and-accommodations"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would disclose the ordering rule for later qualifications."
 }

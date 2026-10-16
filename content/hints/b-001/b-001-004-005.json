@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Separate entry requirements, the first exam step, later credentials, code testing, and authority outside the hobby before choosing.",
-      "fr": "Séparez les conditions d'entrée, la première étape d'examen, les titres ultérieurs, l'épreuve de code et l'autorisation hors loisir avant de choisir."
-    },
-    {
-      "level": 2,
-      "en": "The certification path starts with an entry step, then later credentials branch independently. Accessibility and non-amateur authority facts are separate from that sequence.",
-      "fr": "Le parcours de certification commence par une étape d'entrée, puis les titres ultérieurs se traitent séparément. L'accessibilité et les autorisations non radioamateurs forment des faits distincts."
+      "en": "This is the code-qualification speed from the eligibility table; remember it as the modest entry code test, not an old high-speed benchmark.",
+      "fr": "Il s'agit de la vitesse de compétence en code dans le tableau d'admissibilité ; retenez-la comme l'épreuve d'entrée modeste, et non comme un ancien seuil de grande vitesse."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "reference-facts-basic-eligibility-qualifications-exams-and-accommodations"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Any second hint for this numeric recall item would reveal the exact speed."
 }
