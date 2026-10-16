@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-16 08:04'
+updated_date: '2026-10-16 08:05'
 labels:
   - content
 dependencies: []
@@ -26,8 +26,7 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 - [ ] #1 Owner decision recorded
 - [ ] #2 Splits and moves done with coverage, quizzes, explanations, figures and links updated; saved lesson progress migrates on web and Apple
 - [ ] #3 L-005-04 and M8 are split into smaller lessons, B-001-014 moves to L-001-05, and L-004-03 comes first in M4
-- [ ] #4 Saved lesson progress for moved or split lessons migrates on web and Apple, with tests
-- [ ] #5 Lesson coverage shows every question still covered exactly as intended, and all content checks pass
+- [ ] #4 Lesson coverage shows every question still covered exactly as intended, and all content checks pass
 <!-- AC:END -->
 
 ## Implementation Notes
