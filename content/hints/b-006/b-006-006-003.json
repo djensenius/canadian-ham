@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-006-003",
+  "questionId": "B-006-006-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the matching device used when a very high feed-point value must feed ordinary coax.",
+      "fr": "Revoyez le dispositif d’adaptation utilisé lorsqu’une valeur très élevée au point d’alimentation doit alimenter un câble coaxial ordinaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "matching-networks-and-tuners"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall or concept item: a second hint would define the correct choice or eliminate distractors; topic pointer and lesson link only."
+}

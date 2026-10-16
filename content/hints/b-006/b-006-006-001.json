@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-006-001",
+  "questionId": "B-006-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the load condition that makes many protected solid-state transmitters fold back.",
+      "fr": "Revoyez l’état de charge qui fait souvent réduire la puissance des émetteurs à semi-conducteurs protégés."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "radio-connection"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

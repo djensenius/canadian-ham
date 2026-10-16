@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-006-011",
+  "questionId": "B-006-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the impedance-ratio method: divide the load value by the line value.",
+      "fr": "Utilisez la méthode du rapport d’impédance : divisez la valeur de charge par la valeur de la ligne."
+    },
+    {
+      "level": 2,
+      "en": "Set up the ratio as 300 ohms / 50 ohms, then express the result as a transformer ratio.",
+      "fr": "Établissez le rapport comme 300 ohms / 50 ohms, puis exprimez le résultat comme rapport de transformation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "worked-example-impedance-ratio"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

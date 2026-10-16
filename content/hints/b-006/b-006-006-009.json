@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-006-009",
+  "questionId": "B-006-006-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the matched-line condition before deciding whether line length changes the match.",
+      "fr": "Revoyez l’état d’une ligne adaptée avant de décider si sa longueur change l’adaptation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "matching-networks-and-tuners"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}
