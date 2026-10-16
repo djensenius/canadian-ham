@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-005-007",
+  "questionId": "B-007-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how high activity changes the band menu.",
+      "fr": "Revoyez comment une forte activité change le choix des bandes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "in-the-real-world-a-changing-band-menu"
+  },
+  "singleLevelReason": "Trend recall: a second hint would identify or eliminate the frequency range or effect; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

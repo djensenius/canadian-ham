@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-005-008",
+  "questionId": "B-007-005-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the broad influence described in the solar-activity section.",
+      "fr": "Revoyez l’influence générale décrite dans la section sur l’activité solaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "solar-activity-and-the-solar-cycle"
+  },
+  "singleLevelReason": "Concept recall: a second hint would identify or eliminate the spectrum-wide influence; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

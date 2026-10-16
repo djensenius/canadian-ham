@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-005-006",
+  "questionId": "B-007-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the day-to-day solar inputs in the solar-activity section.",
+      "fr": "Revoyez les apports solaires quotidiens dans la section sur l’activité solaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "solar-activity-and-the-solar-cycle"
+  },
+  "singleLevelReason": "Cause recall: a second hint would identify or eliminate the daily solar input; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-005-001",
+  "questionId": "B-007-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the solar-activity trend in the solar-cycle section.",
+      "fr": "Revoyez la tendance de l’activité solaire dans la section sur le cycle solaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "solar-activity-and-the-solar-cycle"
+  },
+  "singleLevelReason": "Trend recall: a second hint would identify or eliminate the direction of the ionization change; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
