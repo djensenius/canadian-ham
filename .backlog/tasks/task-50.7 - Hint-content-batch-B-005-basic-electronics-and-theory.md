@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:27'
+updated_date: '2026-10-16 14:39'
 labels:
   - content
 dependencies:
@@ -78,4 +78,6 @@ Completed B-005-013: wrote 10 hint files (4 two-level meter-placement concept, 6
 Finished B-005 hint content: 142/142 active questions covered (101 two-level, 41 single-level). Full validation passed: pnpm check:hints -- --category B-005 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. PR handoff will include per-subsection counts and samples.
 
 Opened PR #269 (task-50.7: B-005 hints) with per-subsection counts, 10 EN/FR samples with options, and checks run; added @copilot as reviewer.
+
+PR #269 review fixes applied in 03a987aca062f37c0e82170d970aefcb603d17c8: corrected B-005-001-001 mega/kilo factual error; converted definition/concept leaks to neutral single-level pointers; rewrote method hints flagged for answer/option leakage; fixed FR terminology/style and lesson-link anchors; added the README rule that concept-question principles cannot restate the answer. Updated B-005 counts: 142 files, 88 two-level, 54 single-level. Manual EN/FR option self-test applied to every touched hint file. Validation passed: pnpm check:hints -- --category B-005 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
 <!-- SECTION:NOTES:END -->
