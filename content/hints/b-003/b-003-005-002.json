@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-005-002",
+  "questionId": "B-003-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the early receiver stage that helps weak signals before conversion and filtering.",
+      "fr": "Revoyez le premier étage du récepteur qui aide les signaux faibles avant la conversion et le filtrage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-02",
+    "sectionAnchor": "ssbcw-receiver-path"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

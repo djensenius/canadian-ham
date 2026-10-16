@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-020-009",
+  "questionId": "B-003-020-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review open-wire feedline touch safety while RF is present.",
+      "fr": "Revoyez la sécurité de contact avec une ligne ouverte lorsque de la RF est présente."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "lightning-towers-and-antenna-contact"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

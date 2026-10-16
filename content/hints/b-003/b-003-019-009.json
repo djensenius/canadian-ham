@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-019-009",
+  "questionId": "B-003-019-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the controlled method for making filter capacitors safe before work.",
+      "fr": "Revoyez la méthode contrôlée pour rendre les condensateurs de filtrage sûrs avant le travail."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "fuses-chassis-safety-and-stored-charge"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

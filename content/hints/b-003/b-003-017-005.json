@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-017-005",
+  "questionId": "B-003-017-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why source-side protection matters for a long mobile DC lead.",
+      "fr": "Revoyez pourquoi la protection du côté source compte pour un long fil CC mobile."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-07",
+    "sectionAnchor": "dc-wiring-voltage-drop-and-fuses"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

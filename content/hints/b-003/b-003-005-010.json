@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-005-010",
+  "questionId": "B-003-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the part of the receiver chain where CW tone shaping can be placed.",
+      "fr": "Revoyez la partie de la chaîne de réception où l’on peut placer la mise en forme de tonalité CW."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-02",
+    "sectionAnchor": "ssbcw-receiver-path"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

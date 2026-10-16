@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-005-009",
+  "questionId": "B-003-005-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the final audio-level stage before headphones or a speaker.",
+      "fr": "Revoyez le dernier étage de niveau audio avant le casque d’écoute ou le haut-parleur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-02",
+    "sectionAnchor": "ssbcw-receiver-path"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

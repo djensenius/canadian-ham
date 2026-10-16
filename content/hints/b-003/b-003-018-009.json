@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-018-009",
+  "questionId": "B-003-018-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the first safety requirement before touching a victim at a high-voltage source.",
+      "fr": "Revoyez la première exigence de sécurité avant de toucher une victime près d’une source haute tension."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "station-access-and-electrical-shock"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

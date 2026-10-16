@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-019-006",
+  "questionId": "B-003-019-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review where the protective conductor of a three-wire AC cord bonds in a supply.",
+      "fr": "Revoyez où le conducteur de protection d’un cordon CA à trois fils est relié dans une alimentation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "fuses-chassis-safety-and-stored-charge"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

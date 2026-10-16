@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-012-006",
+  "questionId": "B-003-012-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what carrier suppression changes in a double-sideband voice signal’s power use.",
+      "fr": "Revoyez ce que la suppression de la porteuse change dans l’utilisation de la puissance d’un signal vocal à double bande latérale."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "ssb-linear-amplification-and-level-control"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

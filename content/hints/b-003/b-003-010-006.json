@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-003-010-006",
+  "questionId": "B-003-010-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the high-side superheterodyne setup: convert the IF to the same unit as the signal, then add it once.",
+      "fr": "Utilisez le montage superhétérodyne avec oscillateur au-dessus : convertissez la FI dans la même unité que le signal, puis ajoutez-la une seule fois."
+    },
+    {
+      "level": 2,
+      "en": "The given IF is 455 kHz, which is 0.455 MHz. Add that offset to the receive frequency; do not use image spacing.",
+      "fr": "La FI donnée est 455 kHz, soit 0,455 MHz. Ajoutez ce décalage à la fréquence reçue; n’utilisez pas l’écart de fréquence image."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-04",
+    "sectionAnchor": "local-oscillator-and-image-basics"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

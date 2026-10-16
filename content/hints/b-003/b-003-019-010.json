@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-019-010",
+  "questionId": "B-003-019-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the safety grounding conductor keeps a faulty chassis from remaining touch-dangerous.",
+      "fr": "Revoyez comment le conducteur de mise à la terre de sécurité empêche un châssis défectueux de rester dangereux au toucher."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "fuses-chassis-safety-and-stored-charge"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

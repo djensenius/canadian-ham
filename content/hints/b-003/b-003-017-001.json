@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-017-001",
+  "questionId": "B-003-017-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how poor supply filtering can show up in a keyed CW signal.",
+      "fr": "Revoyez comment un mauvais filtrage d’alimentation peut apparaître dans un signal CW manipulé."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-07",
+    "sectionAnchor": "station-dc-supplies"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

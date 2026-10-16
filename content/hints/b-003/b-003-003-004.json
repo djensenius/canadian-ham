@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-003-004",
+  "questionId": "B-003-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the tuning part of the superheterodyne block diagram.",
+      "fr": "Revoyez la partie de syntonisation du schéma fonctionnel superhétérodyne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "superheterodyne-receiver-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

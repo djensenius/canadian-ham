@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-020-003",
+  "questionId": "B-003-020-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the most conservative station disconnection plan for severe lightning risk.",
+      "fr": "Revoyez le plan de débranchement de station le plus prudent lors d’un risque important de foudre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "lightning-towers-and-antenna-contact"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

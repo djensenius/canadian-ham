@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-016-004",
+  "questionId": "B-003-016-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review which station power items act as sources of electromotive force.",
+      "fr": "Revoyez quels éléments d’alimentation de station agissent comme sources de force électromotrice."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-07",
+    "sectionAnchor": "battery-basics"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

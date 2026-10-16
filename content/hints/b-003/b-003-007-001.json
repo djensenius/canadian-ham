@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-007-001",
+  "questionId": "B-003-007-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the receive audio path in a computer-based digital-mode station.",
+      "fr": "Revoyez le trajet audio de réception dans une station numérique avec ordinateur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-03",
+    "sectionAnchor": "computer-audio-interfaces-for-digital-modes"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

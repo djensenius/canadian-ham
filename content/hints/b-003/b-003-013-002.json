@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-013-002",
+  "questionId": "B-003-013-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how transmitter deviation affects the loudness heard through an FM repeater.",
+      "fr": "Revoyez comment l’excursion de l’émetteur influence le volume entendu par un répéteur FM."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "fm-deviation-squelch-and-capture-effect"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-021-007",
+  "questionId": "B-003-021-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review which body parts need extra care because they shed heat poorly.",
+      "fr": "Revoyez quelles parties du corps nécessitent plus de prudence parce qu’elles évacuent mal la chaleur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "rf-exposure-and-nearby-people"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

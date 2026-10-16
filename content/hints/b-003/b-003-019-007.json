@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-019-007",
+  "questionId": "B-003-019-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why a long DC-looking ground lead may not solve an RF problem at the desk.",
+      "fr": "Revoyez pourquoi un long fil de terre, valable en CC, peut ne pas régler un problème RF au pupitre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "grounding-and-bonding"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

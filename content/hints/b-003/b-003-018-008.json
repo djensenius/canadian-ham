@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-018-008",
+  "questionId": "B-003-018-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the emergency response sequence when someone may still be connected to high voltage.",
+      "fr": "Revoyez la séquence d’intervention d’urgence lorsqu’une personne peut être encore en contact avec une haute tension."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "station-access-and-electrical-shock"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

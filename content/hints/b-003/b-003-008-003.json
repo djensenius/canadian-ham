@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-008-003",
+  "questionId": "B-003-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the supply block that changes an alternating waveform into one-polarity current.",
+      "fr": "Revoyez le bloc d’alimentation qui transforme une forme d’onde alternative en courant d’une seule polarité."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-03",
+    "sectionAnchor": "linear-power-supply-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

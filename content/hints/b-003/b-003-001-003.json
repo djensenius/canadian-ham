@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-001-003",
+  "questionId": "B-003-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the lesson topic on unwanted products from HF output stages and the accessory used near that part of the chain.",
+      "fr": "Revoyez le sujet de la leçon sur les produits indésirables des étages de sortie HF et l’accessoire placé près de cette partie de la chaîne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "the-hf-station-as-a-chain"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

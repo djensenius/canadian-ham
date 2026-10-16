@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-013-005",
+  "questionId": "B-003-013-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why local VHF and UHF voice commonly uses FM in weak-signal conditions.",
+      "fr": "Revoyez pourquoi la phonie locale VHF et UHF utilise souvent la FM dans des conditions de signaux faibles."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "fm-deviation-squelch-and-capture-effect"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

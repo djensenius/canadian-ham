@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-001-002",
+  "questionId": "B-003-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the HF chain again, paying attention to which active RF source is last before the station accessories.",
+      "fr": "Revoyez encore la chaîne HF, en portant attention à la dernière source RF active avant les accessoires de station."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "the-hf-station-as-a-chain"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

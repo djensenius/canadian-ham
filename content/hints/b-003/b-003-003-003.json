@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-003-003",
+  "questionId": "B-003-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how a superheterodyne receiver moves different received signals to a common internal frequency.",
+      "fr": "Revoyez comment un récepteur superhétérodyne déplace différents signaux reçus vers une fréquence interne commune."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "superheterodyne-receiver-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

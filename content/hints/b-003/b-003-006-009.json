@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-006-009",
+  "questionId": "B-003-006-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the block that first combines speech audio with an RF source in the SSB path.",
+      "fr": "Revoyez le bloc qui combine d’abord l’audio de la parole avec une source RF dans le trajet BLU."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-02",
+    "sectionAnchor": "ssb-transmitter-path"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

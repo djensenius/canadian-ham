@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-001-006",
+  "questionId": "B-003-001-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the matching-device topic in the HF station chain.",
+      "fr": "Revoyez le sujet du dispositif d’adaptation dans la chaîne d’une station HF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "the-hf-station-as-a-chain"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

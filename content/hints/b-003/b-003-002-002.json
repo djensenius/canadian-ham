@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-002-002",
+  "questionId": "B-003-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the first step in the FM voice chain, before any RF stages are involved.",
+      "fr": "Revoyez la première étape de la chaîne vocale FM, avant l’intervention des étages RF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "fm-transmitter-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

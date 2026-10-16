@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-012-008",
+  "questionId": "B-003-012-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how microphone gain is set by watching peak limiting guidance, not by chasing the largest indication.",
+      "fr": "Revoyez comment le gain du microphone se règle avec l’indication des crêtes permises, et non en cherchant la plus grande indication."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "ssb-linear-amplification-and-level-control"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-017-010",
+  "questionId": "B-003-017-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the fire-safety reason for protecting a positive mobile DC lead.",
+      "fr": "Revoyez la raison de sécurité incendie de protéger le fil positif CC d’une installation mobile."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-07",
+    "sectionAnchor": "dc-wiring-voltage-drop-and-fuses"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

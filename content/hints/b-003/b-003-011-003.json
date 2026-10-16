@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-011-003",
+  "questionId": "B-003-011-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why a tunable source can be useful in a basic CW transmitter.",
+      "fr": "Revoyez pourquoi une source syntonisable peut être utile dans un émetteur CW élémentaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "clean-cw-stable-carrier-shaped-keying"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

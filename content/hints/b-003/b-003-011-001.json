@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-011-001",
+  "questionId": "B-003-011-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the CW signal-quality section on unstable notes during keying.",
+      "fr": "Revoyez la section sur la qualité du signal CW et les notes instables pendant la manipulation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "clean-cw-stable-carrier-shaped-keying"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

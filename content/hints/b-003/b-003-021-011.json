@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-021-011",
+  "questionId": "B-003-021-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the RF-safety reason for placing dipole conductors where people cannot reach them.",
+      "fr": "Revoyez la raison de sécurité RF de placer les conducteurs d’un dipôle hors d’atteinte des personnes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "rf-exposure-and-nearby-people"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-003-012-010",
+  "questionId": "B-003-012-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For a lower-sideband tone, convert the audio tone to kHz and place it below the indicated setting.",
+      "fr": "Pour une tonalité en bande latérale inférieure, convertissez la tonalité audio en kHz et placez-la sous le réglage indiqué."
+    },
+    {
+      "level": 2,
+      "en": "Use the setup frequency minus the converted audio offset; leave the subtraction result for the answer comparison.",
+      "fr": "Utilisez la fréquence de réglage moins le décalage audio converti; gardez le résultat de la soustraction pour comparer aux réponses."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "worked-example-sideband-frequency-direction"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-003-001",
+  "questionId": "B-003-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the simplified FM receiver chain from the antenna input inward.",
+      "fr": "Revoyez la chaîne simplifiée d’un récepteur FM à partir de l’entrée d’antenne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "superheterodyne-receiver-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

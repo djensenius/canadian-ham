@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-011-010",
+  "questionId": "B-003-011-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the final-amplifier power budget: useful RF output plus the energy that must be handled in the stage.",
+      "fr": "Revoyez le bilan de puissance de l’amplificateur final : sortie RF utile plus l’énergie que l’étage doit gérer."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "am-envelope-and-sidebands"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

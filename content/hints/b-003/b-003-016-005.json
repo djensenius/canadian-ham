@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-016-005",
+  "questionId": "B-003-016-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why a rechargeable cell type may be chosen over a disposable alkaline type.",
+      "fr": "Revoyez pourquoi un type de cellule rechargeable peut être choisi plutôt qu’un type alcalin jetable."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-07",
+    "sectionAnchor": "battery-basics"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

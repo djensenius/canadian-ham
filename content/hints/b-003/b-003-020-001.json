@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-020-001",
+  "questionId": "B-003-020-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review storm-season cable handling for an idle station.",
+      "fr": "Revoyez la gestion des câbles d’une station inutilisée pendant la saison des orages."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "lightning-towers-and-antenna-contact"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

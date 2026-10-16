@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-015-003",
+  "questionId": "B-003-015-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the role of a packet relay in a digital radio path.",
+      "fr": "Revoyez le rôle d’un relais de paquets dans un trajet radio numérique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-06",
+    "sectionAnchor": "packet-digipeaters-and-reliability"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

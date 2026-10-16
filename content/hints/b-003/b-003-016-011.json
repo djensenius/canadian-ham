@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-016-011",
+  "questionId": "B-003-016-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the lithium-pack safety warning about fault current and safe handling.",
+      "fr": "Revoyez l’avertissement de sécurité des blocs au lithium concernant le courant de défaut et la manipulation sûre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-07",
+    "sectionAnchor": "battery-basics"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

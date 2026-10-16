@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-005-006",
+  "questionId": "B-003-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the gain block placed after narrow selection and before detection.",
+      "fr": "Revoyez le bloc de gain placé après la sélection étroite et avant la détection."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-02",
+    "sectionAnchor": "ssbcw-receiver-path"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

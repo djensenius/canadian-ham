@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-015-002",
+  "questionId": "B-003-015-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the basic contrast between smooth analog variation and agreed digital values.",
+      "fr": "Revoyez le contraste de base entre une variation analogique continue et des valeurs numériques convenues."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-06",
+    "sectionAnchor": "analog-digital-and-digital-voice"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

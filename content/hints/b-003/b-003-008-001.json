@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-008-001",
+  "questionId": "B-003-008-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review where protection sensing must look in a regulated supply to protect the connected radio.",
+      "fr": "Revoyez où la détection de protection doit regarder dans une alimentation régulée pour protéger la radio raccordée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-03",
+    "sectionAnchor": "linear-power-supply-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

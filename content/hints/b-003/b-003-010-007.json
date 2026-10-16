@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-010-007",
+  "questionId": "B-003-010-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what happens when a receiver passband is too tight for the information in a modulated signal.",
+      "fr": "Revoyez ce qui arrive quand la bande passante d’un récepteur est trop serrée pour l’information d’un signal modulé."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-04",
+    "sectionAnchor": "receiver-performance-terms"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

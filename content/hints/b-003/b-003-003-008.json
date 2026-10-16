@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-003-008",
+  "questionId": "B-003-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the FM receiver block that turns the frequency changes back into recovered audio.",
+      "fr": "Revoyez le bloc du récepteur FM qui transforme les variations de fréquence en audio récupérée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "superheterodyne-receiver-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

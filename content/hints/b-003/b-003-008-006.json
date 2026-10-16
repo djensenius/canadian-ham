@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-008-006",
+  "questionId": "B-003-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review which linear-supply block deliberately drops voltage while carrying load current.",
+      "fr": "Revoyez quel bloc d’une alimentation linéaire chute volontairement une tension tout en portant le courant de charge."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-03",
+    "sectionAnchor": "linear-power-supply-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

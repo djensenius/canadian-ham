@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-020-004",
+  "questionId": "B-003-020-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the personal safety equipment required for climbing work.",
+      "fr": "Revoyez l’équipement de sécurité personnel requis pour le travail en hauteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "lightning-towers-and-antenna-contact"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

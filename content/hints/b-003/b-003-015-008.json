@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-015-008",
+  "questionId": "B-003-015-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the clean-signal check for sound-card transmit audio.",
+      "fr": "Revoyez la vérification de signal propre pour l’audio d’émission par carte son."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-06",
+    "sectionAnchor": "worked-example-sound-card-audio-check"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

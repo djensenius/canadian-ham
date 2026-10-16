@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-011-002",
+  "questionId": "B-003-011-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the first supply-and-oscillator checks for a CW note that moves when keyed.",
+      "fr": "Revoyez les premières vérifications de l’alimentation et de l’oscillateur pour une note CW qui bouge à la manipulation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "clean-cw-stable-carrier-shaped-keying"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

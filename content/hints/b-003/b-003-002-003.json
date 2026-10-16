@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-002-003",
+  "questionId": "B-003-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how FM carries speech by changing the oscillator’s radio-frequency behaviour.",
+      "fr": "Revoyez comment la FM transporte la parole en modifiant le comportement radiofréquence de l’oscillateur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "fm-transmitter-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
