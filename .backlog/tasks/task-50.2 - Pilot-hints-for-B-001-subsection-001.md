@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 12:06'
+updated_date: '2026-10-16 12:08'
 labels:
   - content
 dependencies:
@@ -30,9 +30,9 @@ Write the first production hint batch for all active Basic questions in subsecti
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 Every B-001-001 question has exactly two EN hints and two FR hints following the approved nudge-then-setup ladder.
-- [x] #2 Hints avoid copying question text, correct answers, option text, and reference-sheet content; the hint checker and originality/explanation checks pass.
-- [x] #3 At least five representative EN/FR hint pairs are listed in implementation notes or the PR body for owner tone review.
+- [ ] #1 Every B-001-001 question has approved EN/FR hint content following the recall-ladder ruling: two levels where useful, or one level with singleLevelReason where Hint 2 would leak.
+- [ ] #2 Hints avoid copying question text, correct answers, option text, and reference-sheet content; the hint checker and originality/explanation checks pass.
+- [ ] #3 At least five representative EN/FR hint pairs, or all pilot pairs when fewer than five files exist, are listed in implementation notes or the PR body for owner tone review.
 <!-- AC:END -->
 
 ## Implementation Plan
