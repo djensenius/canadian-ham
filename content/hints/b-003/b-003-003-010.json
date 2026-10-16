@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review where muting and listener audio controls sit in the simplified FM receiver chain.",
-      "fr": "Revoyez où se trouvent le silencieux et les commandes audio d’écoute dans la chaîne FM simplifiée."
+      "en": "Review the superheterodyne receiver block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un récepteur superhétérodyne."
     }
   ],
   "lessonLink": {

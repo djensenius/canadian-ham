@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why the earliest receiver stage matters so much for weak VHF signals.",
-      "fr": "Revoyez pourquoi le premier étage du récepteur est si important pour les signaux VHF faibles."
+      "en": "Review the superheterodyne receiver block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un récepteur superhétérodyne."
     }
   ],
   "lessonLink": {

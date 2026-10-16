@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the FM receiver block just before the frequency-change detector.",
-      "fr": "Revoyez le bloc du récepteur FM situé juste avant le détecteur de variation de fréquence."
+      "en": "Review the superheterodyne receiver block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un récepteur superhétérodyne."
     }
   ],
   "lessonLink": {

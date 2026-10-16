@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the FM receiver block that turns the frequency changes back into recovered audio.",
-      "fr": "Revoyez le bloc du récepteur FM qui transforme les variations de fréquence en audio récupérée."
+      "en": "Review the superheterodyne receiver block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un récepteur superhétérodyne."
     }
   ],
   "lessonLink": {

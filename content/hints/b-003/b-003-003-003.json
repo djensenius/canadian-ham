@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how a superheterodyne receiver moves different received signals to a common internal frequency.",
-      "fr": "Revoyez comment un récepteur superhétérodyne déplace différents signaux reçus vers une fréquence interne commune."
+      "en": "Review the superheterodyne receiver block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un récepteur superhétérodyne."
     }
   ],
   "lessonLink": {

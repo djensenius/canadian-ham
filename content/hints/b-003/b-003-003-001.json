@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the simplified FM receiver chain from the antenna input inward.",
-      "fr": "Revoyez la chaîne simplifiée d’un récepteur FM à partir de l’entrée d’antenne."
+      "en": "Review the superheterodyne receiver block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un récepteur superhétérodyne."
     }
   ],
   "lessonLink": {

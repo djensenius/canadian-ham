@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the receiver section that handles audio level after detection.",
-      "fr": "Revoyez la section du récepteur qui traite le niveau audio après la détection."
+      "en": "Review the superheterodyne receiver block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un récepteur superhétérodyne."
     }
   ],
   "lessonLink": {
