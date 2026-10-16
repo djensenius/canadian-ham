@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the reference signal used by the SSB/CW detector.",
-      "fr": "Revoyez le signal de référence utilisé par le détecteur BLU/CW."
+      "en": "Review the SSB/CW receiver path.",
+      "fr": "Revoyez le trajet d'un récepteur BLU/CW."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the fixed-frequency passband section in the SSB/CW receiver path.",
-      "fr": "Revoyez la section de bande passante à fréquence fixe dans le trajet du récepteur BLU/CW."
+      "en": "Review the SSB/CW receiver path.",
+      "fr": "Revoyez le trajet d'un récepteur BLU/CW."
     }
   ],
   "lessonLink": {
