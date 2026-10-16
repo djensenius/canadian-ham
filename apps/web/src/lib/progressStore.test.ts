@@ -210,6 +210,15 @@ describe("ProgressStore", () => {
     assert.deepEqual(validation.data?.syncDeviceRows, malformedRows);
   });
 
+  it("normalizes pre-change IndexedDB question progress rows on read", async () => {
+    const { lastAnsweredWithHelp: _lastAnsweredWithHelp, recentAnsweredWithHelp: _recentAnsweredWithHelp, ...legacyRecord } = record;
+    const store = createStore("legacy-indexeddb-help-fields");
+
+    await store.putQuestionProgress(legacyRecord as QuestionProgressRecord);
+
+    assert.deepEqual(await store.getQuestionProgress(), [record]);
+  });
+
   it("imports older question progress and sync rows without answered-with-help fields as false", async () => {
     const { lastAnsweredWithHelp: _lastAnsweredWithHelp, recentAnsweredWithHelp: _recentAnsweredWithHelp, ...legacyRecord } = record;
     const legacyExport = validExport({
