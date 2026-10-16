@@ -33,14 +33,14 @@ struct HomeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text(bank.courseBankID == .advanced ? "Offline, private, Advanced bank" : "Offline, private, 2025 bank") // l10n: localized
+                    Text(bank.courseBankID == .advanced ? "Offline, private Advanced practice" : "Offline, private study") // l10n: localized
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                     Text(bank.courseBankID == .advanced ? "Ready for the Advanced qualification?" : "Ready for Basic with Honours?") // l10n: localized
                         .font(DesignTokens.FontScale.display.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text(bank.courseBankID == .advanced ? "Study with the bundled ISED Advanced 2025-02-04 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it and is separate from Basic." : "Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it.") // l10n: localized
+                    Text(bank.courseBankID == .advanced ? "Study for the Canadian Amateur Radio Advanced Qualification with the official ISED question bank. Advanced progress is tracked separately from Basic." : "Study for the Canadian Amateur Radio Basic Qualification with the official ISED question bank.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     homeActionLayout
