@@ -9522,13 +9522,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence supérieure avec la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence supérieure à l’aide de la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence supérieure avec la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence supérieure à l’aide de la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
           }
         }
       }
@@ -9538,13 +9538,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence de base avec la banque de questions officielle d’ISDE."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence de base à l’aide de la banque de questions officielle d’ISDE."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence de base avec la banque de questions officielle d’ISDE."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence de base à l’aide de la banque de questions officielle d’ISDE."
           }
         }
       }
@@ -10612,13 +10612,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour le manipulateur droit; utilisez J pour les points et K pour les traits. Sinon, utilisez les grandes cibles tactiles."
+            "value" : "Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour le manipulateur droit; utilisez J pour les points et K pour les traits. Sinon, utilisez les grandes cibles tactiles."
+            "value" : "Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles."
           }
         }
       }
