@@ -4,11 +4,17 @@ title: 'Hint content batch: B-008 interference and suppression'
 status: To Do
 assignee: []
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 08:12'
+updated_date: '2026-10-16 08:29'
 labels:
   - content
 dependencies:
-  - TASK-50.2
+  - TASK-50.3
+  - TASK-50.4
+  - TASK-50.5
+  - TASK-50.6
+  - TASK-50.7
+  - TASK-50.8
+  - TASK-50.9
 references:
   - content/generated/basic-2025-07-15/questions.json
   - content/explanations/b-008
