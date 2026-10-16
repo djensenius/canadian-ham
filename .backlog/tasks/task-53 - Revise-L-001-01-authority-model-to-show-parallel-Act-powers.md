@@ -29,7 +29,11 @@ L-001-01 currently teaches the Act, Regulations, and ISED standards as a linear 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect the current lesson section, figure directive, SVG, and hint anchors for L-001-01.\n2. Compare old vs revised taught facts to preserve coverage while replacing the rejected stacked authority model with the approved parallel model.\n3. Update the lesson prose, illustration brief, and any referenced figure/text equivalent if present.\n4. Regenerate/check figures, render/read the figure preview if changed, then run lesson, originality, link, hint, figure, and test commands.\n5. Record evidence, finalize TASK-53, and open the PR.
+1. Inspect the current lesson section, figure directive, SVG, and hint anchors for L-001-01.
+2. Compare old vs revised taught facts to preserve coverage while replacing the rejected stacked authority model with the approved parallel model.
+3. Update the lesson prose, illustration brief, and any referenced figure/text equivalent if present.
+4. Regenerate/check figures, render/read the figure preview if changed, then run lesson, originality, link, hint, figure, and test commands.
+5. Record evidence, finalize TASK-53, and open the PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
