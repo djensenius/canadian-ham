@@ -11,6 +11,8 @@
     "check:links": "node packages/content-tools/src/check-links.ts",
     "check:figures": "node scripts/check-figures.mjs --self-test && node scripts/check-figures.mjs",
     "check:figures:fix": "node scripts/check-figures.mjs --fix",
+    "check:hints": "pnpm --filter @canadian-ham/content-tools check:hints",
+    "check:hints:self-test": "pnpm --filter @canadian-ham/content-tools check:hints:self-test",
     "check:schemas": "pnpm --filter @canadian-ham/schemas test",
     "check:apple-network": "bash scripts/check-apple-no-network.sh",
     "check:apple-icloud-gate": "node scripts/check-apple-icloud-gate.mjs",

@@ -1,10 +1,17 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { checkMarkdownLinks } from "../src/check-links.ts";
+import { checkMarkdownLinks, slugForHeadingText } from "../src/check-links.ts";
+
+const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
+
+type LessonHeadingAnchorFixture = {
+  readonly slugCases: ReadonlyArray<{ readonly name: string; readonly headingText: string; readonly expectedSlug: string }>;
+};
 
 async function withTempRepo(run: (root: string) => Promise<void>): Promise<void> {
   const root = await mkdtemp(path.join(tmpdir(), "canadian-ham-links-"));
@@ -14,6 +21,13 @@ async function withTempRepo(run: (root: string) => Promise<void>): Promise<void>
     await rm(root, { recursive: true, force: true });
   }
 }
+
+test("slugForHeadingText matches the shared lesson-heading fixture", async () => {
+  const fixture = JSON.parse(await readFile(path.join(repoRoot, "fixtures/lesson-heading-anchors.json"), "utf8")) as LessonHeadingAnchorFixture;
+  for (const slugCase of fixture.slugCases) {
+    assert.equal(slugForHeadingText(slugCase.headingText), slugCase.expectedSlug, slugCase.name);
+  }
+});
 
 test("checkMarkdownLinks verifies relative Markdown file and anchor targets", async () => {
   await withTempRepo(async (root) => {

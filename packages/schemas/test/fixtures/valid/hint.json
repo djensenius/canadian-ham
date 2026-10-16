@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-001-001",
+  "questionId": "B-001-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Think about the licence document and the permission it gives before any station operation.",
+      "fr": "Pensez au document d'autorisation et à la permission qu'il donne avant toute exploitation de station."
+    },
+    {
+      "level": 2,
+      "en": "The permission to transmit rests on a legal authority, not on station hardware details.",
+      "fr": "La permission d'émettre repose sur une autorité juridique, et non sur les détails matériels de la station."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "how-these-rules-fit-together"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
