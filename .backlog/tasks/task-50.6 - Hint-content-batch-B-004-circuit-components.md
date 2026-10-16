@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:54'
+updated_date: '2026-10-16 15:05'
 labels:
   - content
 dependencies:
@@ -65,6 +65,8 @@ Validation passed after implementation:
 - pnpm typecheck
 - pnpm test
 Manual self-review: applied EN/FR literal-option self-test, checked hint prose avoids reference-sheet pointer text/copying, and checked the four two-level numeric/method hints do not state final answer values or band ordinals. Content-review acceptance criteria remain for reviewer.
+
+Review fix round for PR #271 (batch review r271): addressed all listed B-004 findings across 33 hint files. Reworked 006-005/006-010/006-011 two-level colour-code hints so Hint 2 sets up the table/method without naming matching digits, multiplier band, or final value; 006-005 resolves orange-orange-black vs orange-white-black (second band), 006-010 resolves brown-red-brown vs brown-red-red (third band), and 006-011 leaves 27 + four zeros -> 270 kΩ for the learner. Rewrote answer-bearing single-level pointers to neutral section-level topics in EN/FR, applied the literal option self-test in both languages, fixed FR terminology/calques, and updated 005-003 lesson link to triode-vacuum-tubes. Counts remain 63/63 B-004 hints: 59 single-level and 4 two-level. Validation passed: pnpm check:hints -- --category B-004 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
