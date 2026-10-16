@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:16'
+updated_date: '2026-10-16 14:18'
 labels:
   - content
 dependencies:
@@ -43,3 +43,9 @@ Write and review original EN/FR hint content for B-002 operating procedure quest
 <!-- SECTION:PLAN:BEGIN -->
 1. Read hint rules, teaching guide, B-001 examples, M2 lessons, B-002 explanations, and question metadata before writing.\n2. Implement B-002 one subsection at a time by hand, choosing two-level hints where reasoning is possible and single-level topic pointers for pure recall.\n3. After each subsection, run pnpm check:hints for that subsection with --require-complete, commit, push, and append progress notes.\n4. Stop after the first two subsections with six EN/FR calibration samples including questions, options, and correct answers before continuing.\n5. After approval, finish remaining subsections and run the full required validation suite before PR handoff.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Completed B-002-001 repeater procedure hints: 10 two-level, 1 single-level recall. Validation: pnpm check:hints -- --subsection B-002-001 --require-complete passed. Commit: e329dfe5a406ad4f20e980f17dcd62ed6a53cf6e.
+<!-- SECTION:NOTES:END -->
