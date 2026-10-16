@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "A decrease of 6 dB is one quarter of the power. Apply that ratio to the starting transmitter power.",
-      "fr": "Une diminution de 6 dB correspond au quart de la puissance. Appliquez ce rapport à la puissance d’émission de départ."
+      "en": "Recall how many decibels make one halving of power, count how many halvings fit in the stated drop, then apply them to the starting transmitter power.",
+      "fr": "Rappelez-vous combien de décibels correspondent à une division de la puissance par deux, comptez combien de ces divisions tiennent dans la baisse indiquée, puis appliquez-les à la puissance d’émission de départ."
     }
   ],
   "lessonLink": {

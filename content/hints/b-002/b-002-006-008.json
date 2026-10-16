@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "A rise of 6 dB is two power doublings. Convert those doublings into a single multiplier.",
-      "fr": "Une hausse de 6 dB correspond à deux doublements de puissance. Convertissez ces doublements en un seul multiplicateur."
+      "en": "Recall how many decibels make one doubling of power, count how many doublings fit in the stated rise, then turn them into a single multiplier.",
+      "fr": "Rappelez-vous combien de décibels correspondent à un doublement de la puissance, comptez combien de doublements tiennent dans la hausse indiquée, puis convertissez-les en un seul multiplicateur."
     }
   ],
   "lessonLink": {
