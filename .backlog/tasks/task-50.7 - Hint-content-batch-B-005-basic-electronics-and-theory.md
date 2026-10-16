@@ -1,11 +1,11 @@
 ---
 id: TASK-50.7
 title: 'Hint content batch: B-005 basic electronics and theory'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:39'
+updated_date: '2026-10-16 15:39'
 labels:
   - content
 dependencies:
@@ -30,12 +30,12 @@ Write and review original EN/FR hint content for B-005 electronics and theory qu
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
-- [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
-- [ ] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
-- [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
-- [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
-- [ ] #6 All in-scope B-005 basic electronics and theory active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
+- [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [x] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [x] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [x] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [x] #6 All in-scope B-005 basic electronics and theory active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -80,4 +80,12 @@ Finished B-005 hint content: 142/142 active questions covered (101 two-level, 41
 Opened PR #269 (task-50.7: B-005 hints) with per-subsection counts, 10 EN/FR samples with options, and checks run; added @copilot as reviewer.
 
 PR #269 review fixes applied in 03a987aca062f37c0e82170d970aefcb603d17c8: corrected B-005-001-001 mega/kilo factual error; converted definition/concept leaks to neutral single-level pointers; rewrote method hints flagged for answer/option leakage; fixed FR terminology/style and lesson-link anchors; added the README rule that concept-question principles cannot restate the answer. Updated B-005 counts: 142 files, 88 two-level, 54 single-level. Manual EN/FR option self-test applied to every touched hint file. Validation passed: pnpm check:hints -- --category B-005 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
+
+Coordinator closeout 2026-10-16: batch content review completed (review files ~/.cache/canadian-ham-reviews/r269*.md), all findings fixed and coordinator spot-checked against ISED options; merged in PR #269.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Hand-written EN/FR hints for every active question in this category, reviewed (no answer leakage, no elimination, neutral section-level pointers, verified method hints), merged in PR #269.
+<!-- SECTION:FINAL_SUMMARY:END -->

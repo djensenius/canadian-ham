@@ -1,11 +1,11 @@
 ---
 id: TASK-50.8
 title: 'Hint content batch: B-006 feeders and antennas'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:05'
+updated_date: '2026-10-16 15:39'
 labels:
   - content
 dependencies:
@@ -30,12 +30,12 @@ Write and review original EN/FR hint content for B-006 feeder and antenna questi
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
-- [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
-- [ ] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
-- [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
-- [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
-- [ ] #6 All in-scope B-006 feeders and antennas active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
+- [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [x] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [x] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [x] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [x] #6 All in-scope B-006 feeders and antennas active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -52,4 +52,12 @@ Two-level justifications: B-006-006-011: learner must compute/derive impedance t
 Implementation handoff: drafted 140/140 active B-006 hint files under content/hints/b-006 with lessonLink metadata and referenceSheetSection where formulas apply. Subsection checks passed for B-006-001 through B-006-013 with --require-complete; full B-006 check, hint self-test, schemas, explanations, lesson originality, typecheck, and test all passed locally. Content review is still required for AC #2/#4/#5 before finalizing the task.
 
 Review fix pass for PR #270 (batch review r270.md): neutralized every flagged single-level pointer and FR terminology issue, added README examples of narrowing pointers, kept the original 16 reviewed calculation ladders with only the requested wording/anchor notes, and upgraded four reviewer-proposed real calculations: B-006-004-009 (40/20 => 100% added loss), B-006-008-001 (143/3.9 vs 143/3.6 => longer), B-006-008-002 (143/3.6 vs 143/3.9 => shorter), and B-006-008-004 (300/f speed conversion => 300 000 km/s). Counts now: 140 B-006 files, 120 one-level, 20 two-level, reference pointers 16 wavelength/dipole + 1 decibel + 123 null. Validation passed: pnpm check:hints -- --category B-006 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
+
+Coordinator closeout 2026-10-16: batch content review completed (review files ~/.cache/canadian-ham-reviews/r270*.md), all findings fixed and coordinator spot-checked against ISED options; merged in PR #270.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Hand-written EN/FR hints for every active question in this category, reviewed (no answer leakage, no elimination, neutral section-level pointers, verified method hints), merged in PR #270.
+<!-- SECTION:FINAL_SUMMARY:END -->

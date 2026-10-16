@@ -1,11 +1,11 @@
 ---
 id: TASK-50.9
 title: 'Hint content batch: B-007 propagation'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:30'
+updated_date: '2026-10-16 15:39'
 labels:
   - content
 dependencies:
@@ -31,7 +31,7 @@ Write and review original EN/FR hint content for B-007 propagation questions.
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
-- [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [x] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
 - [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
 - [x] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
 - [x] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
@@ -54,10 +54,12 @@ Implemented B-007 hint files for all 87 active questions (B-007-001: 10, B-007-0
 Validation passed: per-subsection pnpm check:hints -- --subsection B-007-001 through B-007-008 --require-complete before each subsection commit; final pnpm check:hints -- --category B-007 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Content reviewer AC #2 remains pending for the parent review gate.
 
 Review round for PR #273 (r273.md): fixed all high/medium/low reviewer findings by neutralizing 37 B-007 hint pointers. Converted B-007-003-006, B-007-003-010, and B-007-003-011 from two-level sketch ladders to single-level topic pointers with singleLevelReason because the available method named launch angle or the geometry reason clause. Remaining two-level method file after this round: B-007-006-005: learner must compute/derive approximate band name from 28 MHz using 300/f and match same-band evidence; the hint never states 10 metres or beacon as the answer property. Read EN/FR options for every touched file and applied the literal option self-test while editing. Validation passed after fixes: pnpm check:hints -- --category B-007 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
+
+Coordinator closeout 2026-10-16: batch content review completed (review files ~/.cache/canadian-ham-reviews/r273*.md), all findings fixed and coordinator spot-checked against ISED options; merged in PR #273.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented original EN/FR hints for all 87 active B-007 propagation questions with four two-level method ladders and singleLevelReason on every one-level file; automated hint/schema/explanation/originality/typecheck/test checks pass. Pending independent content reviewer check for AC #2.
+Hand-written EN/FR hints for every active question in this category, reviewed (no answer leakage, no elimination, neutral section-level pointers, verified method hints), merged in PR #273.
 <!-- SECTION:FINAL_SUMMARY:END -->

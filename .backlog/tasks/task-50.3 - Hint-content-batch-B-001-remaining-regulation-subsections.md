@@ -1,11 +1,11 @@
 ---
 id: TASK-50.3
 title: 'Hint content batch: B-001 remaining regulation subsections'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:12'
+updated_date: '2026-10-16 15:39'
 labels:
   - content
 dependencies:
@@ -30,12 +30,12 @@ Write and review original EN/FR hint content for B-001 after the B-001-001 pilot
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
-- [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
-- [ ] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
-- [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
-- [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
-- [ ] #6 All in-scope B-001 remaining regulation active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
+- [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [x] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [x] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [x] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [x] #6 All in-scope B-001 remaining regulation active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -138,4 +138,12 @@ Opened PR #267 (task-50.3: B-001 hints) with per-subsection counts, 10 EN/FR sam
 Addressed PR #267 batch review at head 62a0bfd7. Rewrote all listed leaking/leaning B-001 topic pointers; upgraded reviewed method-capable questions to two-level hints (remaining batch now 33 two-level / 162 B single-level; category total 35 two-level / 164 B); fixed B-001-015-006/-007/-008 band-method selection issues; updated FR terminology; tightened shared short-correct-answer checker with a self-test; updated README and PR body with counts, 8 review-round samples, and a finding-to-fix table. Validation passed: pnpm check:hints:self-test; pnpm check:hints -- --category B-001 --require-complete; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Commit: ab41e98d868f19afa54bb3d431ae50fbcd835488.
 
 Addressed PR #267 re-review at head 616d1f7b. Fixed every summary-table and sections 1–4 item: high leaks, leaning/elimination pointers, 015-008/015-009 band methods, lesson anchors, off-topic/inaccurate pointers, EN/FR terminology, 025-001 affected-equipment wording, and README example wording. Re-applied the README literal option self-test to every touched hint file in EN and FR, per level and combined levels. Counts unchanged: remaining batch 195 hints = 33 two-level / 162 B single-level; category total 199 hints = 35 two-level / 164 B. Validation passed: pnpm check:hints:self-test; pnpm check:hints -- --category B-001 --require-complete; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. PR body updated with re-review finding-to-fix table and counts. Commit: e5dce74da28cfe227bd013227cc9b2ab65f7c263.
+
+Coordinator closeout 2026-10-16: batch content review completed (review files ~/.cache/canadian-ham-reviews/r267*.md), all findings fixed and coordinator spot-checked against ISED options; merged in PR #267.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Hand-written EN/FR hints for every active question in this category, reviewed (no answer leakage, no elimination, neutral section-level pointers, verified method hints), merged in PR #267.
+<!-- SECTION:FINAL_SUMMARY:END -->
