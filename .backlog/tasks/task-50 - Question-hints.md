@@ -1,0 +1,27 @@
+---
+id: TASK-50
+title: Question hints
+status: To Do
+assignee: []
+created_date: '2026-10-16 07:57'
+labels: []
+dependencies: []
+documentation:
+  - docs/teaching-guide.md
+  - docs/content-licensing.md
+priority: medium
+type: feature
+ordinal: 114000
+---
+
+## Description
+
+<!-- SECTION:DESCRIPTION:BEGIN -->
+Owner-approved feature (2026-10-15): add per-question hints for the active ISED Basic bank, EN and FR, as original project content separate from official ISED data. Decisions: hints appear in practice and review sessions only, never mock exams; lesson quizzes are out of scope and need a future owner decision; each question has a two-step ladder where Hint 1 nudges the concept/formula/reference-sheet area and Hint 2 works the setup without giving the answer; answering after any hint records answered with help, does not count toward mastery or weak-area clearing, and returns sooner in spaced review; hints may point to a reference-sheet section in plain words only where that sheet is available and must never copy sheet content; initial platform order is content schema/checker/hint writing, then web UI in the existing exam-tools panel, then iOS/iPadOS/macOS after task-44.3, with tvOS/visionOS later. Content must never restate the correct answer, option text, or question wording; use docs/teaching-guide.md style including SI spacing, x for multiply, and E for voltage; include automated leakage/originality checks.
+<!-- SECTION:DESCRIPTION:END -->
+
+## Acceptance Criteria
+<!-- AC:BEGIN -->
+- [ ] #1 The Basic bank has tracked subtasks for schema/checking, pilot content, category content batches, web UI, Apple UI, tvOS/visionOS follow-up, and lesson-quiz follow-up.
+- [ ] #2 Implementation order and owner decisions from 2026-10-15 are recorded so future workers do not add hints to mock exams or lesson quizzes without approval.
+<!-- AC:END -->
