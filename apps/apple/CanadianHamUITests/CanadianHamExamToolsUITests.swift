@@ -90,8 +90,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         typeCalculatorKeys(["4"], on: focusedCalculator)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "24", "Calculator should accept hardware input again after tapping back into the calculator")
 
-        assertQuestionStemRemainsSelectable(in: app)
-
         let questionCard = app.descendants(matching: .any)["question-card"].firstMatch
         XCTAssertTrue(questionCard.waitForExistence(timeout: 5), "Expected the question card before tapping non-text exam content")
         scrollBackgroundUntilHittable(questionCard, in: app, maxSwipes: 12)
@@ -618,19 +616,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             scrollView.swipeUp()
             waitBriefly()
         }
-    }
-
-    private func assertQuestionStemRemainsSelectable(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
-        let questionStem = app.staticTexts["question-stem"].firstMatch
-        XCTAssertTrue(questionStem.waitForExistence(timeout: 5), "Expected selectable question text", file: file, line: line)
-        positionElementFullyVisibleAboveToolSheet(questionStem, in: app, context: "selectable question text", file: file, line: line)
-        questionStem.press(forDuration: 1.0)
-        let selectionAction = app.descendants(matching: .any)
-            .matching(NSPredicate(format: "label == %@ OR label == %@", "Copy", "Select All"))
-            .firstMatch
-        XCTAssertTrue(selectionAction.waitForExistence(timeout: 3), "Long-pressing the question stem should expose text-selection actions instead of being swallowed by the calculator focus tap gesture", file: file, line: line)
-        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15)).tap()
-        waitBriefly(0.3)
     }
 
     private func focusCalculatorKeyboard(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {

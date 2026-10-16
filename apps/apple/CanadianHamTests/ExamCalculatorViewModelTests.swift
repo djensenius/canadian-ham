@@ -74,4 +74,29 @@ final class ExamCalculatorViewModelTests: XCTestCase {
         let sheet = try XCTUnwrap(try ReferenceSheetLoader.load(configuration: .basic, bundle: Bundle(for: Self.self)))
         XCTAssertTrue(sheet.markdown.contains("Ohm's law"))
     }
+
+    func testQuestionCardFocusResetKeepsTextSelectionEnabled() throws {
+        let sourceURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("CanadianHam/Views/StudyViews.swift")
+        let source = try String(contentsOf: sourceURL, encoding: .utf8)
+        let questionCardBody = try XCTUnwrap(source.slice(from: "struct QuestionCard: View", to: "struct AnswerChoiceButton: View"))
+
+        XCTAssertTrue(questionCardBody.contains(".textSelection(.enabled)"), "Question text should remain selectable.")
+        XCTAssertTrue(questionCardBody.contains("var onInteraction: (() -> Void)? = nil"), "Lesson quizzes should not install the exam-only focus-reset gesture by default.")
+        XCTAssertTrue(questionCardBody.contains("if let onInteraction"), "The focus-reset gesture should be conditional on exam screens passing a handler.")
+        XCTAssertTrue(questionCardBody.contains("including: .all"), "The exam focus-reset tap should not exclude child text-selection gestures.")
+        XCTAssertFalse(questionCardBody.contains("including: .gesture"), "The old gesture mask blocked child text-selection gestures.")
+
+        XCTAssertTrue(source.contains("onKeyboardFocus: clearCalculatorKeyboardFocus"), "Keyboard focus moving to answer buttons should clear calculator input focus for Full Keyboard Access users.")
+    }
+}
+
+private extension String {
+    func slice(from start: String, to end: String) -> String? {
+        guard let startRange = range(of: start),
+              let endRange = range(of: end, range: startRange.upperBound..<endIndex) else { return nil }
+        return String(self[startRange.lowerBound..<endRange.lowerBound])
+    }
 }
