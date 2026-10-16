@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:24'
+updated_date: '2026-10-16 14:26'
 labels:
   - content
 dependencies:
@@ -30,12 +30,12 @@ Write and review original EN/FR hint content for B-002 operating procedure quest
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
 - [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
-- [ ] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
 - [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
 - [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
-- [ ] #6 All in-scope B-002 operating procedures active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
+- [x] #6 All in-scope B-002 operating procedures active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -66,4 +66,12 @@ Completed B-002-007 Q-signal hints: 0 two-level, 11 single-level recall. Validat
 Completed B-002-008 emergency procedure hints: 8 two-level, 3 single-level recall/priority. Validation: pnpm check:hints -- --subsection B-002-008 --require-complete passed. Commit: 190586a344775ce6a54d94d09c62769a1f3dea6b.
 
 Completed B-002-009 records/maps/time hints: 5 two-level, 6 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-009 --require-complete passed. Commit: 5781e1b72e6ce6b37253d06844fef3ab27d23b8b.
+
+Full batch completed. Counts: B-002-001 9 two-level/2 single-level; B-002-002 0/11; B-002-003 8/3; B-002-004 9/2; B-002-005 3/8; B-002-006 9/2; B-002-007 0/11; B-002-008 8/3; B-002-009 5/6. Total: 51 two-level, 48 single-level. Validation passed: pnpm check:hints -- --category B-002 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Review AC #2/#4/#5 remain for content reviewer/PR review.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented original EN/FR hints for all 99 active B-002 questions plus the definition-question style rule in content/hints/README.md. Verified completeness and leakage with full B-002 hint checks and the required schema, explanation, originality, typecheck, and test suite; content review criteria remain pending PR review.
+<!-- SECTION:FINAL_SUMMARY:END -->
