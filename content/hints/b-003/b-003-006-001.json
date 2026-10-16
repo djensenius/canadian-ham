@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the fixed-frequency source in the SSB transmitter block diagram.",
-      "fr": "Revoyez la source à fréquence fixe dans le schéma fonctionnel d’un émetteur BLU."
+      "en": "Review the SSB transmitter path.",
+      "fr": "Revoyez le trajet d'un émetteur BLU."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review which variable source sets the final frequency in the SSB transmitter path.",
-      "fr": "Revoyez quelle source variable règle la fréquence finale dans le trajet de l’émetteur BLU."
+      "en": "Review the SSB transmitter path.",
+      "fr": "Revoyez le trajet d'un émetteur BLU."
     }
   ],
   "lessonLink": {

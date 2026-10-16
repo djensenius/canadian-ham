@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what happens to the two sidebands after the balanced-modulator block.",
-      "fr": "Revoyez ce qui arrive aux deux bandes latérales après le bloc du modulateur équilibré."
+      "en": "Review the SSB transmitter path.",
+      "fr": "Revoyez le trajet d'un émetteur BLU."
     }
   ],
   "lessonLink": {

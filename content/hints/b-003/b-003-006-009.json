@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the block that first combines speech audio with an RF source in the SSB path.",
-      "fr": "Revoyez le bloc qui combine d’abord l’audio de la parole avec une source RF dans le trajet BLU."
+      "en": "Review the SSB transmitter path.",
+      "fr": "Revoyez le trajet d'un émetteur BLU."
     }
   ],
   "lessonLink": {

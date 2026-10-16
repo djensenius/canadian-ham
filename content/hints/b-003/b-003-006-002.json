@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why the small microphone signal needs an early audio stage in an SSB transmitter.",
-      "fr": "Revoyez pourquoi le faible signal du microphone a besoin d’un premier étage audio dans un émetteur BLU."
+      "en": "Review the SSB transmitter path.",
+      "fr": "Revoyez le trajet d'un émetteur BLU."
     }
   ],
   "lessonLink": {

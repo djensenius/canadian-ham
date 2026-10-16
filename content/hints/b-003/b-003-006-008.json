@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review where load-protection monitoring belongs in the SSB transmitter power chain.",
-      "fr": "Revoyez où se trouve la surveillance de protection de charge dans la chaîne de puissance d’un émetteur BLU."
+      "en": "Review the SSB transmitter path.",
+      "fr": "Revoyez le trajet d'un émetteur BLU."
     }
   ],
   "lessonLink": {
