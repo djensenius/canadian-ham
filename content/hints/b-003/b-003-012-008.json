@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how microphone gain is set by watching peak limiting guidance, not by chasing the largest indication.",
-      "fr": "Revoyez comment le gain du microphone se règle avec l’indication des crêtes permises, et non en cherchant la plus grande indication."
+      "en": "Review SSB amplification and level control.",
+      "fr": "Revoyez l'amplification et le contrôle de niveau en BLU."
     }
   ],
   "lessonLink": {

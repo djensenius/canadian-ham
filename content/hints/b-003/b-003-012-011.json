@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the transmitter level-control system that keeps voice peaks inside the clean range.",
-      "fr": "Revoyez le système de commande de niveau de l’émetteur qui garde les crêtes de voix dans la zone propre."
+      "en": "Review SSB amplification and level control.",
+      "fr": "Revoyez l'amplification et le contrôle de niveau en BLU."
     }
   ],
   "lessonLink": {

@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review what carrier suppression changes in a double-sideband voice signal’s power use.",
-      "fr": "Revoyez ce que la suppression de la porteuse change dans l’utilisation de la puissance d’un signal vocal à double bande latérale."
+      "en": "Review SSB amplification and level control.",
+      "fr": "Revoyez l'amplification et le contrôle de niveau en BLU."
     }
   ],
   "lessonLink": {
