@@ -36,6 +36,14 @@ Apply these constraints to every hint file:
 
 The checker deliberately treats some short distractor words as meaningful when they are the whole option. That can create safe false positives for common words such as "never"/"jamais"; rewrite the hint instead of weakening the checker unless a reviewer approves a narrower rule. The distinctive two-word check can also safely over-flag common phrases from long answers, such as "transmitter power", "ground wave", or "radio energy"; treat those as review prompts and rephrase rather than weakening the batch checker.
 
+## Good vs bad hint examples
+
+Bad hints tell the learner to sort the question into generic buckets, reuse the same setup across many unrelated questions, or say to use the table row. For example, "Decide whether this is prohibited conduct, a process safeguard, or a consequence" is too generic for a false-distress penalty question, and "use the table row" is just a lookup instruction.
+
+A good Hint 1 is specific to the question's concept without naming or eliminating an option. For a false-distress penalty question, a better Hint 1 is: "Misusing distress signals endangers lives, so the Act treats it as one of the more serious radio offences, and the penalty can combine more than one kind of punishment." It points at seriousness and structure without stating the exact penalty.
+
+A good Hint 2 teaches the reasoning or distinction the question turns on. Shared distinctions are allowed only when the questions truly share the same idea, and even then the wording should be tailored to the current question. For pure recall facts where any useful Hint 2 would give away the answer, use a one-level ladder and include `singleLevelReason`.
+
 ## Reviewer checklist
 
 For each batch, reviewers should verify that hints:
