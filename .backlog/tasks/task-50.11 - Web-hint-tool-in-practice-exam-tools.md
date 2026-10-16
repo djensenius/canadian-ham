@@ -4,7 +4,7 @@ title: Web hint tool in practice exam tools
 status: To Do
 assignee: []
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 11:49'
+updated_date: '2026-10-16 12:06'
 labels:
   - web
 dependencies:
@@ -37,6 +37,6 @@ Add the Hint tool to the existing web practice/review exam-tools panel after Bas
 - [ ] #4 Web tests cover availability by session type, accessibility/keyboard behaviour, EN/FR display, and progress/spaced-review effects.
 - [ ] #5 Reference-sheet pointer labels from referenceSheetSection are shown only when the web reference sheet is available for the session and hidden otherwise.
 - [ ] #6 Hint data is bundled into the web build so practice/review hints work offline with the active Basic bank.
-- [ ] #7 A localized "Review in lesson" link from lessonLink opens the linked lesson at sectionAnchor without discarding the in-progress practice/review session.
+- [ ] #7 A localized "Review in lesson" link from lessonLink appears with the last available hint level (Hint 2 for two-level files, Hint 1 for one-level files), notes in French UI that current lesson bodies are English-only, opens the linked lesson at sectionAnchor without discarding the in-progress practice/review session, and the web lesson reader generates anchors with the shared fixtures/lesson-heading-anchors.json algorithm.
 - [ ] #8 The hint tool handles one-level hint files by presenting only Hint 1, with no empty or broken Hint 2 affordance.
 <!-- AC:END -->
