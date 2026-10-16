@@ -2,6 +2,25 @@ import Foundation
 import XCTest
 @testable import CanadianHamContent
 
+private struct LessonHeadingAnchorFixture: Decodable {
+    struct SlugCase: Decodable {
+        let name: String
+        let headingText: String
+        let expectedSlug: String
+    }
+
+    struct AnchorCase: Decodable {
+        let name: String
+        let title: String?
+        let markdown: String
+        let expectedAnchors: [String]
+        let rejectedAnchors: [String]
+    }
+
+    let slugCases: [SlugCase]
+    let anchorCases: [AnchorCase]
+}
+
 final class ContentLibraryTests: XCTestCase {
     func testLoadsRealRepositoryContent() throws {
         let library = try ContentLibrary.load(fromDirectory: repoRootURL())
@@ -132,6 +151,21 @@ final class ContentLibraryTests: XCTestCase {
         for fixture in fixtures {
             let rendered = try LessonMarkdownRenderer.render(fixture.markdown)
             XCTAssertEqual(simplifiedBlocks(rendered.blocks), fixture.expected, fixture.name)
+        }
+    }
+
+    func testSharedLessonHeadingAnchorFixtures() throws {
+        let fixtureURL = try repoRootURL().appendingPathComponent("fixtures/lesson-heading-anchors.json")
+        let fixture = try JSONDecoder().decode(LessonHeadingAnchorFixture.self, from: Data(contentsOf: fixtureURL))
+        for slugCase in fixture.slugCases {
+            XCTAssertEqual(LessonMarkdownRenderer.headingAnchorSlug(for: slugCase.headingText), slugCase.expectedSlug, slugCase.name)
+        }
+        for anchorCase in fixture.anchorCases {
+            let anchors = try LessonMarkdownRenderer.headingAnchors(for: anchorCase.markdown, title: anchorCase.title)
+            XCTAssertEqual(anchors, anchorCase.expectedAnchors, anchorCase.name)
+            for rejectedAnchor in anchorCase.rejectedAnchors {
+                XCTAssertFalse(anchors.contains(rejectedAnchor), "\(anchorCase.name): \(rejectedAnchor)")
+            }
         }
     }
 

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { render, screen } from "@testing-library/react";
 import { describe, it } from "vitest";
 
-import { MarkdownContent, parseMarkdownBlocks } from "./MarkdownContent";
+import { lessonHeadingAnchorSlug, lessonHeadingAnchors, MarkdownContent, parseMarkdownBlocks } from "./MarkdownContent";
 
 interface FigureDirectiveFixture {
   readonly name: string;
@@ -13,11 +13,18 @@ interface FigureDirectiveFixture {
   readonly expected: readonly Record<string, unknown>[];
 }
 
+interface LessonHeadingAnchorFixture {
+  readonly slugCases: ReadonlyArray<{ readonly name: string; readonly headingText: string; readonly expectedSlug: string }>;
+  readonly anchorCases: ReadonlyArray<{ readonly name: string; readonly title: string | null; readonly markdown: string; readonly expectedAnchors: readonly string[]; readonly rejectedAnchors: readonly string[] }>;
+}
+
 const moduleUrl = new URL(import.meta.url);
 const modulePath = moduleUrl.protocol === "file:"
   ? fileURLToPath(moduleUrl)
   : join(process.cwd(), moduleUrl.pathname.replace(/^\/+/, ""));
-const figureDirectiveFixtures = JSON.parse(readFileSync(join(dirname(modulePath), "../../../../fixtures/markdown-figure-directives.json"), "utf8")) as FigureDirectiveFixture[];
+const fixturesRoot = join(dirname(modulePath), "../../../../fixtures");
+const figureDirectiveFixtures = JSON.parse(readFileSync(join(fixturesRoot, "markdown-figure-directives.json"), "utf8")) as FigureDirectiveFixture[];
+const lessonHeadingAnchorFixture = JSON.parse(readFileSync(join(fixturesRoot, "lesson-heading-anchors.json"), "utf8")) as LessonHeadingAnchorFixture;
 
 function simplifiedBlocks(markdown: string) {
   return parseMarkdownBlocks(markdown).map((block) => {
@@ -41,6 +48,22 @@ describe("MarkdownContent parser", () => {
   for (const fixture of figureDirectiveFixtures) {
     it(`matches shared figure-directive fixture: ${fixture.name}`, () => {
       assert.deepEqual(simplifiedBlocks(fixture.markdown), fixture.expected);
+    });
+  }
+
+  for (const slugCase of lessonHeadingAnchorFixture.slugCases) {
+    it(`matches shared heading slug fixture: ${slugCase.name}`, () => {
+      assert.equal(lessonHeadingAnchorSlug(slugCase.headingText), slugCase.expectedSlug);
+    });
+  }
+
+  for (const anchorCase of lessonHeadingAnchorFixture.anchorCases) {
+    it(`matches shared rendered-heading anchor fixture: ${anchorCase.name}`, () => {
+      const anchors = lessonHeadingAnchors(anchorCase.markdown, anchorCase.title ?? undefined);
+      assert.deepEqual(anchors, anchorCase.expectedAnchors);
+      for (const rejectedAnchor of anchorCase.rejectedAnchors) {
+        assert.equal(anchors.includes(rejectedAnchor), false, rejectedAnchor);
+      }
     });
   }
 

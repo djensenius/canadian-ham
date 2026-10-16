@@ -161,6 +161,43 @@ public enum LessonMarkdownRenderer {
         }) ?? []
     }
 
+    public static func headingAnchorSlug(for headingText: String) -> String {
+        let withoutCode = replaceMatches(in: headingText.trimmingCharacters(in: .whitespacesAndNewlines), pattern: #"`([^`]+)`"#, template: "$1")
+        let withoutHTML = replaceMatches(in: withoutCode, pattern: #"<[^>]+>"#, template: "")
+        let lowercased = withoutHTML.lowercased()
+        let filteredScalars = lowercased.unicodeScalars.filter { scalar in
+            CharacterSet.letters.contains(scalar) || CharacterSet.decimalDigits.contains(scalar) || CharacterSet.whitespacesAndNewlines.contains(scalar) || scalar == "-"
+        }
+        let filtered = String(String.UnicodeScalarView(filteredScalars)).trimmingCharacters(in: .whitespacesAndNewlines)
+        var result = ""
+        for scalar in filtered.unicodeScalars {
+            result += CharacterSet.whitespacesAndNewlines.contains(scalar) ? "-" : String(scalar)
+        }
+        return result
+    }
+
+    public static func headingAnchors(for markdown: String, title: String? = nil) throws -> [String] {
+        var seen: [String: Int] = [:]
+        var anchors: [String] = []
+        for block in try parseBlocks(from: markdown) {
+            guard case let .heading(level, attributedText) = block else {
+                continue
+            }
+            let text = String(attributedText.characters)
+            if level == 1, let title, text == title {
+                continue
+            }
+            let baseSlug = headingAnchorSlug(for: text)
+            guard !baseSlug.isEmpty else {
+                continue
+            }
+            let previousCount = seen[baseSlug, default: 0]
+            seen[baseSlug] = previousCount + 1
+            anchors.append(previousCount == 0 ? baseSlug : "\(baseSlug)-\(previousCount)")
+        }
+        return anchors
+    }
+
     private static func parseBlocks(from markdown: String) throws -> [LessonBlock] {
         let normalized = markdown.replacingOccurrences(of: "\r\n", with: "\n")
         let lines = normalized.components(separatedBy: "\n")
@@ -226,6 +263,14 @@ public enum LessonMarkdownRenderer {
         }
 
         return blocks
+    }
+
+    private static func replaceMatches(in value: String, pattern: String, template: String) -> String {
+        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+            return value
+        }
+        let range = NSRange(value.startIndex..<value.endIndex, in: value)
+        return regex.stringByReplacingMatches(in: value, range: range, withTemplate: template)
     }
 
     private static func inlineAttributedString(for markdown: String) throws -> AttributedString {

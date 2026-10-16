@@ -10,7 +10,7 @@ Each Basic question hint file uses `packages/schemas/hint.schema.json`:
 - `status`: content workflow state.
 - `hints`: one or two entries with original English and French text. Level 1 is required; level 2 is optional only for approved single-level recall cases.
 - `singleLevelReason`: required when `hints` contains only level 1. Record why a useful level 2 would give away the answer.
-- `lessonLink`: `{ lessonId, sectionAnchor? }` pointing to the lesson section that teaches the hint topic. The checker verifies the lesson ID and heading anchor using the same GitHub-style slug rules as the lesson-link checker: lowercase, strip inline code markers and HTML tags, drop punctuation except hyphens, and replace each whitespace character with `-`; duplicate headings receive `-1`, `-2`, and so on.
+- `lessonLink`: `{ lessonId, sectionAnchor? }` pointing to the lesson section that teaches the hint topic. The checker verifies that the lesson exists, covers the question's subsection, and exposes the heading anchor rendered by the lesson readers. The shared slug rules are: lowercase, strip inline code markers and HTML tags, drop punctuation except hyphens, and replace each whitespace character with `-`; duplicate headings receive `-1`, `-2`, and so on. The depth-1 lesson title and `Illustration brief` author section are not linkable.
 - `referenceSheetSection`: a section key for UI-provided reference-sheet pointers, or `null`/omitted when no pointer applies. Hint prose should remain generic so apps can hide the pointer when the reference sheet is unavailable.
 - `licenseClass`: `original`.
 
@@ -29,12 +29,12 @@ Apply these constraints to every hint file:
 
 - Hints must never eliminate answer options. Do not paraphrase, list, contrast with, or otherwise point at wrong options.
 - Do not name the correct answer, copy distinctive words from it, or point at those distinctive words with near-synonyms.
-- Do not connect the asked-for function to one option in Hint 2. Shared distinctions are fine; directly stating another question's answer is not.
+- Do not connect the asked-for function to one option in any hint level or across levels. Shared distinctions are fine; directly stating another question's answer is not.
 - Each hint must stand alone. Do not say "same as the previous question" or depend on practice order, because questions are randomized.
 - Use natural French with one term per concept across files. Prefer ISED terminology, including `stations de radioamateur`.
 - Reference-sheet pointers belong in `referenceSheetSection`, not in hint prose. The UI decides whether a pointer label is available.
 
-The checker deliberately treats some short distractor words as meaningful when they are the whole option. That can create safe false positives for common words such as "never"/"jamais"; rewrite the hint instead of weakening the checker unless a reviewer approves a narrower rule.
+The checker deliberately treats some short distractor words as meaningful when they are the whole option. That can create safe false positives for common words such as "never"/"jamais"; rewrite the hint instead of weakening the checker unless a reviewer approves a narrower rule. The distinctive two-word check can also safely over-flag common phrases from long answers, such as "transmitter power", "ground wave", or "radio energy"; treat those as review prompts and rephrase rather than weakening the batch checker.
 
 ## Reviewer checklist
 

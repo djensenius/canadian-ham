@@ -100,7 +100,7 @@ function extractMarkdownLinks(file: string, text: string): MarkdownLink[] {
   return links;
 }
 
-function slugForHeadingText(headingText: string): string {
+export function slugForHeadingText(headingText: string): string {
   return headingText
     .trim()
     .replace(/`([^`]+)`/g, "$1")

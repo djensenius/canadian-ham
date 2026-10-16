@@ -5,11 +5,20 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { checkHints, HintCheckError, runHintCheckerSelfTest, slugForLessonHeading } from "../src/check-hints.ts";
+import { checkHints, HintCheckError, lessonReaderHeadingAnchors, runHintCheckerSelfTest, slugForLessonHeading } from "../src/check-hints.ts";
 import { requiredReferenceSheetSections } from "../src/check-reference-sheet.ts";
 import { hintForQuestion, loadQuestionHints, questionHintsByQuestionId, referenceSheetSectionKeys, referenceSheetSectionLabels } from "../src/hints.ts";
 
 const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
+
+type LessonHeadingAnchorFixture = {
+  readonly slugCases: ReadonlyArray<{ readonly name: string; readonly headingText: string; readonly expectedSlug: string }>;
+  readonly anchorCases: ReadonlyArray<{ readonly name: string; readonly title: string | null; readonly markdown: string; readonly expectedAnchors: readonly string[]; readonly rejectedAnchors: readonly string[] }>;
+};
+
+async function lessonHeadingAnchorFixture(): Promise<LessonHeadingAnchorFixture> {
+  return JSON.parse(await readFile(path.join(repoRoot, "fixtures/lesson-heading-anchors.json"), "utf8")) as LessonHeadingAnchorFixture;
+}
 
 async function withFixture(testName: string, run: (root: string) => Promise<void>): Promise<void> {
   const root = await mkdtemp(path.join(tmpdir(), `canadian-ham-hints-test-${testName}-`));
@@ -72,7 +81,7 @@ function hint(overrides: Record<string, unknown> = {}) {
 async function writeFixture(root: string, hintRecord = hint(), questionRecords = [question()]): Promise<void> {
   await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), `${JSON.stringify(questionRecords, null, 2)}\n`, "utf8");
   await writeFile(path.join(root, "content/hints/b-001/b-001-001-001.json"), `${JSON.stringify(hintRecord, null, 2)}\n`, "utf8");
-  await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\n---\n# Fixture Lesson\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
+  await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\ntitle:\n  en: "Fixture Lesson"\ncovers:\n  - B-001-001\n---\n# Fixture Lesson\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
 }
 
 test("hint loader sorts records and exposes question lookup helpers", async () => {
@@ -117,9 +126,22 @@ test("reference-sheet section keys stay aligned between schema, labels, and shee
   assert.deepEqual(requiredReferenceSheetSections, referenceSheetSectionKeys.map((key) => `## ${referenceSheetSectionLabels[key].en}`));
 });
 
-test("lesson heading slugs match the GitHub-style lesson-link rules", () => {
-  assert.equal(slugForLessonHeading("A  `B` <em>C</em>!"), "a--b-c");
-  assert.equal(slugForLessonHeading("Reference facts: Authority and source roles"), "reference-facts-authority-and-source-roles");
+test("lesson heading slugs match the shared lesson-heading fixture", async () => {
+  const fixture = await lessonHeadingAnchorFixture();
+  for (const slugCase of fixture.slugCases) {
+    assert.equal(slugForLessonHeading(slugCase.headingText), slugCase.expectedSlug, slugCase.name);
+  }
+});
+
+test("hint lesson-link anchors match headings rendered by lesson readers", async () => {
+  const fixture = await lessonHeadingAnchorFixture();
+  for (const anchorCase of fixture.anchorCases) {
+    const anchors = lessonReaderHeadingAnchors(anchorCase.markdown, anchorCase.title ?? undefined);
+    assert.deepEqual([...anchors], anchorCase.expectedAnchors, anchorCase.name);
+    for (const rejectedAnchor of anchorCase.rejectedAnchors) {
+      assert.equal(anchors.has(rejectedAnchor), false, `${anchorCase.name}: ${rejectedAnchor}`);
+    }
+  }
 });
 
 test("hint check accepts valid EN/FR two-step hints", async () => {

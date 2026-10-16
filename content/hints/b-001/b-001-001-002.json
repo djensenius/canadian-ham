@@ -11,13 +11,13 @@
     },
     {
       "level": 2,
-      "en": "The framework has layers: an Act gives legal authority; regulations are binding rules made under that authority; departmental standards are technical operating documents; the department administers the system.",
-      "fr": "Le cadre s'organise en niveaux : une loi confère l'autorité juridique; les règlements sont des règles obligatoires prises sous cette autorité; les normes ministérielles sont des documents techniques d'exploitation; le ministère administre l'ensemble."
+      "en": "An Act grants legal powers. Under those powers, regulations set binding rules and the department issues technical operating standards; the department also administers the Act.",
+      "fr": "Une loi confère des pouvoirs juridiques. En vertu de ces pouvoirs, les règlements fixent des règles obligatoires et le ministère publie des normes techniques d'exploitation ; le ministère applique aussi la loi."
     }
   ],
   "lessonLink": {
     "lessonId": "L-001-01",
-    "sectionAnchor": "how-these-rules-fit-together"
+    "sectionAnchor": "reference-facts-authority-and-source-roles"
   },
   "referenceSheetSection": null,
   "licenseClass": "original"

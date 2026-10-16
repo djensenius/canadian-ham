@@ -1,3 +1,4 @@
+import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -6,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { ACTIVE_BANK_ID, ACTIVE_GENERATED_DIR } from "./active-bank.ts";
 import { isMainModule } from "./cli.ts";
 import { loadQuestionHints, referenceSheetSectionKeys, type LoadedQuestionHint, type QuestionHint, type ReferenceSheetSectionKey } from "./hints.ts";
+import { slugForHeadingText } from "./check-links.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_HINT_ROOT = path.join(REPO_ROOT, "content/hints");
@@ -32,7 +34,15 @@ const STOP_WORD_TOKENS = new Set([
   "au", "aux", "ce", "cet", "cette", "ces", "d", "de", "des", "du", "en", "est", "et", "l", "la", "le", "les", "leur", "leurs", "ou", "par", "pour", "qu", "que", "quel", "quelle", "quels", "quelles", "qui", "s", "son", "sont", "sur", "un", "une",
 ]);
 const NUMERIC_UNIT_TOKENS = new Set([
-  "v", "volt", "volts", "mv", "millivolt", "millivolts", "kv", "kilovolt", "kilovolts", "a", "amp", "amps", "ampere", "amperes", "ma", "milliamp", "milliamps", "milliampere", "milliamperes", "ohm", "ohms", "kohm", "kohms", "w", "watt", "watts", "mw", "milliwatt", "milliwatts", "kw", "kilowatt", "kilowatts", "hz", "khz", "mhz", "ghz", "db", "m", "mm", "cm", "km", "pf", "uf", "µf", "μf", "nf", "f",
+  "v", "volt", "volts", "mv", "millivolt", "millivolts", "kv", "kilovolt", "kilovolts",
+  "a", "amp", "amps", "ampere", "amperes", "ma", "milliamp", "milliamps", "milliampere", "milliamperes",
+  "ohm", "ohms", "kohm", "kohms", "kilohm", "kilohms", "megohm", "megohms",
+  "w", "watt", "watts", "mw", "milliwatt", "milliwatts", "kw", "kilowatt", "kilowatts",
+  "hz", "khz", "mhz", "ghz", "db", "dbi", "dbd", "dbm", "dbw",
+  "m", "mm", "cm", "km", "metre", "metres", "meter", "meters",
+  "pf", "picofarad", "picofarads", "uf", "µf", "μf", "microfarad", "microfarads", "nf", "nanofarad", "nanofarads", "f", "farad", "farads",
+  "h", "mh", "uh", "µh", "μh", "henry", "henries", "millihenry", "millihenries", "microhenry", "microhenries",
+  "wpm", "mots", "min", "minute", "minutes", "year", "years", "an", "ans", "degree", "degrees", "degre", "degres", "time", "times", "fois",
 ]);
 const LOW_INFORMATION_TOKENS = new Set([...STOP_WORD_TOKENS, ...NUMERIC_UNIT_TOKENS]);
 const REFERENCE_SHEET_WORDS = ["reference sheet", "reference material", "formula sheet", "feuille de référence", "document de référence"];
@@ -78,6 +88,8 @@ type QuestionRecord = {
 type LessonRecord = {
   readonly id: string;
   readonly filePath: string;
+  readonly title: string | undefined;
+  readonly covers: ReadonlySet<string>;
   readonly anchors: ReadonlySet<string>;
 };
 
@@ -164,44 +176,93 @@ async function findMarkdownFiles(root: string, current = root): Promise<string[]
   return files.sort((a, b) => a.localeCompare(b));
 }
 
-function parseLessonId(markdown: string): string | null {
+type LessonMetadata = {
+  readonly id: string;
+  readonly title: string | undefined;
+  readonly covers: ReadonlySet<string>;
+};
+
+function frontMatterBlock(markdown: string): string | null {
   if (!markdown.startsWith("---\n")) {
     return null;
   }
   const closeIndex = markdown.indexOf("\n---", 4);
-  if (closeIndex === -1) {
-    return null;
-  }
-  const frontMatter = markdown.slice(4, closeIndex);
-  if (!/^type:\s*lesson\s*$/m.test(frontMatter)) {
-    return null;
-  }
-  return /^id:\s*([A-Za-z0-9-]+)\s*$/m.exec(frontMatter)?.[1] ?? null;
+  return closeIndex === -1 ? null : markdown.slice(4, closeIndex);
 }
 
-export function slugForLessonHeading(headingText: string): string {
-  return headingText
-    .trim()
-    .replace(/`([^`]+)`/g, "$1")
-    .replace(/<[^>]+>/g, "")
-    .toLowerCase()
-    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
-    .trim()
-    .replace(/\s/g, "-");
+function parseLessonMetadata(markdown: string): LessonMetadata | null {
+  const frontMatter = frontMatterBlock(markdown);
+  if (frontMatter === null || !/^type:\s*lesson\s*$/m.test(frontMatter)) {
+    return null;
+  }
+  const id = /^id:\s*([A-Za-z0-9-]+)\s*$/m.exec(frontMatter)?.[1] ?? null;
+  if (id === null) {
+    return null;
+  }
+  const title = /^\s+en:\s*"?([^"\n]+)"?\s*$/m.exec(frontMatter)?.[1];
+  const covers = new Set<string>();
+  const coversMatch = /^covers:\s*$(?<items>(?:\n\s+-\s+[^\n]+)+)/m.exec(frontMatter);
+  const coverItems = coversMatch?.groups?.items ?? "";
+  for (const match of coverItems.matchAll(/^\s+-\s+([A-Z]-\d{3}-\d{3})\s*$/gm)) {
+    covers.add(match[1]!);
+  }
+  return { id, title, covers };
 }
 
-function lessonHeadingAnchors(markdown: string): Set<string> {
+export const slugForLessonHeading = slugForHeadingText;
+
+function markdownLines(text: string): Array<{ line: string; lineNumber: number }> {
+  const lines: Array<{ line: string; lineNumber: number }> = [];
+  let lineNumber = 1;
+  for (const line of text.split(/\r?\n/)) {
+    lines.push({ line, lineNumber });
+    lineNumber += 1;
+  }
+  return lines;
+}
+
+function addAnchor(anchors: Set<string>, seen: Map<string, number>, headingText: string): void {
+  const baseSlug = slugForLessonHeading(headingText);
+  if (baseSlug.length === 0) {
+    return;
+  }
+  const previousCount = seen.get(baseSlug) ?? 0;
+  seen.set(baseSlug, previousCount + 1);
+  anchors.add(previousCount === 0 ? baseSlug : `${baseSlug}-${previousCount}`);
+}
+
+export function lessonReaderHeadingAnchors(markdown: string, title?: string): Set<string> {
   const anchors = new Set<string>();
   const seen = new Map<string, number>();
-  const headingPattern = /^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$/gm;
-  for (const match of markdown.matchAll(headingPattern)) {
-    const baseSlug = slugForLessonHeading(match[1] ?? "");
-    if (baseSlug.length === 0) {
+  let fence: { marker: "`"; length: number } | null = null;
+
+  for (const { line } of markdownLines(markdown)) {
+    const fenceMatch = line.match(/^ {0,3}(`{3,})(.*)$/);
+    if (fence !== null) {
+      if (fenceMatch && fenceMatch[1]?.startsWith(fence.marker) && fenceMatch[1].length >= fence.length && fenceMatch[2]?.trim() === "") {
+        fence = null;
+      }
       continue;
     }
-    const previousCount = seen.get(baseSlug) ?? 0;
-    seen.set(baseSlug, previousCount + 1);
-    anchors.add(previousCount === 0 ? baseSlug : `${baseSlug}-${previousCount}`);
+    if (fenceMatch) {
+      const marker = fenceMatch[1]!;
+      fence = { marker: marker[0] as "`", length: marker.length };
+      continue;
+    }
+
+    const heading = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(line);
+    if (heading === null) {
+      continue;
+    }
+    const depth = heading[1]!.length;
+    const text = heading[2]?.trim() ?? "";
+    if (text.length === 0 || /^illustration brief$/iu.test(text)) {
+      continue;
+    }
+    if (depth === 1 && title !== undefined && text === title) {
+      continue;
+    }
+    addAnchor(anchors, seen, text);
   }
   return anchors;
 }
@@ -210,16 +271,22 @@ async function loadLessons(lessonRoot: string, issues: string[]): Promise<Map<st
   const lessons = new Map<string, LessonRecord>();
   for (const filePath of await findMarkdownFiles(lessonRoot)) {
     const markdown = await readFile(filePath, "utf8");
-    const id = parseLessonId(markdown);
-    if (id === null) {
+    const metadata = parseLessonMetadata(markdown);
+    if (metadata === null) {
       continue;
     }
-    const previous = lessons.get(id);
+    const previous = lessons.get(metadata.id);
     if (previous !== undefined) {
-      issues.push(`${filePath}: duplicate lesson id ${id}; first seen in ${previous.filePath}`);
+      issues.push(`${filePath}: duplicate lesson id ${metadata.id}; first seen in ${previous.filePath}`);
       continue;
     }
-    lessons.set(id, { id, filePath, anchors: lessonHeadingAnchors(markdown) });
+    lessons.set(metadata.id, {
+      id: metadata.id,
+      filePath,
+      title: metadata.title,
+      covers: metadata.covers,
+      anchors: lessonReaderHeadingAnchors(markdown, metadata.title),
+    });
   }
   return lessons;
 }
@@ -408,10 +475,25 @@ type NumericValue = {
   readonly text: string;
 };
 
-const NUMERIC_VALUE_PATTERN = /(?<![\p{L}\p{N}.])(?<number>(?:\d{1,3}(?:[ \u00a0]\d{3})+|\d+)(?:\.\d+)?)(?:\s*(?<unit>v|volts?|mv|millivolts?|kv|kilovolts?|a|amps?|amperes?|ma|milliamps?|milliamperes?|ohms?|kohms?|w|watts?|mw|milliwatts?|kw|kilowatts?|hz|khz|mhz|ghz|db|m|mm|cm|km|pf|uf|µf|μf|nf|f))?(?![\p{L}\p{N}.])/giu;
+const NUMERIC_UNIT_PATTERN = [
+  "millivolts?", "kilovolts?", "volts?", "mv", "kv", "v",
+  "milliamperes?", "milliamps?", "amperes?", "amps?", "ma", "a",
+  "megohms?", "kilohms?", "kohms?", "ohms?",
+  "milliwatts?", "kilowatts?", "watts?", "mw", "kw", "w",
+  "ghz", "mhz", "khz", "hz", "dbi", "dbd", "dbm", "dbw", "db",
+  "kilometres?", "kilometers?", "metres?", "meters?", "km", "cm", "mm", "m",
+  "microfarads?", "picofarads?", "nanofarads?", "farads?", "µf", "μf", "uf", "pf", "nf", "f",
+  "microhenries", "microhenrys", "millihenries", "millihenrys", "henries", "henrys", "µh", "μh", "uh", "mh", "h",
+  "mots/min", "wpm", "minutes?", "years?", "ans?", "degrés", "degres", "degrees?", "fois", "times?",
+].join("|");
+
+function numericValuePattern(language: "en" | "fr"): RegExp {
+  const groupedSeparator = language === "en" ? "[ ,\\u00a0]" : "[ \\u00a0]";
+  return new RegExp(`(?<![\\p{L}\\p{N}.,])(?<number>(?:\\d{1,3}(?:${groupedSeparator}\\d{3})+|\\d+(?!${groupedSeparator}\\d))(?:\\.\\d+)?)(?:\\s*(?<unit>${NUMERIC_UNIT_PATTERN}))?(?![\\p{L}\\p{N}.])`, "giu");
+}
 
 function canonicalNumber(value: string): string {
-  const compact = value.replace(/[ \u00a0]/g, "");
+  const compact = value.replace(/[ ,\u00a0]/g, "");
   const [integer = "0", fraction] = compact.split(".");
   const normalizedInteger = integer.replace(/^0+(?=\d)/u, "") || "0";
   if (fraction === undefined) {
@@ -421,15 +503,16 @@ function canonicalNumber(value: string): string {
   return normalizedFraction.length === 0 ? normalizedInteger : `${normalizedInteger}.${normalizedFraction}`;
 }
 
-function normalizeNumericText(value: string): string {
-  return normalizeText(value).replace(/(\d),(\d)/gu, "$1.$2");
+function normalizeNumericText(value: string, language: "en" | "fr"): string {
+  const normalized = normalizeText(value);
+  return language === "fr" ? normalized.replace(/(\d),(\d)/gu, "$1.$2") : normalized;
 }
 
-function numericValues(value: string): NumericValue[] {
-  const normalized = normalizeNumericText(value);
+function numericValues(value: string, language: "en" | "fr"): NumericValue[] {
+  const normalized = normalizeNumericText(value, language);
   const values: NumericValue[] = [];
   const seen = new Set<string>();
-  for (const match of normalized.matchAll(NUMERIC_VALUE_PATTERN)) {
+  for (const match of normalized.matchAll(numericValuePattern(language))) {
     const number = canonicalNumber(match.groups?.number ?? match[0]);
     if (seen.has(number)) {
       continue;
@@ -440,14 +523,29 @@ function numericValues(value: string): NumericValue[] {
   return values;
 }
 
-function answerIsMostlyNumericValue(answerText: string): boolean {
-  return numericValues(answerText).length > 0 && officialSignificantTokens(answerText).length === 0;
-}
-
-function numericValueOptionCounts(answerTexts: readonly string[]): Map<string, number> {
+function tokenOptionCounts(answerTexts: readonly string[]): Map<string, number> {
   const counts = new Map<string, number>();
   for (const answerText of answerTexts) {
-    const optionValues = new Set(numericValues(answerText).map((value) => value.number));
+    for (const token of new Set(officialSignificantTokens(answerText))) {
+      counts.set(token, (counts.get(token) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
+
+function answerHasCheckableNumericValue(answerText: string, questionText: string, answerTexts: readonly string[], language: "en" | "fr"): boolean {
+  if (numericValues(answerText, language).length === 0) {
+    return false;
+  }
+  const questionTokens = new Set(questionSignificantTokens(questionText));
+  const optionTokenCounts = tokenOptionCounts(answerTexts);
+  return officialSignificantTokens(answerText).every((token) => questionTokens.has(token) || (optionTokenCounts.get(token) ?? 0) >= 2);
+}
+
+function numericValueOptionCounts(answerTexts: readonly string[], language: "en" | "fr"): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const answerText of answerTexts) {
+    const optionValues = new Set(numericValues(answerText, language).map((value) => value.number));
     for (const optionValue of optionValues) {
       counts.set(optionValue, (counts.get(optionValue) ?? 0) + 1);
     }
@@ -455,14 +553,14 @@ function numericValueOptionCounts(answerTexts: readonly string[]): Map<string, n
   return counts;
 }
 
-function findCorrectNumericAnswerLeakage(hintText: string, questionText: string, answerText: string, answerTexts: readonly string[]): NumericValue | null {
-  const answerValues = numericValues(answerText);
-  if (answerValues.length === 0 || !answerIsMostlyNumericValue(answerText)) {
+function findCorrectNumericAnswerLeakage(hintText: string, questionText: string, answerText: string, answerTexts: readonly string[], language: "en" | "fr"): NumericValue | null {
+  const answerValues = numericValues(answerText, language);
+  if (answerValues.length === 0 || !answerHasCheckableNumericValue(answerText, questionText, answerTexts, language)) {
     return null;
   }
-  const optionCounts = numericValueOptionCounts(answerTexts);
-  const questionNumbers = new Set(numericValues(questionText).map((value) => value.number));
-  const hintNumbers = new Set(numericValues(hintText).map((value) => value.number));
+  const optionCounts = numericValueOptionCounts(answerTexts, language);
+  const questionNumbers = new Set(numericValues(questionText, language).map((value) => value.number));
+  const hintNumbers = new Set(numericValues(hintText, language).map((value) => value.number));
   for (const answerValue of answerValues) {
     if ((optionCounts.get(answerValue.number) ?? 0) >= 2) {
       continue;
@@ -549,7 +647,7 @@ function validateHintLocation(hint: LoadedQuestionHint, relativePath: string, qu
   }
 }
 
-function validateHintLessonLink(hint: LoadedQuestionHint, relativePath: string, lessonsById: ReadonlyMap<string, LessonRecord>, issues: string[]): void {
+function validateHintLessonLink(hint: LoadedQuestionHint, relativePath: string, question: QuestionRecord, lessonsById: ReadonlyMap<string, LessonRecord>, issues: string[]): void {
   if (!isRecord(hint.lessonLink) || !isNonEmptyString(hint.lessonLink.lessonId)) {
     return;
   }
@@ -557,6 +655,9 @@ function validateHintLessonLink(hint: LoadedQuestionHint, relativePath: string, 
   if (lesson === undefined) {
     issues.push(`${relativePath}: lessonLink.lessonId ${hint.lessonLink.lessonId} is not an existing lesson`);
     return;
+  }
+  if (!lesson.covers.has(question.subsectionId)) {
+    issues.push(`${relativePath}: lessonLink.lessonId ${hint.lessonLink.lessonId} does not cover ${question.subsectionId}`);
   }
   if (hint.lessonLink.sectionAnchor !== undefined && isNonEmptyString(hint.lessonLink.sectionAnchor) && !lesson.anchors.has(hint.lessonLink.sectionAnchor)) {
     issues.push(`${relativePath}: lessonLink.sectionAnchor ${hint.lessonLink.sectionAnchor} does not exist in ${path.relative(REPO_ROOT, lesson.filePath).split(path.sep).join("/")}`);
@@ -588,7 +689,7 @@ function validateHintLeakage(hint: LoadedQuestionHint, relativePath: string, que
         const answerText = answer.text[language];
         const kind = answer.isCorrect ? "correct answer" : `answer option sourceIndex ${answer.sourceIndex}`;
         if (answer.isCorrect) {
-          const numericLeak = findCorrectNumericAnswerLeakage(hintText, question.text[language], answerText, answerTexts);
+          const numericLeak = findCorrectNumericAnswerLeakage(hintText, question.text[language], answerText, answerTexts, language);
           if (numericLeak !== null) {
             issues.push(`${label}: contains correct answer numeric value ${JSON.stringify(numericLeak.text)} from ${JSON.stringify(answerText)}`);
           }
@@ -659,7 +760,7 @@ export async function checkHints(options: HintCheckOptions = {}): Promise<HintCh
       continue;
     }
     validateHintLocation(hint, relativePath, question, issues);
-    validateHintLessonLink(hint, relativePath, lessonsById, issues);
+    validateHintLessonLink(hint, relativePath, question, lessonsById, issues);
     if (shapeIsValid || validHintStepsForLeakage(hint).length > 0) {
       validateHintLeakage(hint, relativePath, question, issues);
     }
@@ -793,7 +894,7 @@ async function withSelfTestFixture(name: string, run: (root: string) => Promise<
 async function writeSelfTestFixture(root: string, hintRecord: QuestionHint, questions: readonly QuestionRecord[] = [question()]): Promise<void> {
   await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), `${JSON.stringify(questions, null, 2)}\n`, "utf8");
   await writeFile(path.join(root, "content/hints/b-001/b-001-001-001.json"), `${JSON.stringify(hintRecord, null, 2)}\n`, "utf8");
-  await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\n---\n# Fixture Lesson\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
+  await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\ntitle:\n  en: "Fixture Lesson"\ncovers:\n  - B-001-001\n---\n# Fixture Lesson\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
 }
 
 
@@ -884,6 +985,36 @@ export async function runHintCheckerSelfTest(): Promise<void> {
   await assertSelfTestRejects("unknown-lesson-anchor", hint({ lessonLink: { lessonId: "L-001-01", sectionAnchor: "missing-section" } }), "lessonLink.sectionAnchor missing-section does not exist");
 
   await assertSelfTestAccepts("lesson-link-without-anchor", hint({ lessonLink: { lessonId: "L-001-01" } }));
+
+  await assertSelfTestRejects("lesson-link-case-mismatch", hint({ lessonLink: { lessonId: "L-001-01", sectionAnchor: "Shared-Setup" } }), "lessonLink.sectionAnchor Shared-Setup does not exist");
+
+  await withSelfTestFixture("lesson-link-unrendered-heading", async (root) => {
+    await writeSelfTestFixture(root, hint({ lessonLink: { lessonId: "L-001-01", sectionAnchor: "illustration-brief" } }));
+    await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\ntitle:\n  en: "Fixture Lesson"\ncovers:\n  - B-001-001\n---\n# Fixture Lesson\n\n## Illustration brief\n\nAlt text: Fixture.\n\nDescription: Draw a fixture.\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
+    await assert.rejects(
+      () => checkHints({
+        hintRoot: path.join(root, "content/hints"),
+        questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+        lessonRoot: path.join(root, "content/lessons"),
+        requireComplete: true,
+      }),
+      (error: unknown) => error instanceof HintCheckError
+        && error.report.issues.some((issue) => issue.includes("lessonLink.sectionAnchor illustration-brief does not exist")),
+    );
+  });
+
+  await assertSelfTestRejects("lesson-link-wrong-coverage", hint(), "does not cover B-001-999", [question({ subsectionId: "B-001-999" })]);
+
+  await withSelfTestFixture("lesson-link-duplicate-anchor", async (root) => {
+    await writeSelfTestFixture(root, hint({ lessonLink: { lessonId: "L-001-01", sectionAnchor: "shared-setup-1" } }));
+    await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\ntitle:\n  en: "Fixture Lesson"\ncovers:\n  - B-001-001\n---\n# Fixture Lesson\n\n## Shared setup\n\nFirst section.\n\n## Shared setup\n\nSecond section.\n`, "utf8");
+    await checkHints({
+      hintRoot: path.join(root, "content/hints"),
+      questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      lessonRoot: path.join(root, "content/lessons"),
+      requireComplete: true,
+    });
+  });
 
   await assertSelfTestRejects("missing-en-key", hint({ hints: [
     { level: 1, fr: "Pensez au bloc de fréquence." } as unknown as QuestionHint["hints"][number],
@@ -1047,8 +1178,15 @@ export async function runHintCheckerSelfTest(): Promise<void> {
   const numericCases = [
     { name: "12-v", answer: "12 V", questionWithValue: "The question gives 12 V and asks what value to carry forward.", leakingHint: "Use 12 V as the final value." },
     { name: "1500-khz", answer: "1 500 kHz", questionWithValue: "The question gives 1 500 kHz and asks what value to carry forward.", leakingHint: "Use 1500 kHz as the final value." },
+    { name: "1500-khz-en-comma", answer: "1 500 kHz", questionWithValue: "The question gives 1 500 kHz and asks what value to carry forward.", leakingHint: "Use 1,500 kHz as the final value." },
     { name: "0-5-a", answer: "0.5 A", questionWithValue: "The question gives 0.5 A and asks what value to carry forward.", leakingHint: "Use 0.5 A as the final value." },
     { name: "50-ohms", answer: "50 ohms", questionWithValue: "The question gives a 50 ohms load and asks what value to carry forward.", leakingHint: "Use 50 in the relationship." },
+    { name: "5-08-metres", answer: "5.08 metres", questionWithValue: "The question gives 5.08 metres and asks what value to carry forward.", leakingHint: "The setup gives about 5.08 metres." },
+    { name: "10-microfarads", answer: "10 microfarads", questionWithValue: "The question gives 10 microfarads and asks what value to carry forward.", leakingHint: "The capacitance is 10 microfarads." },
+    { name: "270-kilohms", answer: "270 kilohms", questionWithValue: "The question gives 270 kilohms and asks what value to carry forward.", leakingHint: "Use 270 kilohms." },
+    { name: "13-dbi", answer: "13 dBi", questionWithValue: "The question gives 13 dBi and asks what value to carry forward.", leakingHint: "The gain is 13 dBi." },
+    { name: "11-years", answer: "11 years", questionWithValue: "The question gives 11 years and asks what value to carry forward.", leakingHint: "The interval is 11 years." },
+    { name: "5-wpm", answer: "5 wpm", questionWithValue: "The question gives 5 wpm and asks what value to carry forward.", leakingHint: "Use 5 wpm." },
   ] as const;
 
   for (const numericCase of numericCases) {
@@ -1079,6 +1217,19 @@ export async function runHintCheckerSelfTest(): Promise<void> {
       });
     });
   }
+
+  await assertSelfTestRejects("numeric-answer-fr-mots-min", hint({ hints: [
+    { level: 1, en: "Set up the Morse speed before answering.", fr: "Utilisez 5 mots/min." },
+    { level: 2, en: "Keep speed separate from message content.", fr: "Gardez la vitesse distincte du contenu du message." },
+  ] }), "correct answer numeric value", [question({
+    text: { en: "Fixture Morse question?", fr: "Question fictive de Morse?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "5 wpm", fr: "5 mots/min" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "10 wpm", fr: "10 mots/min" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "15 wpm", fr: "15 mots/min" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "20 wpm", fr: "20 mots/min" } },
+    ],
+  })]);
 
   await assertSelfTestAccepts("numeric-non-value-safety-code-6", hint({ hints: [
     { level: 1, en: "Use Safety Code 6 as the exposure framework before judging the statement.", fr: "Utilisez le Code de sécurité 6 comme cadre d'exposition avant de juger l'énoncé." },
@@ -1119,7 +1270,7 @@ export async function runHintCheckerSelfTest(): Promise<void> {
     ],
   })]);
 
-  await assertSelfTestAccepts("numeric-answer-fr-thousands-comma-not-split", hint({ hints: [
+  await assertSelfTestAccepts("numeric-answer-fr-decimal-comma-not-split", hint({ hints: [
     { level: 1, en: "Use the repeater sub-band boundary rather than a bare integer.", fr: "Ne traitez pas 500 comme une valeur indépendante." },
     { level: 2, en: "Keep the frequency as one MHz value.", fr: "Gardez la fréquence comme une seule valeur en MHz." },
   ] }), [question({
