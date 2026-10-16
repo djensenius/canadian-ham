@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review where most of the RF output energy is delivered in the FM transmitter chain.",
-      "fr": "Revoyez où se livre la plus grande partie de l’énergie RF de sortie dans la chaîne d’un émetteur FM."
+      "en": "Review the FM transmitter block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un émetteur FM."
     }
   ],
   "lessonLink": {

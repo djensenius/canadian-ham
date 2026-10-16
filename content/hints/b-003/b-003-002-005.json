@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why an FM transmitter may use a stable lower-frequency source before later RF stages.",
-      "fr": "Revoyez pourquoi un émetteur FM peut utiliser une source stable à fréquence plus basse avant les étages RF suivants."
+      "en": "Review the FM transmitter block diagram.",
+      "fr": "Revoyez le schéma fonctionnel d'un émetteur FM."
     }
   ],
   "lessonLink": {
