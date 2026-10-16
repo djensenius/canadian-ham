@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:23'
+updated_date: '2026-10-16 14:24'
 labels:
   - content
 dependencies:
@@ -62,4 +62,6 @@ Completed B-002-005 Morse procedure hints: 3 two-level, 8 single-level recall/de
 Completed B-002-006 signal-report/RST hints: 9 two-level, 2 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-006 --require-complete passed. Commit: 1d3f1aaa7bc5ff1d6b8532808059f88f8deba382.
 
 Completed B-002-007 Q-signal hints: 0 two-level, 11 single-level recall. Validation: pnpm check:hints -- --subsection B-002-007 --require-complete passed. Commit: 4235a0a9a21abb5489f0d7692f9e0d8db7fe7785.
+
+Completed B-002-008 emergency procedure hints: 8 two-level, 3 single-level recall/priority. Validation: pnpm check:hints -- --subsection B-002-008 --require-complete passed. Commit: 190586a344775ce6a54d94d09c62769a1f3dea6b.
 <!-- SECTION:NOTES:END -->
