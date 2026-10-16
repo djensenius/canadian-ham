@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-008-004-005",
+  "questionId": "B-008-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Check whether the reported frequency is an integer multiple of the operating frequency.",
+      "fr": "Vérifiez si la fréquence rapportée est un multiple entier de la fréquence d’exploitation."
+    },
+    {
+      "level": 2,
+      "en": "Divide the reported frequency by the operating frequency; use a whole-number result to classify the unwanted output.",
+      "fr": "Divisez la fréquence rapportée par la fréquence d’exploitation; utilisez un résultat entier pour classer la sortie indésirable."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "worked-example-finding-a-harmonic"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

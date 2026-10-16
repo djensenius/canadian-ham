@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-008",
+  "questionId": "B-008-004-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the SSB example about driving stages beyond their clean range.",
+      "fr": "Revoyez l’exemple BLU sur les étages poussés au-delà de leur plage propre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "overdrive-overmodulation-flat-topping-and-splatter"
+  },
+  "singleLevelReason": "Cause recall: a second hint would state the control setting in the correct option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-006",
+  "questionId": "B-008-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the SSB transmitter section on non-linear operation and signal spreading near the intended signal.",
+      "fr": "Revoyez la section sur l’émetteur BLU, le fonctionnement non linéaire et l’élargissement près du signal voulu."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "overdrive-overmodulation-flat-topping-and-splatter"
+  },
+  "singleLevelReason": "Cause recall: another hint would name the transmitter setting that causes the symptom.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

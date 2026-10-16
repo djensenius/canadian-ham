@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-011",
+  "questionId": "B-008-004-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the RF power-amplifier condition that pushes a stage away from clean operation.",
+      "fr": "Revoyez la condition de l’amplificateur de puissance RF qui éloigne un étage d’un fonctionnement propre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "overdrive-overmodulation-flat-topping-and-splatter"
+  },
+  "singleLevelReason": "Condition recall: a second hint would state the exact input condition in the answer.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

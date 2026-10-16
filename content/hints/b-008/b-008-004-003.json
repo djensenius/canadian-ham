@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-003",
+  "questionId": "B-008-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why unwanted transmitter products matter to spectrum users beyond your own station.",
+      "fr": "Revoyez pourquoi les produits indésirables d’un émetteur comptent pour les utilisateurs du spectre au-delà de votre station."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "harmonics"
+  },
+  "singleLevelReason": "Reason recall: another hint would state the harm that selects the option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

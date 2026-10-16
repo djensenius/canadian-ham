@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-009",
+  "questionId": "B-008-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what makes RF amplifier stages create extra products in the harmonics lesson.",
+      "fr": "Revoyez ce qui fait créer des produits supplémentaires par les étages d’amplification RF dans la leçon sur les harmoniques."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "overdrive-overmodulation-flat-topping-and-splatter"
+  },
+  "singleLevelReason": "Cause recall: another hint would identify the operating condition in the answer.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

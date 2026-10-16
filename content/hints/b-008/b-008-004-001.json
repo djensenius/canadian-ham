@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-001",
+  "questionId": "B-008-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how channel-specific TV symptoms can point to transmitter-frequency relationships.",
+      "fr": "Revoyez comment des symptômes limités à certains canaux de télévision peuvent pointer vers des relations avec la fréquence d’émission."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "harmonics"
+  },
+  "singleLevelReason": "Symptom classification: a second hint would name the relationship or exclude broad overload.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
