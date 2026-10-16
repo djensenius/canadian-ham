@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-011",
+  "questionId": "B-005-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the DC-circuit vocabulary for positive and negative direction.",
+      "fr": "Revoyez le vocabulaire des circuits CC pour la direction positive et négative."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "voltage-drop-and-polarity"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name or closely define the DC direction term.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

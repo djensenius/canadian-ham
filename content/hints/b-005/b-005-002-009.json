@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-002-009",
+  "questionId": "B-005-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Connect the idea to E measured across a part while current is flowing.",
+      "fr": "Reliez l'idée à E mesurée aux bornes d'une partie du circuit pendant qu'un courant circule."
+    },
+    {
+      "level": 2,
+      "en": "In a real load or wire, current through opposition leaves less electrical pressure after that section than before it.",
+      "fr": "Dans une charge ou un fil réel, le courant qui traverse une opposition laisse moins de pression électrique après cette section qu'avant."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "voltage-drop-and-polarity"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

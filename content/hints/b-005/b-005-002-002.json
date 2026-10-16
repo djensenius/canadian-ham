@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-002-002",
+  "questionId": "B-005-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Sort the choices by material family first; ceramics, gases, and dry polymers are often used where current should not flow.",
+      "fr": "Classez d'abord les choix par famille de matériaux; les céramiques, les gaz et les polymères secs servent souvent là où le courant ne doit pas passer."
+    },
+    {
+      "level": 2,
+      "en": "Check whether every item in a group resists current flow; one conductive entry is enough to spoil the group for this purpose.",
+      "fr": "Vérifiez si chaque élément du groupe s'oppose au passage du courant; un seul élément conducteur suffit à écarter le groupe pour cet usage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "conductors-insulators-and-semiconductors"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
