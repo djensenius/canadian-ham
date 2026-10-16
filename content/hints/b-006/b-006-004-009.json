@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-004-009",
+  "questionId": "B-006-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the worked example where feedline loss scales with run length.",
+      "fr": "Revoyez l’exemple où les pertes de ligne varient avec la longueur du parcours."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "worked-example-doubling-cable-length"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

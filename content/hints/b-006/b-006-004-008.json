@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-004-008",
+  "questionId": "B-006-004-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the units used when manufacturers state feedline attenuation.",
+      "fr": "Revoyez les unités utilisées par les fabricants pour indiquer l’atténuation d’une ligne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "feedline-loss"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

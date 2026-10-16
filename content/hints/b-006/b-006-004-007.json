@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-004-007",
+  "questionId": "B-006-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review which HF feedline type can have very low loss when kept in clear air.",
+      "fr": "Revoyez quel type de ligne HF peut avoir de très faibles pertes lorsqu’elle est gardée à l’air libre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "feedline-loss"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall or concept item: a second hint would define the correct choice or eliminate distractors; topic pointer and lesson link only."
+}
