@@ -48,4 +48,6 @@ Write and review original EN/FR hint content for B-002 operating procedure quest
 
 <!-- SECTION:NOTES:BEGIN -->
 Completed B-002-001 repeater procedure hints: 10 two-level, 1 single-level recall. Validation: pnpm check:hints -- --subsection B-002-001 --require-complete passed. Commit: e329dfe5a406ad4f20e980f17dcd62ed6a53cf6e.
+
+Completed B-002-002 phonetic alphabet hints: 0 two-level, 11 single-level recall. Validation: pnpm check:hints -- --subsection B-002-002 --require-complete passed. Commit: 41811b2e7127bac3941007c17149bdb22b1f61a5. Calibration stop reached after first two subsections.
 <!-- SECTION:NOTES:END -->
