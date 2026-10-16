@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 12:56'
+updated_date: '2026-10-16 12:57'
 labels:
   - content
 dependencies:
@@ -88,4 +88,6 @@ Re-audited B-001-002 through B-001-005 after sample review using the no-decisive
 B-001-006 manually written after calibration: 6 hints (0 two-level, 6 single-level B). Validation: pnpm check:hints -- --subsection B-001-006 --require-complete passed.
 
 B-001-007 manually written after calibration: 11 hints (0 two-level, 11 single-level B). Validation: pnpm check:hints -- --subsection B-001-007 --require-complete passed.
+
+B-001-008 manually written after calibration: 8 hints (0 two-level, 8 single-level B). Validation: pnpm check:hints -- --subsection B-001-008 --require-complete passed.
 <!-- SECTION:NOTES:END -->
