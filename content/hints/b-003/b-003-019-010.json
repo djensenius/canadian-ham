@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how the safety grounding conductor keeps a faulty chassis from remaining touch-dangerous.",
-      "fr": "Revoyez comment le conducteur de mise à la terre de sécurité empêche un châssis défectueux de rester dangereux au toucher."
+      "en": "Review power-supply safety devices and stored charge.",
+      "fr": "Revoyez les dispositifs de sécurité de l'alimentation et les charges emmagasinées."
     }
   ],
   "lessonLink": {

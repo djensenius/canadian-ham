@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why a long DC-looking ground lead may not solve an RF problem at the desk.",
-      "fr": "Revoyez pourquoi un long fil de terre, valable en CC, peut ne pas régler un problème RF au pupitre."
+      "en": "Review station grounding and bonding.",
+      "fr": "Revoyez la mise à la terre et les liaisons de la station."
     }
   ],
   "lessonLink": {

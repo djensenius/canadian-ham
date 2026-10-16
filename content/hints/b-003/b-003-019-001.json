@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the station-wide scope of electrical shock grounding.",
-      "fr": "Revoyez la portée de la mise à la terre de protection contre les chocs pour toute la station."
+      "en": "Review station grounding and bonding.",
+      "fr": "Revoyez la mise à la terre et les liaisons de la station."
     }
   ],
   "lessonLink": {
