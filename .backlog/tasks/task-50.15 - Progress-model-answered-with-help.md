@@ -4,6 +4,7 @@ title: 'Progress model: answered with help'
 status: To Do
 assignee: []
 created_date: '2026-10-16 08:12'
+updated_date: '2026-10-16 08:30'
 labels:
   - engine
 dependencies: []
@@ -21,7 +22,7 @@ Question hints need a durable progress state before UI work records hinted answe
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 engine-ts and engine-swift represent answered with help as distinct from correct/incorrect without granting mastery or weak-area clearing
+- [ ] #1 engine-ts and engine-swift store answered with help as a flag alongside correct/incorrect outcomes, preserving accuracy stats while withholding mastery credit and weak-area clearing
 - [ ] #2 Shared parity fixtures cover hinted-answer scheduling and sooner spaced-review return behaviour
 - [ ] #3 common progress schema, progress export schema, sync device rows, and import compatibility accept and preserve the answered-with-help state
 - [ ] #4 Migration/backward-compatibility tests cover older progress exports or device rows that do not contain the new state
