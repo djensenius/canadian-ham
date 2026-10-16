@@ -48,4 +48,6 @@ Write and review original EN/FR hint content for B-005 electronics and theory qu
 
 <!-- SECTION:NOTES:BEGIN -->
 Completed B-005-001 calibration slice: wrote 11 hint files (9 two-level method, 2 single-level prefix recall); pnpm check:hints -- --subsection B-005-001 --require-complete passed.
+
+Completed B-005-002 calibration slice: wrote 11 hint files (3 two-level concept/method, 8 single-level recall); pnpm check:hints -- --subsection B-005-002 --require-complete passed. Stopping for calibration with sample questions/options as requested.
 <!-- SECTION:NOTES:END -->
