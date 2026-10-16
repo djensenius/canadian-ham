@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:12'
+updated_date: '2026-10-16 15:16'
 labels:
   - content
 dependencies:
@@ -36,13 +36,13 @@ Write and review original EN/FR hint content for B-008 interference and suppress
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
 - [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
-- [ ] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
 - [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
 - [ ] #5 After this final content batch, CI requires full Basic-bank hint completeness with check:hints -- --require-complete (or equivalent) before UI integration proceeds.
 - [ ] #6 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
-- [ ] #7 All in-scope B-008 interference and suppression active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
+- [x] #7 All in-scope B-008 interference and suppression active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -50,3 +50,9 @@ Write and review original EN/FR hint content for B-008 interference and suppress
 <!-- SECTION:PLAN:BEGIN -->
 1. Read the hint authoring rules, teaching/reference materials, existing reviewed hint examples, B-008 lessons, explanations, and active question data.\n2. Add hand-written EN/FR hint files for all active B-008 questions, using single-level hints except for true computation/derivation items.\n3. Run subsection/category hint checks and required content/project checks, then assess full-bank completeness and update CI only if the whole bank is complete.\n4. Record implementation notes, validation evidence, and any pending CI/full-bank/review status in the Backlog task.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented B-008 hints: 55/55 active questions covered. Counts by subsection (two-level/single-level): B-008-001 1/10; B-008-002 0/11; B-008-003 0/11; B-008-004 3/8; B-008-005 0/11. All referenceSheetSection values are null because no B-008 hint uses a reference-sheet formula/section pointer. Applied the literal option self-test to all four EN and FR options for every file, per level and across levels; self-check found no reference-sheet copying, equivalent-unit leak, or distractor numeric elimination.\nTwo-level method notes: B-008-001-010: learner must compute/derive the receiver-mixing frequency difference and compare it with channel 5; the hint never states the high-pass-at-TV answer property. B-008-004-005: learner must compute/derive the reported/operating frequency ratio; the hint never states the harmonic-output answer property. B-008-004-007: learner must compute/derive the 15 m integer-multiple range and compare it with channel 3; the hint never states the harmonic-emission answer property. B-008-004-010: learner must compute/derive the listed band-name frequency multiples; the hint never states the second-harmonic-of-10 m answer property.\nValidation passed: per-subsection pnpm check:hints -- --subsection B-008-00N --require-complete for all five subsections; pnpm check:hints -- --category B-008 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Full-bank pnpm check:hints -- --require-complete intentionally left out of CI because B-003 (199 missing) and B-007 (87 missing) are not present on this branch/main; .github/workflows/ci.yml remains unchanged and the full-bank switch is pending those merges. Review AC #2/#4/#6 remain for content reviewer/PR review.
+<!-- SECTION:NOTES:END -->
