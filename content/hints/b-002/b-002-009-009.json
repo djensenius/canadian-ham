@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-009-009",
+  "questionId": "B-002-009-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the reference meridian used for UTC.",
+      "fr": "Revoyez le méridien de référence utilisé pour l’UTC."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-04",
+    "sectionAnchor": "utc-and-time-standards"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-009-003",
+  "questionId": "B-002-009-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review grid locators used in VHF contest exchanges.",
+      "fr": "Revoyez les locators de grille utilisés dans les échanges de concours VHF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-04",
+    "sectionAnchor": "grid-locators"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition and numeric recall: any second hint identifies or eliminates an option; topic pointer and lesson link only."
+}

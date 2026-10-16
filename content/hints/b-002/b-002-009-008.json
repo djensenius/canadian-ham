@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-009-008",
+  "questionId": "B-002-009-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "When this map is centred on your station, directions radiate outward from you.",
+      "fr": "Lorsque cette carte est centrée sur votre station, les directions rayonnent vers l’extérieur à partir de vous."
+    },
+    {
+      "level": 2,
+      "en": "Use it to decide which way a place lies from your station, especially when aiming or understanding direction.",
+      "fr": "Utilisez-la pour déterminer de quel côté un lieu se trouve par rapport à votre station, surtout pour orienter une antenne ou comprendre une direction."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-04",
+    "sectionAnchor": "bearings-azimuthal-maps-and-long-path"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-009-001",
+  "questionId": "B-002-009-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the contact-confirmation role of QSL cards.",
+      "fr": "Revoyez le rôle des cartes QSL pour confirmer les contacts."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-04",
+    "sectionAnchor": "contact-confirmations-and-logs"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
+}

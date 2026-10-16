@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-009-004",
+  "questionId": "B-002-009-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Long path uses the reciprocal direction from the short path.",
+      "fr": "Le long trajet utilise la direction réciproque du court trajet."
+    },
+    {
+      "level": 2,
+      "en": "On a compass, a reciprocal heading is half a circle away from the original heading.",
+      "fr": "Sur une boussole, un cap réciproque se trouve à un demi-tour du cap d’origine."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-04",
+    "sectionAnchor": "memory-trick-long-path-is-the-other-way-around"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
