@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-010-006",
+  "questionId": "B-005-010-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Inductive reactance tracks how quickly AC current is trying to change.",
+      "fr": "La réactance inductive suit la rapidité avec laquelle le courant CA tente de changer."
+    },
+    {
+      "level": 2,
+      "en": "Look for the parameter change that makes the AC repeat faster; voltage and current level are not the trend being tested.",
+      "fr": "Cherchez le changement de paramètre qui fait répéter le CA plus vite; le niveau de tension ou de courant n'est pas la tendance visée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "reactance-and-impedance"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

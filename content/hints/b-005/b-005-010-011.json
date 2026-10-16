@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-010-011",
+  "questionId": "B-005-010-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Inductors oppose current changes more strongly as the AC changes faster.",
+      "fr": "Les bobines s'opposent plus fortement aux changements de courant lorsque le CA varie plus vite."
+    },
+    {
+      "level": 2,
+      "en": "Choose the trend tied to AC repetition rate, not the applied voltage level.",
+      "fr": "Choisissez la tendance liée au rythme de répétition du CA, et non au niveau de tension appliquée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "reactance-and-impedance"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
