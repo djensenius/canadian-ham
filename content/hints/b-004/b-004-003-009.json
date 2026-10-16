@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-009",
+  "questionId": "B-004-003-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the bipolar terminal-jobs list.",
+      "fr": "Revoyez la liste des rôles des bornes bipolaires."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "memory-trick-transistor-terminal-jobs"
+  },
+  "singleLevelReason": "Terminal-role recall: a second hint would name the control electrode.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

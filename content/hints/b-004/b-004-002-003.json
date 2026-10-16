@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-002-003",
+  "questionId": "B-004-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Zener paragraph in the special-purpose diodes section.",
+      "fr": "Revoyez le paragraphe sur la diode Zener dans la section sur les diodes spéciales."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "special-purpose-diodes"
+  },
+  "singleLevelReason": "Function recall: a second hint would paraphrase the Zener job or eliminate the other effects.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

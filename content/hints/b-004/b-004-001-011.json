@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-011",
+  "questionId": "B-004-001-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the positive-feedback part of the amplifier lesson.",
+      "fr": "Revoyez la partie de la leçon sur la rétroaction positive dans un étage de signal."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "positive-feedback-and-oscillation"
+  },
+  "singleLevelReason": "Concept recall: a second hint would state the result of excessive positive feedback.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

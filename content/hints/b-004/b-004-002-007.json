@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-002-007",
+  "questionId": "B-004-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the electron-flow note in the one-way diode section.",
+      "fr": "Revoyez la note sur le courant électronique dans la section sur la conduction dans un seul sens des diodes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "diodes-conduct-mainly-one-way"
+  },
+  "singleLevelReason": "Direction recall: a second hint would state the terminal order.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
