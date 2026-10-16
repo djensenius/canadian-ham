@@ -1,10 +1,11 @@
 ---
 id: TASK-50.5
 title: 'Hint content batch: B-003 station assembly and safety'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 11:50'
+updated_date: '2026-10-16 15:12'
 labels:
   - content
 dependencies:
@@ -36,3 +37,9 @@ Write and review original EN/FR hint content for B-003 station assembly and safe
 - [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
 - [ ] #6 All in-scope B-003 station assembly and safety active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read hint authoring guidance, reviewed batches, module lessons, explanations, reference sheet, and active B-003 questions/options.\n2. Author original EN/FR hint files under content/hints/b-003 by subsection, using single-level topic pointers except true calculation/method questions.\n3. For any two-level method hints, record the mandatory non-leak note in task notes and validate with subsection hint checks.\n4. Run required batch validation checks and summarize coverage, risks, and review needs.
+<!-- SECTION:PLAN:END -->
