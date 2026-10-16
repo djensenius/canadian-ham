@@ -4,7 +4,7 @@ title: Consolidate iOS UI test launches without appearance toggles
 status: To Do
 assignee: []
 created_date: '2026-10-08 04:35'
-updated_date: '2026-10-14 12:48'
+updated_date: '2026-10-16 08:06'
 labels:
   - apple
   - testing
@@ -34,4 +34,6 @@ Task-31 attempted to combine iOS light/dark accessibility audits into one launch
 
 <!-- SECTION:NOTES:BEGIN -->
 Owner 2026-10-14: also move the per-lesson figure audits (CanadianHamLessonFiguresUITests) into a separate Xcode test plan run only when figures, lesson Markdown with figure directives, or the lesson reader change; default full-suite plan excludes it. Priority: next after the current Apple merge batch.
+
+2026-10-15 merge batch (train-2026-10-15): testModule1LessonFiguresLightPart2 failed with 'Audit failed to complete in time' in the full iOS suite. That's the same timeout that forced the M8 split. When moving figure audits to their own plan, also split long figure ranges so each audit finishes reliably.
 <!-- SECTION:NOTES:END -->
