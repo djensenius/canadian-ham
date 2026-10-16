@@ -563,7 +563,7 @@ struct CalculatorToolView: View {
             break
         }
         switch press.characters {
-        case "\r", "\n": return .equals
+        case "\r", "\n", "\u{3}": return .equals
         case "0": return .zero
         case "1": return .one
         case "2": return .two
@@ -680,6 +680,7 @@ private struct CalculatorKeyboardResponder: UIViewRepresentable {
     final class KeyInputView: UIView {
         private var isActive = false
         private var onKey: (CalculatorKey) -> Void = { _ in }
+        private var swallowedPresses: Set<UIPress> = []
 
         override var canBecomeFirstResponder: Bool { true }
 
@@ -696,26 +697,32 @@ private struct CalculatorKeyboardResponder: UIViewRepresentable {
 
         override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
             let handledPresses = handledCalculatorPresses(in: presses)
+            swallowedPresses.formUnion(handledPresses)
             for press in handledPresses {
                 guard let key = calculatorKey(for: press) else { continue }
                 onKey(key)
             }
-            if handledPresses.count != presses.count {
-                super.pressesBegan(presses.subtracting(handledPresses), with: event)
+            let unhandledPresses = presses.subtracting(handledPresses)
+            if !unhandledPresses.isEmpty {
+                super.pressesBegan(unhandledPresses, with: event)
             }
         }
 
         override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-            let handledPresses = handledCalculatorPresses(in: presses)
-            if handledPresses.count != presses.count {
-                super.pressesEnded(presses.subtracting(handledPresses), with: event)
+            let handledPresses = presses.intersection(swallowedPresses)
+            swallowedPresses.subtract(handledPresses)
+            let unhandledPresses = presses.subtracting(handledPresses)
+            if !unhandledPresses.isEmpty {
+                super.pressesEnded(unhandledPresses, with: event)
             }
         }
 
         override func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-            let handledPresses = handledCalculatorPresses(in: presses)
-            if handledPresses.count != presses.count {
-                super.pressesCancelled(presses.subtracting(handledPresses), with: event)
+            let handledPresses = presses.intersection(swallowedPresses)
+            swallowedPresses.subtract(handledPresses)
+            let unhandledPresses = presses.subtracting(handledPresses)
+            if !unhandledPresses.isEmpty {
+                super.pressesCancelled(unhandledPresses, with: event)
             }
         }
 
