@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:26'
+updated_date: '2026-10-16 14:36'
 labels:
   - content
 dependencies:
@@ -70,6 +70,8 @@ Completed B-002-009 records/maps/time hints: 5 two-level, 6 single-level recall/
 Full batch completed. Counts: B-002-001 9 two-level/2 single-level; B-002-002 0/11; B-002-003 8/3; B-002-004 9/2; B-002-005 3/8; B-002-006 9/2; B-002-007 0/11; B-002-008 8/3; B-002-009 5/6. Total: 51 two-level, 48 single-level. Validation passed: pnpm check:hints -- --category B-002 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Review AC #2/#4/#5 remain for content reviewer/PR review.
 
 Opened PR #268: https://github.com/djensenius/canadian-ham/pull/268 and requested @copilot review via gh pr edit 268 --add-reviewer @copilot.
+
+PR #268 review response: applied every B-002 finding from ~/.cache/canadian-ham-reviews/r268.md. Converted procedure/courtesy/definition leaks to single-level neutral pointers, kept only method-based two-level hints, fixed FR terminology and B-002-009-010 FR time wording, added the procedure/courtesy leak rule to content/hints/README.md, and ran literal option self-test across all 73 touched hint files in EN/FR per level and combined levels. New counts: B-002-001 0/11, B-002-002 0/11, B-002-003 1/10, B-002-004 2/9, B-002-005 0/11, B-002-006 8/3, B-002-007 0/11, B-002-008 1/10, B-002-009 3/8; total 15 two-level/84 single-level. Validation passed: pnpm check:hints -- --category B-002 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Review response commit: 07bf3815f02ff0e1e90781a8245b81726e3c84af.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
