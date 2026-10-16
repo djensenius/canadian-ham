@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-019-003",
+  "questionId": "B-001-019-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review voice-transmission quality-control requirements.",
+      "fr": "Revoyez les exigences de contrôle de qualité des émissions vocales."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-repeaters-automatic-transmissions-stability-and-modulation-quality"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

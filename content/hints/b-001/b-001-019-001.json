@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-019-001",
+  "questionId": "B-001-019-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review frequency-stability requirements for lower VHF and below.",
+      "fr": "Revoyez les exigences de stabilité de fréquence pour les fréquences VHF basses et inférieures."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-repeaters-automatic-transmissions-stability-and-modulation-quality"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}
