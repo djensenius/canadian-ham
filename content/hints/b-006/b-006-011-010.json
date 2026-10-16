@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-011-010",
+  "questionId": "B-006-011-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Basic-bank spacing convention for a three-element Yagi compromise.",
+      "fr": "Revoyez la convention de la banque d’examen pour l’espacement de compromis d’une Yagi à trois éléments."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "yagi-structure-and-practical-hf-use"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Numeric recall item: a second hint would state or point directly at the tested value; topic pointer and lesson link only."
+}

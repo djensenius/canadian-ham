@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-011-001",
+  "questionId": "B-006-011-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how trap Yagis cover several HF bands with one structure.",
+      "fr": "Revoyez comment les Yagi à pièges couvrent plusieurs bandes HF avec une seule structure."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "yagi-structure-and-practical-hf-use"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall or concept item: a second hint would define the correct choice or eliminate distractors; topic pointer and lesson link only."
+}
