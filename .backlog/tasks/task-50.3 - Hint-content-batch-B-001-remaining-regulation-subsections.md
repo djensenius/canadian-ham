@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 13:29'
+updated_date: '2026-10-16 14:12'
 labels:
   - content
 dependencies:
@@ -136,4 +136,6 @@ Completed all remaining B-001 hint files. Counts by subsection (two-level/B): B-
 Opened PR #267 (task-50.3: B-001 hints) with per-subsection counts, 10 EN/FR samples including 3 method hints and option lists, and checks run. Added @copilot reviewer.
 
 Addressed PR #267 batch review at head 62a0bfd7. Rewrote all listed leaking/leaning B-001 topic pointers; upgraded reviewed method-capable questions to two-level hints (remaining batch now 33 two-level / 162 B single-level; category total 35 two-level / 164 B); fixed B-001-015-006/-007/-008 band-method selection issues; updated FR terminology; tightened shared short-correct-answer checker with a self-test; updated README and PR body with counts, 8 review-round samples, and a finding-to-fix table. Validation passed: pnpm check:hints:self-test; pnpm check:hints -- --category B-001 --require-complete; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Commit: ab41e98d868f19afa54bb3d431ae50fbcd835488.
+
+Addressed PR #267 re-review at head 616d1f7b. Fixed every summary-table and sections 1–4 item: high leaks, leaning/elimination pointers, 015-008/015-009 band methods, lesson anchors, off-topic/inaccurate pointers, EN/FR terminology, 025-001 affected-equipment wording, and README example wording. Re-applied the README literal option self-test to every touched hint file in EN and FR, per level and combined levels. Counts unchanged: remaining batch 195 hints = 33 two-level / 162 B single-level; category total 199 hints = 35 two-level / 164 B. Validation passed: pnpm check:hints:self-test; pnpm check:hints -- --category B-001 --require-complete; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. PR body updated with re-review finding-to-fix table and counts. Commit: e5dce74da28cfe227bd013227cc9b2ab65f7c263.
 <!-- SECTION:NOTES:END -->
