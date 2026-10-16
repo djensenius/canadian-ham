@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 14:15'
+updated_date: '2026-10-16 14:18'
 labels:
   - content
 dependencies:
@@ -43,3 +43,9 @@ Write and review original EN/FR hint content for B-005 electronics and theory qu
 <!-- SECTION:PLAN:BEGIN -->
 1. Read the B-005 source questions, M5 lessons, explanations, reference-sheet keys, and calibrated B-001 hint examples.\n2. Write hand-authored EN/FR hints for B-005 one subsection at a time, using formula/setup ladders where useful and single-level topic pointers only for pure recall.\n3. After each subsection, run pnpm check:hints with --subsection and --require-complete, commit, push, and record progress notes.\n4. Stop after B-005-001 and B-005-002 for calibration with six EN/FR samples before continuing.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Completed B-005-001 calibration slice: wrote 11 hint files (9 two-level method, 2 single-level prefix recall); pnpm check:hints -- --subsection B-005-001 --require-complete passed.
+<!-- SECTION:NOTES:END -->
