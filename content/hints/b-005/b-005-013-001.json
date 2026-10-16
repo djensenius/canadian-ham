@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "A voltmeter samples E across the part or circuit being checked.",
-      "fr": "Un voltmètre échantillonne E aux bornes de la pièce ou du circuit vérifié."
+      "en": "A voltmeter measures E across the part or circuit being checked.",
+      "fr": "Un voltmètre mesure E aux bornes de la pièce ou du circuit vérifié."
     },
     {
       "level": 2,
-      "en": "Place it across the same two points whose potential difference you want, rather than making all circuit current pass through it.",
-      "fr": "Placez-le aux deux mêmes points dont vous voulez mesurer la différence de potentiel, au lieu de faire passer tout le courant du circuit par lui."
+      "en": "Decide whether the meter must see the same E as the part or carry the same I, then choose the connection that does that.",
+      "fr": "Décidez si l'appareil de mesure doit mesurer le même E que la pièce ou porter le même I, puis choisissez le raccordement qui fait cela."
     }
   ],
   "lessonLink": {

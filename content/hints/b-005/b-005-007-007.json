@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Frequency and wavelength move in opposite directions for a radio signal in the same medium.",
-      "fr": "La fréquence et la longueur d'onde varient en sens opposés pour un signal radio dans le même milieu."
+      "en": "Use f (MHz) ≈ 300 / λ (m).",
+      "fr": "Utilisez f (MHz) ≈ 300 / λ (m)."
     },
     {
       "level": 2,
-      "en": "Use f ≈ 300 / λ: if λ gets smaller, the denominator is smaller, so f moves the other way.",
-      "fr": "Utilisez f ≈ 300 / λ : si λ devient plus petite, le dénominateur est plus petit, donc f va dans l'autre sens."
+      "en": "Work it for 20 m and 10 m and compare the direction and the size of the change.",
+      "fr": "Calculez-la pour 20 m et 10 m, puis comparez le sens et l’ampleur du changement."
     }
   ],
   "lessonLink": {

@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "For equal parallel parts, divide one resistance by the branch count and multiply one wattage rating by the branch count; keep only a setup that passes both checks.",
-      "fr": "Pour des pièces égales en parallèle, divisez une résistance par le nombre de branches et multipliez une puissance nominale par ce nombre; gardez seulement un montage qui réussit les deux vérifications."
+      "en": "For equal parallel parts, divide one resistance by the branch count and multiply one wattage rating by the branch count; for series parts, add the resistances and the ratings. Keep only a setup that passes both checks.",
+      "fr": "Pour des pièces égales en parallèle, divisez une résistance par le nombre de branches et multipliez une puissance nominale par ce nombre; pour des pièces en série, additionnez les résistances et les puissances nominales. Gardez seulement un montage qui réussit les deux vérifications."
     }
   ],
   "lessonLink": {

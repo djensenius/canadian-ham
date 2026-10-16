@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Inductive reactance tracks how quickly AC current is trying to change.",
-      "fr": "La réactance inductive suit la rapidité avec laquelle le courant CA tente de changer."
+      "en": "An inductor opposes changes in current.",
+      "fr": "Une bobine s'oppose aux changements de courant."
     },
     {
       "level": 2,
-      "en": "Look for the parameter change that makes the AC repeat faster; voltage and current level are not the trend being tested.",
-      "fr": "Cherchez le changement de paramètre qui fait répéter le CA plus vite; le niveau de tension ou de courant n'est pas la tendance visée."
+      "en": "Ask which property of the applied AC sets how quickly the current must change, then decide whether the opposition grows or shrinks with it.",
+      "fr": "Demandez-vous quelle propriété du CA appliqué fixe la rapidité avec laquelle le courant doit changer, puis décidez si l'opposition augmente ou diminue avec elle."
     }
   ],
   "lessonLink": {

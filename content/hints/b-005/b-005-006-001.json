@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why resistor body size matters in the power-ratings section.",
-      "fr": "Revoyez pourquoi la taille du boîtier d'une résistance compte dans la section sur les puissances nominales."
+      "en": "Review what a resistor's physical size does and does not tell you.",
+      "fr": "Revoyez ce que la taille physique d'une résistance indique et n'indique pas."
     }
   ],
   "lessonLink": {

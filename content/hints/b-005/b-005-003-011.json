@@ -8,11 +8,6 @@
       "level": 1,
       "en": "A fuse opens when current becomes excessive, so look for a fault that makes current surge immediately.",
       "fr": "Un fusible ouvre le circuit lorsque le courant devient excessif; cherchez donc une panne qui fait monter le courant immédiatement."
-    },
-    {
-      "level": 2,
-      "en": "Use the low-resistance-fault idea: the supply is effectively given an unintended easy path instead of the normal load path.",
-      "fr": "Utilisez l'idée d'une panne à faible résistance : l'alimentation trouve pratiquement un trajet facile imprévu au lieu du trajet normal de la charge."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "open-closed-and-short-circuits"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Fault-condition recall: a second hint would define or name the fault."
 }

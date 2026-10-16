@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Use the decibel shortcut table and read the sign as a power loss.",
-      "fr": "Utilisez le tableau des raccourcis en décibels et lisez le signe comme une perte de puissance."
-    },
-    {
-      "level": 2,
-      "en": "Use the one-step loss that mirrors the basic doubling step; choose the operation that cuts power by that step.",
-      "fr": "Utilisez la perte d'une étape qui correspond au doublement de base; choisissez l'opération qui réduit la puissance de cette étape."
+      "en": "Review the decibel shortcut table for power losses.",
+      "fr": "Revoyez le tableau des raccourcis en décibels pour les pertes de puissance."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "decibels-as-power-ratios"
   },
   "referenceSheetSection": "decibel-power-shortcuts",
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Pure shortcut recall: any second hint would state the loss operation."
 }

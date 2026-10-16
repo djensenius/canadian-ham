@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Too much current usually means the circuit resistance has become much lower than intended.",
-      "fr": "Un courant trop élevé signifie généralement que la résistance du circuit est devenue beaucoup plus faible que prévu."
-    },
-    {
-      "level": 2,
-      "en": "Look for the fault where an unintended low-resistance path can bypass the normal load.",
-      "fr": "Cherchez la panne où un trajet imprévu de faible résistance peut contourner la charge normale."
+      "en": "Use I = E / R: for a fixed supply, ask what must happen to the circuit's resistance for I to grow too large, then recall which fault does that.",
+      "fr": "Utilisez I = E / R : pour une alimentation fixe, demandez-vous ce qui doit arriver à la résistance du circuit pour que I devienne trop grand, puis rappelez-vous quelle panne produit cela."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "open-closed-and-short-circuits"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Fault-condition recall: a second hint would define or name the fault."
 }

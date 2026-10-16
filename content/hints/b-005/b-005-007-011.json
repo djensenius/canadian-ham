@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Compare the second signal with the fundamental by checking for an exact whole-number multiple.",
-      "fr": "Comparez le deuxième signal au fondamental en vérifiant s'il s'agit d'un multiple entier exact."
-    },
-    {
-      "level": 2,
-      "en": "Set up the ratio 4 kHz / 2 kHz; the resulting whole-number relationship tells you the signal type.",
-      "fr": "Posez le rapport 4 kHz / 2 kHz; la relation entière obtenue indique le type de signal."
+      "en": "Review the names for signals related to a fundamental frequency.",
+      "fr": "Revoyez les noms des signaux liés à une fréquence fondamentale."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "ac-basics"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Pure relationship-name recall: any second hint would state the defining property."
 }

@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Choose the operation that moves one step toward the larger unit and makes the written number smaller.",
-      "fr": "Choisissez l'opération qui monte d'une étape vers l'unité plus grande et qui rend le nombre écrit plus petit."
+      "en": "Test it on a known value: 1 000 MHz and 1 GHz are the same frequency. Which operation turns the MHz number into the GHz number?",
+      "fr": "Essayez avec une valeur connue : 1 000 MHz et 1 GHz sont la même fréquence. Quelle opération transforme le nombre en MHz en nombre en GHz ?"
     }
   ],
   "lessonLink": {

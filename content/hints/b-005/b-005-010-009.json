@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "For a bypass capacitor, slow audio changes should not be given the easy path intended for RF.",
-      "fr": "Avec un condensateur de dérivation, les variations audio lentes ne doivent pas recevoir le trajet facile prévu pour la RF."
+      "en": "Recall how capacitive reactance changes with frequency.",
+      "fr": "Rappelez-vous comment la réactance capacitive varie avec la fréquence."
     },
     {
       "level": 2,
-      "en": "Apply the capacitor trend at audio frequencies: the desired behaviour is large AC opposition there.",
-      "fr": "Appliquez la tendance d'un condensateur aux fréquences audio : le comportement voulu est une grande opposition CA à ces fréquences."
+      "en": "Decide at which frequencies the decoupling capacitor must leave the wanted signal alone, then match that job to the reactance trend.",
+      "fr": "Décidez à quelles fréquences le condensateur de découplage doit laisser tranquille le signal voulu, puis associez ce rôle à la tendance de la réactance."
     }
   ],
   "lessonLink": {

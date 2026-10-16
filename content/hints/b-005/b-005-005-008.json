@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Equal-value resistors in parallel use the shortcut Rt = R / number of branches.",
-      "fr": "Des résistances de même valeur en parallèle utilisent le raccourci Rt = R / nombre de branches."
+      "en": "Use 1 / Rt = 1 / R1 + 1 / R2 + …",
+      "fr": "Utilisez 1 / Rt = 1 / R1 + 1 / R2 + …"
     },
     {
       "level": 2,
-      "en": "Use R as the branch value and the given branch count as the divisor.",
-      "fr": "Utilisez R comme valeur d'une branche et le nombre de branches donné comme diviseur."
+      "en": "Write ten equal 1 / R terms, add them, then flip the result.",
+      "fr": "Écrivez dix termes égaux 1 / R, additionnez-les, puis inversez le résultat."
     }
   ],
   "lessonLink": {

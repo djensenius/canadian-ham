@@ -12,7 +12,7 @@
     {
       "level": 2,
       "en": "Use the count of resistor bodies times the rating of one body; do not change the ohmic value for this rating step.",
-      "fr": "Multipliez le nombre de boîtiers par la puissance nominale d'un seul; ne modifiez pas la valeur ohmique pour cette étape de cote."
+      "fr": "Multipliez le nombre de boîtiers par la puissance nominale d’un seul; ne modifiez pas la valeur ohmique pour ce calcul de puissance nominale."
     }
   ],
   "lessonLink": {

@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Match the two quantity names represented by I and E; the other pairs mix in component properties instead.",
-      "fr": "Associez les deux grandeurs représentées par I et E; les autres paires y mêlent plutôt des propriétés de composants."
+      "en": "Name the two quantities represented by I and E in that formula.",
+      "fr": "Nommez les deux grandeurs représentées par I et E dans cette formule."
     }
   ],
   "lessonLink": {

@@ -7,12 +7,12 @@
     {
       "level": 1,
       "en": "Impedance is tied to the E-over-I relationship seen at a winding.",
-      "fr": "L'impédance est liée au rapport E sur I vu à un enroulement."
+      "fr": "L'impédance est liée au rapport E sur I vu à un côté du transformateur."
     },
     {
       "level": 2,
-      "en": "A transformer can present one E-and-I relationship on one side and another relationship on the other side while transferring power magnetically.",
-      "fr": "Un transformateur peut présenter une relation entre E et I d'un côté et une autre relation de l'autre côté tout en transférant l'énergie par magnétisme."
+      "en": "Write Z = E / I for each winding and apply the turns-ratio idea to E and to I.",
+      "fr": "Écrivez Z = E / I pour le côté primaire et pour le côté secondaire, puis appliquez l'idée du rapport de spires à E et à I."
     }
   ],
   "lessonLink": {

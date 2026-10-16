@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "A ferrite-wound coil is useful when it makes an unwanted RF path hard to use.",
-      "fr": "Une bobine sur ferrite est utile lorsqu'elle rend difficile l'utilisation d'un trajet RF indésirable."
+      "en": "Recall how inductive reactance changes with frequency.",
+      "fr": "Rappelez-vous comment la réactance inductive varie avec la fréquence."
     },
     {
       "level": 2,
-      "en": "Apply the inductor trend at radio frequencies: the wanted property is large AC opposition in that frequency range.",
-      "fr": "Appliquez la tendance d'une bobine aux radiofréquences : la propriété recherchée est une grande opposition CA dans cette gamme."
+      "en": "Decide whether this part should block or pass the RF, then match that job to the reactance trend.",
+      "fr": "Décidez si cette pièce doit bloquer ou laisser passer la RF, puis associez ce rôle à la tendance de la réactance."
     }
   ],
   "lessonLink": {

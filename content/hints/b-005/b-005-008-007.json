@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "The change from 1 W to 2 W is one doubling, so choose the basic positive step for one doubling.",
-      "fr": "Le passage de 1 W à 2 W est un seul doublement; choisissez donc le petit pas positif de base pour un doublement."
+      "en": "Read the dB value on the shortcut-table row whose power ratio is 2.",
+      "fr": "Lisez la valeur en dB sur la ligne du tableau des raccourcis dont le rapport de puissance est 2."
     }
   ],
   "lessonLink": {

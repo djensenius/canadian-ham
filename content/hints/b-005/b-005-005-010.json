@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "With the same E, the branch carrying twice the current must have the reciprocal change in R.",
-      "fr": "Avec le même E, la branche qui transporte deux fois le courant doit avoir la variation réciproque de R."
+      "en": "Write I_A = E / R_A and I_B = E / R_B, set I_A = 2 x I_B, and solve for R_A in terms of R_B.",
+      "fr": "Écrivez I_A = E / R_A et I_B = E / R_B, posez I_A = 2 x I_B, puis résolvez R_A en fonction de R_B."
     }
   ],
   "lessonLink": {

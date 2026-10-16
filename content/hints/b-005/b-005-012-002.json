@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "If little current is drawn from the source, the source sees a large opposition at that frequency.",
-      "fr": "Si peu de courant est tiré de la source, celle-ci voit une grande opposition à cette fréquence."
+      "en": "Use Z = E / I as seen by the source, with the source current described in Hint 1.",
+      "fr": "Utilisez Z = E / I vu par la source, avec le courant de source décrit dans l’indice 1."
     }
   ],
   "lessonLink": {

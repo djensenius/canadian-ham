@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "A capacitor passes faster AC changes more easily than slower ones.",
-      "fr": "Un condensateur laisse passer plus facilement les variations CA rapides que les variations lentes."
+      "en": "A capacitor charges and discharges as the AC reverses.",
+      "fr": "Un condensateur se charge et se décharge lorsque le CA s'inverse."
     },
     {
       "level": 2,
-      "en": "Focus on frequency, not amplitude: as the AC repeats faster, the capacitor's AC opposition moves downward.",
-      "fr": "Concentrez-vous sur la fréquence, et non sur l'amplitude : quand le CA se répète plus vite, l'opposition CA du condensateur descend."
+      "en": "Ask which property of the AC sets how often that happens, and whether that lets current flow more or less easily.",
+      "fr": "Demandez-vous quelle propriété du CA fixe le rythme auquel cela se produit, et si cela laisse le courant circuler plus ou moins facilement."
     }
   ],
   "lessonLink": {

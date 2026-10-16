@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Set up 7 125 kHz / 1 000, then compare the MHz value with the range that spans 3 MHz to 30 MHz.",
-      "fr": "Posez 7 125 kHz / 1 000, puis comparez la valeur en MHz avec la gamme qui va de 3 MHz à 30 MHz."
+      "en": "Set up 7 125 kHz / 1 000, then recall the MHz span of each named radio-frequency range and place the result.",
+      "fr": "Posez 7 125 kHz / 1 000, puis rappelez-vous la plage en MHz de chaque gamme de radiofréquences nommée et placez le résultat."
     }
   ],
   "lessonLink": {

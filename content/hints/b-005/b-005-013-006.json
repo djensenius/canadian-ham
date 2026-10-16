@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "To avoid adding much voltage drop, the meter should look like an easy path for current.",
-      "fr": "Pour éviter d'ajouter une grande chute de tension, le compteur doit ressembler à un trajet facile pour le courant."
+      "en": "Use E = I x R for the meter: what kind of R keeps the meter's own voltage drop tiny?",
+      "fr": "Utilisez E = I x R pour l'appareil de mesure : quel type de R garde la chute de tension propre à l'appareil très petite ?"
     }
   ],
   "lessonLink": {

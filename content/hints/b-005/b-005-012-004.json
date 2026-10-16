@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A tuned circuit needs the pair of parts that store energy in magnetic and electric fields.",
-      "fr": "Un circuit accordé a besoin de la paire de pièces qui stockent l'énergie dans des champs magnétique et électrique."
-    },
-    {
-      "level": 2,
-      "en": "Choose the component pair that gives both L and C behaviour; switching or gain devices are not the tuning pair.",
-      "fr": "Choisissez la paire de composants qui donne les comportements L et C; les dispositifs de commutation ou de gain ne sont pas la paire d'accord."
+      "en": "Review the parts described at the start of the resonance and tuned-circuits section.",
+      "fr": "Revoyez les pièces décrites au début de la section sur la résonance et les circuits accordés."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "resonance-and-tuned-circuits"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Component-pair recall: any second hint would name or eliminate the component pair."
 }

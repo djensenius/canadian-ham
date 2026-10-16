@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Inductors oppose current changes more strongly as the AC changes faster.",
-      "fr": "Les bobines s'opposent plus fortement aux changements de courant lorsque le CA varie plus vite."
+      "en": "An inductor opposes changes in current.",
+      "fr": "Une bobine s'oppose aux changements de courant."
     },
     {
       "level": 2,
-      "en": "Choose the trend tied to AC repetition rate, not the applied voltage level.",
-      "fr": "Choisissez la tendance liée au rythme de répétition du CA, et non au niveau de tension appliquée."
+      "en": "Ask which property of the applied AC sets how quickly the current must change, then decide whether the opposition grows or shrinks with it.",
+      "fr": "Demandez-vous quelle propriété du CA appliqué fixe la rapidité avec laquelle le courant doit changer, puis décidez si l'opposition augmente ou diminue avec elle."
     }
   ],
   "lessonLink": {

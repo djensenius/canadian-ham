@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Low source current for a given E means the circuit presents a large E-over-I value at resonance.",
-      "fr": "Un faible courant de source pour un E donné signifie que le circuit présente une grande valeur E sur I à la résonance."
+      "en": "Use Z = E / I as seen by the source, with the source current described in Hint 1.",
+      "fr": "Utilisez Z = E / I vu par la source, avec le courant de source décrit dans l’indice 1."
     }
   ],
   "lessonLink": {

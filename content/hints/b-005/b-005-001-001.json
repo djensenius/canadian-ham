@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Use the metric-prefix ladder: mega is three 1 000 steps above kilo, so moving from MHz to kHz makes the number larger.",
-      "fr": "Utilisez l'échelle des préfixes métriques : méga est trois étapes de 1 000 au-dessus de kilo; de MHz vers kHz, le nombre augmente."
+      "en": "Use the metric-prefix ladder: mega is one 1 000 step above kilo, so moving from MHz to kHz makes the number larger.",
+      "fr": "Utilisez l'échelle des préfixes métriques : méga est une étape de 1 000 au-dessus de kilo; de MHz vers kHz, le nombre augmente."
     },
     {
       "level": 2,

@@ -50,6 +50,8 @@ For B-001 recall items, there is often no space between a useful content hint an
 
 Keep two-level A+C hints where a method, formula, conversion, or principle helps the learner work the question. The option self-test applies to stating facts or results, not to teaching a method the learner still has to apply. Do not state the computed result, name the matching option, or eliminate options by listing them. If a method hint includes a selection rule such as "nearest", "just below", or "starts there", work it against all four options in EN and FR before accepting it.
 
+For concept questions in technical categories, a "principle" that is just the answer's content restated is a leak. Use a neutral topic pointer unless the learner still has a real method to compute or derive. For example, a voltage-drop definition question should use "Review what happens to E across each part of a working circuit" as a single-level pointer, not a second hint that says current through opposition leaves less electrical pressure after that section.
+
 For example, a band-name question can use the wavelength relationship without giving the range:
 
 - Hint 1: "A band's name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m)."

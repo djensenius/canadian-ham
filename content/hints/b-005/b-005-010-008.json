@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "A bypass capacitor diverts unwanted RF by giving that fast-changing signal an easier path.",
-      "fr": "Un condensateur de dérivation détourne une RF indésirable en offrant un trajet plus facile à ce signal à variation rapide."
+      "en": "Recall how capacitive reactance changes with frequency.",
+      "fr": "Rappelez-vous comment la réactance capacitive varie avec la fréquence."
     },
     {
       "level": 2,
-      "en": "Apply the capacitor trend at radio frequencies: the useful property is small AC opposition in that frequency range.",
-      "fr": "Appliquez la tendance d'un condensateur aux radiofréquences : la propriété utile est une petite opposition CA dans cette gamme."
+      "en": "Decide whether a decoupling capacitor should block or pass the RF, then match that job to the reactance trend.",
+      "fr": "Décidez si un condensateur de découplage doit bloquer ou laisser passer la RF, puis associez ce rôle à la tendance de la réactance."
     }
   ],
   "lessonLink": {

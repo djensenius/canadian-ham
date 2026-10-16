@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Two equal resistors in parallel give half the value of one branch, while two bodies can share heat.",
-      "fr": "Deux résistances égales en parallèle donnent la moitié de la valeur d'une branche, tandis que deux boîtiers peuvent partager la chaleur."
+      "en": "For equal resistors in parallel, handle resistance and wattage rating as two separate checks.",
+      "fr": "Pour des résistances égales en parallèle, traitez la résistance et la puissance nominale comme deux vérifications séparées."
     },
     {
       "level": 2,
-      "en": "Compare 100 ohms / 2 with the original value, then consider that two equal ratings are available instead of one.",
-      "fr": "Comparez 100 ohms / 2 avec la valeur d'origine, puis tenez compte de deux puissances nominales égales au lieu d'une seule."
+      "en": "Work out 100 ohms / 2 and compare it with the original; then apply the rating rule for equal resistors that share heat evenly.",
+      "fr": "Calculez 100 ohms / 2 et comparez avec la valeur d’origine; appliquez ensuite la règle de puissance nominale pour des résistances égales qui partagent la chaleur uniformément."
     }
   ],
   "lessonLink": {

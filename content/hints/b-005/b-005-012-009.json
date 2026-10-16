@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Think of tuning as choosing which RF energy passes most easily, not as DC filtering, audio gain, or voltage adjustment.",
-      "fr": "Voyez l'accord comme le choix de l'énergie RF qui passe le plus facilement, et non comme un filtrage CC, un gain audio ou un réglage de tension."
+      "en": "Think about what a tuned circuit does to signals at and away from its resonant frequency.",
+      "fr": "Pensez à ce qu'un circuit accordé fait aux signaux à sa fréquence de résonance et loin de celle-ci."
     }
   ],
   "lessonLink": {

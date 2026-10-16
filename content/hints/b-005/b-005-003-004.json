@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Current in an ordinary low-voltage circuit needs a complete conductive path.",
-      "fr": "Dans un circuit ordinaire à basse tension, le courant a besoin d'un trajet conducteur complet."
-    },
-    {
-      "level": 2,
-      "en": "Look for the fault condition where the path is broken, so the source has no closed loop to drive current through the load.",
-      "fr": "Cherchez l'état de panne où le trajet est interrompu, de sorte que la source n'a pas de boucle complète pour pousser le courant dans la charge."
+      "en": "Review the circuit fault conditions and what each does to current.",
+      "fr": "Revoyez les états de panne d'un circuit et ce que chacun fait au courant."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "open-closed-and-short-circuits"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Fault-condition recall: any second hint would paraphrase or name the circuit condition."
 }

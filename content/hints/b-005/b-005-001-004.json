@@ -12,7 +12,7 @@
     {
       "level": 2,
       "en": "Use microfarads = picofarads / 1 000 000; place the given pF value into that setup without changing the physical capacitance.",
-      "fr": "Utilisez microfarads = picofarads / 1 000 000; insérez la valeur donnée en pF sans changer la capacitance physique."
+      "fr": "Utilisez microfarads = picofarads / 1 000 000; insérez la valeur donnée en pF sans changer la capacité physique."
     }
   ],
   "lessonLink": {

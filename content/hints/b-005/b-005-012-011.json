@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "With the opposition at its smallest, use Ohm's law intuition: less opposition for the same source lets current rise to its peak.",
-      "fr": "Quand l'opposition est minimale, utilisez l'intuition de la loi d'Ohm : moins d'opposition pour la même source laisse le courant monter à son sommet."
+      "en": "Use I = E / Z with only R left in Z, and compare with Z away from resonance.",
+      "fr": "Utilisez I = E / Z avec seulement R qui reste dans Z, puis comparez avec Z loin de la résonance."
     }
   ],
   "lessonLink": {

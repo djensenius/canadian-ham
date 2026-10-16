@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Use Rt = R1 + R2 + ...; adding positive resistor values makes the total exceed any individual part.",
-      "fr": "Utilisez Rt = R1 + R2 + ...; additionner des valeurs positives rend le total plus grand que chaque pièce prise seule."
+      "en": "Try a quick case: add 10, 20 and 30 ohms and compare the total with each part.",
+      "fr": "Essayez un cas rapide : additionnez 10, 20 et 30 ohms, puis comparez le total avec chaque résistance."
     }
   ],
   "lessonLink": {

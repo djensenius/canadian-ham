@@ -7,12 +7,7 @@
     {
       "level": 1,
       "en": "An ammeter measures I, so the circuit current must pass through the meter.",
-      "fr": "Un ampèremètre mesure I; le courant du circuit doit donc passer par le compteur."
-    },
-    {
-      "level": 2,
-      "en": "Open the current path and insert the meter along that path, rather than placing it across a component.",
-      "fr": "Ouvrez le trajet du courant et insérez le compteur le long de ce trajet, au lieu de le placer aux bornes d'un composant."
+      "fr": "Un ampèremètre mesure I; le courant du circuit doit donc passer par l'appareil de mesure."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "meters-and-how-to-connect-them"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Meter-connection recall: a second hint would define or name the connection."
 }

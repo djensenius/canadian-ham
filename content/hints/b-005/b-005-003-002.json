@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "A higher wattage rating means electrical energy is being used at a higher rate.",
-      "fr": "Une puissance nominale en watts plus élevée signifie que l'énergie électrique est utilisée plus rapidement."
-    },
-    {
-      "level": 2,
-      "en": "Compare only the watt ratings and choose the largest rating; no extra formula is needed.",
-      "fr": "Comparez seulement les valeurs en watts et choisissez la plus grande; aucune autre formule n'est nécessaire."
+      "en": "Review what a lamp's watt rating tells you about energy use.",
+      "fr": "Revoyez ce que la cote en watts d'une lampe indique sur l'utilisation de l'énergie."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "power-how-fast-energy-is-used"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Pure rating recall: any second hint would identify or eliminate an option."
 }

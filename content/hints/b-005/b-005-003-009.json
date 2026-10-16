@@ -6,13 +6,12 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review why a hot resistor is tied to how fast electrical energy is being turned into heat.",
-      "fr": "Revoyez pourquoi une résistance chaude est liée à la rapidité avec laquelle l'énergie électrique se transforme en chaleur."
+      "en": "Review what causes a resistor to heat up in normal operation.",
+      "fr": "Revoyez ce qui fait chauffer une résistance en fonctionnement normal."
     }
   ],
   "lessonLink": {
-    "lessonId": "L-005-02",
-    "sectionAnchor": "power-how-fast-energy-is-used"
+    "lessonId": "L-005-02"
   },
   "singleLevelReason": "Pure concept-term recall: a second hint would name the heat-producing quantity.",
   "referenceSheetSection": null,

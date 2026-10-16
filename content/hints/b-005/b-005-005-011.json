@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "To find the total, combine the currents in all the paths rather than using just one path or adding resistances first.",
-      "fr": "Pour trouver le total, combinez les courants de tous les trajets au lieu d'utiliser un seul trajet ou d'additionner d'abord les résistances."
+      "en": "Apply I = E / R to each branch on its own, then follow those currents back to the source lead.",
+      "fr": "Appliquez I = E / R à chaque branche séparément, puis suivez ces courants jusqu'au fil de la source."
     }
   ],
   "lessonLink": {

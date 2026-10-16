@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "A single doubling is the basic small positive step in the shortcut table; choose that one-step increase.",
-      "fr": "Un seul doublement correspond au petit pas positif de base dans le tableau; choisissez ce pas unique."
+      "en": "Read the dB value on the shortcut-table row whose power ratio is 2.",
+      "fr": "Lisez la valeur en dB sur la ligne du tableau des raccourcis dont le rapport de puissance est 2."
     }
   ],
   "lessonLink": {

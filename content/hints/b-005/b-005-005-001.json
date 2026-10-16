@@ -7,12 +7,12 @@
     {
       "level": 1,
       "en": "In a parallel circuit, current splits into separate paths and then recombines at the source lead.",
-      "fr": "Dans un circuit en parallèle, le courant se divise en trajets distincts puis se regroupe au conducteur de source."
+      "fr": "Dans un circuit en parallèle, le courant se divise en trajets distincts puis se regroupe dans le fil de la source."
     },
     {
       "level": 2,
-      "en": "Account for every path once; the source must supply all the path currents together.",
-      "fr": "Tenez compte de chaque trajet une seule fois; la source doit fournir tous ces courants ensemble."
+      "en": "Picture branches drawing 1 A, 2 A and 3 A; work out what the source lead must carry.",
+      "fr": "Imaginez des branches qui tirent 1 A, 2 A et 3 A; calculez ce que le fil de la source doit porter."
     }
   ],
   "lessonLink": {

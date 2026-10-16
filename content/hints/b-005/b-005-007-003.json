@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "The word audio ties the range to sound, not to RF conversion or receiver specifications.",
-      "fr": "Le mot audio rattache cette gamme au son, et non à une conversion RF ni aux caractéristiques d'un récepteur."
-    },
-    {
-      "level": 2,
-      "en": "Ask what a listener can perceive in that range; the label comes from human hearing.",
-      "fr": "Demandez-vous ce qu'une personne peut percevoir dans cette gamme; le nom vient de l'audition humaine."
+      "en": "Review the AC basics notes on the audio-frequency range.",
+      "fr": "Revoyez les notes de base sur le CA au sujet de la gamme des fréquences audio."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "ac-basics"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Pure range recall: any second hint would paraphrase the range definition or eliminate options."
 }

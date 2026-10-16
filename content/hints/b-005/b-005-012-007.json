@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "When those effects cancel in series, the remaining opposition is small and current can be large.",
-      "fr": "Quand ces effets se compensent en série, l'opposition restante est petite et le courant peut être grand."
+      "en": "Once L and C cancel, ask what is left in Z = E / I to limit the current.",
+      "fr": "Une fois L et C compensés, demandez-vous ce qui reste dans Z = E / I pour limiter le courant."
     }
   ],
   "lessonLink": {

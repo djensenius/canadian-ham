@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "An RF choke should block unwanted fast-changing current while letting intended slower signals pass more easily.",
-      "fr": "Une bobine d'arrêt RF doit bloquer le courant indésirable à variation rapide tout en laissant passer plus facilement les signaux plus lents voulus."
+      "en": "Recall how inductive reactance changes with frequency.",
+      "fr": "Rappelez-vous comment la réactance inductive varie avec la fréquence."
     },
     {
       "level": 2,
-      "en": "Apply the inductor trend at low frequencies: the desired behaviour is small AC opposition there.",
-      "fr": "Appliquez la tendance d'une bobine aux basses fréquences : le comportement voulu est une petite opposition CA à ces fréquences."
+      "en": "Decide whether an RF choke should block or pass the lower-frequency current, then match that job to the reactance trend.",
+      "fr": "Décidez si une bobine d'arrêt RF doit bloquer ou laisser passer le courant de plus basse fréquence, puis associez ce rôle à la tendance de la réactance."
     }
   ],
   "lessonLink": {

@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "Capacitive reactance moves opposite to frequency.",
-      "fr": "La réactance capacitive varie en sens inverse de la fréquence."
+      "en": "A capacitor charges and discharges as the AC reverses.",
+      "fr": "Un condensateur se charge et se décharge lorsque le CA s'inverse."
     },
     {
       "level": 2,
-      "en": "If the question asks when that opposition becomes larger, choose the direction where the AC repeats more slowly.",
-      "fr": "Si la question demande quand cette opposition devient plus grande, choisissez le sens où le CA se répète plus lentement."
+      "en": "Ask which property of the AC sets how often that happens, and which direction of that property makes current flow harder.",
+      "fr": "Demandez-vous quelle propriété du CA fixe le rythme auquel cela se produit, puis quel sens de cette propriété rend le courant plus difficile à faire circuler."
     }
   ],
   "lessonLink": {

@@ -6,13 +6,13 @@
   "hints": [
     {
       "level": 1,
-      "en": "An inductor opposes changes in current, so faster AC changes make it harder for current to vary.",
-      "fr": "Une bobine s'oppose aux changements de courant; des variations CA plus rapides rendent donc le courant plus difficile à faire varier."
+      "en": "An inductor opposes changes in current.",
+      "fr": "Une bobine s'oppose aux changements de courant."
     },
     {
       "level": 2,
-      "en": "Focus on frequency, not amplitude: as the AC repeats faster, the inductor's AC opposition moves upward.",
-      "fr": "Concentrez-vous sur la fréquence, et non sur l'amplitude : quand le CA se répète plus vite, l'opposition CA de la bobine monte."
+      "en": "Ask which property of the applied AC sets how quickly the current must change, then decide whether the opposition grows or shrinks with it.",
+      "fr": "Demandez-vous quelle propriété du CA appliqué fixe la rapidité avec laquelle le courant doit changer, puis décidez si l'opposition augmente ou diminue avec elle."
     }
   ],
   "lessonLink": {

@@ -11,8 +11,8 @@
     },
     {
       "level": 2,
-      "en": "Set up 50 W / 5 W; that ratio matches the tenfold-gain row of the dB shortcut table.",
-      "fr": "Posez 50 W / 5 W; ce rapport correspond à la ligne de gain par dix du tableau des raccourcis en dB."
+      "en": "Then convert that ratio to dB with the shortcut table.",
+      "fr": "Convertissez ensuite ce rapport en dB avec le tableau des raccourcis."
     }
   ],
   "lessonLink": {

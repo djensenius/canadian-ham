@@ -6,13 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Hertz is the unit for complete repeats per second.",
-      "fr": "Le hertz est l'unité des répétitions complètes par seconde."
-    },
-    {
-      "level": 2,
-      "en": "Keep the given number as the count, then attach the meaning of hertz rather than a distance or speed unit.",
-      "fr": "Gardez le nombre donné comme décompte, puis associez-lui le sens du hertz plutôt qu'une unité de distance ou de vitesse."
+      "en": "Review the unit definitions in the AC basics section.",
+      "fr": "Revoyez les définitions des unités dans la section des bases du CA."
     }
   ],
   "lessonLink": {
@@ -20,5 +15,6 @@
     "sectionAnchor": "ac-basics"
   },
   "referenceSheetSection": null,
-  "licenseClass": "original"
+  "licenseClass": "original",
+  "singleLevelReason": "Pure unit-definition recall: any second hint would paraphrase the definition."
 }
