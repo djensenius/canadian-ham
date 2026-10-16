@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-004-003",
+  "questionId": "B-002-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A tuning signal near a sideband net should be close enough for adjustment but outside the active voice passband.",
+      "fr": "Un signal de syntonisation près d’un réseau BLU doit être assez proche pour le réglage, mais hors de la bande passante vocale active."
+    },
+    {
+      "level": 2,
+      "en": "Think of the width of a single-sideband voice signal, then leave that much room from the net before making the brief adjustment.",
+      "fr": "Pensez à la largeur d’un signal vocal en bande latérale unique, puis laissez cet espace par rapport au réseau avant le bref réglage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "sidebands-spacing-and-clean-tests"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
