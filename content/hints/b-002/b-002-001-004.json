@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-001-004",
+  "questionId": "B-002-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Think of this timer as a backstop for protecting a shared relay and its channel.",
+      "fr": "Voyez cette minuterie comme une protection de dernier recours pour un relais partagé et son canal."
+    },
+    {
+      "level": 2,
+      "en": "If one transmitter stays keyed, the controller must keep the relay from staying on without end.",
+      "fr": "Si un émetteur reste en émission, le contrôleur doit empêcher le relais de rester en marche indéfiniment."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "repeaters-are-shared-relays"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

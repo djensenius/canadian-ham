@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-001-001",
+  "questionId": "B-002-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Treat this as a directed repeater call, not as an open invitation to everyone listening.",
+      "fr": "Traitez cela comme un appel dirigé sur répéteur, et non comme une invitation ouverte à toutes les stations à l’écoute."
+    },
+    {
+      "level": 2,
+      "en": "The intended listener needs to know the call is for them, and the channel also needs to know who is calling.",
+      "fr": "La station visée doit savoir que l’appel lui est destiné, et le canal doit aussi savoir qui appelle."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "reference-fact-voice-calling-patterns"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
