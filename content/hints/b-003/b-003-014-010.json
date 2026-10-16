@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review how a transceiver changes its signal path between the two operating directions.",
-      "fr": "Revoyez comment un émetteur-récepteur change son trajet de signal entre les deux sens d’exploitation."
+      "en": "Review transmit/receive switching and speech processing.",
+      "fr": "Revoyez la commutation émission/réception et le processeur de voix."
     }
   ],
   "lessonLink": {

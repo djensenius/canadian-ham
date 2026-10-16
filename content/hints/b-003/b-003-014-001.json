@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the station control used to make Morse element timing more consistent.",
-      "fr": "Revoyez la commande de station utilisée pour rendre plus régulier le minutage des éléments Morse."
+      "en": "Review station audio and keying controls.",
+      "fr": "Revoyez les commandes audio et de manipulation de la station."
     }
   ],
   "lessonLink": {

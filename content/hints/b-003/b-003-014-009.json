@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review which noise problem best matches a blanking-style receiver control.",
-      "fr": "Revoyez quel type de bruit correspond le mieux à une commande de suppression par blanc dans le récepteur."
+      "en": "Review receiver noise controls.",
+      "fr": "Revoyez les commandes antibruit du récepteur."
     }
   ],
   "lessonLink": {

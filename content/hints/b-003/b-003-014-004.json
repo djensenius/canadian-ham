@@ -6,8 +6,8 @@
   "hints": [
     {
       "level": 1,
-      "en": "Review the receiver noise tool that uses digital calculations on signal and noise.",
-      "fr": "Revoyez l’outil de bruit du récepteur qui utilise des calculs numériques sur le signal et le bruit."
+      "en": "Review receiver noise controls.",
+      "fr": "Revoyez les commandes antibruit du récepteur."
     }
   ],
   "lessonLink": {
