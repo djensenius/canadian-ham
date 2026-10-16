@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-008-006",
+  "questionId": "B-001-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests custom transmitting hardware, where design and manufacture status matter.", "fr": "Cet élément vérifie le matériel d'émission personnalisé, où le statut de conception et de fabrication compte." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the minimum qualification."
+}

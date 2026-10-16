@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-008-007",
+  "questionId": "B-001-008-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests operating a cross-band repeater, not installing repeater infrastructure.", "fr": "Cet élément vérifie l'exploitation d'un relais interbande, et non l'installation d'une infrastructure de relais." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the minimum qualification."
+}

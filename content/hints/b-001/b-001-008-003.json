@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-008-003",
+  "questionId": "B-001-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests kit assembly privilege, which is different from designing custom transmitting hardware.", "fr": "Cet élément vérifie le privilège d'assemblage de trousses, qui diffère de la conception de matériel d'émission personnalisé." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the minimum qualification."
+}

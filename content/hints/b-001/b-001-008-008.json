@@ -1,0 +1,13 @@
+{
+  "id": "HINT-B-001-008-008",
+  "questionId": "B-001-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    { "level": 1, "en": "This item tests remote control of settings that change the transmitter's operating condition.", "fr": "Cet élément vérifie la commande à distance de réglages qui modifient l'état d'exploitation de l'émetteur." }
+  ],
+  "lessonLink": { "lessonId": "L-001-02", "sectionAnchor": "reference-facts-station-privileges-and-construction" },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "A second hint would reveal the minimum qualification."
+}
