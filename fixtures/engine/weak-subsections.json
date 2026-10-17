@@ -376,6 +376,82 @@
       "expectedOutput": {
         "weakSubsectionIds": []
       }
+    },
+    {
+      "id": "weak-subsections-hinted-correct-excluded-from-numerator-and-denominator",
+      "input": {
+        "records": [
+          {
+            "questionId": "B-001-013-001",
+            "bankId": "basic-2025-07-15",
+            "attempts": 5,
+            "correctAttempts": 4,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "correct",
+            "lastAnsweredWithHelp": true,
+            "recentResults": [
+              false,
+              true,
+              true,
+              true,
+              true
+            ],
+            "recentAnsweredWithHelp": [
+              false,
+              false,
+              false,
+              false,
+              true
+            ],
+            "leitner": {
+              "box": 1,
+              "dueAt": "2026-01-02T00:00:00.000Z"
+            },
+            "notes": null
+          }
+        ],
+        "latestExamItems": []
+      },
+      "expectedOutput": {
+        "weakSubsectionIds": []
+      }
+    },
+    {
+      "id": "weak-subsections-hinted-incorrect-counts-as-incorrect",
+      "input": {
+        "records": [
+          {
+            "questionId": "B-001-014-001",
+            "bankId": "basic-2025-07-15",
+            "attempts": 3,
+            "correctAttempts": 2,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "correct",
+            "lastAnsweredWithHelp": false,
+            "recentResults": [
+              false,
+              true,
+              true
+            ],
+            "recentAnsweredWithHelp": [
+              true,
+              false,
+              false
+            ],
+            "leitner": {
+              "box": 1,
+              "dueAt": "2026-01-02T00:00:00.000Z"
+            },
+            "notes": null
+          }
+        ],
+        "latestExamItems": []
+      },
+      "expectedOutput": {
+        "weakSubsectionIds": [
+          "B-001-014"
+        ]
+      }
     }
   ]
 }

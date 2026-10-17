@@ -1365,22 +1365,6 @@
         }
       }
     },
-    "%@.recentResults must contain at most 20 booleans." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.recentResults doit contenir au plus 20 booléens."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.recentResults doit contenir au plus 20 booléens."
-          }
-        }
-      }
-    },
     "%@.recentAnsweredWithHelp must contain at most five booleans." : {
       "localizations" : {
         "en" : {
@@ -1421,6 +1405,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
+          }
+        }
+      }
+    },
+    "%@.recentResults must contain at most 20 booleans." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentResults doit contenir au plus 20 booléens."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentResults doit contenir au plus 20 booléens."
           }
         }
       }
