@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-17 22:05'
+updated_date: '2026-10-17 23:14'
 labels:
   - apple
 dependencies:
@@ -62,6 +62,17 @@ Reopened after internal review request-changes; implementing findings 1-15 in fo
 Review-fix validation after internal REQUEST CHANGES: implemented findings 1-15 (UI-language French note and pointer text; wide-layout hint lesson push/back; non-optional heading IDs; Bool help qualification announcements; removed liveStatus and ExamToolButtons allCases default; PracticeHintRules commit/submit helpers and pointer rule tests; hinted-answer result audits; lesson-link round trip; bundled sectionAnchor Swift test; Swift slug parity fixtures; graceful bad-hint degradation; widened/cancel-on-question-change timer test). Validation passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/content-swift (23 tests); iPhone 17 Pro targeted xbuild for CanadianHamUITests/CanadianHamExamToolsUITests + HintSessionStateTests + Learn UI tests (25 executed, 3 skipped); iPad Pro 13-inch (M5) targeted xbuild for same (25 executed, 6 skipped); macOS unit xbuild (151 tests); pnpm typecheck; pnpm test; pnpm check:hints -- --require-complete; pnpm check:links; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts. A plain swift test without DEVELOPER_DIR failed before rerun because XCTest was unavailable from CommandLineTools; an initial iPhone full targeted run exposed the new hinted-answer audit issue and passed after fixes; an initial iPad rerun exposed audit layout fallout and passed after the compact-only button-width fix.
 
 Copilot thread follow-up: fixed duplicate full content validation during hint loading by validating already-loaded non-hint content once and then calling validateQuestionHints() only on the hint-attached library (commit 34d80c6). Replied to and resolved the Copilot review thread. Post-fix validation: packages/content-swift swift test passed (23 tests) and macOS QuestionBankTests/testBundledLessonsAndExplanationsLoadThroughContentLibrary smoke passed (1 test). PR body updated and Copilot re-requested.
+
+Coordinator follow-ups to the delta review (APPROVE WITH NOTES), head 20d9e273:
+- A: removed the unexplained iPhone minWidth 160 on exam-tool buttons. Both hint audits pass without it, so it wasn't needed.
+- C: switching to Learn clears a hint lesson pushed onto the practice stack.
+- E: timer test margins of at least 150 ms.
+- G: Logger warnings when hint loading falls back.
+Targeted runs at 20d9e273:
+- iPhone CanadianHamExamToolsUITests + HintSessionStateTests + testLearnUserNavigationOpensLessonQuiz: 24 UI executed, 3 skipped, 1 failure (testMockExamQuestionsNavigatorPresentsAfterCalculatorSheet: calculator sheet not shown). It passed on an isolated rerun, so it's a flake. Unit: 7 passed.
+- iPad CanadianHamExamToolsUITests: 23 executed, 6 skipped, 0 failures.
+- macOS unit: 151 passed.
+- content-swift swift test: 23 passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
