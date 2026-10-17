@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-17 01:12'
+updated_date: '2026-10-17 01:26'
 labels:
   - web
 dependencies:
@@ -54,6 +54,8 @@ Add the Hint tool to the existing web practice/review exam-tools panel after Bas
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented web hint data bundling and the practice/review Hint exam tool. Validation: pnpm typecheck; pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm check:hints -- --require-complete; pnpm check:links; pnpm check:schemas. Web tests cover practice/due-review vs mock availability, keyboard/liveness, EN/FR and one-level ladders, 0.5 s answered-with-help timing, progress scheduling, reference-sheet label gating, bundled Basic hints, lesson-link focus, unique heading anchors, and generic lesson labels.
+
+Review fix round for PR #278: lifted web hint state into PracticeSession so lesson-link round trips preserve help; removed section anchors from link hrefs; stabilized 0.5 s qualification across re-renders; implemented review-later post-selection help counting while keeping immediate post-score hints non-mutating; fixed French note styling/live messages/focus cleanup/empty hint panel/heading empty-slug robustness. Validation passed: pnpm typecheck; pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm check:hints -- --require-complete; pnpm check:links; pnpm check:schemas.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
