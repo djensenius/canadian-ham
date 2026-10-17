@@ -691,12 +691,18 @@ private struct CalculatorKeyboardResponder: UIViewRepresentable {
         override var canBecomeFirstResponder: Bool { true }
 
         func update(isActive: Bool, onKey: @escaping (CalculatorKey) -> Void) {
+            let becameActive = !self.isActive && isActive
             if self.isActive && !isActive {
                 swallowedPresses.removeAll()
             }
             self.isActive = isActive
             self.onKey = onKey
-            syncFirstResponder()
+            // Claim first responder only when calculator input is activated (or the view joins a
+            // window), never on unrelated view updates, so keyboard focus that moved to another
+            // control is not stolen back.
+            if becameActive || !isActive {
+                syncFirstResponder()
+            }
         }
 
         override func didMoveToWindow() {
