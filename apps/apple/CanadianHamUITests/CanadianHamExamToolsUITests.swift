@@ -453,7 +453,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
             XCTAssertTrue(answer.isHittable, "Expected answer A to be hittable before completing the hinted-answer flow")
             answer.tap()
-            XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5), "Expected immediate feedback after a hinted answer")
+            let feedback = app.descendants(matching: .any)["answer-feedback-title"].firstMatch
+            XCTAssertTrue(feedback.waitForExistence(timeout: 5), "Expected immediate feedback after a hinted answer")
+            scrollBackgroundUntilHittable(feedback, in: app, maxSwipes: 12)
+            scrollBackgroundPastElement(app.descendants(matching: .any)["exam-tool-calculator-button"].firstMatch, preserving: feedback, in: app, maxSwipes: 8)
+            XCTAssertTrue(feedback.isHittable || isFullyVisible(feedback, in: app, requiresHittable: false), "Expected hinted-answer feedback to be visible before auditing the result. Frame: \(frameDescription(feedback.frame))")
             waitBriefly(0.8)
             try auditIgnoringOccludedLessonTextContrast(app: app)
             app.terminate()
@@ -918,6 +922,19 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 preciseExamToolScroll(scrollView, in: app, fingerDeltaY: -72)
             }
             waitBriefly()
+        }
+    }
+
+    private func scrollBackgroundPastElement(_ element: XCUIElement, preserving preservedElement: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        let scrollView = scrollView(containing: preservedElement, in: app)
+        for _ in 0..<maxSwipes where element.exists && visibleFrameExcludingNavigationBar(in: app).intersects(element.frame) {
+            preciseExamToolScroll(scrollView, in: app, fingerDeltaY: -72)
+            waitBriefly()
+            if preservedElement.exists && preservedElement.frame.maxY <= visibleFrameExcludingNavigationBar(in: app).minY {
+                preciseExamToolScroll(scrollView, in: app, fingerDeltaY: 72)
+                waitBriefly()
+                break
+            }
         }
     }
 

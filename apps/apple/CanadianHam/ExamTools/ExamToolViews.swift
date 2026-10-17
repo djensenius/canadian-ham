@@ -28,6 +28,7 @@ struct ExamToolButtons: View {
         ForEach(availableTools) { tool in
             Button { openTool(tool) } label: {
                 AccessibleSecondaryButtonLabel(title: tool.title)
+                    .frame(minWidth: 160)
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("exam-tool-\(tool.rawValue)-button")
