@@ -1774,10 +1774,11 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
     return t(interfaceLanguage, "referenceSheetTitle");
   }
 
+  const panelOpen = activeTool !== null && (activeTool !== "hint" || hintAvailable);
   const shellClassName = [
     "exam-tools-shell",
     `exam-tools-shell--${context}`,
-    activeTool === null ? "" : "exam-tools-shell--open",
+    panelOpen ? "exam-tools-shell--open" : "",
   ].filter(Boolean).join(" ");
 
   return (
@@ -1815,7 +1816,7 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
       <div className="exam-tools-content">
         {children}
       </div>
-      {activeTool === null ? null : (
+      {!panelOpen ? null : (
         <aside className="exam-tool-panel" data-testid="exam-tool-panel" id={panelId} aria-labelledby={`${panelId}-title`} tabIndex={-1} onKeyDown={handlePanelKeyDown}>
           <div className="exam-tool-panel__header">
             <h3 id={`${panelId}-title`}>{toolTitle()}</h3>
