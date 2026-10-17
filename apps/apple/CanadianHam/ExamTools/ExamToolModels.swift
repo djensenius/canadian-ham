@@ -97,6 +97,105 @@ func canadianHamInterfaceCalculatorLocale(bundle: Bundle = .main) -> CalculatorL
     bundle.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true ? .fr : .en
 }
 
+
+struct CalculatorToolLayout {
+    let availableHeight: CGFloat
+    let dynamicTypeSize: DynamicTypeSize
+
+    var sectionSpacing: CGFloat { usesAccessibilityMetrics ? accessibilitySectionSpacing : compactSectionSpacing }
+    var keySpacing: CGFloat { usesAccessibilityMetrics ? accessibilityKeySpacing : compactKeySpacing }
+    var displayHeight: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayHeight : compactDisplayHeight }
+    var displayHorizontalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayHorizontalPadding : compactDisplayHorizontalPadding }
+    var displayVerticalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayVerticalPadding : compactDisplayVerticalPadding }
+    var keyHeight: CGFloat { usesAccessibilityMetrics ? accessibilityKeyHeight : min(accessibilityKeyHeight, max(minimumKeyHeight, compactKeyHeight)) }
+    var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
+
+    var usesScrolling: Bool {
+        usesAccessibilityMetrics || compactContentHeightAtMinimumTargets > availableHeight
+    }
+
+    var usesAccessibilityMetrics: Bool {
+        dynamicTypeSize.isAccessibilitySize
+    }
+
+    private var compactKeyHeight: CGFloat {
+        let gridHeight = max(0, availableHeight - compactNonGridContentHeight)
+        return (gridHeight - compactGridSpacing) / CGFloat(rowCount)
+    }
+
+    private var compactContentHeightAtMinimumTargets: CGFloat {
+        compactNonGridContentHeight + (minimumKeyHeight * CGFloat(rowCount)) + compactGridSpacing
+    }
+
+    private var compactNonGridContentHeight: CGFloat {
+        let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
+        let helpTotal = showsCompactHelpText ? compactEstimatedHelpHeight + compactSectionSpacing : 0
+        return displayTotal + compactSectionSpacing + helpTotal
+    }
+
+    private var compactGridSpacing: CGFloat {
+        compactKeySpacing * CGFloat(rowCount - 1)
+    }
+
+    private var showsCompactHelpText: Bool {
+        guard !usesAccessibilityMetrics, availableHeight >= compactHelpVisibilityHeight else { return false }
+        return compactContentHeightWithEstimatedHelp <= availableHeight
+    }
+
+    private var compactContentHeightWithEstimatedHelp: CGFloat {
+        let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
+        let helpTotal = compactEstimatedHelpHeight + compactSectionSpacing
+        return displayTotal + compactSectionSpacing + helpTotal + (minimumKeyHeight * CGFloat(rowCount)) + compactGridSpacing
+    }
+
+    private var compactEstimatedHelpHeight: CGFloat {
+        // The keyboard-help caption wraps at xxxLarge in the medium sheet; reserve measured line counts
+        // instead of the old fixed 48 pt so showing it never forces keys below their 44 pt target.
+        compactEstimatedHelpLineHeight * compactEstimatedHelpLineCount
+    }
+
+    private var compactEstimatedHelpLineHeight: CGFloat {
+        switch dynamicTypeSize {
+        case .xSmall, .small, .medium:
+            return 16
+        case .large, .xLarge:
+            return 18
+        case .xxLarge:
+            return 20
+        case .xxxLarge:
+            return 22
+        default:
+            return 22
+        }
+    }
+
+    private var compactEstimatedHelpLineCount: CGFloat {
+        switch dynamicTypeSize {
+        case .xSmall, .small, .medium, .large, .xLarge:
+            return 3
+        case .xxLarge:
+            return 4
+        default:
+            return 5
+        }
+    }
+
+    private var accessibilitySectionSpacing: CGFloat { 12 }
+    private var accessibilityKeySpacing: CGFloat { 8 }
+    private var accessibilityDisplayHeight: CGFloat { 72 }
+    private var accessibilityDisplayHorizontalPadding: CGFloat { 16 }
+    private var accessibilityDisplayVerticalPadding: CGFloat { 16 }
+    private var accessibilityKeyHeight: CGFloat { 64 }
+    private var compactSectionSpacing: CGFloat { 6 }
+    private var compactKeySpacing: CGFloat { 6 }
+    private var compactDisplayHeight: CGFloat { 48 }
+    private var compactDisplayHorizontalPadding: CGFloat { 12 }
+    private var compactDisplayVerticalPadding: CGFloat { 4 }
+    private var compactHelpVisibilityHeight: CGFloat { 440 }
+    private var minimumKeyHeight: CGFloat { 44 }
+    private var rowCount: Int { 6 }
+}
+
 struct ReferenceSheetConfiguration: Equatable, Sendable {
     let resourceName: String
     let resourceExtension: String

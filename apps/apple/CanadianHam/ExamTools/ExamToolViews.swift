@@ -805,97 +805,9 @@ private struct CalculatorKeyboardResponder: UIViewRepresentable {
 }
 #endif
 
-struct CalculatorToolLayout {
-    let availableHeight: CGFloat
-    let dynamicTypeSize: DynamicTypeSize
-
-    var sectionSpacing: CGFloat { usesAccessibilityMetrics ? DesignTokens.Spacing.md : compactSectionSpacing }
-    var keySpacing: CGFloat { usesAccessibilityMetrics ? DesignTokens.Spacing.sm : compactKeySpacing }
-    var displayHeight: CGFloat { usesAccessibilityMetrics ? 72 : compactDisplayHeight }
-    var displayHorizontalPadding: CGFloat { usesAccessibilityMetrics ? DesignTokens.Spacing.lg : DesignTokens.Spacing.md }
-    var displayVerticalPadding: CGFloat { usesAccessibilityMetrics ? DesignTokens.Spacing.lg : compactDisplayVerticalPadding }
-    var keyHeight: CGFloat { usesAccessibilityMetrics ? 64 : min(64, max(minimumKeyHeight, compactKeyHeight)) }
+private extension CalculatorToolLayout {
     var displayFont: Font { (usesAccessibilityMetrics ? DesignTokens.FontScale.display : DesignTokens.FontScale.title).monospacedDigit().weight(.bold) }
     var keyFont: Font { (usesAccessibilityMetrics ? DesignTokens.FontScale.body : DesignTokens.FontScale.caption).weight(.semibold) }
-    var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
-
-    var usesScrolling: Bool {
-        usesAccessibilityMetrics || compactContentHeightAtMinimumTargets > availableHeight
-    }
-
-    private var usesAccessibilityMetrics: Bool {
-        dynamicTypeSize.isAccessibilitySize
-    }
-
-    private var compactKeyHeight: CGFloat {
-        let gridHeight = max(0, availableHeight - compactNonGridContentHeight)
-        return (gridHeight - compactGridSpacing) / CGFloat(rowCount)
-    }
-
-    private var compactContentHeightAtMinimumTargets: CGFloat {
-        compactNonGridContentHeight + (minimumKeyHeight * CGFloat(rowCount)) + compactGridSpacing
-    }
-
-    private var compactNonGridContentHeight: CGFloat {
-        let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
-        let helpTotal = showsCompactHelpText ? compactEstimatedHelpHeight + compactSectionSpacing : 0
-        return displayTotal + compactSectionSpacing + helpTotal
-    }
-
-    private var compactGridSpacing: CGFloat {
-        compactKeySpacing * CGFloat(rowCount - 1)
-    }
-
-    private var showsCompactHelpText: Bool {
-        guard !usesAccessibilityMetrics, availableHeight >= compactHelpVisibilityHeight else { return false }
-        return compactContentHeightWithEstimatedHelp <= availableHeight
-    }
-
-    private var compactContentHeightWithEstimatedHelp: CGFloat {
-        let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
-        let helpTotal = compactEstimatedHelpHeight + compactSectionSpacing
-        return displayTotal + compactSectionSpacing + helpTotal + (minimumKeyHeight * CGFloat(rowCount)) + compactGridSpacing
-    }
-
-    private var compactEstimatedHelpHeight: CGFloat {
-        // The keyboard-help caption wraps at xxxLarge in the medium sheet; reserve measured line counts
-        // instead of the old fixed 48 pt so showing it never forces keys below their 44 pt target.
-        compactEstimatedHelpLineHeight * compactEstimatedHelpLineCount
-    }
-
-    private var compactEstimatedHelpLineHeight: CGFloat {
-        switch dynamicTypeSize {
-        case .xSmall, .small, .medium:
-            return 16
-        case .large, .xLarge:
-            return 18
-        case .xxLarge:
-            return 20
-        case .xxxLarge:
-            return 22
-        default:
-            return 22
-        }
-    }
-
-    private var compactEstimatedHelpLineCount: CGFloat {
-        switch dynamicTypeSize {
-        case .xSmall, .small, .medium, .large, .xLarge:
-            return 3
-        case .xxLarge:
-            return 4
-        default:
-            return 5
-        }
-    }
-
-    private var compactSectionSpacing: CGFloat { 6 }
-    private var compactKeySpacing: CGFloat { 6 }
-    private var compactDisplayHeight: CGFloat { 48 }
-    private var compactDisplayVerticalPadding: CGFloat { 4 }
-    private var compactHelpVisibilityHeight: CGFloat { 440 }
-    private var minimumKeyHeight: CGFloat { 44 }
-    private var rowCount: Int { 6 }
 }
 
 struct ReferenceSheetToolView: View {
