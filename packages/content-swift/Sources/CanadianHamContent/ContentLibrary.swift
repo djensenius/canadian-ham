@@ -46,11 +46,53 @@ public struct ContentLibrary: Sendable {
         let quizzes = try loadJSONFiles(LessonQuiz.self, root: layout.quizzesRoot, fileExtension: "json")
         let explanations = try loadJSONFiles(Explanation.self, root: layout.explanationsRoot, fileExtension: "json")
             .sorted { ordinalLess($0.questionId, $1.questionId) }
-        let questionHints = try (directoryExists(layout.hintsRoot) ? loadJSONFiles(QuestionHint.self, root: layout.hintsRoot, fileExtension: "json") : [])
-            .filter { $0.bankId == bankId }
-            .sorted { ordinalLess($0.questionId, $1.questionId) }
+        let questionHints = loadQuestionHintsIfValid(layout: layout, bankId: bankId)
 
-        let library = try ContentLibrary(
+        let libraryWithoutHints = try makeLibrary(
+            manifest: manifest,
+            questions: questions,
+            subsections: subsections,
+            categories: categories,
+            subsectionTitles: subsectionTitles,
+            modulesAndLessons: modulesAndLessons,
+            quizzes: quizzes,
+            explanations: explanations,
+            questionHints: []
+        )
+        try libraryWithoutHints.validate()
+
+        guard !questionHints.isEmpty else { return libraryWithoutHints }
+        do {
+            let library = try makeLibrary(
+                manifest: manifest,
+                questions: questions,
+                subsections: subsections,
+                categories: categories,
+                subsectionTitles: subsectionTitles,
+                modulesAndLessons: modulesAndLessons,
+                quizzes: quizzes,
+                explanations: explanations,
+                questionHints: questionHints
+            )
+            try library.validate()
+            return library
+        } catch {
+            return libraryWithoutHints
+        }
+    }
+
+    private static func makeLibrary(
+        manifest: BankManifest,
+        questions: [Question],
+        subsections: [Subsection],
+        categories: [Category],
+        subsectionTitles: [SubsectionTitle],
+        modulesAndLessons: (modules: [LessonModule], lessons: [Lesson]),
+        quizzes: [LessonQuiz],
+        explanations: [Explanation],
+        questionHints: [QuestionHint]
+    ) throws -> ContentLibrary {
+        try ContentLibrary(
             manifest: manifest,
             questions: questions.sorted { ordinalLess($0.id, $1.id) },
             subsections: subsections.sorted { ordinalLess($0.id, $1.id) },
@@ -62,8 +104,17 @@ public struct ContentLibrary: Sendable {
             explanations: explanations,
             questionHints: questionHints
         )
-        try library.validate()
-        return library
+    }
+
+    private static func loadQuestionHintsIfValid(layout: ContentLayout, bankId: String) -> [QuestionHint] {
+        guard directoryExists(layout.hintsRoot) else { return [] }
+        do {
+            return try loadJSONFiles(QuestionHint.self, root: layout.hintsRoot, fileExtension: "json")
+                .filter { $0.bankId == bankId }
+                .sorted { ordinalLess($0.questionId, $1.questionId) }
+        } catch {
+            return []
+        }
     }
 
     public init(

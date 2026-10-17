@@ -7,7 +7,7 @@ import UIKit
 #endif
 
 struct ExamToolButtons: View {
-    var availableTools: [ExamTool] = ExamTool.allCases
+    let availableTools: [ExamTool]
     let openTool: (ExamTool) -> Void
 
     var body: some View {
@@ -430,13 +430,12 @@ struct HintToolContext {
     let canRecordHelp: Bool
     let referenceSheetAvailable: Bool
     let revealLevel: (Int) -> Void
-    let hintVisibleLongEnough: () -> Void
+    let hintVisibleLongEnough: () -> Bool
     let openLesson: (QuestionHintLessonLink) -> Void
 }
 
 private struct HintToolView: View {
     let context: HintToolContext
-    @State private var liveStatus = ""
     @State private var qualificationTimer = HintVisibilityQualificationTimer()
 
     private var lastAvailableLevel: Int { context.hint.hints.count }
@@ -465,7 +464,7 @@ private struct HintToolView: View {
                     hintCard(entry)
                 }
 
-                if context.referenceSheetAvailable, let referenceSheetSection, context.visibleLevel > 0 {
+                if HintToolRules.showsReferencePointer(referenceSheetAvailable: context.referenceSheetAvailable, visibleLevel: context.visibleLevel, referenceSheetSection: referenceSheetSection), let referenceSheetSection {
                     Text(referencePointerText(referenceSheetSection)) // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
@@ -480,7 +479,7 @@ private struct HintToolView: View {
                         }
                         .buttonStyle(AccessibleSecondaryButtonStyle())
                         .accessibilityIdentifier("hint-review-in-lesson-button")
-                        if context.language == .french {
+                        if canadianHamUsesFrenchUI {
                             Text("Lesson offered in English only.")
                                 .font(DesignTokens.FontScale.caption.weight(.semibold))
                                 .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -540,7 +539,6 @@ private struct HintToolView: View {
     private func reveal(_ level: Int) {
         context.revealLevel(level)
         let announcement = String.localizedStringWithFormat(String(localized: "Hint %d shown."), level)
-        liveStatus = announcement
         AccessibilityNotification.Announcement(announcement).post()
     }
 
@@ -554,9 +552,8 @@ private struct HintToolView: View {
             canRecordHelp: context.canRecordHelp,
             alreadyQualified: context.answeredWithHelpQualified
         ) {
-            context.hintVisibleLongEnough()
-            liveStatus = String(localized: "Answers to this question will be saved as answered with help.")
-            AccessibilityNotification.Announcement(liveStatus).post()
+            guard context.hintVisibleLongEnough() else { return }
+            AccessibilityNotification.Announcement(String(localized: "Answers to this question will be saved as answered with help.")).post()
         }
     }
 
@@ -565,8 +562,9 @@ private struct HintToolView: View {
     }
 
     private func referencePointerText(_ section: String) -> AttributedString {
+        let interfaceLanguage: BankLanguage = canadianHamUsesFrenchUI ? .french : .english
         var text = AttributedString(String(localized: "Reference sheet: "))
-        text += localized(referenceSheetSectionLabel(section, language: context.language), language: context.language)
+        text += localized(referenceSheetSectionLabel(section, language: interfaceLanguage), language: interfaceLanguage)
         return text
     }
 }

@@ -5,7 +5,7 @@ import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
 
-private var canadianHamUsesFrenchUI: Bool {
+var canadianHamUsesFrenchUI: Bool {
     Bundle.main.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true
 }
 
@@ -613,7 +613,7 @@ struct LessonMarkdownView: View {
         let blocks = displayBlocks(rendered)
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             ForEach(blocks) { displayBlock in
-                blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor)
+                blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
             }
         }
         .onAppear { focusTargetHeadingAfterLayout() }
@@ -621,17 +621,11 @@ struct LessonMarkdownView: View {
     }
 
     @ViewBuilder
-    private func blockView(_ block: LessonBlock, headingAnchor: String?) -> some View {
+    private func blockView(_ block: LessonBlock, headingAnchor: String?, fallbackID: String) -> some View {
         switch block {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
-                Text(english(strippingLinks(from: text))) // l10n: content(en)
-                    .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityAddTraits(.isHeader)
-                    .id(headingAnchor)
-                    .accessibilityIdentifier(headingAnchor.map { "lesson-heading-\($0)" } ?? "lesson-heading")
-                    .accessibilityFocused($focusedHeadingAnchor, equals: headingAnchor)
+                headingView(level: level, text: text, headingAnchor: headingAnchor, fallbackID: fallbackID)
             }
         case .paragraph(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
@@ -690,7 +684,23 @@ struct LessonMarkdownView: View {
             } else {
                 headingAnchor = nil
             }
-            return DisplayLessonBlock(id: offset, block: block, headingAnchor: headingAnchor)
+            return DisplayLessonBlock(id: offset, block: block, headingAnchor: headingAnchor, fallbackID: "lesson-block-\(offset)")
+        }
+    }
+
+    @ViewBuilder
+    private func headingView(level: Int, text: AttributedString, headingAnchor: String?, fallbackID: String) -> some View {
+        let heading = Text(english(strippingLinks(from: text))) // l10n: content(en)
+            .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .accessibilityAddTraits(.isHeader)
+            .id(headingAnchor ?? fallbackID)
+        if let headingAnchor {
+            heading
+                .accessibilityIdentifier("lesson-heading-\(headingAnchor)")
+                .accessibilityFocused($focusedHeadingAnchor, equals: headingAnchor)
+        } else {
+            heading.accessibilityIdentifier("lesson-heading")
         }
     }
 
@@ -720,6 +730,7 @@ private struct DisplayLessonBlock: Identifiable {
     let id: Int
     let block: LessonBlock
     let headingAnchor: String?
+    let fallbackID: String
 }
 
 private struct LessonFigureView: View {

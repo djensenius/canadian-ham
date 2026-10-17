@@ -152,6 +152,31 @@ final class ContentLibraryTests: XCTestCase {
         }
     }
 
+    func testBundledQuestionHintSectionAnchorsResolveInLessons() throws {
+        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
+
+        for hint in library.questionHints {
+            guard let sectionAnchor = hint.lessonLink.sectionAnchor else { continue }
+            let lesson = try XCTUnwrap(library.lessonsById[hint.lessonLink.lessonId], "\(hint.id) should reference an existing lesson")
+            let anchors = try LessonHeadingAnchors.anchors(for: lesson.bodyMarkdown, title: lesson.title.en)
+            XCTAssertTrue(anchors.contains(sectionAnchor), "\(hint.id) sectionAnchor \(sectionAnchor) should resolve in \(lesson.id)")
+        }
+    }
+
+    func testBadHintFileDropsHintsWithoutDroppingLessonContent() throws {
+        try withTemporaryContentFixture { root in
+            let hintsDirectory = root.appendingPathComponent("content/hints/b-001", isDirectory: true)
+            try FileManager.default.createDirectory(at: hintsDirectory, withIntermediateDirectories: true)
+            try "{".write(to: hintsDirectory.appendingPathComponent("bad-hint.json"), atomically: true, encoding: .utf8)
+
+            let library = try ContentLibrary.load(fromDirectory: root)
+
+            XCTAssertEqual(library.questionHints.count, 0)
+            XCTAssertEqual(library.lessons.count, 8)
+            XCTAssertEqual(library.questions.count, 1)
+        }
+    }
+
     func testFigureDirectivesForOhmsLawLesson() throws {
         let library = try ContentLibrary.load(fromDirectory: repoRootURL())
         let lesson = try XCTUnwrap(library.lessonsById["L-005-02"])

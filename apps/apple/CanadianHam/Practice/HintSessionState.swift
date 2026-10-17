@@ -5,6 +5,12 @@ struct PracticeHintQualificationResult: Equatable {
     var answeredWithHelpQuestionIds: Set<String>
 }
 
+enum HintToolRules {
+    static func showsReferencePointer(referenceSheetAvailable: Bool, visibleLevel: Int, referenceSheetSection: String?) -> Bool {
+        referenceSheetAvailable && visibleLevel > 0 && referenceSheetSection != nil
+    }
+}
+
 enum PracticeHintRules {
     static func canRecordHelp(mode: ApplePreferences.PracticeMode, alreadySelected: Bool, reviewSubmitted: Bool) -> Bool {
         guard !reviewSubmitted else { return false }
@@ -38,8 +44,12 @@ enum PracticeHintRules {
         return next
     }
 
-    static func shouldSubmitAnswerWithHelp(questionID: String, qualifiedQuestionIds: Set<String>, answeredWithHelpQuestionIds: Set<String>) -> Bool {
+    static func shouldCommitAnswerWithHelp(questionID: String, qualifiedQuestionIds: Set<String>, answeredWithHelpQuestionIds: Set<String>) -> Bool {
         qualifiedQuestionIds.contains(questionID) || answeredWithHelpQuestionIds.contains(questionID)
+    }
+
+    static func shouldSubmitAnswerWithHelp(questionID: String, qualifiedQuestionIds: Set<String>, answeredWithHelpQuestionIds: Set<String>) -> Bool {
+        shouldCommitAnswerWithHelp(questionID: questionID, qualifiedQuestionIds: qualifiedQuestionIds, answeredWithHelpQuestionIds: answeredWithHelpQuestionIds)
     }
 }
 

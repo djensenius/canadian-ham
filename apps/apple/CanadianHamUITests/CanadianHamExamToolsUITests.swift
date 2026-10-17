@@ -138,7 +138,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(review.waitForExistence(timeout: 5), "The lesson link appears only after the last available hint level")
         XCTAssertEqual(review.label, "Review in lesson", "The link label must stay generic before answering")
         review.tap()
-        XCTAssertTrue(app.descendants(matching: .any)["lesson-heading-wavelength-and-frequency"].firstMatch.waitForExistence(timeout: 10), "Hint lesson link should open the shared sectionAnchor")
+        let heading = app.descendants(matching: .any)["lesson-heading-wavelength-and-frequency"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), "Hint lesson link should open the shared sectionAnchor")
+        XCTAssertTrue(heading.isHittable || isFullyVisible(heading, in: app, requiresHittable: false), "Hint lesson link should scroll the target heading into view. Frame: \(frameDescription(heading.frame))")
+
+        tapNavigationBack(in: app, context: "returning from hint lesson link")
+        let questionID = app.descendants(matching: .any)["question-identifier"].firstMatch
+        XCTAssertTrue(questionID.waitForExistence(timeout: 10), "Back from the hint lesson should return to the practice question")
+        XCTAssertEqual(questionID.label, "B-006-008-004", "The practice session should keep the same question after a hint lesson round trip")
+        openTool(.hint, in: app)
+        XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5), "The practice session should keep Hint 2 visible after returning from the lesson")
     }
 
     func testOneLevelHintHasNoSecondHintAffordance() throws {
@@ -427,6 +436,30 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 #endif
     }
 
+    func testAccessibilityAuditHintedAnswerResultLightAndDark() throws {
+        for appearance in ["light", "dark"] {
+            let app = launchTwoLevelHintPracticeQuestion(appearance: appearance)
+            openTool(.hint, in: app)
+            let first = app.buttons["hint-show-level-1-button"].firstMatch
+            XCTAssertTrue(first.waitForExistence(timeout: 5), "Expected Hint 1 before qualifying a hinted answer")
+            scrollExamToolUntilHittable(first, in: app, maxSwipes: 8)
+            first.tap()
+            waitBriefly(0.7)
+            closeTool(in: app)
+            waitBriefly(0.3)
+
+            let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+            XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected answer A after closing the hint tool")
+            scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+            XCTAssertTrue(answer.isHittable, "Expected answer A to be hittable before completing the hinted-answer flow")
+            answer.tap()
+            XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5), "Expected immediate feedback after a hinted answer")
+            waitBriefly(0.8)
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+            app.terminate()
+        }
+    }
+
     func testRegularWidthInspectorAccessibilityAuditLightAndDark() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector audit is covered by the targeted iPad run.")
@@ -660,6 +693,20 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let close = app.buttons["exam-tool-close-button"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 5), "Expected a close tools button")
         close.tap()
+    }
+
+    private func tapNavigationBack(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let navigationBar = app.navigationBars.firstMatch
+        XCTAssertTrue(navigationBar.waitForExistence(timeout: 5), "\(context): expected a navigation bar before tapping Back", file: file, line: line)
+        let labels = ["Back", "All questions", "Practice"]
+        let preferredBack = navigationBar.buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
+        if preferredBack.waitForExistence(timeout: 2) {
+            preferredBack.tap()
+            return
+        }
+        let anyBack = navigationBar.buttons.element(boundBy: 0)
+        XCTAssertTrue(anyBack.waitForExistence(timeout: 5), "\(context): expected a navigation back button", file: file, line: line)
+        anyBack.tap()
     }
 
     private func revealBothHints(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {

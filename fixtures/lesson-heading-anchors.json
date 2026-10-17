@@ -19,6 +19,16 @@
       "name": "inline links and emphasis are stripped before slugging",
       "headingText": "Review [linked *power*](https://example.invalid) and **gain**",
       "expectedSlug": "review-linked-power-and-gain"
+    },
+    {
+      "name": "unicode number characters are preserved",
+      "headingText": "I²R and ½-wave shortcuts",
+      "expectedSlug": "i²r-and-½-wave-shortcuts"
+    },
+    {
+      "name": "combining marks are removed like JavaScript Unicode property escapes",
+      "headingText": "Café gain and phase",
+      "expectedSlug": "cafe-gain-and-phase"
     }
   ],
   "anchorCases": [

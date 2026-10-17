@@ -15,6 +15,7 @@ final class HintSessionStateTests: XCTestCase {
 
         XCTAssertEqual(result.qualifiedQuestionIds, ["B-001-002-002"])
         XCTAssertEqual(result.answeredWithHelpQuestionIds, [])
+        XCTAssertTrue(PracticeHintRules.shouldCommitAnswerWithHelp(questionID: "B-001-002-002", qualifiedQuestionIds: result.qualifiedQuestionIds, answeredWithHelpQuestionIds: result.answeredWithHelpQuestionIds))
         XCTAssertTrue(PracticeHintRules.shouldSubmitAnswerWithHelp(questionID: "B-001-002-002", qualifiedQuestionIds: result.qualifiedQuestionIds, answeredWithHelpQuestionIds: result.answeredWithHelpQuestionIds))
     }
 
@@ -55,6 +56,14 @@ final class HintSessionStateTests: XCTestCase {
         )
 
         XCTAssertEqual(answered, ["B-001-002-002"])
+        XCTAssertTrue(PracticeHintRules.shouldSubmitAnswerWithHelp(questionID: "B-001-002-002", qualifiedQuestionIds: [], answeredWithHelpQuestionIds: answered))
+    }
+
+    func testReferencePointerRuleShowsOnlyWhenReferenceSheetIsAvailable() {
+        XCTAssertTrue(HintToolRules.showsReferencePointer(referenceSheetAvailable: true, visibleLevel: 1, referenceSheetSection: "ohms-law"))
+        XCTAssertFalse(HintToolRules.showsReferencePointer(referenceSheetAvailable: false, visibleLevel: 1, referenceSheetSection: "ohms-law"))
+        XCTAssertFalse(HintToolRules.showsReferencePointer(referenceSheetAvailable: true, visibleLevel: 0, referenceSheetSection: "ohms-law"))
+        XCTAssertFalse(HintToolRules.showsReferencePointer(referenceSheetAvailable: true, visibleLevel: 1, referenceSheetSection: nil))
     }
 
     func testApplyPracticeAnswerSubmitsAnsweredWithHelpToEngine() throws {
@@ -92,21 +101,26 @@ final class HintSessionStateTests: XCTestCase {
         let timer = HintVisibilityQualificationTimer()
         var fired: [String] = []
 
-        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 80_000_000) {
+        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 400_000_000) {
             fired.append("first")
         }
-        try await Task.sleep(nanoseconds: 30_000_000)
-        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 80_000_000) {
+        try await Task.sleep(nanoseconds: 150_000_000)
+        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 400_000_000) {
             fired.append("restarted")
         }
-        try await Task.sleep(nanoseconds: 70_000_000)
+        try await Task.sleep(nanoseconds: 300_000_000)
         XCTAssertEqual(fired, ["first"], "Beginning the same visible question again must not restart the 0.5 s qualification window")
 
-        timer.begin(questionID: "B-001-002-003", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 80_000_000) {
+        timer.begin(questionID: "B-001-002-003", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 350_000_000) {
             fired.append("second")
         }
-        timer.cancel()
-        try await Task.sleep(nanoseconds: 100_000_000)
-        XCTAssertEqual(fired, ["first"], "Closing the hint or changing away before the delay must not qualify help")
+        try await Task.sleep(nanoseconds: 150_000_000)
+        timer.begin(questionID: "B-001-002-004", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 350_000_000) {
+            fired.append("third")
+        }
+        try await Task.sleep(nanoseconds: 250_000_000)
+        XCTAssertEqual(fired, ["first"], "Changing questions before the delay must cancel the previous qualification timer")
+        try await Task.sleep(nanoseconds: 150_000_000)
+        XCTAssertEqual(fired, ["first", "third"], "The timer for the newly visible question should still qualify after its full delay")
     }
 }

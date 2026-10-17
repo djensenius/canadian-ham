@@ -646,8 +646,12 @@ struct RootView: View {
             return
         }
 #endif
-        selection = .learn
-        navigationPath = [route]
+        if selection.isExamSessionSelection {
+            navigationPath.append(route)
+        } else {
+            selection = .learn
+            navigationPath = [route]
+        }
     }
 
     @ViewBuilder

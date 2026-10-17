@@ -644,17 +644,20 @@ struct PracticeSessionView: View {
         state.hintLevelsByQuestionId[questionID] = max(state.hintLevelsByQuestionId[questionID] ?? 0, level)
     }
 
-    private func qualifyAnsweredWithHelp(questionID: String) {
+    private func qualifyAnsweredWithHelp(questionID: String) -> Bool {
+        let currentQualified = state.hintQualifiedQuestionIds
+        let currentAnsweredWithHelp = state.answeredWithHelpQuestionIds
         let result = PracticeHintRules.qualifyingHint(
             questionID: questionID,
             mode: progressStore.preferences.practiceMode,
             alreadySelected: state.selectedByQuestionId[questionID] != nil,
             reviewSubmitted: state.reviewSubmitted,
-            qualifiedQuestionIds: state.hintQualifiedQuestionIds,
-            answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds
+            qualifiedQuestionIds: currentQualified,
+            answeredWithHelpQuestionIds: currentAnsweredWithHelp
         )
         state.hintQualifiedQuestionIds = result.qualifiedQuestionIds
         state.answeredWithHelpQuestionIds = result.answeredWithHelpQuestionIds
+        return result.qualifiedQuestionIds != currentQualified || result.answeredWithHelpQuestionIds != currentAnsweredWithHelp
     }
 
     private func hintCanAffectAnswer(questionID: String) -> Bool {
@@ -825,7 +828,12 @@ struct PracticeSessionView: View {
         do {
             let now = try AppleStudyEngine.canonicalNow()
             let progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
-            let next = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: sourceIndex, now: now, answeredWithHelp: state.hintQualifiedQuestionIds.contains(question.id))
+            let answeredWithHelp = PracticeHintRules.shouldCommitAnswerWithHelp(
+                questionID: question.id,
+                qualifiedQuestionIds: state.hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds
+            )
+            let next = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: sourceIndex, now: now, answeredWithHelp: answeredWithHelp)
             try progressStore.saveQuestionProgress(next)
             state.committedQuestionIds.insert(question.id)
             onDataChanged()

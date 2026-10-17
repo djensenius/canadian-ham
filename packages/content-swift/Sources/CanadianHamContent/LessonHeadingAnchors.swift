@@ -7,8 +7,7 @@ public enum LessonHeadingAnchors {
             .replacingOccurrences(of: #"<[^>]+>"#, with: "", options: .regularExpression)
             .lowercased()
         let allowed = stripped.unicodeScalars.filter { scalar in
-            CharacterSet.letters.contains(scalar)
-                || CharacterSet.decimalDigits.contains(scalar)
+            isJavaScriptLetterOrNumber(scalar)
                 || CharacterSet.whitespacesAndNewlines.contains(scalar)
                 || scalar == UnicodeScalar("-")
         }
@@ -48,6 +47,16 @@ public enum LessonHeadingAnchors {
         }
 
         return anchors
+    }
+
+    private static func isJavaScriptLetterOrNumber(_ scalar: UnicodeScalar) -> Bool {
+        switch scalar.properties.generalCategory {
+        case .uppercaseLetter, .lowercaseLetter, .titlecaseLetter, .modifierLetter, .otherLetter,
+             .decimalNumber, .letterNumber, .otherNumber:
+            true
+        default:
+            false
+        }
     }
 
     private static func stripInlineMarkdown(_ value: String) -> String {
