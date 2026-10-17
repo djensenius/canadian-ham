@@ -1,10 +1,11 @@
 ---
 id: TASK-15
 title: iPhone Duo readiness
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-16 08:08'
+updated_date: '2026-10-17 23:56'
 labels:
   - apple
   - 'legacy:T-706'
@@ -32,6 +33,16 @@ Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026
 - [ ] #7 A hint counts as used only after at least 0.5 s of visibility (button, peek or VoiceOver); unit tests cover the posture state machine and timing
 - [ ] #8 Hinge code is gated by #available(iOS 27.1, *) and an SDK-conditional build setting so the project still builds with older Xcode SDKs
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Run the iPhone Duo runtime experiment with xbuild/simctl/Simulator inspection and record findings before product changes.
+2. Inspect the existing task-44.3 exam-tools split/sheet implementation and 50.12 hint paths, then replace iPhone idiom gating with a narrow width-driven unfolded split rule that preserves non-Duo iPhone behaviour.
+3. Add a posture-provider seam with no hinge implementation yet, plus DEBUG-only test hooks for resize/size-class simulation where needed.
+4. Add or update targeted unit/UI coverage for state preservation and width-driven panel selection, without weakening existing audits.
+5. Validate with targeted iPhone Duo, iPhone 17 Pro, iPad, macOS, and web/l10n checks; check only AC1-AC5 and leave task-15 In Progress for part 2.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
