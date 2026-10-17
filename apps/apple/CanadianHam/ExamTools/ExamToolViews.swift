@@ -10,6 +10,14 @@ struct ExamToolButtons: View {
     let availableTools: [ExamTool]
     let openTool: (ExamTool) -> Void
 
+    private var compactButtonMinWidth: CGFloat? {
+#if os(iOS)
+        UIDevice.current.userInterfaceIdiom == .pad ? nil : 160
+#else
+        nil
+#endif
+    }
+
     var body: some View {
         ViewThatFits(in: .horizontal) {
             HStack(spacing: DesignTokens.Spacing.sm) { buttons }
@@ -28,7 +36,7 @@ struct ExamToolButtons: View {
         ForEach(availableTools) { tool in
             Button { openTool(tool) } label: {
                 AccessibleSecondaryButtonLabel(title: tool.title)
-                    .frame(minWidth: 160)
+                    .frame(minWidth: compactButtonMinWidth)
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("exam-tool-\(tool.rawValue)-button")
