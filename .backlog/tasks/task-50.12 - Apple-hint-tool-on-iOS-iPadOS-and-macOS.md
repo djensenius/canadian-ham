@@ -1,11 +1,11 @@
 ---
 id: TASK-50.12
 title: 'Apple hint tool on iOS, iPadOS and macOS'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-17 19:55'
+updated_date: '2026-10-17 20:04'
 labels:
   - apple
 dependencies:
@@ -56,6 +56,8 @@ Validation and AC audit after continuing at 01451d4e/882ac42f:
 - macOS xbuild unit tests passed at final code (150 executed, 0 failures).
 - pnpm check:apple-l10n passed with no catalog rewrite (git status clean afterward), node scripts/check-apple-text-sources.ts passed, pnpm typecheck/test/check:hints -- --require-complete/check:schemas passed.
 - AC audit: practice UI exposes Hint and mock UI does not; advanced/tvOS/visionOS are not targeted. Hint ladder shows Hint 1 then Hint 2 only when present, hides reference-sheet pointer until Apple reference sheets are available, keeps session-level state across the lesson link via RootView navigation, and records answeredWithHelp through AppleStudyEngine. Lesson links use the generic localized label and shared LessonHeadingAnchors fixture algorithm; UI test opens the target section anchor and the lesson reader applies accessibility focus to the heading.
+
+Reopened after internal review request-changes; implementing findings 1-15 in focused fix groups with targeted validation.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
