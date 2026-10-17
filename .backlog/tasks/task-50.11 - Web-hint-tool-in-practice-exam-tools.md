@@ -1,10 +1,11 @@
 ---
 id: TASK-50.11
 title: Web hint tool in practice exam tools
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:31'
+updated_date: '2026-10-17 01:05'
 labels:
   - web
 dependencies:
@@ -42,3 +43,9 @@ Add the Hint tool to the existing web practice/review exam-tools panel after Bas
 - [ ] #8 The hint tool handles one-level hint files by presenting only Hint 1, with no empty or broken Hint 2 affordance.
 - [ ] #9 The lesson link uses a generic localized label ("Review in lesson" / « Revoir dans la leçon ») and never shows the linked section heading or lesson title before the question is answered, because some headings contain answer words (e.g. "Sporadic E and six metres")
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add a bundled web hint data loader for the active Basic bank, including localized hint text, one/two-level metadata, reference-sheet section labels, and lesson-link metadata.\n2. Add a Hint tool to the existing web exam-tools panel for practice/review only, with the approved ladder, accessibility announcements/focus, reference-sheet gating, lesson links, and 0.5 s answered-with-help qualification.\n3. Wire practice answer submission to pass answeredWithHelp through the 50.15 progress API while leaving mock exams and lesson quizzes unchanged.\n4. Render shared lesson heading anchors in the web lesson reader and focus linked headings after hint-link navigation without discarding the session.\n5. Add web/unit tests covering session availability, keyboard/accessibility, EN/FR, one-level hints, 0.5 s rule, progress scheduling, reference gating, bundled offline data, lesson-link focus, and heading IDs; then run the requested checks.
+<!-- SECTION:PLAN:END -->
