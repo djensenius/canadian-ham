@@ -1,28 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%lld%%" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%"
-          }
-        }
-      }
-    },
     ", %@" : {
       "localizations" : {
         "fr" : {
@@ -2605,66 +2583,24 @@
         }
       }
     },
-    "Add" : {
+    "%lld%%" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Additionner"
+            "value" : "%lld%%"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Additionner"
-          }
-        }
-      }
-    },
-    "Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
-          }
-        }
-      }
-    },
-    "All clear" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tout effacer"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tout effacer"
-          }
-        }
-      }
-    },
-    "Backspace" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retour arrière"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retour arrière"
+            "value" : "%lld%%"
           }
         }
       }
@@ -2735,684 +2671,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Résultat de la calculatrice : %@"
-          }
-        }
-      }
-    },
-    "Clear entry" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effacer l’entrée"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effacer l’entrée"
-          }
-        }
-      }
-    },
-    "Close tool" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Close tool"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fermer l’outil"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fermer l’outil"
-          }
-        }
-      }
-    },
-    "Decimal point" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Virgule décimale"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Virgule décimale"
-          }
-        }
-      }
-    },
-    "Digit 0" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 0"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 0"
-          }
-        }
-      }
-    },
-    "Digit 1" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 1"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 1"
-          }
-        }
-      }
-    },
-    "Digit 2" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 2"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 2"
-          }
-        }
-      }
-    },
-    "Digit 3" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 3"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 3"
-          }
-        }
-      }
-    },
-    "Digit 4" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 4"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 4"
-          }
-        }
-      }
-    },
-    "Digit 5" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 5"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 5"
-          }
-        }
-      }
-    },
-    "Digit 6" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 6"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 6"
-          }
-        }
-      }
-    },
-    "Digit 7" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 7"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 7"
-          }
-        }
-      }
-    },
-    "Digit 8" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 8"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 8"
-          }
-        }
-      }
-    },
-    "Digit 9" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 9"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chiffre 9"
-          }
-        }
-      }
-    },
-    "Divide" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diviser"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diviser"
-          }
-        }
-      }
-    },
-    "Equals" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Égal"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Égal"
-          }
-        }
-      }
-    },
-    "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer."
-          }
-        }
-      }
-    },
-    "Multiply" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Multiplier"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Multiplier"
-          }
-        }
-      }
-    },
-    "Offline Basic question-bank practice for visionOS" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercices hors ligne avec la banque de questions de compétence de base pour visionOS"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercices hors ligne avec la banque de questions de compétence de base pour visionOS"
-          }
-        }
-      }
-    },
-    "Offline, private, 2025 bank" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hors ligne, privé, banque 2025"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hors ligne, privé, banque 2025"
-          }
-        }
-      }
-    },
-    "Offline, private, Advanced bank" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hors ligne, privé, banque supérieure"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hors ligne, privé, banque supérieure"
-          }
-        }
-      }
-    },
-    "Percent" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pourcentage"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pourcentage"
-          }
-        }
-      }
-    },
-    "Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Sur Mac et avec les claviers matériels iPad, placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets. Sur iPhone et iPad, utilisez les grandes cibles tactiles."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Sur Mac et avec les claviers matériels iPad, placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets. Sur iPhone et iPad, utilisez les grandes cibles tactiles."
-          }
-        }
-      }
-    },
-    "Reciprocal" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inverse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inverse"
-          }
-        }
-      }
-    },
-    "Reference sheet" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille de référence"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille de référence"
-          }
-        }
-      }
-    },
-    "Reference sheet unavailable" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille de référence non disponible"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille de référence non disponible"
-          }
-        }
-      }
-    },
-    "Show full sheet" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show full sheet"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afficher la feuille complète"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afficher la feuille complète"
-          }
-        }
-      }
-    },
-    "Square" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Carré"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Carré"
-          }
-        }
-      }
-    },
-    "Square root" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Racine carrée"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Racine carrée"
-          }
-        }
-      }
-    },
-    "Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions follow your Language setting." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercice suivent votre réglage de langue."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercice suivent votre réglage de langue."
-          }
-        }
-      }
-    },
-    "Study with the bundled ISED Advanced 2025-02-04 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it and is separate from Basic." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Étudiez la banque de questions ISDE EN/FR de compétence supérieure 2025-02-04 incluse sur iPhone, iPad et Mac. La progression reste sur cet appareil sauf si vous l’exportez et est séparée de celle de la compétence de base."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Étudiez la banque de questions ISDE EN/FR de compétence supérieure 2025-02-04 incluse sur iPhone, iPad et Mac. La progression reste sur cet appareil sauf si vous l’exportez et est séparée de celle de la compétence de base."
-          }
-        }
-      }
-    },
-    "Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Étudiez avec la banque de questions ISDE compétence de base 2025-07-15 intégrée sur iPhone, iPad et Mac. La progression reste sur cet appareil, sauf si vous l’exportez."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Étudiez avec la banque de questions ISDE compétence de base 2025-07-15 intégrée sur iPhone, iPad et Mac. La progression reste sur cet appareil, sauf si vous l’exportez."
-          }
-        }
-      }
-    },
-    "Subtract" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Soustraire"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Soustraire"
-          }
-        }
-      }
-    },
-    "The bundled Basic reference sheet is not installed in this build." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La feuille de référence de base intégrée n’est pas installée dans cette version."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La feuille de référence de base intégrée n’est pas installée dans cette version."
-          }
-        }
-      }
-    },
-    "This Apple TV app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Apple TV app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple TV fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple TV fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
-          }
-        }
-      }
-    },
-    "This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
-          }
-        }
-      }
-    },
-    "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
-          }
-        }
-      }
-    },
-    "Toggle sign" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change sign"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Changer le signe"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Changer le signe"
-          }
-        }
-      }
-    },
-    "Zoom in" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom in"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agrandir le zoom"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agrandir le zoom"
-          }
-        }
-      }
-    },
-    "Zoom out" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom out"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réduire le zoom"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réduire le zoom"
           }
         }
       }
@@ -3535,6 +2793,22 @@
         }
       }
     },
+    "Add" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additionner"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additionner"
+          }
+        }
+      }
+    },
     "Advanced" : {
       "localizations" : {
         "fr" : {
@@ -3595,6 +2869,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les leçons de compétence supérieure sont à venir. Entre-temps, utilisez les exercices et les examens simulés de compétence supérieure."
+          }
+        }
+      }
+    },
+    "All clear" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout effacer"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout effacer"
           }
         }
       }
@@ -3833,6 +3123,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tonalité audio"
+          }
+        }
+      }
+    },
+    "Backspace" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retour arrière"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retour arrière"
           }
         }
       }
@@ -4205,6 +3511,22 @@
         }
       }
     },
+    "Clear entry" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l’entrée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l’entrée"
+          }
+        }
+      }
+    },
     "Clear sending practice" : {
       "localizations" : {
         "fr" : {
@@ -4217,6 +3539,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Effacer l’exercice d’envoi"
+          }
+        }
+      }
+    },
+    "Close tool" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close tool"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer l’outil"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer l’outil"
           }
         }
       }
@@ -4677,6 +4021,22 @@
         }
       }
     },
+    "Decimal point" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virgule décimale"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virgule décimale"
+          }
+        }
+      }
+    },
     "Decoded %@." : {
       "localizations" : {
         "fr" : {
@@ -4805,6 +4165,166 @@
         }
       }
     },
+    "Digit 0" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 0"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 0"
+          }
+        }
+      }
+    },
+    "Digit 1" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 1"
+          }
+        }
+      }
+    },
+    "Digit 2" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 2"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 2"
+          }
+        }
+      }
+    },
+    "Digit 3" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 3"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 3"
+          }
+        }
+      }
+    },
+    "Digit 4" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 4"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 4"
+          }
+        }
+      }
+    },
+    "Digit 5" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 5"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 5"
+          }
+        }
+      }
+    },
+    "Digit 6" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 6"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 6"
+          }
+        }
+      }
+    },
+    "Digit 7" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 7"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 7"
+          }
+        }
+      }
+    },
+    "Digit 8" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 8"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 8"
+          }
+        }
+      }
+    },
+    "Digit 9" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 9"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 9"
+          }
+        }
+      }
+    },
     "Discard this in-progress mock exam and return to the start screen." : {
       "localizations" : {
         "en" : {
@@ -4867,6 +4387,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choix affiché %@"
+          }
+        }
+      }
+    },
+    "Divide" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diviser"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diviser"
           }
         }
       }
@@ -5191,6 +4727,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entrez les caractères entendus, et non la notation en points et tirets."
+          }
+        }
+      }
+    },
+    "Equals" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Égal"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Égal"
           }
         }
       }
@@ -6381,6 +5933,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+          }
+        }
+      }
+    },
+    "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer."
           }
         }
       }
@@ -7597,6 +7171,22 @@
         }
       }
     },
+    "Multiply" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multiplier"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multiplier"
+          }
+        }
+      }
+    },
     "Needs review" : {
       "localizations" : {
         "fr" : {
@@ -8353,6 +7943,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mettre la minuterie en pause"
+          }
+        }
+      }
+    },
+    "Percent" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourcentage"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourcentage"
           }
         }
       }
@@ -9163,6 +8769,22 @@
         }
       }
     },
+    "Reciprocal" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverse"
+          }
+        }
+      }
+    },
     "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape." : {
       "localizations" : {
         "en" : {
@@ -9181,6 +8803,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réduire les animations ou Atténuer les lumières clignotantes est activé; la lecture utilise donc le ruban non clignotant."
+          }
+        }
+      }
+    },
+    "Reference sheet" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence"
+          }
+        }
+      }
+    },
+    "Reference sheet unavailable" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence non disponible"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence non disponible"
           }
         }
       }
@@ -9749,6 +9403,28 @@
         }
       }
     },
+    "Show full sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show full sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher la feuille complète"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher la feuille complète"
+          }
+        }
+      }
+    },
     "Simulated 5 wpm exam" : {
       "localizations" : {
         "fr" : {
@@ -9837,6 +9513,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sources"
+          }
+        }
+      }
+    },
+    "Square" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carré"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carré"
+          }
+        }
+      }
+    },
+    "Square root" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racine carrée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racine carrée"
           }
         }
       }
@@ -10543,6 +10251,22 @@
         }
       }
     },
+    "Subtract" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soustraire"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soustraire"
+          }
+        }
+      }
+    },
     "Switch course" : {
       "localizations" : {
         "fr" : {
@@ -10657,6 +10381,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ruban"
+          }
+        }
+      }
+    },
+    "The bundled Basic reference sheet is not installed in this build." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La feuille de référence de base intégrée n’est pas installée dans cette version."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La feuille de référence de base intégrée n’est pas installée dans cette version."
           }
         }
       }
@@ -11067,6 +10807,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Profil de minutage"
+          }
+        }
+      }
+    },
+    "Toggle sign" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change sign"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer le signe"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer le signe"
           }
         }
       }
@@ -11587,6 +11349,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
+          }
+        }
+      }
+    },
+    "Zoom in" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom in"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir le zoom"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir le zoom"
+          }
+        }
+      }
+    },
+    "Zoom out" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom out"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire le zoom"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire le zoom"
           }
         }
       }
