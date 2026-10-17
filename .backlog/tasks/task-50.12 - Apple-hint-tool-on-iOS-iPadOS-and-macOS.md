@@ -1,10 +1,11 @@
 ---
 id: TASK-50.12
 title: 'Apple hint tool on iOS, iPadOS and macOS'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:31'
+updated_date: '2026-10-17 18:13'
 labels:
   - apple
 dependencies:
@@ -35,3 +36,13 @@ Add the Hint tool to iOS/iPadOS/macOS practice and review sessions after task-44
 - [ ] #7 The hint tool handles one-level hint files by presenting only Hint 1, with no empty or broken Hint 2 affordance.
 - [ ] #8 The lesson link uses a generic localized label ("Review in lesson" / « Revoir dans la leçon ») and never shows the linked section heading or lesson title before the question is answered, because some headings contain answer words (e.g. "Sporadic E and six metres")
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Trace the web hint implementation and Apple practice/review/exam-tools surfaces, including progress submission, bundled content generation, lesson navigation, localization, and existing tests.
+2. Add bundled Apple Basic hint data and Swift models/loaders gated to iOS/iPadOS/macOS practice and review sessions, leaving mock exams, lesson quizzes, tvOS, and visionOS unchanged.
+3. Add the Hint tool to the existing exam-tools UI with the approved ladder, stable 0.5 s shown qualification, reference-sheet availability gating, session-level help state, lesson-link navigation, and answeredWithHelp progress recording.
+4. Port the shared lesson heading-anchor algorithm to Swift, render unique heading IDs, and focus linked lesson headings after hint navigation.
+5. Add targeted unit/UI/accessibility tests and run the requested content, web/package, and xbuild checks before finalizing the Backlog task.
+<!-- SECTION:PLAN:END -->
