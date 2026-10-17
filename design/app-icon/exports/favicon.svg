@@ -6,9 +6,9 @@
     .spoke { stroke-width: 2.4; }
     .hub { fill: #15120f; stroke: none; }
     @media (prefers-color-scheme: dark) {
-      .paper { fill: #201B16; }
-      .ink { stroke: #f3e8d2; }
-      .hub { fill: #f3e8d2; }
+      .paper { fill: #453316; }
+      .ink { stroke: #ffffff; }
+      .hub { fill: #ffffff; }
     }
   </style>
   <rect width="64" height="64" rx="14" class="paper"/>

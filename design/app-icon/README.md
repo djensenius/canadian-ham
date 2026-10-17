@@ -43,7 +43,7 @@ Exports are written to `design/app-icon/exports/`.
 
 - `app-icon-1024.png`: flattened opaque 1024 x 1024 light PNG; no alpha and no pre-rounded corners. The light design remains the approved task-4 Yagi brush rendering.
 - `app-icon-foreground-1024.png`: transparent brushstroke foreground layer for Icon Composer.
-- `app-icon-dark-1024.png`: dark-mode fallback with the cream/light mark on the dark warm app field.
+- `app-icon-dark-1024.png`: dark-mode fallback with a white mark on the flat family brown field (`#453316`), matching FluxHaus and FluxTerm.
 - `app-icon-tinted-1024.png`: opaque greyscale tinted fallback with the mark on black, matching Apple's tinted app-icon guidance and the owner's other app catalogues.
 - `app-icon-60.png` and `app-icon-120.png`: review renders included on the preview sheet to check small-size legibility.
 - `mac-16.png`, `mac-32.png`, `mac-64.png`, `mac-128.png`, `mac-256.png`, `mac-512.png`, and `mac-1024.png`: macOS fallback sizes installed into the appiconset.
@@ -88,4 +88,4 @@ The renderer copies these files to `apps/web/public/`. `apps/web/index.html` ref
 
 ## Icon Composer bundle
 
-The committed Xcode 26+/27 `.icon` bundle lives at `apps/apple/CanadianHam/Resources/AppIcon.icon`. Its structure matches the owner's other apps: `icon.json` plus `Assets/brushstroke.png`, with glass enabled, individual lighting, a layer-colour shadow, and the flat family cream fill (`#E8D5B7`). The Icon Composer foreground is the approved black brush with a narrow `DARK_INK` cream underlay so `ictool` dark, tinted, and clear OS renders remain legible when OS 27 prefers `AppIcon.icon` over the fallback appiconset. tvOS and visionOS keep their existing layered image-stack assets; dark/tinted app-icon variants are not added there because those platforms use the current layered icon mechanisms rather than the iOS/iPadOS/macOS luminosity appiconset slots.
+The committed Xcode 26+/27 `.icon` bundle lives at `apps/apple/CanadianHam/Resources/AppIcon.icon`. Its structure matches the owner's other apps: `icon.json` plus `Assets/brushstroke.png`, with glass enabled, individual lighting, a layer-colour shadow, and fill specializations: the flat family cream (`#E8D5B7`) in light mode, and the family brown (`#453316`) with a solid white mark in dark mode, matching FluxHaus and FluxTerm. The Icon Composer foreground is the approved black brush with a narrow `DARK_INK` cream underlay so `ictool` dark, tinted, and clear OS renders remain legible when OS 27 prefers `AppIcon.icon` over the fallback appiconset. tvOS and visionOS keep their existing layered image-stack assets; dark/tinted app-icon variants are not added there because those platforms use the current layered icon mechanisms rather than the iOS/iPadOS/macOS luminosity appiconset slots.
