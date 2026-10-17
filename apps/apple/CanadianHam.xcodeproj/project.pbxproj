@@ -35,6 +35,7 @@
 		310B2A12D242A918D8BBC716 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		34730D4F3AD434676D64C065 /* reference-sheet in Resources */ = {isa = PBXBuildFile; fileRef = 4A74CF9820A6C3C99B05EEB0 /* reference-sheet */; };
 		3611785543C180B0E9D40510 /* ExamToolModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5581AFE7785D06E74DC2FC46 /* ExamToolModels.swift */; };
+		361493881B2CC61302617533 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		3BD841E056F7CDC54828C327 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		3C1B7F75096DB44648DDD167 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
 		3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB023709CD1B8683292D109F /* ProgressModels.swift */; };
@@ -75,6 +76,7 @@
 		7AC3F901ABC1A7ED3D21F3E4 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		8490F17176EBB9E8968E07D0 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
+		85CDB77762FF7637D402F2F8 /* hints in Resources */ = {isa = PBXBuildFile; fileRef = 8DDA76D15062E1F8BA06B694 /* hints */; };
 		883A3E64C9D89F484D72EFE5 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
 		8A06B7AF447073AD26DAC6E9 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		8AD63D2FB881F6C3C07DD025 /* ProgressSyncMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */; };
@@ -85,6 +87,7 @@
 		9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */; };
 		942070A451CA10AC36A0A7D6 /* ICloudSyncCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD44BDE3AE8019C65CBB1C42 /* ICloudSyncCopy.swift */; };
 		99C0F97A90AE1A49F93825A5 /* CanadianHamTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3A3A58596F0B71F478108 /* CanadianHamTVApp.swift */; };
+		9A7ADDB15DD50F70FECD1017 /* hints in Resources */ = {isa = PBXBuildFile; fileRef = 8DDA76D15062E1F8BA06B694 /* hints */; };
 		9B089F46411317817CD15DA1 /* CanadianHam-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1D63C824E4C00165C3F4961 /* CanadianHam-InfoPlist.strings */; };
 		9D8BD598B9DE34941DFBC88D /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
 		9DD26BBE2A0EFA8F53C536CF /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 68B2019B8C107CCE6C8C9198 /* quizzes */; };
@@ -130,6 +133,7 @@
 		DA4A30385D268F8D0E95F511 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 9D9113772DD563A33D70898D /* CanadianHamEngine */; };
 		DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 		DA99F3691748E29BFE1A90C6 /* CanadianHamVisionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C184EEC11CE4CD529F8D0EA /* CanadianHamVisionUITests.swift */; };
+		DC79B64D912576A5938512ED /* HintSessionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D93A41FC817D303C7A8E2CF /* HintSessionStateTests.swift */; };
 		DF6B8F376DDDF80C642514AE /* FigureAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79D037FE5B7CD4B97D40373D /* FigureAssets.xcassets */; };
 		E050A0F858C7D6CB9B14B292 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 736AE7B0E0E83BF1142D58FD /* CanadianHamMorseEngine */; };
 		E4193FF2F1A1DE441EFA3160 /* course.json in Resources */ = {isa = PBXBuildFile; fileRef = 79F451DA18B5F91DD4DCA5BC /* course.json */; };
@@ -140,6 +144,7 @@
 		EA81C6AED50B97331189D30C /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		F29D97E65744F19D2C1D0D8E /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		F38D65FBDA95BC1C08E31ECD /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
+		F8197E5A10D63432C1384166 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		FD369ABE0D4B147229E2166A /* ExamToolViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FDAFA896E1B85E902E8CA0 /* ExamToolViews.swift */; };
 		FD506BE95FA24A70BDDCA8A4 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
 /* End PBXBuildFile section */
@@ -194,6 +199,7 @@
 		27C0ADA4801D9094289C71DB /* MorseTrainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseTrainerTests.swift; sourceTree = "<group>"; };
 		2B1FBF49E8AB06030D37A8C7 /* CanadianHamTVTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C184EEC11CE4CD529F8D0EA /* CanadianHamVisionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamVisionUITests.swift; sourceTree = "<group>"; };
+		2D93A41FC817D303C7A8E2CF /* HintSessionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSessionStateTests.swift; sourceTree = "<group>"; };
 		30A5D1876F7D063DF4DF7F31 /* CanadianHamVisionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamVisionApp.swift; sourceTree = "<group>"; };
 		31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankStore.swift; sourceTree = "<group>"; };
 		3BF67D7A994EF193C91BBA17 /* CanadianHamLessonFiguresUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamLessonFiguresUITests.swift; sourceTree = "<group>"; };
@@ -208,6 +214,7 @@
 		5581AFE7785D06E74DC2FC46 /* ExamToolModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamToolModels.swift; sourceTree = "<group>"; };
 		5A86BCCABAA1B3403D777005 /* LessonFigureMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonFigureMetadata.swift; sourceTree = "<group>"; };
 		5B61FF08B59BD2425E771B49 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
+		5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSessionState.swift; sourceTree = "<group>"; };
 		5FB02018DEAAC19F488B3B0F /* CanadianHam.iOS.CloudKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.iOS.CloudKit.entitlements; sourceTree = "<group>"; };
 		5FC310E91D274D6ACA4BBA5F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		62D7A86407A650CCC12DE3EA /* morse-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "morse-swift"; path = "../../packages/morse-swift"; sourceTree = SOURCE_ROOT; };
@@ -227,6 +234,7 @@
 		86CBBDFF03A04BC20799F5E4 /* CanadianHamTV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSyncMerge.swift; sourceTree = "<group>"; };
 		8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.entitlements; sourceTree = "<group>"; };
+		8DDA76D15062E1F8BA06B694 /* hints */ = {isa = PBXFileReference; lastKnownFileType = folder; name = hints; path = ../../content/hints; sourceTree = SOURCE_ROOT; };
 		909B643DBB51DDC79E2D1DA1 /* MorseCopyExamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseCopyExamView.swift; sourceTree = "<group>"; };
 		A235069367EFC3776ADEE826 /* questions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questions.json; sourceTree = "<group>"; };
 		A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStoreTests.swift; sourceTree = "<group>"; };
@@ -385,6 +393,7 @@
 			isa = PBXGroup;
 			children = (
 				3D86FB3E02E2AC2B774A8B43 /* ExamCalculatorViewModelTests.swift */,
+				2D93A41FC817D303C7A8E2CF /* HintSessionStateTests.swift */,
 				19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */,
 				27C0ADA4801D9094289C71DB /* MorseTrainerTests.swift */,
 				A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */,
@@ -434,6 +443,7 @@
 			isa = PBXGroup;
 			children = (
 				86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */,
+				5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */,
 			);
 			path = Practice;
 			sourceTree = "<group>";
@@ -630,6 +640,7 @@
 			isa = PBXGroup;
 			children = (
 				CB336527869B374AEC035D2F /* explanations */,
+				8DDA76D15062E1F8BA06B694 /* hints */,
 				EF0A093E186AB771F904629B /* lessons */,
 				68B2019B8C107CCE6C8C9198 /* quizzes */,
 				4A74CF9820A6C3C99B05EEB0 /* reference-sheet */,
@@ -934,6 +945,7 @@
 			files = (
 				E4193FF2F1A1DE441EFA3160 /* course.json in Resources */,
 				6C11B3F5053B13833830A44A /* explanations in Resources */,
+				9A7ADDB15DD50F70FECD1017 /* hints in Resources */,
 				CBBD854076689D0E6F2EE822 /* lessons in Resources */,
 				9DD26BBE2A0EFA8F53C536CF /* quizzes in Resources */,
 				1B410B92394BF7241B23CA62 /* reference-sheet in Resources */,
@@ -978,6 +990,7 @@
 				DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */,
 				CD41A0E943ED3D0B9276D02A /* course.json in Resources */,
 				3C1B7F75096DB44648DDD167 /* explanations in Resources */,
+				85CDB77762FF7637D402F2F8 /* hints in Resources */,
 				C35F4DB3660A226431C7A5B4 /* lessons in Resources */,
 				B0482ACB36AF22C5E174F05E /* quizzes in Resources */,
 				34730D4F3AD434676D64C065 /* reference-sheet in Resources */,
@@ -1043,7 +1056,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
+			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations hints; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
 		};
 		2CB5C6A88CF14A45641BF6BC /* Copy Basic and Advanced generated content */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1097,7 +1110,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
+			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations hints; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
 		};
 		F39EEE4D2D3C9993911AA3FC /* Copy Basic and Advanced generated content */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1158,6 +1171,8 @@
 				29093220F5952D4EEFCB3282 /* EngineShuffle.swift in Sources */,
 				00E2303922E7852FB4AA01E7 /* ExamCalculatorViewModelTests.swift in Sources */,
 				3611785543C180B0E9D40510 /* ExamToolModels.swift in Sources */,
+				F8197E5A10D63432C1384166 /* HintSessionState.swift in Sources */,
+				DC79B64D912576A5938512ED /* HintSessionStateTests.swift in Sources */,
 				08BF73A02D5B4B5A42259B7E /* LocalizationCatalogTests.swift in Sources */,
 				8EC1393EB1FF099433C29317 /* MorseTrainerTests.swift in Sources */,
 				42B335E4F445B4521F5ACA40 /* ProgressModels.swift in Sources */,
@@ -1226,6 +1241,7 @@
 				7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */,
 				AF879ED04D51F1A64765DA8B /* ExamToolModels.swift in Sources */,
 				FD369ABE0D4B147229E2166A /* ExamToolViews.swift in Sources */,
+				361493881B2CC61302617533 /* HintSessionState.swift in Sources */,
 				942070A451CA10AC36A0A7D6 /* ICloudSyncCopy.swift in Sources */,
 				93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */,
 				EA651611EAE395366553C319 /* LearnViews.swift in Sources */,

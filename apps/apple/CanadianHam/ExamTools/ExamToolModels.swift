@@ -7,6 +7,7 @@ import SwiftUI
 
 enum ExamTool: String, CaseIterable, Identifiable {
     case calculator
+    case hint
     case referenceSheet
 
     var id: String { rawValue }
@@ -14,6 +15,7 @@ enum ExamTool: String, CaseIterable, Identifiable {
     var title: LocalizedStringKey {
         switch self {
         case .calculator: "Calculator"
+        case .hint: "Hint"
         case .referenceSheet: "Reference sheet"
         }
     }
@@ -21,6 +23,7 @@ enum ExamTool: String, CaseIterable, Identifiable {
     var systemImage: String {
         switch self {
         case .calculator: "plus.forwardslash.minus"
+        case .hint: "lightbulb"
         case .referenceSheet: "doc.text.magnifyingglass"
         }
     }
@@ -28,6 +31,7 @@ enum ExamTool: String, CaseIterable, Identifiable {
     var accessibilityIdentifier: String {
         switch self {
         case .calculator: "exam-tool-calculator-panel"
+        case .hint: "exam-tool-hint-panel"
         case .referenceSheet: "exam-tool-reference-sheet-panel"
         }
     }

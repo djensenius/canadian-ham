@@ -311,7 +311,8 @@ struct RootView: View {
                 language: $language,
                 state: practiceSessionStates.state(for: scope),
                 dataRevision: combinedDataRevision,
-                localDataReplacementRevision: appSettings.localDataReplacementRevision
+                localDataReplacementRevision: appSettings.localDataReplacementRevision,
+                onOpenHintLesson: { openHintLesson($0) }
             ) {
                 recordDataChanged()
             }
@@ -632,6 +633,23 @@ struct RootView: View {
         }
     }
 
+    private func openHintLesson(_ link: QuestionHintLessonLink) {
+        let route: LearnRoute = if let sectionAnchor = link.sectionAnchor {
+            .lessonSection(link.lessonId, sectionAnchor)
+        } else {
+            .lesson(link.lessonId)
+        }
+#if os(iOS)
+        if effectiveHorizontalSizeClass == .compact {
+            compactNavigationPath.append(route)
+            selection = .learn
+            return
+        }
+#endif
+        selection = .learn
+        navigationPath = [route]
+    }
+
     @ViewBuilder
     private func learnDestination(_ route: LearnRoute, bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         LearnRouteDestinationView(
@@ -679,7 +697,8 @@ struct RootView: View {
                 state: practiceSessionStates.state(for: scope),
                 dataRevision: combinedDataRevision,
                 localDataReplacementRevision: appSettings.localDataReplacementRevision,
-                onExamToolPresentationChanged: { regularWidthExamToolPresented = $0 }
+                onExamToolPresentationChanged: { regularWidthExamToolPresented = $0 },
+                onOpenHintLesson: { openHintLesson($0) }
             ) {
                 recordDataChanged()
             }

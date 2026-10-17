@@ -16,6 +16,7 @@ final class ContentLibraryTests: XCTestCase {
         XCTAssertEqual(library.orderedLessons().count, 36)
         XCTAssertEqual(library.quizzes.count, 36)
         XCTAssertEqual(library.explanations.count, 984)
+        XCTAssertEqual(library.questionHints.count, 984)
         XCTAssertEqual(library.manifest.counts.questions, 984)
         XCTAssertEqual(library.manifest.counts.subsections, 100)
         XCTAssertEqual(library.manifest.counts.categories, 8)
@@ -132,6 +133,22 @@ final class ContentLibraryTests: XCTestCase {
         for fixture in fixtures {
             let rendered = try LessonMarkdownRenderer.render(fixture.markdown)
             XCTAssertEqual(simplifiedBlocks(rendered.blocks), fixture.expected, fixture.name)
+        }
+    }
+
+    func testSharedLessonHeadingAnchorFixtures() throws {
+        let fixtureURL = try repoRootURL().appendingPathComponent("fixtures/lesson-heading-anchors.json")
+        let fixtures = try JSONDecoder().decode(LessonHeadingAnchorFixtures.self, from: Data(contentsOf: fixtureURL))
+
+        for fixture in fixtures.slugCases {
+            XCTAssertEqual(LessonHeadingAnchors.slug(for: fixture.headingText), fixture.expectedSlug, fixture.name)
+        }
+        for fixture in fixtures.anchorCases {
+            let anchors = try LessonHeadingAnchors.anchors(for: fixture.markdown, title: fixture.title)
+            XCTAssertEqual(anchors, fixture.expectedAnchors, fixture.name)
+            for rejectedAnchor in fixture.rejectedAnchors {
+                XCTAssertFalse(anchors.contains(rejectedAnchor), "\(fixture.name) should not expose \(rejectedAnchor)")
+            }
         }
     }
 
@@ -339,6 +356,25 @@ private struct SimplifiedMarkdownBlock: Decodable, Equatable {
     let textEquivalent: [String]?
     let text: String?
     let language: String?
+}
+
+private struct LessonHeadingAnchorFixtures: Decodable {
+    let slugCases: [LessonHeadingAnchorSlugFixture]
+    let anchorCases: [LessonHeadingAnchorCaseFixture]
+}
+
+private struct LessonHeadingAnchorSlugFixture: Decodable {
+    let name: String
+    let headingText: String
+    let expectedSlug: String
+}
+
+private struct LessonHeadingAnchorCaseFixture: Decodable {
+    let name: String
+    let title: String?
+    let markdown: String
+    let expectedAnchors: [String]
+    let rejectedAnchors: [String]
 }
 
 private func simplifiedBlocks(_ blocks: [LessonBlock]) -> [SimplifiedMarkdownBlock] {
