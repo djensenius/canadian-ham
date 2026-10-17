@@ -77,7 +77,7 @@ final class ExamCalculatorViewModelTests: XCTestCase {
     }
 
     func testCalculatorToolLayoutScrollsWhenCompactHeightCannotKeepMinimumKeys() {
-        let layout = CalculatorToolLayout(availableHeight: 355, dynamicTypeSize: .large)
+        let layout = CalculatorToolLayout(availableHeight: 379, dynamicTypeSize: .large)
 
         XCTAssertTrue(layout.usesScrolling)
         XCTAssertEqual(layout.displayHeight, 48)
@@ -96,7 +96,7 @@ final class ExamCalculatorViewModelTests: XCTestCase {
     }
 
     func testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes() {
-        let compactScrollingLayout = CalculatorToolLayout(availableHeight: 355, dynamicTypeSize: .large)
+        let compactScrollingLayout = CalculatorToolLayout(availableHeight: 379, dynamicTypeSize: .large)
         XCTAssertTrue(compactScrollingLayout.usesScrolling)
         XCTAssertEqual(compactScrollingLayout.displayHeight, 48)
         XCTAssertEqual(compactScrollingLayout.keyHeight, 44)

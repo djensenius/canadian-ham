@@ -111,7 +111,7 @@ struct CalculatorToolLayout {
     var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
 
     var usesScrolling: Bool {
-        usesAccessibilityMetrics || compactContentHeightAtMinimumTargets > availableHeight
+        usesAccessibilityMetrics || compactContentHeightAtMinimumTargets + compactMinimumFitAllowance > availableHeight
     }
 
     var usesAccessibilityMetrics: Bool {
@@ -192,6 +192,9 @@ struct CalculatorToolLayout {
     private var compactDisplayHorizontalPadding: CGFloat { 12 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
     private var compactHelpVisibilityHeight: CGFloat { 440 }
+    // Measured allowance for LazyVGrid/VStack compression and sheet-height rounding at the iPhone medium detent.
+    // Without this headroom, XCTest observed 42.25 pt key frames even though the pure minimums sum to 356 pt.
+    private var compactMinimumFitAllowance: CGFloat { 24 }
     private var minimumKeyHeight: CGFloat { 44 }
     private var rowCount: Int { 6 }
 }
