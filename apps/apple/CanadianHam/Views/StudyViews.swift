@@ -939,7 +939,7 @@ struct MockExamView: View {
             calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
             refreshForCurrentTimerState()
         }
-        .onChange(of: selectedExamTool) { _, next in handleExamToolPresentationChange(next) }
+        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
         .onDisappear { onExamToolPresentationChanged(false) }
         .task(id: localDataReplacementRevision) { resetIfLocalDataWasReplaced() }
         .onReceive(timer) { _ in
@@ -1178,9 +1178,6 @@ struct MockExamView: View {
         }
     }
 
-    private func handleExamToolPresentationChange(_ nextTool: ExamTool?) {
-        onExamToolPresentationChanged(nextTool != nil)
-    }
 
     private func presentPendingNavigatorSheetIfNeeded() {
         guard pendingNavigatorPresentation else { return }

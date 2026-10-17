@@ -1,4 +1,5 @@
 import CanadianHamCalculatorEngine
+import SwiftUI
 import XCTest
 
 @MainActor
@@ -73,6 +74,49 @@ final class ExamCalculatorViewModelTests: XCTestCase {
 
         let sheet = try XCTUnwrap(try ReferenceSheetLoader.load(configuration: .basic, bundle: Bundle(for: Self.self)))
         XCTAssertTrue(sheet.markdown.contains("Ohm's law"))
+    }
+
+    func testCalculatorToolLayoutScrollsWhenCompactHeightCannotKeepMinimumKeys() {
+        let layout = CalculatorToolLayout(availableHeight: 355, dynamicTypeSize: .large)
+
+        XCTAssertTrue(layout.usesScrolling)
+        XCTAssertEqual(layout.displayHeight, 48)
+        XCTAssertGreaterThanOrEqual(layout.keyHeight, 44)
+    }
+
+    func testCalculatorToolLayoutDoesNotScrollAtOrAboveHelpThresholdForNonAccessibilitySizes() {
+        let nonAccessibilitySizes: [DynamicTypeSize] = [.xSmall, .small, .medium, .large, .xLarge, .xxLarge, .xxxLarge]
+
+        for size in nonAccessibilitySizes {
+            let layout = CalculatorToolLayout(availableHeight: 440, dynamicTypeSize: size)
+
+            XCTAssertFalse(layout.usesScrolling, "Non-accessibility size \(size) should keep the compact calculator layout at 440 pt or taller")
+            XCTAssertGreaterThanOrEqual(layout.keyHeight, 44, "Non-accessibility size \(size) should preserve 44 pt calculator keys")
+        }
+    }
+
+    func testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes() {
+        let compactScrollingLayout = CalculatorToolLayout(availableHeight: 355, dynamicTypeSize: .large)
+        XCTAssertTrue(compactScrollingLayout.usesScrolling)
+        XCTAssertEqual(compactScrollingLayout.displayHeight, 48)
+        XCTAssertEqual(compactScrollingLayout.keyHeight, 44)
+
+        let accessibilityLayout = CalculatorToolLayout(availableHeight: 600, dynamicTypeSize: .accessibility1)
+        XCTAssertTrue(accessibilityLayout.usesScrolling)
+        XCTAssertEqual(accessibilityLayout.displayHeight, 72)
+        XCTAssertEqual(accessibilityLayout.keyHeight, 64)
+    }
+
+    func testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere() {
+        let sizes: [DynamicTypeSize] = [.xSmall, .large, .xxxLarge, .accessibility1, .accessibility5]
+        let heights: [CGFloat] = [1, 100, 355, 356, 379, 440, 600]
+
+        for size in sizes {
+            for height in heights {
+                let layout = CalculatorToolLayout(availableHeight: height, dynamicTypeSize: size)
+                XCTAssertGreaterThanOrEqual(layout.keyHeight, 44, "height \(height), size \(size)")
+            }
+        }
     }
 
     func testQuestionCardFocusResetKeepsTextSelectionEnabled() throws {

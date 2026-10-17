@@ -84,6 +84,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                             }
                         }
                         .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
+                        .presentationContentInteraction(.scrolls)
                         .presentationBackgroundInteraction(.enabled(upThrough: .medium))
                         .presentationDragIndicator(.visible)
                         .onAppear { selectedSheetDetent = preferredSheetDetent(for: tool) }
@@ -808,18 +809,22 @@ struct CalculatorToolLayout {
     let availableHeight: CGFloat
     let dynamicTypeSize: DynamicTypeSize
 
-    var sectionSpacing: CGFloat { usesScrolling ? DesignTokens.Spacing.md : compactSectionSpacing }
-    var keySpacing: CGFloat { usesScrolling ? DesignTokens.Spacing.sm : compactKeySpacing }
-    var displayHeight: CGFloat { usesScrolling ? 72 : compactDisplayHeight }
-    var displayHorizontalPadding: CGFloat { usesScrolling ? DesignTokens.Spacing.lg : DesignTokens.Spacing.md }
-    var displayVerticalPadding: CGFloat { usesScrolling ? DesignTokens.Spacing.lg : compactDisplayVerticalPadding }
-    var keyHeight: CGFloat { usesScrolling ? 64 : min(64, max(minimumKeyHeight, compactKeyHeight)) }
-    var displayFont: Font { (usesScrolling ? DesignTokens.FontScale.display : DesignTokens.FontScale.title).monospacedDigit().weight(.bold) }
-    var keyFont: Font { (usesScrolling ? DesignTokens.FontScale.body : DesignTokens.FontScale.caption).weight(.semibold) }
+    var sectionSpacing: CGFloat { usesAccessibilityMetrics ? DesignTokens.Spacing.md : compactSectionSpacing }
+    var keySpacing: CGFloat { usesAccessibilityMetrics ? DesignTokens.Spacing.sm : compactKeySpacing }
+    var displayHeight: CGFloat { usesAccessibilityMetrics ? 72 : compactDisplayHeight }
+    var displayHorizontalPadding: CGFloat { usesAccessibilityMetrics ? DesignTokens.Spacing.lg : DesignTokens.Spacing.md }
+    var displayVerticalPadding: CGFloat { usesAccessibilityMetrics ? DesignTokens.Spacing.lg : compactDisplayVerticalPadding }
+    var keyHeight: CGFloat { usesAccessibilityMetrics ? 64 : min(64, max(minimumKeyHeight, compactKeyHeight)) }
+    var displayFont: Font { (usesAccessibilityMetrics ? DesignTokens.FontScale.display : DesignTokens.FontScale.title).monospacedDigit().weight(.bold) }
+    var keyFont: Font { (usesAccessibilityMetrics ? DesignTokens.FontScale.body : DesignTokens.FontScale.caption).weight(.semibold) }
     var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
 
     var usesScrolling: Bool {
-        dynamicTypeSize.isAccessibilitySize || compactContentHeightAtMinimumTargets + compactFitSafetyMargin > availableHeight
+        usesAccessibilityMetrics || compactContentHeightAtMinimumTargets > availableHeight
+    }
+
+    private var usesAccessibilityMetrics: Bool {
+        dynamicTypeSize.isAccessibilitySize
     }
 
     private var compactKeyHeight: CGFloat {
@@ -833,7 +838,7 @@ struct CalculatorToolLayout {
 
     private var compactNonGridContentHeight: CGFloat {
         let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
-        let helpTotal: CGFloat = showsCompactHelpText ? 48 + compactSectionSpacing : 0
+        let helpTotal = showsCompactHelpText ? compactEstimatedHelpHeight + compactSectionSpacing : 0
         return displayTotal + compactSectionSpacing + helpTotal
     }
 
@@ -842,14 +847,53 @@ struct CalculatorToolLayout {
     }
 
     private var showsCompactHelpText: Bool {
-        !dynamicTypeSize.isAccessibilitySize && availableHeight >= 440
+        guard !usesAccessibilityMetrics, availableHeight >= compactHelpVisibilityHeight else { return false }
+        return compactContentHeightWithEstimatedHelp <= availableHeight
+    }
+
+    private var compactContentHeightWithEstimatedHelp: CGFloat {
+        let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
+        let helpTotal = compactEstimatedHelpHeight + compactSectionSpacing
+        return displayTotal + compactSectionSpacing + helpTotal + (minimumKeyHeight * CGFloat(rowCount)) + compactGridSpacing
+    }
+
+    private var compactEstimatedHelpHeight: CGFloat {
+        // The keyboard-help caption wraps at xxxLarge in the medium sheet; reserve measured line counts
+        // instead of the old fixed 48 pt so showing it never forces keys below their 44 pt target.
+        compactEstimatedHelpLineHeight * compactEstimatedHelpLineCount
+    }
+
+    private var compactEstimatedHelpLineHeight: CGFloat {
+        switch dynamicTypeSize {
+        case .xSmall, .small, .medium:
+            return 16
+        case .large, .xLarge:
+            return 18
+        case .xxLarge:
+            return 20
+        case .xxxLarge:
+            return 22
+        default:
+            return 22
+        }
+    }
+
+    private var compactEstimatedHelpLineCount: CGFloat {
+        switch dynamicTypeSize {
+        case .xSmall, .small, .medium, .large, .xLarge:
+            return 3
+        case .xxLarge:
+            return 4
+        default:
+            return 5
+        }
     }
 
     private var compactSectionSpacing: CGFloat { 6 }
     private var compactKeySpacing: CGFloat { 6 }
     private var compactDisplayHeight: CGFloat { 48 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
-    private var compactFitSafetyMargin: CGFloat { 24 }
+    private var compactHelpVisibilityHeight: CGFloat { 440 }
     private var minimumKeyHeight: CGFloat { 44 }
     private var rowCount: Int { 6 }
 }

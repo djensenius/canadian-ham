@@ -86,12 +86,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         openTool(.calculator, in: app)
         assertCalculatorPresentedAsSheet(in: app, context: "forced-regular iPhone landscape key reachability")
+        let calculatorScrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
+        XCTAssertTrue(calculatorScrollView.waitForExistence(timeout: 5), "Landscape medium sheets must expose calculator-tool-scroll so keys scroll instead of shrinking below 44 pt")
         for identifier in calculatorKeyIdentifiers {
             let key = app.buttons[identifier].firstMatch
             scrollCalculatorPanelUntilElementExists(key, in: app, maxSwipes: 10)
             XCTAssertTrue(key.exists, "Expected calculator key \(identifier) to exist in the scrollable landscape sheet")
             scrollExamToolUntilHittable(key, in: app, maxSwipes: 10)
             XCTAssertTrue(key.isHittable, "Calculator key \(identifier) should be hittable after scrolling the landscape medium sheet. Frame: \(frameDescription(key.frame))")
+            XCTAssertGreaterThanOrEqual(key.frame.height, 44, "Calculator key \(identifier) must preserve the 44 pt hit target while scrolling. Frame: \(frameDescription(key.frame))")
         }
 #else
         throw XCTSkip("Forced-regular iPhone landscape sheet scrolling is iOS-only.")
@@ -247,6 +250,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(questions.isHittable, "Questions should remain tappable while the calculator sheet is open")
         questions.tap()
         XCTAssertTrue(app.staticTexts["Question navigator"].firstMatch.waitForExistence(timeout: 5), "Tapping Questions while the calculator sheet is open should dismiss the tool sheet and then present the navigator")
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForNonExistence(timeout: 2), "The calculator sheet should be gone after the question navigator appears")
 #else
         throw XCTSkip("Compact mock-exam navigator sheet coordination is iOS-only.")
 #endif
@@ -565,7 +569,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func performMediumDetentExamToolAudit(on app: XCUIApplication, context: String) throws {
+        let mediumHeaderFrame = currentCalculatorHeaderFrame(in: app, context: "\(context) before medium-detent precheck")
+        assertMediumDetentHeaderFrame(mediumHeaderFrame, in: app, context: "\(context) before medium-detent precheck")
         assertMediumDetentToolPanelVisibleElements(in: app, context: context)
+        scrollCalculatorPanelToTop(in: app, context: context)
+        assertMediumDetentHeaderFrame(mediumHeaderFrame, in: app, context: "\(context) immediately before medium-detent audit")
+        assertCalculatorDisplayAndCloseHittable(in: app, context: "\(context) immediately before medium-detent audit")
+
         var ignoredTextClippedIssues = 0
         try app.performAccessibilityAudit { issue in
             if self.isApprovedMediumDetentToolScrollTextClip(issue, in: app) {
@@ -616,21 +626,53 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(header.waitForExistence(timeout: 5), "\(context): expected a visible calculator panel header before auditing", file: file, line: line)
         XCTAssertTrue(windowFrame.contains(header.frame), "\(context): sheet visible frame should contain the panel header. Header: \(frameDescription(header.frame)); window: \(frameDescription(windowFrame))", file: file, line: line)
 
-        let display = app.descendants(matching: .any)["calculator-result"].firstMatch
-        XCTAssertTrue(display.waitForExistence(timeout: 5), "\(context): expected the calculator display before auditing", file: file, line: line)
-        XCTAssertTrue(display.isHittable, "\(context): calculator display should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(display.frame))", file: file, line: line)
-
-        let close = app.buttons["exam-tool-close-button"].firstMatch
-        XCTAssertTrue(close.waitForExistence(timeout: 5), "\(context): expected Close tool before auditing", file: file, line: line)
-        XCTAssertTrue(close.isHittable, "\(context): Close tool should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(close.frame))", file: file, line: line)
+        assertCalculatorDisplayAndCloseHittable(in: app, context: "\(context) before medium-detent precheck", file: file, line: line)
 
         for identifier in calculatorKeyIdentifiers {
             let key = app.buttons[identifier].firstMatch
-            scrollCalculatorPanelUntilElementExists(key, in: app, maxSwipes: 10)
+            scrollCalculatorPanelUntilElementExists(key, in: app, maxSwipes: 10, file: file, line: line)
             XCTAssertTrue(key.waitForExistence(timeout: 5), "\(context): expected \(identifier) before auditing", file: file, line: line)
-            scrollExamToolUntilHittable(key, in: app, maxSwipes: 10)
+            scrollExamToolUntilHittable(key, in: app, maxSwipes: 10, file: file, line: line)
             XCTAssertTrue(key.isHittable, "\(context): \(identifier) should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(key.frame))", file: file, line: line)
+            XCTAssertGreaterThanOrEqual(key.frame.height, 44, "\(context): \(identifier) must preserve the 44 pt hit target before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(key.frame))", file: file, line: line)
         }
+    }
+
+    private func assertCalculatorDisplayAndCloseHittable(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let display = app.descendants(matching: .any)["calculator-result"].firstMatch
+        XCTAssertTrue(display.waitForExistence(timeout: 5), "\(context): expected the calculator display", file: file, line: line)
+        XCTAssertTrue(display.isHittable, "\(context): calculator display should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(display.frame))", file: file, line: line)
+
+        let close = app.buttons["exam-tool-close-button"].firstMatch
+        XCTAssertTrue(close.waitForExistence(timeout: 5), "\(context): expected Close tool", file: file, line: line)
+        XCTAssertTrue(close.isHittable, "\(context): Close tool should be hittable before using the medium-detent text-clipped audit exception. Frame: \(frameDescription(close.frame))", file: file, line: line)
+    }
+
+    private func currentCalculatorHeaderFrame(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) -> CGRect {
+        let header = app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch
+        XCTAssertTrue(header.waitForExistence(timeout: 5), "\(context): expected a calculator panel header", file: file, line: line)
+        return header.frame
+    }
+
+    private func assertMediumDetentHeaderFrame(_ expectedFrame: CGRect, in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let windowFrame = app.windows.firstMatch.frame
+        let currentFrame = currentCalculatorHeaderFrame(in: app, context: context, file: file, line: line)
+        XCTAssertTrue(windowFrame.contains(currentFrame), "\(context): medium sheet header should stay in the window. Header: \(frameDescription(currentFrame)); window: \(frameDescription(windowFrame))", file: file, line: line)
+        XCTAssertGreaterThan(currentFrame.minY, windowFrame.height * 0.25, "\(context): sheet appears to have left the medium detent. Header: \(frameDescription(currentFrame)); window: \(frameDescription(windowFrame))", file: file, line: line)
+        XCTAssertLessThan(abs(currentFrame.minY - expectedFrame.minY), 6, "\(context): sheet header moved after the medium-detent precheck, so the medium-detent audit exception would be applied outside the approved detent. Expected: \(frameDescription(expectedFrame)); current: \(frameDescription(currentFrame))", file: file, line: line)
+        XCTAssertLessThan(abs(currentFrame.height - expectedFrame.height), 2, "\(context): sheet header height changed before audit. Expected: \(frameDescription(expectedFrame)); current: \(frameDescription(currentFrame))", file: file, line: line)
+    }
+
+    private func scrollCalculatorPanelToTop(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let display = app.descendants(matching: .any)["calculator-result"].firstMatch
+        XCTAssertTrue(display.waitForExistence(timeout: 5), "\(context): expected calculator display before restoring scroll position", file: file, line: line)
+        guard !display.isHittable else { return }
+        let scrollView = calculatorScrollView(in: app, requiredFor: "restoring calculator medium-detent audit scroll position", file: file, line: line)
+        for _ in 0..<10 where !display.isHittable {
+            scrollView.swipeDown()
+            waitBriefly()
+        }
+        XCTAssertTrue(display.isHittable, "\(context): calculator display should be hittable after restoring the calculator scroll view to the top. Frame: \(frameDescription(display.frame))", file: file, line: line)
     }
 
     private var calculatorKeyIdentifiers: [String] {
@@ -692,10 +734,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
-    private func scrollExamToolUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
-        let calculatorScrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
-        let scrollView = element.identifier.hasPrefix("calculator-key-") && calculatorScrollView.exists ? calculatorScrollView : scrollView(containing: element, in: app)
+    private func scrollExamToolUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int, file: StaticString = #filePath, line: UInt = #line) {
         for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: true) {
+            let scrollView = element.identifier.hasPrefix("calculator-key-")
+                ? calculatorScrollView(in: app, requiredFor: "scrolling calculator key \(element.identifier)", file: file, line: line)
+                : scrollView(containing: element, in: app)
             if element.exists && element.frame.maxY <= visibleFrameExcludingNavigationBar(in: app).minY {
                 scrollView.swipeDown()
             } else {
@@ -717,14 +760,18 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
-    private func scrollCalculatorPanelUntilElementExists(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
-        let panel = app.descendants(matching: .any)["exam-tool-calculator-panel"].firstMatch
-        let calculatorScrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
-        let scrollView = calculatorScrollView.exists ? calculatorScrollView : panel.scrollViews.firstMatch.exists ? panel.scrollViews.firstMatch : app.scrollViews.firstMatch
+    private func scrollCalculatorPanelUntilElementExists(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int, file: StaticString = #filePath, line: UInt = #line) {
         for _ in 0..<maxSwipes where !element.exists {
+            let scrollView = calculatorScrollView(in: app, requiredFor: "revealing calculator element \(element.identifier)", file: file, line: line)
             scrollView.swipeUp()
             waitBriefly()
         }
+    }
+
+    private func calculatorScrollView(in app: XCUIApplication, requiredFor context: String, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
+        let scrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
+        XCTAssertTrue(scrollView.waitForExistence(timeout: 1), "Expected calculator-tool-scroll for \(context); refusing to fall back to the background scroll view", file: file, line: line)
+        return scrollView
     }
 
     private func focusCalculatorKeyboard(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
