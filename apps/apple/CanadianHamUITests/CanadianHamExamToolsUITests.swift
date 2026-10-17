@@ -86,8 +86,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         openTool(.calculator, in: app)
         assertCalculatorPresentedAsSheet(in: app, context: "forced-regular iPhone landscape key reachability")
-        let calculatorScrollView = app.descendants(matching: .any)["calculator-tool-scroll"].firstMatch
-        XCTAssertTrue(calculatorScrollView.waitForExistence(timeout: 5), "Landscape medium sheets must expose calculator-tool-scroll so keys scroll instead of shrinking below 44 pt")
+        let calculatorScrollView = calculatorScrollView(in: app, requiredFor: "landscape medium sheet key reachability", timeout: 5)
+        XCTAssertEqual(calculatorScrollView.elementType, .scrollView, "Landscape medium sheets must wrap the calculator in a scroll view so keys scroll instead of shrinking below 44 pt")
         for identifier in calculatorKeyIdentifiers {
             let key = app.buttons[identifier].firstMatch
             scrollCalculatorPanelUntilElementExists(key, in: app, maxSwipes: 10)
@@ -768,9 +768,17 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
-    private func calculatorScrollView(in app: XCUIApplication, requiredFor context: String, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
-        let scrollView = app.descendants(matching: .any)["calculator-tool-scroll"].firstMatch
-        XCTAssertTrue(scrollView.waitForExistence(timeout: 1), "Expected calculator-tool-scroll for \(context); refusing to fall back to the background scroll view", file: file, line: line)
+    /// The calculator's ScrollView is the root of `CalculatorToolView`, so XCTest exposes it with the
+    /// outer `calculator-keyboard-focus-target` identifier rather than the inner `calculator-tool-scroll`.
+    /// Accept only a scroll view carrying one of those two calculator identifiers that also contains the
+    /// calculator result display; never fall back to the background question scroll view.
+    private func calculatorScrollView(in app: XCUIApplication, requiredFor context: String, timeout: TimeInterval = 1, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
+        let calculatorIdentifiers = NSPredicate(format: "identifier IN %@", ["calculator-tool-scroll", "calculator-keyboard-focus-target"])
+        let scrollView = app.scrollViews
+            .matching(calculatorIdentifiers)
+            .containing(.any, identifier: "calculator-result")
+            .firstMatch
+        XCTAssertTrue(scrollView.waitForExistence(timeout: timeout), "Expected the calculator scroll view (containing calculator-result) for \(context); refusing to fall back to the background scroll view", file: file, line: line)
         return scrollView
     }
 
