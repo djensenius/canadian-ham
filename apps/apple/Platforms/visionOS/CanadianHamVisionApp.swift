@@ -158,7 +158,7 @@ private struct VisionCategoryGridView: View {
                             .font(DesignTokens.FontScale.display.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
-                        Text("Offline Basic question-bank practice for visionOS")
+                        Text("Offline Basic question-bank practice")
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
@@ -776,7 +776,7 @@ private struct VisionAboutView: View {
                             .accessibilityLabel(Text(englishVision("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."))) // l10n: content(en)
                     }
                     VisionPaperSection(title: "Privacy") {
-                        Text("This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.")
+                        Text("Canadian Ham works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.")
                     }
                 }
             }
