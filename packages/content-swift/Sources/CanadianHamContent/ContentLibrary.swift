@@ -1,4 +1,7 @@
 import Foundation
+import os
+
+private let questionHintLogger = Logger(subsystem: "org.davidjensenius.CanadianHam", category: "QuestionHints")
 
 public struct ContentLibrary: Sendable {
     public let manifest: BankManifest
@@ -77,6 +80,7 @@ public struct ContentLibrary: Sendable {
             try library.validateQuestionHints()
             return library
         } catch {
+            questionHintLogger.warning("Question hints failed validation; continuing without hints: \(String(describing: error), privacy: .public)")
             return libraryWithoutHints
         }
     }
@@ -113,6 +117,7 @@ public struct ContentLibrary: Sendable {
                 .filter { $0.bankId == bankId }
                 .sorted { ordinalLess($0.questionId, $1.questionId) }
         } catch {
+            questionHintLogger.warning("Question hint files could not be decoded; continuing without hints: \(String(describing: error), privacy: .public)")
             return []
         }
     }

@@ -416,8 +416,10 @@ struct RootView: View {
             .onChange(of: appSettings.localDataReplacementRevision) { _, next in
                 clearCachedSessions(localDataReplacementRevision: next)
             }
-            .onChange(of: selection) { _, next in
-                if next != .learn {
+            .onChange(of: selection) { previous, next in
+                // Lessons opened from a practice hint sit on the practice stack; clear them when
+                // switching to Learn so Learn opens at its list rather than the hint lesson.
+                if next != .learn || previous.isExamSessionSelection {
                     navigationPath.removeAll()
                 }
                 if !next.isExamSessionSelection {

@@ -101,26 +101,29 @@ final class HintSessionStateTests: XCTestCase {
         let timer = HintVisibilityQualificationTimer()
         var fired: [String] = []
 
-        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 400_000_000) {
+        // Margins of at least 150 ms on every check keep this deterministic on loaded simulators.
+        // Same question: a restart would fire at 1300 ms; the original fires at 1000 ms. Check at 1150 ms.
+        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 1_000_000_000) {
             fired.append("first")
         }
-        try await Task.sleep(nanoseconds: 150_000_000)
-        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 400_000_000) {
+        try await Task.sleep(nanoseconds: 300_000_000)
+        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 1_000_000_000) {
             fired.append("restarted")
         }
-        try await Task.sleep(nanoseconds: 300_000_000)
+        try await Task.sleep(nanoseconds: 850_000_000)
         XCTAssertEqual(fired, ["first"], "Beginning the same visible question again must not restart the 0.5 s qualification window")
 
-        timer.begin(questionID: "B-001-002-003", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 350_000_000) {
+        // Question change: B-001-002-003 would fire 400 ms after B-001-002-004 begins; B-001-002-004 fires at 900 ms.
+        timer.begin(questionID: "B-001-002-003", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 600_000_000) {
             fired.append("second")
         }
-        try await Task.sleep(nanoseconds: 150_000_000)
-        timer.begin(questionID: "B-001-002-004", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 350_000_000) {
+        try await Task.sleep(nanoseconds: 200_000_000)
+        timer.begin(questionID: "B-001-002-004", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 900_000_000) {
             fired.append("third")
         }
-        try await Task.sleep(nanoseconds: 250_000_000)
+        try await Task.sleep(nanoseconds: 650_000_000)
         XCTAssertEqual(fired, ["first"], "Changing questions before the delay must cancel the previous qualification timer")
-        try await Task.sleep(nanoseconds: 150_000_000)
+        try await Task.sleep(nanoseconds: 450_000_000)
         XCTAssertEqual(fired, ["first", "third"], "The timer for the newly visible question should still qualify after its full delay")
     }
 }
