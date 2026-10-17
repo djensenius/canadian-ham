@@ -407,7 +407,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 defer { app.terminate() }
 
                 openTool(.hint, in: app)
-                expandCompactSheetToLarge(in: app)
                 revealBothHints(in: app)
                 waitBriefly(0.8)
                 try auditIgnoringOccludedLessonTextContrast(app: app)
