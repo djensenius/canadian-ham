@@ -140,7 +140,7 @@ struct CalculatorToolLayout {
 
     private var showsCompactHelpText: Bool {
         guard !usesAccessibilityMetrics, availableHeight >= compactHelpVisibilityHeight else { return false }
-        return compactContentHeightWithEstimatedHelp <= availableHeight
+        return compactContentHeightWithEstimatedHelp + compactMinimumFitAllowance <= availableHeight
     }
 
     private var compactContentHeightWithEstimatedHelp: CGFloat {
@@ -194,9 +194,11 @@ struct CalculatorToolLayout {
     private var compactDisplayVerticalPadding: CGFloat { 4 }
     private var compactHelpVisibilityHeight: CGFloat { 440 }
     // Measured allowance for LazyVGrid/VStack compression and sheet-height rounding at the iPhone medium detent.
-    // Without this headroom, XCTest observed 42.25 pt key frames even though the pure minimums sum to 356 pt.
+    // Without this headroom, XCTest observed sub-44 pt key frames even though the pure minimums fit.
     private var compactMinimumFitAllowance: CGFloat { 24 }
-    private var minimumKeyHeight: CGFloat { 44 }
+    // SwiftUI reports the button accessibility frame slightly smaller than the requested label frame;
+    // a 46 pt layout floor preserves the user-facing 44 pt minimum in UI tests.
+    private var minimumKeyHeight: CGFloat { 46 }
     private var rowCount: Int { 6 }
 }
 

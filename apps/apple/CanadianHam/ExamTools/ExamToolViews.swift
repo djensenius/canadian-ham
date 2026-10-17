@@ -440,18 +440,11 @@ struct CalculatorToolView: View {
     var body: some View {
         GeometryReader { proxy in
             let layout = CalculatorToolLayout(availableHeight: proxy.size.height, dynamicTypeSize: dynamicTypeSize, forceScrolling: forceScrolling)
-            Group {
-                if layout.usesScrolling {
-                    ScrollView {
-                        calculatorContent(layout: layout)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .accessibilityIdentifier("calculator-tool-scroll")
-                } else {
-                    calculatorContent(layout: layout)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                }
+            ScrollView {
+                calculatorContent(layout: layout)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .accessibilityIdentifier("calculator-tool-scroll")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
