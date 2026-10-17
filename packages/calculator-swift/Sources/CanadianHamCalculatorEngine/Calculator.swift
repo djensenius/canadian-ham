@@ -179,6 +179,24 @@ public func runCalculatorKeys(_ keys: [CalculatorKey], locale: CalculatorLocale 
     }
 }
 
+public func updateCalculatorLocale(_ state: CalculatorState, locale: CalculatorLocale) -> CalculatorState {
+    guard state.locale != locale else { return state }
+    return withDisplay(CalculatorState(
+        locale: locale,
+        display: state.display,
+        displayValue: state.displayValue,
+        error: state.error,
+        accumulator: state.accumulator,
+        pendingOperator: state.pendingOperator,
+        currentEntry: state.currentEntry,
+        entering: state.entering,
+        displayedValue: state.displayedValue,
+        awaitingOperand: state.awaitingOperand,
+        lastOperation: state.lastOperation,
+        justEvaluated: state.justEvaluated
+    ))
+}
+
 public func applyCalculatorKey(_ state: CalculatorState, key: CalculatorKey) -> CalculatorState {
     if key == .allClear {
         return createCalculatorState(locale: state.locale)

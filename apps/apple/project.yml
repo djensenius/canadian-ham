@@ -20,6 +20,8 @@ packages:
     path: ../../packages/content-swift
   CanadianHamMorseEngine:
     path: ../../packages/morse-swift
+  CanadianHamCalculatorEngine:
+    path: ../../packages/calculator-swift
 settings:
   base:
     CURRENT_PROJECT_VERSION: 1
@@ -78,6 +80,10 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../content/reference-sheet
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
     postBuildScripts:
       - name: Remove content authoring README files
         basedOnDependencyAnalysis: false
@@ -131,6 +137,8 @@ targets:
         product: CanadianHamContent
       - package: CanadianHamMorseEngine
         product: CanadianHamMorseEngine
+      - package: CanadianHamCalculatorEngine
+        product: CanadianHamCalculatorEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.davidjensenius.CanadianHam
@@ -176,6 +184,7 @@ targets:
       - path: CanadianHam/Services/AppleStudyEngine.swift
       - path: CanadianHam/Models/ProgressModels.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/ExamTools/ExamToolModels.swift
       - path: ../../content/lessons
         type: folder
         buildPhase: resources
@@ -194,6 +203,10 @@ targets:
         createIntermediateGroups: false
       - path: ../../fixtures/morse/course.json
         type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/reference-sheet
+        type: folder
         buildPhase: resources
         createIntermediateGroups: false
     postBuildScripts:
@@ -250,6 +263,8 @@ targets:
         product: CanadianHamContent
       - package: CanadianHamMorseEngine
         product: CanadianHamMorseEngine
+      - package: CanadianHamCalculatorEngine
+        product: CanadianHamCalculatorEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.davidjensenius.CanadianHam.tests

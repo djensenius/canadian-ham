@@ -150,6 +150,7 @@ The mock exam timer is optional and off by default.
 ### Apple
 
 - XCUITest runs `performAccessibilityAudit` on every iOS, tvOS, and visionOS screen when screen UI exists.
+- Screenshot evidence paths and opt-in test-runner environment variables are documented in [`docs/testing/evidence.md`](testing/evidence.md).
 - The macOS UI suite is intentionally skipped for speed; macOS keyboard and Full Keyboard Access coverage is verified in the manual release checklist below.
 - A largest-Dynamic-Type UI run validates no clipped essential text and no unreachable actions.
 - VoiceOver manual smoke covers practice, mock exam, results, lessons, import/export, and reset.

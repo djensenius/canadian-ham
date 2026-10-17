@@ -2059,12 +2059,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func auditPracticeSession(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) unanswered practice")
+        try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) unanswered practice")
 
         answerKnownIncorrectLifeAnswerIfPresent(in: app)
         _ = waitForAnswerFeedback(in: app)
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Incorrect"), "Audit fixture should expose the incorrect-answer state")
-        try performAudit(on: app, context: "\(appearance.rawValue) incorrect answered practice")
+        try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) incorrect answered practice")
         app.terminate()
 
         let correctApp = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
@@ -2074,7 +2074,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let correctFeedbackTitle = correctApp.staticTexts["answer-feedback-title"].firstMatch
         XCTAssertTrue(correctFeedbackTitle.waitForExistence(timeout: 5), "Correct-answer feedback title should exist")
         XCTAssertEqual(correctFeedbackTitle.label, "Correct", "Audit fixture should expose the exact correct-answer state")
-        try performAudit(on: correctApp, context: "\(appearance.rawValue) correct answered practice")
+        try auditIgnoringOccludedExamTextContrast(app: correctApp, context: "\(appearance.rawValue) correct answered practice")
         correctApp.terminate()
 
         let reviewApp = launchApp(arguments: [
@@ -2088,9 +2088,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollAndTap("Submit for review", in: reviewApp)
         XCTAssertTrue(reviewApp.staticTexts["Practice review"].waitForExistence(timeout: 10))
         scrollToTop(in: reviewApp)
-        try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review")
+        try auditIgnoringOccludedExamTextContrast(app: reviewApp, context: "\(appearance.rawValue) practice review")
         scrollPracticeReviewFeedbackIntoView(in: reviewApp)
-        try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review feedback")
+        try auditIgnoringOccludedExamTextContrast(app: reviewApp, context: "\(appearance.rawValue) practice review feedback")
         reviewApp.terminate()
     }
 
@@ -2222,7 +2222,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(timerNext.waitForExistence(timeout: 5), "One-question mock exam should expose Next")
         XCTAssertFalse(timerPrevious.isEnabled, "Previous should be disabled on a one-question mock exam")
         XCTAssertFalse(timerNext.isEnabled, "Next should be disabled on a one-question mock exam")
-        try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question timer")
+        try auditIgnoringOccludedExamTextContrast(app: timerApp, context: "\(appearance.rawValue) mock exam question timer")
         tap("Questions", in: timerApp)
         XCTAssertTrue(timerApp.staticTexts["Question navigator"].waitForExistence(timeout: 5))
         try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")
@@ -2246,7 +2246,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(topAnswer.isHittable, "Selected top answer should remain visible before auditing")
         XCTAssertTrue(topAnswer.label.localizedCaseInsensitiveContains("Selected"), "Selected top answer should expose the Selected state before auditing")
         XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the flagged state before auditing")
-        try performAudit(on: app, context: "\(appearance.rawValue) mock exam answered flagged question")
+        try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) mock exam answered flagged question")
         tap("Questions", in: app)
         XCTAssertTrue(app.staticTexts["Question navigator"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the navigator sheet before auditing")
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
@@ -2259,9 +2259,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         submitMockExamAlert(in: app)
         assertMockExamResultVisible(in: app)
         scrollToTop(in: app)
-        try performAudit(on: app, context: "\(appearance.rawValue) mock exam results")
+        try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) mock exam results")
         scrollMockResultsDetailsIntoView(in: app)
-        try performAudit(on: app, context: "\(appearance.rawValue) mock exam results details")
+        try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) mock exam results details")
         app.terminate()
     }
 
@@ -2336,6 +2336,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
             }
             return true
         }
+    }
+
+    private func auditIgnoringOccludedExamTextContrast(app: XCUIApplication, context _: String) throws {
+        try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
     private func openMockExamStart(in app: XCUIApplication) {

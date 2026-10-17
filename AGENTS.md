@@ -86,7 +86,8 @@ platform) and share one build lock, so don't run them by reflex.
 ### Approved accessibility audit exceptions
 - Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
   whose element frame is not fully contained in the visible scroll area below an opaque navigation
-  bar; nil-element findings, navigation-bar elements, fully visible contrast issues, and every
+  bar. Owner decision 2026-10-14 adds practice and mock exam screens to this same occluded-content
+  rule. Nil-element findings, navigation-bar elements, fully visible contrast issues, and every
   non-contrast issue must still fail.
 - Task-42 Morse course home lower-content audit: owner decisions 2026-10-12 and 2026-10-14 also
   approve the fully visible Morse settings-card note false positives. Only the Morse home

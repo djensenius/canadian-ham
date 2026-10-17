@@ -336,6 +336,7 @@ final class PracticeSessionState: ObservableObject {
     @Published var answeredCount = 0
     @Published var correctCount = 0
     @Published var errorMessage: String?
+    let calculatorViewModel = ExamCalculatorViewModel()
 
     var hasUnfinishedCourseWork: Bool {
         guard !items.isEmpty, let loadedPracticeMode else { return false }
@@ -377,7 +378,12 @@ struct PracticeSessionView: View {
     let dataRevision: Int
     let localDataReplacementRevision: Int
     let headerAccessory: AnyView?
+    let onExamToolPresentationChanged: (Bool) -> Void
     let onDataChanged: () -> Void
+
+    @State private var selectedExamTool: ExamTool?
+    @State private var calculatorFocused = false
+    @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
 
     init(
         bank: QuestionBank,
@@ -388,6 +394,7 @@ struct PracticeSessionView: View {
         dataRevision: Int,
         localDataReplacementRevision: Int,
         headerAccessory: AnyView? = nil,
+        onExamToolPresentationChanged: @escaping (Bool) -> Void = { _ in },
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
@@ -395,9 +402,11 @@ struct PracticeSessionView: View {
         self.scope = scope
         _language = language
         self.state = state
+        _calculatorViewModel = ObservedObject(wrappedValue: state.calculatorViewModel)
         self.dataRevision = dataRevision
         self.localDataReplacementRevision = localDataReplacementRevision
         self.headerAccessory = headerAccessory
+        self.onExamToolPresentationChanged = onExamToolPresentationChanged
         self.onDataChanged = onDataChanged
     }
 
@@ -428,7 +437,15 @@ struct PracticeSessionView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.large)
+#endif
+        .lessonReaderOpaqueNavigationBar()
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
+        .onAppear { calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale()) }
+        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
+        .onDisappear { onExamToolPresentationChanged(false) }
     }
 
     private var header: some View {
@@ -436,6 +453,8 @@ struct PracticeSessionView: View {
             Text(scopeTitleAttributed) // l10n: localized
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("practice-category-title")
             Text(sessionProgressText) // l10n: localized
@@ -522,7 +541,9 @@ struct PracticeSessionView: View {
         let question = item.question
         let selected = state.selectedByQuestionId[question.id]
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            QuestionCard(question: question, language: language)
+            ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
+            QuestionCard(question: question, language: language, onInteraction: clearCalculatorKeyboardFocus)
+                .simultaneousGesture(examContentTapGesture)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Answers")
                     .font(DesignTokens.FontScale.title.weight(.bold))
@@ -537,13 +558,19 @@ struct PracticeSessionView: View {
                             language: language,
                             selectedSourceIndex: selected,
                             showCorrectness: selected != nil && progressStore.preferences.practiceMode == .immediate,
-                            disabled: selected != nil && progressStore.preferences.practiceMode == .immediate
+                            disabled: selected != nil && progressStore.preferences.practiceMode == .immediate,
+                            onKeyboardFocus: clearCalculatorKeyboardFocus
                         ) {
+                            clearCalculatorKeyboardFocus()
                             select(sourceIndex: sourceIndex, question: question)
                         }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            clearCalculatorKeyboardFocus()
+                        })
                     }
                 }
             }
+            .simultaneousGesture(examContentTapGesture)
             if let selected, progressStore.preferences.practiceMode == .immediate {
                 PracticeFeedback(question: question, selectedSourceIndex: selected, language: language, choicePermutation: item.choicePermutation)
                 Button(state.currentIndex + 1 == state.items.count ? "Finish session" : "Next question") { // l10n: localized
@@ -563,6 +590,36 @@ struct PracticeSessionView: View {
                 .accessibilityHint(selected == nil ? Text("Choose an answer before continuing") : Text("Continues without feedback until review")) // l10n: localized
             }
         }
+    }
+
+    private var availableExamTools: [ExamTool] {
+        appleExamTools(for: bank, referenceSheetConfiguration: referenceSheetConfiguration)
+    }
+
+    private func openExamTool(_ tool: ExamTool) {
+        selectedExamTool = tool
+        calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
+        if tool == .calculator {
+            Task { @MainActor in
+                calculatorViewModel.acceptHardwareKeyboardInput()
+                calculatorFocused = true
+            }
+        }
+    }
+
+    private func clearCalculatorKeyboardFocus() {
+        calculatorFocused = false
+        calculatorViewModel.suspendHardwareKeyboardInput()
+    }
+
+    private var examContentTapGesture: some Gesture {
+        TapGesture().onEnded {
+            clearCalculatorKeyboardFocus()
+        }
+    }
+
+    private var referenceSheetConfiguration: ReferenceSheetConfiguration {
+        appleReferenceSheetConfigurationFromLaunchArguments()
     }
 
     private var practiceReview: some View {
@@ -635,6 +692,9 @@ struct PracticeSessionView: View {
             state.answeredCount = 0
             state.correctCount = 0
             state.errorMessage = nil
+            selectedExamTool = nil
+            calculatorFocused = false
+            calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             state.items = []
@@ -740,12 +800,14 @@ final class MockExamState: ObservableObject {
     @Published var errorMessage: String?
     @Published var timerStatus = String(localized: "Timer off")
     @Published var loadedLocalDataReplacementRevision = 0
+    let calculatorViewModel = ExamCalculatorViewModel()
 
     var hasUnfinishedCourseWork: Bool {
         !generatedItems.isEmpty && result == nil
     }
 
     func resetSession(localDataReplacementRevision: Int) {
+        calculatorViewModel.clearForNewExam()
         seed = ""
         startedAt = ""
         generatedItems = []
@@ -794,6 +856,7 @@ struct MockExamView: View {
     let language: BankLanguage
     @ObservedObject private var state: MockExamState
     let localDataReplacementRevision: Int
+    let onExamToolPresentationChanged: (Bool) -> Void
     let onDataChanged: () -> Void
 
     init(
@@ -802,13 +865,16 @@ struct MockExamView: View {
         language: BankLanguage,
         state: MockExamState,
         localDataReplacementRevision: Int,
+        onExamToolPresentationChanged: @escaping (Bool) -> Void = { _ in },
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
         self.progressStore = progressStore
         self.language = language
         self.state = state
+        _calculatorViewModel = ObservedObject(wrappedValue: state.calculatorViewModel)
         self.localDataReplacementRevision = localDataReplacementRevision
+        self.onExamToolPresentationChanged = onExamToolPresentationChanged
         self.onDataChanged = onDataChanged
     }
 
@@ -817,7 +883,11 @@ struct MockExamView: View {
     @State private var confirmingEndExam = false
     @State private var isSubmitting = false
     @State private var showingNavigator = false
+    @State private var pendingNavigatorPresentation = false
     @State private var shouldFocusResultsHeading = false
+    @State private var selectedExamTool: ExamTool?
+    @State private var calculatorFocused = false
+    @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -846,6 +916,14 @@ struct MockExamView: View {
         .id(state.result?.id ?? "mock-exam-active")
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
+        .lessonReaderOpaqueNavigationBar()
+        .examToolPresentation(
+            selectedTool: $selectedExamTool,
+            calculator: calculatorViewModel,
+            calculatorFocused: $calculatorFocused,
+            referenceSheetConfiguration: referenceSheetConfiguration,
+            onDismiss: presentPendingNavigatorSheetIfNeeded
+        )
         .sheet(isPresented: $showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 navigator
@@ -857,7 +935,12 @@ struct MockExamView: View {
             .pagePadding()
             .background(DesignTokens.Colors.paper)
         }
-        .onAppear { refreshForCurrentTimerState() }
+        .onAppear {
+            calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
+            refreshForCurrentTimerState()
+        }
+        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
+        .onDisappear { onExamToolPresentationChanged(false) }
         .task(id: localDataReplacementRevision) { resetIfLocalDataWasReplaced() }
         .onReceive(timer) { _ in
             refreshForCurrentTimerState()
@@ -913,7 +996,10 @@ struct MockExamView: View {
             }
             .paperCard()
 
-            QuestionCard(question: question, language: language)
+            ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
+
+            QuestionCard(question: question, language: language, onInteraction: clearCalculatorKeyboardFocus)
+                .simultaneousGesture(examContentTapGesture)
                 .accessibilityAction(named: Text("Next unanswered")) {
                     jumpToNextUnanswered()
                 }
@@ -925,6 +1011,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("mock-answers-title")
                 ForEach(Array(item.choicePermutation.enumerated()), id: \.offset) { displayIndex, sourceIndex in
                     if let answer = question.answers.first(where: { $0.sourceIndex == sourceIndex }) {
                         AnswerChoiceButton(
@@ -933,13 +1020,19 @@ struct MockExamView: View {
                             language: language,
                             selectedSourceIndex: state.selectedByQuestionId[question.id] ?? nil,
                             showCorrectness: false,
-                            disabled: false
+                            disabled: false,
+                            onKeyboardFocus: clearCalculatorKeyboardFocus
                         ) {
+                            clearCalculatorKeyboardFocus()
                             state.selectedByQuestionId[question.id] = sourceIndex
                         }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            clearCalculatorKeyboardFocus()
+                        })
                     }
                 }
             }
+            .simultaneousGesture(examContentTapGesture)
 
             HStack {
                 Button { state.currentIndex = max(0, state.currentIndex - 1) } label: {
@@ -977,6 +1070,36 @@ struct MockExamView: View {
 #else
         false
 #endif
+    }
+
+    private var availableExamTools: [ExamTool] {
+        appleExamTools(for: bank, referenceSheetConfiguration: referenceSheetConfiguration)
+    }
+
+    private func openExamTool(_ tool: ExamTool) {
+        selectedExamTool = tool
+        calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
+        if tool == .calculator {
+            Task { @MainActor in
+                calculatorViewModel.acceptHardwareKeyboardInput()
+                calculatorFocused = true
+            }
+        }
+    }
+
+    private func clearCalculatorKeyboardFocus() {
+        calculatorFocused = false
+        calculatorViewModel.suspendHardwareKeyboardInput()
+    }
+
+    private var examContentTapGesture: some Gesture {
+        TapGesture().onEnded {
+            clearCalculatorKeyboardFocus()
+        }
+    }
+
+    private var referenceSheetConfiguration: ReferenceSheetConfiguration {
+        appleReferenceSheetConfigurationFromLaunchArguments()
     }
 
     @ViewBuilder
@@ -1035,12 +1158,31 @@ struct MockExamView: View {
     @ViewBuilder
     private var questionsButton: some View {
         if usesNavigatorSheet {
-            Button { showingNavigator = true } label: {
+            Button { presentNavigatorSheet() } label: {
                 AccessibleSecondaryButtonLabel(title: "Questions")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("mock-questions-button")
         }
+    }
+
+    private func presentNavigatorSheet() {
+        guard usesNavigatorSheet else { return }
+        if selectedExamTool != nil {
+            pendingNavigatorPresentation = true
+            calculatorFocused = false
+            calculatorViewModel.suspendHardwareKeyboardInput()
+            selectedExamTool = nil
+        } else {
+            showingNavigator = true
+        }
+    }
+
+
+    private func presentPendingNavigatorSheetIfNeeded() {
+        guard pendingNavigatorPresentation else { return }
+        pendingNavigatorPresentation = false
+        showingNavigator = true
     }
 
     @ViewBuilder
@@ -1267,8 +1409,12 @@ struct MockExamView: View {
         confirmingSubmit = false
         confirmingEndExam = false
         showingNavigator = false
+        pendingNavigatorPresentation = false
+        selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
+        calculatorFocused = false
+        calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
     }
 
     private func refreshForCurrentTimerState(now: Date = Date()) {
@@ -1317,6 +1463,9 @@ struct MockExamView: View {
             state.loadedLocalDataReplacementRevision = localDataReplacementRevision
             state.result = nil
             state.errorMessage = nil
+            selectedExamTool = nil
+            calculatorFocused = false
+            calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -1387,8 +1536,12 @@ struct MockExamView: View {
         confirmingSubmit = false
         confirmingEndExam = false
         showingNavigator = false
+        pendingNavigatorPresentation = false
+        selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
+        calculatorFocused = false
+        calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
     }
 }
 
@@ -1831,9 +1984,10 @@ struct ProgressExportDocument: FileDocument {
 struct QuestionCard: View {
     let question: BankQuestion
     let language: BankLanguage
+    var onInteraction: (() -> Void)? = nil
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        let card = VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text(question.id) // l10n: verbatim
                 .font(DesignTokens.FontScale.body.monospaced())
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -1845,8 +1999,15 @@ struct QuestionCard: View {
                 .accessibilityIdentifier("question-stem")
         }
         .paperCard()
+        .contentShape(Rectangle())
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("question-card")
+
+        if let onInteraction {
+            card.simultaneousGesture(TapGesture().onEnded { onInteraction() }, including: .all)
+        } else {
+            card
+        }
     }
 }
 
@@ -1857,7 +2018,9 @@ struct AnswerChoiceButton: View {
     let selectedSourceIndex: Int?
     let showCorrectness: Bool
     let disabled: Bool
+    var onKeyboardFocus: (() -> Void)? = nil
     let action: () -> Void
+    @FocusState private var isKeyboardFocused: Bool
 
     private var letter: String { ["A", "B", "C", "D"][safe: displayIndex] ?? "\(displayIndex + 1)" }
     private var isSelected: Bool { selectedSourceIndex == answer.sourceIndex }
@@ -1900,6 +2063,12 @@ struct AnswerChoiceButton: View {
         .accessibilityLabel(accessibilityLabel) // l10n: content(question)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("answer-\(letter)-button")
+        .focused($isKeyboardFocused)
+        .onChange(of: isKeyboardFocused) { _, isFocused in
+            if isFocused {
+                onKeyboardFocus?()
+            }
+        }
     }
 
     private var statusText: String? {
@@ -2129,6 +2298,33 @@ struct MessagePanel: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(kind == .success ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.warningBorder, lineWidth: 1))
         .accessibilityElement(children: .combine)
     }
+}
+
+private func appleExamTools(for bank: QuestionBank, referenceSheetConfiguration: ReferenceSheetConfiguration) -> [ExamTool] {
+    var tools: [ExamTool] = [.calculator]
+    if bank.courseBankID != .advanced, referenceSheetConfiguration.availableOnApple {
+        tools.append(.referenceSheet)
+    }
+    return tools
+}
+
+@MainActor
+private func shouldFocusCalculator(for tool: ExamTool, calculatorViewModel: ExamCalculatorViewModel) -> Bool {
+    if tool == .calculator {
+        calculatorViewModel.acceptHardwareKeyboardInput()
+        return true
+    }
+    calculatorViewModel.suspendHardwareKeyboardInput()
+    return false
+}
+
+private func appleReferenceSheetConfigurationFromLaunchArguments() -> ReferenceSheetConfiguration {
+#if DEBUG
+    if let resourceName = AppLaunchArguments.value(after: "-CanadianHamReferenceSheetResourceName") {
+        return ReferenceSheetConfiguration(resourceName: resourceName, resourceExtension: "md", subdirectory: "reference-sheet")
+    }
+#endif
+    return .basic
 }
 
 private extension ApplePreferences.PracticeMode {

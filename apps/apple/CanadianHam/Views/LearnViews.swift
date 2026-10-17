@@ -513,7 +513,7 @@ private struct LessonPrerequisitesSection: View {
     }
 }
 
-private extension View {
+extension View {
     @ViewBuilder
     func lessonReaderOpaqueNavigationBar() -> some View {
 #if os(iOS)
@@ -563,7 +563,7 @@ private struct OutlineLessonView: View {
     }
 }
 
-private struct LessonMarkdownView: View {
+struct LessonMarkdownView: View {
     let markdown: String
     let title: String?
 

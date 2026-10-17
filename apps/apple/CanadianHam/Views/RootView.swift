@@ -1,5 +1,8 @@
 import CanadianHamContent
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 private enum SidebarSelection: Hashable {
     case home
@@ -10,6 +13,15 @@ private enum SidebarSelection: Hashable {
     case morse
     case settings
     case about
+
+    var isExamSessionSelection: Bool {
+        switch self {
+        case .practice, .mockExam:
+            true
+        case .home, .learn, .practiceHub, .morse, .settings, .about:
+            false
+        }
+    }
 }
 
 #if os(iOS)
@@ -51,6 +63,9 @@ struct RootView: View {
     @State private var unfinishedCourseWorkCheckID = UUID()
     @StateObject private var practiceSessionStates = PracticeSessionStateCache()
     @StateObject private var mockExamState = MockExamState()
+    @State private var splitColumnVisibility = NavigationSplitViewVisibility.automatic
+    @State private var preToolSplitColumnVisibility: NavigationSplitViewVisibility?
+    @State private var regularWidthExamToolPresented = false
 #if os(iOS)
     @State private var compactNavigationPath = NavigationPath()
 #endif
@@ -65,7 +80,7 @@ struct RootView: View {
             if let bank, let contentLibrary, let progressStore {
                 appContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     .environment(\.canadianHamContentLibrary, contentLibrary)
-                    .preferredColorScheme(colorScheme(for: progressStore.preferences.theme))
+                    .preferredColorScheme(launchColorScheme ?? colorScheme(for: progressStore.preferences.theme))
             } else if let progressStoreError {
                 StoreRecoveryView(message: progressStoreError) {
                     ProgressStoreService.resetPersistentStoreFiles()
@@ -367,119 +382,237 @@ struct RootView: View {
 
     @ViewBuilder
     private func splitContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
-        NavigationSplitView {
-            List {
-                Section {
-                    SidebarButton(selection: .home, current: selection) {
-                        Label("Home", systemImage: "house")
-                    } action: { selection = .home }
-                    SidebarButton(selection: .learn, current: selection) {
-                        Label("Learn", systemImage: "book.closed")
-                    } action: { selection = .learn }
-                } header: {
-                    Text("Study")
-                        .textCase(nil)
-                        .accessibilityAddTraits(.isHeader)
-                }
-
-                Section {
-                    SidebarButton(selection: .practiceHub, current: selection) {
-                        Label("Practice", systemImage: "checklist")
-                    } action: { selection = .practiceHub }
-                    SidebarButton(selection: .practice(.all), current: selection) {
-                        Label("All questions", systemImage: "tray.full")
-                    } action: { selection = .practice(.all) }
-                    SidebarButton(selection: .practice(.weak), current: selection) {
-                        Label("Weak areas", systemImage: "exclamationmark.triangle")
-                    } action: { selection = .practice(.weak) }
-                    SidebarButton(selection: .practice(.due), current: selection) {
-                        Label("Due review", systemImage: "calendar.badge.clock")
-                    } action: { selection = .practice(.due) }
-                    ForEach(bank.categories) { category in
-                        SidebarButton(selection: .practice(.category(category.id)), current: selection) {
-                            CategoryRow(category: category, language: language)
-                        } action: { selection = .practice(.category(category.id)) }
-                        .accessibilityLabel(Text(categoryAccessibilityLabel(category))) // l10n: content(question)
-                    }
-                } header: {
-                    Text("Practice categories")
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .textCase(nil)
-                        .accessibilityAddTraits(.isHeader)
-                }
-                .headerProminence(.increased)
-
-                Section {
-                    SidebarButton(selection: .mockExam, current: selection) {
-                        Label("Mock exam", systemImage: "doc.text.magnifyingglass")
-                    } action: { selection = .mockExam }
-                    SidebarButton(selection: .morse, current: selection) {
-                        Label("Morse", systemImage: "waveform")
-                    } action: { selection = .morse }
-#if !os(macOS)
-                    SidebarButton(selection: .settings, current: selection) {
-                        Label("Settings", systemImage: "gearshape")
-                    } action: { selection = .settings }
+        GeometryReader { proxy in
+            let columnVisibility: Binding<NavigationSplitViewVisibility>? = shouldUseBoundSplitColumnVisibility ? $splitColumnVisibility : nil
+            splitNavigationView(
+                bank: bank,
+                contentLibrary: contentLibrary,
+                progressStore: progressStore,
+                columnVisibility: columnVisibility
+            )
+            .navigationSplitViewStyle(.balanced)
+#if os(iOS)
+            .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
 #endif
-                    SidebarButton(selection: .about, current: selection) {
-                        Label("About", systemImage: "info.circle")
-                    } action: { selection = .about }
-                } header: {
-                    Text("Tools")
-                        .textCase(nil)
-                        .accessibilityAddTraits(.isHeader)
+            .onAppear {
+                updateLanguage(from: progressStore.preferences)
+                applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
+                applyInitialSplitColumnVisibilityLaunchArgument()
+                updateRegularWidthExamToolColumnVisibility(containerSize: proxy.size)
+            }
+            .onChange(of: progressStore.preferences.language) { _, _ in
+                updateLanguage(from: progressStore.preferences)
+            }
+            .onChange(of: progressStore.preferences.practiceMode) { _, _ in
+                practiceSessionStates.clear()
+            }
+            .onChange(of: progressStore.preferences.activeBankId) { _, next in
+                loadBank(for: next)
+                practiceSessionStates.clear()
+                mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
+            }
+            .onChange(of: appSettings.localDataReplacementRevision) { _, next in
+                clearCachedSessions(localDataReplacementRevision: next)
+            }
+            .onChange(of: selection) { _, next in
+                if next != .learn {
+                    navigationPath.removeAll()
+                }
+                if !next.isExamSessionSelection {
+                    regularWidthExamToolPresented = false
                 }
             }
-            .listStyle(.sidebar)
-            .scrollContentBackground(.hidden)
-            .background(DesignTokens.Colors.paper)
-            .accessibilityIdentifier("root-sidebar")
-            .navigationTitle("Canadian Ham")
-        } detail: {
-            NavigationStack(path: $navigationPath) {
-                detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-                    .navigationDestination(for: LearnRoute.self) { route in
-                        learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                    }
+            .onChange(of: regularWidthExamToolPresented) { _, _ in
+                updateRegularWidthExamToolColumnVisibility(containerSize: proxy.size)
+            }
+            .onChange(of: proxy.size) { _, next in
+                updateRegularWidthExamToolColumnVisibility(containerSize: next)
             }
         }
-        .navigationSplitViewStyle(.balanced)
-#if os(iOS)
-        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-#endif
 #if os(macOS)
         .frame(minWidth: 980, minHeight: 680)
 #endif
-        .onAppear {
-            updateLanguage(from: progressStore.preferences)
-            applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
-        }
-        .onChange(of: progressStore.preferences.language) { _, _ in
-            updateLanguage(from: progressStore.preferences)
-        }
-        .onChange(of: progressStore.preferences.practiceMode) { _, _ in
-            practiceSessionStates.clear()
-        }
-        .onChange(of: progressStore.preferences.activeBankId) { _, next in
-            loadBank(for: next)
-            practiceSessionStates.clear()
-            mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
-        }
-        .onChange(of: appSettings.localDataReplacementRevision) { _, next in
-            clearCachedSessions(localDataReplacementRevision: next)
-        }
-        .onChange(of: selection) { _, next in
-            if next != .learn {
-                navigationPath.removeAll()
+    }
+
+    @ViewBuilder
+    private func splitNavigationView(
+        bank: QuestionBank,
+        contentLibrary: ContentLibrary,
+        progressStore: ProgressStoreService,
+        columnVisibility: Binding<NavigationSplitViewVisibility>?
+    ) -> some View {
+        if let columnVisibility {
+            NavigationSplitView(columnVisibility: columnVisibility) {
+                splitSidebar(bank: bank)
+            } detail: {
+                splitDetail(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
             }
+        } else {
+            NavigationSplitView {
+                splitSidebar(bank: bank)
+            } detail: {
+                splitDetail(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+            }
+        }
+    }
+
+    private func splitSidebar(bank: QuestionBank) -> some View {
+        List {
+            Section {
+                SidebarButton(selection: .home, current: selection) {
+                    Label("Home", systemImage: "house")
+                } action: { selection = .home }
+                SidebarButton(selection: .learn, current: selection) {
+                    Label("Learn", systemImage: "book.closed")
+                } action: { selection = .learn }
+            } header: {
+                Text("Study")
+                    .font(DesignTokens.FontScale.title.weight(.bold))
+                    .textCase(nil)
+                    .accessibilityAddTraits(.isHeader)
+            }
+            .headerProminence(.increased)
+
+            Section {
+                SidebarButton(selection: .practiceHub, current: selection) {
+                    Label("Practice", systemImage: "checklist")
+                } action: { selection = .practiceHub }
+                SidebarButton(selection: .practice(.all), current: selection) {
+                    Label("All questions", systemImage: "tray.full")
+                } action: { selection = .practice(.all) }
+                SidebarButton(selection: .practice(.weak), current: selection) {
+                    Label("Weak areas", systemImage: "exclamationmark.triangle")
+                } action: { selection = .practice(.weak) }
+                SidebarButton(selection: .practice(.due), current: selection) {
+                    Label("Due review", systemImage: "calendar.badge.clock")
+                } action: { selection = .practice(.due) }
+                ForEach(bank.categories) { category in
+                    SidebarButton(selection: .practice(.category(category.id)), current: selection) {
+                        CategoryRow(category: category, language: language)
+                    } action: { selection = .practice(.category(category.id)) }
+                    .accessibilityLabel(Text(categoryAccessibilityLabel(category))) // l10n: content(question)
+                }
+            } header: {
+                Text("Practice categories")
+                    .font(DesignTokens.FontScale.title.weight(.bold))
+                    .textCase(nil)
+                    .accessibilityAddTraits(.isHeader)
+            }
+            .headerProminence(.increased)
+
+            Section {
+                SidebarButton(selection: .mockExam, current: selection) {
+                    Label("Mock exam", systemImage: "doc.text.magnifyingglass")
+                } action: { selection = .mockExam }
+                SidebarButton(selection: .morse, current: selection) {
+                    Label("Morse", systemImage: "waveform")
+                } action: { selection = .morse }
+#if !os(macOS)
+                SidebarButton(selection: .settings, current: selection) {
+                    Label("Settings", systemImage: "gearshape")
+                } action: { selection = .settings }
+#endif
+                SidebarButton(selection: .about, current: selection) {
+                    Label("About", systemImage: "info.circle")
+                } action: { selection = .about }
+            } header: {
+                Text("Tools")
+                    .font(DesignTokens.FontScale.title.weight(.bold))
+                    .textCase(nil)
+                    .accessibilityAddTraits(.isHeader)
+            }
+            .headerProminence(.increased)
+        }
+        .listStyle(.sidebar)
+        .scrollContentBackground(.hidden)
+        .background(DesignTokens.Colors.paper)
+        .accessibilityIdentifier("root-sidebar")
+        .navigationTitle("Canadian Ham")
+    }
+
+    private func splitDetail(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
+        NavigationStack(path: $navigationPath) {
+            detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                .background(DesignTokens.Colors.paper)
+                .navigationDestination(for: LearnRoute.self) { route in
+                    learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                }
         }
     }
 
     private var combinedDataRevision: Int {
         dataRevision + appSettings.dataRevision
     }
+
+    private var shouldUseBoundSplitColumnVisibility: Bool {
+#if os(iOS)
+        Self.usesBoundSplitColumnVisibility
+#else
+        false
+#endif
+    }
+
+#if os(iOS)
+    private static let usesBoundSplitColumnVisibility: Bool = {
+#if DEBUG
+        let hasInitialVisibilityLaunchArgument = AppLaunchArguments.value(after: "-CanadianHamInitialSplitColumnVisibility") != nil
+#else
+        let hasInitialVisibilityLaunchArgument = false
+#endif
+        return UIDevice.current.userInterfaceIdiom == .pad || hasInitialVisibilityLaunchArgument
+    }()
+#endif
+
+#if DEBUG && os(iOS)
+    private var initialSplitColumnVisibilityLaunchArgument: NavigationSplitViewVisibility? {
+        switch AppLaunchArguments.value(after: "-CanadianHamInitialSplitColumnVisibility") {
+        case "all":
+            return .all
+        case "detailOnly":
+            return .detailOnly
+        default:
+            return nil
+        }
+    }
+#endif
+
+    private func applyInitialSplitColumnVisibilityLaunchArgument() {
+#if DEBUG && os(iOS)
+        if let initialSplitColumnVisibilityLaunchArgument {
+            splitColumnVisibility = initialSplitColumnVisibilityLaunchArgument
+        }
+#endif
+    }
+
+    private func updateRegularWidthExamToolColumnVisibility(containerSize: CGSize) {
+#if os(iOS)
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return }
+        guard shouldCollapseSidebarForRegularWidthExamTool(containerSize: containerSize) else {
+            if let preToolSplitColumnVisibility {
+                splitColumnVisibility = preToolSplitColumnVisibility
+                self.preToolSplitColumnVisibility = nil
+            }
+            return
+        }
+
+        if preToolSplitColumnVisibility == nil {
+            preToolSplitColumnVisibility = splitColumnVisibility
+        }
+        splitColumnVisibility = .detailOnly
+#endif
+    }
+
+#if os(iOS)
+    private func shouldCollapseSidebarForRegularWidthExamTool(containerSize: CGSize) -> Bool {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return false }
+        let estimatedSidebarWidth: CGFloat = 320
+        let inspectorIdealWidth: CGFloat = 380
+        let minimumExamColumnWidth: CGFloat = 420
+        let canFitSidebarDetailAndInspector = containerSize.width - estimatedSidebarWidth - inspectorIdealWidth >= minimumExamColumnWidth
+        return regularWidthExamToolPresented && !canFitSidebarDetailAndInspector
+    }
+#endif
 
     private func updateLanguage(from preferences: ApplePreferences) {
         language = preferences.language.resolvedLanguage()
@@ -545,7 +678,8 @@ struct RootView: View {
                 language: $language,
                 state: practiceSessionStates.state(for: scope),
                 dataRevision: combinedDataRevision,
-                localDataReplacementRevision: appSettings.localDataReplacementRevision
+                localDataReplacementRevision: appSettings.localDataReplacementRevision,
+                onExamToolPresentationChanged: { regularWidthExamToolPresented = $0 }
             ) {
                 recordDataChanged()
             }
@@ -555,7 +689,8 @@ struct RootView: View {
                 progressStore: progressStore,
                 language: language,
                 state: mockExamState,
-                localDataReplacementRevision: appSettings.localDataReplacementRevision
+                localDataReplacementRevision: appSettings.localDataReplacementRevision,
+                onExamToolPresentationChanged: { regularWidthExamToolPresented = $0 }
             ) {
                 recordDataChanged()
             }
@@ -808,6 +943,18 @@ struct RootView: View {
         var label = localized(category.name.text(for: language), language: category.name.resolvedLanguage(for: language))
         label += AttributedString(", \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))")
         return label
+    }
+
+    private var launchColorScheme: ColorScheme? {
+#if DEBUG
+        switch AppLaunchArguments.value(after: "-CanadianHamAppearance") {
+        case "light": .light
+        case "dark": .dark
+        default: nil
+        }
+#else
+        nil
+#endif
     }
 
     private func colorScheme(for theme: ApplePreferences.Theme) -> ColorScheme? {

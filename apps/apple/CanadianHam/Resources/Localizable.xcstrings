@@ -2583,6 +2583,28 @@
         }
       }
     },
+    "%lld%%" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
+    },
     "Before this lesson" : {
       "localizations" : {
         "fr" : {
@@ -2595,6 +2617,60 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avant cette leçon"
+          }
+        }
+      }
+    },
+    "Calculator" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculatrice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculatrice"
+          }
+        }
+      }
+    },
+    "Calculator result" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice"
+          }
+        }
+      }
+    },
+    "Calculator result: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculator result: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice : %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice : %@"
           }
         }
       }
@@ -2717,6 +2793,22 @@
         }
       }
     },
+    "Add" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additionner"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additionner"
+          }
+        }
+      }
+    },
     "Advanced" : {
       "localizations" : {
         "fr" : {
@@ -2777,6 +2869,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les leçons de compétence supérieure sont à venir. Entre-temps, utilisez les exercices et les examens simulés de compétence supérieure."
+          }
+        }
+      }
+    },
+    "All clear" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout effacer"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout effacer"
           }
         }
       }
@@ -3015,6 +3123,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tonalité audio"
+          }
+        }
+      }
+    },
+    "Backspace" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retour arrière"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retour arrière"
           }
         }
       }
@@ -3387,6 +3511,22 @@
         }
       }
     },
+    "Clear entry" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l’entrée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l’entrée"
+          }
+        }
+      }
+    },
     "Clear sending practice" : {
       "localizations" : {
         "fr" : {
@@ -3399,6 +3539,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Effacer l’exercice d’envoi"
+          }
+        }
+      }
+    },
+    "Close tool" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close tool"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer l’outil"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer l’outil"
           }
         }
       }
@@ -3859,6 +4021,22 @@
         }
       }
     },
+    "Decimal point" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virgule décimale"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virgule décimale"
+          }
+        }
+      }
+    },
     "Decoded %@." : {
       "localizations" : {
         "fr" : {
@@ -3987,6 +4165,166 @@
         }
       }
     },
+    "Digit 0" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 0"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 0"
+          }
+        }
+      }
+    },
+    "Digit 1" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 1"
+          }
+        }
+      }
+    },
+    "Digit 2" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 2"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 2"
+          }
+        }
+      }
+    },
+    "Digit 3" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 3"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 3"
+          }
+        }
+      }
+    },
+    "Digit 4" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 4"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 4"
+          }
+        }
+      }
+    },
+    "Digit 5" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 5"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 5"
+          }
+        }
+      }
+    },
+    "Digit 6" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 6"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 6"
+          }
+        }
+      }
+    },
+    "Digit 7" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 7"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 7"
+          }
+        }
+      }
+    },
+    "Digit 8" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 8"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 8"
+          }
+        }
+      }
+    },
+    "Digit 9" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 9"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 9"
+          }
+        }
+      }
+    },
     "Discard this in-progress mock exam and return to the start screen." : {
       "localizations" : {
         "en" : {
@@ -4049,6 +4387,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choix affiché %@"
+          }
+        }
+      }
+    },
+    "Divide" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diviser"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diviser"
           }
         }
       }
@@ -4373,6 +4727,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entrez les caractères entendus, et non la notation en points et tirets."
+          }
+        }
+      }
+    },
+    "Equals" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Égal"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Égal"
           }
         }
       }
@@ -5563,6 +5933,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+          }
+        }
+      }
+    },
+    "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer."
           }
         }
       }
@@ -6779,6 +7171,22 @@
         }
       }
     },
+    "Multiply" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multiplier"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multiplier"
+          }
+        }
+      }
+    },
     "Needs review" : {
       "localizations" : {
         "fr" : {
@@ -7535,6 +7943,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mettre la minuterie en pause"
+          }
+        }
+      }
+    },
+    "Percent" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourcentage"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourcentage"
           }
         }
       }
@@ -8345,6 +8769,22 @@
         }
       }
     },
+    "Reciprocal" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverse"
+          }
+        }
+      }
+    },
     "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape." : {
       "localizations" : {
         "en" : {
@@ -8363,6 +8803,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réduire les animations ou Atténuer les lumières clignotantes est activé; la lecture utilise donc le ruban non clignotant."
+          }
+        }
+      }
+    },
+    "Reference sheet" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence"
+          }
+        }
+      }
+    },
+    "Reference sheet unavailable" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence non disponible"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence non disponible"
           }
         }
       }
@@ -8931,6 +9403,28 @@
         }
       }
     },
+    "Show full sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show full sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher la feuille complète"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher la feuille complète"
+          }
+        }
+      }
+    },
     "Simulated 5 wpm exam" : {
       "localizations" : {
         "fr" : {
@@ -9019,6 +9513,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sources"
+          }
+        }
+      }
+    },
+    "Square" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carré"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carré"
+          }
+        }
+      }
+    },
+    "Square root" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racine carrée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racine carrée"
           }
         }
       }
@@ -9725,6 +10251,22 @@
         }
       }
     },
+    "Subtract" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soustraire"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soustraire"
+          }
+        }
+      }
+    },
     "Switch course" : {
       "localizations" : {
         "fr" : {
@@ -9839,6 +10381,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ruban"
+          }
+        }
+      }
+    },
+    "The bundled Basic reference sheet is not installed in this build." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La feuille de référence de base intégrée n’est pas installée dans cette version."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La feuille de référence de base intégrée n’est pas installée dans cette version."
           }
         }
       }
@@ -10249,6 +10807,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Profil de minutage"
+          }
+        }
+      }
+    },
+    "Toggle sign" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change sign"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer le signe"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer le signe"
           }
         }
       }
@@ -10769,6 +11349,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
+          }
+        }
+      }
+    },
+    "Zoom in" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom in"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir le zoom"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir le zoom"
+          }
+        }
+      }
+    },
+    "Zoom out" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom out"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire le zoom"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire le zoom"
           }
         }
       }
