@@ -44,9 +44,10 @@ ICON_COMPOSER_TOOL = Path("/Applications/Xcode.app/Contents/Applications/Icon Co
 
 SIZE = 1024
 INK = "#15120F"
-CREAM_INNER = (255, 247, 232)
-CREAM_OUTER = (246, 238, 220)
-CREAM_OUTER_HEX = "#F6EEDC"
+# Flat family cream shared with the owner's other ink-brush app icons (FluxHaus, FluxKlang).
+CREAM_INNER = (232, 213, 183)
+CREAM_OUTER = (232, 213, 183)
+CREAM_OUTER_HEX = "#E8D5B7"
 DARK_FIELD = "#201B16"
 DARK_FIELD_INNER = (42, 36, 30)
 DARK_FIELD_OUTER = (32, 27, 22)

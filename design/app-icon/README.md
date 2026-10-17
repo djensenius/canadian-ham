@@ -8,7 +8,7 @@ The owner approved `design/app-icon/concepts/01-hex-top` on 2026-10-02. `design/
 
 The production renderer builds the mark from deterministic vector brush commands, then rasterizes at the requested export sizes with ImageMagick. The core coordinate system is `0 0 1024 1024`:
 
-- **Back:** opaque warm cream radial field, with no paper grain or tiled texture.
+- **Back:** opaque flat family cream field (`#E8D5B7`, shared with the owner's FluxHaus and FluxKlang icons), with no paper grain or tiled texture.
 - **Middle:** transparent layer containing only the pale zigzag W/M wire elements.
 - **Front:** transparent layer containing the brushed hexagon perimeter, six spreaders, dry-brush tails, splatter, and hub dot.
 - **Flattened app/web icons:** back + middle + front composited on the cream field.
@@ -48,7 +48,7 @@ Exports are written to `design/app-icon/exports/`.
 - `app-icon-60.png` and `app-icon-120.png`: review renders included on the preview sheet to check small-size legibility.
 - `mac-16.png`, `mac-32.png`, `mac-64.png`, `mac-128.png`, `mac-256.png`, `mac-512.png`, and `mac-1024.png`: macOS fallback sizes installed into the appiconset.
 
-The renderer installs the light, dark, tinted, and macOS fallback images into `AppIcon.appiconset` using the same structure as the owner's other apps. It also writes `AppIcon.icon` with the transparent brushstroke layer over a cream gradient fill for Liquid Glass light/dark/clear/tinted rendering on supported Apple platforms.
+The renderer installs the light, dark, tinted, and macOS fallback images into `AppIcon.appiconset` using the same structure as the owner's other apps. It also writes `AppIcon.icon` with the transparent brushstroke layer over the flat family cream fill (`#E8D5B7`) for Liquid Glass light/dark/clear/tinted rendering on supported Apple platforms.
 
 ### visionOS Solid Image Stack
 
@@ -88,4 +88,4 @@ The renderer copies these files to `apps/web/public/`. `apps/web/index.html` ref
 
 ## Icon Composer bundle
 
-The committed Xcode 26+/27 `.icon` bundle lives at `apps/apple/CanadianHam/Resources/AppIcon.icon`. Its structure matches the owner's other apps: `icon.json` plus `Assets/brushstroke.png`, with glass enabled, individual lighting, a layer-colour shadow, and a cream gradient fill from the Canadian Ham palette. The Icon Composer foreground is the approved black brush with a narrow `DARK_INK` cream underlay so `ictool` dark, tinted, and clear OS renders remain legible when OS 27 prefers `AppIcon.icon` over the fallback appiconset. tvOS and visionOS keep their existing layered image-stack assets; dark/tinted app-icon variants are not added there because those platforms use the current layered icon mechanisms rather than the iOS/iPadOS/macOS luminosity appiconset slots.
+The committed Xcode 26+/27 `.icon` bundle lives at `apps/apple/CanadianHam/Resources/AppIcon.icon`. Its structure matches the owner's other apps: `icon.json` plus `Assets/brushstroke.png`, with glass enabled, individual lighting, a layer-colour shadow, and the flat family cream fill (`#E8D5B7`). The Icon Composer foreground is the approved black brush with a narrow `DARK_INK` cream underlay so `ictool` dark, tinted, and clear OS renders remain legible when OS 27 prefers `AppIcon.icon` over the fallback appiconset. tvOS and visionOS keep their existing layered image-stack assets; dark/tinted app-icon variants are not added there because those platforms use the current layered icon mechanisms rather than the iOS/iPadOS/macOS luminosity appiconset slots.
