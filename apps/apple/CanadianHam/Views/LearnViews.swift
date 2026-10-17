@@ -1,10 +1,11 @@
+import Accessibility
 import CanadianHamContent
 import CanadianHamEngine
 import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
 
-private var canadianHamUsesFrenchUI: Bool {
+var canadianHamUsesFrenchUI: Bool {
     Bundle.main.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true
 }
 
@@ -171,6 +172,7 @@ struct LearnView: View {
 enum LearnRoute: Hashable {
     case module(String)
     case lesson(String)
+    case lessonSection(String, String)
     case lessonQuiz(String)
 }
 
@@ -198,6 +200,21 @@ struct LearnRouteDestinationView: View {
                     bank: bank,
                     progressStore: progressStore,
                     language: language,
+                    targetSectionAnchor: nil,
+                    onDataChanged: onDataChanged
+                )
+            } else {
+                ContentUnavailableView("Lesson not found", systemImage: "book.closed")
+            }
+        case .lessonSection(let id, let anchor):
+            if let lesson = library.lessonsById[id] {
+                LessonReaderView(
+                    lesson: lesson,
+                    library: library,
+                    bank: bank,
+                    progressStore: progressStore,
+                    language: language,
+                    targetSectionAnchor: anchor,
                     onDataChanged: onDataChanged
                 )
             } else {
@@ -301,6 +318,7 @@ private struct LessonReaderView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
+    let targetSectionAnchor: String?
     let onDataChanged: () -> Void
 
     @State private var lessonProgress: LessonProgressRecord?
@@ -308,72 +326,76 @@ private struct LessonReaderView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(localized(lesson.title.en, language: .english)) // l10n: content(en)
-                        .font(DesignTokens.FontScale.headline.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityAddTraits(.isHeader)
-                        .accessibilityIdentifier("lesson-reader-title")
-                    if let lessonProgress {
-                        Text(markedReadText(lessonProgress.readCount)) // l10n: localized
-                            .font(DesignTokens.FontScale.caption)
+        ScrollViewReader { scrollProxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
+                            .font(DesignTokens.FontScale.caption.weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    } else {
-                        Text("Not marked read yet.")
-                            .font(DesignTokens.FontScale.caption)
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    }
-                    LessonPrerequisitesSection(prerequisites: prerequisiteLessons)
-                }
-                .paperCard()
-
-                if let errorMessage {
-                    MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
-                }
-
-                if lesson.status == .outline {
-                    OutlineLessonView(lesson: lesson, library: library)
-                } else {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                        EnglishOnlyLessonNotice()
-                        LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
+                        Text(localized(lesson.title.en, language: .english)) // l10n: content(en)
+                            .font(DesignTokens.FontScale.headline.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityAddTraits(.isHeader)
+                            .accessibilityIdentifier("lesson-reader-title")
+                        if let lessonProgress {
+                            Text(markedReadText(lessonProgress.readCount)) // l10n: localized
+                                .font(DesignTokens.FontScale.caption)
+                                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        } else {
+                            Text("Not marked read yet.")
+                                .font(DesignTokens.FontScale.caption)
+                                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        }
+                        LessonPrerequisitesSection(prerequisites: prerequisiteLessons)
                     }
                     .paperCard()
-                }
 
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Button { markRead() } label: {
-                        lessonActionLabel(Text("Mark lesson read"))
+                    if let errorMessage {
+                        MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
                     }
-                    .buttonStyle(.plain)
-                    if let firstQuizID = lesson.quizIds.first {
-                        NavigationLink("Go to quiz", value: LearnRoute.lessonQuiz(firstQuizID))
-                            .buttonStyle(AccessiblePrimaryButtonStyle())
-                            .accessibilityIdentifier("go-to-lesson-quiz-button")
+
+                    if lesson.status == .outline {
+                        OutlineLessonView(lesson: lesson, library: library)
+                    } else {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                            EnglishOnlyLessonNotice()
+                            LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en, targetAnchor: targetSectionAnchor)
+                        }
+                        .paperCard()
                     }
-                    if let previous = neighbor(offset: -1) {
-                        NavigationLink(value: LearnRoute.lesson(previous.id)) {
-                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
+
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Button { markRead() } label: {
+                            lessonActionLabel(Text("Mark lesson read"))
                         }
                         .buttonStyle(.plain)
-                    }
-                    if let next = neighbor(offset: 1) {
-                        NavigationLink(value: LearnRoute.lesson(next.id)) {
-                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
+                        if let firstQuizID = lesson.quizIds.first {
+                            NavigationLink("Go to quiz", value: LearnRoute.lessonQuiz(firstQuizID))
+                                .buttonStyle(AccessiblePrimaryButtonStyle())
+                                .accessibilityIdentifier("go-to-lesson-quiz-button")
                         }
-                        .buttonStyle(.plain)
+                        if let previous = neighbor(offset: -1) {
+                            NavigationLink(value: LearnRoute.lesson(previous.id)) {
+                                lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        if let next = neighbor(offset: 1) {
+                            NavigationLink(value: LearnRoute.lesson(next.id)) {
+                                lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
-                }
 
-                quizCards
+                    quizCards
+                }
+                .pagePadding()
             }
-            .pagePadding()
+            .onAppear { focusTargetSection(scrollProxy) }
+            .onChange(of: targetSectionAnchor) { _, _ in focusTargetSection(scrollProxy) }
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(lessonModuleNavigationTitle) // l10n: localized
@@ -393,6 +415,17 @@ private struct LessonReaderView: View {
             return String(localized: "Lesson")
         }
         return String(localized: "Module \(module.order)")
+    }
+
+    private func focusTargetSection(_ scrollProxy: ScrollViewProxy) {
+        guard let targetSectionAnchor else { return }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            withAnimation(.easeInOut(duration: 0.2)) {
+                scrollProxy.scrollTo(targetSectionAnchor, anchor: .top)
+            }
+            AccessibilityNotification.Announcement(String(localized: "Lesson section opened.")).post()
+        }
     }
 
     private func lessonActionLabel(_ text: Text) -> some View {
@@ -566,30 +599,33 @@ private struct OutlineLessonView: View {
 struct LessonMarkdownView: View {
     let markdown: String
     let title: String?
+    let targetAnchor: String?
+    @AccessibilityFocusState private var focusedHeadingAnchor: String?
 
-    init(markdown: String, title: String? = nil) {
+    init(markdown: String, title: String? = nil, targetAnchor: String? = nil) {
         self.markdown = markdown
         self.title = title
+        self.targetAnchor = targetAnchor
     }
 
     var body: some View {
         let rendered = (try? LessonMarkdownRenderer.render(markdown)) ?? RenderedLessonMarkdown(blocks: [.paragraph(AttributedString(markdown))])
+        let blocks = displayBlocks(rendered)
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            ForEach(Array(rendered.blocks.enumerated()), id: \.offset) { _, block in
-                blockView(block)
+            ForEach(blocks) { displayBlock in
+                blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
             }
         }
+        .onAppear { focusTargetHeadingAfterLayout() }
+        .onChange(of: targetAnchor) { _, _ in focusTargetHeadingAfterLayout() }
     }
 
     @ViewBuilder
-    private func blockView(_ block: LessonBlock) -> some View {
+    private func blockView(_ block: LessonBlock, headingAnchor: String?, fallbackID: String) -> some View {
         switch block {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
-                Text(english(strippingLinks(from: text))) // l10n: content(en)
-                    .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityAddTraits(.isHeader)
+                headingView(level: level, text: text, headingAnchor: headingAnchor, fallbackID: fallbackID)
             }
         case .paragraph(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
@@ -633,6 +669,49 @@ struct LessonMarkdownView: View {
         }
     }
 
+    private func displayBlocks(_ rendered: RenderedLessonMarkdown) -> [DisplayLessonBlock] {
+        let headingAnchors = LessonHeadingAnchors.anchorEntries(for: rendered, title: title)
+        var headingIndex = 0
+        return rendered.blocks.enumerated().map { offset, block in
+            let headingAnchor: String?
+            if case let .heading(level, text) = block {
+                if level == 1, title != nil, plainString(text) == title {
+                    headingAnchor = nil
+                } else {
+                    headingAnchor = headingAnchors[safe: headingIndex] ?? nil
+                    headingIndex += 1
+                }
+            } else {
+                headingAnchor = nil
+            }
+            return DisplayLessonBlock(id: offset, block: block, headingAnchor: headingAnchor, fallbackID: "lesson-block-\(offset)")
+        }
+    }
+
+    @ViewBuilder
+    private func headingView(level: Int, text: AttributedString, headingAnchor: String?, fallbackID: String) -> some View {
+        let heading = Text(english(strippingLinks(from: text))) // l10n: content(en)
+            .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .accessibilityAddTraits(.isHeader)
+            .id(headingAnchor ?? fallbackID)
+        if let headingAnchor {
+            heading
+                .accessibilityIdentifier("lesson-heading-\(headingAnchor)")
+                .accessibilityFocused($focusedHeadingAnchor, equals: headingAnchor)
+        } else {
+            heading.accessibilityIdentifier("lesson-heading")
+        }
+    }
+
+    private func focusTargetHeadingAfterLayout() {
+        guard let targetAnchor else { return }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 200_000_000)
+            focusedHeadingAnchor = targetAnchor
+        }
+    }
+
     private func strippingLinks(from value: AttributedString) -> AttributedString {
         var copy = value
         let ranges = copy.runs.map(\.range)
@@ -645,6 +724,13 @@ struct LessonMarkdownView: View {
     private func plainString(_ value: AttributedString) -> String {
         String(value.characters)
     }
+}
+
+private struct DisplayLessonBlock: Identifiable {
+    let id: Int
+    let block: LessonBlock
+    let headingAnchor: String?
+    let fallbackID: String
 }
 
 private struct LessonFigureView: View {

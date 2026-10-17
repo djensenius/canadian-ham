@@ -7,7 +7,7 @@ import UIKit
 #endif
 
 struct ExamToolButtons: View {
-    var availableTools: [ExamTool] = ExamTool.allCases
+    let availableTools: [ExamTool]
     let openTool: (ExamTool) -> Void
 
     var body: some View {
@@ -40,6 +40,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @ObservedObject var calculator: ExamCalculatorViewModel
     @Binding var calculatorFocused: Bool
     let referenceSheetConfiguration: ReferenceSheetConfiguration
+    let hintContext: HintToolContext?
     let onDismiss: () -> Void
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selectedSheetDetent = PresentationDetent.medium
@@ -282,6 +283,14 @@ struct ExamToolPresentationModifier: ViewModifier {
                 calculatorFocused: $calculatorFocused
             )
             .frame(height: availableHeight)
+        case .hint:
+            if let hintContext {
+                HintToolView(context: hintContext)
+                    .frame(height: availableHeight)
+            } else {
+                ContentUnavailableView("Hint unavailable", systemImage: "lightbulb.slash")
+                    .foregroundStyle(DesignTokens.Colors.ink)
+            }
         case .referenceSheet:
 #if os(iOS)
             ReferenceSheetToolView(
@@ -406,9 +415,183 @@ extension View {
         calculator: ExamCalculatorViewModel,
         calculatorFocused: Binding<Bool>,
         referenceSheetConfiguration: ReferenceSheetConfiguration = .basic,
+        hintContext: HintToolContext? = nil,
         onDismiss: @escaping () -> Void = {}
     ) -> some View {
-        modifier(ExamToolPresentationModifier(selectedTool: selectedTool, calculator: calculator, calculatorFocused: calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, onDismiss: onDismiss))
+        modifier(ExamToolPresentationModifier(selectedTool: selectedTool, calculator: calculator, calculatorFocused: calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, hintContext: hintContext, onDismiss: onDismiss))
+    }
+}
+
+struct HintToolContext {
+    let hint: QuestionHint
+    let language: BankLanguage
+    let visibleLevel: Int
+    let answeredWithHelpQualified: Bool
+    let canRecordHelp: Bool
+    let referenceSheetAvailable: Bool
+    let revealLevel: (Int) -> Void
+    let hintVisibleLongEnough: () -> Bool
+    let openLesson: (QuestionHintLessonLink) -> Void
+}
+
+private struct HintToolView: View {
+    let context: HintToolContext
+    @State private var qualificationTimer = HintVisibilityQualificationTimer()
+
+    private var lastAvailableLevel: Int { context.hint.hints.count }
+    private var nextLevel: Int? { context.visibleLevel < lastAvailableLevel ? context.visibleLevel + 1 : nil }
+    private var visibleHints: [QuestionHintText] { context.hint.hints.filter { $0.level <= context.visibleLevel } }
+    private var showsLessonLink: Bool { context.visibleLevel >= lastAvailableLevel }
+    private var referenceSheetSection: String? { context.hint.referenceSheetSection }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                Text(context.canRecordHelp ? String(localized: "Use hints when you need help. Answers after a shown hint are saved as answered with help.") : String(localized: "This hint is available for review. Your current answer has already been scored.")) // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("hint-tool-intro")
+
+                if visibleHints.isEmpty {
+                    Text("No hint is shown yet.")
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        .accessibilityIdentifier("hint-tool-empty")
+                }
+
+                ForEach(visibleHints, id: \.level) { entry in
+                    hintCard(entry)
+                }
+
+                if HintToolRules.showsReferencePointer(referenceSheetAvailable: context.referenceSheetAvailable, visibleLevel: context.visibleLevel, referenceSheetSection: referenceSheetSection), let referenceSheetSection {
+                    Text(referencePointerText(referenceSheetSection)) // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("hint-reference-pointer")
+                }
+
+                if showsLessonLink {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Button("Review in lesson") { // l10n: localized
+                            context.openLesson(context.hint.lessonLink)
+                        }
+                        .buttonStyle(AccessibleSecondaryButtonStyle())
+                        .accessibilityIdentifier("hint-review-in-lesson-button")
+                        if canadianHamUsesFrenchUI {
+                            Text("Lesson offered in English only.")
+                                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                                .accessibilityIdentifier("hint-english-only-lesson-notice")
+                        }
+                    }
+                }
+
+                if let nextLevel {
+                    showHintButton(level: nextLevel)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.bottom, DesignTokens.Spacing.xl)
+        }
+        .accessibilityIdentifier("hint-tool-scroll")
+        .onAppear { syncQualificationTimer() }
+        .onDisappear { cancelQualificationTimer() }
+        .onChange(of: context.hint.questionId) { _, _ in syncQualificationTimer() }
+        .onChange(of: context.visibleLevel) { _, _ in syncQualificationTimer() }
+        .onChange(of: context.canRecordHelp) { _, _ in syncQualificationTimer() }
+        .onChange(of: context.answeredWithHelpQualified) { _, _ in syncQualificationTimer() }
+    }
+
+    private func showHintButton(level: Int) -> some View {
+        Button(level == 1 ? String(localized: "Show Hint 1") : String(localized: "Show Hint 2")) { // l10n: localized
+            reveal(level)
+        }
+        .buttonStyle(AccessiblePrimaryButtonStyle())
+        .accessibilityIdentifier("hint-show-level-\(level)-button")
+    }
+
+    private func hintCard(_ entry: QuestionHintText) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(String.localizedStringWithFormat(String(localized: "Hint %d"), entry.level)) // l10n: localized
+                .font(DesignTokens.FontScale.body.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("hint-level-\(entry.level)-title")
+            Text(localizedHintText(entry)) // l10n: content(question)
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .textSelection(.enabled)
+                .accessibilityIdentifier("hint-level-\(entry.level)-body")
+        }
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+    }
+
+    private func localizedHintText(_ entry: QuestionHintText) -> AttributedString {
+        localized(context.language == .french ? entry.fr : entry.en, language: context.language)
+    }
+
+    private func reveal(_ level: Int) {
+        context.revealLevel(level)
+        let announcement = String.localizedStringWithFormat(String(localized: "Hint %d shown."), level)
+        AccessibilityNotification.Announcement(announcement).post()
+    }
+
+    private func syncQualificationTimer() {
+        guard context.visibleLevel > 0 else {
+            cancelQualificationTimer()
+            return
+        }
+        qualificationTimer.begin(
+            questionID: context.hint.questionId,
+            canRecordHelp: context.canRecordHelp,
+            alreadyQualified: context.answeredWithHelpQualified
+        ) {
+            guard context.hintVisibleLongEnough() else { return }
+            AccessibilityNotification.Announcement(String(localized: "Answers to this question will be saved as answered with help.")).post()
+        }
+    }
+
+    private func cancelQualificationTimer() {
+        qualificationTimer.cancel()
+    }
+
+    private func referencePointerText(_ section: String) -> AttributedString {
+        let interfaceLanguage: BankLanguage = canadianHamUsesFrenchUI ? .french : .english
+        var text = AttributedString(String(localized: "Reference sheet: "))
+        text += localized(referenceSheetSectionLabel(section, language: interfaceLanguage), language: interfaceLanguage)
+        return text
+    }
+}
+
+private func localized(_ string: String, language: BankLanguage) -> AttributedString {
+    var attributed = AttributedString(string)
+    attributed.languageIdentifier = language == .french ? "fr-CA" : "en-CA"
+    return attributed
+}
+
+private func referenceSheetSectionLabel(_ section: String, language: BankLanguage) -> String {
+    switch (section, language) {
+    case ("ohms-law", .french): "Loi d'Ohm"
+    case ("ohms-law", _): "Ohm's law"
+    case ("power", .french): "Puissance"
+    case ("power", _): "Power"
+    case ("series-parallel-resistance", .french): "Résistance en série et en parallèle"
+    case ("series-parallel-resistance", _): "Series and parallel resistance"
+    case ("decibel-power-shortcuts", .french): "Repères de puissance en décibels"
+    case ("decibel-power-shortcuts", _): "Decibel power shortcuts"
+    case ("wavelength-dipole-length", .french): "Longueur d'onde et longueur de dipôle"
+    case ("wavelength-dipole-length", _): "Wavelength and dipole length"
+    case ("metric-prefixes", .french): "Préfixes métriques"
+    case ("metric-prefixes", _): "Metric prefixes"
+    case ("resistor-colour-code", .french): "Code de couleurs des résistances à quatre bandes"
+    case ("resistor-colour-code", _): "Four-band resistor colour code"
+    default: section
     }
 }
 

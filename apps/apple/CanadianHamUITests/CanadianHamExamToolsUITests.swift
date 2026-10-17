@@ -107,13 +107,58 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
+        XCTAssertTrue(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists)
         XCTAssertFalse(app.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "task-44.3 ships only the calculator on Apple; the reference sheet follows in task-44.4")
 
         let advancedApp = launchAdvancedPracticeQuestion()
         defer { advancedApp.terminate() }
         XCTAssertTrue(advancedApp.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(advancedApp.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
+        XCTAssertFalse(advancedApp.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "Advanced course has no active Apple hints in task-50.12")
         XCTAssertFalse(advancedApp.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "Advanced course must not offer the Basic reference sheet")
+    }
+
+    func testHintToolLadderAndLessonLink() throws {
+        let app = launchTwoLevelHintPracticeQuestion()
+        defer { app.terminate() }
+
+        openTool(.hint, in: app)
+        XCTAssertTrue(app.staticTexts["hint-tool-empty"].firstMatch.waitForExistence(timeout: 5), "Hint panel should start empty before the learner asks for help")
+        XCTAssertTrue(app.buttons["hint-show-level-1-button"].firstMatch.waitForExistence(timeout: 5), "Hint 1 should be the first available action")
+        XCTAssertFalse(app.buttons["hint-show-level-2-button"].firstMatch.exists, "Hint 2 must not be available before Hint 1")
+
+        app.buttons["hint-show-level-1-button"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["hint-level-1-title"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "Two-level hint files should reveal Hint 2 only after Hint 1")
+        XCTAssertFalse(app.descendants(matching: .any)["hint-reference-pointer"].firstMatch.exists, "Reference-sheet pointers stay hidden until the Apple sheet is available")
+
+        app.buttons["hint-show-level-2-button"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5))
+        let review = app.buttons["hint-review-in-lesson-button"].firstMatch
+        XCTAssertTrue(review.waitForExistence(timeout: 5), "The lesson link appears only after the last available hint level")
+        XCTAssertEqual(review.label, "Review in lesson", "The link label must stay generic before answering")
+        review.tap()
+        let heading = app.descendants(matching: .any)["lesson-heading-wavelength-and-frequency"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), "Hint lesson link should open the shared sectionAnchor")
+        XCTAssertTrue(heading.isHittable || isFullyVisible(heading, in: app, requiresHittable: false), "Hint lesson link should scroll the target heading into view. Frame: \(frameDescription(heading.frame))")
+
+        tapNavigationBack(in: app, context: "returning from hint lesson link")
+        let questionID = app.descendants(matching: .any)["question-identifier"].firstMatch
+        XCTAssertTrue(questionID.waitForExistence(timeout: 10), "Back from the hint lesson should return to the practice question")
+        XCTAssertEqual(questionID.label, "B-006-008-004", "The practice session should keep the same question after a hint lesson round trip")
+        openTool(.hint, in: app)
+        XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5), "The practice session should keep Hint 2 visible after returning from the lesson")
+    }
+
+    func testOneLevelHintHasNoSecondHintAffordance() throws {
+        let app = launchOneLevelHintPracticeQuestion()
+        defer { app.terminate() }
+
+        openTool(.hint, in: app)
+        app.buttons["hint-show-level-1-button"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["hint-level-1-title"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["hint-show-level-2-button"].firstMatch.exists, "One-level hint files must not show an empty Hint 2 action")
+        XCTAssertTrue(app.buttons["hint-review-in-lesson-button"].firstMatch.waitForExistence(timeout: 5), "One-level files show the lesson link after Hint 1")
     }
 
     func testCalculatorAutoFocusesHardwareKeyboardOnOpen() throws {
@@ -206,6 +251,21 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         openTool(.calculator, in: app)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "0")
+    }
+
+    func testMockExamDoesNotExposeHints() throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-exam-tools-no-hints",
+            "-CanadianHamMockExamQuestionID", "B-006-008-004",
+            "-CanadianHamMockExamLimit", "3"
+        ])
+        defer { app.terminate() }
+
+        tapStartMockExam(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
+        XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "Mock exams must never expose hints")
     }
 
     func testMockExamCalculatorKeepsAnswersHittableAndTimerRuns() throws {
@@ -336,6 +396,74 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
+    func testAccessibilityAuditHintToolLightAndDark() throws {
+#if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            for appearance in ["light", "dark"] {
+                let app = launchTwoLevelHintPracticeQuestion(appearance: appearance, extraArguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+                defer { app.terminate() }
+
+                openTool(.hint, in: app)
+                XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Expected iPad inspector hint panel")
+                revealBothHints(in: app)
+                waitBriefly(0.8)
+                try auditIgnoringOccludedLessonTextContrast(app: app)
+                app.terminate()
+            }
+        } else {
+            for appearance in ["light", "dark"] {
+                let app = launchTwoLevelHintPracticeQuestion(appearance: appearance, extraArguments: ["-CanadianHamExamToolInitialDetent", "large"])
+                defer { app.terminate() }
+
+                openTool(.hint, in: app)
+                revealBothHints(in: app)
+                waitBriefly(0.8)
+                try auditIgnoringOccludedLessonTextContrast(app: app)
+                app.terminate()
+            }
+        }
+#else
+        for appearance in ["light", "dark"] {
+            let app = launchTwoLevelHintPracticeQuestion(appearance: appearance)
+            defer { app.terminate() }
+
+            openTool(.hint, in: app)
+            revealBothHints(in: app)
+            waitBriefly(0.8)
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+            app.terminate()
+        }
+#endif
+    }
+
+    func testAccessibilityAuditHintedAnswerResultLightAndDark() throws {
+        for appearance in ["light", "dark"] {
+            let app = launchTwoLevelHintPracticeQuestion(appearance: appearance)
+            openTool(.hint, in: app)
+            let first = app.buttons["hint-show-level-1-button"].firstMatch
+            XCTAssertTrue(first.waitForExistence(timeout: 5), "Expected Hint 1 before qualifying a hinted answer")
+            scrollExamToolUntilHittable(first, in: app, maxSwipes: 8)
+            first.tap()
+            waitBriefly(0.7)
+            closeTool(in: app)
+            waitBriefly(0.3)
+
+            let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+            XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected answer A after closing the hint tool")
+            scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+            XCTAssertTrue(answer.isHittable, "Expected answer A to be hittable before completing the hinted-answer flow")
+            answer.tap()
+            let feedback = app.descendants(matching: .any)["answer-feedback-title"].firstMatch
+            XCTAssertTrue(feedback.waitForExistence(timeout: 5), "Expected immediate feedback after a hinted answer")
+            scrollBackgroundUntilHittable(feedback, in: app, maxSwipes: 12)
+            scrollBackgroundPastElement(app.descendants(matching: .any)["exam-tool-calculator-button"].firstMatch, preserving: feedback, in: app, maxSwipes: 8)
+            XCTAssertTrue(feedback.isHittable || isFullyVisible(feedback, in: app, requiresHittable: false), "Expected hinted-answer feedback to be visible before auditing the result. Frame: \(frameDescription(feedback.frame))")
+            waitBriefly(0.8)
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+            app.terminate()
+        }
+    }
+
     func testRegularWidthInspectorAccessibilityAuditLightAndDark() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector audit is covered by the targeted iPad run.")
@@ -423,11 +551,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     private enum Tool {
         case calculator
+        case hint
         case referenceSheet
 
         var buttonIdentifier: String {
             switch self {
             case .calculator: "exam-tool-calculator-button"
+            case .hint: "exam-tool-hint-button"
             case .referenceSheet: "exam-tool-referenceSheet-button"
             }
         }
@@ -435,6 +565,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         var panelIdentifier: String {
             switch self {
             case .calculator: "exam-tool-calculator-panel"
+            case .hint: "exam-tool-hint-panel"
             case .referenceSheet: "exam-tool-reference-sheet-panel"
             }
         }
@@ -526,6 +657,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         ])
     }
 
+    private func launchTwoLevelHintPracticeQuestion(appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
+        launchPracticeQuestion(appearance: appearance, categoryID: "B-006", questionID: "B-006-008-004", extraArguments: extraArguments)
+    }
+
+    private func launchOneLevelHintPracticeQuestion(appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
+        launchPracticeQuestion(appearance: appearance, categoryID: "B-006", questionID: "B-006-003-008", extraArguments: extraArguments)
+    }
+
     private func launchAuditPracticeQuestion(appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
         launchPracticeQuestion(appearance: appearance, categoryID: "B-001", questionID: "B-001-002-002", extraArguments: extraArguments)
     }
@@ -558,6 +697,32 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let close = app.buttons["exam-tool-close-button"].firstMatch
         XCTAssertTrue(close.waitForExistence(timeout: 5), "Expected a close tools button")
         close.tap()
+    }
+
+    private func tapNavigationBack(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let navigationBar = app.navigationBars.firstMatch
+        XCTAssertTrue(navigationBar.waitForExistence(timeout: 5), "\(context): expected a navigation bar before tapping Back", file: file, line: line)
+        let labels = ["Back", "All questions", "Practice"]
+        let preferredBack = navigationBar.buttons.matching(NSPredicate(format: "label IN %@", labels)).firstMatch
+        if preferredBack.waitForExistence(timeout: 2) {
+            preferredBack.tap()
+            return
+        }
+        let anyBack = navigationBar.buttons.element(boundBy: 0)
+        XCTAssertTrue(anyBack.waitForExistence(timeout: 5), "\(context): expected a navigation back button", file: file, line: line)
+        anyBack.tap()
+    }
+
+    private func revealBothHints(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let first = app.buttons["hint-show-level-1-button"].firstMatch
+        XCTAssertTrue(first.waitForExistence(timeout: 5), "Expected Hint 1 button", file: file, line: line)
+        scrollExamToolUntilHittable(first, in: app, maxSwipes: 8, file: file, line: line)
+        first.tap()
+        let second = app.buttons["hint-show-level-2-button"].firstMatch
+        XCTAssertTrue(second.waitForExistence(timeout: 5), "Expected Hint 2 button", file: file, line: line)
+        scrollExamToolUntilHittable(second, in: app, maxSwipes: 8, file: file, line: line)
+        second.tap()
+        XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5), "Expected both hints to be visible", file: file, line: line)
     }
 
     private func assertCalculatorPresentedAsSheet(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
@@ -757,6 +922,19 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 preciseExamToolScroll(scrollView, in: app, fingerDeltaY: -72)
             }
             waitBriefly()
+        }
+    }
+
+    private func scrollBackgroundPastElement(_ element: XCUIElement, preserving preservedElement: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        let scrollView = scrollView(containing: preservedElement, in: app)
+        for _ in 0..<maxSwipes where element.exists && visibleFrameExcludingNavigationBar(in: app).intersects(element.frame) {
+            preciseExamToolScroll(scrollView, in: app, fingerDeltaY: -72)
+            waitBriefly()
+            if preservedElement.exists && preservedElement.frame.maxY <= visibleFrameExcludingNavigationBar(in: app).minY {
+                preciseExamToolScroll(scrollView, in: app, fingerDeltaY: 72)
+                waitBriefly()
+                break
+            }
         }
     }
 

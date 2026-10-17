@@ -135,6 +135,8 @@ final class QuestionBankTests: XCTestCase {
         XCTAssertEqual(library.lessons.count, library.orderedLessons().count)
         XCTAssertFalse(library.lessons.isEmpty)
         XCTAssertEqual(library.explanations.count, library.questions.count)
+        XCTAssertEqual(library.questionHints.count, library.questions.count)
+        XCTAssertNotNil(library.questionHintsByQuestionId["B-001-002-002"])
         for lesson in library.lessons {
             XCTAssertNoThrow(try LessonMarkdownRenderer.render(lesson.bodyMarkdown), "Lesson \(lesson.id) should render")
         }

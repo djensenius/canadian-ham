@@ -311,7 +311,8 @@ struct RootView: View {
                 language: $language,
                 state: practiceSessionStates.state(for: scope),
                 dataRevision: combinedDataRevision,
-                localDataReplacementRevision: appSettings.localDataReplacementRevision
+                localDataReplacementRevision: appSettings.localDataReplacementRevision,
+                onOpenHintLesson: { openHintLesson($0) }
             ) {
                 recordDataChanged()
             }
@@ -415,8 +416,10 @@ struct RootView: View {
             .onChange(of: appSettings.localDataReplacementRevision) { _, next in
                 clearCachedSessions(localDataReplacementRevision: next)
             }
-            .onChange(of: selection) { _, next in
-                if next != .learn {
+            .onChange(of: selection) { previous, next in
+                // Lessons opened from a practice hint sit on the practice stack; clear them when
+                // switching to Learn so Learn opens at its list rather than the hint lesson.
+                if next != .learn || previous.isExamSessionSelection {
                     navigationPath.removeAll()
                 }
                 if !next.isExamSessionSelection {
@@ -632,6 +635,27 @@ struct RootView: View {
         }
     }
 
+    private func openHintLesson(_ link: QuestionHintLessonLink) {
+        let route: LearnRoute = if let sectionAnchor = link.sectionAnchor {
+            .lessonSection(link.lessonId, sectionAnchor)
+        } else {
+            .lesson(link.lessonId)
+        }
+#if os(iOS)
+        if effectiveHorizontalSizeClass == .compact {
+            compactNavigationPath.append(route)
+            selection = .learn
+            return
+        }
+#endif
+        if selection.isExamSessionSelection {
+            navigationPath.append(route)
+        } else {
+            selection = .learn
+            navigationPath = [route]
+        }
+    }
+
     @ViewBuilder
     private func learnDestination(_ route: LearnRoute, bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         LearnRouteDestinationView(
@@ -679,7 +703,8 @@ struct RootView: View {
                 state: practiceSessionStates.state(for: scope),
                 dataRevision: combinedDataRevision,
                 localDataReplacementRevision: appSettings.localDataReplacementRevision,
-                onExamToolPresentationChanged: { regularWidthExamToolPresented = $0 }
+                onExamToolPresentationChanged: { regularWidthExamToolPresented = $0 },
+                onOpenHintLesson: { openHintLesson($0) }
             ) {
                 recordDataChanged()
             }

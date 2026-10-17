@@ -3113,6 +3113,28 @@
         }
       }
     },
+    "Answers to this question will be saved as answered with help." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answers to this question will be saved as answered with help."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les réponses à cette question seront enregistrées comme réponses avec aide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les réponses à cette question seront enregistrées comme réponses avec aide."
+          }
+        }
+      }
+    },
     "Appearance" : {
       "localizations" : {
         "en" : {
@@ -5353,6 +5375,94 @@
         }
       }
     },
+    "Hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice"
+          }
+        }
+      }
+    },
+    "Hint %d" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint %d"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice %d"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice %d"
+          }
+        }
+      }
+    },
+    "Hint %d shown." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint %d shown."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice %d affiché."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice %d affiché."
+          }
+        }
+      }
+    },
+    "Hint unavailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint unavailable"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice non disponible"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice non disponible"
+          }
+        }
+      }
+    },
     "Hold key" : {
       "localizations" : {
         "fr" : {
@@ -6397,6 +6507,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Questionnaire de leçon indisponible"
+          }
+        }
+      }
+    },
+    "Lesson section opened." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesson section opened."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Section de leçon ouverte."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Section de leçon ouverte."
           }
         }
       }
@@ -7485,6 +7617,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune copie saisie."
+          }
+        }
+      }
+    },
+    "No hint is shown yet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hint is shown yet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun indice n’est affiché pour l’instant."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun indice n’est affiché pour l’instant."
           }
         }
       }
@@ -8927,6 +9081,28 @@
         }
       }
     },
+    "Reference sheet: " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reference sheet: "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence : "
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "fr" : {
@@ -9133,6 +9309,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voir les questions à réviser"
+          }
+        }
+      }
+    },
+    "Review in lesson" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review in lesson"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoir dans la leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoir dans la leçon"
           }
         }
       }
@@ -9509,6 +9707,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Afficher la feuille complète"
+          }
+        }
+      }
+    },
+    "Show Hint 1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Hint 1"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’indice 1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’indice 1"
+          }
+        }
+      }
+    },
+    "Show Hint 2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Hint 2"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’indice 2"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’indice 2"
           }
         }
       }
@@ -10641,6 +10883,28 @@
         }
       }
     },
+    "This hint is available for review. Your current answer has already been scored." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This hint is available for review. Your current answer has already been scored."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cet indice est disponible pour la révision. Votre réponse actuelle a déjà été notée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cet indice est disponible pour la révision. Votre réponse actuelle a déjà été notée."
+          }
+        }
+      }
+    },
     "This outline is bundled so module order and objectives remain visible offline while the full lesson is authored." : {
       "localizations" : {
         "fr" : {
@@ -11249,6 +11513,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unité %lld"
+          }
+        }
+      }
+    },
+    "Use hints when you need help. Answers after a shown hint are saved as answered with help." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use hints when you need help. Answers after a shown hint are saved as answered with help."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez les indices lorsque vous avez besoin d’aide. Les réponses après un indice affiché sont enregistrées avec aide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez les indices lorsque vous avez besoin d’aide. Les réponses après un indice affiché sont enregistrées avec aide."
           }
         }
       }

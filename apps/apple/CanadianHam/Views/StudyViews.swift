@@ -1,4 +1,5 @@
 import Accessibility
+import CanadianHamContent
 import CanadianHamEngine
 import Combine
 import SwiftUI
@@ -327,6 +328,9 @@ final class PracticeSessionState: ObservableObject {
     @Published var items: [PracticeQuestionItem] = []
     @Published var currentIndex = 0
     @Published var selectedByQuestionId: [String: Int] = [:]
+    @Published var hintLevelsByQuestionId: [String: Int] = [:]
+    @Published var hintQualifiedQuestionIds: Set<String> = []
+    @Published var answeredWithHelpQuestionIds: Set<String> = []
     @Published var committedQuestionIds: Set<String> = []
     @Published var reviewSubmitted = false
     @Published var loadedScope: PracticeScope?
@@ -379,11 +383,13 @@ struct PracticeSessionView: View {
     let localDataReplacementRevision: Int
     let headerAccessory: AnyView?
     let onExamToolPresentationChanged: (Bool) -> Void
+    let onOpenHintLesson: (QuestionHintLessonLink) -> Void
     let onDataChanged: () -> Void
 
     @State private var selectedExamTool: ExamTool?
     @State private var calculatorFocused = false
     @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
+    @Environment(\.canadianHamContentLibrary) private var contentLibrary
 
     init(
         bank: QuestionBank,
@@ -395,6 +401,7 @@ struct PracticeSessionView: View {
         localDataReplacementRevision: Int,
         headerAccessory: AnyView? = nil,
         onExamToolPresentationChanged: @escaping (Bool) -> Void = { _ in },
+        onOpenHintLesson: @escaping (QuestionHintLessonLink) -> Void = { _ in },
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
@@ -407,6 +414,7 @@ struct PracticeSessionView: View {
         self.localDataReplacementRevision = localDataReplacementRevision
         self.headerAccessory = headerAccessory
         self.onExamToolPresentationChanged = onExamToolPresentationChanged
+        self.onOpenHintLesson = onOpenHintLesson
         self.onDataChanged = onDataChanged
     }
 
@@ -441,7 +449,7 @@ struct PracticeSessionView: View {
         .navigationBarTitleDisplayMode(.large)
 #endif
         .lessonReaderOpaqueNavigationBar()
-        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration)
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, hintContext: hintToolContext)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
         .onAppear { calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale()) }
         .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
@@ -593,7 +601,32 @@ struct PracticeSessionView: View {
     }
 
     private var availableExamTools: [ExamTool] {
-        appleExamTools(for: bank, referenceSheetConfiguration: referenceSheetConfiguration)
+        var tools = appleExamTools(for: bank, referenceSheetConfiguration: referenceSheetConfiguration)
+        if currentQuestionHint != nil {
+            tools.insert(.hint, at: min(1, tools.count))
+        }
+        return tools
+    }
+
+    private var currentQuestionHint: QuestionHint? {
+        guard let item = state.items[safe: state.currentIndex], bank.courseBankID == .basic else { return nil }
+        return contentLibrary?.questionHintsByQuestionId[item.question.id]
+    }
+
+    private var hintToolContext: HintToolContext? {
+        guard let item = state.items[safe: state.currentIndex], let hint = currentQuestionHint else { return nil }
+        let questionID = item.question.id
+        return HintToolContext(
+            hint: hint,
+            language: language,
+            visibleLevel: state.hintLevelsByQuestionId[questionID] ?? 0,
+            answeredWithHelpQualified: state.hintQualifiedQuestionIds.contains(questionID),
+            canRecordHelp: hintCanAffectAnswer(questionID: questionID),
+            referenceSheetAvailable: referenceSheetConfiguration.availableOnApple,
+            revealLevel: { level in revealHintLevel(questionID: questionID, level: level) },
+            hintVisibleLongEnough: { qualifyAnsweredWithHelp(questionID: questionID) },
+            openLesson: { link in openHintLesson(link) }
+        )
     }
 
     private func openExamTool(_ tool: ExamTool) {
@@ -605,6 +638,41 @@ struct PracticeSessionView: View {
                 calculatorFocused = true
             }
         }
+    }
+
+    private func revealHintLevel(questionID: String, level: Int) {
+        state.hintLevelsByQuestionId[questionID] = max(state.hintLevelsByQuestionId[questionID] ?? 0, level)
+    }
+
+    private func qualifyAnsweredWithHelp(questionID: String) -> Bool {
+        let currentQualified = state.hintQualifiedQuestionIds
+        let currentAnsweredWithHelp = state.answeredWithHelpQuestionIds
+        let result = PracticeHintRules.qualifyingHint(
+            questionID: questionID,
+            mode: progressStore.preferences.practiceMode,
+            alreadySelected: state.selectedByQuestionId[questionID] != nil,
+            reviewSubmitted: state.reviewSubmitted,
+            qualifiedQuestionIds: currentQualified,
+            answeredWithHelpQuestionIds: currentAnsweredWithHelp
+        )
+        state.hintQualifiedQuestionIds = result.qualifiedQuestionIds
+        state.answeredWithHelpQuestionIds = result.answeredWithHelpQuestionIds
+        return result.qualifiedQuestionIds != currentQualified || result.answeredWithHelpQuestionIds != currentAnsweredWithHelp
+    }
+
+    private func hintCanAffectAnswer(questionID: String) -> Bool {
+        PracticeHintRules.canRecordHelp(
+            mode: progressStore.preferences.practiceMode,
+            alreadySelected: state.selectedByQuestionId[questionID] != nil,
+            reviewSubmitted: state.reviewSubmitted
+        )
+    }
+
+    private func openHintLesson(_ link: QuestionHintLessonLink) {
+        calculatorFocused = false
+        calculatorViewModel.suspendHardwareKeyboardInput()
+        selectedExamTool = nil
+        onOpenHintLesson(link)
     }
 
     private func clearCalculatorKeyboardFocus() {
@@ -687,6 +755,9 @@ struct PracticeSessionView: View {
             state.loadedLocalDataReplacementRevision = localDataReplacementRevision
             state.currentIndex = 0
             state.selectedByQuestionId = [:]
+            state.hintLevelsByQuestionId = [:]
+            state.hintQualifiedQuestionIds = []
+            state.answeredWithHelpQuestionIds = []
             state.committedQuestionIds = []
             state.reviewSubmitted = false
             state.answeredCount = 0
@@ -727,12 +798,22 @@ struct PracticeSessionView: View {
         if let previous = state.selectedByQuestionId[question.id] {
             guard progressStore.preferences.practiceMode == .reviewLater else { return }
             state.selectedByQuestionId[question.id] = sourceIndex
+            state.answeredWithHelpQuestionIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
+                questionID: question.id,
+                qualifiedQuestionIds: state.hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds
+            )
             if previous == 0, sourceIndex != 0 { state.correctCount -= 1 }
             if previous != 0, sourceIndex == 0 { state.correctCount += 1 }
             AccessibilityNotification.Announcement(String(localized: "Selected answer updated")).post()
             return
         }
         state.selectedByQuestionId[question.id] = sourceIndex
+        state.answeredWithHelpQuestionIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
+            questionID: question.id,
+            qualifiedQuestionIds: state.hintQualifiedQuestionIds,
+            answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds
+        )
         state.answeredCount += 1
         if sourceIndex == 0 { state.correctCount += 1 }
         if progressStore.preferences.practiceMode == .immediate {
@@ -747,7 +828,12 @@ struct PracticeSessionView: View {
         do {
             let now = try AppleStudyEngine.canonicalNow()
             let progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
-            let next = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: sourceIndex, now: now)
+            let answeredWithHelp = PracticeHintRules.shouldCommitAnswerWithHelp(
+                questionID: question.id,
+                qualifiedQuestionIds: state.hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds
+            )
+            let next = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: sourceIndex, now: now, answeredWithHelp: answeredWithHelp)
             try progressStore.saveQuestionProgress(next)
             state.committedQuestionIds.insert(question.id)
             onDataChanged()
@@ -774,7 +860,8 @@ struct PracticeSessionView: View {
             let now = try AppleStudyEngine.canonicalNow()
             for item in state.items {
                 guard let selected = state.selectedByQuestionId[item.question.id] else { continue }
-                progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: item.question, selectedSourceIndex: selected, now: now)
+                let answeredWithHelp = PracticeHintRules.shouldSubmitAnswerWithHelp(questionID: item.question.id, qualifiedQuestionIds: state.hintQualifiedQuestionIds, answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds)
+                progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: item.question, selectedSourceIndex: selected, now: now, answeredWithHelp: answeredWithHelp)
             }
             try progressStore.saveQuestionProgress(progress)
             state.reviewSubmitted = true

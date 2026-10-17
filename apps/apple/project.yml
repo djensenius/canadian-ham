@@ -72,6 +72,10 @@ targets:
         type: folder
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../content/hints
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
       - path: ../../content/subsection-titles.json
         type: file
         buildPhase: resources
@@ -90,7 +94,7 @@ targets:
         script: |
           set -euo pipefail
           resource_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
-          for content_directory in lessons quizzes explanations; do
+          for content_directory in lessons quizzes explanations hints; do
             destination="${resource_destination}/${content_directory}"
             if [ -d "${destination}" ]; then
               find "${destination}" -type f -iname README.md -delete
@@ -184,6 +188,7 @@ targets:
       - path: CanadianHam/Services/AppleStudyEngine.swift
       - path: CanadianHam/Models/ProgressModels.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Practice/HintSessionState.swift
       - path: CanadianHam/ExamTools/ExamToolModels.swift
       - path: ../../content/lessons
         type: folder
@@ -194,6 +199,10 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
       - path: ../../content/explanations
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/hints
         type: folder
         buildPhase: resources
         createIntermediateGroups: false
@@ -215,7 +224,7 @@ targets:
         script: |
           set -euo pipefail
           resource_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
-          for content_directory in lessons quizzes explanations; do
+          for content_directory in lessons quizzes explanations hints; do
             destination="${resource_destination}/${content_directory}"
             if [ -d "${destination}" ]; then
               find "${destination}" -type f -iname README.md -delete
