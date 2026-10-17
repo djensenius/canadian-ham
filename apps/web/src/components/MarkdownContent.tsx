@@ -32,19 +32,27 @@ type MarkdownBlock =
 
 export function MarkdownContent({ markdown, title, interfaceLanguage = "en", contentLanguage, tableLabel = t(interfaceLanguage, "markdownTableAria") }: MarkdownContentProps) {
   let tableIndex = 0;
-  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => {
+  let headingIndex = 0;
+  const blocks = parseMarkdownBlocks(markdown, title);
+  const headingAnchors = lessonHeadingAnchorEntries(blocks);
+  return <>{blocks.map((block, index) => {
     if (block.type === "table") {
       tableIndex += 1;
       return renderBlock(block, index, interfaceLanguage, contentLanguage, `${tableLabel} ${tableIndex}`);
+    }
+    if (block.type === "heading") {
+      const headingId = headingAnchors[headingIndex];
+      headingIndex += 1;
+      return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel, headingId);
     }
     return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel);
   })}</>;
 }
 
-function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string): ReactNode {
+function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string, headingId?: string): ReactNode {
   if (block.type === "heading") {
     const Tag = `h${Math.min(block.depth + 1, 6)}` as "h2" | "h3" | "h4" | "h5" | "h6";
-    return <Tag key={index} lang={contentLanguage}>{block.text}</Tag>;
+    return <Tag id={headingId} key={index} lang={contentLanguage} tabIndex={headingId === undefined ? undefined : -1}>{block.text}</Tag>;
   }
   if (block.type === "paragraph") {
     return <p key={index} lang={contentLanguage}>{block.text}</p>;
@@ -117,18 +125,26 @@ export function lessonHeadingAnchorSlug(headingText: string): string {
 }
 
 export function lessonHeadingAnchors(markdown: string, title?: string): string[] {
+  return lessonHeadingAnchorEntries(parseMarkdownBlocks(markdown, title)).filter((anchor): anchor is string => anchor !== undefined);
+}
+
+function lessonHeadingAnchorEntries(blocks: readonly MarkdownBlock[]): Array<string | undefined> {
   const seen = new Map<string, number>();
-  const anchors: string[] = [];
-  for (const block of parseMarkdownBlocks(markdown, title)) {
+  const anchors: Array<string | undefined> = [];
+  for (const block of blocks) {
     if (block.type !== "heading") {
       continue;
     }
     const baseSlug = lessonHeadingAnchorSlug(block.text);
     if (baseSlug.length === 0) {
+      anchors.push(undefined);
       continue;
     }
     const previousCount = seen.get(baseSlug) ?? 0;
     seen.set(baseSlug, previousCount + 1);
+    // Keep these IDs identical to fixtures/lesson-heading-anchors.json and hint sectionAnchor values.
+    // Prefixing them to avoid collisions with app chrome IDs would break the shared fixture algorithm
+    // and existing lesson hash targets.
     anchors.push(previousCount === 0 ? baseSlug : `${baseSlug}-${previousCount}`);
   }
   return anchors;

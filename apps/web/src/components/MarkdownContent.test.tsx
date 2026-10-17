@@ -67,6 +67,16 @@ describe("MarkdownContent parser", () => {
     });
   }
 
+  it("renders shared heading ids on linkable headings and keeps duplicates unique", () => {
+    render(<MarkdownContent markdown={"# Fixture Lesson\n\n## Shared setup\n\n## Shared setup"} title="Fixture Lesson" />);
+
+    assert.equal(screen.queryByRole("heading", { name: "Fixture Lesson" }), null);
+    const headings = screen.getAllByRole("heading", { name: "Shared setup" });
+    assert.equal(headings[0]?.id, "shared-setup");
+    assert.equal(headings[1]?.id, "shared-setup-1");
+    assert.equal(headings[0]?.getAttribute("tabindex"), "-1");
+  });
+
   it("handles dash, star, and plus unordered bullets", () => {
     const blocks = parseMarkdownBlocks("- dash\n* star\n+ plus");
 

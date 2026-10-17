@@ -566,17 +566,54 @@ li {
 }
 
 .calculator-tool,
-.reference-sheet-tool {
+.reference-sheet-tool,
+.hint-tool {
   display: grid;
   gap: var(--ch-space-md);
 }
 
-.calculator-help {
+.calculator-help,
+.hint-tool__intro,
+.hint-tool__empty,
+.hint-reference-pointer,
+.hint-lesson-link {
   margin-bottom: 0;
   color: var(--ch-color-ink-muted);
   font-size: var(--ch-type-caption-size);
   font-weight: 700;
   line-height: var(--ch-type-caption-line-height);
+}
+
+.hint-card {
+  padding: var(--ch-space-md);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-color-paper-elevated);
+}
+
+.hint-card h4 {
+  margin-bottom: var(--ch-space-sm);
+}
+
+.hint-card p {
+  margin-bottom: 0;
+  color: var(--ch-color-ink);
+  font-size: var(--ch-type-body-size);
+  font-weight: 600;
+  line-height: var(--ch-type-body-line-height);
+}
+
+.hint-reference-pointer strong {
+  color: var(--ch-color-ink);
+}
+
+.hint-lesson-link a {
+  font-weight: 900;
+}
+
+.hint-lesson-link__notice {
+  color: var(--ch-color-ink-muted);
+  font-weight: 700;
 }
 
 .calculator-display {

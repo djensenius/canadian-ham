@@ -16,6 +16,7 @@ import { Component, createRef, useEffect, useMemo, useRef, useState, type Keyboa
 import { textToTimedMorse } from "@canadian-ham/morse-engine";
 import { MorseCoursePanel } from "./morse/course/MorseCoursePanel";
 
+import { HintTool } from "./components/HintTool";
 import { MarkdownContent } from "./components/MarkdownContent";
 import { PwaStatus } from "./components/PwaStatus";
 import {
@@ -32,6 +33,7 @@ import {
   type Question,
 } from "./data/bank";
 import { explanationForQuestion, mainExplanationText, parseChoiceNotes, type Explanation } from "./data/explanations";
+import { hintForQuestion, type QuestionHint } from "./data/hints";
 import { lessonNeighbors, lessonsById, lessonsByModuleId, modules, modulesById, type LessonMeta } from "./data/lessons";
 import { buildLessonQuizItems, lessonQuizzesById, type ConceptCheck, type LessonQuiz, type LessonQuizItem } from "./data/quizzes";
 import { basicReferenceSheetMarkdownForWeb } from "./data/referenceSheet";
@@ -93,6 +95,9 @@ interface PracticeSession {
   readonly items: readonly PracticeItem[];
   readonly currentIndex: number;
   readonly selectedByQuestionId: ReadonlyMap<string, number>;
+  readonly hintLevelsByQuestionId: ReadonlyMap<string, number>;
+  readonly hintQualifiedQuestionIds: ReadonlySet<string>;
+  readonly answeredWithHelpQuestionIds: ReadonlySet<string>;
   readonly submitted: boolean;
 }
 
@@ -110,7 +115,7 @@ interface MockExamSession {
   readonly confirmingSubmit: boolean;
 }
 
-type ExamToolKind = "calculator" | "reference";
+type ExamToolKind = "calculator" | "reference" | "hint";
 
 function defaultNow(): string {
   return new Date().toISOString();
@@ -414,6 +419,7 @@ function AppContent({
   const routeSegments = hashSegments(locationHash);
   const currentModuleId = route === "module" || route === "lesson" ? routeSegments[1] : undefined;
   const currentLessonId = route === "lesson" ? routeSegments[2] : undefined;
+  const currentLessonAnchor = route === "lesson" ? routeSegments[3] : undefined;
 
   function updateRouteForHash(nextHash: string): void {
     setLocationHash(nextHash);
@@ -436,11 +442,12 @@ function AppContent({
     }
   }
 
-  function navigateToLesson(moduleId: string, lessonId: string): void {
-    const nextHash = `#/learn/${moduleId}/${lessonId}`;
+  function navigateToLesson(moduleId: string, lessonId: string, sectionAnchor?: string): void {
+    const anchorSegment = sectionAnchor === undefined ? "" : `/${sectionAnchor}`;
+    const nextHash = `#/learn/${moduleId}/${lessonId}${anchorSegment}`;
     updateRouteForHash(nextHash);
     if (window.location.hash !== nextHash) {
-      window.location.hash = `/learn/${moduleId}/${lessonId}`;
+      window.location.hash = `/learn/${moduleId}/${lessonId}${anchorSegment}`;
     }
   }
 
@@ -474,6 +481,9 @@ function AppContent({
       items,
       currentIndex: 0,
       selectedByQuestionId: new Map(),
+      hintLevelsByQuestionId: new Map(),
+      hintQualifiedQuestionIds: new Set(),
+      answeredWithHelpQuestionIds: new Set(),
       submitted: false,
     });
     navigate("practice");
@@ -730,6 +740,7 @@ function AppContent({
             lessonProgress={lessonProgress}
             moduleId={currentModuleId ?? ""}
             now={now}
+            targetAnchor={currentLessonAnchor}
             onLessonRead={(lesson) => void markLessonRead(lesson)}
             onOpenLesson={navigateToLesson}
             onOpenModule={navigateToModule}
@@ -745,6 +756,12 @@ function AppContent({
             activeBank={activeBank}
             activeScope={practiceScope}
             now={now}
+            onOpenLesson={(lessonId, sectionAnchor) => {
+              const lesson = lessonsById.get(lessonId);
+              if (lesson !== undefined) {
+                navigateToLesson(lesson.moduleId, lesson.id, sectionAnchor);
+              }
+            }}
             onProgressChange={commitProgress}
             onSessionChange={setPracticeSession}
             onSetPreferences={setPreferences}
@@ -1029,6 +1046,7 @@ interface LessonPageProps {
   readonly lessonProgress: readonly LessonProgressRecord[];
   readonly attempts: readonly LessonQuizAttempt[];
   readonly now: () => string;
+  readonly targetAnchor?: string;
   readonly onLessonRead: (lesson: LessonMeta) => void;
   readonly onOpenModule: (moduleId: string) => void;
   readonly onOpenLesson: (moduleId: string, lessonId: string) => void;
@@ -1064,9 +1082,18 @@ function LessonPrerequisites({ interfaceLanguage, lesson, onOpenLesson }: { read
   );
 }
 
-function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt }: LessonPageProps) {
+function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, targetAnchor, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt }: LessonPageProps) {
   const lesson = lessonsById.get(lessonId);
   const module = modulesById.get(moduleId) ?? (lesson !== undefined ? modulesById.get(lesson.moduleId) : undefined);
+  useEffect(() => {
+    if (targetAnchor === undefined) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      document.getElementById(targetAnchor)?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [lessonId, targetAnchor]);
   if (lesson === undefined || module === undefined) {
     return (
       <section className="card lesson-page" aria-labelledby="lesson-title">
@@ -1320,6 +1347,7 @@ interface PracticeProps {
   readonly language: Language;
   readonly bankReady: boolean;
   readonly now: () => string;
+  readonly onOpenLesson: (lessonId: string, sectionAnchor?: string) => void;
   readonly preferences: WebPreferences;
   readonly progress: readonly QuestionProgressRecord[];
   readonly session: PracticeSession | null;
@@ -1329,6 +1357,12 @@ interface PracticeProps {
   readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>;
 }
 
+function hintLessonHref(hint: QuestionHint): string {
+  const lesson = lessonsById.get(hint.lessonLink.lessonId);
+  const moduleId = lesson?.moduleId ?? "";
+  return `#/learn/${moduleId}/${hint.lessonLink.lessonId}`;
+}
+
 function Practice({
   interfaceLanguage,
   activeBank,
@@ -1336,6 +1370,7 @@ function Practice({
   language,
   bankReady,
   now,
+  onOpenLesson,
   preferences,
   progress,
   session,
@@ -1352,7 +1387,11 @@ function Practice({
   const reviewRef = useRef<HTMLDivElement>(null);
   const currentItem = session?.items[session.currentIndex];
   const selectedSourceIndex = currentItem === undefined ? undefined : session?.selectedByQuestionId.get(currentItem.question.id);
+  const currentHint = currentItem === undefined ? null : hintForQuestion(currentItem.question.id, activeBank.bankId);
+  const currentHintVisibleLevel = currentItem === undefined ? 0 : session?.hintLevelsByQuestionId.get(currentItem.question.id) ?? 0;
+  const currentHintQualified = currentItem !== undefined && session !== null && session.hintQualifiedQuestionIds.has(currentItem.question.id);
   const isAnswered = selectedSourceIndex !== undefined;
+  const hintCanAffectCurrentAnswer = session !== null && !session.submitted && !(session.mode === "immediate" && isAnswered);
   const allAnswered = session !== null && session.items.every((item) => session.selectedByQuestionId.has(item.question.id));
 
   useEffect(() => {
@@ -1391,17 +1430,59 @@ function Practice({
     startPractice(nextScope, nextMode);
   }
 
+  function revealHintLevel(questionId: string, level: 1 | 2): void {
+    if (session === null) {
+      return;
+    }
+    const nextLevels = new Map(session.hintLevelsByQuestionId);
+    nextLevels.set(questionId, Math.max(nextLevels.get(questionId) ?? 0, level));
+    onSessionChange({ ...session, hintLevelsByQuestionId: nextLevels });
+  }
+
+  function qualifyAnsweredWithHelp(questionId: string): void {
+    if (session === null || session.submitted) {
+      return;
+    }
+    const selected = session.selectedByQuestionId.has(questionId);
+    if (session.mode === "immediate" && selected) {
+      return;
+    }
+    const nextQualified = session.hintQualifiedQuestionIds.has(questionId)
+      ? session.hintQualifiedQuestionIds
+      : new Set(session.hintQualifiedQuestionIds).add(questionId);
+    const nextAnsweredWithHelp = selected && !session.answeredWithHelpQuestionIds.has(questionId)
+      ? new Set(session.answeredWithHelpQuestionIds).add(questionId)
+      : session.answeredWithHelpQuestionIds;
+    if (nextQualified === session.hintQualifiedQuestionIds && nextAnsweredWithHelp === session.answeredWithHelpQuestionIds) {
+      return;
+    }
+    onSessionChange({
+      ...session,
+      hintQualifiedQuestionIds: nextQualified,
+      answeredWithHelpQuestionIds: nextAnsweredWithHelp,
+    });
+  }
+
+  function recordAnsweredWithHelp(questionId: string, nextSession: PracticeSession): PracticeSession {
+    if (nextSession.answeredWithHelpQuestionIds.has(questionId)) {
+      return nextSession;
+    }
+    return { ...nextSession, answeredWithHelpQuestionIds: new Set(nextSession.answeredWithHelpQuestionIds).add(questionId) };
+  }
+
   async function chooseAnswer(item: PracticeItem, displayIndex: number): Promise<void> {
     if (session === null || (session.mode === "immediate" && session.selectedByQuestionId.has(item.question.id))) {
       return;
     }
     const sourceIndex = item.choicePermutation[displayIndex]!;
+    const answeredWithHelp = session.hintQualifiedQuestionIds.has(item.question.id);
     const selected = new Map(session.selectedByQuestionId);
     selected.set(item.question.id, sourceIndex);
-    const nextSession = { ...session, selectedByQuestionId: selected };
+    const selectedSession = { ...session, selectedByQuestionId: selected };
+    const nextSession = answeredWithHelp ? recordAnsweredWithHelp(item.question.id, selectedSession) : selectedSession;
     onSessionChange(nextSession);
     if (session.mode === "immediate") {
-      const nextProgress = applyPracticeAnswer(progress, item.question.id, sourceIndex, now(), activeBank.bankId);
+      const nextProgress = applyPracticeAnswer(progress, item.question.id, sourceIndex, now(), activeBank.bankId, answeredWithHelp);
       try {
         await onProgressChange(nextProgress);
       } catch {
@@ -1421,7 +1502,7 @@ function Practice({
       for (const item of session.items) {
         const sourceIndex = session.selectedByQuestionId.get(item.question.id);
         if (sourceIndex !== undefined) {
-          nextProgress = applyPracticeAnswer(nextProgress, item.question.id, sourceIndex, submittedAt, activeBank.bankId);
+          nextProgress = applyPracticeAnswer(nextProgress, item.question.id, sourceIndex, submittedAt, activeBank.bankId, session.hintQualifiedQuestionIds.has(item.question.id) || session.answeredWithHelpQuestionIds.has(item.question.id));
         }
       }
       await onProgressChange(nextProgress);
@@ -1493,8 +1574,16 @@ function Practice({
           <div className="practice-main">
             <ExamTools
               context="practice"
+              hint={currentHint}
+              hintAnsweredWithHelpQualified={currentHintQualified}
+              hintLessonHref={currentHint === null ? undefined : hintLessonHref(currentHint)}
+              hintCanRecordHelp={hintCanAffectCurrentAnswer}
+              hintVisibleLevel={currentHintVisibleLevel}
               interfaceLanguage={interfaceLanguage}
               key={session.instanceId}
+              onHintVisibleLongEnough={(questionId) => qualifyAnsweredWithHelp(questionId)}
+              onOpenHintLesson={onOpenLesson}
+              onRevealHintLevel={(questionId, level) => revealHintLevel(questionId, level)}
               referenceSheetAvailable={activeBank.course === "basic"}
             >
               <QuestionCard
@@ -1611,29 +1700,46 @@ interface ExamToolsProps {
   readonly interfaceLanguage: InterfaceLanguage;
   readonly referenceSheetAvailable: boolean;
   readonly children: ReactNode;
+  readonly hint?: QuestionHint | null;
+  readonly hintAnsweredWithHelpQualified?: boolean;
+  readonly hintCanRecordHelp?: boolean;
+  readonly hintLessonHref?: string;
+  readonly hintVisibleLevel?: number;
+  readonly onHintVisibleLongEnough?: (questionId: string) => void;
+  readonly onOpenHintLesson?: (lessonId: string, sectionAnchor?: string) => void;
+  readonly onRevealHintLevel?: (questionId: string, level: 1 | 2) => void;
 }
 
-function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, children }: ExamToolsProps) {
+function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, children, hint = null, hintAnsweredWithHelpQualified = false, hintCanRecordHelp = false, hintLessonHref, hintVisibleLevel = 0, onHintVisibleLongEnough, onOpenHintLesson, onRevealHintLevel }: ExamToolsProps) {
   const [activeTool, setActiveTool] = useState<ExamToolKind | null>(null);
   const [calculatorState, setCalculatorState] = useState<CalculatorState>(() => createCalculatorState({ locale: interfaceLanguage }));
   const calculatorButtonRef = useRef<HTMLButtonElement>(null);
   const referenceButtonRef = useRef<HTMLButtonElement>(null);
+  const hintButtonRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLButtonElement | null>(null);
   const panelId = `exam-tools-${context}-panel`;
+  const hintAvailable = context === "practice" && hint !== null && hintLessonHref !== undefined && onHintVisibleLongEnough !== undefined && onOpenHintLesson !== undefined && onRevealHintLevel !== undefined;
 
   useEffect(() => {
     setCalculatorState(createCalculatorState({ locale: interfaceLanguage }));
   }, [interfaceLanguage]);
 
   useEffect(() => {
+    if (activeTool === "hint" && !hintAvailable) {
+      setActiveTool(null);
+    }
+  }, [activeTool, hintAvailable]);
+
+  useEffect(() => {
     if (activeTool === null) {
       return;
     }
-    window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       const panel = document.getElementById(panelId);
       const focusTarget = panel?.querySelector<HTMLElement>("[data-exam-tool-focus]") ?? panel;
       focusTarget?.focus({ preventScroll: true });
     }, 0);
+    return () => window.clearTimeout(timer);
   }, [activeTool, panelId]);
 
   function pressCalculatorKey(key: CalculatorKey): void {
@@ -1652,16 +1758,27 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
   }
 
   function handlePanelKeyDown(event: KeyboardEvent<HTMLElement>): void {
-    if (activeTool === "reference" && event.key === "Escape") {
+    if ((activeTool === "reference" || activeTool === "hint") && event.key === "Escape") {
       event.preventDefault();
       closeTool();
     }
   }
 
+  function toolTitle(): string {
+    if (activeTool === "calculator") {
+      return t(interfaceLanguage, "calculatorTitle");
+    }
+    if (activeTool === "hint") {
+      return t(interfaceLanguage, "hintToolTitle");
+    }
+    return t(interfaceLanguage, "referenceSheetTitle");
+  }
+
+  const panelOpen = activeTool !== null && (activeTool !== "hint" || hintAvailable);
   const shellClassName = [
     "exam-tools-shell",
     `exam-tools-shell--${context}`,
-    activeTool === null ? "" : "exam-tools-shell--open",
+    panelOpen ? "exam-tools-shell--open" : "",
   ].filter(Boolean).join(" ");
 
   return (
@@ -1685,14 +1802,24 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
           type="button"
           onClick={() => openTool("reference", referenceButtonRef.current)}
         >{t(interfaceLanguage, "examToolReferenceSheet")}</button>
+        {hintAvailable ? (
+          <button
+            aria-controls={activeTool === "hint" ? panelId : undefined}
+            aria-expanded={activeTool === "hint"}
+            className="secondary-button"
+            ref={hintButtonRef}
+            type="button"
+            onClick={() => openTool("hint", hintButtonRef.current)}
+          >{t(interfaceLanguage, "examToolHint")}</button>
+        ) : null}
       </div>
       <div className="exam-tools-content">
         {children}
       </div>
-      {activeTool === null ? null : (
+      {!panelOpen ? null : (
         <aside className="exam-tool-panel" data-testid="exam-tool-panel" id={panelId} aria-labelledby={`${panelId}-title`} tabIndex={-1} onKeyDown={handlePanelKeyDown}>
           <div className="exam-tool-panel__header">
-            <h3 id={`${panelId}-title`}>{activeTool === "calculator" ? t(interfaceLanguage, "calculatorTitle") : t(interfaceLanguage, "referenceSheetTitle")}</h3>
+            <h3 id={`${panelId}-title`}>{toolTitle()}</h3>
             <button type="button" className="secondary-button" onClick={closeTool}>{t(interfaceLanguage, "closeExamTool")}</button>
           </div>
           {activeTool === "calculator" ? (
@@ -1701,7 +1828,22 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
               interfaceLanguage={interfaceLanguage}
               onPressKey={pressCalculatorKey}
             />
-          ) : <ReferenceSheetTool interfaceLanguage={interfaceLanguage} />}
+          ) : null}
+          {activeTool === "reference" ? <ReferenceSheetTool interfaceLanguage={interfaceLanguage} /> : null}
+          {activeTool === "hint" && hintAvailable ? (
+            <HintTool
+              answeredWithHelpQualified={hintAnsweredWithHelpQualified}
+              canRecordHelp={hintCanRecordHelp}
+              hint={hint}
+              interfaceLanguage={interfaceLanguage}
+              lessonHref={hintLessonHref}
+              onHintVisibleLongEnough={onHintVisibleLongEnough}
+              onOpenLesson={onOpenHintLesson}
+              onRevealLevel={onRevealHintLevel}
+              referenceSheetAvailable={referenceSheetAvailable}
+              visibleLevel={hintVisibleLevel}
+            />
+          ) : null}
         </aside>
       )}
     </div>

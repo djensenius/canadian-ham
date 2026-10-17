@@ -10,18 +10,22 @@ import { StrictMode } from "react";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
+import { type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import { generateMorseExamText, profileForName } from "@canadian-ham/morse-engine";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
 import { answerMorseCourseSession, morseCourseSummaryMessage, type SessionState } from "./morse/course/MorseCoursePanel";
 import { ADVANCED_BANK_ID, advancedBank, bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
+import { lessonHeadingAnchors, parseMarkdownBlocks } from "./components/MarkdownContent";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
+import { basicQuestionHints, hintForQuestion, type QuestionHint } from "./data/hints";
+import { lessonsById } from "./data/lessons";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
 import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
 import { MorseOutputView } from "./lib/morseOutput";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
-import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
+import { applyPracticeAnswer, buildExamAttempt, createMockExam } from "./lib/studyEngine";
 import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ham/morse-engine";
 import courseFixture from "../../../fixtures/morse/course.json";
 
@@ -98,6 +102,60 @@ function localDateString(value: string): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function currentPracticeQuestionId(): string {
+  const questionMeta = document.querySelector(".question-meta")?.textContent ?? "";
+  const questionId = questionMeta.match(/B-\d{3}-\d{3}-\d{3}/)?.[0];
+  assert.ok(questionId);
+  return questionId;
+}
+
+function correctAnswerChoiceForCurrentQuestion(): HTMLElement {
+  const questionId = currentPracticeQuestionId();
+  const displayedQuestion = testQuestions.find((question) => question.id === questionId);
+  assert.ok(displayedQuestion);
+  const correctAnswerText = displayedQuestion.answers.find((answer) => answer.sourceIndex === 0)?.text.en;
+  assert.ok(correctAnswerText);
+  const correctChoice = screen.getAllByTestId("answer-choice").find((choice) => (choice.textContent ?? "").includes(correctAnswerText));
+  assert.ok(correctChoice);
+  return correctChoice;
+}
+
+async function startDueReviewForQuestion(questionId: string): Promise<void> {
+  const user = userEvent.setup();
+  await user.selectOptions(screen.getByLabelText("Practice scope"), "due");
+  await user.click(screen.getByRole("button", { name: "Start set" }));
+  await waitFor(() => assert.equal(currentPracticeQuestionId(), questionId));
+}
+
+function weakDueProgressRecord(questionId: string): QuestionProgressRecord {
+  return {
+    questionId,
+    bankId: "basic-2025-07-15",
+    attempts: 3,
+    correctAttempts: 2,
+    lastAttemptedAt: "2026-01-01T00:00:00.000Z",
+    lastResult: "incorrect",
+    lastAnsweredWithHelp: false,
+    recentResults: [true, true, false],
+    recentAnsweredWithHelp: [false, false, false],
+    leitner: { box: 0, dueAt: fixedNow },
+    notes: null,
+  };
+}
+
+function lessonHeadingTextForHintLink(hint: QuestionHint): string | null {
+  const sectionAnchor = hint.lessonLink.sectionAnchor;
+  if (sectionAnchor === undefined) {
+    return null;
+  }
+  const lesson = lessonsById.get(hint.lessonLink.lessonId);
+  assert.ok(lesson);
+  const anchors = lessonHeadingAnchors(lesson.body, lesson.title.en);
+  const headingBlocks = parseMarkdownBlocks(lesson.body, lesson.title.en).filter((block): block is Extract<ReturnType<typeof parseMarkdownBlocks>[number], { readonly type: "heading" }> => block.type === "heading");
+  const headingIndex = anchors.indexOf(sectionAnchor);
+  return headingIndex === -1 ? null : headingBlocks[headingIndex]?.text ?? null;
 }
 
 class DelayedInitialPreferencesStore extends ProgressStore {
@@ -1061,6 +1119,322 @@ describe("App accessibility and flows", () => {
     assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.textContent, "✕");
     assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.getAttribute("aria-hidden"), "true");
     await waitFor(async () => assert.equal((await store.getQuestionProgress()).length, 1));
+  });
+
+  it("bundles Basic hints offline and exposes the Hint tool in practice but never mock exams", async () => {
+    assert.equal(basicQuestionHints.length, testQuestions.length);
+
+    window.location.hash = "#/practice";
+    const practiceStore = createStore("practice-hint-availability");
+    const practiceUser = userEvent.setup();
+    render(<App store={practiceStore} now={() => fixedNow} seedFactory={() => "practice-hint-availability"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const hint = hintForQuestion(currentPracticeQuestionId(), "basic-2025-07-15");
+    assert.ok(hint);
+    await practiceUser.click(screen.getByRole("button", { name: "Hint" }));
+    await screen.findByRole("heading", { name: "Hint" });
+    await practiceUser.click(screen.getByRole("button", { name: "Show Hint 1" }));
+    assert.match(screen.getByRole("region", { name: "Hint" }).textContent ?? "", new RegExp(hint.hints[0]!.en.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u"));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const reviewStore = createStore("review-hint-availability");
+    await reviewStore.putQuestionProgressMany(applyPracticeAnswer([], testQuestions[0]!.id, 1, fixedNow));
+    render(<App store={reviewStore} now={() => fixedNow} seedFactory={() => "review-hint-availability"} />);
+    await screen.findByRole("heading", { name: "Practice" });
+    await practiceUser.selectOptions(screen.getByLabelText("Practice scope"), "due");
+    await practiceUser.click(screen.getByRole("button", { name: "Start set" }));
+    await screen.findByText(/Scope: Due review/);
+    assert.ok(screen.getByRole("button", { name: "Hint" }));
+
+    cleanup();
+    window.location.hash = "#/mock";
+    const mockStore = createStore("mock-hint-availability");
+    render(<App store={mockStore} now={() => fixedNow} seedFactory={() => "mock-hint-availability"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam" });
+    await practiceUser.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    await screen.findByText(/Question 1 of/);
+    assert.equal(screen.queryByRole("button", { name: "Hint" }), null);
+  });
+
+  it("records answered-with-help only after a hint is visible for 0.5 seconds and keeps helped correct answers due now", async () => {
+    window.location.hash = "#/practice";
+    const earlyStore = createStore("hint-progress-early");
+    render(<App store={earlyStore} now={() => fixedNow} seedFactory={() => "hint-progress-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await earlyStore.getQuestionProgress()).length, 1));
+    const earlyRecord = (await earlyStore.getQuestionProgress())[0]!;
+    assert.equal(earlyRecord.lastAnsweredWithHelp, false);
+    assert.equal(earlyRecord.leitner.box, 1);
+    assert.notEqual(earlyRecord.leitner.dueAt, fixedNow);
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const helpedQuestionId = "B-005-004-002";
+    const helpedStore = createStore("hint-progress-helped");
+    await helpedStore.putQuestionProgressMany([weakDueProgressRecord(helpedQuestionId)]);
+    render(<App store={helpedStore} now={() => fixedNow} seedFactory={() => "hint-progress-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    await startDueReviewForQuestion(helpedQuestionId);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await helpedStore.getQuestionProgress())[0]?.attempts, 4));
+    const helpedRecord = (await helpedStore.getQuestionProgress()).find((record) => record.questionId === helpedQuestionId)!;
+    assert.equal(helpedRecord.lastAnsweredWithHelp, true);
+    assert.deepEqual(helpedRecord.recentAnsweredWithHelp, [false, false, false, true]);
+    assert.equal(helpedRecord.leitner.box, 0);
+    assert.equal(helpedRecord.leitner.dueAt, fixedNow);
+
+    fireEvent.click(screen.getByRole("button", { name: "Home" }));
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    fireEvent.click(screen.getByText("Weak subsections"));
+    assert.ok(screen.getByText(new RegExp(testQuestions.find((question) => question.id === helpedQuestionId)?.subsectionId ?? "^$", "u")));
+  });
+
+  it("does not restart hint qualification on re-render and does not count hints closed or left before 0.5 seconds", async () => {
+    const stableTimerQuestionId = "B-005-004-002";
+    window.location.hash = "#/practice";
+    const stableStore = createStore("hint-stable-rerender");
+    await stableStore.putQuestionProgressMany(applyPracticeAnswer([], stableTimerQuestionId, 1, fixedNow));
+    render(<App store={stableStore} now={() => fixedNow} seedFactory={() => "hint-stable-rerender"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(stableTimerQuestionId);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(300); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 2" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(300); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await stableStore.getQuestionProgress()).find((record) => record.questionId === stableTimerQuestionId)?.lastAnsweredWithHelp, true));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const closedStore = createStore("hint-closed-before-qualified");
+    render(<App store={closedStore} now={() => fixedNow} seedFactory={() => "hint-closed-before-qualified"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(screen.getByRole("button", { name: "Close tool" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(100); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await closedStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const changedStore = createStore("hint-question-changed-before-qualified");
+    render(<App store={changedStore} now={() => fixedNow} seedFactory={() => "hint-question-changed-before-qualified"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const firstQuestionId = currentPracticeQuestionId();
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(screen.getByRole("button", { name: "Next" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(100); });
+      fireEvent.click(screen.getByRole("button", { name: "Previous" }));
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await changedStore.getQuestionProgress()).find((record) => record.questionId === firstQuestionId)?.lastAnsweredWithHelp, false));
+  });
+
+  it("opens the generic lesson link at the anchored heading without discarding helped practice state", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("hint-lesson-link");
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-lesson-link"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const questionId = currentPracticeQuestionId();
+    const hint = hintForQuestion(questionId, "basic-2025-07-15");
+    assert.ok(hint);
+    assert.ok(hint.lessonLink.sectionAnchor);
+    const linkedLesson = lessonsById.get(hint.lessonLink.lessonId);
+    assert.ok(linkedLesson);
+    const linkedHeadingText = lessonHeadingTextForHintLink(hint);
+    assert.ok(linkedHeadingText);
+
+    fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+    const hintPanel = await screen.findByRole("region", { name: "Hint" });
+    vi.useFakeTimers();
+    try {
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 1" }));
+      if (hint.hints.length === 2) {
+        fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 2" }));
+      }
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    assert.equal((hintPanel.textContent ?? "").includes(linkedLesson.title.en), false);
+    assert.equal((hintPanel.textContent ?? "").includes(linkedHeadingText), false);
+    const lessonLink = within(hintPanel).getByRole("link", { name: "Review in lesson" }) as HTMLAnchorElement;
+    assert.equal(lessonLink.getAttribute("href")?.endsWith(`/${hint.lessonLink.lessonId}`), true);
+    for (const attribute of Array.from(lessonLink.attributes)) {
+      assert.equal(attribute.value.includes(hint.lessonLink.sectionAnchor), false, `${attribute.name} leaked the section anchor`);
+      assert.equal(attribute.value.includes(linkedHeadingText), false, `${attribute.name} leaked the linked heading text`);
+    }
+
+    fireEvent.click(lessonLink);
+    await screen.findByRole("heading", { name: linkedLesson.title.en });
+    await waitFor(() => assert.equal(document.activeElement?.id, hint.lessonLink.sectionAnchor));
+
+    fireEvent.click(screen.getByRole("button", { name: "Practice" }));
+    await screen.findByText(new RegExp(questionId));
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    await waitFor(async () => assert.equal((await store.getQuestionProgress())[0]?.lastAnsweredWithHelp, true));
+  });
+
+  it("keeps helped state across the lesson link in review-later mode", async () => {
+    const questionId = "B-005-004-002";
+    const store = createStore("hint-lesson-link-review-later");
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    await store.putQuestionProgressMany(applyPracticeAnswer([], questionId, 1, fixedNow));
+    window.location.hash = "#/practice";
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-lesson-link-review-later"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(questionId);
+    const hint = hintForQuestion(questionId, "basic-2025-07-15");
+    assert.ok(hint);
+    assert.ok(hint.lessonLink.sectionAnchor);
+    const linkedLesson = lessonsById.get(hint.lessonLink.lessonId);
+    assert.ok(linkedLesson);
+
+    fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+    const hintPanel = await screen.findByRole("region", { name: "Hint" });
+    vi.useFakeTimers();
+    try {
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 1" }));
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 2" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    fireEvent.click(within(hintPanel).getByRole("link", { name: "Review in lesson" }));
+    await screen.findByRole("heading", { name: linkedLesson.title.en });
+
+    fireEvent.click(screen.getByRole("button", { name: "Practice" }));
+    await screen.findByText(new RegExp(questionId));
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    fireEvent.click(screen.getByRole("button", { name: "Submit practice set" }));
+    await waitFor(async () => assert.equal((await store.getQuestionProgress()).find((record) => record.questionId === questionId)?.lastAnsweredWithHelp, true));
+  });
+
+  it("counts review-later hints viewed after selection but does not change immediate answers already scored", async () => {
+    const reviewLaterQuestionId = "B-005-004-002";
+    const reviewLaterStore = createStore("hint-review-later-after-selection");
+    await reviewLaterStore.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    await reviewLaterStore.putQuestionProgressMany(applyPracticeAnswer([], reviewLaterQuestionId, 1, fixedNow));
+    window.location.hash = "#/practice";
+    render(<App store={reviewLaterStore} now={() => fixedNow} seedFactory={() => "hint-review-later-after-selection"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(reviewLaterQuestionId);
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Submit practice set" }));
+    await waitFor(async () => assert.equal((await reviewLaterStore.getQuestionProgress()).find((record) => record.questionId === reviewLaterQuestionId)?.lastAnsweredWithHelp, true));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const immediateStore = createStore("hint-immediate-after-scored");
+    render(<App store={immediateStore} now={() => fixedNow} seedFactory={() => "hint-immediate-after-scored"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    await waitFor(async () => assert.equal((await immediateStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false));
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    assert.equal(screen.getByTestId("hint-live-status").textContent?.includes("This answer will be recorded with help."), false);
+    assert.equal((await immediateStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false);
+  });
+
+  it("shows localized French hint content in the App without panel-styled lesson notes", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("hint-french-app-display");
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-french-app-display"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/u);
+    const hint = hintForQuestion(currentPracticeQuestionId(), "basic-2025-07-15");
+    assert.ok(hint);
+    fireEvent.click(screen.getByRole("button", { name: "Indice" }));
+    const hintPanel = await screen.findByRole("region", { name: "Indice" });
+    fireEvent.click(within(hintPanel).getByRole("button", { name: "Afficher l’indice 1" }));
+    assert.match(hintPanel.textContent ?? "", new RegExp(hint.hints[0]!.fr.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u"));
+    if (hint.hints.length === 2) {
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Afficher l’indice 2" }));
+    }
+    assert.ok(within(hintPanel).getByRole("link", { name: "Revoir dans la leçon" }));
+    const notice = screen.getByText(/Leçon offerte en anglais seulement/u);
+    assert.equal(notice.classList.contains("hint-lesson-link__notice"), true);
+    assert.equal(notice.classList.contains("reference-note"), false);
   });
 
   it("keeps practice questions and answers operable with calculator or reference tools open at phone, tablet, and desktop widths", async () => {
