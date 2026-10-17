@@ -531,6 +531,8 @@ struct CalculatorToolView: View {
                 .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
         .buttonStyle(.plain)
+        .frame(maxWidth: .infinity, minHeight: layout.keyHeight)
+        .contentShape(Rectangle())
         .accessibilityLabel(Text(accessibilityLabel(for: key))) // l10n: localized
         .accessibilityIdentifier("calculator-key-\(accessibilityIdentifierSuffix(for: key))")
     }

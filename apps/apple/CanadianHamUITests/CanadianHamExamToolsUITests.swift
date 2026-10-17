@@ -86,7 +86,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
         openTool(.calculator, in: app)
         assertCalculatorPresentedAsSheet(in: app, context: "forced-regular iPhone landscape key reachability")
-        let calculatorScrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
+        let calculatorScrollView = app.descendants(matching: .any)["calculator-tool-scroll"].firstMatch
         XCTAssertTrue(calculatorScrollView.waitForExistence(timeout: 5), "Landscape medium sheets must expose calculator-tool-scroll so keys scroll instead of shrinking below 44 pt")
         for identifier in calculatorKeyIdentifiers {
             let key = app.buttons[identifier].firstMatch
@@ -769,7 +769,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func calculatorScrollView(in app: XCUIApplication, requiredFor context: String, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
-        let scrollView = app.scrollViews["calculator-tool-scroll"].firstMatch
+        let scrollView = app.descendants(matching: .any)["calculator-tool-scroll"].firstMatch
         XCTAssertTrue(scrollView.waitForExistence(timeout: 1), "Expected calculator-tool-scroll for \(context); refusing to fall back to the background scroll view", file: file, line: line)
         return scrollView
     }
