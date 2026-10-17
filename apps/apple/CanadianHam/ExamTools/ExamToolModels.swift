@@ -101,6 +101,7 @@ func canadianHamInterfaceCalculatorLocale(bundle: Bundle = .main) -> CalculatorL
 struct CalculatorToolLayout {
     let availableHeight: CGFloat
     let dynamicTypeSize: DynamicTypeSize
+    var forceScrolling = false
 
     var sectionSpacing: CGFloat { usesAccessibilityMetrics ? accessibilitySectionSpacing : compactSectionSpacing }
     var keySpacing: CGFloat { usesAccessibilityMetrics ? accessibilityKeySpacing : compactKeySpacing }
@@ -111,7 +112,7 @@ struct CalculatorToolLayout {
     var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
 
     var usesScrolling: Bool {
-        usesAccessibilityMetrics || compactContentHeightAtMinimumTargets + compactMinimumFitAllowance > availableHeight
+        forceScrolling || usesAccessibilityMetrics || compactContentHeightAtMinimumTargets + compactMinimumFitAllowance > availableHeight
     }
 
     var usesAccessibilityMetrics: Bool {

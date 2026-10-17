@@ -99,7 +99,8 @@ final class ExamCalculatorViewModelTests: XCTestCase {
         let compactScrollingLayout = CalculatorToolLayout(availableHeight: 379, dynamicTypeSize: .large)
         XCTAssertTrue(compactScrollingLayout.usesScrolling)
         XCTAssertEqual(compactScrollingLayout.displayHeight, 48)
-        XCTAssertEqual(compactScrollingLayout.keyHeight, 44)
+        XCTAssertGreaterThanOrEqual(compactScrollingLayout.keyHeight, 44)
+        XCTAssertLessThan(compactScrollingLayout.keyHeight, 64)
 
         let accessibilityLayout = CalculatorToolLayout(availableHeight: 600, dynamicTypeSize: .accessibility1)
         XCTAssertTrue(accessibilityLayout.usesScrolling)

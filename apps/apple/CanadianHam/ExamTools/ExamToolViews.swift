@@ -255,6 +255,14 @@ struct ExamToolPresentationModifier: ViewModifier {
         .accessibilityIdentifier("exam-tool-close-button")
     }
 
+    private var compactCalculatorSheetUsesMediumDetent: Bool {
+#if os(iOS)
+        !horizontalUsesInspector && selectedSheetDetent == .medium
+#else
+        false
+#endif
+    }
+
     private func toolPanel(for tool: ExamTool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             toolHeader(for: tool)
@@ -277,8 +285,12 @@ struct ExamToolPresentationModifier: ViewModifier {
     private func toolBody(for tool: ExamTool, availableHeight: CGFloat) -> some View {
         switch tool {
         case .calculator:
-            CalculatorToolView(viewModel: calculator, calculatorFocused: $calculatorFocused)
-                .frame(height: availableHeight)
+            CalculatorToolView(
+                viewModel: calculator,
+                calculatorFocused: $calculatorFocused,
+                forceScrolling: compactCalculatorSheetUsesMediumDetent
+            )
+            .frame(height: availableHeight)
         case .referenceSheet:
 #if os(iOS)
             ReferenceSheetToolView(
@@ -412,6 +424,7 @@ extension View {
 struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
     @Binding var calculatorFocused: Bool
+    var forceScrolling = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @FocusState private var hasKeyboardFocus: Bool
 
@@ -426,7 +439,7 @@ struct CalculatorToolView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            let layout = CalculatorToolLayout(availableHeight: proxy.size.height, dynamicTypeSize: dynamicTypeSize)
+            let layout = CalculatorToolLayout(availableHeight: proxy.size.height, dynamicTypeSize: dynamicTypeSize, forceScrolling: forceScrolling)
             Group {
                 if layout.usesScrolling {
                     ScrollView {
