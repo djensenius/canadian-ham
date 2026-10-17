@@ -378,7 +378,7 @@
       }
     },
     {
-      "id": "weak-subsections-hinted-correct-excluded-from-numerator-and-denominator",
+      "id": "weak-subsections-hinted-correct-rollover-counts-attempt-without-credit",
       "input": {
         "records": [
           {
@@ -413,7 +413,9 @@
         "latestExamItems": []
       },
       "expectedOutput": {
-        "weakSubsectionIds": []
+        "weakSubsectionIds": [
+          "B-001-013"
+        ]
       }
     },
     {
