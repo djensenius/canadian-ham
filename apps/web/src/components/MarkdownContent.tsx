@@ -32,19 +32,26 @@ type MarkdownBlock =
 
 export function MarkdownContent({ markdown, title, interfaceLanguage = "en", contentLanguage, tableLabel = t(interfaceLanguage, "markdownTableAria") }: MarkdownContentProps) {
   let tableIndex = 0;
+  let headingIndex = 0;
+  const headingAnchors = lessonHeadingAnchors(markdown, title);
   return <>{parseMarkdownBlocks(markdown, title).map((block, index) => {
     if (block.type === "table") {
       tableIndex += 1;
       return renderBlock(block, index, interfaceLanguage, contentLanguage, `${tableLabel} ${tableIndex}`);
     }
+    if (block.type === "heading") {
+      const headingId = headingAnchors[headingIndex];
+      headingIndex += 1;
+      return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel, headingId);
+    }
     return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel);
   })}</>;
 }
 
-function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string): ReactNode {
+function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string, headingId?: string): ReactNode {
   if (block.type === "heading") {
     const Tag = `h${Math.min(block.depth + 1, 6)}` as "h2" | "h3" | "h4" | "h5" | "h6";
-    return <Tag key={index} lang={contentLanguage}>{block.text}</Tag>;
+    return <Tag id={headingId} key={index} lang={contentLanguage} tabIndex={headingId === undefined ? undefined : -1}>{block.text}</Tag>;
   }
   if (block.type === "paragraph") {
     return <p key={index} lang={contentLanguage}>{block.text}</p>;
