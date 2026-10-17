@@ -1,11 +1,11 @@
 ---
 id: TASK-50.12
 title: 'Apple hint tool on iOS, iPadOS and macOS'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-17 20:04'
+updated_date: '2026-10-17 22:03'
 labels:
   - apple
 dependencies:
@@ -58,10 +58,12 @@ Validation and AC audit after continuing at 01451d4e/882ac42f:
 - AC audit: practice UI exposes Hint and mock UI does not; advanced/tvOS/visionOS are not targeted. Hint ladder shows Hint 1 then Hint 2 only when present, hides reference-sheet pointer until Apple reference sheets are available, keeps session-level state across the lesson link via RootView navigation, and records answeredWithHelp through AppleStudyEngine. Lesson links use the generic localized label and shared LessonHeadingAnchors fixture algorithm; UI test opens the target section anchor and the lesson reader applies accessibility focus to the heading.
 
 Reopened after internal review request-changes; implementing findings 1-15 in focused fix groups with targeted validation.
+
+Review-fix validation after internal REQUEST CHANGES: implemented findings 1-15 (UI-language French note and pointer text; wide-layout hint lesson push/back; non-optional heading IDs; Bool help qualification announcements; removed liveStatus and ExamToolButtons allCases default; PracticeHintRules commit/submit helpers and pointer rule tests; hinted-answer result audits; lesson-link round trip; bundled sectionAnchor Swift test; Swift slug parity fixtures; graceful bad-hint degradation; widened/cancel-on-question-change timer test). Validation passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/content-swift (23 tests); iPhone 17 Pro targeted xbuild for CanadianHamUITests/CanadianHamExamToolsUITests + HintSessionStateTests + Learn UI tests (25 executed, 3 skipped); iPad Pro 13-inch (M5) targeted xbuild for same (25 executed, 6 skipped); macOS unit xbuild (151 tests); pnpm typecheck; pnpm test; pnpm check:hints -- --require-complete; pnpm check:links; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts. A plain swift test without DEVELOPER_DIR failed before rerun because XCTest was unavailable from CommandLineTools; an initial iPhone full targeted run exposed the new hinted-answer audit issue and passed after fixes; an initial iPad rerun exposed audit layout fallout and passed after the compact-only button-width fix.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented Apple question hints for iOS/iPadOS/macOS practice and review sessions: bundled Basic hints, Swift content models/loader validation, the localized Hint exam tool, stable 0.5 s answered-with-help qualification, lesson-link navigation to anchored headings with focus, and Apple tests for ladder, lesson link, mock-exam absence, reference-sheet gating, one-level hints, audits, fixtures, and progress recording. Validation passed on targeted iPhone/iPad UI runs, macOS unit tests, Apple localization/text-source checks, and pnpm type/content/schema/hint checks. tvOS/visionOS remain intentionally untouched for TASK-50.13.
+Addressed internal review findings for TASK-50.12: aligned hint UI-language behavior with Learn, preserved wide-layout practice sessions on lesson links, hardened heading anchors/slug parity/content hint loading, extracted and tested PracticeHintRules decisions, added hinted-answer and lesson round-trip UI coverage, and completed targeted Apple/package/web validation. Ready for re-review.
 <!-- SECTION:FINAL_SUMMARY:END -->
