@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-018-003",
+  "questionId": "B-001-018-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review Basic-only repeater-output rules.",
+      "fr": "Revoyez les règles de sortie de répéteur pour la compétence de base seulement."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-operator-privileges-and-below-30-mhz-access"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

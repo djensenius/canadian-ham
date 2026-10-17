@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-008-005-009",
+  "questionId": "B-008-005-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Place the interfering band and both wanted bands on one frequency line: use the band table, and 300 / λ for the 31 m broadcast band.",
+      "fr": "Placez la bande brouilleuse et les deux bandes voulues sur un même axe de fréquences : utilisez le tableau des bandes, et 300 / λ pour la bande de radiodiffusion de 31 m."
+    },
+    {
+      "level": 2,
+      "en": "Compare that line with each filter family's response sketch and find the response that matches what must be removed and kept.",
+      "fr": "Comparez cet axe avec la courbe de réponse de chaque famille de filtres et trouvez celle qui correspond à ce qu'il faut retirer et garder."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "filter-vocabulary"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

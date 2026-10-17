@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-003-007",
+  "questionId": "B-006-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the connector-name examples for portable low-power gear and test instruments.",
+      "fr": "Revoyez les exemples de noms de connecteurs pour le matériel portatif de faible puissance et les instruments de mesure."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "common-connector-names"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall or concept item: a second hint would define the correct choice or eliminate distractors; topic pointer and lesson link only."
+}

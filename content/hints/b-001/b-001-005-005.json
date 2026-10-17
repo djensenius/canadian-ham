@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-005-005",
+  "questionId": "B-001-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the work-for-another-person rule for repairing a transmitter.",
+      "fr": "Revoyez la règle du travail pour autrui lors de la réparation d’un émetteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-work-done-for-another-person"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

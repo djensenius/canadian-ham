@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-003-016-009",
+  "questionId": "B-003-016-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For matched sources in parallel, keep the voltage of one source and add the ampere-hour capacities.",
+      "fr": "Pour des sources appariées en parallèle, gardez la tension d’une source et additionnez les capacités en ampèreheures."
+    },
+    {
+      "level": 2,
+      "en": "Use the two given capacity values as the addends; leave the voltage unchanged while you compare the options.",
+      "fr": "Utilisez les deux capacités données comme termes de l’addition; laissez la tension inchangée pendant la comparaison des choix."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-07",
+    "sectionAnchor": "capacity-series-and-parallel-connections"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-011-006",
+  "questionId": "B-005-011-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the induction notes in the transformers section.",
+      "fr": "Revoyez les notes sur l’induction dans la section sur les transformateurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "transformers-and-magnetic-fields"
+  },
+  "singleLevelReason": "Pure induction recall: a second hint would state the maximum-change condition.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

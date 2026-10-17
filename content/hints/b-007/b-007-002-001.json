@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-002-001",
+  "questionId": "B-007-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the start of the ionosphere-in-layers section.",
+      "fr": "Revoyez le début de la section sur les couches de l’ionosphère."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "the-ionosphere-in-layers"
+  },
+  "singleLevelReason": "Cause recall: a second hint would identify or eliminate the source of ionization; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

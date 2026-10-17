@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-006-002",
+  "questionId": "B-002-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the three parts of the RST report in order.",
+      "fr": "Revoyez dans l’ordre les trois parties du rapport RST."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "memory-trick-rst-reads-in-order"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Acronym recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

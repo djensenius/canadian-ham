@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-006-001",
+  "questionId": "B-002-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the RST signal report topic.",
+      "fr": "Revoyez le sujet des rapports de signal RST."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "signal-reports-rs-and-rst"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
+}

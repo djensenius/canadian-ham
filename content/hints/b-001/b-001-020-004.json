@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-020-004",
+  "questionId": "B-001-020-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how international rules treat Morse-code requirements.",
+      "fr": "Revoyez comment les règles internationales traitent les exigences liées au code Morse."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-05",
+    "sectionAnchor": "reference-facts-international-message-purpose-and-regulatory-source"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

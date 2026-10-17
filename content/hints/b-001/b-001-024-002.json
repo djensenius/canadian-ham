@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-024-002",
+  "questionId": "B-001-024-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the general role of the RF safety code.",
+      "fr": "Revoyez le rôle général du code de sécurité RF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-06",
+    "sectionAnchor": "reference-facts-safety-code-6-and-rf-exposure"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

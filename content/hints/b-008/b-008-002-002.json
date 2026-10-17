@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-002",
+  "questionId": "B-008-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the cures for interference to telephone equipment.",
+      "fr": "Revoyez les mesures pour les appareils de téléphonie perturbés par la RF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "audio-rectification"
+  },
+  "singleLevelReason": "Procedure recall: another hint would name the installation and location in the correct option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

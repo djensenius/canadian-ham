@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-006-006",
+  "questionId": "B-006-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how an antenna tuner works.",
+      "fr": "Revoyez le fonctionnement d'un bloc d'accord d'antenne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "matching-networks-and-tuners"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-011-002",
+  "questionId": "B-005-011-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how a transformer's turns ratio affects its windings.",
+      "fr": "Revoyez l’effet du rapport de spires d’un transformateur sur ses enroulements."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "transformer-power-calculations"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Any E-and-I reasoning for the windings restates the correct mechanism; topic pointer and lesson link only."
+}

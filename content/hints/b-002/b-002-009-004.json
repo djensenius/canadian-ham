@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-009-004",
+  "questionId": "B-002-009-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Short and long path are the two ways around the same great circle.",
+      "fr": "Le court trajet et le long trajet sont les deux façons de faire le tour du même grand cercle."
+    },
+    {
+      "level": 2,
+      "en": "Picture leaving your station along each route and compare the two starting directions on a compass.",
+      "fr": "Imaginez que vous quittez votre station par chaque route, puis comparez les deux directions de départ sur une boussole."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-04",
+    "sectionAnchor": "memory-trick-long-path-is-the-other-way-around"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

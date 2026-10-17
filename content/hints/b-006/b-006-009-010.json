@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-009-010",
+  "questionId": "B-006-009-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how antenna gain figures are labelled.",
+      "fr": "Revoyez comment on note le gain d'une antenne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "directivity-and-gain"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

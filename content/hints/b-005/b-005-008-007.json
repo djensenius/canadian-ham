@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-008-007",
+  "questionId": "B-005-008-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "First compare the two powers as a ratio, then use the dB shortcut table.",
+      "fr": "Comparez d'abord les deux puissances sous forme de rapport, puis utilisez le tableau des raccourcis en dB."
+    },
+    {
+      "level": 2,
+      "en": "Read the dB value on the shortcut-table row whose power ratio is 2.",
+      "fr": "Lisez la valeur en dB sur la ligne du tableau des raccourcis dont le rapport de puissance est 2."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original"
+}

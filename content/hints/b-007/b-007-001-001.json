@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-001-001",
+  "questionId": "B-007-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the main radio paths for local and distance contacts.",
+      "fr": "Revoyez les principaux trajets radio pour les contacts locaux et à distance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "the-main-radio-paths"
+  },
+  "singleLevelReason": "Concept recall: a second hint would identify or eliminate a path, layer, mode, value, or effect; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

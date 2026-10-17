@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-019-002",
+  "questionId": "B-001-019-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Overmodulation means the audio drives the RF signal’s amplitude past its clean limit.",
+      "fr": "La surmodulation signifie que l’audio pousse l’amplitude du signal RF au-delà de sa limite propre."
+    },
+    {
+      "level": 2,
+      "en": "For each mode, ask what the audio or keying actually varies: the amplitude envelope, the frequency, or simple on/off timing. Then ask where an amplitude limit can be exceeded.",
+      "fr": "Pour chaque mode, demandez-vous ce que l’audio ou la manipulation fait varier : l’enveloppe d’amplitude, la fréquence ou la simple mise en marche et arrêt. Demandez-vous ensuite où une limite d’amplitude peut être dépassée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "how-these-rules-fit-together"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

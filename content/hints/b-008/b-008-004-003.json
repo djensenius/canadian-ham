@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-003",
+  "questionId": "B-008-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why harmonic emissions are a concern.",
+      "fr": "Revoyez pourquoi le rayonnement harmonique pose problème."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "harmonics"
+  },
+  "singleLevelReason": "Reason recall: another hint would state the harm that selects the option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

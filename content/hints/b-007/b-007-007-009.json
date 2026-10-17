@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-007-009",
+  "questionId": "B-007-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the rough-path operating example.",
+      "fr": "Revoyez l’exemple d’exploitation sur un trajet difficile."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "in-the-real-world-choosing-the-mode-for-a-rough-auroral-path"
+  },
+  "singleLevelReason": "Mode/reason recall: a second hint would identify or eliminate the emission mode or reason; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-008-004-007",
+  "questionId": "B-008-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Convert the 15 m band to its real frequency limits from the band table (not 300 / λ) and compare them with the channel 3 range.",
+      "fr": "Convertissez la bande de 15 m en limites de fréquences réelles à partir du tableau des bandes (et non avec 300 / λ), puis comparez-les à la plage du canal 3."
+    },
+    {
+      "level": 2,
+      "en": "Find how many times those limits must be multiplied to land in channel 3, then recall what the lesson calls an output at that many times the operating frequency.",
+      "fr": "Trouvez par combien il faut multiplier ces limites pour tomber dans le canal 3, puis rappelez-vous comment la leçon nomme une sortie à ce nombre de fois la fréquence d'exploitation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "harmonics"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

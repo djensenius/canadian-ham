@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-006",
+  "questionId": "B-008-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the key-click section of the lesson.",
+      "fr": "Revoyez la section sur les claquements de manipulation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "key-clicks-and-waveform-shape"
+  },
+  "singleLevelReason": "Waveform recall: a second hint would describe the exact envelope property in the answer.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

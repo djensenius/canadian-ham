@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-017-004",
+  "questionId": "B-001-017-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Only the Advanced qualification changes the power row. Honours and Morse open frequencies below 30 MHz; they do not raise power limits.",
+      "fr": "Seule la compétence supérieure change la ligne de puissance. La compétence de base avec distinction et le code Morse donnent accès aux fréquences inférieures à 30 MHz, mais n’augmentent pas les limites de puissance."
+    },
+    {
+      "level": 2,
+      "en": "The frequency in the question only tells you whether you may transmit there. Treat this operator as Basic for power and recall the Basic SSB peak-envelope power limit.",
+      "fr": "La fréquence indiquée ne sert qu’à savoir si vous pouvez y émettre. Traitez cet opérateur comme un titulaire de la compétence de base pour la puissance et rappelez-vous la limite PEP en BLU de la compétence de base."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "memory-trick-basic-power-stays-basic"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

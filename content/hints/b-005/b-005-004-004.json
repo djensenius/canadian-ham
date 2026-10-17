@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-004-004",
+  "questionId": "B-005-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the Ohm's law triangle with E over I and R.",
+      "fr": "Utilisez le triangle de la loi d'Ohm avec E au-dessus de I et R."
+    },
+    {
+      "level": 2,
+      "en": "Cover the unknown letter: letters side by side multiply, and a letter above another divides. Put the result into words.",
+      "fr": "Couvrez la lettre inconnue : des lettres côte à côte se multiplient, et une lettre au-dessus d’une autre se divise. Mettez le résultat en mots."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "ohms-law"
+  },
+  "referenceSheetSection": "ohms-law",
+  "licenseClass": "original"
+}

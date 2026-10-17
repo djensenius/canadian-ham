@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-010-009",
+  "questionId": "B-005-010-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Recall how capacitive reactance changes with frequency.",
+      "fr": "Rappelez-vous comment la réactance capacitive varie avec la fréquence."
+    },
+    {
+      "level": 2,
+      "en": "Decide at which frequencies the decoupling capacitor must leave the wanted signal alone, then match that job to the reactance trend.",
+      "fr": "Décidez à quelles fréquences le condensateur de découplage doit laisser tranquille le signal voulu, puis associez ce rôle à la tendance de la réactance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "reactance-and-impedance"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

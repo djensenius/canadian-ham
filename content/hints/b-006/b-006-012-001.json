@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-012-001",
+  "questionId": "B-006-012-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the practical half-wave dipole estimate: length ≈ 143 / f(MHz).",
+      "fr": "Utilisez l’estimation pratique d’un dipôle demi-onde : longueur ≈ 143 / f(MHz)."
+    },
+    {
+      "level": 2,
+      "en": "Substitute f = 28.150 MHz and keep the overall length in metres.",
+      "fr": "Remplacez f par 28,150 MHz et gardez la longueur totale en mètres."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "worked-example-original-dipole-cut"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-024-003",
+  "questionId": "B-001-024-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Treat the human body like a simple antenna: it is resonant when its length is about half a wavelength.",
+      "fr": "Considérez le corps humain comme une antenne simple : il est en résonance lorsque sa longueur correspond à environ une demi-longueur d’onde."
+    },
+    {
+      "level": 2,
+      "en": "Take an adult height of about 1.75 m as half a wavelength, double it to get λ, convert with f (MHz) ≈ 300 / λ (m), and see which range contains your result.",
+      "fr": "Prenez une taille adulte d’environ 1,75 m comme demi-longueur d’onde, doublez-la pour obtenir λ, convertissez avec f (MHz) ≈ 300 / λ (m) et voyez quelle plage contient votre résultat."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-06",
+    "sectionAnchor": "how-these-rules-fit-together"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

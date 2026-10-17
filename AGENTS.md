@@ -84,13 +84,16 @@ platform) and share one build lock, so don't run them by reflex.
   which platforms you skipped and why.
 
 ### Approved accessibility audit exceptions
-- Task-42 Morse settings description: a narrow contrast exception is approved for the known Morse
-  settings description false positive; task-42 should generalize it onto the shared occluded-content
-  helper rather than adding a separate filter.
 - Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
   whose element frame is not fully contained in the visible scroll area below an opaque navigation
   bar. Owner decision 2026-10-14 adds practice and mock exam screens to this same occluded-content
-  rule. Fully visible contrast issues and every non-contrast issue must still fail.
+  rule. Nil-element findings, navigation-bar elements, fully visible contrast issues, and every
+  non-contrast issue must still fail.
+- Task-42 Morse course home lower-content audit: owner decisions 2026-10-12 and 2026-10-14 also
+  approve the fully visible Morse settings-card note false positives. Only the Morse home
+  lower-content audit may ignore `.contrast` findings whose `issue.element` identifier exactly equals
+  `morse-settings-description` or `morse-settings-fixed-timing-description`; every other issue still
+  fails.
 - Task-44.3 exam tool: owner decision 2026-10-12 approves the medium-detent rule that text inside
   the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
   implements that exception.

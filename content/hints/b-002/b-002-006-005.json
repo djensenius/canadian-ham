@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-006-005",
+  "questionId": "B-002-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Split the report into its two basic digits and the extra amount above the S-meter reference.",
+      "fr": "Séparez le rapport en ses deux chiffres de base et la quantité supplémentaire au-dessus de la référence du S-mètre."
+    },
+    {
+      "level": 2,
+      "en": "Read each digit on its own scale, then decide what the plus figure is measured against.",
+      "fr": "Lisez chaque chiffre sur sa propre échelle, puis déterminez par rapport à quoi la valeur « plus » est mesurée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "signal-reports-rs-and-rst"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

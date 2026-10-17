@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-004-002",
+  "questionId": "B-003-004-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the station power source feeds the blocks in a basic CW transmitter.",
+      "fr": "Revoyez comment la source d’alimentation de la station alimente les blocs d’un émetteur CW élémentaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-02",
+    "sectionAnchor": "basic-cw-transmitter-stages"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

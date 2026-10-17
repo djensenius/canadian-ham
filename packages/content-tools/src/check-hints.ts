@@ -397,21 +397,31 @@ function officialCandidatePhrases(officialTokens: readonly string[], includeDist
 
 function answerPhraseCounts(answerTexts: readonly string[], includeDistinctiveTwoWordRuns: boolean): Map<string, number> {
   const counts = new Map<string, number>();
-  for (const answerText of answerTexts) {
-    const answerPhrases = new Set(officialCandidatePhrases(officialSignificantTokens(answerText), includeDistinctiveTwoWordRuns).map(phraseKey));
-    for (const answerPhrase of answerPhrases) {
-      counts.set(answerPhrase, (counts.get(answerPhrase) ?? 0) + 1);
+  const tokenizedAnswers = answerTexts.map((answerText) => officialSignificantTokens(answerText));
+  const candidateKeys = new Set<string>();
+  for (const answerTokens of tokenizedAnswers) {
+    for (const answerPhrase of officialCandidatePhrases(answerTokens, includeDistinctiveTwoWordRuns)) {
+      candidateKeys.add(phraseKey(answerPhrase));
     }
+  }
+  for (const candidateKey of candidateKeys) {
+    const candidate = candidateKey.split(" ");
+    counts.set(candidateKey, tokenizedAnswers.filter((answerTokens) => containsTokenPhrase(answerTokens, candidate)).length);
   }
   return counts;
 }
 
 function distinctiveOfficialCandidatePhrases(officialText: string, context: OfficialPhraseLeakageContext, includeDistinctiveTwoWordRuns: boolean): string[][] {
   const questionTokens = questionSignificantTokens(context.questionText);
+  const officialTokens = officialSignificantTokens(officialText);
+  const officialFullPhraseKey = phraseKey(officialTokens);
   const phraseCounts = answerPhraseCounts(context.answerTexts, includeDistinctiveTwoWordRuns);
-  return officialCandidatePhrases(officialSignificantTokens(officialText), includeDistinctiveTwoWordRuns).filter((candidate) => {
+  return officialCandidatePhrases(officialTokens, includeDistinctiveTwoWordRuns).filter((candidate) => {
     if (containsTokenPhrase(questionTokens, candidate)) {
       return false;
+    }
+    if (includeDistinctiveTwoWordRuns && phraseKey(candidate) === officialFullPhraseKey) {
+      return true;
     }
     return (phraseCounts.get(phraseKey(candidate)) ?? 0) < 2;
   });
@@ -1261,6 +1271,54 @@ export async function runHintCheckerSelfTest(): Promise<void> {
       { sourceIndex: 1, isCorrect: false, text: { en: "A map projection displaying Maidenhead grid squares", fr: "Une projection cartographique montrant des grilles" } },
       { sourceIndex: 2, isCorrect: false, text: { en: "A map projection centred on the magnetic North Pole", fr: "Une projection cartographique centrée sur le pôle Nord magnétique" } },
       { sourceIndex: 3, isCorrect: false, text: { en: "A map projection centred on the geographic North Pole", fr: "Une projection cartographique centrée sur le pôle Nord géographique" } },
+    ],
+  })]);
+
+  await withSelfTestFixture("b-001-003-003-shared-fine", async (root) => {
+    const regressionQuestion = question({
+      id: "B-001-003-003",
+      subsectionId: "B-001-003",
+      text: {
+        en: "Transmitting a false or fraudulent distress signal or message is prohibited. The person found guilty is liable to what penalty?",
+        fr: "Émettre faussement ou frauduleusement un signal de détresse ou un message est interdit. Quelle est la peine encourue par une personne reconnue coupable de cette infraction?",
+      },
+      answers: [
+        { sourceIndex: 0, isCorrect: true, text: { en: "A fine, not exceeding $5 000, or a prison term not exceeding one year, or both", fr: "Une amende maximale de 5 000 $, ou un emprisonnement maximal d'un an, ou les deux à la fois" } },
+        { sourceIndex: 1, isCorrect: false, text: { en: "A fine of $10 000", fr: "Une amende de 10 000 $" } },
+        { sourceIndex: 2, isCorrect: false, text: { en: "A prison term of two years", fr: "Un emprisonnement de deux ans" } },
+        { sourceIndex: 3, isCorrect: false, text: { en: "A fine not exceeding $1 000", fr: "Une amende maximale de 1 000 $" } },
+      ],
+    });
+    const regressionHint = hint({
+      id: "HINT-B-001-003-003",
+      questionId: "B-001-003-003",
+      hints: [
+        { level: 1, en: "Consider fine before choosing.", fr: "Pensez à l'amende avant de choisir." },
+      ],
+      lessonLink: { lessonId: "L-001-01", sectionAnchor: "shared-setup" },
+      singleLevelReason: "Fixture regression uses one level to isolate shared-option wording.",
+    });
+    await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), `${JSON.stringify([regressionQuestion], null, 2)}\n`, "utf8");
+    await writeFile(path.join(root, "content/hints/b-001/b-001-003-003.json"), `${JSON.stringify(regressionHint, null, 2)}\n`, "utf8");
+    await writeFile(path.join(root, "content/lessons/m1-regulations-policies/l-001-01.md"), `---\ntype: lesson\nid: L-001-01\ntitle:\n  en: "Fixture Lesson"\ncovers:\n  - B-001-003\n---\n# Fixture Lesson\n\n## Shared setup\n\nA fixture lesson section.\n`, "utf8");
+    await checkHints({
+      hintRoot: path.join(root, "content/hints"),
+      questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      lessonRoot: path.join(root, "content/lessons"),
+      requireComplete: true,
+    });
+  });
+
+  await assertSelfTestRejects("short-correct-answer-shared-by-options", hint({ hints: [
+    { level: 1, en: "Canadian visitors need only Basic before operating.", fr: "Pensez à la compétence de visite." },
+    { level: 2, en: "Use the visiting-operator privilege row.", fr: "Utilisez la ligne sur les privilèges de visite." },
+  ] }), "correct answer text", [question({
+    text: { en: "What Canadian qualification must a visitor hold?", fr: "Quelle compétence canadienne un visiteur doit-il détenir?" },
+    answers: [
+      { sourceIndex: 0, isCorrect: true, text: { en: "Basic", fr: "Compétence de base" } },
+      { sourceIndex: 1, isCorrect: false, text: { en: "Basic with Honours", fr: "Compétence de base avec distinction" } },
+      { sourceIndex: 2, isCorrect: false, text: { en: "Basic with Morse code", fr: "Compétence de base avec code Morse" } },
+      { sourceIndex: 3, isCorrect: false, text: { en: "Advanced", fr: "Compétence supérieure" } },
     ],
   })]);
 

@@ -1,10 +1,11 @@
 ---
 id: TASK-50.4
 title: 'Hint content batch: B-002 operating procedures'
-status: To Do
-assignee: []
+status: Done
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 11:50'
+updated_date: '2026-10-16 15:39'
 labels:
   - content
 dependencies:
@@ -29,10 +30,54 @@ Write and review original EN/FR hint content for B-002 operating procedure quest
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
-- [ ] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
-- [ ] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
-- [ ] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
-- [ ] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
-- [ ] #6 All in-scope B-002 operating procedures active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
+- [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [x] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [x] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [x] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [x] #6 All in-scope B-002 operating procedures active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read hint rules, teaching guide, B-001 examples, M2 lessons, B-002 explanations, and question metadata before writing.\n2. Implement B-002 one subsection at a time by hand, choosing two-level hints where reasoning is possible and single-level topic pointers for pure recall.\n3. After each subsection, run pnpm check:hints for that subsection with --require-complete, commit, push, and append progress notes.\n4. Stop after the first two subsections with six EN/FR calibration samples including questions, options, and correct answers before continuing.\n5. After approval, finish remaining subsections and run the full required validation suite before PR handoff.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Completed B-002-001 repeater procedure hints: 10 two-level, 1 single-level recall. Validation: pnpm check:hints -- --subsection B-002-001 --require-complete passed. Commit: e329dfe5a406ad4f20e980f17dcd62ed6a53cf6e.
+
+Completed B-002-002 phonetic alphabet hints: 0 two-level, 11 single-level recall. Validation: pnpm check:hints -- --subsection B-002-002 --require-complete passed. Commit: 41811b2e7127bac3941007c17149bdb22b1f61a5. Calibration stop reached after first two subsections.
+
+Applied calibration fixes: converted B-002-001-003 to a one-level definition pointer, rewrote B-002-001-005 H2 to teach CTCSS use/context instead of paraphrasing the definition, softened B-002-002-001 and -002 voice-spelling pointers, and recorded the definition-question rule in content/hints/README.md. Validation: pnpm check:hints -- --subsection B-002-001 --require-complete and --subsection B-002-002 --require-complete passed. Commit: 83fe19e5b8019df6e592711c7495b0bed343a1d0.
+
+Completed B-002-003 voice/simplex hints: 8 two-level, 3 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-003 --require-complete passed. Commit: b15b00095c99154a23eb8f89ae4a59c2849e54db.
+
+Completed B-002-004 operating courtesy/testing hints: 9 two-level, 2 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-004 --require-complete passed. Commit: 181602eb0867203425f7b5a682d5dd8f40ca2077.
+
+Completed B-002-005 Morse procedure hints: 3 two-level, 8 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-005 --require-complete passed. Commit: b010c423d4c5602eec9b4c76ca579ec716140981.
+
+Completed B-002-006 signal-report/RST hints: 9 two-level, 2 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-006 --require-complete passed. Commit: 1d3f1aaa7bc5ff1d6b8532808059f88f8deba382.
+
+Completed B-002-007 Q-signal hints: 0 two-level, 11 single-level recall. Validation: pnpm check:hints -- --subsection B-002-007 --require-complete passed. Commit: 4235a0a9a21abb5489f0d7692f9e0d8db7fe7785.
+
+Completed B-002-008 emergency procedure hints: 8 two-level, 3 single-level recall/priority. Validation: pnpm check:hints -- --subsection B-002-008 --require-complete passed. Commit: 190586a344775ce6a54d94d09c62769a1f3dea6b.
+
+Completed B-002-009 records/maps/time hints: 5 two-level, 6 single-level recall/definition. Validation: pnpm check:hints -- --subsection B-002-009 --require-complete passed. Commit: 5781e1b72e6ce6b37253d06844fef3ab27d23b8b.
+
+Full batch completed. Counts: B-002-001 9 two-level/2 single-level; B-002-002 0/11; B-002-003 8/3; B-002-004 9/2; B-002-005 3/8; B-002-006 9/2; B-002-007 0/11; B-002-008 8/3; B-002-009 5/6. Total: 51 two-level, 48 single-level. Validation passed: pnpm check:hints -- --category B-002 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Review AC #2/#4/#5 remain for content reviewer/PR review.
+
+Opened PR #268: https://github.com/djensenius/canadian-ham/pull/268 and requested @copilot review via gh pr edit 268 --add-reviewer @copilot.
+
+PR #268 review response: applied every B-002 finding from ~/.cache/canadian-ham-reviews/r268.md. Converted procedure/courtesy/definition leaks to single-level neutral pointers, kept only method-based two-level hints, fixed FR terminology and B-002-009-010 FR time wording, added the procedure/courtesy leak rule to content/hints/README.md, and ran literal option self-test across all 73 touched hint files in EN/FR per level and combined levels. New counts: B-002-001 0/11, B-002-002 0/11, B-002-003 1/10, B-002-004 2/9, B-002-005 0/11, B-002-006 8/3, B-002-007 0/11, B-002-008 1/10, B-002-009 3/8; total 15 two-level/84 single-level. Validation passed: pnpm check:hints -- --category B-002 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --dir packages/content-tools check:explanations; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. Review response commit: 07bf3815f02ff0e1e90781a8245b81726e3c84af.
+
+Coordinator closeout 2026-10-16: batch content review completed (review files ~/.cache/canadian-ham-reviews/r268*.md), all findings fixed and coordinator spot-checked against ISED options; merged in PR #268.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Hand-written EN/FR hints for every active question in this category, reviewed (no answer leakage, no elimination, neutral section-level pointers, verified method hints), merged in PR #268.
+<!-- SECTION:FINAL_SUMMARY:END -->

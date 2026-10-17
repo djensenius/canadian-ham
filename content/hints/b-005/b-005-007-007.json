@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-007-007",
+  "questionId": "B-005-007-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use f (MHz) ≈ 300 / λ (m).",
+      "fr": "Utilisez f (MHz) ≈ 300 / λ (m)."
+    },
+    {
+      "level": 2,
+      "en": "Work it for 20 m and 10 m and compare the direction and the size of the change.",
+      "fr": "Calculez-la pour 20 m et 10 m, puis comparez le sens et l’ampleur du changement."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

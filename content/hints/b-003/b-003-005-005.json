@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-005-005",
+  "questionId": "B-003-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the SSB/CW receiver path.",
+      "fr": "Revoyez le trajet d'un récepteur BLU/CW."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-02",
+    "sectionAnchor": "ssbcw-receiver-path"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

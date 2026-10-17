@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-006-007",
+  "questionId": "B-005-006-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "The load must satisfy two checks: total resistance and total safe wattage.",
+      "fr": "La charge doit satisfaire deux vérifications : la résistance totale et la puissance sûre totale."
+    },
+    {
+      "level": 2,
+      "en": "For equal parallel parts, divide one resistance by the branch count and multiply one wattage rating by the branch count; for series parts, add the resistances and the ratings. Keep only a setup that passes both checks.",
+      "fr": "Pour des pièces égales en parallèle, divisez une résistance par le nombre de branches et multipliez une puissance nominale par ce nombre; pour des pièces en série, additionnez les résistances et les puissances nominales. Gardez seulement un montage qui réussit les deux vérifications."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "power-ratings-and-heat"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-017-002",
+  "questionId": "B-003-017-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the station device that changes household AC into low-voltage DC for radio equipment.",
+      "fr": "Revoyez l’appareil de station qui transforme le CA domestique en CC basse tension pour l’équipement radio."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-07",
+    "sectionAnchor": "station-dc-supplies"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

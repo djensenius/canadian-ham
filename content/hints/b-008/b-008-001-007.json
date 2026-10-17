@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-007",
+  "questionId": "B-008-001-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the example of a handheld receiver after a better outside antenna is connected.",
+      "fr": "Revoyez l’exemple d’un récepteur portatif après le branchement d’une meilleure antenne extérieure."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "receiver-overload-and-desensitization"
+  },
+  "singleLevelReason": "Example recall: another hint would identify the affected receiver stage or the named mechanism.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

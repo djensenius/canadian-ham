@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-023-003",
+  "questionId": "B-001-023-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review when antenna-siting consultation rules do or do not apply.",
+      "fr": "Revoyez quand les règles de consultation sur l’emplacement des antennes s’appliquent ou non."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-06",
+    "sectionAnchor": "reference-facts-antenna-siting-and-public-consultation"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

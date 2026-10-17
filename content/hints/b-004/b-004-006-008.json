@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-006-008",
+  "questionId": "B-004-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what the colour-code lesson says about resistors and temperature.",
+      "fr": "Revoyez ce que la leçon sur le code de couleurs dit des résistances et de la température."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "what-the-colour-code-does-not-tell-you"
+  },
+  "singleLevelReason": "Concept recall: a second hint would state the drift dependency directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

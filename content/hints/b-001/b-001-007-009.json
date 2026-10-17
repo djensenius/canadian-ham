@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-007-009",
+  "questionId": "B-001-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the amateur-service rule on secret codes.",
+      "fr": "Revoyez la règle du service de radioamateur sur les codes secrets."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-communications-that-fit-amateur-radio"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

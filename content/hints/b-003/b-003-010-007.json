@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-010-007",
+  "questionId": "B-003-010-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review receiver performance terms.",
+      "fr": "Revoyez les critères de performance d'un récepteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-04",
+    "sectionAnchor": "receiver-performance-terms"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

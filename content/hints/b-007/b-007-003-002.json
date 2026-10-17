@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-003-002",
+  "questionId": "B-007-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the single-hop planning scales in the hop discussion.",
+      "fr": "Revoyez les échelles de planification d’un seul saut dans l’explication des sauts."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "worked-example-comparing-hop-scales"
+  },
+  "singleLevelReason": "Numeric recall: a second hint would identify or eliminate a hop distance; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-003-008",
+  "questionId": "B-006-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review feedline and connector maintenance.",
+      "fr": "Revoyez l'entretien des lignes et des connecteurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "choosing-a-feedline-for-the-route"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

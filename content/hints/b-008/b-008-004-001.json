@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-001",
+  "questionId": "B-008-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the pattern of affected TV channels helps diagnose interference.",
+      "fr": "Revoyez comment la répartition des canaux de télévision touchés aide à diagnostiquer le brouillage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "harmonics"
+  },
+  "singleLevelReason": "Symptom classification: a second hint would name the relationship or exclude broad overload.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

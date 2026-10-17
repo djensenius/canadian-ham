@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-007-004",
+  "questionId": "B-006-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the polarization examples for straight half-wave elements.",
+      "fr": "Revoyez les exemples de polarisation pour les éléments droits demi-onde."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "polarization"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}
