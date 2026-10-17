@@ -109,7 +109,7 @@ struct CalculatorToolLayout {
     var displayHorizontalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayHorizontalPadding : compactDisplayHorizontalPadding }
     var displayVerticalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayVerticalPadding : compactDisplayVerticalPadding }
     var keyHeight: CGFloat { usesAccessibilityMetrics ? accessibilityKeyHeight : min(accessibilityKeyHeight, max(minimumKeyHeight, compactKeyHeight)) }
-    var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
+    var showsHelpText: Bool { !usesAccessibilityMetrics && showsCompactHelpText }
 
     var usesScrolling: Bool {
         forceScrolling || usesAccessibilityMetrics || compactContentHeightAtMinimumTargets + compactMinimumFitAllowance > availableHeight

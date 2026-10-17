@@ -257,7 +257,7 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     private var compactCalculatorSheetUsesMediumDetent: Bool {
 #if os(iOS)
-        !horizontalUsesInspector && selectedSheetDetent == .medium
+        !horizontalUsesInspector
 #else
         false
 #endif
@@ -526,12 +526,12 @@ struct CalculatorToolView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
-                .frame(maxWidth: .infinity, minHeight: layout.keyHeight)
+                .frame(maxWidth: .infinity, height: layout.keyHeight)
                 .background(buttonBackground(for: key), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
         .buttonStyle(.plain)
-        .frame(maxWidth: .infinity, minHeight: layout.keyHeight)
+        .frame(maxWidth: .infinity, height: layout.keyHeight)
         .contentShape(Rectangle())
         .accessibilityLabel(Text(accessibilityLabel(for: key))) // l10n: localized
         .accessibilityIdentifier("calculator-key-\(accessibilityIdentifierSuffix(for: key))")
