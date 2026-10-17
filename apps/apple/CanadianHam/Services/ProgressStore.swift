@@ -918,7 +918,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let configuration: ModelConfiguration
         if isStoredInMemoryOnly {
             configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
@@ -929,7 +929,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func makeSplitModelContainer(iCloudSyncEnabled: Bool, isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let plan = configurationPlan(iCloudSyncEnabled: iCloudSyncEnabled)
         let progressSchema = Schema([QuestionProgressEntity.self, ExamAttemptEntity.self, LessonProgressEntity.self, LessonQuizAttemptEntity.self, MorseCourseProgressEntity.self])
         let preferencesSchema = Schema([PreferencesEntity.self])
@@ -1510,6 +1510,8 @@ final class ProgressStoreService: ObservableObject {
             if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).correctAttempts must be between 0 and attempts.")) }
             appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).lastAttemptedAt")
             if record.recentResults.count > 5 { errors.append(String(localized: "\(prefix).recentResults must contain at most five booleans.")) }
+            if record.recentAnsweredWithHelp.count > 5 { errors.append(String(localized: "\(prefix).recentAnsweredWithHelp must contain at most five booleans.")) }
+            if record.recentAnsweredWithHelp.count != record.recentResults.count { errors.append(String(localized: "\(prefix).recentAnsweredWithHelp must have the same length as recentResults.")) }
             if !(0...5).contains(record.leitner.box) { errors.append(String(localized: "\(prefix).leitner.box must be an integer between 0 and 5.")) }
             appendTimestampError(&errors, value: record.leitner.dueAt, field: "\(prefix).leitner.dueAt")
         }
@@ -1577,6 +1579,8 @@ final class ProgressStoreService: ObservableObject {
             if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).record.correctAttempts must be between 0 and attempts.")) }
             appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).record.lastAttemptedAt")
             if record.recentResults.count > 5 { errors.append(String(localized: "\(prefix).record.recentResults must contain at most five booleans.")) }
+            if record.recentAnsweredWithHelp.count > 5 { errors.append(String(localized: "\(prefix).record.recentAnsweredWithHelp must contain at most five booleans.")) }
+            if record.recentAnsweredWithHelp.count != record.recentResults.count { errors.append(String(localized: "\(prefix).record.recentAnsweredWithHelp must have the same length as recentResults.")) }
             if !(0...5).contains(record.leitner.box) { errors.append(String(localized: "\(prefix).record.leitner.box must be an integer between 0 and 5.")) }
             appendTimestampError(&errors, value: record.leitner.dueAt, field: "\(prefix).record.leitner.dueAt")
         }
@@ -1728,7 +1732,9 @@ final class ProgressStoreService: ObservableObject {
                 correctAttempts: ownCorrectAttempts,
                 lastAttemptedAt: record.lastAttemptedAt,
                 lastResult: record.lastResult,
+                lastAnsweredWithHelp: record.lastAnsweredWithHelp,
                 recentResults: record.recentResults,
+                recentAnsweredWithHelp: record.recentAnsweredWithHelp,
                 leitner: record.leitner,
                 notes: record.notes
             )
@@ -1736,13 +1742,16 @@ final class ProgressStoreService: ObservableObject {
             writeRecord = record
         }
         let data = try encoder.encode(writeRecord.recentResults)
+        let recentAnsweredWithHelpData = try encoder.encode(writeRecord.recentAnsweredWithHelp)
         if let entity = existing {
             entity.bankId = writeRecord.bankId
             entity.attempts = writeRecord.attempts
             entity.correctAttempts = writeRecord.correctAttempts
             entity.lastAttemptedAt = writeRecord.lastAttemptedAt
             entity.lastResult = writeRecord.lastResult.rawValue
+            entity.lastAnsweredWithHelp = writeRecord.lastAnsweredWithHelp
             entity.recentResultsData = data
+            entity.recentAnsweredWithHelpData = recentAnsweredWithHelpData
             entity.leitnerBox = writeRecord.leitner.box
             entity.dueAt = writeRecord.leitner.dueAt
             entity.notes = writeRecord.notes
@@ -1755,7 +1764,9 @@ final class ProgressStoreService: ObservableObject {
                 correctAttempts: writeRecord.correctAttempts,
                 lastAttemptedAt: writeRecord.lastAttemptedAt,
                 lastResult: writeRecord.lastResult.rawValue,
+                lastAnsweredWithHelp: writeRecord.lastAnsweredWithHelp,
                 recentResultsData: data,
+                recentAnsweredWithHelpData: recentAnsweredWithHelpData,
                 leitnerBox: writeRecord.leitner.box,
                 dueAt: writeRecord.leitner.dueAt,
                 notes: writeRecord.notes,
@@ -2361,6 +2372,8 @@ final class ProgressStoreService: ObservableObject {
 
     private func questionProgressRecord(from entity: QuestionProgressEntity) throws -> QuestionProgressRecord {
         let recentResults = try decoder.decode([Bool].self, from: entity.recentResultsData)
+        let decodedRecentAnsweredWithHelp = (try? decoder.decode([Bool].self, from: entity.recentAnsweredWithHelpData)) ?? []
+        let recentAnsweredWithHelp = decodedRecentAnsweredWithHelp.count == recentResults.count ? decodedRecentAnsweredWithHelp : Array(repeating: false, count: recentResults.count)
         return QuestionProgressRecord(
             questionId: entity.questionId,
             bankId: entity.bankId,
@@ -2368,7 +2381,9 @@ final class ProgressStoreService: ObservableObject {
             correctAttempts: entity.correctAttempts,
             lastAttemptedAt: entity.lastAttemptedAt,
             lastResult: AnswerResult(rawValue: entity.lastResult) ?? .incorrect,
+            lastAnsweredWithHelp: entity.lastAnsweredWithHelp,
             recentResults: recentResults,
+            recentAnsweredWithHelp: recentAnsweredWithHelp,
             leitner: LeitnerState(box: entity.leitnerBox, dueAt: entity.dueAt),
             notes: entity.notes
         )

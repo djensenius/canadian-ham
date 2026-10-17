@@ -1365,6 +1365,50 @@
         }
       }
     },
+    "%@.recentAnsweredWithHelp must contain at most five booleans." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp must contain at most five booleans."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp doit contenir au plus cinq booléens."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp doit contenir au plus cinq booléens."
+          }
+        }
+      }
+    },
+    "%@.recentAnsweredWithHelp must have the same length as recentResults." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp must have the same length as recentResults."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
+          }
+        }
+      }
+    },
     "%@.recentResults must contain at most 20 booleans." : {
       "localizations" : {
         "fr" : {
@@ -1479,6 +1523,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.record.questionId doit être un identifiant de question connu."
+          }
+        }
+      }
+    },
+    "%@.record.recentAnsweredWithHelp must contain at most five booleans." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp must contain at most five booleans."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp doit contenir au plus cinq valeurs booléennes."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp doit contenir au plus cinq valeurs booléennes."
+          }
+        }
+      }
+    },
+    "%@.record.recentAnsweredWithHelp must have the same length as recentResults." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp must have the same length as recentResults."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
           }
         }
       }

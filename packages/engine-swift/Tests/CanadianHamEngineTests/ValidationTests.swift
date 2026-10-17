@@ -203,6 +203,45 @@ final class ValidationTests: XCTestCase {
         }
     }
 
+    func testHintedCorrectPreservesAccuracyWithoutMasteryCredit() throws {
+        let record = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-006-004-001",
+            bankId: basicBankId,
+            isCorrect: true,
+            now: "2026-01-02T00:00:00.000Z",
+            answeredWithHelp: true
+        ))
+
+        XCTAssertEqual(record.correctAttempts, 1)
+        XCTAssertEqual(record.lastResult, .correct)
+        XCTAssertTrue(record.lastAnsweredWithHelp)
+        XCTAssertEqual(record.recentResults, [true])
+        XCTAssertEqual(record.recentAnsweredWithHelp, [true])
+        XCTAssertEqual(record.leitner.box, 0)
+        XCTAssertEqual(record.leitner.dueAt, "2026-01-02T00:00:00.000Z")
+    }
+
+    func testOlderProgressJsonDecodesHelpFieldsAsFalse() throws {
+        let data = Data(#"""
+        {
+          "questionId": "B-006-004-001",
+          "bankId": "basic-2025-07-15",
+          "attempts": 1,
+          "correctAttempts": 1,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [true],
+          "leitner": { "box": 1, "dueAt": "2026-01-03T00:00:00.000Z" },
+          "notes": null
+        }
+        """#.utf8)
+
+        let record = try JSONDecoder().decode(QuestionProgressRecord.self, from: data)
+
+        XCTAssertFalse(record.lastAnsweredWithHelp)
+        XCTAssertEqual(record.recentAnsweredWithHelp, [false])
+    }
+
     func testApplyAnswerRejectsOutOfRangeLeitnerBoxes() {
         let update = AnswerUpdate(
             questionId: "B-006-004-001",

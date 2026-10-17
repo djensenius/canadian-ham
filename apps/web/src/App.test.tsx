@@ -735,7 +735,9 @@ describe("App accessibility and flows", () => {
         correctAttempts: 0,
         lastAttemptedAt: "2026-01-01T00:00:00.000Z",
         lastResult: "incorrect",
+        lastAnsweredWithHelp: false,
         recentResults: [false],
+        recentAnsweredWithHelp: [false],
         leitner: { box: 0, dueAt: "2026-01-01T00:00:00.000Z" },
         notes: null,
       });

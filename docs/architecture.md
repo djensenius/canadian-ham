@@ -116,7 +116,7 @@ Example manifest (deterministic: no generated timestamps):
 
 ## Data schemas
 
-Schema definitions should be versioned. JSON examples below show the intended shape, not final JSON Schema syntax.
+Schema definitions should be versioned. JSON examples below show the intended shape, not final JSON Schema syntax. Additive optional progress-export fields may stay on the current version when older imports and rows load unchanged with documented defaults.
 
 ### Question
 
@@ -338,7 +338,9 @@ Explanations are original project content and must not copy study-guide prose. P
   "correctAttempts": 3,
   "lastAttemptedAt": "2026-01-02T04:10:00.000Z",
   "lastResult": "incorrect",
+  "lastAnsweredWithHelp": false,
   "recentResults": [true, true, false, true, false],
+  "recentAnsweredWithHelp": [false, false, false, false, false],
   "leitner": {
     "box": 0,
     "dueAt": "2026-01-02T04:10:00.000Z"
@@ -547,9 +549,10 @@ This order is fixture-testable: fixtures provide mock attempts, per-category tot
 
 Weak subsection detection:
 
-- `recentResults` has maximum length 5 per question record, is ordered oldest to newest, and is updated by appending the newest result then truncating from the front until at most 5 entries remain.
-- A subsection's recent attempts are the multiset union of every boolean in `recentResults` from stored progress records for active questions in that subsection; duplicate true/false entries are counted, and questions with no progress record contribute zero attempts.
-- A subsection is weak if that union has at least two attempts and `correct / total < 70%`; exactly 70% is not weak, and a single pooled attempt is not enough to classify weakness.
+- `recentResults` has maximum length 5 per question record, is ordered oldest to newest, and is updated by appending the newest result then truncating from the front until at most 5 entries remain. `lastAnsweredWithHelp` flags whether the latest answer was submitted after a hint was shown, and `recentAnsweredWithHelp` is the same-length oldest-to-newest flag array for `recentResults`. Missing help fields in older exports, IndexedDB rows, or SwiftData rows default to `false`.
+- A subsection's recent attempts are the multiset union of every boolean in `recentResults` from stored progress records for active questions in that subsection; duplicate true/false entries are counted, and questions with no progress record contribute zero attempts. Accuracy remains based on actual correctness, so a hinted correct answer still increments `correctAttempts` and stores `lastResult: "correct"`.
+- Helped correct answers do not clear weak areas: when deriving weak subsections, a `true` result whose paired `recentAnsweredWithHelp` flag is `true` counts as an attempt but not as proficiency-correct, so a helped answer that rolls an older failure out of the five-result window still cannot clear the weak area. Helped incorrect answers count as incorrect attempts.
+- A subsection is weak if that proficiency-correct union has at least two attempts and `correct / total < 70%`; exactly 70% is not weak, and a single pooled attempt is not enough to classify weakness.
 - A subsection is also weak if it was missed or unanswered on the latest mock exam.
 - The output is the sorted union of progress-derived weak subsections and latest-exam missed/unanswered subsections.
 - Fixtures must cover the max length, ordering, append/truncate behaviour, pooled attempts, exact-threshold behaviour, and latest-exam union behaviour.
@@ -563,7 +566,7 @@ State per stored question record:
 
 - `box`: integer from 0 to 5.
 - `dueAt`: UTC timestamp.
-- `attempts`, `correctAttempts`, `recentResults` where `recentResults` follows the max-length and ordering rules above.
+- `attempts`, `correctAttempts`, `lastAnsweredWithHelp`, `recentResults`, and `recentAnsweredWithHelp` where the recent arrays follow the max-length and ordering rules above.
 
 Time rules:
 
@@ -575,7 +578,13 @@ Time rules:
 - A correct answer before `dueAt` still promotes; v1 does not block early promotion.
 - Repeated answers to the same question in one session are applied in answer order, each with its own explicit `now` value or the session submit time if the mode batches updates. Sequence-case output records are sorted by ordinal question ID.
 
-On correct answer:
+Answered-with-help rule:
+
+- Practice/review UI may set `answeredWithHelp` on an answer update after a hint was shown. Mock exams do not set this flag.
+- The correctness outcome is still stored in `lastResult`, `recentResults`, and `correctAttempts`; answered-with-help is an additional flag, not a third result.
+- A helped answer gives no new mastery credit and does not clear weak areas. A helped correct answer keeps the current Leitner box without promotion and is due immediately (`dueAt = now`); a helped incorrect answer behaves exactly like any incorrect answer.
+
+On unaided correct answer:
 
 - New box is `min(box + 1, 5)`.
 - Due interval by box after promotion:
@@ -586,7 +595,12 @@ On correct answer:
   - Box 5: `30 * 86400` seconds.
 - New `dueAt = now + intervalSeconds`.
 
-On incorrect answer:
+On helped correct answer:
+
+- New box remains the current box.
+- Due interval is immediate (`dueAt = now`).
+
+On incorrect answer, including helped incorrect:
 
 - New box is `0`.
 - Due interval is immediate (`dueAt = now`).

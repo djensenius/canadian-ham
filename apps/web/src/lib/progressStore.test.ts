@@ -17,7 +17,9 @@ const record: QuestionProgressRecord = {
   correctAttempts: 1,
   lastAttemptedAt: "2026-01-02T03:04:05.000Z",
   lastResult: "correct",
+  lastAnsweredWithHelp: false,
   recentResults: [true],
+  recentAnsweredWithHelp: [false],
   leitner: { box: 1, dueAt: "2026-01-03T03:04:05.000Z" },
   notes: null,
 };
@@ -191,6 +193,54 @@ describe("ProgressStore", () => {
     assert.deepEqual(Object.fromEntries(examAttempts.map((attempt) => [`${attempt.bankId}|${attempt.submittedAt}`, attempt.id])), fixture.examAttempts.expectedIdsBySubmittedAt);
     assert.deepEqual(deduplicateDeviceLessonProgressForSync(fixture.lessonProgress.deviceRows), fixture.lessonProgress.expected);
     assert.deepEqual(deduplicateDeviceLessonProgressForSync([...fixture.lessonProgress.deviceRows, ...fixture.lessonProgress.deviceRows]), fixture.lessonProgress.expected);
+  });
+
+  it("does not throw while normalizing malformed sync question rows", () => {
+    const malformedRows = {
+      questionProgress: [{ deviceId: "iphone" }, "bad-row"],
+      examAttempts: [],
+      lessonProgress: [],
+      lessonQuizAttempts: [],
+      morseCourseProgress: [],
+    };
+
+    const validation = validateProgressImport(validExport({ syncDeviceRows: malformedRows as never }));
+
+    assert.equal(validation.ok, true);
+    assert.deepEqual(validation.data?.syncDeviceRows, malformedRows);
+  });
+
+  it("normalizes pre-change IndexedDB question progress rows on read", async () => {
+    const { lastAnsweredWithHelp: _lastAnsweredWithHelp, recentAnsweredWithHelp: _recentAnsweredWithHelp, ...legacyRecord } = record;
+    const store = createStore("legacy-indexeddb-help-fields");
+
+    await store.putQuestionProgress(legacyRecord as QuestionProgressRecord);
+
+    assert.deepEqual(await store.getQuestionProgress(), [record]);
+  });
+
+  it("imports older question progress and sync rows without answered-with-help fields as false", async () => {
+    const { lastAnsweredWithHelp: _lastAnsweredWithHelp, recentAnsweredWithHelp: _recentAnsweredWithHelp, ...legacyRecord } = record;
+    const legacyExport = validExport({
+      questionProgress: [legacyRecord as QuestionProgressRecord],
+      syncDeviceRows: {
+        questionProgress: [{ deviceId: "iphone", record: legacyRecord as QuestionProgressRecord }],
+        examAttempts: [],
+        lessonProgress: [],
+        lessonQuizAttempts: [],
+        morseCourseProgress: [],
+      },
+    });
+
+    const validation = validateProgressImport(legacyExport);
+    assert.equal(validation.ok, true);
+    assert.deepEqual(validation.data?.questionProgress, [record]);
+    assert.deepEqual(validation.data?.syncDeviceRows?.questionProgress, [{ deviceId: "iphone", record }]);
+
+    const store = createStore("legacy-help-fields");
+    await store.importData(legacyExport);
+    assert.deepEqual(await store.getQuestionProgress(), [record]);
+    assert.deepEqual((await store.exportData("2026-01-02T05:00:00.000Z")).syncDeviceRows?.questionProgress, [{ deviceId: "iphone", record }]);
   });
 
   it("preserves opaque sync device rows on import/export until progress changes", async () => {
