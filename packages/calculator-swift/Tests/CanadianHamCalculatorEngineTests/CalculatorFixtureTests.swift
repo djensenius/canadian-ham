@@ -63,6 +63,20 @@ final class CalculatorFixtureTests: XCTestCase {
         XCTAssertNil(object["text"])
     }
 
+    func testUpdateCalculatorLocaleRedrawsCurrentDisplay() throws {
+        let englishState = runCalculatorKeys([.one, .decimalPoint, .five], locale: .en)
+        XCTAssertEqual(englishState.display, "1.5")
+        XCTAssertEqual(englishState.displayValue.visual, "1.5")
+
+        let frenchState = updateCalculatorLocale(englishState, locale: .fr)
+        XCTAssertEqual(frenchState.locale, .fr)
+        XCTAssertEqual(frenchState.display, "1,5")
+        XCTAssertEqual(frenchState.displayValue.visual, "1,5")
+        XCTAssertEqual(frenchState.displayValue.spoken.fr, "1,5")
+        XCTAssertEqual(frenchState.currentEntry, englishState.currentEntry)
+        XCTAssertEqual(frenchState.displayedValue, englishState.displayedValue)
+    }
+
     private func calculatorFixtureURL() throws -> URL {
         let currentDirectory = URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
         let fileURL = URL(fileURLWithPath: #filePath).standardizedFileURL

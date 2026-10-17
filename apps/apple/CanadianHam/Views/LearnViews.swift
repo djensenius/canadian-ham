@@ -67,7 +67,7 @@ struct LearnView: View {
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored.")
+                    Text("Advanced lessons are coming. Use Advanced practice and mock exams in the meantime.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                 }
@@ -87,7 +87,7 @@ struct LearnView: View {
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions follow your Language setting.")
+                    Text("Study the eight modules in order. Lessons are currently authored in English; official practice questions follow your Language setting.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
@@ -513,7 +513,7 @@ private struct LessonPrerequisitesSection: View {
     }
 }
 
-private extension View {
+extension View {
     @ViewBuilder
     func lessonReaderOpaqueNavigationBar() -> some View {
 #if os(iOS)
@@ -563,7 +563,7 @@ private struct OutlineLessonView: View {
     }
 }
 
-private struct LessonMarkdownView: View {
+struct LessonMarkdownView: View {
     let markdown: String
     let title: String?
 
