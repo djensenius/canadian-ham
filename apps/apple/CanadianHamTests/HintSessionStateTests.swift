@@ -1,3 +1,4 @@
+import CanadianHamEngine
 import XCTest
 
 @MainActor
@@ -54,6 +55,37 @@ final class HintSessionStateTests: XCTestCase {
         )
 
         XCTAssertEqual(answered, ["B-001-002-002"])
+    }
+
+    func testApplyPracticeAnswerSubmitsAnsweredWithHelpToEngine() throws {
+        let question = BankQuestion(
+            id: "B-006-004-001",
+            bankId: CourseBankID.basic.rawValue,
+            categoryId: "B-006",
+            subsectionId: "B-006-004",
+            sourceOrder: 1,
+            text: LocalizedText(en: "Sample question", fr: "Exemple"),
+            answers: [
+                BankAnswer(sourceIndex: 0, isCorrect: true, text: LocalizedText(en: "Correct", fr: "Correct")),
+                BankAnswer(sourceIndex: 1, isCorrect: false, text: LocalizedText(en: "Wrong", fr: "Incorrect")),
+                BankAnswer(sourceIndex: 2, isCorrect: false, text: LocalizedText(en: "Wrong", fr: "Incorrect")),
+                BankAnswer(sourceIndex: 3, isCorrect: false, text: LocalizedText(en: "Wrong", fr: "Incorrect"))
+            ]
+        )
+
+        let records = try AppleStudyEngine.applyPracticeAnswer(
+            progress: [],
+            question: question,
+            selectedSourceIndex: 0,
+            now: "2026-01-02T00:00:00.000Z",
+            answeredWithHelp: true
+        )
+        let record = try XCTUnwrap(records.first)
+
+        XCTAssertTrue(record.lastAnsweredWithHelp)
+        XCTAssertEqual(record.recentAnsweredWithHelp, [true])
+        XCTAssertEqual(record.leitner.box, 0)
+        XCTAssertEqual(record.leitner.dueAt, "2026-01-02T00:00:00.000Z")
     }
 
     func testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange() async throws {
