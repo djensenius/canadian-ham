@@ -74,7 +74,7 @@ public struct ContentLibrary: Sendable {
                 explanations: explanations,
                 questionHints: questionHints
             )
-            try library.validate()
+            try library.validateQuestionHints()
             return library
         } catch {
             return libraryWithoutHints
