@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-17 22:03'
+updated_date: '2026-10-17 22:05'
 labels:
   - apple
 dependencies:
@@ -60,6 +60,8 @@ Validation and AC audit after continuing at 01451d4e/882ac42f:
 Reopened after internal review request-changes; implementing findings 1-15 in focused fix groups with targeted validation.
 
 Review-fix validation after internal REQUEST CHANGES: implemented findings 1-15 (UI-language French note and pointer text; wide-layout hint lesson push/back; non-optional heading IDs; Bool help qualification announcements; removed liveStatus and ExamToolButtons allCases default; PracticeHintRules commit/submit helpers and pointer rule tests; hinted-answer result audits; lesson-link round trip; bundled sectionAnchor Swift test; Swift slug parity fixtures; graceful bad-hint degradation; widened/cancel-on-question-change timer test). Validation passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/content-swift (23 tests); iPhone 17 Pro targeted xbuild for CanadianHamUITests/CanadianHamExamToolsUITests + HintSessionStateTests + Learn UI tests (25 executed, 3 skipped); iPad Pro 13-inch (M5) targeted xbuild for same (25 executed, 6 skipped); macOS unit xbuild (151 tests); pnpm typecheck; pnpm test; pnpm check:hints -- --require-complete; pnpm check:links; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts. A plain swift test without DEVELOPER_DIR failed before rerun because XCTest was unavailable from CommandLineTools; an initial iPhone full targeted run exposed the new hinted-answer audit issue and passed after fixes; an initial iPad rerun exposed audit layout fallout and passed after the compact-only button-width fix.
+
+Copilot thread follow-up: fixed duplicate full content validation during hint loading by validating already-loaded non-hint content once and then calling validateQuestionHints() only on the hint-attached library (commit 34d80c6). Replied to and resolved the Copilot review thread. Post-fix validation: packages/content-swift swift test passed (23 tests) and macOS QuestionBankTests/testBundledLessonsAndExplanationsLoadThroughContentLibrary smoke passed (1 test). PR body updated and Copilot re-requested.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
