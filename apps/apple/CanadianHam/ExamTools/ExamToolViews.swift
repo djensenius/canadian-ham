@@ -255,14 +255,6 @@ struct ExamToolPresentationModifier: ViewModifier {
         .accessibilityIdentifier("exam-tool-close-button")
     }
 
-    private var compactCalculatorSheetUsesMediumDetent: Bool {
-#if os(iOS)
-        !horizontalUsesInspector
-#else
-        false
-#endif
-    }
-
     private func toolPanel(for tool: ExamTool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             toolHeader(for: tool)
@@ -287,8 +279,7 @@ struct ExamToolPresentationModifier: ViewModifier {
         case .calculator:
             CalculatorToolView(
                 viewModel: calculator,
-                calculatorFocused: $calculatorFocused,
-                forceScrolling: compactCalculatorSheetUsesMediumDetent
+                calculatorFocused: $calculatorFocused
             )
             .frame(height: availableHeight)
         case .referenceSheet:
@@ -424,7 +415,6 @@ extension View {
 struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
     @Binding var calculatorFocused: Bool
-    var forceScrolling = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @FocusState private var hasKeyboardFocus: Bool
 
@@ -439,11 +429,14 @@ struct CalculatorToolView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            let layout = CalculatorToolLayout(availableHeight: proxy.size.height, dynamicTypeSize: dynamicTypeSize, forceScrolling: forceScrolling)
+            let layout = CalculatorToolLayout(availableHeight: proxy.size.height, dynamicTypeSize: dynamicTypeSize)
+            // Keys keep a fixed minimum height, so content that does not fit scrolls instead of
+            // compressing below 44 pt. Bounce only when the content actually overflows.
             ScrollView {
                 calculatorContent(layout: layout)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .scrollBounceBehavior(.basedOnSize)
             .accessibilityIdentifier("calculator-tool-scroll")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

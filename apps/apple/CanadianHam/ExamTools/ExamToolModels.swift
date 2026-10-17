@@ -101,7 +101,6 @@ func canadianHamInterfaceCalculatorLocale(bundle: Bundle = .main) -> CalculatorL
 struct CalculatorToolLayout {
     let availableHeight: CGFloat
     let dynamicTypeSize: DynamicTypeSize
-    var forceScrolling = false
 
     var sectionSpacing: CGFloat { usesAccessibilityMetrics ? accessibilitySectionSpacing : compactSectionSpacing }
     var keySpacing: CGFloat { usesAccessibilityMetrics ? accessibilityKeySpacing : compactKeySpacing }
@@ -111,8 +110,10 @@ struct CalculatorToolLayout {
     var keyHeight: CGFloat { usesAccessibilityMetrics ? accessibilityKeyHeight : min(accessibilityKeyHeight, max(minimumKeyHeight, compactKeyHeight)) }
     var showsHelpText: Bool { !usesAccessibilityMetrics && showsCompactHelpText }
 
+    /// Whether the calculator content is expected to overflow the available height, so the
+    /// always-present ScrollView (bounce based on size) actually scrolls.
     var usesScrolling: Bool {
-        forceScrolling || usesAccessibilityMetrics || compactContentHeightAtMinimumTargets + compactMinimumFitAllowance > availableHeight
+        usesAccessibilityMetrics || compactContentHeightAtMinimumTargets + compactMinimumFitAllowance > availableHeight
     }
 
     var usesAccessibilityMetrics: Bool {
@@ -193,8 +194,8 @@ struct CalculatorToolLayout {
     private var compactDisplayHorizontalPadding: CGFloat { 12 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
     private var compactHelpVisibilityHeight: CGFloat { 440 }
-    // Measured allowance for LazyVGrid/VStack compression and sheet-height rounding at the iPhone medium detent.
-    // Without this headroom, XCTest observed sub-44 pt key frames even though the pure minimums fit.
+    // Headroom for sheet-height rounding at the iPhone medium detent when predicting overflow and deciding
+    // whether the compact help text fits; keys themselves never compress because they have fixed heights.
     private var compactMinimumFitAllowance: CGFloat { 24 }
     // SwiftUI reports the button accessibility frame slightly smaller than the requested label frame;
     // a 46 pt layout floor preserves the user-facing 44 pt minimum in UI tests.
