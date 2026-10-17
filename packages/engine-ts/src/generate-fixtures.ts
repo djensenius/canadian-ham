@@ -325,7 +325,7 @@ function buildWeakSubsectionsFixture(): unknown {
   const pooledSingleAttemptRecords = [makeProgress("B-001-010-001", [false])];
   const helpedCorrectChangesWeakOutcomeRecords = [makeProgress("B-001-011-001", [false, true, true, true], [false, false, true, false])];
   const helpedCorrectAllFalseControlRecords = [makeProgress("B-001-012-001", [false, true, true, true], [false, false, false, false])];
-  const helpedCorrectExcludedFromBothCountsRecords = [
+  const helpedCorrectRolloverDoesNotClearWeakRecords = [
     makeProgress("B-001-013-001", [false, true, true, true, true], [false, false, false, false, true]),
   ];
   const helpedIncorrectCountsAsIncorrectRecords = [makeProgress("B-001-014-001", [false, true, true], [true, false, false])];
@@ -372,9 +372,9 @@ function buildWeakSubsectionsFixture(): unknown {
         expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedCorrectAllFalseControlRecords) },
       },
       {
-        id: "weak-subsections-hinted-correct-excluded-from-numerator-and-denominator",
-        input: { records: helpedCorrectExcludedFromBothCountsRecords, latestExamItems: [] },
-        expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedCorrectExcludedFromBothCountsRecords) },
+        id: "weak-subsections-hinted-correct-rollover-counts-attempt-without-credit",
+        input: { records: helpedCorrectRolloverDoesNotClearWeakRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedCorrectRolloverDoesNotClearWeakRecords) },
       },
       {
         id: "weak-subsections-hinted-incorrect-counts-as-incorrect",

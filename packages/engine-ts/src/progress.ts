@@ -118,12 +118,11 @@ export function weakSubsectionIds(
     const current = subsectionAttempts.get(subsectionId) ?? { correct: 0, total: 0 };
     const recentAnsweredWithHelp = record.recentAnsweredWithHelp ?? [];
     for (const [index, result] of record.recentResults.entries()) {
+      // A helped correct answer counts as an attempt without proficiency credit, so it can
+      // never clear a weak area, even when it rolls an older failure out of the window.
       const wasHelped = recentAnsweredWithHelp[index] === true;
-      if (result && wasHelped) {
-        continue;
-      }
       current.total += 1;
-      if (result) {
+      if (result && !wasHelped) {
         current.correct += 1;
       }
     }

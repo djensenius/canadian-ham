@@ -239,11 +239,10 @@ public func weakSubsectionIds(records: [QuestionProgressRecord], latestExamItems
         var current = subsectionAttempts[subsectionId] ?? (correct: 0, total: 0)
         for (index, result) in record.recentResults.enumerated() {
             let wasHelped = record.recentAnsweredWithHelp.indices.contains(index) ? record.recentAnsweredWithHelp[index] : false
-            if result, wasHelped {
-                continue
-            }
+            // A helped correct answer counts as an attempt without proficiency credit, so it can
+            // never clear a weak area, even when it rolls an older failure out of the window.
             current.total += 1
-            if result {
+            if result, !wasHelped {
                 current.correct += 1
             }
         }

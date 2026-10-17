@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:12'
-updated_date: '2026-10-17 01:02'
+updated_date: '2026-10-17 01:37'
 labels:
   - engine
 dependencies: []
@@ -47,6 +47,8 @@ Implemented answered-with-help as an additional flag alongside correct/incorrect
 Opened PR #277 with Apple xbuild engine parity and macOS unit checks marked pending because /tmp/task-50.15-apple-checks.sh is still queued behind the shared xbuild lock. Non-Apple checks completed: pnpm typecheck, pnpm test, pnpm check:schemas, pnpm import:check, swift test in packages/engine-swift, and TS engine fixture tests.
 
 Coordinator: r277 review fixes plus delta-review fixes landed (head 3c537d94). Scheduling rules chosen under owner delegation 2026-10-16: hinted correct keeps its box and is due now; hinted incorrect behaves as incorrect; weak areas exclude hinted-correct answers from both counts. Checks: pnpm typecheck/test/check:schemas/import:check/check:apple-l10n/text-sources passed; swift test 21; engine-ts 23; engine parity xbuild 21; iOS ProgressStoreTests 85/0; macOS unit 133/0. Waits for an Apple merge batch.
+
+Copilot rollover finding: changed the weak-area rule so a hinted-correct answer counts as an attempt without proficiency credit (the exclusion rule let a helped answer evict an older failure and clear weakness). Both engines, docs and the fixture (weak-subsections-hinted-correct-rollover-counts-attempt-without-credit) are updated. engine-ts 23, swift test 21, parity xbuild passed, web tests and typecheck passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
