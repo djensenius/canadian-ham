@@ -12,15 +12,18 @@ export interface HintToolProps {
   readonly referenceSheetAvailable: boolean;
   readonly visibleLevel: number;
   readonly answeredWithHelpQualified: boolean;
-  readonly onRevealLevel: (level: 1 | 2) => void;
-  readonly onHintVisibleLongEnough: () => void;
+  readonly canRecordHelp: boolean;
+  readonly onRevealLevel: (questionId: string, level: 1 | 2) => void;
+  readonly onHintVisibleLongEnough: (questionId: string) => void;
   readonly onOpenLesson: (lessonId: string, sectionAnchor?: string) => void;
   readonly lessonHref: string;
 }
 
-export function HintTool({ hint, interfaceLanguage, referenceSheetAvailable, visibleLevel, answeredWithHelpQualified, onRevealLevel, onHintVisibleLongEnough, onOpenLesson, lessonHref }: HintToolProps) {
+export function HintTool({ hint, interfaceLanguage, referenceSheetAvailable, visibleLevel, answeredWithHelpQualified, canRecordHelp, onRevealLevel, onHintVisibleLongEnough, onOpenLesson, lessonHref }: HintToolProps) {
   const [liveMessage, setLiveMessage] = useState("");
   const revealedHintRef = useRef<HTMLElement | null>(null);
+  const latestVisibleLongEnoughCallbackRef = useRef(onHintVisibleLongEnough);
+  const shouldFocusRevealedHintRef = useRef(false);
   const hintIsVisible = visibleLevel > 0;
   const lastAvailableLevel = hint.hints.length;
   const nextLevel = visibleLevel < lastAvailableLevel ? (visibleLevel + 1) as 1 | 2 : null;
@@ -29,22 +32,33 @@ export function HintTool({ hint, interfaceLanguage, referenceSheetAvailable, vis
   const referenceSheetSection = hint.referenceSheetSection ?? null;
 
   useEffect(() => {
-    if (!hintIsVisible || answeredWithHelpQualified) {
-      return;
-    }
-    const timer = window.setTimeout(onHintVisibleLongEnough, hintVisibleQualificationMilliseconds);
-    return () => window.clearTimeout(timer);
-  }, [answeredWithHelpQualified, hint.questionId, hintIsVisible, onHintVisibleLongEnough]);
+    latestVisibleLongEnoughCallbackRef.current = onHintVisibleLongEnough;
+  }, [onHintVisibleLongEnough]);
 
   useEffect(() => {
-    if (visibleLevel === 0) {
+    setLiveMessage("");
+  }, [hint.questionId]);
+
+  useEffect(() => {
+    if (!hintIsVisible || answeredWithHelpQualified || !canRecordHelp) {
       return;
     }
-    window.setTimeout(() => revealedHintRef.current?.focus({ preventScroll: true }), 0);
-  }, [hint.questionId, visibleLevel]);
+    const timer = window.setTimeout(() => latestVisibleLongEnoughCallbackRef.current(hint.questionId), hintVisibleQualificationMilliseconds);
+    return () => window.clearTimeout(timer);
+  }, [answeredWithHelpQualified, canRecordHelp, hint.questionId, hintIsVisible]);
+
+  useEffect(() => {
+    if (!shouldFocusRevealedHintRef.current || visibleLevel === 0) {
+      return;
+    }
+    shouldFocusRevealedHintRef.current = false;
+    const timer = window.setTimeout(() => revealedHintRef.current?.focus({ preventScroll: true }), 0);
+    return () => window.clearTimeout(timer);
+  }, [visibleLevel]);
 
   function reveal(level: 1 | 2): void {
-    onRevealLevel(level);
+    shouldFocusRevealedHintRef.current = true;
+    onRevealLevel(hint.questionId, level);
     setLiveMessage(t(interfaceLanguage, "hintRevealedAnnouncement", level));
   }
 
@@ -57,10 +71,12 @@ export function HintTool({ hint, interfaceLanguage, referenceSheetAvailable, vis
     onOpenLesson(lessonLink.lessonId, lessonLink.sectionAnchor);
   }
 
+  const helpAnnouncement = answeredWithHelpQualified && canRecordHelp ? ` ${t(interfaceLanguage, "hintAnsweredWithHelpAnnouncement")}` : "";
+
   return (
     <section className="hint-tool" aria-label={t(interfaceLanguage, "hintToolTitle")} data-exam-tool-focus tabIndex={-1}>
       <p className="hint-tool__intro">{t(interfaceLanguage, "hintToolIntro")}</p>
-      <div className="sr-only" aria-live="polite" data-testid="hint-live-status">{liveMessage}{answeredWithHelpQualified ? ` ${t(interfaceLanguage, "hintAnsweredWithHelpAnnouncement")}` : ""}</div>
+      <div className="sr-only" aria-live="polite" data-testid="hint-live-status">{liveMessage}{helpAnnouncement}</div>
       {visibleHints.length === 0 ? <p className="hint-tool__empty">{t(interfaceLanguage, "hintNotOpenedYet")}</p> : null}
       {visibleHints.map((entry) => (
         <article className="hint-card" key={entry.level} ref={entry.level === visibleLevel ? revealedHintRef : undefined} tabIndex={-1} aria-labelledby={`hint-${hint.questionId}-${entry.level}-title`}>
@@ -74,7 +90,7 @@ export function HintTool({ hint, interfaceLanguage, referenceSheetAvailable, vis
       {showLessonLink ? (
         <p className="hint-lesson-link">
           <a href={lessonHref} onClick={handleLessonClick}>{t(interfaceLanguage, "hintReviewInLesson")}</a>
-          {interfaceLanguage === "fr" ? <span className="reference-note"> {t(interfaceLanguage, "englishOnlyLessonNotice")}</span> : null}
+          {interfaceLanguage === "fr" ? <span className="hint-lesson-link__notice"> {t(interfaceLanguage, "englishOnlyLessonNotice")}</span> : null}
         </p>
       ) : null}
       {nextLevel === null ? null : (

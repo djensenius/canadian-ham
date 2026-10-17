@@ -95,6 +95,9 @@ interface PracticeSession {
   readonly items: readonly PracticeItem[];
   readonly currentIndex: number;
   readonly selectedByQuestionId: ReadonlyMap<string, number>;
+  readonly hintLevelsByQuestionId: ReadonlyMap<string, number>;
+  readonly hintQualifiedQuestionIds: ReadonlySet<string>;
+  readonly answeredWithHelpQuestionIds: ReadonlySet<string>;
   readonly submitted: boolean;
 }
 
@@ -478,6 +481,9 @@ function AppContent({
       items,
       currentIndex: 0,
       selectedByQuestionId: new Map(),
+      hintLevelsByQuestionId: new Map(),
+      hintQualifiedQuestionIds: new Set(),
+      answeredWithHelpQuestionIds: new Set(),
       submitted: false,
     });
     navigate("practice");
@@ -1354,8 +1360,7 @@ interface PracticeProps {
 function hintLessonHref(hint: QuestionHint): string {
   const lesson = lessonsById.get(hint.lessonLink.lessonId);
   const moduleId = lesson?.moduleId ?? "";
-  const sectionAnchor = hint.lessonLink.sectionAnchor === undefined ? "" : `/${hint.lessonLink.sectionAnchor}`;
-  return `#/learn/${moduleId}/${hint.lessonLink.lessonId}${sectionAnchor}`;
+  return `#/learn/${moduleId}/${hint.lessonLink.lessonId}`;
 }
 
 function Practice({
@@ -1380,22 +1385,14 @@ function Practice({
   const [submittingPractice, setSubmittingPractice] = useState(false);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
-  const [hintLevelsByQuestionId, setHintLevelsByQuestionId] = useState<ReadonlyMap<string, number>>(() => new Map());
-  const [hintQualifiedQuestionIds, setHintQualifiedQuestionIds] = useState<ReadonlySet<string>>(() => new Set());
-  const [answeredWithHelpQuestionIds, setAnsweredWithHelpQuestionIds] = useState<ReadonlySet<string>>(() => new Set());
   const currentItem = session?.items[session.currentIndex];
   const selectedSourceIndex = currentItem === undefined ? undefined : session?.selectedByQuestionId.get(currentItem.question.id);
   const currentHint = currentItem === undefined ? null : hintForQuestion(currentItem.question.id, activeBank.bankId);
-  const currentHintVisibleLevel = currentItem === undefined ? 0 : hintLevelsByQuestionId.get(currentItem.question.id) ?? 0;
-  const currentHintQualified = currentItem !== undefined && hintQualifiedQuestionIds.has(currentItem.question.id);
+  const currentHintVisibleLevel = currentItem === undefined ? 0 : session?.hintLevelsByQuestionId.get(currentItem.question.id) ?? 0;
+  const currentHintQualified = currentItem !== undefined && session !== null && session.hintQualifiedQuestionIds.has(currentItem.question.id);
   const isAnswered = selectedSourceIndex !== undefined;
+  const hintCanAffectCurrentAnswer = session !== null && !session.submitted && !(session.mode === "immediate" && isAnswered);
   const allAnswered = session !== null && session.items.every((item) => session.selectedByQuestionId.has(item.question.id));
-
-  useEffect(() => {
-    setHintLevelsByQuestionId(new Map());
-    setHintQualifiedQuestionIds(new Set());
-    setAnsweredWithHelpQuestionIds(new Set());
-  }, [session?.instanceId]);
 
   useEffect(() => {
     if (session === null && bankReady) {
@@ -1434,29 +1431,43 @@ function Practice({
   }
 
   function revealHintLevel(questionId: string, level: 1 | 2): void {
-    setHintLevelsByQuestionId((current) => {
-      const next = new Map(current);
-      next.set(questionId, Math.max(next.get(questionId) ?? 0, level));
-      return next;
-    });
+    if (session === null) {
+      return;
+    }
+    const nextLevels = new Map(session.hintLevelsByQuestionId);
+    nextLevels.set(questionId, Math.max(nextLevels.get(questionId) ?? 0, level));
+    onSessionChange({ ...session, hintLevelsByQuestionId: nextLevels });
   }
 
   function qualifyAnsweredWithHelp(questionId: string): void {
-    setHintQualifiedQuestionIds((current) => {
-      if (current.has(questionId)) {
-        return current;
-      }
-      return new Set(current).add(questionId);
+    if (session === null || session.submitted) {
+      return;
+    }
+    const selected = session.selectedByQuestionId.has(questionId);
+    if (session.mode === "immediate" && selected) {
+      return;
+    }
+    const nextQualified = session.hintQualifiedQuestionIds.has(questionId)
+      ? session.hintQualifiedQuestionIds
+      : new Set(session.hintQualifiedQuestionIds).add(questionId);
+    const nextAnsweredWithHelp = selected && !session.answeredWithHelpQuestionIds.has(questionId)
+      ? new Set(session.answeredWithHelpQuestionIds).add(questionId)
+      : session.answeredWithHelpQuestionIds;
+    if (nextQualified === session.hintQualifiedQuestionIds && nextAnsweredWithHelp === session.answeredWithHelpQuestionIds) {
+      return;
+    }
+    onSessionChange({
+      ...session,
+      hintQualifiedQuestionIds: nextQualified,
+      answeredWithHelpQuestionIds: nextAnsweredWithHelp,
     });
   }
 
-  function recordAnsweredWithHelp(questionId: string): void {
-    setAnsweredWithHelpQuestionIds((current) => {
-      if (current.has(questionId)) {
-        return current;
-      }
-      return new Set(current).add(questionId);
-    });
+  function recordAnsweredWithHelp(questionId: string, nextSession: PracticeSession): PracticeSession {
+    if (nextSession.answeredWithHelpQuestionIds.has(questionId)) {
+      return nextSession;
+    }
+    return { ...nextSession, answeredWithHelpQuestionIds: new Set(nextSession.answeredWithHelpQuestionIds).add(questionId) };
   }
 
   async function chooseAnswer(item: PracticeItem, displayIndex: number): Promise<void> {
@@ -1464,14 +1475,12 @@ function Practice({
       return;
     }
     const sourceIndex = item.choicePermutation[displayIndex]!;
-    const answeredWithHelp = hintQualifiedQuestionIds.has(item.question.id);
+    const answeredWithHelp = session.hintQualifiedQuestionIds.has(item.question.id);
     const selected = new Map(session.selectedByQuestionId);
     selected.set(item.question.id, sourceIndex);
-    const nextSession = { ...session, selectedByQuestionId: selected };
+    const selectedSession = { ...session, selectedByQuestionId: selected };
+    const nextSession = answeredWithHelp ? recordAnsweredWithHelp(item.question.id, selectedSession) : selectedSession;
     onSessionChange(nextSession);
-    if (answeredWithHelp) {
-      recordAnsweredWithHelp(item.question.id);
-    }
     if (session.mode === "immediate") {
       const nextProgress = applyPracticeAnswer(progress, item.question.id, sourceIndex, now(), activeBank.bankId, answeredWithHelp);
       try {
@@ -1493,7 +1502,7 @@ function Practice({
       for (const item of session.items) {
         const sourceIndex = session.selectedByQuestionId.get(item.question.id);
         if (sourceIndex !== undefined) {
-          nextProgress = applyPracticeAnswer(nextProgress, item.question.id, sourceIndex, submittedAt, activeBank.bankId, answeredWithHelpQuestionIds.has(item.question.id));
+          nextProgress = applyPracticeAnswer(nextProgress, item.question.id, sourceIndex, submittedAt, activeBank.bankId, session.hintQualifiedQuestionIds.has(item.question.id) || session.answeredWithHelpQuestionIds.has(item.question.id));
         }
       }
       await onProgressChange(nextProgress);
@@ -1568,20 +1577,13 @@ function Practice({
               hint={currentHint}
               hintAnsweredWithHelpQualified={currentHintQualified}
               hintLessonHref={currentHint === null ? undefined : hintLessonHref(currentHint)}
+              hintCanRecordHelp={hintCanAffectCurrentAnswer}
               hintVisibleLevel={currentHintVisibleLevel}
               interfaceLanguage={interfaceLanguage}
               key={session.instanceId}
-              onHintVisibleLongEnough={() => {
-                if (currentItem !== undefined) {
-                  qualifyAnsweredWithHelp(currentItem.question.id);
-                }
-              }}
+              onHintVisibleLongEnough={(questionId) => qualifyAnsweredWithHelp(questionId)}
               onOpenHintLesson={onOpenLesson}
-              onRevealHintLevel={(level) => {
-                if (currentItem !== undefined) {
-                  revealHintLevel(currentItem.question.id, level);
-                }
-              }}
+              onRevealHintLevel={(questionId, level) => revealHintLevel(questionId, level)}
               referenceSheetAvailable={activeBank.course === "basic"}
             >
               <QuestionCard
@@ -1700,14 +1702,15 @@ interface ExamToolsProps {
   readonly children: ReactNode;
   readonly hint?: QuestionHint | null;
   readonly hintAnsweredWithHelpQualified?: boolean;
+  readonly hintCanRecordHelp?: boolean;
   readonly hintLessonHref?: string;
   readonly hintVisibleLevel?: number;
-  readonly onHintVisibleLongEnough?: () => void;
+  readonly onHintVisibleLongEnough?: (questionId: string) => void;
   readonly onOpenHintLesson?: (lessonId: string, sectionAnchor?: string) => void;
-  readonly onRevealHintLevel?: (level: 1 | 2) => void;
+  readonly onRevealHintLevel?: (questionId: string, level: 1 | 2) => void;
 }
 
-function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, children, hint = null, hintAnsweredWithHelpQualified = false, hintLessonHref, hintVisibleLevel = 0, onHintVisibleLongEnough, onOpenHintLesson, onRevealHintLevel }: ExamToolsProps) {
+function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, children, hint = null, hintAnsweredWithHelpQualified = false, hintCanRecordHelp = false, hintLessonHref, hintVisibleLevel = 0, onHintVisibleLongEnough, onOpenHintLesson, onRevealHintLevel }: ExamToolsProps) {
   const [activeTool, setActiveTool] = useState<ExamToolKind | null>(null);
   const [calculatorState, setCalculatorState] = useState<CalculatorState>(() => createCalculatorState({ locale: interfaceLanguage }));
   const calculatorButtonRef = useRef<HTMLButtonElement>(null);
@@ -1722,14 +1725,21 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
   }, [interfaceLanguage]);
 
   useEffect(() => {
+    if (activeTool === "hint" && !hintAvailable) {
+      setActiveTool(null);
+    }
+  }, [activeTool, hintAvailable]);
+
+  useEffect(() => {
     if (activeTool === null) {
       return;
     }
-    window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       const panel = document.getElementById(panelId);
       const focusTarget = panel?.querySelector<HTMLElement>("[data-exam-tool-focus]") ?? panel;
       focusTarget?.focus({ preventScroll: true });
     }, 0);
+    return () => window.clearTimeout(timer);
   }, [activeTool, panelId]);
 
   function pressCalculatorKey(key: CalculatorKey): void {
@@ -1822,6 +1832,7 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
           {activeTool === "hint" && hintAvailable ? (
             <HintTool
               answeredWithHelpQualified={hintAnsweredWithHelpQualified}
+              canRecordHelp={hintCanRecordHelp}
               hint={hint}
               interfaceLanguage={interfaceLanguage}
               lessonHref={hintLessonHref}

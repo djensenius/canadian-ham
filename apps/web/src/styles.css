@@ -611,6 +611,11 @@ li {
   font-weight: 900;
 }
 
+.hint-lesson-link__notice {
+  color: var(--ch-color-ink-muted);
+  font-weight: 700;
+}
+
 .calculator-display {
   display: block;
   width: 100%;

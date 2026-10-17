@@ -23,12 +23,13 @@ function HintHarness({ hint, interfaceLanguage = "en", referenceSheetAvailable =
   return (
     <HintTool
       answeredWithHelpQualified={false}
+      canRecordHelp={true}
       hint={hint}
       interfaceLanguage={interfaceLanguage}
-      lessonHref={`#/learn/M5/${hint.lessonLink.lessonId}/${hint.lessonLink.sectionAnchor ?? ""}`}
+      lessonHref={`#/learn/M5/${hint.lessonLink.lessonId}`}
       onHintVisibleLongEnough={onQualified}
       onOpenLesson={() => undefined}
-      onRevealLevel={setVisibleLevel}
+      onRevealLevel={(_questionId, level) => setVisibleLevel(level)}
       referenceSheetAvailable={referenceSheetAvailable}
       visibleLevel={visibleLevel}
     />

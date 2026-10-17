@@ -33,8 +33,9 @@ type MarkdownBlock =
 export function MarkdownContent({ markdown, title, interfaceLanguage = "en", contentLanguage, tableLabel = t(interfaceLanguage, "markdownTableAria") }: MarkdownContentProps) {
   let tableIndex = 0;
   let headingIndex = 0;
-  const headingAnchors = lessonHeadingAnchors(markdown, title);
-  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => {
+  const blocks = parseMarkdownBlocks(markdown, title);
+  const headingAnchors = lessonHeadingAnchorEntries(blocks);
+  return <>{blocks.map((block, index) => {
     if (block.type === "table") {
       tableIndex += 1;
       return renderBlock(block, index, interfaceLanguage, contentLanguage, `${tableLabel} ${tableIndex}`);
@@ -124,18 +125,26 @@ export function lessonHeadingAnchorSlug(headingText: string): string {
 }
 
 export function lessonHeadingAnchors(markdown: string, title?: string): string[] {
+  return lessonHeadingAnchorEntries(parseMarkdownBlocks(markdown, title)).filter((anchor): anchor is string => anchor !== undefined);
+}
+
+function lessonHeadingAnchorEntries(blocks: readonly MarkdownBlock[]): Array<string | undefined> {
   const seen = new Map<string, number>();
-  const anchors: string[] = [];
-  for (const block of parseMarkdownBlocks(markdown, title)) {
+  const anchors: Array<string | undefined> = [];
+  for (const block of blocks) {
     if (block.type !== "heading") {
       continue;
     }
     const baseSlug = lessonHeadingAnchorSlug(block.text);
     if (baseSlug.length === 0) {
+      anchors.push(undefined);
       continue;
     }
     const previousCount = seen.get(baseSlug) ?? 0;
     seen.set(baseSlug, previousCount + 1);
+    // Keep these IDs identical to fixtures/lesson-heading-anchors.json and hint sectionAnchor values.
+    // Prefixing them to avoid collisions with app chrome IDs would break the shared fixture algorithm
+    // and existing lesson hash targets.
     anchors.push(previousCount === 0 ? baseSlug : `${baseSlug}-${previousCount}`);
   }
   return anchors;

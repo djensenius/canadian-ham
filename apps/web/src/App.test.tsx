@@ -10,6 +10,7 @@ import { StrictMode } from "react";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
+import { type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import { generateMorseExamText, profileForName } from "@canadian-ham/morse-engine";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
@@ -119,6 +120,29 @@ function correctAnswerChoiceForCurrentQuestion(): HTMLElement {
   const correctChoice = screen.getAllByTestId("answer-choice").find((choice) => (choice.textContent ?? "").includes(correctAnswerText));
   assert.ok(correctChoice);
   return correctChoice;
+}
+
+async function startDueReviewForQuestion(questionId: string): Promise<void> {
+  const user = userEvent.setup();
+  await user.selectOptions(screen.getByLabelText("Practice scope"), "due");
+  await user.click(screen.getByRole("button", { name: "Start set" }));
+  await waitFor(() => assert.equal(currentPracticeQuestionId(), questionId));
+}
+
+function weakDueProgressRecord(questionId: string): QuestionProgressRecord {
+  return {
+    questionId,
+    bankId: "basic-2025-07-15",
+    attempts: 3,
+    correctAttempts: 2,
+    lastAttemptedAt: "2026-01-01T00:00:00.000Z",
+    lastResult: "incorrect",
+    lastAnsweredWithHelp: false,
+    recentResults: [true, true, false],
+    recentAnsweredWithHelp: [false, false, false],
+    leitner: { box: 0, dueAt: fixedNow },
+    notes: null,
+  };
 }
 
 function lessonHeadingTextForHintLink(hint: QuestionHint): string | null {
@@ -1161,11 +1185,14 @@ describe("App accessibility and flows", () => {
 
     cleanup();
     window.location.hash = "#/practice";
+    const helpedQuestionId = "B-005-004-002";
     const helpedStore = createStore("hint-progress-helped");
+    await helpedStore.putQuestionProgressMany([weakDueProgressRecord(helpedQuestionId)]);
     render(<App store={helpedStore} now={() => fixedNow} seedFactory={() => "hint-progress-seed"} />);
 
     await screen.findByRole("heading", { name: "Practice" });
     await screen.findByText(/Question 1 of/);
+    await startDueReviewForQuestion(helpedQuestionId);
     vi.useFakeTimers();
     try {
       fireEvent.click(screen.getByRole("button", { name: "Hint" }));
@@ -1176,18 +1203,90 @@ describe("App accessibility and flows", () => {
     } finally {
       vi.useRealTimers();
     }
-    await waitFor(async () => assert.equal((await helpedStore.getQuestionProgress()).length, 1));
-    const helpedRecord = (await helpedStore.getQuestionProgress())[0]!;
+    await waitFor(async () => assert.equal((await helpedStore.getQuestionProgress())[0]?.attempts, 4));
+    const helpedRecord = (await helpedStore.getQuestionProgress()).find((record) => record.questionId === helpedQuestionId)!;
     assert.equal(helpedRecord.lastAnsweredWithHelp, true);
-    assert.deepEqual(helpedRecord.recentAnsweredWithHelp, [true]);
+    assert.deepEqual(helpedRecord.recentAnsweredWithHelp, [false, false, false, true]);
     assert.equal(helpedRecord.leitner.box, 0);
     assert.equal(helpedRecord.leitner.dueAt, fixedNow);
+
+    fireEvent.click(screen.getByRole("button", { name: "Home" }));
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    fireEvent.click(screen.getByText("Weak subsections"));
+    assert.ok(screen.getByText(new RegExp(testQuestions.find((question) => question.id === helpedQuestionId)?.subsectionId ?? "^$", "u")));
   });
 
-  it("opens the generic lesson link at the anchored heading without discarding the practice session", async () => {
+  it("does not restart hint qualification on re-render and does not count hints closed or left before 0.5 seconds", async () => {
+    const stableTimerQuestionId = "B-005-004-002";
+    window.location.hash = "#/practice";
+    const stableStore = createStore("hint-stable-rerender");
+    await stableStore.putQuestionProgressMany(applyPracticeAnswer([], stableTimerQuestionId, 1, fixedNow));
+    render(<App store={stableStore} now={() => fixedNow} seedFactory={() => "hint-stable-rerender"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(stableTimerQuestionId);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(300); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 2" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(300); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await stableStore.getQuestionProgress()).find((record) => record.questionId === stableTimerQuestionId)?.lastAnsweredWithHelp, true));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const closedStore = createStore("hint-closed-before-qualified");
+    render(<App store={closedStore} now={() => fixedNow} seedFactory={() => "hint-closed-before-qualified"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(screen.getByRole("button", { name: "Close tool" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(100); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await closedStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const changedStore = createStore("hint-question-changed-before-qualified");
+    render(<App store={changedStore} now={() => fixedNow} seedFactory={() => "hint-question-changed-before-qualified"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const firstQuestionId = currentPracticeQuestionId();
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(screen.getByRole("button", { name: "Next" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(100); });
+      fireEvent.click(screen.getByRole("button", { name: "Previous" }));
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await changedStore.getQuestionProgress()).find((record) => record.questionId === firstQuestionId)?.lastAnsweredWithHelp, false));
+  });
+
+  it("opens the generic lesson link at the anchored heading without discarding helped practice state", async () => {
     window.location.hash = "#/practice";
     const store = createStore("hint-lesson-link");
-    const user = userEvent.setup();
     render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-lesson-link"} />);
 
     await screen.findByRole("heading", { name: "Practice" });
@@ -1195,29 +1294,147 @@ describe("App accessibility and flows", () => {
     const questionId = currentPracticeQuestionId();
     const hint = hintForQuestion(questionId, "basic-2025-07-15");
     assert.ok(hint);
+    assert.ok(hint.lessonLink.sectionAnchor);
     const linkedLesson = lessonsById.get(hint.lessonLink.lessonId);
     assert.ok(linkedLesson);
     const linkedHeadingText = lessonHeadingTextForHintLink(hint);
+    assert.ok(linkedHeadingText);
 
-    await user.click(screen.getByRole("button", { name: "Hint" }));
+    fireEvent.click(screen.getByRole("button", { name: "Hint" }));
     const hintPanel = await screen.findByRole("region", { name: "Hint" });
-    await user.click(within(hintPanel).getByRole("button", { name: "Show Hint 1" }));
-    if (hint.hints.length === 2) {
-      await user.click(within(hintPanel).getByRole("button", { name: "Show Hint 2" }));
+    vi.useFakeTimers();
+    try {
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 1" }));
+      if (hint.hints.length === 2) {
+        fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 2" }));
+      }
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
     }
     assert.equal((hintPanel.textContent ?? "").includes(linkedLesson.title.en), false);
-    if (linkedHeadingText !== null) {
-      assert.equal((hintPanel.textContent ?? "").includes(linkedHeadingText), false);
+    assert.equal((hintPanel.textContent ?? "").includes(linkedHeadingText), false);
+    const lessonLink = within(hintPanel).getByRole("link", { name: "Review in lesson" }) as HTMLAnchorElement;
+    assert.equal(lessonLink.getAttribute("href")?.endsWith(`/${hint.lessonLink.lessonId}`), true);
+    for (const attribute of Array.from(lessonLink.attributes)) {
+      assert.equal(attribute.value.includes(hint.lessonLink.sectionAnchor), false, `${attribute.name} leaked the section anchor`);
+      assert.equal(attribute.value.includes(linkedHeadingText), false, `${attribute.name} leaked the linked heading text`);
     }
 
-    await user.click(within(hintPanel).getByRole("link", { name: "Review in lesson" }));
+    fireEvent.click(lessonLink);
     await screen.findByRole("heading", { name: linkedLesson.title.en });
-    if (hint.lessonLink.sectionAnchor !== undefined) {
-      await waitFor(() => assert.equal(document.activeElement?.id, hint.lessonLink.sectionAnchor));
-    }
+    await waitFor(() => assert.equal(document.activeElement?.id, hint.lessonLink.sectionAnchor));
 
-    await user.click(screen.getByRole("button", { name: "Practice" }));
+    fireEvent.click(screen.getByRole("button", { name: "Practice" }));
     await screen.findByText(new RegExp(questionId));
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    await waitFor(async () => assert.equal((await store.getQuestionProgress())[0]?.lastAnsweredWithHelp, true));
+  });
+
+  it("keeps helped state across the lesson link in review-later mode", async () => {
+    const questionId = "B-005-004-002";
+    const store = createStore("hint-lesson-link-review-later");
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    await store.putQuestionProgressMany(applyPracticeAnswer([], questionId, 1, fixedNow));
+    window.location.hash = "#/practice";
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-lesson-link-review-later"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(questionId);
+    const hint = hintForQuestion(questionId, "basic-2025-07-15");
+    assert.ok(hint);
+    assert.ok(hint.lessonLink.sectionAnchor);
+    const linkedLesson = lessonsById.get(hint.lessonLink.lessonId);
+    assert.ok(linkedLesson);
+
+    fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+    const hintPanel = await screen.findByRole("region", { name: "Hint" });
+    vi.useFakeTimers();
+    try {
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 1" }));
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 2" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    fireEvent.click(within(hintPanel).getByRole("link", { name: "Review in lesson" }));
+    await screen.findByRole("heading", { name: linkedLesson.title.en });
+
+    fireEvent.click(screen.getByRole("button", { name: "Practice" }));
+    await screen.findByText(new RegExp(questionId));
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    fireEvent.click(screen.getByRole("button", { name: "Submit practice set" }));
+    await waitFor(async () => assert.equal((await store.getQuestionProgress()).find((record) => record.questionId === questionId)?.lastAnsweredWithHelp, true));
+  });
+
+  it("counts review-later hints viewed after selection but does not change immediate answers already scored", async () => {
+    const reviewLaterQuestionId = "B-005-004-002";
+    const reviewLaterStore = createStore("hint-review-later-after-selection");
+    await reviewLaterStore.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    await reviewLaterStore.putQuestionProgressMany(applyPracticeAnswer([], reviewLaterQuestionId, 1, fixedNow));
+    window.location.hash = "#/practice";
+    render(<App store={reviewLaterStore} now={() => fixedNow} seedFactory={() => "hint-review-later-after-selection"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(reviewLaterQuestionId);
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Submit practice set" }));
+    await waitFor(async () => assert.equal((await reviewLaterStore.getQuestionProgress()).find((record) => record.questionId === reviewLaterQuestionId)?.lastAnsweredWithHelp, true));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const immediateStore = createStore("hint-immediate-after-scored");
+    render(<App store={immediateStore} now={() => fixedNow} seedFactory={() => "hint-immediate-after-scored"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    await waitFor(async () => assert.equal((await immediateStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false));
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    assert.equal(screen.getByTestId("hint-live-status").textContent?.includes("This answer will be recorded with help."), false);
+    assert.equal((await immediateStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false);
+  });
+
+  it("shows localized French hint content in the App without panel-styled lesson notes", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("hint-french-app-display");
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-french-app-display"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/u);
+    const hint = hintForQuestion(currentPracticeQuestionId(), "basic-2025-07-15");
+    assert.ok(hint);
+    fireEvent.click(screen.getByRole("button", { name: "Indice" }));
+    const hintPanel = await screen.findByRole("region", { name: "Indice" });
+    fireEvent.click(within(hintPanel).getByRole("button", { name: "Afficher l’indice 1" }));
+    assert.match(hintPanel.textContent ?? "", new RegExp(hint.hints[0]!.fr.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u"));
+    if (hint.hints.length === 2) {
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Afficher l’indice 2" }));
+    }
+    assert.ok(within(hintPanel).getByRole("link", { name: "Revoir dans la leçon" }));
+    const notice = screen.getByText(/Leçon offerte en anglais seulement/u);
+    assert.equal(notice.classList.contains("hint-lesson-link__notice"), true);
+    assert.equal(notice.classList.contains("reference-note"), false);
   });
 
   it("keeps practice questions and answers operable with calculator or reference tools open at phone, tablet, and desktop widths", async () => {
