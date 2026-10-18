@@ -149,8 +149,10 @@ private struct CanadianHamVisionRootView: View {
     private func loadBankIfNeeded() {
         guard bank == nil, loadError == nil else { return }
         do {
-            bank = try QuestionBankStore.load()
-            contentLibrary = try ContentLibrary.load()
+            let loadedBank = try QuestionBankStore.load()
+            let loadedContentLibrary = try ContentLibrary.load()
+            bank = loadedBank
+            contentLibrary = loadedContentLibrary
         } catch {
             loadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
@@ -727,7 +729,6 @@ private struct VisionHintPanel: View {
                 .strokeBorder(DesignTokens.Colors.border, lineWidth: 1.5)
         )
         .glassBackgroundEffect()
-        .accessibilityIdentifier("vision-hint-panel")
         .onAppear { syncQualificationTimer() }
         .onDisappear { qualificationTimer.cancel() }
         .onChange(of: hint.questionId) { _, _ in syncQualificationTimer() }
@@ -788,6 +789,7 @@ private struct VisionLessonView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                     Button("Practice", action: onPractice) // l10n: localized
                         .buttonStyle(.bordered)
+                        .accessibilityIdentifier("lesson-return-to-practice-button")
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         Text(englishVision(lesson.id)) // l10n: content(en)
                             .font(DesignTokens.FontScale.caption.weight(.semibold))

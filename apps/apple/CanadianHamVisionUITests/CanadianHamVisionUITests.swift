@@ -83,7 +83,7 @@ final class CanadianHamVisionUITests: XCTestCase {
     }
 
     func testPracticeHintLadderLessonLinkAndAudit() throws {
-        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-006", questionID: "B-006-008-004")
+        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-006", questionID: "B-006-008-004", language: "fr", interfaceLanguage: "fr")
         app.launch()
         defer { app.terminate() }
 
@@ -96,13 +96,17 @@ final class CanadianHamVisionUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.waitForExistence(timeout: 5), "Hint 2 should appear after the second ladder action")
         let review = app.buttons["hint-review-in-lesson-button"].firstMatch
         XCTAssertTrue(review.waitForExistence(timeout: 5), "Last hint level should expose the generic lesson link")
+        XCTAssertEqual(review.label, "Revoir dans la leçon", "Lesson link label should stay generic and localized")
+        XCTAssertTrue(app.staticTexts["hint-english-only-lesson-notice"].firstMatch.waitForExistence(timeout: 5), "French UI should note that lesson bodies are currently English-only")
+        XCTAssertFalse(anyLabel(in: app, contains: "Polarization, dipoles, and wavelength"), "Hint link must not reveal the lesson title before the question is answered")
+        XCTAssertFalse(anyLabel(in: app, contains: "Wavelength and frequency"), "Hint link must not reveal the linked section heading before the question is answered")
         try performAudit(on: app, context: "visionOS open hint")
 
         scrollUntilHittable(review, in: app, maxSwipes: 6)
         review.tap()
         XCTAssertTrue(app.descendants(matching: .any)["vision-lesson-screen"].firstMatch.waitForExistence(timeout: 10), "Review in lesson should open the visionOS lesson reader")
         XCTAssertTrue(app.staticTexts["lesson-heading-wavelength-and-frequency"].firstMatch.waitForExistence(timeout: 10), "Lesson link should open at the sectionAnchor")
-        app.buttons["Practice"].firstMatch.tap()
+        app.buttons["lesson-return-to-practice-button"].firstMatch.tap()
         XCTAssertTrue(app.descendants(matching: .any)["vision-practice-screen"].firstMatch.waitForExistence(timeout: 5), "Practice button should return to the in-progress session")
         XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.exists, "Hint state should survive the lesson round trip")
     }
@@ -213,7 +217,8 @@ final class CanadianHamVisionUITests: XCTestCase {
         categoryID: String = "B-001",
         questionID: String = "B-001-002-002",
         answeredSourceIndex: Int? = nil,
-        language: String? = nil
+        language: String? = nil,
+        interfaceLanguage: String? = nil
     ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
@@ -227,6 +232,9 @@ final class CanadianHamVisionUITests: XCTestCase {
         }
         if let language {
             app.launchArguments += ["-CanadianHamLanguage", language]
+        }
+        if let interfaceLanguage {
+            app.launchArguments += ["-AppleLanguages", "(\(interfaceLanguage))", "-AppleLocale", "\(interfaceLanguage)_CA"]
         }
         return app
     }

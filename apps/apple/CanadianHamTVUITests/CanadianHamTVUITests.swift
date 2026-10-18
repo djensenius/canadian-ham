@@ -123,7 +123,7 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     func testPracticeHintLadderLessonLinkAndAudit() throws {
-        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-006", questionID: "B-006-008-004", evidenceFocus: "hint")
+        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-006", questionID: "B-006-008-004", language: "fr", evidenceFocus: "hint", interfaceLanguage: "fr")
         app.launch()
         defer { app.terminate() }
 
@@ -135,10 +135,14 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "Two-level files should reveal Hint 2 only after Hint 1")
         openHintLevel(2, in: app)
         XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.waitForExistence(timeout: 5), "Hint 2 should appear after the second ladder action")
-        XCTAssertTrue(app.descendants(matching: .any)["hint-review-in-lesson-button"].firstMatch.waitForExistence(timeout: 5), "Last hint level should expose the generic lesson link")
+        let review = app.descendants(matching: .any)["hint-review-in-lesson-button"].firstMatch
+        XCTAssertTrue(review.waitForExistence(timeout: 5), "Last hint level should expose the generic lesson link")
+        XCTAssertEqual(review.label, "Revoir dans la leçon", "Lesson link label should stay generic and localized")
+        XCTAssertTrue(app.staticTexts["hint-english-only-lesson-notice"].firstMatch.waitForExistence(timeout: 5), "French UI should note that lesson bodies are currently English-only")
+        XCTAssertFalse(anyLabel(in: app, contains: "Polarization, dipoles, and wavelength"), "Hint link must not reveal the lesson title before the question is answered")
+        XCTAssertFalse(anyLabel(in: app, contains: "Wavelength and frequency"), "Hint link must not reveal the linked section heading before the question is answered")
         try performAudit(on: app, context: "tvOS open hint")
 
-        let review = app.descendants(matching: .any)["hint-review-in-lesson-button"].firstMatch
         pressUntilFocused(review, remote: XCUIRemote.shared, buttons: [.down, .right, .left], maxCycles: 8)
         XCUIRemote.shared.press(.select)
         XCTAssertTrue(app.descendants(matching: .any)["tv-lesson-screen"].firstMatch.waitForExistence(timeout: 10), "Review in lesson should open the tvOS lesson reader")
@@ -270,6 +274,7 @@ final class CanadianHamTVUITests: XCTestCase {
         answeredSourceIndex: Int? = nil,
         language: String? = nil,
         evidenceFocus: String? = nil,
+        interfaceLanguage: String? = nil,
         reduceMotion: Bool = false
     ) -> XCUIApplication {
         let app = XCUIApplication()
@@ -287,6 +292,9 @@ final class CanadianHamTVUITests: XCTestCase {
         }
         if let evidenceFocus {
             app.launchArguments += ["-CanadianHamTVEvidenceFocus", evidenceFocus]
+        }
+        if let interfaceLanguage {
+            app.launchArguments += ["-AppleLanguages", "(\(interfaceLanguage))", "-AppleLocale", "\(interfaceLanguage)_CA"]
         }
         if reduceMotion {
             app.launchArguments += ["-CanadianHamReduceMotion", "enabled"]

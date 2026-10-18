@@ -88,6 +88,7 @@ final class CanadianHamVisionTests: XCTestCase {
             .sorted()
     }
 
+    @MainActor
     func testVisionHintLadderHelpRecordingAndLessonAnchors() throws {
         let appBundle = try builtAppBundle(named: "CanadianHamVision")
         let library = try ContentLibrary.load(from: appBundle)
@@ -118,6 +119,7 @@ final class CanadianHamVisionTests: XCTestCase {
             answeredWithHelpQuestionIds: qualification.answeredWithHelpQuestionIds
         ))
 
+        XCTAssertEqual(HintVisibilityQualificationTimer.defaultDelayNanoseconds, 500_000_000, "visionOS uses the shared 0.5 s hint visibility rule")
         let updated = try applyAnswer(existing: nil, update: AnswerUpdate(
             questionId: twoLevelHint.questionId,
             bankId: "basic-2025-07-15",
@@ -126,7 +128,19 @@ final class CanadianHamVisionTests: XCTestCase {
             answeredWithHelp: true
         ))
         XCTAssertTrue(updated.lastAnsweredWithHelp)
+        XCTAssertEqual(updated.recentAnsweredWithHelp, [true])
         XCTAssertEqual(updated.leitner.box, 0, "Helped correct answers must not advance mastery")
+        XCTAssertEqual(updated.leitner.dueAt, "2026-01-01T00:00:00.000Z", "Helped correct answers remain due for spaced review")
+        XCTAssertEqual(try dueCount(records: [updated], now: "2026-01-01T00:00:00.000Z"), 1)
+
+        let secondHelped = try applyAnswer(existing: updated, update: AnswerUpdate(
+            questionId: twoLevelHint.questionId,
+            bankId: "basic-2025-07-15",
+            isCorrect: true,
+            now: "2026-01-01T00:01:00.000Z",
+            answeredWithHelp: true
+        ))
+        XCTAssertEqual(weakSubsectionIds(records: [secondHelped]), ["B-006-008"], "Helped correct answers count as attempts without proficiency credit in weak-area calculations")
     }
 
     func testVisionReferencePointersAreHiddenBecauseReferenceSheetIsUnavailable() {

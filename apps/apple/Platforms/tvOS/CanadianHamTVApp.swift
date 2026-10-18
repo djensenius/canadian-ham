@@ -248,8 +248,10 @@ private struct CanadianHamTVRootView: View {
     private func loadBankIfNeeded() {
         guard bank == nil, loadError == nil else { return }
         do {
-            bank = try QuestionBankStore.load()
-            contentLibrary = try ContentLibrary.load()
+            let loadedBank = try QuestionBankStore.load()
+            let loadedContentLibrary = try ContentLibrary.load()
+            bank = loadedBank
+            contentLibrary = loadedContentLibrary
         } catch {
             loadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
@@ -470,6 +472,7 @@ private struct TVPracticeView: View {
                                         openLesson: onOpenHintLesson,
                                         requestsEvidenceFocus: evidenceFocus == .hint
                                     )
+                                    .id(Self.hintAnchorID)
                                 }
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -515,6 +518,15 @@ private struct TVPracticeView: View {
                 guard selectedSourceIndex != nil else { return }
                 scrollFeedbackIntoView(with: scrollProxy)
             }
+            .onChange(of: currentQuestionHint?.questionId) { _, _ in
+                scrollHintActionIntoViewIfRequested(with: scrollProxy)
+            }
+            .onChange(of: session.hintLevelsByQuestionId[session.currentQuestion?.id ?? ""] ?? 0) { _, _ in
+                scrollHintActionIntoViewIfRequested(with: scrollProxy)
+            }
+            .onAppear {
+                scrollHintActionIntoViewIfRequested(with: scrollProxy)
+            }
         }
         .onAppear {
             session.resetIfNeeded(for: category.id)
@@ -526,12 +538,24 @@ private struct TVPracticeView: View {
     }
 
     private static let feedbackAnchorID = "tv-feedback-anchor"
+    private static let hintAnchorID = "tv-hint-anchor"
+    private static let hintActionAnchorID = "tv-hint-action-anchor"
 
     private func scrollFeedbackIntoView(with proxy: ScrollViewProxy) {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 150_000_000)
             withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
                 proxy.scrollTo(Self.feedbackAnchorID, anchor: .bottom)
+            }
+        }
+    }
+
+    private func scrollHintActionIntoViewIfRequested(with proxy: ScrollViewProxy) {
+        guard evidenceFocus == .hint, currentQuestionHint != nil else { return }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 250_000_000)
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
+                proxy.scrollTo(Self.hintActionAnchorID, anchor: .center)
             }
         }
     }
@@ -705,6 +729,7 @@ private struct TVHintPanel: View {
 
     @State private var qualificationTimer = HintVisibilityQualificationTimer()
     @FocusState private var isShowHintFocused: Bool
+    @FocusState private var isReviewFocused: Bool
 
     private var lastAvailableLevel: Int { hint.hints.count }
     private var nextLevel: Int? { visibleLevel < lastAvailableLevel ? visibleLevel + 1 : nil }
@@ -752,6 +777,7 @@ private struct TVHintPanel: View {
                     Button("Review in lesson") { openLesson(hint.lessonLink) } // l10n: localized
                         .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                         .buttonStyle(TVSecondaryButtonStyle())
+                        .focused($isReviewFocused)
                         .accessibilityIdentifier("hint-review-in-lesson-button")
                     if tvUsesFrenchInterface {
                         Text("Lesson offered in English only.")
@@ -760,6 +786,7 @@ private struct TVHintPanel: View {
                             .accessibilityIdentifier("hint-english-only-lesson-notice")
                     }
                 }
+                .id("tv-hint-action-anchor")
             }
 
             if let nextLevel {
@@ -771,6 +798,7 @@ private struct TVHintPanel: View {
                 .buttonStyle(TVPrimaryButtonStyle())
                 .focused($isShowHintFocused)
                 .accessibilityIdentifier("hint-show-level-\(nextLevel)-button")
+                .id("tv-hint-action-anchor")
             }
         }
         .padding(DesignTokens.Spacing.xl)
@@ -780,16 +808,16 @@ private struct TVHintPanel: View {
             RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous)
                 .strokeBorder(DesignTokens.Colors.border, lineWidth: 2)
         )
-        .accessibilityIdentifier("tv-hint-panel")
         .onAppear {
             syncQualificationTimer()
-            if requestsEvidenceFocus {
-                isShowHintFocused = true
-            }
+            syncEvidenceFocus()
         }
         .onDisappear { qualificationTimer.cancel() }
         .onChange(of: hint.questionId) { _, _ in syncQualificationTimer() }
-        .onChange(of: visibleLevel) { _, _ in syncQualificationTimer() }
+        .onChange(of: visibleLevel) { _, _ in
+            syncQualificationTimer()
+            syncEvidenceFocus()
+        }
         .onChange(of: canRecordHelp) { _, _ in syncQualificationTimer() }
         .onChange(of: answeredWithHelpQualified) { _, _ in syncQualificationTimer() }
     }
@@ -817,6 +845,15 @@ private struct TVHintPanel: View {
         var text = AttributedString(language == .french ? entry.fr : entry.en)
         text.languageIdentifier = language.accessibilityLanguageCode
         return text
+    }
+
+    private func syncEvidenceFocus() {
+        guard requestsEvidenceFocus else { return }
+        if nextLevel != nil {
+            isShowHintFocused = true
+        } else if showsLessonLink {
+            isReviewFocused = true
+        }
     }
 
     private func syncQualificationTimer() {
@@ -847,6 +884,7 @@ private struct TVLessonView: View {
                     Button("Practice", action: onPractice) // l10n: localized
                         .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                         .buttonStyle(TVSecondaryButtonStyle())
+                        .accessibilityIdentifier("lesson-return-to-practice-button")
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         Text(english(lesson.id)) // l10n: content(en)
                             .font(DesignTokens.FontScale.caption.weight(.semibold))
