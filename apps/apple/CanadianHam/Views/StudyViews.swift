@@ -474,8 +474,8 @@ struct PracticeSessionView: View {
         }
         .onAppear { configureDuoPostureProviderIfNeeded() }
         .onDisappear { clearDuoPostureProviderCallback() }
-        .onChange(of: scope) { _, _ in configureDuoPostureProviderIfNeeded() }
-        .onChange(of: ObjectIdentifier(state)) { _, _ in configureDuoPostureProviderIfNeeded() }
+        .onChange(of: scope) { _, _ in resetHingePeekForSessionChange() }
+        .onChange(of: ObjectIdentifier(state)) { _, _ in resetHingePeekForSessionChange() }
         .onChange(of: state.currentIndex) { _, _ in resetHingePeekForQuestionChange() }
         .onChange(of: state.selectedByQuestionId) { _, _ in applyHingePeekPresentation(.eligibilityChanged) }
         .onChange(of: state.reviewSubmitted) { _, _ in applyHingePeekPresentation(.eligibilityChanged) }
@@ -728,7 +728,7 @@ struct PracticeSessionView: View {
 
         if result.startedPeeking {
             applyHingePeekPresentation(.postureStarted)
-        } else if !result.isPeeking {
+        } else if result.endedByPostureReset {
             applyHingePeekPresentation(.postureEnded)
         }
     }
@@ -797,6 +797,13 @@ struct PracticeSessionView: View {
         applyHingePeekPresentation(.questionChanged)
         hingePeekStateMachine.reset()
         cancelHingePeekDwellRecheck()
+    }
+
+    private func resetHingePeekForSessionChange() {
+        hingePeekPresentationState = HingeHintPeekPresentationState()
+        hingePeekStateMachine.reset()
+        cancelHingePeekDwellRecheck()
+        configureDuoPostureProviderIfNeeded()
     }
 #endif
 

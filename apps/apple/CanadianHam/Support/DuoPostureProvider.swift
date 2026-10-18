@@ -48,6 +48,7 @@ struct HingePeekConfiguration: Equatable, Sendable {
 struct HingePeekUpdateResult: Equatable, Sendable {
     var isPeeking: Bool
     var startedPeeking: Bool
+    var endedByPostureReset: Bool
     var pendingDwellDeadline: TimeInterval?
 }
 
@@ -71,21 +72,22 @@ struct HingePeekStateMachine: Equatable, Sendable {
         lastSample = sample
         guard sample.posture == .partiallyOpen, let angleDegrees = sample.angleDegrees else {
             reset()
-            return result(startedPeeking: false)
+            return result(startedPeeking: false, endedByPostureReset: true)
         }
 
         let wasPeeking = isPeeking
         if isPeeking {
             let toleratedRange = (configuration.peekAngleRange.lowerBound - configuration.edgeJitterTolerance)...(configuration.peekAngleRange.upperBound + configuration.edgeJitterTolerance)
             guard toleratedRange.contains(angleDegrees) else {
-                reset()
+                clearCandidate()
+                isPeeking = false
                 return result(startedPeeking: false)
             }
             return result(startedPeeking: !wasPeeking && isPeeking)
         }
 
         guard configuration.peekAngleRange.contains(angleDegrees) else {
-            reset()
+            clearCandidate()
             return result(startedPeeking: false)
         }
 
@@ -118,14 +120,18 @@ struct HingePeekStateMachine: Equatable, Sendable {
     }
 
     mutating func reset() {
-        stableCandidateStartedAt = nil
-        stableCandidateStartedAngle = nil
+        clearCandidate()
         lastSample = nil
         isPeeking = false
     }
 
-    private func result(startedPeeking: Bool, pendingDwellDeadline: TimeInterval? = nil) -> HingePeekUpdateResult {
-        HingePeekUpdateResult(isPeeking: isPeeking, startedPeeking: startedPeeking, pendingDwellDeadline: pendingDwellDeadline)
+    private mutating func clearCandidate() {
+        stableCandidateStartedAt = nil
+        stableCandidateStartedAngle = nil
+    }
+
+    private func result(startedPeeking: Bool, endedByPostureReset: Bool = false, pendingDwellDeadline: TimeInterval? = nil) -> HingePeekUpdateResult {
+        HingePeekUpdateResult(isPeeking: isPeeking, startedPeeking: startedPeeking, endedByPostureReset: endedByPostureReset, pendingDwellDeadline: pendingDwellDeadline)
     }
 }
 

@@ -132,10 +132,24 @@ final class HintSessionStateTests: XCTestCase {
 
         XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0).isPeeking)
         XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.8).isPeeking)
-        XCTAssertFalse(machine.update(status: .unfolded, angleDegrees: 180, timestamp: 0.9).isPeeking)
+        let unfolded = machine.update(status: .unfolded, angleDegrees: 180, timestamp: 0.9)
+        XCTAssertFalse(unfolded.isPeeking)
+        XCTAssertTrue(unfolded.endedByPostureReset)
         XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 1.0).isPeeking, "After fully opening, a new dwell must start")
         XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 1.8).isPeeking)
-        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 1.9).isPeeking)
+        let closed = machine.update(status: .closed, angleDegrees: 0, timestamp: 1.9)
+        XCTAssertFalse(closed.isPeeking)
+        XCTAssertTrue(closed.endedByPostureReset)
+    }
+
+    func testHingePeekLeavingToleranceDoesNotResetDismissalSuppression() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
+
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0).isPeeking)
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.8).isPeeking)
+        let outsideTolerance = machine.update(status: .partiallyOpen, angleDegrees: 38.1, timestamp: 0.9)
+        XCTAssertFalse(outsideTolerance.isPeeking)
+        XCTAssertFalse(outsideTolerance.endedByPostureReset, "Moving outside the peek range should end dwell without allowing a dismissed panel to reopen before closed/fully-open reset")
     }
 
     func testHingePeekEligibilityAllowsPracticeReviewLaterButNeverMockExamOrScoredImmediateAnswer() {
