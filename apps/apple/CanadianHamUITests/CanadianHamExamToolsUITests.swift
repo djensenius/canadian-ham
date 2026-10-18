@@ -485,16 +485,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Expected the calculator value before the simulated fold request")
 
         applySimulatedWindowSizeChange(in: app, expectedSizeValue: "382x644", context: "unfolded to folded")
+        if !app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.exists {
+            openTool(.calculator, in: app)
+        }
 #if os(iOS)
         let expectedPresentation: SimulatedToolPresentationExpectation = UIDevice.current.userInterfaceIdiom == .phone ? .sheet : .inspector
 #else
         let expectedPresentation: SimulatedToolPresentationExpectation = .inspector
 #endif
         assertSimulatedLayoutChanged(in: app, to: expectedPresentation, context: "unfolded to folded")
-
-        if !app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.exists {
-            openTool(.calculator, in: app)
-        }
         XCTAssertTrue(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Expected the calculator after the simulated fold request")
 
         XCTAssertTrue(question.waitForExistence(timeout: 5), "Expected to remain in the practice session after the simulated fold request")
@@ -824,11 +823,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             }
         }
 
+        let panel = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+        let panelDescription = panel.exists ? frameDescription(panel.frame) : "missing"
         switch expected {
         case .inspector:
-            XCTFail("\(context): expected the simulated layout change to replace the bottom sheet with the inspector. Window: \(frameDescription(app.windows.firstMatch.frame)); panel: \(frameDescription(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.frame))", file: file, line: line)
+            XCTFail("\(context): expected the simulated layout change to replace the bottom sheet with the inspector. Window: \(frameDescription(app.windows.firstMatch.frame)); panel: \(panelDescription)", file: file, line: line)
         case .sheet:
-            XCTFail("\(context): expected the simulated layout change to replace the inspector with the bottom sheet. Window: \(frameDescription(app.windows.firstMatch.frame)); panel: \(frameDescription(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.frame))", file: file, line: line)
+            XCTFail("\(context): expected the simulated layout change to replace the inspector with the bottom sheet. Window: \(frameDescription(app.windows.firstMatch.frame)); panel: \(panelDescription)", file: file, line: line)
         }
     }
 
