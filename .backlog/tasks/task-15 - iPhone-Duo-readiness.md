@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 03:10'
+updated_date: '2026-10-18 03:19'
 labels:
   - apple
   - 'legacy:T-706'
@@ -26,9 +26,9 @@ Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026
 <!-- AC:BEGIN -->
 - [x] #1 The app builds with Xcode 27.1+ and runs on the iPhone Duo simulator
 - [x] #2 Practice and mock exam state survives fold/unfold
-- [x] #3 The layouts adapt between the outer and inner displays without truncation
+- [ ] #3 The layouts adapt between the outer and inner displays without truncation
 - [x] #4 The UI tests and accessibility audits run on the iPhone Duo simulator
-- [x] #5 Unfolded iPhone Duo shows the exam tools and the question side by side (width-driven, sharing the iPad side-panel code)
+- [ ] #5 Unfolded iPhone Duo shows the exam tools and the question side by side (width-driven, sharing the iPad side-panel code)
 - [ ] #6 In practice and review sessions, a slight open shows Hint 1 after a stable dwell; a normal unfold never triggers it; mock exams never peek
 - [ ] #7 A hint counts as used only after at least 0.5 s of visibility (button, peek or VoiceOver); unit tests cover the posture state machine and timing
 - [ ] #8 Hinge code is gated by #available(iOS 27.1, *) and an SDK-conditional build setting so the project still builds with older Xcode SDKs
@@ -42,6 +42,8 @@ Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026
 3. Add a posture-provider seam with no hinge implementation yet, plus DEBUG-only test hooks for resize/size-class simulation where needed.
 4. Add or update targeted unit/UI coverage for state preservation and width-driven panel selection, without weakening existing audits.
 5. Validate with targeted iPhone Duo, iPhone 17 Pro, iPad, macOS, and web/l10n checks; check only AC1-AC5 and leave task-15 In Progress for part 2.
+
+6. Address PR #286 review: root-measured unfolded iPhone split layout with regular size-class injection, hysteresis policy tests, runtime fold/unfold UI coverage, SDK flag inversion, and honest task evidence updates.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
