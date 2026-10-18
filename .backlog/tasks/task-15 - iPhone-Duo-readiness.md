@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 19:22'
+updated_date: '2026-10-18 19:28'
 labels:
   - apple
   - 'legacy:T-706'
@@ -46,6 +46,8 @@ Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026
 6. Address PR #286 review: root-measured unfolded iPhone split layout with regular size-class injection, hysteresis policy tests, runtime fold/unfold UI coverage, SDK flag inversion, and honest task evidence updates.
 
 7. Implement TASK-15 part 2: add the gated UIHinge-backed posture provider plus DEBUG simulated posture sequences, route posture updates through a pure hinge-peek dwell state machine, reveal Hint 1 through the existing hint tool/timer only for eligible practice/review questions, and cover the state machine, visibility-timer integration, mock-exam gate and simulated UI flows without changing existing audits.
+
+8. Address PR #292 follow-up: preserve dismissal suppression across lesson disappear/reappear while restarting dwell on appear, tighten peek announcements to real hint-level increases, strengthen reducer/UI coverage for lesson round trips and dismissal suppression, then rerun the requested targeted xbuild tests before committing.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
