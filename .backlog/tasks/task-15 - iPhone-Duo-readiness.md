@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 05:10'
+updated_date: '2026-10-18 06:04'
 labels:
   - apple
   - 'legacy:T-706'
@@ -79,4 +79,6 @@ Additional required Duo practice targets also reproduce on detached origin/main 
 Review follow-up TASK-56 tracks the remaining arbitrary deep Learn NavigationPath synchronization across compact/split Duo layout changes. This PR syncs the root selection and RootView-owned practice/mock/hint routes needed for the part 1 fold/unfold state test.
 
 Review fix validation 2026-10-18: implemented root-measured unfolded iPhone layout with regular horizontal size-class injection, root window-size environment for exam tools, hysteresis policy coverage, deterministic DEBUG resize control, SDK flag inversion to NO_HINGE_API on iphone*27.0*, generated Xcode project twice, and TASK-56 for remaining arbitrary deep Learn path sync. Re-checked AC3/AC5 with qualified evidence: iPad Pro 13-inch new unfolded tests assert frames and full inspector audit; iPhone Duo runs the same simulated unfolded policy and fold/unfold state tests, but its current simulator renders a 382 pt window so frame/audit geometry is intentionally recorded only on real-width destinations. TASK-54 now includes real iPhone Duo unfolded/fold-unfold verification.
+
+coordinator decision 2026-10-18, pending owner confirmation: unfolded Duo portrait (about 669 pt wide) leaves less than a 420 pt exam column beside the 380 pt inspector, so TASK-15 part 1 now enters the iPhone split/inspector path only at width >= 800 pt, height >= 600 pt and non-compact vertical size class, with hysteresis leaving below about 780 pt width. Unfolded landscape (about 951x669 pt) gets the split; unfolded portrait (about 669x951 pt) keeps the sheet. TASK-54 AC4 holds real-device verification for these boundaries.
 <!-- SECTION:NOTES:END -->
