@@ -197,7 +197,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testSimulatedHingeDismissedPeekReopensOnlyAfterReset() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
             "-CanadianHamExamToolInitialDetent", "large",
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:26@5.0,unfolded:180@10.0,partiallyOpen:25@10.3"
+            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:26@5.0,unfolded:180@20.0,partiallyOpen:25@20.3"
         ])
         defer { app.terminate() }
 
@@ -208,7 +208,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(hintPanel.waitForNonExistence(timeout: 2), "Dismissing the peek-opened Hint panel should close it")
         waitBriefly(1.2)
         XCTAssertFalse(hintPanel.exists, "An in-band sample while the same peek posture is active must not reopen a dismissed panel")
-        XCTAssertTrue(hintPanel.waitForExistence(timeout: 12), "After a fully-open reset, a fresh stable dwell may peek again")
+        XCTAssertTrue(hintPanel.waitForExistence(timeout: 25), "After a fully-open reset, a fresh stable dwell may peek again")
     }
 
     func testSimulatedHingePeekStillWorksAfterHintLessonRoundTrip() throws {
