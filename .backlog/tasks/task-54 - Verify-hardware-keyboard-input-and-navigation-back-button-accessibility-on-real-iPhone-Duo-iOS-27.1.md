@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-10-18 01:53'
-updated_date: '2026-10-18 03:19'
+updated_date: '2026-10-18 06:04'
 labels:
   - apple
 dependencies:
@@ -25,7 +25,7 @@ TASK-15 part 1 found four iPhone Duo simulator failures that also reproduce on o
 - [ ] #1 Re-run CanadianHamExamToolsUITests/testCalculatorAutoFocusesHardwareKeyboardOnOpen, testCalculatorKeyboardInputIsFocusScoped, testCalculatorValueResetsForNewMockExam and testHintToolLadderAndLessonLink on a real iPhone Duo or newer iOS 27.1+ simulator and record per-test results
 - [ ] #2 Verify with VoiceOver or Accessibility Inspector that the lesson/result back affordance is reachable and correctly labelled on iPhone Duo
 - [ ] #3 If the failures reproduce on real hardware, fix product code without weakening tests; if they do not, document the simulator limitation and keep TASK-15 tests unchanged
-- [ ] #4 Verify on a real iPhone Duo that unfolded practice shows the question and exam tools side by side, and that a fold/unfold during practice preserves the current question, selected answer and calculator value
+- [ ] #4 Verify on a real iPhone Duo that unfolded landscape (about 951x669 pt) uses the side-by-side question plus exam-tools inspector layout, unfolded portrait (about 669x951 pt) stays on the compact sheet, and fold/unfold in both directions during practice preserves the current question, selected answer and calculator value
 <!-- AC:END -->
 
 ## Implementation Notes
