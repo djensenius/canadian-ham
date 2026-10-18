@@ -1,9 +1,11 @@
 ---
 id: TASK-57
 title: Hint button fails the Dynamic Type audit on iPhone practice
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-18 05:52'
+updated_date: '2026-10-18 05:52'
 labels: []
 dependencies: []
 priority: high
@@ -22,3 +24,12 @@ Regression from #279 (task-50.12). On iPhone 17 Pro, main's CanadianHamPracticeU
 - [ ] #2 testAccessibilityAuditPracticeSessionLight/Dark pass on iPhone 17 Pro and the hint audit tests still pass on iPhone 17 Pro and iPad
 - [ ] #3 The fix is checked against the TASK-55 Duo Dynamic Type finding, and TASK-55 notes are updated
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect the #279 hint/calculator code and git history to isolate why Hint exposes a non-scaling accessibility node while Calculator does not.
+2. Apply the smallest app-side fix so the visible Hint title and accessibility metadata use Dynamic Type-compatible SwiftUI text semantics without audit filters, fixed widths, minimumScaleFactor, or hidden visible text.
+3. Run the requested targeted xbuild tests on iPhone 17 Pro, iPad Pro 13-inch, iPhone Duo, macOS units, and string checks if text sources change.
+4. Record the Duo result on TASK-55, finalize TASK-57 with evidence, commit, push, and open the requested PR.
+<!-- SECTION:PLAN:END -->
