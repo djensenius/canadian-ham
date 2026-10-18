@@ -790,15 +790,19 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func assertSimulatedWindowSizeApplied(in app: XCUIApplication, expectedSizeValue: String, context: String, file: StaticString = #filePath, line: UInt = #line) {
-        let button = app.buttons["debug-simulated-window-size-change-button"].firstMatch
         let deadline = Date().addingTimeInterval(5)
+        var observedValue: String?
+        var observedLabel: String?
         while Date() < deadline {
-            if (button.value as? String) == expectedSizeValue {
+            let button = app.buttons["debug-simulated-window-size-change-button"].firstMatch
+            observedValue = button.value as? String
+            observedLabel = button.label
+            if observedValue == expectedSizeValue || observedLabel?.contains(expectedSizeValue) == true {
                 return
             }
             waitBriefly(0.2)
         }
-        XCTFail("\(context): expected the DEBUG simulated window-size hook to apply \(expectedSizeValue); button value is \(String(describing: button.value))", file: file, line: line)
+        XCTFail("\(context): expected the DEBUG simulated window-size hook to apply \(expectedSizeValue); button value is \(String(describing: observedValue)), label is \(String(describing: observedLabel))", file: file, line: line)
     }
 
     private func assertSimulatedLayoutChanged(in app: XCUIApplication, to expected: SimulatedToolPresentationExpectation, context: String, file: StaticString = #filePath, line: UInt = #line) {

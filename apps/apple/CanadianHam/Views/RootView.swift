@@ -707,7 +707,7 @@ struct RootView: View {
             Button {
                 debugSimulatedWindowSize = size
             } label: {
-                Text(verbatim: "Apply simulated window size change")
+                Text(verbatim: "Apply simulated window size change (\(debugSimulatedWindowSizeAccessibilityValue))")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("debug-simulated-window-size-change-button")
