@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-10-18 01:53'
-updated_date: '2026-10-18 06:04'
+updated_date: '2026-10-18 11:14'
 labels:
   - apple
 dependencies:
@@ -32,4 +32,6 @@ TASK-15 part 1 found four iPhone Duo simulator failures that also reproduce on o
 
 <!-- SECTION:NOTES:BEGIN -->
 Review follow-up 2026-10-18: TASK-54 depends on TASK-15 part 1 / PR #286 for the Duo simulator classification and unfolded-layout hooks; it does not need part 2 hinge-peek work except insofar as Backlog cannot express a dependency on part 1 only.
+
+From the #286 final review: (R2) record the safe-area width actually measured in unfolded landscape on hardware; the 800 pt rule uses the safe-area size, not the full window. (R3) check for a one-frame compact→split flash at launch on an unfolded Duo, since the first frame lays out before the size is measured.
 <!-- SECTION:NOTES:END -->
