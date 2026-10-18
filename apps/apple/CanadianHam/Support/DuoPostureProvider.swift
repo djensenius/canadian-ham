@@ -34,51 +34,98 @@ struct HingePeekConfiguration: Equatable, Sendable {
     /// Require a stable hold so a normal unfold that passes through the band
     /// does not reveal a hint.
     var dwellTime: TimeInterval = 0.7
-    /// Keep the candidate alive through small sensor jitter around the band
-    /// edges without peeking unless the latest sample is back in range.
+    /// Keep an already-visible peek alive through small sensor jitter around
+    /// the band edges. Pre-peek dwell still starts only in the real band.
     var edgeJitterTolerance: Double = 2
+    /// Restart dwell if the hinge keeps moving instead of holding near the
+    /// angle where the candidate began. This is deliberately separate from
+    /// edge jitter because jitter tolerance is only for an active peek.
+    var stableAngleTolerance: Double = 3
 
     static let `default` = HingePeekConfiguration()
+}
+
+struct HingePeekUpdateResult: Equatable, Sendable {
+    var isPeeking: Bool
+    var startedPeeking: Bool
+    var pendingDwellDeadline: TimeInterval?
 }
 
 struct HingePeekStateMachine: Equatable, Sendable {
     private var configuration: HingePeekConfiguration
     private var stableCandidateStartedAt: TimeInterval?
+    private var stableCandidateStartedAngle: Double?
+    private var lastSample: DuoPostureSample?
     private(set) var isPeeking = false
 
     init(configuration: HingePeekConfiguration = .default) {
         self.configuration = configuration
     }
 
-    mutating func update(status: DuoPosture, angleDegrees: Double?, timestamp: TimeInterval) -> Bool {
-        guard status == .partiallyOpen, let angleDegrees else {
+    mutating func update(status: DuoPosture, angleDegrees: Double?, timestamp: TimeInterval) -> HingePeekUpdateResult {
+        let sample = DuoPostureSample(posture: status, angleDegrees: angleDegrees, timestamp: timestamp)
+        return update(sample: sample)
+    }
+
+    mutating func update(sample: DuoPostureSample) -> HingePeekUpdateResult {
+        lastSample = sample
+        guard sample.posture == .partiallyOpen, let angleDegrees = sample.angleDegrees else {
             reset()
-            return false
+            return result(startedPeeking: false)
         }
 
-        let inPeekBand = configuration.peekAngleRange.contains(angleDegrees)
-        let toleratedRange = (configuration.peekAngleRange.lowerBound - configuration.edgeJitterTolerance)...(configuration.peekAngleRange.upperBound + configuration.edgeJitterTolerance)
-        let inToleratedBand = toleratedRange.contains(angleDegrees)
+        let wasPeeking = isPeeking
+        if isPeeking {
+            let toleratedRange = (configuration.peekAngleRange.lowerBound - configuration.edgeJitterTolerance)...(configuration.peekAngleRange.upperBound + configuration.edgeJitterTolerance)
+            guard toleratedRange.contains(angleDegrees) else {
+                reset()
+                return result(startedPeeking: false)
+            }
+            return result(startedPeeking: !wasPeeking && isPeeking)
+        }
 
-        guard inPeekBand || inToleratedBand else {
+        guard configuration.peekAngleRange.contains(angleDegrees) else {
             reset()
-            return false
+            return result(startedPeeking: false)
         }
 
-        if stableCandidateStartedAt == nil {
-            stableCandidateStartedAt = timestamp
+        if let startAngle = stableCandidateStartedAngle,
+           abs(angleDegrees - startAngle) > configuration.stableAngleTolerance {
+            stableCandidateStartedAt = sample.timestamp
+            stableCandidateStartedAngle = angleDegrees
+        } else if stableCandidateStartedAt == nil {
+            stableCandidateStartedAt = sample.timestamp
+            stableCandidateStartedAngle = angleDegrees
         }
 
-        guard let stableCandidateStartedAt else { return false }
-        if inPeekBand, timestamp - stableCandidateStartedAt >= configuration.dwellTime {
+        guard let stableCandidateStartedAt else { return result(startedPeeking: false) }
+        if sample.timestamp - stableCandidateStartedAt + 0.000_001 >= configuration.dwellTime {
             isPeeking = true
+            return result(startedPeeking: true)
         }
-        return isPeeking
+        return result(startedPeeking: false, pendingDwellDeadline: stableCandidateStartedAt + configuration.dwellTime)
+    }
+
+    mutating func recheck(timestamp: TimeInterval) -> HingePeekUpdateResult {
+        guard let lastSample else { return result(startedPeeking: false) }
+        return update(
+            sample: DuoPostureSample(
+                posture: lastSample.posture,
+                angleDegrees: lastSample.angleDegrees,
+                timestamp: timestamp
+            )
+        )
     }
 
     mutating func reset() {
         stableCandidateStartedAt = nil
+        stableCandidateStartedAngle = nil
+        lastSample = nil
         isPeeking = false
+    }
+
+    private func result(startedPeeking: Bool, pendingDwellDeadline: TimeInterval? = nil) -> HingePeekUpdateResult {
+        HingePeekUpdateResult(isPeeking: isPeeking, startedPeeking: startedPeeking, pendingDwellDeadline: pendingDwellDeadline)
     }
 }
 
@@ -100,6 +147,84 @@ enum HingeHintPeekRules {
             return PracticeHintRules.canRecordHelp(mode: mode, alreadySelected: alreadySelected, reviewSubmitted: reviewSubmitted)
         case .mockExam:
             return false
+        }
+    }
+}
+
+struct HingeHintPeekPresentationState: Equatable {
+    var posturePeekActive = false
+    var openedToolByPeek = false
+    var suppressedUntilPostureReset = false
+    var activeQuestionID: String?
+}
+
+struct HingeHintPeekPresentationContext: Equatable {
+    var questionID: String?
+    var canPeek: Bool
+    var selectedTool: ExamTool?
+}
+
+enum HingeHintPeekPresentationAction: Equatable {
+    case postureStarted
+    case postureEnded
+    case selectedToolChanged(ExamTool?)
+    case questionChanged
+    case eligibilityChanged
+}
+
+enum HingeHintPeekPresentationEffect: Equatable {
+    case presentHint(questionID: String)
+    case closeHint
+}
+
+enum HingeHintPeekPresentationReducer {
+    /// Drives the view effects for an already-qualified hinge dwell. It is
+    /// intentionally start-transition based: once the user dismisses or changes
+    /// tools, the same held posture cannot reopen Hint until the posture state
+    /// machine resets at closed or fully-open.
+    static func reduce(
+        state: inout HingeHintPeekPresentationState,
+        action: HingeHintPeekPresentationAction,
+        context: HingeHintPeekPresentationContext
+    ) -> [HingeHintPeekPresentationEffect] {
+        switch action {
+        case .postureStarted:
+            guard !state.posturePeekActive else { return [] }
+            state.posturePeekActive = true
+            guard !state.suppressedUntilPostureReset,
+                  context.canPeek,
+                  let questionID = context.questionID
+            else { return [] }
+            state.activeQuestionID = questionID
+            state.openedToolByPeek = context.selectedTool != .hint
+            return [.presentHint(questionID: questionID)]
+
+        case .postureEnded:
+            // A peek-opened panel is transient and closes when the phone fully
+            // opens or closes. A Hint panel the learner opened with the button
+            // remains open, and we intentionally do not restore a calculator or
+            // other tool that the peek replaced.
+            let shouldClose = state.openedToolByPeek && context.selectedTool == .hint
+            state = HingeHintPeekPresentationState()
+            return shouldClose ? [.closeHint] : []
+
+        case .selectedToolChanged(let selectedTool):
+            guard state.posturePeekActive, state.openedToolByPeek, selectedTool != .hint else { return [] }
+            state.openedToolByPeek = false
+            state.suppressedUntilPostureReset = true
+            return []
+
+        case .questionChanged:
+            let shouldClose = state.openedToolByPeek && context.selectedTool == .hint
+            state = HingeHintPeekPresentationState()
+            return shouldClose ? [.closeHint] : []
+
+        case .eligibilityChanged:
+            guard state.posturePeekActive, !context.canPeek else { return [] }
+            let shouldClose = state.openedToolByPeek && context.selectedTool == .hint
+            state.openedToolByPeek = false
+            state.suppressedUntilPostureReset = true
+            return shouldClose ? [.closeHint] : []
         }
     }
 }
@@ -268,19 +393,37 @@ struct SimulatedDuoPostureSequenceParser {
 struct DuoPostureObserverView: UIViewRepresentable {
     let provider: any DuoPostureProviding
 
+    final class Coordinator {
+        var provider: (any DuoPostureProviding)?
+
+        init(provider: any DuoPostureProviding) {
+            self.provider = provider
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(provider: provider)
+    }
+
     func makeUIView(context: Context) -> UIView {
         let view = UIView(frame: .zero)
         view.isUserInteractionEnabled = false
+        context.coordinator.provider = provider
         provider.attach(to: view)
         return view
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
+        if let existing = context.coordinator.provider, existing !== provider {
+            existing.detach()
+        }
+        context.coordinator.provider = provider
         provider.attach(to: uiView)
     }
 
-    static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        // The provider is owned by SwiftUI state and detaches from PracticeSessionView.onDisappear.
+    static func dismantleUIView(_ uiView: UIView, coordinator: Coordinator) {
+        coordinator.provider?.detach()
+        coordinator.provider = nil
     }
 }
 

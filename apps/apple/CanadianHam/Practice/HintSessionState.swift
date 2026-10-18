@@ -1,4 +1,12 @@
 import Foundation
+import SwiftUI
+
+enum HintAccessibilityAnnouncements {
+    static func postHintShown(level: Int) {
+        let announcement = String.localizedStringWithFormat(String(localized: "Hint %d shown."), level)
+        AccessibilityNotification.Announcement(announcement).post()
+    }
+}
 
 struct PracticeHintQualificationResult: Equatable {
     var qualifiedQuestionIds: Set<String>

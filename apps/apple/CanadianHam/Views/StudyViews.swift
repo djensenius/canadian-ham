@@ -391,8 +391,8 @@ struct PracticeSessionView: View {
 #if os(iOS)
     @State private var duoPostureProvider: (any DuoPostureProviding)?
     @State private var hingePeekStateMachine = HingePeekStateMachine()
-    @State private var hingePeekIsActive = false
-    @State private var selectedToolOpenedByHingePeek = false
+    @State private var hingePeekPresentationState = HingeHintPeekPresentationState()
+    @State private var hingePeekDwellRecheckTask: Task<Void, Never>?
 #endif
     @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
     @Environment(\.canadianHamContentLibrary) private var contentLibrary
@@ -460,9 +460,7 @@ struct PracticeSessionView: View {
         .onAppear { calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale()) }
         .onChange(of: selectedExamTool) { _, next in
 #if os(iOS)
-            if next != .hint {
-                selectedToolOpenedByHingePeek = false
-            }
+            applyHingePeekPresentation(.selectedToolChanged(next))
 #endif
             onExamToolPresentationChanged(next != nil)
         }
@@ -475,10 +473,12 @@ struct PracticeSessionView: View {
             }
         }
         .onAppear { configureDuoPostureProviderIfNeeded() }
-        .onDisappear { duoPostureProvider?.detach() }
-        .onChange(of: state.currentIndex) { _, _ in refreshActiveHingePeek() }
-        .onChange(of: state.selectedByQuestionId) { _, _ in refreshActiveHingePeek() }
-        .onChange(of: state.reviewSubmitted) { _, _ in refreshActiveHingePeek() }
+        .onDisappear { clearDuoPostureProviderCallback() }
+        .onChange(of: scope) { _, _ in configureDuoPostureProviderIfNeeded() }
+        .onChange(of: ObjectIdentifier(state)) { _, _ in configureDuoPostureProviderIfNeeded() }
+        .onChange(of: state.currentIndex) { _, _ in resetHingePeekForQuestionChange() }
+        .onChange(of: state.selectedByQuestionId) { _, _ in applyHingePeekPresentation(.eligibilityChanged) }
+        .onChange(of: state.reviewSubmitted) { _, _ in applyHingePeekPresentation(.eligibilityChanged) }
 #endif
     }
 
@@ -656,9 +656,6 @@ struct PracticeSessionView: View {
     }
 
     private func openExamTool(_ tool: ExamTool) {
-#if os(iOS)
-        selectedToolOpenedByHingePeek = false
-#endif
         selectedExamTool = tool
         calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
         if tool == .calculator {
@@ -710,53 +707,94 @@ struct PracticeSessionView: View {
         }
     }
 
+    private func clearDuoPostureProviderCallback() {
+        duoPostureProvider?.onPostureChanged = nil
+        cancelHingePeekDwellRecheck()
+    }
+
     private func handleDuoPosture(_ sample: DuoPostureSample) {
-        let shouldPeek = hingePeekStateMachine.update(status: sample.posture, angleDegrees: sample.angleDegrees, timestamp: sample.timestamp)
-        if shouldPeek {
-            presentHingeHintPeekIfEligible()
+        let result = hingePeekStateMachine.update(sample: sample)
+        applyHingePeekUpdateResult(result, lastSampleTimestamp: sample.timestamp)
+    }
+
+    private func applyHingePeekUpdateResult(_ result: HingePeekUpdateResult, lastSampleTimestamp: TimeInterval) {
+        if let deadline = result.pendingDwellDeadline {
+            scheduleHingePeekDwellRecheck(deadline: deadline, lastSampleTimestamp: lastSampleTimestamp)
         } else {
-            endHingeHintPeek()
+            cancelHingePeekDwellRecheck()
+        }
+
+        if result.startedPeeking {
+            applyHingePeekPresentation(.postureStarted)
+        } else if !result.isPeeking {
+            applyHingePeekPresentation(.postureEnded)
         }
     }
 
-    private func refreshActiveHingePeek() {
-        guard hingePeekIsActive else { return }
-        presentHingeHintPeekIfEligible()
+    private func scheduleHingePeekDwellRecheck(deadline: TimeInterval, lastSampleTimestamp: TimeInterval) {
+        hingePeekDwellRecheckTask?.cancel()
+        let delayNanoseconds = UInt64(max(0, deadline - lastSampleTimestamp) * 1_000_000_000)
+        hingePeekDwellRecheckTask = Task { @MainActor in
+            if delayNanoseconds > 0 {
+                try? await Task.sleep(nanoseconds: delayNanoseconds)
+            }
+            guard !Task.isCancelled else { return }
+            let result = hingePeekStateMachine.recheck(timestamp: deadline)
+            applyHingePeekUpdateResult(result, lastSampleTimestamp: deadline)
+        }
     }
 
-    private func presentHingeHintPeekIfEligible() {
-        guard let item = state.items[safe: state.currentIndex], currentQuestionHint != nil else {
-            endHingeHintPeek()
-            return
+    private func cancelHingePeekDwellRecheck() {
+        hingePeekDwellRecheckTask?.cancel()
+        hingePeekDwellRecheckTask = nil
+    }
+
+    private var hingePeekPresentationContext: HingeHintPeekPresentationContext {
+        guard let item = state.items[safe: state.currentIndex] else {
+            return HingeHintPeekPresentationContext(questionID: nil, canPeek: false, selectedTool: selectedExamTool)
         }
         let questionID = item.question.id
-        guard HingeHintPeekRules.canPeekHint(
+        let canPeek = HingeHintPeekRules.canPeekHint(
             sessionKind: .practice(progressStore.preferences.practiceMode),
-            hasHint: true,
+            hasHint: currentQuestionHint != nil,
             alreadySelected: state.selectedByQuestionId[questionID] != nil,
             reviewSubmitted: state.reviewSubmitted
-        ) else {
-            endHingeHintPeek()
-            return
-        }
+        )
+        return HingeHintPeekPresentationContext(questionID: questionID, canPeek: canPeek, selectedTool: selectedExamTool)
+    }
 
-        hingePeekIsActive = true
-        revealHintLevel(questionID: questionID, level: 1)
-        calculatorFocused = false
-        calculatorViewModel.suspendHardwareKeyboardInput()
-        if selectedExamTool != .hint {
-            selectedToolOpenedByHingePeek = true
-            selectedExamTool = .hint
+    private func applyHingePeekPresentation(_ action: HingeHintPeekPresentationAction) {
+        let effects = HingeHintPeekPresentationReducer.reduce(
+            state: &hingePeekPresentationState,
+            action: action,
+            context: hingePeekPresentationContext
+        )
+        for effect in effects {
+            applyHingePeekPresentationEffect(effect)
         }
     }
 
-    private func endHingeHintPeek() {
-        guard hingePeekIsActive || selectedToolOpenedByHingePeek else { return }
-        hingePeekIsActive = false
-        if selectedToolOpenedByHingePeek, selectedExamTool == .hint {
-            selectedExamTool = nil
+    private func applyHingePeekPresentationEffect(_ effect: HingeHintPeekPresentationEffect) {
+        switch effect {
+        case .presentHint(let questionID):
+            revealHintLevel(questionID: questionID, level: 1)
+            HintAccessibilityAnnouncements.postHintShown(level: 1)
+            calculatorFocused = false
+            calculatorViewModel.suspendHardwareKeyboardInput()
+            if selectedExamTool != .hint {
+                selectedExamTool = .hint
+            }
+        case .closeHint:
+            if selectedExamTool == .hint {
+                selectedExamTool = nil
+            }
         }
-        selectedToolOpenedByHingePeek = false
+    }
+
+    private func resetHingePeekForQuestionChange() {
+        applyHingePeekPresentation(.questionChanged)
+        hingePeekStateMachine.reset()
+        cancelHingePeekDwellRecheck()
     }
 #endif
 
@@ -859,8 +897,8 @@ struct PracticeSessionView: View {
             calculatorFocused = false
 #if os(iOS)
             hingePeekStateMachine.reset()
-            hingePeekIsActive = false
-            selectedToolOpenedByHingePeek = false
+            hingePeekPresentationState = HingeHintPeekPresentationState()
+            cancelHingePeekDwellRecheck()
 #endif
             calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {

@@ -67,43 +67,75 @@ final class HintSessionStateTests: XCTestCase {
     }
 
     func testHingePeekRequiresStableDwellInSlightOpenBand() {
-        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2))
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
 
-        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 0))
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.1))
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.75))
-        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.81))
+        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 0).isPeeking)
+        XCTAssertEqual(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.1).pendingDwellDeadline ?? -1, 0.8, accuracy: 0.000_001)
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.75).isPeeking)
+        let result = machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.81)
+        XCTAssertTrue(result.isPeeking)
+        XCTAssertTrue(result.startedPeeking)
+    }
+
+    func testHingePeekRecheckPeeksWithoutNewSamples() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
+
+        let candidate = machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 10)
+        XCTAssertFalse(candidate.isPeeking)
+        XCTAssertEqual(candidate.pendingDwellDeadline ?? -1, 10.7, accuracy: 0.000_001)
+
+        let recheck = machine.recheck(timestamp: 10.7)
+        XCTAssertTrue(recheck.isPeeking, "A single in-band sample should qualify when the scheduled dwell re-check fires with the last posture sample")
+        XCTAssertTrue(recheck.startedPeeking)
+    }
+
+    func testHingePeekStartsOnlyInsideRealBandAndDoesNotUseEdgeJitterBeforePeek() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
+
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 37, timestamp: 0).isPeeking)
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 37, timestamp: 1.0).isPeeking)
+        let boundary = machine.update(status: .partiallyOpen, angleDegrees: 35, timestamp: 1.1)
+        XCTAssertFalse(boundary.isPeeking, "Touching the real band after holding in the jitter range must start a fresh dwell, not peek instantly")
+        XCTAssertEqual(boundary.pendingDwellDeadline ?? -1, 1.8, accuracy: 0.000_001)
+    }
+
+    func testHingePeekSlowCloseThroughBandNeverPeeks() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
+
+        for (timestamp, angle) in [(0.0, 35.0), (0.35, 31.5), (0.7, 28.0), (1.05, 24.5), (1.4, 21.0), (1.75, 19.0)] {
+            XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: angle, timestamp: timestamp).isPeeking, "Continuous motion through the band must restart dwell instead of peeking at \(angle)°")
+        }
     }
 
     func testHingePeekFastUnfoldThroughBandNeverPeeks() {
-        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2))
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
 
-        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 0))
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 22, timestamp: 0.1))
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 30, timestamp: 0.25))
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 34, timestamp: 0.35))
-        XCTAssertFalse(machine.update(status: .unfolded, angleDegrees: 180, timestamp: 0.45))
+        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 0).isPeeking)
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 22, timestamp: 0.1).isPeeking)
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 30, timestamp: 0.25).isPeeking)
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 34, timestamp: 0.35).isPeeking)
+        XCTAssertFalse(machine.update(status: .unfolded, angleDegrees: 180, timestamp: 0.45).isPeeking)
     }
 
-    func testHingePeekToleratesSmallJitterAtBandEdges() {
-        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2))
+    func testHingePeekToleratesSmallJitterOnlyAfterPeekStarts() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
 
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 20, timestamp: 0))
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 19.2, timestamp: 0.25), "Small edge jitter should not reset the stable dwell candidate")
-        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 20.5, timestamp: 0.72), "Returning inside the band after tolerated jitter should peek once the original dwell elapsed")
-        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 36.5, timestamp: 0.9), "A visible peek may continue through tolerated edge jitter")
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 38.1, timestamp: 1.0), "Jitter outside the tolerance ends the peek")
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 19.2, timestamp: 0).isPeeking, "Pre-peek edge jitter must not start dwell")
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 20, timestamp: 0.1).isPeeking)
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 20.5, timestamp: 0.82).isPeeking)
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 36.5, timestamp: 0.9).isPeeking, "A visible peek may continue through tolerated edge jitter")
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 38.1, timestamp: 1.0).isPeeking, "Jitter outside the tolerance ends the peek")
     }
 
     func testHingePeekEndsWhenPhoneFullyOpensOrCloses() {
-        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2))
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
 
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0))
-        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.8))
-        XCTAssertFalse(machine.update(status: .unfolded, angleDegrees: 180, timestamp: 0.9))
-        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 1.0), "After fully opening, a new dwell must start")
-        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 1.8))
-        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 1.9))
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0).isPeeking)
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.8).isPeeking)
+        XCTAssertFalse(machine.update(status: .unfolded, angleDegrees: 180, timestamp: 0.9).isPeeking)
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 1.0).isPeeking, "After fully opening, a new dwell must start")
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 1.8).isPeeking)
+        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 1.9).isPeeking)
     }
 
     func testHingePeekEligibilityAllowsPracticeReviewLaterButNeverMockExamOrScoredImmediateAnswer() {
@@ -113,6 +145,54 @@ final class HintSessionStateTests: XCTestCase {
         XCTAssertFalse(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.reviewLater), hasHint: true, alreadySelected: true, reviewSubmitted: true))
         XCTAssertFalse(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.reviewLater), hasHint: false, alreadySelected: false, reviewSubmitted: false))
         XCTAssertFalse(HingeHintPeekRules.canPeekHint(sessionKind: .mockExam, hasHint: true, alreadySelected: false, reviewSubmitted: false))
+    }
+
+    func testHingePeekPresentationStartsOnlyOnceUntilPostureReset() {
+        var state = HingeHintPeekPresentationState()
+        let eligible = HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)
+
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible), [.presentHint(questionID: "B-001-002-002")])
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: .hint)), [])
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureEnded, context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: .hint)), [.closeHint])
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible), [.presentHint(questionID: "B-001-002-002")])
+    }
+
+    func testHingePeekPresentationDismissalSuppressesReopenUntilReset() {
+        var state = HingeHintPeekPresentationState()
+        let eligible = HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)
+
+        _ = HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible)
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .selectedToolChanged(nil), context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)), [])
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)), [])
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureEnded, context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)), [])
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible), [.presentHint(questionID: "B-001-002-002")])
+    }
+
+    func testHingePeekPresentationKeepsButtonOpenedHintOpenOnReset() {
+        var state = HingeHintPeekPresentationState()
+        let buttonOpened = HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: .hint)
+
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: buttonOpened), [.presentHint(questionID: "B-001-002-002")])
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureEnded, context: buttonOpened), [], "A Hint panel opened by the button must stay open when the peek posture ends")
+    }
+
+    func testHingePeekPresentationClosesPeekOpenedHintOnQuestionChangeAndRequiresFreshDwell() {
+        var state = HingeHintPeekPresentationState()
+        let eligible = HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)
+
+        _ = HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible)
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .questionChanged, context: HingeHintPeekPresentationContext(questionID: "B-001-002-003", canPeek: true, selectedTool: .hint)), [.closeHint])
+        XCTAssertFalse(state.posturePeekActive)
+    }
+
+    func testHingePeekPresentationImmediateAnswerEndsEligibility() {
+        var state = HingeHintPeekPresentationState()
+        let eligible = HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)
+
+        _ = HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible)
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .eligibilityChanged, context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: false, selectedTool: .hint)), [.closeHint])
+        XCTAssertTrue(state.suppressedUntilPostureReset)
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible), [])
     }
 
     func testApplyPracticeAnswerSubmitsAnsweredWithHelpToEngine() throws {
@@ -146,7 +226,7 @@ final class HintSessionStateTests: XCTestCase {
         XCTAssertEqual(record.leitner.dueAt, "2026-01-02T00:00:00.000Z")
     }
 
-    func testPeekRouteUsesVisibilityTimerBeforeQualifyingAnsweredWithHelp() async throws {
+    func testHintVisibilityTimerDoesNotQualifyShortPeekRoute() async throws {
         let questionID = "B-001-002-002"
         let timer = HintVisibilityQualificationTimer()
         var qualifiedQuestionIds: Set<String> = []
@@ -169,6 +249,20 @@ final class HintSessionStateTests: XCTestCase {
         try await Task.sleep(nanoseconds: 180_000_000)
         XCTAssertEqual(qualifiedQuestionIds, [questionID])
         XCTAssertEqual(answeredWithHelpQuestionIds, [])
+    }
+
+    func testHintVisibilityTimerCancelsShortPeekBeforeRecordingHelp() async throws {
+        let timer = HintVisibilityQualificationTimer()
+        var qualifiedQuestionIds: Set<String> = []
+
+        timer.begin(questionID: "B-001-002-002", canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 300_000_000) {
+            qualifiedQuestionIds.insert("B-001-002-002")
+        }
+        try await Task.sleep(nanoseconds: 120_000_000)
+        timer.cancel()
+        try await Task.sleep(nanoseconds: 260_000_000)
+
+        XCTAssertEqual(qualifiedQuestionIds, [], "A peek that closes before the 0.5 s visibility rule must not record help")
     }
 
     func testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange() async throws {
