@@ -388,6 +388,15 @@ struct PracticeSessionView: View {
 
     @State private var selectedExamTool: ExamTool?
     @State private var calculatorFocused = false
+#if os(iOS)
+    @State private var duoPostureProvider: (any DuoPostureProviding)?
+    @State private var hingePeekStateMachine = HingePeekStateMachine()
+    @State private var hingePeekPresentationState = HingeHintPeekPresentationState()
+    @State private var hingePeekDwellRecheckTask: Task<Void, Never>?
+#if DEBUG
+    @State private var debugHingePlaybackTimestamp: TimeInterval = 0
+#endif
+#endif
     @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
     @Environment(\.canadianHamContentLibrary) private var contentLibrary
 
@@ -452,8 +461,39 @@ struct PracticeSessionView: View {
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, hintContext: hintToolContext)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
         .onAppear { calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale()) }
-        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
+        .onChange(of: selectedExamTool) { _, next in
+#if os(iOS)
+            applyHingePeekPresentation(.selectedToolChanged(next))
+#endif
+            onExamToolPresentationChanged(next != nil)
+        }
         .onDisappear { onExamToolPresentationChanged(false) }
+#if os(iOS)
+        .background {
+            if let duoPostureProvider {
+                DuoPostureObserverView(provider: duoPostureProvider)
+                    .frame(width: 0, height: 0)
+            }
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugStatus") {
+                Text(verbatim: "Hinge playback progress") // l10n: verbatim DEBUG-only UI test hook
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(width: 1, height: 1)
+                    .accessibilityIdentifier("debug-hinge-playback-progress")
+                    .accessibilityValue(Text(verbatim: String(format: "%.3f", debugHingePlaybackTimestamp))) // l10n: verbatim
+                    .allowsHitTesting(false)
+            }
+#endif
+        }
+        .onAppear { configureDuoPostureProviderIfNeeded() }
+        .onDisappear { clearDuoPostureProviderCallback() }
+        .onChange(of: scope) { _, _ in resetHingePeekForSessionChange() }
+        .onChange(of: ObjectIdentifier(state)) { _, _ in resetHingePeekForSessionChange() }
+        .onChange(of: state.currentIndex) { _, _ in resetHingePeekForQuestionChange() }
+        .onChange(of: state.selectedByQuestionId) { _, _ in applyHingePeekPresentation(.eligibilityChanged) }
+        .onChange(of: state.reviewSubmitted) { _, _ in applyHingePeekPresentation(.eligibilityChanged) }
+#endif
     }
 
     private var header: some View {
@@ -640,8 +680,12 @@ struct PracticeSessionView: View {
         }
     }
 
-    private func revealHintLevel(questionID: String, level: Int) {
-        state.hintLevelsByQuestionId[questionID] = max(state.hintLevelsByQuestionId[questionID] ?? 0, level)
+    @discardableResult
+    private func revealHintLevel(questionID: String, level: Int) -> Bool {
+        let previousLevel = state.hintLevelsByQuestionId[questionID] ?? 0
+        let nextLevel = max(previousLevel, level)
+        state.hintLevelsByQuestionId[questionID] = nextLevel
+        return nextLevel > previousLevel
     }
 
     private func qualifyAnsweredWithHelp(questionID: String) -> Bool {
@@ -667,6 +711,127 @@ struct PracticeSessionView: View {
             reviewSubmitted: state.reviewSubmitted
         )
     }
+
+#if os(iOS)
+    private func configureDuoPostureProviderIfNeeded() {
+        if duoPostureProvider == nil {
+            duoPostureProvider = DuoPostureProviderFactory.makeProvider()
+        }
+        applyHingePeekPresentation(.viewAppeared)
+        duoPostureProvider?.onPostureChanged = { sample in
+            handleDuoPosture(sample)
+        }
+        if let sample = duoPostureProvider?.sample {
+            handleDuoPosture(sample)
+        }
+    }
+
+    private func clearDuoPostureProviderCallback() {
+        applyHingePeekPresentation(.viewDisappeared)
+        duoPostureProvider?.onPostureChanged = nil
+        hingePeekStateMachine.reset()
+        cancelHingePeekDwellRecheck()
+    }
+
+    private func handleDuoPosture(_ sample: DuoPostureSample) {
+#if DEBUG
+        debugHingePlaybackTimestamp = sample.timestamp
+#endif
+        var receivedSample = sample
+        receivedSample.timestamp = ProcessInfo.processInfo.systemUptime
+        let result = hingePeekStateMachine.update(sample: receivedSample)
+        applyHingePeekUpdateResult(result, lastSampleTimestamp: receivedSample.timestamp)
+    }
+
+    private func applyHingePeekUpdateResult(_ result: HingePeekUpdateResult, lastSampleTimestamp: TimeInterval) {
+        if let deadline = result.pendingDwellDeadline {
+            scheduleHingePeekDwellRecheck(deadline: deadline, lastSampleTimestamp: lastSampleTimestamp)
+        } else {
+            cancelHingePeekDwellRecheck()
+        }
+
+        if result.startedPeeking {
+            applyHingePeekPresentation(.postureStarted)
+        } else if result.endedByPostureReset {
+            applyHingePeekPresentation(.postureEnded)
+        }
+    }
+
+    private func scheduleHingePeekDwellRecheck(deadline: TimeInterval, lastSampleTimestamp: TimeInterval) {
+        hingePeekDwellRecheckTask?.cancel()
+        let delayNanoseconds = UInt64(max(0, deadline - lastSampleTimestamp) * 1_000_000_000)
+        hingePeekDwellRecheckTask = Task { @MainActor in
+            if delayNanoseconds > 0 {
+                try? await Task.sleep(nanoseconds: delayNanoseconds)
+            }
+            guard !Task.isCancelled else { return }
+            let result = hingePeekStateMachine.recheck(timestamp: deadline)
+            applyHingePeekUpdateResult(result, lastSampleTimestamp: deadline)
+        }
+    }
+
+    private func cancelHingePeekDwellRecheck() {
+        hingePeekDwellRecheckTask?.cancel()
+        hingePeekDwellRecheckTask = nil
+    }
+
+    private var hingePeekPresentationContext: HingeHintPeekPresentationContext {
+        guard let item = state.items[safe: state.currentIndex] else {
+            return HingeHintPeekPresentationContext(questionID: nil, canPeek: false, selectedTool: selectedExamTool)
+        }
+        let questionID = item.question.id
+        let canPeek = HingeHintPeekRules.canPeekHint(
+            sessionKind: .practice(progressStore.preferences.practiceMode),
+            hasHint: currentQuestionHint != nil,
+            alreadySelected: state.selectedByQuestionId[questionID] != nil,
+            reviewSubmitted: state.reviewSubmitted
+        )
+        return HingeHintPeekPresentationContext(questionID: questionID, canPeek: canPeek, selectedTool: selectedExamTool)
+    }
+
+    private func applyHingePeekPresentation(_ action: HingeHintPeekPresentationAction) {
+        let effects = HingeHintPeekPresentationReducer.reduce(
+            state: &hingePeekPresentationState,
+            action: action,
+            context: hingePeekPresentationContext
+        )
+        for effect in effects {
+            applyHingePeekPresentationEffect(effect)
+        }
+    }
+
+    private func applyHingePeekPresentationEffect(_ effect: HingeHintPeekPresentationEffect) {
+        switch effect {
+        case .presentHint(let questionID):
+            let revealedNewLevel = revealHintLevel(questionID: questionID, level: 1)
+            if revealedNewLevel {
+                HintAccessibilityAnnouncements.postHintShown(level: 1)
+            }
+            calculatorFocused = false
+            calculatorViewModel.suspendHardwareKeyboardInput()
+            if selectedExamTool != .hint {
+                selectedExamTool = .hint
+            }
+        case .closeHint:
+            if selectedExamTool == .hint {
+                selectedExamTool = nil
+            }
+        }
+    }
+
+    private func resetHingePeekForQuestionChange() {
+        applyHingePeekPresentation(.questionChanged)
+        hingePeekStateMachine.reset()
+        cancelHingePeekDwellRecheck()
+    }
+
+    private func resetHingePeekForSessionChange() {
+        hingePeekPresentationState = HingeHintPeekPresentationState()
+        hingePeekStateMachine.reset()
+        cancelHingePeekDwellRecheck()
+        configureDuoPostureProviderIfNeeded()
+    }
+#endif
 
     private func openHintLesson(_ link: QuestionHintLessonLink) {
         calculatorFocused = false
@@ -765,6 +930,11 @@ struct PracticeSessionView: View {
             state.errorMessage = nil
             selectedExamTool = nil
             calculatorFocused = false
+#if os(iOS)
+            hingePeekStateMachine.reset()
+            hingePeekPresentationState = HingeHintPeekPresentationState()
+            cancelHingePeekDwellRecheck()
+#endif
             calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)

@@ -559,8 +559,7 @@ private struct HintToolView: View {
 
     private func reveal(_ level: Int) {
         context.revealLevel(level)
-        let announcement = String.localizedStringWithFormat(String(localized: "Hint %d shown."), level)
-        AccessibilityNotification.Announcement(announcement).post()
+        HintAccessibilityAnnouncements.postHintShown(level: level)
     }
 
     private func syncQualificationTimer() {
