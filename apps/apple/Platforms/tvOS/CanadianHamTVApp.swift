@@ -62,6 +62,7 @@ private struct TVLaunchOptions {
 private enum TVEvidenceFocus: String {
     case category
     case answer
+    case hint
 }
 
 private enum PlatformScreen: String {
@@ -466,7 +467,8 @@ private struct TVPracticeView: View {
                                         referenceSheetAvailable: false,
                                         revealLevel: { level in revealHintLevel(questionID: currentQuestion.id, level: level) },
                                         hintVisibleLongEnough: { qualifyAnsweredWithHelp(questionID: currentQuestion.id) },
-                                        openLesson: onOpenHintLesson
+                                        openLesson: onOpenHintLesson,
+                                        requestsEvidenceFocus: evidenceFocus == .hint
                                     )
                                 }
                             }
@@ -699,8 +701,10 @@ private struct TVHintPanel: View {
     let revealLevel: (Int) -> Void
     let hintVisibleLongEnough: () -> Bool
     let openLesson: (QuestionHintLessonLink) -> Void
+    let requestsEvidenceFocus: Bool
 
     @State private var qualificationTimer = HintVisibilityQualificationTimer()
+    @FocusState private var isShowHintFocused: Bool
 
     private var lastAvailableLevel: Int { hint.hints.count }
     private var nextLevel: Int? { visibleLevel < lastAvailableLevel ? visibleLevel + 1 : nil }
@@ -765,6 +769,7 @@ private struct TVHintPanel: View {
                 }
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .buttonStyle(TVPrimaryButtonStyle())
+                .focused($isShowHintFocused)
                 .accessibilityIdentifier("hint-show-level-\(nextLevel)-button")
             }
         }
@@ -776,7 +781,12 @@ private struct TVHintPanel: View {
                 .strokeBorder(DesignTokens.Colors.border, lineWidth: 2)
         )
         .accessibilityIdentifier("tv-hint-panel")
-        .onAppear { syncQualificationTimer() }
+        .onAppear {
+            syncQualificationTimer()
+            if requestsEvidenceFocus {
+                isShowHintFocused = true
+            }
+        }
         .onDisappear { qualificationTimer.cancel() }
         .onChange(of: hint.questionId) { _, _ in syncQualificationTimer() }
         .onChange(of: visibleLevel) { _, _ in syncQualificationTimer() }

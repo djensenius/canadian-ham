@@ -88,7 +88,7 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     func testPracticeInteractionUsesConfiguredLanguageShowsFeedbackAndAdvances() throws {
-        let app = configuredApp(screen: .practice, appearance: "light", language: "fr")
+        let app = configuredApp(screen: .practice, appearance: "light", language: "fr", evidenceFocus: "answer")
         app.launch()
         defer { app.terminate() }
 
@@ -123,7 +123,7 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     func testPracticeHintLadderLessonLinkAndAudit() throws {
-        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-006", questionID: "B-006-008-004")
+        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-006", questionID: "B-006-008-004", evidenceFocus: "hint")
         app.launch()
         defer { app.terminate() }
 
@@ -132,13 +132,13 @@ final class CanadianHamTVUITests: XCTestCase {
 
         openHintLevel(1, in: app)
         XCTAssertTrue(app.staticTexts["hint-level-1-body"].firstMatch.waitForExistence(timeout: 5), "Hint 1 should appear in tvOS practice")
-        XCTAssertTrue(app.buttons["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "Two-level files should reveal Hint 2 only after Hint 1")
+        XCTAssertTrue(app.descendants(matching: .any)["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "Two-level files should reveal Hint 2 only after Hint 1")
         openHintLevel(2, in: app)
         XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.waitForExistence(timeout: 5), "Hint 2 should appear after the second ladder action")
-        XCTAssertTrue(app.buttons["hint-review-in-lesson-button"].firstMatch.waitForExistence(timeout: 5), "Last hint level should expose the generic lesson link")
+        XCTAssertTrue(app.descendants(matching: .any)["hint-review-in-lesson-button"].firstMatch.waitForExistence(timeout: 5), "Last hint level should expose the generic lesson link")
         try performAudit(on: app, context: "tvOS open hint")
 
-        let review = app.buttons["hint-review-in-lesson-button"].firstMatch
+        let review = app.descendants(matching: .any)["hint-review-in-lesson-button"].firstMatch
         pressUntilFocused(review, remote: XCUIRemote.shared, buttons: [.down, .right, .left], maxCycles: 8)
         XCUIRemote.shared.press(.select)
         XCTAssertTrue(app.descendants(matching: .any)["tv-lesson-screen"].firstMatch.waitForExistence(timeout: 10), "Review in lesson should open the tvOS lesson reader")
@@ -149,15 +149,15 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     func testPracticeOneLevelHintHasNoHint2AndNonPracticeScreensHaveNoHint() throws {
-        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-001", questionID: "B-001-002-002")
+        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-001", questionID: "B-001-002-002", evidenceFocus: "hint")
         app.launch()
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["tv-practice-screen"].firstMatch.waitForExistence(timeout: 15))
         openHintLevel(1, in: app)
         XCTAssertTrue(app.staticTexts["hint-level-1-body"].firstMatch.waitForExistence(timeout: 5), "One-level hint should show Hint 1")
-        XCTAssertFalse(app.buttons["hint-show-level-2-button"].firstMatch.exists, "One-level files must not expose a broken Hint 2 affordance")
-        XCTAssertTrue(app.buttons["hint-review-in-lesson-button"].firstMatch.exists, "One-level files expose the lesson link after Hint 1")
+        XCTAssertFalse(app.descendants(matching: .any)["hint-show-level-2-button"].firstMatch.exists, "One-level files must not expose a broken Hint 2 affordance")
+        XCTAssertTrue(app.descendants(matching: .any)["hint-review-in-lesson-button"].firstMatch.exists, "One-level files expose the lesson link after Hint 1")
 
         let mockApp = XCUIApplication()
         mockApp.launchArguments = [
@@ -167,7 +167,7 @@ final class CanadianHamTVUITests: XCTestCase {
         mockApp.launch()
         defer { mockApp.terminate() }
         XCTAssertTrue(PlatformAuditScreen.categories.waitElement(in: mockApp).waitForExistence(timeout: 15), "tvOS has no mock-exam surface and falls back to the non-practice grid")
-        XCTAssertFalse(mockApp.buttons["hint-show-level-1-button"].firstMatch.exists, "Hints must not be exposed outside practice")
+        XCTAssertFalse(mockApp.descendants(matching: .any)["hint-show-level-1-button"].firstMatch.exists, "Hints must not be exposed outside practice")
     }
 
     func testLayoutEvidenceScreenshots() throws {
@@ -397,7 +397,7 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     private func openHintLevel(_ level: Int, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
-        let button = app.buttons["hint-show-level-\(level)-button"].firstMatch
+        let button = app.descendants(matching: .any)["hint-show-level-\(level)-button"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 8), "Expected Show Hint \(level) button", file: file, line: line)
         pressUntilFocused(button, remote: XCUIRemote.shared, buttons: [.down, .right, .left], maxCycles: 10, file: file, line: line)
         XCUIRemote.shared.press(.select)
