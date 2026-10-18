@@ -710,6 +710,8 @@ struct RootView: View {
                 Text(verbatim: "Apply simulated window size change (\(debugSimulatedWindowSizeAccessibilityValue))")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
+            .padding(.top, 120)
+            .padding(.trailing, DesignTokens.Spacing.md)
             .accessibilityIdentifier("debug-simulated-window-size-change-button")
             .accessibilityValue(Text(verbatim: debugSimulatedWindowSizeAccessibilityValue))
         }
