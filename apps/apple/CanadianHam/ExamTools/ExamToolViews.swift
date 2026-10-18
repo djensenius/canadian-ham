@@ -48,6 +48,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.canadianHamWindowSize) private var canadianHamWindowSize
     @Environment(\.canadianHamUsesUnfoldedIPhoneLayout) private var canadianHamUsesUnfoldedIPhoneLayout
+    @Environment(\.canadianHamApplySimulatedWindowSizeChange) private var canadianHamApplySimulatedWindowSizeChange
 #endif
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0

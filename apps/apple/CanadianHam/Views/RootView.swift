@@ -162,12 +162,12 @@ struct RootView: View {
             }
             .environment(\.canadianHamWindowSize, windowSize)
             .environment(\.canadianHamUsesUnfoldedIPhoneLayout, unfoldedIPhoneLayout)
+            .environment(\.canadianHamApplySimulatedWindowSizeChange, debugSimulatedWindowSizeChangeAction())
             .overlay(alignment: .topTrailing) {
                 debugSimulatedWindowSizeChangeControl()
             }
             .onAppear {
                 updateUnfoldedIPhoneLayout(windowSize: windowSize)
-                synchronizeNavigationForLayoutChange(usesCompactNavigation: compactNavigation)
                 scheduleDebugSimulatedWindowSizeChangeIfNeeded()
             }
             .onChange(of: windowSize) { _, next in
@@ -680,15 +680,10 @@ struct RootView: View {
     private func debugSimulatedWindowSizeChangeControl() -> some View {
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowSimulatedWindowSizeChangeControl"),
            let size = debugSimulatedWindowSizeAfterChange {
-            Button {
+            Button("Apply simulated window size change") {
                 debugSimulatedWindowSize = size
-            } label: {
-                Image(systemName: "rectangle.2.swap")
-                    .frame(width: 44, height: 44)
             }
-            .buttonStyle(.plain)
-            .opacity(0.01)
-            .accessibilityLabel("Apply simulated window size change")
+            .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("debug-simulated-window-size-change-button")
         }
     }
@@ -697,11 +692,19 @@ struct RootView: View {
         AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeAfterChange")
             .flatMap { canadianHamParsedWindowSize($0) }
     }
+
+    private func debugSimulatedWindowSizeChangeAction() -> (@MainActor @Sendable () -> Void)? {
+        guard ProcessInfo.processInfo.arguments.contains("-CanadianHamShowSimulatedWindowSizeChangeControl"),
+              let size = debugSimulatedWindowSizeAfterChange else { return nil }
+        return { debugSimulatedWindowSize = size }
+    }
 #else
     @ViewBuilder
     private func debugSimulatedWindowSizeChangeControl() -> some View {
         EmptyView()
     }
+
+    private func debugSimulatedWindowSizeChangeAction() -> (@MainActor @Sendable () -> Void)? { nil }
 #endif
 
     private func scheduleDebugSimulatedWindowSizeChangeIfNeeded() {
@@ -799,7 +802,6 @@ struct RootView: View {
         if effectiveHorizontalSizeClass == .compact && !usesUnfoldedIPhoneLayout {
             compactNavigationPath.append(route)
             selection = .learn
-            navigationPath = [route]
             return
         }
 #endif

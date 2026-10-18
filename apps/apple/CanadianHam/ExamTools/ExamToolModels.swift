@@ -148,6 +148,10 @@ private struct CanadianHamUsesUnfoldedIPhoneLayoutKey: EnvironmentKey {
     static let defaultValue = false
 }
 
+private struct CanadianHamApplySimulatedWindowSizeChangeKey: EnvironmentKey {
+    static let defaultValue: (@MainActor @Sendable () -> Void)? = nil
+}
+
 extension EnvironmentValues {
     var canadianHamWindowSize: CGSize? {
         get { self[CanadianHamWindowSizeKey.self] }
@@ -157,6 +161,11 @@ extension EnvironmentValues {
     var canadianHamUsesUnfoldedIPhoneLayout: Bool {
         get { self[CanadianHamUsesUnfoldedIPhoneLayoutKey.self] }
         set { self[CanadianHamUsesUnfoldedIPhoneLayoutKey.self] = newValue }
+    }
+
+    var canadianHamApplySimulatedWindowSizeChange: (@MainActor @Sendable () -> Void)? {
+        get { self[CanadianHamApplySimulatedWindowSizeChangeKey.self] }
+        set { self[CanadianHamApplySimulatedWindowSizeChangeKey.self] = newValue }
     }
 }
 
