@@ -163,7 +163,7 @@ struct RootView: View {
         .environment(\.canadianHamUsesUnfoldedIPhoneLayout, unfoldedIPhoneLayout)
         .background(windowSizeReader())
         .overlay(alignment: .topTrailing) {
-            debugSimulatedWindowSizeChangeControl()
+            debugSimulatedWindowSizeChangeControl(usesCompactNavigation: compactNavigation)
         }
         .onAppear {
             if let windowSize {
@@ -701,26 +701,29 @@ struct RootView: View {
 
 #if DEBUG
     @ViewBuilder
-    private func debugSimulatedWindowSizeChangeControl() -> some View {
+    private func debugSimulatedWindowSizeChangeControl(usesCompactNavigation: Bool) -> some View {
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowSimulatedWindowSizeChangeControl"),
            let size = debugSimulatedWindowSizeAfterChange {
             Button {
                 debugSimulatedWindowSize = size
             } label: {
-                Text(verbatim: "Apply simulated window size change (\(debugSimulatedWindowSizeAccessibilityValue))")
+                Text(verbatim: "Apply simulated window size change (\(debugSimulatedWindowSizeAccessibilityValue(usesCompactNavigation: usesCompactNavigation)))")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .padding(.top, 120)
             .padding(.trailing, DesignTokens.Spacing.md)
             .accessibilityIdentifier("debug-simulated-window-size-change-button")
-            .accessibilityValue(Text(verbatim: debugSimulatedWindowSizeAccessibilityValue)) // l10n: verbatim
+            .accessibilityValue(Text(verbatim: debugSimulatedWindowSizeAccessibilityValue(usesCompactNavigation: usesCompactNavigation))) // l10n: verbatim
         }
     }
 
-    private var debugSimulatedWindowSizeAccessibilityValue: String {
+    /// "<width>x<height> <split|compact>" so UI tests can assert the layout decision itself flips,
+    /// even on simulators whose rendered window is too narrow to show the inspector visually.
+    private func debugSimulatedWindowSizeAccessibilityValue(usesCompactNavigation: Bool) -> String {
         let size = debugSimulatedWindowSize ?? canadianHamSimulatedWindowSizeFromLaunchArguments()
-        guard let size else { return "actual" }
-        return "\(Int(size.width))x\(Int(size.height))"
+        let mode = usesCompactNavigation ? "compact" : "split"
+        guard let size else { return "actual \(mode)" }
+        return "\(Int(size.width))x\(Int(size.height)) \(mode)"
     }
 
     private var debugSimulatedWindowSizeAfterChange: CGSize? {
@@ -729,7 +732,7 @@ struct RootView: View {
     }
 #else
     @ViewBuilder
-    private func debugSimulatedWindowSizeChangeControl() -> some View {
+    private func debugSimulatedWindowSizeChangeControl(usesCompactNavigation: Bool) -> some View {
         EmptyView()
     }
 #endif

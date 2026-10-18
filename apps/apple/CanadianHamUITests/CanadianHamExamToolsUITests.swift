@@ -447,7 +447,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         tapCalculatorKey("calculator-key-2", in: app)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Expected the calculator value before the simulated unfold request")
 
+        assertSimulatedLayoutMode(in: app, expectedMode: "compact", context: "folded before unfolding")
         applySimulatedWindowSizeChange(in: app, expectedSizeValue: "951x669", context: "folded to unfolded")
+        assertSimulatedLayoutMode(in: app, expectedMode: "split", context: "folded to unfolded")
 #if os(iOS)
         if app.windows.firstMatch.frame.width >= 800 {
             assertSimulatedLayoutChanged(in: app, to: .inspector, context: "folded to unfolded")
@@ -502,7 +504,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         tapCalculatorKey("calculator-key-2", in: app)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Expected the calculator value before the simulated fold request")
 
+        assertSimulatedLayoutMode(in: app, expectedMode: "split", context: "unfolded before folding")
         applySimulatedWindowSizeChange(in: app, expectedSizeValue: "382x644", context: "unfolded to folded")
+        assertSimulatedLayoutMode(in: app, expectedMode: "compact", context: "unfolded to folded")
         if !app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.exists {
             openTool(.calculator, in: app)
         }
@@ -814,12 +818,30 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             let button = app.buttons["debug-simulated-window-size-change-button"].firstMatch
             observedValue = button.value as? String
             observedLabel = button.label
-            if observedValue == expectedSizeValue || observedLabel?.contains(expectedSizeValue) == true {
+            if observedValue?.hasPrefix(expectedSizeValue + " ") == true || observedLabel?.contains(expectedSizeValue) == true {
                 return
             }
             waitBriefly(0.2)
         }
         XCTFail("\(context): expected the DEBUG simulated window-size hook to apply \(expectedSizeValue); button value is \(String(describing: observedValue)), label is \(String(describing: observedLabel))", file: file, line: line)
+    }
+
+    /// Asserts the root layout decision (DEBUG control value suffix) independently of the rendered window width.
+    private func assertSimulatedLayoutMode(in app: XCUIApplication, expectedMode: String, context: String, file: StaticString = #filePath, line: UInt = #line) {
+#if os(iOS)
+        // iPad always uses split navigation; the compact/split decision under test is the phone-idiom path.
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
+#endif
+        let deadline = Date().addingTimeInterval(5)
+        var observedValue: String?
+        while Date() < deadline {
+            observedValue = app.buttons["debug-simulated-window-size-change-button"].firstMatch.value as? String
+            if observedValue?.hasSuffix(" " + expectedMode) == true {
+                return
+            }
+            waitBriefly(0.2)
+        }
+        XCTFail("\(context): expected the root layout decision to be \(expectedMode); DEBUG control value is \(String(describing: observedValue))", file: file, line: line)
     }
 
     private func assertSimulatedLayoutChanged(in app: XCUIApplication, to expected: SimulatedToolPresentationExpectation, context: String, file: StaticString = #filePath, line: UInt = #line) {
