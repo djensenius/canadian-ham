@@ -382,7 +382,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testSimulatedFoldToUnfoldKeepsPracticeQuestionSelectionAndCalculatorValue() throws {
         let app = launchPracticeQuestion(extraArguments: [
             "-CanadianHamSimulatedWindowSize", "382x644",
-            "-CanadianHamSimulatedWindowSizeChangeDelay", "8",
+            "-CanadianHamSimulatedWindowSizeChangeDelay", "20",
             "-CanadianHamSimulatedWindowSizeAfterChange", "669x951",
             "-CanadianHamPracticeMode", "review-later"
         ])
@@ -615,6 +615,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             defer { app.terminate() }
 
             openTool(.calculator, in: app)
+            XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5), "Expected the calculator panel before checking largest Dynamic Type reachability")
             let reciprocal = app.buttons["calculator-key-reciprocal"].firstMatch
             scrollCalculatorPanelUntilElementExists(reciprocal, in: app, maxSwipes: 10)
             XCTAssertTrue(reciprocal.exists, "The lower calculator keys should exist at the largest accessibility text size")
