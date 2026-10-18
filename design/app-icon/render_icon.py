@@ -48,10 +48,13 @@ INK = "#15120F"
 CREAM_INNER = (232, 213, 183)
 CREAM_OUTER = (232, 213, 183)
 CREAM_OUTER_HEX = "#E8D5B7"
-DARK_FIELD = "#201B16"
-DARK_FIELD_INNER = (42, 36, 30)
-DARK_FIELD_OUTER = (32, 27, 22)
-DARK_INK = "#F3E8D2"
+# Dark appearance shared with the owner's FluxHaus and FluxTerm icons: flat warm brown field, white mark.
+DARK_FIELD = "#453316"
+DARK_FIELD_INNER = (69, 51, 22)
+DARK_FIELD_OUTER = (69, 51, 22)
+DARK_INK = "#FFFFFF"
+# Narrow cream halo baked into the Icon Composer brushstroke so system clear/tinted renders stay legible.
+ICON_COMPOSER_UNDERLAY = "#F3E8D2"
 TINTED_FOREGROUND = "#FFFFFF"
 TINTED_BACKGROUND = "#000000"
 
@@ -201,7 +204,7 @@ def render_icon_composer_foreground(foreground: Path, output: Path, tmp: Path) -
         MAGICK,
         "-size",
         f"{SIZE}x{SIZE}",
-        f"xc:{DARK_INK}",
+        f"xc:{ICON_COMPOSER_UNDERLAY}",
         str(halo_alpha),
         "-compose",
         "CopyOpacity",
@@ -734,14 +737,21 @@ def write_icon_composer_bundle(foreground: Path, tmp: Path) -> None:
         ICON_COMPOSER / "icon.json",
         {
             "color-space-for-untagged-svg-colors": "display-p3",
-            "fill": {"linear-gradient": [srgb_string(CREAM_INNER), srgb_string(CREAM_OUTER)]},
+            # Light uses the family cream; dark uses the family brown with a white mark (FluxHaus/FluxTerm).
+            "fill-specializations": [
+                {"value": {"solid": srgb_string(CREAM_INNER)}},
+                {"appearance": "dark", "value": {"solid": srgb_string(DARK_FIELD_INNER)}},
+            ],
             "groups": [
                 {
                     "blend-mode": "normal",
                     "layers": [
                         {
                             "blend-mode": "normal",
-                            "fill": "automatic",
+                            "fill-specializations": [
+                                {"value": "automatic"},
+                                {"appearance": "dark", "value": {"solid": srgb_string((255, 255, 255))}},
+                            ],
                             "glass": True,
                             "hidden": False,
                             "image-name": "brushstroke.png",
