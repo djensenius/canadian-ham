@@ -118,6 +118,24 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertFalse(advancedApp.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "Advanced course must not offer the Basic reference sheet")
     }
 
+    func testLargestDynamicTypeKeepsHintToolButtonReachable() throws {
+        let app = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        let calculator = app.buttons[Tool.calculator.buttonIdentifier].firstMatch
+        let hint = app.buttons[Tool.hint.buttonIdentifier].firstMatch
+        XCTAssertTrue(calculator.waitForExistence(timeout: 5), "Expected the calculator button at the largest accessibility text size")
+        XCTAssertTrue(hint.waitForExistence(timeout: 5), "Expected the hint button at the largest accessibility text size")
+        XCTAssertEqual(hint.label, "Hint", "The hint tool button keeps the visible localized title")
+        scrollExamToolUntilHittable(calculator, in: app, maxSwipes: 8)
+        XCTAssertTrue(calculator.isHittable, "The calculator button should remain hittable at the largest accessibility text size. Frame: \(frameDescription(calculator.frame))")
+        scrollExamToolUntilHittable(hint, in: app, maxSwipes: 8)
+        XCTAssertTrue(hint.isHittable, "The hint button should remain hittable at the largest accessibility text size. Frame: \(frameDescription(hint.frame))")
+        hint.tap()
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Tapping the largest-text Hint button should open the hint tool")
+    }
+
     func testHintToolLadderAndLessonLink() throws {
         let app = launchTwoLevelHintPracticeQuestion()
         defer { app.terminate() }

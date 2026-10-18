@@ -1,0 +1,55 @@
+---
+id: TASK-57
+title: Hint button fails the Dynamic Type audit on iPhone practice
+status: Done
+assignee:
+  - '@worker'
+created_date: '2026-10-18 05:52'
+updated_date: '2026-10-18 08:35'
+labels: []
+dependencies: []
+priority: high
+ordinal: 133000
+---
+
+## Description
+
+<!-- SECTION:DESCRIPTION:BEGIN -->
+Regression from #279 (task-50.12). On iPhone 17 Pro, main's CanadianHamPracticeUITests testAccessibilityAuditPracticeSessionLight/Dark fail at CanadianHamPracticeUITests.swift:2321 with 'Dynamic Type font sizes are partially unsupported'. The flagged element is the exam-tools row Hint button ('User will not be able to change the font size of this SwiftUI.AccessibilityNode'); the Calculator button with the same style is not flagged. An earlier unexplained minWidth:160 on exam-tool buttons (removed before merge) had masked it. The same finding appears on the iPhone Duo (TASK-55). Evidence: /tmp/t15-reg-main-pro.log and xcresult attachments in /tmp/ax-att.
+<!-- SECTION:DESCRIPTION:END -->
+
+## Acceptance Criteria
+<!-- AC:BEGIN -->
+- [x] #1 The root cause of the Hint button Dynamic Type audit finding is identified and fixed in the app, without filtering the audit or adding unexplained fixed widths
+- [x] #2 testAccessibilityAuditPracticeSessionLight/Dark pass on iPhone 17 Pro and the hint audit tests still pass on iPhone 17 Pro and iPad
+- [x] #3 The fix is checked against the TASK-55 Duo Dynamic Type finding, and TASK-55 notes are updated
+<!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect the #279 hint/calculator code and git history to isolate why Hint exposes a non-scaling accessibility node while Calculator does not.
+2. Apply the smallest app-side fix so the visible Hint title and accessibility metadata use Dynamic Type-compatible SwiftUI text semantics without audit filters, fixed widths, minimumScaleFactor, or hidden visible text.
+3. Run the requested targeted xbuild tests on iPhone 17 Pro, iPad Pro 13-inch, iPhone Duo, macOS units, and string checks if text sources change.
+4. Record the Duo result on TASK-55, finalize TASK-57 with evidence, commit, push, and open the requested PR.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Root cause: the Hint tool button supplied only a short visible Text title; SwiftUI synthesized a separate non-scaling AccessibilityNode for that button in the practice row, while Calculator's wider title did not trip the Dynamic Type audit. Fix: keep the visible Dynamic Type Text unchanged and give exam-tool buttons an explicit localized SwiftUI Text accessibilityLabel, so the audit sees a scalable Text-backed label instead of the synthesized non-scaling node. No audit filters, fixed widths, minimumScaleFactor, or hidden visible text were added.
+
+Coordinator completed the handoff after the worker ran out of context.
+Final targeted results at 137c5a5f:
+- iPhone 17 Pro practice session audits Light/Dark: 2/0 failures (/tmp/task57-practice-audits-iphone17d.log, e.log). The previous fail runs b and c were before the fix.
+- iPhone 17 Pro CanadianHamExamToolsUITests + testLearnUserNavigationOpensLessonQuiz: 25 executed, 3 skipped, 0 failures (/tmp/task57-iphone17-tools-learn.log). Includes the new testLargestDynamicTypeKeepsHintToolButtonReachable.
+- iPad Pro 13-inch (M5) CanadianHamExamToolsUITests: 24 executed, 6 skipped, 0 failures (/tmp/task57-ipad-examtools.log).
+- macOS unit: 151/0 (/tmp/task57-macos-units2.log).
+- iPhone Duo practice audits: the Dynamic Type finding is GONE, but both now fail with 'Text clipped' (/tmp/task57-duo-practice-audits.log). That is recorded in TASK-55 as the remaining Duo issue.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Exam-tool buttons now carry an explicit localized SwiftUI Text accessibility label, so the Hint button's accessibility node supports Dynamic Type like the visible title. This clears the iPhone practice-audit regression from #279 without filtering audits or adding fixed widths. Added a largest-text Hint reachability UI test.
+<!-- SECTION:FINAL_SUMMARY:END -->
