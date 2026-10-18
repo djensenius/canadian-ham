@@ -1,11 +1,11 @@
 ---
 id: TASK-15
 title: iPhone Duo readiness
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 11:18'
+updated_date: '2026-10-18 12:37'
 labels:
   - apple
   - 'legacy:T-706'
@@ -29,9 +29,9 @@ Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026
 - [x] #3 The layouts adapt between the outer and inner displays without truncation
 - [x] #4 The UI tests and accessibility audits run on the iPhone Duo simulator
 - [x] #5 Unfolded iPhone Duo shows the exam tools and the question side by side (width-driven, sharing the iPad side-panel code)
-- [ ] #6 In practice and review sessions, a slight open shows Hint 1 after a stable dwell; a normal unfold never triggers it; mock exams never peek
-- [ ] #7 A hint counts as used only after at least 0.5 s of visibility (button, peek or VoiceOver); unit tests cover the posture state machine and timing
-- [ ] #8 Hinge code is gated by #available(iOS 27.1, *) and an SDK-conditional build setting so the project still builds with older Xcode SDKs
+- [x] #6 In practice and review sessions, a slight open shows Hint 1 after a stable dwell; a normal unfold never triggers it; mock exams never peek
+- [x] #7 A hint counts as used only after at least 0.5 s of visibility (button, peek or VoiceOver); unit tests cover the posture state machine and timing
+- [x] #8 Hinge code is gated by #available(iOS 27.1, *) and an SDK-conditional build setting so the project still builds with older Xcode SDKs
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -87,4 +87,12 @@ coordinator decision 2026-10-18, pending owner confirmation: unfolded Duo portra
 N1-N7 post-merge validation 2026-10-18 (after merge of origin/main / TASK-57): implemented background root window measurement with keyboard-safe-area ignored only in the measuring background, cleared split navigationPath after copying into compact path on fold, raised the phone split/inspector threshold to 800x600 with 780/580 hysteresis, changed simulated size changes to a DEBUG-only user-triggered control with observable applied-size state, added unfolded->folded coverage, removed the compact root simultaneousGesture and duplicate 640x600 assertion, and kept #290's ExamToolButtons .accessibilityLabel(Text(tool.title)) line. AC3/AC5 evidence is qualified: iPad Pro 13-inch runs prove the iPad inspector/sidebar path; the phone-idiom injected-regular split/inspector path is policy/UI-hook covered on simulators but real unfolded Duo landscape/portrait verification remains TASK-54 AC4. Created TASK-58 for the separate iPhone 17 Pro Max calculator-key-percent forced-regular landscape failure. Latest post-merge results: macOS unit tests passed (157 tests, /tmp/task15-macos-unit-postmerge-20261018052548.log); iPad Pro 13-inch (M5) CanadianHamExamToolsUITests passed (30 executed, 6 skipped, /tmp/task15-ipad-examtools-postmerge-20261018052652.log); iPhone Duo CanadianHamExamToolsUITests executed 30, skipped 3, failed only the four known main-reproduced Duo simulator failures (calculator hardware keyboard tests and hint lesson back button, /tmp/task15-duo-examtools-postmerge-20261018054357.log); iPhone 17 Pro CanadianHamExamToolsUITests plus keyboard checks and practice audits passed (34 executed, 3 skipped, /tmp/task15-iphone17-examtools-keyboard-practice-postmerge-20261018060635.log), including testAccessibilityAuditPracticeSessionLight/Dark now passing after TASK-57/#290; pnpm check:apple-l10n passed without rewrite (/tmp/task15-apple-l10n-postmerge-20261018052141.log); node scripts/check-apple-text-sources.ts passed (/tmp/task15-apple-text-sources-postmerge-20261018052137.log). Previous main-reproduced iPhone 17 Pro practice Dynamic Type failures are now fixed on main by TASK-57/#290 rather than tracked as TASK-15 residual failures; the iPhone 17 Pro Max calculator-key-percent failure remains tracked in TASK-58.
 
 Coordinator, final review R1: the DEBUG size-change control's accessibility value now reports '<WxH> <compact|split>' from the root compactNavigation decision. The fold/unfold tests assert compact→split and split→compact on phone idiom (iPad always splits), so the phone split wiring is exercised on every simulator. Six simulated-layout tests passed on iPhone Duo, iPhone 17 Pro and iPad Pro 13-inch (M5): 6/0 each (/tmp/t15-r1-*.log). R2/R3 were added to TASK-54.
+
+TASK-15 part 2 validation 2026-10-18: implemented a pure HingePeekStateMachine (20–35° default slight-open band, 0.7 s dwell, edge-jitter tolerance), UIHingeInteraction provider behind #if !NO_HINGE_API and #available(iOS 27.1,*), DEBUG -CanadianHamSimulatedHingeSequence provider, and PracticeSessionView integration that reveals Hint 1 only for eligible practice/review questions using the existing HintToolView visibility timer. Mock exams never attach hint context or peek. TASK-54 now has real-device ACs for angle band, dwell, and normal-unfold non-peek verification. Validation: macOS unit tests passed 163/0 (/tmp/task15-peek-macos-unit-20261018073403.log, including 13 HintSessionStateTests for state machine/timer); iPhone 17 Pro CanadianHamExamToolsUITests passed 33 executed/3 skipped/0 failures (/tmp/task15-peek-iphone17-examtools-20261018073437.log, includes practice audits and new peek UI audit); iPhone Duo new simulated hinge peek UI tests passed 3/0 (/tmp/task15-peek-duo-new-peek-20261018081512.log); Duo hinge+hint targeted run executed 5 with only known TASK-54 simulator failure testHintToolLadderAndLessonLink (/tmp/task15-peek-duo-hinge-hint-20261018072858.log); iPad Pro 13-inch (M5) CanadianHamExamToolsUITests passed 33 executed/6 skipped/0 failures (/tmp/task15-peek-ipad-examtools-20261018081745.log); pnpm typecheck passed; pnpm test passed (131 content-tool tests + 21 morse tests + 127 calculator tests + 208 web tests); pnpm check:apple-l10n passed without rewrite; node scripts/check-apple-text-sources.ts passed. XcodeGen was run twice after project.yml and a third run confirmed deterministic project output.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+TASK-15 is complete. Part 1 delivered Duo simulator readiness and unfolded width-driven exam-tool split/inspector layout; part 2 adds the iOS 27.1+ hinge peek for Hint 1 in practice/review only. The hinge path is SDK/availability gated, simulator-testable through a DEBUG launch sequence, uses the existing hint panel and 0.5 s visibility qualification timer, and leaves mock exams without hints. Remaining real-device posture calibration and existing Duo simulator keyboard/back-button limitations are tracked in TASK-54.
+<!-- SECTION:FINAL_SUMMARY:END -->
