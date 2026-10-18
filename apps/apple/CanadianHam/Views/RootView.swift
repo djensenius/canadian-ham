@@ -713,7 +713,7 @@ struct RootView: View {
             .padding(.top, 120)
             .padding(.trailing, DesignTokens.Spacing.md)
             .accessibilityIdentifier("debug-simulated-window-size-change-button")
-            .accessibilityValue(Text(verbatim: debugSimulatedWindowSizeAccessibilityValue))
+            .accessibilityValue(Text(verbatim: debugSimulatedWindowSizeAccessibilityValue)) // l10n: verbatim
         }
     }
 
