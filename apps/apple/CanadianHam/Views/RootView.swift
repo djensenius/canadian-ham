@@ -711,7 +711,14 @@ struct RootView: View {
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("debug-simulated-window-size-change-button")
+            .accessibilityValue(Text(verbatim: debugSimulatedWindowSizeAccessibilityValue))
         }
+    }
+
+    private var debugSimulatedWindowSizeAccessibilityValue: String {
+        let size = debugSimulatedWindowSize ?? canadianHamSimulatedWindowSizeFromLaunchArguments()
+        guard let size else { return "actual" }
+        return "\(Int(size.width))x\(Int(size.height))"
     }
 
     private var debugSimulatedWindowSizeAfterChange: CGSize? {
