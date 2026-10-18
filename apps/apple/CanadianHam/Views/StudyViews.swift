@@ -393,6 +393,9 @@ struct PracticeSessionView: View {
     @State private var hingePeekStateMachine = HingePeekStateMachine()
     @State private var hingePeekPresentationState = HingeHintPeekPresentationState()
     @State private var hingePeekDwellRecheckTask: Task<Void, Never>?
+#if DEBUG
+    @State private var debugHingePlaybackTimestamp: TimeInterval = 0
+#endif
 #endif
     @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
     @Environment(\.canadianHamContentLibrary) private var contentLibrary
@@ -471,6 +474,17 @@ struct PracticeSessionView: View {
                 DuoPostureObserverView(provider: duoPostureProvider)
                     .frame(width: 0, height: 0)
             }
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugStatus") {
+                Text(verbatim: "Hinge playback progress") // l10n: verbatim DEBUG-only UI test hook
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(width: 1, height: 1)
+                    .accessibilityIdentifier("debug-hinge-playback-progress")
+                    .accessibilityValue(Text(verbatim: String(format: "%.3f", debugHingePlaybackTimestamp))) // l10n: verbatim
+                    .allowsHitTesting(false)
+            }
+#endif
         }
         .onAppear { configureDuoPostureProviderIfNeeded() }
         .onDisappear { clearDuoPostureProviderCallback() }
@@ -666,8 +680,12 @@ struct PracticeSessionView: View {
         }
     }
 
-    private func revealHintLevel(questionID: String, level: Int) {
-        state.hintLevelsByQuestionId[questionID] = max(state.hintLevelsByQuestionId[questionID] ?? 0, level)
+    @discardableResult
+    private func revealHintLevel(questionID: String, level: Int) -> Bool {
+        let previousLevel = state.hintLevelsByQuestionId[questionID] ?? 0
+        let nextLevel = max(previousLevel, level)
+        state.hintLevelsByQuestionId[questionID] = nextLevel
+        return nextLevel > previousLevel
     }
 
     private func qualifyAnsweredWithHelp(questionID: String) -> Bool {
@@ -699,6 +717,7 @@ struct PracticeSessionView: View {
         if duoPostureProvider == nil {
             duoPostureProvider = DuoPostureProviderFactory.makeProvider()
         }
+        applyHingePeekPresentation(.viewAppeared)
         duoPostureProvider?.onPostureChanged = { sample in
             handleDuoPosture(sample)
         }
@@ -708,15 +727,20 @@ struct PracticeSessionView: View {
     }
 
     private func clearDuoPostureProviderCallback() {
+        applyHingePeekPresentation(.viewDisappeared)
         duoPostureProvider?.onPostureChanged = nil
         hingePeekStateMachine.reset()
-        hingePeekPresentationState = HingeHintPeekPresentationState()
         cancelHingePeekDwellRecheck()
     }
 
     private func handleDuoPosture(_ sample: DuoPostureSample) {
-        let result = hingePeekStateMachine.update(sample: sample)
-        applyHingePeekUpdateResult(result, lastSampleTimestamp: sample.timestamp)
+#if DEBUG
+        debugHingePlaybackTimestamp = sample.timestamp
+#endif
+        var receivedSample = sample
+        receivedSample.timestamp = ProcessInfo.processInfo.systemUptime
+        let result = hingePeekStateMachine.update(sample: receivedSample)
+        applyHingePeekUpdateResult(result, lastSampleTimestamp: receivedSample.timestamp)
     }
 
     private func applyHingePeekUpdateResult(_ result: HingePeekUpdateResult, lastSampleTimestamp: TimeInterval) {
@@ -779,8 +803,10 @@ struct PracticeSessionView: View {
     private func applyHingePeekPresentationEffect(_ effect: HingeHintPeekPresentationEffect) {
         switch effect {
         case .presentHint(let questionID):
-            revealHintLevel(questionID: questionID, level: 1)
-            HintAccessibilityAnnouncements.postHintShown(level: 1)
+            let revealedNewLevel = revealHintLevel(questionID: questionID, level: 1)
+            if revealedNewLevel {
+                HintAccessibilityAnnouncements.postHintShown(level: 1)
+            }
             calculatorFocused = false
             calculatorViewModel.suspendHardwareKeyboardInput()
             if selectedExamTool != .hint {

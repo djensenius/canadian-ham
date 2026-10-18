@@ -197,7 +197,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testSimulatedHingeDismissedPeekReopensOnlyAfterReset() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
             "-CanadianHamExamToolInitialDetent", "large",
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:26@5.0,unfolded:180@20.0,partiallyOpen:25@20.3"
+            "-CanadianHamHingePlaybackDebugStatus",
+            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:45@6.0,partiallyOpen:25@6.5,partiallyOpen:45@7.5,unfolded:180@10.0,partiallyOpen:25@10.4"
         ])
         defer { app.terminate() }
 
@@ -206,19 +207,21 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(hintPanel.waitForExistence(timeout: 5), "The initial stable peek should open Hint")
         closeTool(in: app)
         XCTAssertTrue(hintPanel.waitForNonExistence(timeout: 2), "Dismissing the peek-opened Hint panel should close it")
-        waitBriefly(1.2)
-        XCTAssertFalse(hintPanel.exists, "An in-band sample while the same peek posture is active must not reopen a dismissed panel")
-        XCTAssertTrue(hintPanel.waitForExistence(timeout: 25), "After a fully-open reset, a fresh stable dwell may peek again")
+        waitForSimulatedHingePlayback(in: app, atLeast: 7.5, context: "dismissed peek should stay closed after leaving and re-entering the peek band without a reset")
+        XCTAssertFalse(hintPanel.exists, "Leaving the band and returning without a closed or fully-open reset must not reopen a dismissed panel")
+        XCTAssertTrue(hintPanel.waitForExistence(timeout: 8), "After a fully-open reset, a fresh stable dwell may peek again")
     }
 
     func testSimulatedHingePeekStillWorksAfterHintLessonRoundTrip() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
             "-CanadianHamExamToolInitialDetent", "large",
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0"
+            "-CanadianHamHingePlaybackDebugStatus",
+            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:45@6.0,partiallyOpen:25@6.5,partiallyOpen:45@7.5,unfolded:180@60.0,partiallyOpen:25@60.4"
         ])
         defer { app.terminate() }
 
-        XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "The initial simulated hinge peek should open Hint")
+        let hintPanel = app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch
+        XCTAssertTrue(hintPanel.waitForExistence(timeout: 5), "The initial simulated hinge peek should open Hint")
         let second = app.buttons["hint-show-level-2-button"].firstMatch
         XCTAssertTrue(second.waitForExistence(timeout: 5), "The initial peek should reveal Hint 1 and offer Hint 2")
         second.tap()
@@ -229,7 +232,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(heading.waitForExistence(timeout: 10), "Hint lesson link should open the shared sectionAnchor")
         tapNavigationBack(in: app, context: "returning from hint lesson before delayed hinge peek")
         XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10), "Back from the hint lesson should return to the practice question")
-        XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 10), "The DEBUG hinge provider should reattach after the lesson round trip and peek Hint again")
+        waitForSimulatedHingePlayback(in: app, atLeast: 7.5, context: "returned from the lesson with no closed or fully-open reset")
+        XCTAssertFalse(hintPanel.exists, "A peek dismissed by the lesson link must stay dismissed after a lesson round trip until a real posture reset")
+        waitForSimulatedHingePlayback(in: app, atLeast: 60.4, context: "fully-open reset and fresh slight-open sample after the lesson", timeout: 45)
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 3), "After a fully-open reset following the lesson, a fresh stable dwell may peek again")
     }
 
     func testSimulatedHingeFastUnfoldDoesNotPeekHintOneInPractice() throws {
@@ -907,6 +913,21 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             waitBriefly(0.2)
         }
         XCTFail("\(context): expected the DEBUG simulated window-size hook to apply \(expectedSizeValue); button value is \(String(describing: observedValue)), label is \(String(describing: observedLabel))", file: file, line: line)
+    }
+
+    private func waitForSimulatedHingePlayback(in app: XCUIApplication, atLeast timestamp: TimeInterval, context: String, timeout: TimeInterval = 10, file: StaticString = #filePath, line: UInt = #line) {
+        let progress = app.staticTexts["debug-hinge-playback-progress"].firstMatch
+        XCTAssertTrue(progress.waitForExistence(timeout: 5), "\(context): expected the DEBUG hinge playback progress element", file: file, line: line)
+        let deadline = Date().addingTimeInterval(timeout)
+        var observedValue: String?
+        while Date() < deadline {
+            observedValue = progress.value as? String
+            if let observedValue, let observedTimestamp = TimeInterval(observedValue), observedTimestamp + 0.000_001 >= timestamp {
+                return
+            }
+            waitBriefly(0.2)
+        }
+        XCTFail("\(context): expected simulated hinge playback to reach \(timestamp); observed value is \(String(describing: observedValue))", file: file, line: line)
     }
 
     /// Asserts the root layout decision (DEBUG control value suffix) independently of the rendered window width.

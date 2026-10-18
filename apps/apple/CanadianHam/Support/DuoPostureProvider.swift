@@ -162,7 +162,6 @@ struct HingeHintPeekPresentationState: Equatable {
     var posturePeekActive = false
     var openedToolByPeek = false
     var suppressedUntilPostureReset = false
-    var activeQuestionID: String?
 }
 
 struct HingeHintPeekPresentationContext: Equatable {
@@ -172,6 +171,8 @@ struct HingeHintPeekPresentationContext: Equatable {
 }
 
 enum HingeHintPeekPresentationAction: Equatable {
+    case viewAppeared
+    case viewDisappeared
     case postureStarted
     case postureEnded
     case selectedToolChanged(ExamTool?)
@@ -195,6 +196,12 @@ enum HingeHintPeekPresentationReducer {
         context: HingeHintPeekPresentationContext
     ) -> [HingeHintPeekPresentationEffect] {
         switch action {
+        case .viewAppeared, .viewDisappeared:
+            // View lifecycle only attaches or removes callbacks and pending
+            // dwell work. Dismissal suppression is a presentation decision and
+            // must survive lesson navigation until a posture reset arrives.
+            return []
+
         case .postureStarted:
             guard !state.posturePeekActive else { return [] }
             state.posturePeekActive = true
@@ -202,7 +209,6 @@ enum HingeHintPeekPresentationReducer {
                   context.canPeek,
                   let questionID = context.questionID
             else { return [] }
-            state.activeQuestionID = questionID
             state.openedToolByPeek = context.selectedTool != .hint
             return [.presentHint(questionID: questionID)]
 
@@ -334,11 +340,13 @@ final class SimulatedDuoPostureProvider: DuoPostureProviding {
     }
 
     private let sequence: [DuoPostureSample]
+    private let playbackStartedAt = ProcessInfo.processInfo.systemUptime
     private weak var attachedView: UIView?
     private var playbackTask: Task<Void, Never>?
 
     init(sequence: [DuoPostureSample]) {
         self.sequence = sequence.sorted { $0.timestamp < $1.timestamp }
+        refreshSampleForCurrentElapsed(notify: false)
     }
 
     func attach(to view: UIView) {
@@ -353,22 +361,39 @@ final class SimulatedDuoPostureProvider: DuoPostureProviding {
         playbackTask?.cancel()
         playbackTask = nil
         attachedView = nil
+        refreshSampleForCurrentElapsed(notify: false)
     }
 
     private func startPlayback() {
         playbackTask?.cancel()
+        refreshSampleForCurrentElapsed(notify: true)
+        let pendingSamples = sequence.filter { $0.timestamp > elapsedPlaybackTime }
         playbackTask = Task { @MainActor in
-            var previousTimestamp: TimeInterval = 0
-            for sample in sequence {
-                let delay = max(0, sample.timestamp - previousTimestamp)
+            for target in pendingSamples {
+                let delay = max(0, target.timestamp - self.elapsedPlaybackTime)
                 if delay > 0 {
                     try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
                 }
                 guard !Task.isCancelled else { return }
-                self.sample = sample
-                self.onPostureChanged?(sample)
-                previousTimestamp = sample.timestamp
+                self.updateSample(target, notify: true)
             }
+        }
+    }
+
+    private var elapsedPlaybackTime: TimeInterval {
+        ProcessInfo.processInfo.systemUptime - playbackStartedAt
+    }
+
+    private func refreshSampleForCurrentElapsed(notify: Bool) {
+        guard let currentSample = sequence.last(where: { $0.timestamp <= elapsedPlaybackTime }) else { return }
+        updateSample(currentSample, notify: notify)
+    }
+
+    private func updateSample(_ sample: DuoPostureSample, notify: Bool) {
+        guard self.sample != sample else { return }
+        self.sample = sample
+        if notify {
+            onPostureChanged?(sample)
         }
     }
 }

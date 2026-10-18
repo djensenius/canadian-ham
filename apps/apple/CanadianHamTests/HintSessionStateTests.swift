@@ -192,6 +192,35 @@ final class HintSessionStateTests: XCTestCase {
         XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible), [.presentHint(questionID: "B-001-002-002")])
     }
 
+    func testHingePeekPresentationLifecycleKeepsDismissalSuppressionAcrossDisappear() {
+        var state = HingeHintPeekPresentationState()
+        let eligible = HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)
+
+        _ = HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible)
+        _ = HingeHintPeekPresentationReducer.reduce(state: &state, action: .selectedToolChanged(nil), context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil))
+        XCTAssertTrue(state.suppressedUntilPostureReset)
+
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .viewDisappeared, context: eligible), [])
+        XCTAssertTrue(state.suppressedUntilPostureReset, "Navigating to a lesson must not clear the dismissal suppression")
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .viewAppeared, context: eligible), [])
+        XCTAssertTrue(state.suppressedUntilPostureReset, "Returning from a lesson must keep suppression until a posture reset")
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible), [])
+    }
+
+    func testHingePeekPresentationAppearanceAllowsCurrentResetToClearSuppression() {
+        var state = HingeHintPeekPresentationState()
+        let eligible = HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)
+
+        _ = HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible)
+        _ = HingeHintPeekPresentationReducer.reduce(state: &state, action: .selectedToolChanged(nil), context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil))
+        _ = HingeHintPeekPresentationReducer.reduce(state: &state, action: .viewDisappeared, context: eligible)
+
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .viewAppeared, context: eligible), [])
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureEnded, context: HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: nil)), [])
+        XCTAssertFalse(state.suppressedUntilPostureReset, "A current closed or fully-open sample processed on appear clears dismissal suppression")
+        XCTAssertEqual(HingeHintPeekPresentationReducer.reduce(state: &state, action: .postureStarted, context: eligible), [.presentHint(questionID: "B-001-002-002")])
+    }
+
     func testHingePeekPresentationKeepsButtonOpenedHintOpenOnReset() {
         var state = HingeHintPeekPresentationState()
         let buttonOpened = HingeHintPeekPresentationContext(questionID: "B-001-002-002", canPeek: true, selectedTool: .hint)
