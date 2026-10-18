@@ -1,10 +1,11 @@
 ---
 id: TASK-50.13
 title: tvOS and visionOS hint follow-up
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-16 15:31'
+updated_date: '2026-10-18 20:02'
 labels:
   - apple
 dependencies:
@@ -32,3 +33,9 @@ Bring the Hint tool to tvOS and visionOS after the first Apple iOS/iPadOS/macOS 
 - [ ] #7 The hint tool handles one-level hint files by presenting only Hint 1, with no empty or broken Hint 2 affordance.
 - [ ] #8 The lesson link uses a generic localized label ("Review in lesson" / « Revoir dans la leçon ») and never shows the linked section heading or lesson title before the question is answered, because some headings contain answer words (e.g. "Sporadic E and six metres")
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect the shipped task-50.12 hint/session/content and lesson-anchor code, plus tvOS/visionOS practice/mock/lesson surfaces and target membership.\n2. Reuse shared hint/content/engine files by adding them to CanadianHamTV and CanadianHamVision targets, then add minimal platform-specific Hint presentation to tvOS/visionOS practice only with mock exams excluded.\n3. Wire help recording, ladder/timer/lesson-link/session-retention behavior through existing practice state without touching iOS-only views unless needed.\n4. Add or extend tvOS/visionOS unit/UI/accessibility tests for availability/absence, ladder/one-level files, lesson links, help recording, and audits.\n5. Regenerate the Apple project twice with XcodeGen, verify determinism, run targeted xbuild and JS/localization/content checks, then finalize Backlog, commit, push, and open the PR.
+<!-- SECTION:PLAN:END -->
