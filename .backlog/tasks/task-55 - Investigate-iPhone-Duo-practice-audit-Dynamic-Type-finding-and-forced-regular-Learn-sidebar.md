@@ -6,6 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-10-18 02:16'
+updated_date: '2026-10-18 03:19'
 labels:
   - apple
 dependencies:
@@ -26,3 +27,9 @@ TASK-15 part 1 required iPhone Duo practice audits and Learn navigation runs. Bo
 - [ ] #2 Make CanadianHamPracticeUITests/testLearnUserNavigationOpensLessonQuiz pass on iPhone Duo, or document why forced-regular landscape has no root-sidebar on the iOS 27.1 Duo runtime
 - [ ] #3 Rerun CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionLight, testAccessibilityAuditPracticeSessionDark and testLearnUserNavigationOpensLessonQuiz on iPhone Duo and record per-test results
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Review follow-up 2026-10-18: TASK-55 depends on TASK-15 part 1 / PR #286 because it investigates Duo simulator practice audit/navigation failures found by that work; it does not need part 2 hinge-peek work except insofar as Backlog cannot express a dependency on part 1 only.
+<!-- SECTION:NOTES:END -->
