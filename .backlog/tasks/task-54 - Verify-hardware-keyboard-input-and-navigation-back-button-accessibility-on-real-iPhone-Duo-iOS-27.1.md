@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-10-18 01:53'
-updated_date: '2026-10-18 11:14'
+updated_date: '2026-10-18 11:32'
 labels:
   - apple
 dependencies:
@@ -26,6 +26,9 @@ TASK-15 part 1 found four iPhone Duo simulator failures that also reproduce on o
 - [ ] #2 Verify with VoiceOver or Accessibility Inspector that the lesson/result back affordance is reachable and correctly labelled on iPhone Duo
 - [ ] #3 If the failures reproduce on real hardware, fix product code without weakening tests; if they do not, document the simulator limitation and keep TASK-15 tests unchanged
 - [ ] #4 Verify on a real iPhone Duo that unfolded landscape (about 951x669 pt) uses the side-by-side question plus exam-tools inspector layout, unfolded portrait (about 669x951 pt) stays on the compact sheet, and fold/unfold in both directions during practice preserves the current question, selected answer and calculator value
+- [ ] #5 Verify on a real iPhone Duo that the Hint 1 hinge peek triggers only in the implemented slight-open angle band (default 20–35° until hardware evidence says otherwise), and record the observed comfortable angle range.
+- [ ] #6 Verify on a real iPhone Duo that the slight-open posture must dwell stably for about 0.7 s before Hint 1 peeks, including small edge jitter, and record pass/fail evidence.
+- [ ] #7 Verify on a real iPhone Duo that a normal fold-to-unfold motion passing quickly through the peek band never reveals Hint 1.
 <!-- AC:END -->
 
 ## Implementation Notes
