@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 00:08'
+updated_date: '2026-10-18 03:10'
 labels:
   - apple
   - 'legacy:T-706'
@@ -24,11 +24,11 @@ Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The app builds with Xcode 27.1+ and runs on the iPhone Duo simulator
-- [ ] #2 Practice and mock exam state survives fold/unfold
-- [ ] #3 The layouts adapt between the outer and inner displays without truncation
-- [ ] #4 The UI tests and accessibility audits run on the iPhone Duo simulator
-- [ ] #5 Unfolded iPhone Duo shows the exam tools and the question side by side (width-driven, sharing the iPad side-panel code)
+- [x] #1 The app builds with Xcode 27.1+ and runs on the iPhone Duo simulator
+- [x] #2 Practice and mock exam state survives fold/unfold
+- [x] #3 The layouts adapt between the outer and inner displays without truncation
+- [x] #4 The UI tests and accessibility audits run on the iPhone Duo simulator
+- [x] #5 Unfolded iPhone Duo shows the exam tools and the question side by side (width-driven, sharing the iPad side-panel code)
 - [ ] #6 In practice and review sessions, a slight open shows Hint 1 after a stable dwell; a normal unfold never triggers it; mock exams never peek
 - [ ] #7 A hint counts as used only after at least 0.5 s of visibility (button, peek or VoiceOver); unit tests cover the posture state machine and timing
 - [ ] #8 Hinge code is gated by #available(iOS 27.1, *) and an SDK-conditional build setting so the project still builds with older Xcode SDKs
@@ -69,4 +69,8 @@ Runtime experiment 2026-10-17 (iPhone Duo 0DEB0EAC-F45C-4251-82AA-146DAF2BD524, 
 - A temporary DEBUG diagnostic overlay (not committed) logged the launched app on the default/closed display at SwiftUI geometry 382x644 pt, safe area top 0 / bottom 34 / trailing 84, horizontal size class compact, vertical regular. UIHingeInteraction delivered an initial update with status closed (raw 1) and angle 0.0.
 - Toggling screen 3 power with `simctl io screenConfig --display primary-1 power off/on` generated SwiftUI geometry changes (including a transient 2769x1973 pt report) but kept compact/regular size classes and UIHingeInteraction still reported closed angle 0.0; it did not simulate an unfolded posture.
 - I did not find a simulator-controllable fold/unfold path, so part 1 tests should use width/size-class DEBUG launch hooks for unfolded layout and state-resize coverage. Part 2 can attach a real UIHingeInteraction provider behind availability/build gates.
+
+Part 1 validation after merging origin/main (merge commit b4cd582d): iPhone Duo simulator runtime remains iOS 27.1 with no fold/unfold control, so unfolded coverage uses the DEBUG-only -CanadianHamSimulatedWindowSize hook plus unit policy coverage. Main classification: the four named CanadianHamExamToolsUITests failures all reproduce on detached origin/main on iPhone Duo (log /tmp/task15-main-duo-four-20261017213848.log): testCalculatorAutoFocusesHardwareKeyboardOnOpen, testCalculatorKeyboardInputIsFocusScoped, testCalculatorValueResetsForNewMockExam, and testHintToolLadderAndLessonLink. Branch post-merge full Duo ExamTools log /tmp/task15-duo-examtools-postmerge-20261017215328.log executed 25 tests, 3 skipped, 4 failures: the same four. Diagnosis recorded for follow-up TASK-54: hardware key events do not reach focusable/onKeyPress calculator handling on Duo, and system NavigationBar back buttons are not exposed to XCTest; attempted product workarounds were reverted per coordinator decision because they would be simulator-specific.
+
+Additional required Duo practice targets also reproduce on detached origin/main (main log /tmp/task15-main-duo-practice-targeted-20261017221356.log; branch log /tmp/task15-duo-practice-targeted-20261017221133.log): testAccessibilityAuditPracticeSessionLight and Dark fail with 'Dynamic Type font sizes are partially unsupported', and testLearnUserNavigationOpensLessonQuiz fails waiting for root-sidebar under forced-regular landscape. Follow-up TASK-55 tracks investigation/fix. Passing validation: DuoLayoutPolicyTests passed (5 tests, /tmp/task15-duo-layout-unit-postmerge-20261017230937.log); iPhone 17 Pro CanadianHamExamToolsUITests passed (25 executed, 3 skipped, /tmp/task15-iphone17-examtools-postmerge-20261017221639.log); iPad Pro 13-inch (M5) CanadianHamExamToolsUITests passed (25 executed, 6 skipped, /tmp/task15-ipad-examtools-postmerge-20261017225044.log); macOS unit tests passed (156 tests, /tmp/task15-macos-unit-postmerge-20261017230448.log); pnpm typecheck passed (/tmp/task15-pnpm-typecheck-20261017230551.log); pnpm test passed (127 node tests + 208 web tests, /tmp/task15-pnpm-test-20261017230625.log); pnpm check:apple-l10n passed without rewrite (/tmp/task15-apple-l10n-20261017230729.log); Apple text-source check passed (/tmp/task15-apple-text-sources-20261017230902.log). AC4 is checked for the Duo tests/audits that run or are classified: the remaining 7 Duo failures are main-reproduced and tracked in TASK-54/TASK-55.
 <!-- SECTION:NOTES:END -->
