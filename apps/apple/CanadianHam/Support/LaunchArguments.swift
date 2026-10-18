@@ -25,8 +25,11 @@ func canadianHamParsedWindowSize(_ rawValue: String) -> CGSize? {
 }
 
 func canadianHamSimulatedWindowSize(default actualSize: CGSize, arguments: [String] = ProcessInfo.processInfo.arguments) -> CGSize {
-    guard let rawValue = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSize", in: arguments),
-          let size = canadianHamParsedWindowSize(rawValue) else { return actualSize }
-    return size
+    canadianHamSimulatedWindowSizeFromLaunchArguments(arguments: arguments) ?? actualSize
+}
+
+func canadianHamSimulatedWindowSizeFromLaunchArguments(arguments: [String] = ProcessInfo.processInfo.arguments) -> CGSize? {
+    guard let rawValue = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSize", in: arguments) else { return nil }
+    return canadianHamParsedWindowSize(rawValue)
 }
 #endif

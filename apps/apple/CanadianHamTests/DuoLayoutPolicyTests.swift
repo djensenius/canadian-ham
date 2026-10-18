@@ -7,48 +7,53 @@ final class DuoLayoutPolicyTests: XCTestCase {
     func testUnfoldedIPhoneEntryBoundaries() {
         XCTAssertFalse(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 639, height: 600),
+            containerSize: CGSize(width: 799, height: 600),
             verticalSizeClass: .regular
         ))
         XCTAssertTrue(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 640, height: 600),
+            containerSize: CGSize(width: 800, height: 600),
             verticalSizeClass: .regular
         ))
         XCTAssertFalse(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 640, height: 599),
+            containerSize: CGSize(width: 800, height: 599),
             verticalSizeClass: .regular
         ))
+        XCTAssertFalse(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
+            idiom: .phone,
+            containerSize: CGSize(width: 669, height: 951),
+            verticalSizeClass: .regular
+        ), "Unfolded Duo portrait is not wide enough for a 420 pt exam column beside the 380 pt inspector.")
         XCTAssertTrue(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 640, height: 600),
+            containerSize: CGSize(width: 951, height: 669),
             verticalSizeClass: .regular
-        ))
+        ), "Unfolded Duo landscape is wide enough for the split/inspector layout.")
     }
 
     func testUnfoldedIPhoneHysteresisPreventsSmallSizeJitterFromClosingLayout() {
         XCTAssertTrue(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 639, height: 599),
+            containerSize: CGSize(width: 799, height: 599),
             verticalSizeClass: .regular,
             wasUsingUnfoldedLayout: true
         ), "An already-unfolded layout should not collapse for one-point window-size jitter around the entry threshold.")
         XCTAssertTrue(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 620, height: 580),
+            containerSize: CGSize(width: 780, height: 580),
             verticalSizeClass: .regular,
             wasUsingUnfoldedLayout: true
         ))
         XCTAssertFalse(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 619, height: 580),
+            containerSize: CGSize(width: 779, height: 580),
             verticalSizeClass: .regular,
             wasUsingUnfoldedLayout: true
         ))
         XCTAssertFalse(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 620, height: 579),
+            containerSize: CGSize(width: 780, height: 579),
             verticalSizeClass: .regular,
             wasUsingUnfoldedLayout: true
         ))
@@ -69,10 +74,10 @@ final class DuoLayoutPolicyTests: XCTestCase {
         ), "Pro Max landscape keeps the task-44.3 sheet path because its vertical size class is compact and its height is below the unfolded threshold.")
     }
 
-    func testNilVerticalSizeClassDoesNotBlockWidthDrivenUnfoldedLayout() {
+    func testNilVerticalSizeClassDoesNotBlockWidthDrivenUnfoldedLandscapeLayout() {
         XCTAssertTrue(AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: .phone,
-            containerSize: CGSize(width: 669, height: 951),
+            containerSize: CGSize(width: 951, height: 669),
             verticalSizeClass: nil
         ))
     }

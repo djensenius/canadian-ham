@@ -69,10 +69,10 @@ struct RootView: View {
     @State private var regularWidthExamToolPresented = false
 #if os(iOS)
     @State private var compactNavigationPath = NavigationPath()
+    @State private var measuredWindowSize: CGSize?
     @State private var usesUnfoldedIPhoneLayout = false
 #if DEBUG
     @State private var debugSimulatedWindowSize: CGSize?
-    @State private var didScheduleDebugSimulatedWindowSizeChange = false
 #endif
 #endif
     @State private var didApplyLaunchNavigation = false
@@ -142,42 +142,41 @@ struct RootView: View {
     @ViewBuilder
     private func appContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
 #if os(iOS)
-        GeometryReader { proxy in
-            let windowSize = effectiveWindowSize(proxy.size)
-            let unfoldedIPhoneLayout = calculatedUsesUnfoldedIPhoneLayout(windowSize: windowSize)
-            let compactNavigation = usesCompactNavigation(usesUnfoldedIPhoneLayout: unfoldedIPhoneLayout)
-            Group {
-                if compactNavigation {
-                    compactTabContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                } else {
-                    splitContent(
-                        bank: bank,
-                        contentLibrary: contentLibrary,
-                        progressStore: progressStore,
-                        windowSize: windowSize,
-                        usesUnfoldedIPhoneLayout: unfoldedIPhoneLayout
-                    )
-                    .environment(\.horizontalSizeClass, unfoldedIPhoneLayout ? .regular : horizontalSizeClass)
-                }
-            }
-            .environment(\.canadianHamWindowSize, windowSize)
-            .environment(\.canadianHamUsesUnfoldedIPhoneLayout, unfoldedIPhoneLayout)
-            .environment(\.canadianHamApplySimulatedWindowSizeChange, debugSimulatedWindowSizeChangeAction())
-            .overlay(alignment: .topTrailing) {
-                debugSimulatedWindowSizeChangeControl()
-            }
-            .onAppear {
-                updateUnfoldedIPhoneLayout(windowSize: windowSize)
-                scheduleDebugSimulatedWindowSizeChangeIfNeeded()
-            }
-            .onChange(of: windowSize) { _, next in
-                updateUnfoldedIPhoneLayout(windowSize: next)
-            }
-            .onChange(of: compactNavigation) { _, next in
-                synchronizeNavigationForLayoutChange(usesCompactNavigation: next)
+        let windowSize = effectiveWindowSize(measuredWindowSize)
+        let unfoldedIPhoneLayout = windowSize.map { calculatedUsesUnfoldedIPhoneLayout(windowSize: $0) } ?? false
+        let compactNavigation = usesCompactNavigation(usesUnfoldedIPhoneLayout: unfoldedIPhoneLayout)
+        Group {
+            if compactNavigation {
+                compactTabContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+            } else {
+                splitContent(
+                    bank: bank,
+                    contentLibrary: contentLibrary,
+                    progressStore: progressStore,
+                    windowSize: windowSize,
+                    usesUnfoldedIPhoneLayout: unfoldedIPhoneLayout
+                )
+                .environment(\.horizontalSizeClass, unfoldedIPhoneLayout ? .regular : horizontalSizeClass)
             }
         }
-        .ignoresSafeArea(.keyboard)
+        .environment(\.canadianHamWindowSize, windowSize)
+        .environment(\.canadianHamUsesUnfoldedIPhoneLayout, unfoldedIPhoneLayout)
+        .background(windowSizeReader())
+        .overlay(alignment: .topTrailing) {
+            debugSimulatedWindowSizeChangeControl()
+        }
+        .onAppear {
+            if let windowSize {
+                updateUnfoldedIPhoneLayout(windowSize: windowSize)
+            }
+        }
+        .onChange(of: windowSize) { _, next in
+            guard let next else { return }
+            updateUnfoldedIPhoneLayout(windowSize: next)
+        }
+        .onChange(of: compactNavigation) { _, next in
+            synchronizeNavigationForLayoutChange(usesCompactNavigation: next)
+        }
 #else
         splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
 #endif
@@ -225,14 +224,14 @@ struct RootView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 compactRootSection("Study") {
-                    compactRootButton("Home", systemImage: "house", destination: .home) { selection = .home }
-                    compactRootButton("Learn", systemImage: "book.closed", destination: .learn) { selection = .learn }
-                    compactRootButton("Practice", systemImage: "checklist", destination: .practice) { selection = .practiceHub }
+                    compactRootButton("Home", systemImage: "house", destination: .home)
+                    compactRootButton("Learn", systemImage: "book.closed", destination: .learn)
+                    compactRootButton("Practice", systemImage: "checklist", destination: .practice)
                 }
 
                 compactRootSection("Tools") {
-                    compactRootButton("Morse", systemImage: "waveform", destination: .morse) { selection = .morse }
-                    compactRootButton("Settings", systemImage: "gearshape", destination: .settings) { selection = .settings }
+                    compactRootButton("Morse", systemImage: "waveform", destination: .morse)
+                    compactRootButton("Settings", systemImage: "gearshape", destination: .settings)
                 }
             }
             .pagePadding()
@@ -255,7 +254,7 @@ struct RootView: View {
         }
     }
 
-    private func compactRootButton(_ title: LocalizedStringKey, systemImage: String, destination: CompactSection, onNavigate: @escaping () -> Void) -> some View {
+    private func compactRootButton(_ title: LocalizedStringKey, systemImage: String, destination: CompactSection) -> some View {
         NavigationLink(value: destination) {
             HStack(spacing: DesignTokens.Spacing.md) {
                 Image(systemName: systemImage)
@@ -276,7 +275,6 @@ struct RootView: View {
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
         .buttonStyle(.plain)
-        .simultaneousGesture(TapGesture().onEnded(onNavigate))
         .accessibilityLabel(Text(title)) // l10n: localized
     }
 
@@ -637,17 +635,43 @@ struct RootView: View {
         usesUnfoldedIPhoneLayout = next
     }
 
-    private func effectiveWindowSize(_ actualSize: CGSize) -> CGSize {
+    private func effectiveWindowSize(_ actualSize: CGSize?) -> CGSize? {
 #if DEBUG
-        debugSimulatedWindowSize ?? canadianHamSimulatedWindowSize(default: actualSize)
+        if let debugSimulatedWindowSize {
+            return debugSimulatedWindowSize
+        }
+        if let actualSize {
+            return canadianHamSimulatedWindowSize(default: actualSize)
+        }
+        return canadianHamSimulatedWindowSizeFromLaunchArguments()
 #else
         actualSize
 #endif
     }
 
+    @ViewBuilder
+    private func windowSizeReader() -> some View {
+        GeometryReader { proxy in
+            Color.clear
+                .onAppear {
+                    updateMeasuredWindowSize(proxy.size)
+                }
+                .onChange(of: proxy.size) { _, next in
+                    updateMeasuredWindowSize(next)
+                }
+        }
+        .ignoresSafeArea(.keyboard)
+    }
+
+    private func updateMeasuredWindowSize(_ size: CGSize) {
+        guard measuredWindowSize != size else { return }
+        measuredWindowSize = size
+    }
+
     private func synchronizeNavigationForLayoutChange(usesCompactNavigation: Bool) {
         guard usesCompactNavigation else { return }
         compactNavigationPath = compactPath(for: selection, including: navigationPath)
+        navigationPath = []
     }
 
     private func compactPath(for selection: SidebarSelection, including splitPath: [LearnRoute]) -> NavigationPath {
@@ -680,8 +704,10 @@ struct RootView: View {
     private func debugSimulatedWindowSizeChangeControl() -> some View {
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowSimulatedWindowSizeChangeControl"),
            let size = debugSimulatedWindowSizeAfterChange {
-            Button("Apply simulated window size change") {
+            Button {
                 debugSimulatedWindowSize = size
+            } label: {
+                Text(verbatim: "Apply simulated window size change")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("debug-simulated-window-size-change-button")
@@ -692,35 +718,12 @@ struct RootView: View {
         AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeAfterChange")
             .flatMap { canadianHamParsedWindowSize($0) }
     }
-
-    private func debugSimulatedWindowSizeChangeAction() -> (@MainActor @Sendable () -> Void)? {
-        guard ProcessInfo.processInfo.arguments.contains("-CanadianHamShowSimulatedWindowSizeChangeControl"),
-              let size = debugSimulatedWindowSizeAfterChange else { return nil }
-        return { debugSimulatedWindowSize = size }
-    }
 #else
     @ViewBuilder
     private func debugSimulatedWindowSizeChangeControl() -> some View {
         EmptyView()
     }
-
-    private func debugSimulatedWindowSizeChangeAction() -> (@MainActor @Sendable () -> Void)? { nil }
 #endif
-
-    private func scheduleDebugSimulatedWindowSizeChangeIfNeeded() {
-#if DEBUG
-        guard !didScheduleDebugSimulatedWindowSizeChange,
-              let rawDelay = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeChangeDelay"),
-              let delay = Double(rawDelay),
-              delay >= 0,
-              let size = debugSimulatedWindowSizeAfterChange else { return }
-        didScheduleDebugSimulatedWindowSizeChange = true
-        Task { @MainActor in
-            try? await Task.sleep(for: .seconds(delay))
-            debugSimulatedWindowSize = size
-        }
-#endif
-    }
 #endif
 
 #if DEBUG && os(iOS)

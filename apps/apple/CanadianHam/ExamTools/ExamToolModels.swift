@@ -102,9 +102,9 @@ func canadianHamInterfaceCalculatorLocale(bundle: Bundle = .main) -> CalculatorL
 }
 
 struct AdaptiveExamLayoutPolicy {
-    static let unfoldedIPhoneMinimumWidth: CGFloat = 640
+    static let unfoldedIPhoneMinimumWidth: CGFloat = 800
     static let unfoldedIPhoneMinimumHeight: CGFloat = 600
-    static let unfoldedIPhoneExitWidth: CGFloat = 620
+    static let unfoldedIPhoneExitWidth: CGFloat = 780
     static let unfoldedIPhoneExitHeight: CGFloat = 580
 
     static func usesUnfoldedIPhoneLayout(
@@ -148,10 +148,6 @@ private struct CanadianHamUsesUnfoldedIPhoneLayoutKey: EnvironmentKey {
     static let defaultValue = false
 }
 
-private struct CanadianHamApplySimulatedWindowSizeChangeKey: EnvironmentKey {
-    static let defaultValue: (@MainActor @Sendable () -> Void)? = nil
-}
-
 extension EnvironmentValues {
     var canadianHamWindowSize: CGSize? {
         get { self[CanadianHamWindowSizeKey.self] }
@@ -161,11 +157,6 @@ extension EnvironmentValues {
     var canadianHamUsesUnfoldedIPhoneLayout: Bool {
         get { self[CanadianHamUsesUnfoldedIPhoneLayoutKey.self] }
         set { self[CanadianHamUsesUnfoldedIPhoneLayoutKey.self] = newValue }
-    }
-
-    var canadianHamApplySimulatedWindowSizeChange: (@MainActor @Sendable () -> Void)? {
-        get { self[CanadianHamApplySimulatedWindowSizeChangeKey.self] }
-        set { self[CanadianHamApplySimulatedWindowSizeChangeKey.self] = newValue }
     }
 }
 
