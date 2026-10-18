@@ -47,6 +47,7 @@ struct RootView: View {
     @StateObject private var appSettings: AppSettingsModel
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
 #endif
 
     @State private var bank: QuestionBank?
@@ -136,10 +137,13 @@ struct RootView: View {
     @ViewBuilder
     private func appContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
 #if os(iOS)
-        if effectiveHorizontalSizeClass == .compact {
-            compactTabContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-        } else {
-            splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+        GeometryReader { proxy in
+            let containerSize = effectiveContainerSize(proxy.size)
+            if usesCompactNavigation(containerSize: containerSize) {
+                compactTabContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+            } else {
+                splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+            }
         }
 #else
         splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
@@ -565,6 +569,25 @@ struct RootView: View {
 #endif
         return UIDevice.current.userInterfaceIdiom == .pad || hasInitialVisibilityLaunchArgument
     }()
+#endif
+
+#if os(iOS)
+    private func usesCompactNavigation(containerSize: CGSize) -> Bool {
+        guard effectiveHorizontalSizeClass == .compact else { return false }
+        return !AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
+            idiom: PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom),
+            containerSize: containerSize,
+            verticalSizeClass: verticalSizeClass
+        )
+    }
+
+    private func effectiveContainerSize(_ actualSize: CGSize) -> CGSize {
+#if DEBUG
+        canadianHamSimulatedWindowSize(default: actualSize)
+#else
+        actualSize
+#endif
+    }
 #endif
 
 #if DEBUG && os(iOS)

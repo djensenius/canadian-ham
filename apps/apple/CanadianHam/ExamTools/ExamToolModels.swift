@@ -101,6 +101,54 @@ func canadianHamInterfaceCalculatorLocale(bundle: Bundle = .main) -> CalculatorL
     bundle.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true ? .fr : .en
 }
 
+struct AdaptiveExamLayoutPolicy {
+    static let unfoldedIPhoneMinimumWidth: CGFloat = 640
+    static let unfoldedIPhoneMinimumHeight: CGFloat = 600
+
+    static func usesUnfoldedIPhoneLayout(
+        idiom: PlatformUserInterfaceIdiom,
+        containerSize: CGSize,
+        verticalSizeClass: UserInterfaceSizeClass?
+    ) -> Bool {
+        guard idiom == .phone else { return false }
+        guard verticalSizeClass != .compact else { return false }
+        return containerSize.width >= unfoldedIPhoneMinimumWidth && containerSize.height >= unfoldedIPhoneMinimumHeight
+    }
+
+    static func usesInspectorPresentation(
+        idiom: PlatformUserInterfaceIdiom,
+        containerSize: CGSize,
+        horizontalSizeClass: UserInterfaceSizeClass?,
+        verticalSizeClass: UserInterfaceSizeClass?
+    ) -> Bool {
+        if idiom == .pad {
+            return horizontalSizeClass == .regular
+        }
+        return usesUnfoldedIPhoneLayout(idiom: idiom, containerSize: containerSize, verticalSizeClass: verticalSizeClass)
+    }
+}
+
+enum PlatformUserInterfaceIdiom: Equatable {
+    case phone
+    case pad
+    case mac
+    case other
+
+#if os(iOS)
+    init(_ idiom: UIUserInterfaceIdiom) {
+        switch idiom {
+        case .phone:
+            self = .phone
+        case .pad:
+            self = .pad
+        case .mac:
+            self = .mac
+        default:
+            self = .other
+        }
+    }
+#endif
+}
 
 struct CalculatorToolLayout {
     let availableHeight: CGFloat

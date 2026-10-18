@@ -346,6 +346,54 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "0", "Starting a new mock exam should reset calculator state")
     }
 
+    func testSimulatedUnfoldedWidthUsesInspectorAndKeepsPracticeSelection() throws {
+        let app = launchPracticeQuestion(extraArguments: [
+            "-CanadianHamForceRegularHorizontalSizeClass",
+            "-CanadianHamSimulatedWindowSize", "669x951",
+            "-CanadianHamPracticeMode", "review-later"
+        ])
+        defer { app.terminate() }
+
+        let question = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(question.waitForExistence(timeout: 10), "Expected the practice question before opening a simulated unfolded inspector")
+        let initialQuestionText = question.label
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected answer A before selecting an answer")
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        XCTAssertTrue(answer.isHittable, "Expected answer A to be hittable before selecting it")
+        answer.tap()
+        waitBriefly()
+        XCTAssertTrue(answer.isSelected, "Answer A should be selected before opening the simulated unfolded inspector")
+        let selectedAnswerLabel = answer.label
+
+        openTool(.calculator, in: app)
+        let panel = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+        XCTAssertTrue(panel.waitForExistence(timeout: 5), "Simulated unfolded iPhone width should keep the calculator available while exercising the inspector selection policy")
+        XCTAssertEqual(question.label, initialQuestionText, "Opening the simulated unfolded tool panel must not rebuild to a different question")
+        XCTAssertEqual(answer.label, selectedAnswerLabel, "Opening the inspector must preserve the selected answer label")
+        XCTAssertTrue(answer.isSelected, "Opening the inspector must preserve the selected answer state")
+    }
+
+    func testSimulatedUnfoldedWidthMockExamUsesCalculatorInspectorWithoutHints() throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamForceRegularHorizontalSizeClass",
+            "-CanadianHamSimulatedWindowSize", "669x951",
+            "-CanadianHamMockExamSeed", "ui-exam-tools-duo-mock",
+            "-CanadianHamMockExamQuestionID", "B-006-008-004",
+            "-CanadianHamMockExamLimit", "3"
+        ])
+        defer { app.terminate() }
+
+        tapStartMockExam(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
+        XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "Mock exams must never expose hints, including in simulated unfolded width")
+        openTool(.calculator, in: app)
+        let panel = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+        XCTAssertTrue(panel.waitForExistence(timeout: 5), "Simulated unfolded mock exams should keep the calculator available while exercising the inspector selection policy")
+    }
+
     func testRegularWidthUsesInspectorAndKeepsAnswersHittable() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector layout is covered by the targeted iPad run.")
