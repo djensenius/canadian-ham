@@ -69,6 +69,11 @@ struct RootView: View {
     @State private var regularWidthExamToolPresented = false
 #if os(iOS)
     @State private var compactNavigationPath = NavigationPath()
+    @State private var usesUnfoldedIPhoneLayout = false
+#if DEBUG
+    @State private var debugSimulatedWindowSize: CGSize?
+    @State private var didScheduleDebugSimulatedWindowSizeChange = false
+#endif
 #endif
     @State private var didApplyLaunchNavigation = false
 
@@ -138,13 +143,38 @@ struct RootView: View {
     private func appContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
 #if os(iOS)
         GeometryReader { proxy in
-            let containerSize = effectiveContainerSize(proxy.size)
-            if usesCompactNavigation(containerSize: containerSize) {
-                compactTabContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-            } else {
-                splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+            let windowSize = effectiveWindowSize(proxy.size)
+            let unfoldedIPhoneLayout = calculatedUsesUnfoldedIPhoneLayout(windowSize: windowSize)
+            let compactNavigation = usesCompactNavigation(usesUnfoldedIPhoneLayout: unfoldedIPhoneLayout)
+            Group {
+                if compactNavigation {
+                    compactTabContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                } else {
+                    splitContent(
+                        bank: bank,
+                        contentLibrary: contentLibrary,
+                        progressStore: progressStore,
+                        windowSize: windowSize,
+                        usesUnfoldedIPhoneLayout: unfoldedIPhoneLayout
+                    )
+                    .environment(\.horizontalSizeClass, unfoldedIPhoneLayout ? .regular : horizontalSizeClass)
+                }
+            }
+            .environment(\.canadianHamWindowSize, windowSize)
+            .environment(\.canadianHamUsesUnfoldedIPhoneLayout, unfoldedIPhoneLayout)
+            .onAppear {
+                updateUnfoldedIPhoneLayout(windowSize: windowSize)
+                synchronizeNavigationForLayoutChange(usesCompactNavigation: compactNavigation)
+                scheduleDebugSimulatedWindowSizeChangeIfNeeded()
+            }
+            .onChange(of: windowSize) { _, next in
+                updateUnfoldedIPhoneLayout(windowSize: next)
+            }
+            .onChange(of: compactNavigation) { _, next in
+                synchronizeNavigationForLayoutChange(usesCompactNavigation: next)
             }
         }
+        .ignoresSafeArea(.keyboard)
 #else
         splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
 #endif
@@ -192,14 +222,14 @@ struct RootView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 compactRootSection("Study") {
-                    compactRootButton("Home", systemImage: "house", destination: .home)
-                    compactRootButton("Learn", systemImage: "book.closed", destination: .learn)
-                    compactRootButton("Practice", systemImage: "checklist", destination: .practice)
+                    compactRootButton("Home", systemImage: "house", destination: .home) { selection = .home }
+                    compactRootButton("Learn", systemImage: "book.closed", destination: .learn) { selection = .learn }
+                    compactRootButton("Practice", systemImage: "checklist", destination: .practice) { selection = .practiceHub }
                 }
 
                 compactRootSection("Tools") {
-                    compactRootButton("Morse", systemImage: "waveform", destination: .morse)
-                    compactRootButton("Settings", systemImage: "gearshape", destination: .settings)
+                    compactRootButton("Morse", systemImage: "waveform", destination: .morse) { selection = .morse }
+                    compactRootButton("Settings", systemImage: "gearshape", destination: .settings) { selection = .settings }
                 }
             }
             .pagePadding()
@@ -222,7 +252,7 @@ struct RootView: View {
         }
     }
 
-    private func compactRootButton(_ title: LocalizedStringKey, systemImage: String, destination: CompactSection) -> some View {
+    private func compactRootButton(_ title: LocalizedStringKey, systemImage: String, destination: CompactSection, onNavigate: @escaping () -> Void) -> some View {
         NavigationLink(value: destination) {
             HStack(spacing: DesignTokens.Spacing.md) {
                 Image(systemName: systemImage)
@@ -243,6 +273,7 @@ struct RootView: View {
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
         .buttonStyle(.plain)
+        .simultaneousGesture(TapGesture().onEnded(onNavigate))
         .accessibilityLabel(Text(title)) // l10n: localized
     }
 
@@ -252,12 +283,15 @@ struct RootView: View {
         case .home:
             compactHomeView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
+                .onAppear { selection = .home }
         case .learn:
             compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
+                .onAppear { selection = .learn }
         case .practice:
             compactPracticeView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
+                .onAppear { selection = .practiceHub }
         case .morse:
             MorseTrainerView(settings: $morseSettings, progressStore: progressStore) { nextSettings in
                 morseSettings = nextSettings
@@ -265,9 +299,11 @@ struct RootView: View {
                 recordDataChanged()
             }
             .background(DesignTokens.Colors.paper)
+            .onAppear { selection = .morse }
         case .settings:
             compactSettingsView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
+                .onAppear { selection = .settings }
         }
     }
 
@@ -320,6 +356,7 @@ struct RootView: View {
             ) {
                 recordDataChanged()
             }
+            .onAppear { selection = .practice(scope) }
         case .mockExam:
             MockExamView(
                 bank: bank,
@@ -330,6 +367,7 @@ struct RootView: View {
             ) {
                 recordDataChanged()
             }
+            .onAppear { selection = .mockExam }
         }
     }
 
@@ -359,6 +397,7 @@ struct RootView: View {
         switch route {
         case .about:
             AboutView(bank: bank)
+                .onAppear { selection = .about }
         }
     }
 
@@ -386,57 +425,66 @@ struct RootView: View {
 #endif
 
     @ViewBuilder
-    private func splitContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
-        GeometryReader { proxy in
-            let columnVisibility: Binding<NavigationSplitViewVisibility>? = shouldUseBoundSplitColumnVisibility ? $splitColumnVisibility : nil
-            splitNavigationView(
-                bank: bank,
-                contentLibrary: contentLibrary,
-                progressStore: progressStore,
-                columnVisibility: columnVisibility
-            )
-            .navigationSplitViewStyle(.balanced)
+    private func splitContent(
+        bank: QuestionBank,
+        contentLibrary: ContentLibrary,
+        progressStore: ProgressStoreService,
+        windowSize: CGSize? = nil,
+        usesUnfoldedIPhoneLayout: Bool = false
+    ) -> some View {
+        let columnVisibility: Binding<NavigationSplitViewVisibility>? = shouldUseBoundSplitColumnVisibility(usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout) ? $splitColumnVisibility : nil
+        splitNavigationView(
+            bank: bank,
+            contentLibrary: contentLibrary,
+            progressStore: progressStore,
+            columnVisibility: columnVisibility
+        )
+        .navigationSplitViewStyle(.balanced)
 #if os(iOS)
-            .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
 #endif
-            .onAppear {
-                updateLanguage(from: progressStore.preferences)
-                applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
-                applyInitialSplitColumnVisibilityLaunchArgument()
-                updateRegularWidthExamToolColumnVisibility(containerSize: proxy.size)
+        .onAppear {
+            updateLanguage(from: progressStore.preferences)
+            applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
+            applyInitialSplitColumnVisibilityLaunchArgument()
+            updateRegularWidthExamToolColumnVisibility(containerSize: windowSize, usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout)
+        }
+        .onChange(of: progressStore.preferences.language) { _, _ in
+            updateLanguage(from: progressStore.preferences)
+        }
+        .onChange(of: progressStore.preferences.practiceMode) { _, _ in
+            practiceSessionStates.clear()
+        }
+        .onChange(of: progressStore.preferences.activeBankId) { _, next in
+            loadBank(for: next)
+            practiceSessionStates.clear()
+            mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
+        }
+        .onChange(of: appSettings.localDataReplacementRevision) { _, next in
+            clearCachedSessions(localDataReplacementRevision: next)
+        }
+        .onChange(of: selection) { previous, next in
+            // Lessons opened from a practice hint sit on the practice stack; clear them when
+            // switching to Learn so Learn opens at its list rather than the hint lesson.
+            if next != .learn || previous.isExamSessionSelection {
+                navigationPath.removeAll()
             }
-            .onChange(of: progressStore.preferences.language) { _, _ in
-                updateLanguage(from: progressStore.preferences)
-            }
-            .onChange(of: progressStore.preferences.practiceMode) { _, _ in
-                practiceSessionStates.clear()
-            }
-            .onChange(of: progressStore.preferences.activeBankId) { _, next in
-                loadBank(for: next)
-                practiceSessionStates.clear()
-                mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
-            }
-            .onChange(of: appSettings.localDataReplacementRevision) { _, next in
-                clearCachedSessions(localDataReplacementRevision: next)
-            }
-            .onChange(of: selection) { previous, next in
-                // Lessons opened from a practice hint sit on the practice stack; clear them when
-                // switching to Learn so Learn opens at its list rather than the hint lesson.
-                if next != .learn || previous.isExamSessionSelection {
-                    navigationPath.removeAll()
-                }
-                if !next.isExamSessionSelection {
-                    regularWidthExamToolPresented = false
-                }
-            }
-            .onChange(of: regularWidthExamToolPresented) { _, _ in
-                updateRegularWidthExamToolColumnVisibility(containerSize: proxy.size)
-            }
-            .onChange(of: proxy.size) { _, next in
-                updateRegularWidthExamToolColumnVisibility(containerSize: next)
+            if !next.isExamSessionSelection {
+                regularWidthExamToolPresented = false
             }
         }
+        .onChange(of: regularWidthExamToolPresented) { _, _ in
+            updateRegularWidthExamToolColumnVisibility(containerSize: windowSize, usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout)
+        }
+#if os(iOS)
+        .onChange(of: windowSize) { _, next in
+            updateRegularWidthExamToolColumnVisibility(containerSize: next, usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout)
+        }
+        .onChange(of: usesUnfoldedIPhoneLayout) { _, next in
+            updateRegularWidthExamToolColumnVisibility(containerSize: windowSize, usesUnfoldedIPhoneLayout: next)
+        }
+#endif
 #if os(macOS)
         .frame(minWidth: 980, minHeight: 680)
 #endif
@@ -552,40 +600,91 @@ struct RootView: View {
         dataRevision + appSettings.dataRevision
     }
 
-    private var shouldUseBoundSplitColumnVisibility: Bool {
+    private func shouldUseBoundSplitColumnVisibility(usesUnfoldedIPhoneLayout: Bool) -> Bool {
 #if os(iOS)
-        Self.usesBoundSplitColumnVisibility
-#else
-        false
-#endif
-    }
-
-#if os(iOS)
-    private static let usesBoundSplitColumnVisibility: Bool = {
 #if DEBUG
         let hasInitialVisibilityLaunchArgument = AppLaunchArguments.value(after: "-CanadianHamInitialSplitColumnVisibility") != nil
 #else
         let hasInitialVisibilityLaunchArgument = false
 #endif
-        return UIDevice.current.userInterfaceIdiom == .pad || hasInitialVisibilityLaunchArgument
-    }()
+        return UIDevice.current.userInterfaceIdiom == .pad || usesUnfoldedIPhoneLayout || hasInitialVisibilityLaunchArgument
+#else
+        return false
 #endif
+    }
 
 #if os(iOS)
-    private func usesCompactNavigation(containerSize: CGSize) -> Bool {
-        guard effectiveHorizontalSizeClass == .compact else { return false }
-        return !AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
+    private func usesCompactNavigation(usesUnfoldedIPhoneLayout: Bool) -> Bool {
+        guard !usesUnfoldedIPhoneLayout else { return false }
+        return effectiveHorizontalSizeClass == .compact
+    }
+
+    private func calculatedUsesUnfoldedIPhoneLayout(windowSize: CGSize) -> Bool {
+        AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
             idiom: PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom),
-            containerSize: containerSize,
-            verticalSizeClass: verticalSizeClass
+            containerSize: windowSize,
+            verticalSizeClass: verticalSizeClass,
+            wasUsingUnfoldedLayout: usesUnfoldedIPhoneLayout
         )
     }
 
-    private func effectiveContainerSize(_ actualSize: CGSize) -> CGSize {
+    private func updateUnfoldedIPhoneLayout(windowSize: CGSize) {
+        let next = calculatedUsesUnfoldedIPhoneLayout(windowSize: windowSize)
+        guard usesUnfoldedIPhoneLayout != next else { return }
+        usesUnfoldedIPhoneLayout = next
+    }
+
+    private func effectiveWindowSize(_ actualSize: CGSize) -> CGSize {
 #if DEBUG
-        canadianHamSimulatedWindowSize(default: actualSize)
+        debugSimulatedWindowSize ?? canadianHamSimulatedWindowSize(default: actualSize)
 #else
         actualSize
+#endif
+    }
+
+    private func synchronizeNavigationForLayoutChange(usesCompactNavigation: Bool) {
+        guard usesCompactNavigation else { return }
+        compactNavigationPath = compactPath(for: selection, including: navigationPath)
+    }
+
+    private func compactPath(for selection: SidebarSelection, including splitPath: [LearnRoute]) -> NavigationPath {
+        var path: NavigationPath
+        switch selection {
+        case .home:
+            path = compactPath(to: .home)
+        case .learn:
+            path = compactPath(to: .learn)
+            for route in splitPath { path.append(route) }
+        case .practiceHub:
+            path = compactPath(to: .practice)
+        case .practice(let scope):
+            path = compactPath(to: .practice, appending: CompactPracticeRoute.practice(scope))
+            for route in splitPath { path.append(route) }
+        case .mockExam:
+            path = compactPath(to: .practice, appending: CompactPracticeRoute.mockExam)
+        case .morse:
+            path = compactPath(to: .morse)
+        case .settings:
+            path = compactPath(to: .settings)
+        case .about:
+            path = compactPath(to: .settings, appending: CompactSettingsRoute.about)
+        }
+        return path
+    }
+
+    private func scheduleDebugSimulatedWindowSizeChangeIfNeeded() {
+#if DEBUG
+        guard !didScheduleDebugSimulatedWindowSizeChange,
+              let rawDelay = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeChangeDelay"),
+              let delay = Double(rawDelay),
+              delay >= 0,
+              let rawSize = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeAfterChange"),
+              let size = canadianHamParsedWindowSize(rawSize) else { return }
+        didScheduleDebugSimulatedWindowSizeChange = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(delay))
+            debugSimulatedWindowSize = size
+        }
 #endif
     }
 #endif
@@ -611,10 +710,11 @@ struct RootView: View {
 #endif
     }
 
-    private func updateRegularWidthExamToolColumnVisibility(containerSize: CGSize) {
+    private func updateRegularWidthExamToolColumnVisibility(containerSize: CGSize?, usesUnfoldedIPhoneLayout: Bool) {
 #if os(iOS)
-        guard UIDevice.current.userInterfaceIdiom == .pad else { return }
-        guard shouldCollapseSidebarForRegularWidthExamTool(containerSize: containerSize) else {
+        guard let containerSize,
+              UIDevice.current.userInterfaceIdiom == .pad || usesUnfoldedIPhoneLayout else { return }
+        guard shouldCollapseSidebarForRegularWidthExamTool(containerSize: containerSize, usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout) else {
             if let preToolSplitColumnVisibility {
                 splitColumnVisibility = preToolSplitColumnVisibility
                 self.preToolSplitColumnVisibility = nil
@@ -630,8 +730,8 @@ struct RootView: View {
     }
 
 #if os(iOS)
-    private func shouldCollapseSidebarForRegularWidthExamTool(containerSize: CGSize) -> Bool {
-        guard UIDevice.current.userInterfaceIdiom == .pad else { return false }
+    private func shouldCollapseSidebarForRegularWidthExamTool(containerSize: CGSize, usesUnfoldedIPhoneLayout: Bool) -> Bool {
+        guard UIDevice.current.userInterfaceIdiom == .pad || usesUnfoldedIPhoneLayout else { return false }
         let estimatedSidebarWidth: CGFloat = 320
         let inspectorIdealWidth: CGFloat = 380
         let minimumExamColumnWidth: CGFloat = 420
@@ -665,9 +765,10 @@ struct RootView: View {
             .lesson(link.lessonId)
         }
 #if os(iOS)
-        if effectiveHorizontalSizeClass == .compact {
+        if effectiveHorizontalSizeClass == .compact && !usesUnfoldedIPhoneLayout {
             compactNavigationPath.append(route)
             selection = .learn
+            navigationPath = [route]
             return
         }
 #endif

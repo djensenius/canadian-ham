@@ -46,6 +46,8 @@ struct ExamToolPresentationModifier: ViewModifier {
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.canadianHamWindowSize) private var canadianHamWindowSize
+    @Environment(\.canadianHamUsesUnfoldedIPhoneLayout) private var canadianHamUsesUnfoldedIPhoneLayout
 #endif
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
@@ -67,38 +69,37 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     func body(content: Content) -> some View {
 #if os(iOS)
-        GeometryReader { proxy in
-            let containerSize = effectiveContainerSize(proxy.size)
-            let usesInspector = horizontalUsesInspector(containerSize: containerSize)
-            if usesInspector {
-                focusResettingContent(content)
-                    .background { inspectorKeyboardResponder(usesInspector: usesInspector) }
-                    .inspector(isPresented: isPresented) {
-                        toolPanel(usesInspector: usesInspector)
-                            .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
-                    }
-            } else {
-                focusResettingContent(content)
-                    .safeAreaInset(edge: .bottom) {
-                        Color.clear.frame(height: selectedTool == nil ? 0 : compactSheetHeight)
-                    }
-                    .sheet(item: $selectedTool, onDismiss: onDismiss) { tool in
-                        toolPanel(for: tool, usesInspector: usesInspector)
-                            .background {
-                                GeometryReader { proxy in
-                                    Color.clear
-                                        .onAppear { updateCompactSheetHeight(proxy.size.height) }
-                                        .onChange(of: proxy.size.height) { _, height in updateCompactSheetHeight(height) }
-                                }
+        let usesInspector = horizontalUsesInspector()
+        if usesInspector {
+            focusResettingContent(content)
+                .background { inspectorKeyboardResponder(usesInspector: usesInspector) }
+                .inspector(isPresented: isPresented) {
+                    toolPanel(usesInspector: usesInspector)
+                        .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
+                }
+                .onAppear { resetCompactSheetHeight() }
+                .onChange(of: usesInspector) { _, _ in resetCompactSheetHeight() }
+        } else {
+            focusResettingContent(content)
+                .safeAreaInset(edge: .bottom) {
+                    Color.clear.frame(height: selectedTool == nil ? 0 : compactSheetHeight)
+                }
+                .sheet(item: $selectedTool, onDismiss: onDismiss) { tool in
+                    toolPanel(for: tool, usesInspector: usesInspector)
+                        .background {
+                            GeometryReader { proxy in
+                                Color.clear
+                                    .onAppear { updateCompactSheetHeight(proxy.size.height) }
+                                    .onChange(of: proxy.size.height) { _, height in updateCompactSheetHeight(height) }
                             }
-                            .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
-                            .presentationContentInteraction(.scrolls)
-                            .presentationBackgroundInteraction(.enabled(upThrough: .medium))
-                            .presentationDragIndicator(.visible)
-                            .onAppear { selectedSheetDetent = preferredSheetDetent(for: tool) }
-                            .onChange(of: dynamicTypeSize) { _, _ in selectedSheetDetent = preferredSheetDetent(for: tool) }
-                    }
-            }
+                        }
+                        .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
+                        .presentationContentInteraction(.scrolls)
+                        .presentationBackgroundInteraction(.enabled(upThrough: .medium))
+                        .presentationDragIndicator(.visible)
+                        .onAppear { selectedSheetDetent = preferredSheetDetent(for: tool) }
+                        .onChange(of: dynamicTypeSize) { _, _ in selectedSheetDetent = preferredSheetDetent(for: tool) }
+                }
         }
 #elseif os(macOS)
         focusResettingContent(content)
@@ -152,21 +153,21 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
 #if os(iOS)
-    private func horizontalUsesInspector(containerSize: CGSize) -> Bool {
-        AdaptiveExamLayoutPolicy.usesInspectorPresentation(
+    private func horizontalUsesInspector() -> Bool {
+        if canadianHamUsesUnfoldedIPhoneLayout {
+            return true
+        }
+        return AdaptiveExamLayoutPolicy.usesInspectorPresentation(
             idiom: PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom),
-            containerSize: containerSize,
+            containerSize: canadianHamWindowSize ?? .zero,
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass
         )
     }
 
-    private func effectiveContainerSize(_ actualSize: CGSize) -> CGSize {
-#if DEBUG
-        canadianHamSimulatedWindowSize(default: actualSize)
-#else
-        actualSize
-#endif
+    private func resetCompactSheetHeight() {
+        guard compactSheetHeight != 0 else { return }
+        compactSheetHeight = 0
     }
 
     @ViewBuilder

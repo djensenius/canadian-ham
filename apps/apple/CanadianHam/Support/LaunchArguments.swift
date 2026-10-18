@@ -11,8 +11,7 @@ enum AppLaunchArguments {
 }
 
 #if DEBUG
-func canadianHamSimulatedWindowSize(default actualSize: CGSize, arguments: [String] = ProcessInfo.processInfo.arguments) -> CGSize {
-    guard let rawValue = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSize", in: arguments) else { return actualSize }
+func canadianHamParsedWindowSize(_ rawValue: String) -> CGSize? {
     let separators = CharacterSet(charactersIn: "xX,")
     let parts = rawValue.components(separatedBy: separators)
     guard parts.count == 2,
@@ -20,8 +19,14 @@ func canadianHamSimulatedWindowSize(default actualSize: CGSize, arguments: [Stri
           let height = Double(parts[1]),
           width > 0,
           height > 0 else {
-        return actualSize
+        return nil
     }
     return CGSize(width: width, height: height)
+}
+
+func canadianHamSimulatedWindowSize(default actualSize: CGSize, arguments: [String] = ProcessInfo.processInfo.arguments) -> CGSize {
+    guard let rawValue = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSize", in: arguments),
+          let size = canadianHamParsedWindowSize(rawValue) else { return actualSize }
+    return size
 }
 #endif

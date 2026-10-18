@@ -1,7 +1,6 @@
 import Foundation
 
 #if os(iOS)
-@MainActor
 enum DuoPosture: Equatable, Sendable {
     case unavailable
     case closed

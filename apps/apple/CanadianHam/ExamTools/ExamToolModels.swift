@@ -104,14 +104,20 @@ func canadianHamInterfaceCalculatorLocale(bundle: Bundle = .main) -> CalculatorL
 struct AdaptiveExamLayoutPolicy {
     static let unfoldedIPhoneMinimumWidth: CGFloat = 640
     static let unfoldedIPhoneMinimumHeight: CGFloat = 600
+    static let unfoldedIPhoneExitWidth: CGFloat = 620
+    static let unfoldedIPhoneExitHeight: CGFloat = 580
 
     static func usesUnfoldedIPhoneLayout(
         idiom: PlatformUserInterfaceIdiom,
         containerSize: CGSize,
-        verticalSizeClass: UserInterfaceSizeClass?
+        verticalSizeClass: UserInterfaceSizeClass?,
+        wasUsingUnfoldedLayout: Bool = false
     ) -> Bool {
         guard idiom == .phone else { return false }
         guard verticalSizeClass != .compact else { return false }
+        if wasUsingUnfoldedLayout {
+            return containerSize.width >= unfoldedIPhoneExitWidth && containerSize.height >= unfoldedIPhoneExitHeight
+        }
         return containerSize.width >= unfoldedIPhoneMinimumWidth && containerSize.height >= unfoldedIPhoneMinimumHeight
     }
 
@@ -119,12 +125,38 @@ struct AdaptiveExamLayoutPolicy {
         idiom: PlatformUserInterfaceIdiom,
         containerSize: CGSize,
         horizontalSizeClass: UserInterfaceSizeClass?,
-        verticalSizeClass: UserInterfaceSizeClass?
+        verticalSizeClass: UserInterfaceSizeClass?,
+        wasUsingUnfoldedLayout: Bool = false
     ) -> Bool {
         if idiom == .pad {
             return horizontalSizeClass == .regular
         }
-        return usesUnfoldedIPhoneLayout(idiom: idiom, containerSize: containerSize, verticalSizeClass: verticalSizeClass)
+        return usesUnfoldedIPhoneLayout(
+            idiom: idiom,
+            containerSize: containerSize,
+            verticalSizeClass: verticalSizeClass,
+            wasUsingUnfoldedLayout: wasUsingUnfoldedLayout
+        )
+    }
+}
+
+private struct CanadianHamWindowSizeKey: EnvironmentKey {
+    static let defaultValue: CGSize? = nil
+}
+
+private struct CanadianHamUsesUnfoldedIPhoneLayoutKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var canadianHamWindowSize: CGSize? {
+        get { self[CanadianHamWindowSizeKey.self] }
+        set { self[CanadianHamWindowSizeKey.self] = newValue }
+    }
+
+    var canadianHamUsesUnfoldedIPhoneLayout: Bool {
+        get { self[CanadianHamUsesUnfoldedIPhoneLayoutKey.self] }
+        set { self[CanadianHamUsesUnfoldedIPhoneLayoutKey.self] = newValue }
     }
 }
 
