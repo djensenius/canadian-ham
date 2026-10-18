@@ -190,6 +190,8 @@ targets:
       - path: CanadianHam/Models/ProgressModels.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
       - path: CanadianHam/Practice/HintSessionState.swift
+      - path: CanadianHam/Support/LaunchArguments.swift
+      - path: CanadianHam/Support/DuoPostureProvider.swift
       - path: CanadianHam/ExamTools/ExamToolModels.swift
       - path: ../../content/lessons
         type: folder

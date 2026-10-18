@@ -66,6 +66,55 @@ final class HintSessionStateTests: XCTestCase {
         XCTAssertFalse(HintToolRules.showsReferencePointer(referenceSheetAvailable: true, visibleLevel: 1, referenceSheetSection: nil))
     }
 
+    func testHingePeekRequiresStableDwellInSlightOpenBand() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2))
+
+        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 0))
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.1))
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.75))
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.81))
+    }
+
+    func testHingePeekFastUnfoldThroughBandNeverPeeks() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2))
+
+        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 0))
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 22, timestamp: 0.1))
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 30, timestamp: 0.25))
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 34, timestamp: 0.35))
+        XCTAssertFalse(machine.update(status: .unfolded, angleDegrees: 180, timestamp: 0.45))
+    }
+
+    func testHingePeekToleratesSmallJitterAtBandEdges() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2))
+
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 20, timestamp: 0))
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 19.2, timestamp: 0.25), "Small edge jitter should not reset the stable dwell candidate")
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 20.5, timestamp: 0.72), "Returning inside the band after tolerated jitter should peek once the original dwell elapsed")
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 36.5, timestamp: 0.9), "A visible peek may continue through tolerated edge jitter")
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 38.1, timestamp: 1.0), "Jitter outside the tolerance ends the peek")
+    }
+
+    func testHingePeekEndsWhenPhoneFullyOpensOrCloses() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2))
+
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0))
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.8))
+        XCTAssertFalse(machine.update(status: .unfolded, angleDegrees: 180, timestamp: 0.9))
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 1.0), "After fully opening, a new dwell must start")
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 1.8))
+        XCTAssertFalse(machine.update(status: .closed, angleDegrees: 0, timestamp: 1.9))
+    }
+
+    func testHingePeekEligibilityAllowsPracticeReviewLaterButNeverMockExamOrScoredImmediateAnswer() {
+        XCTAssertTrue(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.reviewLater), hasHint: true, alreadySelected: true, reviewSubmitted: false))
+        XCTAssertTrue(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.immediate), hasHint: true, alreadySelected: false, reviewSubmitted: false))
+        XCTAssertFalse(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.immediate), hasHint: true, alreadySelected: true, reviewSubmitted: false))
+        XCTAssertFalse(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.reviewLater), hasHint: true, alreadySelected: true, reviewSubmitted: true))
+        XCTAssertFalse(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.reviewLater), hasHint: false, alreadySelected: false, reviewSubmitted: false))
+        XCTAssertFalse(HingeHintPeekRules.canPeekHint(sessionKind: .mockExam, hasHint: true, alreadySelected: false, reviewSubmitted: false))
+    }
+
     func testApplyPracticeAnswerSubmitsAnsweredWithHelpToEngine() throws {
         let question = BankQuestion(
             id: "B-006-004-001",
@@ -95,6 +144,31 @@ final class HintSessionStateTests: XCTestCase {
         XCTAssertEqual(record.recentAnsweredWithHelp, [true])
         XCTAssertEqual(record.leitner.box, 0)
         XCTAssertEqual(record.leitner.dueAt, "2026-01-02T00:00:00.000Z")
+    }
+
+    func testPeekRouteUsesVisibilityTimerBeforeQualifyingAnsweredWithHelp() async throws {
+        let questionID = "B-001-002-002"
+        let timer = HintVisibilityQualificationTimer()
+        var qualifiedQuestionIds: Set<String> = []
+        var answeredWithHelpQuestionIds: Set<String> = []
+
+        timer.begin(questionID: questionID, canRecordHelp: true, alreadyQualified: false, delayNanoseconds: 200_000_000) {
+            let result = PracticeHintRules.qualifyingHint(
+                questionID: questionID,
+                mode: .immediate,
+                alreadySelected: false,
+                reviewSubmitted: false,
+                qualifiedQuestionIds: qualifiedQuestionIds,
+                answeredWithHelpQuestionIds: answeredWithHelpQuestionIds
+            )
+            qualifiedQuestionIds = result.qualifiedQuestionIds
+            answeredWithHelpQuestionIds = result.answeredWithHelpQuestionIds
+        }
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertEqual(qualifiedQuestionIds, [], "A peek reveal must not count as help before the shared 0.5 s visibility rule fires")
+        try await Task.sleep(nanoseconds: 180_000_000)
+        XCTAssertEqual(qualifiedQuestionIds, [questionID])
+        XCTAssertEqual(answeredWithHelpQuestionIds, [])
     }
 
     func testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange() async throws {

@@ -388,6 +388,12 @@ struct PracticeSessionView: View {
 
     @State private var selectedExamTool: ExamTool?
     @State private var calculatorFocused = false
+#if os(iOS)
+    @State private var duoPostureProvider: (any DuoPostureProviding)?
+    @State private var hingePeekStateMachine = HingePeekStateMachine()
+    @State private var hingePeekIsActive = false
+    @State private var selectedToolOpenedByHingePeek = false
+#endif
     @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
     @Environment(\.canadianHamContentLibrary) private var contentLibrary
 
@@ -452,8 +458,28 @@ struct PracticeSessionView: View {
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, hintContext: hintToolContext)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
         .onAppear { calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale()) }
-        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
+        .onChange(of: selectedExamTool) { _, next in
+#if os(iOS)
+            if next != .hint {
+                selectedToolOpenedByHingePeek = false
+            }
+#endif
+            onExamToolPresentationChanged(next != nil)
+        }
         .onDisappear { onExamToolPresentationChanged(false) }
+#if os(iOS)
+        .background {
+            if let duoPostureProvider {
+                DuoPostureObserverView(provider: duoPostureProvider)
+                    .frame(width: 0, height: 0)
+            }
+        }
+        .onAppear { configureDuoPostureProviderIfNeeded() }
+        .onDisappear { duoPostureProvider?.detach() }
+        .onChange(of: state.currentIndex) { _, _ in refreshActiveHingePeek() }
+        .onChange(of: state.selectedByQuestionId) { _, _ in refreshActiveHingePeek() }
+        .onChange(of: state.reviewSubmitted) { _, _ in refreshActiveHingePeek() }
+#endif
     }
 
     private var header: some View {
@@ -630,6 +656,9 @@ struct PracticeSessionView: View {
     }
 
     private func openExamTool(_ tool: ExamTool) {
+#if os(iOS)
+        selectedToolOpenedByHingePeek = false
+#endif
         selectedExamTool = tool
         calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
         if tool == .calculator {
@@ -667,6 +696,69 @@ struct PracticeSessionView: View {
             reviewSubmitted: state.reviewSubmitted
         )
     }
+
+#if os(iOS)
+    private func configureDuoPostureProviderIfNeeded() {
+        if duoPostureProvider == nil {
+            duoPostureProvider = DuoPostureProviderFactory.makeProvider()
+        }
+        duoPostureProvider?.onPostureChanged = { sample in
+            handleDuoPosture(sample)
+        }
+        if let sample = duoPostureProvider?.sample {
+            handleDuoPosture(sample)
+        }
+    }
+
+    private func handleDuoPosture(_ sample: DuoPostureSample) {
+        let shouldPeek = hingePeekStateMachine.update(status: sample.posture, angleDegrees: sample.angleDegrees, timestamp: sample.timestamp)
+        if shouldPeek {
+            presentHingeHintPeekIfEligible()
+        } else {
+            endHingeHintPeek()
+        }
+    }
+
+    private func refreshActiveHingePeek() {
+        guard hingePeekIsActive else { return }
+        presentHingeHintPeekIfEligible()
+    }
+
+    private func presentHingeHintPeekIfEligible() {
+        guard let item = state.items[safe: state.currentIndex], currentQuestionHint != nil else {
+            endHingeHintPeek()
+            return
+        }
+        let questionID = item.question.id
+        guard HingeHintPeekRules.canPeekHint(
+            sessionKind: .practice(progressStore.preferences.practiceMode),
+            hasHint: true,
+            alreadySelected: state.selectedByQuestionId[questionID] != nil,
+            reviewSubmitted: state.reviewSubmitted
+        ) else {
+            endHingeHintPeek()
+            return
+        }
+
+        hingePeekIsActive = true
+        revealHintLevel(questionID: questionID, level: 1)
+        calculatorFocused = false
+        calculatorViewModel.suspendHardwareKeyboardInput()
+        if selectedExamTool != .hint {
+            selectedToolOpenedByHingePeek = true
+            selectedExamTool = .hint
+        }
+    }
+
+    private func endHingeHintPeek() {
+        guard hingePeekIsActive || selectedToolOpenedByHingePeek else { return }
+        hingePeekIsActive = false
+        if selectedToolOpenedByHingePeek, selectedExamTool == .hint {
+            selectedExamTool = nil
+        }
+        selectedToolOpenedByHingePeek = false
+    }
+#endif
 
     private func openHintLesson(_ link: QuestionHintLessonLink) {
         calculatorFocused = false
@@ -765,6 +857,11 @@ struct PracticeSessionView: View {
             state.errorMessage = nil
             selectedExamTool = nil
             calculatorFocused = false
+#if os(iOS)
+            hingePeekStateMachine.reset()
+            hingePeekIsActive = false
+            selectedToolOpenedByHingePeek = false
+#endif
             calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)

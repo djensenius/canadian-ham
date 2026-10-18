@@ -179,6 +179,51 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(app.buttons["hint-review-in-lesson-button"].firstMatch.waitForExistence(timeout: 5), "One-level files show the lesson link after Hint 1")
     }
 
+    func testSimulatedHingeStableSlightOpenPeeksHintOneInPractice() throws {
+        let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
+            "-CanadianHamExamToolInitialDetent", "large",
+            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@0.2,partiallyOpen:25@1.0,partiallyOpen:25@2.0"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the practice question before the simulated hinge peek")
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "A stable slight-open simulated hinge posture should open the existing hint panel")
+        XCTAssertTrue(app.staticTexts["hint-level-1-title"].firstMatch.waitForExistence(timeout: 5), "The hinge peek should reveal Hint 1 through the existing hint UI")
+        XCTAssertTrue(app.buttons["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "The normal hint ladder remains available after the peek reveals Hint 1")
+        waitBriefly(0.8)
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+    }
+
+    func testSimulatedHingeFastUnfoldDoesNotPeekHintOneInPractice() throws {
+        let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
+            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@0.2,unfolded:180@0.35"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the practice question before the simulated fast unfold")
+        waitBriefly(1.2)
+        XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.exists, "A normal fast unfold through the peek band must not open the hint panel")
+        XCTAssertFalse(app.staticTexts["hint-level-1-title"].firstMatch.exists, "A normal fast unfold must not reveal Hint 1")
+        XCTAssertTrue(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "The Hint button remains the primary accessible path")
+    }
+
+    func testSimulatedHingeNeverPeeksHintOneInMockExam() throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-exam-tools-hinge-mock",
+            "-CanadianHamMockExamQuestionID", "B-006-008-004",
+            "-CanadianHamMockExamLimit", "3",
+            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@0.2,partiallyOpen:25@1.0,partiallyOpen:25@2.0"
+        ])
+        defer { app.terminate() }
+
+        tapStartMockExam(in: app)
+        waitBriefly(1.2)
+        XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "Mock exams must never expose the Hint button")
+        XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.exists, "Mock exams must never open the hint panel from hinge posture")
+        XCTAssertFalse(app.staticTexts["hint-level-1-title"].firstMatch.exists, "Mock exams must never reveal Hint 1 from hinge posture")
+    }
+
     func testCalculatorAutoFocusesHardwareKeyboardOnOpen() throws {
         let app = launchPracticeQuestion()
         defer { app.terminate() }
