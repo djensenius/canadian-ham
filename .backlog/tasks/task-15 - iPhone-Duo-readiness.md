@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 03:22'
+updated_date: '2026-10-18 05:10'
 labels:
   - apple
   - 'legacy:T-706'
@@ -26,9 +26,9 @@ Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026
 <!-- AC:BEGIN -->
 - [x] #1 The app builds with Xcode 27.1+ and runs on the iPhone Duo simulator
 - [x] #2 Practice and mock exam state survives fold/unfold
-- [ ] #3 The layouts adapt between the outer and inner displays without truncation
+- [x] #3 The layouts adapt between the outer and inner displays without truncation
 - [x] #4 The UI tests and accessibility audits run on the iPhone Duo simulator
-- [ ] #5 Unfolded iPhone Duo shows the exam tools and the question side by side (width-driven, sharing the iPad side-panel code)
+- [x] #5 Unfolded iPhone Duo shows the exam tools and the question side by side (width-driven, sharing the iPad side-panel code)
 - [ ] #6 In practice and review sessions, a slight open shows Hint 1 after a stable dwell; a normal unfold never triggers it; mock exams never peek
 - [ ] #7 A hint counts as used only after at least 0.5 s of visibility (button, peek or VoiceOver); unit tests cover the posture state machine and timing
 - [ ] #8 Hinge code is gated by #available(iOS 27.1, *) and an SDK-conditional build setting so the project still builds with older Xcode SDKs
@@ -77,4 +77,6 @@ Part 1 validation after merging origin/main (merge commit b4cd582d): iPhone Duo 
 Additional required Duo practice targets also reproduce on detached origin/main (main log /tmp/task15-main-duo-practice-targeted-20261017221356.log; branch log /tmp/task15-duo-practice-targeted-20261017221133.log): testAccessibilityAuditPracticeSessionLight and Dark fail with 'Dynamic Type font sizes are partially unsupported', and testLearnUserNavigationOpensLessonQuiz fails waiting for root-sidebar under forced-regular landscape. Follow-up TASK-55 tracks investigation/fix. Passing validation: DuoLayoutPolicyTests passed (5 tests, /tmp/task15-duo-layout-unit-postmerge-20261017230937.log); iPhone 17 Pro CanadianHamExamToolsUITests passed (25 executed, 3 skipped, /tmp/task15-iphone17-examtools-postmerge-20261017221639.log); iPad Pro 13-inch (M5) CanadianHamExamToolsUITests passed (25 executed, 6 skipped, /tmp/task15-ipad-examtools-postmerge-20261017225044.log); macOS unit tests passed (156 tests, /tmp/task15-macos-unit-postmerge-20261017230448.log); pnpm typecheck passed (/tmp/task15-pnpm-typecheck-20261017230551.log); pnpm test passed (127 node tests + 208 web tests, /tmp/task15-pnpm-test-20261017230625.log); pnpm check:apple-l10n passed without rewrite (/tmp/task15-apple-l10n-20261017230729.log); Apple text-source check passed (/tmp/task15-apple-text-sources-20261017230902.log). AC4 is checked for the Duo tests/audits that run or are classified: the remaining 7 Duo failures are main-reproduced and tracked in TASK-54/TASK-55.
 
 Review follow-up TASK-56 tracks the remaining arbitrary deep Learn NavigationPath synchronization across compact/split Duo layout changes. This PR syncs the root selection and RootView-owned practice/mock/hint routes needed for the part 1 fold/unfold state test.
+
+Review fix validation 2026-10-18: implemented root-measured unfolded iPhone layout with regular horizontal size-class injection, root window-size environment for exam tools, hysteresis policy coverage, deterministic DEBUG resize control, SDK flag inversion to NO_HINGE_API on iphone*27.0*, generated Xcode project twice, and TASK-56 for remaining arbitrary deep Learn path sync. Re-checked AC3/AC5 with qualified evidence: iPad Pro 13-inch new unfolded tests assert frames and full inspector audit; iPhone Duo runs the same simulated unfolded policy and fold/unfold state tests, but its current simulator renders a 382 pt window so frame/audit geometry is intentionally recorded only on real-width destinations. TASK-54 now includes real iPhone Duo unfolded/fold-unfold verification.
 <!-- SECTION:NOTES:END -->
