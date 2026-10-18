@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 05:52'
-updated_date: '2026-10-18 05:52'
+updated_date: '2026-10-18 08:11'
 labels: []
 dependencies: []
 priority: high
@@ -33,3 +33,9 @@ Regression from #279 (task-50.12). On iPhone 17 Pro, main's CanadianHamPracticeU
 3. Run the requested targeted xbuild tests on iPhone 17 Pro, iPad Pro 13-inch, iPhone Duo, macOS units, and string checks if text sources change.
 4. Record the Duo result on TASK-55, finalize TASK-57 with evidence, commit, push, and open the requested PR.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Root cause: the Hint tool button supplied only a short visible Text title; SwiftUI synthesized a separate non-scaling AccessibilityNode for that button in the practice row, while Calculator's wider title did not trip the Dynamic Type audit. Fix: keep the visible Dynamic Type Text unchanged and give exam-tool buttons an explicit localized SwiftUI Text accessibilityLabel, so the audit sees a scalable Text-backed label instead of the synthesized non-scaling node. No audit filters, fixed widths, minimumScaleFactor, or hidden visible text were added.
+<!-- SECTION:NOTES:END -->
