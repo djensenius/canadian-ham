@@ -1,11 +1,11 @@
 ---
 id: TASK-15
 title: iPhone Duo readiness
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 12:37'
+updated_date: '2026-10-18 12:50'
 labels:
   - apple
   - 'legacy:T-706'
@@ -89,10 +89,12 @@ N1-N7 post-merge validation 2026-10-18 (after merge of origin/main / TASK-57): i
 Coordinator, final review R1: the DEBUG size-change control's accessibility value now reports '<WxH> <compact|split>' from the root compactNavigation decision. The fold/unfold tests assert compact→split and split→compact on phone idiom (iPad always splits), so the phone split wiring is exercised on every simulator. Six simulated-layout tests passed on iPhone Duo, iPhone 17 Pro and iPad Pro 13-inch (M5): 6/0 each (/tmp/t15-r1-*.log). R2/R3 were added to TASK-54.
 
 TASK-15 part 2 validation 2026-10-18: implemented a pure HingePeekStateMachine (20–35° default slight-open band, 0.7 s dwell, edge-jitter tolerance), UIHingeInteraction provider behind #if !NO_HINGE_API and #available(iOS 27.1,*), DEBUG -CanadianHamSimulatedHingeSequence provider, and PracticeSessionView integration that reveals Hint 1 only for eligible practice/review questions using the existing HintToolView visibility timer. Mock exams never attach hint context or peek. TASK-54 now has real-device ACs for angle band, dwell, and normal-unfold non-peek verification. Validation: macOS unit tests passed 163/0 (/tmp/task15-peek-macos-unit-20261018073403.log, including 13 HintSessionStateTests for state machine/timer); iPhone 17 Pro CanadianHamExamToolsUITests passed 33 executed/3 skipped/0 failures (/tmp/task15-peek-iphone17-examtools-20261018073437.log, includes practice audits and new peek UI audit); iPhone Duo new simulated hinge peek UI tests passed 3/0 (/tmp/task15-peek-duo-new-peek-20261018081512.log); Duo hinge+hint targeted run executed 5 with only known TASK-54 simulator failure testHintToolLadderAndLessonLink (/tmp/task15-peek-duo-hinge-hint-20261018072858.log); iPad Pro 13-inch (M5) CanadianHamExamToolsUITests passed 33 executed/6 skipped/0 failures (/tmp/task15-peek-ipad-examtools-20261018081745.log); pnpm typecheck passed; pnpm test passed (131 content-tool tests + 21 morse tests + 127 calculator tests + 208 web tests); pnpm check:apple-l10n passed without rewrite; node scripts/check-apple-text-sources.ts passed. XcodeGen was run twice after project.yml and a third run confirmed deterministic project output.
+
+Coordinator decisions for PR #292 review round (2026-10-18): H1 dwell must re-check at candidateStart+dwell using the last sample even without new hinge samples; cancel on reset or leaving the band. Stability: dwell starts only inside the real 20–35° band and restarts if the angle moves more than about 3° from the candidate start; jitter tolerance only keeps an already-active peek alive. H2 presentation is start-transition only: dismissal or tool switching suppresses reopen until the posture state machine resets, and refreshActiveHingePeek must never reopen a dismissed peek. Question changes close a peek-opened panel and require a fresh dwell. Peek-opened panels close on fully-open or closed; button-opened panels stay open; the previous tool is not restored. VoiceOver still uses the peek and posts the same Hint 1 shown announcement through shared code. H3 lifecycle must re-attach hinge interaction after a lesson round trip and clear/refresh onPostureChanged to avoid stale state/retain cycles. AC6 remains simulator/code-verified only; real-device verification pending TASK-54 AC5–7. NO_HINGE_API build evidence required.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-TASK-15 is complete. Part 1 delivered Duo simulator readiness and unfolded width-driven exam-tool split/inspector layout; part 2 adds the iOS 27.1+ hinge peek for Hint 1 in practice/review only. The hinge path is SDK/availability gated, simulator-testable through a DEBUG launch sequence, uses the existing hint panel and 0.5 s visibility qualification timer, and leaves mock exams without hints. Remaining real-device posture calibration and existing Duo simulator keyboard/back-button limitations are tracked in TASK-54.
+TASK-15 remains in progress for PR #292 review fixes. Part 1 delivered Duo simulator readiness and unfolded width-driven exam-tool split/inspector layout; part 2 adds the gated iOS 27.1+ hinge peek for Hint 1 in practice/review only, but review found dwell/presentation/lifecycle gaps that are being corrected. Current simulator/unit evidence proves the guarded route and qualifying gates; real-device posture calibration, angle band, dwell, and normal-unfold/non-peek verification remain pending TASK-54 AC5–7.
 <!-- SECTION:FINAL_SUMMARY:END -->
