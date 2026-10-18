@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 03:19'
+updated_date: '2026-10-18 03:22'
 labels:
   - apple
   - 'legacy:T-706'
@@ -75,4 +75,6 @@ Runtime experiment 2026-10-17 (iPhone Duo 0DEB0EAC-F45C-4251-82AA-146DAF2BD524, 
 Part 1 validation after merging origin/main (merge commit b4cd582d): iPhone Duo simulator runtime remains iOS 27.1 with no fold/unfold control, so unfolded coverage uses the DEBUG-only -CanadianHamSimulatedWindowSize hook plus unit policy coverage. Main classification: the four named CanadianHamExamToolsUITests failures all reproduce on detached origin/main on iPhone Duo (log /tmp/task15-main-duo-four-20261017213848.log): testCalculatorAutoFocusesHardwareKeyboardOnOpen, testCalculatorKeyboardInputIsFocusScoped, testCalculatorValueResetsForNewMockExam, and testHintToolLadderAndLessonLink. Branch post-merge full Duo ExamTools log /tmp/task15-duo-examtools-postmerge-20261017215328.log executed 25 tests, 3 skipped, 4 failures: the same four. Diagnosis recorded for follow-up TASK-54: hardware key events do not reach focusable/onKeyPress calculator handling on Duo, and system NavigationBar back buttons are not exposed to XCTest; attempted product workarounds were reverted per coordinator decision because they would be simulator-specific.
 
 Additional required Duo practice targets also reproduce on detached origin/main (main log /tmp/task15-main-duo-practice-targeted-20261017221356.log; branch log /tmp/task15-duo-practice-targeted-20261017221133.log): testAccessibilityAuditPracticeSessionLight and Dark fail with 'Dynamic Type font sizes are partially unsupported', and testLearnUserNavigationOpensLessonQuiz fails waiting for root-sidebar under forced-regular landscape. Follow-up TASK-55 tracks investigation/fix. Passing validation: DuoLayoutPolicyTests passed (5 tests, /tmp/task15-duo-layout-unit-postmerge-20261017230937.log); iPhone 17 Pro CanadianHamExamToolsUITests passed (25 executed, 3 skipped, /tmp/task15-iphone17-examtools-postmerge-20261017221639.log); iPad Pro 13-inch (M5) CanadianHamExamToolsUITests passed (25 executed, 6 skipped, /tmp/task15-ipad-examtools-postmerge-20261017225044.log); macOS unit tests passed (156 tests, /tmp/task15-macos-unit-postmerge-20261017230448.log); pnpm typecheck passed (/tmp/task15-pnpm-typecheck-20261017230551.log); pnpm test passed (127 node tests + 208 web tests, /tmp/task15-pnpm-test-20261017230625.log); pnpm check:apple-l10n passed without rewrite (/tmp/task15-apple-l10n-20261017230729.log); Apple text-source check passed (/tmp/task15-apple-text-sources-20261017230902.log). AC4 is checked for the Duo tests/audits that run or are classified: the remaining 7 Duo failures are main-reproduced and tracked in TASK-54/TASK-55.
+
+Review follow-up TASK-56 tracks the remaining arbitrary deep Learn NavigationPath synchronization across compact/split Duo layout changes. This PR syncs the root selection and RootView-owned practice/mock/hint routes needed for the part 1 fold/unfold state test.
 <!-- SECTION:NOTES:END -->
