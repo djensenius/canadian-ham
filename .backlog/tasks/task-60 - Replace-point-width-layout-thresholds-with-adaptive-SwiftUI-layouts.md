@@ -1,9 +1,11 @@
 ---
 id: TASK-60
 title: Replace point-width layout thresholds with adaptive SwiftUI layouts
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-18 23:49'
+updated_date: '2026-10-18 23:50'
 labels:
   - apple
   - layout
