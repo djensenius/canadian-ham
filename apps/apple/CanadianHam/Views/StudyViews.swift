@@ -709,6 +709,8 @@ struct PracticeSessionView: View {
 
     private func clearDuoPostureProviderCallback() {
         duoPostureProvider?.onPostureChanged = nil
+        hingePeekStateMachine.reset()
+        hingePeekPresentationState = HingeHintPeekPresentationState()
         cancelHingePeekDwellRecheck()
     }
 

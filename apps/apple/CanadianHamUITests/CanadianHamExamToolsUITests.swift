@@ -197,7 +197,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testSimulatedHingeDismissedPeekReopensOnlyAfterReset() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
             "-CanadianHamExamToolInitialDetent", "large",
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:26@3.0,unfolded:180@4.0,partiallyOpen:25@4.2"
+            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:26@5.0,unfolded:180@10.0,partiallyOpen:25@10.3"
         ])
         defer { app.terminate() }
 
@@ -214,12 +214,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testSimulatedHingePeekStillWorksAfterHintLessonRoundTrip() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
             "-CanadianHamExamToolInitialDetent", "large",
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@6.0"
+            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0"
         ])
         defer { app.terminate() }
 
-        openTool(.hint, in: app)
-        revealBothHints(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "The initial simulated hinge peek should open Hint")
+        let second = app.buttons["hint-show-level-2-button"].firstMatch
+        XCTAssertTrue(second.waitForExistence(timeout: 5), "The initial peek should reveal Hint 1 and offer Hint 2")
+        second.tap()
         let review = app.buttons["hint-review-in-lesson-button"].firstMatch
         XCTAssertTrue(review.waitForExistence(timeout: 5), "The lesson link appears after both hints")
         review.tap()

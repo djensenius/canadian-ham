@@ -315,7 +315,16 @@ final class UIHingeDuoPostureProvider: DuoPostureProviding {
 @MainActor
 final class SimulatedDuoPostureProvider: DuoPostureProviding {
     private(set) var sample: DuoPostureSample = .unavailable
-    var onPostureChanged: ((DuoPostureSample) -> Void)?
+    var onPostureChanged: ((DuoPostureSample) -> Void)? {
+        didSet {
+            if onPostureChanged == nil {
+                playbackTask?.cancel()
+                playbackTask = nil
+            } else if attachedView != nil {
+                startPlayback()
+            }
+        }
+    }
 
     private let sequence: [DuoPostureSample]
     private weak var attachedView: UIView?
@@ -328,7 +337,9 @@ final class SimulatedDuoPostureProvider: DuoPostureProviding {
     func attach(to view: UIView) {
         guard attachedView !== view else { return }
         attachedView = view
-        startPlayback()
+        if onPostureChanged != nil {
+            startPlayback()
+        }
     }
 
     func detach() {
