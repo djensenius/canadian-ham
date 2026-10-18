@@ -766,12 +766,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
-#if os(iOS)
-    private enum SidebarVisibilityExpectation {
-        case collapsed
-        case visible
-    }
-
     private enum SimulatedToolPresentationExpectation {
         case inspector
         case sheet
@@ -809,6 +803,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         case .sheet:
             XCTFail("\(context): expected the simulated layout change to replace the inspector with the bottom sheet. Window: \(frameDescription(app.windows.firstMatch.frame)); panel: \(frameDescription(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.frame))", file: file, line: line)
         }
+    }
+
+#if os(iOS)
+    private enum SidebarVisibilityExpectation {
+        case collapsed
+        case visible
     }
 
     private func runRegularWidthInspectorScenario(
