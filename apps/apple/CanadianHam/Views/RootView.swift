@@ -162,6 +162,9 @@ struct RootView: View {
             }
             .environment(\.canadianHamWindowSize, windowSize)
             .environment(\.canadianHamUsesUnfoldedIPhoneLayout, unfoldedIPhoneLayout)
+            .overlay(alignment: .topTrailing) {
+                debugSimulatedWindowSizeChangeControl()
+            }
             .onAppear {
                 updateUnfoldedIPhoneLayout(windowSize: windowSize)
                 synchronizeNavigationForLayoutChange(usesCompactNavigation: compactNavigation)
@@ -672,14 +675,42 @@ struct RootView: View {
         return path
     }
 
+#if DEBUG
+    @ViewBuilder
+    private func debugSimulatedWindowSizeChangeControl() -> some View {
+        if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowSimulatedWindowSizeChangeControl"),
+           let size = debugSimulatedWindowSizeAfterChange {
+            Button {
+                debugSimulatedWindowSize = size
+            } label: {
+                Image(systemName: "rectangle.2.swap")
+                    .frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
+            .opacity(0.01)
+            .accessibilityLabel("Apply simulated window size change")
+            .accessibilityIdentifier("debug-simulated-window-size-change-button")
+        }
+    }
+
+    private var debugSimulatedWindowSizeAfterChange: CGSize? {
+        AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeAfterChange")
+            .flatMap { canadianHamParsedWindowSize($0) }
+    }
+#else
+    @ViewBuilder
+    private func debugSimulatedWindowSizeChangeControl() -> some View {
+        EmptyView()
+    }
+#endif
+
     private func scheduleDebugSimulatedWindowSizeChangeIfNeeded() {
 #if DEBUG
         guard !didScheduleDebugSimulatedWindowSizeChange,
               let rawDelay = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeChangeDelay"),
               let delay = Double(rawDelay),
               delay >= 0,
-              let rawSize = AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeAfterChange"),
-              let size = canadianHamParsedWindowSize(rawSize) else { return }
+              let size = debugSimulatedWindowSizeAfterChange else { return }
         didScheduleDebugSimulatedWindowSizeChange = true
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(delay))

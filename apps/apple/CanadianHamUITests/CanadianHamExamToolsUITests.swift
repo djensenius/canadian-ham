@@ -382,8 +382,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testSimulatedFoldToUnfoldKeepsPracticeQuestionSelectionAndCalculatorValue() throws {
         let app = launchPracticeQuestion(extraArguments: [
             "-CanadianHamSimulatedWindowSize", "382x644",
-            "-CanadianHamSimulatedWindowSizeChangeDelay", "20",
             "-CanadianHamSimulatedWindowSizeAfterChange", "669x951",
+            "-CanadianHamShowSimulatedWindowSizeChangeControl",
             "-CanadianHamPracticeMode", "review-later"
         ])
         defer { app.terminate() }
@@ -412,6 +412,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 #endif
         tapCalculatorKey("calculator-key-2", in: app)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Expected the calculator value before simulated unfolding")
+
+        let resize = app.buttons["debug-simulated-window-size-change-button"].firstMatch
+        XCTAssertTrue(resize.waitForExistence(timeout: 5), "Expected the DEBUG simulated window-size change control")
+        resize.tap()
 
         let deadline = Date().addingTimeInterval(12)
         while Date() < deadline {
