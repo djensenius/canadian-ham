@@ -785,7 +785,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let button = app.buttons["debug-simulated-window-size-change-button"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 5), "\(context): expected the DEBUG simulated window-size change control", file: file, line: line)
         XCTAssertTrue(button.isHittable, "\(context): expected the DEBUG simulated window-size change control to be hittable", file: file, line: line)
-        button.tap()
+        button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         assertSimulatedWindowSizeApplied(in: app, expectedSizeValue: expectedSizeValue, context: context, file: file, line: line)
     }
 
