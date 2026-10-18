@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-18 11:14'
+updated_date: '2026-10-18 11:18'
 labels:
   - apple
   - 'legacy:T-706'
@@ -44,6 +44,8 @@ Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026
 5. Validate with targeted iPhone Duo, iPhone 17 Pro, iPad, macOS, and web/l10n checks; check only AC1-AC5 and leave task-15 In Progress for part 2.
 
 6. Address PR #286 review: root-measured unfolded iPhone split layout with regular size-class injection, hysteresis policy tests, runtime fold/unfold UI coverage, SDK flag inversion, and honest task evidence updates.
+
+7. Implement TASK-15 part 2: add the gated UIHinge-backed posture provider plus DEBUG simulated posture sequences, route posture updates through a pure hinge-peek dwell state machine, reveal Hint 1 through the existing hint tool/timer only for eligible practice/review questions, and cover the state machine, visibility-timer integration, mock-exam gate and simulated UI flows without changing existing audits.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
