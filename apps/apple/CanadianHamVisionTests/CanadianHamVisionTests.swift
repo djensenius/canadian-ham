@@ -1,3 +1,5 @@
+import CanadianHamContent
+import CanadianHamEngine
 import XCTest
 
 final class CanadianHamVisionTests: XCTestCase {
@@ -9,9 +11,12 @@ final class CanadianHamVisionTests: XCTestCase {
         XCTAssertEqual(bank.categories.count, 8)
         XCTAssertEqual(bank.subsections.count, 100)
         XCTAssertEqual(bank.manifest.bankId, "basic-2025-07-15")
-        XCTAssertEqual(try bundledGeneratedBankIDs(in: appBundle), [])
+        XCTAssertEqual(try bundledGeneratedBankIDs(in: appBundle), ["basic-2025-07-15"])
         XCTAssertEqual(try bundledReadmePaths(in: appBundle), [], "visionOS app bundle must not contain README.md files")
         XCTAssertTrue(try bundledAdvancedResourcePaths(in: appBundle).isEmpty, "visionOS app bundle must not contain Advanced generated resources")
+        let library = try ContentLibrary.load(from: appBundle)
+        XCTAssertEqual(library.questionHints.count, 984)
+        XCTAssertNotNil(library.questionHintsByQuestionId["B-001-002-002"])
     }
 
     func testBundledQuestionBankLoadsForVisionApp() throws {
@@ -81,6 +86,51 @@ final class CanadianHamVisionTests: XCTestCase {
             .map { $0.path.replacingOccurrences(of: resourceURL.path + "/", with: "") }
             .filter { $0.contains("advanced-") || $0.contains("A-001") }
             .sorted()
+    }
+
+    func testVisionHintLadderHelpRecordingAndLessonAnchors() throws {
+        let appBundle = try builtAppBundle(named: "CanadianHamVision")
+        let library = try ContentLibrary.load(from: appBundle)
+        let oneLevelHint = try XCTUnwrap(library.questionHintsByQuestionId["B-001-002-002"])
+        let twoLevelHint = try XCTUnwrap(library.questionHintsByQuestionId["B-006-008-004"])
+
+        XCTAssertEqual(oneLevelHint.hints.map(\.level), [1])
+        XCTAssertNil(oneLevelHint.hints.first { $0.level == 2 }, "One-level files must not expose an empty Hint 2")
+        XCTAssertEqual(twoLevelHint.hints.map(\.level), [1, 2])
+        XCTAssertNotNil(twoLevelHint.lessonLink.sectionAnchor)
+
+        let lesson = try XCTUnwrap(library.lessonsById[twoLevelHint.lessonLink.lessonId])
+        let anchors = try LessonHeadingAnchors.anchors(for: lesson.bodyMarkdown, title: lesson.title.en)
+        XCTAssertTrue(anchors.contains(try XCTUnwrap(twoLevelHint.lessonLink.sectionAnchor)))
+
+        let qualification = PracticeHintRules.qualifyingHint(
+            questionID: twoLevelHint.questionId,
+            mode: .immediate,
+            alreadySelected: false,
+            reviewSubmitted: false,
+            qualifiedQuestionIds: [],
+            answeredWithHelpQuestionIds: []
+        )
+        XCTAssertTrue(qualification.qualifiedQuestionIds.contains(twoLevelHint.questionId))
+        XCTAssertTrue(PracticeHintRules.shouldCommitAnswerWithHelp(
+            questionID: twoLevelHint.questionId,
+            qualifiedQuestionIds: qualification.qualifiedQuestionIds,
+            answeredWithHelpQuestionIds: qualification.answeredWithHelpQuestionIds
+        ))
+
+        let updated = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: twoLevelHint.questionId,
+            bankId: "basic-2025-07-15",
+            isCorrect: true,
+            now: "2026-01-01T00:00:00.000Z",
+            answeredWithHelp: true
+        ))
+        XCTAssertTrue(updated.lastAnsweredWithHelp)
+        XCTAssertEqual(updated.leitner.box, 0, "Helped correct answers must not advance mastery")
+    }
+
+    func testVisionReferencePointersAreHiddenBecauseReferenceSheetIsUnavailable() {
+        XCTAssertFalse(HintToolRules.showsReferencePointer(referenceSheetAvailable: false, visibleLevel: 1, referenceSheetSection: "ohms-law"))
     }
 
     func testVisionPracticeSeedsVaryAcrossSessionIDs() throws {

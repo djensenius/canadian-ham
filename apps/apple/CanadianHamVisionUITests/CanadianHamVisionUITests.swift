@@ -82,6 +82,53 @@ final class CanadianHamVisionUITests: XCTestCase {
         waitForElementToDisappear(feedback, timeout: 5, message: "Feedback should disappear after advancing to the next question")
     }
 
+    func testPracticeHintLadderLessonLinkAndAudit() throws {
+        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-006", questionID: "B-006-008-004")
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["vision-practice-screen"].firstMatch.waitForExistence(timeout: 15))
+        XCTAssertFalse(app.descendants(matching: .any)["hint-reference-pointer"].firstMatch.exists, "visionOS has no reference-sheet surface, so hint reference pointers stay hidden")
+        tapHintLevel(1, in: app)
+        XCTAssertTrue(app.staticTexts["hint-level-1-body"].firstMatch.waitForExistence(timeout: 5), "Hint 1 should appear in visionOS practice")
+        XCTAssertTrue(app.buttons["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "Two-level files should reveal Hint 2 only after Hint 1")
+        tapHintLevel(2, in: app)
+        XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.waitForExistence(timeout: 5), "Hint 2 should appear after the second ladder action")
+        let review = app.buttons["hint-review-in-lesson-button"].firstMatch
+        XCTAssertTrue(review.waitForExistence(timeout: 5), "Last hint level should expose the generic lesson link")
+        try performAudit(on: app, context: "visionOS open hint")
+
+        scrollUntilHittable(review, in: app, maxSwipes: 6)
+        review.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["vision-lesson-screen"].firstMatch.waitForExistence(timeout: 10), "Review in lesson should open the visionOS lesson reader")
+        XCTAssertTrue(app.staticTexts["lesson-heading-wavelength-and-frequency"].firstMatch.waitForExistence(timeout: 10), "Lesson link should open at the sectionAnchor")
+        app.buttons["Practice"].firstMatch.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["vision-practice-screen"].firstMatch.waitForExistence(timeout: 5), "Practice button should return to the in-progress session")
+        XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.exists, "Hint state should survive the lesson round trip")
+    }
+
+    func testPracticeOneLevelHintHasNoHint2AndNonPracticeScreensHaveNoHint() throws {
+        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-001", questionID: "B-001-002-002")
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["vision-practice-screen"].firstMatch.waitForExistence(timeout: 15))
+        tapHintLevel(1, in: app)
+        XCTAssertTrue(app.staticTexts["hint-level-1-body"].firstMatch.waitForExistence(timeout: 5), "One-level hint should show Hint 1")
+        XCTAssertFalse(app.buttons["hint-show-level-2-button"].firstMatch.exists, "One-level files must not expose a broken Hint 2 affordance")
+        XCTAssertTrue(app.buttons["hint-review-in-lesson-button"].firstMatch.exists, "One-level files expose the lesson link after Hint 1")
+
+        let mockApp = XCUIApplication()
+        mockApp.launchArguments = [
+            "-CanadianHamPlatformInitialScreen", "mockExam",
+            "-CanadianHamAppearance", "light"
+        ]
+        mockApp.launch()
+        defer { mockApp.terminate() }
+        XCTAssertTrue(PlatformAuditScreen.categories.waitElement(in: mockApp).waitForExistence(timeout: 15), "visionOS has no mock-exam surface and falls back to the non-practice grid")
+        XCTAssertFalse(mockApp.buttons["hint-show-level-1-button"].firstMatch.exists, "Hints must not be exposed outside practice")
+    }
+
     func testLongestQuestionSupportsLargestDynamicType() throws {
         let defaultApp = configuredApp(
             screen: .practice,
@@ -127,6 +174,14 @@ final class CanadianHamVisionUITests: XCTestCase {
         assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
         scrollUntilHittable(nextQuestion, in: app, maxSwipes: 12)
         XCTAssertTrue(nextQuestion.isHittable, "Next question should be reachable by scrolling at the largest Dynamic Type size")
+    }
+
+    private func tapHintLevel(_ level: Int, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let button = app.buttons["hint-show-level-\(level)-button"].firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 8), "Expected Show Hint \(level) button", file: file, line: line)
+        scrollUntilHittable(button, in: app, maxSwipes: 6)
+        XCTAssertTrue(button.isHittable, "Show Hint \(level) should be hittable", file: file, line: line)
+        button.tap()
     }
 
     private func auditScreen(_ screen: PlatformAuditScreen) throws {
