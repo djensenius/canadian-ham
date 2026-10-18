@@ -152,6 +152,16 @@ final class HintSessionStateTests: XCTestCase {
         XCTAssertFalse(outsideTolerance.endedByPostureReset, "Moving outside the peek range should end dwell without allowing a dismissed panel to reopen before closed/fully-open reset")
     }
 
+    func testHingePeekUnavailableSampleDoesNotResetDismissalSuppression() {
+        var machine = HingePeekStateMachine(configuration: HingePeekConfiguration(peekAngleRange: 20...35, dwellTime: 0.7, edgeJitterTolerance: 2, stableAngleTolerance: 3))
+
+        XCTAssertFalse(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0).isPeeking)
+        XCTAssertTrue(machine.update(status: .partiallyOpen, angleDegrees: 25, timestamp: 0.8).isPeeking)
+        let unavailable = machine.update(status: .unavailable, angleDegrees: nil, timestamp: 0.9)
+        XCTAssertFalse(unavailable.isPeeking)
+        XCTAssertFalse(unavailable.endedByPostureReset, "Transient nil-hinge or unavailable samples must not clear dismissal suppression; only closed or fully-open resets do that")
+    }
+
     func testHingePeekEligibilityAllowsPracticeReviewLaterButNeverMockExamOrScoredImmediateAnswer() {
         XCTAssertTrue(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.reviewLater), hasHint: true, alreadySelected: true, reviewSubmitted: false))
         XCTAssertTrue(HingeHintPeekRules.canPeekHint(sessionKind: .practice(.immediate), hasHint: true, alreadySelected: false, reviewSubmitted: false))

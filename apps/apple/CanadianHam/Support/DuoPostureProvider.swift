@@ -71,8 +71,9 @@ struct HingePeekStateMachine: Equatable, Sendable {
     mutating func update(sample: DuoPostureSample) -> HingePeekUpdateResult {
         lastSample = sample
         guard sample.posture == .partiallyOpen, let angleDegrees = sample.angleDegrees else {
+            let endedByPostureReset = sample.posture == .closed || sample.posture == .unfolded
             reset()
-            return result(startedPeeking: false, endedByPostureReset: true)
+            return result(startedPeeking: false, endedByPostureReset: endedByPostureReset)
         }
 
         let wasPeeking = isPeeking
