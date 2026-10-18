@@ -44,6 +44,12 @@ struct ExamToolPresentationModifier: ViewModifier {
     let hintContext: HintToolContext?
     let onDismiss: () -> Void
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+#if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.canadianHamWindowSize) private var canadianHamWindowSize
+    @Environment(\.canadianHamUsesUnfoldedIPhoneLayout) private var canadianHamUsesUnfoldedIPhoneLayout
+#endif
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
     @State private var toolPanelFrameInWindow: CGRect?
@@ -64,20 +70,23 @@ struct ExamToolPresentationModifier: ViewModifier {
 
     func body(content: Content) -> some View {
 #if os(iOS)
-        if horizontalUsesInspector {
+        let usesInspector = horizontalUsesInspector()
+        if usesInspector {
             focusResettingContent(content)
-                .background { inspectorKeyboardResponder }
+                .background { inspectorKeyboardResponder(usesInspector: usesInspector) }
                 .inspector(isPresented: isPresented) {
-                    toolPanel
+                    toolPanel(usesInspector: usesInspector)
                         .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
                 }
+                .onAppear { resetCompactSheetHeight() }
+                .onChange(of: usesInspector) { _, _ in resetCompactSheetHeight() }
         } else {
             focusResettingContent(content)
                 .safeAreaInset(edge: .bottom) {
                     Color.clear.frame(height: selectedTool == nil ? 0 : compactSheetHeight)
                 }
                 .sheet(item: $selectedTool, onDismiss: onDismiss) { tool in
-                    toolPanel(for: tool)
+                    toolPanel(for: tool, usesInspector: usesInspector)
                         .background {
                             GeometryReader { proxy in
                                 Color.clear
@@ -96,7 +105,7 @@ struct ExamToolPresentationModifier: ViewModifier {
 #elseif os(macOS)
         focusResettingContent(content)
             .inspector(isPresented: isPresented) {
-                toolPanel
+                toolPanel(usesInspector: true)
                     .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
             }
 #else
@@ -145,15 +154,26 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
 #if os(iOS)
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    private func horizontalUsesInspector() -> Bool {
+        if canadianHamUsesUnfoldedIPhoneLayout {
+            return true
+        }
+        return AdaptiveExamLayoutPolicy.usesInspectorPresentation(
+            idiom: PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom),
+            containerSize: canadianHamWindowSize ?? .zero,
+            horizontalSizeClass: horizontalSizeClass,
+            verticalSizeClass: verticalSizeClass
+        )
+    }
 
-    private var horizontalUsesInspector: Bool {
-        horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad
+    private func resetCompactSheetHeight() {
+        guard compactSheetHeight != 0 else { return }
+        compactSheetHeight = 0
     }
 
     @ViewBuilder
-    private var inspectorKeyboardResponder: some View {
-        if horizontalUsesInspector {
+    private func inspectorKeyboardResponder(usesInspector: Bool) -> some View {
+        if usesInspector {
             CalculatorKeyboardResponder(isActive: selectedTool == .calculator && calculatorFocused && calculator.acceptsHardwareKeyboardInput) { key in
                 pressCalculatorHardwareKey(key)
             }
@@ -178,9 +198,9 @@ struct ExamToolPresentationModifier: ViewModifier {
 #endif
 
     @ViewBuilder
-    private var toolPanel: some View {
+    private func toolPanel(usesInspector: Bool) -> some View {
         if let selectedTool {
-            toolPanel(for: selectedTool)
+            toolPanel(for: selectedTool, usesInspector: usesInspector)
         } else {
             EmptyView()
         }
@@ -257,14 +277,14 @@ struct ExamToolPresentationModifier: ViewModifier {
         .accessibilityIdentifier("exam-tool-close-button")
     }
 
-    private func toolPanel(for tool: ExamTool) -> some View {
+    private func toolPanel(for tool: ExamTool, usesInspector: Bool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             toolHeader(for: tool)
 
             Divider()
 
             GeometryReader { proxy in
-                toolBody(for: tool, availableHeight: proxy.size.height)
+                toolBody(for: tool, availableHeight: proxy.size.height, usesInspector: usesInspector)
                     .frame(maxWidth: .infinity, maxHeight: proxy.size.height, alignment: .topLeading)
             }
         }
@@ -276,7 +296,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     @ViewBuilder
-    private func toolBody(for tool: ExamTool, availableHeight: CGFloat) -> some View {
+    private func toolBody(for tool: ExamTool, availableHeight: CGFloat, usesInspector: Bool) -> some View {
         switch tool {
         case .calculator:
             CalculatorToolView(
@@ -296,7 +316,7 @@ struct ExamToolPresentationModifier: ViewModifier {
 #if os(iOS)
             ReferenceSheetToolView(
                 configuration: referenceSheetConfiguration,
-                showsFullSheetButton: !horizontalUsesInspector && selectedSheetDetent == .medium,
+                showsFullSheetButton: !usesInspector && selectedSheetDetent == .medium,
                 onShowFullSheet: { selectedSheetDetent = .large }
             )
             .frame(height: availableHeight)

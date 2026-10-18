@@ -364,6 +364,193 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "0", "Starting a new mock exam should reset calculator state")
     }
 
+    func testSimulatedUnfoldedLandscapeWithoutForcedSizeClassUsesInspectorAndKeepsPracticeSelection() throws {
+        let app = launchPracticeQuestion(extraArguments: [
+            "-CanadianHamSimulatedWindowSize", "951x669",
+            "-CanadianHamPracticeMode", "review-later"
+        ])
+        defer { app.terminate() }
+
+        let question = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(question.waitForExistence(timeout: 10), "Expected the practice question before opening a simulated unfolded landscape inspector")
+        let initialQuestionText = question.label
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected answer A before selecting an answer")
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        XCTAssertTrue(answer.isHittable, "Expected answer A to be hittable before selecting it")
+        answer.tap()
+        waitBriefly()
+        XCTAssertTrue(answer.isSelected, "Answer A should be selected before opening the simulated unfolded inspector")
+        let selectedAnswerLabel = answer.label
+
+        openTool(.calculator, in: app)
+        let panel = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+        XCTAssertTrue(panel.waitForExistence(timeout: 5), "Simulated unfolded iPhone landscape should keep the calculator available while exercising the inspector selection policy")
+        XCTAssertEqual(question.label, initialQuestionText, "Opening the simulated unfolded tool panel must not rebuild to a different question")
+        XCTAssertEqual(answer.label, selectedAnswerLabel, "Opening the inspector must preserve the selected answer label")
+        XCTAssertTrue(answer.isSelected, "Opening the inspector must preserve the selected answer state")
+#if os(iOS)
+        if app.windows.firstMatch.frame.width >= 800 {
+            assertQuestionTitleWithinExamColumn(in: app, context: "simulated unfolded iPhone landscape inspector")
+            assertVisibleAnswerButtonsRemainHittable(in: app, context: "simulated unfolded iPhone landscape inspector")
+        }
+#endif
+    }
+
+    func testSimulatedUnfoldedPortraitKeepsCompactSheet() throws {
+        let app = launchPracticeQuestion(extraArguments: [
+            "-CanadianHamSimulatedWindowSize", "669x951",
+            "-CanadianHamPracticeMode", "review-later"
+        ])
+        defer { app.terminate() }
+
+        openTool(.calculator, in: app)
+#if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            assertCalculatorPresentedAsSheet(in: app, context: "simulated unfolded portrait iPhone")
+        }
+#endif
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Simulated unfolded portrait should keep the calculator available in the compact sheet")
+    }
+
+    func testSimulatedFoldedToUnfoldedRequestKeepsPracticeQuestionSelectionAndCalculatorValue() throws {
+        let app = launchPracticeQuestion(extraArguments: [
+            "-CanadianHamSimulatedWindowSize", "382x644",
+            "-CanadianHamShowSimulatedWindowSizeChangeControl",
+            "-CanadianHamSimulatedWindowSizeAfterChange", "951x669",
+            "-CanadianHamPracticeMode", "review-later"
+        ])
+        defer { app.terminate() }
+
+        let question = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(question.waitForExistence(timeout: 10), "Expected the practice question before simulated unfold")
+        let initialQuestionText = question.label
+        let questionID = app.descendants(matching: .any)["question-identifier"].firstMatch
+        XCTAssertTrue(questionID.waitForExistence(timeout: 5), "Expected the practice question identifier before simulated unfold")
+        let initialQuestionID = questionID.label
+
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected answer A before simulated unfold")
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        XCTAssertTrue(answer.isHittable, "Expected answer A to be hittable before simulated unfold")
+        answer.tap()
+        waitBriefly()
+        XCTAssertTrue(answer.isSelected, "Answer A should be selected before simulated unfold")
+        let selectedAnswerLabel = answer.label
+
+        openTool(.calculator, in: app)
+#if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            assertCalculatorPresentedAsSheet(in: app, context: "simulated folded iPhone before unfolding")
+        }
+#endif
+        tapCalculatorKey("calculator-key-2", in: app)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Expected the calculator value before the simulated unfold request")
+
+        assertSimulatedLayoutMode(in: app, expectedMode: "compact", context: "folded before unfolding")
+        applySimulatedWindowSizeChange(in: app, expectedSizeValue: "951x669", context: "folded to unfolded")
+        assertSimulatedLayoutMode(in: app, expectedMode: "split", context: "folded to unfolded")
+#if os(iOS)
+        if app.windows.firstMatch.frame.width >= 800 {
+            assertSimulatedLayoutChanged(in: app, to: .inspector, context: "folded to unfolded")
+        } else {
+            XCTContext.runActivity(named: "Narrow rendered Duo window cannot prove visual inspector transition") { activity in
+                activity.add(XCTAttachment(string: "The DEBUG window-size hook applied 951x669, but this simulator renders a \(frameDescription(app.windows.firstMatch.frame)) window; the folded-to-unfolded visual inspector transition remains real-device coverage in TASK-54."))
+            }
+        }
+#else
+        assertSimulatedLayoutChanged(in: app, to: .inspector, context: "folded to unfolded")
+#endif
+
+        if !app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.exists {
+            openTool(.calculator, in: app)
+        }
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Expected the calculator after the simulated unfold request")
+
+        XCTAssertTrue(question.waitForExistence(timeout: 5), "Expected to remain in the practice session after the simulated unfold request")
+        XCTAssertEqual(question.label, initialQuestionText, "Simulated unfolding must keep the same question")
+        XCTAssertEqual(questionID.label, initialQuestionID, "Simulated unfolding must keep the same question identifier")
+        XCTAssertEqual(answer.label, selectedAnswerLabel, "Simulated unfolding must preserve the selected answer label")
+        XCTAssertTrue(answer.isSelected, "Simulated unfolding must preserve the selected answer state")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Simulated unfolding must preserve the calculator value")
+    }
+
+    func testSimulatedUnfoldedToFoldedRequestKeepsPracticeQuestionSelectionAndCalculatorValue() throws {
+        let app = launchPracticeQuestion(extraArguments: [
+            "-CanadianHamSimulatedWindowSize", "951x669",
+            "-CanadianHamShowSimulatedWindowSizeChangeControl",
+            "-CanadianHamSimulatedWindowSizeAfterChange", "382x644",
+            "-CanadianHamPracticeMode", "review-later"
+        ])
+        defer { app.terminate() }
+
+        let question = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(question.waitForExistence(timeout: 10), "Expected the practice question before simulated fold")
+        let initialQuestionText = question.label
+        let questionID = app.descendants(matching: .any)["question-identifier"].firstMatch
+        XCTAssertTrue(questionID.waitForExistence(timeout: 5), "Expected the practice question identifier before simulated fold")
+        let initialQuestionID = questionID.label
+
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        XCTAssertTrue(answer.waitForExistence(timeout: 5), "Expected answer A before simulated fold")
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        XCTAssertTrue(answer.isHittable, "Expected answer A to be hittable before simulated fold")
+        answer.tap()
+        waitBriefly()
+        XCTAssertTrue(answer.isSelected, "Answer A should be selected before simulated fold")
+        let selectedAnswerLabel = answer.label
+
+        openTool(.calculator, in: app)
+        tapCalculatorKey("calculator-key-2", in: app)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Expected the calculator value before the simulated fold request")
+
+        assertSimulatedLayoutMode(in: app, expectedMode: "split", context: "unfolded before folding")
+        applySimulatedWindowSizeChange(in: app, expectedSizeValue: "382x644", context: "unfolded to folded")
+        assertSimulatedLayoutMode(in: app, expectedMode: "compact", context: "unfolded to folded")
+        if !app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.exists {
+            openTool(.calculator, in: app)
+        }
+#if os(iOS)
+        let expectedPresentation: SimulatedToolPresentationExpectation = UIDevice.current.userInterfaceIdiom == .phone ? .sheet : .inspector
+#else
+        let expectedPresentation: SimulatedToolPresentationExpectation = .inspector
+#endif
+        assertSimulatedLayoutChanged(in: app, to: expectedPresentation, context: "unfolded to folded")
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Expected the calculator after the simulated fold request")
+
+        XCTAssertTrue(question.waitForExistence(timeout: 5), "Expected to remain in the practice session after the simulated fold request")
+        XCTAssertEqual(question.label, initialQuestionText, "Simulated folding must keep the same question")
+        XCTAssertEqual(questionID.label, initialQuestionID, "Simulated folding must keep the same question identifier")
+        XCTAssertEqual(answer.label, selectedAnswerLabel, "Simulated folding must preserve the selected answer label")
+        XCTAssertTrue(answer.isSelected, "Simulated folding must preserve the selected answer state")
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Simulated folding must preserve the calculator value")
+    }
+
+    func testSimulatedUnfoldedLandscapeMockExamUsesCalculatorInspectorWithoutHints() throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamSimulatedWindowSize", "951x669",
+            "-CanadianHamMockExamSeed", "ui-exam-tools-duo-mock",
+            "-CanadianHamMockExamQuestionID", "B-006-008-004",
+            "-CanadianHamMockExamLimit", "3"
+        ])
+        defer { app.terminate() }
+
+        tapStartMockExam(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
+        XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "Mock exams must never expose hints, including in simulated unfolded landscape")
+        openTool(.calculator, in: app)
+        let panel = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+        XCTAssertTrue(panel.waitForExistence(timeout: 5), "Simulated unfolded mock exams should keep the calculator available while exercising the inspector selection policy")
+#if os(iOS)
+        if app.windows.firstMatch.frame.width >= 800 {
+            assertQuestionTitleWithinExamColumn(in: app, context: "simulated unfolded mock exam inspector")
+            assertVisibleAnswerButtonsRemainHittable(in: app, context: "simulated unfolded mock exam inspector")
+        }
+#endif
+    }
+
     func testRegularWidthUsesInspectorAndKeepsAnswersHittable() throws {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector layout is covered by the targeted iPad run.")
@@ -495,12 +682,33 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 #endif
     }
 
+    func testSimulatedUnfoldedInspectorAccessibilityAuditLightAndDark() throws {
+        for appearance in ["light", "dark"] {
+            let app = launchAuditPracticeQuestion(appearance: appearance, extraArguments: ["-CanadianHamSimulatedWindowSize", "951x669"])
+            defer { app.terminate() }
+
+            openTool(.calculator, in: app)
+            XCTAssertTrue(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Simulated unfolded inspector should present the calculator before auditing")
+            waitBriefly(0.8)
+            guard app.windows.firstMatch.frame.width >= 800 else {
+                XCTContext.runActivity(named: "Narrow rendered window cannot produce meaningful unfolded landscape inspector audit geometry") { activity in
+                    activity.add(XCTAttachment(string: "The simulated unfolded landscape policy is active, but this simulator renders a \(frameDescription(app.windows.firstMatch.frame)) window; the full unfolded inspector audit runs on iPad or real unfolded Duo landscape width."))
+                }
+                app.terminate()
+                continue
+            }
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+            app.terminate()
+        }
+    }
+
     func testLargestDynamicTypeKeepsCalculatorGridReachableLightAndDark() throws {
         for appearance in ["light", "dark"] {
             let app = launchPracticeQuestion(appearance: appearance, extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
             defer { app.terminate() }
 
             openTool(.calculator, in: app)
+            XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5), "Expected the calculator panel before checking largest Dynamic Type reachability")
             let reciprocal = app.buttons["calculator-key-reciprocal"].firstMatch
             scrollCalculatorPanelUntilElementExists(reciprocal, in: app, maxSwipes: 10)
             XCTAssertTrue(reciprocal.exists, "The lower calculator keys should exist at the largest accessibility text size")
@@ -586,6 +794,82 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             case .hint: "exam-tool-hint-panel"
             case .referenceSheet: "exam-tool-reference-sheet-panel"
             }
+        }
+    }
+
+    private enum SimulatedToolPresentationExpectation {
+        case inspector
+        case sheet
+    }
+
+    private func applySimulatedWindowSizeChange(in app: XCUIApplication, expectedSizeValue: String, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let button = app.buttons["debug-simulated-window-size-change-button"].firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 5), "\(context): expected the DEBUG simulated window-size change control", file: file, line: line)
+        XCTAssertTrue(button.isHittable, "\(context): expected the DEBUG simulated window-size change control to be hittable", file: file, line: line)
+        button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        assertSimulatedWindowSizeApplied(in: app, expectedSizeValue: expectedSizeValue, context: context, file: file, line: line)
+    }
+
+    private func assertSimulatedWindowSizeApplied(in app: XCUIApplication, expectedSizeValue: String, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let deadline = Date().addingTimeInterval(5)
+        var observedValue: String?
+        var observedLabel: String?
+        while Date() < deadline {
+            let button = app.buttons["debug-simulated-window-size-change-button"].firstMatch
+            observedValue = button.value as? String
+            observedLabel = button.label
+            if observedValue?.hasPrefix(expectedSizeValue + " ") == true || observedLabel?.contains(expectedSizeValue) == true {
+                return
+            }
+            waitBriefly(0.2)
+        }
+        XCTFail("\(context): expected the DEBUG simulated window-size hook to apply \(expectedSizeValue); button value is \(String(describing: observedValue)), label is \(String(describing: observedLabel))", file: file, line: line)
+    }
+
+    /// Asserts the root layout decision (DEBUG control value suffix) independently of the rendered window width.
+    private func assertSimulatedLayoutMode(in app: XCUIApplication, expectedMode: String, context: String, file: StaticString = #filePath, line: UInt = #line) {
+#if os(iOS)
+        // iPad always uses split navigation; the compact/split decision under test is the phone-idiom path.
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
+#endif
+        let deadline = Date().addingTimeInterval(5)
+        var observedValue: String?
+        while Date() < deadline {
+            observedValue = app.buttons["debug-simulated-window-size-change-button"].firstMatch.value as? String
+            if observedValue?.hasSuffix(" " + expectedMode) == true {
+                return
+            }
+            waitBriefly(0.2)
+        }
+        XCTFail("\(context): expected the root layout decision to be \(expectedMode); DEBUG control value is \(String(describing: observedValue))", file: file, line: line)
+    }
+
+    private func assertSimulatedLayoutChanged(in app: XCUIApplication, to expected: SimulatedToolPresentationExpectation, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let deadline = Date().addingTimeInterval(5)
+        while Date() < deadline {
+            let panel = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+            guard panel.exists else {
+                waitBriefly(0.2)
+                continue
+            }
+            let hasSheet = activeToolPanelTop(in: app) != nil
+            switch expected {
+            case .inspector where !hasSheet:
+                return
+            case .sheet where hasSheet:
+                return
+            default:
+                waitBriefly(0.2)
+            }
+        }
+
+        let panel = app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch
+        let panelDescription = panel.exists ? frameDescription(panel.frame) : "missing"
+        switch expected {
+        case .inspector:
+            XCTFail("\(context): expected the simulated layout change to replace the bottom sheet with the inspector. Window: \(frameDescription(app.windows.firstMatch.frame)); panel: \(panelDescription)", file: file, line: line)
+        case .sheet:
+            XCTFail("\(context): expected the simulated layout change to replace the inspector with the bottom sheet. Window: \(frameDescription(app.windows.firstMatch.frame)); panel: \(panelDescription)", file: file, line: line)
         }
     }
 
