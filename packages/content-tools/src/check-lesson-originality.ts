@@ -14,6 +14,156 @@ const FIVE_GRAM_SIZE = 5;
 const SHARED_FIVE_GRAM_THRESHOLD = 5;
 const SHARED_FIVE_GRAM_RATIO_THRESHOLD = 0.4;
 const LONGEST_SHARED_WORD_RUN_THRESHOLD = 8;
+const NUMERIC_CONTEXT_MATCH_THRESHOLD = 2;
+
+const COMMON_NUMERIC_TOKENS = new Set([
+  "0.1",
+  "0.2",
+  "0.5",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "10",
+  "20",
+  "30",
+  "50",
+  "100",
+]);
+
+const CONTEXT_STOP_WORDS = new Set([
+  "a",
+  "about",
+  "above",
+  "add",
+  "adds",
+  "all",
+  "allow",
+  "allowed",
+  "amateur",
+  "an",
+  "and",
+  "answer",
+  "approximately",
+  "are",
+  "as",
+  "at",
+  "be",
+  "between",
+  "by",
+  "can",
+  "change",
+  "changed",
+  "changes",
+  "common",
+  "compared",
+  "decrease",
+  "decreased",
+  "decreases",
+  "decibel",
+  "decibels",
+  "divide",
+  "does",
+  "each",
+  "equal",
+  "estimated",
+  "find",
+  "for",
+  "from",
+  "gain",
+  "given",
+  "has",
+  "higher",
+  "how",
+  "if",
+  "in",
+  "increase",
+  "increased",
+  "increases",
+  "is",
+  "it",
+  "loss",
+  "lower",
+  "many",
+  "minus",
+  "of",
+  "or",
+  "original",
+  "plus",
+  "power",
+  "ratio",
+  "results",
+  "roughly",
+  "same",
+  "signal",
+  "step",
+  "than",
+  "that",
+  "the",
+  "their",
+  "then",
+  "these",
+  "times",
+  "to",
+  "total",
+  "use",
+  "uses",
+  "using",
+  "value",
+  "values",
+  "what",
+  "when",
+  "which",
+  "with",
+  "would",
+]);
+
+const NUMERIC_UNIT_WORDS = new Set([
+  "a",
+  "amp",
+  "amps",
+  "ampere",
+  "amperes",
+  "db",
+  "degree",
+  "degrees",
+  "f",
+  "farad",
+  "farads",
+  "feet",
+  "foot",
+  "hz",
+  "khz",
+  "kilohertz",
+  "kohm",
+  "kohms",
+  "ma",
+  "meter",
+  "meters",
+  "metre",
+  "metres",
+  "mhz",
+  "microamp",
+  "microamps",
+  "microfarad",
+  "microfarads",
+  "milliamp",
+  "milliamps",
+  "ohm",
+  "ohms",
+  "pf",
+  "uf",
+  "v",
+  "volt",
+  "volts",
+  "w",
+  "watt",
+  "watts",
+  "wavelength",
+  "wavelengths",
+]);
 
 const NUMBER_WORDS = new Map<string, string>([
   ["zero", "0"],
@@ -170,6 +320,39 @@ function numericTokens(text: string): Set<string> {
 
 function normalizeWordTokens(text: string): string[] {
   return [...text.toLowerCase().matchAll(/[\p{L}\p{N}]+/gu)].map((match) => match[0]!);
+}
+
+function contextTokenStem(token: string): string {
+  if (token.length > 5 && token.endsWith("ies")) {
+    return `${token.slice(0, -3)}y`;
+  }
+  if (token.length > 6 && token.endsWith("ing")) {
+    return token.slice(0, -3);
+  }
+  if (token.length > 5 && token.endsWith("ed")) {
+    return token.slice(0, -2);
+  }
+  if (token.length > 4 && token.endsWith("es")) {
+    return token.slice(0, -2);
+  }
+  if (token.length > 3 && token.endsWith("s")) {
+    return token.slice(0, -1);
+  }
+  return token;
+}
+
+function numericContextTokens(text: string): string[] {
+  const tokens = new Set<string>();
+  for (const word of normalizeWordTokens(text)) {
+    if (word.length <= 2 || CONTEXT_STOP_WORDS.has(word) || NUMBER_WORDS.has(word) || NUMERIC_UNIT_WORDS.has(word) || /^\d+$/.test(word)) {
+      continue;
+    }
+    const stemmed = contextTokenStem(word);
+    if (stemmed.length > 2 && !CONTEXT_STOP_WORDS.has(stemmed) && !NUMERIC_UNIT_WORDS.has(stemmed)) {
+      tokens.add(stemmed);
+    }
+  }
+  return [...tokens].sort();
 }
 
 function fiveGramsFromWords(words: string[]): Set<string> {
@@ -337,6 +520,7 @@ type QuestionCheck = {
   categoryId: string;
   questionTokens: string[];
   answerTokens: string[];
+  numericContextTokens: string[];
   sourceWords: string[];
   sourceFiveGrams: Set<string>;
 };
@@ -370,6 +554,7 @@ async function loadQuestions(questionsPath: string): Promise<QuestionCheck[]> {
       categoryId: categoryIdFromSubsection(subsectionId),
       questionTokens: [...numericTokens(question.text.en)].sort(),
       answerTokens: [...numericTokens(correctAnswer.text.en)].sort(),
+      numericContextTokens: numericContextTokens(question.text.en),
       sourceWords,
       sourceFiveGrams: fiveGramsFromWords(sourceWords),
     });
@@ -415,6 +600,15 @@ function sharedValues(left: Iterable<string>, right: Set<string>): string[] {
   return [...left].filter((value) => right.has(value)).sort();
 }
 
+function hasDistinctiveNumericQuestionEvidence(question: QuestionCheck, matchingQuestionTokens: readonly string[], blockContextTokens: Set<string>): boolean {
+  if (matchingQuestionTokens.some((token) => !COMMON_NUMERIC_TOKENS.has(token))) {
+    return true;
+  }
+
+  const sharedContextTokens = sharedValues(question.numericContextTokens, blockContextTokens);
+  return sharedContextTokens.length >= NUMERIC_CONTEXT_MATCH_THRESHOLD;
+}
+
 export async function checkLessonOriginality(options: LessonOriginalityOptions = {}): Promise<LessonOriginalityReport> {
   const lessonRoot = options.lessonRoot ?? DEFAULT_LESSON_ROOT;
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTIONS_PATH;
@@ -446,6 +640,7 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
       }
 
       const blockNumericTokens = numericTokens(block.text);
+      const blockContextTokens = new Set(numericContextTokens(block.text));
       const blockWords = normalizeWordTokens(block.text);
       const blockFiveGrams = fiveGramsFromWords(blockWords);
 
@@ -453,7 +648,11 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
         if (question.questionTokens.length > 0 && question.answerTokens.length > 0) {
           const matchingQuestionTokens = question.questionTokens.filter((token) => blockNumericTokens.has(token));
           const matchingAnswerTokens = question.answerTokens.filter((token) => blockNumericTokens.has(token));
-          if (matchingQuestionTokens.length === question.questionTokens.length && matchingAnswerTokens.length === question.answerTokens.length) {
+          if (
+            matchingQuestionTokens.length === question.questionTokens.length
+            && matchingAnswerTokens.length === question.answerTokens.length
+            && hasDistinctiveNumericQuestionEvidence(question, matchingQuestionTokens, blockContextTokens)
+          ) {
             issues.push({
               filePath,
               lessonId: metadata.id,
@@ -497,7 +696,7 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
   const summaryLines = [
     `Lesson files checked: ${checkedFileCount}`,
     `Official questions checked: ${questionChecks.length}`,
-    `Numeric originality window: one #/##/### heading block, scoped by lesson categoryIds`,
+    `Numeric originality window: one #/##/### heading block, scoped by lesson categoryIds; keyed answers require a distinctive question number or ${NUMERIC_CONTEXT_MATCH_THRESHOLD} distinctive context words`,
     `Near-verbatim threshold: ${SHARED_FIVE_GRAM_THRESHOLD} shared word ${FIVE_GRAM_SIZE}-grams, ${Math.round(SHARED_FIVE_GRAM_RATIO_THRESHOLD * 100)}% of source ${FIVE_GRAM_SIZE}-grams, or ${LONGEST_SHARED_WORD_RUN_THRESHOLD} shared words in a row, across the whole bank`,
     `Allow-listed heading blocks skipped: ${allowlistedBlocks.size}`,
     `Originality issues: ${issues.length}`,

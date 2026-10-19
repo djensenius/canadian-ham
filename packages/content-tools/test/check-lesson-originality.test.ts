@@ -117,6 +117,37 @@ test("originality check passes original numeric examples", async () => {
   });
 });
 
+test("numeric originality allows common dB and ratio shortcut numbers without question context", async () => {
+  await withFixture("common-db-steps", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-DB-001", "A two-times increase in power results in a change of how many dB?", "3 dB higher"),
+      question("B-TEST-DB-002", "If a signal has a 10 dB power gain, what is the approximate power ratio?", "10 times"),
+      question("B-TEST-DB-003", "What change in transmitter power results in a 3 dB decrease?", "Divide the original power by 2"),
+    ], lessonMarkdown(`# Lesson
+
+## Worked example: estimating gain without copying a question
+
+For Basic-level estimating, use practical power shortcuts. A +10 dB step followed by a -3 dB step leaves about 5x power. Three +3 dB steps stack to about 8x power.
+`));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality allows standalone common numbers without distinctive context", async () => {
+  await withFixture("standalone-common-numbers", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-COMMON-001", "If a 5 V circuit draws 2 A, what is the power?", "10 W"),
+    ], lessonMarkdown("# Lesson\n\nA 5-minute warm-up reviews the +10 dB shortcut before any circuit examples begin.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
 test("originality check rejects integer-only question and answer numbers in one heading block", async () => {
   await withFixture("integer-only", async (root) => {
     await writeFixture(root, [
@@ -141,6 +172,20 @@ test("originality check rejects unit-word bank scenarios such as two 500 ohm 1 W
       () => runCheck(root),
       (error: unknown) => error instanceof LessonOriginalityError
         && error.report.issues.some((issue) => issue.questionId === "B-TEST-003" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality rejects common numbers when paired with distinctive question context", async () => {
+  await withFixture("common-numbers-with-context", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-CONTEXT-001", "If you wire two 20-microfarad capacitors in series, what is the capacity of the combination?", "10 microfarads"),
+    ], lessonMarkdown("# Lesson\n\nTwo 20 uF capacitors in series combine to make 10 uF.\n"));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-CONTEXT-001" && issue.issueType === "numeric-overlap"),
     );
   });
 });
