@@ -1041,6 +1041,28 @@
         }
       }
     },
+    "%@.lessonIdVersion must be 1 or 2 when present." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonIdVersion must be 1 or 2 when present."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonIdVersion doit être 1 ou 2 lorsqu’il est présent."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonIdVersion doit être 1 ou 2 lorsqu’il est présent."
+          }
+        }
+      }
+    },
     "%@.lessonsCompleted must be non-negative." : {
       "localizations" : {
         "fr" : {
@@ -5745,6 +5767,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importation : la version du fichier doit être 1."
+          }
+        }
+      }
+    },
+    "Import lessonIdVersion must be 1 or 2 when present." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import lessonIdVersion must be 1 or 2 when present."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : lessonIdVersion doit être 1 ou 2 lorsqu’il est présent."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : lessonIdVersion doit être 1 ou 2 lorsqu’il est présent."
           }
         }
       }
