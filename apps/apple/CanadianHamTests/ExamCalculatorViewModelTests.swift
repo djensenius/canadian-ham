@@ -90,13 +90,17 @@ final class ExamCalculatorViewModelTests: XCTestCase {
     }
 
     func testCalculatorToolLayoutUsesExplicitScrollingModeWithoutHeightThresholds() {
-        let scrollingLayout = CalculatorToolLayout(dynamicTypeSize: .large, contentMode: .scrolling)
+        let scrollingLayout = CalculatorToolLayout(dynamicTypeSize: .large, contentMode: .scrolling(showsHelpText: false))
 
         XCTAssertTrue(scrollingLayout.usesScrolling)
         XCTAssertFalse(scrollingLayout.showsHelpText)
         XCTAssertEqual(scrollingLayout.displayHeight, 48)
         XCTAssertGreaterThanOrEqual(scrollingLayout.keyHeight, 44)
         XCTAssertLessThan(scrollingLayout.keyHeight, 64)
+
+        let scrollingWithHelp = CalculatorToolLayout(dynamicTypeSize: .large, contentMode: .scrolling(showsHelpText: true))
+        XCTAssertTrue(scrollingWithHelp.usesScrolling)
+        XCTAssertTrue(scrollingWithHelp.showsHelpText)
     }
 
     func testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes() {
@@ -106,7 +110,7 @@ final class ExamCalculatorViewModelTests: XCTestCase {
         XCTAssertEqual(accessibilityFittingLayout.displayHeight, 72)
         XCTAssertEqual(accessibilityFittingLayout.keyHeight, 64)
 
-        let accessibilityScrollingLayout = CalculatorToolLayout(dynamicTypeSize: .accessibility1, contentMode: .scrolling)
+        let accessibilityScrollingLayout = CalculatorToolLayout(dynamicTypeSize: .accessibility1, contentMode: .scrolling(showsHelpText: false))
         XCTAssertTrue(accessibilityScrollingLayout.usesScrolling)
         XCTAssertEqual(accessibilityScrollingLayout.displayHeight, 72)
         XCTAssertEqual(accessibilityScrollingLayout.keyHeight, 64)
@@ -114,7 +118,7 @@ final class ExamCalculatorViewModelTests: XCTestCase {
 
     func testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere() {
         let sizes: [DynamicTypeSize] = [.xSmall, .large, .xxxLarge, .accessibility1, .accessibility5]
-        let modes: [CalculatorToolLayout.ContentMode] = [.fitting(showsHelpText: true), .fitting(showsHelpText: false), .scrolling]
+        let modes: [CalculatorToolLayout.ContentMode] = [.fitting(showsHelpText: true), .fitting(showsHelpText: false), .scrolling(showsHelpText: false)]
 
         for size in sizes {
             for mode in modes {

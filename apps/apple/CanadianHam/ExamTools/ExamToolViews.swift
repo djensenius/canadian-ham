@@ -293,10 +293,19 @@ struct ExamToolPresentationModifier: ViewModifier {
     private func toolBody(for tool: ExamTool, availableHeight: CGFloat, usesInspector: Bool) -> some View {
         switch tool {
         case .calculator:
+#if os(iOS)
+            let idiom = PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom)
+            let calculatorPrefersScrolling = !usesInspector || idiom == .phone
+            let calculatorShowsHelpWhenScrolling = (idiom == .phone && usesInspector) || (!usesInspector && selectedSheetDetent == .large)
+#else
+            let calculatorPrefersScrolling = !usesInspector
+            let calculatorShowsHelpWhenScrolling = false
+#endif
             CalculatorToolView(
                 viewModel: calculator,
                 calculatorFocused: $calculatorFocused,
-                prefersScrolling: !usesInspector
+                prefersScrolling: calculatorPrefersScrolling,
+                showsHelpWhenScrolling: calculatorShowsHelpWhenScrolling
             )
             .frame(height: availableHeight)
         case .hint:
@@ -614,6 +623,7 @@ struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
     @Binding var calculatorFocused: Bool
     let prefersScrolling: Bool
+    let showsHelpWhenScrolling: Bool
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 #if os(iOS)
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -632,12 +642,12 @@ struct CalculatorToolView: View {
     var body: some View {
         GeometryReader { _ in
             if shouldPreferScrollableCalculator {
-                calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling))
+                calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling(showsHelpText: showsHelpWhenScrolling)))
             } else {
                 ViewThatFits(in: .vertical) {
                     calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: true)))
                     calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: false)))
-                    calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling))
+                    calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling(showsHelpText: false)))
                 }
             }
         }
@@ -680,6 +690,7 @@ struct CalculatorToolView: View {
         calculatorContent(layout: layout)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .topLeading)
+            .accessibilityElement(children: .contain)
     }
 
     private func calculatorScrollContent(layout: CalculatorToolLayout) -> some View {

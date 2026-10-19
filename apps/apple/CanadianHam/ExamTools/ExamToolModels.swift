@@ -156,7 +156,7 @@ enum PlatformUserInterfaceIdiom: Equatable {
 struct CalculatorToolLayout {
     enum ContentMode: Equatable {
         case fitting(showsHelpText: Bool)
-        case scrolling
+        case scrolling(showsHelpText: Bool)
     }
 
     let dynamicTypeSize: DynamicTypeSize
@@ -174,16 +174,29 @@ struct CalculatorToolLayout {
     var displayVerticalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayVerticalPadding : compactDisplayVerticalPadding }
     var keyHeight: CGFloat {
         if usesAccessibilityMetrics { return accessibilityKeyHeight }
-        return contentMode == .scrolling ? scrollingKeyHeight : minimumKeyHeight
+        switch contentMode {
+        case .fitting:
+            return minimumKeyHeight
+        case .scrolling:
+            return scrollingKeyHeight
+        }
     }
     var showsHelpText: Bool {
-        guard !usesAccessibilityMetrics,
-              case .fitting(let showsHelpText) = contentMode else { return false }
-        return showsHelpText
+        guard !usesAccessibilityMetrics else { return false }
+        switch contentMode {
+        case .fitting(let showsHelpText), .scrolling(let showsHelpText):
+            return showsHelpText
+        }
     }
 
     var usesScrolling: Bool {
-        usesAccessibilityMetrics || contentMode == .scrolling
+        if usesAccessibilityMetrics { return true }
+        switch contentMode {
+        case .fitting:
+            return false
+        case .scrolling:
+            return true
+        }
     }
 
     var usesAccessibilityMetrics: Bool {
@@ -201,7 +214,7 @@ struct CalculatorToolLayout {
     private var compactDisplayHeight: CGFloat { 48 }
     private var compactDisplayHorizontalPadding: CGFloat { 12 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
-    private var scrollingKeyHeight: CGFloat { 56 }
+    private var scrollingKeyHeight: CGFloat { minimumKeyHeight }
     // SwiftUI reports the button accessibility frame slightly smaller than the requested label frame;
     // a 46 pt layout floor preserves the user-facing 44 pt minimum in UI tests.
     private var minimumKeyHeight: CGFloat { 46 }
