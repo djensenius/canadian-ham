@@ -1548,21 +1548,30 @@ final class ProgressStoreService: ObservableObject {
                 migrated[attempt.id] = attempt
                 continue
             }
-            // Partial attempts store only the count of correct concepts. The UI
-            // asks them in order. Always retain explicit wrong IDs outside that
-            // prefix as wrong; inconsistent local rows must not invent successes.
+            // Partial attempts record a concept count, not correct concept IDs. Include
+            // explicit wrong IDs first, then fill only the remaining slots in UI order.
             let oldConcepts = conceptMapping.filter { $0.old.hasPrefix("\(attempt.quizId)-C") }
-            let answered = Set(oldConcepts.prefix(max(0, attempt.total - attempt.officialQuestionIds.count)).map(\.old) + attempt.incorrectConceptCheckIds)
+            let wrongConceptIDs = Set(attempt.incorrectConceptCheckIds)
+            let remainingConceptCount = max(0, attempt.total - attempt.officialQuestionIds.count - wrongConceptIDs.count)
+            let answered = wrongConceptIDs.union(oldConcepts.filter { !wrongConceptIDs.contains($0.old) }.prefix(remainingConceptCount).map(\.old))
             let assignedConcepts = oldConcepts.filter { answered.contains($0.old) }.compactMap(\.new)
             let wrongConcepts = oldConcepts.filter { attempt.incorrectConceptCheckIds.contains($0.old) }.compactMap(\.new)
-            for target in targets {
+            // Inconsistent historical scores must not gain correct answers. Allocate the
+            // recorded budget to the original destination first, then sorted quiz IDs.
+            var remainingCorrect = max(0, attempt.correct)
+            let orderedTargets = targets.sorted {
+                if ($0.quizId == attempt.quizId) != ($1.quizId == attempt.quizId) { return $0.quizId == attempt.quizId }
+                return $0.quizId < $1.quizId
+            }
+            for target in orderedTargets {
                 let officialQuestionIds = attempt.officialQuestionIds.filter { questionId in target.prefixes.contains { questionId.hasPrefix($0) } }
                 let incorrectOfficialQuestionIds = attempt.incorrectOfficialQuestionIds.filter { officialQuestionIds.contains($0) }
                 let concepts = assignedConcepts.filter { $0.hasPrefix("\(target.quizId)-C") }
                 let incorrectConceptCheckIds = wrongConcepts.filter { concepts.contains($0) }
-                if officialQuestionIds.isEmpty && concepts.isEmpty && target.quizId != attempt.quizId { continue }
-                let correct = officialQuestionIds.count - incorrectOfficialQuestionIds.count + concepts.count - incorrectConceptCheckIds.count
-                let total = max(1, officialQuestionIds.count + concepts.count)
+                let total = officialQuestionIds.count + concepts.count
+                if total == 0 { continue }
+                let correct = min(remainingCorrect, officialQuestionIds.count - incorrectOfficialQuestionIds.count + concepts.count - incorrectConceptCheckIds.count)
+                remainingCorrect -= correct
                 let id = target.quizId == attempt.quizId ? attempt.id : "\(attempt.id)::\(target.quizId)"
                 migrated[id] = LessonQuizAttempt(
                     id: id,

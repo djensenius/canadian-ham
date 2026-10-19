@@ -502,6 +502,7 @@ final class ProgressStoreTests: XCTestCase {
             XCTAssertEqual(store.validate(imported, bank: bank), [], testCase.name)
             try store.importData(imported, bank: bank)
             XCTAssertEqual(try store.lessonQuizAttempts(), testCase.expected, testCase.name)
+            XCTAssertLessThanOrEqual(try store.lessonQuizAttempts().reduce(0) { $0 + $1.correct }, testCase.attempt.correct, "\(testCase.name): original correct budget")
             let exported = try store.exportData(bank: bank, exportedAt: imported.exportedAt)
             XCTAssertEqual(exported.syncDeviceRows?.lessonQuizAttempts.map(\.attempt), testCase.expected, testCase.name)
             for mapping in testCase.conceptDestinations {
@@ -579,12 +580,15 @@ final class ProgressStoreTests: XCTestCase {
             DeviceLessonProgressRecord(deviceId: "phone", record: LessonProgressRecord(lessonId: "L-005-06", readAt: archivedRead.readAt, readCount: 2), lessonIdVersion: 2),
         ])
         let expectedPartial = [
-            LessonQuizAttempt(id: "partial", quizId: "QZ-L-005-04-A", lessonId: "L-005-04", submittedAt: partial.submittedAt, correct: 2, total: 2, percent: 100, officialQuestionIds: ["B-005-007-001"], incorrectOfficialQuestionIds: [], incorrectConceptCheckIds: []),
+            LessonQuizAttempt(id: "partial", quizId: "QZ-L-005-04-A", lessonId: "L-005-04", submittedAt: partial.submittedAt, correct: 1, total: 1, percent: 100, officialQuestionIds: ["B-005-007-001"], incorrectOfficialQuestionIds: [], incorrectConceptCheckIds: []),
             LessonQuizAttempt(id: "partial::QZ-L-005-05-A", quizId: "QZ-L-005-05-A", lessonId: "L-005-05", submittedAt: partial.submittedAt, correct: 0, total: 2, percent: 0, officialQuestionIds: ["B-005-009-001"], incorrectOfficialQuestionIds: ["B-005-009-001"], incorrectConceptCheckIds: ["QZ-L-005-05-A-C2"]),
         ]
         for deviceId in ["phone", "tablet"] {
             XCTAssertEqual(deviceRows.lessonQuizAttempts.filter { $0.deviceId == deviceId && $0.attempt.id.hasPrefix("partial") }.map(\.attempt), expectedPartial)
         }
+        XCTAssertFalse(try store.lessonQuizAttempts().contains { $0.id == archivedAttempt.id })
+        XCTAssertFalse(deviceRows.lessonQuizAttempts.contains { $0.attempt.id == archivedAttempt.id })
+        XCTAssertEqual(deviceRows.lessonQuizAttempts.filter { $0.attempt.id.hasPrefix("archived") }.map { $0.attempt.quizId }, ["QZ-L-005-06-A"])
         let migratedArchived = try XCTUnwrap(deviceRows.lessonQuizAttempts.first { $0.attempt.quizId == "QZ-L-005-06-A" })
         XCTAssertEqual(migratedArchived.attempt.correct, 2)
         XCTAssertEqual(migratedArchived.attempt.total, 2)
@@ -715,8 +719,15 @@ final class ProgressStoreTests: XCTestCase {
         let store = try ProgressStoreService.inMemoryForTests()
         XCTAssertEqual(store.validate(historicalExport, bank: bank), [])
         try store.importData(historicalExport, bank: bank)
-        XCTAssertTrue(try store.lessonQuizAttempts().contains { $0.quizId == "QZ-L-005-05-A" && $0.officialQuestionIds == ["B-005-009-003"] })
-        XCTAssertEqual(try store.lessonQuizAttempts().first { $0.quizId == "QZ-L-005-05-A" }?.incorrectConceptCheckIds, ["QZ-L-005-05-A-C2"])
+        let migratedAttempts = try store.lessonQuizAttempts()
+        XCTAssertEqual(migratedAttempts, [LessonQuizAttempt(
+            id: "legacy-reactance::QZ-L-005-05-A", quizId: "QZ-L-005-05-A", lessonId: "L-005-05",
+            submittedAt: legacyAttempt.submittedAt, correct: 0, total: 2, percent: 0,
+            officialQuestionIds: ["B-005-009-003"], incorrectOfficialQuestionIds: ["B-005-009-003"],
+            incorrectConceptCheckIds: ["QZ-L-005-05-A-C2"]
+        )])
+        XCTAssertFalse(migratedAttempts.contains { $0.quizId == "QZ-L-005-04-A" })
+        XCTAssertEqual(migratedAttempts.reduce(0) { $0 + $1.correct }, legacyAttempt.correct)
 
         let wrongSourceAttempt = LessonQuizAttempt(
             id: "wrong-source", quizId: "QZ-L-005-05-A", lessonId: "L-005-05",

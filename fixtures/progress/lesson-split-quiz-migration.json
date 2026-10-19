@@ -344,5 +344,187 @@
         "newId": null
       }
     ]
+  },
+  {
+    "name": "partial wrong concept uses the only concept slot",
+    "attempt": {
+      "id": "partial-wrong",
+      "quizId": "QZ-L-005-04-A",
+      "lessonId": "L-005-04",
+      "submittedAt": "2026-01-03T03:45:00.000Z",
+      "correct": 1,
+      "total": 2,
+      "percent": 50.0,
+      "officialQuestionIds": [
+        "B-005-007-001"
+      ],
+      "incorrectOfficialQuestionIds": [],
+      "incorrectConceptCheckIds": [
+        "QZ-L-005-04-A-C3"
+      ]
+    },
+    "expected": [
+      {
+        "id": "partial-wrong",
+        "quizId": "QZ-L-005-04-A",
+        "lessonId": "L-005-04",
+        "submittedAt": "2026-01-03T03:45:00.000Z",
+        "correct": 1,
+        "total": 1,
+        "percent": 100.0,
+        "officialQuestionIds": [
+          "B-005-007-001"
+        ],
+        "incorrectOfficialQuestionIds": [],
+        "incorrectConceptCheckIds": []
+      },
+      {
+        "id": "partial-wrong::QZ-L-005-05-A",
+        "quizId": "QZ-L-005-05-A",
+        "lessonId": "L-005-05",
+        "submittedAt": "2026-01-03T03:45:00.000Z",
+        "correct": 0,
+        "total": 1,
+        "percent": 0.0,
+        "officialQuestionIds": [],
+        "incorrectOfficialQuestionIds": [],
+        "incorrectConceptCheckIds": [
+          "QZ-L-005-05-A-C2"
+        ]
+      }
+    ],
+    "conceptDestinations": []
+  },
+  {
+    "name": "inconsistent zero correct budget retains totals without inventing wrong IDs",
+    "attempt": {
+      "id": "zero-budget",
+      "quizId": "QZ-L-005-04-A",
+      "lessonId": "L-005-04",
+      "submittedAt": "2026-01-03T03:45:00.000Z",
+      "correct": 0,
+      "total": 2,
+      "percent": 0.0,
+      "officialQuestionIds": [
+        "B-005-007-001"
+      ],
+      "incorrectOfficialQuestionIds": [],
+      "incorrectConceptCheckIds": []
+    },
+    "expected": [
+      {
+        "id": "zero-budget",
+        "quizId": "QZ-L-005-04-A",
+        "lessonId": "L-005-04",
+        "submittedAt": "2026-01-03T03:45:00.000Z",
+        "correct": 0,
+        "total": 2,
+        "percent": 0.0,
+        "officialQuestionIds": [
+          "B-005-007-001"
+        ],
+        "incorrectOfficialQuestionIds": [],
+        "incorrectConceptCheckIds": []
+      }
+    ],
+    "conceptDestinations": []
+  },
+  {
+    "name": "inconsistent split correct budget 0 prefers original quiz before sorted destinations",
+    "attempt": {
+      "id": "split-budget-0",
+      "quizId": "QZ-L-008-02-A",
+      "lessonId": "L-008-02",
+      "submittedAt": "2026-01-03T03:45:00.000Z",
+      "correct": 0,
+      "total": 2,
+      "percent": 0.0,
+      "officialQuestionIds": [
+        "B-008-004-002",
+        "B-008-005-002"
+      ],
+      "incorrectOfficialQuestionIds": [],
+      "incorrectConceptCheckIds": []
+    },
+    "expected": [
+      {
+        "id": "split-budget-0",
+        "quizId": "QZ-L-008-02-A",
+        "lessonId": "L-008-02",
+        "submittedAt": "2026-01-03T03:45:00.000Z",
+        "correct": 0,
+        "total": 1,
+        "percent": 0.0,
+        "officialQuestionIds": [
+          "B-008-004-002"
+        ],
+        "incorrectOfficialQuestionIds": [],
+        "incorrectConceptCheckIds": []
+      },
+      {
+        "id": "split-budget-0::QZ-L-008-01-A",
+        "quizId": "QZ-L-008-01-A",
+        "lessonId": "L-008-01",
+        "submittedAt": "2026-01-03T03:45:00.000Z",
+        "correct": 0,
+        "total": 1,
+        "percent": 0.0,
+        "officialQuestionIds": [
+          "B-008-005-002"
+        ],
+        "incorrectOfficialQuestionIds": [],
+        "incorrectConceptCheckIds": []
+      }
+    ],
+    "conceptDestinations": []
+  },
+  {
+    "name": "inconsistent split correct budget 1 prefers original quiz before sorted destinations",
+    "attempt": {
+      "id": "split-budget-1",
+      "quizId": "QZ-L-008-02-A",
+      "lessonId": "L-008-02",
+      "submittedAt": "2026-01-03T03:45:00.000Z",
+      "correct": 1,
+      "total": 2,
+      "percent": 50.0,
+      "officialQuestionIds": [
+        "B-008-004-002",
+        "B-008-005-002"
+      ],
+      "incorrectOfficialQuestionIds": [],
+      "incorrectConceptCheckIds": []
+    },
+    "expected": [
+      {
+        "id": "split-budget-1",
+        "quizId": "QZ-L-008-02-A",
+        "lessonId": "L-008-02",
+        "submittedAt": "2026-01-03T03:45:00.000Z",
+        "correct": 1,
+        "total": 1,
+        "percent": 100.0,
+        "officialQuestionIds": [
+          "B-008-004-002"
+        ],
+        "incorrectOfficialQuestionIds": [],
+        "incorrectConceptCheckIds": []
+      },
+      {
+        "id": "split-budget-1::QZ-L-008-01-A",
+        "quizId": "QZ-L-008-01-A",
+        "lessonId": "L-008-01",
+        "submittedAt": "2026-01-03T03:45:00.000Z",
+        "correct": 0,
+        "total": 1,
+        "percent": 0.0,
+        "officialQuestionIds": [
+          "B-008-005-002"
+        ],
+        "incorrectOfficialQuestionIds": [],
+        "incorrectConceptCheckIds": []
+      }
+    ],
+    "conceptDestinations": []
   }
 ]
