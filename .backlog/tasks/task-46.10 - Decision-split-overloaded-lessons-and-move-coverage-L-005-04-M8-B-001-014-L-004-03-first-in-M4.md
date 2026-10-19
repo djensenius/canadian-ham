@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 23:02'
+updated_date: '2026-10-19 23:09'
 labels:
   - content
 dependencies: []
@@ -60,6 +60,8 @@ Tightened historical validation tables from subsection prefixes to the exact sam
 Coordinator-approved final safety fix: move the local Apple migration completion marker after successful context.save(), so a save failure cannot suppress retry on the next launch. No cheap existing save-failure injection seam covers this private initializer migration (existing hooks are specific to language migration/import/quiz saves); no new testing scaffolding was added, per approval. Control-flow ordering is explicit; queued iOS/localization builds compile the change. Exact historical-ID macOS regression passed (1 test / zero failures), and final web ProgressStore 31 tests/typecheck/build/URL-CSP audit passed. No further scope expansion planned.
 
 Coordinator final validation 2026-10-19 at the head after the save-ordering fix: macOS unit 182/0; pnpm check:apple-l10n passed with no rewrite; pnpm test passed; iPhone 17 Pro Learn + changed lesson-figure tests 6/0; content checks all passed (coverage 100/100, originality 0, explanations 984, quizzes 37, links, hints 984/984, figures 38, schemas 2034, import:check).
+
+PR #302 review fixes in progress. Verified each explicit concept mapping by comparing prompts against quizzes at 350a3b53; the two old M8 filter checks have no current equivalent and are dropped. Coordinator decision 2026-10-19: read destinations only when every contributing old lesson was read; use latest readAt/minimum readCount, separately per device. Approved partial-quiz rule uses the answered concept prefix plus explicit wrong IDs (never invent correct answers for those wrong IDs); coherent raw device aggregates drive migrated top-level read progress, while incoherent exports retain fallback. Documented in docs/architecture.md. Added shared concept/score fixture plus web and Apple launch/import regressions. Full macOS unit run is queued behind the xbuild lock. Figure mismatch follow-up created; leave teaching-guide x notation unchanged.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
