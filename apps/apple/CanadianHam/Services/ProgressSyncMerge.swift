@@ -31,6 +31,13 @@ struct DeviceLessonProgressRecord: Codable, Equatable, Sendable {
         self.record = record
         self.lessonIdVersion = lessonIdVersion
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        record = try container.decode(LessonProgressRecord.self, forKey: .record)
+        lessonIdVersion = container.contains(.lessonIdVersion) ? try container.decode(Int.self, forKey: .lessonIdVersion) : nil
+    }
 }
 
 struct DeviceLessonQuizAttemptRecord: Codable, Equatable, Sendable {
@@ -42,6 +49,13 @@ struct DeviceLessonQuizAttemptRecord: Codable, Equatable, Sendable {
         self.deviceId = deviceId
         self.attempt = attempt
         self.lessonIdVersion = lessonIdVersion
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        attempt = try container.decode(LessonQuizAttempt.self, forKey: .attempt)
+        lessonIdVersion = container.contains(.lessonIdVersion) ? try container.decode(Int.self, forKey: .lessonIdVersion) : nil
     }
 }
 

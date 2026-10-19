@@ -182,7 +182,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schema = try container.decode(String.self, forKey: .schema)
         version = try container.decode(Int.self, forKey: .version)
-        lessonIdVersion = try container.decodeIfPresent(Int.self, forKey: .lessonIdVersion)
+        lessonIdVersion = container.contains(.lessonIdVersion) ? try container.decode(Int.self, forKey: .lessonIdVersion) : nil
         exportedAt = try container.decode(String.self, forKey: .exportedAt)
         bankId = try container.decodeIfPresent(String.self, forKey: .bankId) ?? basicBankId
         questionProgress = try container.decode([QuestionProgressRecord].self, forKey: .questionProgress)
@@ -591,7 +591,7 @@ final class ProgressStoreService: ObservableObject {
     @Published private(set) var iCloudAccountSignalError: String?
 
     private static let legacyEnglishLanguageMigrationMarkerKey = "CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete"
-    private static let task4610LessonSplitMigrationMarkerKey = "CanadianHam.progress.task46_10LessonSplitMigrationComplete"
+    static let task4610LessonSplitMigrationMarkerKey = "CanadianHam.progress.task46_10LessonSplitMigrationComplete"
     private static let appleLanguagesLastAppliedPreferenceKey = "CanadianHam.preferences.appleLanguagesLastApplied"
     private static let appleLanguagesPreferenceKey = "AppleLanguages"
 
@@ -1270,7 +1270,7 @@ final class ProgressStoreService: ObservableObject {
             try context.delete(model: LessonProgressEntity.self)
             try context.delete(model: LessonQuizAttemptEntity.self)
             try removeMorseCourseProgressIfPresent()
-            try context.delete(model: PreferencesEntity.self)
+            if let entity = try existingPreferencesEntity() { context.delete(entity) }
             defaults.removeObject(forKey: Self.activeBankPreferenceKey)
             preferences = .default
             if layout == .split {
@@ -1432,9 +1432,13 @@ final class ProgressStoreService: ObservableObject {
         let migratesTopLevelRows = (data.lessonIdVersion ?? LessonIDContentVersion.legacy) == LessonIDContentVersion.legacy
         let decodedLessonProgress = try decodeArchivedArray(data.lessonProgress, as: LessonProgressRecord.self)
         let decodedLessonQuizAttempts = try decodeArchivedArray(data.lessonQuizAttempts, as: LessonQuizAttempt.self)
-        let lessonProgress = migratesTopLevelRows ? migrateTask4610LessonProgress(decodedLessonProgress) : decodedLessonProgress
+        var lessonProgress = migratesTopLevelRows ? migrateTask4610LessonProgress(decodedLessonProgress) : decodedLessonProgress
         let lessonQuizAttempts = migratesTopLevelRows ? migrateTask4610LessonQuizAttempts(decodedLessonQuizAttempts) : decodedLessonQuizAttempts
         let syncDeviceRows = data.syncDeviceRows.map(migrateTask4610SyncDeviceRows)
+        if migratesTopLevelRows, let rawRows = data.syncDeviceRows, let migratedRows = syncDeviceRows,
+           ProgressSyncMerge.deduplicateDeviceLessonProgress(rawRows.lessonProgress) == decodedLessonProgress.sorted(by: { $0.lessonId < $1.lessonId }) {
+            lessonProgress = ProgressSyncMerge.deduplicateDeviceLessonProgress(migratedRows.lessonProgress)
+        }
         return ProgressExportV1(
             schema: data.schema,
             version: data.version,
@@ -1455,11 +1459,7 @@ final class ProgressStoreService: ObservableObject {
         ProgressSyncDeviceRows(
             questionProgress: rows.questionProgress,
             examAttempts: rows.examAttempts,
-            lessonProgress: rows.lessonProgress.flatMap { row in
-                guard LessonIDContentVersion.isSupported(row.lessonIdVersion) else { return [row] }
-                guard row.lessonIdVersion != LessonIDContentVersion.current else { return [row] }
-                return migrateTask4610LessonProgress([row.record]).map { DeviceLessonProgressRecord(deviceId: row.deviceId, record: $0, lessonIdVersion: LessonIDContentVersion.current) }
-            },
+            lessonProgress: migrateTask4610DeviceLessonProgress(rows.lessonProgress),
             lessonQuizAttempts: rows.lessonQuizAttempts.flatMap { row in
                 guard LessonIDContentVersion.isSupported(row.lessonIdVersion) else { return [row] }
                 guard row.lessonIdVersion != LessonIDContentVersion.current else { return [row] }
@@ -1470,53 +1470,77 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private func migrateTask4610LessonProgress(_ records: [LessonProgressRecord]) -> [LessonProgressRecord] {
-        let targetsByLessonId: [String: [String]] = [
-            "L-005-04": ["L-005-04", "L-005-05"],
-            "L-005-05": ["L-005-05", "L-005-06"],
+        let sourcesByDestination: [String: [String]] = [
+            "L-001-03": ["L-001-03"],
+            "L-001-05": ["L-001-03", "L-001-05"],
+            "L-005-04": ["L-005-04"],
+            "L-005-05": ["L-005-04", "L-005-05"],
+            "L-005-06": ["L-005-05"],
             "L-008-01": ["L-008-01", "L-008-02"],
             "L-008-02": ["L-008-01", "L-008-02"],
-            "L-001-03": ["L-001-03", "L-001-05"],
         ]
-        var merged: [String: LessonProgressRecord] = [:]
-        for record in records {
-            for lessonId in targetsByLessonId[record.lessonId] ?? [record.lessonId] {
-                let next = LessonProgressRecord(lessonId: lessonId, readAt: record.readAt, readCount: record.readCount)
-                if let existing = merged[lessonId] {
-                    merged[lessonId] = LessonProgressRecord(
-                        lessonId: lessonId,
-                        readAt: max(existing.readAt, next.readAt),
-                        readCount: max(existing.readCount, next.readCount)
-                    )
-                } else {
-                    merged[lessonId] = next
-                }
+        let byId = Dictionary(records.map { ($0.lessonId, $0) }, uniquingKeysWith: { _, last in last })
+        let destinations = Set(records.map(\.lessonId)).union(sourcesByDestination.keys)
+        return destinations.sorted().compactMap { lessonId in
+            let sourceIds = sourcesByDestination[lessonId] ?? [lessonId]
+            let sources = sourceIds.compactMap { byId[$0] }
+            guard sources.count == sourceIds.count else { return nil }
+            return LessonProgressRecord(
+                lessonId: lessonId,
+                readAt: sources.map(\.readAt).max()!,
+                readCount: sources.map(\.readCount).min()!
+            )
+        }
+    }
+
+    private func migrateTask4610DeviceLessonProgress(_ rows: [DeviceLessonProgressRecord]) -> [DeviceLessonProgressRecord] {
+        let preserved = rows.filter { !LessonIDContentVersion.isSupported($0.lessonIdVersion) || $0.lessonIdVersion == LessonIDContentVersion.current }
+        let legacy = rows.filter { LessonIDContentVersion.isSupported($0.lessonIdVersion) && $0.lessonIdVersion != LessonIDContentVersion.current }
+        return preserved + Dictionary(grouping: legacy, by: \.deviceId).values.flatMap { deviceRows in
+            migrateTask4610LessonProgress(ProgressSyncMerge.deduplicateDeviceLessonProgress(deviceRows)).map {
+                DeviceLessonProgressRecord(deviceId: deviceRows[0].deviceId, record: $0, lessonIdVersion: LessonIDContentVersion.current)
             }
         }
-        return merged.values.sorted { $0.lessonId < $1.lessonId }
     }
 
     private func migrateTask4610LessonQuizAttempts(_ attempts: [LessonQuizAttempt]) -> [LessonQuizAttempt] {
-        let targetsByQuizId: [String: [(quizId: String, lessonId: String, prefixes: [String], conceptCheckIds: Set<String>)]] = [
+        let targetsByQuizId: [String: [(quizId: String, lessonId: String, prefixes: [String])]] = [
             "QZ-L-005-04-A": [
-                ("QZ-L-005-04-A", "L-005-04", ["B-005-007-", "B-005-008-"], ["QZ-L-005-04-A-C1", "QZ-L-005-04-A-C2"]),
-                ("QZ-L-005-05-A", "L-005-05", ["B-005-009-", "B-005-010-", "B-005-012-"], ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"]),
+                ("QZ-L-005-04-A", "L-005-04", ["B-005-007-", "B-005-008-"]),
+                ("QZ-L-005-05-A", "L-005-05", ["B-005-009-", "B-005-010-", "B-005-012-"]),
             ],
             "QZ-L-005-05-A": [
-                ("QZ-L-005-05-A", "L-005-05", ["B-005-009-", "B-005-010-", "B-005-012-"], ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"]),
-                ("QZ-L-005-06-A", "L-005-06", ["B-005-011-", "B-005-013-"], ["QZ-L-005-06-A-C1", "QZ-L-005-06-A-C2", "QZ-L-005-06-A-C3"]),
+                ("QZ-L-005-05-A", "L-005-05", ["B-005-009-", "B-005-010-", "B-005-012-"]),
+                ("QZ-L-005-06-A", "L-005-06", ["B-005-011-", "B-005-013-"]),
             ],
             "QZ-L-008-01-A": [
-                ("QZ-L-008-01-A", "L-008-01", ["B-008-001-", "B-008-002-", "B-008-005-"], ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"]),
-                ("QZ-L-008-02-A", "L-008-02", ["B-008-003-", "B-008-004-"], ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"]),
+                ("QZ-L-008-01-A", "L-008-01", ["B-008-001-", "B-008-002-", "B-008-005-"]),
+                ("QZ-L-008-02-A", "L-008-02", ["B-008-003-", "B-008-004-"]),
             ],
             "QZ-L-008-02-A": [
-                ("QZ-L-008-01-A", "L-008-01", ["B-008-001-", "B-008-002-", "B-008-005-"], ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"]),
-                ("QZ-L-008-02-A", "L-008-02", ["B-008-003-", "B-008-004-"], ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"]),
+                ("QZ-L-008-01-A", "L-008-01", ["B-008-001-", "B-008-002-", "B-008-005-"]),
+                ("QZ-L-008-02-A", "L-008-02", ["B-008-003-", "B-008-004-"]),
             ],
             "QZ-L-001-03-A": [
-                ("QZ-L-001-03-A", "L-001-03", ["B-001-010-", "B-001-011-", "B-001-012-", "B-001-013-"], []),
-                ("QZ-L-001-05-A", "L-001-05", ["B-001-014-", "B-001-020-", "B-001-021-"], []),
+                ("QZ-L-001-03-A", "L-001-03", ["B-001-010-", "B-001-011-", "B-001-012-", "B-001-013-"]),
+                ("QZ-L-001-05-A", "L-001-05", ["B-001-014-", "B-001-020-", "B-001-021-"]),
             ],
+        ]
+        // Ordered as in 350a3b53. Nil explicitly drops the old filter checks:
+        // their text has no current equivalent, despite reuse of their IDs.
+        let conceptMapping: [(old: String, new: String?)] = [
+            ("QZ-L-005-04-A-C1", "QZ-L-005-04-A-C1"),
+            ("QZ-L-005-04-A-C2", "QZ-L-005-05-A-C1"),
+            ("QZ-L-005-04-A-C3", "QZ-L-005-05-A-C2"),
+            ("QZ-L-005-05-A-C1", "QZ-L-005-06-A-C1"),
+            ("QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"),
+            ("QZ-L-005-05-A-C3", "QZ-L-005-06-A-C2"),
+            ("QZ-L-008-01-A-C1", "QZ-L-008-01-A-C1"),
+            ("QZ-L-008-01-A-C2", "QZ-L-008-01-A-C2"),
+            ("QZ-L-008-01-A-C3", "QZ-L-008-01-A-C3"),
+            ("QZ-L-008-02-A-C1", "QZ-L-008-02-A-C1"),
+            ("QZ-L-008-02-A-C2", nil),
+            ("QZ-L-008-02-A-C3", nil),
         ]
         var migrated: [String: LessonQuizAttempt] = [:]
         for attempt in attempts {
@@ -1524,12 +1548,21 @@ final class ProgressStoreService: ObservableObject {
                 migrated[attempt.id] = attempt
                 continue
             }
+            // Partial attempts store only the count of correct concepts. The UI
+            // asks them in order. Always retain explicit wrong IDs outside that
+            // prefix as wrong; inconsistent local rows must not invent successes.
+            let oldConcepts = conceptMapping.filter { $0.old.hasPrefix("\(attempt.quizId)-C") }
+            let answered = Set(oldConcepts.prefix(max(0, attempt.total - attempt.officialQuestionIds.count)).map(\.old) + attempt.incorrectConceptCheckIds)
+            let assignedConcepts = oldConcepts.filter { answered.contains($0.old) }.compactMap(\.new)
+            let wrongConcepts = oldConcepts.filter { attempt.incorrectConceptCheckIds.contains($0.old) }.compactMap(\.new)
             for target in targets {
                 let officialQuestionIds = attempt.officialQuestionIds.filter { questionId in target.prefixes.contains { questionId.hasPrefix($0) } }
                 let incorrectOfficialQuestionIds = attempt.incorrectOfficialQuestionIds.filter { officialQuestionIds.contains($0) }
-                if officialQuestionIds.isEmpty && target.quizId != attempt.quizId { continue }
-                let correct = officialQuestionIds.count - incorrectOfficialQuestionIds.count
-                let total = max(1, officialQuestionIds.count)
+                let concepts = assignedConcepts.filter { $0.hasPrefix("\(target.quizId)-C") }
+                let incorrectConceptCheckIds = wrongConcepts.filter { concepts.contains($0) }
+                if officialQuestionIds.isEmpty && concepts.isEmpty && target.quizId != attempt.quizId { continue }
+                let correct = officialQuestionIds.count - incorrectOfficialQuestionIds.count + concepts.count - incorrectConceptCheckIds.count
+                let total = max(1, officialQuestionIds.count + concepts.count)
                 let id = target.quizId == attempt.quizId ? attempt.id : "\(attempt.id)::\(target.quizId)"
                 migrated[id] = LessonQuizAttempt(
                     id: id,
@@ -1541,7 +1574,7 @@ final class ProgressStoreService: ObservableObject {
                     percent: Double(correct) / Double(total) * 100,
                     officialQuestionIds: officialQuestionIds,
                     incorrectOfficialQuestionIds: incorrectOfficialQuestionIds,
-                    incorrectConceptCheckIds: attempt.incorrectConceptCheckIds.filter { target.conceptCheckIds.contains($0) }
+                    incorrectConceptCheckIds: incorrectConceptCheckIds
                 )
             }
         }
@@ -2274,27 +2307,32 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private func migrateTask4610LessonReferencesIfNeeded() throws {
-        guard !defaults.bool(forKey: Self.task4610LessonSplitMigrationMarkerKey) else { return }
-        let lessonRows = try deviceLessonProgressRows()
+        let markerKey = Self.task4610LessonSplitMigrationMarkerKey
+        let markerDescriptor = FetchDescriptor<PreferencesEntity>(predicate: #Predicate { $0.key == markerKey })
+        guard try context.fetch(markerDescriptor).isEmpty else { return }
+        let lessonRows = try deviceLessonProgressRows().map {
+            DeviceLessonProgressRecord(deviceId: $0.deviceId, record: $0.record, lessonIdVersion: LessonIDContentVersion.legacy)
+        }
         let quizRows = try deviceLessonQuizAttemptRows()
-        var changed = false
-        for row in lessonRows {
-            for record in migrateTask4610LessonProgress([row.record]) where record != row.record {
-                try upsertLessonProgress(record, deviceId: row.deviceId, mergesExistingReadCount: true)
-                changed = true
-            }
+        try context.delete(model: LessonProgressEntity.self)
+        try context.delete(model: LessonQuizAttemptEntity.self)
+        for row in migrateTask4610DeviceLessonProgress(lessonRows) {
+            try upsertLessonProgress(row.record, deviceId: row.deviceId)
         }
         for row in quizRows {
             for attempt in migrateTask4610LessonQuizAttempts([row.attempt]) {
                 try upsertLessonQuizAttempt(attempt, deviceId: row.deviceId)
-                if attempt != row.attempt { changed = true }
             }
         }
-        if changed {
-            try context.save()
-            objectWillChange.send()
-        }
-        defaults.set(true, forKey: Self.task4610LessonSplitMigrationMarkerKey)
+        // A keyed local preferences row is the durable marker. It participates in
+        // the same SwiftData transaction as the rewritten lesson/quiz rows, without
+        // changing a released versioned schema or relying on UserDefaults flushing.
+        context.insert(PreferencesEntity(
+            key: markerKey, practiceMode: "immediate", examTimerEnabled: false,
+            language: "system", theme: "system"
+        ))
+        try context.save()
+        objectWillChange.send()
     }
 
     private func saveExamAttemptWithoutSave(_ attempt: StoredExamAttempt, deviceId: String? = nil) throws {
@@ -2370,7 +2408,7 @@ final class ProgressStoreService: ObservableObject {
         try context.delete(model: ExamAttemptEntity.self)
         try context.delete(model: LessonProgressEntity.self)
         try context.delete(model: LessonQuizAttemptEntity.self)
-        try context.delete(model: PreferencesEntity.self)
+        if let entity = try existingPreferencesEntity() { context.delete(entity) }
         let entity = PreferencesEntity(
             practiceMode: snapshot.preferences.practiceMode.rawValue,
             examTimerEnabled: snapshot.preferences.examTimerEnabled,

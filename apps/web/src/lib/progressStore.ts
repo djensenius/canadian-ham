@@ -161,6 +161,17 @@ export const lessonProgressMigrationMap: Readonly<Record<string, readonly string
   "L-001-03": ["L-001-03", "L-001-05"],
 });
 
+// All contributing old lessons must be read before a destination earns read credit.
+const lessonProgressSources: Readonly<Record<string, readonly string[]>> = {
+  "L-001-03": ["L-001-03"],
+  "L-001-05": ["L-001-03", "L-001-05"],
+  "L-005-04": ["L-005-04"],
+  "L-005-05": ["L-005-04", "L-005-05"],
+  "L-005-06": ["L-005-05"],
+  "L-008-01": ["L-008-01", "L-008-02"],
+  "L-008-02": ["L-008-01", "L-008-02"],
+};
+
 const lessonQuizMigrationMap: Readonly<Record<string, readonly string[]>> = Object.freeze({
   "QZ-L-005-04-A": ["QZ-L-005-04-A", "QZ-L-005-05-A"],
   "QZ-L-005-05-A": ["QZ-L-005-05-A", "QZ-L-005-06-A"],
@@ -168,6 +179,33 @@ const lessonQuizMigrationMap: Readonly<Record<string, readonly string[]>> = Obje
   "QZ-L-008-02-A": ["QZ-L-008-01-A", "QZ-L-008-02-A"],
   "QZ-L-001-03-A": ["QZ-L-001-03-A", "QZ-L-001-05-A"],
 });
+
+// Prefixes also preserve older local question IDs outside the sampled historical quiz.
+const lessonQuizMigrationPrefixes: Readonly<Record<string, readonly string[]>> = {
+  "QZ-L-001-03-A": ["B-001-010-", "B-001-011-", "B-001-012-", "B-001-013-"],
+  "QZ-L-001-05-A": ["B-001-014-", "B-001-020-", "B-001-021-"],
+  "QZ-L-005-04-A": ["B-005-007-", "B-005-008-"],
+  "QZ-L-005-05-A": ["B-005-009-", "B-005-010-", "B-005-012-"],
+  "QZ-L-005-06-A": ["B-005-011-", "B-005-013-"],
+  "QZ-L-008-01-A": ["B-008-001-", "B-008-002-", "B-008-005-"],
+  "QZ-L-008-02-A": ["B-008-003-", "B-008-004-"],
+};
+
+// Ordered as in 350a3b53. Null explicitly drops checks with no current equivalent.
+const lessonConceptCheckMigrationMap: Readonly<Record<string, string | null>> = {
+  "QZ-L-005-04-A-C1": "QZ-L-005-04-A-C1",
+  "QZ-L-005-04-A-C2": "QZ-L-005-05-A-C1",
+  "QZ-L-005-04-A-C3": "QZ-L-005-05-A-C2",
+  "QZ-L-005-05-A-C1": "QZ-L-005-06-A-C1",
+  "QZ-L-005-05-A-C2": "QZ-L-005-05-A-C3",
+  "QZ-L-005-05-A-C3": "QZ-L-005-06-A-C2",
+  "QZ-L-008-01-A-C1": "QZ-L-008-01-A-C1",
+  "QZ-L-008-01-A-C2": "QZ-L-008-01-A-C2",
+  "QZ-L-008-01-A-C3": "QZ-L-008-01-A-C3",
+  "QZ-L-008-02-A-C1": "QZ-L-008-02-A-C1",
+  "QZ-L-008-02-A-C2": null,
+  "QZ-L-008-02-A-C3": null,
+};
 
 interface StoredPreferenceRecord {
   readonly key: string;
@@ -449,8 +487,7 @@ export function deduplicateDeviceExamAttemptsForSync(rows: readonly DeviceExamAt
 }
 
 export function deduplicateDeviceLessonProgressForSync(rows: readonly DeviceLessonProgressRecord[]): LessonProgressRecord[] {
-  const migratedRows = migrateDeviceLessonProgressRowsForLessonIDs(rows);
-  return [...groupBy(migratedRows, (row) => row.record.lessonId).values()]
+  return [...groupBy(rows, (row) => row.record.lessonId).values()]
     .map((group) => {
       const deviceRows = [...groupBy(group, (row) => row.deviceId).values()].map((deviceGroup) => [...deviceGroup].sort(deviceLessonProgressTieBreak).at(-1)!);
       const latest = [...deviceRows].sort(deviceLessonProgressTieBreak).at(-1)!;
@@ -464,24 +501,18 @@ export function deduplicateDeviceLessonProgressForSync(rows: readonly DeviceLess
 }
 
 export function migrateLessonProgressRecords(records: readonly LessonProgressRecord[]): LessonProgressRecord[] {
-  const merged = new Map<string, LessonProgressRecord>();
-  for (const record of records) {
-    const targetLessonIds = lessonProgressMigrationMap[record.lessonId] ?? [record.lessonId];
-    for (const lessonId of targetLessonIds) {
-      const next: LessonProgressRecord = { ...record, lessonId };
-      const existing = merged.get(lessonId);
-      if (existing === undefined) {
-        merged.set(lessonId, next);
-      } else {
-        merged.set(lessonId, {
-          lessonId,
-          readAt: codePointCompare(existing.readAt, next.readAt) >= 0 ? existing.readAt : next.readAt,
-          readCount: Math.max(existing.readCount, next.readCount),
-        });
-      }
-    }
-  }
-  return [...merged.values()].sort((a, b) => codePointCompare(a.lessonId, b.lessonId));
+  const recordsById = new Map(records.map((record) => [record.lessonId, record]));
+  const destinations = new Set([...records.map((record) => record.lessonId), ...Object.keys(lessonProgressSources)]);
+  return [...destinations].sort(codePointCompare).flatMap((lessonId) => {
+    const sources = (lessonProgressSources[lessonId] ?? [lessonId]).map((id) => recordsById.get(id));
+    if (sources.some((record) => record === undefined)) return [];
+    const readSources = sources as LessonProgressRecord[];
+    return [{
+      lessonId,
+      readAt: readSources.map((record) => record.readAt).sort(codePointCompare).at(-1)!,
+      readCount: Math.min(...readSources.map((record) => record.readCount)),
+    }];
+  });
 }
 
 export function migrateLessonQuizAttempts(attempts: readonly LessonQuizAttempt[]): LessonQuizAttempt[] {
@@ -492,14 +523,26 @@ export function migrateLessonQuizAttempts(attempts: readonly LessonQuizAttempt[]
       migrated.set(attempt.id, attempt);
       continue;
     }
+    // Partial attempts record only a count, not the IDs of correct concepts. The UI
+    // asks them in order. Keep explicit wrong IDs even outside that prefix; never
+    // infer a correct answer for an inconsistent historical wrong ID.
+    const oldConceptIds = Object.keys(lessonConceptCheckMigrationMap).filter((id) => id.startsWith(`${attempt.quizId}-C`));
+    const answeredConceptIds = new Set([
+      ...oldConceptIds.slice(0, Math.max(0, attempt.total - attempt.officialQuestionIds.length)),
+      ...attempt.incorrectConceptCheckIds,
+    ]);
+    const assignedConceptIds = oldConceptIds.filter((id) => answeredConceptIds.has(id)).flatMap((id) => lessonConceptCheckMigrationMap[id] ?? []);
+    const wrongConceptIds = oldConceptIds.filter((id) => attempt.incorrectConceptCheckIds.includes(id)).flatMap((id) => lessonConceptCheckMigrationMap[id] ?? []);
     for (const quizId of targetQuizIds) {
       const quiz = lessonQuizzesById.get(quizId);
       if (quiz === undefined) continue;
-      const officialQuestionIds = attempt.officialQuestionIds.filter((questionId) => quiz.officialQuestionIds.includes(questionId));
+      const officialQuestionIds = attempt.officialQuestionIds.filter((questionId) => lessonQuizMigrationPrefixes[quizId]!.some((prefix) => questionId.startsWith(prefix)));
       const incorrectOfficialQuestionIds = attempt.incorrectOfficialQuestionIds.filter((questionId) => officialQuestionIds.includes(questionId));
-      if (officialQuestionIds.length === 0 && quizId !== attempt.quizId) continue;
-      const correct = officialQuestionIds.length - incorrectOfficialQuestionIds.length;
-      const total = Math.max(1, officialQuestionIds.length);
+      const conceptIds = assignedConceptIds.filter((id) => id.startsWith(`${quizId}-C`));
+      const incorrectConceptCheckIds = wrongConceptIds.filter((id) => conceptIds.includes(id));
+      if (officialQuestionIds.length + conceptIds.length === 0 && quizId !== attempt.quizId) continue;
+      const correct = officialQuestionIds.length - incorrectOfficialQuestionIds.length + conceptIds.length - incorrectConceptCheckIds.length;
+      const total = Math.max(1, officialQuestionIds.length + conceptIds.length);
       const id = quizId === attempt.quizId ? attempt.id : `${attempt.id}::${quizId}`;
       migrated.set(id, {
         ...attempt,
@@ -511,7 +554,7 @@ export function migrateLessonQuizAttempts(attempts: readonly LessonQuizAttempt[]
         percent: (correct / total) * 100,
         officialQuestionIds,
         incorrectOfficialQuestionIds,
-        incorrectConceptCheckIds: attempt.incorrectConceptCheckIds.filter((conceptCheckId) => quiz.conceptChecks.some((conceptCheck) => conceptCheck.id === conceptCheckId)),
+        incorrectConceptCheckIds,
       });
     }
   }
@@ -527,16 +570,15 @@ function migrateProgressSyncDeviceRowsForLessonIDs(rows: ProgressSyncDeviceRows)
 }
 
 function migrateDeviceLessonProgressRowsForLessonIDs(rows: readonly DeviceLessonProgressRecord[]): DeviceLessonProgressRecord[] {
-  return rows.flatMap((row) => {
-    if (!isRecord(row) || !isLessonProgressRecordLike(row.record)) return [row];
-    if (!isSupportedLessonIdVersion(row.lessonIdVersion)) return [row];
-    if (row.lessonIdVersion === CURRENT_LESSON_ID_VERSION) return [row];
-    return migrateLessonProgressRecords([row.record]).map((record) => ({
-      ...row,
+  const preserved = rows.filter((row) => !isRecord(row) || !isLessonProgressRecordLike(row.record) || !isSupportedLessonIdVersion(row.lessonIdVersion) || row.lessonIdVersion === CURRENT_LESSON_ID_VERSION);
+  const legacy = rows.filter((row) => !preserved.includes(row));
+  return [...preserved, ...[...groupBy(legacy, (row) => row.deviceId).values()].flatMap((deviceRows) =>
+    migrateLessonProgressRecords(deduplicateDeviceLessonProgressForSync(deviceRows)).map((record) => ({
+      deviceId: deviceRows[0]!.deviceId,
       record,
       lessonIdVersion: CURRENT_LESSON_ID_VERSION,
-    }));
-  });
+    }))),
+  ];
 }
 
 function migrateDeviceLessonQuizAttemptRowsForLessonIDs(rows: readonly DeviceLessonQuizAttemptRecord[]): DeviceLessonQuizAttemptRecord[] {
@@ -669,6 +711,7 @@ function migrateLessonStoresForTask4610(transaction: IDBTransaction): void {
     const lessonStore = transaction.objectStore("lessonProgress");
     const request = lessonStore.getAll();
     request.onsuccess = () => {
+      lessonStore.clear();
       for (const record of migrateLessonProgressRecords(request.result.filter(isLessonProgressRecordLike))) {
         lessonStore.put(record);
       }
@@ -678,6 +721,7 @@ function migrateLessonStoresForTask4610(transaction: IDBTransaction): void {
     const quizStore = transaction.objectStore("lessonQuizAttempts");
     const request = quizStore.getAll();
     request.onsuccess = () => {
+      quizStore.clear();
       for (const attempt of migrateLessonQuizAttempts(request.result.filter(isLessonQuizAttemptLike))) {
         quizStore.put(attempt);
       }
@@ -754,7 +798,7 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
     return { ok: false, errors };
   }
 
-  const lessonProgress = migratesTopLevelLessonRows
+  let lessonProgress = migratesTopLevelLessonRows
     ? migrateLessonProgressRecords(rawLessonProgress as LessonProgressRecord[])
     : rawLessonProgress as LessonProgressRecord[];
   const lessonQuizAttempts = migratesTopLevelLessonRows
@@ -763,6 +807,14 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
   const syncDeviceRows = isRecord(raw.syncDeviceRows)
     ? migrateProgressSyncDeviceRowsForLessonIDs(raw.syncDeviceRows as unknown as ProgressSyncDeviceRows)
     : undefined;
+  if (migratesTopLevelLessonRows && syncDeviceRows !== undefined && isRecord(raw.syncDeviceRows)) {
+    const rawRows = (raw.syncDeviceRows as unknown as ProgressSyncDeviceRows).lessonProgress;
+    const mergedRaw = deduplicateDeviceLessonProgressForSync(rawRows);
+    const sortedRaw = [...rawLessonProgress as LessonProgressRecord[]].sort((a, b) => codePointCompare(a.lessonId, b.lessonId));
+    if (mergedRaw.length === sortedRaw.length && mergedRaw.every((record, index) => record.lessonId === sortedRaw[index]!.lessonId && record.readAt === sortedRaw[index]!.readAt && record.readCount === sortedRaw[index]!.readCount)) {
+      lessonProgress = deduplicateDeviceLessonProgressForSync(syncDeviceRows.lessonProgress);
+    }
+  }
   errors.push(...validateLessonImportRows(lessonProgress, lessonQuizAttempts, bank, false));
   if (syncDeviceRows !== undefined) {
     errors.push(...validateSyncDeviceLessonRows(syncDeviceRows as unknown as Record<string, unknown>, bank));

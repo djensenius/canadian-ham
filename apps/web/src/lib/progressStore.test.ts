@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, it } from "vitest";
 import { IDBFactory } from "fake-indexeddb";
 
 import { advancedBank, bankId } from "../data/bank";
-import { ProgressStore, deduplicateDeviceExamAttemptsForSync, deduplicateDeviceLessonProgressForSync, deduplicateDeviceQuestionProgressForSync, defaultPreferences, validateProgressImport, type DeviceExamAttemptRecord, type DeviceLessonProgressRecord, type DeviceLessonQuizAttemptRecord, type DeviceQuestionProgressRecord, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1, type ProgressSyncDeviceRows } from "./progressStore";
+import { ProgressStore, migrateLessonQuizAttempts, migrateLessonProgressRecords, deduplicateDeviceExamAttemptsForSync, deduplicateDeviceLessonProgressForSync, deduplicateDeviceQuestionProgressForSync, defaultPreferences, validateProgressImport, type DeviceExamAttemptRecord, type DeviceLessonProgressRecord, type DeviceLessonQuizAttemptRecord, type DeviceQuestionProgressRecord, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1, type ProgressSyncDeviceRows } from "./progressStore";
 import type { QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import type { MorseCourseProgressExport } from "@canadian-ham/morse-engine";
 
@@ -161,9 +161,9 @@ async function createVersion5DatabaseWithLegacyLessonRows(name: string): Promise
         quizId: "QZ-L-005-04-A",
         lessonId: "L-005-04",
         submittedAt: "2026-01-02T03:45:00.000Z",
-        correct: 10,
-        total: 12,
-        percent: 83.33333333333334,
+        correct: 1,
+        total: 2,
+        percent: 50,
         officialQuestionIds: ["B-005-007-001", "B-005-009-003"],
         incorrectOfficialQuestionIds: ["B-005-009-003"],
         incorrectConceptCheckIds: [],
@@ -264,9 +264,7 @@ describe("ProgressStore", () => {
 
     assert.deepEqual(await store.getLessonProgress(), [
       { lessonId: "L-005-04", readAt: "2026-01-02T03:30:00.000Z", readCount: 2 },
-      { lessonId: "L-005-05", readAt: "2026-01-02T03:30:00.000Z", readCount: 2 },
-      { lessonId: "L-008-01", readAt: "2026-01-03T03:30:00.000Z", readCount: 1 },
-      { lessonId: "L-008-02", readAt: "2026-01-03T03:30:00.000Z", readCount: 1 },
+
     ]);
     assert.deepEqual(await store.getLessonQuizAttempts(), [
       {
@@ -322,8 +320,7 @@ describe("ProgressStore", () => {
     assert.equal(validation.ok, true);
     assert.deepEqual(validation.data?.lessonProgress, [
       { lessonId: "L-001-03", readAt: "2026-01-02T03:30:00.000Z", readCount: 1 },
-      { lessonId: "L-001-05", readAt: "2026-01-02T03:30:00.000Z", readCount: 1 },
-      { lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 },
+
       { lessonId: "L-005-06", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 },
     ]);
     assert.deepEqual(validation.data?.lessonQuizAttempts?.map(({ id, quizId, lessonId, officialQuestionIds }) => ({ id, quizId, lessonId, officialQuestionIds })), [
@@ -331,6 +328,89 @@ describe("ProgressStore", () => {
       { id: "legacy-00103::QZ-L-001-05-A", quizId: "QZ-L-001-05-A", lessonId: "L-001-05", officialQuestionIds: ["B-001-014-001"] },
     ]);
     assert.equal(validation.data?.lessonIdVersion, 2);
+  });
+
+  it("remaps every historical wrong concept by text and recomputes concept-inclusive scores", () => {
+    const cases = JSON.parse(readFileSync(path.resolve(import.meta.dirname, "../../../../fixtures/progress/lesson-split-quiz-migration.json"), "utf8")) as { name: string; attempt: LessonQuizAttempt; expected: LessonQuizAttempt[] }[];
+    for (const testCase of cases) {
+      const result = validateProgressImport(validExport({ lessonIdVersion: 1, lessonProgress: [], lessonQuizAttempts: [testCase.attempt] }));
+      assert.equal(result.ok, true, `${testCase.name}: ${result.errors}`);
+      assert.deepEqual(result.data?.lessonQuizAttempts, testCase.expected, testCase.name);
+    }
+  });
+
+  it("counts only the answered concept prefix plus explicit wrong concepts for partial local quizzes", () => {
+    const partial: LessonQuizAttempt = {
+      ...lessonQuizAttempt, id: "partial", quizId: "QZ-L-005-04-A", lessonId: "L-005-04",
+      officialQuestionIds: ["B-005-007-001"], incorrectOfficialQuestionIds: [],
+      correct: 2, total: 2, percent: 100, incorrectConceptCheckIds: [],
+    };
+    assert.deepEqual(migrateLessonQuizAttempts([partial]), [partial]);
+    const inconsistent = { ...partial, incorrectConceptCheckIds: ["QZ-L-005-04-A-C3"] };
+    const migrated = migrateLessonQuizAttempts([inconsistent]);
+    assert.equal(migrated.length, 2);
+    assert.equal(migrated[0]?.total, 2);
+    assert.equal(migrated[0]?.correct, 2);
+    assert.deepEqual(migrated[1]?.incorrectConceptCheckIds, ["QZ-L-005-05-A-C2"]);
+    assert.equal(migrated[1]?.total, 1);
+    assert.equal(migrated[1]?.correct, 0);
+    const oldLocal = { ...partial, total: 1, correct: 0, percent: 0, officialQuestionIds: ["B-005-009-001"], incorrectOfficialQuestionIds: ["B-005-009-001"] };
+    assert.deepEqual(migrateLessonQuizAttempts([oldLocal]).map((attempt) => attempt.officialQuestionIds), [[], ["B-005-009-001"]]);
+  });
+
+  it("requires every contributing lesson and uses the latest date and minimum read count", () => {
+    const early = { lessonId: "L-005-04", readAt: "2026-01-02T03:30:00.000Z", readCount: 5 };
+    const late = { lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 };
+    assert.deepEqual(migrateLessonProgressRecords([early]), [early]);
+    assert.deepEqual(migrateLessonProgressRecords([late]), [{ ...late, lessonId: "L-005-06" }]);
+    assert.deepEqual(migrateLessonProgressRecords([early, late]), [early, late, { ...late, lessonId: "L-005-06" }]);
+    for (const sources of [["L-001-03", "L-001-05"], ["L-008-01", "L-008-02"]]) {
+      assert.deepEqual(migrateLessonProgressRecords([{ ...early, lessonId: sources[0]! }]), sources[0] === "L-001-03" ? [{ ...early, lessonId: "L-001-03" }] : []);
+      assert.deepEqual(migrateLessonProgressRecords([{ ...early, lessonId: sources[0]! }, { ...late, lessonId: sources[1]! }]), sources.map((lessonId) => ({ ...(lessonId === "L-001-03" ? early : late), lessonId })));
+    }
+  });
+
+  it("merges legacy source reads per device before aggregating and falls back for incoherent rows", async () => {
+    const rows: DeviceLessonProgressRecord[] = [
+      { deviceId: "phone", record: { lessonId: "L-005-04", readAt: "2026-01-02T03:30:00.000Z", readCount: 5 } },
+      { deviceId: "phone", record: { lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 } },
+      { deviceId: "tablet", record: { lessonId: "L-005-04", readAt: "2026-01-04T03:30:00.000Z", readCount: 1 } },
+      { deviceId: "tablet", record: { lessonId: "L-005-05", readAt: "2026-01-05T03:30:00.000Z", readCount: 4 } },
+    ];
+    const raw = deduplicateDeviceLessonProgressForSync(rows);
+    // Sync merge is version-neutral, including unversioned fixture rows.
+    assert.deepEqual(raw.map((record) => record.lessonId), ["L-005-04", "L-005-05"]);
+    assert.deepEqual(raw.map((record) => record.readCount), [6, 6]);
+    const imported = validExport({ lessonIdVersion: 1, questionProgress: [], examAttempts: [], lessonProgress: raw, lessonQuizAttempts: [], syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: rows, lessonQuizAttempts: [], morseCourseProgress: [] } });
+    const validated = validateProgressImport(imported);
+    assert.equal(validated.ok, true, validated.errors.join("\n"));
+    const expectedRows: DeviceLessonProgressRecord[] = [
+      { deviceId: "phone", record: rows[0]!.record, lessonIdVersion: 2 },
+      { deviceId: "phone", record: { ...rows[1]!.record }, lessonIdVersion: 2 },
+      { deviceId: "phone", record: { ...rows[1]!.record, lessonId: "L-005-06" }, lessonIdVersion: 2 },
+      { deviceId: "tablet", record: rows[2]!.record, lessonIdVersion: 2 },
+      { deviceId: "tablet", record: { ...rows[3]!.record, readCount: 1 }, lessonIdVersion: 2 },
+      { deviceId: "tablet", record: { ...rows[3]!.record, lessonId: "L-005-06" }, lessonIdVersion: 2 },
+    ];
+    assert.deepEqual(validated.data?.syncDeviceRows?.lessonProgress, expectedRows);
+    assert.deepEqual(validated.data?.lessonProgress, deduplicateDeviceLessonProgressForSync(expectedRows));
+    assert.equal(validated.data?.lessonProgress?.find((record) => record.lessonId === "L-005-05")?.readCount, 3);
+    const incoherent = validateProgressImport({ ...imported, lessonProgress: raw.map((record) => ({ ...record, readCount: 7 })) });
+    assert.equal(incoherent.ok, true);
+    assert.equal(incoherent.data?.lessonProgress?.find((record) => record.lessonId === "L-005-05")?.readCount, 7);
+    const store = createStore("per-device-migration");
+    await store.importData(imported);
+    assert.deepEqual((await store.exportData("2026-01-06T03:45:00.000Z")).syncDeviceRows?.lessonProgress, expectedRows);
+  });
+
+  it("rejects null and unsupported lesson ID versions at the top level and on both row kinds", () => {
+    for (const version of [null, 3]) {
+      assert.equal(validateProgressImport({ ...validExport(), lessonIdVersion: version }).ok, false);
+      for (const field of ["lessonProgress", "lessonQuizAttempts"] as const) {
+        const row = field === "lessonProgress" ? { record: lessonProgressRecord } : { attempt: lessonQuizAttempt };
+        assert.equal(validateProgressImport({ ...validExport(), syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [], morseCourseProgress: [], [field]: [{ deviceId: "phone", ...row, lessonIdVersion: version }] } }).ok, false);
+      }
+    }
   });
 
   it("rejects invalid legacy rows before migration can merge duplicates or repair scores", async () => {
@@ -370,7 +450,7 @@ describe("ProgressStore", () => {
       quizId: "QZ-L-005-04-A",
       lessonId: "L-005-04",
       correct: 0,
-      total: 1,
+      total: 2,
       percent: 0,
       officialQuestionIds: ["B-005-009-003"],
       incorrectOfficialQuestionIds: ["B-005-009-003"],
@@ -381,6 +461,8 @@ describe("ProgressStore", () => {
     assert.equal(validation.ok, true);
     assert(validation.data?.lessonQuizAttempts?.some((attempt) => attempt.quizId === "QZ-L-005-05-A" && attempt.officialQuestionIds.includes("B-005-009-003")));
     await createStore("historical-quiz-membership").importData(historicalExport);
+
+    assert.deepEqual(validateProgressImport(historicalExport).data?.lessonQuizAttempts?.find((attempt) => attempt.quizId === "QZ-L-005-05-A")?.incorrectConceptCheckIds, ["QZ-L-005-05-A-C2"]);
 
     const wrongSourceAttempt = { ...legacyAttempt, quizId: "QZ-L-005-05-A", lessonId: "L-005-05", incorrectConceptCheckIds: [] };
     const neverAskedAttempt = { ...legacyAttempt, officialQuestionIds: ["B-005-009-001"], incorrectOfficialQuestionIds: ["B-005-009-001"], incorrectConceptCheckIds: [] };
@@ -518,9 +600,8 @@ describe("ProgressStore", () => {
 
     assert.equal(validation.ok, true);
     assert.deepEqual(validation.data?.syncDeviceRows?.lessonProgress, [
-      { deviceId: "legacy-phone", record: { lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 }, lessonIdVersion: 2 },
-      { deviceId: "legacy-phone", record: { lessonId: "L-005-06", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 }, lessonIdVersion: 2 },
       currentProgress,
+      { deviceId: "legacy-phone", record: { lessonId: "L-005-06", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 }, lessonIdVersion: 2 },
     ]);
     assert.deepEqual(validation.data?.syncDeviceRows?.lessonQuizAttempts.map(({ deviceId, lessonIdVersion, attempt }) => ({ deviceId, lessonIdVersion, id: attempt.id, quizId: attempt.quizId, lessonId: attempt.lessonId, officialQuestionIds: attempt.officialQuestionIds })), [
       { deviceId: "legacy-phone", lessonIdVersion: 2, id: "legacy-00505", quizId: "QZ-L-005-05-A", lessonId: "L-005-05", officialQuestionIds: ["B-005-012-001"] },
@@ -545,7 +626,6 @@ describe("ProgressStore", () => {
     assert.deepEqual(twice.lessonProgress, once.lessonProgress);
     assert.deepEqual(twice.lessonQuizAttempts, once.lessonQuizAttempts);
     assert.deepEqual(twice.lessonProgress, [
-      { lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 },
       { lessonId: "L-005-06", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 },
     ]);
   });
