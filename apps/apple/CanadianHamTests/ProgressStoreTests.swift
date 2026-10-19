@@ -470,6 +470,72 @@ final class ProgressStoreTests: XCTestCase {
         ])
     }
 
+    func testTask4610RejectsInvalidLegacyQuizScoresBeforeMigration() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let invalidAttempt = LessonQuizAttempt(
+            id: "legacy-invalid-score", quizId: "QZ-L-005-04-A", lessonId: "L-005-04",
+            submittedAt: "2026-01-03T03:45:00.000Z", correct: 2, total: 1, percent: 100,
+            officialQuestionIds: ["B-005-009-003"], incorrectOfficialQuestionIds: [], incorrectConceptCheckIds: []
+        )
+        let imported = ProgressExportV1(
+            schema: "canadian-ham.progress-export", version: 1, lessonIdVersion: 1,
+            exportedAt: "2026-01-04T03:45:00.000Z", bankId: bank.manifest.bankId,
+            questionProgress: [], examAttempts: [], lessonProgress: [],
+            lessonQuizAttempts: try archivedArray([invalidAttempt]),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+        let store = try ProgressStoreService.inMemoryForTests()
+        let errors = store.validate(imported, bank: bank)
+        XCTAssertTrue(errors.contains { $0.contains("correct must not exceed total") })
+        XCTAssertTrue(errors.contains { $0.contains("percent must match") })
+        XCTAssertThrowsError(try store.importData(imported, bank: bank))
+        XCTAssertEqual(try store.lessonQuizAttempts(), [])
+    }
+
+    func testTask4610ValidatesHistoricalQuizMembershipBeforeMigratingTopLevelAndSyncRows() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let legacyAttempt = LessonQuizAttempt(
+            id: "legacy-reactance", quizId: "QZ-L-005-04-A", lessonId: "L-005-04",
+            submittedAt: "2026-01-03T03:45:00.000Z", correct: 0, total: 1, percent: 0,
+            officialQuestionIds: ["B-005-009-003"], incorrectOfficialQuestionIds: ["B-005-009-003"],
+            incorrectConceptCheckIds: ["QZ-L-005-04-A-C3"]
+        )
+        let historicalExport = ProgressExportV1(
+            schema: "canadian-ham.progress-export", version: 1, lessonIdVersion: 1,
+            exportedAt: "2026-01-04T03:45:00.000Z", bankId: bank.manifest.bankId,
+            questionProgress: [], examAttempts: [], lessonProgress: [],
+            lessonQuizAttempts: try archivedArray([legacyAttempt]),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+        let store = try ProgressStoreService.inMemoryForTests()
+        XCTAssertEqual(store.validate(historicalExport, bank: bank), [])
+        try store.importData(historicalExport, bank: bank)
+        XCTAssertTrue(try store.lessonQuizAttempts().contains { $0.quizId == "QZ-L-005-05-A" && $0.officialQuestionIds == ["B-005-009-003"] })
+
+        let wrongSourceAttempt = LessonQuizAttempt(
+            id: "wrong-source", quizId: "QZ-L-005-05-A", lessonId: "L-005-05",
+            submittedAt: legacyAttempt.submittedAt, correct: 0, total: 1, percent: 0,
+            officialQuestionIds: legacyAttempt.officialQuestionIds,
+            incorrectOfficialQuestionIds: legacyAttempt.incorrectOfficialQuestionIds, incorrectConceptCheckIds: []
+        )
+        for usesSyncRow in [false, true] {
+            let invalidExport = ProgressExportV1(
+                schema: "canadian-ham.progress-export", version: 1, lessonIdVersion: usesSyncRow ? 2 : 1,
+                exportedAt: historicalExport.exportedAt, bankId: bank.manifest.bankId,
+                questionProgress: [], examAttempts: [], lessonProgress: [],
+                lessonQuizAttempts: try archivedArray(usesSyncRow ? [] : [wrongSourceAttempt]),
+                syncDeviceRows: usesSyncRow ? ProgressSyncDeviceRows(
+                    questionProgress: [], examAttempts: [], lessonProgress: [],
+                    lessonQuizAttempts: [DeviceLessonQuizAttemptRecord(deviceId: "legacy-phone", attempt: wrongSourceAttempt)],
+                    morseCourseProgress: []
+                ) : nil,
+                preferences: historicalExport.preferences
+            )
+            XCTAssertTrue(store.validate(invalidExport, bank: bank).contains { $0.contains("officialQuestionIds must belong") })
+            XCTAssertThrowsError(try store.importData(invalidExport, bank: bank))
+        }
+    }
+
     func testImportLeavesTask4610Version2LessonSplitRowsUnchanged() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let v2Progress = LessonProgressRecord(lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2)
@@ -530,7 +596,7 @@ final class ProgressStoreTests: XCTestCase {
                 correct: 1,
                 total: 2,
                 percent: 50,
-                officialQuestionIds: ["B-005-009-003", "B-005-011-001"],
+                officialQuestionIds: ["B-005-012-001", "B-005-011-001"],
                 incorrectOfficialQuestionIds: ["B-005-011-001"],
                 incorrectConceptCheckIds: []
             )
@@ -564,7 +630,7 @@ final class ProgressStoreTests: XCTestCase {
                 correct: 1,
                 total: 1,
                 percent: 100,
-                officialQuestionIds: ["B-005-009-003"],
+                officialQuestionIds: ["B-005-012-001"],
                 incorrectOfficialQuestionIds: [],
                 incorrectConceptCheckIds: []
             ),
@@ -2513,6 +2579,7 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[2].officialQuestionIds must contain known") })
         XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[3].officialQuestionIds must belong") })
         XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[3].incorrectOfficialQuestionIds must be a subset") })
+        XCTAssertThrowsError(try ProgressStoreService.inMemoryForTests().importData(decoded, bank: bank))
     }
 
     func testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues() throws {

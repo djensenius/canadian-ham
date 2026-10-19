@@ -1339,11 +1339,11 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func importData(_ data: ProgressExportV1, bank: QuestionBank) throws {
-        let data = try migratedProgressExportForTask4610(data)
         let errors = validate(data, bank: bank)
         if !errors.isEmpty {
             throw ProgressStoreError.validationFailed(errors)
         }
+        let data = try migratedProgressExportForTask4610(data)
 
         let usableSyncDeviceRows = try usableSyncDeviceRows(from: data, bank: bank)
         let previousSnapshot = try snapshotForRollback()
@@ -1551,8 +1551,13 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func validate(_ data: ProgressExportV1, bank: QuestionBank) -> [String] {
-        let sourceLessonIdVersion = data.lessonIdVersion
-        let data = (try? migratedProgressExportForTask4610(data)) ?? data
+        let errors = validateProgressExport(data, bank: bank)
+        guard errors.isEmpty else { return errors }
+        guard let migrated = try? migratedProgressExportForTask4610(data) else { return errors }
+        return validateProgressExport(migrated, bank: bank)
+    }
+
+    private func validateProgressExport(_ data: ProgressExportV1, bank: QuestionBank) -> [String] {
         var errors: [String] = []
         let knownQuestionIds = Set(bank.questions.map(\.id))
         let knownCategoryIds = Set(bank.categories.map(\.id))
@@ -1560,7 +1565,7 @@ final class ProgressStoreService: ObservableObject {
 
         if data.schema != "canadian-ham.progress-export" { errors.append(String(localized: "Import file schema is not canadian-ham.progress-export.")) }
         if data.version != 1 { errors.append(String(localized: "Import file version must be 1.")) }
-        if !LessonIDContentVersion.isSupported(sourceLessonIdVersion) { errors.append(String(localized: "Import lessonIdVersion must be 1 or 2 when present.")) }
+        if !LessonIDContentVersion.isSupported(data.lessonIdVersion) { errors.append(String(localized: "Import lessonIdVersion must be 1 or 2 when present.")) }
         if data.bankId != bank.manifest.bankId { errors.append(String(localized: "Import bankId must be \(bank.manifest.bankId).")) }
         appendTimestampError(&errors, value: data.exportedAt, field: String(localized: "Import exportedAt"))
 
@@ -1603,6 +1608,7 @@ final class ProgressStoreService: ObservableObject {
             knownQuestionIds: knownQuestionIds,
             knownLessonIds: bank.knownLessonIds,
             lessonQuizzesById: bank.lessonQuizzesById,
+            lessonIdVersion: data.lessonIdVersion,
             errors: &errors
         )
         if let morseCourseProgress = data.morseCourseProgress {
@@ -1680,7 +1686,7 @@ final class ProgressStoreService: ObservableObject {
             if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
             if !LessonIDContentVersion.isSupported(row.lessonIdVersion) { errors.append(String(localized: "\(prefix).lessonIdVersion must be 1 or 2 when present.")) }
             if let archived = try? archivedArray([row.attempt]) {
-                if bank.courseBankID.hasLessons { validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, errors: &errors) }
+                if bank.courseBankID.hasLessons { validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, lessonIdVersion: row.lessonIdVersion, errors: &errors) }
             } else {
                 errors.append(String.localizedStringWithFormat(String(localized: "%@.attempt must be a valid lesson quiz attempt."), "Import syncDeviceRows.lessonQuizAttempts[\(index)]"))
             }
@@ -2582,11 +2588,21 @@ private func validateLessonProgress(_ records: [ArchivedJSON], knownLessonIds: S
     }
 }
 
+// Version-1 membership before TASK-46.10, from content/quizzes at 350a3b53658c64f12e89c0b48d6b97c7c3040e88.
+private let legacyLessonQuizMembership: [String: (questionPrefixes: [String], conceptCheckIds: Set<String>)] = [
+    "QZ-L-005-04-A": (["B-005-007-", "B-005-008-", "B-005-009-", "B-005-010-"], ["QZ-L-005-04-A-C1", "QZ-L-005-04-A-C2", "QZ-L-005-04-A-C3"]),
+    "QZ-L-005-05-A": (["B-005-011-", "B-005-012-", "B-005-013-"], ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"]),
+    "QZ-L-008-01-A": (["B-008-001-", "B-008-002-", "B-008-003-"], ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"]),
+    "QZ-L-008-02-A": (["B-008-004-", "B-008-005-"], ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"]),
+    "QZ-L-001-03-A": (["B-001-010-", "B-001-011-", "B-001-012-", "B-001-013-", "B-001-014-"], []),
+]
+
 private func validateLessonQuizAttempts(
     _ attempts: [ArchivedJSON],
     knownQuestionIds: Set<String>,
     knownLessonIds: Set<String>,
     lessonQuizzesById: [String: BankLessonQuiz],
+    lessonIdVersion: Int? = LessonIDContentVersion.current,
     errors: inout [String]
 ) {
     var ids = Set<String>()
@@ -2610,6 +2626,10 @@ private func validateLessonQuizAttempts(
             quiz = nil
             errors.append(String(localized: "\(prefix).quizId must be a non-empty string."))
         }
+
+        let legacyMembership = (lessonIdVersion ?? LessonIDContentVersion.legacy) == LessonIDContentVersion.legacy
+            ? attempt.storage["quizId"]?.stringValue.flatMap { legacyLessonQuizMembership[$0] }
+            : nil
 
         if let lessonId = attempt.storage["lessonId"]?.nonEmptyStringValue {
             if !knownLessonIds.contains(lessonId) || (quiz != nil && lessonId != quiz?.lessonId) {
@@ -2644,9 +2664,15 @@ private func validateLessonQuizAttempts(
 
         if let officialQuestionIds = stringArray(attempt.storage["officialQuestionIds"]) {
             let quizQuestionIds = Set(quiz?.officialQuestionIds ?? [])
+            let belongsToQuiz = officialQuestionIds.allSatisfy { questionId in
+                if let legacyMembership {
+                    return legacyMembership.questionPrefixes.contains { questionId.hasPrefix($0) }
+                }
+                return quizQuestionIds.contains(questionId)
+            }
             if !officialQuestionIds.allSatisfy(knownQuestionIds.contains) {
                 errors.append(String(localized: "\(prefix).officialQuestionIds must contain known question IDs."))
-            } else if quiz != nil && !officialQuestionIds.allSatisfy(quizQuestionIds.contains) {
+            } else if quiz != nil && !belongsToQuiz {
                 errors.append(String(localized: "\(prefix).officialQuestionIds must belong to the lesson quiz."))
             }
 
@@ -2670,7 +2696,7 @@ private func validateLessonQuizAttempts(
         }
 
         if let incorrectConceptCheckIds = stringArray(attempt.storage["incorrectConceptCheckIds"]) {
-            let conceptCheckIds = quiz?.conceptCheckIds ?? []
+            let conceptCheckIds = legacyMembership?.conceptCheckIds ?? quiz?.conceptCheckIds ?? []
             if quiz != nil && !incorrectConceptCheckIds.allSatisfy(conceptCheckIds.contains) {
                 errors.append(String(localized: "\(prefix).incorrectConceptCheckIds must contain known concept check IDs for the quiz."))
             }

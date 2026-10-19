@@ -333,6 +333,73 @@ describe("ProgressStore", () => {
     assert.equal(validation.data?.lessonIdVersion, 2);
   });
 
+  it("rejects invalid legacy rows before migration can merge duplicates or repair scores", async () => {
+    const legacyAttempt: LessonQuizAttempt = {
+      ...lessonQuizAttempt,
+      id: "legacy-invalid-score",
+      quizId: "QZ-L-005-04-A",
+      lessonId: "L-005-04",
+      correct: 2,
+      total: 1,
+      percent: 100,
+      officialQuestionIds: ["B-005-009-003"],
+      incorrectConceptCheckIds: [],
+    };
+    const invalidExport = validExport({
+      lessonIdVersion: undefined,
+      lessonProgress: [lessonProgressRecord, lessonProgressRecord],
+      lessonQuizAttempts: [legacyAttempt, legacyAttempt],
+    });
+    const validation = validateProgressImport(invalidExport);
+
+    assert.equal(validation.ok, false);
+    assert(validation.errors.some((error) => error.includes("lessonProgress[1].lessonId duplicates")));
+    assert(validation.errors.some((error) => error.includes("lessonQuizAttempts[1].id duplicates")));
+    assert(validation.errors.some((error) => error.includes("lessonQuizAttempts[0].correct must not exceed total")));
+    assert(validation.errors.some((error) => error.includes("lessonQuizAttempts[0].percent must match")));
+    const store = createStore("invalid-legacy-rows");
+    await assert.rejects(store.importData(invalidExport), /duplicates/);
+    assert.deepEqual(await store.getLessonProgress(), []);
+    assert.deepEqual(await store.getLessonQuizAttempts(), []);
+  });
+
+  it("validates historical quiz membership before migrating top-level and sync rows", async () => {
+    const legacyAttempt: LessonQuizAttempt = {
+      ...lessonQuizAttempt,
+      id: "legacy-reactance",
+      quizId: "QZ-L-005-04-A",
+      lessonId: "L-005-04",
+      correct: 0,
+      total: 1,
+      percent: 0,
+      officialQuestionIds: ["B-005-009-003"],
+      incorrectOfficialQuestionIds: ["B-005-009-003"],
+      incorrectConceptCheckIds: ["QZ-L-005-04-A-C3"],
+    };
+    const historicalExport = validExport({ lessonIdVersion: 1, lessonQuizAttempts: [legacyAttempt] });
+    const validation = validateProgressImport(historicalExport);
+    assert.equal(validation.ok, true);
+    assert(validation.data?.lessonQuizAttempts?.some((attempt) => attempt.quizId === "QZ-L-005-05-A" && attempt.officialQuestionIds.includes("B-005-009-003")));
+    await createStore("historical-quiz-membership").importData(historicalExport);
+
+    const wrongSourceAttempt = { ...legacyAttempt, quizId: "QZ-L-005-05-A", lessonId: "L-005-05", incorrectConceptCheckIds: [] };
+    const invalidExports = [
+      validExport({ lessonIdVersion: 1, lessonQuizAttempts: [wrongSourceAttempt] }),
+      validExport({
+        syncDeviceRows: {
+          questionProgress: [], examAttempts: [], lessonProgress: [], morseCourseProgress: [],
+          lessonQuizAttempts: [{ deviceId: "legacy-phone", attempt: wrongSourceAttempt }],
+        },
+      }),
+    ];
+    for (const invalidExport of invalidExports) {
+      const invalid = validateProgressImport(invalidExport);
+      assert.equal(invalid.ok, false);
+      assert(invalid.errors.some((error) => error.includes("officialQuestionIds must belong")));
+      await assert.rejects(createStore("invalid-historical-membership").importData(invalidExport), /officialQuestionIds must belong/);
+    }
+  });
+
   it("does not invent an empty destination attempt when a legacy quiz only answered retained questions", () => {
     const retainedAttempt: LessonQuizAttempt = {
       id: "legacy-ac-only",
@@ -417,7 +484,7 @@ describe("ProgressStore", () => {
         correct: 1,
         total: 2,
         percent: 50,
-        officialQuestionIds: ["B-005-009-003", "B-005-011-001"],
+        officialQuestionIds: ["B-005-012-001", "B-005-011-001"],
         incorrectOfficialQuestionIds: ["B-005-011-001"],
         incorrectConceptCheckIds: [],
       },
@@ -455,7 +522,7 @@ describe("ProgressStore", () => {
       currentProgress,
     ]);
     assert.deepEqual(validation.data?.syncDeviceRows?.lessonQuizAttempts.map(({ deviceId, lessonIdVersion, attempt }) => ({ deviceId, lessonIdVersion, id: attempt.id, quizId: attempt.quizId, lessonId: attempt.lessonId, officialQuestionIds: attempt.officialQuestionIds })), [
-      { deviceId: "legacy-phone", lessonIdVersion: 2, id: "legacy-00505", quizId: "QZ-L-005-05-A", lessonId: "L-005-05", officialQuestionIds: ["B-005-009-003"] },
+      { deviceId: "legacy-phone", lessonIdVersion: 2, id: "legacy-00505", quizId: "QZ-L-005-05-A", lessonId: "L-005-05", officialQuestionIds: ["B-005-012-001"] },
       { deviceId: "legacy-phone", lessonIdVersion: 2, id: "legacy-00505::QZ-L-005-06-A", quizId: "QZ-L-005-06-A", lessonId: "L-005-06", officialQuestionIds: ["B-005-011-001"] },
       { deviceId: "current-tablet", lessonIdVersion: 2, id: "current-00505", quizId: "QZ-L-005-05-A", lessonId: "L-005-05", officialQuestionIds: ["B-005-009-003"] },
     ]);

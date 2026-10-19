@@ -288,9 +288,13 @@ export class ProgressStore {
   }
 
   async importData(data: ProgressExportV1): Promise<void> {
-    data = migrateProgressExportLessonIDs(data);
-    const db = await this.open();
     const importBank = bankDataForId(data.bankId);
+    const validation = validateProgressImport(data, importBank);
+    if (!validation.ok || validation.data === undefined) {
+      throw new Error(validation.errors.join("\n"));
+    }
+    data = validation.data;
+    const db = await this.open();
     const existingQuestionProgress = (await this.getQuestionProgress()).filter((record) => record.bankId !== importBank.bankId);
     const existingExamAttempts = (await this.getExamAttempts()).filter((attempt) => attempt.bankId !== importBank.bankId);
     await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress", "preferences", "syncMetadata"], "readwrite", (transaction) => {
@@ -514,24 +518,6 @@ export function migrateLessonQuizAttempts(attempts: readonly LessonQuizAttempt[]
   return [...migrated.values()].sort((a, b) => codePointCompare(a.submittedAt, b.submittedAt) || codePointCompare(a.id, b.id));
 }
 
-function migrateProgressExportLessonIDs(data: ProgressExportV1): ProgressExportV1 {
-  const topLevelVersion = data.lessonIdVersion ?? LEGACY_LESSON_ID_VERSION;
-  const migratesTopLevelRows = topLevelVersion === LEGACY_LESSON_ID_VERSION;
-  const lessonProgress = migratesTopLevelRows
-    ? migrateLessonProgressRecords(data.lessonProgress ?? [])
-    : [...(data.lessonProgress ?? [])];
-  const lessonQuizAttempts = migratesTopLevelRows
-    ? migrateLessonQuizAttempts(data.lessonQuizAttempts ?? [])
-    : [...(data.lessonQuizAttempts ?? [])];
-  return {
-    ...data,
-    lessonIdVersion: isSupportedLessonIdVersion(topLevelVersion) ? CURRENT_LESSON_ID_VERSION : data.lessonIdVersion,
-    lessonProgress,
-    lessonQuizAttempts,
-    ...(data.syncDeviceRows === undefined ? {} : { syncDeviceRows: migrateProgressSyncDeviceRowsForLessonIDs(data.syncDeviceRows) }),
-  };
-}
-
 function migrateProgressSyncDeviceRowsForLessonIDs(rows: ProgressSyncDeviceRows): ProgressSyncDeviceRows {
   return {
     ...rows,
@@ -740,7 +726,7 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
     errors.push("Import preferences are invalid.");
   }
   if (isRecord(raw.syncDeviceRows)) {
-    errors.push(...validateSyncDeviceRowsLessonIdVersions(raw.syncDeviceRows));
+    errors.push(...validateSyncDeviceLessonRows(raw.syncDeviceRows, bank));
   }
 
   const questionProgress = Array.isArray(raw.questionProgress) ? raw.questionProgress : [];
@@ -761,42 +747,26 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
   }
 
   const rawLessonProgress = Array.isArray(raw.lessonProgress) ? raw.lessonProgress : [];
-  const migratesTopLevelLessonRows = (raw.lessonIdVersion ?? LEGACY_LESSON_ID_VERSION) === LEGACY_LESSON_ID_VERSION;
-  const lessonProgress = migratesTopLevelLessonRows
-    ? migrateLessonProgressRecords(rawLessonProgress.filter(isLessonProgressRecordLike) as LessonProgressRecord[])
-    : rawLessonProgress.filter(isLessonProgressRecordLike) as LessonProgressRecord[];
-  const lessonProgressIds = new Set<string>();
-  for (const [index, record] of lessonProgress.entries()) {
-    errors.push(...validateLessonProgressRecord(record, index));
-    if (isRecord(record) && typeof record.lessonId === "string") {
-      if (lessonProgressIds.has(record.lessonId)) {
-        errors.push(`Import lessonProgress[${index}].lessonId duplicates another lesson progress record.`);
-      }
-      lessonProgressIds.add(record.lessonId);
-    }
-  }
-  rawLessonProgress.forEach((record, index) => {
-    if (!isLessonProgressRecordLike(record)) errors.push(...validateLessonProgressRecord(record, index));
-  });
-
   const rawLessonQuizAttempts = Array.isArray(raw.lessonQuizAttempts) ? raw.lessonQuizAttempts : [];
-  const lessonQuizAttempts = migratesTopLevelLessonRows
-    ? migrateLessonQuizAttempts(rawLessonQuizAttempts.filter(isLessonQuizAttemptLike) as LessonQuizAttempt[])
-    : rawLessonQuizAttempts.filter(isLessonQuizAttemptLike) as LessonQuizAttempt[];
-  const lessonQuizAttemptIds = new Set<string>();
-  for (const [index, attempt] of lessonQuizAttempts.entries()) {
-    errors.push(...validateLessonQuizAttempt(attempt, index, bank));
-    if (isRecord(attempt) && typeof attempt.id === "string") {
-      if (lessonQuizAttemptIds.has(attempt.id)) {
-        errors.push(`Import lessonQuizAttempts[${index}].id duplicates another lesson quiz attempt.`);
-      }
-      lessonQuizAttemptIds.add(attempt.id);
-    }
+  const migratesTopLevelLessonRows = (raw.lessonIdVersion ?? LEGACY_LESSON_ID_VERSION) === LEGACY_LESSON_ID_VERSION;
+  errors.push(...validateLessonImportRows(rawLessonProgress, rawLessonQuizAttempts, bank, migratesTopLevelLessonRows));
+  if (errors.length > 0) {
+    return { ok: false, errors };
   }
-  rawLessonQuizAttempts.forEach((attempt, index) => {
-    if (!isLessonQuizAttemptLike(attempt)) errors.push(...validateLessonQuizAttempt(attempt, index, bank));
-  });
 
+  const lessonProgress = migratesTopLevelLessonRows
+    ? migrateLessonProgressRecords(rawLessonProgress as LessonProgressRecord[])
+    : rawLessonProgress as LessonProgressRecord[];
+  const lessonQuizAttempts = migratesTopLevelLessonRows
+    ? migrateLessonQuizAttempts(rawLessonQuizAttempts as LessonQuizAttempt[])
+    : rawLessonQuizAttempts as LessonQuizAttempt[];
+  const syncDeviceRows = isRecord(raw.syncDeviceRows)
+    ? migrateProgressSyncDeviceRowsForLessonIDs(raw.syncDeviceRows as unknown as ProgressSyncDeviceRows)
+    : undefined;
+  errors.push(...validateLessonImportRows(lessonProgress, lessonQuizAttempts, bank, false));
+  if (syncDeviceRows !== undefined) {
+    errors.push(...validateSyncDeviceLessonRows(syncDeviceRows as unknown as Record<string, unknown>, bank));
+  }
   if (errors.length > 0) {
     return { ok: false, errors };
   }
@@ -815,25 +785,63 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
       lessonProgress: lessonProgress as LessonProgressRecord[],
       lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
       morseCourseProgress: raw.morseCourseProgress as MorseCourseProgressExport | undefined,
-      ...(isRecord(raw.syncDeviceRows) ? { syncDeviceRows: normalizeProgressSyncDeviceRows(migrateProgressSyncDeviceRowsForLessonIDs(raw.syncDeviceRows as unknown as ProgressSyncDeviceRows)) } : {}),
+      ...(syncDeviceRows === undefined ? {} : { syncDeviceRows: normalizeProgressSyncDeviceRows(syncDeviceRows) }),
       preferences: normalizePreferences(raw.preferences),
     },
   };
 }
 
-function validateSyncDeviceRowsLessonIdVersions(value: Record<string, unknown>): string[] {
+function validateLessonImportRows(progress: readonly unknown[], attempts: readonly unknown[], bank: BankData, legacyLessonIds: boolean): string[] {
+  const errors: string[] = [];
+  const lessonProgressIds = new Set<string>();
+  for (const [index, record] of progress.entries()) {
+    errors.push(...validateLessonProgressRecord(record, index));
+    if (isRecord(record) && typeof record.lessonId === "string") {
+      if (lessonProgressIds.has(record.lessonId)) {
+        errors.push(`Import lessonProgress[${index}].lessonId duplicates another lesson progress record.`);
+      }
+      lessonProgressIds.add(record.lessonId);
+    }
+  }
+  const lessonQuizAttemptIds = new Set<string>();
+  for (const [index, attempt] of attempts.entries()) {
+    errors.push(...validateLessonQuizAttempt(attempt, index, bank, legacyLessonIds));
+    if (isRecord(attempt) && typeof attempt.id === "string") {
+      if (lessonQuizAttemptIds.has(attempt.id)) {
+        errors.push(`Import lessonQuizAttempts[${index}].id duplicates another lesson quiz attempt.`);
+      }
+      lessonQuizAttemptIds.add(attempt.id);
+    }
+  }
+  return errors;
+}
+
+function validateSyncDeviceLessonRows(value: Record<string, unknown>, bank: BankData): string[] {
   const errors: string[] = [];
   const lessonProgress = Array.isArray(value.lessonProgress) ? value.lessonProgress : [];
   for (const [index, row] of lessonProgress.entries()) {
-    if (isRecord(row) && row.lessonIdVersion !== undefined && !isSupportedLessonIdVersion(row.lessonIdVersion)) {
-      errors.push(`Import syncDeviceRows.lessonProgress[${index}].lessonIdVersion must be 1 or 2 when present.`);
+    const prefix = `Import syncDeviceRows.lessonProgress[${index}]`;
+    if (!isRecord(row)) {
+      errors.push(`${prefix} must be an object.`);
+      continue;
     }
+    if (!isSupportedLessonIdVersion(row.lessonIdVersion)) {
+      errors.push(`${prefix}.lessonIdVersion must be 1 or 2 when present.`);
+    }
+    errors.push(...validateLessonProgressRecord(row.record, index).map((error) => error.replace(`Import lessonProgress[${index}]`, `${prefix}.record`)));
   }
   const lessonQuizAttempts = Array.isArray(value.lessonQuizAttempts) ? value.lessonQuizAttempts : [];
   for (const [index, row] of lessonQuizAttempts.entries()) {
-    if (isRecord(row) && row.lessonIdVersion !== undefined && !isSupportedLessonIdVersion(row.lessonIdVersion)) {
-      errors.push(`Import syncDeviceRows.lessonQuizAttempts[${index}].lessonIdVersion must be 1 or 2 when present.`);
+    const prefix = `Import syncDeviceRows.lessonQuizAttempts[${index}]`;
+    if (!isRecord(row)) {
+      errors.push(`${prefix} must be an object.`);
+      continue;
     }
+    if (!isSupportedLessonIdVersion(row.lessonIdVersion)) {
+      errors.push(`${prefix}.lessonIdVersion must be 1 or 2 when present.`);
+    }
+    const legacyLessonIds = (row.lessonIdVersion ?? LEGACY_LESSON_ID_VERSION) === LEGACY_LESSON_ID_VERSION;
+    errors.push(...validateLessonQuizAttempt(row.attempt, index, bank, legacyLessonIds).map((error) => error.replace(`Import lessonQuizAttempts[${index}]`, `${prefix}.attempt`)));
   }
   return errors;
 }
@@ -1122,13 +1130,23 @@ function validateLessonProgressRecord(value: unknown, index: number): string[] {
   return errors;
 }
 
-function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData): string[] {
+// Version-1 membership before TASK-46.10, from content/quizzes at 350a3b53658c64f12e89c0b48d6b97c7c3040e88.
+const legacyLessonQuizMembership: Readonly<Record<string, { readonly questionPrefixes: readonly string[]; readonly conceptCheckIds: readonly string[] }>> = {
+  "QZ-L-005-04-A": { questionPrefixes: ["B-005-007-", "B-005-008-", "B-005-009-", "B-005-010-"], conceptCheckIds: ["QZ-L-005-04-A-C1", "QZ-L-005-04-A-C2", "QZ-L-005-04-A-C3"] },
+  "QZ-L-005-05-A": { questionPrefixes: ["B-005-011-", "B-005-012-", "B-005-013-"], conceptCheckIds: ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"] },
+  "QZ-L-008-01-A": { questionPrefixes: ["B-008-001-", "B-008-002-", "B-008-003-"], conceptCheckIds: ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"] },
+  "QZ-L-008-02-A": { questionPrefixes: ["B-008-004-", "B-008-005-"], conceptCheckIds: ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"] },
+  "QZ-L-001-03-A": { questionPrefixes: ["B-001-010-", "B-001-011-", "B-001-012-", "B-001-013-", "B-001-014-"], conceptCheckIds: [] },
+};
+
+function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData, legacyLessonIds = false): string[] {
   const prefix = `Import lessonQuizAttempts[${index}]`;
   const errors: string[] = [];
   if (!isRecord(value)) {
     return [`${prefix} must be an object.`];
   }
   const quiz = typeof value.quizId === "string" ? lessonQuizzesById.get(value.quizId) : undefined;
+  const legacyMembership = legacyLessonIds && typeof value.quizId === "string" ? legacyLessonQuizMembership[value.quizId] : undefined;
   if (typeof value.id !== "string" || value.id.length === 0) {
     errors.push(`${prefix}.id must be a non-empty string.`);
   }
@@ -1163,7 +1181,9 @@ function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData
   }
   if (!isKnownQuestionIdArray(value.officialQuestionIds, bank)) {
     errors.push(`${prefix}.officialQuestionIds must contain known question IDs.`);
-  } else if (quiz !== undefined && !value.officialQuestionIds.every((id) => quiz.officialQuestionIds.includes(id))) {
+  } else if (quiz !== undefined && !value.officialQuestionIds.every((id) => legacyMembership === undefined
+    ? quiz.officialQuestionIds.includes(id)
+    : legacyMembership.questionPrefixes.some((prefix) => id.startsWith(prefix)))) {
     errors.push(`${prefix}.officialQuestionIds must belong to the lesson quiz.`);
   }
   if (!isKnownQuestionIdArray(value.incorrectOfficialQuestionIds, bank)) {
@@ -1174,7 +1194,9 @@ function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData
       errors.push(`${prefix}.incorrectOfficialQuestionIds must be a subset of officialQuestionIds.`);
     }
   }
-  if (!Array.isArray(value.incorrectConceptCheckIds) || !value.incorrectConceptCheckIds.every((id) => typeof id === "string" && (quiz === undefined || quiz.conceptChecks.some((conceptCheck) => conceptCheck.id === id)))) {
+  if (!Array.isArray(value.incorrectConceptCheckIds) || !value.incorrectConceptCheckIds.every((id) => typeof id === "string" && (quiz === undefined || (legacyMembership === undefined
+    ? quiz.conceptChecks.some((conceptCheck) => conceptCheck.id === id)
+    : legacyMembership.conceptCheckIds.includes(id))))) {
     errors.push(`${prefix}.incorrectConceptCheckIds must contain known concept check IDs for the quiz.`);
   }
   return errors;
