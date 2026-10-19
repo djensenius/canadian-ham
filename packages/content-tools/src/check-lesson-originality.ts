@@ -496,6 +496,9 @@ function contextTokenStem(token: string): string {
   if (token.length > 5 && token.endsWith("ed")) {
     return token.slice(0, -2);
   }
+  if (token.length > 4 && (token.endsWith("ces") || token.endsWith("ges"))) {
+    return token.slice(0, -1);
+  }
   if (token.length > 4 && token.endsWith("es")) {
     return token.slice(0, -2);
   }

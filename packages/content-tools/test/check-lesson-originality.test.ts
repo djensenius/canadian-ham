@@ -240,6 +240,29 @@ ${fixture.lesson}
   }
 });
 
+test("numeric originality normalizes voltage and resistance plurals for context", async () => {
+  await withFixture("plural-context-forms", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-PLURAL-001", "If voltage resistance uses two items, what total is shown?", "10"),
+      question("B-TEST-PLURAL-002", "What is the voltage across a 2-ohm resistor if a current of 0.5 amperes flows through it?", "1.0 volts"),
+      question("B-TEST-PLURAL-003", "What is the total resistance of five 10-ohm resistors in series?", "50 ohms"),
+    ], lessonMarkdown(`# Lesson
+
+Voltages resistances use two items: 10.
+Resistor voltages: 2 ohms at 0.5 A gives 1 V.
+Five 10-ohm resistances in series give 50 ohms.
+`));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-PLURAL-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-PLURAL-002" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-PLURAL-003" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
 test("numeric originality keeps the common-number context threshold boundary", async () => {
   await withFixture("one-context-word", async (root) => {
     await writeFixture(root, [
