@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 23:49'
-updated_date: '2026-10-19 21:08'
+updated_date: '2026-10-19 21:39'
 labels:
   - apple
   - layout
@@ -50,6 +50,8 @@ Earlier full-class runs: iPhone 17 Pro matrix + practice audits + Learn passed; 
 PR #301 regression follow-up: iPad full ExamTools at cccb5e68 failed 24/35 while iPhone passed. Three representative failures queued in /tmp/task-60-ipad-regression-repro.log. The runtime split-style modifier changes structural identity when a tool opens; investigating stable .balanced with temporary native detailOnly and saved sidebar restoration.
 
 Reproduced all three representative iPad failures (keyboard-focus key missing, largest-type Hint missing, regular-width inspector missing): /tmp/task-60-ipad-regression-repro.log, 3 executed/3 failures, xbuild exit 65. Removed runtime split-style branching; NavigationSplitView now stays balanced, with temporary detailOnly on iPad and regular-width iPhone and restoration of the saved user visibility. Inspector scenario retains all geometry/hittability checks, expects temporary sidebar collapse and additionally checks calculator interactivity/value preservation through close/reopen and a second sidebar restoration. Full iPad class + targeted iPhone inspector/transitions + macOS units queued under /tmp/task-60-ipad-regression-checks.out.
+
+iPad full-class follow-up: all tool presentation/accessibility/keyboard-focus regressions passed, but the new hidden-sidebar landscape scenario caught a DEBUG launch-hook race (detailOnly applied in onAppear after split construction). Initialize split visibility @State from that existing launch argument instead; no release-policy change. Only the affected inspector scenario is requeued in /tmp/task-60-ipad-regression-sidebar-retry.log. The full class also encountered the known TASK-61 hinge playback failure at 7.500 vs expected 60.4; no hinge tests changed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
