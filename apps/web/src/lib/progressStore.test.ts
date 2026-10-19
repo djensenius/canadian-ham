@@ -333,6 +333,38 @@ describe("ProgressStore", () => {
     assert.equal(validation.data?.lessonIdVersion, 2);
   });
 
+  it("does not invent an empty destination attempt when a legacy quiz only answered retained questions", () => {
+    const retainedAttempt: LessonQuizAttempt = {
+      id: "legacy-ac-only",
+      quizId: "QZ-L-005-04-A",
+      lessonId: "L-005-04",
+      submittedAt: "2026-01-02T03:45:00.000Z",
+      correct: 1,
+      total: 1,
+      percent: 100,
+      officialQuestionIds: ["B-005-007-001"],
+      incorrectOfficialQuestionIds: [],
+      incorrectConceptCheckIds: [],
+    };
+    const validation = validateProgressImport(validExport({
+      lessonIdVersion: undefined,
+      lessonQuizAttempts: [retainedAttempt],
+      syncDeviceRows: {
+        questionProgress: [],
+        examAttempts: [],
+        lessonProgress: [],
+        lessonQuizAttempts: [{ deviceId: "legacy-phone", attempt: retainedAttempt }],
+        morseCourseProgress: [],
+      },
+    }));
+
+    assert.equal(validation.ok, true);
+    assert.deepEqual(validation.data?.lessonQuizAttempts, [retainedAttempt]);
+    assert.deepEqual(validation.data?.syncDeviceRows?.lessonQuizAttempts, [
+      { deviceId: "legacy-phone", attempt: retainedAttempt, lessonIdVersion: 2 },
+    ]);
+  });
+
   it("leaves v2 lesson split exports unchanged", async () => {
     const v2Progress: LessonProgressRecord = { lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 };
     const v2Attempt: LessonQuizAttempt = {

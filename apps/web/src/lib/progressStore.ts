@@ -493,7 +493,7 @@ export function migrateLessonQuizAttempts(attempts: readonly LessonQuizAttempt[]
       if (quiz === undefined) continue;
       const officialQuestionIds = attempt.officialQuestionIds.filter((questionId) => quiz.officialQuestionIds.includes(questionId));
       const incorrectOfficialQuestionIds = attempt.incorrectOfficialQuestionIds.filter((questionId) => officialQuestionIds.includes(questionId));
-      if (officialQuestionIds.length === 0 && !targetQuizIds.includes(attempt.quizId)) continue;
+      if (officialQuestionIds.length === 0 && quizId !== attempt.quizId) continue;
       const correct = officialQuestionIds.length - incorrectOfficialQuestionIds.length;
       const total = Math.max(1, officialQuestionIds.length);
       const id = quizId === attempt.quizId ? attempt.id : `${attempt.id}::${quizId}`;
