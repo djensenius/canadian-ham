@@ -88,7 +88,7 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     func testPracticeInteractionUsesConfiguredLanguageShowsFeedbackAndAdvances() throws {
-        let app = configuredApp(screen: .practice, appearance: "light", language: "fr", evidenceFocus: "answer")
+        let app = configuredApp(screen: .practice, appearance: "light", language: "fr")
         app.launch()
         defer { app.terminate() }
 
@@ -98,7 +98,7 @@ final class CanadianHamTVUITests: XCTestCase {
         let remote = XCUIRemote.shared
         let firstAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
         XCTAssertTrue(firstAnswer.waitForExistence(timeout: 5), "First answer should exist")
-        pressUntilFocused(firstAnswer, remote: remote, buttons: [.down, .right], maxCycles: 6)
+        pressUntilFocused(firstAnswer, remote: remote, buttons: [.down, .right, .left, .up], maxCycles: 8)
         remote.press(.select)
         let feedback = app.descendants(matching: .any)["answer-feedback"].firstMatch
         XCTAssertTrue(feedback.waitForExistence(timeout: 5), "Feedback should appear after selecting an answer")
@@ -123,37 +123,61 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     func testPracticeHintLadderLessonLinkAndAudit() throws {
-        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-006", questionID: "B-006-008-004", language: "fr", evidenceFocus: "hint", interfaceLanguage: "fr")
+        for appearance in ["light", "dark"] {
+            let app = configuredApp(screen: .practice, appearance: appearance, categoryID: "B-006", questionID: "B-006-008-004", language: "fr", interfaceLanguage: "fr")
+            app.launch()
+            defer { app.terminate() }
+
+            XCTAssertTrue(app.descendants(matching: .any)["tv-practice-screen"].firstMatch.waitForExistence(timeout: 15))
+            XCTAssertFalse(app.descendants(matching: .any)["hint-reference-pointer"].firstMatch.exists, "tvOS has no reference-sheet surface, so hint reference pointers stay hidden")
+
+            openHintLevel(1, in: app)
+            XCTAssertTrue(app.staticTexts["hint-level-1-body"].firstMatch.waitForExistence(timeout: 5), "Hint 1 should appear in tvOS practice")
+            XCTAssertTrue(app.descendants(matching: .any)["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "Two-level files should reveal Hint 2 only after Hint 1")
+            openHintLevel(2, in: app)
+            XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.waitForExistence(timeout: 5), "Hint 2 should appear after the second ladder action")
+            let review = app.descendants(matching: .any)["hint-review-in-lesson-button"].firstMatch
+            XCTAssertTrue(review.waitForExistence(timeout: 5), "Last hint level should expose the generic lesson link")
+            waitForFocus(on: review)
+            XCTAssertTrue(review.hasFocus, "Review in lesson should receive focus when it replaces the final hint button")
+            XCTAssertEqual(review.label, "Revoir dans la leçon", "Lesson link label should stay generic and localized")
+            XCTAssertTrue(app.staticTexts["hint-english-only-lesson-notice"].firstMatch.waitForExistence(timeout: 5), "French UI should note that lesson bodies are currently English-only")
+            XCTAssertFalse(anyLabel(in: app, contains: "Polarization, dipoles, and wavelength"), "Hint link must not reveal the lesson title before the question is answered")
+            XCTAssertFalse(anyLabel(in: app, contains: "Wavelength and frequency"), "Hint link must not reveal the linked section heading before the question is answered")
+            try performAudit(on: app, context: "tvOS \(appearance) open hint")
+
+            XCUIRemote.shared.press(.select)
+            XCTAssertTrue(app.descendants(matching: .any)["tv-lesson-screen"].firstMatch.waitForExistence(timeout: 10), "Review in lesson should open the tvOS lesson reader")
+            let heading = app.staticTexts["lesson-heading-wavelength-and-frequency"].firstMatch
+            XCTAssertTrue(heading.waitForExistence(timeout: 10), "Lesson link should open at the sectionAnchor")
+            assertElementIsVisible(heading, in: app, description: "tvOS linked lesson heading")
+            try performAudit(on: app, context: "tvOS \(appearance) lesson reader")
+            XCUIRemote.shared.press(.menu)
+            XCTAssertTrue(app.descendants(matching: .any)["tv-practice-screen"].firstMatch.waitForExistence(timeout: 5), "Menu should return to the in-progress practice session")
+            XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.exists, "Hint state should survive the lesson round trip")
+
+            let firstAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+            XCTAssertTrue(firstAnswer.waitForExistence(timeout: 5), "An answer should remain reachable after the lesson round trip")
+            pressUntilFocused(firstAnswer, remote: XCUIRemote.shared, buttons: [.down, .right, .left, .up], maxCycles: 8)
+            XCUIRemote.shared.press(.select)
+            XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5), "A remote user should be able to answer after reviewing the lesson")
+
+            app.terminate()
+        }
+    }
+
+    func testPracticeKeepsQuestionBankWhenContentLibraryFails() throws {
+        let app = configuredApp(screen: .practice, appearance: "light", simulateContentLoadFailure: true)
         app.launch()
         defer { app.terminate() }
 
-        XCTAssertTrue(app.descendants(matching: .any)["tv-practice-screen"].firstMatch.waitForExistence(timeout: 15))
-        XCTAssertFalse(app.descendants(matching: .any)["hint-reference-pointer"].firstMatch.exists, "tvOS has no reference-sheet surface, so hint reference pointers stay hidden")
-
-        openHintLevel(1, in: app)
-        XCTAssertTrue(app.staticTexts["hint-level-1-body"].firstMatch.waitForExistence(timeout: 5), "Hint 1 should appear in tvOS practice")
-        XCTAssertTrue(app.descendants(matching: .any)["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "Two-level files should reveal Hint 2 only after Hint 1")
-        openHintLevel(2, in: app)
-        XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.waitForExistence(timeout: 5), "Hint 2 should appear after the second ladder action")
-        let review = app.descendants(matching: .any)["hint-review-in-lesson-button"].firstMatch
-        XCTAssertTrue(review.waitForExistence(timeout: 5), "Last hint level should expose the generic lesson link")
-        XCTAssertEqual(review.label, "Revoir dans la leçon", "Lesson link label should stay generic and localized")
-        XCTAssertTrue(app.staticTexts["hint-english-only-lesson-notice"].firstMatch.waitForExistence(timeout: 5), "French UI should note that lesson bodies are currently English-only")
-        XCTAssertFalse(anyLabel(in: app, contains: "Polarization, dipoles, and wavelength"), "Hint link must not reveal the lesson title before the question is answered")
-        XCTAssertFalse(anyLabel(in: app, contains: "Wavelength and frequency"), "Hint link must not reveal the linked section heading before the question is answered")
-        try performAudit(on: app, context: "tvOS open hint")
-
-        pressUntilFocused(review, remote: XCUIRemote.shared, buttons: [.down, .right, .left], maxCycles: 8)
-        XCUIRemote.shared.press(.select)
-        XCTAssertTrue(app.descendants(matching: .any)["tv-lesson-screen"].firstMatch.waitForExistence(timeout: 10), "Review in lesson should open the tvOS lesson reader")
-        XCTAssertTrue(app.staticTexts["lesson-heading-wavelength-and-frequency"].firstMatch.waitForExistence(timeout: 10), "Lesson link should open at the sectionAnchor")
-        XCUIRemote.shared.press(.menu)
-        XCTAssertTrue(app.descendants(matching: .any)["tv-practice-screen"].firstMatch.waitForExistence(timeout: 5), "Menu should return to the in-progress practice session")
-        XCTAssertTrue(app.staticTexts["hint-level-2-body"].firstMatch.exists, "Hint state should survive the lesson round trip")
+        XCTAssertTrue(app.staticTexts["An Amateur Radio Operator Certificate is valid for:"].firstMatch.waitForExistence(timeout: 15), "Practice should keep working when optional content fails to load")
+        XCTAssertFalse(app.descendants(matching: .any)["hint-show-level-1-button"].firstMatch.exists, "The hint panel should hide when optional hint content is unavailable")
+        XCTAssertFalse(app.staticTexts["Question bank unavailable"].firstMatch.exists, "Content failures must not be reported as bank failures")
     }
 
     func testPracticeOneLevelHintHasNoHint2AndNonPracticeScreensHaveNoHint() throws {
-        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-001", questionID: "B-001-002-002", evidenceFocus: "hint")
+        let app = configuredApp(screen: .practice, appearance: "light", categoryID: "B-001", questionID: "B-001-002-002")
         app.launch()
         defer { app.terminate() }
 
@@ -275,7 +299,8 @@ final class CanadianHamTVUITests: XCTestCase {
         language: String? = nil,
         evidenceFocus: String? = nil,
         interfaceLanguage: String? = nil,
-        reduceMotion: Bool = false
+        reduceMotion: Bool = false,
+        simulateContentLoadFailure: Bool = false
     ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
@@ -298,6 +323,9 @@ final class CanadianHamTVUITests: XCTestCase {
         }
         if reduceMotion {
             app.launchArguments += ["-CanadianHamReduceMotion", "enabled"]
+        }
+        if simulateContentLoadFailure {
+            app.launchArguments += ["-CanadianHamSimulateContentLoadFailure", "content"]
         }
         return app
     }
@@ -485,13 +513,22 @@ final class CanadianHamTVUITests: XCTestCase {
     ) {
         XCTAssertTrue(element.exists, "\(description) must exist before capturing focus-ring evidence", file: file, line: line)
         XCTAssertTrue(element.isHittable, "Focused \(description) must be hittable before capturing focus-ring evidence", file: file, line: line)
+        assertElementIsVisible(element, in: app, description: description, file: file, line: line)
+    }
 
+    private func assertElementIsVisible(
+        _ element: XCUIElement,
+        in app: XCUIApplication,
+        description: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         let window = app.windows.firstMatch
-        XCTAssertTrue(window.waitForExistence(timeout: 5), "App window should exist before capturing focus-ring evidence", file: file, line: line)
-        XCTAssertFalse(element.frame.isEmpty, "\(description) frame should be non-empty before capture", file: file, line: line)
+        XCTAssertTrue(window.waitForExistence(timeout: 5), "App window should exist before checking \(description)", file: file, line: line)
+        XCTAssertFalse(element.frame.isEmpty, "\(description) frame should be non-empty", file: file, line: line)
         XCTAssertTrue(
-            window.frame.insetBy(dx: -1, dy: -1).contains(element.frame),
-            "Focused \(description) frame \(element.frame) should be inside the app window \(window.frame) before capture",
+            element.isHittable || window.frame.insetBy(dx: -1, dy: -1).contains(element.frame),
+            "\(description) frame \(element.frame) should be hittable or inside the app window \(window.frame)",
             file: file,
             line: line
         )

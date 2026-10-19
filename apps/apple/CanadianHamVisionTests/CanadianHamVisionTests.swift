@@ -113,11 +113,13 @@ final class CanadianHamVisionTests: XCTestCase {
             answeredWithHelpQuestionIds: []
         )
         XCTAssertTrue(qualification.qualifiedQuestionIds.contains(twoLevelHint.questionId))
-        XCTAssertTrue(PracticeHintRules.shouldCommitAnswerWithHelp(
+        let selection = PlatformPracticeSelectionLogic.selectAnswer(
             questionID: twoLevelHint.questionId,
             qualifiedQuestionIds: qualification.qualifiedQuestionIds,
             answeredWithHelpQuestionIds: qualification.answeredWithHelpQuestionIds
-        ))
+        )
+        XCTAssertTrue(selection.answeredWithHelp)
+        XCTAssertTrue(selection.answeredWithHelpQuestionIds.contains(twoLevelHint.questionId), "visionOS selection records helped answers in the in-session answer state")
 
         XCTAssertEqual(HintVisibilityQualificationTimer.defaultDelayNanoseconds, 500_000_000, "visionOS uses the shared 0.5 s hint visibility rule")
         let updated = try applyAnswer(existing: nil, update: AnswerUpdate(
@@ -144,7 +146,8 @@ final class CanadianHamVisionTests: XCTestCase {
     }
 
     func testVisionReferencePointersAreHiddenBecauseReferenceSheetIsUnavailable() {
-        XCTAssertFalse(HintToolRules.showsReferencePointer(referenceSheetAvailable: false, visibleLevel: 1, referenceSheetSection: "ohms-law"))
+        XCTAssertFalse(PlatformReferenceSheetAvailability.isAvailable)
+        XCTAssertFalse(HintToolRules.showsReferencePointer(referenceSheetAvailable: PlatformReferenceSheetAvailability.isAvailable, visibleLevel: 1, referenceSheetSection: "ohms-law"))
     }
 
     func testVisionPracticeSeedsVaryAcrossSessionIDs() throws {

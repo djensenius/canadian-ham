@@ -26,6 +26,7 @@ private struct TVLaunchOptions {
     let reduceMotionOverride: Bool?
     let initialLanguage: BankLanguage
     let evidenceFocus: TVEvidenceFocus?
+    let simulateContentLoadFailure: Bool
 
     init(arguments: [String] = ProcessInfo.processInfo.arguments) {
         #if DEBUG
@@ -45,6 +46,7 @@ private struct TVLaunchOptions {
         }
         initialLanguage = BankLanguage.resolvedPreference(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments))
         evidenceFocus = AppLaunchArguments.value(after: "-CanadianHamTVEvidenceFocus", in: arguments).flatMap(TVEvidenceFocus.init(rawValue:))
+        simulateContentLoadFailure = AppLaunchArguments.value(after: "-CanadianHamSimulateContentLoadFailure", in: arguments) == "content"
         #else
         _ = arguments
         initialScreen = .categories
@@ -55,6 +57,7 @@ private struct TVLaunchOptions {
         reduceMotionOverride = nil
         initialLanguage = BankLanguage.systemPreferred()
         evidenceFocus = nil
+        simulateContentLoadFailure = false
         #endif
     }
 }
@@ -126,7 +129,7 @@ private extension EnvironmentValues {
     }
 }
 
-private extension View {
+extension View {
     func tvFocusRing<S: InsettableShape>(
         _ shape: S,
         isFocused: Bool,
@@ -149,6 +152,7 @@ private struct CanadianHamTVRootView: View {
     @State private var bank: QuestionBank?
     @State private var contentLibrary: ContentLibrary?
     @State private var loadError: String?
+    @State private var contentLoadError: String?
     @State private var screen: PlatformScreen
     @State private var selectedCategoryID: String
     @State private var language: BankLanguage
@@ -234,7 +238,7 @@ private struct CanadianHamTVRootView: View {
                 TVLessonView(lesson: lesson, sectionAnchor: activeLessonLink.sectionAnchor, onPractice: { screen = .practice })
                     .onExitCommand { screen = .practice }
             } else {
-                TVMessageView(title: "Lesson", message: String(localized: "Unable to complete this operation: \("")"), systemImage: "book.closed")
+                TVMessageView(title: "Lesson", message: contentLoadError ?? localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: PlatformLessonUnavailableError()), systemImage: "book.closed")
             }
         case .morse:
             TVMorseView(settings: $morseSettings, onCategories: { screen = .categories })
@@ -248,12 +252,20 @@ private struct CanadianHamTVRootView: View {
     private func loadBankIfNeeded() {
         guard bank == nil, loadError == nil else { return }
         do {
-            let loadedBank = try QuestionBankStore.load()
-            let loadedContentLibrary = try ContentLibrary.load()
-            bank = loadedBank
-            contentLibrary = loadedContentLibrary
+            bank = try QuestionBankStore.load()
         } catch {
             loadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
+            return
+        }
+
+        guard contentLibrary == nil, contentLoadError == nil else { return }
+        do {
+            if launchOptions.simulateContentLoadFailure {
+                throw PlatformContentLoadSimulationError()
+            }
+            contentLibrary = try ContentLibrary.load()
+        } catch {
+            contentLoadError = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -384,7 +396,6 @@ private struct TVPracticeSessionState {
     var hintLevelsByQuestionId: [String: Int] = [:]
     var hintQualifiedQuestionIds: Set<String> = []
     var answeredWithHelpQuestionIds: Set<String> = []
-    var progressRecords: [QuestionProgressRecord] = []
 
     mutating func reset(for categoryID: String) {
         self.categoryID = categoryID
@@ -398,7 +409,6 @@ private struct TVPracticeSessionState {
         hintLevelsByQuestionId = [:]
         hintQualifiedQuestionIds = []
         answeredWithHelpQuestionIds = []
-        progressRecords = []
     }
 
     mutating func resetIfNeeded(for categoryID: String) {
@@ -466,7 +476,6 @@ private struct TVPracticeView: View {
                                         visibleLevel: session.hintLevelsByQuestionId[currentQuestion.id] ?? 0,
                                         answeredWithHelpQualified: session.hintQualifiedQuestionIds.contains(currentQuestion.id),
                                         canRecordHelp: hintCanAffectAnswer(questionID: currentQuestion.id),
-                                        referenceSheetAvailable: false,
                                         revealLevel: { level in revealHintLevel(questionID: currentQuestion.id, level: level) },
                                         hintVisibleLongEnough: { qualifyAnsweredWithHelp(questionID: currentQuestion.id) },
                                         openLesson: onOpenHintLesson,
@@ -563,17 +572,12 @@ private struct TVPracticeView: View {
     private func select(_ answer: ShuffledAnswer) {
         guard session.selectedSourceIndex == nil else { return }
         if let question = session.currentQuestion {
-            session.answeredWithHelpQuestionIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
+            let selection = PlatformPracticeSelectionLogic.selectAnswer(
                 questionID: question.id,
                 qualifiedQuestionIds: session.hintQualifiedQuestionIds,
                 answeredWithHelpQuestionIds: session.answeredWithHelpQuestionIds
             )
-            let answeredWithHelp = PracticeHintRules.shouldCommitAnswerWithHelp(
-                questionID: question.id,
-                qualifiedQuestionIds: session.hintQualifiedQuestionIds,
-                answeredWithHelpQuestionIds: session.answeredWithHelpQuestionIds
-            )
-            recordPracticeAnswer(question: question, answer: answer, answeredWithHelp: answeredWithHelp)
+            session.answeredWithHelpQuestionIds = selection.answeredWithHelpQuestionIds
         }
         withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
             session.selectedSourceIndex = answer.sourceIndex
@@ -610,23 +614,6 @@ private struct TVPracticeView: View {
 
     private func hintCanAffectAnswer(questionID _: String) -> Bool {
         PracticeHintRules.canRecordHelp(mode: .immediate, alreadySelected: session.selectedSourceIndex != nil, reviewSubmitted: false)
-    }
-
-    private func recordPracticeAnswer(question: BankQuestion, answer: ShuffledAnswer, answeredWithHelp: Bool) {
-        let now = String(format: "2026-01-01T00:00:%02d.000Z", min(session.answeredCount, 59))
-        do {
-            let existing = session.progressRecords.first { $0.questionId == question.id }
-            let updated = try applyAnswer(existing: existing, update: AnswerUpdate(
-                questionId: question.id,
-                bankId: question.bankId,
-                isCorrect: answer.isCorrect,
-                now: now,
-                answeredWithHelp: answeredWithHelp
-            ))
-            session.progressRecords = (session.progressRecords.filter { $0.questionId != question.id } + [updated]).sorted { $0.questionId < $1.questionId }
-        } catch {
-            session.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
-        }
     }
 
     private func loadNextQuestion() {
@@ -721,7 +708,6 @@ private struct TVHintPanel: View {
     let visibleLevel: Int
     let answeredWithHelpQualified: Bool
     let canRecordHelp: Bool
-    let referenceSheetAvailable: Bool
     let revealLevel: (Int) -> Void
     let hintVisibleLongEnough: () -> Bool
     let openLesson: (QuestionHintLessonLink) -> Void
@@ -731,10 +717,13 @@ private struct TVHintPanel: View {
     @FocusState private var isShowHintFocused: Bool
     @FocusState private var isReviewFocused: Bool
 
-    private var lastAvailableLevel: Int { hint.hints.count }
-    private var nextLevel: Int? { visibleLevel < lastAvailableLevel ? visibleLevel + 1 : nil }
-    private var visibleHints: [QuestionHintText] { hint.hints.filter { $0.level <= visibleLevel } }
-    private var showsLessonLink: Bool { visibleLevel >= lastAvailableLevel }
+    private var panelState: PlatformHintPanelState {
+        PlatformHintPanelState(hint: hint, language: language, visibleLevel: visibleLevel)
+    }
+
+    private var nextLevel: Int? { panelState.nextLevel }
+    private var visibleHints: [QuestionHintText] { panelState.visibleHints }
+    private var showsLessonLink: Bool { panelState.showsLessonLink }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -762,14 +751,6 @@ private struct TVHintPanel: View {
 
             ForEach(visibleHints, id: \.level) { entry in
                 hintCard(entry)
-            }
-
-            if HintToolRules.showsReferencePointer(referenceSheetAvailable: referenceSheetAvailable, visibleLevel: visibleLevel, referenceSheetSection: hint.referenceSheetSection), let referenceSheetSection = hint.referenceSheetSection {
-                Text(tvReferencePointerText(referenceSheetSection)) // l10n: localized
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("hint-reference-pointer")
             }
 
             if showsLessonLink {
@@ -810,13 +791,13 @@ private struct TVHintPanel: View {
         )
         .onAppear {
             syncQualificationTimer()
-            syncEvidenceFocus()
+            syncActionFocus()
         }
         .onDisappear { qualificationTimer.cancel() }
         .onChange(of: hint.questionId) { _, _ in syncQualificationTimer() }
         .onChange(of: visibleLevel) { _, _ in
             syncQualificationTimer()
-            syncEvidenceFocus()
+            syncActionFocus()
         }
         .onChange(of: canRecordHelp) { _, _ in syncQualificationTimer() }
         .onChange(of: answeredWithHelpQualified) { _, _ in syncQualificationTimer() }
@@ -829,7 +810,7 @@ private struct TVHintPanel: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("hint-level-\(entry.level)-title")
-            Text(localized(entry, language: language)) // l10n: content(question)
+            Text(panelState.localizedHintText(entry)) // l10n: content(question)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
@@ -841,18 +822,11 @@ private struct TVHintPanel: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
     }
 
-    private func localized(_ entry: QuestionHintText, language: BankLanguage) -> AttributedString {
-        var text = AttributedString(language == .french ? entry.fr : entry.en)
-        text.languageIdentifier = language.accessibilityLanguageCode
-        return text
-    }
-
-    private func syncEvidenceFocus() {
-        guard requestsEvidenceFocus else { return }
-        if nextLevel != nil {
-            isShowHintFocused = true
-        } else if showsLessonLink {
+    private func syncActionFocus() {
+        if showsLessonLink {
             isReviewFocused = true
+        } else if requestsEvidenceFocus, nextLevel != nil {
+            isShowHintFocused = true
         }
     }
 
@@ -894,16 +868,18 @@ private struct TVLessonView: View {
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
                             .accessibilityIdentifier("lesson-reader-title")
-                        Text("Lesson offered in English only.")
-                            .font(DesignTokens.FontScale.body.weight(.semibold))
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                            .accessibilityIdentifier("hint-english-only-lesson-notice")
+                        if tvUsesFrenchInterface {
+                            Text("Lesson offered in English only.")
+                                .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                                .accessibilityIdentifier("hint-english-only-lesson-notice")
+                        }
                     }
                     .padding(DesignTokens.Spacing.xl)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
 
-                    PlatformLessonMarkdownView(lesson: lesson, targetAnchor: sectionAnchor)
+                    LessonMarkdownView(lesson: lesson, targetAnchor: sectionAnchor)
                         .padding(DesignTokens.Spacing.xl)
                         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
                 }
@@ -1450,6 +1426,14 @@ private struct TVPaperSection<Content: View>: View {
     }
 }
 
+private struct PlatformContentLoadSimulationError: LocalizedError {
+    var errorDescription: String? { "Content library unavailable for testing." }
+}
+
+private struct PlatformLessonUnavailableError: LocalizedError {
+    var errorDescription: String? { "Lesson content is unavailable." }
+}
+
 private let localizedErrorDetailSeparator = "\u{1E}"
 
 private func localizedErrorMessage(_ localizedPrefix: String, detail error: Error) -> String {
@@ -1531,33 +1515,6 @@ private func verbatimTVText(_ string: String) -> Text {
 
 private var tvUsesFrenchInterface: Bool {
     Bundle.main.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true
-}
-
-private func tvReferencePointerText(_ section: String) -> AttributedString {
-    let language: BankLanguage = tvUsesFrenchInterface ? .french : .english
-    var text = AttributedString(String(localized: "Reference sheet: "))
-    text += localized(tvReferenceSheetSectionLabel(section, language: language), language: language)
-    return text
-}
-
-private func tvReferenceSheetSectionLabel(_ section: String, language: BankLanguage) -> String {
-    switch (section, language) {
-    case ("ohms-law", .french): "Loi d'Ohm"
-    case ("ohms-law", _): "Ohm's law"
-    case ("power", .french): "Puissance"
-    case ("power", _): "Power"
-    case ("series-parallel-resistance", .french): "Résistance en série et en parallèle"
-    case ("series-parallel-resistance", _): "Series and parallel resistance"
-    case ("decibel-power-shortcuts", .french): "Repères de puissance en décibels"
-    case ("decibel-power-shortcuts", _): "Decibel power shortcuts"
-    case ("wavelength-dipole-length", .french): "Longueur d'onde et longueur de dipôle"
-    case ("wavelength-dipole-length", _): "Wavelength and dipole length"
-    case ("metric-prefixes", .french): "Préfixes métriques"
-    case ("metric-prefixes", _): "Metric prefixes"
-    case ("resistor-colour-code", .french): "Code de couleurs des résistances à quatre bandes"
-    case ("resistor-colour-code", _): "Four-band resistor colour code"
-    default: section
-    }
 }
 
 private func english(_ string: String) -> AttributedString {

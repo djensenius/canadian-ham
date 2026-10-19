@@ -54,6 +54,8 @@ targets:
           - Resources/Assets.xcassets
           - Resources/FigureAssets.xcassets
           - Resources/CanadianHam.iOS.CloudKit.Info.plist
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformLessonMarkdownView.swift
       - path: CanadianHam/Resources/AppIcon.icon
         buildPhase: resources
       - path: CanadianHam/Resources/Assets.xcassets
@@ -184,6 +186,7 @@ targets:
       - path: CanadianHamTests
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
+      - path: Platforms/Shared/ApplePreferences.swift
       - path: CanadianHam/Services/ProgressStore.swift
       - path: CanadianHam/Services/ProgressSyncMerge.swift
       - path: CanadianHam/Services/AppleStudyEngine.swift
@@ -312,7 +315,8 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: Platforms/tvOS
-      - path: Platforms/Shared/PlatformHintPreferences.swift
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformHintPanelSupport.swift
       - path: Platforms/Shared/PlatformLessonMarkdownView.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
@@ -328,22 +332,6 @@ targets:
       - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources
-      - path: ../../content/generated/basic-2025-07-15/questions.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/subsections.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/categories.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/manifest.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
       - path: ../../content/lessons
         type: folder
         buildPhase: resources
@@ -422,7 +410,8 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: CanadianHamTVTests
-      - path: Platforms/Shared/PlatformHintPreferences.swift
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformHintPanelSupport.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
@@ -478,7 +467,8 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: Platforms/visionOS
-      - path: Platforms/Shared/PlatformHintPreferences.swift
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformHintPanelSupport.swift
       - path: Platforms/Shared/PlatformLessonMarkdownView.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
@@ -494,22 +484,6 @@ targets:
       - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources
-      - path: ../../content/generated/basic-2025-07-15/questions.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/subsections.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/categories.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/manifest.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
       - path: ../../content/lessons
         type: folder
         buildPhase: resources
@@ -588,7 +562,8 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: CanadianHamVisionTests
-      - path: Platforms/Shared/PlatformHintPreferences.swift
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformHintPanelSupport.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
