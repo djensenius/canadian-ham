@@ -3,7 +3,7 @@ id: TASK-47
 title: >-
   Originality checker: flag real question-answer number pairs, not common
   numbers
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:48'
@@ -23,8 +23,8 @@ check-lesson-originality rejects any worked-example block whose only numeric tok
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A worked example using 10 dB + 3 dB steps passes; copying a bank question's numbers with its keyed answer still fails (self-test cases)
-- [ ] #2 All lessons on main still pass; any newly allowed lines are reviewed
+- [x] #1 A worked example using 10 dB + 3 dB steps passes; copying a bank question's numbers with its keyed answer still fails (self-test cases)
+- [x] #2 All lessons on main still pass; any newly allowed lines are reviewed
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -54,3 +54,11 @@ Before/after all-lessons comparison:
   - `L-005-04` Decibels as power ratios vs `B-005-001-003`, `B-005-004-001`, `B-005-005-008`, `B-005-005-010`, `B-005-006-006`, `B-005-006-009`, `B-005-008-001`, `B-005-008-002`, `B-005-008-003`, `B-005-008-007`, `B-005-009-001`, `B-005-009-002`, `B-005-009-003`, `B-005-009-004`, `B-005-009-009`, `B-005-009-010`, and `B-005-011-007`: standard dB/power-ratio step values (`0.5`, `1`, `2`, `3`, `4`, `5`, `10`, `20`, `100`, `1000`) taught as estimating shortcuts rather than any one question scenario.
   - `L-006-02` reflected-power estimates vs `B-006-009-002`, `B-006-011-010`, and `B-006-013-010`: common ratio/SWR/Yagi-spacing numbers overlap the reflected-power table, but the lesson block lacks the source questions' matching contexts.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Refined the lesson originality numeric-overlap rule so common numeric values do not fail unless they are paired with distinctive question numbers or at least two distinctive question context words; near-verbatim checks remain unchanged. Added self-test fixtures covering allowed 10 dB/3 dB shortcut examples, standalone common numbers, and rejected real leaks with distinctive numbers, units, multi-number sets, and common-number capacitor/series context.
+
+Validation passed: `pnpm --filter @canadian-ham/content-tools test -- check-lesson-originality.test.ts`, `pnpm --filter @canadian-ham/content-tools typecheck`, `pnpm typecheck`, `pnpm test`, `pnpm --dir packages/content-tools check:lesson-originality:all`, `pnpm --dir packages/content-tools check:explanations`, `pnpm check:hints -- --require-complete`, `pnpm check:links`, and `pnpm check:schemas`. Normal all-lessons originality output remained 0 issues before and after. Empty-allowlist comparison found 22 reviewed numeric false positives removed and no new findings.
+<!-- SECTION:FINAL_SUMMARY:END -->
