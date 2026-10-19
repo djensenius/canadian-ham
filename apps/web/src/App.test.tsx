@@ -929,7 +929,7 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     const prerequisites = screen.getByRole("region", { name: "Before this lesson" });
     const prerequisiteLink = within(prerequisites).getByRole("link", { name: "Power and Ohm’s law" });
     assert.equal(prerequisiteLink.getAttribute("href"), "#/learn/M5/L-005-02");
-    assert.ok(within(prerequisites).getByRole("link", { name: "AC, decibels, capacitors, inductors, and reactance" }));
+    assert.ok(within(prerequisites).getByRole("link", { name: "AC and decibels" }));
     await expectNoAxeViolations(container);
 
     fireEvent.click(prerequisiteLink, { ctrlKey: true });

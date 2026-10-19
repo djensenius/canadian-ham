@@ -1,0 +1,50 @@
+{
+  "id": "QZ-L-005-06-A",
+  "lessonId": "L-005-06",
+  "officialQuestionIds": [
+    "B-005-011-001",
+    "B-005-011-002",
+    "B-005-011-004",
+    "B-005-011-008",
+    "B-005-013-001",
+    "B-005-013-005",
+    "B-005-013-006",
+    "B-005-013-007",
+    "B-005-013-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-005-06-A-C1",
+      "prompt": { "en": "An ideal transformer has 900 primary turns and 150 secondary turns. If the primary is 180 V, what secondary voltage is expected?", "fr": null },
+      "choices": [
+        { "text": { "en": "30 V", "fr": null }, "isCorrect": true },
+        { "text": { "en": "108 V", "fr": null }, "isCorrect": false },
+        { "text": { "en": "180 V", "fr": null }, "isCorrect": false },
+        { "text": { "en": "1 080 V", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The secondary has 150 / 900 of the primary turns, so 180 V x 1/6 = 30 V.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-06-A-C2",
+      "prompt": { "en": "You need to measure voltage across a load resistor. How should the voltmeter be connected?", "fr": null },
+      "choices": [
+        { "text": { "en": "In series so all load current must flow through the voltmeter.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Across the load, using the meter as a high-resistance branch.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "In place of an RF wattmeter in the feedline.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Across the supply before selecting a meter mode.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Voltage is measured across two points, so a voltmeter is placed in parallel with the part.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-06-A-C3",
+      "prompt": { "en": "A digital meter repeats 12.4 V, 12.4 V, and 12.5 V on a reference known to be 13.0 V. Which description fits best?", "fr": null },
+      "choices": [
+        { "text": { "en": "Precise readings, but not accurate readings.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Accurate readings, but no displayed resolution.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A correct RF wattmeter connection.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A transformer turns-ratio problem.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The readings are close to each other, so they are precise, but they are offset from the reference value, so they are not accurate.", "fr": null }
+    }
+  ]
+}

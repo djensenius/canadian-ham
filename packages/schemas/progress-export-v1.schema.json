@@ -7,6 +7,7 @@
   "properties": {
     "schema": { "const": "canadian-ham.progress-export" },
     "version": { "const": 1 },
+    "lessonIdVersion": { "$ref": "#/$defs/lessonIdVersion" },
     "exportedAt": { "$ref": "common.schema.json#/$defs/canonicalUtcTimestamp" },
     "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
     "questionProgress": {
@@ -30,6 +31,7 @@
     "preferences": { "$ref": "common.schema.json#/$defs/webPreferences" }
   },
   "$defs": {
+    "lessonIdVersion": { "enum": [1, 2] },
     "syncDeviceRows": {
       "type": "object",
       "required": ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress"],
@@ -66,7 +68,8 @@
       "required": ["deviceId", "record"],
       "properties": {
         "deviceId": { "$ref": "#/$defs/deviceId" },
-        "record": { "$ref": "common.schema.json#/$defs/lessonProgressRecord" }
+        "record": { "$ref": "common.schema.json#/$defs/lessonProgressRecord" },
+        "lessonIdVersion": { "$ref": "#/$defs/lessonIdVersion" }
       },
       "additionalProperties": false
     },
@@ -75,7 +78,8 @@
       "required": ["deviceId", "attempt"],
       "properties": {
         "deviceId": { "$ref": "#/$defs/deviceId" },
-        "attempt": { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" }
+        "attempt": { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" },
+        "lessonIdVersion": { "$ref": "#/$defs/lessonIdVersion" }
       },
       "additionalProperties": false
     },

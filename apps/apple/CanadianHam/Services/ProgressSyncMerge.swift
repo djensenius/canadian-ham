@@ -2,6 +2,15 @@ import CanadianHamEngine
 import CanadianHamMorseEngine
 import Foundation
 
+enum LessonIDContentVersion {
+    static let legacy = 1
+    static let current = 2
+
+    static func isSupported(_ version: Int?) -> Bool {
+        version == nil || version == legacy || version == current
+    }
+}
+
 struct DeviceQuestionProgressRecord: Codable, Equatable, Sendable {
     let deviceId: String
     let record: QuestionProgressRecord
@@ -15,11 +24,39 @@ struct DeviceExamAttemptRecord: Codable, Equatable, Sendable {
 struct DeviceLessonProgressRecord: Codable, Equatable, Sendable {
     let deviceId: String
     let record: LessonProgressRecord
+    let lessonIdVersion: Int?
+
+    init(deviceId: String, record: LessonProgressRecord, lessonIdVersion: Int? = nil) {
+        self.deviceId = deviceId
+        self.record = record
+        self.lessonIdVersion = lessonIdVersion
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        record = try container.decode(LessonProgressRecord.self, forKey: .record)
+        lessonIdVersion = container.contains(.lessonIdVersion) ? try container.decode(Int.self, forKey: .lessonIdVersion) : nil
+    }
 }
 
 struct DeviceLessonQuizAttemptRecord: Codable, Equatable, Sendable {
     let deviceId: String
     let attempt: LessonQuizAttempt
+    let lessonIdVersion: Int?
+
+    init(deviceId: String, attempt: LessonQuizAttempt, lessonIdVersion: Int? = nil) {
+        self.deviceId = deviceId
+        self.attempt = attempt
+        self.lessonIdVersion = lessonIdVersion
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        attempt = try container.decode(LessonQuizAttempt.self, forKey: .attempt)
+        lessonIdVersion = container.contains(.lessonIdVersion) ? try container.decode(Int.self, forKey: .lessonIdVersion) : nil
+    }
 }
 
 struct DeviceMorseCourseProgressRecord: Codable, Equatable, Sendable {
@@ -95,7 +132,7 @@ enum ProgressSyncMerge {
     }
 
     static func deduplicateLessonProgress(_ records: [LessonProgressRecord]) -> [LessonProgressRecord] {
-        deduplicateDeviceLessonProgress(records.map { DeviceLessonProgressRecord(deviceId: "local", record: $0) })
+        deduplicateDeviceLessonProgress(records.map { DeviceLessonProgressRecord(deviceId: "local", record: $0, lessonIdVersion: LessonIDContentVersion.current) })
     }
 
     static func deduplicateDeviceLessonProgress(_ rows: [DeviceLessonProgressRecord]) -> [LessonProgressRecord] {
@@ -114,7 +151,7 @@ enum ProgressSyncMerge {
     }
 
     static func deduplicateLessonQuizAttempts(_ attempts: [LessonQuizAttempt]) -> [LessonQuizAttempt] {
-        deduplicateDeviceLessonQuizAttempts(attempts.map { DeviceLessonQuizAttemptRecord(deviceId: "local", attempt: $0) })
+        deduplicateDeviceLessonQuizAttempts(attempts.map { DeviceLessonQuizAttemptRecord(deviceId: "local", attempt: $0, lessonIdVersion: LessonIDContentVersion.current) })
     }
 
     static func deduplicateDeviceLessonQuizAttempts(_ rows: [DeviceLessonQuizAttemptRecord]) -> [LessonQuizAttempt] {

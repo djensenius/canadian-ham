@@ -2,34 +2,41 @@
   "id": "QZ-L-005-05-A",
   "lessonId": "L-005-05",
   "officialQuestionIds": [
-    "B-005-011-001",
-    "B-005-011-002",
-    "B-005-011-004",
-    "B-005-011-008",
+    "B-005-009-003",
+    "B-005-009-011",
+    "B-005-010-001",
+    "B-005-010-007",
+    "B-005-010-009",
     "B-005-012-001",
     "B-005-012-006",
     "B-005-012-008",
-    "B-005-012-011",
-    "B-005-013-001",
-    "B-005-013-005",
-    "B-005-013-006",
-    "B-005-013-007",
-    "B-005-013-010"
+    "B-005-012-011"
   ],
   "conceptChecks": [
     {
       "id": "QZ-L-005-05-A-C1",
-      "prompt": { "en": "An ideal transformer has 900 primary turns and 150 secondary turns. If the primary is 180 V, what secondary voltage is expected?", "fr": null },
+      "prompt": { "en": "Two equal 56 µF capacitors are connected in series. What is the total capacitance?", "fr": null },
       "choices": [
-        { "text": { "en": "30 V", "fr": null }, "isCorrect": true },
-        { "text": { "en": "108 V", "fr": null }, "isCorrect": false },
-        { "text": { "en": "180 V", "fr": null }, "isCorrect": false },
-        { "text": { "en": "1 080 V", "fr": null }, "isCorrect": false }
+        { "text": { "en": "28 µF", "fr": null }, "isCorrect": true },
+        { "text": { "en": "56 µF", "fr": null }, "isCorrect": false },
+        { "text": { "en": "112 µF", "fr": null }, "isCorrect": false },
+        { "text": { "en": "3 136 µF", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The secondary has 150 / 900 of the primary turns, so 180 V x 1/6 = 30 V.", "fr": null }
+      "explanation": { "en": "Two equal capacitors in series have half the capacitance of one.", "fr": null }
     },
     {
       "id": "QZ-L-005-05-A-C2",
+      "prompt": { "en": "Which part is useful when you want high opposition to RF but low opposition at low frequency?", "fr": null },
+      "choices": [
+        { "text": { "en": "A bypass capacitor chosen to shunt RF to ground.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "An inductor used as an RF choke.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A small capacitor placed in the audio path.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A resistor chosen for a DC voltage drop.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Inductive reactance increases with frequency, so a choke can impede RF.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-05-A-C3",
       "prompt": { "en": "Which statement is true at resonance in a series RLC circuit?", "fr": null },
       "choices": [
         { "text": { "en": "The L and C reactances cancel, so current is at a maximum.", "fr": null }, "isCorrect": true },
@@ -38,17 +45,6 @@
         { "text": { "en": "Adding more capacitance would have no effect on tuning.", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "Series resonance gives low impedance at the resonant frequency, so current is highest.", "fr": null }
-    },
-    {
-      "id": "QZ-L-005-05-A-C3",
-      "prompt": { "en": "You need to measure voltage across a load resistor. How should the voltmeter be connected?", "fr": null },
-      "choices": [
-        { "text": { "en": "In series so all load current must flow through the voltmeter.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Across the load, using the meter as a high-resistance branch.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "In place of an RF wattmeter in the feedline.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Across the supply before selecting a meter mode.", "fr": null }, "isCorrect": false }
-      ],
-      "explanation": { "en": "Voltage is measured across two points, so a voltmeter is placed in parallel with the part.", "fr": null }
     }
   ]
 }

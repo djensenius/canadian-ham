@@ -11,8 +11,8 @@
     }
   ],
   "lessonLink": {
-    "lessonId": "L-008-01",
-    "sectionAnchor": "spurious-emissions"
+    "lessonId": "L-008-02",
+    "sectionAnchor": "spurious-emissions-and-intermodulation"
   },
   "singleLevelReason": "Classification recall: another hint would name the transmitter-output category.",
   "referenceSheetSection": null,
