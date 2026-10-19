@@ -395,6 +395,7 @@ struct PracticeSessionView: View {
     @State private var hingePeekDwellRecheckTask: Task<Void, Never>?
 #if DEBUG
     @State private var debugHingePlaybackTimestamp: TimeInterval = 0
+    @State private var debugHingePlaybackTriggerHidden = false
 #endif
 #endif
     @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
@@ -591,10 +592,13 @@ struct PracticeSessionView: View {
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
 #if os(iOS) && DEBUG
-            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTrigger") {
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTrigger"), !debugHingePlaybackTriggerHidden {
                 Button {
                     configureDuoPostureProviderIfNeeded()
                     duoPostureProvider?.triggerNextDebugPlaybackSegment()
+                    if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTriggerHidesAfterTap") {
+                        debugHingePlaybackTriggerHidden = true
+                    }
                 } label: {
                     Text(verbatim: "Run") // l10n: verbatim DEBUG-only UI test hook
                 }

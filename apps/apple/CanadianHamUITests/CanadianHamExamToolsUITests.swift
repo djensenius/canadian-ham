@@ -182,7 +182,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testSimulatedHingeStableSlightOpenPeeksHintOneInPractice() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments(
             "partiallyOpen:25@0.1",
-            additionalArguments: ["-CanadianHamExamToolInitialDetent", "large"]
+            additionalArguments: ["-CanadianHamExamToolInitialDetent", "large", "-CanadianHamHingePlaybackDebugTriggerHidesAfterTap"]
         ))
         defer { app.terminate() }
 
