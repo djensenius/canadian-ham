@@ -3365,6 +3365,10 @@ final class ProgressStoreTests: XCTestCase {
         try JSONDecoder().decode([ArchivedJSON].self, from: JSONEncoder().encode(value))
     }
 
+    private func decodeArchivedArray<T: Decodable>(_ value: [ArchivedJSON], as type: T.Type) throws -> [T] {
+        try JSONDecoder().decode([T].self, from: JSONEncoder().encode(value))
+    }
+
     private func sampleMorseCourseProgress(lessonId: String = "koch-001") -> MorseCourseProgressExport {
         MorseCourseProgressExport(
             courseId: "ised-koch-g4fon-v1",
