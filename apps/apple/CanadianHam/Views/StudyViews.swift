@@ -487,7 +487,7 @@ struct PracticeSessionView: View {
 #endif
         }
 #if DEBUG
-        .overlay(alignment: .topLeading) {
+        .overlay(alignment: .topTrailing) {
             if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTrigger") {
                 Button {
                     duoPostureProvider?.triggerNextDebugPlaybackSegment()
@@ -496,7 +496,7 @@ struct PracticeSessionView: View {
                 }
                 .buttonStyle(AccessibleSecondaryButtonStyle())
                 .padding(.top, 96)
-                .padding(.leading, DesignTokens.Spacing.md)
+                .padding(.trailing, DesignTokens.Spacing.md)
                 .accessibilityIdentifier("debug-hinge-playback-trigger")
             }
         }
