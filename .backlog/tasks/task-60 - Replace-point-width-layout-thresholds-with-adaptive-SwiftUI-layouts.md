@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 23:49'
-updated_date: '2026-10-19 20:57'
+updated_date: '2026-10-19 21:08'
 labels:
   - apple
   - layout
@@ -48,6 +48,8 @@ Coordinator completion 2026-10-19 (head 6fb5d9cc): no point-width thresholds rem
 Earlier full-class runs: iPhone 17 Pro matrix + practice audits + Learn passed; iPad full class only the TASK-61 hinge flake; Duo full class only the known TASK-54 items + TASK-61 flake; Pro Max landscape calculator = TASK-58 (pre-existing on main). TASK-54 updated with size-class real-device checks.
 
 PR #301 regression follow-up: iPad full ExamTools at cccb5e68 failed 24/35 while iPhone passed. Three representative failures queued in /tmp/task-60-ipad-regression-repro.log. The runtime split-style modifier changes structural identity when a tool opens; investigating stable .balanced with temporary native detailOnly and saved sidebar restoration.
+
+Reproduced all three representative iPad failures (keyboard-focus key missing, largest-type Hint missing, regular-width inspector missing): /tmp/task-60-ipad-regression-repro.log, 3 executed/3 failures, xbuild exit 65. Removed runtime split-style branching; NavigationSplitView now stays balanced, with temporary detailOnly on iPad and regular-width iPhone and restoration of the saved user visibility. Inspector scenario retains all geometry/hittability checks, expects temporary sidebar collapse and additionally checks calculator interactivity/value preservation through close/reopen and a second sidebar restoration. Full iPad class + targeted iPhone inspector/transitions + macOS units queued under /tmp/task-60-ipad-regression-checks.out.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
