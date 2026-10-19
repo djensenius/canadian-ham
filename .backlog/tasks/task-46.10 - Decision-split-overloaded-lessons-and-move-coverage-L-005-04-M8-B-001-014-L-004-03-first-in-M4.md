@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 18:35'
+updated_date: '2026-10-19 18:38'
 labels:
   - content
 dependencies: []
@@ -44,4 +44,6 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 Owner decision 2026-10-12: YES. Split L-005-04 (AC and dB vs reactance and resonance), split M8 (receiver-side vs transmitter-side), move B-001-014 to L-001-05, teach L-004-03 first in M4. Lesson IDs may change; migrate saved progress and quiz references. Start after the 38.x figure branches merge.
 
 Owner decision 2026-10-12: yes, do it, including migrating saved lesson progress for moved or split lessons.
+
+Resumed finalization: committed test-local archived-array decoder helper (8d31d867; assertions unchanged) and exactly two sorted version-validation localizations (b67bfb39). Python verified origin/main catalogue entries and order unchanged and exact OrderedDict round-trip formatting. Final macOS full units, eight affected iPhone Learn/figure tests, localization no-rewrite gate, and all requested web/content checks queued via nohup in /tmp/task-46.10-{apple3,web-content3}.sh. The initial foreground localization attempt timed out while waiting for the shared lock, with catalogue hash unchanged; queued retry uses nohup.
 <!-- SECTION:NOTES:END -->
