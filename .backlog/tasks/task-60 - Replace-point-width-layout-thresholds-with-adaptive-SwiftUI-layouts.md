@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-18 23:49'
-updated_date: '2026-10-19 17:53'
+updated_date: '2026-10-19 20:53'
 labels:
   - apple
   - layout
@@ -33,6 +33,8 @@ Owner decision 2026-10-18: use modern SwiftUI adaptive layouts instead of hard-c
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Replace the Duo unfolded policy with size-class-driven decisions: remove window-size thresholds/hysteresis, root geometry measurement, custom environment plumbing, and DEBUG window-size launch hooks; keep the existing forced-regular iPhone landscape sheet behaviour by preserving compact navigation on compact-vertical phones.\n2. Update RootView sidebar collapse to rely on NavigationSplitView column visibility/style plus size class/exam-tool presentation instead of estimated column widths, preserving the iPad narrow regular-width collapse-and-restore tests.\n3. Refactor CalculatorToolView/CalculatorToolLayout so ViewThatFits selects calculator-with-help, calculator-without-help, then scrollable content, while layout metrics keep 44 pt key targets and accessibility-size scrolling.\n4. Replace threshold/window-size unit and UI tests with size-class policy and DEBUG size-class-change coverage, keep state-preservation and hinge-peek coverage, and update TASK-54 notes for size-class-based real-Duo checks.\n5. Run targeted unit/UI tests and backlog finalization commands with per-test evidence before committing/pushing/opening the PR.
+
+Regression follow-up: reproduce 2–3 iPad exam-tool presentation failures; replace runtime split-style changes with stable native column visibility and restore the user sidebar state; run full iPad ExamTools, targeted iPhone inspector/transitions, and macOS units; record results and update PR #301.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
