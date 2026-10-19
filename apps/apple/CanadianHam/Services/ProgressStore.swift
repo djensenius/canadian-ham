@@ -2290,11 +2290,11 @@ final class ProgressStoreService: ObservableObject {
                 if attempt != row.attempt { changed = true }
             }
         }
-        defaults.set(true, forKey: Self.task4610LessonSplitMigrationMarkerKey)
         if changed {
             try context.save()
             objectWillChange.send()
         }
+        defaults.set(true, forKey: Self.task4610LessonSplitMigrationMarkerKey)
     }
 
     private func saveExamAttemptWithoutSave(_ attempt: StoredExamAttempt, deviceId: String? = nil) throws {
