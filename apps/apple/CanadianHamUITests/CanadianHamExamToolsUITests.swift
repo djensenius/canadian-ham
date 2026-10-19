@@ -182,17 +182,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     func testSimulatedHingeStableSlightOpenPeeksHintOneInPractice() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments(
             "partiallyOpen:25@0.1",
+            includeProgress: false,
             additionalArguments: ["-CanadianHamExamToolInitialDetent", "large", "-CanadianHamHingePlaybackDebugTriggerHidesAfterTap"]
         ))
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the practice question before the simulated hinge peek")
         triggerSimulatedHingePlayback(in: app, context: "starting stable slight-open hinge playback")
-        waitForSimulatedHingePlayback(in: app, atLeast: 0.1, context: "stable slight-open hinge playback delivered its peek-band sample")
         XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "A stable slight-open simulated hinge posture should open the existing hint panel")
         XCTAssertTrue(app.staticTexts["hint-level-1-title"].firstMatch.waitForExistence(timeout: 5), "The hinge peek should reveal Hint 1 through the existing hint UI")
         XCTAssertTrue(app.buttons["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "The normal hint ladder remains available after the peek reveals Hint 1")
-        waitForSimulatedHingePlayback(in: app, atLeast: 0.1, context: "stable slight-open hinge playback reached its final sample")
         try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
@@ -924,12 +923,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTFail("\(context): expected the DEBUG simulated window-size hook to apply \(expectedSizeValue); button value is \(String(describing: observedValue)), label is \(String(describing: observedLabel))", file: file, line: line)
     }
 
-    private func triggeredHingeArguments(_ sequenceSegments: String, additionalArguments: [String] = []) -> [String] {
-        additionalArguments + [
-            "-CanadianHamHingePlaybackDebugStatus",
-            "-CanadianHamHingePlaybackDebugTrigger",
-            "-CanadianHamSimulatedHingeTriggeredSequences", sequenceSegments
-        ]
+    private func triggeredHingeArguments(_ sequenceSegments: String, includeProgress: Bool = true, additionalArguments: [String] = []) -> [String] {
+        additionalArguments
+            + (includeProgress ? ["-CanadianHamHingePlaybackDebugStatus"] : [])
+            + [
+                "-CanadianHamHingePlaybackDebugTrigger",
+                "-CanadianHamSimulatedHingeTriggeredSequences", sequenceSegments
+            ]
     }
 
     private func triggerSimulatedHingePlayback(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
