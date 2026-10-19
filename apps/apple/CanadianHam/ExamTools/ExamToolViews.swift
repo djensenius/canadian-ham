@@ -47,8 +47,6 @@ struct ExamToolPresentationModifier: ViewModifier {
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Environment(\.canadianHamWindowSize) private var canadianHamWindowSize
-    @Environment(\.canadianHamUsesUnfoldedIPhoneLayout) private var canadianHamUsesUnfoldedIPhoneLayout
 #endif
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
@@ -155,12 +153,8 @@ struct ExamToolPresentationModifier: ViewModifier {
 
 #if os(iOS)
     private func horizontalUsesInspector() -> Bool {
-        if canadianHamUsesUnfoldedIPhoneLayout {
-            return true
-        }
-        return AdaptiveExamLayoutPolicy.usesInspectorPresentation(
+        AdaptiveExamLayoutPolicy.usesInspectorPresentation(
             idiom: PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom),
-            containerSize: canadianHamWindowSize ?? .zero,
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass
         )
@@ -299,9 +293,19 @@ struct ExamToolPresentationModifier: ViewModifier {
     private func toolBody(for tool: ExamTool, availableHeight: CGFloat, usesInspector: Bool) -> some View {
         switch tool {
         case .calculator:
+#if os(iOS)
+            let idiom = PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom)
+            let calculatorPrefersScrolling = !usesInspector || idiom == .phone
+            let calculatorShowsHelpWhenScrolling = (idiom == .phone && usesInspector) || (!usesInspector && selectedSheetDetent == .large)
+#else
+            let calculatorPrefersScrolling = !usesInspector
+            let calculatorShowsHelpWhenScrolling = false
+#endif
             CalculatorToolView(
                 viewModel: calculator,
-                calculatorFocused: $calculatorFocused
+                calculatorFocused: $calculatorFocused,
+                prefersScrolling: calculatorPrefersScrolling,
+                showsHelpWhenScrolling: calculatorShowsHelpWhenScrolling
             )
             .frame(height: availableHeight)
         case .hint:
@@ -618,7 +622,12 @@ private func referenceSheetSectionLabel(_ section: String, language: BankLanguag
 struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
     @Binding var calculatorFocused: Bool
+    let prefersScrolling: Bool
+    let showsHelpWhenScrolling: Bool
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+#if os(iOS)
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+#endif
     @FocusState private var hasKeyboardFocus: Bool
 
     private let rows: [[CalculatorKey]] = [
@@ -631,20 +640,21 @@ struct CalculatorToolView: View {
     ]
 
     var body: some View {
-        GeometryReader { proxy in
-            let layout = CalculatorToolLayout(availableHeight: proxy.size.height, dynamicTypeSize: dynamicTypeSize)
-            // Keys keep a fixed minimum height, so content that does not fit scrolls instead of
-            // compressing below 44 pt. Bounce only when the content actually overflows.
-            ScrollView {
-                calculatorContent(layout: layout)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        Group {
+            if shouldPreferScrollableCalculator {
+                calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling(showsHelpText: showsHelpWhenScrolling)))
+            } else {
+                ViewThatFits(in: .vertical) {
+                    calculatorFittingCandidate(at: 0)
+                    calculatorFittingCandidate(at: 1)
+                    calculatorFittingCandidate(at: 2)
+                    calculatorFittingCandidate(at: 3)
+                    calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling(showsHelpText: false)))
+                }
             }
-            .scrollBounceBehavior(.basedOnSize)
-            .accessibilityIdentifier("calculator-tool-scroll")
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .contentShape(Rectangle())
-        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("calculator-keyboard-focus-target")
         .focusable(true)
         .focused($hasKeyboardFocus)
@@ -667,6 +677,37 @@ struct CalculatorToolView: View {
         .onKeyPress { press in
             handleKeyPress(press)
         }
+    }
+
+    private var shouldPreferScrollableCalculator: Bool {
+        if prefersScrolling || dynamicTypeSize.isAccessibilitySize { return true }
+#if os(iOS)
+        return verticalSizeClass == .compact
+#else
+        return false
+#endif
+    }
+
+    private func calculatorFittingCandidate(at index: Int) -> some View {
+        let contentMode = CalculatorToolLayout.fittingCandidateContentModes[index]
+        return calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: contentMode))
+    }
+
+    private func calculatorFittingContent(layout: CalculatorToolLayout) -> some View {
+        calculatorContent(layout: layout)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .accessibilityElement(children: .contain)
+    }
+
+    private func calculatorScrollContent(layout: CalculatorToolLayout) -> some View {
+        ScrollView {
+            calculatorContent(layout: layout)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("calculator-tool-scroll")
     }
 
     private func calculatorContent(layout: CalculatorToolLayout) -> some View {
