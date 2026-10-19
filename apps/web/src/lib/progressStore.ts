@@ -1131,12 +1131,12 @@ function validateLessonProgressRecord(value: unknown, index: number): string[] {
 }
 
 // Version-1 membership before TASK-46.10, from content/quizzes at 350a3b53658c64f12e89c0b48d6b97c7c3040e88.
-const legacyLessonQuizMembership: Readonly<Record<string, { readonly questionPrefixes: readonly string[]; readonly conceptCheckIds: readonly string[] }>> = {
-  "QZ-L-005-04-A": { questionPrefixes: ["B-005-007-", "B-005-008-", "B-005-009-", "B-005-010-"], conceptCheckIds: ["QZ-L-005-04-A-C1", "QZ-L-005-04-A-C2", "QZ-L-005-04-A-C3"] },
-  "QZ-L-005-05-A": { questionPrefixes: ["B-005-011-", "B-005-012-", "B-005-013-"], conceptCheckIds: ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"] },
-  "QZ-L-008-01-A": { questionPrefixes: ["B-008-001-", "B-008-002-", "B-008-003-"], conceptCheckIds: ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"] },
-  "QZ-L-008-02-A": { questionPrefixes: ["B-008-004-", "B-008-005-"], conceptCheckIds: ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"] },
-  "QZ-L-001-03-A": { questionPrefixes: ["B-001-010-", "B-001-011-", "B-001-012-", "B-001-013-", "B-001-014-"], conceptCheckIds: [] },
+const legacyLessonQuizMembership: Readonly<Record<string, { readonly officialQuestionIds: readonly string[]; readonly conceptCheckIds: readonly string[] }>> = {
+  "QZ-L-005-04-A": { officialQuestionIds: ["B-005-007-001", "B-005-007-005", "B-005-007-009", "B-005-008-003", "B-005-008-004", "B-005-008-005", "B-005-008-009", "B-005-008-011", "B-005-009-003", "B-005-009-011", "B-005-010-001", "B-005-010-009"], conceptCheckIds: ["QZ-L-005-04-A-C1", "QZ-L-005-04-A-C2", "QZ-L-005-04-A-C3"] },
+  "QZ-L-005-05-A": { officialQuestionIds: ["B-005-011-001", "B-005-011-002", "B-005-011-004", "B-005-011-008", "B-005-012-001", "B-005-012-006", "B-005-012-008", "B-005-012-011", "B-005-013-001", "B-005-013-005", "B-005-013-006", "B-005-013-007", "B-005-013-010"], conceptCheckIds: ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"] },
+  "QZ-L-008-01-A": { officialQuestionIds: ["B-008-001-001", "B-008-001-004", "B-008-001-006", "B-008-001-011", "B-008-002-001", "B-008-002-005", "B-008-002-011", "B-008-003-005"], conceptCheckIds: ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"] },
+  "QZ-L-008-02-A": { officialQuestionIds: ["B-008-004-002", "B-008-004-005", "B-008-004-006", "B-008-004-008", "B-008-004-010", "B-008-005-002", "B-008-005-007", "B-008-005-009"], conceptCheckIds: ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"] },
+  "QZ-L-001-03-A": { officialQuestionIds: ["B-001-010-001", "B-001-010-002", "B-001-010-003", "B-001-010-004", "B-001-010-005", "B-001-010-006", "B-001-010-007", "B-001-010-008", "B-001-010-009", "B-001-010-010", "B-001-011-001", "B-001-011-002", "B-001-011-003", "B-001-011-004", "B-001-011-005", "B-001-011-006", "B-001-011-007", "B-001-011-008", "B-001-011-009", "B-001-011-010", "B-001-012-001", "B-001-012-002", "B-001-012-003", "B-001-012-004", "B-001-013-001", "B-001-013-002", "B-001-013-003", "B-001-013-004", "B-001-013-005", "B-001-013-006", "B-001-013-007", "B-001-013-008", "B-001-013-009", "B-001-013-010", "B-001-013-011", "B-001-014-001", "B-001-014-002", "B-001-014-003", "B-001-014-004", "B-001-014-005", "B-001-014-006", "B-001-014-007", "B-001-014-008", "B-001-014-009", "B-001-014-010", "B-001-014-011"], conceptCheckIds: [] },
 };
 
 function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData, legacyLessonIds = false): string[] {
@@ -1183,7 +1183,7 @@ function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData
     errors.push(`${prefix}.officialQuestionIds must contain known question IDs.`);
   } else if (quiz !== undefined && !value.officialQuestionIds.every((id) => legacyMembership === undefined
     ? quiz.officialQuestionIds.includes(id)
-    : legacyMembership.questionPrefixes.some((prefix) => id.startsWith(prefix)))) {
+    : legacyMembership.officialQuestionIds.includes(id))) {
     errors.push(`${prefix}.officialQuestionIds must belong to the lesson quiz.`);
   }
   if (!isKnownQuestionIdArray(value.incorrectOfficialQuestionIds, bank)) {

@@ -383,15 +383,16 @@ describe("ProgressStore", () => {
     await createStore("historical-quiz-membership").importData(historicalExport);
 
     const wrongSourceAttempt = { ...legacyAttempt, quizId: "QZ-L-005-05-A", lessonId: "L-005-05", incorrectConceptCheckIds: [] };
-    const invalidExports = [
-      validExport({ lessonIdVersion: 1, lessonQuizAttempts: [wrongSourceAttempt] }),
+    const neverAskedAttempt = { ...legacyAttempt, officialQuestionIds: ["B-005-009-001"], incorrectOfficialQuestionIds: ["B-005-009-001"], incorrectConceptCheckIds: [] };
+    const invalidExports = [wrongSourceAttempt, neverAskedAttempt].flatMap((invalidAttempt) => [
+      validExport({ lessonIdVersion: 1, lessonQuizAttempts: [invalidAttempt] }),
       validExport({
         syncDeviceRows: {
           questionProgress: [], examAttempts: [], lessonProgress: [], morseCourseProgress: [],
-          lessonQuizAttempts: [{ deviceId: "legacy-phone", attempt: wrongSourceAttempt }],
+          lessonQuizAttempts: [{ deviceId: "legacy-phone", attempt: invalidAttempt }],
         },
       }),
-    ];
+    ]);
     for (const invalidExport of invalidExports) {
       const invalid = validateProgressImport(invalidExport);
       assert.equal(invalid.ok, false);

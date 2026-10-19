@@ -518,21 +518,28 @@ final class ProgressStoreTests: XCTestCase {
             officialQuestionIds: legacyAttempt.officialQuestionIds,
             incorrectOfficialQuestionIds: legacyAttempt.incorrectOfficialQuestionIds, incorrectConceptCheckIds: []
         )
-        for usesSyncRow in [false, true] {
-            let invalidExport = ProgressExportV1(
-                schema: "canadian-ham.progress-export", version: 1, lessonIdVersion: usesSyncRow ? 2 : 1,
-                exportedAt: historicalExport.exportedAt, bankId: bank.manifest.bankId,
-                questionProgress: [], examAttempts: [], lessonProgress: [],
-                lessonQuizAttempts: try archivedArray(usesSyncRow ? [] : [wrongSourceAttempt]),
-                syncDeviceRows: usesSyncRow ? ProgressSyncDeviceRows(
+        let neverAskedAttempt = LessonQuizAttempt(
+            id: "never-asked", quizId: legacyAttempt.quizId, lessonId: legacyAttempt.lessonId,
+            submittedAt: legacyAttempt.submittedAt, correct: 0, total: 1, percent: 0,
+            officialQuestionIds: ["B-005-009-001"], incorrectOfficialQuestionIds: ["B-005-009-001"], incorrectConceptCheckIds: []
+        )
+        for invalidAttempt in [wrongSourceAttempt, neverAskedAttempt] {
+            for usesSyncRow in [false, true] {
+                let invalidExport = ProgressExportV1(
+                    schema: "canadian-ham.progress-export", version: 1, lessonIdVersion: usesSyncRow ? 2 : 1,
+                    exportedAt: historicalExport.exportedAt, bankId: bank.manifest.bankId,
                     questionProgress: [], examAttempts: [], lessonProgress: [],
-                    lessonQuizAttempts: [DeviceLessonQuizAttemptRecord(deviceId: "legacy-phone", attempt: wrongSourceAttempt)],
-                    morseCourseProgress: []
-                ) : nil,
-                preferences: historicalExport.preferences
-            )
-            XCTAssertTrue(store.validate(invalidExport, bank: bank).contains { $0.contains("officialQuestionIds must belong") })
-            XCTAssertThrowsError(try store.importData(invalidExport, bank: bank))
+                    lessonQuizAttempts: try archivedArray(usesSyncRow ? [] : [invalidAttempt]),
+                    syncDeviceRows: usesSyncRow ? ProgressSyncDeviceRows(
+                        questionProgress: [], examAttempts: [], lessonProgress: [],
+                        lessonQuizAttempts: [DeviceLessonQuizAttemptRecord(deviceId: "legacy-phone", attempt: invalidAttempt)],
+                        morseCourseProgress: []
+                    ) : nil,
+                    preferences: historicalExport.preferences
+                )
+                XCTAssertTrue(store.validate(invalidExport, bank: bank).contains { $0.contains("officialQuestionIds must belong") })
+                XCTAssertThrowsError(try store.importData(invalidExport, bank: bank))
+            }
         }
     }
 
