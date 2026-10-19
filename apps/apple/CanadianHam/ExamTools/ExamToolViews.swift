@@ -643,7 +643,6 @@ struct CalculatorToolView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .contentShape(Rectangle())
-        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("calculator-keyboard-focus-target")
         .focusable(true)
         .focused($hasKeyboardFocus)
