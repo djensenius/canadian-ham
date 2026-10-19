@@ -4,9 +4,11 @@ title: Realign lesson figures after the TASK-46.10 coverage split
 status: To Do
 assignee: []
 created_date: '2026-10-19 23:09'
+updated_date: '2026-10-19 23:37'
 labels:
   - content
-dependencies: []
+dependencies:
+  - TASK-46.10
 parent_task_id: TASK-46
 ordinal: 138000
 ---
