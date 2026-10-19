@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, configure, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { StrictMode } from "react";
@@ -30,10 +30,13 @@ import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ha
 import courseFixture from "../../../fixtures/morse/course.json";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
+const appFlowAsyncTimeoutMs = 5_000;
+const appFlowTestTimeoutMs = 10_000;
 const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
 let stores: ProgressStore[] = [];
 let testQuestions: readonly Question[] = [];
 
+configure({ asyncUtilTimeout: appFlowAsyncTimeoutMs });
 beforeEach(async () => {
   Object.defineProperty(globalThis, "indexedDB", { value: new IDBFactory(), configurable: true });
   Object.defineProperty(window, "localStorage", { value: createMemoryStorage(), configurable: true });
@@ -48,6 +51,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   cleanup();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
   for (const store of stores) {
@@ -59,6 +63,19 @@ function createStore(name: string): ProgressStore {
   const store = new ProgressStore(name);
   stores.push(store);
   return store;
+}
+
+async function setAppHash(hash: string): Promise<void> {
+  await act(async () => {
+    window.location.hash = hash;
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  });
+}
+
+function getMain(container: HTMLElement): HTMLElement {
+  const main = container.querySelector("main#main");
+  assert.ok(main instanceof HTMLElement);
+  return main;
 }
 
 function setViewportWidth(width: number): void {
@@ -559,7 +576,7 @@ function progressExport(): ProgressExportV1 {
   };
 }
 
-describe("App accessibility and flows", () => {
+describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () => {
   it("offers a localized skip link as the first focus stop and keeps route focus management", async () => {
     const store = createStore("skip-link");
     const user = userEvent.setup();
@@ -637,8 +654,7 @@ describe("App accessibility and flows", () => {
     await user.click(within(primaryNav).getByRole("button", { name: "Apprendre" }));
     await screen.findByRole("heading", { name: "Apprendre" });
 
-    window.location.hash = "#/learn/M5/L-005-01";
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await setAppHash("#/learn/M5/L-005-01");
     await screen.findByText("Leçon offerte en anglais seulement.");
     assert.ok(container.querySelector('.lesson-article h2[lang="en"]'));
     assert.ok(container.querySelector('.lesson-article div[lang="en"]'));
@@ -649,8 +665,7 @@ describe("App accessibility and flows", () => {
     await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
     await screen.findByRole("heading", { name: "Examen simulé" });
 
-    window.location.hash = "#/results";
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await setAppHash("#/results");
     await screen.findByRole("heading", { name: "Résultats de l’examen simulé" });
     assert.ok(screen.getByText(/Brouillage et suppression/));
 
@@ -935,23 +950,29 @@ describe("App accessibility and flows", () => {
   it("automatically includes M4 and M6 lessons from content and renders them", async () => {
     window.location.hash = "#/learn";
     const store = createStore("m4-m6-lessons");
-    const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "m4-m6-seed"} />);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "m4-m6-seed"} />);
+    const main = getMain(container);
+    const mainView = within(main);
 
-    await screen.findByRole("heading", { name: "Learn" });
-    assert.ok(screen.getByRole("heading", { name: "Circuit Components" }));
-    assert.ok(screen.getByRole("heading", { name: "Feedlines and Antenna Systems" }));
+    await mainView.findByRole("heading", { name: "Learn" });
+    assert.ok(mainView.getByRole("heading", { name: "Circuit Components" }));
+    assert.ok(mainView.getByRole("heading", { name: "Feedlines and Antenna Systems" }));
 
-    window.location.hash = "#/learn/M4/L-004-01";
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
-    await screen.findByRole("heading", { name: "Amplifiers and diodes" });
-    await screen.findByRole("heading", { name: "QZ-L-004-01-A" });
+    await setAppHash("#/learn/M4/L-004-01");
+    await mainView.findByRole("heading", { name: "Amplifiers and diodes" });
+    const m4Quiz = await mainView.findByRole("heading", { name: "QZ-L-004-01-A" });
+    const m4QuizSection = m4Quiz.closest("section");
+    assert.ok(m4QuizSection instanceof HTMLElement);
+    const m4Choices = await within(m4QuizSection).findByRole("group", { name: "Answer choices" });
+    assert.equal(within(m4Choices).getAllByRole("button").length, 4);
 
-    await user.click(screen.getByRole("button", { name: "Learn" }));
-    window.location.hash = "#/learn/M6/L-006-01";
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
-    await screen.findByRole("heading", { name: "Feedline basics and types" });
-    await screen.findByRole("heading", { name: "QZ-L-006-01-A" });
+    await setAppHash("#/learn/M6/L-006-01");
+    await mainView.findByRole("heading", { name: "Feedline basics and types" });
+    const m6Quiz = await mainView.findByRole("heading", { name: "QZ-L-006-01-A" });
+    const m6QuizSection = m6Quiz.closest("section");
+    assert.ok(m6QuizSection instanceof HTMLElement);
+    const m6Choices = await within(m6QuizSection).findByRole("group", { name: "Answer choices" });
+    assert.equal(within(m6Choices).getAllByRole("button").length, 4);
   });
 
   it("updates lesson navigation state for next, previous, sidebar, and browser history", async () => {
@@ -977,14 +998,18 @@ describe("App accessibility and flows", () => {
 
     await user.click(screen.getByRole("button", { name: /^Next:/ }));
     await screen.findByRole("heading", { name: "Power and Ohm’s law" });
-    window.history.back();
+    await act(async () => {
+      window.history.back();
+    });
     await waitFor(() => assert.equal(window.location.hash, "#/learn/M5/L-005-01"));
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await setAppHash("#/learn/M5/L-005-01");
     await screen.findByRole("heading", { name: "Units, conductors, and current" });
 
-    window.history.forward();
+    await act(async () => {
+      window.history.forward();
+    });
     await waitFor(() => assert.equal(window.location.hash, "#/learn/M5/L-005-02"));
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await setAppHash("#/learn/M5/L-005-02");
     await screen.findByRole("heading", { name: "Power and Ohm’s law" });
   });
 

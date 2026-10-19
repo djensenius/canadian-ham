@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 
 import { t, type InterfaceLanguage } from "../lib/i18n";
 
@@ -33,8 +33,8 @@ type MarkdownBlock =
 export function MarkdownContent({ markdown, title, interfaceLanguage = "en", contentLanguage, tableLabel = t(interfaceLanguage, "markdownTableAria") }: MarkdownContentProps) {
   let tableIndex = 0;
   let headingIndex = 0;
-  const blocks = parseMarkdownBlocks(markdown, title);
-  const headingAnchors = lessonHeadingAnchorEntries(blocks);
+  const blocks = useMemo(() => parseMarkdownBlocks(markdown, title), [markdown, title]);
+  const headingAnchors = useMemo(() => lessonHeadingAnchorEntries(blocks), [blocks]);
   return <>{blocks.map((block, index) => {
     if (block.type === "table") {
       tableIndex += 1;
