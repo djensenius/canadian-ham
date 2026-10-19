@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 20:41'
+updated_date: '2026-10-19 20:56'
 labels:
   - content
 dependencies: []
@@ -52,4 +52,6 @@ Coordinator-approved parity fix: web split-quiz migration now matches Apple by s
 Full macOS run: 180 tests executed; 179 passed and existing testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates failed nine assertions because migration merged/sorted invalid raw rows before validation. Coordinator approved fixing both import paths: raw rows now validate before any migration, including exact historical quiz membership from source commit 350a3b53658c64f12e89c0b48d6b97c7c3040e88; migrated rows then validate against current membership. Imports reject invalid data before writing. Existing validation assertions are unchanged and now also assert import rejection. New Apple/web tests cover invalid scores and historical top-level/sync quiz membership, including removed legacy concept C3. Corrected only the legacy L-005-05 mixed-row fixture from B-005-009-003 to historically correct B-005-012-001; v2 fixture and all migration assertions preserved. Historical membership tables were independently checked against source via Python; web ProgressStore 31 tests pass. macOS ProgressStore class rerun queued via nohup; initial typecheck caught missing test DB names, fixed, and retry passes.
 
 macOS fix validation passed via xbuild: entire ProgressStoreTests class, 93 tests / zero failures, including unchanged testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates and the two new raw-validation regressions. Initial full run covered the other 89 unit tests successfully (180 total before adding two tests); combined final evidence covers 182 distinct passing tests. Full-run/fix-rerun per-test table prepared at /tmp/task-46.10-macos-per-test.md for the PR and task notes. Latest pnpm test passes 217 web + 21 Morse Vitest tests; typecheck, build and URL/CSP audit pass. iOS and localization checks remain queued.
+
+Tightened historical validation tables from subsection prefixes to the exact sampled officialQuestionIds: the old quizzes selected questions, not whole subsections. Both tables now match all source official-question and concept IDs exactly (Python set comparison against commit 350a3b53658c64f12e89c0b48d6b97c7c3040e88). Verified every old official ID occurs in a current destination. Strengthened the historical-membership regression on Apple/web to reject same-subsection B-005-009-001, which was never in the old quiz, for both top-level and sync rows. Web ProgressStore 31 tests pass; latest targeted Apple historical-membership method is queued via nohup. No assertions removed.
 <!-- SECTION:NOTES:END -->
