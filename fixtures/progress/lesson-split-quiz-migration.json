@@ -74,6 +74,20 @@
           "QZ-L-005-05-A-C2"
         ]
       }
+    ],
+    "conceptDestinations": [
+      {
+        "oldId": "QZ-L-005-04-A-C1",
+        "newId": "QZ-L-005-04-A-C1"
+      },
+      {
+        "oldId": "QZ-L-005-04-A-C2",
+        "newId": "QZ-L-005-05-A-C1"
+      },
+      {
+        "oldId": "QZ-L-005-04-A-C3",
+        "newId": "QZ-L-005-05-A-C2"
+      }
     ]
   },
   {
@@ -153,6 +167,20 @@
           "QZ-L-005-06-A-C2"
         ]
       }
+    ],
+    "conceptDestinations": [
+      {
+        "oldId": "QZ-L-005-05-A-C1",
+        "newId": "QZ-L-005-06-A-C1"
+      },
+      {
+        "oldId": "QZ-L-005-05-A-C2",
+        "newId": "QZ-L-005-05-A-C3"
+      },
+      {
+        "oldId": "QZ-L-005-05-A-C3",
+        "newId": "QZ-L-005-06-A-C2"
+      }
     ]
   },
   {
@@ -221,6 +249,20 @@
         "incorrectOfficialQuestionIds": [],
         "incorrectConceptCheckIds": []
       }
+    ],
+    "conceptDestinations": [
+      {
+        "oldId": "QZ-L-008-01-A-C1",
+        "newId": "QZ-L-008-01-A-C1"
+      },
+      {
+        "oldId": "QZ-L-008-01-A-C2",
+        "newId": "QZ-L-008-01-A-C2"
+      },
+      {
+        "oldId": "QZ-L-008-01-A-C3",
+        "newId": "QZ-L-008-01-A-C3"
+      }
     ]
   },
   {
@@ -286,6 +328,20 @@
         ],
         "incorrectOfficialQuestionIds": [],
         "incorrectConceptCheckIds": []
+      }
+    ],
+    "conceptDestinations": [
+      {
+        "oldId": "QZ-L-008-02-A-C1",
+        "newId": "QZ-L-008-02-A-C1"
+      },
+      {
+        "oldId": "QZ-L-008-02-A-C2",
+        "newId": null
+      },
+      {
+        "oldId": "QZ-L-008-02-A-C3",
+        "newId": null
       }
     ]
   }

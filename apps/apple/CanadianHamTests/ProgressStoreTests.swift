@@ -470,9 +470,14 @@ final class ProgressStoreTests: XCTestCase {
 
     func testTask4610SharedConceptMappingAndConceptInclusiveScores() throws {
         struct Case: Decodable {
+            struct ConceptDestination: Decodable {
+                let oldId: String
+                let newId: String?
+            }
             let name: String
             let attempt: LessonQuizAttempt
             let expected: [LessonQuizAttempt]
+            let conceptDestinations: [ConceptDestination]
         }
         let fixtureURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent().deletingLastPathComponent()
@@ -499,6 +504,29 @@ final class ProgressStoreTests: XCTestCase {
             XCTAssertEqual(try store.lessonQuizAttempts(), testCase.expected, testCase.name)
             let exported = try store.exportData(bank: bank, exportedAt: imported.exportedAt)
             XCTAssertEqual(exported.syncDeviceRows?.lessonQuizAttempts.map(\.attempt), testCase.expected, testCase.name)
+            for mapping in testCase.conceptDestinations {
+                let old = testCase.attempt
+                let attempt = LessonQuizAttempt(
+                    id: old.id, quizId: old.quizId, lessonId: old.lessonId, submittedAt: old.submittedAt,
+                    correct: old.total - 1, total: old.total, percent: Double(old.total - 1) / Double(old.total) * 100,
+                    officialQuestionIds: old.officialQuestionIds, incorrectOfficialQuestionIds: [], incorrectConceptCheckIds: [mapping.oldId]
+                )
+                let individual = ProgressExportV1(
+                    schema: imported.schema, version: 1, lessonIdVersion: 1, exportedAt: imported.exportedAt, bankId: imported.bankId,
+                    questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: try archivedArray([attempt]), preferences: imported.preferences
+                )
+                try store.importData(individual, bank: bank)
+                let expected = testCase.expected.map { destination in
+                    let wrong = mapping.newId.map { $0.hasPrefix("\(destination.quizId)-C") ? [$0] : [] } ?? []
+                    let correct = destination.total - wrong.count
+                    return LessonQuizAttempt(
+                        id: destination.id, quizId: destination.quizId, lessonId: destination.lessonId, submittedAt: destination.submittedAt,
+                        correct: correct, total: destination.total, percent: Double(correct) / Double(destination.total) * 100,
+                        officialQuestionIds: destination.officialQuestionIds, incorrectOfficialQuestionIds: [], incorrectConceptCheckIds: wrong
+                    )
+                }
+                XCTAssertEqual(try store.lessonQuizAttempts(), expected, "Individual wrong concept \(mapping.oldId)")
+            }
         }
     }
 

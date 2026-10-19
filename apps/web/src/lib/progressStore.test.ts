@@ -331,11 +331,21 @@ describe("ProgressStore", () => {
   });
 
   it("remaps every historical wrong concept by text and recomputes concept-inclusive scores", () => {
-    const cases = JSON.parse(readFileSync(path.resolve(import.meta.dirname, "../../../../fixtures/progress/lesson-split-quiz-migration.json"), "utf8")) as { name: string; attempt: LessonQuizAttempt; expected: LessonQuizAttempt[] }[];
+    const cases = JSON.parse(readFileSync(path.resolve(import.meta.dirname, "../../../../fixtures/progress/lesson-split-quiz-migration.json"), "utf8")) as { name: string; attempt: LessonQuizAttempt; expected: LessonQuizAttempt[]; conceptDestinations: { oldId: string; newId: string | null }[] }[];
     for (const testCase of cases) {
       const result = validateProgressImport(validExport({ lessonIdVersion: 1, lessonProgress: [], lessonQuizAttempts: [testCase.attempt] }));
       assert.equal(result.ok, true, `${testCase.name}: ${result.errors}`);
       assert.deepEqual(result.data?.lessonQuizAttempts, testCase.expected, testCase.name);
+      for (const { oldId, newId } of testCase.conceptDestinations) {
+        const attempt = { ...testCase.attempt, correct: testCase.attempt.total - 1, percent: ((testCase.attempt.total - 1) / testCase.attempt.total) * 100, incorrectConceptCheckIds: [oldId] };
+        const migrated = validateProgressImport(validExport({ lessonIdVersion: 1, lessonProgress: [], lessonQuizAttempts: [attempt] }));
+        assert.equal(migrated.ok, true, migrated.errors.join("\n"));
+        assert.deepEqual(migrated.data?.lessonQuizAttempts, testCase.expected.map((destination) => {
+          const wrong = newId?.startsWith(`${destination.quizId}-C`) ? [newId] : [];
+          const correct = destination.total - wrong.length;
+          return { ...destination, incorrectConceptCheckIds: wrong, correct, percent: (correct / destination.total) * 100 };
+        }), `individual wrong concept ${oldId} -> ${newId ?? "dropped"}`);
+      }
     }
   });
 
