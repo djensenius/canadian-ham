@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 23:15'
+updated_date: '2026-10-19 23:21'
 labels:
   - content
 dependencies: []
@@ -257,6 +257,8 @@ Latest full macOS xbuild per-test evidence (186 passed, zero failures; iOS/tvOS/
 | `CanadianHamTests.ReadinessAndScoringTests.testExamScoringBoundaries` | PASSED | 0.001 seconds |
 | `CanadianHamTests.ReadinessAndScoringTests.testReadinessStates` | PASSED | 0.001 seconds |
 | `CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate` | PASSED | 0.035 seconds |
+
+Strengthened the shared concept fixture/tests in 87a2ead9: each of the 12 old concepts is now tested individually as the sole wrong answer, in addition to all-wrong cases, so a permutation between concepts/destinations cannot hide behind the same aggregate wrong-ID sets. Web ProgressStore 36/36 and typecheck passed; targeted macOS shared-concept method passed 1/1, 0 failures, 0.185 seconds (xbuild -only-testing:CanadianHamTests/ProgressStoreTests/testTask4610SharedConceptMappingAndConceptInclusiveScores). Full macOS 186/186 remains valid for unchanged production Apple code. PR body updated with this additional per-test result. All current CI checks green; localization no-rewrite gate still waiting on shared lock.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
