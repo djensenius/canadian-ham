@@ -1,6 +1,7 @@
 {
   "schema": "canadian-ham.progress-export",
   "version": 1,
+  "lessonIdVersion": 2,
   "exportedAt": "2026-01-02T03:04:05.000Z",
   "bankId": "advanced-2025-02-04",
   "questionProgress": [
@@ -11,8 +12,13 @@
       "correctAttempts": 1,
       "lastAttemptedAt": "2026-01-02T03:00:00.000Z",
       "lastResult": "correct",
-      "recentResults": [true],
-      "leitner": { "box": 1, "dueAt": "2026-01-03T03:00:00.000Z" },
+      "recentResults": [
+        true
+      ],
+      "leitner": {
+        "box": 1,
+        "dueAt": "2026-01-03T03:00:00.000Z"
+      },
       "notes": null
     }
   ],
@@ -24,14 +30,23 @@
       "seed": "advanced-fixture",
       "startedAt": "2026-01-02T03:00:00.000Z",
       "submittedAt": "2026-01-02T03:10:00.000Z",
-      "timer": { "enabled": false, "secondsAllowed": null, "secondsElapsed": 600 },
+      "timer": {
+        "enabled": false,
+        "secondsAllowed": null,
+        "secondsElapsed": 600
+      },
       "items": [
         {
           "position": 1,
           "questionId": "A-001-001-001",
           "subsectionId": "A-001-001",
           "categoryId": "A-001",
-          "choicePermutation": [0, 1, 2, 3],
+          "choicePermutation": [
+            0,
+            1,
+            2,
+            3
+          ],
           "selectedSourceIndex": 0,
           "isCorrect": true,
           "flagged": false
@@ -45,7 +60,12 @@
         "passed": true,
         "honours": false,
         "categoryBreakdown": [
-          { "categoryId": "A-001", "correct": 1, "total": 1, "percent": 100 }
+          {
+            "categoryId": "A-001",
+            "correct": 1,
+            "total": 1,
+            "percent": 100
+          }
         ],
         "weakSubsectionIds": []
       }
@@ -53,5 +73,10 @@
   ],
   "lessonProgress": [],
   "lessonQuizAttempts": [],
-  "preferences": { "practiceMode": "review-later", "examTimerEnabled": false, "theme": "system", "activeBankId": "advanced-2025-02-04" }
+  "preferences": {
+    "practiceMode": "review-later",
+    "examTimerEnabled": false,
+    "theme": "system",
+    "activeBankId": "advanced-2025-02-04"
+  }
 }

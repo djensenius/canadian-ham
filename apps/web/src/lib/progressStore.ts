@@ -88,6 +88,13 @@ export interface DeviceExamAttemptRecord {
 export interface DeviceLessonProgressRecord {
   readonly deviceId: string;
   readonly record: LessonProgressRecord;
+  readonly lessonIdVersion?: LessonIdVersion;
+}
+
+export interface DeviceLessonQuizAttemptRecord {
+  readonly deviceId: string;
+  readonly attempt: LessonQuizAttempt;
+  readonly lessonIdVersion?: LessonIdVersion;
 }
 
 export interface DeviceMorseCourseProgressRecord {
@@ -99,13 +106,16 @@ export interface ProgressSyncDeviceRows {
   readonly questionProgress: readonly DeviceQuestionProgressRecord[];
   readonly examAttempts: readonly DeviceExamAttemptRecord[];
   readonly lessonProgress: readonly DeviceLessonProgressRecord[];
-  readonly lessonQuizAttempts?: readonly unknown[];
+  readonly lessonQuizAttempts: readonly DeviceLessonQuizAttemptRecord[];
   readonly morseCourseProgress: readonly DeviceMorseCourseProgressRecord[];
 }
+
+type LessonIdVersion = 1 | 2;
 
 export interface ProgressExportV1 {
   readonly schema: "canadian-ham.progress-export";
   readonly version: 1;
+  readonly lessonIdVersion?: LessonIdVersion;
   readonly exportedAt: string;
   readonly bankId: string;
   readonly questionProgress: readonly QuestionProgressRecord[];
@@ -132,6 +142,8 @@ export const defaultPreferences: WebPreferences = {
   morse: defaultMorsePreferences,
 };
 
+const CURRENT_LESSON_ID_VERSION: LessonIdVersion = 2;
+const LEGACY_LESSON_ID_VERSION: LessonIdVersion = 1;
 const DB_VERSION = 6;
 const DEFAULT_DB_NAME = "canadian-ham-web-progress";
 const PREFERENCES_KEY = "preferences";
@@ -262,6 +274,7 @@ export class ProgressStore {
     return {
       schema: "canadian-ham.progress-export",
       version: 1,
+      lessonIdVersion: CURRENT_LESSON_ID_VERSION,
       exportedAt,
       bankId: bank.bankId,
       questionProgress,
@@ -275,6 +288,7 @@ export class ProgressStore {
   }
 
   async importData(data: ProgressExportV1): Promise<void> {
+    data = migrateProgressExportLessonIDs(data);
     const db = await this.open();
     const importBank = bankDataForId(data.bankId);
     const existingQuestionProgress = (await this.getQuestionProgress()).filter((record) => record.bankId !== importBank.bankId);
@@ -431,7 +445,8 @@ export function deduplicateDeviceExamAttemptsForSync(rows: readonly DeviceExamAt
 }
 
 export function deduplicateDeviceLessonProgressForSync(rows: readonly DeviceLessonProgressRecord[]): LessonProgressRecord[] {
-  return [...groupBy(rows, (row) => row.record.lessonId).values()]
+  const migratedRows = migrateDeviceLessonProgressRowsForLessonIDs(rows);
+  return [...groupBy(migratedRows, (row) => row.record.lessonId).values()]
     .map((group) => {
       const deviceRows = [...groupBy(group, (row) => row.deviceId).values()].map((deviceGroup) => [...deviceGroup].sort(deviceLessonProgressTieBreak).at(-1)!);
       const latest = [...deviceRows].sort(deviceLessonProgressTieBreak).at(-1)!;
@@ -497,6 +512,62 @@ export function migrateLessonQuizAttempts(attempts: readonly LessonQuizAttempt[]
     }
   }
   return [...migrated.values()].sort((a, b) => codePointCompare(a.submittedAt, b.submittedAt) || codePointCompare(a.id, b.id));
+}
+
+function migrateProgressExportLessonIDs(data: ProgressExportV1): ProgressExportV1 {
+  const topLevelVersion = data.lessonIdVersion ?? LEGACY_LESSON_ID_VERSION;
+  const migratesTopLevelRows = topLevelVersion === LEGACY_LESSON_ID_VERSION;
+  const lessonProgress = migratesTopLevelRows
+    ? migrateLessonProgressRecords(data.lessonProgress ?? [])
+    : [...(data.lessonProgress ?? [])];
+  const lessonQuizAttempts = migratesTopLevelRows
+    ? migrateLessonQuizAttempts(data.lessonQuizAttempts ?? [])
+    : [...(data.lessonQuizAttempts ?? [])];
+  return {
+    ...data,
+    lessonIdVersion: isSupportedLessonIdVersion(topLevelVersion) ? CURRENT_LESSON_ID_VERSION : data.lessonIdVersion,
+    lessonProgress,
+    lessonQuizAttempts,
+    ...(data.syncDeviceRows === undefined ? {} : { syncDeviceRows: migrateProgressSyncDeviceRowsForLessonIDs(data.syncDeviceRows) }),
+  };
+}
+
+function migrateProgressSyncDeviceRowsForLessonIDs(rows: ProgressSyncDeviceRows): ProgressSyncDeviceRows {
+  return {
+    ...rows,
+    lessonProgress: Array.isArray(rows.lessonProgress) ? migrateDeviceLessonProgressRowsForLessonIDs(rows.lessonProgress) : rows.lessonProgress,
+    lessonQuizAttempts: Array.isArray(rows.lessonQuizAttempts) ? migrateDeviceLessonQuizAttemptRowsForLessonIDs(rows.lessonQuizAttempts) : rows.lessonQuizAttempts,
+  };
+}
+
+function migrateDeviceLessonProgressRowsForLessonIDs(rows: readonly DeviceLessonProgressRecord[]): DeviceLessonProgressRecord[] {
+  return rows.flatMap((row) => {
+    if (!isRecord(row) || !isLessonProgressRecordLike(row.record)) return [row];
+    if (!isSupportedLessonIdVersion(row.lessonIdVersion)) return [row];
+    if (row.lessonIdVersion === CURRENT_LESSON_ID_VERSION) return [row];
+    return migrateLessonProgressRecords([row.record]).map((record) => ({
+      ...row,
+      record,
+      lessonIdVersion: CURRENT_LESSON_ID_VERSION,
+    }));
+  });
+}
+
+function migrateDeviceLessonQuizAttemptRowsForLessonIDs(rows: readonly DeviceLessonQuizAttemptRecord[]): DeviceLessonQuizAttemptRecord[] {
+  return rows.flatMap((row) => {
+    if (!isRecord(row) || !isLessonQuizAttemptLike(row.attempt)) return [row];
+    if (!isSupportedLessonIdVersion(row.lessonIdVersion)) return [row];
+    if (row.lessonIdVersion === CURRENT_LESSON_ID_VERSION) return [row];
+    return migrateLessonQuizAttempts([row.attempt]).map((attempt) => ({
+      ...row,
+      attempt,
+      lessonIdVersion: CURRENT_LESSON_ID_VERSION,
+    }));
+  });
+}
+
+function isSupportedLessonIdVersion(value: unknown): value is LessonIdVersion | undefined {
+  return value === undefined || value === LEGACY_LESSON_ID_VERSION || value === CURRENT_LESSON_ID_VERSION;
 }
 
 function filterSyncDeviceRowsForExport(rows: ProgressSyncDeviceRows | undefined, bank: BankData): ProgressSyncDeviceRows | undefined {
@@ -639,6 +710,9 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
   if (raw.version !== 1) {
     errors.push("Import file version must be 1.");
   }
+  if (raw.lessonIdVersion !== undefined && !isSupportedLessonIdVersion(raw.lessonIdVersion)) {
+    errors.push("Import lessonIdVersion must be 1 or 2 when present.");
+  }
   if (raw.bankId !== undefined && raw.bankId !== bank.bankId) {
     errors.push(`Import bankId must be ${bank.bankId}.`);
   }
@@ -665,6 +739,9 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
   if (!isPreferences(raw.preferences)) {
     errors.push("Import preferences are invalid.");
   }
+  if (isRecord(raw.syncDeviceRows)) {
+    errors.push(...validateSyncDeviceRowsLessonIdVersions(raw.syncDeviceRows));
+  }
 
   const questionProgress = Array.isArray(raw.questionProgress) ? raw.questionProgress : [];
   for (const [index, record] of questionProgress.entries()) {
@@ -684,7 +761,10 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
   }
 
   const rawLessonProgress = Array.isArray(raw.lessonProgress) ? raw.lessonProgress : [];
-  const lessonProgress = migrateLessonProgressRecords(rawLessonProgress.filter(isLessonProgressRecordLike) as LessonProgressRecord[]);
+  const migratesTopLevelLessonRows = (raw.lessonIdVersion ?? LEGACY_LESSON_ID_VERSION) === LEGACY_LESSON_ID_VERSION;
+  const lessonProgress = migratesTopLevelLessonRows
+    ? migrateLessonProgressRecords(rawLessonProgress.filter(isLessonProgressRecordLike) as LessonProgressRecord[])
+    : rawLessonProgress.filter(isLessonProgressRecordLike) as LessonProgressRecord[];
   const lessonProgressIds = new Set<string>();
   for (const [index, record] of lessonProgress.entries()) {
     errors.push(...validateLessonProgressRecord(record, index));
@@ -700,7 +780,9 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
   });
 
   const rawLessonQuizAttempts = Array.isArray(raw.lessonQuizAttempts) ? raw.lessonQuizAttempts : [];
-  const lessonQuizAttempts = migrateLessonQuizAttempts(rawLessonQuizAttempts.filter(isLessonQuizAttemptLike) as LessonQuizAttempt[]);
+  const lessonQuizAttempts = migratesTopLevelLessonRows
+    ? migrateLessonQuizAttempts(rawLessonQuizAttempts.filter(isLessonQuizAttemptLike) as LessonQuizAttempt[])
+    : rawLessonQuizAttempts.filter(isLessonQuizAttemptLike) as LessonQuizAttempt[];
   const lessonQuizAttemptIds = new Set<string>();
   for (const [index, attempt] of lessonQuizAttempts.entries()) {
     errors.push(...validateLessonQuizAttempt(attempt, index, bank));
@@ -725,6 +807,7 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
     data: {
       schema: "canadian-ham.progress-export",
       version: 1,
+      lessonIdVersion: CURRENT_LESSON_ID_VERSION,
       exportedAt: raw.exportedAt as string,
       bankId: bank.bankId,
       questionProgress: questionProgress.map((record) => normalizeQuestionProgressRecord(record, bank)) as QuestionProgressRecord[],
@@ -732,10 +815,27 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
       lessonProgress: lessonProgress as LessonProgressRecord[],
       lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
       morseCourseProgress: raw.morseCourseProgress as MorseCourseProgressExport | undefined,
-      ...(isRecord(raw.syncDeviceRows) ? { syncDeviceRows: normalizeProgressSyncDeviceRows(raw.syncDeviceRows as unknown as ProgressSyncDeviceRows) } : {}),
+      ...(isRecord(raw.syncDeviceRows) ? { syncDeviceRows: normalizeProgressSyncDeviceRows(migrateProgressSyncDeviceRowsForLessonIDs(raw.syncDeviceRows as unknown as ProgressSyncDeviceRows)) } : {}),
       preferences: normalizePreferences(raw.preferences),
     },
   };
+}
+
+function validateSyncDeviceRowsLessonIdVersions(value: Record<string, unknown>): string[] {
+  const errors: string[] = [];
+  const lessonProgress = Array.isArray(value.lessonProgress) ? value.lessonProgress : [];
+  for (const [index, row] of lessonProgress.entries()) {
+    if (isRecord(row) && row.lessonIdVersion !== undefined && !isSupportedLessonIdVersion(row.lessonIdVersion)) {
+      errors.push(`Import syncDeviceRows.lessonProgress[${index}].lessonIdVersion must be 1 or 2 when present.`);
+    }
+  }
+  const lessonQuizAttempts = Array.isArray(value.lessonQuizAttempts) ? value.lessonQuizAttempts : [];
+  for (const [index, row] of lessonQuizAttempts.entries()) {
+    if (isRecord(row) && row.lessonIdVersion !== undefined && !isSupportedLessonIdVersion(row.lessonIdVersion)) {
+      errors.push(`Import syncDeviceRows.lessonQuizAttempts[${index}].lessonIdVersion must be 1 or 2 when present.`);
+    }
+  }
+  return errors;
 }
 
 function validateMorseCourseProgress(value: unknown): string[] {

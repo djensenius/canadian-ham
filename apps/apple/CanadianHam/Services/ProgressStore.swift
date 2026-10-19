@@ -208,6 +208,7 @@ extension BankLanguage: Codable {}
 struct ProgressExportV1: Codable, Equatable, Sendable {
     let schema: String
     let version: Int
+    let lessonIdVersion: Int?
     let exportedAt: String
     let bankId: String
     let questionProgress: [QuestionProgressRecord]
@@ -221,6 +222,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
     init(
         schema: String,
         version: Int,
+        lessonIdVersion: Int? = nil,
         exportedAt: String,
         bankId: String,
         questionProgress: [QuestionProgressRecord],
@@ -233,6 +235,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
     ) {
         self.schema = schema
         self.version = version
+        self.lessonIdVersion = lessonIdVersion
         self.exportedAt = exportedAt
         self.bankId = bankId
         self.questionProgress = questionProgress
@@ -248,6 +251,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schema = try container.decode(String.self, forKey: .schema)
         version = try container.decode(Int.self, forKey: .version)
+        lessonIdVersion = try container.decodeIfPresent(Int.self, forKey: .lessonIdVersion)
         exportedAt = try container.decode(String.self, forKey: .exportedAt)
         bankId = try container.decodeIfPresent(String.self, forKey: .bankId) ?? basicBankId
         questionProgress = try container.decode([QuestionProgressRecord].self, forKey: .questionProgress)
@@ -1371,6 +1375,7 @@ final class ProgressStoreService: ObservableObject {
         return ProgressExportV1(
             schema: "canadian-ham.progress-export",
             version: 1,
+            lessonIdVersion: LessonIDContentVersion.current,
             exportedAt: exportedAt,
             bankId: bank.manifest.bankId,
             questionProgress: questionProgress,
@@ -1493,12 +1498,16 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private func migratedProgressExportForTask4610(_ data: ProgressExportV1) throws -> ProgressExportV1 {
-        let lessonProgress = migrateTask4610LessonProgress(try decodeArchivedArray(data.lessonProgress, as: LessonProgressRecord.self))
-        let lessonQuizAttempts = migrateTask4610LessonQuizAttempts(try decodeArchivedArray(data.lessonQuizAttempts, as: LessonQuizAttempt.self))
+        let migratesTopLevelRows = (data.lessonIdVersion ?? LessonIDContentVersion.legacy) == LessonIDContentVersion.legacy
+        let decodedLessonProgress = try decodeArchivedArray(data.lessonProgress, as: LessonProgressRecord.self)
+        let decodedLessonQuizAttempts = try decodeArchivedArray(data.lessonQuizAttempts, as: LessonQuizAttempt.self)
+        let lessonProgress = migratesTopLevelRows ? migrateTask4610LessonProgress(decodedLessonProgress) : decodedLessonProgress
+        let lessonQuizAttempts = migratesTopLevelRows ? migrateTask4610LessonQuizAttempts(decodedLessonQuizAttempts) : decodedLessonQuizAttempts
         let syncDeviceRows = data.syncDeviceRows.map(migrateTask4610SyncDeviceRows)
         return ProgressExportV1(
             schema: data.schema,
             version: data.version,
+            lessonIdVersion: LessonIDContentVersion.isSupported(data.lessonIdVersion) ? LessonIDContentVersion.current : data.lessonIdVersion,
             exportedAt: data.exportedAt,
             bankId: data.bankId,
             questionProgress: data.questionProgress,
@@ -1516,10 +1525,14 @@ final class ProgressStoreService: ObservableObject {
             questionProgress: rows.questionProgress,
             examAttempts: rows.examAttempts,
             lessonProgress: rows.lessonProgress.flatMap { row in
-                migrateTask4610LessonProgress([row.record]).map { DeviceLessonProgressRecord(deviceId: row.deviceId, record: $0) }
+                guard LessonIDContentVersion.isSupported(row.lessonIdVersion) else { return [row] }
+                guard row.lessonIdVersion != LessonIDContentVersion.current else { return [row] }
+                return migrateTask4610LessonProgress([row.record]).map { DeviceLessonProgressRecord(deviceId: row.deviceId, record: $0, lessonIdVersion: LessonIDContentVersion.current) }
             },
             lessonQuizAttempts: rows.lessonQuizAttempts.flatMap { row in
-                migrateTask4610LessonQuizAttempts([row.attempt]).map { DeviceLessonQuizAttemptRecord(deviceId: row.deviceId, attempt: $0) }
+                guard LessonIDContentVersion.isSupported(row.lessonIdVersion) else { return [row] }
+                guard row.lessonIdVersion != LessonIDContentVersion.current else { return [row] }
+                return migrateTask4610LessonQuizAttempts([row.attempt]).map { DeviceLessonQuizAttemptRecord(deviceId: row.deviceId, attempt: $0, lessonIdVersion: LessonIDContentVersion.current) }
             },
             morseCourseProgress: rows.morseCourseProgress
         )
@@ -1607,6 +1620,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func validate(_ data: ProgressExportV1, bank: QuestionBank) -> [String] {
+        let sourceLessonIdVersion = data.lessonIdVersion
         let data = (try? migratedProgressExportForTask4610(data)) ?? data
         var errors: [String] = []
         let knownQuestionIds = Set(bank.questions.map(\.id))
@@ -1615,6 +1629,7 @@ final class ProgressStoreService: ObservableObject {
 
         if data.schema != "canadian-ham.progress-export" { errors.append(String(localized: "Import file schema is not canadian-ham.progress-export.")) }
         if data.version != 1 { errors.append(String(localized: "Import file version must be 1.")) }
+        if !LessonIDContentVersion.isSupported(sourceLessonIdVersion) { errors.append(String(localized: "Import lessonIdVersion must be 1 or 2 when present.")) }
         if data.bankId != bank.manifest.bankId { errors.append(String(localized: "Import bankId must be \(bank.manifest.bankId).")) }
         appendTimestampError(&errors, value: data.exportedAt, field: String(localized: "Import exportedAt"))
 
@@ -1722,6 +1737,7 @@ final class ProgressStoreService: ObservableObject {
         for (index, row) in rows.lessonProgress.enumerated() {
             let prefix = "Import syncDeviceRows.lessonProgress[\(index)]"
             if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            if !LessonIDContentVersion.isSupported(row.lessonIdVersion) { errors.append(String(localized: "\(prefix).lessonIdVersion must be 1 or 2 when present.")) }
             if let archived = try? archivedArray([row.record]) {
                 if bank.courseBankID.hasLessons { validateLessonProgress(archived, knownLessonIds: bank.knownLessonIds, errors: &errors) }
             } else {
@@ -1731,6 +1747,7 @@ final class ProgressStoreService: ObservableObject {
         for (index, row) in rows.lessonQuizAttempts.enumerated() {
             let prefix = "Import syncDeviceRows.lessonQuizAttempts[\(index)]"
             if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            if !LessonIDContentVersion.isSupported(row.lessonIdVersion) { errors.append(String(localized: "\(prefix).lessonIdVersion must be 1 or 2 when present.")) }
             if let archived = try? archivedArray([row.attempt]) {
                 if bank.courseBankID.hasLessons { validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, errors: &errors) }
             } else {
@@ -2464,14 +2481,22 @@ final class ProgressStoreService: ObservableObject {
     private func deviceLessonProgressRows() throws -> [DeviceLessonProgressRecord] {
         let descriptor = FetchDescriptor<LessonProgressEntity>(sortBy: [SortDescriptor(\.lessonId), SortDescriptor(\.deviceId), SortDescriptor(\.readAt)])
         return try context.fetch(descriptor).map { entity in
-            DeviceLessonProgressRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, record: LessonProgressRecord(lessonId: entity.lessonId, readAt: entity.readAt, readCount: entity.readCount))
+            DeviceLessonProgressRecord(
+                deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId,
+                record: LessonProgressRecord(lessonId: entity.lessonId, readAt: entity.readAt, readCount: entity.readCount),
+                lessonIdVersion: LessonIDContentVersion.current
+            )
         }
     }
 
     private func deviceLessonQuizAttemptRows() throws -> [DeviceLessonQuizAttemptRecord] {
         let descriptor = FetchDescriptor<LessonQuizAttemptEntity>(sortBy: [SortDescriptor(\.submittedAt), SortDescriptor(\.deviceId), SortDescriptor(\.id)])
         return try context.fetch(descriptor).map { entity in
-            DeviceLessonQuizAttemptRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, attempt: try decoder.decode(LessonQuizAttempt.self, from: entity.payloadData))
+            DeviceLessonQuizAttemptRecord(
+                deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId,
+                attempt: try decoder.decode(LessonQuizAttempt.self, from: entity.payloadData),
+                lessonIdVersion: LessonIDContentVersion.current
+            )
         }
     }
 
