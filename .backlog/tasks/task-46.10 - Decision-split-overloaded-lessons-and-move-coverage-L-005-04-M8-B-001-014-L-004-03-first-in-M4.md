@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 23:09'
+updated_date: '2026-10-19 23:11'
 labels:
   - content
 dependencies: []
@@ -62,6 +62,8 @@ Coordinator-approved final safety fix: move the local Apple migration completion
 Coordinator final validation 2026-10-19 at the head after the save-ordering fix: macOS unit 182/0; pnpm check:apple-l10n passed with no rewrite; pnpm test passed; iPhone 17 Pro Learn + changed lesson-figure tests 6/0; content checks all passed (coverage 100/100, originality 0, explanations 984, quizzes 37, links, hints 984/984, figures 38, schemas 2034, import:check).
 
 PR #302 review fixes in progress. Verified each explicit concept mapping by comparing prompts against quizzes at 350a3b53; the two old M8 filter checks have no current equivalent and are dropped. Coordinator decision 2026-10-19: read destinations only when every contributing old lesson was read; use latest readAt/minimum readCount, separately per device. Approved partial-quiz rule uses the answered concept prefix plus explicit wrong IDs (never invent correct answers for those wrong IDs); coherent raw device aggregates drive migrated top-level read progress, while incoherent exports retain fallback. Documented in docs/architecture.md. Added shared concept/score fixture plus web and Apple launch/import regressions. Full macOS unit run is queued behind the xbuild lock. Figure mismatch follow-up created; leave teaching-guide x notation unchanged.
+
+Review fixes committed/pushed: 53205dd8 (explicit text-verified concept remapping, concept-inclusive partial scores, conservative all-source/per-device read credit, version-neutral sync deduplication, null rejection, atomic SwiftData marker, shared fixture and launch/import regressions), e3e41860 (L-006-01 prerequisite L-005-05 and three invalid version-3 schema fixtures). Full macOS xbuild units passed 186/186, including all 97 ProgressStoreTests and all four new review regressions; web ProgressStore 36/36 and typecheck pass. Schema checks pass 55 tests / 2034 targets. TASK-46.12 tracks the two figure/host-lesson mismatches; figures and x notation deliberately unchanged here. Full web/content and no-rewrite localization checks are running.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
