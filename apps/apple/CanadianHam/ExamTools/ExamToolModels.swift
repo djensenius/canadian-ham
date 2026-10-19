@@ -172,7 +172,10 @@ struct CalculatorToolLayout {
     var displayHeight: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayHeight : compactDisplayHeight }
     var displayHorizontalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayHorizontalPadding : compactDisplayHorizontalPadding }
     var displayVerticalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayVerticalPadding : compactDisplayVerticalPadding }
-    var keyHeight: CGFloat { usesAccessibilityMetrics ? accessibilityKeyHeight : minimumKeyHeight }
+    var keyHeight: CGFloat {
+        if usesAccessibilityMetrics { return accessibilityKeyHeight }
+        return contentMode == .scrolling ? scrollingKeyHeight : minimumKeyHeight
+    }
     var showsHelpText: Bool {
         guard !usesAccessibilityMetrics,
               case .fitting(let showsHelpText) = contentMode else { return false }
@@ -198,6 +201,7 @@ struct CalculatorToolLayout {
     private var compactDisplayHeight: CGFloat { 48 }
     private var compactDisplayHorizontalPadding: CGFloat { 12 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
+    private var scrollingKeyHeight: CGFloat { 56 }
     // SwiftUI reports the button accessibility frame slightly smaller than the requested label frame;
     // a 46 pt layout floor preserves the user-facing 44 pt minimum in UI tests.
     private var minimumKeyHeight: CGFloat { 46 }

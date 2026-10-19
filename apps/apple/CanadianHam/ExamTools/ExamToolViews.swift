@@ -295,7 +295,8 @@ struct ExamToolPresentationModifier: ViewModifier {
         case .calculator:
             CalculatorToolView(
                 viewModel: calculator,
-                calculatorFocused: $calculatorFocused
+                calculatorFocused: $calculatorFocused,
+                prefersScrolling: !usesInspector
             )
             .frame(height: availableHeight)
         case .hint:
@@ -612,7 +613,11 @@ private func referenceSheetSectionLabel(_ section: String, language: BankLanguag
 struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
     @Binding var calculatorFocused: Bool
+    let prefersScrolling: Bool
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+#if os(iOS)
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+#endif
     @FocusState private var hasKeyboardFocus: Bool
 
     private let rows: [[CalculatorKey]] = [
@@ -625,45 +630,51 @@ struct CalculatorToolView: View {
     ]
 
     var body: some View {
-        calculatorAdaptiveContent()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .contentShape(Rectangle())
-            .accessibilityElement(children: .contain)
-            .accessibilityIdentifier("calculator-keyboard-focus-target")
-            .focusable(true)
-            .focused($hasKeyboardFocus)
-            .onAppear {
-                if calculatorFocused {
-                    focusKeyboardAfterLayout()
-                }
-            }
-            .simultaneousGesture(TapGesture().onEnded {
-                activateKeyboardFocus()
-            })
-            .onChange(of: calculatorFocused) { _, isFocused in
-                if isFocused {
-                    focusKeyboardAfterLayout()
-                } else {
-                    hasKeyboardFocus = false
-                    viewModel.suspendHardwareKeyboardInput()
-                }
-            }
-            .onKeyPress { press in
-                handleKeyPress(press)
-            }
-    }
-
-    @ViewBuilder
-    private func calculatorAdaptiveContent() -> some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling))
-        } else {
-            ViewThatFits(in: .vertical) {
-                calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: true)))
-                calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: false)))
+        GeometryReader { _ in
+            if shouldPreferScrollableCalculator {
                 calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling))
+            } else {
+                ViewThatFits(in: .vertical) {
+                    calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: true)))
+                    calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: false)))
+                    calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling))
+                }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("calculator-keyboard-focus-target")
+        .focusable(true)
+        .focused($hasKeyboardFocus)
+        .onAppear {
+            if calculatorFocused {
+                focusKeyboardAfterLayout()
+            }
+        }
+        .simultaneousGesture(TapGesture().onEnded {
+            activateKeyboardFocus()
+        })
+        .onChange(of: calculatorFocused) { _, isFocused in
+            if isFocused {
+                focusKeyboardAfterLayout()
+            } else {
+                hasKeyboardFocus = false
+                viewModel.suspendHardwareKeyboardInput()
+            }
+        }
+        .onKeyPress { press in
+            handleKeyPress(press)
+        }
+    }
+
+    private var shouldPreferScrollableCalculator: Bool {
+        if prefersScrolling || dynamicTypeSize.isAccessibilitySize { return true }
+#if os(iOS)
+        return verticalSizeClass == .compact
+#else
+        return false
+#endif
     }
 
     private func calculatorFittingContent(layout: CalculatorToolLayout) -> some View {
@@ -678,6 +689,7 @@ struct CalculatorToolView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .scrollBounceBehavior(.basedOnSize)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("calculator-tool-scroll")
     }
 

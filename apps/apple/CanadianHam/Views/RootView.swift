@@ -701,8 +701,7 @@ struct RootView: View {
     private func updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: Bool) {
 #if os(iOS)
         guard UIDevice.current.userInterfaceIdiom == .pad || usesRegularWidthIPhoneLayout else { return }
-        guard regularWidthExamToolPresented,
-              shouldCollapseSidebarForRegularWidthExamTool(usesRegularWidthIPhoneLayout: usesRegularWidthIPhoneLayout) else {
+        guard regularWidthExamToolPresented else {
             if let preToolSplitColumnVisibility {
                 splitColumnVisibility = preToolSplitColumnVisibility
                 self.preToolSplitColumnVisibility = nil
@@ -713,23 +712,9 @@ struct RootView: View {
         if preToolSplitColumnVisibility == nil {
             preToolSplitColumnVisibility = splitColumnVisibility
         }
-        splitColumnVisibility = .detailOnly
+        splitColumnVisibility = usesRegularWidthIPhoneLayout ? .detailOnly : .automatic
 #endif
     }
-
-#if os(iOS)
-    private func shouldCollapseSidebarForRegularWidthExamTool(usesRegularWidthIPhoneLayout: Bool) -> Bool {
-        if usesRegularWidthIPhoneLayout { return true }
-        guard UIDevice.current.userInterfaceIdiom == .pad else { return false }
-        return currentInterfaceOrientation?.isPortrait ?? false
-    }
-
-    private var currentInterfaceOrientation: UIInterfaceOrientation? {
-        UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.interfaceOrientation }
-            .first { $0 != .unknown }
-    }
-#endif
 
     private func updateLanguage(from preferences: ApplePreferences) {
         language = preferences.language.resolvedLanguage()
