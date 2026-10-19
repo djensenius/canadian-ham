@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-19 15:49'
+updated_date: '2026-10-19 16:04'
 labels:
   - apple
 dependencies:
@@ -63,6 +63,8 @@ AC evidence:
 Final TASK-50.13 handoff pass: reproduced the tvOS one-level failure in /tmp/task-50.13-tvos-onelevel-repro.log, fixed tvOS answer-column left navigation to scroll/focus the current hint action, and verified the one-level test in /tmp/task-50.13-tvos-onelevel-fix.log plus the tvOS hint ladder in /tmp/task-50.13-tvos-ladder-after-focusguide.log. Merged origin/main (#296) with a merge commit. Post-merge validation passed: full tvOS scheme (CanadianHamTVTests 6 + CanadianHamTVUITests 15, /tmp/task-50.13-postmerge-tvos-full.log), full visionOS scheme (CanadianHamVisionTests 6 + CanadianHamVisionUITests 12, /tmp/task-50.13-postmerge-vision-full.log), iPhone 17 Pro Learn targeted tests (2, /tmp/task-50.13-postmerge-iphone-learn-targeted.log), pnpm check:apple-l10n (/tmp/task-50.13-postmerge-apple-l10n.log), node scripts/check-apple-text-sources.ts (/tmp/task-50.13-postmerge-apple-text-sources.log), and git diff --check (/tmp/task-50.13-postmerge-git-diff-check.log). The pre-merge iPhone ExamTools+Learn final chain had the known TASK-61 hinge flake in CanadianHamExamToolsUITests.testSimulatedHingeDismissedPeekReopensOnlyAfterReset; no hinge tests were changed here and the PR body lists the flake with /tmp/task-50.13-final-iphone-examtools-learn.log.
 
 Copilot re-review after SHA 1dd9c8c5 raised Reduce Motion findings for tvOS and visionOS linked-lesson scrolling. Fixed both lesson readers to use nil animation when Reduce Motion is active (tvOS also honors the existing test override). Validation passed: tvOS lesson-link targeted test /tmp/task-50.13-tvos-ladder-reducemotion-fix.log, visionOS lesson-link targeted test /tmp/task-50.13-vision-ladder-reducemotion-fix.log, node scripts/check-apple-text-sources.ts /tmp/task-50.13-reducemotion-apple-text-sources.log, and git diff --check /tmp/task-50.13-reducemotion-git-diff-check.log.
+
+Coordinator decision 2026-10-19 (final review M-A): tvOS practice now focuses answer A by default when answers appear (release builds too). Accepted as standard tvOS primary-action focus, matching what the real-remote tests exercise. Low notes (tvOS lesson focus assertion, visionOS swipe-before-check, iOS blockquote text selection, .combine lesson blocks) are acceptable for now. Known TASK-61 hinge flake: testSimulatedHingeDismissedPeekReopensOnlyAfterReset.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
