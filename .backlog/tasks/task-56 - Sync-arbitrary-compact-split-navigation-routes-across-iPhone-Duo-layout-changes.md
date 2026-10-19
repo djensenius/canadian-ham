@@ -6,6 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-10-18 03:22'
+updated_date: '2026-10-19 23:20'
 labels:
   - apple
 dependencies:
@@ -26,3 +27,9 @@ PR #286 preserves practice and mock exam session state across simulated Duo fold
 - [ ] #2 Starting from a split Learn lesson or quiz route and folding to compact keeps the same lesson or quiz visible
 - [ ] #3 UI or unit coverage exercises at least one compact-to-split and one split-to-compact deep Learn route without weakening existing navigation tests
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Also keep the open exam tool (calculator/hint) presented across size-class transitions; currently it dismisses and must be reopened (value is preserved).
+<!-- SECTION:NOTES:END -->
