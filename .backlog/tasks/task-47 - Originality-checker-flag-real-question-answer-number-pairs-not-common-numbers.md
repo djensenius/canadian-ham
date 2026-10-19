@@ -7,7 +7,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:48'
-updated_date: '2026-10-19 13:32'
+updated_date: '2026-10-19 13:35'
 labels:
   - content
 dependencies: []
@@ -62,9 +62,9 @@ Final Copilot/review follow-up:
   These blocks were added to `content/lessons/originality-allowlist.json` with specific justifications; no lesson prose was edited.
 
 Commands run for this final round:
-- `pnpm --filter @canadian-ham/content-tools test -- check-lesson-originality.test.ts` — 143/143 tests passed after adding the final fixtures.
+- `pnpm --filter @canadian-ham/content-tools test -- check-lesson-originality.test.ts` — 144/144 tests passed after adding the final fixtures.
 - `pnpm typecheck` — passed for all workspace packages/apps (TypeScript no-emit checks completed; schemas package has no TypeScript sources).
-- `pnpm test` — passed: release-permission self-test passed; content-tools 143/143 tests passed; morse-engine 21/21 tests passed; calculator-ts 127/127 tests passed; web 208/208 tests passed.
+- `pnpm test` — passed: release-permission self-test passed; content-tools 144/144 tests passed; morse-engine 21/21 tests passed; calculator-ts 127/127 tests passed; web 208/208 tests passed.
 - `pnpm --dir packages/content-tools check:lesson-originality:all` — passed after reviewing and allowlisting the five L-006-01 teaching-fact blocks; 36 lesson files, 984 official questions, 44 allowlisted blocks, 0 issues.
 - `pnpm --dir packages/content-tools check:explanations` — passed: 984 explanation files verified, 984 question references verified, 2952 per-choice notes verified, 984/984 question explanations present.
 - `pnpm check:hints -- --require-complete` — passed: 984 hint files checked for 984 active Basic questions with completeness required.
