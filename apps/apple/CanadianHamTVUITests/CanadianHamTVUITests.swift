@@ -513,7 +513,16 @@ final class CanadianHamTVUITests: XCTestCase {
     ) {
         XCTAssertTrue(element.exists, "\(description) must exist before capturing focus-ring evidence", file: file, line: line)
         XCTAssertTrue(element.isHittable, "Focused \(description) must be hittable before capturing focus-ring evidence", file: file, line: line)
-        assertElementIsVisible(element, in: app, description: description, file: file, line: line)
+
+        let window = app.windows.firstMatch
+        XCTAssertTrue(window.waitForExistence(timeout: 5), "App window should exist before capturing focus-ring evidence", file: file, line: line)
+        XCTAssertFalse(element.frame.isEmpty, "\(description) frame should be non-empty before capture", file: file, line: line)
+        XCTAssertTrue(
+            window.frame.insetBy(dx: -1, dy: -1).contains(element.frame),
+            "Focused \(description) frame \(element.frame) should be inside the app window \(window.frame) before capture",
+            file: file,
+            line: line
+        )
     }
 
     private func assertElementIsVisible(
