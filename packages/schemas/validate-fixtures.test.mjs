@@ -110,6 +110,18 @@ test("hint schema: one-level fixture without reason rejects", () => {
   assert(errors.some((error) => error.includes("expected exactly one oneOf branch to match")), errors.join("\n"));
 });
 
+for (const [fixture, field] of [
+  ["lesson-id-version", "$.lessonIdVersion"],
+  ["lesson-progress-id-version", "$.syncDeviceRows.lessonProgress[0].lessonIdVersion"],
+  ["lesson-quiz-id-version", "$.syncDeviceRows.lessonQuizAttempts[0].lessonIdVersion"],
+]) {
+  test(`progress export v1: rejects unsupported ${fixture}`, () => {
+    const data = readJsonFixture("invalid", `progress-export-v1-${fixture}.json`);
+    const errors = validateDataAgainstSchema(data, "progress-export-v1.schema.json");
+    assert(errors.some((error) => error.includes(`${field}: expected one of`)), errors.join("\n"));
+  });
+}
+
 for (const fixtureCase of fixtureCases) {
   test(`${fixtureCase.name}: valid synthetic fixture validates`, () => {
     const data = readJsonFixture("valid", fixtureCase.fixture);

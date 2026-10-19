@@ -16,7 +16,7 @@ objectives:
   - "Compare coaxial, twin-lead, and open-wire construction."
   - "Choose feedline based on surroundings and common-mode concerns."
 prerequisites:
-  - L-005-04
+  - L-005-05
 estimatedMinutes: 35
 quizIds:
   - QZ-L-006-01-A
