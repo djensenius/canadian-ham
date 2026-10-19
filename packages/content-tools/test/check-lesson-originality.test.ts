@@ -285,6 +285,18 @@ test("numeric originality does not treat picofarads as farads", async () => {
   });
 });
 
+test("numeric originality keeps scaled unit-pair magnitudes distinct", async () => {
+  await withFixture("scaled-unit-pair-magnitude", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-SCALED-PAIR-001", "If two 1-kohm resistors are connected in series, what total resistance results?", "2 kohms"),
+    ], lessonMarkdown("# Lesson\n\nTwo 1 ohm loads in series give 2 ohms.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
 test("numeric originality allows low-context metric conversion teaching", async () => {
   await withFixture("allowed-metric-conversion", async (root) => {
     await writeFixture(root, [
