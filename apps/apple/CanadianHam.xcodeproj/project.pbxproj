@@ -12,13 +12,17 @@
 		02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
 		06F98767DA87C95EB04ABFEF /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 94C45D93BD1BF4DF19826B39 /* CanadianHamEngine */; };
 		08BF73A02D5B4B5A42259B7E /* LocalizationCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */; };
+		0AC69A16CC0A913D051094F7 /* PlatformHintPanelSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */; };
 		0B481C38251FAE9490A00C29 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
+		0CC2A80AA55592C499041495 /* PlatformLessonMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDB66EC2C530873730DEE2A /* PlatformLessonMarkdownView.swift */; };
 		10FA036510A648A0BD33F258 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CEF53E707EFDB7074F0A99 /* Assets.xcassets */; };
+		15DF729E9580619EDE8400FF /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		1A532FBCB03EEDAB5AD727F0 /* StudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0390C2BF7D07DEAD8A246557 /* StudyViews.swift */; };
 		1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		1B410B92394BF7241B23CA62 /* reference-sheet in Resources */ = {isa = PBXBuildFile; fileRef = 4A74CF9820A6C3C99B05EEB0 /* reference-sheet */; };
 		1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */; };
-		1DCF404690C92BF4178DF338 /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = 73750B729415D5254CB490A4 /* subsections.json */; };
+		1FF3020AFEB16FFA1BA640B3 /* PlatformLessonMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDB66EC2C530873730DEE2A /* PlatformLessonMarkdownView.swift */; };
+		2337449B05AE3AF97A66A776 /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		23D42DA3EBF7A595CD9A845B /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		2411648A6CFFBBE0F93DF147 /* CanadianHamTVUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB9DE0DC8D961680058B71B /* CanadianHamTVUITests.swift */; };
 		25678E1090022805FCCE403B /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = 73750B729415D5254CB490A4 /* subsections.json */; };
@@ -34,8 +38,10 @@
 		2F050C4A4E0713BC8DA97210 /* subsection-titles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0CE325C0851B44E13EA76E8A /* subsection-titles.json */; };
 		310B2A12D242A918D8BBC716 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		34730D4F3AD434676D64C065 /* reference-sheet in Resources */ = {isa = PBXBuildFile; fileRef = 4A74CF9820A6C3C99B05EEB0 /* reference-sheet */; };
+		35962F994D0BFD7B79907E2B /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		3611785543C180B0E9D40510 /* ExamToolModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5581AFE7785D06E74DC2FC46 /* ExamToolModels.swift */; };
 		361493881B2CC61302617533 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
+		3997D8ED66D192D9373FD5F5 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 152905B827825A7ACF7591F2 /* CanadianHamMorseEngine */; };
 		3BD841E056F7CDC54828C327 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		3C1B7F75096DB44648DDD167 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
 		3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB023709CD1B8683292D109F /* ProgressModels.swift */; };
@@ -45,46 +51,56 @@
 		40C8A8612A803C82838EFCB2 /* CanadianHamTV-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 487D077D63B8DBAF59046380 /* CanadianHamTV-InfoPlist.strings */; };
 		42B335E4F445B4521F5ACA40 /* ProgressModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB023709CD1B8683292D109F /* ProgressModels.swift */; };
 		43FFC9C735678A6F9AB5032E /* CanadianHamVision-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2CB38B6F805FE75CFAC65C2 /* CanadianHamVision-InfoPlist.strings */; };
+		46F61789477386335C056B0E /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 68B2019B8C107CCE6C8C9198 /* quizzes */; };
 		47F9EBF35283D2B9415C7524 /* LessonFigureMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A86BCCABAA1B3403D777005 /* LessonFigureMetadata.swift */; };
 		4A3F7F0CD01A2A85311ACD13 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		4B93675CC0BC61C3C00C9E04 /* CanadianHamVision-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFF1458062A6B863DA69A0BD /* CanadianHamVision-InfoPlist.strings */; };
 		4CBF95D998062361B45D4394 /* ProgressStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */; };
+		4CC0798D0BE0051AD44213C1 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		4D238BF985752F0296615E76 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
-		4E38473222269C9E2D330A8C /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 007479A1ABED939E784D6108 /* CanadianHamMorseEngine */; };
+		4E38473222269C9E2D330A8C /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = 7940DA847C278497ABEBF199 /* CanadianHamContent */; };
 		52E2423AD8ECA065D5EE426A /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		534739C3352A8EB6282F3652 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
+		56971C911C417B59168BF071 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 007479A1ABED939E784D6108 /* CanadianHamMorseEngine */; };
+		597E9B1D4F1011D023EDE4F6 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 022D91A5693114D1A7D36F4D /* CanadianHamMorseEngine */; };
 		59EC5C3A19D8FF6609993C84 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
 		5A1CE4F99519795442DFAA39 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */; };
 		5DF5007F39C2EFC48596AD6F /* MorseTrainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC95E41AA3E6715FCCBF7956 /* MorseTrainerView.swift */; };
 		5E15045977972A993EB53B58 /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
 		60AF16DB335E5903B9287215 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 5FC310E91D274D6ACA4BBA5F /* AppIcon.icon */; };
+		6281C633D94C73560ECC6261 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
 		673D5075CD26F8D34C1A729A /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
+		687FDC6E7F12542E2BEF8A8A /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		6BEBAF49D6330C4DA12195D3 /* CanadianHamVisionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A5D1876F7D063DF4DF7F31 /* CanadianHamVisionApp.swift */; };
 		6C11B3F5053B13833830A44A /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
 		6C7049017ADA7EB711391F79 /* DuoPostureProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4688DE61A3DD68E4FD52D69 /* DuoPostureProvider.swift */; };
 		6CEC753352A58DF16AA8C291 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
-		6DB43413CCA7121F27CA0968 /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = 73750B729415D5254CB490A4 /* subsections.json */; };
 		6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140A13D95FE054984DF26281 /* AboutView.swift */; };
 		6EFADA5EE0B61414AA83A09D /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = A4E736FDA05FB857B049D1C5 /* CanadianHamContent */; };
 		6F0E7D31B3B2DD3B7C2F540C /* CanadianHamVisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28A9D49438EBAC030569D6E /* CanadianHamVisionTests.swift */; };
+		6F8C692E4E3D7AFA91619BA3 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
 		70BBC9801C24E0B8B879ABAA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		71824E1D425D494043EA0781 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 		71C1049741A681C96AED8C32 /* DuoLayoutPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8190B2B9429493319576A943 /* DuoLayoutPolicyTests.swift */; };
-		747531E2672E2252C908D095 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		752B46FA11D4B4D51DA668B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C782F628EB577B33F58A9306 /* Assets.xcassets */; };
 		78933BE6A5110553F1DC54F7 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 14AF7EC003239D281E65DBE7 /* CanadianHamMorseEngine */; };
 		7982B192043B93C7CCF3A7AE /* CanadianHamExamToolsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EC771E2AC082EB0E486561 /* CanadianHamExamToolsUITests.swift */; };
+		79D75ECB17B9CB1A985361CE /* hints in Resources */ = {isa = PBXBuildFile; fileRef = 8DDA76D15062E1F8BA06B694 /* hints */; };
 		7A69A327192A249A5B2FF3AD /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 		7AC3F901ABC1A7ED3D21F3E4 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
+		7E02AFE279C34A1FC9CF476D /* PlatformHintPanelSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */; };
 		7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
+		82485367546F1E13DDE76910 /* PlatformLessonMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDB66EC2C530873730DEE2A /* PlatformLessonMarkdownView.swift */; };
+		848EEFA0418937BBF873E510 /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 68B2019B8C107CCE6C8C9198 /* quizzes */; };
 		8490F17176EBB9E8968E07D0 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		85CDB77762FF7637D402F2F8 /* hints in Resources */ = {isa = PBXBuildFile; fileRef = 8DDA76D15062E1F8BA06B694 /* hints */; };
-		883A3E64C9D89F484D72EFE5 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
+		87720190F84DFA7653EE0FD1 /* PlatformHintPanelSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */; };
+		8913C2895E5B88E6C0025F57 /* PlatformHintPanelSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */; };
 		8A06B7AF447073AD26DAC6E9 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		8AD63D2FB881F6C3C07DD025 /* ProgressSyncMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */; };
 		8EC1393EB1FF099433C29317 /* MorseTrainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C0ADA4801D9094289C71DB /* MorseTrainerTests.swift */; };
 		916F171C8628700ACA3A58E0 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
-		92BA95D6FCD407A66C0ED1E8 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
+		933D08B20FD3733545AD0663 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
 		93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
 		9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */; };
 		942070A451CA10AC36A0A7D6 /* ICloudSyncCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD44BDE3AE8019C65CBB1C42 /* ICloudSyncCopy.swift */; };
@@ -96,13 +112,16 @@
 		9F71B8904D489DC8A2E29170 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		A041F7F72D19CE86C37290E7 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
 		A2FE6F8DF1FDB87F9C1D28B8 /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
-		A492D8B7740A60671214ADA8 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 022D91A5693114D1A7D36F4D /* CanadianHamMorseEngine */; };
+		A3412920220CB205D93C5DF5 /* subsection-titles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0CE325C0851B44E13EA76E8A /* subsection-titles.json */; };
+		A492D8B7740A60671214ADA8 /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = E6CAE1D99E45212A9775493F /* CanadianHamContent */; };
 		A4A6DF61C3775C2EEF581B72 /* CanadianHam-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 02FD09ACC6D3F5472A098191 /* CanadianHam-InfoPlist.strings */; };
 		A5C84AF9525F86DFA166EF45 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF15EA3BC012EB6FC4367D8 /* RootView.swift */; };
 		A8B6E6C9D32A4DCE4E6DD8E7 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 96D1FEA916557A5E1FFB3586 /* CanadianHamEngine */; };
-		AC07D876F91D5D2F28ECE3D2 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 152905B827825A7ACF7591F2 /* CanadianHamMorseEngine */; };
+		AA8BB1D3491765A13ED390DB /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
+		AC07D876F91D5D2F28ECE3D2 /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = BC1B22F95D80C78A94FF60F5 /* CanadianHamContent */; };
 		AC15C015AB010E727C4989FF /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = 73750B729415D5254CB490A4 /* subsections.json */; };
 		AC54AE6D8B9AF2AE8CE61FDE /* CanadianHamTV-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7D22DC6BEB5258264EA424D3 /* CanadianHamTV-InfoPlist.strings */; };
+		AD13B902D04C89AAF2B25D79 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		AF879ED04D51F1A64765DA8B /* ExamToolModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5581AFE7785D06E74DC2FC46 /* ExamToolModels.swift */; };
 		AFFA52B1C5ECDFD23A77E6A3 /* MorseCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA88F601A0455484A38F9D /* MorseCourseView.swift */; };
 		B00FB34D312F4173BFFCF151 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 2E108B72C914D6F8D1BF0C66 /* CanadianHamEngine */; };
@@ -111,9 +130,11 @@
 		B0C7B7CAC1D226318F0900AC /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		B18E85A637C5F57E5A898BC7 /* CanadianHamCalculatorEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 9DA8DBBB5E416928D5BDEE15 /* CanadianHamCalculatorEngine */; };
 		B1D73B5C5972B72A5B59CBED /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = A9EEDAA05AD705E57A6948B6 /* CanadianHamContent */; };
+		B5683127D3712559E856B623 /* hints in Resources */ = {isa = PBXBuildFile; fileRef = 8DDA76D15062E1F8BA06B694 /* hints */; };
+		B5A4E99A1BF167623B4F46E7 /* subsection-titles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0CE325C0851B44E13EA76E8A /* subsection-titles.json */; };
+		B5AD43BEDB6E39F3768DC085 /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
-		BF95B48C3152C964718844AD /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
 		C11811604AA55578350262B5 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
 		C35F4DB3660A226431C7A5B4 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
 		C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */; };
@@ -126,27 +147,29 @@
 		CD240E737A75D41970CA2028 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		CD24F593A0D94F9208BC1616 /* CanadianHamTVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD219C3080FCB9838E25140 /* CanadianHamTVTests.swift */; };
 		CD41A0E943ED3D0B9276D02A /* course.json in Resources */ = {isa = PBXBuildFile; fileRef = 79F451DA18B5F91DD4DCA5BC /* course.json */; };
-		CD8A5A7802FF75614CC1DA0F /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		CD8A9ACFAA34C9C68A3786CD /* DuoPostureProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4688DE61A3DD68E4FD52D69 /* DuoPostureProvider.swift */; };
 		CE953C0F14D339C6403750C9 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		CF2029D951C519CBB030F40F /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = A93BEFD816B4EDC7F95607AD /* CanadianHamMorseEngine */; };
 		D191EB6891C495D76962A0C0 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		D2806F394061B4F8B49774FA /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
+		D473AF7D132C9C9F3132BA81 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		D7E320E0C9430271DF5C5CCE /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
 		D8C7E713E0A8B477ADCA8BE6 /* CanadianHamCalculatorEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 994965CC2B8679E2E5808827 /* CanadianHamCalculatorEngine */; };
+		D968DA3CC2FDF7E7604CD335 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
 		DA4A30385D268F8D0E95F511 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 9D9113772DD563A33D70898D /* CanadianHamEngine */; };
 		DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 		DA99F3691748E29BFE1A90C6 /* CanadianHamVisionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C184EEC11CE4CD529F8D0EA /* CanadianHamVisionUITests.swift */; };
 		DC79B64D912576A5938512ED /* HintSessionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D93A41FC817D303C7A8E2CF /* HintSessionStateTests.swift */; };
 		DF6B8F376DDDF80C642514AE /* FigureAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79D037FE5B7CD4B97D40373D /* FigureAssets.xcassets */; };
-		E050A0F858C7D6CB9B14B292 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 736AE7B0E0E83BF1142D58FD /* CanadianHamMorseEngine */; };
+		E050A0F858C7D6CB9B14B292 /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = 33905ABA2A53FB2548DCEF6B /* CanadianHamContent */; };
+		E33986F2CB9C9B22FF210F23 /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		E4193FF2F1A1DE441EFA3160 /* course.json in Resources */ = {isa = PBXBuildFile; fileRef = 79F451DA18B5F91DD4DCA5BC /* course.json */; };
 		E5B8F95402DD487BCC28516E /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 1F3F655DC0021680B5931CD5 /* CanadianHamEngine */; };
-		E765FBE19849FC13D6671D61 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		E996A2002C10F58E41385C21 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		EA651611EAE395366553C319 /* LearnViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E31A65DF43C45C6F15475C7 /* LearnViews.swift */; };
 		EA81C6AED50B97331189D30C /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		F29D97E65744F19D2C1D0D8E /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
+		F2BA47C11EB041C657F3E732 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 736AE7B0E0E83BF1142D58FD /* CanadianHamMorseEngine */; };
 		F38D65FBDA95BC1C08E31ECD /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
 		F8197E5A10D63432C1384166 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		FD369ABE0D4B147229E2166A /* ExamToolViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FDAFA896E1B85E902E8CA0 /* ExamToolViews.swift */; };
@@ -185,6 +208,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePreferences.swift; sourceTree = "<group>"; };
 		02FD09ACC6D3F5472A098191 /* CanadianHam-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHam-InfoPlist.strings"; path = "fr.lproj/CanadianHam-InfoPlist.strings"; sourceTree = "<group>"; };
 		0390C2BF7D07DEAD8A246557 /* StudyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViews.swift; sourceTree = "<group>"; };
 		0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankTests.swift; sourceTree = "<group>"; };
@@ -211,6 +235,7 @@
 		3E31A65DF43C45C6F15475C7 /* LearnViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnViews.swift; sourceTree = "<group>"; };
 		41444275857B5CF1758CE3B6 /* CanadianHamPracticeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamPracticeUITests.swift; sourceTree = "<group>"; };
 		487D077D63B8DBAF59046380 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr-CA.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
+		49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformHintPanelSupport.swift; sourceTree = "<group>"; };
 		49EC771E2AC082EB0E486561 /* CanadianHamExamToolsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamExamToolsUITests.swift; sourceTree = "<group>"; };
 		4A74CF9820A6C3C99B05EEB0 /* reference-sheet */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "reference-sheet"; path = "../../content/reference-sheet"; sourceTree = SOURCE_ROOT; };
 		4EF15EA3BC012EB6FC4367D8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -237,6 +262,7 @@
 		8190B2B9429493319576A943 /* DuoLayoutPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuoLayoutPolicyTests.swift; sourceTree = "<group>"; };
 		86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineShuffle.swift; sourceTree = "<group>"; };
 		86CBBDFF03A04BC20799F5E4 /* CanadianHamTV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8CDB66EC2C530873730DEE2A /* PlatformLessonMarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformLessonMarkdownView.swift; sourceTree = "<group>"; };
 		8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSyncMerge.swift; sourceTree = "<group>"; };
 		8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.entitlements; sourceTree = "<group>"; };
 		8DDA76D15062E1F8BA06B694 /* hints */ = {isa = PBXFileReference; lastKnownFileType = folder; name = hints; path = ../../content/hints; sourceTree = SOURCE_ROOT; };
@@ -278,7 +304,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B00FB34D312F4173BFFCF151 /* CanadianHamEngine in Frameworks */,
-				E050A0F858C7D6CB9B14B292 /* CanadianHamMorseEngine in Frameworks */,
+				E050A0F858C7D6CB9B14B292 /* CanadianHamContent in Frameworks */,
+				F2BA47C11EB041C657F3E732 /* CanadianHamMorseEngine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,7 +325,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5B8F95402DD487BCC28516E /* CanadianHamEngine in Frameworks */,
-				AC07D876F91D5D2F28ECE3D2 /* CanadianHamMorseEngine in Frameworks */,
+				AC07D876F91D5D2F28ECE3D2 /* CanadianHamContent in Frameworks */,
+				3997D8ED66D192D9373FD5F5 /* CanadianHamMorseEngine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,7 +335,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA4A30385D268F8D0E95F511 /* CanadianHamEngine in Frameworks */,
-				A492D8B7740A60671214ADA8 /* CanadianHamMorseEngine in Frameworks */,
+				A492D8B7740A60671214ADA8 /* CanadianHamContent in Frameworks */,
+				597E9B1D4F1011D023EDE4F6 /* CanadianHamMorseEngine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,7 +345,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				28F9BCBD442B78C68AEB1ED2 /* CanadianHamEngine in Frameworks */,
-				4E38473222269C9E2D330A8C /* CanadianHamMorseEngine in Frameworks */,
+				4E38473222269C9E2D330A8C /* CanadianHamContent in Frameworks */,
+				56971C911C417B59168BF071 /* CanadianHamMorseEngine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +443,7 @@
 		38F0F47F803846067023DA54 /* Platforms */ = {
 			isa = PBXGroup;
 			children = (
+				902094F14A5E716761DB228A /* Shared */,
 				A3360FD5558C69ECEEDFCDF9 /* tvOS */,
 				29626EB9BFFBDAA8D9EBA428 /* visionOS */,
 			);
@@ -513,6 +544,16 @@
 				0390C2BF7D07DEAD8A246557 /* StudyViews.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		902094F14A5E716761DB228A /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */,
+				49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */,
+				8CDB66EC2C530873730DEE2A /* PlatformLessonMarkdownView.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		92AC9D1337CAB361B9C569D0 /* basic-2025-07-15 */ = {
@@ -686,6 +727,7 @@
 			name = CanadianHamTVTests;
 			packageProductDependencies = (
 				3AB128F5CC3D7010118FF2AB /* CanadianHamEngine */,
+				7940DA847C278497ABEBF199 /* CanadianHamContent */,
 				007479A1ABED939E784D6108 /* CanadianHamMorseEngine */,
 			);
 			productName = CanadianHamTVTests;
@@ -699,6 +741,8 @@
 				FF647467F70269FC5113305A /* Sources */,
 				43D39217D2081D1C20A0889C /* Resources */,
 				32321241FCD6881D0F5E1241 /* Frameworks */,
+				AF917FB45995F30AE00CE081 /* Remove content authoring README files */,
+				1A201BEC989A4024A91C0F38 /* Copy Basic generated content */,
 			);
 			buildRules = (
 			);
@@ -707,6 +751,7 @@
 			name = CanadianHamVision;
 			packageProductDependencies = (
 				2E108B72C914D6F8D1BF0C66 /* CanadianHamEngine */,
+				33905ABA2A53FB2548DCEF6B /* CanadianHamContent */,
 				736AE7B0E0E83BF1142D58FD /* CanadianHamMorseEngine */,
 			);
 			productName = CanadianHamVision;
@@ -728,6 +773,7 @@
 			name = CanadianHamVisionTests;
 			packageProductDependencies = (
 				1F3F655DC0021680B5931CD5 /* CanadianHamEngine */,
+				BC1B22F95D80C78A94FF60F5 /* CanadianHamContent */,
 				152905B827825A7ACF7591F2 /* CanadianHamMorseEngine */,
 			);
 			productName = CanadianHamVisionTests;
@@ -847,6 +893,8 @@
 				EE0886B8A44F244AB836E342 /* Sources */,
 				970FB2C9E711726AD828A219 /* Resources */,
 				E077DD0144B02EFBC773E007 /* Frameworks */,
+				38457BABB253CE728958E33D /* Remove content authoring README files */,
+				EF037CBDD3EA4055405557AC /* Copy Basic generated content */,
 			);
 			buildRules = (
 			);
@@ -855,6 +903,7 @@
 			name = CanadianHamTV;
 			packageProductDependencies = (
 				9D9113772DD563A33D70898D /* CanadianHamEngine */,
+				E6CAE1D99E45212A9775493F /* CanadianHamContent */,
 				022D91A5693114D1A7D36F4D /* CanadianHamMorseEngine */,
 			);
 			productName = CanadianHamTV;
@@ -970,10 +1019,11 @@
 				4B93675CC0BC61C3C00C9E04 /* CanadianHamVision-InfoPlist.strings in Resources */,
 				B0C7B7CAC1D226318F0900AC /* Localizable.xcstrings in Resources */,
 				71824E1D425D494043EA0781 /* PrivacyInfo.xcprivacy in Resources */,
-				92BA95D6FCD407A66C0ED1E8 /* categories.json in Resources */,
-				883A3E64C9D89F484D72EFE5 /* manifest.json in Resources */,
-				747531E2672E2252C908D095 /* questions.json in Resources */,
-				1DCF404690C92BF4178DF338 /* subsections.json in Resources */,
+				6281C633D94C73560ECC6261 /* explanations in Resources */,
+				79D75ECB17B9CB1A985361CE /* hints in Resources */,
+				D968DA3CC2FDF7E7604CD335 /* lessons in Resources */,
+				46F61789477386335C056B0E /* quizzes in Resources */,
+				B5A4E99A1BF167623B4F46E7 /* subsection-titles.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1026,10 +1076,11 @@
 				AC54AE6D8B9AF2AE8CE61FDE /* CanadianHamTV-InfoPlist.strings in Resources */,
 				70BBC9801C24E0B8B879ABAA /* Localizable.xcstrings in Resources */,
 				7A69A327192A249A5B2FF3AD /* PrivacyInfo.xcprivacy in Resources */,
-				CD8A5A7802FF75614CC1DA0F /* categories.json in Resources */,
-				BF95B48C3152C964718844AD /* manifest.json in Resources */,
-				E765FBE19849FC13D6671D61 /* questions.json in Resources */,
-				6DB43413CCA7121F27CA0968 /* subsections.json in Resources */,
+				6F8C692E4E3D7AFA91619BA3 /* explanations in Resources */,
+				B5683127D3712559E856B623 /* hints in Resources */,
+				933D08B20FD3733545AD0663 /* lessons in Resources */,
+				848EEFA0418937BBF873E510 /* quizzes in Resources */,
+				A3412920220CB205D93C5DF5 /* subsection-titles.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1047,6 +1098,33 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1A201BEC989A4024A91C0F38 /* Copy Basic generated content */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../../content/generated/basic-2025-07-15/questions.json",
+				"$(SRCROOT)/../../content/generated/basic-2025-07-15/subsections.json",
+				"$(SRCROOT)/../../content/generated/basic-2025-07-15/categories.json",
+				"$(SRCROOT)/../../content/generated/basic-2025-07-15/manifest.json",
+			);
+			name = "Copy Basic generated content";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/questions.json",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/subsections.json",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/categories.json",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/manifest.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -euo pipefail\nbasic_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/generated/basic-2025-07-15\"\nmkdir -p \"${basic_destination}\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/questions.json\" \"${basic_destination}/questions.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/subsections.json\" \"${basic_destination}/subsections.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/categories.json\" \"${basic_destination}/categories.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/manifest.json\" \"${basic_destination}/manifest.json\"\n";
+		};
 		2263374E432643E94FF9B070 /* Remove content authoring README files */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1101,6 +1179,25 @@
 			shellPath = /bin/sh;
 			shellScript = "set -euo pipefail\ngenerated_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/generated\"\nbasic_destination=\"${generated_destination}/basic-2025-07-15\"\nadvanced_destination=\"${generated_destination}/advanced-2025-02-04\"\nmkdir -p \"${basic_destination}\" \"${advanced_destination}\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/questions.json\" \"${basic_destination}/questions.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/subsections.json\" \"${basic_destination}/subsections.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/categories.json\" \"${basic_destination}/categories.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/manifest.json\" \"${basic_destination}/manifest.json\"\ncp \"${SRCROOT}/../../content/generated/advanced-2025-02-04/questions.json\" \"${advanced_destination}/questions.json\"\ncp \"${SRCROOT}/../../content/generated/advanced-2025-02-04/subsections.json\" \"${advanced_destination}/subsections.json\"\ncp \"${SRCROOT}/../../content/generated/advanced-2025-02-04/categories.json\" \"${advanced_destination}/categories.json\"\ncp \"${SRCROOT}/../../content/generated/advanced-2025-02-04/manifest.json\" \"${advanced_destination}/manifest.json\"\n";
 		};
+		38457BABB253CE728958E33D /* Remove content authoring README files */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Remove content authoring README files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations hints; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
+		};
 		3DF185F25EDB7A03ED8C3208 /* Remove content authoring README files */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1119,6 +1216,52 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations hints; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
+		};
+		AF917FB45995F30AE00CE081 /* Remove content authoring README files */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Remove content authoring README files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations hints; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
+		};
+		EF037CBDD3EA4055405557AC /* Copy Basic generated content */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../../content/generated/basic-2025-07-15/questions.json",
+				"$(SRCROOT)/../../content/generated/basic-2025-07-15/subsections.json",
+				"$(SRCROOT)/../../content/generated/basic-2025-07-15/categories.json",
+				"$(SRCROOT)/../../content/generated/basic-2025-07-15/manifest.json",
+			);
+			name = "Copy Basic generated content";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/questions.json",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/subsections.json",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/categories.json",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/manifest.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -euo pipefail\nbasic_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/generated/basic-2025-07-15\"\nmkdir -p \"${basic_destination}\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/questions.json\" \"${basic_destination}/questions.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/subsections.json\" \"${basic_destination}/subsections.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/categories.json\" \"${basic_destination}/categories.json\"\ncp \"${SRCROOT}/../../content/generated/basic-2025-07-15/manifest.json\" \"${basic_destination}/manifest.json\"\n";
 		};
 		F39EEE4D2D3C9993911AA3FC /* Copy Basic and Advanced generated content */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1162,10 +1305,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15DF729E9580619EDE8400FF /* ApplePreferences.swift in Sources */,
 				CD24F593A0D94F9208BC1616 /* CanadianHamTVTests.swift in Sources */,
 				C79F4B014C66CBB77F1CECDF /* EngineShuffle.swift in Sources */,
+				AD13B902D04C89AAF2B25D79 /* HintSessionState.swift in Sources */,
 				A041F7F72D19CE86C37290E7 /* MorseAudioDriver.swift in Sources */,
 				CD240E737A75D41970CA2028 /* MorseTrainerSettings.swift in Sources */,
+				87720190F84DFA7653EE0FD1 /* PlatformHintPanelSupport.swift in Sources */,
 				8490F17176EBB9E8968E07D0 /* QuestionBankModels.swift in Sources */,
 				673D5075CD26F8D34C1A729A /* QuestionBankStore.swift in Sources */,
 			);
@@ -1175,6 +1321,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2337449B05AE3AF97A66A776 /* ApplePreferences.swift in Sources */,
 				D7E320E0C9430271DF5C5CCE /* AppleStudyEngine.swift in Sources */,
 				71C1049741A681C96AED8C32 /* DuoLayoutPolicyTests.swift in Sources */,
 				CD8A9ACFAA34C9C68A3786CD /* DuoPostureProvider.swift in Sources */,
@@ -1216,11 +1363,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35962F994D0BFD7B79907E2B /* ApplePreferences.swift in Sources */,
 				99C0F97A90AE1A49F93825A5 /* CanadianHamTVApp.swift in Sources */,
 				916F171C8628700ACA3A58E0 /* EngineShuffle.swift in Sources */,
+				4CC0798D0BE0051AD44213C1 /* HintSessionState.swift in Sources */,
 				F38D65FBDA95BC1C08E31ECD /* LaunchArguments.swift in Sources */,
 				FD506BE95FA24A70BDDCA8A4 /* MorseAudioDriver.swift in Sources */,
 				6CEC753352A58DF16AA8C291 /* MorseTrainerSettings.swift in Sources */,
+				8913C2895E5B88E6C0025F57 /* PlatformHintPanelSupport.swift in Sources */,
+				82485367546F1E13DDE76910 /* PlatformLessonMarkdownView.swift in Sources */,
 				29EF8E659FEF66CC21404A08 /* QuestionBankModels.swift in Sources */,
 				4D238BF985752F0296615E76 /* QuestionBankStore.swift in Sources */,
 				E996A2002C10F58E41385C21 /* Tokens.swift in Sources */,
@@ -1231,10 +1382,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5AD43BEDB6E39F3768DC085 /* ApplePreferences.swift in Sources */,
 				6F0E7D31B3B2DD3B7C2F540C /* CanadianHamVisionTests.swift in Sources */,
 				D191EB6891C495D76962A0C0 /* EngineShuffle.swift in Sources */,
+				687FDC6E7F12542E2BEF8A8A /* HintSessionState.swift in Sources */,
 				D2806F394061B4F8B49774FA /* MorseAudioDriver.swift in Sources */,
 				310B2A12D242A918D8BBC716 /* MorseTrainerSettings.swift in Sources */,
+				7E02AFE279C34A1FC9CF476D /* PlatformHintPanelSupport.swift in Sources */,
 				8A06B7AF447073AD26DAC6E9 /* QuestionBankModels.swift in Sources */,
 				3BD841E056F7CDC54828C327 /* QuestionBankStore.swift in Sources */,
 			);
@@ -1247,6 +1401,7 @@
 				6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */,
 				C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */,
 				CB82AC4522910B6DBBE8E338 /* AppSettingsModel.swift in Sources */,
+				AA8BB1D3491765A13ED390DB /* ApplePreferences.swift in Sources */,
 				02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */,
 				1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */,
 				6C7049017ADA7EB711391F79 /* DuoPostureProvider.swift in Sources */,
@@ -1265,6 +1420,7 @@
 				F29D97E65744F19D2C1D0D8E /* MorseTrainerSettings.swift in Sources */,
 				5DF5007F39C2EFC48596AD6F /* MorseTrainerView.swift in Sources */,
 				28F2DC98A7E9840A41F7C1E4 /* NativeSettingsView.swift in Sources */,
+				0CC2A80AA55592C499041495 /* PlatformLessonMarkdownView.swift in Sources */,
 				3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */,
 				27736D9704E4F326B1A87197 /* ProgressStore.swift in Sources */,
 				8AD63D2FB881F6C3C07DD025 /* ProgressSyncMerge.swift in Sources */,
@@ -1290,11 +1446,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E33986F2CB9C9B22FF210F23 /* ApplePreferences.swift in Sources */,
 				6BEBAF49D6330C4DA12195D3 /* CanadianHamVisionApp.swift in Sources */,
 				EA81C6AED50B97331189D30C /* EngineShuffle.swift in Sources */,
+				D473AF7D132C9C9F3132BA81 /* HintSessionState.swift in Sources */,
 				5E15045977972A993EB53B58 /* LaunchArguments.swift in Sources */,
 				C11811604AA55578350262B5 /* MorseAudioDriver.swift in Sources */,
 				0B481C38251FAE9490A00C29 /* MorseTrainerSettings.swift in Sources */,
+				0AC69A16CC0A913D051094F7 /* PlatformHintPanelSupport.swift in Sources */,
+				1FF3020AFEB16FFA1BA640B3 /* PlatformLessonMarkdownView.swift in Sources */,
 				9F71B8904D489DC8A2E29170 /* QuestionBankModels.swift in Sources */,
 				29F45C55CC67C98CAEB7D385 /* QuestionBankStore.swift in Sources */,
 				C67627A6755066FA8F2B034E /* Tokens.swift in Sources */,
@@ -1428,6 +1588,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham TV";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -1468,6 +1629,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham Vision";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -1491,6 +1653,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham TV";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -1650,6 +1813,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham Vision";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -1903,6 +2067,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham Vision";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -2109,6 +2274,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham TV";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -2301,6 +2467,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = CanadianHamEngine;
 		};
+		33905ABA2A53FB2548DCEF6B /* CanadianHamContent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CanadianHamContent;
+		};
 		3AB128F5CC3D7010118FF2AB /* CanadianHamEngine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CanadianHamEngine;
@@ -2308,6 +2478,10 @@
 		736AE7B0E0E83BF1142D58FD /* CanadianHamMorseEngine */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CanadianHamMorseEngine;
+		};
+		7940DA847C278497ABEBF199 /* CanadianHamContent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CanadianHamContent;
 		};
 		94C45D93BD1BF4DF19826B39 /* CanadianHamEngine */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -2338,6 +2512,14 @@
 			productName = CanadianHamMorseEngine;
 		};
 		A9EEDAA05AD705E57A6948B6 /* CanadianHamContent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CanadianHamContent;
+		};
+		BC1B22F95D80C78A94FF60F5 /* CanadianHamContent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CanadianHamContent;
+		};
+		E6CAE1D99E45212A9775493F /* CanadianHamContent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CanadianHamContent;
 		};
