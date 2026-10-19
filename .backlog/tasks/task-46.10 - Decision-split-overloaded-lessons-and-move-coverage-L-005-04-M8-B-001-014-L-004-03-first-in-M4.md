@@ -3,11 +3,11 @@ id: TASK-46.10
 title: >-
   Split overloaded lessons and move coverage (L-005-04, M8, B-001-014, L-004-03
   first in M4)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 23:49'
+updated_date: '2026-10-19 23:50'
 labels:
   - content
 dependencies: []
@@ -265,10 +265,205 @@ Strengthened the shared concept fixture/tests in 87a2ead9: each of the 12 old co
 All review-fix validation complete: pnpm check:apple-l10n passed (L10N_EXIT=0), including localization export plus generic tvOS and visionOS simulator builds. Catalogue SHA-256 before/after identical: a7ebc828e3f093957dc9814f1db1e8596f420da2e3560795b9d9ddfb68bc19f9; no rewrite or new strings. Full macOS 186/186 and final strengthened concept method 1/1 passed; all requested web/content checks, schema negatives, build/URL-CSP audit and final test guard passed. iOS/tvOS/visionOS full suites skipped for this review fix (coordinator merge-batch policy); earlier iOS targeted 6/6 remains recorded. TASK-46.12 depends on this task and tracks the two figure mismatches. PR #302 updated with all macOS per-test results and Copilot re-requested; independent review and resolution of the three already-fixed concept-ID threads remain coordinator review gates.
 
 Final PR #302 review fixes implemented: both platforms select all wrong concepts first and fill only remaining recorded slots, omit all empty quiz destinations, and cap total migrated correct answers at the original score. Coordinator-approved inconsistent-score policy allocates the correct budget to the original quiz first, then sorted quiz IDs, preserves totals and never invents wrong IDs. Shared fixture adds wrong-outside-prefix, zero-budget, and original-ID-before-sort allocation cases; historical-reactance assertions cover the absent L-005-04 destination, and Apple archived-launch assertions reject the fake original attempt. IndexedDB v6 now migrates stored device rows and uses the import coherence comparison to derive per-device read credit, or drops incoherent metadata; regression covers upgrade/export/reimport and schema validity. Documented the two post-v1 ICLOUD_SYNC concerns and removed stray test blank lines. Initial web ProgressStore check passed 37/37; requested macOS units and full web/schema checks running via nohup.
+
+Final fixes committed as 9eee9f9918c1ab4cf2ba03f1cf5704923465a1a7. All requested validation passed: web ProgressStore 37/37; pnpm typecheck; pnpm test (223 web + 21 Morse Vitest, 144 content-tools, 127 calculator tests); pnpm check:schemas (55 tests, 2034 targets); full macOS xbuild units 186/186 including 97 ProgressStoreTests. Test guard and git diff --check pass. macOS was launched through nohup and polled with grep; no other builds were interrupted. Full iOS/tvOS/visionOS suites skipped under the review/merge-batch policy; no SwiftUI strings or target membership changed. Shared fixture now tests the approved zero-score/limited-score budget on both platforms, as well as concept-slot bounds and deterministic original-first allocation. Independent branch review and refreshed Copilot/CI remain required before merge.
+
+Latest full macOS final-fix per-test evidence (186 passed, zero failures):
+
+| macOS unit test | Result | Duration |
+| --- | --- | --- |
+| `CanadianHamTests.DuoLayoutPolicyTests.testIPadInspectorRuleRemainsSizeClassDriven` | PASSED | 0.001 seconds |
+| `CanadianHamTests.DuoLayoutPolicyTests.testMacAndOtherIdiomsNeverUseUnfoldedIPhoneRule` | PASSED | 0.001 seconds |
+| `CanadianHamTests.DuoLayoutPolicyTests.testNilVerticalSizeClassDoesNotBlockWidthDrivenUnfoldedLandscapeLayout` | PASSED | 0.001 seconds |
+| `CanadianHamTests.DuoLayoutPolicyTests.testOrdinaryIPhoneProMaxSizesKeepCompactSheetLayout` | PASSED | 0.001 seconds |
+| `CanadianHamTests.DuoLayoutPolicyTests.testUnfoldedIPhoneEntryBoundaries` | PASSED | 0.001 seconds |
+| `CanadianHamTests.DuoLayoutPolicyTests.testUnfoldedIPhoneHysteresisPreventsSmallSizeJitterFromClosingLayout` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutDoesNotScrollAtOrAboveHelpThresholdForNonAccessibilitySizes` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutScrollsWhenCompactHeightCannotKeepMinimumKeys` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testClearForNewExamResetsCurrentCalculationButKeepsRequestedLocale` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testFrenchLocaleUsesFrenchDecimalDisplayAndSpokenString` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testKeyHandlingProducesEngineDisplayAndSpokenResult` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testQuestionCardFocusResetKeepsTextSelectionEnabled` | PASSED | 0.004 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testReferenceSheetLoaderReturnsNilWhenBundledFileIsMissingAndLoadsBasicSheet` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testUpdateLocaleRefreshesDisplayAndSpokenStringImmediately` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testApplyPracticeAnswerSubmitsAnsweredWithHelpToEngine` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekEligibilityAllowsPracticeReviewLaterButNeverMockExamOrScoredImmediateAnswer` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekEndsWhenPhoneFullyOpensOrCloses` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekFastUnfoldThroughBandNeverPeeks` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekLeavingToleranceDoesNotResetDismissalSuppression` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationAppearanceAllowsCurrentResetToClearSuppression` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationClosesPeekOpenedHintOnQuestionChangeAndRequiresFreshDwell` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationDismissalSuppressesReopenUntilReset` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationImmediateAnswerEndsEligibility` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationKeepsButtonOpenedHintOpenOnReset` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationLifecycleKeepsDismissalSuppressionAcrossDisappear` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationStartsOnlyOnceUntilPostureReset` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekRecheckPeeksWithoutNewSamples` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekRequiresStableDwellInSlightOpenBand` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekSlowCloseThroughBandNeverPeeks` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekStartsOnlyInsideRealBandAndDoesNotUseEdgeJitterBeforePeek` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekToleratesSmallJitterOnlyAfterPeekStarts` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekUnavailableSampleDoesNotResetDismissalSuppression` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHintQualificationMarksUnansweredQuestionAsQualifiedOnly` | PASSED | 0.000 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerCancelsShortPeekBeforeRecordingHelp` | PASSED | 0.399 seconds |
+| `CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerDoesNotQualifyShortPeekRoute` | PASSED | 0.296 seconds |
+| `CanadianHamTests.HintSessionStateTests.testImmediateModeHintAfterScoredAnswerDoesNotRecordHelp` | PASSED | 0.002 seconds |
+| `CanadianHamTests.HintSessionStateTests.testReferencePointerRuleShowsOnlyWhenReferenceSheetIsAvailable` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testReviewLaterHintAfterSelectionRecordsHelp` | PASSED | 0.002 seconds |
+| `CanadianHamTests.HintSessionStateTests.testSelectingAfterQualifiedHintRecordsHelpForReviewLaterSubmission` | PASSED | 0.001 seconds |
+| `CanadianHamTests.HintSessionStateTests.testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange` | PASSED | 2.568 seconds |
+| `CanadianHamTests.LocalizationCatalogTests.testEveryCatalogKeyHasFrenchTranslations` | PASSED | 0.020 seconds |
+| `CanadianHamTests.LocalizationCatalogTests.testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries` | PASSED | 0.006 seconds |
+| `CanadianHamTests.LocalizationCatalogTests.testLanguagePreferenceResolvesSystemAndOverrides` | PASSED | 0.001 seconds |
+| `CanadianHamTests.LocalizationCatalogTests.testLocalizedNullableTextAndLanguageFallsBackToEnglish` | PASSED | 0.001 seconds |
+| `CanadianHamTests.LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale` | PASSED | 0.004 seconds |
+| `CanadianHamTests.MorseTrainerTests.testCompletedMorseCourseSessionIgnoresResubmittedAnswer` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testFixedTimingProfilesUseEngineValues` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testLessonBodyAndBulletContrastTokensMeetMinimumRatio` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseAudioSessionStaysActiveUntilLastPlayerReleases` | PASSED | 0.000 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone` | PASSED | 0.002 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseCourseProgressIgnoresStoredProgressForAnotherCourse` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseExamGeneratorMeetsReceivingExamConstraints` | PASSED | 0.002 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorsePressKeyButtonAccessibilityActionsTriggerConfiguredKeying` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingClassifiesTimingAndErrorSignal` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingPendingFinalizationHelperCancelsAndClears` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingRemainingExamSecondsUsesFixedDeadline` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingScoreCountsTimeoutOnlyThroughMissingCharacters` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsClampAndPreset` | PASSED | 0.000 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsCodableRoundTripPreservesOutputMode` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsDecodesLegacyPayloadWithIsEnabled` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast` | PASSED | 0.005 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsRoundTripThroughUserDefaults` | PASSED | 0.004 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseStopDelayDrainsFadeBeforeStoppingEngine` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testReduceFlashingDecisionUsesInjectedFlags` | PASSED | 0.000 seconds |
+| `CanadianHamTests.MorseTrainerTests.testReduceFlashingStopsOnlyRunningVisualBeacon` | PASSED | 0.001 seconds |
+| `CanadianHamTests.MorseTrainerTests.testScheduleMorseVisualPlaybackInitialStateAndFallback` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testAdvancedImportKeepsBasicProgressExamsAndLessonsThenBasicImportKeepsAdvancedProgress` | PASSED | 0.083 seconds |
+| `CanadianHamTests.ProgressStoreTests.testAdvancedImportRejectsHonoursAttempts` | PASSED | 0.025 seconds |
+| `CanadianHamTests.ProgressStoreTests.testAppleInterfaceLanguagePreferenceWritesAppleLanguagesForNextLaunch` | PASSED | 0.004 seconds |
+| `CanadianHamTests.ProgressStoreTests.testAppSettingsModelPublishesMorseSettingsForRootViewSync` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testAppSettingsModelReplacementRevisionAdvancesForLocalDataReplacement` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testAppSettingsModelTracksUnfinishedCourseWorkAcrossRegisteredWindows` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testCorruptLegacyMorseCourseProgressJSONDoesNotBlockOpeningStore` | PASSED | 0.026 seconds |
+| `CanadianHamTests.ProgressStoreTests.testDecodesLegacyBasicExportWithoutBankIdFields` | PASSED | 0.031 seconds |
+| `CanadianHamTests.ProgressStoreTests.testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme` | PASSED | 0.031 seconds |
+| `CanadianHamTests.ProgressStoreTests.testDefaultLayoutResetDoesNotWriteGatedLegacyCopyMarker` | PASSED | 0.022 seconds |
+| `CanadianHamTests.ProgressStoreTests.testExportDeduplicatesSyncedDuplicatesAndBankScopedSubmittedAt` | PASSED | 0.059 seconds |
+| `CanadianHamTests.ProgressStoreTests.testFreshInstallDefaultsLanguageToSystem` | PASSED | 0.010 seconds |
+| `CanadianHamTests.ProgressStoreTests.testICloudAccountSignalsUseInitInjectedFactory` | PASSED | 0.068 seconds |
+| `CanadianHamTests.ProgressStoreTests.testICloudAccountTeardownUsesInjectedFactoryAndRestoresLocalSnapshot` | PASSED | 0.028 seconds |
+| `CanadianHamTests.ProgressStoreTests.testICloudDeleteCanDeleteLocalDataAfterZoneDelete` | PASSED | 0.030 seconds |
+| `CanadianHamTests.ProgressStoreTests.testICloudDeleteStopsSyncBeforeDeletingZoneAndKeepsLocalWithoutReupload` | PASSED | 0.209 seconds |
+| `CanadianHamTests.ProgressStoreTests.testICloudMergeFixtureIsPermutationIndependentAndIdempotent` | PASSED | 0.002 seconds |
+| `CanadianHamTests.ProgressStoreTests.testICloudSyncConfigurationPlanDefaultsOffAndKeepsPreferencesLocal` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testICloudSyncToggleAndAccountSignalsPreserveLocalProgress` | PASSED | 0.052 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportFiltersSyncDeviceRowsFromOtherBanksInsteadOfFailing` | PASSED | 0.035 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportIgnoresStaleSyncDeviceRowsWhenMergedRowsDoNotMatchTopLevelFields` | PASSED | 0.035 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportingExportWithDeviceRowsThenSyncingOriginalRowsDoesNotDoubleCount` | PASSED | 0.046 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportingTheSameExportTwiceRestoresIdenticalProgressAttemptsAndLessons` | PASSED | 0.065 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportKeepsPersistedAppleLanguagesWhenLanguageDoesNotChange` | PASSED | 0.032 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportLeavesTask4610Version2LessonSplitRowsUnchanged` | PASSED | 0.036 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportMigratesMixedTask4610SyncRowsByRowVersion` | PASSED | 0.039 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportMigratesTask4610LessonSplitProgressAndQuizAttempts` | PASSED | 0.036 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportOfOlderExportDoesNotRemoveExistingMorseProgress` | PASSED | 0.036 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportRejectsInvalidSyncDeviceRows` | PASSED | 0.040 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportRejectsUnsupportedLanguagePreferenceValues` | PASSED | 0.039 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportRollbackAfterMorseWriteRestoresPopulatedStoreAcrossCourses` | PASSED | 0.070 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportRollbackKeepsExistingDataWhenReplacementFails` | PASSED | 0.044 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportRollbackPropagatesMorseProgressRemovalFailure` | PASSED | 0.034 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress` | PASSED | 0.032 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt` | PASSED | 0.035 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates` | PASSED | 0.039 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsDuplicateMorseDailyActivityDates` | PASSED | 0.037 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsInvalidMorseCourseProgress` | PASSED | 0.039 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsMismatchedScoreBankId` | PASSED | 0.038 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt` | PASSED | 0.034 seconds |
+| `CanadianHamTests.ProgressStoreTests.testImportWritesAppleLanguagesToInjectedDefaultsWhenLanguageChanges` | PASSED | 0.033 seconds |
+| `CanadianHamTests.ProgressStoreTests.testInMemoryLanguageOperationsDoNotMutateStandardLanguageDefaults` | PASSED | 0.037 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLaunchAdoptsExternalAppleLanguagesSelectionIntoStoredPreference` | PASSED | 0.010 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLaunchAdoptsRemovedAppleLanguagesKeyAsSystemDefault` | PASSED | 0.013 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLaunchIgnoresRegisteredAppleLanguagesValue` | PASSED | 0.010 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLaunchKeepsPreferenceWhenAppleLanguagesMatchesLastAppliedValue` | PASSED | 0.010 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLegacyLanguageMigrationSaveFailureDoesNotBlockStartupAndRetries` | PASSED | 0.011 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredEnglishLanguageMigratesToSystemOnceAndDoesNotRerun` | PASSED | 0.012 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredFrenchAdoptsExistingPersistentAppleLanguagesInsteadOfOverwriting` | PASSED | 0.010 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredFrenchLanguageStaysFrenchAndAppliesInterfaceLanguageOnce` | PASSED | 0.009 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure` | PASSED | 0.030 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLessonWriteAfterImportedAndSyncedDuplicateRowsAddsExactlyOneRead` | PASSED | 0.044 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLocalLessonAndMorseWritesAfterDeviceRowImportAddOnlyOwnContribution` | PASSED | 0.051 seconds |
+| `CanadianHamTests.ProgressStoreTests.testLocalQuestionWritesAfterDeviceRowImportAddOnlyOwnContribution` | PASSED | 0.036 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMigratesArchivedLessonProgressKeepsMaxOwnReadCount` | PASSED | 0.012 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist` | PASSED | 0.035 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMigratesCommittedPreV2StoreFixtureWithAllDataIntact` | PASSED | 0.442 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMigratesLegacyMorseCourseProgressJSONIntoSwiftDataEntity` | PASSED | 0.020 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMigratesProgressStoreV1ToV2WithoutUniqueConstraints` | PASSED | 0.072 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMigratesProgressStoreV3ToV4PadsAndPersistsAnsweredWithHelpFields` | PASSED | 0.073 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMockExamTimerRefreshPreservesFractionalRemainder` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMorseCourseProgressRoundTripsTwentyRecentCharacterResults` | PASSED | 0.031 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMorseExportMapsHapticsToWebCompatibleAudio` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMorseImportDecodesMissingAndPartialMorsePreferences` | PASSED | 0.053 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMorseImportRejectsExplicitNullMorseValues` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testMorseImportRejectsUnsupportedMorsePreferenceEnums` | PASSED | 0.039 seconds |
+| `CanadianHamTests.ProgressStoreTests.testNativeSettingsAppearanceColorSchemeFollowsLiveThemePreference` | PASSED | 0.011 seconds |
+| `CanadianHamTests.ProgressStoreTests.testNativeSettingsGeneralBindingsUpdatePracticePreferences` | PASSED | 0.013 seconds |
+| `CanadianHamTests.ProgressStoreTests.testOldFormatImportWithMorseProgressReplacesAllExistingDeviceRows` | PASSED | 0.038 seconds |
+| `CanadianHamTests.ProgressStoreTests.testPickerChangeWritesAppleLanguagesButUnchangedPreferencesDoNotRewriteIt` | PASSED | 0.011 seconds |
+| `CanadianHamTests.ProgressStoreTests.testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences` | PASSED | 0.042 seconds |
+| `CanadianHamTests.ProgressStoreTests.testProgressImportDecodesOlderAnsweredWithHelpFieldsAsFalse` | PASSED | 0.037 seconds |
+| `CanadianHamTests.ProgressStoreTests.testProgressStoreDeduplicatesV2EntitiesWithoutUniqueConstraints` | PASSED | 0.039 seconds |
+| `CanadianHamTests.ProgressStoreTests.testProgressStoreRoundTripExportImportReset` | PASSED | 0.057 seconds |
+| `CanadianHamTests.ProgressStoreTests.testResetAllDataTurnsICloudSyncOptInOff` | PASSED | 0.012 seconds |
+| `CanadianHamTests.ProgressStoreTests.testResetAllDataWithICloudSyncDeletesCloudZoneThenWipesLocalData` | PASSED | 0.029 seconds |
+| `CanadianHamTests.ProgressStoreTests.testResetAllDataWithICloudSyncKeepsLocalDataAndRetriesAfterCloudDeleteFailure` | PASSED | 0.150 seconds |
+| `CanadianHamTests.ProgressStoreTests.testResetClearsAppleLanguagesAndLanguagePreference` | PASSED | 0.016 seconds |
+| `CanadianHamTests.ProgressStoreTests.testResetFailureKeepsPreviousAppleLanguagesAndPreference` | PASSED | 0.014 seconds |
+| `CanadianHamTests.ProgressStoreTests.testResetRollsBackWhenMorseProgressRemovalFails` | PASSED | 0.016 seconds |
+| `CanadianHamTests.ProgressStoreTests.testSavingLargeQuestionProgressBatchBuildsOneWriteContext` | PASSED | 1.765 seconds |
+| `CanadianHamTests.ProgressStoreTests.testSharedAppleSettingsModelAppliesLivePreferenceUpdates` | PASSED | 0.113 seconds |
+| `CanadianHamTests.ProgressStoreTests.testSharedICloudMergeFixtureCoversQuestionExamLessonAndMorseRules` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreFailedLegacyPreferencesReadDoesNotCreateMarkerAndRetries` | PASSED | 0.011 seconds |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreFirstOpenCopiesLegacyPreferencesWithoutLosingProgress` | PASSED | 0.106 seconds |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreLegacyPreferencesRetryRunsEvenWhenPreferencesStoreExists` | PASSED | 0.071 seconds |
+| `CanadianHamTests.ProgressStoreTests.testStaleSameDeviceQuestionRowDoesNotLoseNextLocalWrite` | PASSED | 0.031 seconds |
+| `CanadianHamTests.ProgressStoreTests.testSwiftDataQuestionProgressEntityDefaultsHelpFieldsForLightweightMigration` | PASSED | 0.009 seconds |
+| `CanadianHamTests.ProgressStoreTests.testTask4610LaunchMigrationIsAtomicAndStableWithArchivedProgressAndMultipleDevices` | PASSED | 0.044 seconds |
+| `CanadianHamTests.ProgressStoreTests.testTask4610LessonMigrationIsIdempotentAcrossRepeatedImports` | PASSED | 0.038 seconds |
+| `CanadianHamTests.ProgressStoreTests.testTask4610RejectsInvalidLegacyQuizScoresBeforeMigration` | PASSED | 0.028 seconds |
+| `CanadianHamTests.ProgressStoreTests.testTask4610RejectsNullLessonIDVersionAtTopLevelAndOnBothDeviceRowKinds` | PASSED | 0.028 seconds |
+| `CanadianHamTests.ProgressStoreTests.testTask4610RequiresAllReadSourcesAndMergesEachDeviceBeforeAggregating` | PASSED | 0.103 seconds |
+| `CanadianHamTests.ProgressStoreTests.testTask4610SharedConceptMappingAndConceptInclusiveScores` | PASSED | 0.237 seconds |
+| `CanadianHamTests.ProgressStoreTests.testTask4610ValidatesHistoricalQuizMembershipBeforeMigratingTopLevelAndSyncRows` | PASSED | 0.040 seconds |
+| `CanadianHamTests.ProgressStoreTests.testTwoDevicesEachQuestionWriteAddsExactlyOneAfterSync` | PASSED | 0.056 seconds |
+| `CanadianHamTests.QuestionBankTests.testAdvancedBundledJSONDecodesExpectedCountsAndVerifiedFrenchCategoryNames` | PASSED | 0.012 seconds |
+| `CanadianHamTests.QuestionBankTests.testAdvancedMockExamUsesFiftyQuestionsAndNoHonours` | PASSED | 0.013 seconds |
+| `CanadianHamTests.QuestionBankTests.testAppBundleContainsNoReadmeFiles` | PASSED | 0.014 seconds |
+| `CanadianHamTests.QuestionBankTests.testAppBundleContainsOnlyExpectedGeneratedBankDirectories` | PASSED | 0.001 seconds |
+| `CanadianHamTests.QuestionBankTests.testBundledJSONDecodesExpectedCounts` | PASSED | 0.019 seconds |
+| `CanadianHamTests.QuestionBankTests.testBundledLessonModelExposesPrerequisites` | PASSED | 0.556 seconds |
+| `CanadianHamTests.QuestionBankTests.testBundledLessonsAndExplanationsLoadThroughContentLibrary` | PASSED | 0.707 seconds |
+| `CanadianHamTests.QuestionBankTests.testEngineQuestionDrawKeepsQuestionInsideRequestedCategory` | PASSED | 0.020 seconds |
+| `CanadianHamTests.QuestionBankTests.testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion` | PASSED | 0.080 seconds |
+| `CanadianHamTests.QuestionBankTests.testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes` | PASSED | 0.001 seconds |
+| `CanadianHamTests.QuestionBankTests.testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons` | PASSED | 0.569 seconds |
+| `CanadianHamTests.ReadinessAndScoringTests.testAdvancedScoringAndReadinessSuppressHonours` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ReadinessAndScoringTests.testExamScoringBoundaries` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ReadinessAndScoringTests.testReadinessStates` | PASSED | 0.001 seconds |
+| `CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate` | PASSED | 0.035 seconds |
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
 Implemented the approved lesson splits/moves and corrected the PR #302 migration review: explicit text-verified concept mappings (obsolete M8 filter checks dropped), concept-inclusive partial scores, conservative all-source read credit (latest date/minimum count), coherent per-device preservation, and an atomic SwiftData completion marker. Added shared individual-concept fixtures, Apple launch/archive/multi-device/reopen coverage, null/version regressions and schema negatives; aligned prefix handling and fixed L-006-01 prerequisite. Validation: full macOS 186/186 plus strengthened concept test 1/1; web progress 36/36, typecheck, pnpm test (222 web/21 Morse/144 content-tools/127 calculator), all requested content/schema/import checks, web build/URL-CSP, test guard and no-rewrite Apple localization gate passed. TASK-46.12 tracks figure alignment; independent PR review remains required.
+
+Final review edge cases corrected identically on Apple/web: wrong-first bounded concept selection, no empty attempts, deterministic original-score budget, and migrated coherent stored web device rows. Strengthened shared/import/launch/upgrade tests. Final validation: web ProgressStore 37/37; typecheck, pnpm test, schemas and test guard pass; full macOS units 186/186. Documented the gated post-v1 CloudKit/store-atomicity limits. Independent review remains the merge gate.
 <!-- SECTION:FINAL_SUMMARY:END -->
