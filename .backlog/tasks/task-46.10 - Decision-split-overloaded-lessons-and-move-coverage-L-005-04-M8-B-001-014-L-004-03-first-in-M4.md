@@ -3,11 +3,11 @@ id: TASK-46.10
 title: >-
   Split overloaded lessons and move coverage (L-005-04, M8, B-001-014, L-004-03
   first in M4)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 21:18'
+updated_date: '2026-10-19 22:52'
 labels:
   - content
 dependencies: []
@@ -25,9 +25,9 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Owner decision recorded
-- [ ] #2 Splits and moves done with coverage, quizzes, explanations, figures and links updated; saved lesson progress migrates on web and Apple
-- [ ] #3 L-005-04 and M8 are split into smaller lessons, B-001-014 moves to L-001-05, and L-004-03 comes first in M4
-- [ ] #4 Lesson coverage shows every question still covered exactly as intended, and all content checks pass
+- [x] #2 Splits and moves done with coverage, quizzes, explanations, figures and links updated; saved lesson progress migrates on web and Apple
+- [x] #3 L-005-04 and M8 are split into smaller lessons, B-001-014 moves to L-001-05, and L-004-03 comes first in M4
+- [x] #4 Lesson coverage shows every question still covered exactly as intended, and all content checks pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -56,4 +56,12 @@ macOS fix validation passed via xbuild: entire ProgressStoreTests class, 93 test
 Tightened historical validation tables from subsection prefixes to the exact sampled officialQuestionIds: the old quizzes selected questions, not whole subsections. Both tables now match all source official-question and concept IDs exactly (Python set comparison against commit 350a3b53658c64f12e89c0b48d6b97c7c3040e88). Verified every old official ID occurs in a current destination. Strengthened the historical-membership regression on Apple/web to reject same-subsection B-005-009-001, which was never in the old quiz, for both top-level and sync rows. Web ProgressStore 31 tests pass; latest targeted Apple historical-membership method is queued via nohup. No assertions removed.
 
 Coordinator-approved final safety fix: move the local Apple migration completion marker after successful context.save(), so a save failure cannot suppress retry on the next launch. No cheap existing save-failure injection seam covers this private initializer migration (existing hooks are specific to language migration/import/quiz saves); no new testing scaffolding was added, per approval. Control-flow ordering is explicit; queued iOS/localization builds compile the change. Exact historical-ID macOS regression passed (1 test / zero failures), and final web ProgressStore 31 tests/typecheck/build/URL-CSP audit passed. No further scope expansion planned.
+
+Coordinator final validation 2026-10-19 at the head after the save-ordering fix: macOS unit 182/0; pnpm check:apple-l10n passed with no rewrite; pnpm test passed; iPhone 17 Pro Learn + changed lesson-figure tests 6/0; content checks all passed (coverage 100/100, originality 0, explanations 984, quizzes 37, links, hints 984/984, figures 38, schemas 2034, import:check).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Split L-005-04 (AC and dB / reactance and resonance, plus new L-005-06 transformers and meters) and M8 (receiver / transmitter side), moved B-001-014 to L-001-05, and taught L-004-03 first in M4. Updated coverage, quizzes, explanations, hints, figures and links. Saved progress migrates on web (IndexedDB v6) and Apple (one-time local migration, marker after save). Imports and sync rows carry lessonIdVersion so only legacy data migrates. Raw rows are validated against exact historical quiz membership before migration, and migrated rows against current membership.
+<!-- SECTION:FINAL_SUMMARY:END -->
