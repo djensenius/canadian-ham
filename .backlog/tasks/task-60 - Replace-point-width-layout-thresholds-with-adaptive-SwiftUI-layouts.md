@@ -1,11 +1,11 @@
 ---
 id: TASK-60
 title: Replace point-width layout thresholds with adaptive SwiftUI layouts
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 23:49'
-updated_date: '2026-10-19 20:53'
+updated_date: '2026-10-19 20:57'
 labels:
   - apple
   - layout
@@ -46,6 +46,8 @@ Coordinator completion 2026-10-19 (head 6fb5d9cc): no point-width thresholds rem
 - iPad Pro 13 sidebar/inspector passed.
 - macOS calculator-layout units passed; text-source check passed.
 Earlier full-class runs: iPhone 17 Pro matrix + practice audits + Learn passed; iPad full class only the TASK-61 hinge flake; Duo full class only the known TASK-54 items + TASK-61 flake; Pro Max landscape calculator = TASK-58 (pre-existing on main). TASK-54 updated with size-class real-device checks.
+
+PR #301 regression follow-up: iPad full ExamTools at cccb5e68 failed 24/35 while iPhone passed. Three representative failures queued in /tmp/task-60-ipad-regression-repro.log. The runtime split-style modifier changes structural identity when a tool opens; investigating stable .balanced with temporary native detailOnly and saved sidebar restoration.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
