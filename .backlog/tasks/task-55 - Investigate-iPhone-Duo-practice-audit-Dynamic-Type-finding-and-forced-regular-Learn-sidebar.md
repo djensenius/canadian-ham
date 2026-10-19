@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 02:16'
-updated_date: '2026-10-18 21:54'
+updated_date: '2026-10-19 00:04'
 labels:
   - apple
 dependencies:
@@ -32,9 +32,7 @@ TASK-15 part 1 required iPhone Duo practice audits and Learn navigation runs. Bo
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Reproduce the two practice accessibility audits and forced-regular Learn navigation failure on the iPhone Duo 27.1 simulator with result bundles under /tmp, then export xcresult attachments and inspect complete issue descriptions/screenshots for the failing elements.
-2. Trace the identified practice clipping and forced-regular Learn layout through the SwiftUI views/policy in iOS-shared app code, fixing only app layout bugs without audit filtering, minimumScaleFactor, hidden visible text, fixed widths, or hard-coded colours.
-3. Rerun the targeted Duo and iPhone 17 Pro tests, including CanadianHamExamToolsUITests for regression, then record per-test results/log paths in task notes and finalize the task evidence.
+1. Change only session screens that use the same long category/title plus header-card pattern from large navigation title display mode to inline, starting with PracticeSessionView.\n2. Search related Apple session views and UI tests for large title/title assertions; update only direct display-mode assumptions if needed.\n3. Run the requested targeted xbuild tests on iPhone Duo, iPhone 17 Pro, iPad Pro 13-inch, and macOS unit tests; record per-test evidence, then finalize TASK-55 and open the PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
