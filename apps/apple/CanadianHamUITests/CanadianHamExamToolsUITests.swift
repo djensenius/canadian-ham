@@ -933,10 +933,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func triggerSimulatedHingePlayback(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
-        let trigger = app.buttons["debug-hinge-playback-trigger"].firstMatch
-        XCTAssertTrue(trigger.waitForExistence(timeout: 5), "\(context): expected the DEBUG hinge playback trigger", file: file, line: line)
-        XCTAssertTrue(trigger.isHittable, "\(context): expected the DEBUG hinge playback trigger to be hittable", file: file, line: line)
-        trigger.tap()
+        let triggers = app.buttons.matching(identifier: "debug-hinge-playback-trigger")
+        XCTAssertTrue(triggers.firstMatch.waitForExistence(timeout: 5), "\(context): expected the DEBUG hinge playback trigger", file: file, line: line)
+        guard let trigger = triggers.allElementsBoundByIndex.first(where: { $0.exists && $0.isHittable }) else {
+            XCTFail("\(context): expected a hittable DEBUG hinge playback trigger", file: file, line: line)
+            return
+        }
+        trigger.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
     private func waitForSimulatedHingePlayback(in app: XCUIApplication, atLeast timestamp: TimeInterval, context: String, timeout: TimeInterval = 10, file: StaticString = #filePath, line: UInt = #line) {

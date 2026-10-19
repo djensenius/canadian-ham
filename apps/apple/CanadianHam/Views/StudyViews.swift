@@ -490,6 +490,7 @@ struct PracticeSessionView: View {
         .overlay(alignment: .topTrailing) {
             if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTrigger") {
                 Button {
+                    configureDuoPostureProviderIfNeeded()
                     duoPostureProvider?.triggerNextDebugPlaybackSegment()
                 } label: {
                     Text(verbatim: "Run") // l10n: verbatim DEBUG-only UI test hook
