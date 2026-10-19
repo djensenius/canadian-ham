@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 23:45'
+updated_date: '2026-10-19 23:49'
 labels:
   - content
 dependencies: []
@@ -263,6 +263,8 @@ Latest full macOS xbuild per-test evidence (186 passed, zero failures; iOS/tvOS/
 Strengthened the shared concept fixture/tests in 87a2ead9: each of the 12 old concepts is now tested individually as the sole wrong answer, in addition to all-wrong cases, so a permutation between concepts/destinations cannot hide behind the same aggregate wrong-ID sets. Web ProgressStore 36/36 and typecheck passed; targeted macOS shared-concept method passed 1/1, 0 failures, 0.185 seconds (xbuild -only-testing:CanadianHamTests/ProgressStoreTests/testTask4610SharedConceptMappingAndConceptInclusiveScores). Full macOS 186/186 remains valid for unchanged production Apple code. PR body updated with this additional per-test result. All current CI checks green; localization no-rewrite gate still waiting on shared lock.
 
 All review-fix validation complete: pnpm check:apple-l10n passed (L10N_EXIT=0), including localization export plus generic tvOS and visionOS simulator builds. Catalogue SHA-256 before/after identical: a7ebc828e3f093957dc9814f1db1e8596f420da2e3560795b9d9ddfb68bc19f9; no rewrite or new strings. Full macOS 186/186 and final strengthened concept method 1/1 passed; all requested web/content checks, schema negatives, build/URL-CSP audit and final test guard passed. iOS/tvOS/visionOS full suites skipped for this review fix (coordinator merge-batch policy); earlier iOS targeted 6/6 remains recorded. TASK-46.12 depends on this task and tracks the two figure mismatches. PR #302 updated with all macOS per-test results and Copilot re-requested; independent review and resolution of the three already-fixed concept-ID threads remain coordinator review gates.
+
+Final PR #302 review fixes implemented: both platforms select all wrong concepts first and fill only remaining recorded slots, omit all empty quiz destinations, and cap total migrated correct answers at the original score. Coordinator-approved inconsistent-score policy allocates the correct budget to the original quiz first, then sorted quiz IDs, preserves totals and never invents wrong IDs. Shared fixture adds wrong-outside-prefix, zero-budget, and original-ID-before-sort allocation cases; historical-reactance assertions cover the absent L-005-04 destination, and Apple archived-launch assertions reject the fake original attempt. IndexedDB v6 now migrates stored device rows and uses the import coherence comparison to derive per-device read credit, or drops incoherent metadata; regression covers upgrade/export/reimport and schema validity. Documented the two post-v1 ICLOUD_SYNC concerns and removed stray test blank lines. Initial web ProgressStore check passed 37/37; requested macOS units and full web/schema checks running via nohup.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
