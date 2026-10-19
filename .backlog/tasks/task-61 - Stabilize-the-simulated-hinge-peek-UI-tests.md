@@ -1,9 +1,11 @@
 ---
 id: TASK-61
 title: Stabilize the simulated hinge peek UI tests
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-19 12:49'
+updated_date: '2026-10-19 12:50'
 labels:
   - apple
   - tests
@@ -24,3 +26,12 @@ The DEBUG simulated-hinge UI tests from TASK-15 part 2 fail intermittently on se
 - [ ] #2 Timing-dependent waits are replaced with deterministic synchronization (for example the DEBUG hinge playback-progress hook) without weakening what the tests assert
 - [ ] #3 The hinge tests pass reliably in repeated targeted runs on iPhone 17 Pro and iPad Pro 13-inch; any Duo-only failure is tied to TASK-54 with evidence
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Establish a baseline by repeatedly running the CanadianHamExamToolsUITests testSimulatedHinge* methods on the requested iPhone 17 Pro, iPad Pro 13-inch (M5), and iPhone Duo destinations before product/test edits.
+2. Inspect the simulated hinge UI-test helpers and DEBUG posture/playback hooks to identify race points around sequence start, elapsed sleeps, and no-reopen assertions.
+3. Make only DEBUG/test-seam changes needed for deterministic synchronization: gate simulated playback on an explicit readiness trigger, wait for playback progress/state instead of wall-clock sleeps, and keep existing assertions intact or stricter.
+4. Re-run the repeated targeted matrix on the branch, record per-test/device evidence, finalize TASK-61, commit, push, and open the PR.
+<!-- SECTION:PLAN:END -->
