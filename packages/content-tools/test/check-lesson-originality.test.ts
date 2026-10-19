@@ -215,10 +215,31 @@ test("numeric originality rejects common-number leaks when matching units replac
     },
     {
       name: "ohm-volt-watt",
-      id: "B-TEST-UNIT-004",
+      id: "B-005-006-009",
       text: "What is the power consumption of two 10-ohm resistors connected in series with a 10-volt battery?",
       answer: "5 watts",
       lesson: "Two 10 ohm loads in series across a 10 V supply draw 5 W.",
+    },
+    {
+      name: "spelled-ohm-volt-watt",
+      id: "B-005-006-009",
+      text: "What is the power consumption of two 10-ohm resistors connected in series with a 10-volt battery?",
+      answer: "5 watts",
+      lesson: "Two ten-ohm loads in series on a ten-volt supply draw five watts.",
+    },
+    {
+      name: "spelled-microfarad",
+      id: "B-005-009-010",
+      text: "If you wire two 20-microfarad capacitors in series, what is the capacity of the combination?",
+      answer: "10 microfarads",
+      lesson: "Two twenty-microfarad caps in series give ten microfarads.",
+    },
+    {
+      name: "spelled-coax-values",
+      id: "B-TEST-UNIT-005",
+      text: "A line is 50 ohms and another is 75 ohms. What value is used for the dummy load?",
+      answer: "50 ohms",
+      lesson: "A fifty-ohm feed line and a seventy-five-ohm line are compared before choosing a fifty-ohm dummy load.",
     },
   ];
 
@@ -238,6 +259,74 @@ ${fixture.lesson}
       );
     });
   }
+});
+
+test("numeric originality requires unit word boundaries", async () => {
+  await withFixture("unit-word-boundary", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-UNIT-BOUNDARY-001", "If two 20-watt loads are connected in series, what number is shown?", "10"),
+    ], lessonMarkdown("# Lesson\n\nTwo 20 wires in series give 10.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality does not treat picofarads as farads", async () => {
+  await withFixture("picofarad-not-farad", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-PF-FAMILY-001", "If two 20-farad capacitors are connected in series, what number is shown?", "10"),
+    ], lessonMarkdown("# Lesson\n\nTwo 20 pF parts in series give 10.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality allows low-context metric conversion teaching", async () => {
+  await withFixture("allowed-metric-conversion", async (root) => {
+    await writeFixture(root, [
+      question("B-005-001-003", "How many hertz is 1 kHz?", "1000 Hz"),
+    ], lessonMarkdown("# Lesson\n\nA kilohertz is 1000 hertz.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality recognizes scaled unit words and abbreviations", async () => {
+  await withFixture("scaled-unit-words", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-KILOHM-001", "A resistor is marked 4.7 kilohms. What is its resistance in ohms?", "4700 ohms"),
+      question("B-TEST-MEGOHM-001", "A resistor is marked 0.027 megohms. What is its resistance in ohms?", "27000 ohms"),
+      question("B-TEST-MILLIWATT-001", "If a hand-held output is 500 milliwatts, how many watts is that?", "0.5 watts"),
+      question("B-TEST-MICROHENRY-001", "For a coil conversion, 10000 microhenries equals how many millihenries?", "10 millihenries"),
+      question("B-TEST-MV-001", "For a signal conversion, 2000 mV equals how many volts?", "2 volts"),
+      question("B-TEST-PICOFARAD-001", "If two 20-picofarad capacitors are in series, what capacitance results?", "10 picofarads"),
+    ], lessonMarkdown(`# Lesson
+
+A copied resistance value says 4700 ohms.
+Another copied resistance value says 27000 ohms.
+A hand-held output conversion says 0.5 W.
+A coil conversion says 10 mH.
+A signal conversion equals 2 volts.
+Two 20 pF caps in series give 10 pF.
+`));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-KILOHM-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-MEGOHM-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-MILLIWATT-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-MICROHENRY-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-MV-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-PICOFARAD-001" && issue.issueType === "numeric-overlap"),
+    );
+  });
 });
 
 test("numeric originality normalizes voltage and resistance plurals for context", async () => {

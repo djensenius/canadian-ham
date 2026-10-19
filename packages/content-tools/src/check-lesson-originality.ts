@@ -17,7 +17,7 @@ const LONGEST_SHARED_WORD_RUN_THRESHOLD = 8;
 const NUMERIC_CONTEXT_MATCH_THRESHOLD = 2;
 const DIGIT_NUMBER_PATTERN_SOURCE = String.raw`(?:\d{1,3}(?:[\s\u00a0]\d{3})+(?:[,.]\d+)?|\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:[,.]\d+)?|\.\d+)`;
 const DIGIT_NUMBER_PATTERN = new RegExp(String.raw`(?<![\p{L}\p{N}])${DIGIT_NUMBER_PATTERN_SOURCE}`, "gu");
-const UNIT_AFTER_NUMBER_PATTERN = /^\s*(?:[-–—]\s*)?(k\s*(?:ohms?|[ΩΩω])|mega\s*hertz|kilohertz|hertz|megahertz|millihenries|millihenry|microfarads?|microfarad|milliamp(?:ere)?s?|microamp(?:ere)?s?|amperes?|amps?|farads?|ohms?|volts?|watts?|decibels?|degrees?|feet|foot|meters?|metres?|wavelengths?|(?:µ|μ|u)f|mhz|khz|kohms?|pf|ma|mh|hz|db|[avw]|[ΩΩω])/iu;
+const UNIT_AFTER_NUMBER_PATTERN = /^\s*(?:[-–—]\s*)?(k\s*(?:ohms?|[ΩΩω])|kilohms?|kilo\s*ohms?|mega\s*ohms?|mega\s*hertz|kilohertz|hertz|megahertz|millihenries|millihenry|microhenries|microhenry|picofarads?|microfarads?|microfarad|milliwatts?|milliamp(?:ere)?s?|microamp(?:ere)?s?|amperes?|amps?|farads?|ohms?|volts?|watts?|decibels?|degrees?|feet|foot|meters?|metres?|wavelengths?|(?:µ|μ|u)f|mhz|khz|kohms?|megohms?|pf|mv|mw|ma|mh|hz|db|[avw]|[ΩΩω])(?![\p{L}\p{N}])/iu;
 
 type NumericRequirement = {
   display: string;
@@ -165,26 +165,45 @@ const NUMERIC_UNIT_WORDS = new Set([
   "farads",
   "feet",
   "foot",
+  "hertz",
   "hz",
   "khz",
   "kilohertz",
+  "kilohm",
+  "kilohms",
   "kohm",
   "kohms",
   "ma",
+  "megohm",
+  "megohms",
   "meter",
   "meters",
   "metre",
   "metres",
   "mhz",
   "microamp",
+  "microampere",
+  "microamperes",
   "microamps",
   "microfarad",
   "microfarads",
+  "microhenries",
+  "microhenry",
   "milliamp",
+  "milliampere",
+  "milliamperes",
   "milliamps",
+  "millihenries",
+  "millihenry",
+  "milliwatt",
+  "milliwatts",
+  "mv",
+  "mw",
   "ohm",
   "ohms",
   "pf",
+  "picofarad",
+  "picofarads",
   "uf",
   "v",
   "volt",
@@ -218,6 +237,14 @@ const NUMBER_WORDS = new Map<string, string>([
   ["eighteen", "18"],
   ["nineteen", "19"],
   ["twenty", "20"],
+  ["thirty", "30"],
+  ["forty", "40"],
+  ["fifty", "50"],
+  ["sixty", "60"],
+  ["seventy", "70"],
+  ["seventy-five", "75"],
+  ["eighty", "80"],
+  ["ninety", "90"],
   ["twice", "2"],
   ["double", "2"],
   ["half", "0.5"],
@@ -246,7 +273,45 @@ const NUMBER_WORD_VALUES = new Map<string, number>([
   ["eighteen", 18],
   ["nineteen", 19],
   ["twenty", 20],
+  ["thirty", 30],
+  ["forty", 40],
+  ["fifty", 50],
+  ["sixty", 60],
+  ["seventy", 70],
+  ["eighty", 80],
+  ["ninety", 90],
 ]);
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function numberWordPatternSource(value: string): string {
+  return value.split("-").map(escapeRegExp).join(String.raw`[-–—\s]+`);
+}
+
+const NUMBER_WORD_PATTERN = new RegExp(
+  String.raw`(?<![\p{L}\p{N}])(${[...NUMBER_WORDS.keys()].sort((left, right) => right.length - left.length).map(numberWordPatternSource).join("|")})(?![\p{L}\p{N}])`,
+  "giu",
+);
+
+type NumberWordMatch = {
+  display: string;
+  endIndex: number;
+};
+
+function numberWordMatches(text: string): NumberWordMatch[] {
+  const matches: NumberWordMatch[] = [];
+  for (const match of text.matchAll(NUMBER_WORD_PATTERN)) {
+    const rawWord = match[1]!;
+    const key = rawWord.toLowerCase().replace(/[-–—\s]+/gu, "-");
+    const display = NUMBER_WORDS.get(key);
+    if (display !== undefined) {
+      matches.push({ display, endIndex: (match.index ?? 0) + rawWord.length });
+    }
+  }
+  return matches;
+}
 
 type QuestionRecord = {
   id: string;
@@ -334,7 +399,8 @@ function normalizeScaledNumericToken(value: string, multiplier: number): string 
   if (!Number.isFinite(scaled)) {
     return null;
   }
-  return normalizeNumericToken(scaled.toLocaleString("en-US", { maximumFractionDigits: 12, useGrouping: false }));
+  const rounded = Number(scaled.toPrecision(12));
+  return normalizeNumericToken(rounded.toLocaleString("en-US", { maximumFractionDigits: 12, useGrouping: false }));
 }
 
 function unitInfoFromRaw(rawUnit: string): UnitInfo | null {
@@ -342,8 +408,14 @@ function unitInfoFromRaw(rawUnit: string): UnitInfo | null {
   if (unit === "uf" || unit === "µf" || unit === "microfarad" || unit === "microfarads") {
     return { family: "microfarad", countsAsContextEvidence: true };
   }
-  if (unit === "farad" || unit === "farads" || unit === "pf") {
+  if (unit === "pf" || unit === "picofarad" || unit === "picofarads") {
+    return { family: "picofarad", countsAsContextEvidence: true };
+  }
+  if (unit === "farad" || unit === "farads") {
     return { family: "farad", countsAsContextEvidence: true };
+  }
+  if (unit === "microhenry" || unit === "microhenries") {
+    return { family: "millihenry", multiplier: 0.001, countsAsContextEvidence: true };
   }
   if (unit === "mh" || unit === "millihenry" || unit === "millihenries") {
     return { family: "millihenry", countsAsContextEvidence: true };
@@ -351,11 +423,20 @@ function unitInfoFromRaw(rawUnit: string): UnitInfo | null {
   if (unit === "ω" || unit === "ohm" || unit === "ohms") {
     return { family: "ohm", countsAsContextEvidence: true };
   }
-  if (unit === "kohm" || unit === "kohms" || unit === "kω") {
+  if (unit === "kohm" || unit === "kohms" || unit === "kilohm" || unit === "kilohms" || unit === "kω") {
     return { family: "ohm", multiplier: 1000, countsAsContextEvidence: true };
+  }
+  if (unit === "megaohm" || unit === "megaohms" || unit === "megohm" || unit === "megohms") {
+    return { family: "ohm", multiplier: 1000000, countsAsContextEvidence: true };
+  }
+  if (unit === "mv") {
+    return { family: "volt", multiplier: 0.001, countsAsContextEvidence: true };
   }
   if (unit === "v" || unit === "volt" || unit === "volts") {
     return { family: "volt", countsAsContextEvidence: true };
+  }
+  if (unit === "mw" || unit === "milliwatt" || unit === "milliwatts") {
+    return { family: "watt", multiplier: 0.001, countsAsContextEvidence: true };
   }
   if (unit === "w" || unit === "watt" || unit === "watts") {
     return { family: "watt", countsAsContextEvidence: true };
@@ -429,13 +510,20 @@ function numericRequirements(text: string): NumericRequirement[] {
     addNumericRequirement(requirements, display, alternatives);
   }
 
+  for (const match of numberWordMatches(text)) {
+    const alternatives = [match.display];
+    const unitInfo = unitInfoAfterNumber(text, match.endIndex);
+    if (unitInfo?.multiplier !== undefined) {
+      const scaled = normalizeScaledNumericToken(match.display, unitInfo.multiplier);
+      if (scaled !== null) {
+        alternatives.push(scaled);
+      }
+    }
+    addNumericRequirement(requirements, match.display, alternatives);
+  }
+
   const words = normalizeWordTokens(text);
   for (const [index, word] of words.entries()) {
-    const numericWord = NUMBER_WORDS.get(word);
-    if (numericWord !== undefined) {
-      addNumericRequirement(requirements, numericWord, [numericWord]);
-    }
-
     const nextWord = words[index + 1];
     const baseValue = NUMBER_WORD_VALUES.get(word);
     if (baseValue !== undefined && (nextWord === "hundred" || nextWord === "thousand")) {
@@ -450,29 +538,42 @@ function numericTokens(text: string): Set<string> {
   return new Set(numericRequirements(text).flatMap((requirement) => requirement.alternatives));
 }
 
+function numericUnitPairAlternatives(displayNumber: string, unitInfo: UnitInfo): string[] {
+  if (unitInfo.multiplier === undefined) {
+    return [`${displayNumber}:${unitInfo.family}`];
+  }
+  const scaled = normalizeScaledNumericToken(displayNumber, unitInfo.multiplier);
+  return scaled === null ? [] : [`${scaled}:${unitInfo.family}`];
+}
+
+function addNumericUnitRequirement(requirements: Map<string, NumericUnitRequirement>, displayNumber: string, unitInfo: UnitInfo): void {
+  const normalizedAlternatives = [...new Set(numericUnitPairAlternatives(displayNumber, unitInfo))];
+  if (normalizedAlternatives.length === 0) {
+    return;
+  }
+  const key = normalizedAlternatives.join("/");
+  if (!requirements.has(key)) {
+    requirements.set(key, {
+      display: normalizedAlternatives[0]!,
+      alternatives: normalizedAlternatives,
+      countsAsContextEvidence: unitInfo.countsAsContextEvidence,
+    });
+  }
+}
+
 function numericUnitRequirements(text: string): NumericUnitRequirement[] {
   const requirements = new Map<string, NumericUnitRequirement>();
   for (const match of text.matchAll(DIGIT_NUMBER_PATTERN)) {
     const displayNumber = normalizeNumericToken(match[0]!);
     const unitInfo = unitInfoAfterNumber(text, (match.index ?? 0) + match[0]!.length);
-    if (unitInfo === null) {
-      continue;
+    if (unitInfo !== null) {
+      addNumericUnitRequirement(requirements, displayNumber, unitInfo);
     }
-    const alternatives = [`${displayNumber}:${unitInfo.family}`];
-    if (unitInfo.multiplier !== undefined) {
-      const scaled = normalizeScaledNumericToken(displayNumber, unitInfo.multiplier);
-      if (scaled !== null) {
-        alternatives.push(`${scaled}:${unitInfo.family}`);
-      }
-    }
-    const normalizedAlternatives = [...new Set(alternatives)];
-    const key = normalizedAlternatives.join("/");
-    if (!requirements.has(key)) {
-      requirements.set(key, {
-        display: `${displayNumber}:${unitInfo.family}`,
-        alternatives: normalizedAlternatives,
-        countsAsContextEvidence: unitInfo.countsAsContextEvidence,
-      });
+  }
+  for (const match of numberWordMatches(text)) {
+    const unitInfo = unitInfoAfterNumber(text, match.endIndex);
+    if (unitInfo !== null) {
+      addNumericUnitRequirement(requirements, match.display, unitInfo);
     }
   }
   return [...requirements.values()];

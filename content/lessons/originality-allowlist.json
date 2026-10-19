@@ -10,6 +10,31 @@
     "reason": "Reviewed standard SWR reflected-power table requested by docs/teaching-guide.md for task-39.3. The values are calculated from the reflection-coefficient formula and are not copied from ISED question text. The numeric false-positive trigger was B-006-011-010, where the bank's Yagi-spacing numbers overlap the unrelated 3:1 and 0.2 SWR table values."
   },
   {
+    "lessonId": "L-006-01",
+    "blockHeading": "In the real world: cutting coax does not change Z0",
+    "reason": "Reviewed fifty-ohm coax teaching fact for B-006-001-006: the block teaches characteristic impedance and cable length using an original cut-coax scenario; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem."
+  },
+  {
+    "lessonId": "L-006-01",
+    "blockHeading": "Coaxial cable",
+    "reason": "Reviewed fifty-ohm coax teaching fact for B-006-001-006: the block contrasts amateur fifty-ohm coax with seventy-five-ohm TV coax and expected station hardware; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem."
+  },
+  {
+    "lessonId": "L-006-01",
+    "blockHeading": "In the real world: TV coax and radio coax",
+    "reason": "Reviewed fifty-ohm coax teaching fact for B-006-001-006: the block explains practical radio-vs-TV coax expectations; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem."
+  },
+  {
+    "lessonId": "L-006-01",
+    "blockHeading": "Try it",
+    "reason": "Reviewed fifty-ohm coax practice for B-006-001-006: the item asks about cable length and characteristic impedance in an original jumper scenario; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem."
+  },
+  {
+    "lessonId": "L-006-01",
+    "blockHeading": "Summary",
+    "reason": "Reviewed fifty-ohm coax teaching fact for B-006-001-006: the summary states amateur/TV coax norms; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem."
+  },
+  {
     "lessonId": "L-005-05",
     "blockHeading": "Resonance and tuned circuits",
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
