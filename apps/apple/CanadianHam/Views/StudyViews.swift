@@ -486,6 +486,21 @@ struct PracticeSessionView: View {
             }
 #endif
         }
+#if DEBUG
+        .overlay(alignment: .topLeading) {
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTrigger") {
+                Button {
+                    duoPostureProvider?.triggerNextDebugPlaybackSegment()
+                } label: {
+                    Text(verbatim: "Run") // l10n: verbatim DEBUG-only UI test hook
+                }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+                .padding(.top, 96)
+                .padding(.leading, DesignTokens.Spacing.md)
+                .accessibilityIdentifier("debug-hinge-playback-trigger")
+            }
+        }
+#endif
         .onAppear { configureDuoPostureProviderIfNeeded() }
         .onDisappear { clearDuoPostureProviderCallback() }
         .onChange(of: scope) { _, _ in resetHingePeekForSessionChange() }

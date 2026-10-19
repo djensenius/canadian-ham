@@ -249,7 +249,16 @@ protocol DuoPostureProviding: AnyObject {
     var onPostureChanged: ((DuoPostureSample) -> Void)? { get set }
     func attach(to view: UIView)
     func detach()
+#if DEBUG
+    func triggerNextDebugPlaybackSegment()
+#endif
 }
+
+#if DEBUG
+extension DuoPostureProviding {
+    func triggerNextDebugPlaybackSegment() {}
+}
+#endif
 
 @MainActor
 final class UnavailableDuoPostureProvider: DuoPostureProviding {
@@ -334,26 +343,38 @@ final class SimulatedDuoPostureProvider: DuoPostureProviding {
                 playbackTask?.cancel()
                 playbackTask = nil
             } else if attachedView != nil {
-                startPlayback()
+                startAutomaticPlaybackIfNeeded()
             }
         }
     }
 
-    private let sequence: [DuoPostureSample]
-    private let playbackStartedAt = ProcessInfo.processInfo.systemUptime
+    private let automaticSequence: [DuoPostureSample]
+    private let triggeredSegments: [[DuoPostureSample]]
+    private let automaticPlaybackStartedAt: TimeInterval?
     private weak var attachedView: UIView?
     private var playbackTask: Task<Void, Never>?
+    private var nextTriggeredSegmentIndex = 0
 
     init(sequence: [DuoPostureSample]) {
-        self.sequence = sequence.sorted { $0.timestamp < $1.timestamp }
+        self.automaticSequence = sequence.sorted { $0.timestamp < $1.timestamp }
+        self.triggeredSegments = []
+        self.automaticPlaybackStartedAt = ProcessInfo.processInfo.systemUptime
         refreshSampleForCurrentElapsed(notify: false)
+    }
+
+    init(triggeredSegments: [[DuoPostureSample]]) {
+        self.automaticSequence = []
+        self.triggeredSegments = triggeredSegments
+            .map { $0.sorted { $0.timestamp < $1.timestamp } }
+            .filter { !$0.isEmpty }
+        self.automaticPlaybackStartedAt = nil
     }
 
     func attach(to view: UIView) {
         guard attachedView !== view else { return }
         attachedView = view
         if onPostureChanged != nil {
-            startPlayback()
+            startAutomaticPlaybackIfNeeded()
         }
     }
 
@@ -364,10 +385,18 @@ final class SimulatedDuoPostureProvider: DuoPostureProviding {
         refreshSampleForCurrentElapsed(notify: false)
     }
 
-    private func startPlayback() {
+    func triggerNextDebugPlaybackSegment() {
+        guard nextTriggeredSegmentIndex < triggeredSegments.count else { return }
+        let segment = triggeredSegments[nextTriggeredSegmentIndex]
+        nextTriggeredSegmentIndex += 1
+        startTriggeredPlayback(segment)
+    }
+
+    private func startAutomaticPlaybackIfNeeded() {
+        guard automaticPlaybackStartedAt != nil else { return }
         playbackTask?.cancel()
         refreshSampleForCurrentElapsed(notify: true)
-        let pendingSamples = sequence.filter { $0.timestamp > elapsedPlaybackTime }
+        let pendingSamples = automaticSequence.filter { $0.timestamp > elapsedPlaybackTime }
         playbackTask = Task { @MainActor in
             for target in pendingSamples {
                 let delay = max(0, target.timestamp - self.elapsedPlaybackTime)
@@ -380,12 +409,32 @@ final class SimulatedDuoPostureProvider: DuoPostureProviding {
         }
     }
 
+    private func startTriggeredPlayback(_ segment: [DuoPostureSample]) {
+        playbackTask?.cancel()
+        let segmentStartedAt = ProcessInfo.processInfo.systemUptime
+        let segmentBaseTimestamp = segment.first?.timestamp ?? 0
+        playbackTask = Task { @MainActor in
+            for target in segment {
+                let targetElapsed = max(0, target.timestamp - segmentBaseTimestamp)
+                let elapsed = ProcessInfo.processInfo.systemUptime - segmentStartedAt
+                let delay = max(0, targetElapsed - elapsed)
+                if delay > 0 {
+                    try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                }
+                guard !Task.isCancelled else { return }
+                self.updateSample(target, notify: true)
+            }
+        }
+    }
+
     private var elapsedPlaybackTime: TimeInterval {
-        ProcessInfo.processInfo.systemUptime - playbackStartedAt
+        guard let automaticPlaybackStartedAt else { return 0 }
+        return ProcessInfo.processInfo.systemUptime - automaticPlaybackStartedAt
     }
 
     private func refreshSampleForCurrentElapsed(notify: Bool) {
-        guard let currentSample = sequence.last(where: { $0.timestamp <= elapsedPlaybackTime }) else { return }
+        guard automaticPlaybackStartedAt != nil,
+              let currentSample = automaticSequence.last(where: { $0.timestamp <= elapsedPlaybackTime }) else { return }
         updateSample(currentSample, notify: notify)
     }
 
@@ -401,6 +450,10 @@ final class SimulatedDuoPostureProvider: DuoPostureProviding {
 struct SimulatedDuoPostureSequenceParser {
     static func parse(_ rawValue: String) -> [DuoPostureSample] {
         rawValue.split(separator: ",").compactMap { parseStep(String($0).trimmingCharacters(in: .whitespacesAndNewlines)) }
+    }
+
+    static func parseSegments(_ rawValue: String) -> [[DuoPostureSample]] {
+        rawValue.split(separator: "|").map { parse(String($0)) }.filter { !$0.isEmpty }
     }
 
     private static func parseStep(_ rawStep: String) -> DuoPostureSample? {
@@ -474,6 +527,12 @@ struct DuoPostureObserverView: UIViewRepresentable {
 enum DuoPostureProviderFactory {
     static func makeProvider(arguments: [String] = ProcessInfo.processInfo.arguments) -> any DuoPostureProviding {
 #if DEBUG
+        if let rawSegments = AppLaunchArguments.value(after: "-CanadianHamSimulatedHingeTriggeredSequences", in: arguments) {
+            let segments = SimulatedDuoPostureSequenceParser.parseSegments(rawSegments)
+            if !segments.isEmpty {
+                return SimulatedDuoPostureProvider(triggeredSegments: segments)
+            }
+        }
         if let rawSequence = AppLaunchArguments.value(after: "-CanadianHamSimulatedHingeSequence", in: arguments) {
             let sequence = SimulatedDuoPostureSequenceParser.parse(rawSequence)
             if !sequence.isEmpty {
