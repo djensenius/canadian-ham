@@ -3,11 +3,11 @@ id: TASK-46.10
 title: >-
   Split overloaded lessons and move coverage (L-005-04, M8, B-001-014, L-004-03
   first in M4)
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 23:37'
+updated_date: '2026-10-19 23:45'
 labels:
   - content
 dependencies: []
@@ -38,6 +38,8 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 6. Finish the inherited test decoder helper and add only the two version-validation localizations, verifying the catalogue preserves origin/main entries and key order. Run full macOS units, the eight affected iOS Learn/figure tests, and requested web/content checks; record per-test evidence before finalization and PR.
 
 Review fixes: verify old/new concept texts; implement identical concept/score/read-credit and per-device migrations on web/Apple, persist the Apple marker atomically, add launch/import/schema regressions, fix impedance prerequisite, create the approved figure follow-up, then run requested checks and update PR #302.
+
+Final PR #302 fixes: constrain answered-concept selection to recorded count on web/Apple, omit empty quiz destinations, migrate coherent stored IndexedDB device rows during v6 upgrade, document gated split-store limitations, strengthen matching regressions/shared fixture, then run requested web/schema/macOS checks and update the PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
