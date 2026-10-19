@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 19:23'
+updated_date: '2026-10-19 20:41'
 labels:
   - content
 dependencies: []
@@ -50,4 +50,6 @@ Resumed finalization: committed test-local archived-array decoder helper (8d31d8
 Coordinator-approved parity fix: web split-quiz migration now matches Apple by skipping a destination with no answered official questions unless it is the original quiz. Added regression covering top-level and legacy sync-row migration; it failed before the one-line fix and all 29 ProgressStore tests passed afterward (pnpm --dir apps/web exec vitest run src/lib/progressStore.test.ts). Existing assertions were not weakened.
 
 Full macOS run: 180 tests executed; 179 passed and existing testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates failed nine assertions because migration merged/sorted invalid raw rows before validation. Coordinator approved fixing both import paths: raw rows now validate before any migration, including exact historical quiz membership from source commit 350a3b53658c64f12e89c0b48d6b97c7c3040e88; migrated rows then validate against current membership. Imports reject invalid data before writing. Existing validation assertions are unchanged and now also assert import rejection. New Apple/web tests cover invalid scores and historical top-level/sync quiz membership, including removed legacy concept C3. Corrected only the legacy L-005-05 mixed-row fixture from B-005-009-003 to historically correct B-005-012-001; v2 fixture and all migration assertions preserved. Historical membership tables were independently checked against source via Python; web ProgressStore 31 tests pass. macOS ProgressStore class rerun queued via nohup; initial typecheck caught missing test DB names, fixed, and retry passes.
+
+macOS fix validation passed via xbuild: entire ProgressStoreTests class, 93 tests / zero failures, including unchanged testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates and the two new raw-validation regressions. Initial full run covered the other 89 unit tests successfully (180 total before adding two tests); combined final evidence covers 182 distinct passing tests. Full-run/fix-rerun per-test table prepared at /tmp/task-46.10-macos-per-test.md for the PR and task notes. Latest pnpm test passes 217 web + 21 Morse Vitest tests; typecheck, build and URL/CSP audit pass. iOS and localization checks remain queued.
 <!-- SECTION:NOTES:END -->
