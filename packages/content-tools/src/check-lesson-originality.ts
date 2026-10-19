@@ -14,6 +14,206 @@ const FIVE_GRAM_SIZE = 5;
 const SHARED_FIVE_GRAM_THRESHOLD = 5;
 const SHARED_FIVE_GRAM_RATIO_THRESHOLD = 0.4;
 const LONGEST_SHARED_WORD_RUN_THRESHOLD = 8;
+const NUMERIC_CONTEXT_MATCH_THRESHOLD = 2;
+const DIGIT_NUMBER_PATTERN_SOURCE = String.raw`(?:\d{1,3}(?:[\s\u00a0]\d{3})+(?:[,.]\d+)?|\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:[,.]\d+)?|\.\d+)`;
+const DIGIT_NUMBER_PATTERN = new RegExp(String.raw`(?<![\p{L}\p{N}])${DIGIT_NUMBER_PATTERN_SOURCE}`, "gu");
+const UNIT_AFTER_NUMBER_PATTERN = /^\s*(?:[-–—]\s*)?(k\s*(?:ohms?|[ΩΩω])|kilohms?|kilo\s*ohms?|mega\s*ohms?|mega\s*hertz|kilohertz|hertz|megahertz|millihenries|millihenry|microhenries|microhenry|picofarads?|microfarads?|microfarad|milliwatts?|milliamp(?:ere)?s?|microamp(?:ere)?s?|amperes?|amps?|farads?|ohms?|volts?|watts?|decibels?|degrees?|feet|foot|meters?|metres?|wavelengths?|(?:µ|μ|u)f|mhz|khz|kohms?|megohms?|pf|mv|mw|ma|mh|hz|db|[avw]|[ΩΩω])(?![\p{L}\p{N}])/iu;
+
+type NumericRequirement = {
+  display: string;
+  alternatives: string[];
+};
+
+type NumericUnitRequirement = {
+  display: string;
+  alternatives: string[];
+  countsAsContextEvidence: boolean;
+};
+
+type UnitInfo = {
+  family: string;
+  multiplier?: number;
+  countsAsContextEvidence: boolean;
+};
+
+// These are the reusable values that appeared in reviewed false positives: routine
+// half/double/3 dB/10 dB steps, common ratios, Safety Code 6 references, and
+// round arithmetic values. They suppress numeric-only matches only when the
+// lesson block also lacks distinctive context words or matching number+unit pairs.
+const COMMON_NUMERIC_TOKENS = new Set([
+  "0.1",
+  "0.2",
+  "0.5",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "10",
+  "20",
+  "30",
+  "50",
+  "100",
+]);
+
+// Stop words remove function words and generic arithmetic/dB phrasing from the
+// context fallback. Domain nouns such as component names remain available, and
+// matching number+unit pairs provide separate context evidence for calculations.
+const CONTEXT_STOP_WORDS = new Set([
+  "a",
+  "about",
+  "above",
+  "add",
+  "adds",
+  "all",
+  "allow",
+  "allowed",
+  "amateur",
+  "an",
+  "and",
+  "answer",
+  "approximately",
+  "approximate",
+  "are",
+  "as",
+  "at",
+  "be",
+  "between",
+  "by",
+  "can",
+  "change",
+  "changed",
+  "changes",
+  "common",
+  "compared",
+  "decrease",
+  "decreased",
+  "decreases",
+  "decibel",
+  "decibels",
+  "divide",
+  "does",
+  "each",
+  "equal",
+  "estimated",
+  "find",
+  "for",
+  "from",
+  "gain",
+  "given",
+  "has",
+  "higher",
+  "how",
+  "if",
+  "in",
+  "increase",
+  "increased",
+  "increases",
+  "is",
+  "it",
+  "its",
+  "loss",
+  "lower",
+  "many",
+  "minus",
+  "of",
+  "or",
+  "original",
+  "plus",
+  "power",
+  "ratio",
+  "results",
+  "roughly",
+  "same",
+  "signal",
+  "step",
+  "than",
+  "that",
+  "the",
+  "their",
+  "then",
+  "these",
+  "this",
+  "times",
+  "to",
+  "total",
+  "use",
+  "uses",
+  "using",
+  "value",
+  "values",
+  "what",
+  "when",
+  "which",
+  "with",
+  "would",
+  "you",
+]);
+
+const NUMERIC_UNIT_WORDS = new Set([
+  "a",
+  "amp",
+  "amps",
+  "ampere",
+  "amperes",
+  "db",
+  "degree",
+  "degrees",
+  "f",
+  "farad",
+  "farads",
+  "feet",
+  "foot",
+  "hertz",
+  "hz",
+  "khz",
+  "kilohertz",
+  "kilohm",
+  "kilohms",
+  "kohm",
+  "kohms",
+  "ma",
+  "megohm",
+  "megohms",
+  "meter",
+  "meters",
+  "metre",
+  "metres",
+  "mhz",
+  "microamp",
+  "microampere",
+  "microamperes",
+  "microamps",
+  "microfarad",
+  "microfarads",
+  "microhenries",
+  "microhenry",
+  "milliamp",
+  "milliampere",
+  "milliamperes",
+  "milliamps",
+  "millihenries",
+  "millihenry",
+  "milliwatt",
+  "milliwatts",
+  "mv",
+  "mw",
+  "ohm",
+  "ohms",
+  "pf",
+  "picofarad",
+  "picofarads",
+  "uf",
+  "v",
+  "volt",
+  "volts",
+  "w",
+  "watt",
+  "watts",
+  "wavelength",
+  "wavelengths",
+]);
 
 const NUMBER_WORDS = new Map<string, string>([
   ["zero", "0"],
@@ -37,6 +237,14 @@ const NUMBER_WORDS = new Map<string, string>([
   ["eighteen", "18"],
   ["nineteen", "19"],
   ["twenty", "20"],
+  ["thirty", "30"],
+  ["forty", "40"],
+  ["fifty", "50"],
+  ["sixty", "60"],
+  ["seventy", "70"],
+  ["seventy-five", "75"],
+  ["eighty", "80"],
+  ["ninety", "90"],
   ["twice", "2"],
   ["double", "2"],
   ["half", "0.5"],
@@ -65,7 +273,45 @@ const NUMBER_WORD_VALUES = new Map<string, number>([
   ["eighteen", 18],
   ["nineteen", 19],
   ["twenty", 20],
+  ["thirty", 30],
+  ["forty", 40],
+  ["fifty", 50],
+  ["sixty", 60],
+  ["seventy", 70],
+  ["eighty", 80],
+  ["ninety", 90],
 ]);
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function numberWordPatternSource(value: string): string {
+  return value.split("-").map(escapeRegExp).join(String.raw`[-–—\s]+`);
+}
+
+const NUMBER_WORD_PATTERN = new RegExp(
+  String.raw`(?<![\p{L}\p{N}])(${[...NUMBER_WORDS.keys()].sort((left, right) => right.length - left.length).map(numberWordPatternSource).join("|")})(?![\p{L}\p{N}])`,
+  "giu",
+);
+
+type NumberWordMatch = {
+  display: string;
+  endIndex: number;
+};
+
+function numberWordMatches(text: string): NumberWordMatch[] {
+  const matches: NumberWordMatch[] = [];
+  for (const match of text.matchAll(NUMBER_WORD_PATTERN)) {
+    const rawWord = match[1]!;
+    const key = rawWord.toLowerCase().replace(/[-–—\s]+/gu, "-");
+    const display = NUMBER_WORDS.get(key);
+    if (display !== undefined) {
+      matches.push({ display, endIndex: (match.index ?? 0) + rawWord.length });
+    }
+  }
+  return matches;
+}
 
 type QuestionRecord = {
   id: string;
@@ -134,42 +380,247 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function normalizeNumericToken(token: string): string {
-  const cleaned = token.replace(/[\s\u00a0,]/g, "");
-  const withLeadingZero = cleaned.startsWith(".") ? `0${cleaned}` : cleaned;
+  const compact = token.replace(/[\s\u00a0]/g, "");
+  const decimalNormalized = compact.includes(",") && !compact.includes(".") && !/^\d{1,3}(?:,\d{3})+$/.test(compact)
+    ? compact.replace(/,/g, ".")
+    : compact.replace(/,/g, "");
+  const withLeadingZero = decimalNormalized.startsWith(".") ? `0${decimalNormalized}` : decimalNormalized;
   if (withLeadingZero.includes(".")) {
     const [rawInteger, rawFraction = ""] = withLeadingZero.split(".");
     const integer = rawInteger.replace(/^0+(?=\d)/, "") || "0";
     const fraction = rawFraction.replace(/0+$/, "");
     return fraction.length > 0 ? `${integer}.${fraction}` : integer;
   }
-  return cleaned.replace(/^0+(?=\d)/, "") || "0";
+  return withLeadingZero.replace(/^0+(?=\d)/, "") || "0";
 }
 
-function numericTokens(text: string): Set<string> {
-  const tokens = new Set<string>();
-  const digitPattern = /(?<![\p{L}\p{N}])(?:\d+(?:[\s\u00a0,]\d{3})+|\d+)(?:\.\d+)?|(?<![\p{L}\p{N}])\.\d+/gu;
-  for (const match of text.matchAll(digitPattern)) {
-    tokens.add(normalizeNumericToken(match[0]!));
+function normalizeScaledNumericToken(value: string, multiplier: number): string | null {
+  const scaled = Number(value) * multiplier;
+  if (!Number.isFinite(scaled)) {
+    return null;
+  }
+  const rounded = Number(scaled.toPrecision(12));
+  return normalizeNumericToken(rounded.toLocaleString("en-US", { maximumFractionDigits: 12, useGrouping: false }));
+}
+
+function unitInfoFromRaw(rawUnit: string): UnitInfo | null {
+  const unit = rawUnit.toLowerCase().replace(/[\s-]/g, "").replace(/[μµ]/g, "µ").replace(/[ΩΩω]/g, "ω");
+  if (unit === "uf" || unit === "µf" || unit === "microfarad" || unit === "microfarads") {
+    return { family: "microfarad", countsAsContextEvidence: true };
+  }
+  if (unit === "pf" || unit === "picofarad" || unit === "picofarads") {
+    return { family: "picofarad", countsAsContextEvidence: true };
+  }
+  if (unit === "farad" || unit === "farads") {
+    return { family: "farad", countsAsContextEvidence: true };
+  }
+  if (unit === "microhenry" || unit === "microhenries") {
+    return { family: "millihenry", multiplier: 0.001, countsAsContextEvidence: true };
+  }
+  if (unit === "mh" || unit === "millihenry" || unit === "millihenries") {
+    return { family: "millihenry", countsAsContextEvidence: true };
+  }
+  if (unit === "ω" || unit === "ohm" || unit === "ohms") {
+    return { family: "ohm", countsAsContextEvidence: true };
+  }
+  if (unit === "kohm" || unit === "kohms" || unit === "kilohm" || unit === "kilohms" || unit === "kω") {
+    return { family: "ohm", multiplier: 1000, countsAsContextEvidence: true };
+  }
+  if (unit === "megaohm" || unit === "megaohms" || unit === "megohm" || unit === "megohms") {
+    return { family: "ohm", multiplier: 1000000, countsAsContextEvidence: true };
+  }
+  if (unit === "mv") {
+    return { family: "volt", multiplier: 0.001, countsAsContextEvidence: true };
+  }
+  if (unit === "v" || unit === "volt" || unit === "volts") {
+    return { family: "volt", countsAsContextEvidence: true };
+  }
+  if (unit === "mw" || unit === "milliwatt" || unit === "milliwatts") {
+    return { family: "watt", multiplier: 0.001, countsAsContextEvidence: true };
+  }
+  if (unit === "w" || unit === "watt" || unit === "watts") {
+    return { family: "watt", countsAsContextEvidence: true };
+  }
+  // Frequency/current conversions are taught as general metric-prefix facts in
+  // lessons, and dB is a standard ratio shortcut; they normalize for numeric
+  // matching but do not count as context evidence without a real scenario word.
+  if (unit === "a" || unit === "amp" || unit === "amps" || unit === "ampere" || unit === "amperes") {
+    return { family: "ampere", countsAsContextEvidence: false };
+  }
+  if (unit === "ma" || unit === "milliamp" || unit === "milliamps" || unit === "milliampere" || unit === "milliamperes") {
+    return { family: "milliampere", countsAsContextEvidence: false };
+  }
+  if (unit === "microamp" || unit === "microamps" || unit === "microampere" || unit === "microamperes") {
+    return { family: "microampere", countsAsContextEvidence: false };
+  }
+  if (unit === "hz" || unit === "hertz") {
+    return { family: "hertz", multiplier: 1, countsAsContextEvidence: false };
+  }
+  if (unit === "khz" || unit === "kilohertz") {
+    return { family: "hertz", multiplier: 1000, countsAsContextEvidence: false };
+  }
+  if (unit === "mhz" || unit === "megahertz") {
+    return { family: "hertz", multiplier: 1000000, countsAsContextEvidence: false };
+  }
+  if (unit === "db" || unit === "decibel" || unit === "decibels") {
+    return { family: "decibel", countsAsContextEvidence: false };
+  }
+  if (unit === "degree" || unit === "degrees") {
+    return { family: "degree", countsAsContextEvidence: true };
+  }
+  if (unit === "foot" || unit === "feet" || unit === "meter" || unit === "meters" || unit === "metre" || unit === "metres" || unit === "wavelength" || unit === "wavelengths") {
+    return { family: "length", countsAsContextEvidence: true };
+  }
+  return null;
+}
+
+function unitInfoAfterNumber(text: string, numberEndIndex: number): UnitInfo | null {
+  const unitMatch = text.slice(numberEndIndex).match(UNIT_AFTER_NUMBER_PATTERN);
+  return unitMatch === null ? null : unitInfoFromRaw(unitMatch[1]!);
+}
+
+function addNumericRequirement(requirements: Map<string, NumericRequirement>, display: string, alternatives: Iterable<string>): void {
+  const normalizedAlternatives = [...new Set([display, ...alternatives].map((alternative) => normalizeNumericToken(alternative)))];
+  const key = normalizedAlternatives.join("/");
+  if (!requirements.has(key)) {
+    requirements.set(key, { display, alternatives: normalizedAlternatives });
+  }
+}
+
+function numericRequirements(text: string): NumericRequirement[] {
+  const requirements = new Map<string, NumericRequirement>();
+  for (const match of text.matchAll(DIGIT_NUMBER_PATTERN)) {
+    const display = normalizeNumericToken(match[0]!);
+    const alternatives = [display];
+    const unitInfo = unitInfoAfterNumber(text, (match.index ?? 0) + match[0]!.length);
+    if (unitInfo?.multiplier !== undefined) {
+      const scaled = normalizeScaledNumericToken(display, unitInfo.multiplier);
+      if (scaled !== null) {
+        alternatives.push(scaled);
+      }
+    } else {
+      const multiplierMatch = text.slice((match.index ?? 0) + match[0]!.length).match(/^\s*k(?![\p{L}\p{N}])/u);
+      if (multiplierMatch !== null) {
+        const scaled = normalizeScaledNumericToken(display, 1000);
+        if (scaled !== null) {
+          alternatives.push(scaled);
+        }
+      }
+    }
+    addNumericRequirement(requirements, display, alternatives);
+  }
+
+  for (const match of numberWordMatches(text)) {
+    const alternatives = [match.display];
+    const unitInfo = unitInfoAfterNumber(text, match.endIndex);
+    if (unitInfo?.multiplier !== undefined) {
+      const scaled = normalizeScaledNumericToken(match.display, unitInfo.multiplier);
+      if (scaled !== null) {
+        alternatives.push(scaled);
+      }
+    }
+    addNumericRequirement(requirements, match.display, alternatives);
   }
 
   const words = normalizeWordTokens(text);
   for (const [index, word] of words.entries()) {
-    const numericWord = NUMBER_WORDS.get(word);
-    if (numericWord !== undefined) {
-      tokens.add(numericWord);
-    }
-
     const nextWord = words[index + 1];
     const baseValue = NUMBER_WORD_VALUES.get(word);
     if (baseValue !== undefined && (nextWord === "hundred" || nextWord === "thousand")) {
-      tokens.add(String(baseValue * (nextWord === "hundred" ? 100 : 1000)));
+      const value = String(baseValue * (nextWord === "hundred" ? 100 : 1000));
+      addNumericRequirement(requirements, value, [value]);
     }
   }
-  return tokens;
+  return [...requirements.values()];
+}
+
+function numericTokens(text: string): Set<string> {
+  return new Set(numericRequirements(text).flatMap((requirement) => requirement.alternatives));
+}
+
+function numericUnitPairAlternatives(displayNumber: string, unitInfo: UnitInfo): string[] {
+  if (unitInfo.multiplier === undefined) {
+    return [`${displayNumber}:${unitInfo.family}`];
+  }
+  const scaled = normalizeScaledNumericToken(displayNumber, unitInfo.multiplier);
+  return scaled === null ? [] : [`${scaled}:${unitInfo.family}`];
+}
+
+function addNumericUnitRequirement(requirements: Map<string, NumericUnitRequirement>, displayNumber: string, unitInfo: UnitInfo): void {
+  const normalizedAlternatives = [...new Set(numericUnitPairAlternatives(displayNumber, unitInfo))];
+  if (normalizedAlternatives.length === 0) {
+    return;
+  }
+  const key = normalizedAlternatives.join("/");
+  if (!requirements.has(key)) {
+    requirements.set(key, {
+      display: normalizedAlternatives[0]!,
+      alternatives: normalizedAlternatives,
+      countsAsContextEvidence: unitInfo.countsAsContextEvidence,
+    });
+  }
+}
+
+function numericUnitRequirements(text: string): NumericUnitRequirement[] {
+  const requirements = new Map<string, NumericUnitRequirement>();
+  for (const match of text.matchAll(DIGIT_NUMBER_PATTERN)) {
+    const displayNumber = normalizeNumericToken(match[0]!);
+    const unitInfo = unitInfoAfterNumber(text, (match.index ?? 0) + match[0]!.length);
+    if (unitInfo !== null) {
+      addNumericUnitRequirement(requirements, displayNumber, unitInfo);
+    }
+  }
+  for (const match of numberWordMatches(text)) {
+    const unitInfo = unitInfoAfterNumber(text, match.endIndex);
+    if (unitInfo !== null) {
+      addNumericUnitRequirement(requirements, match.display, unitInfo);
+    }
+  }
+  return [...requirements.values()];
+}
+
+function numericUnitPairTokens(text: string): Set<string> {
+  return new Set(numericUnitRequirements(text).flatMap((requirement) => requirement.alternatives));
 }
 
 function normalizeWordTokens(text: string): string[] {
   return [...text.toLowerCase().matchAll(/[\p{L}\p{N}]+/gu)].map((match) => match[0]!);
+}
+
+function contextTokenStem(token: string): string {
+  if (token.length > 5 && token.endsWith("ies")) {
+    return `${token.slice(0, -3)}y`;
+  }
+  if (token.length > 6 && token.endsWith("ing")) {
+    return token.slice(0, -3);
+  }
+  if (token.length > 5 && token.endsWith("ed")) {
+    return token.slice(0, -2);
+  }
+  if (token.length > 4 && (token.endsWith("ces") || token.endsWith("ges"))) {
+    return token.slice(0, -1);
+  }
+  if (token.length > 4 && token.endsWith("es")) {
+    return token.slice(0, -2);
+  }
+  if (token.length > 3 && token.endsWith("s")) {
+    return token.slice(0, -1);
+  }
+  return token;
+}
+
+function numericContextTokens(text: string): string[] {
+  const tokens = new Set<string>();
+  for (const word of normalizeWordTokens(text)) {
+    if (word.length <= 2 || CONTEXT_STOP_WORDS.has(word) || NUMBER_WORDS.has(word) || NUMERIC_UNIT_WORDS.has(word) || /^\d+$/.test(word)) {
+      continue;
+    }
+    const stemmed = contextTokenStem(word);
+    if (stemmed.length > 2 && !CONTEXT_STOP_WORDS.has(stemmed) && !NUMERIC_UNIT_WORDS.has(stemmed)) {
+      tokens.add(stemmed);
+    }
+  }
+  return [...tokens].sort();
 }
 
 function fiveGramsFromWords(words: string[]): Set<string> {
@@ -335,8 +786,10 @@ type QuestionCheck = {
   id: string;
   subsectionId: string;
   categoryId: string;
-  questionTokens: string[];
-  answerTokens: string[];
+  questionNumberRequirements: NumericRequirement[];
+  answerNumberRequirements: NumericRequirement[];
+  numericUnitRequirements: NumericUnitRequirement[];
+  numericContextTokens: string[];
   sourceWords: string[];
   sourceFiveGrams: Set<string>;
 };
@@ -368,8 +821,10 @@ async function loadQuestions(questionsPath: string): Promise<QuestionCheck[]> {
       id: question.id,
       subsectionId,
       categoryId: categoryIdFromSubsection(subsectionId),
-      questionTokens: [...numericTokens(question.text.en)].sort(),
-      answerTokens: [...numericTokens(correctAnswer.text.en)].sort(),
+      questionNumberRequirements: numericRequirements(question.text.en),
+      answerNumberRequirements: numericRequirements(correctAnswer.text.en),
+      numericUnitRequirements: numericUnitRequirements(sourceText),
+      numericContextTokens: numericContextTokens(question.text.en),
       sourceWords,
       sourceFiveGrams: fiveGramsFromWords(sourceWords),
     });
@@ -415,6 +870,41 @@ function sharedValues(left: Iterable<string>, right: Set<string>): string[] {
   return [...left].filter((value) => right.has(value)).sort();
 }
 
+function matchingNumericRequirementTokens(requirements: readonly NumericRequirement[], blockNumericTokens: Set<string>): string[] | null {
+  const matches: string[] = [];
+  for (const requirement of requirements) {
+    const matchedAlternative = requirement.alternatives.find((alternative) => blockNumericTokens.has(alternative));
+    if (matchedAlternative === undefined) {
+      return null;
+    }
+    matches.push(matchedAlternative);
+  }
+  return matches;
+}
+
+function matchedNumericUnitEvidenceCount(question: QuestionCheck, blockNumericUnitPairs: Set<string>): number {
+  let count = 0;
+  for (const requirement of question.numericUnitRequirements) {
+    if (requirement.countsAsContextEvidence && requirement.alternatives.some((alternative) => blockNumericUnitPairs.has(alternative))) {
+      count += 1;
+    }
+  }
+  return count;
+}
+
+function hasDistinctiveNumericQuestionEvidence(question: QuestionCheck, matchingQuestionTokens: readonly string[], matchingAnswerTokens: readonly string[], blockContextTokens: Set<string>, blockNumericUnitPairs: Set<string>): boolean {
+  if (matchingQuestionTokens.some((token, index) => !COMMON_NUMERIC_TOKENS.has(token) && !COMMON_NUMERIC_TOKENS.has(question.questionNumberRequirements[index]?.display ?? token))) {
+    return true;
+  }
+
+  const sharedContextTokens = sharedValues(question.numericContextTokens, blockContextTokens);
+  const contextEvidenceCount = sharedContextTokens.length + matchedNumericUnitEvidenceCount(question, blockNumericUnitPairs);
+  if (matchingAnswerTokens.some((token, index) => !COMMON_NUMERIC_TOKENS.has(token) && !COMMON_NUMERIC_TOKENS.has(question.answerNumberRequirements[index]?.display ?? token)) && contextEvidenceCount >= 1) {
+    return true;
+  }
+  return contextEvidenceCount >= NUMERIC_CONTEXT_MATCH_THRESHOLD;
+}
+
 export async function checkLessonOriginality(options: LessonOriginalityOptions = {}): Promise<LessonOriginalityReport> {
   const lessonRoot = options.lessonRoot ?? DEFAULT_LESSON_ROOT;
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTIONS_PATH;
@@ -446,14 +936,20 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
       }
 
       const blockNumericTokens = numericTokens(block.text);
+      const blockNumericUnitPairs = numericUnitPairTokens(block.text);
+      const blockContextTokens = new Set(numericContextTokens(block.text));
       const blockWords = normalizeWordTokens(block.text);
       const blockFiveGrams = fiveGramsFromWords(blockWords);
 
       for (const question of numericChecksForFile) {
-        if (question.questionTokens.length > 0 && question.answerTokens.length > 0) {
-          const matchingQuestionTokens = question.questionTokens.filter((token) => blockNumericTokens.has(token));
-          const matchingAnswerTokens = question.answerTokens.filter((token) => blockNumericTokens.has(token));
-          if (matchingQuestionTokens.length === question.questionTokens.length && matchingAnswerTokens.length === question.answerTokens.length) {
+        if (question.questionNumberRequirements.length > 0 && question.answerNumberRequirements.length > 0) {
+          const matchingQuestionTokens = matchingNumericRequirementTokens(question.questionNumberRequirements, blockNumericTokens);
+          const matchingAnswerTokens = matchingNumericRequirementTokens(question.answerNumberRequirements, blockNumericTokens);
+          if (
+            matchingQuestionTokens !== null
+            && matchingAnswerTokens !== null
+            && hasDistinctiveNumericQuestionEvidence(question, matchingQuestionTokens, matchingAnswerTokens, blockContextTokens, blockNumericUnitPairs)
+          ) {
             issues.push({
               filePath,
               lessonId: metadata.id,
@@ -497,7 +993,7 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
   const summaryLines = [
     `Lesson files checked: ${checkedFileCount}`,
     `Official questions checked: ${questionChecks.length}`,
-    `Numeric originality window: one #/##/### heading block, scoped by lesson categoryIds`,
+    `Numeric originality window: one #/##/### heading block, scoped by lesson categoryIds; keyed answers require a distinctive question number, matching number+unit evidence, or ${NUMERIC_CONTEXT_MATCH_THRESHOLD} distinctive context words`,
     `Near-verbatim threshold: ${SHARED_FIVE_GRAM_THRESHOLD} shared word ${FIVE_GRAM_SIZE}-grams, ${Math.round(SHARED_FIVE_GRAM_RATIO_THRESHOLD * 100)}% of source ${FIVE_GRAM_SIZE}-grams, or ${LONGEST_SHARED_WORD_RUN_THRESHOLD} shared words in a row, across the whole bank`,
     `Allow-listed heading blocks skipped: ${allowlistedBlocks.size}`,
     `Originality issues: ${issues.length}`,
