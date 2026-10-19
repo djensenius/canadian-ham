@@ -849,6 +849,10 @@ struct RootView: View {
         if let debugHorizontalSizeClassOverride {
             return debugHorizontalSizeClassOverride
         }
+        if let initialSizeClass = AppLaunchArguments.value(after: "-CanadianHamSimulatedHorizontalSizeClass")
+            .flatMap({ canadianHamParsedHorizontalSizeClass($0) }) {
+            return initialSizeClass
+        }
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamForceRegularHorizontalSizeClass") {
             return .regular
         }

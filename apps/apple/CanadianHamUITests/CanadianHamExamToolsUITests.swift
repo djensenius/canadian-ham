@@ -503,6 +503,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     func testSimulatedCompactToRegularSizeClassKeepsPracticeQuestionSelectionAndCalculatorValue() throws {
         let app = launchPracticeQuestion(extraArguments: [
+            "-CanadianHamSimulatedHorizontalSizeClass", "compact",
             "-CanadianHamShowSimulatedSizeClassChangeControl",
             "-CanadianHamSimulatedHorizontalSizeClassAfterChange", "regular",
             "-CanadianHamPracticeMode", "review-later"
@@ -560,7 +561,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     func testSimulatedRegularToCompactSizeClassKeepsPracticeQuestionSelectionAndCalculatorValue() throws {
         let app = launchPracticeQuestion(extraArguments: [
-            "-CanadianHamForceRegularHorizontalSizeClass",
+            "-CanadianHamSimulatedHorizontalSizeClass", "regular",
             "-CanadianHamShowSimulatedSizeClassChangeControl",
             "-CanadianHamSimulatedHorizontalSizeClassAfterChange", "compact",
             "-CanadianHamPracticeMode", "review-later"
@@ -774,15 +775,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             openTool(.calculator, in: app)
             XCTAssertTrue(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Regular-width inspector should present the calculator before auditing")
             waitBriefly(0.8)
-#if os(iOS)
-            guard UIDevice.current.userInterfaceIdiom != .phone else {
-                XCTContext.runActivity(named: "Phone regular-width inspector audit is covered by real unfolded Duo hardware") { activity in
-                    activity.add(XCTAttachment(string: "The size-class policy is active, but this phone simulator renders a \(frameDescription(app.windows.firstMatch.frame)) window; full regular-width inspector geometry remains real-device coverage in TASK-54."))
+            guard activeToolPanelTop(in: app) == nil else {
+                XCTContext.runActivity(named: "Native inspector adapted to a sheet in this window") { activity in
+                    activity.add(XCTAttachment(string: "The regular size-class policy is active, but the calculator is presented as a sheet in a \(frameDescription(app.windows.firstMatch.frame)) window; this test audits trailing inspectors only."))
                 }
                 app.terminate()
                 continue
             }
-#endif
             try auditIgnoringOccludedLessonTextContrast(app: app)
             app.terminate()
         }
@@ -929,10 +928,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     /// Asserts the root layout decision (DEBUG control value suffix) independently of the rendered window width.
     private func assertSimulatedLayoutMode(in app: XCUIApplication, expectedMode: String, context: String, file: StaticString = #filePath, line: UInt = #line) {
-#if os(iOS)
-        // iPad always uses split navigation; the compact/split decision under test is the phone-idiom path.
-        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
-#endif
         let deadline = Date().addingTimeInterval(5)
         var observedValue: String?
         while Date() < deadline {
@@ -1012,6 +1007,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5), "\(context): the inspector should reopen after restoring the sidebar", file: file, line: line)
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "\(context): reopening should preserve calculator state", file: file, line: line)
         assertSidebarVisibility(expectedOpenSidebarVisibility, in: app, context: "\(context) with calculator reopened", file: file, line: line)
+        assertQuestionTitleWithinExamColumn(in: app, context: "\(context) calculator reopened", file: file, line: line)
+        assertVisibleAnswerButtonsRemainHittable(in: app, context: "\(context) calculator inspector reopened", file: file, line: line)
         closeTool(in: app)
         waitBriefly(0.8)
         XCTAssertEqual(isSidebarVisible(app.descendants(matching: .any)["root-sidebar"].firstMatch, in: app), initialSidebarVisible, "\(context): closing the reopened inspector should restore the original sidebar visibility", file: file, line: line)
