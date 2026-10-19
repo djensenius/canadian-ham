@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
-updated_date: '2026-10-18 23:55'
+updated_date: '2026-10-19 14:07'
 labels:
   - apple
 dependencies:
@@ -59,10 +59,12 @@ AC evidence:
 6. tvOS/visionOS UI tests open the generic French Review in lesson link, assert the English-only notice, land on lesson-heading-wavelength-and-frequency, and return to the same in-progress session; unit tests verify LessonHeadingAnchors against the linked sectionAnchor.
 7. tvOS/visionOS unit and UI tests cover B-001-002-002 one-level hints, asserting no Hint 2 action.
 8. tvOS/visionOS UI tests assert the localized generic lesson-link label and that the lesson title/section heading are absent before the question is answered.
+
+Final TASK-50.13 handoff pass: reproduced the tvOS one-level failure in /tmp/task-50.13-tvos-onelevel-repro.log, fixed tvOS answer-column left navigation to scroll/focus the current hint action, and verified the one-level test in /tmp/task-50.13-tvos-onelevel-fix.log plus the tvOS hint ladder in /tmp/task-50.13-tvos-ladder-after-focusguide.log. Merged origin/main (#296) with a merge commit. Post-merge validation passed: full tvOS scheme (CanadianHamTVTests 6 + CanadianHamTVUITests 15, /tmp/task-50.13-postmerge-tvos-full.log), full visionOS scheme (CanadianHamVisionTests 6 + CanadianHamVisionUITests 12, /tmp/task-50.13-postmerge-vision-full.log), iPhone 17 Pro Learn targeted tests (2, /tmp/task-50.13-postmerge-iphone-learn-targeted.log), pnpm check:apple-l10n (/tmp/task-50.13-postmerge-apple-l10n.log), node scripts/check-apple-text-sources.ts (/tmp/task-50.13-postmerge-apple-text-sources.log), and git diff --check (/tmp/task-50.13-postmerge-git-diff-check.log). The pre-merge iPhone ExamTools+Learn final chain had the known TASK-61 hinge flake in CanadianHamExamToolsUITests.testSimulatedHingeDismissedPeekReopensOnlyAfterReset; no hinge tests were changed here and the PR body lists the flake with /tmp/task-50.13-final-iphone-examtools-learn.log.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented tvOS and visionOS hint support for practice/review sessions using the shared Apple hint content, visibility qualification, lesson-anchor rendering, and CanadianHamEngine progress semantics while keeping platform sessions in memory only. Added platform lesson readers for hint links, hid reference-sheet pointers where no sheet exists, excluded hints from mock exams, and added/updated unit and UI coverage for ladder, one-level hints, French English-only lesson notice, generic link text, bundled data, session retention, 0.5 s qualification, due scheduling, and weak areas. Validation passed across full tvOS and visionOS schemes, iPhone ExamTools UI tests, macOS unit tests, pnpm typecheck/test, Apple localization checks, text-source checks, XcodeGen determinism, and git diff --check.
+Implemented tvOS and visionOS hint support and completed review fixes. This final pass adds tvOS directional focus guidance so learners starting from answer focus can reach the current hint action on short one-level questions, merges origin/main, and refreshes PR/task evidence. Verified full tvOS and visionOS schemes after the merge, the requested iPhone 17 Pro Learn tests, Apple localization/text-source checks, git diff --check, plus prior macOS unit and pnpm typecheck/test passes. The only residual issue is the known TASK-61 hinge UI-test flake, documented in the PR and outside this task.
 <!-- SECTION:FINAL_SUMMARY:END -->
