@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { act, cleanup, configure, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { StrictMode } from "react";
@@ -30,13 +30,13 @@ import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ha
 import courseFixture from "../../../fixtures/morse/course.json";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
-const appFlowAsyncTimeoutMs = 5_000;
+const lessonRenderAsyncTimeoutMs = 5_000;
 const appFlowTestTimeoutMs = 10_000;
+const lessonRenderWaitOptions = { timeout: lessonRenderAsyncTimeoutMs };
 const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
 let stores: ProgressStore[] = [];
 let testQuestions: readonly Question[] = [];
 
-configure({ asyncUtilTimeout: appFlowAsyncTimeoutMs });
 beforeEach(async () => {
   Object.defineProperty(globalThis, "indexedDB", { value: new IDBFactory(), configurable: true });
   Object.defineProperty(window, "localStorage", { value: createMemoryStorage(), configurable: true });
@@ -68,6 +68,12 @@ function createStore(name: string): ProgressStore {
 async function setAppHash(hash: string): Promise<void> {
   await act(async () => {
     window.location.hash = hash;
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  });
+}
+
+async function dispatchAppHashChange(): Promise<void> {
+  await act(async () => {
     window.dispatchEvent(new HashChangeEvent("hashchange"));
   });
 }
@@ -954,24 +960,24 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     const main = getMain(container);
     const mainView = within(main);
 
-    await mainView.findByRole("heading", { name: "Learn" });
+    await mainView.findByRole("heading", { name: "Learn" }, lessonRenderWaitOptions);
     assert.ok(mainView.getByRole("heading", { name: "Circuit Components" }));
     assert.ok(mainView.getByRole("heading", { name: "Feedlines and Antenna Systems" }));
 
     await setAppHash("#/learn/M4/L-004-01");
-    await mainView.findByRole("heading", { name: "Amplifiers and diodes" });
-    const m4Quiz = await mainView.findByRole("heading", { name: "QZ-L-004-01-A" });
+    await mainView.findByRole("heading", { name: "Amplifiers and diodes" }, lessonRenderWaitOptions);
+    const m4Quiz = await mainView.findByRole("heading", { name: "QZ-L-004-01-A" }, lessonRenderWaitOptions);
     const m4QuizSection = m4Quiz.closest("section");
     assert.ok(m4QuizSection instanceof HTMLElement);
-    const m4Choices = await within(m4QuizSection).findByRole("group", { name: "Answer choices" });
+    const m4Choices = await within(m4QuizSection).findByRole("group", { name: "Answer choices" }, lessonRenderWaitOptions);
     assert.equal(within(m4Choices).getAllByRole("button").length, 4);
 
     await setAppHash("#/learn/M6/L-006-01");
-    await mainView.findByRole("heading", { name: "Feedline basics and types" });
-    const m6Quiz = await mainView.findByRole("heading", { name: "QZ-L-006-01-A" });
+    await mainView.findByRole("heading", { name: "Feedline basics and types" }, lessonRenderWaitOptions);
+    const m6Quiz = await mainView.findByRole("heading", { name: "QZ-L-006-01-A" }, lessonRenderWaitOptions);
     const m6QuizSection = m6Quiz.closest("section");
     assert.ok(m6QuizSection instanceof HTMLElement);
-    const m6Choices = await within(m6QuizSection).findByRole("group", { name: "Answer choices" });
+    const m6Choices = await within(m6QuizSection).findByRole("group", { name: "Answer choices" }, lessonRenderWaitOptions);
     assert.equal(within(m6Choices).getAllByRole("button").length, 4);
   });
 
@@ -1002,14 +1008,14 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
       window.history.back();
     });
     await waitFor(() => assert.equal(window.location.hash, "#/learn/M5/L-005-01"));
-    await setAppHash("#/learn/M5/L-005-01");
+    await dispatchAppHashChange();
     await screen.findByRole("heading", { name: "Units, conductors, and current" });
 
     await act(async () => {
       window.history.forward();
     });
     await waitFor(() => assert.equal(window.location.hash, "#/learn/M5/L-005-02"));
-    await setAppHash("#/learn/M5/L-005-02");
+    await dispatchAppHashChange();
     await screen.findByRole("heading", { name: "Power and Ohm’s law" });
   });
 
