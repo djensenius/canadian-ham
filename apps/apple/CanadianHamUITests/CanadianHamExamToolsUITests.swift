@@ -538,6 +538,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertSimulatedLayoutMode(in: app, expectedMode: "compact", context: "compact before regular size class")
         applySimulatedSizeClassChange(in: app, expectedSizeClassValue: "regular", context: "compact to regular size class")
         assertSimulatedLayoutMode(in: app, expectedMode: "split", context: "compact to regular size class")
+        if !app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.exists {
+            openTool(.calculator, in: app)
+        }
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Expected the calculator after the simulated size-class change")
 #if os(iOS)
         if UIDevice.current.userInterfaceIdiom != .phone {
             assertSimulatedLayoutChanged(in: app, to: .inspector, context: "compact to regular size class")
@@ -545,11 +549,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 #else
         assertSimulatedLayoutChanged(in: app, to: .inspector, context: "compact to regular size class")
 #endif
-
-        if !app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.exists {
-            openTool(.calculator, in: app)
-        }
-        XCTAssertTrue(app.descendants(matching: .any)[Tool.calculator.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Expected the calculator after the simulated size-class change")
 
         XCTAssertTrue(question.waitForExistence(timeout: 5), "Expected to remain in the practice session after the simulated size-class change")
         XCTAssertEqual(question.label, initialQuestionText, "Simulated size-class change must keep the same question")
