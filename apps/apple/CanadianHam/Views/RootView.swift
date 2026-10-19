@@ -69,10 +69,8 @@ struct RootView: View {
     @State private var regularWidthExamToolPresented = false
 #if os(iOS)
     @State private var compactNavigationPath = NavigationPath()
-    @State private var measuredWindowSize: CGSize?
-    @State private var usesUnfoldedIPhoneLayout = false
 #if DEBUG
-    @State private var debugSimulatedWindowSize: CGSize?
+    @State private var debugHorizontalSizeClassOverride: UserInterfaceSizeClass?
 #endif
 #endif
     @State private var didApplyLaunchNavigation = false
@@ -142,9 +140,9 @@ struct RootView: View {
     @ViewBuilder
     private func appContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
 #if os(iOS)
-        let windowSize = effectiveWindowSize(measuredWindowSize)
-        let unfoldedIPhoneLayout = windowSize.map { calculatedUsesUnfoldedIPhoneLayout(windowSize: $0) } ?? false
-        let compactNavigation = usesCompactNavigation(usesUnfoldedIPhoneLayout: unfoldedIPhoneLayout)
+        let resolvedHorizontalSizeClass = effectiveHorizontalSizeClass
+        let usesRegularWidthIPhoneLayout = usesRegularWidthIPhoneLayout(horizontalSizeClass: resolvedHorizontalSizeClass)
+        let compactNavigation = usesCompactNavigation(horizontalSizeClass: resolvedHorizontalSizeClass)
         Group {
             if compactNavigation {
                 compactTabContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
@@ -153,26 +151,13 @@ struct RootView: View {
                     bank: bank,
                     contentLibrary: contentLibrary,
                     progressStore: progressStore,
-                    windowSize: windowSize,
-                    usesUnfoldedIPhoneLayout: unfoldedIPhoneLayout
+                    usesRegularWidthIPhoneLayout: usesRegularWidthIPhoneLayout
                 )
-                .environment(\.horizontalSizeClass, unfoldedIPhoneLayout ? .regular : horizontalSizeClass)
             }
         }
-        .environment(\.canadianHamWindowSize, windowSize)
-        .environment(\.canadianHamUsesUnfoldedIPhoneLayout, unfoldedIPhoneLayout)
-        .background(windowSizeReader())
+        .environment(\.horizontalSizeClass, resolvedHorizontalSizeClass)
         .overlay(alignment: .topTrailing) {
-            debugSimulatedWindowSizeChangeControl(usesCompactNavigation: compactNavigation)
-        }
-        .onAppear {
-            if let windowSize {
-                updateUnfoldedIPhoneLayout(windowSize: windowSize)
-            }
-        }
-        .onChange(of: windowSize) { _, next in
-            guard let next else { return }
-            updateUnfoldedIPhoneLayout(windowSize: next)
+            debugSimulatedSizeClassChangeControl(usesCompactNavigation: compactNavigation)
         }
         .onChange(of: compactNavigation) { _, next in
             synchronizeNavigationForLayoutChange(usesCompactNavigation: next)
@@ -430,17 +415,16 @@ struct RootView: View {
         bank: QuestionBank,
         contentLibrary: ContentLibrary,
         progressStore: ProgressStoreService,
-        windowSize: CGSize? = nil,
-        usesUnfoldedIPhoneLayout: Bool = false
+        usesRegularWidthIPhoneLayout: Bool = false
     ) -> some View {
-        let columnVisibility: Binding<NavigationSplitViewVisibility>? = shouldUseBoundSplitColumnVisibility(usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout) ? $splitColumnVisibility : nil
+        let columnVisibility: Binding<NavigationSplitViewVisibility>? = shouldUseBoundSplitColumnVisibility(usesRegularWidthIPhoneLayout: usesRegularWidthIPhoneLayout) ? $splitColumnVisibility : nil
         splitNavigationView(
             bank: bank,
             contentLibrary: contentLibrary,
             progressStore: progressStore,
             columnVisibility: columnVisibility
         )
-        .navigationSplitViewStyle(.balanced)
+        .navigationSplitViewStyle(.prominentDetail)
 #if os(iOS)
         .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
@@ -449,7 +433,7 @@ struct RootView: View {
             updateLanguage(from: progressStore.preferences)
             applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
             applyInitialSplitColumnVisibilityLaunchArgument()
-            updateRegularWidthExamToolColumnVisibility(containerSize: windowSize, usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout)
+            updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: usesRegularWidthIPhoneLayout)
         }
         .onChange(of: progressStore.preferences.language) { _, _ in
             updateLanguage(from: progressStore.preferences)
@@ -476,14 +460,11 @@ struct RootView: View {
             }
         }
         .onChange(of: regularWidthExamToolPresented) { _, _ in
-            updateRegularWidthExamToolColumnVisibility(containerSize: windowSize, usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout)
+            updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: usesRegularWidthIPhoneLayout)
         }
 #if os(iOS)
-        .onChange(of: windowSize) { _, next in
-            updateRegularWidthExamToolColumnVisibility(containerSize: next, usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout)
-        }
-        .onChange(of: usesUnfoldedIPhoneLayout) { _, next in
-            updateRegularWidthExamToolColumnVisibility(containerSize: windowSize, usesUnfoldedIPhoneLayout: next)
+        .onChange(of: usesRegularWidthIPhoneLayout) { _, next in
+            updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: next)
         }
 #endif
 #if os(macOS)
@@ -601,71 +582,30 @@ struct RootView: View {
         dataRevision + appSettings.dataRevision
     }
 
-    private func shouldUseBoundSplitColumnVisibility(usesUnfoldedIPhoneLayout: Bool) -> Bool {
+    private func shouldUseBoundSplitColumnVisibility(usesRegularWidthIPhoneLayout: Bool) -> Bool {
 #if os(iOS)
 #if DEBUG
         let hasInitialVisibilityLaunchArgument = AppLaunchArguments.value(after: "-CanadianHamInitialSplitColumnVisibility") != nil
 #else
         let hasInitialVisibilityLaunchArgument = false
 #endif
-        return UIDevice.current.userInterfaceIdiom == .pad || usesUnfoldedIPhoneLayout || hasInitialVisibilityLaunchArgument
+        return UIDevice.current.userInterfaceIdiom == .pad || usesRegularWidthIPhoneLayout || hasInitialVisibilityLaunchArgument
 #else
         return false
 #endif
     }
 
 #if os(iOS)
-    private func usesCompactNavigation(usesUnfoldedIPhoneLayout: Bool) -> Bool {
-        guard !usesUnfoldedIPhoneLayout else { return false }
-        return effectiveHorizontalSizeClass == .compact
+    private func usesCompactNavigation(horizontalSizeClass: UserInterfaceSizeClass?) -> Bool {
+        horizontalSizeClass == .compact
     }
 
-    private func calculatedUsesUnfoldedIPhoneLayout(windowSize: CGSize) -> Bool {
-        AdaptiveExamLayoutPolicy.usesUnfoldedIPhoneLayout(
+    private func usesRegularWidthIPhoneLayout(horizontalSizeClass: UserInterfaceSizeClass?) -> Bool {
+        AdaptiveExamLayoutPolicy.usesRegularWidthIPhoneLayout(
             idiom: PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom),
-            containerSize: windowSize,
-            verticalSizeClass: verticalSizeClass,
-            wasUsingUnfoldedLayout: usesUnfoldedIPhoneLayout
+            horizontalSizeClass: horizontalSizeClass,
+            verticalSizeClass: verticalSizeClass
         )
-    }
-
-    private func updateUnfoldedIPhoneLayout(windowSize: CGSize) {
-        let next = calculatedUsesUnfoldedIPhoneLayout(windowSize: windowSize)
-        guard usesUnfoldedIPhoneLayout != next else { return }
-        usesUnfoldedIPhoneLayout = next
-    }
-
-    private func effectiveWindowSize(_ actualSize: CGSize?) -> CGSize? {
-#if DEBUG
-        if let debugSimulatedWindowSize {
-            return debugSimulatedWindowSize
-        }
-        if let actualSize {
-            return canadianHamSimulatedWindowSize(default: actualSize)
-        }
-        return canadianHamSimulatedWindowSizeFromLaunchArguments()
-#else
-        actualSize
-#endif
-    }
-
-    @ViewBuilder
-    private func windowSizeReader() -> some View {
-        GeometryReader { proxy in
-            Color.clear
-                .onAppear {
-                    updateMeasuredWindowSize(proxy.size)
-                }
-                .onChange(of: proxy.size) { _, next in
-                    updateMeasuredWindowSize(next)
-                }
-        }
-        .ignoresSafeArea(.keyboard)
-    }
-
-    private func updateMeasuredWindowSize(_ size: CGSize) {
-        guard measuredWindowSize != size else { return }
-        measuredWindowSize = size
     }
 
     private func synchronizeNavigationForLayoutChange(usesCompactNavigation: Bool) {
@@ -701,38 +641,37 @@ struct RootView: View {
 
 #if DEBUG
     @ViewBuilder
-    private func debugSimulatedWindowSizeChangeControl(usesCompactNavigation: Bool) -> some View {
-        if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowSimulatedWindowSizeChangeControl"),
-           let size = debugSimulatedWindowSizeAfterChange {
+    private func debugSimulatedSizeClassChangeControl(usesCompactNavigation: Bool) -> some View {
+        if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowSimulatedSizeClassChangeControl"),
+           let sizeClass = debugSimulatedHorizontalSizeClassAfterChange {
             Button {
-                debugSimulatedWindowSize = size
+                debugHorizontalSizeClassOverride = sizeClass
             } label: {
-                Text(verbatim: "Apply simulated window size change (\(debugSimulatedWindowSizeAccessibilityValue(usesCompactNavigation: usesCompactNavigation)))")
+                Text(verbatim: "Apply simulated size class change (\(debugSimulatedSizeClassAccessibilityValue(usesCompactNavigation: usesCompactNavigation)))")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .padding(.top, 120)
             .padding(.trailing, DesignTokens.Spacing.md)
-            .accessibilityIdentifier("debug-simulated-window-size-change-button")
-            .accessibilityValue(Text(verbatim: debugSimulatedWindowSizeAccessibilityValue(usesCompactNavigation: usesCompactNavigation))) // l10n: verbatim
+            .accessibilityIdentifier("debug-simulated-size-class-change-button")
+            .accessibilityValue(Text(verbatim: debugSimulatedSizeClassAccessibilityValue(usesCompactNavigation: usesCompactNavigation))) // l10n: verbatim
         }
     }
 
-    /// "<width>x<height> <split|compact>" so UI tests can assert the layout decision itself flips,
-    /// even on simulators whose rendered window is too narrow to show the inspector visually.
-    private func debugSimulatedWindowSizeAccessibilityValue(usesCompactNavigation: Bool) -> String {
-        let size = debugSimulatedWindowSize ?? canadianHamSimulatedWindowSizeFromLaunchArguments()
+    /// "<compact|regular> <compact|split>" so UI tests can assert the layout decision itself flips.
+    private func debugSimulatedSizeClassAccessibilityValue(usesCompactNavigation: Bool) -> String {
+        let sizeClass = debugHorizontalSizeClassOverride ?? effectiveHorizontalSizeClass
+        let sizeClassValue = sizeClass == .regular ? "regular" : "compact"
         let mode = usesCompactNavigation ? "compact" : "split"
-        guard let size else { return "actual \(mode)" }
-        return "\(Int(size.width))x\(Int(size.height)) \(mode)"
+        return "\(sizeClassValue) \(mode)"
     }
 
-    private var debugSimulatedWindowSizeAfterChange: CGSize? {
-        AppLaunchArguments.value(after: "-CanadianHamSimulatedWindowSizeAfterChange")
-            .flatMap { canadianHamParsedWindowSize($0) }
+    private var debugSimulatedHorizontalSizeClassAfterChange: UserInterfaceSizeClass? {
+        AppLaunchArguments.value(after: "-CanadianHamSimulatedHorizontalSizeClassAfterChange")
+            .flatMap { canadianHamParsedHorizontalSizeClass($0) }
     }
 #else
     @ViewBuilder
-    private func debugSimulatedWindowSizeChangeControl(usesCompactNavigation: Bool) -> some View {
+    private func debugSimulatedSizeClassChangeControl(usesCompactNavigation: Bool) -> some View {
         EmptyView()
     }
 #endif
@@ -759,11 +698,10 @@ struct RootView: View {
 #endif
     }
 
-    private func updateRegularWidthExamToolColumnVisibility(containerSize: CGSize?, usesUnfoldedIPhoneLayout: Bool) {
+    private func updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: Bool) {
 #if os(iOS)
-        guard let containerSize,
-              UIDevice.current.userInterfaceIdiom == .pad || usesUnfoldedIPhoneLayout else { return }
-        guard shouldCollapseSidebarForRegularWidthExamTool(containerSize: containerSize, usesUnfoldedIPhoneLayout: usesUnfoldedIPhoneLayout) else {
+        guard UIDevice.current.userInterfaceIdiom == .pad || usesRegularWidthIPhoneLayout else { return }
+        guard regularWidthExamToolPresented else {
             if let preToolSplitColumnVisibility {
                 splitColumnVisibility = preToolSplitColumnVisibility
                 self.preToolSplitColumnVisibility = nil
@@ -774,20 +712,9 @@ struct RootView: View {
         if preToolSplitColumnVisibility == nil {
             preToolSplitColumnVisibility = splitColumnVisibility
         }
-        splitColumnVisibility = .detailOnly
+        splitColumnVisibility = .automatic
 #endif
     }
-
-#if os(iOS)
-    private func shouldCollapseSidebarForRegularWidthExamTool(containerSize: CGSize, usesUnfoldedIPhoneLayout: Bool) -> Bool {
-        guard UIDevice.current.userInterfaceIdiom == .pad || usesUnfoldedIPhoneLayout else { return false }
-        let estimatedSidebarWidth: CGFloat = 320
-        let inspectorIdealWidth: CGFloat = 380
-        let minimumExamColumnWidth: CGFloat = 420
-        let canFitSidebarDetailAndInspector = containerSize.width - estimatedSidebarWidth - inspectorIdealWidth >= minimumExamColumnWidth
-        return regularWidthExamToolPresented && !canFitSidebarDetailAndInspector
-    }
-#endif
 
     private func updateLanguage(from preferences: ApplePreferences) {
         language = preferences.language.resolvedLanguage()
@@ -814,7 +741,7 @@ struct RootView: View {
             .lesson(link.lessonId)
         }
 #if os(iOS)
-        if effectiveHorizontalSizeClass == .compact && !usesUnfoldedIPhoneLayout {
+        if usesCompactNavigation(horizontalSizeClass: effectiveHorizontalSizeClass) {
             compactNavigationPath.append(route)
             selection = .learn
             return
@@ -917,6 +844,12 @@ struct RootView: View {
 #if os(iOS)
     private var effectiveHorizontalSizeClass: UserInterfaceSizeClass? {
 #if DEBUG
+        if let debugHorizontalSizeClassOverride {
+            return debugHorizontalSizeClassOverride
+        }
+        if let simulatedSizeClass = canadianHamSimulatedHorizontalSizeClassFromLaunchArguments() {
+            return simulatedSizeClass
+        }
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamForceRegularHorizontalSizeClass") {
             return .regular
         }

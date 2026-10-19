@@ -47,8 +47,6 @@ struct ExamToolPresentationModifier: ViewModifier {
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Environment(\.canadianHamWindowSize) private var canadianHamWindowSize
-    @Environment(\.canadianHamUsesUnfoldedIPhoneLayout) private var canadianHamUsesUnfoldedIPhoneLayout
 #endif
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
@@ -155,12 +153,8 @@ struct ExamToolPresentationModifier: ViewModifier {
 
 #if os(iOS)
     private func horizontalUsesInspector() -> Bool {
-        if canadianHamUsesUnfoldedIPhoneLayout {
-            return true
-        }
-        return AdaptiveExamLayoutPolicy.usesInspectorPresentation(
+        AdaptiveExamLayoutPolicy.usesInspectorPresentation(
             idiom: PlatformUserInterfaceIdiom(UIDevice.current.userInterfaceIdiom),
-            containerSize: canadianHamWindowSize ?? .zero,
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass
         )
@@ -631,42 +625,60 @@ struct CalculatorToolView: View {
     ]
 
     var body: some View {
-        GeometryReader { proxy in
-            let layout = CalculatorToolLayout(availableHeight: proxy.size.height, dynamicTypeSize: dynamicTypeSize)
-            // Keys keep a fixed minimum height, so content that does not fit scrolls instead of
-            // compressing below 44 pt. Bounce only when the content actually overflows.
-            ScrollView {
-                calculatorContent(layout: layout)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        calculatorAdaptiveContent()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .contentShape(Rectangle())
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("calculator-keyboard-focus-target")
+            .focusable(true)
+            .focused($hasKeyboardFocus)
+            .onAppear {
+                if calculatorFocused {
+                    focusKeyboardAfterLayout()
+                }
             }
-            .scrollBounceBehavior(.basedOnSize)
-            .accessibilityIdentifier("calculator-tool-scroll")
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .contentShape(Rectangle())
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("calculator-keyboard-focus-target")
-        .focusable(true)
-        .focused($hasKeyboardFocus)
-        .onAppear {
-            if calculatorFocused {
-                focusKeyboardAfterLayout()
+            .simultaneousGesture(TapGesture().onEnded {
+                activateKeyboardFocus()
+            })
+            .onChange(of: calculatorFocused) { _, isFocused in
+                if isFocused {
+                    focusKeyboardAfterLayout()
+                } else {
+                    hasKeyboardFocus = false
+                    viewModel.suspendHardwareKeyboardInput()
+                }
+            }
+            .onKeyPress { press in
+                handleKeyPress(press)
+            }
+    }
+
+    @ViewBuilder
+    private func calculatorAdaptiveContent() -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling))
+        } else {
+            ViewThatFits(in: .vertical) {
+                calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: true)))
+                calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: false)))
+                calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling))
             }
         }
-        .simultaneousGesture(TapGesture().onEnded {
-            activateKeyboardFocus()
-        })
-        .onChange(of: calculatorFocused) { _, isFocused in
-            if isFocused {
-                focusKeyboardAfterLayout()
-            } else {
-                hasKeyboardFocus = false
-                viewModel.suspendHardwareKeyboardInput()
-            }
+    }
+
+    private func calculatorFittingContent(layout: CalculatorToolLayout) -> some View {
+        calculatorContent(layout: layout)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+    }
+
+    private func calculatorScrollContent(layout: CalculatorToolLayout) -> some View {
+        ScrollView {
+            calculatorContent(layout: layout)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .onKeyPress { press in
-            handleKeyPress(press)
-        }
+        .scrollBounceBehavior(.basedOnSize)
+        .accessibilityIdentifier("calculator-tool-scroll")
     }
 
     private func calculatorContent(layout: CalculatorToolLayout) -> some View {
