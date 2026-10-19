@@ -7,7 +7,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:48'
-updated_date: '2026-10-19 12:58'
+updated_date: '2026-10-19 13:14'
 labels:
   - content
 dependencies: []
@@ -53,6 +53,8 @@ Before/after all-lessons comparison:
   - `L-002-04` grid locator code length vs `B-002-006-008` (`6`/`4`): standalone Maidenhead locator lengths, not copied question context.
   - `L-005-04` Decibels as power ratios vs `B-005-001-003`, `B-005-004-001`, `B-005-005-008`, `B-005-005-010`, `B-005-006-006`, `B-005-006-009`, `B-005-008-001`, `B-005-008-002`, `B-005-008-003`, `B-005-008-007`, `B-005-009-001`, `B-005-009-002`, `B-005-009-003`, `B-005-009-004`, `B-005-009-009`, `B-005-009-010`, and `B-005-011-007`: standard dB/power-ratio step values (`0.5`, `1`, `2`, `3`, `4`, `5`, `10`, `20`, `100`, `1000`) taught as estimating shortcuts rather than any one question scenario.
   - `L-006-02` reflected-power estimates vs `B-006-009-002`, `B-006-011-010`, and `B-006-013-010`: common ratio/SWR/Yagi-spacing numbers overlap the reflected-power table, but the lesson block lacks the source questions' matching contexts.
+
+Review fix: added number+unit context evidence for common-number leaks, including µF/uF, mH, ohm/Ω, V and W examples from review, plus regression fixtures for one-context vs two-context boundary, low-context unit copies, French decimal commas, and k/Hz scaling. Normal all-lessons checker before this fix passed with 36 lesson files, 984 questions, 39 allowlisted blocks, 0 issues; after this fix it still passes with the same counts and 0 issues. Empty-allowlist audit before and after remained 61 total findings / 24 numeric / 37 five-gram, so no current lesson findings were newly added or removed by this review fix. The retained suppressed dB/ratio findings remain justified because dB unit matches are not context evidence by themselves; current metric conversion teaching is also not treated as a leak without additional question context. Created follow-up TASK-62 for stale allowlist auditing/reporting recommended by review.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
