@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 23:50'
-updated_date: '2026-10-19 13:06'
+updated_date: '2026-10-19 13:19'
 labels:
   - web
 dependencies: []
@@ -42,10 +42,12 @@ Root cause: App.test.tsx mixed large route renders, axe passes, and async Indexe
 Fix: memoized MarkdownContent parsing/heading anchors; added act-wrapped setAppHash for in-test route changes; scoped the M4/M6 assertions to main, removed the unnecessary Learn rerender between M4 and M6, and now waits for the M4/M6 quiz answer-choice groups without dropping existing heading/module assertions; reset fake timers in afterEach. Added measured guards for App flows only: Testing Library async queries now wait up to 5s and the App flow suite has a 10s per-test timeout because a pre-guard repeated web run failed with App tests at 5.03-5.98s despite passing when isolated.
 
 Validation: focused M4/M6 test passed at 330ms after the deterministic route/query changes. After final changes, pnpm --filter @canadian-ham/web test passed 5 explicit runs: run 1 84.88s, runs 2 and 3 under concurrent pnpm test load 81.37s and 73.51s, run 4 30.99s, run 5 21.42s. The concurrent heavy pnpm test exited 0 and its included web run passed in 87.39s. Required checks also passed: pnpm typecheck; pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls. Known jsdom/axe noise remained unchanged: repeated "Not implemented: HTMLCanvasElement's getContext()" messages.
+
+Review follow-up: removed the file-wide Testing Library asyncUtilTimeout override from App.test.tsx and kept the 5s wait only on the M4/M6 lesson-rendering findByRole calls. Temporary per-query instrumentation of the M4/M6 test under four concurrent Node pbkdf2 CPU workers measured the actual waits as: Learn heading 165ms, M4 lesson heading 37ms, M4 quiz heading 7ms, M4 answer choices 12ms, M6 lesson heading 16ms, M6 quiz heading 4ms, M6 answer choices 2ms (longest 165ms). The 5s scoped timeout is retained as defensive headroom for the known loaded-host timeout but no longer changes other App.test.tsx waits. Load evidence under four concurrent Node pbkdf2 CPU workers: M4/M6 focused test passed 10/10 runs with durations run 01 12.09s, run 02 13.38s, run 03 14.30s, run 04 15.44s, run 05 14.44s, run 06 42.87s, run 07 14.35s, run 08 15.09s, run 09 9.19s, run 10 13.00s. Added MarkdownContent rerender coverage for changed markdown/title props and changed the history test to dispatch only hashchange after history.back()/forward(). Validation after follow-up: focused App/MarkdownContent tests passed; pnpm typecheck passed; pnpm test passed (web: 16 files, 209 tests; known jsdom canvas messages); pnpm build:web passed with the existing large chunk warning.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Stabilized slow web App tests under load by removing nondeterministic hash-route updates, adding explicit waits for rendered M4/M6 quiz choices, scoping the M4/M6 test queries to main, resetting fake timers after each App test, and memoizing MarkdownContent parsing to avoid reparsing large lesson/reference content on rerenders. Added measured App-test guards (5s async query timeout and 10s App-flow test timeout) after repeated-run evidence showed legitimate 5-6s App tests under load. Verified with five explicit web test runs including two while pnpm test ran concurrently, plus typecheck, full pnpm test, web build, and URL/CSP audit.
+Stabilized the M4/M6 web lesson test without a file-wide async wait increase: the default Testing Library async timeout is restored for App.test.tsx, and the 5s wait is scoped to the M4/M6 lesson-rendering findByRole calls only. Added rerender coverage proving MarkdownContent updates when markdown/title props change, and clarified the browser-history test by dispatching hashchange without resetting the hash after back/forward. Temporary query instrumentation under CPU load measured the longest M4/M6 findBy wait at 165ms; the focused M4/M6 test then passed 10/10 under concurrent CPU load. Required checks passed: pnpm typecheck, pnpm test, pnpm build:web.
 <!-- SECTION:FINAL_SUMMARY:END -->
