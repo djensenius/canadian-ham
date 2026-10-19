@@ -1,9 +1,11 @@
 ---
 id: TASK-40
 title: Web test 'automatically includes M4 and M6 lessons' times out under load
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 23:50'
+updated_date: '2026-10-19 12:50'
 labels:
   - web
 dependencies: []
@@ -22,3 +24,12 @@ apps/web/src/App.test.tsx > 'automatically includes M4 and M6 lessons from conte
 - [ ] #1 The test passes reliably under load (for example, 10 consecutive runs while the build host is busy) with unchanged assertion strength
 - [ ] #2 Any timeout change is justified by a measured duration in the task notes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect App.test.tsx helpers and the lesson/Morse quiz rendering path to identify slow or nondeterministic waits, timers, axe usage, or isolation gaps.
+2. Apply the smallest deterministic fix without weakening assertions; prefer scoped queries, targeted rendering, and timer/test isolation fixes over timeout increases.
+3. Run focused web tests repeatedly, including under CPU load, then run required project checks.
+4. Record measured evidence in task notes, check acceptance criteria, finalize the task, commit, push, and open the requested PR.
+<!-- SECTION:PLAN:END -->
