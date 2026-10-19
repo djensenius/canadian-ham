@@ -3,11 +3,11 @@ id: TASK-46.10
 title: >-
   Split overloaded lessons and move coverage (L-005-04, M8, B-001-014, L-004-03
   first in M4)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 23:21'
+updated_date: '2026-10-19 23:37'
 labels:
   - content
 dependencies: []
@@ -259,10 +259,12 @@ Latest full macOS xbuild per-test evidence (186 passed, zero failures; iOS/tvOS/
 | `CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate` | PASSED | 0.035 seconds |
 
 Strengthened the shared concept fixture/tests in 87a2ead9: each of the 12 old concepts is now tested individually as the sole wrong answer, in addition to all-wrong cases, so a permutation between concepts/destinations cannot hide behind the same aggregate wrong-ID sets. Web ProgressStore 36/36 and typecheck passed; targeted macOS shared-concept method passed 1/1, 0 failures, 0.185 seconds (xbuild -only-testing:CanadianHamTests/ProgressStoreTests/testTask4610SharedConceptMappingAndConceptInclusiveScores). Full macOS 186/186 remains valid for unchanged production Apple code. PR body updated with this additional per-test result. All current CI checks green; localization no-rewrite gate still waiting on shared lock.
+
+All review-fix validation complete: pnpm check:apple-l10n passed (L10N_EXIT=0), including localization export plus generic tvOS and visionOS simulator builds. Catalogue SHA-256 before/after identical: a7ebc828e3f093957dc9814f1db1e8596f420da2e3560795b9d9ddfb68bc19f9; no rewrite or new strings. Full macOS 186/186 and final strengthened concept method 1/1 passed; all requested web/content checks, schema negatives, build/URL-CSP audit and final test guard passed. iOS/tvOS/visionOS full suites skipped for this review fix (coordinator merge-batch policy); earlier iOS targeted 6/6 remains recorded. TASK-46.12 depends on this task and tracks the two figure mismatches. PR #302 updated with all macOS per-test results and Copilot re-requested; independent review and resolution of the three already-fixed concept-ID threads remain coordinator review gates.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Split L-005-04 (AC and dB / reactance and resonance, plus new L-005-06 transformers and meters) and M8 (receiver / transmitter side), moved B-001-014 to L-001-05, and taught L-004-03 first in M4. Updated coverage, quizzes, explanations, hints, figures and links. Saved progress migrates on web (IndexedDB v6) and Apple (one-time local migration, marker after save). Imports and sync rows carry lessonIdVersion so only legacy data migrates. Raw rows are validated against exact historical quiz membership before migration, and migrated rows against current membership.
+Implemented the approved lesson splits/moves and corrected the PR #302 migration review: explicit text-verified concept mappings (obsolete M8 filter checks dropped), concept-inclusive partial scores, conservative all-source read credit (latest date/minimum count), coherent per-device preservation, and an atomic SwiftData completion marker. Added shared individual-concept fixtures, Apple launch/archive/multi-device/reopen coverage, null/version regressions and schema negatives; aligned prefix handling and fixed L-006-01 prerequisite. Validation: full macOS 186/186 plus strengthened concept test 1/1; web progress 36/36, typecheck, pnpm test (222 web/21 Morse/144 content-tools/127 calculator), all requested content/schema/import checks, web build/URL-CSP, test guard and no-rewrite Apple localization gate passed. TASK-46.12 tracks figure alignment; independent PR review remains required.
 <!-- SECTION:FINAL_SUMMARY:END -->
