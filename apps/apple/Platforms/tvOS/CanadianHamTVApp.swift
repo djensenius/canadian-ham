@@ -878,6 +878,11 @@ private struct TVLessonView: View {
     let sectionAnchor: String?
     let onPractice: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
+    @Environment(\.tvReduceMotionOverride) private var reduceMotionOverride
+
+    private var reduceMotion: Bool { reduceMotionOverride ?? systemReduceMotion }
+
     var body: some View {
         ScrollViewReader { scrollProxy in
             ScrollView {
@@ -923,7 +928,7 @@ private struct TVLessonView: View {
         guard let sectionAnchor else { return }
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 150_000_000)
-            withAnimation(.easeInOut(duration: DesignTokens.Motion.fast)) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
                 proxy.scrollTo(sectionAnchor, anchor: .top)
             }
             AccessibilityNotification.Announcement(String(localized: "Lesson section opened.")).post()
