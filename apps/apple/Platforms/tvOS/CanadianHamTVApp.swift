@@ -433,6 +433,7 @@ private struct TVPracticeView: View {
 
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @Environment(\.tvReduceMotionOverride) private var reduceMotionOverride
+    @State private var hintActionFocusRequest = 0
 
     private var reduceMotion: Bool { reduceMotionOverride ?? systemReduceMotion }
 
@@ -479,7 +480,8 @@ private struct TVPracticeView: View {
                                         revealLevel: { level in revealHintLevel(questionID: currentQuestion.id, level: level) },
                                         hintVisibleLongEnough: { qualifyAnsweredWithHelp(questionID: currentQuestion.id) },
                                         openLesson: onOpenHintLesson,
-                                        requestsEvidenceFocus: evidenceFocus == .hint
+                                        requestsEvidenceFocus: evidenceFocus == .hint,
+                                        focusActionRequest: hintActionFocusRequest
                                     )
                                     .id(Self.hintAnchorID)
                                 }
@@ -502,6 +504,10 @@ private struct TVPracticeView: View {
                                 }
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .onMoveCommand { direction in
+                                guard direction == .left else { return }
+                                focusHintActionFromAnswerColumn(with: scrollProxy)
+                            }
                         }
 
                         if let selectedAnswer, let correctAnswer {
@@ -563,9 +569,22 @@ private struct TVPracticeView: View {
         guard evidenceFocus == .hint, currentQuestionHint != nil else { return }
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 250_000_000)
-            withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
-                proxy.scrollTo(Self.hintActionAnchorID, anchor: .center)
-            }
+            scrollHintActionIntoView(with: proxy)
+        }
+    }
+
+    private func focusHintActionFromAnswerColumn(with proxy: ScrollViewProxy) {
+        guard currentQuestionHint != nil else { return }
+        Task { @MainActor in
+            scrollHintActionIntoView(with: proxy)
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            hintActionFocusRequest += 1
+        }
+    }
+
+    private func scrollHintActionIntoView(with proxy: ScrollViewProxy) {
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
+            proxy.scrollTo(Self.hintActionAnchorID, anchor: .center)
         }
     }
 
@@ -712,6 +731,7 @@ private struct TVHintPanel: View {
     let hintVisibleLongEnough: () -> Bool
     let openLesson: (QuestionHintLessonLink) -> Void
     let requestsEvidenceFocus: Bool
+    let focusActionRequest: Int
 
     @State private var qualificationTimer = HintVisibilityQualificationTimer()
     @FocusState private var isShowHintFocused: Bool
@@ -799,6 +819,7 @@ private struct TVHintPanel: View {
             syncQualificationTimer()
             syncActionFocus()
         }
+        .onChange(of: focusActionRequest) { _, _ in focusCurrentAction() }
         .onChange(of: canRecordHelp) { _, _ in syncQualificationTimer() }
         .onChange(of: answeredWithHelpQualified) { _, _ in syncQualificationTimer() }
     }
@@ -823,9 +844,15 @@ private struct TVHintPanel: View {
     }
 
     private func syncActionFocus() {
+        if showsLessonLink || requestsEvidenceFocus {
+            focusCurrentAction()
+        }
+    }
+
+    private func focusCurrentAction() {
         if showsLessonLink {
             isReviewFocused = true
-        } else if requestsEvidenceFocus, nextLevel != nil {
+        } else if nextLevel != nil {
             isShowHintFocused = true
         }
     }
