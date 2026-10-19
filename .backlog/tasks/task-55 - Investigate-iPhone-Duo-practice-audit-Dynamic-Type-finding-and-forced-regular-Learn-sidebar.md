@@ -3,11 +3,11 @@ id: TASK-55
 title: >-
   Investigate iPhone Duo practice audit Dynamic Type finding and forced-regular
   Learn sidebar
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-18 02:16'
-updated_date: '2026-10-18 21:54'
+updated_date: '2026-10-19 04:24'
 labels:
   - apple
 dependencies:
@@ -24,17 +24,15 @@ TASK-15 part 1 required iPhone Duo practice audits and Learn navigation runs. Bo
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Identify the element or elements behind the Duo 'Dynamic Type font sizes are partially unsupported' audit finding and fix app code if it is an app issue; do not filter or weaken the audit
-- [ ] #2 Make CanadianHamPracticeUITests/testLearnUserNavigationOpensLessonQuiz pass on iPhone Duo, or document why forced-regular landscape has no root-sidebar on the iOS 27.1 Duo runtime
-- [ ] #3 Rerun CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionLight, testAccessibilityAuditPracticeSessionDark and testLearnUserNavigationOpensLessonQuiz on iPhone Duo and record per-test results
+- [x] #1 Identify the element or elements behind the Duo 'Dynamic Type font sizes are partially unsupported' audit finding and fix app code if it is an app issue; do not filter or weaken the audit
+- [x] #2 Make CanadianHamPracticeUITests/testLearnUserNavigationOpensLessonQuiz pass on iPhone Duo, or document why forced-regular landscape has no root-sidebar on the iOS 27.1 Duo runtime
+- [x] #3 Rerun CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionLight, testAccessibilityAuditPracticeSessionDark and testLearnUserNavigationOpensLessonQuiz on iPhone Duo and record per-test results
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Reproduce the two practice accessibility audits and forced-regular Learn navigation failure on the iPhone Duo 27.1 simulator with result bundles under /tmp, then export xcresult attachments and inspect complete issue descriptions/screenshots for the failing elements.
-2. Trace the identified practice clipping and forced-regular Learn layout through the SwiftUI views/policy in iOS-shared app code, fixing only app layout bugs without audit filtering, minimumScaleFactor, hidden visible text, fixed widths, or hard-coded colours.
-3. Rerun the targeted Duo and iPhone 17 Pro tests, including CanadianHamExamToolsUITests for regression, then record per-test results/log paths in task notes and finalize the task evidence.
+1. Change only session screens that use the same long category/title plus header-card pattern from large navigation title display mode to inline, starting with PracticeSessionView.\n2. Search related Apple session views and UI tests for large title/title assertions; update only direct display-mode assumptions if needed.\n3. Run the requested targeted xbuild tests on iPhone Duo, iPhone 17 Pro, iPad Pro 13-inch, and macOS unit tests; record per-test evidence, then finalize TASK-55 and open the PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -50,4 +48,16 @@ Investigation update 2026-10-18:
 - Learn sidebar AC2 investigation: the Duo `testLearnUserNavigationOpensLessonQuiz` failure is reproducible in `/tmp/task55-duo-initial.log` and the exported hierarchy `/tmp/task55-duo-initial-attachments/46D17E61-32D9-4D82-80D9-BCD86865E390.txt`. With `-CanadianHamForceRegularHorizontalSizeClass` plus landscape on the iOS 27.1 Duo simulator, the app still renders a 466x678 pt closed-display window, exposes a `Show Sidebar` navigation-bar button, and has no `root-sidebar` element in the hierarchy. RootView's part-1 unfolded policy intentionally enters the phone split/sidebar path only for a measured safe-area window at least 800x600 with non-compact vertical size; the current Duo simulator has no fold/unfold control and does not present unfolded landscape geometry. Forced regular horizontal size class alone does not force `NavigationSplitView` to keep the sidebar visible on this narrow phone window, so this appears to be a simulator/test-setup limitation rather than an app layout bug. I did not change the test or product code.
 - Additional targeted evidence gathered during investigation: Duo `CanadianHamExamToolsUITests` log `/tmp/task55-duo-examtools.log` executed 35 tests, skipped 3, and failed the known Duo simulator issues plus the lesson-round-trip hinge test: `testCalculatorAutoFocusesHardwareKeyboardOnOpen`, `testCalculatorKeyboardInputIsFocusScoped`, `testCalculatorValueResetsForNewMockExam`, `testHintToolLadderAndLessonLink`, and `testSimulatedHingePeekStillWorksAfterHintLessonRoundTrip`. The iPhone 17 Pro combined practice/exam-tools run `/tmp/task55-iphone17-practice-examtools.log` passed 38 tests with 3 skipped, but note that run occurred before the temporary generic-title experiment was reverted, so the later default-title-specific logs above are the evidence for current practice-title behaviour.
 - No acceptable source changes remain. TASK-55 is left In Progress awaiting the owner's navigation-title decision; PR should be Backlog-only.
+
+Coordinator, final queued results at 2b2c253c:
+- iPhone Duo testLearnUserNavigationOpensLessonQuiz still fails (exit 65, known Duo-simulator limitation per AC2 notes: forced-regular renders the 466x678 closed display with the sidebar behind 'Show Sidebar'). Log: /tmp/task-55-final.out.
+- macOS unit: 176/0.
+Earlier: Duo practice audits Light/Dark PASS with inline titles; iPhone 17 Pro practice + mock-flow audits + Learn navigation PASS; iPad Pro 13 practice audits PASS.
+AC2 is checked as documented simulator limitation; real-device check in TASK-54.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Practice session navigation titles use inline display mode (owner decision 2026-10-18, option b), fixing the Duo 'Text clipped' audit finding without hiding the category name. The Duo forced-regular Learn sidebar failure is documented as an iOS 27.1 Duo-simulator limitation, to be verified on hardware in TASK-54.
+<!-- SECTION:FINAL_SUMMARY:END -->
