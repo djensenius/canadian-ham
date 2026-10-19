@@ -638,8 +638,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 #if os(iOS)
         try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Inspector layout is covered by the targeted iPad run.")
         try runRegularWidthInspectorScenario(orientation: .portrait, expectedInitialSidebarVisibility: .collapsed, expectedOpenSidebarVisibility: .collapsed, context: "iPad portrait")
-        try runRegularWidthInspectorScenario(orientation: .portrait, expectedInitialSidebarVisibility: .visible, expectedOpenSidebarVisibility: .visible, extraArguments: ["-CanadianHamInitialSplitColumnVisibility", "all"], context: "iPad portrait visible sidebar")
-        try runRegularWidthInspectorScenario(orientation: .landscapeLeft, expectedInitialSidebarVisibility: .visible, expectedOpenSidebarVisibility: .visible, context: "iPad landscape")
+        try runRegularWidthInspectorScenario(orientation: .portrait, expectedInitialSidebarVisibility: .visible, expectedOpenSidebarVisibility: .collapsed, extraArguments: ["-CanadianHamInitialSplitColumnVisibility", "all"], context: "iPad portrait visible sidebar")
+        try runRegularWidthInspectorScenario(orientation: .landscapeLeft, expectedInitialSidebarVisibility: .visible, expectedOpenSidebarVisibility: .collapsed, context: "iPad landscape")
         try runRegularWidthInspectorScenario(orientation: .landscapeLeft, expectedInitialSidebarVisibility: .collapsed, expectedOpenSidebarVisibility: .collapsed, extraArguments: ["-CanadianHamInitialSplitColumnVisibility", "detailOnly"], context: "iPad landscape hidden sidebar")
         XCUIDevice.shared.orientation = .portrait
 #else
@@ -1002,9 +1002,19 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         assertSidebarVisibility(expectedOpenSidebarVisibility, in: app, context: "\(context) with calculator open", file: file, line: line)
         assertQuestionTitleWithinExamColumn(in: app, context: context, file: file, line: line)
         assertVisibleAnswerButtonsRemainHittable(in: app, context: "\(context) calculator inspector", file: file, line: line)
+        tapCalculatorKey("calculator-key-2", in: app)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "\(context): calculator should remain interactive after the sidebar adapts", file: file, line: line)
         closeTool(in: app)
         waitBriefly(0.8)
         XCTAssertEqual(isSidebarVisible(app.descendants(matching: .any)["root-sidebar"].firstMatch, in: app), initialSidebarVisible, "\(context): closing the inspector should restore the sidebar visibility that existed before opening it", file: file, line: line)
+
+        openTool(.calculator, in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["calculator-result"].firstMatch.waitForExistence(timeout: 5), "\(context): the inspector should reopen after restoring the sidebar", file: file, line: line)
+        XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "\(context): reopening should preserve calculator state", file: file, line: line)
+        assertSidebarVisibility(expectedOpenSidebarVisibility, in: app, context: "\(context) with calculator reopened", file: file, line: line)
+        closeTool(in: app)
+        waitBriefly(0.8)
+        XCTAssertEqual(isSidebarVisible(app.descendants(matching: .any)["root-sidebar"].firstMatch, in: app), initialSidebarVisible, "\(context): closing the reopened inspector should restore the original sidebar visibility", file: file, line: line)
     }
 
     private func runRegularWidthInspectorAuditScenario(orientation: UIDeviceOrientation, appearance: String, context: String, file: StaticString = #filePath, line: UInt = #line) throws {

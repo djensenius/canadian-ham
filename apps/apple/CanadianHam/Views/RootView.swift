@@ -4,23 +4,6 @@ import SwiftUI
 import UIKit
 #endif
 
-private struct ExamToolSplitNavigationStyleModifier: ViewModifier {
-    let usesProminentDetail: Bool
-
-    @ViewBuilder
-    func body(content: Content) -> some View {
-#if os(iOS)
-        if usesProminentDetail {
-            content.navigationSplitViewStyle(.prominentDetail)
-        } else {
-            content.navigationSplitViewStyle(.balanced)
-        }
-#else
-        content.navigationSplitViewStyle(.balanced)
-#endif
-    }
-}
-
 private enum SidebarSelection: Hashable {
     case home
     case learn
@@ -441,7 +424,7 @@ struct RootView: View {
             progressStore: progressStore,
             columnVisibility: columnVisibility
         )
-        .modifier(ExamToolSplitNavigationStyleModifier(usesProminentDetail: usesProminentDetailSplitStyle))
+        .navigationSplitViewStyle(.balanced)
 #if os(iOS)
         .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
@@ -715,17 +698,9 @@ struct RootView: View {
 #endif
     }
 
-    private var usesProminentDetailSplitStyle: Bool {
-#if os(iOS)
-        UIDevice.current.userInterfaceIdiom == .pad && regularWidthExamToolPresented
-#else
-        false
-#endif
-    }
-
     private func updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: Bool) {
 #if os(iOS)
-        guard usesRegularWidthIPhoneLayout else {
+        guard UIDevice.current.userInterfaceIdiom == .pad || usesRegularWidthIPhoneLayout else {
             if let preToolSplitColumnVisibility {
                 splitColumnVisibility = preToolSplitColumnVisibility
                 self.preToolSplitColumnVisibility = nil
@@ -740,6 +715,8 @@ struct RootView: View {
             return
         }
 
+        // Keep the split view's identity stable while its inspector is presented.
+        // Native column visibility makes room for the exam without rebuilding its tool.
         if preToolSplitColumnVisibility == nil {
             preToolSplitColumnVisibility = splitColumnVisibility
         }
