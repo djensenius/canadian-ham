@@ -486,22 +486,6 @@ struct PracticeSessionView: View {
             }
 #endif
         }
-#if DEBUG
-        .overlay(alignment: .topTrailing) {
-            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTrigger") {
-                Button {
-                    configureDuoPostureProviderIfNeeded()
-                    duoPostureProvider?.triggerNextDebugPlaybackSegment()
-                } label: {
-                    Text(verbatim: "Run") // l10n: verbatim DEBUG-only UI test hook
-                }
-                .buttonStyle(AccessibleSecondaryButtonStyle())
-                .padding(.top, 96)
-                .padding(.trailing, DesignTokens.Spacing.md)
-                .accessibilityIdentifier("debug-hinge-playback-trigger")
-            }
-        }
-#endif
         .onAppear { configureDuoPostureProviderIfNeeded() }
         .onDisappear { clearDuoPostureProviderCallback() }
         .onChange(of: scope) { _, _ in resetHingePeekForSessionChange() }
@@ -606,6 +590,19 @@ struct PracticeSessionView: View {
         let selected = state.selectedByQuestionId[question.id]
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
+#if os(iOS) && DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTrigger") {
+                Button {
+                    configureDuoPostureProviderIfNeeded()
+                    duoPostureProvider?.triggerNextDebugPlaybackSegment()
+                } label: {
+                    Text(verbatim: "Run") // l10n: verbatim DEBUG-only UI test hook
+                }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+                .frame(minHeight: 44)
+                .accessibilityIdentifier("debug-hinge-playback-trigger")
+            }
+#endif
             QuestionCard(question: question, language: language, onInteraction: clearCalculatorKeyboardFocus)
                 .simultaneousGesture(examContentTapGesture)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
