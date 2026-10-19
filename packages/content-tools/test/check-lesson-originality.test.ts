@@ -127,7 +127,7 @@ test("numeric originality allows common dB and ratio shortcut numbers without qu
 
 ## Worked example: estimating gain without copying a question
 
-For Basic-level estimating, use practical power shortcuts. A +10 dB step followed by a -3 dB step leaves about 5x power. Three +3 dB steps stack to about 8x power.
+For Basic-level estimating, use practical power shortcuts. A 2x power step is about +3 dB, +10 dB is about 10x, and a -3 dB step means divide power by 2.
 `));
 
     const report = await runCheck(root);
@@ -140,7 +140,7 @@ test("numeric originality allows standalone common numbers without distinctive c
   await withFixture("standalone-common-numbers", async (root) => {
     await writeFixture(root, [
       question("B-TEST-COMMON-001", "If a 5 V circuit draws 2 A, what is the power?", "10 W"),
-    ], lessonMarkdown("# Lesson\n\nA 5-minute warm-up reviews the +10 dB shortcut before any circuit examples begin.\n"));
+    ], lessonMarkdown("# Lesson\n\nA 2-minute warm-up reviews a 5 W handheld note and the +10 dB shortcut before any circuit examples begin.\n"));
 
     const report = await runCheck(root);
 
@@ -186,6 +186,117 @@ test("numeric originality rejects common numbers when paired with distinctive qu
       () => runCheck(root),
       (error: unknown) => error instanceof LessonOriginalityError
         && error.report.issues.some((issue) => issue.questionId === "B-TEST-CONTEXT-001" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality rejects common-number leaks when matching units replace missing nouns", async () => {
+  const cases = [
+    {
+      name: "microfarad-symbol",
+      id: "B-TEST-UNIT-001",
+      text: "If you wire two 20-microfarad capacitors in series, what is the capacity of the combination?",
+      answer: "10 microfarads",
+      lesson: "Two 20 µF in series give 10 µF.",
+    },
+    {
+      name: "microfarad-synonym",
+      id: "B-TEST-UNIT-002",
+      text: "If you wire two 20-microfarad capacitors in series, what is the capacity of the combination?",
+      answer: "10 microfarads",
+      lesson: "Two 20 uF caps in series: 10 uF.",
+    },
+    {
+      name: "millihenry-parallel",
+      id: "B-TEST-UNIT-003",
+      text: "If you wire two 20-millihenry inductors in parallel, what is the inductance of the combination?",
+      answer: "10 millihenries",
+      lesson: "Two 20 mH coils in parallel give 10 mH.",
+    },
+    {
+      name: "ohm-volt-watt",
+      id: "B-TEST-UNIT-004",
+      text: "What is the power consumption of two 10-ohm resistors connected in series with a 10-volt battery?",
+      answer: "5 watts",
+      lesson: "Two 10 ohm loads in series across a 10 V supply draw 5 W.",
+    },
+  ];
+
+  for (const fixture of cases) {
+    await withFixture(fixture.name, async (root) => {
+      await writeFixture(root, [
+        question(fixture.id, fixture.text, fixture.answer),
+      ], lessonMarkdown(`# Lesson
+
+${fixture.lesson}
+`));
+
+      await assert.rejects(
+        () => runCheck(root),
+        (error: unknown) => error instanceof LessonOriginalityError
+          && error.report.issues.some((issue) => issue.questionId === fixture.id && issue.issueType === "numeric-overlap"),
+      );
+    });
+  }
+});
+
+test("numeric originality keeps the common-number context threshold boundary", async () => {
+  await withFixture("one-context-word", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-THRESHOLD-001", "If you place two blue tokens in series, what total is shown?", "10"),
+    ], lessonMarkdown("# Lesson\n\nTwo items in series give 10.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+
+  await withFixture("two-context-words", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-THRESHOLD-002", "If you place two blue tokens in series, what total is shown?", "10"),
+    ], lessonMarkdown("# Lesson\n\nTwo blue items in series give 10.\n"));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-THRESHOLD-002" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality flags low-context unit and scaled-prefix copies", async () => {
+  await withFixture("low-context-units", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-HZ-001", "For a dial, how many hertz is 1 kHz?", "1 000 Hz"),
+      question("B-TEST-HZ-002", "What dial frequency is 1.5 kHz in hertz?", "1500 Hz"),
+      question("B-TEST-KOHM-001", "A resistor is marked 1.5 k ohms. What is its resistance in ohms?", "1500 ohms"),
+    ], lessonMarkdown(`# Lesson
+
+A copied dial conversion says 1 kHz is 1,000 Hz.
+A copied scaled-unit dial example says 1500 Hz.
+A copied resistance note says a 1500 ohm part has 1500 ohms.
+`));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-HZ-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-HZ-002" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-KOHM-001" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality parses French decimal commas with units", async () => {
+  await withFixture("french-decimal-comma", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-DECIMAL-001", "What is the second harmonic of a 1.5 kHz signal?", "3 kHz"),
+    ], lessonMarkdown("# Lesson\n\nA copied example says 1,5 kHz doubled is 3 kHz.\n"));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-DECIMAL-001" && issue.issueType === "numeric-overlap"),
     );
   });
 });
