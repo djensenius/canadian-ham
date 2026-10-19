@@ -77,6 +77,26 @@ describe("MarkdownContent parser", () => {
     assert.equal(headings[0]?.getAttribute("tabindex"), "-1");
   });
 
+  it("updates rendered content when markdown and title props change", () => {
+    const { rerender } = render(<MarkdownContent markdown={"# First Lesson\n\n## Shared setup\n\nInitial body"} title="First Lesson" />);
+
+    assert.equal(screen.queryByRole("heading", { name: "First Lesson" }), null);
+    assert.ok(screen.getByRole("heading", { name: "Shared setup" }));
+    assert.ok(screen.getByText("Initial body"));
+
+    rerender(<MarkdownContent markdown={"# Second Lesson\n\n## Updated setup\n\nUpdated body"} title="Second Lesson" />);
+
+    assert.equal(screen.queryByText("Initial body"), null);
+    assert.equal(screen.queryByRole("heading", { name: "Shared setup" }), null);
+    assert.equal(screen.queryByRole("heading", { name: "Second Lesson" }), null);
+    assert.ok(screen.getByRole("heading", { name: "Updated setup" }));
+    assert.ok(screen.getByText("Updated body"));
+
+    rerender(<MarkdownContent markdown={"# Second Lesson\n\n## Updated setup\n\nUpdated body"} title="Displayed Title" />);
+
+    assert.ok(screen.getByRole("heading", { name: "Second Lesson" }));
+  });
+
   it("handles dash, star, and plus unordered bullets", () => {
     const blocks = parseMarkdownBlocks("- dash\n* star\n+ plus");
 

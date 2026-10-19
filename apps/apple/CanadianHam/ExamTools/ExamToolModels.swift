@@ -102,61 +102,32 @@ func canadianHamInterfaceCalculatorLocale(bundle: Bundle = .main) -> CalculatorL
 }
 
 struct AdaptiveExamLayoutPolicy {
-    static let unfoldedIPhoneMinimumWidth: CGFloat = 800
-    static let unfoldedIPhoneMinimumHeight: CGFloat = 600
-    static let unfoldedIPhoneExitWidth: CGFloat = 780
-    static let unfoldedIPhoneExitHeight: CGFloat = 580
-
-    static func usesUnfoldedIPhoneLayout(
+    static func usesRegularWidthIPhoneLayout(
         idiom: PlatformUserInterfaceIdiom,
-        containerSize: CGSize,
-        verticalSizeClass: UserInterfaceSizeClass?,
-        wasUsingUnfoldedLayout: Bool = false
+        horizontalSizeClass: UserInterfaceSizeClass?,
+        verticalSizeClass: UserInterfaceSizeClass?
     ) -> Bool {
         guard idiom == .phone else { return false }
-        guard verticalSizeClass != .compact else { return false }
-        if wasUsingUnfoldedLayout {
-            return containerSize.width >= unfoldedIPhoneExitWidth && containerSize.height >= unfoldedIPhoneExitHeight
-        }
-        return containerSize.width >= unfoldedIPhoneMinimumWidth && containerSize.height >= unfoldedIPhoneMinimumHeight
+        return horizontalSizeClass == .regular && verticalSizeClass != .compact
     }
 
     static func usesInspectorPresentation(
         idiom: PlatformUserInterfaceIdiom,
-        containerSize: CGSize,
         horizontalSizeClass: UserInterfaceSizeClass?,
-        verticalSizeClass: UserInterfaceSizeClass?,
-        wasUsingUnfoldedLayout: Bool = false
+        verticalSizeClass: UserInterfaceSizeClass?
     ) -> Bool {
-        if idiom == .pad {
+        switch idiom {
+        case .pad:
             return horizontalSizeClass == .regular
+        case .phone:
+            return usesRegularWidthIPhoneLayout(
+                idiom: idiom,
+                horizontalSizeClass: horizontalSizeClass,
+                verticalSizeClass: verticalSizeClass
+            )
+        case .mac, .other:
+            return false
         }
-        return usesUnfoldedIPhoneLayout(
-            idiom: idiom,
-            containerSize: containerSize,
-            verticalSizeClass: verticalSizeClass,
-            wasUsingUnfoldedLayout: wasUsingUnfoldedLayout
-        )
-    }
-}
-
-private struct CanadianHamWindowSizeKey: EnvironmentKey {
-    static let defaultValue: CGSize? = nil
-}
-
-private struct CanadianHamUsesUnfoldedIPhoneLayoutKey: EnvironmentKey {
-    static let defaultValue = false
-}
-
-extension EnvironmentValues {
-    var canadianHamWindowSize: CGSize? {
-        get { self[CanadianHamWindowSizeKey.self] }
-        set { self[CanadianHamWindowSizeKey.self] = newValue }
-    }
-
-    var canadianHamUsesUnfoldedIPhoneLayout: Bool {
-        get { self[CanadianHamUsesUnfoldedIPhoneLayoutKey.self] }
-        set { self[CanadianHamUsesUnfoldedIPhoneLayoutKey.self] = newValue }
     }
 }
 
@@ -183,87 +154,64 @@ enum PlatformUserInterfaceIdiom: Equatable {
 }
 
 struct CalculatorToolLayout {
-    let availableHeight: CGFloat
+    enum ContentMode: Equatable {
+        case fitting(showsHelpText: Bool, keyHeight: CGFloat)
+        case scrolling(showsHelpText: Bool)
+    }
+
+    static let expandedKeyHeight: CGFloat = 64
+    // SwiftUI reports the button accessibility frame slightly smaller than the requested label frame;
+    // a 46 pt layout floor preserves the user-facing 44 pt minimum in UI tests.
+    static let minimumKeyHeight: CGFloat = 46
+    static let fittingCandidateContentModes: [ContentMode] = [
+        .fitting(showsHelpText: true, keyHeight: expandedKeyHeight),
+        .fitting(showsHelpText: false, keyHeight: expandedKeyHeight),
+        .fitting(showsHelpText: true, keyHeight: minimumKeyHeight),
+        .fitting(showsHelpText: false, keyHeight: minimumKeyHeight),
+    ]
+
     let dynamicTypeSize: DynamicTypeSize
+    let contentMode: ContentMode
+
+    init(dynamicTypeSize: DynamicTypeSize, contentMode: ContentMode = .fitting(showsHelpText: false, keyHeight: Self.minimumKeyHeight)) {
+        self.dynamicTypeSize = dynamicTypeSize
+        self.contentMode = contentMode
+    }
 
     var sectionSpacing: CGFloat { usesAccessibilityMetrics ? accessibilitySectionSpacing : compactSectionSpacing }
     var keySpacing: CGFloat { usesAccessibilityMetrics ? accessibilityKeySpacing : compactKeySpacing }
     var displayHeight: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayHeight : compactDisplayHeight }
     var displayHorizontalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayHorizontalPadding : compactDisplayHorizontalPadding }
     var displayVerticalPadding: CGFloat { usesAccessibilityMetrics ? accessibilityDisplayVerticalPadding : compactDisplayVerticalPadding }
-    var keyHeight: CGFloat { usesAccessibilityMetrics ? accessibilityKeyHeight : min(accessibilityKeyHeight, max(minimumKeyHeight, compactKeyHeight)) }
-    var showsHelpText: Bool { !usesAccessibilityMetrics && showsCompactHelpText }
+    var keyHeight: CGFloat {
+        if usesAccessibilityMetrics { return accessibilityKeyHeight }
+        switch contentMode {
+        case .fitting(_, let keyHeight):
+            return max(Self.minimumKeyHeight, keyHeight)
+        case .scrolling:
+            return Self.scrollingKeyHeight
+        }
+    }
+    var showsHelpText: Bool {
+        guard !usesAccessibilityMetrics else { return false }
+        switch contentMode {
+        case .fitting(let showsHelpText, _), .scrolling(let showsHelpText):
+            return showsHelpText
+        }
+    }
 
-    /// Whether the calculator content is expected to overflow the available height, so the
-    /// always-present ScrollView (bounce based on size) actually scrolls.
     var usesScrolling: Bool {
-        usesAccessibilityMetrics || compactContentHeightAtMinimumTargets + compactMinimumFitAllowance > availableHeight
+        if usesAccessibilityMetrics { return true }
+        switch contentMode {
+        case .fitting:
+            return false
+        case .scrolling:
+            return true
+        }
     }
 
     var usesAccessibilityMetrics: Bool {
         dynamicTypeSize.isAccessibilitySize
-    }
-
-    private var compactKeyHeight: CGFloat {
-        let gridHeight = max(0, availableHeight - compactNonGridContentHeight)
-        return (gridHeight - compactGridSpacing) / CGFloat(rowCount)
-    }
-
-    private var compactContentHeightAtMinimumTargets: CGFloat {
-        compactNonGridContentHeight + (minimumKeyHeight * CGFloat(rowCount)) + compactGridSpacing
-    }
-
-    private var compactNonGridContentHeight: CGFloat {
-        let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
-        let helpTotal = showsCompactHelpText ? compactEstimatedHelpHeight + compactSectionSpacing : 0
-        return displayTotal + compactSectionSpacing + helpTotal
-    }
-
-    private var compactGridSpacing: CGFloat {
-        compactKeySpacing * CGFloat(rowCount - 1)
-    }
-
-    private var showsCompactHelpText: Bool {
-        guard !usesAccessibilityMetrics, availableHeight >= compactHelpVisibilityHeight else { return false }
-        return compactContentHeightWithEstimatedHelp + compactMinimumFitAllowance <= availableHeight
-    }
-
-    private var compactContentHeightWithEstimatedHelp: CGFloat {
-        let displayTotal = compactDisplayHeight + (compactDisplayVerticalPadding * 2)
-        let helpTotal = compactEstimatedHelpHeight + compactSectionSpacing
-        return displayTotal + compactSectionSpacing + helpTotal + (minimumKeyHeight * CGFloat(rowCount)) + compactGridSpacing
-    }
-
-    private var compactEstimatedHelpHeight: CGFloat {
-        // The keyboard-help caption wraps at xxxLarge in the medium sheet; reserve measured line counts
-        // instead of the old fixed 48 pt so showing it never forces keys below their 44 pt target.
-        compactEstimatedHelpLineHeight * compactEstimatedHelpLineCount
-    }
-
-    private var compactEstimatedHelpLineHeight: CGFloat {
-        switch dynamicTypeSize {
-        case .xSmall, .small, .medium:
-            return 16
-        case .large, .xLarge:
-            return 18
-        case .xxLarge:
-            return 20
-        case .xxxLarge:
-            return 22
-        default:
-            return 22
-        }
-    }
-
-    private var compactEstimatedHelpLineCount: CGFloat {
-        switch dynamicTypeSize {
-        case .xSmall, .small, .medium, .large, .xLarge:
-            return 3
-        case .xxLarge:
-            return 4
-        default:
-            return 5
-        }
     }
 
     private var accessibilitySectionSpacing: CGFloat { 12 }
@@ -277,14 +225,7 @@ struct CalculatorToolLayout {
     private var compactDisplayHeight: CGFloat { 48 }
     private var compactDisplayHorizontalPadding: CGFloat { 12 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
-    private var compactHelpVisibilityHeight: CGFloat { 440 }
-    // Headroom for sheet-height rounding at the iPhone medium detent when predicting overflow and deciding
-    // whether the compact help text fits; keys themselves never compress because they have fixed heights.
-    private var compactMinimumFitAllowance: CGFloat { 24 }
-    // SwiftUI reports the button accessibility frame slightly smaller than the requested label frame;
-    // a 46 pt layout floor preserves the user-facing 44 pt minimum in UI tests.
-    private var minimumKeyHeight: CGFloat { 46 }
-    private var rowCount: Int { 6 }
+    private static var scrollingKeyHeight: CGFloat { minimumKeyHeight }
 }
 
 struct ReferenceSheetConfiguration: Equatable, Sendable {

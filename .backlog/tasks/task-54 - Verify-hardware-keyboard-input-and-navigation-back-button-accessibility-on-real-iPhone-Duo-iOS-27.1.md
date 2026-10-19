@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-10-18 01:53'
-updated_date: '2026-10-18 11:32'
+updated_date: '2026-10-19 18:11'
 labels:
   - apple
 dependencies:
@@ -37,4 +37,8 @@ TASK-15 part 1 found four iPhone Duo simulator failures that also reproduce on o
 Review follow-up 2026-10-18: TASK-54 depends on TASK-15 part 1 / PR #286 for the Duo simulator classification and unfolded-layout hooks; it does not need part 2 hinge-peek work except insofar as Backlog cannot express a dependency on part 1 only.
 
 From the #286 final review: (R2) record the safe-area width actually measured in unfolded landscape on hardware; the 800 pt rule uses the safe-area size, not the full window. (R3) check for a one-frame compact→split flash at launch on an unfolded Duo, since the first frame lays out before the size is measured.
+
+TASK-60 (2026-10-19): the Duo unfolded layout is now driven by system size classes, not point widths. On real hardware, record for the unfolded Duo in portrait and in landscape: (1) the horizontal and vertical size class reported; (2) the resulting layout (compact sheet vs split view plus exam-tools inspector; phone + regular horizontal + non-compact vertical gives split); (3) that fold/unfold keeps the question, selected answer and calculator value; (4) the calculator panel scrolls with keys of at least 44 pt in the inspector.
+
+TASK-60 review follow-up (2026-10-19): because real unfolded Duo size-class reporting is now the source of truth, either hardware outcome can require follow-up. If unfolded portrait reports regular horizontal size class, verify whether split view plus inspector leaves a usable narrow exam column or create a product follow-up. If unfolded landscape reports compact horizontal size class, verify whether losing the inspector is acceptable or create a product follow-up.
 <!-- SECTION:NOTES:END -->

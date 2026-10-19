@@ -54,6 +54,8 @@ targets:
           - Resources/Assets.xcassets
           - Resources/FigureAssets.xcassets
           - Resources/CanadianHam.iOS.CloudKit.Info.plist
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformLessonMarkdownView.swift
       - path: CanadianHam/Resources/AppIcon.icon
         buildPhase: resources
       - path: CanadianHam/Resources/Assets.xcassets
@@ -184,6 +186,7 @@ targets:
       - path: CanadianHamTests
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
+      - path: Platforms/Shared/ApplePreferences.swift
       - path: CanadianHam/Services/ProgressStore.swift
       - path: CanadianHam/Services/ProgressSyncMerge.swift
       - path: CanadianHam/Services/AppleStudyEngine.swift
@@ -312,9 +315,13 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: Platforms/tvOS
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformHintPanelSupport.swift
+      - path: Platforms/Shared/PlatformLessonMarkdownView.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Practice/HintSessionState.swift
       - path: CanadianHam/Morse/MorseTrainerSettings.swift
       - path: CanadianHam/Morse/MorseAudioDriver.swift
       - path: CanadianHam/Design/Tokens.swift
@@ -325,25 +332,63 @@ targets:
       - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources
-      - path: ../../content/generated/basic-2025-07-15/questions.json
+      - path: ../../content/lessons
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/quizzes
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/explanations
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/hints
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/subsection-titles.json
         type: file
         buildPhase: resources
         createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/subsections.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/categories.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/manifest.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
+    postBuildScripts:
+      - name: Remove content authoring README files
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          resource_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+          for content_directory in lessons quizzes explanations hints; do
+            destination="${resource_destination}/${content_directory}"
+            if [ -d "${destination}" ]; then
+              find "${destination}" -type f -iname README.md -delete
+            fi
+          done
+      - name: Copy Basic generated content
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $(SRCROOT)/../../content/generated/basic-2025-07-15/questions.json
+          - $(SRCROOT)/../../content/generated/basic-2025-07-15/subsections.json
+          - $(SRCROOT)/../../content/generated/basic-2025-07-15/categories.json
+          - $(SRCROOT)/../../content/generated/basic-2025-07-15/manifest.json
+        outputFiles:
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/questions.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/subsections.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/categories.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/manifest.json
+        script: |
+          set -euo pipefail
+          basic_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/generated/basic-2025-07-15"
+          mkdir -p "${basic_destination}"
+          cp "${SRCROOT}/../../content/generated/basic-2025-07-15/questions.json" "${basic_destination}/questions.json"
+          cp "${SRCROOT}/../../content/generated/basic-2025-07-15/subsections.json" "${basic_destination}/subsections.json"
+          cp "${SRCROOT}/../../content/generated/basic-2025-07-15/categories.json" "${basic_destination}/categories.json"
+          cp "${SRCROOT}/../../content/generated/basic-2025-07-15/manifest.json" "${basic_destination}/manifest.json"
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamContent
+        product: CanadianHamContent
       - package: CanadianHamMorseEngine
         product: CanadianHamMorseEngine
     settings:
@@ -358,15 +403,19 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: App Icon & Top Shelf Image
         SWIFT_EMIT_LOC_STRINGS: YES
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
   CanadianHamTVTests:
     type: bundle.unit-test
     platform: tvOS
     deploymentTarget: "27.0"
     sources:
       - path: CanadianHamTVTests
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformHintPanelSupport.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Practice/HintSessionState.swift
       - path: CanadianHam/Morse/MorseTrainerSettings.swift
       - path: CanadianHam/Morse/MorseAudioDriver.swift
       - path: ../../content/generated/basic-2025-07-15/questions.json
@@ -388,6 +437,8 @@ targets:
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamContent
+        product: CanadianHamContent
       - package: CanadianHamMorseEngine
         product: CanadianHamMorseEngine
     settings:
@@ -416,9 +467,13 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: Platforms/visionOS
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformHintPanelSupport.swift
+      - path: Platforms/Shared/PlatformLessonMarkdownView.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Practice/HintSessionState.swift
       - path: CanadianHam/Morse/MorseTrainerSettings.swift
       - path: CanadianHam/Morse/MorseAudioDriver.swift
       - path: CanadianHam/Design/Tokens.swift
@@ -429,25 +484,63 @@ targets:
       - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources
-      - path: ../../content/generated/basic-2025-07-15/questions.json
+      - path: ../../content/lessons
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/quizzes
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/explanations
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/hints
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/subsection-titles.json
         type: file
         buildPhase: resources
         createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/subsections.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/categories.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/manifest.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
+    postBuildScripts:
+      - name: Remove content authoring README files
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          resource_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+          for content_directory in lessons quizzes explanations hints; do
+            destination="${resource_destination}/${content_directory}"
+            if [ -d "${destination}" ]; then
+              find "${destination}" -type f -iname README.md -delete
+            fi
+          done
+      - name: Copy Basic generated content
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $(SRCROOT)/../../content/generated/basic-2025-07-15/questions.json
+          - $(SRCROOT)/../../content/generated/basic-2025-07-15/subsections.json
+          - $(SRCROOT)/../../content/generated/basic-2025-07-15/categories.json
+          - $(SRCROOT)/../../content/generated/basic-2025-07-15/manifest.json
+        outputFiles:
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/questions.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/subsections.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/categories.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/manifest.json
+        script: |
+          set -euo pipefail
+          basic_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/generated/basic-2025-07-15"
+          mkdir -p "${basic_destination}"
+          cp "${SRCROOT}/../../content/generated/basic-2025-07-15/questions.json" "${basic_destination}/questions.json"
+          cp "${SRCROOT}/../../content/generated/basic-2025-07-15/subsections.json" "${basic_destination}/subsections.json"
+          cp "${SRCROOT}/../../content/generated/basic-2025-07-15/categories.json" "${basic_destination}/categories.json"
+          cp "${SRCROOT}/../../content/generated/basic-2025-07-15/manifest.json" "${basic_destination}/manifest.json"
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamContent
+        product: CanadianHamContent
       - package: CanadianHamMorseEngine
         product: CanadianHamMorseEngine
     settings:
@@ -462,15 +555,19 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_EMIT_LOC_STRINGS: YES
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
   CanadianHamVisionTests:
     type: bundle.unit-test
     platform: visionOS
     deploymentTarget: "27.0"
     sources:
       - path: CanadianHamVisionTests
+      - path: Platforms/Shared/ApplePreferences.swift
+      - path: Platforms/Shared/PlatformHintPanelSupport.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Practice/HintSessionState.swift
       - path: CanadianHam/Morse/MorseTrainerSettings.swift
       - path: CanadianHam/Morse/MorseAudioDriver.swift
       - path: ../../content/generated/basic-2025-07-15/questions.json
@@ -492,6 +589,8 @@ targets:
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamContent
+        product: CanadianHamContent
       - package: CanadianHamMorseEngine
         product: CanadianHamMorseEngine
     settings:
