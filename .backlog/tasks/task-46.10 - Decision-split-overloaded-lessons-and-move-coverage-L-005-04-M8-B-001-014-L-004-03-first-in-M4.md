@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 20:56'
+updated_date: '2026-10-19 21:18'
 labels:
   - content
 dependencies: []
@@ -54,4 +54,6 @@ Full macOS run: 180 tests executed; 179 passed and existing testImportValidation
 macOS fix validation passed via xbuild: entire ProgressStoreTests class, 93 tests / zero failures, including unchanged testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates and the two new raw-validation regressions. Initial full run covered the other 89 unit tests successfully (180 total before adding two tests); combined final evidence covers 182 distinct passing tests. Full-run/fix-rerun per-test table prepared at /tmp/task-46.10-macos-per-test.md for the PR and task notes. Latest pnpm test passes 217 web + 21 Morse Vitest tests; typecheck, build and URL/CSP audit pass. iOS and localization checks remain queued.
 
 Tightened historical validation tables from subsection prefixes to the exact sampled officialQuestionIds: the old quizzes selected questions, not whole subsections. Both tables now match all source official-question and concept IDs exactly (Python set comparison against commit 350a3b53658c64f12e89c0b48d6b97c7c3040e88). Verified every old official ID occurs in a current destination. Strengthened the historical-membership regression on Apple/web to reject same-subsection B-005-009-001, which was never in the old quiz, for both top-level and sync rows. Web ProgressStore 31 tests pass; latest targeted Apple historical-membership method is queued via nohup. No assertions removed.
+
+Coordinator-approved final safety fix: move the local Apple migration completion marker after successful context.save(), so a save failure cannot suppress retry on the next launch. No cheap existing save-failure injection seam covers this private initializer migration (existing hooks are specific to language migration/import/quiz saves); no new testing scaffolding was added, per approval. Control-flow ordering is explicit; queued iOS/localization builds compile the change. Exact historical-ID macOS regression passed (1 test / zero failures), and final web ProgressStore 31 tests/typecheck/build/URL-CSP audit passed. No further scope expansion planned.
 <!-- SECTION:NOTES:END -->
