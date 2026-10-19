@@ -12,6 +12,7 @@ lessonIds:
   - L-005-03
   - L-005-04
   - L-005-05
+  - L-005-06
 status: draft
 ---
 # Basic Electronics and Theory
@@ -23,5 +24,6 @@ Start with quantities, circuit relationships, AC behaviour, power, reactance, re
 - L-005-01 — Units, conductors, and current
 - L-005-02 — Power and Ohm’s law
 - L-005-03 — Parallel circuits and power ratings
-- L-005-04 — AC, decibels, and reactance
-- L-005-05 — Transformers, resonance, and meters
+- L-005-04 — AC and decibels
+- L-005-05 — Capacitors, inductors, reactance, and resonance
+- L-005-06 — Transformers and meters

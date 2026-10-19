@@ -416,6 +416,60 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try iphone.questionProgressRecords(), [ipadWrite])
     }
 
+    func testImportMigratesTask4610LessonSplitProgressAndQuizAttempts() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let legacyProgress = [
+            LessonProgressRecord(lessonId: "L-005-04", readAt: "2026-01-02T03:30:00.000Z", readCount: 2),
+            LessonProgressRecord(lessonId: "L-001-03", readAt: "2026-01-03T03:30:00.000Z", readCount: 1),
+        ]
+        let legacyAttempt = LessonQuizAttempt(
+            id: "legacy-00103",
+            quizId: "QZ-L-001-03-A",
+            lessonId: "L-001-03",
+            submittedAt: "2026-01-03T03:45:00.000Z",
+            correct: 2,
+            total: 2,
+            percent: 100,
+            officialQuestionIds: ["B-001-010-001", "B-001-014-001"],
+            incorrectOfficialQuestionIds: [],
+            incorrectConceptCheckIds: []
+        )
+        let imported = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-04T03:45:00.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: try archivedArray(legacyProgress),
+            lessonQuizAttempts: try archivedArray([legacyAttempt]),
+            syncDeviceRows: ProgressSyncDeviceRows(
+                questionProgress: [],
+                examAttempts: [],
+                lessonProgress: legacyProgress.map { DeviceLessonProgressRecord(deviceId: "iphone", record: $0) },
+                lessonQuizAttempts: [DeviceLessonQuizAttemptRecord(deviceId: "iphone", attempt: legacyAttempt)],
+                morseCourseProgress: []
+            ),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+        let store = try ProgressStoreService.inMemoryForTests(localDeviceID: "ipad")
+
+        try store.importData(imported, bank: bank)
+
+        XCTAssertEqual(try store.lessonProgressRecords(), [
+            LessonProgressRecord(lessonId: "L-001-03", readAt: "2026-01-03T03:30:00.000Z", readCount: 1),
+            LessonProgressRecord(lessonId: "L-001-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 1),
+            LessonProgressRecord(lessonId: "L-005-04", readAt: "2026-01-02T03:30:00.000Z", readCount: 2),
+            LessonProgressRecord(lessonId: "L-005-05", readAt: "2026-01-02T03:30:00.000Z", readCount: 2),
+        ])
+        XCTAssertEqual(try store.lessonQuizAttempts().map { attempt in
+            [attempt.id, attempt.quizId, attempt.lessonId, attempt.officialQuestionIds.joined(separator: ",")]
+        }, [
+            ["legacy-00103", "QZ-L-001-03-A", "L-001-03", "B-001-010-001"],
+            ["legacy-00103::QZ-L-001-05-A", "QZ-L-001-05-A", "L-001-05", "B-001-014-001"],
+        ])
+    }
+
     func testLocalLessonAndMorseWritesAfterDeviceRowImportAddOnlyOwnContribution() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let importedLesson = LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-02T03:00:00.000Z", readCount: 2)

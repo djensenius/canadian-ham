@@ -5,32 +5,31 @@ moduleId: M1
 categoryIds:
   - B-001
 title:
-  en: "Communications, interference, and third parties"
+  en: "Communications, interference, identification, and message handling"
   fr: null
 covers:
   - B-001-010
   - B-001-011
   - B-001-012
   - B-001-013
-  - B-001-014
 objectives:
   - "Prevent harmful interference and respect primary/secondary service status."
   - "Use emergency communication exceptions correctly."
-  - "Apply message privacy, compensation, identification, and third-party limits."
+  - "Apply message privacy, compensation, and station-identification limits."
 prerequisites:
   - L-001-02
   - L-002-03
   - L-008-01
-estimatedMinutes: 45
+estimatedMinutes: 40
 quizIds:
   - QZ-L-001-03-A
 status: draft
 ---
-# Communications, interference, and third parties
+# Communications, interference, identification, and message handling
 
-Operating courtesy and legal limits meet in this lesson. Interference, emergency communication, privacy, payment, identification, third-party traffic, and visiting operators all affect whether a transmission should begin, continue, change, or stop.
+Operating courtesy and legal limits meet in this lesson. Interference, emergency communication, privacy, payment, and identification all affect whether a transmission should begin, continue, change, or stop.
 
-The tables hold the reference facts. The prose turns them into an operating sequence: listen, classify the situation, identify, and stand by when the rules or safety require it.
+The tables hold the reference facts. The prose turns them into an operating sequence: listen, classify the situation, identify, and stand by when the rules or safety require it. Third-party and visiting-operator rules move to L-001-05, where the course teaches international operation and location.
 
 ## Learning objectives
 
@@ -38,9 +37,8 @@ By the end of this lesson, you can:
 
 - distinguish accidental interference, harmful interference, secondary-service operation, and deliberate interference;
 - keep emergency and disaster-relief exceptions narrow;
-- apply message privacy, media, remuneration, and public-service rows as amateur-service boundary facts;
-- identify station-identification timing and language requirements; and
-- explain Canadian third-party and visiting-operator communication limits.
+- apply message privacy, media, remuneration, and public-service rows as amateur-service boundary facts; and
+- identify station-identification timing and language requirements.
 
 ## Reference facts: Interference and shared bands
 
@@ -94,23 +92,6 @@ By the end of this lesson, you can:
 | Language for identification | English or French. |
 | Unidentified amateur communications | Only to control a model craft. |
 
-## Reference facts: Third-party and visiting-operator communication
-
-| Topic | Fact established for this lesson |
-|---|---|
-| Third-party communications | Conducted on behalf of a person without amateur radio certification. |
-| Third-party content in the Canadian amateur service | Personal and non-commercial only. |
-| Canadian third-party communications | May be provided with any other amateur radio station. |
-| Canadian international third-party traffic | Canada permits international communications on behalf of third parties. |
-| International emergency or disaster-relief third-party traffic | Expressly permitted; a specific prohibition by the foreign administration concerned is the only bar. |
-| Foreign administration objection to communication | A country can preclude communication by filing an objection with the ITU. |
-| Foreign visitors other than United States citizens | Their country must have an agreement with Canada and the operator must have the appropriate permit. |
-| CEPT amateur licence holders operating in Canada | Granted Advanced privileges by ISED. |
-| United States-issued call sign holder operating in Canada | Must indicate location by city and province at least once during a contact. |
-| United States-issued call sign holder in Canada using voice | Identifies with the call sign, mobile or portable qualifier, and the Canadian prefix for the station's geographic location. |
-| Supervising a non-certified guest during a contact | Keep supervising and monitoring the guest, including if a foreign station joins, because you remain responsible for the station and international third-party traffic depends on the foreign administration not objecting. |
-| Local non-certified participants at both ends | Both non-certified people are third parties. |
-
 ::figure communications-flowchart
 Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
 Text equivalent:
@@ -130,7 +111,7 @@ Your own station's direct involvement with distress traffic is the only narrow e
 
 Privacy and payment rows keep amateur service non-commercial. A public-service agency message can be legitimate. Some non-broadcast content may be shared for protection, court evidence, or national defence and security; media questions are not one of those reasons. Payment for third-party messages and remuneration for exchanging messages do not fit amateur service.
 
-Third-party and visiting-operator rows add two questions. Who is the message for, and whose operating permission is being used? Ask those before sending the traffic.
+Station identification rows make contacts and tests traceable. The habit is simple: identify at the start, identify at the end, and watch the interval during longer contacts.
 
 ### Memory trick: start, stop, and the interval check
 
@@ -151,9 +132,8 @@ During public-service work, prepared operators sound calm because they have alre
 - Harmful interference is a serious station problem, and deliberate interference is unacceptable.
 - Secondary amateur operation must protect primary users, and some shared ranges have no interference protection or heavy licence-exempt use.
 - Emergency exceptions are tied to distress, safety of life and property, and essential relief needs.
-- Amateur message handling for third parties must be unpaid, personal, and non-commercial.
+- Amateur message handling must be unpaid and non-commercial.
 - Identify with the station call sign at the required times and use the same identification discipline during tests.
-- Visiting and international third-party operation depend on the specific permission facts in the reference tables.
 
 ## Illustration brief
 

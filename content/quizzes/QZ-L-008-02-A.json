@@ -2,14 +2,16 @@
   "id": "QZ-L-008-02-A",
   "lessonId": "L-008-02",
   "officialQuestionIds": [
+    "B-008-003-002",
+    "B-008-003-003",
+    "B-008-003-005",
+    "B-008-003-008",
+    "B-008-003-009",
     "B-008-004-002",
     "B-008-004-005",
     "B-008-004-006",
     "B-008-004-008",
-    "B-008-004-010",
-    "B-008-005-002",
-    "B-008-005-007",
-    "B-008-005-009"
+    "B-008-004-010"
   ],
   "conceptChecks": [
     {
@@ -25,25 +27,25 @@
     },
     {
       "id": "QZ-L-008-02-A-C2",
-      "prompt": { "en": "A receiver must keep monitoring 3.9 MHz and 5.3 MHz while reducing a strong controller that covers 4.45 to 4.65 MHz. Which statement is NOT true?", "fr": null },
+      "prompt": { "en": "A clean sidetone is heard locally, but a distant station reports clicks close to a CW signal. Which check best fits the taught transmitter-side fault?", "fr": null },
       "choices": [
-        { "text": { "en": "A filter that rejects a middle range can protect the two wanted frequencies on either side.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "If the problem were one stable carrier instead of a range, a narrower rejection dip might sacrifice less nearby spectrum.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The filter belongs before the receiver stage that is being driven non-linear by the controller energy.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "One cutoff placed between 3.9 MHz and 5.3 MHz can remove the controller range and still pass both wanted frequencies.", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Inspect the keying waveform and later RF stages for abrupt rise and decay.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Move a high-pass filter to a television input as the only required check.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Shorten a powered-speaker lead because the sidetone proves audio rectification.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Add receive attenuation because all clicks come from receiver overload.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A single cutoff is a one-sided boundary, so it cannot remove only the middle range while preserving wanted signals below and above it. The other statements match the taught filter-selection principles.", "fr": null }
+      "explanation": { "en": "Distant key clicks point to a transmitted waveform problem, so the keying shape and following RF stages need attention before further operation.", "fr": null }
     },
     {
       "id": "QZ-L-008-02-A-C3",
-      "prompt": { "en": "A planned receiver filter has its cutoff almost on top of the lowest wanted channel. Which prediction follows from the lesson's cutoff discussion?", "fr": null },
+      "prompt": { "en": "An SSB signal spreads when microphone gain is advanced past the clean range. What should be tried first?", "fr": null },
       "choices": [
-        { "text": { "en": "Signals near the boundary may be partly attenuated, so leave margin and verify the response instead of treating the cutoff as a perfect wall.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Everything on the pass side of the listed cutoff is passed with no loss, and everything on the other side is removed completely.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Moving the cutoff closer to the wanted channel always improves reception because transition width is irrelevant.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A cutoff value tells only the connector impedance; it says nothing about the filter's frequency response.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Reduce audio drive so the transmitter stays closer to linear operation.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Use a receiver notch filter at every neighbour's station.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Send Morse more slowly with the same voice setting.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Remove shielding because covers only affect receiver overload.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Real filters change from mostly passing to mostly attenuating over a transition range. A cutoff placed too close to a wanted channel may reduce that channel, so the response must be checked with margin.", "fr": null }
+      "explanation": { "en": "Excessive microphone gain can drive stages non-linearly and create splatter. Reducing drive is the direct transmitter-side test.", "fr": null }
     }
   ]
 }

@@ -132,10 +132,30 @@ export const defaultPreferences: WebPreferences = {
   morse: defaultMorsePreferences,
 };
 
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 const DEFAULT_DB_NAME = "canadian-ham-web-progress";
 const PREFERENCES_KEY = "preferences";
 const SYNC_DEVICE_ROWS_KEY = "syncDeviceRows";
+
+export const lessonProgressMigrationMap: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  // TASK-46.10 split L-005-04 into AC/dB and reactance/resonance.
+  "L-005-04": ["L-005-04", "L-005-05"],
+  // TASK-46.10 moved resonance out of the old transformer/meter lesson.
+  "L-005-05": ["L-005-05", "L-005-06"],
+  // TASK-46.10 split M8 by receiver-side and transmitter-side faults.
+  "L-008-01": ["L-008-01", "L-008-02"],
+  "L-008-02": ["L-008-01", "L-008-02"],
+  // TASK-46.10 moved B-001-014 third-party coverage into L-001-05.
+  "L-001-03": ["L-001-03", "L-001-05"],
+});
+
+const lessonQuizMigrationMap: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  "QZ-L-005-04-A": ["QZ-L-005-04-A", "QZ-L-005-05-A"],
+  "QZ-L-005-05-A": ["QZ-L-005-05-A", "QZ-L-005-06-A"],
+  "QZ-L-008-01-A": ["QZ-L-008-01-A", "QZ-L-008-02-A"],
+  "QZ-L-008-02-A": ["QZ-L-008-01-A", "QZ-L-008-02-A"],
+  "QZ-L-001-03-A": ["QZ-L-001-03-A", "QZ-L-001-05-A"],
+});
 
 interface StoredPreferenceRecord {
   readonly key: string;
@@ -424,6 +444,60 @@ export function deduplicateDeviceLessonProgressForSync(rows: readonly DeviceLess
     .sort((a, b) => codePointCompare(a.lessonId, b.lessonId));
 }
 
+export function migrateLessonProgressRecords(records: readonly LessonProgressRecord[]): LessonProgressRecord[] {
+  const merged = new Map<string, LessonProgressRecord>();
+  for (const record of records) {
+    const targetLessonIds = lessonProgressMigrationMap[record.lessonId] ?? [record.lessonId];
+    for (const lessonId of targetLessonIds) {
+      const next: LessonProgressRecord = { ...record, lessonId };
+      const existing = merged.get(lessonId);
+      if (existing === undefined) {
+        merged.set(lessonId, next);
+      } else {
+        merged.set(lessonId, {
+          lessonId,
+          readAt: codePointCompare(existing.readAt, next.readAt) >= 0 ? existing.readAt : next.readAt,
+          readCount: Math.max(existing.readCount, next.readCount),
+        });
+      }
+    }
+  }
+  return [...merged.values()].sort((a, b) => codePointCompare(a.lessonId, b.lessonId));
+}
+
+export function migrateLessonQuizAttempts(attempts: readonly LessonQuizAttempt[]): LessonQuizAttempt[] {
+  const migrated = new Map<string, LessonQuizAttempt>();
+  for (const attempt of attempts) {
+    const targetQuizIds = lessonQuizMigrationMap[attempt.quizId];
+    if (targetQuizIds === undefined) {
+      migrated.set(attempt.id, attempt);
+      continue;
+    }
+    for (const quizId of targetQuizIds) {
+      const quiz = lessonQuizzesById.get(quizId);
+      if (quiz === undefined) continue;
+      const officialQuestionIds = attempt.officialQuestionIds.filter((questionId) => quiz.officialQuestionIds.includes(questionId));
+      const incorrectOfficialQuestionIds = attempt.incorrectOfficialQuestionIds.filter((questionId) => officialQuestionIds.includes(questionId));
+      if (officialQuestionIds.length === 0 && !targetQuizIds.includes(attempt.quizId)) continue;
+      const correct = officialQuestionIds.length - incorrectOfficialQuestionIds.length;
+      const total = Math.max(1, officialQuestionIds.length);
+      const id = quizId === attempt.quizId ? attempt.id : `${attempt.id}::${quizId}`;
+      migrated.set(id, {
+        ...attempt,
+        id,
+        quizId,
+        lessonId: quiz.lessonId,
+        correct,
+        total,
+        percent: (correct / total) * 100,
+        officialQuestionIds,
+        incorrectOfficialQuestionIds,
+        incorrectConceptCheckIds: attempt.incorrectConceptCheckIds.filter((conceptCheckId) => quiz.conceptChecks.some((conceptCheck) => conceptCheck.id === conceptCheckId)),
+      });
+    }
+  }
+  return [...migrated.values()].sort((a, b) => codePointCompare(a.submittedAt, b.submittedAt) || codePointCompare(a.id, b.id));
+}
 
 function filterSyncDeviceRowsForExport(rows: ProgressSyncDeviceRows | undefined, bank: BankData): ProgressSyncDeviceRows | undefined {
   if (rows === undefined) return undefined;
@@ -527,6 +601,31 @@ function migrateDatabase(db: IDBDatabase, oldVersion: number, transaction: IDBTr
       db.createObjectStore("syncMetadata", { keyPath: "key" });
     }
   }
+
+  if (oldVersion < 6 && transaction !== null) {
+    migrateLessonStoresForTask4610(transaction);
+  }
+}
+
+function migrateLessonStoresForTask4610(transaction: IDBTransaction): void {
+  if (transaction.objectStoreNames.contains("lessonProgress")) {
+    const lessonStore = transaction.objectStore("lessonProgress");
+    const request = lessonStore.getAll();
+    request.onsuccess = () => {
+      for (const record of migrateLessonProgressRecords(request.result.filter(isLessonProgressRecordLike))) {
+        lessonStore.put(record);
+      }
+    };
+  }
+  if (transaction.objectStoreNames.contains("lessonQuizAttempts")) {
+    const quizStore = transaction.objectStore("lessonQuizAttempts");
+    const request = quizStore.getAll();
+    request.onsuccess = () => {
+      for (const attempt of migrateLessonQuizAttempts(request.result.filter(isLessonQuizAttemptLike))) {
+        quizStore.put(attempt);
+      }
+    };
+  }
 }
 
 export function validateProgressImport(raw: unknown, bank: BankData = basicBank): ImportValidationResult {
@@ -584,7 +683,8 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
     }
   }
 
-  const lessonProgress = Array.isArray(raw.lessonProgress) ? raw.lessonProgress : [];
+  const rawLessonProgress = Array.isArray(raw.lessonProgress) ? raw.lessonProgress : [];
+  const lessonProgress = migrateLessonProgressRecords(rawLessonProgress.filter(isLessonProgressRecordLike) as LessonProgressRecord[]);
   const lessonProgressIds = new Set<string>();
   for (const [index, record] of lessonProgress.entries()) {
     errors.push(...validateLessonProgressRecord(record, index));
@@ -595,8 +695,12 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
       lessonProgressIds.add(record.lessonId);
     }
   }
+  rawLessonProgress.forEach((record, index) => {
+    if (!isLessonProgressRecordLike(record)) errors.push(...validateLessonProgressRecord(record, index));
+  });
 
-  const lessonQuizAttempts = Array.isArray(raw.lessonQuizAttempts) ? raw.lessonQuizAttempts : [];
+  const rawLessonQuizAttempts = Array.isArray(raw.lessonQuizAttempts) ? raw.lessonQuizAttempts : [];
+  const lessonQuizAttempts = migrateLessonQuizAttempts(rawLessonQuizAttempts.filter(isLessonQuizAttemptLike) as LessonQuizAttempt[]);
   const lessonQuizAttemptIds = new Set<string>();
   for (const [index, attempt] of lessonQuizAttempts.entries()) {
     errors.push(...validateLessonQuizAttempt(attempt, index, bank));
@@ -607,6 +711,9 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
       lessonQuizAttemptIds.add(attempt.id);
     }
   }
+  rawLessonQuizAttempts.forEach((attempt, index) => {
+    if (!isLessonQuizAttemptLike(attempt)) errors.push(...validateLessonQuizAttempt(attempt, index, bank));
+  });
 
   if (errors.length > 0) {
     return { ok: false, errors };
@@ -780,6 +887,30 @@ function runTransaction(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isLessonProgressRecordLike(value: unknown): value is LessonProgressRecord {
+  return isRecord(value)
+    && typeof value.lessonId === "string"
+    && typeof value.readAt === "string"
+    && isPositiveInteger(value.readCount);
+}
+
+function isLessonQuizAttemptLike(value: unknown): value is LessonQuizAttempt {
+  return isRecord(value)
+    && typeof value.id === "string"
+    && typeof value.quizId === "string"
+    && typeof value.lessonId === "string"
+    && typeof value.submittedAt === "string"
+    && isNonNegativeInteger(value.correct)
+    && isPositiveInteger(value.total)
+    && isNonNegativeFiniteNumber(value.percent)
+    && Array.isArray(value.officialQuestionIds)
+    && value.officialQuestionIds.every((id) => typeof id === "string")
+    && Array.isArray(value.incorrectOfficialQuestionIds)
+    && value.incorrectOfficialQuestionIds.every((id) => typeof id === "string")
+    && Array.isArray(value.incorrectConceptCheckIds)
+    && value.incorrectConceptCheckIds.every((id) => typeof id === "string");
 }
 
 function normalizePreferences(value: unknown): WebPreferences {

@@ -17,5 +17,5 @@ Diagnose interference after learners understand stations, filtering, antennas, a
 
 ## Lessons
 
-- L-008-01 — Overload, rectification, and spurious signals
-- L-008-02 — Harmonics and filters
+- L-008-01 — Receiver and device interference, with filters
+- L-008-02 — Transmitter emissions, harmonics, and keying faults

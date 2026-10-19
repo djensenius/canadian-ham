@@ -9,11 +9,7 @@
     "B-005-008-004",
     "B-005-008-005",
     "B-005-008-009",
-    "B-005-008-011",
-    "B-005-009-003",
-    "B-005-009-011",
-    "B-005-010-001",
-    "B-005-010-009"
+    "B-005-008-011"
   ],
   "conceptChecks": [
     {
@@ -29,25 +25,14 @@
     },
     {
       "id": "QZ-L-005-04-A-C2",
-      "prompt": { "en": "Two equal 56 µF capacitors are connected in series. What is the total capacitance?", "fr": null },
+      "prompt": { "en": "A receiver report is S9 plus 16 dB. If the signal drops by 10 dB, what report is expected?", "fr": null },
       "choices": [
-        { "text": { "en": "28 µF", "fr": null }, "isCorrect": true },
-        { "text": { "en": "56 µF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "112 µF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "3 136 µF", "fr": null }, "isCorrect": false }
+        { "text": { "en": "S9 plus 26 dB", "fr": null }, "isCorrect": false },
+        { "text": { "en": "S9 plus 6 dB", "fr": null }, "isCorrect": true },
+        { "text": { "en": "S6", "fr": null }, "isCorrect": false },
+        { "text": { "en": "S9 plus 10 dB", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Two equal capacitors in series have half the capacitance of one.", "fr": null }
-    },
-    {
-      "id": "QZ-L-005-04-A-C3",
-      "prompt": { "en": "Which part is useful when you want high opposition to RF but low opposition at low frequency?", "fr": null },
-      "choices": [
-        { "text": { "en": "A bypass capacitor chosen to shunt RF to ground.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "An inductor used as an RF choke.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A small capacitor placed in the audio path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A resistor chosen for a DC voltage drop.", "fr": null }, "isCorrect": false }
-      ],
-      "explanation": { "en": "Inductive reactance increases with frequency, so a choke can impede RF.", "fr": null }
+      "explanation": { "en": "Subtract the dB reduction from the amount above S9: 16 dB - 10 dB = 6 dB.", "fr": null }
     }
   ]
 }

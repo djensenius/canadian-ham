@@ -11,7 +11,7 @@
     }
   ],
   "lessonLink": {
-    "lessonId": "L-008-02",
+    "lessonId": "L-008-01",
     "sectionAnchor": "band-pass-band-reject-and-notch-filters"
   },
   "singleLevelReason": "Application recall: a second hint would identify the filter response that preserves the assigned band.",

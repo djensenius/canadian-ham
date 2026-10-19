@@ -656,6 +656,7 @@ final class ProgressStoreService: ObservableObject {
     @Published private(set) var iCloudAccountSignalError: String?
 
     private static let legacyEnglishLanguageMigrationMarkerKey = "CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete"
+    private static let task4610LessonSplitMigrationMarkerKey = "CanadianHam.progress.task46_10LessonSplitMigrationComplete"
     private static let appleLanguagesLastAppliedPreferenceKey = "CanadianHam.preferences.appleLanguagesLastApplied"
     private static let appleLanguagesPreferenceKey = "AppleLanguages"
 
@@ -711,6 +712,7 @@ final class ProgressStoreService: ObservableObject {
         self.preferences = try loadPreferences()
         try adoptLegacyDeviceRowsIfNeeded()
         try migrateLearningProgressFromLegacyStorageIfNeeded()
+        try migrateTask4610LessonReferencesIfNeeded()
 #if ICLOUD_SYNC
         if iCloudSyncEnabled, startICloudMonitoring {
             startICloudAccountMonitoring()
@@ -1401,6 +1403,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func importData(_ data: ProgressExportV1, bank: QuestionBank) throws {
+        let data = try migratedProgressExportForTask4610(data)
         let errors = validate(data, bank: bank)
         if !errors.isEmpty {
             throw ProgressStoreError.validationFailed(errors)
@@ -1489,7 +1492,122 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
+    private func migratedProgressExportForTask4610(_ data: ProgressExportV1) throws -> ProgressExportV1 {
+        let lessonProgress = migrateTask4610LessonProgress(try decodeArchivedArray(data.lessonProgress, as: LessonProgressRecord.self))
+        let lessonQuizAttempts = migrateTask4610LessonQuizAttempts(try decodeArchivedArray(data.lessonQuizAttempts, as: LessonQuizAttempt.self))
+        let syncDeviceRows = data.syncDeviceRows.map(migrateTask4610SyncDeviceRows)
+        return ProgressExportV1(
+            schema: data.schema,
+            version: data.version,
+            exportedAt: data.exportedAt,
+            bankId: data.bankId,
+            questionProgress: data.questionProgress,
+            examAttempts: data.examAttempts,
+            lessonProgress: try archivedArray(lessonProgress),
+            lessonQuizAttempts: try archivedArray(lessonQuizAttempts),
+            morseCourseProgress: data.morseCourseProgress,
+            syncDeviceRows: syncDeviceRows,
+            preferences: data.preferences
+        )
+    }
+
+    private func migrateTask4610SyncDeviceRows(_ rows: ProgressSyncDeviceRows) -> ProgressSyncDeviceRows {
+        ProgressSyncDeviceRows(
+            questionProgress: rows.questionProgress,
+            examAttempts: rows.examAttempts,
+            lessonProgress: rows.lessonProgress.flatMap { row in
+                migrateTask4610LessonProgress([row.record]).map { DeviceLessonProgressRecord(deviceId: row.deviceId, record: $0) }
+            },
+            lessonQuizAttempts: rows.lessonQuizAttempts.flatMap { row in
+                migrateTask4610LessonQuizAttempts([row.attempt]).map { DeviceLessonQuizAttemptRecord(deviceId: row.deviceId, attempt: $0) }
+            },
+            morseCourseProgress: rows.morseCourseProgress
+        )
+    }
+
+    private func migrateTask4610LessonProgress(_ records: [LessonProgressRecord]) -> [LessonProgressRecord] {
+        let targetsByLessonId: [String: [String]] = [
+            "L-005-04": ["L-005-04", "L-005-05"],
+            "L-005-05": ["L-005-05", "L-005-06"],
+            "L-008-01": ["L-008-01", "L-008-02"],
+            "L-008-02": ["L-008-01", "L-008-02"],
+            "L-001-03": ["L-001-03", "L-001-05"],
+        ]
+        var merged: [String: LessonProgressRecord] = [:]
+        for record in records {
+            for lessonId in targetsByLessonId[record.lessonId] ?? [record.lessonId] {
+                let next = LessonProgressRecord(lessonId: lessonId, readAt: record.readAt, readCount: record.readCount)
+                if let existing = merged[lessonId] {
+                    merged[lessonId] = LessonProgressRecord(
+                        lessonId: lessonId,
+                        readAt: max(existing.readAt, next.readAt),
+                        readCount: max(existing.readCount, next.readCount)
+                    )
+                } else {
+                    merged[lessonId] = next
+                }
+            }
+        }
+        return merged.values.sorted { $0.lessonId < $1.lessonId }
+    }
+
+    private func migrateTask4610LessonQuizAttempts(_ attempts: [LessonQuizAttempt]) -> [LessonQuizAttempt] {
+        let targetsByQuizId: [String: [(quizId: String, lessonId: String, prefixes: [String], conceptCheckIds: Set<String>)]] = [
+            "QZ-L-005-04-A": [
+                ("QZ-L-005-04-A", "L-005-04", ["B-005-007-", "B-005-008-"], ["QZ-L-005-04-A-C1", "QZ-L-005-04-A-C2"]),
+                ("QZ-L-005-05-A", "L-005-05", ["B-005-009-", "B-005-010-", "B-005-012-"], ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"]),
+            ],
+            "QZ-L-005-05-A": [
+                ("QZ-L-005-05-A", "L-005-05", ["B-005-009-", "B-005-010-", "B-005-012-"], ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"]),
+                ("QZ-L-005-06-A", "L-005-06", ["B-005-011-", "B-005-013-"], ["QZ-L-005-06-A-C1", "QZ-L-005-06-A-C2", "QZ-L-005-06-A-C3"]),
+            ],
+            "QZ-L-008-01-A": [
+                ("QZ-L-008-01-A", "L-008-01", ["B-008-001-", "B-008-002-", "B-008-005-"], ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"]),
+                ("QZ-L-008-02-A", "L-008-02", ["B-008-003-", "B-008-004-"], ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"]),
+            ],
+            "QZ-L-008-02-A": [
+                ("QZ-L-008-01-A", "L-008-01", ["B-008-001-", "B-008-002-", "B-008-005-"], ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"]),
+                ("QZ-L-008-02-A", "L-008-02", ["B-008-003-", "B-008-004-"], ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"]),
+            ],
+            "QZ-L-001-03-A": [
+                ("QZ-L-001-03-A", "L-001-03", ["B-001-010-", "B-001-011-", "B-001-012-", "B-001-013-"], []),
+                ("QZ-L-001-05-A", "L-001-05", ["B-001-014-", "B-001-020-", "B-001-021-"], []),
+            ],
+        ]
+        var migrated: [String: LessonQuizAttempt] = [:]
+        for attempt in attempts {
+            guard let targets = targetsByQuizId[attempt.quizId] else {
+                migrated[attempt.id] = attempt
+                continue
+            }
+            for target in targets {
+                let officialQuestionIds = attempt.officialQuestionIds.filter { questionId in target.prefixes.contains { questionId.hasPrefix($0) } }
+                let incorrectOfficialQuestionIds = attempt.incorrectOfficialQuestionIds.filter { officialQuestionIds.contains($0) }
+                if officialQuestionIds.isEmpty && target.quizId != attempt.quizId { continue }
+                let correct = officialQuestionIds.count - incorrectOfficialQuestionIds.count
+                let total = max(1, officialQuestionIds.count)
+                let id = target.quizId == attempt.quizId ? attempt.id : "\(attempt.id)::\(target.quizId)"
+                migrated[id] = LessonQuizAttempt(
+                    id: id,
+                    quizId: target.quizId,
+                    lessonId: target.lessonId,
+                    submittedAt: attempt.submittedAt,
+                    correct: correct,
+                    total: total,
+                    percent: Double(correct) / Double(total) * 100,
+                    officialQuestionIds: officialQuestionIds,
+                    incorrectOfficialQuestionIds: incorrectOfficialQuestionIds,
+                    incorrectConceptCheckIds: attempt.incorrectConceptCheckIds.filter { target.conceptCheckIds.contains($0) }
+                )
+            }
+        }
+        return migrated.values.sorted { lhs, rhs in
+            lhs.submittedAt == rhs.submittedAt ? lhs.id < rhs.id : lhs.submittedAt < rhs.submittedAt
+        }
+    }
+
     func validate(_ data: ProgressExportV1, bank: QuestionBank) -> [String] {
+        let data = (try? migratedProgressExportForTask4610(data)) ?? data
         var errors: [String] = []
         let knownQuestionIds = Set(bank.questions.map(\.id))
         let knownCategoryIds = Set(bank.categories.map(\.id))
@@ -2198,6 +2316,30 @@ final class ProgressStoreService: ObservableObject {
             } catch {
                 NSLog("CanadianHam: unable to remove migrated legacy Morse course progress JSON; leaving file in place: %@", String(describing: error))
             }
+        }
+    }
+
+    private func migrateTask4610LessonReferencesIfNeeded() throws {
+        guard !defaults.bool(forKey: Self.task4610LessonSplitMigrationMarkerKey) else { return }
+        let lessonRows = try deviceLessonProgressRows()
+        let quizRows = try deviceLessonQuizAttemptRows()
+        var changed = false
+        for row in lessonRows {
+            for record in migrateTask4610LessonProgress([row.record]) where record != row.record {
+                try upsertLessonProgress(record, deviceId: row.deviceId, mergesExistingReadCount: true)
+                changed = true
+            }
+        }
+        for row in quizRows {
+            for attempt in migrateTask4610LessonQuizAttempts([row.attempt]) {
+                try upsertLessonQuizAttempt(attempt, deviceId: row.deviceId)
+                if attempt != row.attempt { changed = true }
+            }
+        }
+        defaults.set(true, forKey: Self.task4610LessonSplitMigrationMarkerKey)
+        if changed {
+            try context.save()
+            objectWillChange.send()
         }
     }
 

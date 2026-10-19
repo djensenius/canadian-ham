@@ -138,6 +138,44 @@ function assertProgressExportMatchesSchema(exported: ProgressExportV1): void {
   assert.match(result.stdout, /Schema validation passed for stdin against progress-export-v1\.schema\.json/);
 }
 
+async function createVersion5DatabaseWithLegacyLessonRows(name: string): Promise<void> {
+  const request = indexedDB.open(name, 5);
+  await new Promise<void>((resolve, reject) => {
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      db.createObjectStore("questionProgress", { keyPath: "questionId" });
+      const attemptStore = db.createObjectStore("examAttempts", { keyPath: "id" });
+      attemptStore.createIndex("submittedAt", "submittedAt", { unique: false });
+      db.createObjectStore("preferences", { keyPath: "key" });
+      db.createObjectStore("lessonProgress", { keyPath: "lessonId" });
+      const quizAttemptStore = db.createObjectStore("lessonQuizAttempts", { keyPath: "id" });
+      quizAttemptStore.createIndex("submittedAt", "submittedAt", { unique: false });
+      quizAttemptStore.createIndex("lessonId", "lessonId", { unique: false });
+      db.createObjectStore("morseCourseProgress", { keyPath: "key" });
+      db.createObjectStore("syncMetadata", { keyPath: "key" });
+      request.transaction?.objectStore("lessonProgress").put({ lessonId: "L-005-04", readAt: "2026-01-02T03:30:00.000Z", readCount: 2 });
+      request.transaction?.objectStore("lessonProgress").put({ lessonId: "L-008-02", readAt: "2026-01-03T03:30:00.000Z", readCount: 1 });
+      request.transaction?.objectStore("lessonQuizAttempts").put({
+        id: "legacy-00504",
+        quizId: "QZ-L-005-04-A",
+        lessonId: "L-005-04",
+        submittedAt: "2026-01-02T03:45:00.000Z",
+        correct: 10,
+        total: 12,
+        percent: 83.33333333333334,
+        officialQuestionIds: ["B-005-007-001", "B-005-009-003"],
+        incorrectOfficialQuestionIds: ["B-005-009-003"],
+        incorrectConceptCheckIds: [],
+      });
+    };
+    request.onerror = () => reject(request.error ?? new Error("Unable to create v5 test database"));
+    request.onsuccess = () => {
+      request.result.close();
+      resolve();
+    };
+  });
+}
+
 async function createVersion3Database(name: string): Promise<void> {
   const request = indexedDB.open(name, 3);
   await new Promise<void>((resolve, reject) => {
@@ -217,6 +255,79 @@ describe("ProgressStore", () => {
     await store.putQuestionProgress(legacyRecord as QuestionProgressRecord);
 
     assert.deepEqual(await store.getQuestionProgress(), [record]);
+  });
+
+  it("migrates pre-split lesson progress and quiz attempts during IndexedDB upgrade", async () => {
+    await createVersion5DatabaseWithLegacyLessonRows("legacy-lesson-splits");
+    const store = createStore("legacy-lesson-splits");
+
+    assert.deepEqual(await store.getLessonProgress(), [
+      { lessonId: "L-005-04", readAt: "2026-01-02T03:30:00.000Z", readCount: 2 },
+      { lessonId: "L-005-05", readAt: "2026-01-02T03:30:00.000Z", readCount: 2 },
+      { lessonId: "L-008-01", readAt: "2026-01-03T03:30:00.000Z", readCount: 1 },
+      { lessonId: "L-008-02", readAt: "2026-01-03T03:30:00.000Z", readCount: 1 },
+    ]);
+    assert.deepEqual(await store.getLessonQuizAttempts(), [
+      {
+        id: "legacy-00504",
+        quizId: "QZ-L-005-04-A",
+        lessonId: "L-005-04",
+        submittedAt: "2026-01-02T03:45:00.000Z",
+        correct: 1,
+        total: 1,
+        percent: 100,
+        officialQuestionIds: ["B-005-007-001"],
+        incorrectOfficialQuestionIds: [],
+        incorrectConceptCheckIds: [],
+      },
+      {
+        id: "legacy-00504::QZ-L-005-05-A",
+        quizId: "QZ-L-005-05-A",
+        lessonId: "L-005-05",
+        submittedAt: "2026-01-02T03:45:00.000Z",
+        correct: 0,
+        total: 1,
+        percent: 0,
+        officialQuestionIds: ["B-005-009-003"],
+        incorrectOfficialQuestionIds: ["B-005-009-003"],
+        incorrectConceptCheckIds: [],
+      },
+    ]);
+  });
+
+  it("imports legacy lesson split progress into the new lesson and quiz IDs", () => {
+    const validation = validateProgressImport(validExport({
+      lessonProgress: [
+        { lessonId: "L-001-03", readAt: "2026-01-02T03:30:00.000Z", readCount: 1 },
+        { lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 },
+      ],
+      lessonQuizAttempts: [
+        {
+          id: "legacy-00103",
+          quizId: "QZ-L-001-03-A",
+          lessonId: "L-001-03",
+          submittedAt: "2026-01-02T03:45:00.000Z",
+          correct: 2,
+          total: 2,
+          percent: 100,
+          officialQuestionIds: ["B-001-010-001", "B-001-014-001"],
+          incorrectOfficialQuestionIds: [],
+          incorrectConceptCheckIds: [],
+        },
+      ],
+    }));
+
+    assert.equal(validation.ok, true);
+    assert.deepEqual(validation.data?.lessonProgress, [
+      { lessonId: "L-001-03", readAt: "2026-01-02T03:30:00.000Z", readCount: 1 },
+      { lessonId: "L-001-05", readAt: "2026-01-02T03:30:00.000Z", readCount: 1 },
+      { lessonId: "L-005-05", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 },
+      { lessonId: "L-005-06", readAt: "2026-01-03T03:30:00.000Z", readCount: 2 },
+    ]);
+    assert.deepEqual(validation.data?.lessonQuizAttempts?.map(({ id, quizId, lessonId, officialQuestionIds }) => ({ id, quizId, lessonId, officialQuestionIds })), [
+      { id: "legacy-00103", quizId: "QZ-L-001-03-A", lessonId: "L-001-03", officialQuestionIds: ["B-001-010-001"] },
+      { id: "legacy-00103::QZ-L-001-05-A", quizId: "QZ-L-001-05-A", lessonId: "L-001-05", officialQuestionIds: ["B-001-014-001"] },
+    ]);
   });
 
   it("imports older question progress and sync rows without answered-with-help fields as false", async () => {

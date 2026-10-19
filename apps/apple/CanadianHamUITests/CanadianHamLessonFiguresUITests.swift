@@ -517,9 +517,9 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     ]
 
     private static let module4Lessons: [LessonSpec] = [
+        LessonSpec(moduleID: "M4", lessonID: "L-004-03", figures: [FigureSpec(id: "resistor-colour-code", altText: "Four-band resistor example with every band labelled by position, colour name, value, multiplier, or tolerance, plus a tolerance range line.")]),
         LessonSpec(moduleID: "M4", lessonID: "L-004-01", figures: [FigureSpec(id: "amplifiers-diodes", altText: "A clean block diagram showing a weak signal entering an amplifier, a larger matching signal leaving it, and a diode symbol labelled anode and cathode.")]),
-        LessonSpec(moduleID: "M4", lessonID: "L-004-02", figures: [FigureSpec(id: "control-terminals", altText: "Three side-by-side simplified symbols for an NPN transistor, an N-channel FET, and a triode tube, with their control terminals highlighted.")]),
-        LessonSpec(moduleID: "M4", lessonID: "L-004-03", figures: [FigureSpec(id: "resistor-colour-code", altText: "Four-band resistor example with every band labelled by position, colour name, value, multiplier, or tolerance, plus a tolerance range line.")])
+        LessonSpec(moduleID: "M4", lessonID: "L-004-02", figures: [FigureSpec(id: "control-terminals", altText: "Three side-by-side simplified symbols for an NPN transistor, an N-channel FET, and a triode tube, with their control terminals highlighted.")])
     ]
 
     private static let module5Lessons: [LessonSpec] = [
@@ -531,7 +531,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         ]),
         LessonSpec(moduleID: "M5", lessonID: "L-005-03", figures: [FigureSpec(id: "series-parallel-current-paths", altText: "Cell feeding resistors in series, and the same cell feeding parallel resistor branches with total and branch current arrows.")]),
         LessonSpec(moduleID: "M5", lessonID: "L-005-04", figures: [FigureSpec(id: "db-power-ratio-table", altText: "Decibel power-ratio shortcut table for 3, 6, 10, and 20 dB changes, with increase and decrease columns.")]),
-        LessonSpec(moduleID: "M5", lessonID: "L-005-05", figures: [FigureSpec(id: "transformer-resonance-meters", altText: "Multi-panel figure showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.")])
+        LessonSpec(moduleID: "M5", lessonID: "L-005-06", figures: [FigureSpec(id: "transformer-resonance-meters", altText: "Multi-panel figure showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.")])
     ]
 
     private static let module6Lessons: [LessonSpec] = [
@@ -549,7 +549,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     ]
 
     private static let module8Lessons: [LessonSpec] = [
-        LessonSpec(moduleID: "M8", lessonID: "L-008-01", figures: [FigureSpec(id: "interference-troubleshooting-map", altText: "A troubleshooting map that separates receiver overload, audio rectification, and transmitter spurious emissions.")]),
-        LessonSpec(moduleID: "M8", lessonID: "L-008-02", figures: [FigureSpec(id: "filter-response-sketches", altText: "Frequency-response sketches for low-pass, high-pass, band-pass, band-reject, and notch filters.")])
+        LessonSpec(moduleID: "M8", lessonID: "L-008-01", figures: [FigureSpec(id: "filter-response-sketches", altText: "Frequency-response sketches for low-pass, high-pass, band-pass, band-reject, and notch filters.")]),
+        LessonSpec(moduleID: "M8", lessonID: "L-008-02", figures: [FigureSpec(id: "interference-troubleshooting-map", altText: "A troubleshooting map that separates receiver overload, audio rectification, and transmitter spurious emissions.")])
     ]
 }
