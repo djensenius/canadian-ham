@@ -77,6 +77,9 @@ struct RootView: View {
 
     init(appSettings: AppSettingsModel) {
         _appSettings = StateObject(wrappedValue: appSettings)
+#if DEBUG && os(iOS)
+        _splitColumnVisibility = State(initialValue: Self.initialSplitColumnVisibilityLaunchArgument ?? .automatic)
+#endif
     }
 
     var body: some View {
@@ -432,7 +435,6 @@ struct RootView: View {
         .onAppear {
             updateLanguage(from: progressStore.preferences)
             applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
-            applyInitialSplitColumnVisibilityLaunchArgument()
             updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: usesRegularWidthIPhoneLayout)
         }
         .onChange(of: progressStore.preferences.language) { _, _ in
@@ -678,7 +680,7 @@ struct RootView: View {
 #endif
 
 #if DEBUG && os(iOS)
-    private var initialSplitColumnVisibilityLaunchArgument: NavigationSplitViewVisibility? {
+    private static var initialSplitColumnVisibilityLaunchArgument: NavigationSplitViewVisibility? {
         switch AppLaunchArguments.value(after: "-CanadianHamInitialSplitColumnVisibility") {
         case "all":
             return .all
@@ -689,14 +691,6 @@ struct RootView: View {
         }
     }
 #endif
-
-    private func applyInitialSplitColumnVisibilityLaunchArgument() {
-#if DEBUG && os(iOS)
-        if let initialSplitColumnVisibilityLaunchArgument {
-            splitColumnVisibility = initialSplitColumnVisibilityLaunchArgument
-        }
-#endif
-    }
 
     private func updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: Bool) {
 #if os(iOS)
