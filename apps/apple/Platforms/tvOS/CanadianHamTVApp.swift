@@ -496,7 +496,7 @@ private struct TVPracticeView: View {
                                         displayLetter: displayLetter(for: answer.displayIndex),
                                         language: language,
                                         selectedSourceIndex: session.selectedSourceIndex,
-                                        requestsEvidenceFocus: evidenceFocus == .answer && answer.displayIndex == 0,
+                                        requestsEvidenceFocus: (evidenceFocus == .answer || evidenceFocus == nil) && answer.displayIndex == 0,
                                         action: { select(answer) }
                                     )
                                 }
