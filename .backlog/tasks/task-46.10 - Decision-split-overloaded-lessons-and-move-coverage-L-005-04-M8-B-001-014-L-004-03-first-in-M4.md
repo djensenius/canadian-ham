@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-19 18:38'
+updated_date: '2026-10-19 18:39'
 labels:
   - content
 dependencies: []
@@ -46,4 +46,6 @@ Owner decision 2026-10-12: YES. Split L-005-04 (AC and dB vs reactance and reson
 Owner decision 2026-10-12: yes, do it, including migrating saved lesson progress for moved or split lessons.
 
 Resumed finalization: committed test-local archived-array decoder helper (8d31d867; assertions unchanged) and exactly two sorted version-validation localizations (b67bfb39). Python verified origin/main catalogue entries and order unchanged and exact OrderedDict round-trip formatting. Final macOS full units, eight affected iPhone Learn/figure tests, localization no-rewrite gate, and all requested web/content checks queued via nohup in /tmp/task-46.10-{apple3,web-content3}.sh. The initial foreground localization attempt timed out while waiting for the shared lock, with catalogue hash unchanged; queued retry uses nohup.
+
+Coordinator-approved parity fix: web split-quiz migration now matches Apple by skipping a destination with no answered official questions unless it is the original quiz. Added regression covering top-level and legacy sync-row migration; it failed before the one-line fix and all 29 ProgressStore tests passed afterward (pnpm --dir apps/web exec vitest run src/lib/progressStore.test.ts). Existing assertions were not weakened.
 <!-- SECTION:NOTES:END -->
