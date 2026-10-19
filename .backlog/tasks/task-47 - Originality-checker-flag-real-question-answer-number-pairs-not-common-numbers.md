@@ -3,9 +3,11 @@ id: TASK-47
 title: >-
   Originality checker: flag real question-answer number pairs, not common
   numbers
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 15:48'
+updated_date: '2026-10-19 12:50'
 labels:
   - content
 dependencies: []
