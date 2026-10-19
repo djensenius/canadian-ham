@@ -640,13 +640,15 @@ struct CalculatorToolView: View {
     ]
 
     var body: some View {
-        GeometryReader { _ in
+        Group {
             if shouldPreferScrollableCalculator {
                 calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling(showsHelpText: showsHelpWhenScrolling)))
             } else {
                 ViewThatFits(in: .vertical) {
-                    calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: true)))
-                    calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .fitting(showsHelpText: false)))
+                    calculatorFittingCandidate(at: 0)
+                    calculatorFittingCandidate(at: 1)
+                    calculatorFittingCandidate(at: 2)
+                    calculatorFittingCandidate(at: 3)
                     calculatorScrollContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: .scrolling(showsHelpText: false)))
                 }
             }
@@ -684,6 +686,11 @@ struct CalculatorToolView: View {
 #else
         return false
 #endif
+    }
+
+    private func calculatorFittingCandidate(at index: Int) -> some View {
+        let contentMode = CalculatorToolLayout.fittingCandidateContentModes[index]
+        return calculatorFittingContent(layout: CalculatorToolLayout(dynamicTypeSize: dynamicTypeSize, contentMode: contentMode))
     }
 
     private func calculatorFittingContent(layout: CalculatorToolLayout) -> some View {

@@ -4,6 +4,23 @@ import SwiftUI
 import UIKit
 #endif
 
+private struct ExamToolSplitNavigationStyleModifier: ViewModifier {
+    let usesProminentDetail: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+#if os(iOS)
+        if usesProminentDetail {
+            content.navigationSplitViewStyle(.prominentDetail)
+        } else {
+            content.navigationSplitViewStyle(.balanced)
+        }
+#else
+        content.navigationSplitViewStyle(.balanced)
+#endif
+    }
+}
+
 private enum SidebarSelection: Hashable {
     case home
     case learn
@@ -424,7 +441,7 @@ struct RootView: View {
             progressStore: progressStore,
             columnVisibility: columnVisibility
         )
-        .navigationSplitViewStyle(.balanced)
+        .modifier(ExamToolSplitNavigationStyleModifier(usesProminentDetail: usesProminentDetailSplitStyle))
 #if os(iOS)
         .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
@@ -698,9 +715,23 @@ struct RootView: View {
 #endif
     }
 
+    private var usesProminentDetailSplitStyle: Bool {
+#if os(iOS)
+        UIDevice.current.userInterfaceIdiom == .pad && regularWidthExamToolPresented
+#else
+        false
+#endif
+    }
+
     private func updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: Bool) {
 #if os(iOS)
-        guard UIDevice.current.userInterfaceIdiom == .pad || usesRegularWidthIPhoneLayout else { return }
+        guard usesRegularWidthIPhoneLayout else {
+            if let preToolSplitColumnVisibility {
+                splitColumnVisibility = preToolSplitColumnVisibility
+                self.preToolSplitColumnVisibility = nil
+            }
+            return
+        }
         guard regularWidthExamToolPresented else {
             if let preToolSplitColumnVisibility {
                 splitColumnVisibility = preToolSplitColumnVisibility
@@ -712,7 +743,7 @@ struct RootView: View {
         if preToolSplitColumnVisibility == nil {
             preToolSplitColumnVisibility = splitColumnVisibility
         }
-        splitColumnVisibility = usesRegularWidthIPhoneLayout ? .detailOnly : .automatic
+        splitColumnVisibility = .detailOnly
 #endif
     }
 
@@ -846,9 +877,6 @@ struct RootView: View {
 #if DEBUG
         if let debugHorizontalSizeClassOverride {
             return debugHorizontalSizeClassOverride
-        }
-        if let simulatedSizeClass = canadianHamSimulatedHorizontalSizeClassFromLaunchArguments() {
-            return simulatedSizeClass
         }
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamForceRegularHorizontalSizeClass") {
             return .regular

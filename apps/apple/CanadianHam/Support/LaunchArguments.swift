@@ -21,9 +21,4 @@ func canadianHamParsedHorizontalSizeClass(_ rawValue: String) -> UserInterfaceSi
         return nil
     }
 }
-
-func canadianHamSimulatedHorizontalSizeClassFromLaunchArguments(arguments: [String] = ProcessInfo.processInfo.arguments) -> UserInterfaceSizeClass? {
-    guard let rawValue = AppLaunchArguments.value(after: "-CanadianHamSimulatedHorizontalSizeClass", in: arguments) else { return nil }
-    return canadianHamParsedHorizontalSizeClass(rawValue)
-}
 #endif

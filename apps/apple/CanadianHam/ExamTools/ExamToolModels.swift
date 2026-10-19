@@ -155,14 +155,25 @@ enum PlatformUserInterfaceIdiom: Equatable {
 
 struct CalculatorToolLayout {
     enum ContentMode: Equatable {
-        case fitting(showsHelpText: Bool)
+        case fitting(showsHelpText: Bool, keyHeight: CGFloat)
         case scrolling(showsHelpText: Bool)
     }
+
+    static let expandedKeyHeight: CGFloat = 64
+    // SwiftUI reports the button accessibility frame slightly smaller than the requested label frame;
+    // a 46 pt layout floor preserves the user-facing 44 pt minimum in UI tests.
+    static let minimumKeyHeight: CGFloat = 46
+    static let fittingCandidateContentModes: [ContentMode] = [
+        .fitting(showsHelpText: true, keyHeight: expandedKeyHeight),
+        .fitting(showsHelpText: false, keyHeight: expandedKeyHeight),
+        .fitting(showsHelpText: true, keyHeight: minimumKeyHeight),
+        .fitting(showsHelpText: false, keyHeight: minimumKeyHeight),
+    ]
 
     let dynamicTypeSize: DynamicTypeSize
     let contentMode: ContentMode
 
-    init(dynamicTypeSize: DynamicTypeSize, contentMode: ContentMode = .fitting(showsHelpText: false)) {
+    init(dynamicTypeSize: DynamicTypeSize, contentMode: ContentMode = .fitting(showsHelpText: false, keyHeight: Self.minimumKeyHeight)) {
         self.dynamicTypeSize = dynamicTypeSize
         self.contentMode = contentMode
     }
@@ -175,16 +186,16 @@ struct CalculatorToolLayout {
     var keyHeight: CGFloat {
         if usesAccessibilityMetrics { return accessibilityKeyHeight }
         switch contentMode {
-        case .fitting:
-            return minimumKeyHeight
+        case .fitting(_, let keyHeight):
+            return max(Self.minimumKeyHeight, keyHeight)
         case .scrolling:
-            return scrollingKeyHeight
+            return Self.scrollingKeyHeight
         }
     }
     var showsHelpText: Bool {
         guard !usesAccessibilityMetrics else { return false }
         switch contentMode {
-        case .fitting(let showsHelpText), .scrolling(let showsHelpText):
+        case .fitting(let showsHelpText, _), .scrolling(let showsHelpText):
             return showsHelpText
         }
     }
@@ -214,10 +225,7 @@ struct CalculatorToolLayout {
     private var compactDisplayHeight: CGFloat { 48 }
     private var compactDisplayHorizontalPadding: CGFloat { 12 }
     private var compactDisplayVerticalPadding: CGFloat { 4 }
-    private var scrollingKeyHeight: CGFloat { minimumKeyHeight }
-    // SwiftUI reports the button accessibility frame slightly smaller than the requested label frame;
-    // a 46 pt layout floor preserves the user-facing 44 pt minimum in UI tests.
-    private var minimumKeyHeight: CGFloat { 46 }
+    private static var scrollingKeyHeight: CGFloat { minimumKeyHeight }
 }
 
 struct ReferenceSheetConfiguration: Equatable, Sendable {

@@ -77,16 +77,26 @@ final class ExamCalculatorViewModelTests: XCTestCase {
     }
 
     func testCalculatorToolLayoutCanRepresentFittingContentWithAndWithoutHelp() {
-        let withHelp = CalculatorToolLayout(dynamicTypeSize: .large, contentMode: .fitting(showsHelpText: true))
+        let withHelp = CalculatorToolLayout(dynamicTypeSize: .large, contentMode: .fitting(showsHelpText: true, keyHeight: CalculatorToolLayout.expandedKeyHeight))
         XCTAssertFalse(withHelp.usesScrolling)
         XCTAssertTrue(withHelp.showsHelpText)
         XCTAssertEqual(withHelp.displayHeight, 48)
-        XCTAssertGreaterThanOrEqual(withHelp.keyHeight, 44)
+        XCTAssertEqual(withHelp.keyHeight, 64)
 
-        let withoutHelp = CalculatorToolLayout(dynamicTypeSize: .large, contentMode: .fitting(showsHelpText: false))
+        let withoutHelp = CalculatorToolLayout(dynamicTypeSize: .large, contentMode: .fitting(showsHelpText: false, keyHeight: CalculatorToolLayout.minimumKeyHeight))
         XCTAssertFalse(withoutHelp.usesScrolling)
         XCTAssertFalse(withoutHelp.showsHelpText)
-        XCTAssertGreaterThanOrEqual(withoutHelp.keyHeight, 44)
+        XCTAssertEqual(withoutHelp.keyHeight, 46)
+    }
+
+    func testCalculatorToolLayoutFittingCandidatesPreferLargeKeysBeforeMinimumKeys() {
+        let candidates = CalculatorToolLayout.fittingCandidateContentModes.map {
+            CalculatorToolLayout(dynamicTypeSize: .large, contentMode: $0)
+        }
+
+        XCTAssertEqual(candidates.map(\.keyHeight), [64, 64, 46, 46])
+        XCTAssertEqual(candidates.map(\.showsHelpText), [true, false, true, false])
+        XCTAssertTrue(candidates.allSatisfy { !$0.usesScrolling })
     }
 
     func testCalculatorToolLayoutUsesExplicitScrollingModeWithoutHeightThresholds() {
@@ -104,7 +114,7 @@ final class ExamCalculatorViewModelTests: XCTestCase {
     }
 
     func testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes() {
-        let accessibilityFittingLayout = CalculatorToolLayout(dynamicTypeSize: .accessibility1, contentMode: .fitting(showsHelpText: true))
+        let accessibilityFittingLayout = CalculatorToolLayout(dynamicTypeSize: .accessibility1, contentMode: .fitting(showsHelpText: true, keyHeight: CalculatorToolLayout.minimumKeyHeight))
         XCTAssertTrue(accessibilityFittingLayout.usesScrolling)
         XCTAssertFalse(accessibilityFittingLayout.showsHelpText)
         XCTAssertEqual(accessibilityFittingLayout.displayHeight, 72)
@@ -118,7 +128,7 @@ final class ExamCalculatorViewModelTests: XCTestCase {
 
     func testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere() {
         let sizes: [DynamicTypeSize] = [.xSmall, .large, .xxxLarge, .accessibility1, .accessibility5]
-        let modes: [CalculatorToolLayout.ContentMode] = [.fitting(showsHelpText: true), .fitting(showsHelpText: false), .scrolling(showsHelpText: false)]
+        let modes: [CalculatorToolLayout.ContentMode] = CalculatorToolLayout.fittingCandidateContentModes + [.scrolling(showsHelpText: false), .scrolling(showsHelpText: true)]
 
         for size in sizes {
             for mode in modes {
