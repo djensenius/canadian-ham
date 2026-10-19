@@ -3,10 +3,11 @@ id: TASK-56
 title: >-
   Sync arbitrary compact/split navigation routes across iPhone Duo layout
   changes
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-18 03:22'
-updated_date: '2026-10-19 23:20'
+updated_date: '2026-10-19 23:57'
 labels:
   - apple
 dependencies:
@@ -27,6 +28,15 @@ PR #286 preserves practice and mock exam session state across simulated Duo fold
 - [ ] #2 Starting from a split Learn lesson or quiz route and folding to compact keeps the same lesson or quiz visible
 - [ ] #3 UI or unit coverage exercises at least one compact-to-split and one split-to-compact deep Learn route without weakening existing navigation tests
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect RootView navigation and exam-tool ownership, then introduce a pure typed compact/split route mapping with exhaustive unit coverage.
+2. Synchronize deep routes in both directions and lift active exam-tool presentation above the adaptive root switch without changing tool/session reset behavior.
+3. Add strict DEBUG size-class transition UI tests for lessons, quizzes and open tools; leave existing transition tests and shared/exception helpers unchanged.
+4. Run targeted xbuild checks using nohup scripts on iPhone 17 Pro, iPad Pro 13-inch (M5), iPhone Duo (27.1), and macOS units; record per-test evidence and finalize TASK-56.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
