@@ -198,7 +198,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     func testSimulatedHingeDismissedPeekReopensOnlyAfterReset() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments(
-            "partiallyOpen:25@0.1|partiallyOpen:45@0.1,partiallyOpen:25@0.2,partiallyOpen:25@1.0,partiallyOpen:45@1.1|unfolded:180@0.1,partiallyOpen:25@0.2",
+            "partiallyOpen:25@0.1|partiallyOpen:45@2.1,partiallyOpen:25@2.2,partiallyOpen:25@3.0,partiallyOpen:45@3.1|unfolded:180@4.1,partiallyOpen:25@4.2",
             additionalArguments: ["-CanadianHamExamToolInitialDetent", "large"]
         ))
         defer { app.terminate() }
@@ -211,16 +211,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         closeTool(in: app)
         XCTAssertTrue(hintPanel.waitForNonExistence(timeout: 2), "Dismissing the peek-opened Hint panel should close it")
         triggerSimulatedHingePlayback(in: app, context: "playing no-reset leave-and-reenter posture segment")
-        waitForSimulatedHingePlayback(in: app, atLeast: 1.1, context: "dismissed peek should stay closed after leaving and re-entering the peek band without a reset")
+        waitForSimulatedHingePlayback(in: app, atLeast: 3.1, context: "dismissed peek should stay closed after leaving and re-entering the peek band without a reset")
         XCTAssertFalse(hintPanel.exists, "Leaving the band and returning without a closed or fully-open reset must not reopen a dismissed panel")
         triggerSimulatedHingePlayback(in: app, context: "playing fully-open reset and fresh slight-open segment")
-        waitForSimulatedHingePlayback(in: app, atLeast: 0.2, context: "fully-open reset segment delivered its fresh peek-band sample")
+        waitForSimulatedHingePlayback(in: app, atLeast: 4.2, context: "fully-open reset segment delivered its fresh peek-band sample")
         XCTAssertTrue(hintPanel.waitForExistence(timeout: 5), "After a fully-open reset, a fresh stable dwell may peek again")
     }
 
     func testSimulatedHingePeekStillWorksAfterHintLessonRoundTrip() throws {
         let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments(
-            "partiallyOpen:25@0.1|partiallyOpen:45@0.1,partiallyOpen:25@0.2,partiallyOpen:25@1.0,partiallyOpen:45@1.1|unfolded:180@0.1,partiallyOpen:25@0.2",
+            "partiallyOpen:25@0.1|partiallyOpen:45@2.1,partiallyOpen:25@2.2,partiallyOpen:25@3.0,partiallyOpen:45@3.1|unfolded:180@4.1,partiallyOpen:25@4.2",
             additionalArguments: ["-CanadianHamExamToolInitialDetent", "large"]
         ))
         defer { app.terminate() }
@@ -241,10 +241,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         tapNavigationBack(in: app, context: "returning from hint lesson before delayed hinge peek")
         XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10), "Back from the hint lesson should return to the practice question")
         triggerSimulatedHingePlayback(in: app, context: "playing no-reset posture segment after lesson return")
-        waitForSimulatedHingePlayback(in: app, atLeast: 1.1, context: "returned from the lesson with no closed or fully-open reset")
+        waitForSimulatedHingePlayback(in: app, atLeast: 3.1, context: "returned from the lesson with no closed or fully-open reset")
         XCTAssertFalse(hintPanel.exists, "A peek dismissed by the lesson link must stay dismissed after a lesson round trip until a real posture reset")
         triggerSimulatedHingePlayback(in: app, context: "playing fully-open reset and fresh slight-open segment after lesson")
-        waitForSimulatedHingePlayback(in: app, atLeast: 0.2, context: "fully-open reset after the lesson delivered its fresh peek-band sample")
+        waitForSimulatedHingePlayback(in: app, atLeast: 4.2, context: "fully-open reset after the lesson delivered its fresh peek-band sample")
         XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "After a fully-open reset following the lesson, a fresh stable dwell may peek again")
     }
 
