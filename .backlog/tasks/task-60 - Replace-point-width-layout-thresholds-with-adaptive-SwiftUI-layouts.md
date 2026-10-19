@@ -1,11 +1,11 @@
 ---
 id: TASK-60
 title: Replace point-width layout thresholds with adaptive SwiftUI layouts
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 23:49'
-updated_date: '2026-10-19 22:37'
+updated_date: '2026-10-19 22:55'
 labels:
   - apple
   - layout
@@ -35,6 +35,8 @@ Owner decision 2026-10-18: use modern SwiftUI adaptive layouts instead of hard-c
 1. Replace the Duo unfolded policy with size-class-driven decisions: remove window-size thresholds/hysteresis, root geometry measurement, custom environment plumbing, and DEBUG window-size launch hooks; keep the existing forced-regular iPhone landscape sheet behaviour by preserving compact navigation on compact-vertical phones.\n2. Update RootView sidebar collapse to rely on NavigationSplitView column visibility/style plus size class/exam-tool presentation instead of estimated column widths, preserving the iPad narrow regular-width collapse-and-restore tests.\n3. Refactor CalculatorToolView/CalculatorToolLayout so ViewThatFits selects calculator-with-help, calculator-without-help, then scrollable content, while layout metrics keep 44 pt key targets and accessibility-size scrolling.\n4. Replace threshold/window-size unit and UI tests with size-class policy and DEBUG size-class-change coverage, keep state-preservation and hinge-peek coverage, and update TASK-54 notes for size-class-based real-Duo checks.\n5. Run targeted unit/UI tests and backlog finalization commands with per-test evidence before committing/pushing/opening the PR.
 
 Regression follow-up: reproduce 2–3 iPad exam-tool presentation failures; replace runtime split-style changes with stable native column visibility and restore the user sidebar state; run full iPad ExamTools, targeted iPhone inspector/transitions, and macOS units; record results and update PR #301.
+
+PR #301 final review fixes: parse the DEBUG initial simulated horizontal size class after the runtime override; explicitly start each transition test in its opposite size class and assert the inspector/compact layout mode on iPad as well as phones; gate light/dark inspector audits by actual presentation, keeping full default audit and unchanged exception/shared helpers. Add reopen geometry/hittability checks. Run requested targeted iPhone 17 Pro, iPad Pro 13-inch (M5), iPhone Duo and macOS unit checks via sequential nohup xbuild; update PR body, reply/resolve three threads, append evidence, commit/push and re-request Copilot.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
