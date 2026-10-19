@@ -149,18 +149,6 @@ const DEFAULT_DB_NAME = "canadian-ham-web-progress";
 const PREFERENCES_KEY = "preferences";
 const SYNC_DEVICE_ROWS_KEY = "syncDeviceRows";
 
-export const lessonProgressMigrationMap: Readonly<Record<string, readonly string[]>> = Object.freeze({
-  // TASK-46.10 split L-005-04 into AC/dB and reactance/resonance.
-  "L-005-04": ["L-005-04", "L-005-05"],
-  // TASK-46.10 moved resonance out of the old transformer/meter lesson.
-  "L-005-05": ["L-005-05", "L-005-06"],
-  // TASK-46.10 split M8 by receiver-side and transmitter-side faults.
-  "L-008-01": ["L-008-01", "L-008-02"],
-  "L-008-02": ["L-008-01", "L-008-02"],
-  // TASK-46.10 moved B-001-014 third-party coverage into L-001-05.
-  "L-001-03": ["L-001-03", "L-001-05"],
-});
-
 // All contributing old lessons must be read before a destination earns read credit.
 const lessonProgressSources: Readonly<Record<string, readonly string[]>> = {
   "L-001-03": ["L-001-03"],
