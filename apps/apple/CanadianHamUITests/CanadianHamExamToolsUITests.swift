@@ -594,7 +594,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             openTool(.calculator, in: app)
         }
 #if os(iOS)
-        let expectedPresentation: SimulatedToolPresentationExpectation = UIDevice.current.userInterfaceIdiom == .phone ? .sheet : .inspector
+        let expectedPresentation: SimulatedToolPresentationExpectation = .sheet
 #else
         let expectedPresentation: SimulatedToolPresentationExpectation = .inspector
 #endif
