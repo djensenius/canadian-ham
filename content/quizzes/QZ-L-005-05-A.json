@@ -15,36 +15,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-005-05-A-C1",
-      "prompt": { "en": "Two equal 56 µF capacitors are connected in series. What is the total capacitance?", "fr": null },
+      "prompt": {
+        "en": "A designer wants to increase a 22 µF timing capacitance using another identical capacitor. Which connection gives the larger total?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "28 µF", "fr": null }, "isCorrect": true },
-        { "text": { "en": "56 µF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "112 µF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "3 136 µF", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Series, because capacitances add end-to-end like resistances.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Series capacitors follow the reciprocal rule. Equal series capacitors give a smaller total.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Either connection, because identical parts leave the value unchanged.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The connection changes the total even when the individual parts are identical.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Parallel, because both capacitors store charge across the same voltage.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Parallel capacitances add, giving 44 µF here.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Series, because the total is the product of the two labels.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Multiplying capacitance labels alone is not a valid series combination rule.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Two equal capacitors in series have half the capacitance of one.", "fr": null }
+      "explanation": {
+        "en": "Capacitor connection rules are opposite to the simple resistor combination pattern.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-05-A-C2",
-      "prompt": { "en": "Which part is useful when you want high opposition to RF but low opposition at low frequency?", "fr": null },
+      "prompt": {
+        "en": "An ideal coil and capacitor are tested separately as frequency rises. Which pair of trends should guide an RF bypass design?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "A bypass capacitor chosen to shunt RF to ground.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "An inductor used as an RF choke.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A small capacitor placed in the audio path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A resistor chosen for a DC voltage drop.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Coil opposition rises; capacitor opposition falls.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Inductive reactance rises with frequency, while capacitive reactance falls.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both oppositions rise because faster AC always meets more opposition.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That trend fits the coil, but capacitive reactance falls as frequency rises.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both oppositions fall because RF passes through every reactive part easily.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The capacitor's reactance falls, but the coil's rises.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Coil opposition falls; capacitor opposition rises.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Those trends are reversed. They would lead to choosing the wrong RF path.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Inductive reactance increases with frequency, so a choke can impede RF.", "fr": null }
+      "explanation": {
+        "en": "An RF choke impedes unwanted RF in series; a suitable bypass capacitor gives it an easier shunt path.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-05-A-C3",
-      "prompt": { "en": "Which statement is true at resonance in a series RLC circuit?", "fr": null },
+      "prompt": {
+        "en": "A series tuned circuit is at resonance. Its capacitance is then increased while the source frequency stays fixed. What happens?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The L and C reactances cancel, so current is at a maximum.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The circuit behaves like a parallel tuned trap with high impedance.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The capacitor stops storing energy.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Adding more capacitance would have no effect on tuning.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "It remains exactly resonant because the resistance stayed the same.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Resistance affects losses and sharpness. L and C set the ideal resonant frequency.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Its resonant frequency falls, so the source is now above resonance.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "More capacitance lowers the resonant frequency; the unchanged source now lies above it.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Its resonant frequency rises, so the source is now below resonance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "More capacitance lowers, rather than raises, the resonant frequency.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It becomes a parallel resonant circuit because its impedance rises.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Changing a value does not change the series connection into parallel branches.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Series resonance gives low impedance at the resonant frequency, so current is highest.", "fr": null }
+      "explanation": {
+        "en": "Resonance is a frequency condition as well as a circuit arrangement. Changing C moves that condition.",
+        "fr": null
+      }
     }
   ]
 }

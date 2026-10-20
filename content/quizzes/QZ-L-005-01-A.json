@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-005-01-A-C1",
-      "prompt": { "en": "A battery current is 640 mA. What is the same current in amperes?", "fr": null },
+      "prompt": {
+        "en": "A parts list needs 0.82 A. A meter on the same accessory reads 820 mA. What should the learner conclude?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "0.64 A", "fr": null }, "isCorrect": true },
-        { "text": { "en": "6.4 A", "fr": null }, "isCorrect": false },
-        { "text": { "en": "64 A", "fr": null }, "isCorrect": false },
-        { "text": { "en": "0.064 A", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The readings differ by a factor of ten.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That would follow from dividing by 100. Milli requires dividing by 1 000.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "They describe the same current.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "820 / 1 000 = 0.82 A, so only the display unit differs.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The meter reads a thousand times too high.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "820 is a larger number because mA is a smaller unit. The current itself is unchanged.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The readings differ by a factor of one hundred.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This treats milli as a tenfold step. It is a thousandth of an ampere.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Milliamperes are thousandths of an ampere, so divide 640 by 1 000.", "fr": null }
+      "explanation": {
+        "en": "Compare values only after expressing them in the same unit.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-01-A-C2",
-      "prompt": { "en": "Which statement best describes an insulator in a simple circuit?", "fr": null },
+      "prompt": {
+        "en": "A cable has sound copper conductors, but its plastic separator cracks and lets them touch. Which change explains the fault?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "It strongly resists normal current flow and is used to separate conductors.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It is chosen when a circuit needs the lowest possible resistance path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is a material whose conductivity is between metal conductors and insulators.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is used to carry the return current in a coax shield.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The copper now has the resistance of an insulator.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The copper is still conductive. The failed separation creates the unwanted path.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The return conductor has stopped carrying charge because plastic supplies it.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Plastic normally separates the conductors; it does not supply their current.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "An insulating barrier has failed, allowing an unintended conductive path.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The separator keeps the intended paths apart. Contact between conductors can create a short.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The plastic has become a normal series resistor in the intended path.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The described fault is conductor contact, not a resistor deliberately inserted in series.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Insulators separate conductors and help keep current on the intended path.", "fr": null }
+      "explanation": {
+        "en": "Materials have different jobs: conductors carry current, and insulation keeps those paths separate.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-01-A-C3",
-      "prompt": { "en": "Why is polarity important when connecting a DC radio accessory?", "fr": null },
+      "prompt": {
+        "en": "A DC accessory has equal-sized red and black leads. Which check matters before connecting a replacement supply?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Some DC circuits can be damaged when the positive and negative leads are swapped.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It changes a conductor into a semiconductor material.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It makes current flow in an open circuit with no return path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It sets the frequency shown on the receiver dial.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Confirm the required positive and negative connections in its instructions.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Equal wire size does not remove polarity requirements. Verify the specified connections.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Choose polarity from which wire has the lower resistance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Wire resistance does not establish the required input polarity.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Swap the leads if the supply has a lower current rating.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Current capacity and polarity are separate. Swapping leads does not correct a rating mismatch.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use either orientation if the two leads have equal length.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Lead length does not make a polarity-sensitive circuit reversible.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "DC equipment often expects positive and negative leads to be connected correctly.", "fr": null }
+      "explanation": {
+        "en": "A DC circuit can depend on current direction even when both supply leads look alike.",
+        "fr": null
+      }
     }
   ]
 }

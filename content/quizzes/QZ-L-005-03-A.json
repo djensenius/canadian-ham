@@ -17,36 +17,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-005-03-A-C1",
-      "prompt": { "en": "Four 18 ohm resistors are connected in series. What is the total resistance?", "fr": null },
+      "prompt": {
+        "en": "A resistor in a single series string breaks internally. What happens to current in the other resistors?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "4.5 ohms", "fr": null }, "isCorrect": false },
-        { "text": { "en": "18 ohms", "fr": null }, "isCorrect": false },
-        { "text": { "en": "72 ohms", "fr": null }, "isCorrect": true },
-        { "text": { "en": "0.22 ohms", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "It stops throughout the string because the only path is broken.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Every series part is in the same path. An open part stops current in that path.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Only the broken part loses current; the others keep their original current.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That describes separate paths. This series string has only one path.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It rises because one resistance has been removed.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An open is not a jumper replacing the part. It breaks the path instead.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It divides among the remaining resistors.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The remaining resistors have no parallel branches for current to divide through.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Series resistances add directly: 18 + 18 + 18 + 18 = 72 ohms.", "fr": null }
+      "explanation": {
+        "en": "Topology matters: a series break opens the whole loop.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-03-A-C2",
-      "prompt": { "en": "Five equal 250 ohm resistors are in parallel. What is the total resistance?", "fr": null },
+      "prompt": {
+        "en": "A supply holds its voltage steady while a second equal resistor branch is added in parallel. How do the original branch current and total current change?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "1 250 ohms", "fr": null }, "isCorrect": false },
-        { "text": { "en": "250 ohms", "fr": null }, "isCorrect": false },
-        { "text": { "en": "125 ohms", "fr": null }, "isCorrect": false },
-        { "text": { "en": "50 ohms", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "Both currents stay unchanged.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The original current stays unchanged, but the new branch adds its own current to the total.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The original branch current halves; total current stays unchanged.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The supply holds the same voltage across each branch, so the original resistor still draws the same current.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The original branch current stays unchanged; total current doubles.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Each equal branch sees the full supply voltage and draws the original branch current.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The original branch current doubles; total current doubles.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Only the total doubles. The original branch has unchanged resistance and voltage.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Equal parallel resistors use Rt = R / branches, so 250 / 5 = 50 ohms.", "fr": null }
+      "explanation": {
+        "en": "Adding a parallel path changes total resistance without changing the voltage of an ideal regulated supply.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-03-A-C3",
-      "prompt": { "en": "Four equal 270 ohm, 0.25 W resistors share current evenly in a parallel load. What total heat rating can the network use?", "fr": null },
+      "prompt": {
+        "en": "A parallel test load uses equal resistance values, but one resistor has a lower wattage rating. What sets the safe test level?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "0.25 W", "fr": null }, "isCorrect": false },
-        { "text": { "en": "0.50 W", "fr": null }, "isCorrect": false },
-        { "text": { "en": "1.0 W", "fr": null }, "isCorrect": true },
-        { "text": { "en": "4.0 W", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Add every nameplate wattage, even if one part overheats.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The summed rating is usable only if each part stays within its own limit.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Check each branch's dissipation; the lower-rated part may limit the whole load.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Equal resistances at equal voltage share power equally, so the weakest heat rating can limit the network.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use the largest individual wattage because it protects the smaller parts.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The larger part does not absorb the smaller parts' shares of heat.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Divide total resistance by the sum of wattages to get the safe power.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Resistance and wattage describe different limits. That division does not calculate branch dissipation.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Equal parts that share current and heat can add their wattage ratings: 4 x 0.25 W = 1.0 W.", "fr": null }
+      "explanation": {
+        "en": "Even current sharing is not enough when individual heat ratings differ.",
+        "fr": null
+      }
     }
   ]
 }

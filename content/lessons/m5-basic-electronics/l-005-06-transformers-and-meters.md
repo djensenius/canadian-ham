@@ -56,6 +56,22 @@ If the secondary supplies 15 V at 1.6 A to a purely resistive load, the output i
 
 An ideal transformer delivering 24 W from a 120 V primary would draw I = P / E = 24 W / 120 V = 0.20 A. A real small transformer supply draws more input current than the ideal calculation because some power becomes heat.
 
+### Faded practice: finish a wall-wart estimate
+
+Use an ideal transformer and a purely resistive AC load.
+
+- Given: primary E = 120 V; secondary E = 18 V RMS; secondary I = 1.4 A RMS.
+- Find: secondary power and ideal primary current.
+- Formula: P = I x E; primary I = P / primary E.
+- Complete: P = 1.4 x ___ = ___ W; primary I = ___ / 120 = ___ A.
+- Sanity check: Should the higher-voltage side carry less current?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a wall-wart estimate
+
+Output power = 25.2 W. Ideal primary current = 0.21 A. Real losses raise input power; reactive or rectifier loads need more care than this simple model.
+
 ## Transformer power calculations
 
 For ideal transformer questions, input power and output power are treated as equal:
@@ -108,6 +124,22 @@ A 1:4 primary-to-secondary turns ratio steps secondary voltage up to 4 times the
 - Answer: primary current = 300 mA.
 - Sanity check: current changes in the opposite direction to voltage when power is conserved.
 
+### Faded practice: finish turns and current together
+
+An ideal step-down transformer supplies a resistive load.
+
+- Given: primary E = 180 V RMS; primary turns = 750; secondary turns = 125; secondary I = 0.8 A RMS.
+- Find: secondary voltage and primary current.
+- Formula: secondary E = primary E x secondary turns / primary turns; P = I x E; primary I = P / primary E.
+- Complete: secondary E = 180 x ___ / 750 = ___ V; output P = 0.8 x ___ = ___ W; primary I = ___ / 180 ≈ ___ A.
+- Sanity check: Did voltage step down and current step up from primary to secondary?
+
+Fill the gaps before checking below.
+
+### Check your work: finish turns and current together
+
+Secondary E = 30 V, P = 24 W, and primary I ≈ 0.133 A. Equal ideal power, rather than equal current, connects the windings.
+
 ## Meters and how to connect them
 
 A meter should disturb the circuit as little as practical.
@@ -147,11 +179,21 @@ Before measuring current, move the lead to the current jack, choose the current 
 
 ## Try it
 
-1. A transformer primary consumes 54 W. If the ideal secondary voltage is 18 V, I = P / E = 54 / 18 = 3 A.
-2. To measure voltage across a resistor, connect the voltmeter in parallel with that resistor.
-3. To measure current drawn from a supply, place an ammeter in series with the current path.
-4. If a meter gives readings close together but offset from the true value, which two words help describe that? The readings are precise but not accurate.
-5. Why can a transformer change impedance? It changes the AC voltage and current ratio, and impedance is E / I for AC.
+Try these before reading the feedback below.
+
+1. An ideal transformer takes 54 W at its primary. Find secondary current at 18 V.
+2. How do you connect a voltmeter to measure a resistor's voltage?
+3. How do you connect an ammeter to measure supply current?
+4. How would you describe repeated readings close together but offset from the true value?
+5. Why can a transformer change impedance?
+
+### Try-it feedback
+
+1. I = P / E = 54 / 18 = 3 A.
+2. Connect it in parallel across the resistor.
+3. Open the path and insert the ammeter in series, with the correct range and lead jacks.
+4. They are precise but inaccurate.
+5. It changes the AC voltage and current ratio. Impedance is E / I for AC.
 
 ## Radio connection
 
