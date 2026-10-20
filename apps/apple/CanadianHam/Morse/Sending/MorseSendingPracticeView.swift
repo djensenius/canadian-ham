@@ -48,6 +48,7 @@ struct MorseSendingPracticeView: View {
     }
 
     var body: some View {
+        VStack(spacing: 0) {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -66,7 +67,9 @@ struct MorseSendingPracticeView: View {
             }
             .pagePadding()
         }
+        }
         .background(DesignTokens.Colors.paper)
+        .contentShape(Rectangle())
         .navigationTitle("Sending practice") // l10n: localized
         .focusable(!showingExam && presentedResult == nil)
         .focused($keyboardFocus, equals: .practice)
@@ -196,6 +199,8 @@ struct MorseSendingPracticeView: View {
     }
 
     private var sendingExamScreen: some View {
+        // Keep Space on the keying focus target, not the ScrollView's paging handler.
+        VStack(spacing: 0) {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -218,7 +223,9 @@ struct MorseSendingPracticeView: View {
             }
             .pagePadding()
         }
+        }
         .background(DesignTokens.Colors.paper)
+        .contentShape(Rectangle())
         .navigationTitle("Exam-style check") // l10n: localized
         .focusable(presentedResult == nil)
         .focused($keyboardFocus, equals: .exam)
