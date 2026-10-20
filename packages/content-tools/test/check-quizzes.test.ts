@@ -495,3 +495,33 @@ test("quiz check scoped to a module ignores other modules' quiz files but keeps 
     );
   });
 });
+
+test("quiz check stages required feedback and rejects malformed feedback even without the flag", async () => {
+  await withFixture("choice-feedback", async (root) => {
+    const options = {
+      lessonRoot: path.join(root, "content/lessons"),
+      questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      quizRoot: path.join(root, "content/quizzes"),
+      requireFeedback: true,
+    };
+    const check = JSON.parse(quiz()).conceptChecks[0];
+    await writeBaseFixture(root);
+    await assert.rejects(checkQuizzes(options), (error: unknown) => {
+      assert.ok(error instanceof QuizCheckError);
+      assert.equal(error.report.issues.filter((issue) => issue.includes("feedback is required")).length, 2);
+      return true;
+    });
+    for (const feedback of [null, "note", {}, { en: "", fr: null }, { en: "note", fr: "" }, { en: "note" }]) {
+      await writeBaseFixture(root, quiz({ conceptChecks: [{ ...check, choices: check.choices.map((choice: object) => ({ ...choice, feedback })) }] }));
+      await assert.rejects(runCheck(root), (error: unknown) => {
+        assert.ok(error instanceof QuizCheckError);
+        assert.ok(error.report.issues.some((issue) => issue.includes("feedback must have non-empty en text")));
+        return true;
+      });
+    }
+    await writeBaseFixture(root, quiz({ conceptChecks: [{ ...check, choices: check.choices.map((choice: object, index: number) => ({ ...choice, feedback: { en: "Explain this option.", fr: index === 0 ? null : "Expliquer ce choix." } })) }] }));
+    assert.equal((await checkQuizzes(options)).conceptCheckCount, 1);
+    await writeBaseFixture(root, quiz({ conceptChecks: [] }));
+    assert.equal((await checkQuizzes(options)).conceptCheckCount, 0);
+  });
+});

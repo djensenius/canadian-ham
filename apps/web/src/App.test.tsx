@@ -1121,6 +1121,80 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     await expectNoAxeViolations(quizSection);
   });
 
+  for (const language of ["en", "fr"] as const) {
+    for (const theme of ["light", "dark"] as const) {
+      for (const correct of [true, false]) {
+        it(`shows only the chosen concept option feedback with focus and axe in ${language} ${theme} (${correct ? "correct" : "incorrect"})`, async () => {
+          const original = lessonQuizzesById.get("QZ-L-004-01-A")!;
+          const source = original.conceptChecks[0]!;
+          const concept = {
+            ...source,
+            choices: source.choices.map((choice, index) => ({
+              ...choice,
+              feedback: { en: `Feedback for source option ${index}.`, fr: choice.isCorrect ? `Rétroaction du choix source ${index}.` : null },
+            })),
+          };
+          lessonQuizzesById.set(original.id, { ...original, officialQuestionIds: [], conceptChecks: [concept] });
+          try {
+            window.location.hash = "#/learn/M4/L-004-01";
+            window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+            const store = createStore(`concept-feedback-${language}-${theme}-${correct}`);
+            await store.putPreferences({ ...defaultPreferences, language, theme });
+            const user = userEvent.setup();
+            const { container } = render(<App store={store} now={() => fixedNow} />);
+            await screen.findByRole("heading", { name: original.id });
+            const section = getLessonQuizSection();
+            const sourceIndex = concept.choices.findIndex((choice) => choice.isCorrect === correct);
+            const choice = concept.choices[sourceIndex]!;
+            const buttons = within(section).getAllByTestId("lesson-quiz-choice");
+            const button = buttons.find((item) => item.textContent?.includes(choice.text.en))!;
+            assert.ok(button);
+            assert.equal(within(section).queryByRole("status"), null);
+            assert.equal(section.textContent?.includes("Feedback for source option"), false);
+            assert.equal(section.textContent?.includes("Rétroaction du choix source"), false);
+            button.focus();
+            await user.keyboard("{Enter}");
+            const status = within(section).getByRole("status");
+            await waitFor(() => assert.equal(document.activeElement, status));
+            const expected = choice.feedback[language] ?? choice.feedback.en;
+            assert.ok(status.textContent?.includes(expected));
+            const feedback = status.querySelector("span[lang]");
+            assert.equal(feedback?.getAttribute("lang"), language === "fr" && correct ? "fr-CA" : "en");
+            assert.ok(within(section).getByText(concept.explanation.en));
+            for (const other of concept.choices.filter((item) => item !== choice)) {
+              assert.equal(section.textContent?.includes(other.feedback.en), false);
+              if (other.feedback.fr !== null) assert.equal(section.textContent?.includes(other.feedback.fr), false);
+            }
+            assert.equal(button.getAttribute("aria-pressed"), "true");
+            assert.ok(buttons.every((item) => item.hasAttribute("disabled")));
+            assert.equal(document.documentElement.dataset.theme, theme);
+            await expectNoAxeViolations(container);
+          } finally {
+            lessonQuizzesById.set(original.id, original);
+          }
+        });
+      }
+    }
+  }
+
+  it("keeps the generic concept explanation for legacy choices without feedback", async () => {
+    const original = lessonQuizzesById.get("QZ-L-004-01-A")!;
+    const source = original.conceptChecks[0]!;
+    const concept = { ...source, choices: source.choices.map(({ text, isCorrect }) => ({ text, isCorrect })) };
+    lessonQuizzesById.set(original.id, { ...original, officialQuestionIds: [], conceptChecks: [concept] });
+    try {
+      window.location.hash = "#/learn/M4/L-004-01";
+      render(<App store={createStore("legacy-concept-feedback")} now={() => fixedNow} />);
+      await screen.findByRole("heading", { name: original.id });
+      const section = getLessonQuizSection();
+      fireEvent.click(within(section).getAllByTestId("lesson-quiz-choice")[0]!);
+      assert.ok(within(section).getByText(concept.explanation.en));
+      assert.equal(within(section).getByRole("status").querySelector("span[lang]"), null);
+    } finally {
+      lessonQuizzesById.set(original.id, original);
+    }
+  });
+
   it("freezes lesson quiz help at choice, preserves scores and applies existing progress semantics", async () => {
     window.location.hash = "#/learn/M5/L-005-01";
     const store = createStore("lesson-quiz-help-progress");

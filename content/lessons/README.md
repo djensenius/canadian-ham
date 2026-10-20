@@ -85,6 +85,8 @@ pnpm --dir packages/content-tools check:quizzes:module ../../content/lessons/m4-
 
 A module-scoped run checks the quiz files referenced by lessons under that root and reports orphan quiz files only for that module's `QZ-L-00N-*` prefix.
 
+Each concept-check choice may carry `feedback: {"en": "...", "fr": null}` (or translated French text). Explain why that choice fits or which misconception it reveals, rather than repeating the generic explanation. During the TASK-46.6 conversion, run `node packages/content-tools/src/check-quizzes.ts --require-feedback` (optionally with `--lesson-root=<module path>`) to enforce feedback on every choice. This flag becomes required by default once all modules are converted.
+
 The quiz checker also runs a **CONCEPT-CHECK OVERLAP** lint. For each concept check, it compares the prompt plus correct choice with every official question plus correct answer in the same quiz, and with each line in that lesson's `## Try it` section. The heuristic uses content-word token Jaccard after stop-word removal plus shared content-word 5-grams. Current thresholds are documented in `packages/content-tools/src/check-quizzes.ts`: Jaccard `>= 0.88`, at least `4` shared 5-grams, or at least `1` shared 5-gram with Jaccard `>= 0.82`. The check is intentionally narrow: it catches restatements of the official bank or Try-it items, but it does not attempt a broad "off-topic distractor" judgment.
 
 ## Explanation check

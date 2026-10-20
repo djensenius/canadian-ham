@@ -1429,7 +1429,10 @@ function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex
       </div>
       {showCorrectness ? (
         <div className="feedback">
-          <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedChoice?.isCorrect ? t(interfaceLanguage, "feedbackCorrectSentence") : t(interfaceLanguage, "feedbackIncorrectSentence")}</p>
+          <p role="status" ref={feedbackRef} tabIndex={-1}>
+            {selectedChoice?.isCorrect ? t(interfaceLanguage, "feedbackCorrectSentence") : t(interfaceLanguage, "feedbackIncorrectSentence")}
+            {selectedChoice?.feedback !== undefined ? <span lang={languageTag(selectedChoice.feedback[language] === null ? "en" : language)}> {selectedChoice.feedback[language] ?? selectedChoice.feedback.en}</span> : null}
+          </p>
           <p lang={languageTag(conceptCheck.explanation[language] === null ? "en" : language)}>{conceptCheck.explanation[language] ?? conceptCheck.explanation.en}</p>
         </div>
       ) : null}
