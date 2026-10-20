@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-007-03-A-C1",
       "prompt": {
-        "en": "A handheld-to-repeater estimate gives only local coverage, but a hilltop weak-signal pair later works many hundreds of kilometres on VHF. What should the log say before claiming an enhanced opening?",
+        "en": "In the practical radio-horizon model, one antenna is raised from 16 m to 64 m. What happens to that antenna's own horizon contribution?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Record antenna heights, weather, distance, direction, and signal steadiness so the range claim can be tied to the path conditions.",
+            "en": "It doubles, because square root of height rises from 4 to 8.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The model uses square root of height, not height itself. The other station's contribution is separate.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Delete the local estimate, because any longer contact proves height and terrain never matter.",
+            "en": "It becomes four times larger because height becomes four times larger.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "That treats horizon as directly proportional to height and ignores the square root.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Assume the same long path is now dependable for handheld emergency coverage every day.",
+            "en": "It is unchanged unless transmitter power rises too.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The height term changes even at unchanged power.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Log only transmitter power, because lower-atmosphere paths do not depend on weather or antenna location.",
+            "en": "The whole two-station path necessarily becomes twice as long.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Only this antenna's contribution doubles. Add the other station's unchanged contribution before comparing total path estimates.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "The lesson separates ordinary local planning from longer weak-signal paths. Good notes preserve the evidence: station height, weather, direction, distance, and signal character.",
+        "en": "Separate the changed antenna contribution from the combined path, and remember that terrain can still limit coverage.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-03-A-C2",
       "prompt": {
-        "en": "A VHF event shifts from brief shower-related pings to a steadier path along a lake inversion. Which operating adjustment best fits the change?",
+        "en": "A steady VHF path opens along a lake inversion while an HF sky-wave route is poor. Are those observations contradictory?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Schedule long overs for the pings, because short reflections leave more time than inversion paths.",
+            "en": "Yes; good VHF propagation proves the same F-region conditions must support HF.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The VHF weather-layer path and HF ionospheric path depend on different regions.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Treat the ping period as short contact windows, then use more normal exchange timing while the inversion path stays steady.",
+            "en": "No; lower-atmosphere conditions can improve VHF independently of the ionospheric HF route.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "A tropospheric enhancement does not establish a useful F-region path at the planned HF frequency.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Log both as the same kind of ionospheric opening because the band is VHF.",
+            "en": "Yes; an inversion must improve every frequency by the same amount.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A weather structure is not a universal gain increase across all bands and paths.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Ignore timing once the first contact is made; both openings should last the same length.",
+            "en": "No; both observations prove that all VHF openings are sporadic E.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The lake inversion points to a lower-atmosphere mechanism, not an automatic E-region explanation.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Meteor-related pings are brief, so timing must be concise. A duct or enhanced lower-atmosphere path can allow more normal exchanges while the weather structure persists, but it still may fade.",
+        "en": "Interpret the band and physical region together. An opening on one path does not prove that another band is open.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-03-A-C3",
       "prompt": {
-        "en": "During an HF exercise, a control station hears brief smeared bits from a normally missed area, but the traffic is not reliable enough for messages. What is the best operating response?",
+        "en": "Weak smeared HF fragments are heard inside an area usually skipped by the main sky-wave return. What conclusion is justified?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Log the clue as possible scattered energy and move traffic to a band, relay, or schedule that gives steadier copy.",
+            "en": "The main return point must have moved to that area, making ordinary message service dependable.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "Weak scattered fragments do not establish a new reliable main return.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Keep sending long messages on that path, because brief smeared copy proves the route is dependable.",
+            "en": "The receiver must be faulty because a skip zone can never contain any energy.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Scatter can redirect a small part of the signal into an area missed by the main path.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Widen the transmitted signal to make all delayed copies arrive with the same phase.",
+            "en": "Scattered energy may be reaching the area without creating a reliable main-hop path.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "Only a small fraction may arrive over irregular paths, explaining weak and smeared copy.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Ignore the band and time in the log, because mixed paths cannot be compared later.",
+            "en": "The signal must be a surface ground wave because it is closer than the main return.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Location alone does not establish ground wave. The weakness and smearing can fit scatter.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Weak smeared copy can be a useful propagation clue, but it is not a dependable traffic path by itself. The operator should log it and choose a steadier communication plan.",
+        "en": "A skip zone describes the main coverage gap, not a rule that absolutely no scattered energy can arrive there.",
         "fr": null
       }
     }
