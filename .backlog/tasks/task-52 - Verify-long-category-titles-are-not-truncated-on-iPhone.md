@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-20 15:05'
+updated_date: '2026-10-20 15:12'
 labels:
   - apple
 dependencies: []
@@ -45,4 +45,6 @@ Coordinator decision 2026-10-20 (owner may revisit): retain TASK-55 native inlin
 Coordinator clarification 2026-10-20: the native navigation-bar visual-ellipsis exception also applies at default text size wherever long native practice or Study module titles cannot fit. Each case must retain the complete accessibility label and the full wrapped title in the content header on that screen. Cards, lists and content headers retain strict no-truncation checks. Evidence will list the specific titles/sizes so the owner can revisit this decision; French B-003 requires 342.7 pt at 17-pt text versus 314 pt available.
 
 Large Content Viewer confirmed on iPhone 17 Pro at AX-XXXL: a ten-second hold on the native French B-003 title displays its complete name in a wrapped/hyphenated system overlay without an ellipsis. Timed host captures at 3 s and 7 s both show it; a repeat capture from the final coverage run is retained in docs/evidence/task-52/native-large-content-viewer-fr-accessibility-xxxl-B-003.png. No app implementation was needed. Strict card measurements now preserve the text language and native hyphenation (the original unhyphenated metric falsely required an extra line for the visibly complete Compo-sants des circuits). All pre-existing tests/audits/helpers remain unchanged.
+
+Coordinator clarification 2026-10-20: the approved native-title exception also covers the existing automatic/large navigation style on Study module screens, with no style/title changes. Observed B-003 at AX-XXXL: native bar displays Station Ass… with a 346.3 × 71.7 pt accessibility frame; the complete Station Assembly, Practice and Safety label and the full wrapped same-screen content header both pass. Evidence retained as native-study-fr-accessibility-xxxl-B-003.png. French AX-XXXL coverage passed in 1278.551 seconds; the other three targeted cases are queued by the conditional driver.
 <!-- SECTION:NOTES:END -->
