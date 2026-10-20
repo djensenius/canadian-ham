@@ -60,11 +60,11 @@ The original review is historical: [m1-m2.md](m1-m2.md). This ledger records the
 
 | Bank IDs (suffixes within B-002) | Taught facts extracted from the old lesson | Revised teaching location / comparison |
 |---|---|---|
-| 009-001, 009-005, 009-007 | QSL cards or web logs confirm contacts. Canadian amateur logs are optional but useful for awards, memory, confirmation matching and interference enquiries. Record UTC date/time, call, band/frequency, mode, report, location and station notes. | Pending rewrite comparison. |
-| 009-003 | Maidenhead codes describe location, with four or six characters; useful in VHF contests. | Pending rewrite comparison. |
-| 009-002, 009-004, 009-006, 009-008 | A station-centred azimuthal map gives bearings; long-path bearing is the reciprocal, 180 degrees away; try that direction when short path fails, without assuming success. | Pending rewrite comparison. |
-| 009-009, 009-010 | UTC uses the Greenwich meridian reference. UTC-minus zones subtract the offset for local time, sometimes crossing into the previous local date. Bridge 24-hour times to AM/PM; keep UTC date with UTC time in records. | Pending rewrite comparison. |
-| 009-011 | CHU, WWV and WWVH provide accurate frequency/time references. | Pending rewrite comparison. |
+| 009-001, 009-005, 009-007 | QSL cards or web logs confirm contacts. Canadian amateur logs are optional but useful for awards, memory, confirmation matching and interference enquiries. Record UTC date/time, call, band/frequency, mode, report, location and station notes. | Retained — Make a contact easy to match; Worked example: a log narrows an interference enquiry. |
+| 009-003 | Maidenhead codes describe location, with four or six characters; useful in VHF contests. | Retained — Use a compact location label. |
+| 009-002, 009-004, 009-006, 009-008 | A station-centred azimuthal map gives bearings; long-path bearing is the reciprocal, 180 degrees away; try that direction when short path fails, without assuming success. | Retained — Take bearings from your own station; Worked example: aim the other way. |
+| 009-009, 009-010 | UTC uses the Greenwich meridian reference. UTC-minus zones subtract the offset for local time, sometimes crossing into the previous local date. Bridge 24-hour times to AM/PM; keep UTC date with UTC time in records. | Retained — Keep one clock for the contact; Worked examples: a schedule in local evening time / crossing into the previous local date. |
+| 009-011 | CHU, WWV and WWVH provide accurate frequency/time references. | Retained — Keep one clock for the contact. |
 
 ## Verification after rewriting
 

@@ -14,5 +14,129 @@
     "B-002-009-010",
     "B-002-009-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-04-A-C1",
+      "prompt": {
+        "en": "You log a contact at 0040 UTC on 8 March. The stated local offset is UTC minus 3 hours. Which local reminder matches the UTC entry?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "0340 on 8 March",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "2140 on 7 March",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "2140 on 8 March",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "0040 on 7 March",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Subtract three hours: the local clock reads 2140 on the previous date, 7 March. Adding moves in the wrong direction. Keeping 8 March with 2140 misses the date change; changing only the date leaves the clock wrong. Keep the original UTC date and time together in the log.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-04-A-C2",
+      "prompt": {
+        "en": "A club gives you an azimuthal map centred on its station, far from yours. Can you use its printed bearings directly to aim your home antenna?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Yes. Bearings depend only on the destination.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Yes, if you use the same UTC time as the club.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "No. You need bearings from a map centred on your own location.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "No. Azimuthal maps cannot show antenna bearings.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A bearing has a starting point as well as a destination. A different map centre can change the direction to aim. Sharing a time standard does not change map geometry; a correctly centred azimuthal map does show useful bearings.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-04-A-C3",
+      "prompt": {
+        "en": "A confirmation lists the right call sign but a different band from your log. What is the useful next step?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Compare UTC date, time, band, and mode with the other operator before accepting a match.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Accept it because a matching call sign proves every other field is correct.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Change your log to the confirmation details without checking.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Discard the log because Canadian amateurs do not have to keep one.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A call sign alone does not identify a particular contact. Compare the contact details and resolve the mismatch rather than overwriting evidence. Optional logs can still help match confirmations and find recording errors.",
+        "fr": null
+      }
+    }
+  ]
 }

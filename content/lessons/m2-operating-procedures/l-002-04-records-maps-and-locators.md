@@ -23,66 +23,64 @@ status: draft
 ---
 # Records, maps, and locators
 
-Operating continues after the microphone is released. Contact records help you confirm communication, remember conditions, chase awards, respond to interference questions, and plan future contacts.
+Two operators can log the same contact under different local dates. One may be finishing an evening while the other has started a new day. A shared time standard and clear location notes let them match the contact later.
 
-Maps and locators turn a call sign exchange into a sense of direction and distance. Time standards let two stations in different time zones describe the same moment.
+Maps answer another operating question: where should a directional antenna point? Records and maps turn a brief exchange into information you can use again.
 
 ## Learning objectives
 
 By the end of this lesson, you can:
 
-- describe what a QSL card proves and how web-based logs can serve a similar confirming role;
-- describe useful contact notes and the Canadian regulatory status of amateur station logs;
-- explain what a Maidenhead grid square communicates in a VHF contest;
-- use an azimuthal map to find bearings from your own location;
-- understand why long-path direction is opposite short-path direction; and
-- convert a simple UTC schedule into local time.
+- explain how QSL cards and web logs confirm contacts;
+- choose useful log details without treating a log as a Canadian regulatory requirement;
+- recognize a Maidenhead locator as compact location information;
+- use a station-centred azimuthal map and an opposite long-path bearing; and
+- convert UTC to local time while keeping the date correct.
 
-## Contact confirmations and logs
+## Make a contact easy to match
 
-A QSL card is written proof that two amateur stations communicated. Modern operators may also confirm contacts through web-based logging systems. Either way, the confirmation lets both stations recognize the same completed contact.
+A QSL card confirms that two amateur stations completed a contact. Entries in web-based logging systems can provide a confirming role too. Matching details let the operators distinguish that contact from another one on the same band.
 
-Canadian regulations make amateur station logbooks optional. Operators keep personal logs because they support award applications, preserve memories, help match confirmations, and help investigate neighbour interference complaints by showing when the station was transmitting.
+Canadian amateur station logs are optional, not a regulatory requirement. They are still useful for awards, memories, matching confirmations, and checking later interference enquiries.
 
-Useful log details include UTC date and time, call sign, band or frequency, mode, signal report, location information, and brief station notes. A complete note is more valuable than a memory reconstructed later.
+Record enough information to identify what happened: UTC date and time, the other call sign, band or frequency, mode, signal report, location, and useful station notes. A power or antenna change can matter when you compare results later.
 
-### In the real world: a log answers later questions
+### Worked example: a log narrows an interference enquiry
 
-If a neighbour reports interference at 0215 UTC, a log can show whether your station was transmitting then, what band and mode you used, and whether the antenna or power setting had changed.
+A neighbour reports a burst of interference at 0215 UTC. Your log shows the band and mode used at that time, with a note about an antenna change.
 
-The log does not prove every cause by itself. It gives a clear starting point for a fair investigation.
+That record gives the investigation a starting point. It does not prove that your station caused the problem. Compare the reported time with your actual activity before drawing conclusions.
 
-## Grid locators
+## Use a compact location label
 
-In VHF contesting and many digital tools, a station may ask for your grid square. A grid square communicates location compactly enough to send quickly while still giving useful geographic information.
+In a VHF contest, an operator may request your grid square rather than a town name. A Maidenhead locator expresses location with a short code. The versions taught here have four or six characters.
 
-### Reference fact: grid locator code length
+A locator identifies a geographic area; it is not a signal report or a compass bearing. It gives contest and weak-signal operators location information that is quick to send. At VHF and UHF, location matters because terrain and line-of-sight paths can change over short distances.
 
-| Locator system | Code length used here |
-|---|---|
-| Maidenhead-style grid locator | 4 or 6 characters. |
+## Take bearings from your own station
 
-Grid locators pair well with VHF and UHF operation because small changes in position can matter to line-of-sight and weak-signal paths.
+An azimuthal map is drawn around a chosen centre. When your station is that centre, lines radiating outward show bearings from you to other places. A map centred elsewhere does not give your station's bearings directly.
 
-## Bearings, azimuthal maps, and long path
+For a distant contact, the shorter great-circle route is called short path. Long path goes the other way around the globe. Its initial heading is the reciprocal: 180 degrees away from the short-path heading.
 
-An azimuthal map is centred on a chosen location. When it is centred on your station, directions radiating from the centre show bearings from your station to other places. That makes it useful for aiming directional antennas or simply understanding where signals are coming from.
+If short path gives poor reception, try the opposite direction. Propagation may favour that longer route at the time. The map gives a direction to try, not a promise that either path will work.
 
-There are often two great-circle directions between places: the short path and the long path. The long-path heading is 180 degrees from the short-path heading. When the expected short-path bearing is weak, the reciprocal direction can be worth checking.
+### Worked example: aim the other way
 
-### Reference fact: map and bearing relationships
+Suppose a station-centred map gives a short-path bearing of 65 degrees for a distant contact.
 
-| Item | Meaning used here |
-|---|---|
-| Azimuthal map | Map projection centred on a chosen location. |
-| Station-centred azimuthal map | Shows bearings from the station at the centre. |
-| Long path | Direction 180 degrees from the short-path heading. |
+- Given: short-path heading = 65 degrees.
+- Find: long-path heading.
+- Formula: use the opposite bearing; add 180 degrees, subtracting a full 360-degree turn if needed.
+- Substitute: long-path heading = 65 + 180 degrees.
+- Answer: long-path heading = 245 degrees.
+- Sanity check: the new heading is half a turn from the original, not a small trim of the antenna.
 
-### Memory trick: long path is the other way around
+### Memory trick: the other way around
 
-- Helps remember: long-path direction relative to the short path.
-- Trick: turn the beam to the reciprocal direction, half a circle away.
-- Limit: propagation may still favour neither path, so the map is a direction tool, not a contact guarantee.
+- Helps remember: long-path direction relative to short path.
+- Trick: reverse the heading by half a circle.
+- Limit: opposite headings describe geometry. They do not guarantee a usable radio path.
 
 ::figure records-maps-locators
 Alt text: A station log beside an azimuthal map centred on the operator, with a grid locator label.
@@ -92,31 +90,64 @@ Text equivalent:
 - The clock is labelled UTC and the map has a grid label.
 ::
 
-## UTC and time standards
+## Keep one clock for the contact
 
-Amateur schedules, log entries, and confirmations commonly use UTC so operators in different time zones can agree on one clock. The reference meridian is Greenwich in the United Kingdom.
+UTC means Coordinated Universal Time. Amateur schedules, logs, and contact confirmations use it to describe the same moment across time zones. The reference meridian runs through Greenwich in the United Kingdom.
 
-A time zone labelled UTC minus 5 hours is five hours behind UTC. To convert a UTC schedule to that local time, subtract five hours; adding would move the wrong way. Adjust the local date if the subtraction crosses midnight. Logs and confirmations should keep the UTC date and time together so both stations compare the same contact record.
+A zone described as UTC minus an offset is behind UTC. Subtract that offset to find local time from UTC. If the subtraction crosses midnight, the local date is the previous day. Keep the UTC date attached to UTC time in the log, even when you also write a local-time reminder.
 
-Stations CHU, WWV, and WWVH provide standard frequency and time references.
+Use the offset that applies on the contact date, including any seasonal clock change. The examples below give an offset explicitly; they are not year-round rules for a named Canadian city.
 
-### In the real world: UTC date and local date can differ
+### Worked example: a schedule in local evening time
 
-If a net is listed at 2100 UTC and your local zone is UTC minus 5 hours, local time is 1600 because 21 - 5 = 16. On a 12-hour clock, 1600 is 4 PM. If a contact is at 0300 UTC, the same subtraction gives 2200 on the previous local date.
+A club lists a net at 2245 UTC. Your local time for that date is UTC minus 5 hours.
 
-Write the UTC date with the UTC time. That prevents two operators from confirming the same contact under different local dates.
+- Given: UTC = 2245; local offset = minus 5 h.
+- Find: local net time.
+- Formula: local time = UTC - offset magnitude for this UTC-minus zone.
+- Substitute: local time = 2245 - 0500.
+- Answer: 1745 on the same date, or 5:45 PM.
+- Sanity check: the local clock is behind UTC, so it must read earlier.
 
-## How these procedures fit together
+### Worked example: crossing into the previous local date
 
-Records, maps, and time standards make contacts verifiable and repeatable. QSL and web-log systems confirm that the contact happened. A station log preserves the details needed to match that confirmation and review later problems.
+A contact occurs at 0210 UTC on 12 April. The stated local offset is still UTC minus 5 hours.
 
-Grid locators describe location compactly. Azimuthal maps turn location into bearing. UTC lets stations in different time zones describe the same moment without ambiguity.
+- Given: UTC date = 12 April; UTC time = 0210; offset = minus 5 h.
+- Find: local date and time.
+- Formula: subtract the offset, carrying the date back when crossing midnight.
+- Substitute: 0210 - 0500 = 2110 on the previous local date.
+- Answer: 11 April at 2110, or 9:10 PM locally.
+- Sanity check: adding the offset back reaches 0210 on 12 April. The log still records the contact's UTC date as 12 April.
+
+Standard time and frequency stations CHU, WWV, and WWVH provide accurate reference signals. Operators can use them to check time or frequency, supporting careful logging and receiver checks.
+
+## Try it
+
+Work these out before reading the feedback. Keep dates beside your times.
+
+1. Finish a local-time reminder: an event is at 0145 UTC on 20 May. Your stated zone is UTC minus 5 hours. After subtracting, the local time is ___ on ___ May. Express it in AM/PM too.
+2. A map shows a short-path heading of 235 degrees. Add half a turn, then remove a full turn if needed. What heading should you try for long path?
+3. Your contact partner's local date differs from yours. Which record fields should you compare before assuming you logged different contacts?
+
+### Check your thinking
+
+1. The local reminder is 2045 on 19 May, or 8:45 PM. Keep 20 May and 0145 together in the UTC log entry.
+2. 235 + 180 = 415; 415 - 360 = 55 degrees. The headings point opposite ways.
+3. Compare UTC date and time along with call signs, band or frequency, and mode. Local dates alone can differ for the same moment.
 
 ## Radio connection
 
-Logs and maps make operating cumulative. A single contact becomes part of a pattern: which antenna worked, what time the path opened, whether long path helped, and whether a neighbour's interference report overlaps your actual transmissions.
+A location label, a bearing, and a time each answer a different question. Together they help you aim an antenna, recognize a contact, and compare conditions later. Clear records also give interference investigations facts rather than guesses.
 
-Grid locators are especially useful at VHF and UHF because small changes in position can matter. UTC is equally important on HF because contacts may cross date lines and time zones.
+## Common mistakes
+
+- Treating an optional log as pointless: it still supports confirmations, awards, and investigations.
+- Reading a grid locator as an antenna heading: use location information with the right map.
+- Taking your bearing from a map centred on another station: use your own centre.
+- Adding the offset when converting from UTC to a UTC-minus zone: that zone is behind, so subtract.
+- Changing the clock but forgetting the date: check whether the conversion crossed midnight.
+- Treating long path as guaranteed: it is another direction to test under current conditions.
 
 ## Illustration brief
 
@@ -126,7 +157,4 @@ Description: Draw a notebook page with columns for UTC, call sign, band, mode, r
 
 ## Summary
 
-- Confirmations, station logs, and UTC make contacts easier to verify across operators and time zones.
-- Canadian regulations make amateur station logbooks optional, while practical operating gives them many uses.
-- Grid locators, azimuthal maps, and long-path bearings connect location with direction.
-- Time and frequency standard stations support accurate operating records and receiver checks.
+Useful records describe the same contact consistently: who, where, when, and how. UTC removes time-zone ambiguity, while locators and station-centred maps connect location to direction. A log and a map do not prove a cause or guarantee a path, but both give the next operating decision a firmer starting point.
