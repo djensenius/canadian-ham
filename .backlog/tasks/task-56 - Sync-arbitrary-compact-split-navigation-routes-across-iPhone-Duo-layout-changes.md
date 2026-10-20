@@ -7,7 +7,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-18 03:22'
-updated_date: '2026-10-20 02:02'
+updated_date: '2026-10-20 02:09'
 labels:
   - apple
 dependencies:
@@ -274,6 +274,8 @@ Log: `/tmp/task-56-macos.log`
 - PASSED: `RootNavigationMappingTests.testEveryLearnRouteRoundTripsWithItsWholeStack` (0.001 seconds)
 - PASSED: `RootNavigationMappingTests.testEveryRootSelectionRoundTrips` (0.000 seconds)
 - PASSED: `RootNavigationMappingTests.testPracticeHintLessonStackKeepsSessionAsSplitSelection` (0.001 seconds)
+
+Coordinator review fixes 2026-10-19: (1) loadBank now clears navigationPath when switching to a lessonless bank while on Learn, because selection changes outside the sidebar no longer reset the split stack. (2) The deep quiz UI tests assert the quiz screen's own lesson-quiz-card before and after the transition (the lesson summary card also shows the quiz ID). Known limitation: Morse sub-screens (course/sending/copy exam) are pushed via destinations, not path values, so a layout change returns to the Morse home, same as before this PR. Superseded experiment notes: the 'selected calculator/hint retained' text above refers to the abandoned approach, now descoped to TASK-63; the final summary is accurate.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
