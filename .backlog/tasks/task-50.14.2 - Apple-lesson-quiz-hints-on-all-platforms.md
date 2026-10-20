@@ -4,7 +4,7 @@ title: Apple lesson-quiz hints on all platforms
 status: To Do
 assignee: []
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-20 13:04'
+updated_date: '2026-10-20 13:13'
 labels:
   - apple
 dependencies:
@@ -27,4 +27,5 @@ Apply the owner-approved 2026-10-20 rules in TASK-50.14 after the web/model cont
 - [ ] #4 Existing question-progress paths apply TASK-50.15 scheduling/weak-area/recent-answer semantics; persist answeredWithHelp in quiz attempts using the shared model and preserve old attempts without flags, including import/export/sync round trips.
 - [ ] #5 Targeted unit/UI tests cover timing, score, progress, persistence, EN/FR, current/other lesson links and hint exclusions; VoiceOver/focus/Dynamic Type and light/dark accessibility audits cover affected screens without weakening tests; Apple localization/text checks and relevant platform checks pass. Web axe evidence remains covered by dependency TASK-50.14.1.
 - [ ] #6 Match the web attempt contract: optional answeredWithHelpIds array, sorted unique subset of officialQuestionIds, missing means none; reject unknown/concept IDs in import/sync, preserve the field through persistence/export/import/sync and lesson-ID migrations (filter to destination official membership if an attempt splits).
+- [ ] #7 Lesson quizzes have a hint-only toolbar/panel: no calculator or reference sheet is added. Use referenceSheetAvailable=false and hide existing reference-sheet pointer labels, including when the hint metadata has a pointer.
 <!-- AC:END -->
