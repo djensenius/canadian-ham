@@ -129,6 +129,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         applySimulatedSizeClassChange(in: app, expectedSizeClassValue: "regular", context: "lesson quiz hints at largest Dynamic Type")
         XCTAssertTrue(question.waitForExistence(timeout: 10))
         XCTAssertEqual(question.label, original)
+        let hintButton = app.buttons["exam-tool-hint-button"].firstMatch
+        let layoutControl = app.buttons["debug-simulated-size-class-change-button"].firstMatch
+        // At AX-XXXL the debug layout control overlaps the scroll content. Scroll the real Hint
+        // button below that overlay rather than tapping through the test control.
+        for _ in 0..<12 where hintButton.frame.minY <= layoutControl.frame.maxY + 12 {
+            preciseExamToolScroll(app.scrollViews.firstMatch, in: app, fingerDeltaY: 72)
+            waitBriefly()
+        }
+        XCTAssertGreaterThan(hintButton.frame.minY, layoutControl.frame.maxY)
         openTool(.hint, in: app)
         let secondHint = app.staticTexts["hint-level-2-title"].firstMatch
         let hintScroll = app.scrollViews["hint-tool-scroll"].firstMatch
