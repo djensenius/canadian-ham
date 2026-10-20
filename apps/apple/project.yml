@@ -300,6 +300,14 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../content/categories.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/categories-advanced.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
     dependencies:
       - target: CanadianHam
     settings:
