@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-20 13:02'
+updated_date: '2026-10-20 13:04'
 labels:
   - content
 dependencies: []
@@ -42,4 +42,6 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 Owner decision 2026-10-12: YES. Move M2 to the explanatory lesson format (concept sections, worked examples, Try it, common mistakes, concept checks). Start after the 38.x figure branches merge.
 
 Owner decision 2026-10-12: yes, do it. See docs/lesson-review/README.md and docs/lesson-review/m1-m2.md.
+
+Before rewriting: extracted teaching from all four M2 lessons and checked all 99 official questions (44/33/11/11). Baseline ledger: docs/lesson-review/m2-explanatory-taught-facts.md. No FR versions exist (all title.fr fields are null). Preserve all front matter, 99 official quiz IDs and four figure directives. Existing review gaps in sideband convention and S-unit reasoning will be taught explicitly.
 <!-- SECTION:NOTES:END -->
