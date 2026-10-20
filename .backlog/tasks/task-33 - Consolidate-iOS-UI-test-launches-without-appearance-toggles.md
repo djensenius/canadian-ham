@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-08 04:35'
-updated_date: '2026-10-20 05:05'
+updated_date: '2026-10-20 05:14'
 labels:
   - apple
   - testing
@@ -51,4 +51,6 @@ Owner 2026-10-14: also move the per-lesson figure audits (CanadianHamLessonFigur
 Figure plan implemented first: CanadianHamDefault excludes only CanadianHamLessonFiguresUITests; CanadianHamLessonFigures selects only that class. Split all 13 remaining two-lesson light ranges into single-lesson tests (32 -> 45 figure methods), preserving every existing figure/appearance and shared helper body. Historical Module 1 Part 2 now already contains one figure in L-001-03 following task-46 lesson splits, so it cannot be subdivided further without changing the audit itself. XcodeGen regenerated twice; complete project diffs byte-identical. Baseline default run launched via nohup (128 UI methods, unchanged audit flows). Initial test-plan decoding failed before tests because configurations.options was absent; corrected empty options and restarted as /tmp/task-33-baseline-v2.*.
 
 Launch sharing committed as 5a3fc4be: core read-only screens 9->3 launches per appearance; sending main/lower/exam 2->1. All original assertions and audit call-line multisets retained. Four sending wrappers moved to two source-named combined methods; removal map and complete before/after coverage inventory are in docs/testing/task-33-ui-audit-inventory.md. Shared/exception/positioning helpers and every direct performAccessibilityAudit site remain byte-identical. Test guard self-test passes; diff flags exactly the four mapped wrapper deletions and passes with Test-guard-approved: task-33. Full after-default and figure runs are queued sequentially behind the baseline via nohup; no other builds killed.
+
+Supervisor-approved baseline adjustment: current baseline single medium-detent audits passed in 322.972s dark and 311.446s light; full suites are known to take ~5 hours. Stop only this task own baseline process and use the existing full train-2026-10-17 baseline at main 029f2d49 (/tmp/train1017-ios.log: 138 UI + 142 unit tests, ~18,233 s UI), explicitly dated two days before the task branch point. Treat the two completed current medium-detent audits as a timed calibration sample; do not label the interrupted current baseline a full suite. Required complete after-default and figure-plan runs remain queued unchanged, without filtering or weakening coverage.
 <!-- SECTION:NOTES:END -->
