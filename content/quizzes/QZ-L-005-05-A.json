@@ -16,114 +16,114 @@
     {
       "id": "QZ-L-005-05-A-C1",
       "prompt": {
-        "en": "A designer wants to increase a 22 µF timing capacitance using another identical capacitor. Which connection gives the larger total?",
+        "en": "A timer was designed for a pair of equal capacitors in parallel, but they were wired in series. How does the actual total compare with the planned total?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Series, because capacitances add end-to-end like resistances.",
+            "en": "It is unchanged because the same parts were used.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Series capacitors follow the reciprocal rule. Equal series capacitors give a smaller total.",
+            "en": "Connection changes the total even when the parts stay the same.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Either connection, because identical parts leave the value unchanged.",
+            "en": "It is half the planned total.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The connection changes the total even when the individual parts are identical.",
+            "en": "The series total is half a single part, but the plan called for twice a single part.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Parallel, because both capacitors store charge across the same voltage.",
+            "en": "It is a quarter of the planned total.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Parallel capacitances add, giving 44 µF here.",
+            "en": "For each value C, the plan gives 2 x C and the actual circuit gives C / 2. Their ratio is 1/4.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Series, because the total is the product of the two labels.",
+            "en": "It is four times the planned total.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Multiplying capacitance labels alone is not a valid series combination rule.",
+            "en": "That reverses the comparison. The actual series total is smaller, not larger.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Capacitor connection rules are opposite to the simple resistor combination pattern.",
+        "en": "Check both the intended topology and the actual topology before comparing their totals.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-005-05-A-C2",
       "prompt": {
-        "en": "An ideal coil and capacitor are tested separately as frequency rises. Which pair of trends should guide an RF bypass design?",
+        "en": "A bypass capacitor chosen to shunt unwanted RF is reused against much lower-frequency interference. With its value unchanged, why might it shunt less effectively?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Coil opposition rises; capacitor opposition falls.",
+            "en": "Its reactance is higher at the lower frequency.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Inductive reactance rises with frequency, while capacitive reactance falls.",
+            "en": "A higher capacitive reactance gives the unwanted current a harder shunt path.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Both oppositions rise because faster AC always meets more opposition.",
+            "en": "Its reactance is lower at the lower frequency.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "That trend fits the coil, but capacitive reactance falls as frequency rises.",
+            "en": "That reverses the capacitor trend and would predict an easier shunt path.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Both oppositions fall because RF passes through every reactive part easily.",
+            "en": "It now acts as an RF choke in series with the lead.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The capacitor's reactance falls, but the coil's rises.",
+            "en": "The part is still a capacitor in a shunt connection. Changing frequency does not turn it into a series coil.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Coil opposition falls; capacitor opposition rises.",
+            "en": "Its DC resistance now sets the same opposition at all frequencies.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Those trends are reversed. They would lead to choosing the wrong RF path.",
+            "en": "The relevant opposition is frequency-dependent capacitive reactance, not a fixed DC resistor value.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "An RF choke impedes unwanted RF in series; a suitable bypass capacitor gives it an easier shunt path.",
+        "en": "A cure selected for one frequency range may work poorly in another, even with the same connection.",
         "fr": null
       }
     },

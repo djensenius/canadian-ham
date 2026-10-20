@@ -16,57 +16,57 @@
     {
       "id": "QZ-L-005-06-A-C1",
       "prompt": {
-        "en": "An ideal transformer halves the RMS voltage delivered to a resistive load. At equal input and output power, how does secondary current compare with primary current?",
+        "en": "An ideal calculation predicts 24 W of input for a transformer delivering 24 W to a load. A real transformer takes more input power and its core warms. Which explanation fits?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "It is half as large, following voltage.",
+            "en": "The extra input means the turns ratio must be reversed.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Halving both voltage and current would reduce power to a quarter, contradicting ideal power transfer.",
+            "en": "Heat loss does not by itself establish a winding-ratio mistake.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "It stays equal because current is conserved through both windings.",
+            "en": "Equal ideal power means a warm core can be ignored in real sizing.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Separate windings do not carry the same current. Their powers, not their currents, are equal in this model.",
+            "en": "The ideal model neglects losses. Real heat requires extra input energy.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "It is twice as large.",
+            "en": "Some input power becomes heat, so the lossless model underestimates real input.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "With half the voltage, twice the current gives the same I x E power.",
+            "en": "The output still needs 24 W, and transformer losses require additional input power.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "It is four times as large because the turns ratio is squared.",
+            "en": "The extra power is stored permanently in the core rather than lost.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The squared turns ratio applies to impedance transformation, not this current ratio.",
+            "en": "A warming core shows energy converted to heat, not permanent accumulation of useful output energy.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "In an ideal transformer, voltage and current ratios move in opposite directions.",
+        "en": "Ideal transformer calculations are a useful baseline, not a guarantee of real efficiency.",
         "fr": null
       }
     },
