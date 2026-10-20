@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-19 23:09'
-updated_date: '2026-10-20 04:24'
+updated_date: '2026-10-20 04:36'
 labels:
   - content
 dependencies:
@@ -41,4 +41,6 @@ PR #302 review identified two figure/lesson mismatches after the lesson split: t
 Implementation: split the original parallel LC panel into parallel-lc-resonance and placed it beside the resonance explanation in L-005-05; no existing figure covered resonance. Kept the stable transformer-resonance-meters id, removed its LC content and tightened its layout to transformers/meters only in L-005-06. Removed the third-party lane from communications-flowchart in L-001-03. Synchronized all three directives, briefs, text equivalents, Apple vector assets/metadata, and UI-test specs; added Module5 LightPart5 so both split lessons remain audited. No question-bank, coverage, quiz or prerequisite changes.
 Validation so far: figure fix/check (39 SVGs/references) and checker self-test (53 fixtures), links, all-lesson originality (0 issues), complete hints (984/984), coverage (100/100, no duplicates), and pnpm test pass (153 content-tools, 21 Morse engine, 127 calculator engine, 223 web). qlmanage -t -s 800 rendered all three changed SVGs into /tmp/f4612; opened every PNG and confirmed clear labels, circuit connections, two remaining communications lanes and no clipping. Artwork remains currentColor-only; real app supplies token ink/cream.
 Extra teaching-guide validation: swift test --package-path packages/content-swift ran 23 tests, 22 passed; testLoadsRealRepositoryContent has three pre-existing failures at lines 15-17 expecting 36 lessons/orderedLessons/quizzes while the existing TASK-46.10 split gives 37. These source assertions are unchanged from base a056c773; this task adds no lesson or quiz files. All-lesson Markdown parsing and shared figure fixtures pass. Kept this unrelated issue out of scope and notified coordinator. Targeted iPhone 17 Pro figure audits are running via nohup/xbuild; waited for the shared build lock without interfering with other builds.
+
+Initial targeted iOS run passed 3/3 on iPhone 17 Pro: testModule1LessonFiguresLightPart2 (L-001-03), 194.000 s; testModule5LessonFiguresLightPart4 (L-005-05), 211.471 s; testModule5LessonFiguresLightPart5 (L-005-06), 298.424 s. Result bundle /tmp/f4612-ios.xcresult; log /tmp/f4612-xbuild.log; exit 0. Existing test wrappers had writeEvidence default false, so successful runs retained no figure screenshots. Enabled the existing writeEvidence option for exactly these three cases without changing any audit/helper/visibility assertion, then started a second targeted run to inspect actual Apple-rendered labels as required by docs/figures.md. Result bundle will be /tmp/f4612-ios-evidence.xcresult; log /tmp/f4612-xbuild-evidence.log. Test guard passes with no guarded changes. Base tree independently confirmed 37 lesson files and 37 quiz files while the unchanged Swift content-package test expects 36.
 <!-- SECTION:NOTES:END -->
