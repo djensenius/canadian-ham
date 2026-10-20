@@ -85,8 +85,9 @@ struct MorseSendingPracticeView: View {
                 stopAllKeying(finalizeStraight: true)
             }
         }
-        .onChange(of: keyboardFocus) { _, focus in
-            if focus == nil { stopAllKeying(finalizeStraight: true) }
+        .onChange(of: keyboardFocus) { previous, _ in
+            // Release held keys even when focus moves directly between the two screens.
+            if previous != nil { stopAllKeying(finalizeStraight: true) }
         }
         .navigationDestination(isPresented: $showingExam) {
             sendingExamScreen
