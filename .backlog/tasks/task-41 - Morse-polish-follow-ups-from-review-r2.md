@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-20 14:49'
+updated_date: '2026-10-20 15:27'
 labels:
   - apple
   - web
@@ -23,9 +23,9 @@ Low items from the task-12.18/12.19/12.20 review r2 (~/.cache/canadian-ham-revie
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [ ] #1 Hardware-keyboard keying works on the pushed exam-style sending screen on macOS and iPad keyboards (focus isn't shared with the screen underneath), with a test where feasible
-- [ ] #2 A UI test shows a running beacon stops (or switches to tape) when Reduce Motion or Dim Flashing Lights turns on, in at least one playback screen, beyond the decision-function unit test
-- [ ] #3 An Apple test asserts the safety-note wording (square points, grouped digits); the web axe test derives its expected string rather than hard-coding it
-- [ ] #4 Apple settings import from the Settings and Study views is covered by a test; behaviour for an unknown timingProfile/outputMode is documented (default vs reject) and matches web or the difference is recorded
+- [x] #2 A UI test shows a running beacon stops (or switches to tape) when Reduce Motion or Dim Flashing Lights turns on, in at least one playback screen, beyond the decision-function unit test
+- [x] #3 An Apple test asserts the safety-note wording (square points, grouped digits); the web axe test derives its expected string rather than hard-coding it
+- [x] #4 Apple settings import from the Settings and Study views is covered by a test; behaviour for an unknown timingProfile/outputMode is documented (default vs reject) and matches web or the difference is recorded
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -52,4 +52,6 @@ macOS import fix round passed both new view-path tests: testNativeSettingsImport
 iPhone first integration round passed all four existing sending regressions: testMorseSendingPracticeBackFromRunningExamStopsDeadlineGrading (78.322s), testMorseSendingPracticeClearsPendingCharacterWhenLeaving (76.163s), testMorseSendingPracticeGradesHeldStraightKeyBeforeScoring (99.181s), testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen (105.285s). Both new integration tests failed and are under targeted retest, not checked off. Failure artifacts showed focus lost after Start and a LabeledContent AX prefix; fixed post-layout focus restoration (same pattern as calculator) and exact AX string variants. Moved the DEBUG reduced-motion input into Quick listen itself after the root-level injection did not propagate reliably through navigation. Read-only native accessibility environment is not mutated. Beacon/Stop assertions remain, with combined live-state polling and diagnostic output.
 
 Detached runner: /tmp/task-41-validate-r6.sh; evidence/logs/results: /tmp/task-41-validation-20261020. Only 2 failing iPhone methods rerun, then 1 iPad keyboard method, then localization gate. Shared xbuild lock waits have been lengthy and respected; no other builds interrupted.
+
+AC #2 verified: testMorseRunningBeaconStopsWhenReduceMotionTurnsOn passed on iPhone 17 Pro (57.198s) after local DEBUG flag injection; it asserts a real beacon is running before the flag change, Stop disables and beacon disappears after it, then the next Play renders tape. AC #3 verified by passed testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas plus the passed derived-string web axe test. AC #4 verified by both passed app view-path import tests and web unknown-enum rejection regression; both platforms reject unknown enum strings. AC #1 remains unchecked while actual hardware-event regression is debugged. Final iPad and localization validation remain pending; task stays In Progress.
 <!-- SECTION:NOTES:END -->
