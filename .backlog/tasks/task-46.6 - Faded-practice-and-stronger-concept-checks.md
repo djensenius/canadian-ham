@@ -1,11 +1,11 @@
 ---
 id: TASK-46.6
 title: Faded practice and stronger concept checks
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 15:44'
+updated_date: '2026-10-20 15:45'
 labels:
   - content
 dependencies:
@@ -26,8 +26,8 @@ For quantitative lessons, add one partly worked practice problem after each work
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every lesson with calculations has at least one faded practice problem
-- [ ] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
+- [x] #1 Every lesson with calculations has at least one faded practice problem
+- [x] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -112,4 +112,12 @@ Coordinator figure-plan list (all 31 edited lessons across both parts; directive
 - content/lessons/m8-interference-suppression/l-008-01-receiver-device-interference-and-filters.md
 - content/lessons/m8-interference-suppression/l-008-02-transmitter-emissions-and-harmonics.md
 Run the existing CanadianHamLessonFigures plan once for this complete content batch, including Ohm’s law integrations; worker did not run xbuild.
+
+AC #1 evidence (both parts): 67 source-tested faded sets in every quantitative lesson (30 total); 74/74 focused regressions verify completion labels/blanks before separate solutions, plus the qualitative M6 exception and reference-only M1. AC #2 evidence: all 92 checks reviewed through Part A review plus the six repaired overlaps and Part B manual bank/Try-it comparisons; every choice has distinct diagnostic feedback (368 notes). Default and explicit strict checker, schema validation, overlap lint and all module feedback/no-negative-stem regressions PASS. Source implementation final commit dea1b6a3beb5daf64248f13f0143cc48f0bf9872. Parent closure follows the explicit user instruction and does not imply Apple subtask completion or independent reviewer approval.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Completed both parts of TASK-46.6: optional localized per-option feedback schema/readers and accessible web display; 67 faded-practice sets across all 30 quantitative lessons; 92 diagnostic checks with 368 choice-specific notes; independent M2 Try-its; six Part A review overlaps redesigned; M5–M8 manual bank/Try-it comparison and strong same-topic distractors. Checker now requires feedback by default while preserving legacy reader/schema support. Kept M1 reference-only, all identities/official mappings/front matter/figures intact, hints resolving, and 0 stale allowlist entries. Supervisor-approved EXP-B-008-004-004 now distinguishes out-of-band vs spurious causes under the unwanted-emissions umbrella without changing official data. Requested content/schema/import checks, typecheck, 74 focused regressions and 24 Swift tests pass. Full pnpm test initially passed (206 content-tools, 21 Morse, 127 calculator, 245 web); final repeat hit an unchanged progressStore 5 s timeout under extreme load, a file retry hit a different timeout, and both affected methods passed a targeted original-timeout retry. No tests weakened. All module commits pushed, no PR opened. TASK-46.6.1 remains To Do; independent branch review and the coordinator figure plan for the 31 enumerated figure lessons remain before PR/merge.
+<!-- SECTION:FINAL_SUMMARY:END -->
