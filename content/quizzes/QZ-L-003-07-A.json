@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-07-A-C1",
-      "prompt": { "en": "A portable kit includes a loose lithium-based pack from another hobby. Before wiring it into the station, what plan is defensible?", "fr": null },
+      "prompt": {
+        "en": "A portable kit has a lithium-based pack from another hobby. Which compatibility check is sufficient before using it in the station?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Use only the charger, protection, and connection method specified for that pack", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Use a NiMH charger if the plug fits and the radio turns on", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Bypass the protection board so transmit current has a lower-resistance path", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Parallel it with an unmatched lithium pack using clip leads to add capacity", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Check its specified charger, protection, connection method, and suitability for the radio load.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The pack design and chemistry govern charging and protection as well as the station connection. Follow the specified system and load ratings.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Check only connector fit and nominal voltage against the radio label.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A fitting connector and nominal voltage do not establish polarity, protection, charging compatibility, or load capability.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Check only that the pack can deliver the radio's transmit current.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Current capability matters, but it does not establish safe charging, voltage range, or protection.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Check only that an existing charger has the same nominal voltage as the pack.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Matching nominal voltage alone does not establish the correct charging method for the chemistry and pack design.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Lithium-based packs need the charger, protection, and connection method intended for that chemistry and pack design. Connector fit, lower resistance, or improvised paralleling do not make the setup safe.", "fr": null }
+      "explanation": {
+        "en": "Battery compatibility includes chemistry, protection, load capability, polarity, and approved connection and charging methods. No single label or connector establishes all of them.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-07-A-C2",
-      "prompt": { "en": "The same battery and DC leads are used, but transmit current is twice the planned value. What should you predict at the radio input?", "fr": null },
+      "prompt": {
+        "en": "A battery station draws twice the planned transmit current. In a simple model, source voltage and lead resistance stay fixed. What happens at the radio input?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The input voltage rises because the battery capacity is being used faster", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Only AC ripple changes; DC lead resistance is unaffected by current", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The input voltage falls more because resistance drops more voltage at higher current", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The fuse current rating should be increased to hold the voltage steady", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The voltage drop doubles and radio input voltage rises.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The drop does double, but it is subtracted from source voltage. The radio receives less voltage, not more.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The voltage drop stays fixed because the same leads are installed.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Resistance stayed fixed, not voltage drop. By E = I x R, more current causes more drop.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The voltage drop doubles and radio input voltage falls.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "At fixed resistance, doubling current doubles the lead drop. More of the source voltage is lost in the leads.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The voltage drop halves and radio input voltage rises.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This reverses the current relationship. Fixed resistance gives a larger drop at larger current.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Internal resistance and lead resistance cause voltage drop proportional to current, so a higher transmit current leaves less voltage at the radio. A larger fuse does not fix voltage drop.", "fr": null }
+      "explanation": {
+        "en": "At fixed resistance, lead voltage drop follows current. Greater drop leaves less of the source voltage available at the radio.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-07-A-C3",
-      "prompt": { "en": "A compact switching supply is rated 30 A continuous for a 19 A transceiver, and the buyer plans to trust it without any station test. Which added check is still needed?", "fr": null },
+      "prompt": {
+        "en": "A switching supply is rated 30 A continuous for a 19 A transceiver. Which added check tests something the current rating does not establish?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Confirm under load that the supply is not adding receiver hash or transmitted noise", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Measure only the no-load output voltage and stop if the meter shows nominal voltage", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Check only that the output plug fits, then skip transmit testing to avoid stressing it", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Listen only on receive and assume transmit will be clean if no hash is heard", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Check receiver and transmitted noise with the supply installed and loaded.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Adequate current does not prove RF quietness. Test the installed station under relevant receive and transmit loads.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Confirm again that the printed current rating exceeds 19 A.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This rechecks current headroom, not RF noise. Both are needed for a useful station supply.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Confirm only that no-load DC voltage matches the radio requirement.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "No-load voltage is useful but does not show loaded behaviour or noise coupled into the radio.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Confirm only that the loaded DC voltage stays within the radio range.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Loaded voltage matters, but a steady DC reading can miss RF hash or transmitted noise. Check signal quality too.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Current headroom is necessary, but it does not prove that the supply is quiet in the station under transmit load. No-load voltage, connector fit, and receive-only listening are useful checks, but they do not replace an under-load noise check.", "fr": null }
+      "explanation": {
+        "en": "A station supply must have adequate voltage and current and behave quietly in the installed system. A rating label cannot establish all three.",
+        "fr": null
+      }
     }
   ]
 }

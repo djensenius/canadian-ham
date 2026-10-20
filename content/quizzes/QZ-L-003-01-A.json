@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-01-A-C1",
-      "prompt": { "en": "A 100 W dummy-load test is planned for several minutes, and the load's case is warming quickly. Which response would NOT be a valid way to protect the test setup?", "fr": null },
+      "prompt": {
+        "en": "A dummy load is rated for 90 W for 30 seconds, or 35 W continuously. A 70 W test will last two minutes. Which plan respects the stated ratings?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Pause and check the dummy load's power and time rating before continuing", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Reduce transmitter power or shorten the test if the rating is being approached", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Keep increasing power because a warmer load proves the station is safer", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Allow cooling time between transmissions when the rating calls for it", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Run the full test because 70 W is below the 90 W rating.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The 90 W rating has a 30-second limit. It does not cover a two-minute run.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Run the test while the case feels cool; the short-term rating applies until it feels hot.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Case temperature can lag internal heating. Touch does not replace the power and time ratings.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Lower power to at most the continuous rating, or use a load rated for the full test.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The planned time exceeds the short-term limit. Use the continuous rating or a load specified for that power and duration.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Run for two minutes, then allow two minutes off to meet a 50% duty cycle.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An assumed rest period does not authorize exceeding the stated single-run limit. Follow the actual cooling and duty-cycle instructions.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The unsafe response is treating heat as permission to increase power. A dummy load turns test RF into heat, so the operator should respect its power rating, time limit, and cooling needs.", "fr": null }
+      "explanation": {
+        "en": "A dummy load turns RF into heat. Match the test power and duration to its actual continuous, short-run, and cooling specifications.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-01-A-C2",
-      "prompt": { "en": "A block diagram labels a frequency multiplier as if microphone audio should be plugged into it directly. What is the best correction?", "fr": null },
+      "prompt": {
+        "en": "A block diagram connects microphone audio directly to a frequency multiplier in an FM transmitter. Which correction follows the signal types?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Drive the multiplier from the oscillator path; audio stays in the speech-amplifier and modulator path", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Drive the multiplier from the microphone path; RF can be added by the final amplifier", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Use the multiplier as the modulator; the oscillator should stay unvaried until after multiplication", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Drive the modulator only from the multiplier output; speech should be added after amplification", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Feed the multiplier from the oscillator path; route speech through the speech amplifier and modulator.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The multiplier handles oscillator-path RF. The speech path controls the modulator, which varies oscillator frequency in this simplified chain.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Feed the multiplier from the microphone path; the final amplifier can turn that audio into RF.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An RF power amplifier raises RF power. It does not create the missing modulated carrier from microphone audio.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use the multiplier to set audio loudness; feed the oscillator straight to the antenna.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Multiplication changes RF frequency, not microphone loudness. The transmitter still needs modulation and RF power amplification.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Put speech after the RF power amplifier; keep the oscillator frequency fixed during voice.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "In this FM chain, speech controls frequency before multiplication and power amplification. Adding it after the final amplifier bypasses that job.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The multiplier is an RF block. Microphone audio is raised by the speech amplifier and used by the modulator before the oscillator-path RF is multiplied.", "fr": null }
+      "explanation": {
+        "en": "Signal type determines block placement. Speech controls modulation; the frequency multiplier and power amplifier handle the resulting RF.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-01-A-C3",
-      "prompt": { "en": "A receiver uses a 10.700 MHz IF and a high-side oscillator for a 144.390 MHz signal. Its injection filter passes only 154 to 156 MHz. Which conclusion is correct?", "fr": null },
+      "prompt": {
+        "en": "A receiver uses a 10.700 MHz IF and a high-side oscillator for a 144.390 MHz signal. Its injection filter passes 154 to 156 MHz. Which oscillator setting fits?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "133.690 MHz, so it falls below the injection-filter range", "fr": null }, "isCorrect": false },
-        { "text": { "en": "144.390 MHz, because the oscillator stays on the received signal", "fr": null }, "isCorrect": false },
-        { "text": { "en": "165.790 MHz, because high side means adding the IF twice", "fr": null }, "isCorrect": false },
-        { "text": { "en": "155.090 MHz, so it falls inside the injection-filter range", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "133.690 MHz, below the filter range.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Subtracting the IF gives low-side injection. The stated design uses an oscillator above the signal.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "144.390 MHz, below the filter range.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This leaves no frequency difference to produce the stated IF. Add the IF for high-side injection.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "165.790 MHz, above the filter range.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This adds the IF twice. One IF separates the desired signal and its local oscillator.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "155.090 MHz, inside the filter range.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "144.390 + 10.700 = 155.090 MHz. It is above the signal and inside the stated pass range.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "High-side injection adds the IF: 144.390 MHz + 10.700 MHz = 155.090 MHz. That result is inside the stated 154 to 156 MHz injection-filter range.", "fr": null }
+      "explanation": {
+        "en": "For high-side injection, the oscillator is one IF above the wanted signal. Check the result against the injection filter range.",
+        "fr": null
+      }
     }
   ]
 }
