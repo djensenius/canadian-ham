@@ -13,36 +13,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-03-A-C1",
-      "prompt": { "en": "A local VHF station uses a vertical whip. Which receiving antenna orientation is usually the better first choice?", "fr": null },
+      "prompt": {
+        "en": "Two nearby portable Yagis point their booms at each other, but one has upright elements and the other has level elements. Which change addresses polarization mismatch?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Horizontal, because it rejects all ground-wave signals", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Vertical, because the polarizations match", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Any orientation, because polarization only applies to feedlines", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Circular, because all whips are circularly polarized", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Rotate one antenna about its boom until the elements have the same orientation.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The elements set polarization. Matching them addresses the stated local line-of-sight mismatch.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Turn both booms away while keeping element orientations unchanged.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Changing aim does not align the electric-field orientations and may reduce directional gain.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Add an equal length of coax to both stations.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Cable length does not align the antennas' polarizations.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Move a feed-point balun to the radio while leaving both antennas unchanged.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A balun addresses a balance transition, not the mismatch between electric-field orientations.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "For local VHF/UHF paths, matching polarization usually improves received signal strength.", "fr": null }
+      "explanation": {
+        "en": "For a Yagi, separate pointing direction from element orientation. Both matter on a local path.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-03-A-C2",
-      "prompt": { "en": "A wire antenna resonates below the frequency you want. What adjustment moves resonance upward?", "fr": null },
+      "prompt": {
+        "en": "Two dipoles cut to the same dimensions resonate at different frequencies after installation. One is close to metal siding. What should be investigated first?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Add more wire to both ends", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Bury the feedline deeper", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Make the radiating wire a little shorter", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Replace the end insulators with longer rope", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Whether the first-cut formula guarantees identical installed resonance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A first-cut estimate is not a guarantee. Nearby objects can change installed behaviour.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The effect of nearby objects and end conditions on electrical length.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Equal physical cuts can behave differently in different surroundings.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Whether changing coax length will necessarily make both wires physically resonant together.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Cable length can change the impedance seen at the radio under mismatch, but it does not guarantee equal antenna resonance.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Whether equal transmitter power forces equal resonant frequencies.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Operating power does not replace the length and environment factors that set resonance.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Shorter antennas resonate higher; longer antennas resonate lower.", "fr": null }
+      "explanation": {
+        "en": "Keep the model limits in view when applying a wire-length estimate to real installations.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-03-A-C3",
-      "prompt": { "en": "Using λ = 300 / f(MHz), what is the free-space wavelength of a 60 MHz signal?", "fr": null },
+      "prompt": {
+        "en": "A calculator entry uses 300 / 0.92 to estimate wavelength at 0.92 GHz. Which repair makes the shortcut valid?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "18 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "10 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "0.5 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "5 m", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "Keep the entry and label the result metres because all frequency prefixes work.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The 300 shortcut requires MHz. A GHz number makes the result a thousand times too large.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Multiply the result by 1 000 because GHz is a larger unit.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That moves the answer in the wrong direction. Higher frequency gives a shorter wavelength.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Convert to 920 MHz, then calculate 300 / 920 ≈ 0.326 m.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Converting GHz to MHz gives the correct input unit for this free-space shortcut.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use 143 / 0.92 because it already includes the GHz conversion.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "143 is a practical dipole factor with MHz input, not a conversion for GHz.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "300 divided by 60 is 5, so the wavelength is about 5 metres.", "fr": null }
+      "explanation": {
+        "en": "Units are part of a formula. The free-space wavelength shortcut uses metres and megahertz together.",
+        "fr": null
+      }
     }
   ]
 }

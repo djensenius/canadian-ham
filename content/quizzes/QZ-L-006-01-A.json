@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-01-A-C1",
-      "prompt": { "en": "An HF tuner has only an unbalanced output, but the antenna will be fed with window line. Where should the balanced-to-unbalanced device go?", "fr": null },
+      "prompt": {
+        "en": "A balanced-output tuner is replaced by one with only an unbalanced output. The window line and dipole are unchanged. Which new boundary needs attention?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "At the tuner output before the window line begins", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Midway along the window line so the losses split evenly", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Only at the antenna feed point after the window-line run", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Inside the radio, because the transceiver output is already balanced", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The coax-to-tuner input, because every tuner input is balanced.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The stated new input is coax. The new balance transition is at the output feeding balanced line.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Only the dipole feed point after the balanced-line run.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The balanced line and dipole are already balanced. The changed boundary is earlier.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The new tuner output feeding the existing balanced line.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The replacement creates an unbalanced-to-balanced transition before the window line begins.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The midpoint of the window line, to equalize losses in its two halves.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Equal cable halves do not define a balance transition. Follow the electrical boundary instead.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The transition belongs where balanced and unbalanced parts meet; in this setup, that is where the unbalanced tuner output hands off to the window line.", "fr": null }
+      "explanation": {
+        "en": "A replacement component can create a new interface requirement even if the antenna itself stays unchanged.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-01-A-C2",
-      "prompt": { "en": "Why is open-wire line usually kept away from metal gutters and railings?", "fr": null },
+      "prompt": {
+        "en": "A coax jumper will be wound tightly on a ferrite toroid for common-mode control. Which dielectric choice follows the construction guidance?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Metal nearby can disturb the fields and change the line behaviour.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Metal nearby turns the route into a better balanced-line support.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The line needs nearby metal to set its velocity factor.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Keeping it near metal is the normal way to reduce line loss.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Choose foam only because lower loss guarantees better resistance to tight bending.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Low loss and mechanical stability are different properties. Foam does not give that guarantee.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Prefer solid dielectric to help keep the centre conductor from shifting toward the shield.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Solid dielectric supports the conductor during tight winding, reducing the risk of a short.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Choose the thinnest insulation because the shield alone keeps the conductor centred.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The dielectric separates and supports the conductors. Thinner insulation is not automatically safer.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Treat foam and solid dielectric as mechanically identical if both cables have the same Z0.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Equal characteristic impedance does not establish identical mechanical behaviour under tight winding.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Balanced line depends on geometry and surrounding fields; nearby conductors can upset the balance and impedance.", "fr": null }
+      "explanation": {
+        "en": "Choose cable for its mechanical job as well as attenuation and characteristic impedance.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-01-A-C3",
-      "prompt": { "en": "A dipole is fed with coax. Where is the balanced-to-unbalanced transition normally handled?", "fr": null },
+      "prompt": {
+        "en": "A new coax sample has the same length and DC conductor resistance as an old one, but a different dielectric. Which RF property may differ?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "At the microphone connector", "fr": null }, "isCorrect": false },
-        { "text": { "en": "At the wall outlet", "fr": null }, "isCorrect": false },
-        { "text": { "en": "At the antenna feed point with a suitable balun or choke arrangement", "fr": null }, "isCorrect": true },
-        { "text": { "en": "By adding extra coax length anywhere in the run", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Only the maximum current, because RF propagation ignores insulation.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Dielectric affects RF wave speed and characteristic impedance, not just current rating.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Only total attenuation, because equal length fixes characteristic impedance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Length does not fix Z0. Geometry and dielectric do.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "No RF property, because an ohmmeter comparison is sufficient.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A DC ohmmeter does not measure characteristic impedance or propagation speed.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Velocity factor and characteristic impedance.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Dielectric helps set wave speed and Z0. Equal DC resistance does not make two RF lines equivalent.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The feed point is where the balanced antenna meets the unbalanced coax, so that is the natural place to handle the transition.", "fr": null }
+      "explanation": {
+        "en": "RF feedlines need more specifications than length and DC resistance.",
+        "fr": null
+      }
     }
   ]
 }

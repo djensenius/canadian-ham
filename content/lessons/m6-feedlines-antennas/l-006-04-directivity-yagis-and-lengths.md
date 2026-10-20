@@ -62,6 +62,22 @@ A small beam is listed as 8.6 dBi. To compare it with a dipole reference, subtra
 - Answer: dBd ≈ 6.5 dBd.
 - Sanity check: the antenna did not change; only the reference changed.
 
+### Faded practice: finish a gain-reference change
+
+Compare catalogue values using the same reference.
+
+- Given: gain = 7.3 dBd; dipole reference offset ≈ 2.1 dB.
+- Find: gain in dBi.
+- Formula: dBi ≈ dBd + 2.1 dB.
+- Complete: gain ≈ 7.3 + ___ = ___ dBi.
+- Sanity check: Should the isotropic-reference number be larger for the same antenna?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a gain-reference change
+
+Gain ≈ 9.4 dBi. Only the reference changed; the antenna did not acquire extra gain.
+
 ## Parasitic elements
 
 A driven element is connected to the feedline. A parasitic element is not directly fed. It receives energy from the nearby driven element by electromagnetic coupling and re-radiates that energy.
@@ -86,6 +102,22 @@ For an exercise near 24.2 MHz, use the practical half-wave estimate for the driv
 - Sanity check: the director is shorter than the driven element, and the reflector is longer.
 
 Real Yagi dimensions are design-specific. The key relationship is director shorter, reflector longer.
+
+### Faded practice: finish Yagi element estimates
+
+Use the lesson's simple first-cut conventions, not final construction dimensions.
+
+- Given: f = 22.3 MHz; director 5% shorter; reflector 5% longer.
+- Find: driven, director, and reflector lengths.
+- Formula: driven ≈ 143 / f(MHz); director ≈ driven x 0.95; reflector ≈ driven x 1.05.
+- Complete: driven ≈ 143 / ___ ≈ 6.41 m; director ≈ 6.41 x ___ ≈ ___ m; reflector ≈ 6.41 x ___ ≈ ___ m.
+- Sanity check: Do the director and reflector fall on opposite sides of the driven-element length?
+
+Fill the gaps before checking below.
+
+### Check your work: finish Yagi element estimates
+
+Driven ≈ 6.41 m, director ≈ 6.09 m, reflector ≈ 6.73 m. Real dimensions depend on the full Yagi design.
 
 ## Quarter-wave and half-wave verticals
 
@@ -139,6 +171,22 @@ A VHF half-wave vertical is estimated for 146 MHz using the Basic exam conventio
 - Answer: length ≈ 1.03 m.
 - Sanity check: this is a free-space half-wave convention, not a final construction drawing.
 
+### Faded practice: finish paired length conventions
+
+Keep a practical HF wire estimate separate from a free-space VHF estimate.
+
+- Given: HF exercise f = 16.3 MHz; separate VHF exercise f = 162 MHz.
+- Find: practical HF quarter-wave start and free-space VHF half-wave estimate.
+- Formula: HF quarter wave ≈ 71.3 / f(MHz); VHF half wave ≈ 150 / f(MHz).
+- Complete: HF length ≈ 71.3 / ___ ≈ ___ m; VHF length ≈ 150 / ___ ≈ ___ m.
+- Sanity check: Did you choose the formula for each stated purpose rather than using the same rule for both?
+
+Fill the gaps before checking below.
+
+### Check your work: finish paired length conventions
+
+HF start ≈ 4.37 m; VHF estimate ≈ 0.926 m. These are calculation exercises, not permission to transmit on either example frequency or finished antenna plans.
+
 ## Mobile verticals and loading coils
 
 A mobile HF whip is often much shorter than a natural quarter wavelength. Electrically, that short conductor looks capacitive. A loading coil adds series inductance to tune out some of that capacitive reactance.
@@ -147,11 +195,21 @@ Compact loaded antennas may be narrow-band and less efficient than full-sized an
 
 ## Try it
 
-1. A Yagi's elements are horizontal. What polarization should you expect? Horizontal, because polarization follows element orientation.
-2. Which parasitic element is a little shorter than the driven element and placed toward the desired signal direction? The director.
-3. Which parasitic element is a little longer than the driven element and sits behind it? The reflector.
-4. A stacked pair of identical antennas is compared with one antenna before real-world losses. What ideal gain change is expected? About 3 dB, because the main-direction power density roughly doubles when the combined pattern is concentrated.
-5. A quarter-wave vertical is planned for 25 MHz. Which practical starting length should you use? Use 71.3 / 25 = 2.85 m; 75 / 25 = 3.0 m is the free-space quarter-wave check.
+Try these before reading the feedback below.
+
+1. What polarization follows from horizontal Yagi elements?
+2. Which parasitic element is slightly shorter and sits toward the wanted direction?
+3. Which parasitic element is slightly longer and sits behind the driven element?
+4. What ideal main-direction gain change can a stacked identical pair provide before losses?
+5. Find a practical quarter-wave vertical starting length at 25 MHz and compare with free space.
+
+### Try-it feedback
+
+1. Horizontal; element orientation sets polarization.
+2. The director.
+3. The reflector.
+4. About 3 dB, or roughly doubled main-direction power density from pattern concentration, not new transmitter power.
+5. 71.3 / 25 ≈ 2.85 m; free-space 75 / 25 = 3.0 m.
 
 ## Radio connection
 

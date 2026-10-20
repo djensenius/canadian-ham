@@ -91,6 +91,22 @@ A signal is at 146 MHz. Estimate its wavelength.
 
 At 440 MHz, the same rule gives λ = 300 / 440 = 0.682 m, or about 68 cm.
 
+### Faded practice: finish a wavelength conversion
+
+Estimate a free-space wave, not a finished antenna element.
+
+- Given: f = 1.25 GHz = 1 250 MHz.
+- Find: wavelength in metres and centimetres.
+- Formula: λ(m) = 300 / f(MHz); centimetres = metres x 100.
+- Complete: λ = 300 / ___ = ___ m = ___ cm.
+- Sanity check: Should a higher microwave frequency have a shorter wavelength?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a wavelength conversion
+
+λ = 300 / 1 250 = 0.24 m, or 24 cm. Convert GHz to MHz before using the 300 shortcut.
+
 ### Memory trick: 100 MHz is 3 m
 
 - Helps remember: wavelength in metres = 300 / frequency in MHz.
@@ -133,6 +149,22 @@ You want a first cut for a wire dipole near 10.6 MHz.
 
 After installation, an analyzer can show whether the resonant point is above or below the desired frequency.
 
+### Faded practice: finish a practical dipole first cut
+
+Use the practical wire estimate rather than a free-space half wave.
+
+- Given: f = 12.7 MHz.
+- Find: overall starting length and each leg.
+- Formula: overall length ≈ 143 / f(MHz); leg length = overall length / 2.
+- Complete: overall length ≈ 143 / ___ ≈ ___ m; each leg ≈ ___ m.
+- Sanity check: Is the overall result a little shorter than the free-space half-wave value?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a practical dipole first cut
+
+Overall length ≈ 11.26 m; each leg ≈ 5.63 m. The free-space half wave is about 11.81 m. Check the installed antenna and trim gradually.
+
 ## Loading, traps, and end insulators
 
 A short antenna can be made electrically longer by adding inductance in series. That is why a compact HF mobile antenna often uses a loading coil. The coil helps cancel capacitive reactance from an element that is physically short for the band. Added series inductance lowers the resonant frequency for a given physical length.
@@ -143,11 +175,21 @@ End insulators on a suspended wire mark where the antenna conductor ends electri
 
 ## Try it
 
-1. A vertical handheld whip is used with a vertical repeater antenna. Do their polarizations match? Yes. Both electric fields are vertical.
-2. A horizontal dipole is made slightly shorter. What happens to resonant frequency? It moves upward because shorter antennas resonate at higher frequencies.
-3. A 72 MHz signal is being estimated as a free-space wave. What wavelength should you use? λ = 300 / 72 = 4.17 m, so the free-space wavelength is about 4.17 m.
-4. A resonant wire dipole is planned for 14.2 MHz. Which first-cut formula is the practical antenna estimate: 150 / f or 143 / f? Use 143 / 14.2 = 10.07 m overall as a practical starting length.
-5. A short mobile HF whip is far shorter than a quarter wavelength. What part helps it tune? A loading coil adds series inductance so the short whip behaves electrically longer.
+Try these before reading the feedback below.
+
+1. Do vertical handheld and repeater antennas have matching polarization?
+2. What happens to a horizontal wire dipole's resonant frequency if it is shortened?
+3. Estimate the free-space wavelength at 72 MHz.
+4. Which first-cut estimate suits a practical wire dipole at 14.2 MHz: 150 / f or 143 / f?
+5. What helps a short mobile HF whip tune below its natural resonant frequency?
+
+### Try-it feedback
+
+1. Yes. Their electric fields are vertical.
+2. Resonance moves upward.
+3. λ = 300 / 72 ≈ 4.17 m.
+4. 143 / 14.2 ≈ 10.07 m overall is the practical starting estimate.
+5. A loading coil adds series inductance, making it electrically longer.
 
 ## Radio connection
 

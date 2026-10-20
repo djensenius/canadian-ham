@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-02-A-C1",
-      "prompt": { "en": "A coax run is doubled in length using the same cable at the same frequency. What happens to loss stated in dB?", "fr": null },
+      "prompt": {
+        "en": "At the operating frequency, cable A loses 0.05 dB/m over a 30 m route. Cable B loses 0.08 dB/m over a 12 m route. Which has less total attenuation, ignoring connector loss?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "It is cut in half.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It stays exactly the same.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It approximately doubles.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It becomes zero if the SWR is low.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "A, because its loss per metre is smaller.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That ignores route length. A totals 0.05 x 30 = 1.5 dB.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "B, because its shorter route gives 0.96 dB rather than 1.5 dB.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Multiply each per-metre figure by its actual length before comparing.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both, because a matched cable has no attenuation.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A good match does not remove conductor and dielectric loss.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A, because dividing loss per metre by length gives the total.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Total dB loss accumulates with length; it is multiplied, not divided.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "For the same cable and frequency, dB loss accumulates with length.", "fr": null }
+      "explanation": {
+        "en": "A lower per-metre loss does not guarantee a lower total when the routes differ.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-02-A-C2",
-      "prompt": { "en": "What is a tuner at the radio mainly doing when it lets a solid-state transmitter run at rated power?", "fr": null },
+      "prompt": {
+        "en": "With antenna and cable unchanged, a desk tuner lowers the SWR seen by the radio. A meter at the antenna end of the main cable shows no change. What does that show?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Transforming impedance so the transmitter sees a suitable load", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Removing all loss from the feedline between tuner and antenna", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Changing the antenna's physical length and radiation pattern", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Replacing the need to find intermittent connectors", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The desk tuner has removed the main cable's heating loss.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The remote measurement does not show the load mismatch changing, and matching at the desk does not remove cable loss.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The antenna wire must have become physically longer.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The stated wire is unchanged. A desk matching network does not alter its physical length.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The tuner changed the impedance presented to the radio, not the antenna-end match.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The two measurements refer to different parts of the system. A radio-end match can improve while the antenna-side cable remains mismatched.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The remote meter must be faulty because SWR is identical on both sides of any tuner.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A matching network separates different impedance conditions; its two sides need not show the same SWR.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A tuner is an impedance-matching network; it does not change the actual radiation pattern or remove all feedline loss.", "fr": null }
+      "explanation": {
+        "en": "Use measurement position to distinguish a transformed radio load from a changed antenna match.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-02-A-C3",
-      "prompt": { "en": "Why can a lossy feedline make an SWR reading at the desk look better than the antenna feed point really is?", "fr": null },
+      "prompt": {
+        "en": "Replacing damaged lossy coax with low-loss cable improves received signals, but station-end SWR rises. Which interpretation should be tested before undoing the repair?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The reflected wave is attenuated on its trip back to the meter.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The antenna stops radiating when the line is lossy.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The feedline changes every antenna into a dummy load.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The SWR meter reads polarization instead of voltage waves.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The better received signals prove that the higher SWR is an instrument error.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Reception and match are separate observations. Neither alone proves an error.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The old cable was more efficient because its SWR display was lower.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A lower station-end reading can result from attenuation, not greater efficiency.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The higher reading proves that the new cable wastes more total power as heat.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A higher SWR alone does not establish total heat loss. The new cable has lower attenuation and may simply reveal more reflection.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The new cable returns more reflected energy to the meter, revealing a mismatch the old loss hid.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Lower attenuation can improve delivery and reception while exposing more of the antenna-end reflection.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Loss reduces both forward and reflected energy; the return trip especially can hide the size of the mismatch from a station-end meter.", "fr": null }
+      "explanation": {
+        "en": "Do not use a low SWR reading caused by loss as a reason to keep an inefficient cable.",
+        "fr": null
+      }
     }
   ]
 }

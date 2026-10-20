@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-04-A-C1",
-      "prompt": { "en": "A Yagi element is not connected to the feedline but is coupled by nearby RF fields. What is it called?", "fr": null },
+      "prompt": {
+        "en": "A loose reflector falls away from a Yagi, but its driven element and feedline stay intact. Why can the pattern change?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "A parasitic element", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A lightning arrester", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A coax shield", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A dummy load", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "An unfed element cannot affect radiation, so only the meter calibration can change.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A parasitic element re-radiates coupled energy even without its own feedline.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The remaining driven element automatically takes over the reflector's length and position.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Its physical dimensions do not change when another element is lost.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The reflector supplied extra transmitter power, which the array now lacks.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The reflector did not generate power. It helped redistribute coupled energy.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The coupled parasitic structure has changed, so the original pattern can no longer be assumed.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Element dimensions and positions shape the array pattern. An intact feedline is not enough to preserve it.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A parasitic element is energized by coupling from the driven element rather than direct feedline connection.", "fr": null }
+      "explanation": {
+        "en": "Unfed does not mean inactive. Recheck a damaged array rather than trusting its original gain and rear rejection.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-04-A-C2",
-      "prompt": { "en": "A roof-mounted quarter-wave vertical is centred on a vehicle roof. Which prediction fits the horizontal pattern?", "fr": null },
+      "prompt": {
+        "en": "Compare an ideal vertical over a symmetric ground system with a Yagi aimed at one station. Which horizontal-pattern contrast fits?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "No compass direction is favoured because the vertical element is symmetric around its axis", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The strongest direction is off the hood because the vehicle points that way", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The strongest direction is straight overhead, so nearby ground stations are in a null", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The feedline direction steers the main lobe unless the coax is exactly 50 ohms", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The vertical is similar in all compass directions; the Yagi concentrates radiation toward its main lobe.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Axial symmetry gives the simple vertical an omnidirectional horizontal pattern; the Yagi is directional.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both have the same narrow forward beam because both are resonant.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Resonance does not establish the same radiation pattern.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The vertical's strongest compass direction follows the coax route.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The ideal symmetric vertical pattern is not steered by coax routing.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The Yagi is omnidirectional if its SWR is low.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A good impedance match does not erase Yagi directivity.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The vertical element is symmetric around its upright axis, so the simple horizontal pattern does not favour one compass direction over another.", "fr": null }
+      "explanation": {
+        "en": "Impedance match and radiation pattern are separate properties.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-04-A-C3",
-      "prompt": { "en": "A club stacks an identical pair of beams and feeds them from the same transmitter. What does the ideal gain increase mean?", "fr": null },
+      "prompt": {
+        "en": "Beam A is advertised as 6.7 dBd; beam B as 8.0 dBi under comparable conditions. Which comparison uses a common reference?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The main-direction power density is roughly doubled because the pattern is concentrated", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The antenna pair radiates twice the transmitter power into all directions", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The stacked array turns a poor impedance match into a perfect one", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The rear lobe becomes the main source of forward gain", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "A is lower by 1.3 dB because 6.7 is less than 8.0.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The raw numbers use different references and cannot be subtracted directly.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A is about 0.8 dB higher because 6.7 dBd is about 8.8 dBi.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Adding the 2.1 dB reference offset puts both on the isotropic scale.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "B is about 3.4 dB higher because dBd must be reduced by 2.1 to get dBi.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That conversion is backwards. A dipole-reference value gains 2.1 when expressed in dBi.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both gains are equal because changing the reference changes the antenna pattern.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Reference labels do not change either antenna. These figures still differ after conversion.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Stacking an identical pair can roughly double power density in the main direction before losses by narrowing and shaping the pattern; it does not create extra transmitter power.", "fr": null }
+      "explanation": {
+        "en": "Convert gain references before comparing catalogue claims; stacking or extra transmitter power is a separate question.",
+        "fr": null
+      }
     }
   ]
 }

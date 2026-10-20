@@ -13,36 +13,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-05-A-C1",
-      "prompt": { "en": "A dipole wire runs northeast-southwest in free space. Where is radiation strongest?", "fr": null },
+      "prompt": {
+        "en": "A free-space dipole sketch predicts a deep end null, but an installed wire near buildings still receives a station off its end. What should be checked before declaring the antenna faulty?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Broadside to the wire, northwest and southeast", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Mainly along the wire toward northeast and southwest", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Only straight upward because the wire is horizontal", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Only toward the feedline because current enters there", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Whether ground and nearby structures have changed the ideal pattern.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The free-space picture is a starting model. Ground and surrounding objects can change installed patterns.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Whether every practical dipole must have the exact free-space pattern.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That assumes away the surroundings. The lesson warns that real ground and objects affect the pattern.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Whether a low SWR guarantees an exact end null.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Impedance match does not guarantee the free-space radiation pattern.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Whether a centre-fed dipole is actually isotropic whenever it is installed outdoors.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Outdoor installation does not make radiation equal in every direction.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A free-space half-wave dipole has maximum radiation broadside to the wire and nulls off the ends.", "fr": null }
+      "explanation": {
+        "en": "Use the free-space pattern to reason, but do not treat it as a guarantee for a cluttered installation.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-05-A-C2",
-      "prompt": { "en": "A full-wave loop is estimated with 306 / f(MHz). About how much wire is needed at 12 MHz?", "fr": null },
+      "prompt": {
+        "en": "For a square full-wave loop, a learner calculates 306 / f and uses that value for every side. What is the right correction?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "25.5 m", "fr": null }, "isCorrect": true },
-        { "text": { "en": "12.8 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "6.0 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "49.0 m", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Use 300 / f on each side because loops use the free-space formula.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "300 / f is free-space wavelength. It does not fix the perimeter-versus-side mistake.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Keep each side as calculated, then shorten only the feedline.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Feedline length does not correct four times too much loop wire.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Halve each side because every antenna uses a half-wave total.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A full-wave loop is not a half-wave dipole. Four equal sides share the loop perimeter.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Treat 306 / f as the full perimeter and divide by four for each side.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The loop estimate gives total wire around the square, not one side.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "306 divided by 12 is 25.5, so the loop starts near 25.5 metres total wire.", "fr": null }
+      "explanation": {
+        "en": "Choose the antenna formula, then divide the total according to the geometry.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-05-A-C3",
-      "prompt": { "en": "What is a likely station symptom when a poorly matched random-wire antenna brings RF back into the operating area?", "fr": null },
+      "prompt": {
+        "en": "An end-fed wire setup produces transmit audio distortion that changes when station leads move. Which path deserves investigation?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The antenna becomes an isotropic point source", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The feedline changes into open-wire line", "fr": null }, "isCorrect": false },
-        { "text": { "en": "RF feedback, such as distorted transmitted audio", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The resonant frequency is guaranteed to stay fixed", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Unwanted RF returning on station wiring because matching or counterpoise control is poor.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Lead-sensitive symptoms suggest RF in the operating area. Investigate return paths and common-mode control.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Only speech-processing compression, because all transmitted distortion begins in audio settings.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Audio settings can cause distortion, but lead-sensitive changes point to RF coupling that also needs investigation.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Only a broken dipole centre insulator, because every wire antenna is centre-fed.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An end-fed arrangement has different feed and return-path issues from a centre-fed dipole.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A guaranteed harmonic, because every lead-sensitive fault is an integer multiple.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Lead sensitivity does not establish a harmonic relationship. Measure before selecting that diagnosis.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Uncontrolled RF return paths can put RF current into station equipment and cause feedback symptoms.", "fr": null }
+      "explanation": {
+        "en": "Use the physical clue to trace RF coupling rather than assigning a transmitter-emission label without evidence.",
+        "fr": null
+      }
     }
   ]
 }
