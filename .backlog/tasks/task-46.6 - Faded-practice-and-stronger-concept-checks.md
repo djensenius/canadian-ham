@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 15:17'
+updated_date: '2026-10-20 15:21'
 labels:
   - content
 dependencies:
@@ -66,4 +66,6 @@ Part B review steering incorporated: read Part A reviewer artifact f39562f8. Man
 M6 complete: 12 faded sets after cable loss, excess-cable comparison, reflected power, impedance ratio, wavelength, dipole, gain-reference, Yagi, vertical and loop sets. L-006-01 has no calculations; its narrative worked example was renamed. All 15 checks now have 60 distinct per-option notes and plausible same-domain distractors; manually audited against the 38 official references and all Try-its. Changed-condition cases include replacing a tuner, solid dielectric on a toroid, differing loss-per-metre and route lengths, remote vs desk measurements, repaired lossy coax revealing SWR, identical cuts in different surroundings, loss of an unfed reflector, and catalogue claims with different references. Try-it answers separated. Retargeted b-006-005-011 after narrative heading rename. Strict quizzes, full originality (0 issues/stale entries), coverage, links, complete hints and diff check PASS. All five edited M6 lessons contain figure directives; assets/directives unchanged.
 
 Part A review fixes complete: redesigned QZ-L-003-06 C1 (average vs clean peak headroom), QZ-L-003-08 C3 (point-source model limits near real structures), QZ-L-004-01 C2 (efficiency vs linearity) and C3 (changed LED supply/rating checks), QZ-L-004-02 C1 (load energy vs small control signal) and C3 (FET/triode analogy limits). Manually checked each against all same-quiz official Q+A and lesson Try-its; none asks the old recognition item in a new costume. Removed scaffolds from the M2 offset, power-ratio, runtime, UTC and bearing Try-its so they are independent practice. Fixed the weak tuning-range distractor in QZ-L-003-05 C1 (the steering called it C2; actual source was C1), Yagi feedback now says names swapped only, and 50 % spacing. Strict M3/M4 quizzes including overlap lint, full originality, links, complete hints and diff check PASS.
+
+M7 complete: four faded sets in all three quantitative lessons (wave-label estimate, hop scales, OWF window check, practical combined radio horizon). Narrative fading example renamed and b-007-004-005 retargeted. Nine diagnostic checks / 36 per-option notes manually compared with the 24 official Q+A and all Try-its. Changed-condition/transfer cases test opposing geometry changes, loss of a ground-wave coverage assumption, unverified multi-hop reliability, rising LUF with fixed MUF, an 85 % estimate outside a narrow window, applying an oblique forecast to NVIS, square-root height vs combined range, independent weather-layer/ionospheric paths, and weak scatter without a reliable main return. Try-it answers separated; tables, coverage and facts retained. Strict module quizzes/overlap, full originality (0 issues/stale entries), coverage, links, complete hints and diff checks PASS. All three edited M7 lessons have unchanged figure directives for coordinator positioning audits.
 <!-- SECTION:NOTES:END -->
