@@ -1,11 +1,11 @@
 ---
 id: TASK-46.6
 title: Faded practice and stronger concept checks
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 16:15'
+updated_date: '2026-10-20 16:21'
 labels:
   - content
 dependencies:
@@ -27,7 +27,7 @@ For quantitative lessons, add one partly worked practice problem after each work
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Every lesson with calculations has at least one faded practice problem
-- [x] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
+- [ ] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -40,6 +40,8 @@ For quantitative lessons, add one partly worked practice problem after each work
 5. Per explicit user direction, verify and close parent TASK-46.6 with both parts evidence, leaving TASK-46.6.1 To Do. Independent branch review and the coordinator figure plan remain required before a PR; no PR opened by this worker.
 
 6. Re-review fixes: read full bank records and Try-its for all seven replacement/transfer checks, replace implausible distractors, audit M2–M8 option wording for absolute/prefix giveaways, update authoring docs and spacing, then run all requested checks before re-closing AC #2.
+
+7. Third-review bounded fixes: remove self-labelled reasoning and logical eliminations in named M6/M7 checks; repair recommended feedback/ambiguity and vary one or two transfer keys; compare every touched check against full same-quiz source records and lesson Try-its; expand distractor cue regression with the existing some logic and demonstrate it catches pre-fix checks; run requested checks, commit, push and record evidence without opening a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -132,6 +134,8 @@ Full pnpm test was run once this round: release-permission self-test PASS; conte
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift PASS on final content: 24/24, 0 failures, 26.624 s; initial run also 24/24 (41.840 s). Final per-test results: testBadHintFileDropsHintsWithoutDroppingLessonContent PASS, testBundledQuestionHintSectionAnchorsResolveInLessons PASS, testConceptCheckChoiceDecodesOptionalFeedbackAndRoundTrips PASS, testContentLibraryRejectsCoversOutsideLessonCategoryIds PASS, testContentLibraryRejectsEmptyModuleListWithoutCrashing PASS, testContentLibraryRejectsExplanationIdMismatch PASS, testContentLibraryRejectsMissingExplanationForQuestion PASS, testContentLibraryRejectsMissingSubsectionCoverage PASS, testContentLibraryRejectsUnknownOfficialQuestionInQuiz PASS, testContentLibraryRejectsUnknownPrerequisite PASS, testExplanationNoteParsingForSampleInEachCategory PASS, testExplanationParserRejectsDuplicateAndCorrectSourceIndexNotes PASS, testFigureDirectivesForOhmsLawLesson PASS, testFrontMatterParserMatchesNumericAndASCIIKeyRules PASS, testLessonIdRegexRejectsMalformedIds PASS, testLoadFromBundleFindsBundledContentDirectory PASS, testLoadsRealRepositoryContent PASS, testMarkdownInlineHandlingKeepsRawHTMLLiteralButPreservesCodeAndAutolinks PASS, testMarkdownRendererParsesEveryRealLesson PASS, testSharedFigureDirectiveFixtures PASS, testSharedLessonHeadingAnchorFixtures PASS, testStrictFrontMatterParserRejectsMalformedInput PASS, testTableIllustrationBriefAndBlockOrderForL00501 PASS, testTableParserHandlesAlignmentEscapedPipesAndFencedCode PASS. No Apple app xbuild suites were run (no app code changed); the already-recorded coordinator figure-positioning plan for the complete TASK-46.6 content batch remains outstanding, not claimed here. Independent re-review remains required before any PR; no PR opened. Legacy M3/M4 inline Try-it conversion is documented under existing TASK-46.5, not duplicated. TASK-46.6.1 remains To Do.
 
 Local logs for acceptance review: /tmp/task-46.6-rereview-final-checks.log, /tmp/task-46.6-rereview-pnpm-test.log, /tmp/task-46.6-rereview-web-retries.log, /tmp/task-46.6-rereview-final-swift-test.log. Parent closure follows the explicit user request after fixes and evidence; it is not independent reviewer approval.
+
+Third review at b10df2dd requested bounded content-quality fixes. Reopened AC #2 for those repairs; all identities and official mappings remain frozen. No PR will be opened.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
