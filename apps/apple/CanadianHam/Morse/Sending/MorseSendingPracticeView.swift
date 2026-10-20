@@ -6,8 +6,10 @@ struct MorseSendingPracticeView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
 
+    private enum KeyboardFocus: Hashable { case practice, exam }
+
     @Environment(\.scenePhase) private var scenePhase
-    @FocusState private var keyFocusActive: Bool
+    @FocusState private var keyboardFocus: KeyboardFocus?
     @State private var driver = MorseAudioDriver()
     @State private var pendingSamples: [MorseKeyTimingSample] = []
     @State private var decodedText = ""
@@ -63,17 +65,18 @@ struct MorseSendingPracticeView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Sending practice") // l10n: localized
-        .focusable(true)
-        .focused($keyFocusActive)
+        .focusable(!showingExam && presentedResult == nil)
+        .focused($keyboardFocus, equals: .practice)
         .onAppear {
-            keyFocusActive = true
+            if !showingExam { keyboardFocus = .practice }
             // Another Morse mode starting playback stops any held key or paddle here.
             playbackCoordinator.register("sending-practice") {
                 stopAllKeying(finalizeStraight: true)
             }
         }
         .onKeyPress(phases: [.down, .up]) { press in
-            handleKeyPress(press)
+            guard !showingExam, presentedResult == nil else { return .ignored }
+            return handleKeyPress(press)
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
@@ -82,8 +85,8 @@ struct MorseSendingPracticeView: View {
                 stopAllKeying(finalizeStraight: true)
             }
         }
-        .onChange(of: keyFocusActive) { _, isFocused in
-            if !isFocused { stopAllKeying(finalizeStraight: true) }
+        .onChange(of: keyboardFocus) { _, focus in
+            if focus == nil { stopAllKeying(finalizeStraight: true) }
         }
         .navigationDestination(isPresented: $showingExam) {
             sendingExamScreen
@@ -207,11 +210,12 @@ struct MorseSendingPracticeView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Exam-style check") // l10n: localized
-        .focusable(true)
-        .focused($keyFocusActive)
-        .onAppear { keyFocusActive = true }
+        .focusable(presentedResult == nil)
+        .focused($keyboardFocus, equals: .exam)
+        .onAppear { keyboardFocus = .exam }
         .onKeyPress(phases: [.down, .up]) { press in
-            handleKeyPress(press)
+            guard showingExam, presentedResult == nil else { return .ignored }
+            return handleKeyPress(press)
         }
         .onDisappear {
             if presentedResult == nil, !examText.isEmpty {

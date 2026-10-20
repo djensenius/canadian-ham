@@ -331,6 +331,35 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try auditMorseSendingResults(appearance: .dark)
     }
 
+    func testMorseSendingExamHardwareKeyboardFocusIsSeparateFromPractice() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        defer { app.terminate() }
+
+        openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
+        XCTAssertTrue(app.buttons["morse-sending-start-exam-button"].firstMatch.waitForExistence(timeout: 5))
+        app.typeKey(" ", modifierFlags: [])
+        let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
+        let decodedE = NSPredicate(format: "label == %@", "E")
+        expectation(for: decodedE, evaluatedWith: decoded)
+        waitForExpectations(timeout: 5)
+
+        // Going Back hands focus to practice, rather than leaving it on the off-screen exam.
+        tapCompactBack(in: app)
+        XCTAssertTrue(app.buttons["morse-sending-exam-open-button"].firstMatch.waitForExistence(timeout: 5))
+        app.typeKey(" ", modifierFlags: [])
+        let decodedEE = NSPredicate(format: "label == %@", "EE")
+        expectation(for: decodedEE, evaluatedWith: decoded)
+        waitForExpectations(timeout: 5)
+
+        // Re-entry clears practice, and the pushed screen must acquire keyboard focus again.
+        openSendingExamStyleCheck(in: app)
+        app.typeKey(" ", modifierFlags: [])
+        expectation(for: decodedE, evaluatedWith: decoded)
+        waitForExpectations(timeout: 5)
+    }
+
     func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
