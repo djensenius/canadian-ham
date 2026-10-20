@@ -366,7 +366,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testMorseSendingExamHardwareKeyboardFocusIsSeparateFromPractice() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseKeyboardStatus"])
         defer { app.terminate() }
 
         openSendingPractice(in: app)
@@ -376,10 +376,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         start.tap()
         XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5))
         app.typeKey(" ", modifierFlags: [])
-        let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
-        let decodedE = NSPredicate(format: "label == %@ OR label == %@", "E", "Decoded text, E")
-        expectation(for: decodedE, evaluatedWith: decoded)
-        waitForExpectations(timeout: 5)
+        assertMorseKeyboardDecodedText("E", in: app)
 
         // Scope Back to the detail stack: iPad also has a sidebar navigation bar.
         let back = app.navigationBars["Exam-style check"].buttons.matching(
@@ -389,15 +386,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
         back.tap()
         XCTAssertTrue(app.buttons["morse-sending-exam-open-button"].firstMatch.waitForExistence(timeout: 5))
         app.typeKey(" ", modifierFlags: [])
-        let decodedEE = NSPredicate(format: "label == %@ OR label == %@", "EE", "Decoded text, EE")
-        expectation(for: decodedEE, evaluatedWith: decoded)
-        waitForExpectations(timeout: 5)
+        assertMorseKeyboardDecodedText("EE", in: app)
 
         // Re-entry clears practice, and the pushed screen must acquire keyboard focus again.
         openSendingExamStyleCheck(in: app)
         app.typeKey(" ", modifierFlags: [])
-        expectation(for: decodedE, evaluatedWith: decoded)
-        waitForExpectations(timeout: 5)
+        assertMorseKeyboardDecodedText("E", in: app)
+    }
+
+    private func assertMorseKeyboardDecodedText(_ text: String, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
+        let matches = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@ OR label == %@", text, "Decoded text, \(text)"),
+            object: decoded
+        )
+        let outcome = XCTWaiter.wait(for: [matches], timeout: 10)
+        let status = app.staticTexts["morse-sending-keyboard-test-status"].firstMatch
+        XCTAssertEqual(outcome, .completed, "Decoded: \(decoded.label); \(status.label)", file: file, line: line)
     }
 
     func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {

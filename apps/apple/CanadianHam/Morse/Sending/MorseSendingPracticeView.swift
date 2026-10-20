@@ -10,6 +10,9 @@ struct MorseSendingPracticeView: View {
 
     @Environment(\.scenePhase) private var scenePhase
     @FocusState private var keyboardFocus: KeyboardFocus?
+#if DEBUG
+    @State private var keyboardEventDescription = "none"
+#endif
     @State private var driver = MorseAudioDriver()
     @State private var pendingSamples: [MorseKeyTimingSample] = []
     @State private var decodedText = ""
@@ -153,6 +156,12 @@ struct MorseSendingPracticeView: View {
                     }
                 }
                 MorseSendingFeedbackView(decodedText: decodedText, pendingSamples: pendingSamples, lastFeedback: lastFeedback)
+#if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseKeyboardStatus") {
+                    Text(verbatim: "Focus: \(String(describing: keyboardFocus)); event: \(keyboardEventDescription); held: \(straightKeyDownAt != nil)") // l10n: verbatim DEBUG-only keyboard test diagnostics
+                        .accessibilityIdentifier("morse-sending-keyboard-test-status")
+                }
+#endif
                 HStack {
                     morseTokenButton("Clear sending practice") { resetSending(clearExam: false) }
 #if DEBUG
@@ -234,6 +243,9 @@ struct MorseSendingPracticeView: View {
     }
 
     private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
+#if DEBUG
+        keyboardEventDescription = "\(String(describing: press.phase)) \(press.characters)"
+#endif
         let character = press.characters.lowercased()
         let element = character == "j" ? MorseKeyElement.dot : character == "k" ? MorseKeyElement.dash : nil
         switch press.phase {
