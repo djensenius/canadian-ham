@@ -1134,8 +1134,16 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
               feedback: { en: `Feedback for source option ${index}.`, fr: choice.isCorrect ? `Rétroaction du choix source ${index}.` : null },
             })),
           };
-          lessonQuizzesById.set(original.id, { ...original, officialQuestionIds: [], conceptChecks: [concept] });
+          const fixtureQuiz = { ...original, officialQuestionIds: [], conceptChecks: [concept] };
+          const sourceIndex = concept.choices.findIndex((choice) => choice.isCorrect === correct);
+          const nowValue = Array.from({ length: 32 }, (_, index) => 1_000 + index).find((value) => {
+            const item = buildLessonQuizItems(fixtureQuiz, `${original.id}:${value.toString(36)}`)[0]!;
+            return item.type === "concept" && item.choicePermutation.indexOf(sourceIndex) !== sourceIndex;
+          });
+          assert.ok(nowValue !== undefined, "fixture must move the selected source option to another display position");
+          lessonQuizzesById.set(original.id, fixtureQuiz);
           try {
+            vi.spyOn(Date, "now").mockReturnValue(nowValue);
             window.location.hash = "#/learn/M4/L-004-01";
             window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
             const store = createStore(`concept-feedback-${language}-${theme}-${correct}`);
@@ -1144,11 +1152,11 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
             const { container } = render(<App store={store} now={() => fixedNow} />);
             await screen.findByRole("heading", { name: original.id });
             const section = getLessonQuizSection();
-            const sourceIndex = concept.choices.findIndex((choice) => choice.isCorrect === correct);
             const choice = concept.choices[sourceIndex]!;
             const buttons = within(section).getAllByTestId("lesson-quiz-choice");
             const button = buttons.find((item) => item.textContent?.includes(choice.text.en))!;
             assert.ok(button);
+            assert.notEqual(buttons.indexOf(button), sourceIndex, "feedback must follow source identity, not displayed letter");
             assert.equal(within(section).queryByRole("status"), null);
             assert.equal(section.textContent?.includes("Feedback for source option"), false);
             assert.equal(section.textContent?.includes("Rétroaction du choix source"), false);

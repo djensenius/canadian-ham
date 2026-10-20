@@ -40,8 +40,8 @@ The script validates the real generated bank JSON, subsection titles, lesson fro
 Expected success output:
 
 ```text
-Schema validation passed: 1042 validation target(s).
-Validated generated bank JSON, subsection titles, lesson front matter, explanations, engine fixtures, and progress export samples.
+Schema validation passed: 2071 validation target(s).
+Validated generated bank JSON, subsection titles, lesson front matter, lesson quizzes, explanations, hints, engine fixtures, and progress export samples.
 ```
 
 ## Validator keyword subset
