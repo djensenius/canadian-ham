@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-08 04:35'
-updated_date: '2026-10-20 04:59'
+updated_date: '2026-10-20 05:01'
 labels:
   - apple
   - testing
@@ -47,4 +47,6 @@ Task-31 attempted to combine iOS light/dark accessibility audits into one launch
 Owner 2026-10-14: also move the per-lesson figure audits (CanadianHamLessonFiguresUITests) into a separate Xcode test plan run only when figures, lesson Markdown with figure directives, or the lesson reader change; default full-suite plan excludes it. Priority: next after the current Apple merge batch.
 
 2026-10-15 merge batch (train-2026-10-15): testModule1LessonFiguresLightPart2 failed with 'Audit failed to complete in time' in the full iOS suite. That's the same timeout that forced the M8 split. When moving figure audits to their own plan, also split long figure ranges so each audit finishes reliably.
+
+Figure plan implemented first: CanadianHamDefault excludes only CanadianHamLessonFiguresUITests; CanadianHamLessonFigures selects only that class. Split all 13 remaining two-lesson light ranges into single-lesson tests (32 -> 45 figure methods), preserving every existing figure/appearance and shared helper body. Historical Module 1 Part 2 now already contains one figure in L-001-03 following task-46 lesson splits, so it cannot be subdivided further without changing the audit itself. XcodeGen regenerated twice; complete project diffs byte-identical. Baseline default run launched via nohup (128 UI methods, unchanged audit flows). Initial test-plan decoding failed before tests because configurations.options was absent; corrected empty options and restarted as /tmp/task-33-baseline-v2.*.
 <!-- SECTION:NOTES:END -->
