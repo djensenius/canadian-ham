@@ -1,11 +1,11 @@
 ---
 id: TASK-46.9
 title: Move M2 from reference style to the explanatory format
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-20 13:21'
+updated_date: '2026-10-20 13:28'
 labels:
   - content
 dependencies: []
@@ -34,6 +34,8 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 2. Rewrite each lesson around concepts, worked/faded examples, separate Try-it prompts and feedback, common mistakes, and original plain-language concept checks; commit and push each lesson/group. Keep any existing French versions aligned and remove stale M2 originality exceptions.
 3. Compare every ledger fact against the revised lessons, update format guidance for the approved M2 change, run all requested content/web and content-swift checks (37 lessons), and record evidence. No Apple UI suites; flag the figure-only test plan for coordinator follow-up.
 4. Check acceptance criteria with evidence, finalize the task, commit and push; report branch, full SHA, files and checks without opening a PR.
+
+5. Review fix round: replace/rework the six flagged concept checks for changed-condition reasoning; move misplaced concepts to precise headings and retarget affected hints; address wording/memory-cue notes and refresh the fact ledger. Re-run the requested content checks and content-swift tests, verify all 99 anchors and immutable figures/front matter/official quiz references, then commit and push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -58,6 +60,8 @@ Renamed headings required 99 M2 hint-link anchor updates. A JSON baseline compar
 Required checks passed: coverage 100/100 across 37 lessons; all-lesson originality (0 issues/stale entries); explanations 984/984 with 2 952 notes; quizzes 37 files / 521 official refs / 92 concept checks (M2 99 official + 12 new); links; figures (53 fixtures, 39 SVGs/references); complete hints 984/984; schemas (2 034 targets, 55 tests); import checks (both banks, 34 reference entries); content-swift swift test (23/23, including unchanged 37-lesson assertion, real Markdown parsing and bundled hint anchors).
 pnpm test: release-permission self-test, content-tools 153/153, Morse 21/21, calculator 127/127 passed; web initially 221/223, with unchanged Settings-loading and v6-device-migration tests timing out. Both cases passed focused default-timeout reruns with no app/test changes. The migration case first timed out again isolated, then passed a diagnostic 30 s CLI-timeout run and a subsequent default-timeout rerun. Aggregate pnpm test remains recorded as failed; do not describe it as a green second full run. Exact commands and outcomes are in the comparison document.
 No Apple UI suites/app builds were run (content-only, per request). All four figure-bearing lessons changed surrounding text: coordinator should run the CanadianHamLessonFigures plan before merge; sources, directives, alt text, text equivalents and briefs are unchanged. No lesson renumbering or progress migration. Independent branch review still required; no PR opened.
+
+Internal review requested changes (findings 1–9): reopening for the approved focused revision. No Apple runs in this round.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
