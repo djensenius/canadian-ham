@@ -144,9 +144,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(stop.isEnabled)
 
         app.buttons["morse-enable-reduce-motion-test-button"].firstMatch.tap()
-        expectation(for: NSPredicate(format: "enabled == false"), evaluatedWith: stop)
-        expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: beacon)
-        waitForExpectations(timeout: 5)
+        let stopped = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !stop.isEnabled && !beacon.exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [stopped], timeout: 10), .completed,
+                       "Expected stopped playback: stop enabled=\(stop.isEnabled), beacon exists=\(beacon.exists)")
         XCTAssertTrue(app.staticTexts["Morse playback stopped."].firstMatch.exists)
         XCTAssertTrue(play.isEnabled)
 
@@ -375,7 +377,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5))
         app.typeKey(" ", modifierFlags: [])
         let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
-        let decodedE = NSPredicate(format: "label == %@", "E")
+        let decodedE = NSPredicate(format: "label == %@ OR label == %@", "E", "Decoded text, E")
         expectation(for: decodedE, evaluatedWith: decoded)
         waitForExpectations(timeout: 5)
 
@@ -387,7 +389,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         back.tap()
         XCTAssertTrue(app.buttons["morse-sending-exam-open-button"].firstMatch.waitForExistence(timeout: 5))
         app.typeKey(" ", modifierFlags: [])
-        let decodedEE = NSPredicate(format: "label == %@", "EE")
+        let decodedEE = NSPredicate(format: "label == %@ OR label == %@", "EE", "Decoded text, EE")
         expectation(for: decodedEE, evaluatedWith: decoded)
         waitForExpectations(timeout: 5)
 

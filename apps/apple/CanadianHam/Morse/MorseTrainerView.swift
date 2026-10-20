@@ -215,19 +215,6 @@ final class MorsePlaybackCoordinator {
     }
 }
 
-#if DEBUG && os(iOS)
-private struct MorseReduceMotionUITestKey: EnvironmentKey {
-    static let defaultValue = false
-}
-
-extension EnvironmentValues {
-    var morseReduceMotionForUITests: Bool {
-        get { self[MorseReduceMotionUITestKey.self] }
-        set { self[MorseReduceMotionUITestKey.self] = newValue }
-    }
-}
-#endif
-
 struct MorseTrainerView: View {
     @Binding var settings: MorseTrainerSettings
     let progressStore: ProgressStoreService
@@ -236,7 +223,8 @@ struct MorseTrainerView: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 #if DEBUG && os(iOS)
-    @Environment(\.morseReduceMotionForUITests) private var reduceMotionForUITests
+    // SwiftUI's Reduce Motion environment is read-only; inject the same input locally in UI tests.
+    @State private var reduceMotionForUITests = false
 #endif
     @Environment(\.colorScheme) private var colorScheme
     @State private var dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
@@ -317,6 +305,14 @@ struct MorseTrainerView: View {
                             .accessibilityLabel(Text("Stop Morse practice output")) // l10n: localized
                             .accessibilityIdentifier("morse-quick-stop-button")
                     }
+#if DEBUG && os(iOS)
+                    if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseReduceMotionControl") {
+                        Button { reduceMotionForUITests = true } label: {
+                            Text(verbatim: "Enable Reduce Motion for Morse test") // l10n: verbatim DEBUG-only UI test hook
+                        }
+                        .accessibilityIdentifier("morse-enable-reduce-motion-test-button")
+                    }
+#endif
                     MorseVisualPlaybackView(state: visualPlaybackState)
                     if !statusMessage.isEmpty {
                         Text(statusMessage) // l10n: localized

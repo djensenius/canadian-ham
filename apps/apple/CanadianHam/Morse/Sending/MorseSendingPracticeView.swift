@@ -68,7 +68,7 @@ struct MorseSendingPracticeView: View {
         .focusable(!showingExam && presentedResult == nil)
         .focused($keyboardFocus, equals: .practice)
         .onAppear {
-            if !showingExam { keyboardFocus = .practice }
+            focusKeyboardAfterLayout(.practice)
             // Another Morse mode starting playback stops any held key or paddle here.
             playbackCoordinator.register("sending-practice") {
                 stopAllKeying(finalizeStraight: true)
@@ -213,7 +213,7 @@ struct MorseSendingPracticeView: View {
         .navigationTitle("Exam-style check") // l10n: localized
         .focusable(presentedResult == nil)
         .focused($keyboardFocus, equals: .exam)
-        .onAppear { keyboardFocus = .exam }
+        .onAppear { focusKeyboardAfterLayout(.exam) }
         .onKeyPress(phases: [.down, .up]) { press in
             guard showingExam, presentedResult == nil else { return .ignored }
             return handleKeyPress(press)
@@ -222,6 +222,14 @@ struct MorseSendingPracticeView: View {
             if presentedResult == nil, !examText.isEmpty {
                 cancelRunningExam(clearExam: true)
             }
+        }
+    }
+
+    private func focusKeyboardAfterLayout(_ target: KeyboardFocus) {
+        Task { @MainActor in
+            await Task.yield()
+            guard presentedResult == nil, showingExam == (target == .exam) else { return }
+            keyboardFocus = target
         }
     }
 
@@ -428,6 +436,7 @@ struct MorseSendingPracticeView: View {
             examDeadline = Date().addingTimeInterval(TimeInterval(debugExamDurationSeconds))
             examRunning = true
             statusMessage = String(localized: "Sending check started. Send the displayed passage within 3:00.")
+            focusKeyboardAfterLayout(.exam)
             examTimerTask?.cancel()
             examTimerTask = Task { @MainActor in
                 while !Task.isCancelled, examRunning {
