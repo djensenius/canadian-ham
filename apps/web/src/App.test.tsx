@@ -1356,6 +1356,27 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     } finally { vi.useRealTimers(); }
   });
 
+  it("moves focus to the lesson title when an anchorless hint links to the current lesson", async () => {
+    const quiz = lessonQuizzesById.get("QZ-L-005-01-A")!;
+    const originals = quiz.officialQuestionIds.map((id) => hintForQuestion(id, bankId)!);
+    for (const hint of originals) basicQuestionHintsByQuestionId.set(hint.questionId, { ...hint, lessonLink: { lessonId: "L-005-01" } });
+    try {
+      window.location.hash = "#/learn/M5/L-005-01";
+      const user = userEvent.setup();
+      render(<App store={createStore("lesson-anchorless-hint-link")} now={() => fixedNow} />);
+      await screen.findByRole("heading", { name: quiz.id });
+      const section = getLessonQuizSection();
+      while (within(section).queryAllByTestId("answer-choice").length === 0) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      await user.click(within(section).getByRole("button", { name: "Hint" }));
+      await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      await user.click(within(section).getByRole("link", { name: "Review in lesson" }));
+      await waitFor(() => assert.equal(document.activeElement?.id, "lesson-title"));
+      assert.equal(window.location.hash, "#/learn/M5/L-005-01");
+    } finally {
+      for (const hint of originals) basicQuestionHintsByQuestionId.set(hint.questionId, hint);
+    }
+  });
+
   it("preserves the quiz when a hint links to a different lesson", async () => {
     // Current content links each hint to its own lesson; exercise the supported other-lesson route.
     const quiz = lessonQuizzesById.get("QZ-L-005-01-A")!;

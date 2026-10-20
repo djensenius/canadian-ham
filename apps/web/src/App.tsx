@@ -777,7 +777,12 @@ function AppContent({
               if (lesson !== undefined) {
                 navigateToLesson(lesson.moduleId, lessonId, anchor);
                 if (currentLessonId === lessonId && (anchor === undefined || currentLessonAnchor === anchor)) {
-                  document.getElementById(anchor ?? "lesson-title")?.focus();
+                  // Same route: the hash doesn't change, so route focus management won't run. Make the target focusable first.
+                  const target = document.getElementById(anchor ?? "lesson-title");
+                  if (target !== null) {
+                    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+                    target.focus();
+                  }
                 }
               }
             }}
