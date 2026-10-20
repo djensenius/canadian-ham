@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 15:07'
+updated_date: '2026-10-20 15:14'
 labels:
   - content
 dependencies:
@@ -60,4 +60,6 @@ Coordinator figure-plan follow-up: all 15 edited lesson files contain existing f
 Final invariants audit against main 1dca8f3b PASS: all 15 changed lesson front matters, figure directive blocks (including text equivalents), and illustration briefs are byte-identical; all 15 quiz identities, ordered official-question lists, and ordered concept IDs unchanged. No generated-bank/source files or Apple app files changed. No progress migration is needed. Independent reviewer should assess diagnostic distractor quality; heuristics and tests are not a substitute for that review.
 
 Part B M5 complete: 19 faded sets across all six quantitative lessons, with conversion steps, blanks, sanity checks and separate solutions; existing Try-it answers separated from prompts. All 17 checks redesigned around plausible unit, topology, energy, reactance, transformer and measurement misconceptions, with 68 choice-specific feedback notes. Retained all front matter, figure directives and taught facts. Verified new calculations, including LED 316.7 ohms ideal / 330 ohms chosen / about 0.044 W, loaded divider 4.0 V to 2.67 V, ideal transformer 30 V / 24 W / 0.133 A. Strict module quizzes, full originality (0 issues / 0 stale entries), coverage (100/100), links, complete hints and diff checks PASS. All six edited M5 lessons have figure directives for coordinator figure-plan run.
+
+Part B review steering incorporated: read Part A reviewer artifact f39562f8. Manually compared every M5/M6 check against its full officialQuestionIds and lesson Try-its rather than relying on lint. M5 C1/C2 in L-005-05 now test a wrong-topology quarter-total comparison and bypass reuse at a lower frequency; L-005-06 C1 now tests the limits of an ideal transformer calculation using observed core heat. These changed-condition/transfer checks replace possible near-restatements. Further M6 checks redesigned before its module commit; six specified Part A blockers and nits will be repaired separately.
 <!-- SECTION:NOTES:END -->
