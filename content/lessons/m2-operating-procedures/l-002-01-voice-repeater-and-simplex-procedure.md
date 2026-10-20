@@ -61,6 +61,22 @@ For an illustrative setup, a repeater transmits on 146.940 MHz and uses a negati
 - Answer: transmit on 146.340 MHz and receive on 146.940 MHz.
 - Sanity check: a negative offset puts the input below the output.
 
+### Faded practice: program a positive offset
+
+An illustrative repeater output is 145.230 MHz with a positive 600 kHz offset. This is arithmetic practice, not a channel recommendation.
+
+- Given: output = 145.230 MHz; positive offset = 600 kHz = ___ MHz.
+- Find: the radio's transmit frequency.
+- Formula: transmit frequency = output + offset magnitude.
+- Complete: transmit frequency = 145.230 MHz + ___ MHz = ___ MHz.
+- Sanity check: should the transmit setting be above or below the output?
+
+Pause and fill the gaps before checking below.
+
+### Check your work: positive offset
+
+600 kHz = 0.600 MHz. The transmit setting is 145.830 MHz, above the output. The radio still receives on the repeater output.
+
 ### Use simplex for a direct path
 
 Simplex is the direct alternative: both stations use a single frequency for sending and receiving. While on a repeater, listen for the other station on its input channel. If you hear that station clearly, a direct path may work. Both operators should check reliable copy before moving to a suitable simplex channel.
