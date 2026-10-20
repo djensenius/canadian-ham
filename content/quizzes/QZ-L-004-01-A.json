@@ -157,23 +157,23 @@
         },
         {
           "text": {
-            "en": "Only the resistor wattage; its current stays fixed because the LED holds its own drop.",
+            "en": "Raise the wattage rating but keep the resistance, since the LED drop sets the current.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A roughly fixed LED drop leaves more voltage across the same resistor, increasing current as well as heat.",
+            "en": "The approximately fixed LED drop leaves more voltage across the same resistor. Current rises as well as heat, so wattage alone is not the complete check.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Only the resistance; its wattage becomes less important as supply voltage rises.",
+            "en": "Recalculate resistance but keep the old wattage rating, since current control also establishes safe heat dissipation.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Both current-setting resistance and safe heat dissipation matter at the higher supply.",
+            "en": "Current-setting resistance does not by itself establish a safe wattage rating. Check power dissipation at the new operating point.",
             "fr": null
           }
         }

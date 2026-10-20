@@ -78,12 +78,12 @@
       "choices": [
         {
           "text": {
-            "en": "Continuity proves that the two conductors are still safely separated.",
+            "en": "Good conductor continuity is sufficient evidence to keep using the damaged cable.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Continuity along a conductor does not test the insulation between conductors.",
+            "en": "An unbroken path along each conductor does not establish sound insulation between them. The damaged separator needs its own check.",
             "fr": null
           }
         },
@@ -111,12 +111,12 @@
         },
         {
           "text": {
-            "en": "The separator must be sound if both conductors have similar end-to-end resistance.",
+            "en": "Similar end-to-end conductor resistances suggest the cracked separator remains electrically sound.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Equal conductor resistance says little about the insulating barrier between them.",
+            "en": "Those readings describe the conductors, not the separator. Similar resistance cannot verify the insulation between them.",
             "fr": null
           }
         }
@@ -146,34 +146,34 @@
         },
         {
           "text": {
-            "en": "A higher current capacity makes reversed connections safe.",
+            "en": "Extra current capacity is useful protection against accidentally reversing the leads.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A supply capable of more current does not protect a polarity-sensitive circuit from reversed leads.",
+            "en": "A larger available current does not limit reverse-polarity damage. Capacity and connection direction are separate issues.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Matching voltage automatically guarantees matching polarity.",
+            "en": "A matching voltage label is reasonable evidence that the plug polarity also matches.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Voltage magnitude and positive/negative connection direction are separate checks.",
+            "en": "The label gives voltage magnitude, not the plug's positive and negative contact arrangement. Check the wiring specification.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Equal-sized supply leads make the accessory reversible.",
+            "en": "Equal-sized supply leads suggest that either connection direction is suitable.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Wire size does not establish whether the internal circuit tolerates reversed polarity.",
+            "en": "Lead size concerns current handling. It does not show whether the accessory tolerates reversed connections.",
             "fr": null
           }
         }

@@ -21,12 +21,12 @@
       "choices": [
         {
           "text": {
-            "en": "Less current leaves the resistor because some turns into heat.",
+            "en": "Equal current means the warm resistor has almost no voltage drop.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Charge continues around the loop. Energy, rather than current, is converted to heat.",
+            "en": "Heating requires power. With current flowing, the resistor voltage drop accounts for energy converted to heat; warmth is not evidence of negligible voltage.",
             "fr": null
           }
         },
@@ -43,7 +43,7 @@
         },
         {
           "text": {
-            "en": "Equal series current means the lamp and resistor must dissipate equal power.",
+            "en": "Equal series current means the lamp and resistor dissipate equal power.",
             "fr": null
           },
           "isCorrect": false,
@@ -54,12 +54,12 @@
         },
         {
           "text": {
-            "en": "The current must split equally between the two series parts.",
+            "en": "The warmer part takes a larger share of the supply voltage because temperature alone sets that share.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Current splits at parallel branches, not between parts in a single series path.",
+            "en": "Voltage division depends on the parts' electrical behaviour. Temperature alone does not establish which part has the larger voltage drop.",
             "fr": null
           }
         }

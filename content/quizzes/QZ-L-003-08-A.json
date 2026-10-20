@@ -135,23 +135,23 @@
       "choices": [
         {
           "text": {
-            "en": "Approval of the occupied position, because the distance ratio always describes a real antenna.",
+            "en": "The nearby metal can be treated as a minor correction to the calculated reduction.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Real antennas, nearby structures, and reflections can depart from the model. The ratio alone is not an assessment.",
+            "en": "That assumption has not been tested. Nearby structures and reflections can change the actual field relative to the simple model.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Approval whenever SWR is low, because the antenna then has the assumed pattern.",
+            "en": "Low SWR would make the calculated reduction a suitable site assessment.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "SWR measures match, not the actual exposure pattern at that position.",
+            "en": "Low SWR addresses match, not whether the actual field near the occupied position follows the assumed pattern.",
             "fr": null
           }
         },
@@ -168,12 +168,12 @@
         },
         {
           "text": {
-            "en": "Approval whenever the calculated ratio is below the old value, regardless of the old exposure.",
+            "en": "A relative reduction sufficient to assess the position without the old absolute exposure.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A relative reduction does not establish a safe absolute exposure, even if the model applied exactly.",
+            "en": "A relative reduction cannot establish a safe absolute exposure without a baseline, even if the simple model applied exactly.",
             "fr": null
           }
         }

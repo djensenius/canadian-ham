@@ -21,23 +21,23 @@
       "choices": [
         {
           "text": {
-            "en": "The coax-to-tuner input, because every tuner input is balanced.",
+            "en": "The coax-to-tuner input, treating the tuner itself as the start of the balanced system.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The stated new input is coax. The new balance transition is at the output feeding balanced line.",
+            "en": "The replacement has an unbalanced output. Treating the whole tuner as balanced puts the transition at the wrong boundary.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Only the dipole feed point after the balanced-line run.",
+            "en": "The dipole feed point, treating the window-line run as an extension of the unbalanced output.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The balanced line and dipole are already balanced. The changed boundary is earlier.",
+            "en": "Window line is balanced. The balance transition needs attention before that run, not after it.",
             "fr": null
           }
         },
@@ -129,57 +129,57 @@
     {
       "id": "QZ-L-006-01-A-C3",
       "prompt": {
-        "en": "A new coax sample has the same length and DC conductor resistance as an old one, but a different dielectric. Which RF property may differ?",
+        "en": "An older coax jumper passes a low-current continuity check. During a brief transmit test its connector becomes warm and RF readings turn intermittent. Which conclusion fits?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Only the maximum current, because RF propagation ignores insulation.",
+            "en": "The continuity pass makes a connector fault unlikely, so the antenna should be investigated first.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Dielectric affects RF wave speed and characteristic impedance, not just current rating.",
+            "en": "A contact can pass a small test current yet heat or become intermittent under load. The connector symptom still warrants direct inspection.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Only total attenuation, because equal length fixes characteristic impedance.",
+            "en": "The result is ordinary cable attenuation, so the connector can stay if total line loss is acceptable.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Length does not fix Z0. Geometry and dielectric do.",
+            "en": "Ordinary distributed cable loss does not explain intermittent behaviour at a warming connector. A loss budget is not a substitute for checking the contact.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "No RF property, because an ohmmeter comparison is sufficient.",
+            "en": "Retuning at the radio is sufficient if the station-end SWR improves.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A DC ohmmeter does not measure characteristic impedance or propagation speed.",
+            "en": "An improved match does not establish a sound connector. The local heating and intermittent behaviour still need attention.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Velocity factor and characteristic impedance.",
+            "en": "A path exists at low current, but connector contact quality still needs checking before reuse.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Dielectric helps set wave speed and Z0. Equal DC resistance does not make two RF lines equivalent.",
+            "en": "Continuity establishes an unbroken path under the test conditions. It does not establish a sound contact under transmit load; inspect and restore or replace the faulty connection.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "RF feedlines need more specifications than length and DC resistance.",
+        "en": "A low-current continuity test and a transmit-load test answer different questions. Use the connector symptoms to guide the next inspection.",
         "fr": null
       }
     }

@@ -122,7 +122,7 @@ Use the measurement-point formulas from the table.
 - Given: SWR = 2.5:1.
 - Find: reflection coefficient and reflected-power percentage.
 - Formula: coefficient = (SWR - 1) / (SWR + 1); reflected fraction = coefficient x coefficient.
-- Complete: coefficient = (2.5 - 1) / (2.5 + 1) = 1.5 / ___ ≈ ___; reflected fraction ≈ 0.429 x 0.429 ≈ ___, or ___%.
+- Complete: coefficient = (2.5 - 1) / (2.5 + 1) = 1.5 / ___ ≈ ___; reflected fraction ≈ 0.429 x 0.429 ≈ ___, or ___ %.
 - Sanity check: Did you square the voltage ratio before expressing a power percentage?
 
 Fill the gaps before checking below.

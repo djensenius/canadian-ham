@@ -89,12 +89,12 @@
         },
         {
           "text": {
-            "en": "The antenna wire must have become physically longer.",
+            "en": "The lower radio-end reading shows that a larger fraction of power is now absorbed by the antenna.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The stated wire is unchanged. A desk matching network does not alter its physical length.",
+            "en": "The reading describes the radio side of the tuner. It does not measure power absorbed at the unchanged antenna or establish reduced main-line loss.",
             "fr": null
           }
         },
@@ -111,12 +111,12 @@
         },
         {
           "text": {
-            "en": "The remote meter must be faulty because SWR is identical on both sides of any tuner.",
+            "en": "The remote meter probably needs recalibration because the radio-end match is now the reference for the entire line.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A matching network separates different impedance conditions; its two sides need not show the same SWR.",
+            "en": "The measurements are on different sides of a matching network. Their disagreement alone is not evidence that the remote meter needs recalibration.",
             "fr": null
           }
         }
@@ -135,12 +135,12 @@
       "choices": [
         {
           "text": {
-            "en": "The better received signals prove that the higher SWR is an instrument error.",
+            "en": "The better reception is sufficient evidence to treat the higher SWR as a calibration error.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Reception and match are separate observations. Neither alone proves an error.",
+            "en": "Reception and match are separate observations. Improved reception does not establish a calibration error.",
             "fr": null
           }
         },
@@ -157,12 +157,12 @@
         },
         {
           "text": {
-            "en": "The higher reading proves that the new cable wastes more total power as heat.",
+            "en": "The higher SWR is stronger evidence of heating loss than the cable's lower attenuation figure.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A higher SWR alone does not establish total heat loss. The new cable has lower attenuation and may simply reveal more reflection.",
+            "en": "SWR is not a direct measurement of heat loss. Lower attenuation can reveal a reflection that was previously hidden by loss.",
             "fr": null
           }
         },

@@ -78,12 +78,12 @@
       "choices": [
         {
           "text": {
-            "en": "Yes; good VHF propagation proves the same F-region conditions must support HF.",
+            "en": "Yes; better VHF range is evidence that the same upper-atmosphere change should also help HF.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The VHF weather-layer path and HF ionospheric path depend on different regions.",
+            "en": "The described weather-layer VHF path and the ionospheric HF route depend on different parts of the atmosphere.",
             "fr": null
           }
         },
@@ -100,23 +100,23 @@
         },
         {
           "text": {
-            "en": "Yes; an inversion must improve every frequency by the same amount.",
+            "en": "Yes; the inversion should provide a comparable path improvement on HF.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A weather structure is not a universal gain increase across all bands and paths.",
+            "en": "A lower-atmosphere enhancement on VHF does not imply a comparable improvement on an ionospheric HF route.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "No; both observations prove that all VHF openings are sporadic E.",
+            "en": "No; the lake weather change also shifted the ionospheric return point past the HF destination.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The lake inversion points to a lower-atmosphere mechanism, not an automatic E-region explanation.",
+            "en": "The observations do not establish a link between the lake weather structure and the ionospheric return geometry. The paths can change independently.",
             "fr": null
           }
         }
@@ -129,57 +129,57 @@
     {
       "id": "QZ-L-007-03-A-C3",
       "prompt": {
-        "en": "Weak smeared HF fragments are heard inside an area usually skipped by the main sky-wave return. What conclusion is justified?",
+        "en": "A club credits a taller VHF mast for a longer contact. That trial also used more power during an unusual opening. Which follow-up best tests the height claim?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The main return point must have moved to that area, making ordinary message service dependable.",
+            "en": "Repeat the taller-mast trial at still higher power to separate the mast effect from the opening.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Weak scattered fragments do not establish a new reliable main return.",
+            "en": "Changing power again adds another influence. It does not separate the height effect from the original power and propagation changes.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The receiver must be faulty because a skip zone can never contain any energy.",
+            "en": "Compare the taller mast during openings with the shorter mast on ordinary days.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Scatter can redirect a small part of the signal into an area missed by the main path.",
+            "en": "That comparison ties height to different propagation conditions. A range difference could come from the opening instead of the mast.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Scattered energy may be reaching the area without creating a reliable main-hop path.",
+            "en": "Compare mast heights on the same route, frequency, and power under comparable ordinary conditions.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Only a small fraction may arrive over irregular paths, explaining weak and smeared copy.",
+            "en": "Control the other influences and repeat the comparison. This tests height without crediting it for a simultaneous power increase or temporary path enhancement.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The signal must be a surface ground wave because it is closer than the main return.",
+            "en": "Compare a short local contact on the lower mast with a distant contact on the taller mast.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Location alone does not establish ground wave. The weakness and smearing can fit scatter.",
+            "en": "Changing the route and distance changes the test. Two successful contacts on different paths do not isolate the effect of height.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "A skip zone describes the main coverage gap, not a rule that absolutely no scattered energy can arrive there.",
+        "en": "A longer contact after several simultaneous changes does not isolate the effect of antenna height. Compare like conditions to test that claim.",
         "fr": null
       }
     }

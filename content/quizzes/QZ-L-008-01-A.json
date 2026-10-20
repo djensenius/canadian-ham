@@ -23,23 +23,23 @@
       "choices": [
         {
           "text": {
-            "en": "The ferrite has proved that every remaining noise source must be inside the receiver.",
+            "en": "The remaining noise is probably generated inside the receiver, since the cable cure has already been applied.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A remaining symptom does not locate its source. The two current paths respond differently.",
+            "en": "An external noise current can remain when the cure does not address its path. One cable test does not locate the remaining source.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "All noise follows the same path, so the ferrite must have failed between tests.",
+            "en": "The ferrite is probably damaged, since success on one cable current should carry over to the other.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The observations describe common-mode and differential-mode currents, not necessarily a failed part.",
+            "en": "The two current paths interact differently with a whole-cable core. Different results do not by themselves indicate damage.",
             "fr": null
           }
         },
@@ -74,57 +74,57 @@
     {
       "id": "QZ-L-008-01-A-C2",
       "prompt": {
-        "en": "A narrower IF filter removes an adjacent tone from the audio, but a strong off-band source still desensitizes the receiver. What does that result show?",
+        "en": "A noise test combines switching off a charger with rerouting the receiver cable. The noise falls. Which follow-up would best identify which change helped?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The IF filter helps later selectivity but cannot undo overload that already happened at the front end.",
+            "en": "Test the two changes separately with brief, repeatable comparisons.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "The two symptoms occur at different stages. The strong off-band energy must be reduced before the input stage overloads.",
+            "en": "Changing one thing at a time separates their effects. The combined result does not tell whether the charger change, cable route, or both mattered.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Any successful IF filtering proves that the front end is operating linearly.",
+            "en": "Attribute the improvement to the charger because powered devices are more likely sources than cables.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Removing a later unwanted tone does not establish adequate headroom in the earlier input stage.",
+            "en": "That is a hypothesis, not a result of this test. The cable change may have reduced pickup even if the charger was involved.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "An input attenuator is a cost-free cure that leaves weak wanted levels unchanged.",
+            "en": "Attribute the improvement to the cable because it is closer to the receiver.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Attenuation can help overload but also reduces the wanted weak signal. A suitable input filter is preferable when the frequencies can be separated.",
+            "en": "Physical closeness alone does not isolate the cause. The charger was also changed, so its contribution remains unresolved.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "More RF gain must restore sensitivity regardless of the strong off-band source.",
+            "en": "Repeat both changes together several times and use the average to decide which one helped.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Extra input gain can worsen overload. It does not remove the strong signal that uses up front-end headroom.",
+            "en": "Repeating a combined test can confirm the combined effect. It still cannot assign the improvement to either individual change.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "A partial improvement can identify one stage without curing a separate earlier-stage problem.",
+        "en": "A combined test can show improvement without identifying its cause. Separate the changes before choosing which cure to keep.",
         "fr": null
       }
     },
@@ -137,12 +137,12 @@
       "choices": [
         {
           "text": {
-            "en": "Correct rejection frequency guarantees that all wanted power passes without reflection.",
+            "en": "The measured rejection is enough to approve the filter without a wanted-band check.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Frequency response alone does not guarantee a good system match.",
+            "en": "Good rejection at the unwanted frequency does not establish acceptable wanted-band transfer in the installed system.",
             "fr": null
           }
         },
@@ -159,23 +159,23 @@
         },
         {
           "text": {
-            "en": "The filter's centre frequency automatically changes the line's characteristic impedance.",
+            "en": "The rejection measurement is evidence that the cable has taken on the filter's nominal impedance.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The cable's geometry and dielectric set its Z0. Inserting a mismatched network does not redefine the whole line.",
+            "en": "The cable keeps the characteristic impedance set by its own construction. One rejection measurement does not establish the system match.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Adding coax until the station-end reading looks better guarantees that the filter is now matched internally.",
+            "en": "A better station-end reading after adding coax is enough evidence to keep the filter.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Line length can transform a measured impedance under mismatch. It does not make a filter designed for a different impedance equivalent to a correctly matched filter.",
+            "en": "A changed line length can improve a reading through impedance transformation. It does not establish that the filter transfers the wanted signal well in this system.",
             "fr": null
           }
         }

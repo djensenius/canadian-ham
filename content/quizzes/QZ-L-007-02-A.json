@@ -21,12 +21,12 @@
       "choices": [
         {
           "text": {
-            "en": "Both improve equally because a higher lower limit makes every HF band more useful.",
+            "en": "Both plans improve because raising the lower edge indicates stronger support throughout HF.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Raising the lower edge removes low-frequency choices; it does not improve them.",
+            "en": "A higher lower edge excludes more low-frequency choices. It is not evidence that the whole HF range has improved.",
             "fr": null
           }
         },
@@ -43,23 +43,23 @@
         },
         {
           "text": {
-            "en": "14.2 MHz fails first because daytime absorption is always worse at higher HF.",
+            "en": "14.2 MHz is the riskier choice because absorption should be greater at the higher frequency.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Lower-frequency HF generally suffers more D-region absorption. The forecast still includes 14.2 MHz.",
+            "en": "That reverses the lower-HF absorption trend. In the stated forecast, 14.2 MHz remains inside the usable window.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Both must move exactly to 18 MHz because usable choices equal MUF.",
+            "en": "Prefer the 18 MHz boundary for both plans because the upper limit is also the best working point.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "MUF is the upper limit, not a required working frequency. A margin below it is useful.",
+            "en": "The upper limit is a boundary, not a required working point. Planning should allow margin and consider the whole usable window.",
             "fr": null
           }
         }
@@ -78,12 +78,12 @@
       "choices": [
         {
           "text": {
-            "en": "It is automatically suitable because the multiplication is correct.",
+            "en": "It is suitable on the strength of the correct planning-factor calculation.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The arithmetic is correct, but the result lies below the forecast lower edge.",
+            "en": "The multiplication is correct, but the result is below the forecast lower edge. Both boundaries still need checking.",
             "fr": null
           }
         },
@@ -111,12 +111,12 @@
         },
         {
           "text": {
-            "en": "It should be preferred to 10.8 MHz because a lower frequency always suffers less absorption.",
+            "en": "Prefer it to 10.8 MHz because the lower choice should suffer less absorption.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Lower HF can suffer greater absorption. The forecast lower limit excludes the proposed 9.69 MHz, while 10.8 MHz lies inside the window.",
+            "en": "Lower HF can suffer greater absorption. The forecast excludes 9.69 MHz, while 10.8 MHz lies inside the window.",
             "fr": null
           }
         }
@@ -135,12 +135,12 @@
       "choices": [
         {
           "text": {
-            "en": "Yes, because every path through the same region has the same maximum frequency.",
+            "en": "Yes, using the oblique forecast as a common frequency limit for the whole region.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Launch geometry matters. A slant path can return above the vertical limit.",
+            "en": "A slant path and a near-vertical path have different geometry. A frequency returned obliquely may pass through on the near-vertical route.",
             "fr": null
           }
         },
@@ -157,12 +157,12 @@
         },
         {
           "text": {
-            "en": "Yes, because a high-angle path always needs less bending than a shallow path.",
+            "en": "Yes, because a high-angle path should require less bending than the oblique path.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The shallow path needs less bending. A nearly vertical path must use a lower suitable frequency.",
+            "en": "The nearly vertical path needs a greater bend to return to the nearby region. The oblique forecast cannot simply be reused.",
             "fr": null
           }
         },

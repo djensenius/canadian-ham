@@ -128,57 +128,57 @@
     {
       "id": "QZ-L-006-05-A-C3",
       "prompt": {
-        "en": "An end-fed wire setup produces transmit audio distortion that changes when station leads move. Which path deserves investigation?",
+        "en": "A station replaces a single-band dipole with a trap antenna for several related bands. An earlier unwanted-output check used the old antenna. What should be reconsidered?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Unwanted RF returning on station wiring because matching or counterpoise control is poor.",
+            "en": "Recheck radiation on related bands; the new antenna sections may radiate existing unwanted output more effectively.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Lead-sensitive symptoms suggest RF in the operating area. Investigate return paths and common-mode control.",
+            "en": "The antenna change can alter how unwanted transmitter energy reaches the air. A satisfactory result with the old antenna does not validate the new arrangement.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Only speech-processing compression, because all transmitted distortion begins in audio settings.",
+            "en": "Use the low SWR on the operating band as evidence that unwanted output on other bands is suppressed.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Audio settings can cause distortion, but lead-sensitive changes point to RF coupling that also needs investigation.",
+            "en": "Match on the wanted band does not measure suppression on other bands. Those responses need their own checks.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Ordinary linear feedline attenuation, treating every reduction in RF power as audio distortion.",
+            "en": "Keep the earlier result because the transmitter settings and wanted frequency have not changed.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Linear attenuation reduces signal level rather than creating the described audio distortion. Lead-sensitive changes call for an RF coupling investigation.",
+            "en": "Unchanged settings do not keep the radiating system unchanged. The new antenna can respond differently to the same unwanted energy.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "A guaranteed harmonic, because every lead-sensitive fault is an integer multiple.",
+            "en": "Rely on the traps to attenuate output on bands other than the one currently selected.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Lead sensitivity does not establish a harmonic relationship. Measure before selecting that diagnosis.",
+            "en": "Traps isolate sections at selected frequencies. Other sections can still respond at related bands, so traps are not a substitute for emission checks.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Use the physical clue to trace RF coupling rather than assigning a transmitter-emission label without evidence.",
+        "en": "Changing a radiating system can change unwanted radiation even with the same transmitter settings. Recheck the complete operating arrangement.",
         "fr": null
       }
     }

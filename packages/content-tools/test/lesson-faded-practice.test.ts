@@ -42,11 +42,14 @@ for (const module of modulePractice) {
     for (const lessonId of Object.keys(module.lessons)) {
       const quizPath = fileURLToPath(new URL(`../../../content/quizzes/QZ-${lessonId}-A.json`, import.meta.url));
       const quiz = JSON.parse(await readFile(quizPath, "utf8")) as {
-        conceptChecks: { id: string; prompt: { en: string }; choices: { feedback: { en: string } }[] }[];
+        conceptChecks: { id: string; prompt: { en: string }; choices: { text: { en: string }; isCorrect: boolean; feedback: { en: string } }[] }[];
       };
       for (const check of quiz.conceptChecks) {
         assert.doesNotMatch(check.prompt.en, /\bNOT\b|\b(?:not true|would not|spot the error)\b/iu, check.id);
         assert.equal(new Set(check.choices.map((choice) => choice.feedback.en)).size, check.choices.length, `${check.id}: each choice needs its own diagnosis`);
+        const wrong = check.choices.filter((choice) => !choice.isCorrect);
+        const absoluteCue = /\b(?:must|always|guarantee\w*|automatic\w*|prove\w*|necessarily|only)\b/iu;
+        assert.ok(wrong.some((choice) => !absoluteCue.test(choice.text.en)), `${check.id}: avoid absolute-word cues in every distractor`);
       }
     }
   });
@@ -70,12 +73,19 @@ const reviewedTransfers = [
   { lessonId: "L-004-01", check: 3, prompt: /higher supply voltage.*resistor.*unchanged/u, answer: /raises current and heat/u },
   { lessonId: "L-004-02", check: 1, prompt: /control pin.*fan/u, answer: /supply provides the load energy/u },
   { lessonId: "L-004-02", check: 3, prompt: /FET.*triode.*interchangeable/u, answer: /electric field.*separate current path/u },
+  { lessonId: "L-005-05", check: 2, prompt: /heavier load.*dips/u, answer: /draws stored energy faster/u, excludedContent: /bypass|reactance/iu },
+  { lessonId: "L-005-06", check: 2, prompt: /steady DC.*brief pulse/u, answer: /field changes during switching/u, excludedContent: /voltmeter|ammeter|high resistance|low resistance/iu },
+  { lessonId: "L-006-01", check: 3, prompt: /low-current continuity.*intermittent/u, answer: /connector contact quality.*checking/u, excludedContent: /velocity factor|dielectric/iu },
+  { lessonId: "L-006-05", check: 3, prompt: /trap antenna.*unwanted-output check/u, answer: /Recheck radiation on related bands/u, excludedContent: /audio distortion|counterpoise|RF feedback/iu },
+  { lessonId: "L-007-03", check: 3, prompt: /taller VHF mast.*more power/u, answer: /same route, frequency, and power/u, excludedContent: /skip zone|scatter|ground wave/iu },
+  { lessonId: "L-008-01", check: 2, prompt: /switching off a charger.*rerouting/u, answer: /changes separately/u, excludedContent: /IF filter|attenuator|suitable input filter/iu },
+  { lessonId: "L-008-02", check: 2, prompt: /metal cover.*removed for cooling/u, answer: /Refit the cover.*repeat the check/u, excludedContent: /keying|click|symbol rate|rise time/iu },
 ];
 
-for (const { lessonId, check, prompt, answer } of reviewedTransfers) {
+for (const { lessonId, check, prompt, answer, excludedContent } of reviewedTransfers) {
   test(`QZ-${lessonId}-A-C${check} retains the reviewed transfer instead of the old recognition item`, async () => {
     const quiz = JSON.parse(await readFile(fileURLToPath(new URL(`../../../content/quizzes/QZ-${lessonId}-A.json`, import.meta.url)), "utf8")) as {
-      conceptChecks: { id: string; prompt: { en: string }; choices: { text: { en: string }; isCorrect: boolean }[] }[];
+      conceptChecks: { id: string; prompt: { en: string }; explanation: { en: string }; choices: { text: { en: string }; isCorrect: boolean; feedback: { en: string } }[] }[];
     };
     const concept = quiz.conceptChecks.find((item) => item.id === `QZ-${lessonId}-A-C${check}`);
     assert.ok(concept);
@@ -83,6 +93,10 @@ for (const { lessonId, check, prompt, answer } of reviewedTransfers) {
     const correct = concept.choices.filter((choice) => choice.isCorrect);
     assert.equal(correct.length, 1);
     assert.match(correct[0]!.text.en, answer);
+    if (excludedContent) {
+      const disclosedContent = [concept.prompt.en, concept.explanation.en, ...concept.choices.flatMap((choice) => [choice.text.en, choice.feedback.en])].join("\n");
+      assert.doesNotMatch(disclosedContent, excludedContent, `${concept.id}: the former overlapping answer must not return in any option, feedback, or explanation`);
+    }
   });
 }
 

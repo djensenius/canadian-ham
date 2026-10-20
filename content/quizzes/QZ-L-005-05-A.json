@@ -73,57 +73,57 @@
     {
       "id": "QZ-L-005-05-A-C2",
       "prompt": {
-        "en": "A bypass capacitor chosen to shunt unwanted RF is reused against much lower-frequency interference. With its value unchanged, why might it shunt less effectively?",
+        "en": "A supply has a smoothing capacitor after its rectifier. A heavier load makes the dips between charging peaks deeper. Which explanation fits?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Its reactance is higher at the lower frequency.",
+            "en": "The load draws stored energy faster between charging peaks.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "A higher capacitive reactance gives the unwanted current a harder shunt path.",
+            "en": "The capacitor has to support a larger load between recharges. More of its stored energy is used in that interval, so the voltage dips farther.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Its reactance is lower at the lower frequency.",
+            "en": "The capacitor voltage rating sets a slower recharge schedule under heavier load.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "That reverses the capacitor trend and would predict an easier shunt path.",
+            "en": "The voltage rating is a limit for the part, not a timing control. It does not set when the rectifier can recharge it.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Its reactance stays unchanged because its capacitance label has not changed.",
+            "en": "The deeper dips mean the capacitor has permanently used up its storage capacity.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A fixed capacitance still has frequency-dependent reactance. The label alone does not fix its opposition.",
+            "en": "Discharging uses stored energy, not the ability to store it again. The next charging peak can replenish that energy.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Only lead length matters, so the capacitor's frequency response can be ignored.",
+            "en": "The heavier load increases the energy stored between peaks, causing the deeper dips.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Lead layout can matter, but the capacitor's reactance still changes with frequency and affects the shunt path.",
+            "en": "The load draws energy from the capacitor between peaks. It does not add energy during that interval.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "A cure selected for one frequency range may work poorly in another, even with the same connection.",
+        "en": "A smoothing capacitor supports the load between charging peaks. A larger load can deepen the voltage dips without changing the capacitor itself.",
         "fr": null
       }
     },

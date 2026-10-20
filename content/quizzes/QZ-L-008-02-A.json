@@ -74,57 +74,57 @@
     {
       "id": "QZ-L-008-02-A-C2",
       "prompt": {
-        "en": "A technician smooths a CW carrier's rise and fall while keeping carrier frequency and symbol rate unchanged. Nearby clicking energy falls. Which conclusion fits?",
+        "en": "A bench transmitter passes an unwanted-output check with its metal cover fitted. The cover is then removed for cooling. What should happen before returning it to on-air use?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Smoothing the envelope reduced side energy without requiring a change in carrier frequency or sending speed.",
+            "en": "Refit the cover and repeat the check in the intended operating configuration.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "The edge shape affects occupied bandwidth even when the centre frequency and timing rate stay fixed.",
+            "en": "The cover forms part of the shielding and coupling environment. Validate the configuration that will actually be used, rather than carrying over an earlier result.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The carrier frequency must have fallen because a narrower signal always has a lower centre frequency.",
+            "en": "Accept the old result if the RF drive setting is unchanged.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Bandwidth and centre frequency are separate. The measured carrier frequency stayed unchanged.",
+            "en": "The same drive setting does not preserve the shielding or internal coupling after the cover is removed.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The sending speed must have fallen because edge shape and symbol rate are the same quantity.",
+            "en": "Accept the uncovered setup if its lower temperature gives a steadier power reading.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Rise and fall shape can change while symbol timing stays fixed.",
+            "en": "A steadier wanted-power reading does not establish acceptable unwanted output. Cooling and emission checks answer different questions.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Only the local sidetone changed, so the RF spectrum must be identical.",
+            "en": "Use a good antenna SWR reading to extend the earlier bench result to the uncovered setup.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The observation is reduced nearby RF energy. A local sidetone is not a measurement of that spectrum.",
+            "en": "The antenna match does not measure the effect of a missing shield. It cannot validate the altered transmitter configuration.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Separate carrier frequency, keying rate, and envelope shape when interpreting a transmitter test.",
+        "en": "A test result applies to the configuration tested. A shielding change needs validation before the transmitter is used on air.",
         "fr": null
       }
     },
@@ -137,12 +137,12 @@
       "choices": [
         {
           "text": {
-            "en": "The filter must be ineffective because any working harmonic filter also restores clipped peaks.",
+            "en": "The residual clipping is evidence to replace the harmonic filter before investigating the transmitter stages.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A harmonic filter can reduce higher-frequency multiples without restoring linear operation in an overdriven stage.",
+            "en": "The harmonic reduction shows that the filter is doing useful work. It does not repair waveform clipping in a separate stage.",
             "fr": null
           }
         },

@@ -21,34 +21,34 @@
       "choices": [
         {
           "text": {
-            "en": "It must move farther away because layer height is the only relevant change.",
+            "en": "A farther return is the better estimate, using the height change and neglecting the angle change.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A higher region lengthens the path at fixed angle, but the launch angle also changed.",
+            "en": "Greater region height lengthens the path at fixed angle, but the angle also changed. Its opposing effect cannot be discarded without comparing the changes.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "It must move closer because launch angle is the only relevant change.",
+            "en": "A closer return is the better estimate, using the angle change and neglecting the height change.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A higher launch angle shortens skip at fixed region height, but the height also changed.",
+            "en": "A higher angle shortens skip at fixed region height, but region height also rose. The sizes of both changes matter.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The changes must cancel exactly.",
+            "en": "The return should stay about where it was, treating the opposing changes as equal.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Opposing trends do not establish equal effects. Their sizes matter.",
+            "en": "Opposing trends do not establish equal effects. Their magnitudes are needed before estimating the net movement.",
             "fr": null
           }
         },
@@ -89,34 +89,34 @@
         },
         {
           "text": {
-            "en": "Higher frequency follows terrain more closely and automatically extends ground-wave coverage.",
+            "en": "Higher frequency should follow the shoreline more closely and extend surface-wave coverage.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "That reverses the frequency trend. Higher-frequency ground wave is usually less useful over the same surface route.",
+            "en": "That reverses the frequency trend. Higher-frequency ground wave generally becomes less useful over the same surface route.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "A higher band automatically replaces the surface path with an F2 return at the same checkpoints.",
+            "en": "A higher band should replace the surface path with a useful F2 return at the old checkpoints.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A useful sky-wave path depends on frequency, ionization, and geometry; it does not automatically serve the old ground-wave area.",
+            "en": "A sky-wave path depends on ionization and geometry as well as frequency. It need not cover the former surface-wave checkpoints.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Only antenna size changes, leaving useful ground-wave range fixed.",
+            "en": "Allow for smaller antennas but keep the earlier surface-wave coverage estimate.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Frequency affects propagation as well as antenna dimensions.",
+            "en": "The frequency change affects propagation, not just antenna dimensions. The former coverage estimate needs rechecking.",
             "fr": null
           }
         }
@@ -135,12 +135,12 @@
       "choices": [
         {
           "text": {
-            "en": "Distance arithmetic alone guarantees coverage if every hop scale was added correctly.",
+            "en": "The added hop lengths provide enough evidence to list the route as routine coverage.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "That checks only map distance, not current ionization, launch angles, or losses.",
+            "en": "The sum checks map distance. It does not establish current ionization, suitable launch angles, or adequate link strength over the whole route.",
             "fr": null
           }
         },
@@ -157,23 +157,23 @@
         },
         {
           "text": {
-            "en": "All hops retain the original signal strength because surface reflection restores energy.",
+            "en": "Surface reflections largely restore the signal, so hop count adds little to the loss budget.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Reflection redirects some energy; it does not regenerate the signal or replace losses.",
+            "en": "A surface reflection redirects part of the arriving energy. It does not regenerate losses accumulated along the path.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Increasing power guarantees that every planned sky-wave return occurs at the drawn point.",
+            "en": "A modest power reserve should make up for uncertainty in where the planned hops return.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Power can affect link strength but does not set the return geometry.",
+            "en": "Power can improve link strength along a usable path. It does not control the return geometry or replace a missing path.",
             "fr": null
           }
         }

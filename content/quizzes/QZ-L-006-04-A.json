@@ -21,34 +21,34 @@
       "choices": [
         {
           "text": {
-            "en": "A reflector only screens unwanted signals, so the forward radiation pattern should stay unchanged.",
+            "en": "The reflector mainly screens reception from behind, so little change in the forward transmit pattern is expected.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A reflector is a coupled parasitic element that re-radiates energy and helps shape the whole pattern.",
+            "en": "A coupled parasitic element helps shape both receive and transmit patterns. It is not merely a screen for unwanted received signals.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Only the feed-point match can change; an intact driven element preserves the original pattern.",
+            "en": "The main change should be feed-point match, with the intact driven element retaining the old beam shape.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "An intact driven element does not preserve the coupled array structure when another element is lost.",
+            "en": "The driven element alone does not preserve the coupled array structure. Losing a parasitic element can change the pattern as well as the match.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Removing metal must improve forward gain by reducing losses.",
+            "en": "Forward gain should improve slightly because removing metal reduces resistive loss.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A parasitic element is part of the intended pattern-forming structure. Removing it does not guarantee a gain improvement.",
+            "en": "That overlooks the element's pattern-forming role. A reduction in metal does not establish an improvement in forward gain.",
             "fr": null
           }
         },
@@ -111,12 +111,12 @@
         },
         {
           "text": {
-            "en": "The Yagi is omnidirectional if its SWR is low.",
+            "en": "The Yagi has comparable horizontal coverage to the vertical, but at a higher level in each direction.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A good impedance match does not erase Yagi directivity.",
+            "en": "Yagi gain is not a uniform increase around the compass. Its pattern concentrates energy in some directions at the expense of others.",
             "fr": null
           }
         }
@@ -168,12 +168,12 @@
         },
         {
           "text": {
-            "en": "B is about 5.5 dB higher, after adding the reference offset twice to B before comparison.",
+            "en": "A is about 2.9 dB higher because the dipole-reference figure should be multiplied by 1.62.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The conversion is applied once and in the proper direction. Adding 4.2 dB to B incorrectly gives 12.2, then 12.2 - 6.7 = 5.5.",
+            "en": "That treats a logarithmic gain number as a linear power ratio: 6.7 x 1.62 ≈ 10.9. Changing reference requires an additive offset, not multiplication of the dB figure.",
             "fr": null
           }
         }

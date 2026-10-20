@@ -77,12 +77,12 @@
       "choices": [
         {
           "text": {
-            "en": "Whether the first-cut formula guarantees identical installed resonance.",
+            "en": "Small cutting errors, treating the first-cut dimensions as a finished installed design.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A first-cut estimate is not a guarantee. Nearby objects can change installed behaviour.",
+            "en": "Cutting accuracy is worth checking, but the nearby metal is a known difference between installations. A first-cut estimate is not a finished installed design.",
             "fr": null
           }
         },
@@ -99,23 +99,23 @@
         },
         {
           "text": {
-            "en": "Whether changing coax length will necessarily make both wires physically resonant together.",
+            "en": "Coax length, treating it as the main adjustment for the wire's own resonance.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Cable length can change the impedance seen at the radio under mismatch, but it does not guarantee equal antenna resonance.",
+            "en": "Cable length can alter the impedance seen at the radio under mismatch. It does not resolve the effect of nearby metal on the wire's resonance.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Whether identical conductor diameter makes installation surroundings irrelevant.",
+            "en": "Conductor diameter, treating equal wire size as enough to disregard the siding.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Equal diameter does not remove the effects of nearby objects, insulation, height, or end conditions.",
+            "en": "Equal wire diameter does not remove environmental effects. Nearby objects can still alter the electrical behaviour of the installed dipole.",
             "fr": null
           }
         }

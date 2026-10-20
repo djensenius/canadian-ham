@@ -22,12 +22,12 @@
       "choices": [
         {
           "text": {
-            "en": "The readings should be treated as apparent power only, because core heating cannot affect real input power.",
+            "en": "The extra input is probably reactive loading rather than energy lost as heat.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The stated readings are real power in watts. Energy lost as core heat contributes to real input power.",
+            "en": "Reactive loading can affect VA and current, but the observations here include extra real power in watts and a warm core. Heat loss contributes to that real input.",
             "fr": null
           }
         },
@@ -55,12 +55,12 @@
         },
         {
           "text": {
-            "en": "The difference proves a meter fault, because ideal power equality must also hold in a warm real transformer.",
+            "en": "A meter offset is the better explanation because equal-power calculations apply beyond the ideal model.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A meter fault is possible in general, but the ideal lossless rule does not justify dismissing observed heat loss in real equipment.",
+            "en": "The calculation assumes away losses. Extending that assumption to a warm real transformer is not a reason to dismiss the heat loss as a meter offset.",
             "fr": null
           }
         }
@@ -73,57 +73,57 @@
     {
       "id": "QZ-L-005-06-A-C2",
       "prompt": {
-        "en": "A learner inserts a voltmeter in series with a lamp. The lamp goes dark. Which explanation best fits?",
+        "en": "In a low-energy, current-limited bench demonstration, a transformer primary is switched to steady DC instead of AC. The secondary shows a brief pulse, then no sustained voltage. Why?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The voltmeter's high resistance restricts current in the only path.",
+            "en": "The field changes during switching, but the steady field does not sustain an induced secondary voltage.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "A voltmeter belongs across the lamp. In series, its high resistance greatly reduces lamp current.",
+            "en": "Induction depends on a changing magnetic field. The connection transient changes the field; steady DC does not keep repeating that change.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The meter's low resistance has shorted the lamp.",
+            "en": "The field needs more settling time before a continuous secondary voltage develops.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Low resistance is the ideal ammeter behaviour. A voltmeter normally has high input resistance.",
+            "en": "Once primary current is steady, waiting longer does not provide the changing field needed for sustained induction.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The meter adds a normal second parallel branch and steals all lamp current.",
+            "en": "The secondary needs more turns to maintain output from the steady field.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The stated connection is series, not parallel; there is no added branch around the lamp.",
+            "en": "More secondary turns can change the voltage during a field change. They cannot make a steady field keep inducing voltage.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Any meter must be in series, so the lamp must have failed first.",
+            "en": "Reversing the DC leads would turn the brief pulse into a continuous output.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Series is appropriate for current measurement. Voltage measurement uses a parallel connection.",
+            "en": "Reversing the leads changes the direction of the switching transient. It does not make the eventual DC field vary continuously.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Connection and meter resistance work together: a voltmeter samples a voltage without carrying load current.",
+        "en": "A transformer needs continuing magnetic-field changes for sustained induction. A one-time change can produce a pulse without providing continuous secondary output.",
         "fr": null
       }
     },

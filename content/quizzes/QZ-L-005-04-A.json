@@ -43,12 +43,12 @@
         },
         {
           "text": {
-            "en": "The output equals the dB value expressed in watts.",
+            "en": "The output cannot be compared with the input until the starting wattage is known.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "dB is a ratio, not an absolute power reading.",
+            "en": "A starting wattage is needed for an absolute output value. Equal opposing dB ratios are enough to compare input and output levels.",
             "fr": null
           }
         },

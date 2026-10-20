@@ -32,34 +32,34 @@
         },
         {
           "text": {
-            "en": "Check only connector fit and nominal voltage against the radio label.",
+            "en": "Treat matching connector fit and nominal voltage as sufficient for this pack.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A fitting connector and nominal voltage do not establish polarity, protection, charging compatibility, or load capability.",
+            "en": "Those checks do not establish suitable charging, protection, or load behaviour for a lithium-based pack.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Check only that the pack can deliver the radio's transmit current.",
+            "en": "Treat adequate transmit-current capability as sufficient, even with a charger from a different battery type.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Current capability matters, but it does not establish safe charging, voltage range, or protection.",
+            "en": "Load capability and charging compatibility are different checks. A charger must suit the pack's chemistry and specifications.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Check only that an existing charger has the same nominal voltage as the pack.",
+            "en": "Use the existing charger if its nominal voltage matches, since that is a reasonable chemistry check.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Matching nominal voltage alone does not establish the correct charging method for the chemistry and pack design.",
+            "en": "Equal nominal voltage does not establish compatible chemistry or charge control. Use the pack's specified charging method.",
             "fr": null
           }
         }
@@ -157,23 +157,23 @@
         },
         {
           "text": {
-            "en": "Confirm only that no-load DC voltage matches the radio requirement.",
+            "en": "Accept the idle voltage check as a useful substitute for an RF noise test.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "No-load voltage is useful but does not show loaded behaviour or noise coupled into the radio.",
+            "en": "Correct idle DC voltage does not establish clean receiver or transmitter operation with the supply installed.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Confirm only that the loaded DC voltage stays within the radio range.",
+            "en": "Accept steady loaded DC voltage as evidence that switching noise is adequately suppressed.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Loaded voltage matters, but a steady DC reading can miss RF hash or transmitted noise. Check signal quality too.",
+            "en": "Good regulation and RF cleanliness are different properties. The installed supply still needs a signal-quality check.",
             "fr": null
           }
         }
