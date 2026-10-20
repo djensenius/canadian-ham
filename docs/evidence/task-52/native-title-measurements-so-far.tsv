@@ -1,0 +1,70 @@
+run	interfaceLanguage	textSize	surface	categoryID	nativeFrameWidthPt	nativeFrameHeightPt	reference17PtWidth	fullAccessibilityTitle
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	B-001	236.66666666666669	25.33333333333333	196.49508047103882	Règlements et politiques
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	B-002	251.0	25.33333333333333	208.84342277050018	Exploitation et procédures
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	B-003	314.0	25.33333333333333	342.7337739467621	Montage d'une station, pratique et sécurité
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	B-004	236.66666666666669	25.33333333333333	196.30279660224915	Composants des circuits
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	B-005	314.0	25.33333333333333	291.2502291202545	Éléments et théorie de l'électronique
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	B-006	314.0	25.33333333333333	352.99769401550293	Descentes d'antenne et systèmes d'antenne
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	B-007	314.0	25.33333333333333	316.2199133634567	Propagation des ondes radioélectriques
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	B-008	241.66666666666663	25.33333333333333	200.93099689483643	Brouillage et suppression
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	A-001	158.0	25.333333333333343	130.59329545497894	Théorie avancée
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	A-002	314.0	25.333333333333343	408.7885296344757	Notions avancées sur les composants et les circuits
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	A-003	82.66666666666669	25.333333333333343	68.19380784034729	Mesures
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	A-004	121.66666666666669	25.333333333333343	100.74490809440613	Alimentation
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	A-005	314.0	25.333333333333343	287.71791434288025	Émetteurs, modulation et traitement
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	A-006	110.0	25.333333333333343	90.86719524860382	Récepteurs
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	session	A-007	314.0	25.333333333333343	454.36220598220825	Descentes d'antenne - adaptation et systèmes d'antenne
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	module	B-005	352.66666666666674	71.66666666666666	229.80331897735596	Basic Electronics and Theory
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	module	B-004	357.0	71.66666666666666	158.3530879020691	Circuit Components
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	module	B-006	342.0	71.66666666666666	253.42949056625366	Feedlines and Antenna Systems
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	module	B-003	346.33333333333326	71.66666666666666	301.5727653503418	Station Assembly, Practice and Safety
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	module	B-007	353.3333333333333	71.66666666666666	193.04188454151154	Radio Wave Propagation
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	module	B-008	368.66666666666674	71.66666666666666	235.01351630687714	Interference and Suppression
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	module	B-002	353.66666666666674	71.66666666666666	208.70928490161896	Operating and Procedures
+earlier-leading-inclusive-helper-fr-ax	fr	accessibility-xxxl	module	B-001	360.0	71.66666666666666	192.67300641536713	Regulations and Policies
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	B-001	232.33333333333331	25.33333333333333	192.67300641536713	Regulations and Policies
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	B-002	251.33333333333331	25.33333333333333	208.70928490161896	Operating and Procedures
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	B-003	314.0	25.33333333333333	301.5727653503418	Station Assembly, Practice and Safety
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	B-004	191.33333333333331	25.33333333333333	158.3530879020691	Circuit Components
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	B-005	276.6666666666667	25.33333333333333	229.80331897735596	Basic Electronics and Theory
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	B-006	305.6666666666667	25.33333333333333	253.42949056625366	Feedlines and Antenna Systems
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	B-007	233.0	25.33333333333333	193.04188454151154	Radio Wave Propagation
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	B-008	282.6666666666667	25.33333333333333	235.01351630687714	Interference and Suppression
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	A-001	169.0	25.33333333333333	139.6155252456665	Advanced Theory
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	A-002	314.0	25.33333333333333	284.2729320526123	Advanced Components and Circuits
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	A-003	143.0	25.33333333333333	118.29567587375641	Measurements
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	A-004	147.33333333333331	25.33333333333333	122.0672744512558	Power Supplies
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	A-005	314.0	25.33333333333333	325.5644347667694	Transmitters, Modulation and Processing
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	A-006	93.66666666666666	25.33333333333333	77.44278717041016	Receivers
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	session	A-007	314.0	25.33333333333333	343.563645362854	Feedlines - Matching and Antenna Systems
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	module	B-005	352.66666666666674	71.66666666666666	229.80331897735596	Basic Electronics and Theory
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	module	B-004	357.0	71.66666666666666	158.3530879020691	Circuit Components
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	module	B-006	342.0	71.66666666666666	253.42949056625366	Feedlines and Antenna Systems
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	module	B-003	346.33333333333326	71.66666666666666	301.5727653503418	Station Assembly, Practice and Safety
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	module	B-007	353.3333333333333	71.66666666666666	193.04188454151154	Radio Wave Propagation
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	module	B-008	368.66666666666674	71.66666666666666	235.01351630687714	Interference and Suppression
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	module	B-002	353.66666666666674	71.66666666666666	208.70928490161896	Operating and Procedures
+earlier-leading-inclusive-helper-en-ax	en	accessibility-xxxl	module	B-001	360.0	71.66666666666666	192.67300641536713	Regulations and Policies
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	B-001	193.0	20.66666666666667	192.67300641536713	Regulations and Policies
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	B-002	209.0	20.66666666666667	208.70928490161896	Operating and Procedures
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	B-003	301.6666666666667	20.66666666666667	301.5727653503418	Station Assembly, Practice and Safety
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	B-004	158.66666666666669	20.66666666666667	158.3530879020691	Circuit Components
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	B-005	230.0	20.66666666666667	229.80331897735596	Basic Electronics and Theory
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	B-006	253.66666666666663	20.66666666666667	253.42949056625366	Feedlines and Antenna Systems
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	B-007	193.33333333333331	20.66666666666667	193.04188454151154	Radio Wave Propagation
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	B-008	235.33333333333331	20.66666666666667	235.01351630687714	Interference and Suppression
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	A-001	139.66666666666663	20.66666666666667	139.6155252456665	Advanced Theory
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	A-002	284.3333333333333	20.66666666666667	284.2729320526123	Advanced Components and Circuits
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	A-003	118.33333333333331	20.66666666666667	118.29567587375641	Measurements
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	A-004	122.33333333333331	20.66666666666667	122.0672744512558	Power Supplies
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	A-005	314.0	20.66666666666667	325.5644347667694	Transmitters, Modulation and Processing
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	A-006	77.66666666666666	20.66666666666667	77.44278717041016	Receivers
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	session	A-007	314.0	20.66666666666667	343.563645362854	Feedlines - Matching and Antenna Systems
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	module	B-005	351.0	40.66666666666667	229.80331897735596	Basic Electronics and Theory
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	module	B-004	316.66666666666663	40.66666666666667	158.3530879020691	Circuit Components
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	module	B-006	355.3333333333333	40.66666666666667	253.42949056625366	Feedlines and Antenna Systems
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	module	B-003	355.66666666666674	40.66666666666667	301.5727653503418	Station Assembly, Practice and Safety
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	module	B-007	358.66666666666674	40.66666666666667	193.04188454151154	Radio Wave Propagation
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	module	B-008	364.33333333333326	40.66666666666667	235.01351630687714	Interference and Suppression
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	module	B-002	359.0	40.66666666666667	208.70928490161896	Operating and Procedures
+glyph-helper-c7365f58-en-default-sidebar-unresolved	en	default	module	B-001	360.66666666666674	40.66666666666667	192.67300641536713	Regulations and Policies
