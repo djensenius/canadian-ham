@@ -1,11 +1,11 @@
 ---
 id: TASK-46.6
 title: Faded practice and stronger concept checks
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 15:45'
+updated_date: '2026-10-20 15:55'
 labels:
   - content
 dependencies:
@@ -27,7 +27,7 @@ For quantitative lessons, add one partly worked practice problem after each work
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Every lesson with calculations has at least one faded practice problem
-- [x] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
+- [ ] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -38,6 +38,8 @@ For quantitative lessons, add one partly worked practice problem after each work
 3. Apply the Part A review steering: redesign the six specified M3/M4 overlaps as transfers, fix distractor/feedback/spacing notes, and make M2 Try-its independent. Include the supervisor-approved cause-based explanation correction.
 4. Require complete feedback by default, retain legacy schema/reader compatibility, extend source-named regressions, and document the authoring contract. Run requested validation, audit frozen-content invariants, and list edited figure lessons.
 5. Per explicit user direction, verify and close parent TASK-46.6 with both parts evidence, leaving TASK-46.6.1 To Do. Independent branch review and the coordinator figure plan remain required before a PR; no PR opened by this worker.
+
+6. Re-review fixes: read full bank records and Try-its for all seven replacement/transfer checks, replace implausible distractors, audit M2–M8 option wording for absolute/prefix giveaways, update authoring docs and spacing, then run all requested checks before re-closing AC #2.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -114,6 +116,8 @@ Coordinator figure-plan list (all 31 edited lessons across both parts; directive
 Run the existing CanadianHamLessonFigures plan once for this complete content batch, including Ohm’s law integrations; worker did not run xbuild.
 
 AC #1 evidence (both parts): 67 source-tested faded sets in every quantitative lesson (30 total); 74/74 focused regressions verify completion labels/blanks before separate solutions, plus the qualitative M6 exception and reference-only M1. AC #2 evidence: all 92 checks reviewed through Part A review plus the six repaired overlaps and Part B manual bank/Try-it comparisons; every choice has distinct diagnostic feedback (368 notes). Default and explicit strict checker, schema validation, overlap lint and all module feedback/no-negative-stem regressions PASS. Source implementation final commit dea1b6a3beb5daf64248f13f0143cc48f0bf9872. Parent closure follows the explicit user instruction and does not imply Apple subtask completion or independent reviewer approval.
+
+Reopened after independent re-review REQUEST CHANGES at 48dcc7cb; AC #2 unchecked pending transfer-check, distractor and wording repairs. No PR will be opened by this worker.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
