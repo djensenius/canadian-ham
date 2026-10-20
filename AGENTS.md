@@ -74,10 +74,11 @@ platform) and share one build lock, so don't run them by reflex.
   after a commit that only changes `.backlog/` or docs.
 - **Fix rounds:** rerun only the failing or changed tests with `-only-testing:`; the single full
   run happens in the merge batch (above).
-- **Lesson figure audits:** the per-lesson figure audits (`CanadianHamLessonFiguresUITests`) run
+- **Lesson figure audits:** the per-lesson figure audits (`CanadianHamLessonFiguresUITests`
+  and `CanadianHamPracticeUITests.testOhmsLawLessonFiguresAndAccessibilityLight`/`Dark`) run
   in their own test plan, only when figures, `content/figures/`, lesson Markdown with figure
   directives, or the lesson reader change (owner decision 2026-10-14). The default
-  `CanadianHamDefault` plan excludes that class. Run the figure-only plan with:
+  `CanadianHamDefault` plan excludes those tests. Run the figure-only plan with:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamLessonFigures -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
 - **Release candidate (task-1.6):** the full four-platform run with every accessibility audit,
   plus the manual checks in `docs/release/release-checklist.md`.

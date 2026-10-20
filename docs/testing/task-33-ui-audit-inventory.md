@@ -68,7 +68,7 @@ test method is removed. The eventual PR body must contain this standalone line:
 
 Test-guard-approved: task-33
 
-## Unchanged default-plan audit inventory
+## Unchanged audit-flow inventory
 
 All functions, assertions, loops, fixtures, appearance pairs, positioning, and audit
 implementations for these call paths are byte-identical to baseline, except redundant
@@ -86,7 +86,7 @@ Each row names the source entry point(s), not merely a general screen category.
 | `testAccessibilityAuditPracticeSession{Light,Dark}` | Unanswered, incorrect feedback, exact correct feedback, review top, review lower feedback; separate reset/mode fixtures retained |
 | `testLessonPrerequisiteNavigationAndAccessibility{Light,Dark}` | L-006-03 prerequisite block and tapped L-006-02 destination reader |
 | `testAccessibilityAuditLearnFlow{Light,Dark}` | Module list, L-006-03 reader top, answered one-question quiz |
-| `testOhmsLawLessonFiguresAndAccessibility{Light,Dark}` | All three L-005-02 figures inline and enlarged; expanded power-wheel equivalent, all 12 row assertions; enlarged sheets keep plain audit |
+| `testOhmsLawLessonFiguresAndAccessibility{Light,Dark}` (moved to figure plan) | All three L-005-02 figures inline and enlarged; expanded power-wheel equivalent, all 12 row assertions; enlarged sheets keep plain audit |
 | `testAccessibilityAuditMockExamFlow{Light,Dark}` | Timer question, timer navigator, answered/flagged question, answered/flagged navigator, results top, results lower details; distinct fixtures retained |
 | `testAccessibilityAuditAdvancedCourseScreens{Light,Dark}` | Advanced picker, coming-lessons view, hub, unanswered practice, mock start, unanswered 50-question mock, results; all distinct initial-screen fixtures retained |
 | `testCourseSwitchConfirmationKeepsMockExamWhenCancelledLight`, `testCourseSwitchConfirmationAuditsDark` | Unfinished mock course-switch confirmation; cancellation and retained-session assertions |
@@ -111,7 +111,13 @@ any existing audit method or platform guard.
 ## Figure-plan inventory diff
 
 `CanadianHamLessonFiguresUITests` moves intact out of `CanadianHamDefault` into
-`CanadianHamLessonFigures`. This is a plan-membership change, **not removal of audits**.
+`CanadianHamLessonFigures`. The two `testOhmsLawLessonFiguresAndAccessibility{Light,Dark}`
+methods also move by exact method selection: they exercise only inline/enlarged
+figures and the wheel text equivalent, not unrelated reader behaviour. The supervisor
+approved this additional move after an unchanged Ohm's-law dark audit timed out in
+the full run (`accessibilityAudit Code=-56`, 471.508 seconds, `/tmp/task-33-after.log`).
+Their entire flow and all assertions remain unchanged. This is a plan-membership
+change, **not removal of audits**.
 The figure spec arrays (including IDs and alt text), dark sample selection, verifier,
 launch arguments, screenshots, positioning, and exception helper remain byte-identical.
 Every light lesson is still visited exactly once, every listed figure is still audited,
@@ -132,7 +138,8 @@ and every module's first figure is still sampled in dark appearance.
 Thirteen two-lesson ranges become single-lesson ranges. The existing `PartN` method
 keeps the first lesson and any original evidence request; `PartNNextLesson` holds the
 second. Existing one-lesson methods and all eight dark methods are unchanged. This
-raises figure methods from 32 to 45 without changing audit/figure coverage or launches.
+raises the figure class from 32 to 45 methods without changing audit/figure coverage
+or launches; the two moved Ohm's-law integration methods make the figure plan 47 methods.
 M1 Part 2 already covers only L-001-03's single figure after the lesson split, unlike
 the older content behind the historical timeout; it remains covered in the figure run.
 
@@ -146,7 +153,11 @@ the older content behind the historical timeout; it remains covered in the figur
   lessons; eight dark sample methods are byte-identical.
 - Original scheme: **160 UI methods** (128 non-figure + 32 figure).
 - Before launch sharing, new default membership: **128 UI methods**.
-- After launch sharing: **126 default UI methods**, plus **45 figure-only methods**.
+- After launch sharing: 126 non-matrix UI methods. After also moving the two Ohm's-law
+  figure-only integration methods: **124 default UI methods**, plus **47 figure-plan methods**.
+  The one required full default run started before the additional move and is a
+  126-method superset of final default membership; both moved methods are exercised
+  again by the required figure plan. No second default full run is needed.
 - Core and sending launch count: **22 → 8** across both appearances (14 fewer), with
   identical 24 audit tuples. Other launches and all unchanged audit loops remain.
 - Runtime wall clocks, executed counts, per-test results, and any existing skips/flakes

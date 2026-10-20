@@ -23,7 +23,9 @@
       },
       "parallelizable": false,
       "selectedTests": [
-        "CanadianHamLessonFiguresUITests"
+        "CanadianHamLessonFiguresUITests",
+        "CanadianHamPracticeUITests/testOhmsLawLessonFiguresAndAccessibilityLight()",
+        "CanadianHamPracticeUITests/testOhmsLawLessonFiguresAndAccessibilityDark()"
       ]
     }
   ]
