@@ -93,11 +93,10 @@ By the end of this lesson, you can:
 | Unidentified amateur communications | Only to control a model craft. |
 
 ::figure communications-flowchart
-Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
+Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference and emergency situations.
 Text equivalent:
 - The lane labelled interf has listen followed by change/stop.
 - The distress lane has exception, then stand by.
-- The 3rd party lane has personal, then supervised.
 - A clock is labelled ID start, end, and maximum 30-minute intervals.
 ::
 
@@ -137,6 +136,6 @@ During public-service work, prepared operators sound calm because they have alre
 
 ## Illustration brief
 
-Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.
+Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference and emergency situations.
 
-Description: Draw a three-lane flowchart. The first lane is labelled "interference" and points to listen, change, or stop. The second lane is labelled "distress and relief traffic" and points to narrow emergency exceptions and standing by near a relief net. The third lane is labelled "third-party traffic" and points to personal, non-commercial, supervised communication. Add a clock icon labelled "identify: start, end, and within 30 minutes."
+Description: Draw a two-lane ink-brush flowchart. The first lane is labelled "interf" and points to listen, then change/stop. The second lane is labelled "distress" and points to exception, then stand by. These are reminders to check the narrow emergency exceptions and keep relief-net frequencies clear, not a complete decision procedure. Add a clock icon labelled "ID start/end/30" for identification at the start, end, and maximum 30-minute intervals.

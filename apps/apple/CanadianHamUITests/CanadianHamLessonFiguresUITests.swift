@@ -51,7 +51,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule1LessonFiguresLightPart2() throws {
-        try verifyLessonRange(Self.module1Lessons, 2..<3, appearance: .light, evidenceModuleID: "m1")
+        try verifyLessonRange(Self.module1Lessons, 2..<3, appearance: .light, evidenceModuleID: "m1", writeEvidence: true)
     }
 
     func testModule1LessonFiguresLightPart3() throws {
@@ -107,7 +107,11 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule5LessonFiguresLightPart4() throws {
-        try verifyLessonRange(Self.module5Lessons, 4..<5, appearance: .light, evidenceModuleID: "m5")
+        try verifyLessonRange(Self.module5Lessons, 4..<5, appearance: .light, evidenceModuleID: "m5", writeEvidence: true)
+    }
+
+    func testModule5LessonFiguresLightPart5() throws {
+        try verifyLessonRange(Self.module5Lessons, 5..<6, appearance: .light, evidenceModuleID: "m5", writeEvidence: true)
     }
 
     func testModule6LessonFiguresLightPart1() throws {
@@ -492,7 +496,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     private static let module1Lessons: [LessonSpec] = [
         LessonSpec(moduleID: "M1", lessonID: "L-001-01", figures: [FigureSpec(id: "authority-records-exams", altText: "A stacked diagram of Canadian amateur radio authority, records, and exam pathways.")]),
         LessonSpec(moduleID: "M1", lessonID: "L-001-02", figures: [FigureSpec(id: "station-control-decision-tree", altText: "A station-control decision tree showing authorization, service boundary, message purpose, and supervision.")]),
-        LessonSpec(moduleID: "M1", lessonID: "L-001-03", figures: [FigureSpec(id: "communications-flowchart", altText: "Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference, emergency, and third-party situations.")]),
+        LessonSpec(moduleID: "M1", lessonID: "L-001-03", figures: [FigureSpec(id: "communications-flowchart", altText: "Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference and emergency situations.")]),
         LessonSpec(moduleID: "M1", lessonID: "L-001-04", figures: [FigureSpec(id: "privileges-station-checklist", altText: "Station checklist with operator qualification, band, bandwidth, power, repeater, and modulation-quality boxes.")]),
         LessonSpec(moduleID: "M1", lessonID: "L-001-05", figures: [FigureSpec(id: "international-location-checklist", altText: "A travel-operating checklist beside a simplified world map divided into three ITU regions.")]),
         LessonSpec(moduleID: "M1", lessonID: "L-001-06", figures: [FigureSpec(id: "antenna-rf-emc-checklists", altText: "A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.")])
@@ -531,7 +535,8 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         ]),
         LessonSpec(moduleID: "M5", lessonID: "L-005-03", figures: [FigureSpec(id: "series-parallel-current-paths", altText: "Cell feeding resistors in series, and the same cell feeding parallel resistor branches with total and branch current arrows.")]),
         LessonSpec(moduleID: "M5", lessonID: "L-005-04", figures: [FigureSpec(id: "db-power-ratio-table", altText: "Decibel power-ratio shortcut table for 3, 6, 10, and 20 dB changes, with increase and decrease columns.")]),
-        LessonSpec(moduleID: "M5", lessonID: "L-005-06", figures: [FigureSpec(id: "transformer-resonance-meters", altText: "Multi-panel figure showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.")])
+        LessonSpec(moduleID: "M5", lessonID: "L-005-05", figures: [FigureSpec(id: "parallel-lc-resonance", altText: "Parallel LC tuned circuit with an inductor and capacitor between shared rails, labelled high Z at resonance.")]),
+        LessonSpec(moduleID: "M5", lessonID: "L-005-06", figures: [FigureSpec(id: "transformer-resonance-meters", altText: "Two-panel figure showing transformer windings on a core and ammeter and voltmeter placement around a load.")])
     ]
 
     private static let module6Lessons: [LessonSpec] = [
