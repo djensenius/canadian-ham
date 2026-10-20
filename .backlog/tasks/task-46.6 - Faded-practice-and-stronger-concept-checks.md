@@ -1,11 +1,11 @@
 ---
 id: TASK-46.6
 title: Faded practice and stronger concept checks
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 16:33'
+updated_date: '2026-10-20 16:36'
 labels:
   - content
 dependencies:
@@ -27,7 +27,7 @@ For quantitative lessons, add one partly worked practice problem after each work
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Every lesson with calculations has at least one faded practice problem
-- [ ] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
+- [x] #2 No concept check can be answered by eliminating absurd options (reviewed); each has per-option feedback
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -148,6 +148,8 @@ Requested checks PASS on final source: check:quizzes (37 files, 521 references, 
 Full pnpm test ran once: release permission gate PASS; content-tools 216/216 PASS; Morse 21/21 PASS; calculator 127/127 PASS; web 243/245, with unchanged timing failures in ProgressStore stores progress in IndexedDB and exports/imports a validated round trip (5 s timeout) and App clears a stale course switch warning once the exam is submitted (waiting for Mock exam results). Host load was about 736. Method-only original-timeout retries: IndexedDB PASS first retry; App failed first retry and PASS second retry. No production code, timeouts, audit handlers or test skip annotations changed; unrelated methods were only filtered by -t. The original full run is not claimed green. Existing jsdom canvas getContext warnings remain.
 
 Evidence logs: /tmp/task-46.6-r3-content-checks.log, /tmp/task-46.6-r3-focused.log, /tmp/task-46.6-r3-pnpm-test.log, /tmp/task-46.6-r3-web-retries.log, /tmp/task-46.6-r3-web-final-retry.log, /tmp/task-46.6-r3-swift-test.log, /tmp/task-46.6-r3-cue-grep-before.txt and /tmp/task-46.6-r3-cue-grep-after.txt. No xbuild app suites: quiz/test-only round; coordinator figure-plan follow-up for the earlier complete lesson batch remains outstanding. TASK-46.6 stays In Progress with AC #2 unchecked awaiting the required independent re-review. No PR opened.
+
+Fourth independent review (2026-10-20) at 07155564: APPROVE WITH NOTES. Remaining non-blocking notes: format cue in 006-03 C2 / 006-01 C1 (the key is the only bare noun phrase), the 006-01 C3 key echoes prompt wording, and the 007-03 C2 inversion wording. Figure plan: full CanadianHamLessonFigures run on 48dcc7cb (lesson content identical apart from l-006-02 '___ %').
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
