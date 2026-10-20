@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 14:45'
+updated_date: '2026-10-20 14:50'
 labels:
   - content
 dependencies:
@@ -46,4 +46,6 @@ Part B: coordinator starts M5-M8 content branch from the pushed foundation commi
 From task-46.3 r463-2 review: QZ-L-007-03-A C1 and C3 were rewritten to avoid copying bank questions, but they should receive a stronger technical redesign in the faded-practice/stronger-concept-check pass. Also check EXP-B-008-004-004's spurious-emissions distractor note: the current 'broad category' wording may conflict with the cause-based out-of-band vs spurious distinction.
 
 Part A foundation pushed at 93d75d3330bc4474f59409edbf4550e9579df1dc; coordinator notified for Part B branch. Added optional feedback schema, staged --require-feedback checker, focused chosen-option web feedback and EN/FR light/dark axe regressions, optional Swift decoding/round-trip test (37 lessons retained). Apple display tracked in TASK-46.6.1, blocked on TASK-50.14.2. M1 audited and deliberately unchanged: reference-only tables and empty conceptChecks remain required by the teaching guide. M2 now has faded completion problems immediately after offset, S-meter, battery-runtime, long-path-bearing and UTC worked-example sets; story-only headings renamed or converted to steps. All 12 M2 checks now have plausible misconception-based options and 48 per-option notes. M2 strict feedback checker, originality, links and complete hints passed; all example arithmetic recomputed. No new regulatory claims or real channel recommendations.
+
+M3 complete: 24 diagnostic checks with 96 choice-specific notes; removed every NOT/spot-the-error stem and replaced unrelated/giveaway options with plausible block-role, arithmetic, control, rating, or safety misconceptions. Added 19 faded problems across all 8 lessons, covering each quantitative worked-example set (including newly stepwise peak/RMS, product-detection and inverse-square examples); supplied conversions, blanks, separate solutions, and model limits. Story-only examples renamed; two b-003-015 hint anchors updated to retain the same target after heading rename. Recomputed examples and choices, including 15.6 W regulator loss, 11.4 kHz Carson estimate, 46-trace planning count, and squared distance ratios. Strict M3 feedback checker, originality, lesson coverage, links, and complete hints passed. Existing coverage/front matter/quiz IDs/figure directives retained.
 <!-- SECTION:NOTES:END -->
