@@ -942,6 +942,17 @@ describe("ProgressStore", () => {
     assert.match(validation.errors.join("\n"), /Import preferences are invalid/);
   });
 
+  it("rejects unknown Morse timing profiles and output modes before normalization", () => {
+    for (const morse of [
+      { ...defaultPreferences.morse, timingProfile: "future-profile" as never },
+      { ...defaultPreferences.morse, outputMode: "future-output" as never },
+    ]) {
+      const validation = validateProgressImport(validExport({ preferences: { ...defaultPreferences, morse } }));
+      assert.equal(validation.ok, false);
+      assert.match(validation.errors.join("\n"), /Import preferences are invalid/);
+    }
+  });
+
   it("accepts legacy exports without lesson or Morse stores as empty older data", () => {
     const legacy = { ...validExport(), lessonProgress: undefined, lessonQuizAttempts: undefined, morseCourseProgress: undefined };
 

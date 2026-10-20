@@ -100,6 +100,8 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
         try container.encode(outputMode, forKey: .outputMode)
     }
 
+    // Progress imports default unknown enum strings (as web normalization does).
+    // Web file validation rejects these strings first; Apple deliberately accepts them.
     init(exported: ExportedMorseSettings) {
         self.init(
             toneHz: exported.toneHz,

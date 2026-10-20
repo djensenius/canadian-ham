@@ -539,6 +539,106 @@ final class MorseTrainerTests: XCTestCase {
         return try JSONDecoder().decode(MorseCourse.self, from: Data(json.utf8))
     }
 
+    @MainActor
+    func testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let suiteName = "MorseTrainerTests.studyImport.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        var settings = MorseTrainerSettings.default
+        var replacements: [Bool] = []
+        let view = SettingsView(
+            bank: bank,
+            progressStore: store,
+            morseSettings: Binding(get: { settings }, set: { settings = $0 }),
+            openMorse: {},
+            openAbout: {},
+            hasUnfinishedCourseWork: { false },
+            localDataReplacementRevision: 0,
+            onDataChanged: { replacements.append($0) }
+        )
+
+        for (json, expected) in morseImportCases {
+            let imported = try morseImportFixture(bankId: bank.manifest.bankId, morseJSON: json)
+            try view.importProgress(imported, defaults: defaults)
+            XCTAssertEqual(settings, expected, "Study Settings must normalize its live binding")
+            XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), expected)
+            XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        }
+        XCTAssertEqual(replacements, Array(repeating: true, count: morseImportCases.count))
+
+        let beforeFailure = settings
+        let invalid = try morseImportFixture(bankId: "unknown-bank", morseJSON: morseImportCases[0].0)
+        XCTAssertThrowsError(try view.importProgress(invalid, defaults: defaults))
+        XCTAssertEqual(settings, beforeFailure)
+        XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), beforeFailure)
+        XCTAssertEqual(replacements.count, morseImportCases.count, "A rejected import must not announce replacement")
+    }
+
+#if os(macOS)
+    @MainActor
+    func testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let suiteName = "MorseTrainerTests.nativeImport.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        let appSettings = AppSettingsModel(morseSettings: .default)
+        appSettings.bank = bank
+        appSettings.progressStore = store
+        let view = NativeDataSettingsTab(appSettings: appSettings)
+        let initialRevision = appSettings.localDataReplacementRevision
+
+        for (json, expected) in morseImportCases {
+            let imported = try morseImportFixture(bankId: bank.manifest.bankId, morseJSON: json)
+            try view.importProgress(imported, defaults: defaults)
+            XCTAssertEqual(appSettings.morseSettings, expected, "Native Settings must normalize its live observable model")
+            XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), expected)
+            XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        }
+        XCTAssertEqual(appSettings.localDataReplacementRevision, initialRevision + morseImportCases.count)
+
+        let beforeFailure = appSettings.morseSettings
+        let invalid = try morseImportFixture(bankId: "unknown-bank", morseJSON: morseImportCases[0].0)
+        XCTAssertThrowsError(try view.importProgress(invalid, defaults: defaults))
+        XCTAssertEqual(appSettings.morseSettings, beforeFailure)
+        XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), beforeFailure)
+        XCTAssertEqual(appSettings.localDataReplacementRevision, initialRevision + morseImportCases.count)
+    }
+#endif
+
+    private var morseImportCases: [(String, MorseTrainerSettings)] {
+        [
+            (#"{"toneHz":1200,"characterWpm":30,"effectiveWpm":28,"timingProfile":"general","volume":2,"outputMode":"visualTape"}"#,
+             MorseTrainerSettings(toneHz: 900, characterWpm: 25, effectiveWpm: 25, timingProfile: .general, volume: 1, outputMode: .visualTape)),
+            (#"{"toneHz":700,"characterWpm":18,"effectiveWpm":6,"timingProfile":"future-profile","volume":0.4,"outputMode":"future-output"}"#,
+             MorseTrainerSettings(toneHz: 700, characterWpm: 18, effectiveWpm: 6, timingProfile: .isedParis, volume: 0.4, outputMode: .audio))
+        ]
+    }
+
+    private func morseImportFixture(bankId: String, morseJSON: String) throws -> ProgressExportV1 {
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "lessonProgress": [],
+          "lessonQuizAttempts": [],
+          "preferences": {
+            "practiceMode": "review-later",
+            "examTimerEnabled": false,
+            "theme": "system",
+            "morse": \(morseJSON)
+          }
+        }
+        """
+        return try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+    }
+
     func testMorseSettingsRoundTripThroughUserDefaults() throws {
         let suiteName = "MorseTrainerTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))

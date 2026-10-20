@@ -2174,16 +2174,20 @@ struct SettingsView: View {
     private func confirmImport() {
         guard let pendingImport else { return }
         do {
-            try progressStore.importData(pendingImport, bank: bank)
-            morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse).normalized()
-            morseSettings.save()
+            try importProgress(pendingImport)
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
             errorMessage = nil
-            onDataChanged(true)
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
+    }
+
+    func importProgress(_ imported: ProgressExportV1, defaults: UserDefaults = .standard) throws {
+        try progressStore.importData(imported, bank: bank)
+        morseSettings = MorseTrainerSettings(exported: imported.preferences.morse).normalized()
+        morseSettings.save(defaults: defaults)
+        onDataChanged(true)
     }
 
     private func resetAllData() {

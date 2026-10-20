@@ -386,3 +386,14 @@ Per [`AGENTS.md`](../../AGENTS.md), track this work in Backlog.md, not `tasks/PL
 - **2005 history:** rests on secondary but contemporary sources (ARRL Letter, CARAB excerpt). I didn't find the original 2005 Gazette notice.
 - **Device haptics:** that haptics work mainly on iPhone is an inference. Apple's pages only give API availability and the runtime check.
 - **Not audited:** the teaching parameters, and whether the proposed storage names fit the existing persistence code.
+## Implemented progress-import compatibility (TASK-41)
+
+Both Apple import confirmations (native macOS Settings and the Study Settings screen)
+apply Morse settings only after the progress import succeeds, normalize their live
+settings, save them locally, and notify the rest of the app of the replacement.
+Unknown `timingProfile` strings fall back to `isedParis`; unknown `outputMode`
+strings fall back to `audio`. Other valid imported Morse fields are retained.
+This preserves Apple's existing permissive behavior and matches web's settings
+normalization. There is an intentional file-validation difference: web rejects
+unknown enum strings before normalization, while Apple accepts and defaults them.
+Tests in `MorseTrainerTests.swift` and `progressStore.test.ts` record that difference.
