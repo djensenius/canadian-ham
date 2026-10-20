@@ -102,7 +102,7 @@ struct LearnView: View {
                         Text("Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice.") // l10n: localized
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
-                        NavigationLink("Read exam-day guidance", value: LearnRoute.lesson("L-001-01"))
+                        NavigationLink("Read exam-day guidance", value: RootNavigationRoute.learn(.lesson("L-001-01")))
                             .buttonStyle(AccessibleSecondaryButtonStyle())
                     }
                     .padding(.top, DesignTokens.Spacing.sm)
@@ -147,10 +147,10 @@ struct LearnView: View {
                 .font(.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                NavigationLink("Open module", value: LearnRoute.module(module.id))
+                NavigationLink("Open module", value: RootNavigationRoute.learn(.module(module.id)))
                     .tint(DesignTokens.Colors.ink)
                 if let first = lessons.first {
-                    NavigationLink("Start module", value: LearnRoute.lesson(first.id))
+                    NavigationLink("Start module", value: RootNavigationRoute.learn(.lesson(first.id)))
                         .tint(DesignTokens.Colors.ink)
                 }
             }
@@ -269,7 +269,7 @@ private struct ModuleLessonListView: View {
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
                     ForEach(module.lessonIds.compactMap { library.lessonsById[$0] }, id: \.id) { lesson in
-                        NavigationLink(value: LearnRoute.lesson(lesson.id)) {
+                        NavigationLink(value: RootNavigationRoute.learn(.lesson(lesson.id))) {
                             LessonRow(lesson: lesson, isRead: lessonProgress.contains { $0.lessonId == lesson.id })
                         }
                         .buttonStyle(.plain)
@@ -372,18 +372,18 @@ private struct LessonReaderView: View {
                         }
                         .buttonStyle(.plain)
                         if let firstQuizID = lesson.quizIds.first {
-                            NavigationLink("Go to quiz", value: LearnRoute.lessonQuiz(firstQuizID))
+                            NavigationLink("Go to quiz", value: RootNavigationRoute.learn(.lessonQuiz(firstQuizID)))
                                 .buttonStyle(AccessiblePrimaryButtonStyle())
                                 .accessibilityIdentifier("go-to-lesson-quiz-button")
                         }
                         if let previous = neighbor(offset: -1) {
-                            NavigationLink(value: LearnRoute.lesson(previous.id)) {
+                            NavigationLink(value: RootNavigationRoute.learn(.lesson(previous.id))) {
                                 lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
                             }
                             .buttonStyle(.plain)
                         }
                         if let next = neighbor(offset: 1) {
-                            NavigationLink(value: LearnRoute.lesson(next.id)) {
+                            NavigationLink(value: RootNavigationRoute.learn(.lesson(next.id))) {
                                 lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
                             }
                             .buttonStyle(.plain)
@@ -465,7 +465,7 @@ private struct LessonReaderView: View {
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                         .accessibilityIdentifier("lesson-quiz-latest-score")
                 }
-                NavigationLink("Start quiz", value: LearnRoute.lessonQuiz(quiz.id))
+                NavigationLink("Start quiz", value: RootNavigationRoute.learn(.lessonQuiz(quiz.id)))
                     .buttonStyle(AccessiblePrimaryButtonStyle())
             }
             .paperCard()
@@ -521,7 +521,7 @@ private struct LessonPrerequisitesSection: View {
                     .accessibilityIdentifier("lesson-prerequisites-heading")
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     ForEach(prerequisites, id: \.id) { prerequisite in
-                        NavigationLink(value: LearnRoute.lesson(prerequisite.id)) {
+                        NavigationLink(value: RootNavigationRoute.learn(.lesson(prerequisite.id))) {
                             Text(localized(prerequisite.title.en, language: .english)) // l10n: content(en)
                                 .font(DesignTokens.FontScale.body.weight(.semibold))
                                 .foregroundStyle(DesignTokens.Colors.ink)
@@ -1136,7 +1136,7 @@ struct ExplanationPanelView: View {
     @ViewBuilder
     private func citationView(_ citation: ExplanationCitation) -> some View {
         if citation.type == "lesson", let id = citation.id {
-            NavigationLink(value: LearnRoute.lesson(id)) {
+            NavigationLink(value: RootNavigationRoute.learn(.lesson(id))) {
                 Text(id) // l10n: verbatim
                     .font(DesignTokens.FontScale.caption)
                     .frame(minHeight: 44, alignment: .leading)

@@ -609,6 +609,116 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Simulated size-class change must preserve the calculator value")
     }
 
+    func testCompactToSplitKeepsDeepLearnLesson() throws {
+        assertDeepLearnTransition(initialSizeClass: "compact", showsQuiz: false)
+    }
+
+    func testSplitToCompactKeepsDeepLearnLesson() throws {
+        assertDeepLearnTransition(initialSizeClass: "regular", showsQuiz: false)
+    }
+
+    func testCompactToSplitKeepsDeepLearnQuiz() throws {
+        assertDeepLearnTransition(initialSizeClass: "compact", showsQuiz: true)
+    }
+
+    func testSplitToCompactKeepsDeepLearnQuiz() throws {
+        assertDeepLearnTransition(initialSizeClass: "regular", showsQuiz: true)
+    }
+
+    func testCompactToSplitKeepsCalculatorPresented() throws {
+        assertOpenToolTransition(initialSizeClass: "compact", tool: .calculator)
+    }
+
+    func testSplitToCompactKeepsCalculatorPresented() throws {
+        assertOpenToolTransition(initialSizeClass: "regular", tool: .calculator)
+    }
+
+    func testCompactToSplitKeepsHintPresented() throws {
+        assertOpenToolTransition(initialSizeClass: "compact", tool: .hint)
+    }
+
+    func testSplitToCompactKeepsHintPresented() throws {
+        assertOpenToolTransition(initialSizeClass: "regular", tool: .hint)
+    }
+
+    private func navigationTransitionArguments(initialSizeClass: String) -> [String] {
+        [
+            "-CanadianHamSimulatedHorizontalSizeClass", initialSizeClass,
+            "-CanadianHamShowSimulatedSizeClassChangeControl",
+            "-CanadianHamSimulatedHorizontalSizeClassAfterChange", initialSizeClass == "compact" ? "regular" : "compact"
+        ]
+    }
+
+    private func assertDeepLearnTransition(initialSizeClass: String, showsQuiz: Bool, file: StaticString = #filePath, line: UInt = #line) {
+        let app = launchApp(arguments: navigationTransitionArguments(initialSizeClass: initialSizeClass) + ["-CanadianHamInitialScreen", "learn"])
+        defer { app.terminate() }
+        let module = app.buttons["Open module"].firstMatch
+        XCTAssertTrue(module.waitForExistence(timeout: 10), file: file, line: line)
+        scrollBackgroundUntilHittable(module, in: app, maxSwipes: 20)
+        XCTAssertTrue(module.isHittable, file: file, line: line)
+        module.tap()
+        let lesson = app.staticTexts["Units, conductors, and current"].firstMatch
+        XCTAssertTrue(lesson.waitForExistence(timeout: 10), file: file, line: line)
+        lesson.tap()
+        let title = app.descendants(matching: .any)["lesson-reader-title"].firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 10), file: file, line: line)
+        let expectedLessonTitle = title.label
+        if showsQuiz {
+            let quizLink = app.buttons["go-to-lesson-quiz-button"].firstMatch
+            for _ in 0..<32 where !quizLink.isHittable {
+                app.scrollViews.firstMatch.swipeUp()
+            }
+            XCTAssertTrue(quizLink.isHittable, file: file, line: line)
+            quizLink.tap()
+        }
+        let heading = showsQuiz ? app.staticTexts["QZ-L-005-01-A"].firstMatch : title
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), file: file, line: line)
+        let expectedHeading = heading.label
+        XCTAssertFalse(expectedHeading.isEmpty, file: file, line: line)
+        assertSimulatedLayoutMode(in: app, expectedMode: initialSizeClass == "compact" ? "compact" : "split", context: "before deep Learn transition", file: file, line: line)
+        let target = initialSizeClass == "compact" ? "regular" : "compact"
+        applySimulatedSizeClassChange(in: app, expectedSizeClassValue: target, context: "deep Learn transition", file: file, line: line)
+        assertSimulatedLayoutMode(in: app, expectedMode: target == "compact" ? "compact" : "split", context: "after deep Learn transition", file: file, line: line)
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), "The exact deep route must stay presented", file: file, line: line)
+        XCTAssertEqual(heading.label, showsQuiz ? expectedHeading : expectedLessonTitle, file: file, line: line)
+        XCTAssertTrue(heading.isHittable, "The lesson or quiz heading must be visible after the transition", file: file, line: line)
+    }
+
+    private func assertOpenToolTransition(initialSizeClass: String, tool: Tool, file: StaticString = #filePath, line: UInt = #line) {
+        let app = launchTwoLevelHintPracticeQuestion(extraArguments: navigationTransitionArguments(initialSizeClass: initialSizeClass))
+        defer { app.terminate() }
+        let question = app.descendants(matching: .any)["question-identifier"].firstMatch
+        XCTAssertTrue(question.waitForExistence(timeout: 10), file: file, line: line)
+        let expectedQuestion = question.label
+        openTool(tool, in: app)
+        let panel = app.descendants(matching: .any)[tool.panelIdentifier].firstMatch
+        XCTAssertTrue(panel.waitForExistence(timeout: 5), file: file, line: line)
+        if tool == .calculator {
+            tapCalculatorKey("calculator-key-2", in: app)
+            XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", file: file, line: line)
+        } else {
+            let firstHint = app.buttons["hint-show-level-1-button"].firstMatch
+            XCTAssertTrue(firstHint.waitForExistence(timeout: 5), file: file, line: line)
+            firstHint.tap()
+            let nextHint = app.buttons["hint-show-level-2-button"].firstMatch
+            XCTAssertTrue(nextHint.waitForExistence(timeout: 5), file: file, line: line)
+            nextHint.tap()
+            XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5), file: file, line: line)
+        }
+        assertSimulatedLayoutMode(in: app, expectedMode: initialSizeClass == "compact" ? "compact" : "split", context: "before open tool transition", file: file, line: line)
+        let target = initialSizeClass == "compact" ? "regular" : "compact"
+        applySimulatedSizeClassChange(in: app, expectedSizeClassValue: target, context: "open tool transition", file: file, line: line)
+        assertSimulatedLayoutMode(in: app, expectedMode: target == "compact" ? "compact" : "split", context: "after open tool transition", file: file, line: line)
+        // No reopen fallback: presentation itself, not just its saved value, must survive.
+        XCTAssertTrue(panel.waitForExistence(timeout: 10), "The selected tool must re-present without tapping its button", file: file, line: line)
+        if tool == .calculator {
+            XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", file: file, line: line)
+        } else {
+            XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5), "The revealed hint level must survive", file: file, line: line)
+        }
+        XCTAssertEqual(question.label, expectedQuestion, file: file, line: line)
+    }
+
     func testRegularWidthMockExamUsesCalculatorInspectorWithoutHints() throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",

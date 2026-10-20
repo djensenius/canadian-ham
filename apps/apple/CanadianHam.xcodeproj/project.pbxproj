@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		004FD3F4DD2BA1FFFDC4136B /* RootNavigationMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3681EA0DFB736744332D3ED5 /* RootNavigationMappingTests.swift */; };
 		00E2303922E7852FB4AA01E7 /* ExamCalculatorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D86FB3E02E2AC2B774A8B43 /* ExamCalculatorViewModelTests.swift */; };
 		018B9FABEC72D0DC5202DBC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5F42909CFD2242DE9CFD019 /* Assets.xcassets */; };
 		02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
@@ -69,6 +70,7 @@
 		5E15045977972A993EB53B58 /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
 		60AF16DB335E5903B9287215 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 5FC310E91D274D6ACA4BBA5F /* AppIcon.icon */; };
 		6281C633D94C73560ECC6261 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
+		631865B43ED037D1D54AEAD8 /* RootNavigationMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DB3982B264049F7F9EF053 /* RootNavigationMapping.swift */; };
 		673D5075CD26F8D34C1A729A /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		687FDC6E7F12542E2BEF8A8A /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		6BEBAF49D6330C4DA12195D3 /* CanadianHamVisionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A5D1876F7D063DF4DF7F31 /* CanadianHamVisionApp.swift */; };
@@ -230,9 +232,11 @@
 		2D93A41FC817D303C7A8E2CF /* HintSessionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSessionStateTests.swift; sourceTree = "<group>"; };
 		30A5D1876F7D063DF4DF7F31 /* CanadianHamVisionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamVisionApp.swift; sourceTree = "<group>"; };
 		31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankStore.swift; sourceTree = "<group>"; };
+		3681EA0DFB736744332D3ED5 /* RootNavigationMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationMappingTests.swift; sourceTree = "<group>"; };
 		3BF67D7A994EF193C91BBA17 /* CanadianHamLessonFiguresUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamLessonFiguresUITests.swift; sourceTree = "<group>"; };
 		3D86FB3E02E2AC2B774A8B43 /* ExamCalculatorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamCalculatorViewModelTests.swift; sourceTree = "<group>"; };
 		3E31A65DF43C45C6F15475C7 /* LearnViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnViews.swift; sourceTree = "<group>"; };
+		40DB3982B264049F7F9EF053 /* RootNavigationMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationMapping.swift; sourceTree = "<group>"; };
 		41444275857B5CF1758CE3B6 /* CanadianHamPracticeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamPracticeUITests.swift; sourceTree = "<group>"; };
 		487D077D63B8DBAF59046380 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr-CA.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
 		49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformHintPanelSupport.swift; sourceTree = "<group>"; };
@@ -436,6 +440,7 @@
 				27C0ADA4801D9094289C71DB /* MorseTrainerTests.swift */,
 				A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */,
 				0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */,
+				3681EA0DFB736744332D3ED5 /* RootNavigationMappingTests.swift */,
 			);
 			path = CanadianHamTests;
 			sourceTree = "<group>";
@@ -530,6 +535,7 @@
 			children = (
 				BB023709CD1B8683292D109F /* ProgressModels.swift */,
 				EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */,
+				40DB3982B264049F7F9EF053 /* RootNavigationMapping.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1340,6 +1346,7 @@
 				1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */,
 				B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */,
 				9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */,
+				004FD3F4DD2BA1FFFDC4136B /* RootNavigationMappingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1426,6 +1433,7 @@
 				8AD63D2FB881F6C3C07DD025 /* ProgressSyncMerge.swift in Sources */,
 				2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */,
 				CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */,
+				631865B43ED037D1D54AEAD8 /* RootNavigationMapping.swift in Sources */,
 				A5C84AF9525F86DFA166EF45 /* RootView.swift in Sources */,
 				1A532FBCB03EEDAB5AD727F0 /* StudyViews.swift in Sources */,
 				B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */,
