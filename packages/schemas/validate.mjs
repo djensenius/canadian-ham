@@ -47,6 +47,7 @@ const supportedSchemaKeywords = new Set([
   "maxLength",
   "pattern",
   "canonicalUtcTimestamp",
+  "sortedSubset",
 ]);
 
 const canonicalUtcTimestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u;
@@ -314,6 +315,14 @@ function validateAgainstSchema(schema, data, context) {
   }
 
   if (isObject(data)) {
+    // Cross-property ID-array contract used by lesson-quiz help metadata.
+    for (const [key, parentKey] of Object.entries(schema.sortedSubset ?? {})) {
+      if (data[key] !== undefined && (!Array.isArray(data[key]) || !Array.isArray(data[parentKey])
+        || !data[key].every((id, index, ids) => typeof id === "string" && data[parentKey].includes(id)
+          && (index === 0 || ids[index - 1] < id)))) {
+        errors.push(`${context.path}.${key}: expected sorted unique subset of ${parentKey}`);
+      }
+    }
     const properties = isObject(schema.properties) ? schema.properties : {};
     if (Array.isArray(schema.required)) {
       for (const key of schema.required) {

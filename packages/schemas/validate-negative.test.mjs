@@ -341,3 +341,18 @@ test("oneOf discriminator shortcut applies only to a required const property in 
   const noConst = { type: "object", required: ["kind"], properties: { kind: { type: "string" } } };
   assert.equal(selectOneOfBranchByConstDiscriminator([a, noConst], { kind: "a" }), null);
 });
+
+test("lesson-quiz help IDs are optional sorted unique official subsets in attempts and sync rows", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(projectRoot, "fixtures/lesson-quiz-help.json"), "utf8"));
+  for (const ids of [undefined, ...fixture.validHelpIds, ...fixture.invalidHelpIds]) {
+    const attempt = { ...fixture.attempt, ...(ids === undefined ? {} : { answeredWithHelpIds: ids }) };
+    const exports = [
+      { ...validProgressExport, lessonQuizAttempts: [attempt] },
+      { ...validProgressExport, syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", attempt }], morseCourseProgress: [] } },
+    ];
+    for (const data of exports) {
+      const errors = validateDataAgainstSchema(data, "progress-export-v1.schema.json");
+      assert.equal(errors.length === 0, ids === undefined || fixture.validHelpIds.includes(ids), errors.join("\n"));
+    }
+  }
+});

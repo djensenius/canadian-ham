@@ -759,6 +759,7 @@
     "lessonQuizAttempt": {
       "type": "object",
       "required": ["id", "quizId", "lessonId", "submittedAt", "correct", "total", "percent", "officialQuestionIds", "incorrectOfficialQuestionIds", "incorrectConceptCheckIds"],
+      "sortedSubset": { "answeredWithHelpIds": "officialQuestionIds" },
       "properties": {
         "id": { "$ref": "#/$defs/nonEmptyString" },
         "quizId": { "$ref": "#/$defs/quizId" },
@@ -784,6 +785,11 @@
         "incorrectOfficialQuestionIds": {
           "type": "array",
           "items": { "$ref": "#/$defs/questionId" }
+        },
+        "answeredWithHelpIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/basicQuestionId" }
         },
         "incorrectConceptCheckIds": {
           "type": "array",
