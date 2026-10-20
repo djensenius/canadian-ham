@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-20 15:12'
+updated_date: '2026-10-20 15:39'
 labels:
   - apple
 dependencies: []
@@ -47,4 +47,6 @@ Coordinator clarification 2026-10-20: the native navigation-bar visual-ellipsis 
 Large Content Viewer confirmed on iPhone 17 Pro at AX-XXXL: a ten-second hold on the native French B-003 title displays its complete name in a wrapped/hyphenated system overlay without an ellipsis. Timed host captures at 3 s and 7 s both show it; a repeat capture from the final coverage run is retained in docs/evidence/task-52/native-large-content-viewer-fr-accessibility-xxxl-B-003.png. No app implementation was needed. Strict card measurements now preserve the text language and native hyphenation (the original unhyphenated metric falsely required an extra line for the visibly complete Compo-sants des circuits). All pre-existing tests/audits/helpers remain unchanged.
 
 Coordinator clarification 2026-10-20: the approved native-title exception also covers the existing automatic/large navigation style on Study module screens, with no style/title changes. Observed B-003 at AX-XXXL: native bar displays Station Ass… with a 346.3 × 71.7 pt accessibility frame; the complete Station Assembly, Practice and Safety label and the full wrapped same-screen content header both pass. Evidence retained as native-study-fr-accessibility-xxxl-B-003.png. French AX-XXXL coverage passed in 1278.551 seconds; the other three targeted cases are queued by the conditional driver.
+
+Coordinator-approved measurement correction: SwiftUI text frames omit outer font leading, so the new metric helper now measures glyph/line fragments without usesFontLeading. A complete default-size one-line title was 20.333 pt high versus the old 22-pt leading-inclusive estimate. The unchanged 1-pt pixel-rounding tolerance is far smaller than a full line (~20 pt or more); the new helper also asserts that subtracting a line from a measured multi-line title fails its height predicate. All four TASK-52 cases will be rerun using the final helper, per coordinator instruction; no pre-existing test/audit/helper changed.
 <!-- SECTION:NOTES:END -->
