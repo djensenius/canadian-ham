@@ -57,6 +57,30 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Réponses avec aide : 1.")
     }
 
+    func testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch() throws {
+        var app = launchLessonQuiz(seed: "lesson-hints-2")
+        openTool(.hint, in: app)
+        let first = app.buttons["hint-show-level-1-button"].firstMatch
+        XCTAssertTrue(first.waitForExistence(timeout: 5))
+        first.tap()
+        XCTAssertTrue(app.buttons["hint-review-in-lesson-button"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["hint-show-level-2-button"].exists)
+        waitBriefly(0.8)
+        closeTool(in: app)
+        let answer = app.buttons["answer-A-button"].firstMatch
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        answer.tap()
+        submitLessonQuiz(in: app)
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
+        app.terminate()
+        app = XCUIApplication()
+        app.launchArguments = ["-CanadianHamInitialLessonQuizID", "QZ-L-005-01-A", "-CanadianHamAppearance", "light", "-AppleLanguages", "(en)"]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["lesson-quiz-help-summary"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
+    }
+
     func testLessonQuizConceptCheckHasNoHintOrOtherTools() throws {
         let app = launchLessonQuiz(seed: "lesson-hints-15")
         defer { app.terminate() }
