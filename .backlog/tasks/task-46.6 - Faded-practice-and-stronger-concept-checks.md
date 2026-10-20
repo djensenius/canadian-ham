@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 15:00'
+updated_date: '2026-10-20 15:02'
 labels:
   - content
 dependencies:
@@ -38,6 +38,8 @@ Part A (this branch):
 2. Revise M1-M4 content within existing formats: M1 remains reference-only with no concept checks; add faded problems after calculation worked-example sets in M2-M4, rename narrative worked examples, and make all M2-M4 concept choices diagnostic with per-option feedback. Validate, commit, and push each coherent step.
 3. Search then create Apple feedback-display subtask under 46.6 depending on TASK-50.14.2. No Apple app edits. Run content-swift tests (37 lessons) and requested content/web checks; list edited lessons containing figures for coordinator figure-plan tests.
 Part B: coordinator starts M5-M8 content branch from the pushed foundation commit. Require feedback in the default checker once all quizzes are converted at end of 46.6. Parent stays In Progress pending Part B and Apple subtask.
+
+Part B on the same branch: 4. Read M5–M8 lessons and quizzes; preserve front matter, coverage, figure directives, quiz identities, and hint targets. Add completion-style faded problems after every calculation example set, convert narrative example headings, and replace all remaining checks with diagnostic choices and choice-specific feedback. Validate, commit, and push each module. 5. Require feedback by default in the checker and update checker/content regressions and author documentation. Run all requested content checks, pnpm test, and content-swift tests; record both parts evidence, edited figure lessons, and independent-review limitation; finalize parent TASK-46.6 only, leaving TASK-46.6.1 To Do.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
