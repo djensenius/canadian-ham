@@ -110,9 +110,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip() throws {
-        let app = launchLessonQuiz(extraArguments: [
-            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL",
-            "-CanadianHamShowSimulatedSizeClassChangeControl"
+        let app = launchLessonQuiz(extraArguments: navigationTransitionArguments(initialSizeClass: "compact") + [
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
         ])
         defer { app.terminate() }
         openTool(.hint, in: app)
@@ -120,13 +119,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         closeTool(in: app)
         let question = app.staticTexts["question-stem"].firstMatch
         let original = question.label
-        let control = app.buttons["debug-simulated-size-class-change-button"].firstMatch
-        if control.exists {
-            control.tap()
-            waitBriefly(1)
-            XCTAssertTrue(question.waitForExistence(timeout: 10))
-            XCTAssertEqual(question.label, original)
-        }
+        applySimulatedSizeClassChange(in: app, expectedSizeClassValue: "regular", context: "lesson quiz hints at largest Dynamic Type")
+        XCTAssertTrue(question.waitForExistence(timeout: 10))
+        XCTAssertEqual(question.label, original)
         openTool(.hint, in: app)
         XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5))
         closeTool(in: app)
