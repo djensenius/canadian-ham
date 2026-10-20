@@ -9,8 +9,10 @@ Only the iOS UI test target and its scheme/plans change. No app code changes.
 
 Each row below applies independently to **light and dark**. “Top” means the initial
 screen/scroll position, not a lower-content substitute. Every original assertion and
-`performAudit` call (including its context string) is retained with the same multiplicity.
-The plain audit and approved-exception implementations are unchanged.
+`performAudit` statement in the edited flow bodies (including its context string)
+is retained with the same multiplicity. Shared launch/entry setup runs once at the
+common entry rather than twice. The plain audit and approved-exception implementations
+are unchanged.
 
 | Screen/state | Region | Before test | After test | Audit |
 | --- | --- | --- | --- | --- |
@@ -63,7 +65,9 @@ The plain audit and approved-exception implementations are unchanged.
 
 All four wrappers only assigned appearance and called their flow. Their combined
 flow retains all original assertions and all three audit sites. Only the duplicated
-launch/termination and second `openSendingPractice` navigation were removed. No other
+launch/termination and second `openSendingPractice` navigation were removed; that
+unchanged helper's entry-existence assertion now runs once at the shared Morse entry,
+not again for an identical launch. No distinct screen/state assertion is lost. No other
 test method is removed. The eventual PR body must contain this standalone line:
 
 Test-guard-approved: task-33
@@ -151,7 +155,7 @@ the older content behind the historical timeout; it remains covered in the figur
   `performAccessibilityAudit` sites, named shared/exception helpers, positioning helpers,
   and complete figure spec arrays are unchanged. Range multisets match for all 37 light
   lessons; eight dark sample methods are byte-identical.
-- Original scheme: **160 UI methods** (128 non-figure + 32 figure).
+- Original scheme: **160 UI methods** (128 non-matrix + 32 figure-class methods).
 - Before launch sharing, new default membership: **128 UI methods**.
 - After launch sharing: 126 non-matrix UI methods. After also moving the two Ohm's-law
   figure-only integration methods: **124 default UI methods**, plus **47 figure-plan methods**.
@@ -160,8 +164,8 @@ the older content behind the historical timeout; it remains covered in the figur
   again by the required figure plan. No second default full run is needed.
 - Core and sending launch count: **22 → 8** across both appearances (14 fewer), with
   identical 24 audit tuples. Other launches and all unchanged audit loops remain.
-- Runtime wall clocks, executed counts, per-test results, and any existing skips/flakes
-  are recorded separately in the task notes and runtime evidence document. The
+- Runtime wall clocks, executed counts, per-test results, and existing skips/flakes
+  are recorded in the task notes and [runtime evidence](task-33-ios-results.md). The
   supervisor-approved full baseline is the historical `train-2026-10-17` run at
   `029f2d4992f52df72fae258daf892a465cb53841`, not a same-revision control: it had
   138 UI methods (31 figure + 107 other), 142 unit tests, three existing UI skips,
@@ -173,3 +177,21 @@ the older content behind the historical timeout; it remains covered in the figur
   historically (combined 634.418 vs 567.971 seconds, 11.7% slower). The current
   baseline was intentionally interrupted only after supervisor approval; it is
   not represented as a completed suite. No other build was stopped.
+
+### Completed runtime evidence
+
+- Full after-default run: 190 unit tests passed; 126 UI methods (superset of final
+  default's 124), three existing skips, two unchanged failures; UI elapsed
+  **11,390.378s**, outer wall **11,533s** (`/tmp/task-33-after.log`).
+- Full figure run: **47 UI methods**, one unchanged M7 dark timeout; elapsed
+  **11,444.382s**, outer wall **11,520s** (`/tmp/task-33-figures.log`). Both Ohm's-law
+  integration methods passed in this figure run.
+- Every failed unchanged method passed its isolated rerun without source changes:
+  sending-results light **91.923s** (`/tmp/task-33-sending-results-rerun.log`),
+  Ohm's-law dark **1217.286s** (`/tmp/task-33-ohms-dark-rerun.log`), M7 dark
+  **257.999s** (`/tmp/task-33-m7-dark-rerun.log`).
+- Supervisor-approved AC4 wording: **full suite passed except unchanged tests that
+  passed targeted reruns**. TASK-65 tracks all three residual flakes. Neither full
+  run is represented as a clean exit-code-zero run; all failures remain in the
+  per-test record. FluxTerm builds shared the xbuild lock, and the contemporaneous
+  host load was 81.94 / 81.56 / 88.02; load is context, not proof of causation.
