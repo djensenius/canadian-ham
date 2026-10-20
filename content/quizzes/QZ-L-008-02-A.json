@@ -16,36 +16,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-008-02-A-C1",
-      "prompt": { "en": "A test transmitter has an unwanted output at 14.4 MHz while operating at 4.8 MHz. If the same fault remains after retuning the transmitter to 5.0 MHz, what should happen to that unwanted output?", "fr": null },
+      "prompt": {
+        "en": "An unwanted output is at 14.4 MHz with a 4.8 MHz test carrier. After retuning the carrier to 5.0 MHz, the unwanted output stays at 14.4 MHz. What does this do to the third-harmonic hypothesis?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "It should stay at 14.4 MHz because unwanted outputs do not move with the operating frequency.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It should move down to 10.0 MHz because only the second multiple follows the transmitter.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It should move up to 15.0 MHz, preserving the three-to-one relationship.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It should spread evenly from 14.4 MHz to 15.0 MHz because all splatter fills the gap.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "It confirms the hypothesis because the first measurement was an exact multiple.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "One matching ratio is not enough when the later observation breaks that relationship.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It confirms the hypothesis because changing the carrier should not move a harmonic.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A harmonic follows an integer multiple of the carrier. The third harmonic would move to 15.0 MHz.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It weakens the hypothesis; a third harmonic should have moved to 15.0 MHz.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The fixed unwanted frequency no longer follows a three-to-one relationship. Investigate another unwanted-output mechanism.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It proves that the second harmonic stayed fixed instead.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The new carrier's second harmonic is 10.0 MHz, not 14.4 MHz.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The original ratio is 14.4 / 4.8 = 3. With the same relationship at 5.0 MHz, the unwanted output is 5.0 x 3 = 15.0 MHz, an upward move.", "fr": null }
+      "explanation": {
+        "en": "Test a frequency relationship across changed conditions. A single numerical coincidence does not settle the diagnosis.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-008-02-A-C2",
-      "prompt": { "en": "A clean sidetone is heard locally, but a distant station reports clicks close to a CW signal. Which check best fits the taught transmitter-side fault?", "fr": null },
+      "prompt": {
+        "en": "A technician smooths a CW carrier's rise and fall while keeping carrier frequency and symbol rate unchanged. Nearby clicking energy falls. Which conclusion fits?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Inspect the keying waveform and later RF stages for abrupt rise and decay.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Move a high-pass filter to a television input as the only required check.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Shorten a powered-speaker lead because the sidetone proves audio rectification.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Add receive attenuation because all clicks come from receiver overload.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Smoothing the envelope reduced side energy without requiring a change in carrier frequency or sending speed.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The edge shape affects occupied bandwidth even when the centre frequency and timing rate stay fixed.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The carrier frequency must have fallen because a narrower signal always has a lower centre frequency.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Bandwidth and centre frequency are separate. The measured carrier frequency stayed unchanged.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The sending speed must have fallen because edge shape and symbol rate are the same quantity.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Rise and fall shape can change while symbol timing stays fixed.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Only the local sidetone changed, so the RF spectrum must be identical.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The observation is reduced nearby RF energy. A local sidetone is not a measurement of that spectrum.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Distant key clicks point to a transmitted waveform problem, so the keying shape and following RF stages need attention before further operation.", "fr": null }
+      "explanation": {
+        "en": "Separate carrier frequency, keying rate, and envelope shape when interpreting a transmitter test.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-008-02-A-C3",
-      "prompt": { "en": "An SSB signal spreads when microphone gain is advanced past the clean range. What should be tried first?", "fr": null },
+      "prompt": {
+        "en": "A transmitter output low-pass filter reduces a measured third harmonic, but voice peaks remain flattened and adjacent splatter persists. Which conclusion is justified?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Reduce audio drive so the transmitter stays closer to linear operation.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Use a receiver notch filter at every neighbour's station.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Send Morse more slowly with the same voice setting.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Remove shielding because covers only affect receiver overload.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The filter must be ineffective because any working harmonic filter also restores clipped peaks.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A harmonic filter can reduce higher-frequency multiples without restoring linear operation in an overdriven stage.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The transmitter is now clean because the harmonic level improved.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "One improved emission does not excuse the remaining voice-related splatter and clipping.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "An antenna tuner can remove the remaining modulation distortion without changing transmitter drive.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An impedance match does not restore clipped voice peaks or correct overdrive in the transmitter.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The harmonic reduction is useful, but the separate overdrive or modulation problem remains.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "A clean signal needs both adequate output filtering and operation within the clean drive range.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Excessive microphone gain can drive stages non-linearly and create splatter. Reducing drive is the direct transmitter-side test.", "fr": null }
+      "explanation": {
+        "en": "Different unwanted outputs can need different corrections. Do not treat one successful measurement as a complete repair.",
+        "fr": null
+      }
     }
   ]
 }

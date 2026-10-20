@@ -86,11 +86,43 @@ A transmitter is operating on 4.6 MHz in a workshop test. A measuring receiver h
 
 The cure is not to retune the measuring receiver. The transmitter output filtering, drive level, and amplifier operation need attention.
 
+### Faded practice: finish a harmonic comparison
+
+A controlled bench measurement finds an unwanted output above a test carrier.
+
+- Given: carrier = 6.3 MHz; unwanted output = 25.2 MHz.
+- Find: harmonic number and the corresponding frequency after retuning the carrier to 6.7 MHz.
+- Formula: harmonic number = unwanted / carrier; new harmonic frequency = new carrier x harmonic number.
+- Complete: number = 25.2 / ___ = ___; new frequency = 6.7 x ___ = ___ MHz.
+- Sanity check: Does the frequency ratio stay an integer multiple under the harmonic hypothesis?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a harmonic comparison
+
+25.2 / 6.3 = 4. The corresponding fourth harmonic at a 6.7 MHz carrier is 26.8 MHz. Frequency tracking supports the hypothesis; fix the unwanted output before on-air use.
+
 ### In the real world: 60 Hz hum is a different problem
 
 Canadian household AC power is 60 Hz. A full cycle takes 1 / 60 s = 0.0167 s, or 16.7 ms. That low audio-frequency hum often points to power wiring, grounding, shielding, or audio coupling.
 
 A transmitter harmonic is different. If an RF signal starts at 3.7 MHz, the next integer multiples are 7.4 MHz and 11.1 MHz. Those are RF frequencies, not a 60 Hz hum.
+
+### Faded practice: finish an audio-cycle conversion
+
+Compare a measured audio tone with an RF harmonic; use the period relationship shown above.
+
+- Given: audio tone = 250 Hz.
+- Find: time for a complete cycle in seconds and milliseconds.
+- Formula: period = 1 / frequency; milliseconds = seconds x 1 000.
+- Complete: period = 1 / ___ = ___ s; period = ___ x 1 000 = ___ ms.
+- Sanity check: Is this an audio timing result rather than an integer multiple of an RF carrier?
+
+Fill the gaps before checking below.
+
+### Check your work: finish an audio-cycle conversion
+
+Period = 0.004 s = 4 ms. An audio tone by itself does not prove that a transmitter is radiating RF harmonics.
 
 ### Misconception: hum is the same as RF harmonics
 
@@ -123,7 +155,7 @@ There are two related clues. Local RF interference from key clicks can come from
 
 Key clicks are not fixed by sending slower with the same harsh waveform. The transmitter's keying waveform, keying filter, and later RF stages need attention. The goal is to shape the rise and decay times, not to hide the problem.
 
-### Worked example: sharp keying
+### In the real world: sharp keying
 
 A home-built CW transmitter sounds strong at the station monitor, but a friend several kilometres away reports clicking above and below the signal. The sidetone in the shack sounds normal.
 
@@ -150,11 +182,21 @@ Keep notes. A written log prevents circular troubleshooting and makes it easier 
 
 ## Try it
 
-1. A transmitter on 5.1 MHz is suspected of producing an unwanted signal at 20.4 MHz. Which harmonic is that? Divide 20.4 by 5.1. The result is 4, so it is the fourth harmonic.
-2. A CW exciter change reduces the RF-envelope rise time from about 6 ms to less than 1 ms, and a monitor several kilohertz away hears ticks. Why is simply sending slower not a cure? The problem is the abrupt edge of each keyed carrier element, so the keying-shape network and following RF stages need correction before on-air use.
-3. An RF power amplifier's drive control is advanced until output current rises sharply and a spectrum display shows stronger multiples of the carrier. What adjustment should be tried before blaming the antenna? Reduce RF drive and tune the amplifier as recommended so the stage stays closer to linear operation.
-4. A signal appears just outside the needed bandwidth during voice peaks. Which transmitter setting should be checked early? Check audio drive or microphone gain because overmodulation can create splatter.
-5. A transmitter works normally with one load but becomes unstable and radiates an extra output with another load. What kind of fault should be considered? A parasitic oscillation or unwanted feedback path should be investigated before further transmitting.
+Try these before reading the feedback below.
+
+1. A test carrier is 5.1 MHz and an unwanted output is 20.4 MHz. Which harmonic relationship fits?
+2. A CW change reduces RF-envelope rise time from about 6 ms to below 1 ms, and a nearby-frequency monitor hears ticks. Why is slower sending insufficient?
+3. An amplifier's current and carrier multiples rise sharply as drive is advanced. Which adjustment should be checked before blaming the antenna?
+4. Unwanted energy appears just outside the needed bandwidth during voice peaks. Which transmitter setting deserves an early check?
+5. A transmitter is stable with one load but radiates an extra unstable output with another. What fault should be considered?
+
+### Try-it feedback
+
+1. 20.4 / 5.1 = 4, so the fourth harmonic fits.
+2. Each carrier element still has abrupt edges. Correct the keying-shape network and following stages before on-air use.
+3. Reduce RF drive and follow the manufacturer's tuning guidance for clean operation.
+4. Check audio drive or microphone gain; overmodulation can create splatter.
+5. Investigate parasitic oscillation or unintended feedback before further transmitting.
 
 ## Radio connection
 

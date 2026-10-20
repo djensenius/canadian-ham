@@ -16,36 +16,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-008-01-A-C1",
-      "prompt": { "en": "At a public-service site, a scanner hears a phantom tone only when a paging transmitter and a data link are both active. Moving the scanner and adding an input filter reduce the symptom. What did those tests point toward?", "fr": null },
+      "prompt": {
+        "en": "A whole-cable ferrite reduces RF that flows the same way on both power leads, but a different noise current flowing out on one lead and back on the other remains. Why?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Mixing in a non-linear input path before the wanted channel was selected.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A keying waveform fault, because two voice or data transmitters always create Morse clicks.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A telephone audio pickup path, because an input filter at the scanner fixed telephone wiring.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A transmitter low-pass filter failure, because receiver location changes prove harmonic radiation.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The ferrite has proved that every remaining noise source must be inside the receiver.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A remaining symptom does not locate its source. The two current paths respond differently.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "All noise follows the same path, so the ferrite must have failed between tests.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The observations describe common-mode and differential-mode currents, not necessarily a failed part.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The first current was common mode; the second is differential mode and may need a different filter.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "A whole-cable choke mainly impedes common-mode RF. It is not a universal cure for differential noise.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A ferrite should mainly block the intended DC current, so both tests used the wrong principle.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The intended out-and-back current is usually left mostly unchanged; unwanted common-mode current is the target.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The symptom needs two strong sources and improves when less off-channel energy reaches the scanner input. That points to intermodulation or overload in a non-linear input path, not an automatic transmitter repair.", "fr": null }
+      "explanation": {
+        "en": "Identify how the unwanted current travels before expecting the same cure to work on every noise path.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-008-01-A-C2",
-      "prompt": { "en": "Powered speakers reproduce muffled SSB audio during nearby transmissions. The volume control barely changes the unwanted sound, and shortening the audio lead helps. Which path does that support?", "fr": null },
+      "prompt": {
+        "en": "A narrower IF filter removes an adjacent tone from the audio, but a strong off-band source still desensitizes the receiver. What does that result show?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "RF pickup and audio rectification in the speaker lead or input circuit.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A distant receiver hearing key clicks from sharp CW keying.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A harmonic relationship that must affect only one television channel.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A solved problem, because volume controls always remove rectified RF.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The IF filter helps later selectivity but cannot undo overload that already happened at the front end.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The two symptoms occur at different stages. The strong off-band energy must be reduced before the input stage overloads.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Any successful IF filtering proves that the front end is operating linearly.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Removing a later unwanted tone does not establish adequate headroom in the earlier input stage.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "An input attenuator is a cost-free cure that leaves weak wanted levels unchanged.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Attenuation can help overload but also reduces the wanted weak signal. A suitable input filter is preferable when the frequencies can be separated.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "More RF gain must restore sensitivity regardless of the strong off-band source.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Extra input gain can worsen overload. It does not remove the strong signal that uses up front-end headroom.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Lead length, weak volume-control effect, and demodulated speech in an audio device fit audio rectification. Short leads, routing changes, and ferrites near the affected device test that path.", "fr": null }
+      "explanation": {
+        "en": "A partial improvement can identify one stage without curing a separate earlier-stage problem.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-008-01-A-C3",
-      "prompt": { "en": "A receiver loses weak signals across several tuned frequencies whenever a nearby clean transmitter runs. The unwanted frequency is outside the desired band. What first cure best matches the diagnosis?", "fr": null },
+      "prompt": {
+        "en": "A filter rejects the unwanted frequency correctly, but it was designed for a different nominal impedance than the receiver line. Why can wanted-signal delivery still suffer?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Place a suitable filter before the receiver front end so the strong unwanted signal is reduced before overload.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Add only an audio tone control after detection, because overload starts in the speaker.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Open the transmitter first, because a clean off-channel signal proves spurious emissions.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Use an RF attenuator as the equal first choice, with no cost to wanted weak signals.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Correct rejection frequency guarantees that all wanted power passes without reflection.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Frequency response alone does not guarantee a good system match.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "An impedance mismatch can cause reflections and loss even when the rejected frequency is right.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Match the filter to the line and equipment as well as choosing the correct response.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The filter's centre frequency automatically changes the line's characteristic impedance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The cable's geometry and dielectric set its Z0. Inserting a mismatched network does not redefine the whole line.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Adding coax until the station-end reading looks better guarantees that the filter is now matched internally.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Line length can transform a measured impedance under mismatch. It does not make a filter designed for a different impedance equivalent to a correctly matched filter.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The symptom fits receiver front-end overload or desensitization. The filter belongs before the overloaded stage; attenuation can be a fallback, but it also weakens wanted signals.", "fr": null }
+      "explanation": {
+        "en": "Frequency selection, impedance, and placement are separate filter requirements.",
+        "fr": null
+      }
     }
   ]
 }

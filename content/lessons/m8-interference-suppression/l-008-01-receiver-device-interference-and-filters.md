@@ -81,7 +81,7 @@ A small handheld receiver can behave differently after it is connected to a roof
 
 Simple intermodulation checks use sums and differences. Two signals at frequencies f1 and f2 can create products such as f1 + f2, |f1 - f2|, 2 x f1 - f2, or 2 x f2 - f1. For example, a 104.3 MHz FM broadcast signal and an 18.1 MHz HF signal can mix to 104.3 - 18.1 = 86.2 MHz, inside a VHF receiver's tuning range. The arithmetic suggests what to test; it does not prove which device is non-linear.
 
-### Worked example: overload clue
+### In the real world: overload clue
 
 A club sets up two temporary stations at opposite ends of a park shelter. One station is receiving a weak beacon on a small VHF receiver. Each time the other station transmits nearby on a different VHF channel, the beacon disappears under a rushing sound.
 
@@ -99,6 +99,22 @@ At a sailing-club event, a VHF receiver monitors a weak safety channel on 156.8 
 - Sanity check: the number matches the false signal, so receiver intermodulation is plausible.
 
 The cure is often more separation, less unnecessary gain, or a suitable filter at the receiver input. An RF attenuator can be a fallback test, but it also reduces the wanted signal. This is not a repair to the monitored channel or to every nearby transmitter.
+
+### Faded practice: finish an intermodulation test
+
+Use an arithmetic clue to plan a controlled receiver test, not to assign blame.
+
+- Given: f1 = 149.7 MHz; f2 = 152.6 MHz.
+- Find: a possible third-order product at 2 x f2 - f1.
+- Formula: product = 2 x f2 - f1.
+- Complete: product = 2 x ___ - 149.7 = ___ MHz.
+- Sanity check: Does a frequency match prove where the non-linear mixing occurred?
+
+Fill the gaps before checking below.
+
+### Check your work: finish an intermodulation test
+
+Product = 305.2 - 149.7 = 155.5 MHz. A matching false signal supports further tests, but the mixing junction could be in the receiver or elsewhere. Test filtering and separation without creating interference.
 
 ## Filters at the affected receiver
 
@@ -185,7 +201,7 @@ The cut-off frequency is the boundary region where a low-pass or high-pass filte
 
 A low-pass filter passes frequencies below its cut-off and attenuates frequencies above it. In an AC line filter for station equipment, the wanted power frequency is very low, so the filter should pass the power frequency while attenuating RF noise.
 
-### Worked example: low-pass choice
+### In the real world: low-pass choice
 
 A workshop receiver is meant to monitor a 4.2 MHz propagation beacon, but it sits beside a test rack with a 24 MHz clock oscillator. When the rack is on, the receiver front end overloads even though the wanted beacon is far lower in frequency.
 
@@ -211,7 +227,7 @@ A band-reject filter, sometimes called a band-stop filter, rejects a wider range
 
 A notch filter is narrower. It is aimed at a single interfering frequency or a very small slice of spectrum. It can be effective against one steady carrier close to the desired signal, but it will not remove a whole band of strong signals.
 
-### Worked example: choosing the range
+### In the real world: choosing the range
 
 A station wants to monitor 5.4 MHz and 7.8 MHz, but a very strong utility transmitter around 6.6 MHz overloads the receiver. A band-reject filter centred on the utility transmitter range is a better fit than a simple low-pass or high-pass filter, because the station wants to keep receiving on both sides of the unwanted signal.
 
@@ -259,11 +275,21 @@ A good approach is:
 
 ## Try it
 
-1. A doorbell intercom is quiet when its 18 m button cable is unplugged and noisy again when the cable is reconnected. Explain why shortening that run or adding ferrite near the intercom box is a sensible first test. The long cable can pick up RF and deliver it to a non-linear input, so reducing RF current at the affected device tests the pickup path directly.
-2. A sensitive receiver loses weak signals whenever a nearby test transmitter runs 100 W, but the symptom is much less severe at 10 W. What does that power-change trend suggest? A smooth improvement as the strong signal is reduced supports overload or desensitization rather than a fixed-frequency transmitter defect.
-3. Two strong site transmitters at 151.2 MHz and 153.8 MHz are present when a scanner hears a false signal at 156.4 MHz. Compute a possible third-order product and name a practical first test. 2 x 153.8 - 151.2 = 156.4 MHz, so try a suitable front-end filter ahead of the scanner first. Modest attenuation is only a fallback because it weakens wanted signals too.
-4. A calibration receiver needs to hear a weak signal at 10.140 MHz, but one stable birdie sits 700 Hz away. Is a broad band-reject filter always the best first choice? No. A notch filter may be better for one narrow frequency because it removes less nearby spectrum.
-5. A doorbell intercom lead passes close to a transmitting antenna. A ferrite clipped at the station desk changes nothing, but moving the same ferrite to the intercom end helps. Explain why location matters. The lead section after a choke can still pick up RF, so the choke usually belongs close to the affected device or entry point.
+Try these before reading the feedback below.
+
+1. An intercom is quiet when its 18 m button cable is unplugged. Why test a shorter cable or ferrite near the intercom?
+2. Weak signals disappear near a clean test transmitter at 100 W, but the symptom is much weaker at 10 W. What does that trend suggest?
+3. Transmitters at 151.2 MHz and 153.8 MHz accompany a false scanner signal at 156.4 MHz. Find a possible product and a first test.
+4. A weak 10.140 MHz signal has a stable birdie 700 Hz away. Which filter width deserves consideration?
+5. A choke at the station desk does nothing for an intercom lead, but moving it to the intercom end helps. Why?
+
+### Try-it feedback
+
+1. The long cable can pick up RF and deliver it to a non-linear input. Shortening or choking near the device tests that path.
+2. Smooth improvement as strong RF is reduced supports receiver overload or desensitization rather than proving a transmitter defect.
+3. 2 x 153.8 - 151.2 = 156.4 MHz. Try suitable front-end filtering ahead of the scanner. Attenuation is a fallback because it also weakens wanted signals.
+4. A narrow notch may remove less nearby spectrum than a broad band-reject filter when only one narrow carrier is the problem.
+5. The lead after a choke can still pick up RF, so location close to the affected input matters.
 
 ## Radio connection
 
