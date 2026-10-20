@@ -18,7 +18,7 @@ import { answerMorseCourseSession, morseCourseSummaryMessage, type SessionState 
 import { ADVANCED_BANK_ID, advancedBank, bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
 import { lessonHeadingAnchors, parseMarkdownBlocks } from "./components/MarkdownContent";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
-import { basicQuestionHints, hintForQuestion, type QuestionHint } from "./data/hints";
+import { basicQuestionHints, basicQuestionHintsByQuestionId, hintForQuestion, type QuestionHint } from "./data/hints";
 import { lessonsById } from "./data/lessons";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
@@ -140,7 +140,7 @@ function correctAnswerChoiceForCurrentQuestion(): HTMLElement {
   assert.ok(displayedQuestion);
   const correctAnswerText = displayedQuestion.answers.find((answer) => answer.sourceIndex === 0)?.text.en;
   assert.ok(correctAnswerText);
-  const correctChoice = screen.getAllByTestId("answer-choice").find((choice) => (choice.textContent ?? "").includes(correctAnswerText));
+  const correctChoice = screen.getAllByTestId("answer-choice").find((choice) => choice.querySelector("span[lang]")?.textContent === correctAnswerText);
   assert.ok(correctChoice);
   return correctChoice;
 }
@@ -1121,6 +1121,274 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     await expectNoAxeViolations(quizSection);
   });
 
+  it("freezes lesson quiz help at choice, preserves scores and applies existing progress semantics", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson-quiz-help-progress");
+    const quiz = lessonQuizzesById.get("QZ-L-005-01-A")!;
+    await store.putQuestionProgressMany(quiz.officialQuestionIds.map((questionId) => ({
+      ...weakDueProgressRecord(questionId), leitner: { box: 3, dueAt: fixedNow },
+    })));
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: quiz.id });
+    const section = getLessonQuizSection();
+    const officialIds: string[] = [];
+    let helpedCorrectId = "";
+    let helpedIncorrectId = "";
+    for (let index = 0; index < 11; index += 1) {
+      if (within(section).queryAllByTestId("answer-choice").length > 0) {
+        const id = currentPracticeQuestionId();
+        officialIds.push(id);
+        const ordinal = officialIds.length;
+        if (ordinal <= 3) {
+          vi.useFakeTimers();
+          try {
+            if (within(section).getByRole("button", { name: "Hint" }).getAttribute("aria-expanded") !== "true") {
+              fireEvent.click(within(section).getByRole("button", { name: "Hint" }));
+            }
+            await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+            fireEvent.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+            await act(async () => { await vi.advanceTimersByTimeAsync(ordinal === 1 ? 499 : 500); });
+            const correct = correctAnswerChoiceForCurrentQuestion();
+            const chosen = ordinal === 3 ? within(section).getAllByTestId("answer-choice").find((choice) => choice !== correct)! : correct;
+            fireEvent.click(chosen);
+            // Post-score time cannot convert an early, unaided answer to a helped one.
+            await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+          } finally { vi.useRealTimers(); }
+          if (ordinal === 2) helpedCorrectId = id;
+          if (ordinal === 3) helpedIncorrectId = id;
+          assert.equal(within(section).getByRole("status").textContent?.includes("With help"), ordinal !== 1);
+        } else {
+          fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+          if (ordinal === 4) {
+            vi.useFakeTimers();
+            try {
+              if (within(section).getByRole("button", { name: "Hint" }).getAttribute("aria-expanded") !== "true") fireEvent.click(within(section).getByRole("button", { name: "Hint" }));
+              fireEvent.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+              await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+            } finally { vi.useRealTimers(); }
+            assert.doesNotMatch(within(section).getByRole("status").textContent ?? "", /With help/);
+          }
+        }
+      } else {
+        assert.equal(within(section).queryByRole("button", { name: "Hint" }), null);
+        const meta = section.querySelector(".question-meta")?.textContent ?? "";
+        const concept = quiz.conceptChecks.find((item) => meta.includes(item.id))!;
+        const correct = concept.choices.find((choice) => choice.isCorrect)!;
+        fireEvent.click(within(section).getByRole("button", { name: new RegExp(correct.text.en.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u") }));
+      }
+      if (index < 10) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    }
+    assert.equal(officialIds.length, 8);
+    fireEvent.click(within(section).getByRole("button", { name: "Submit lesson quiz" }));
+    await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+    const attempt = (await store.getLessonQuizAttempts())[0]!;
+    assert.equal(attempt.correct, 10);
+    assert.equal(attempt.total, 11);
+    assert.deepEqual(attempt.answeredWithHelpIds, [helpedCorrectId, helpedIncorrectId].sort());
+    assert.deepEqual(attempt.incorrectOfficialQuestionIds, [helpedIncorrectId]);
+    assert.ok(within(section).getByText("Answers with help: 2."));
+    const records = await store.getQuestionProgress();
+    const correct = records.find((record) => record.questionId === helpedCorrectId)!;
+    const incorrect = records.find((record) => record.questionId === helpedIncorrectId)!;
+    assert.equal(correct.attempts, 4);
+    assert.equal(correct.correctAttempts, 3);
+    assert.equal(correct.lastResult, "correct");
+    assert.deepEqual(correct.recentResults, [true, true, false, true]);
+    assert.deepEqual(correct.recentAnsweredWithHelp, [false, false, false, true]);
+    assert.equal(correct.leitner.box, 3);
+    assert.equal(correct.leitner.dueAt, fixedNow);
+    assert.equal(incorrect.lastResult, "incorrect");
+    assert.equal(incorrect.lastAnsweredWithHelp, true);
+    assert.equal(incorrect.leitner.box, 0);
+    assert.equal(incorrect.leitner.dueAt, fixedNow);
+    assert.equal(records.find((record) => record.questionId === officialIds[0])?.lastAnsweredWithHelp, false);
+    assert.equal(records.find((record) => record.questionId === officialIds[3])?.lastAnsweredWithHelp, false);
+    assert.deepEqual(await store.getLessonProgress(), []);
+    // The marker is still present when reviewing a submitted item.
+    for (let index = 0; index < 10; index += 1) fireEvent.click(within(section).getByRole("button", { name: "Previous" }));
+    for (let index = 0; index < 11; index += 1) {
+      if ((section.querySelector(".question-meta")?.textContent ?? "").includes(helpedCorrectId)) break;
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    }
+    assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+    fireEvent.click(within(section).getByRole("button", { name: "Retry quiz" }));
+    assert.equal(section.querySelector('[aria-pressed="true"]'), null);
+  });
+
+  for (const language of ["en", "fr"] as const) {
+    for (const theme of ["light", "dark"] as const) {
+      it(`supports lesson quiz hint keyboard flow and axe in ${language} ${theme}`, async () => {
+        window.location.hash = "#/learn/M5/L-005-01";
+        window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+        const store = createStore(`lesson-hint-axe-${language}-${theme}`);
+        await store.putPreferences({ ...defaultPreferences, language, theme });
+        const user = userEvent.setup();
+        const { container } = render(<App store={store} now={() => fixedNow} />);
+        await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+        const section = getLessonQuizSection();
+        const next = language === "fr" ? "Suivante" : "Next";
+        // Select a sheet-pointer hint deliberately: lesson quizzes remain hint-only.
+        while (within(section).queryAllByTestId("answer-choice").length === 0
+          || hintForQuestion(currentPracticeQuestionId(), bankId)?.referenceSheetSection == null) {
+          fireEvent.click(within(section).getByRole("button", { name: next }));
+        }
+        assert.equal(within(section).queryByRole("button", { name: /Calculator|Calculatrice/ }), null);
+        assert.equal(within(section).queryByRole("button", { name: /Reference sheet|Feuille de référence/ }), null);
+        const hint = hintForQuestion(currentPracticeQuestionId(), bankId)!;
+        const button = within(section).getByRole("button", { name: language === "fr" ? "Indice" : "Hint" });
+        button.focus();
+        await user.keyboard("{Enter}");
+        await waitFor(() => assert.equal(button.getAttribute("aria-expanded"), "true"));
+        await user.click(within(section).getByRole("button", { name: language === "fr" ? "Afficher l’indice 1" : "Show Hint 1" }));
+        await waitFor(() => assert.match(document.activeElement?.textContent ?? "", /Indice 1|Hint 1/));
+        assert.ok(within(section).getByText(hint.hints[0]![language]));
+        if (hint.hints.length === 2) await user.click(within(section).getByRole("button", { name: language === "fr" ? "Afficher l’indice 2" : "Show Hint 2" }));
+        assert.ok(within(section).getByRole("link", { name: language === "fr" ? "Revoir dans la leçon" : "Review in lesson" }));
+        if (language === "fr") assert.ok(within(section).getByText(/Leçon offerte en anglais seulement/));
+        assert.equal(document.documentElement.dataset.theme, theme);
+        assert.equal(section.querySelector(".hint-reference-pointer"), null);
+        await expectNoAxeViolations(container);
+        await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help|enregistrée avec aide/));
+        await user.keyboard("{Escape}");
+        await waitFor(() => assert.equal(document.activeElement, button));
+        assert.equal(within(section).queryByRole("region", { name: language === "fr" ? "Indice" : "Hint" }), null);
+        const question = testQuestions.find((item) => item.id === hint.questionId)!;
+        fireEvent.click(within(section).getAllByTestId("answer-choice").find((choice) => choice.querySelector("span[lang]")?.textContent === question.answers[0]!.text[language])!);
+        assert.match(within(section).getByRole("status").textContent ?? "", language === "fr" ? /Avec aide/ : /With help/);
+        await expectNoAxeViolations(container);
+        // Complete the quiz and check the translated persisted results summary.
+        for (let index = 0; index < 10; index += 1) {
+          const previous = within(section).getByRole("button", { name: language === "fr" ? "Précédente" : "Previous" });
+          if (!previous.hasAttribute("disabled")) fireEvent.click(previous);
+        }
+        for (let index = 0; index < 11; index += 1) {
+          const choices = [...within(section).queryAllByTestId("answer-choice"), ...within(section).queryAllByTestId("lesson-quiz-choice")];
+          if (!choices[0]?.hasAttribute("disabled")) fireEvent.click(choices[0]!);
+          if (index < 10) fireEvent.click(within(section).getByRole("button", { name: next }));
+        }
+        fireEvent.click(within(section).getByRole("button", { name: language === "fr" ? "Soumettre le questionnaire de leçon" : "Submit lesson quiz" }));
+        await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+        assert.ok(within(section).getByText(language === "fr" ? "Réponses avec aide : 1." : "Answers with help: 1."));
+        await expectNoAxeViolations(container);
+      });
+    }
+  }
+
+  it("keeps lesson quiz answers and qualified hints through current-lesson and other-lesson links", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson-quiz-hint-navigation");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    let section = getLessonQuizSection();
+    const seen: string[] = [];
+    for (let index = 0; index < 11; index += 1) {
+      if (within(section).queryAllByTestId("answer-choice").length > 0) {
+        const id = currentPracticeQuestionId();
+        const hint = hintForQuestion(id, bankId)!;
+        if (seen.length === 0 && hint.lessonLink.lessonId === "L-005-01") {
+          seen.push(id);
+          await user.click(within(section).getByRole("button", { name: "Hint" }));
+          await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+          if (hint.hints.length === 2) await user.click(within(section).getByRole("button", { name: "Show Hint 2" }));
+          await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help/));
+          const link = within(section).getByRole("link", { name: "Review in lesson" });
+          assert.equal(link.getAttribute("href"), "#/learn/M5/L-005-01");
+          await user.click(link);
+          if (hint.lessonLink.sectionAnchor !== undefined) await waitFor(() => assert.equal(document.activeElement?.id, hint.lessonLink.sectionAnchor));
+          assert.equal(currentPracticeQuestionId(), id);
+          fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+          assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+          // Route to another lesson and back: answer, permutation, hint level and help survive.
+          await act(async () => { window.location.hash = "#/learn/M5/L-005-02"; });
+          await screen.findByRole("heading", { name: "QZ-L-005-02-A" });
+          await act(async () => { window.location.hash = "#/learn/M5/L-005-01"; });
+          await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+          section = getLessonQuizSection();
+          assert.equal(currentPracticeQuestionId(), id);
+          assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+          await user.click(within(section).getByRole("button", { name: "Hint" }));
+          assert.ok(within(section).getByRole("link", { name: "Review in lesson" }));
+          break;
+        }
+      }
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    }
+    assert.equal(seen.length, 1);
+  });
+
+  it("handles a one-level lesson hint and cancels qualification when it closes early", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    render(<App store={createStore("lesson-one-level-hint")} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    const section = getLessonQuizSection();
+    while (!(section.querySelector(".question-meta")?.textContent ?? "").includes("B-005-002-003")) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(within(section).getByRole("button", { name: "Hint" }));
+      fireEvent.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      assert.equal(within(section).queryByRole("button", { name: "Show Hint 2" }), null);
+      assert.ok(within(section).getByRole("link", { name: "Review in lesson" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(within(section).getByRole("button", { name: "Close tool" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      assert.doesNotMatch(within(section).getByRole("status").textContent ?? "", /With help/);
+    } finally { vi.useRealTimers(); }
+  });
+
+  it("stops unqualified help timing when a hint opens the current lesson", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    render(<App store={createStore("lesson-hint-link-timer")} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    const section = getLessonQuizSection();
+    while (!(section.querySelector(".question-meta")?.textContent ?? "").includes("B-005-002-003")) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(within(section).getByRole("button", { name: "Hint" }));
+      fireEvent.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(within(section).getByRole("link", { name: "Review in lesson" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+      assert.equal(within(section).queryByRole("region", { name: "Hint" }), null);
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      assert.doesNotMatch(within(section).getByRole("status").textContent ?? "", /With help/);
+    } finally { vi.useRealTimers(); }
+  });
+
+  it("preserves the quiz when a hint links to a different lesson", async () => {
+    // Current content links each hint to its own lesson; exercise the supported other-lesson route.
+    const quiz = lessonQuizzesById.get("QZ-L-005-01-A")!;
+    const originals = quiz.officialQuestionIds.map((id) => hintForQuestion(id, bankId)!);
+    for (const hint of originals) basicQuestionHintsByQuestionId.set(hint.questionId, { ...hint, lessonLink: { lessonId: "L-005-02" } });
+    try {
+      window.location.hash = "#/learn/M5/L-005-01";
+      const user = userEvent.setup();
+      render(<App store={createStore("lesson-other-hint-link")} now={() => fixedNow} />);
+      await screen.findByRole("heading", { name: quiz.id });
+      let section = getLessonQuizSection();
+      while (within(section).queryAllByTestId("answer-choice").length === 0) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      const id = currentPracticeQuestionId();
+      const hint = hintForQuestion(id, bankId)!;
+      await user.click(within(section).getByRole("button", { name: "Hint" }));
+      await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      if (hint.hints.length === 2) await user.click(within(section).getByRole("button", { name: "Show Hint 2" }));
+      await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help/));
+      await user.click(within(section).getByRole("link", { name: "Review in lesson" }));
+      await screen.findByRole("heading", { name: "QZ-L-005-02-A" });
+      await act(async () => { window.location.hash = "#/learn/M5/L-005-01"; });
+      await screen.findByRole("heading", { name: quiz.id });
+      section = getLessonQuizSection();
+      assert.equal(currentPracticeQuestionId(), id);
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+      await user.click(within(section).getByRole("button", { name: "Hint" }));
+      assert.ok(within(section).getByRole("link", { name: "Review in lesson" }));
+    } finally {
+      for (const hint of originals) basicQuestionHintsByQuestionId.set(hint.questionId, hint);
+    }
+  });
+
   it("renders Practice with immediate feedback, progress persistence, and no axe violations", async () => {
     window.location.hash = "#/practice";
     const store = createStore("practice");
@@ -1137,7 +1405,7 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     const correctAnswerText = displayedQuestion.answers.find((answer) => answer.sourceIndex === 0)?.text.en;
     assert.ok(correctAnswerText);
     const choices = screen.getAllByTestId("answer-choice");
-    const wrongChoice = choices.find((choice) => !(choice.textContent ?? "").includes(correctAnswerText));
+    const wrongChoice = choices.find((choice) => choice.querySelector("span[lang]")?.textContent !== correctAnswerText);
     assert.ok(wrongChoice);
     fireEvent.click(wrongChoice);
     await screen.findByRole("status");
