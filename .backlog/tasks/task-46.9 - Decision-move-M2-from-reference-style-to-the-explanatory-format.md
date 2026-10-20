@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-20 13:06'
+updated_date: '2026-10-20 13:08'
 labels:
   - content
 dependencies: []
@@ -46,4 +46,6 @@ Owner decision 2026-10-12: yes, do it. See docs/lesson-review/README.md and docs
 Before rewriting: extracted teaching from all four M2 lessons and checked all 99 official questions (44/33/11/11). Baseline ledger: docs/lesson-review/m2-explanatory-taught-facts.md. No FR versions exist (all title.fr fields are null). Preserve all front matter, 99 official quiz IDs and four figure directives. Existing review gaps in sideband convention and S-unit reasoning will be taught explicitly.
 
 L-002-01 complete: concept-led path/access, calling and spectrum-sharing sections; worked offset and join-in examples; faded positive-offset Try it with separate feedback; three original concept checks (including signal-quality retrieval). All 44 mapped bank questions retained and compared in the ledger. Removed its now-stale calling-pattern originality exception. Targeted checks passed: coverage (37 lessons), M2 quizzes (99 official IDs, 3 concept checks), all-lesson originality (0 issues/stale entries).
+
+L-002-02 complete: Morse contact sequence and group jobs, honest RS/RST interpretation, explicit two-doubling S-unit derivation plus upward/downward worked examples, faded reduction Try it and three original checks. All 33 mapped questions plus the old extra Q signals retained in the ledger. Removed its stale calling-pattern exception. Targeted M2 quiz check passed (99 official, 6 concept checks); originality initially flagged the standard 6 dB/fourfold pair repeated in the new worked example, so removed the redundant dB restatement from that example while retaining the derivation in the concept section. All-lesson originality rerun passed with no issues or stale entries.
 <!-- SECTION:NOTES:END -->
