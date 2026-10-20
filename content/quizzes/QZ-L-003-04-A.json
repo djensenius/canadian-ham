@@ -59,7 +59,7 @@
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The terminal names and lengths are reversed. In this simple Yagi, the reflector is longer and the director shorter.",
+            "en": "The element names are swapped. The long rear element is the reflector; the short front element is the director.",
             "fr": null
           }
         }

@@ -132,7 +132,7 @@ Ideal time is 8 h. The exercise budget is 8 h x 0.75 = 6 h. Real use still needs
 Stop and make your decisions before reading the feedback.
 
 1. You hear a distress break-in, but your station cannot reach the people directly. Name two useful actions you can still take.
-2. Finish a planning estimate: a 9 Ah battery supplies an average 1.5 A. Ideal time = 9 / ___ = ___ h. Why should the operating plan use less than that time?
+2. Estimate the ideal runtime of a 9 Ah battery supplying an average 1.5 A. Explain why the operating plan should use less time.
 3. An exercise note lists a call sign and “needs assistance” but no location. What should you obtain before relaying the request?
 
 ### Check your thinking

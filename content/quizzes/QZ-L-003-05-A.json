@@ -54,12 +54,12 @@
         },
         {
           "text": {
-            "en": "Less RF frequency drift; a wider tuning range set by the keying edges.",
+            "en": "Less RF frequency drift and automatic removal of existing key clicks.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Better stability can reduce drift, but keying edges do not set the oscillator tuning range.",
+            "en": "Improved oscillator stability can reduce drift, but it does not automatically change the on-off envelope that causes key clicks.",
             "fr": null
           }
         }

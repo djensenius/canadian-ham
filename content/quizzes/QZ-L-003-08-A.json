@@ -129,57 +129,57 @@
     {
       "id": "QZ-L-003-08-A-C3",
       "prompt": {
-        "en": "An indoor transmitting antenna has low SWR. People can still approach its main beam. Which plan addresses human RF exposure rather than equipment matching?",
+        "en": "A free-space point-source calculation predicts a large exposure reduction at a new operating position beside metal structures. What can that calculation establish by itself?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Retune for an even lower SWR, keeping people and power unchanged.",
+            "en": "Approval of the occupied position, because the distance ratio always describes a real antenna.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A lower SWR improves the equipment match. It does not establish safe exposure for nearby people.",
+            "en": "Real antennas, nearby structures, and reflections can depart from the model. The ratio alone is not an assessment.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Raise power to improve the link while keeping people in the same places.",
+            "en": "Approval whenever SWR is low, because the antenna then has the assumed pattern.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "More power can increase exposure. Link strength alone does not establish a safe occupied area.",
+            "en": "SWR measures match, not the actual exposure pattern at that position.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Keep power and access unchanged after confirming frequency stability.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "Frequency stability is a signal-quality requirement, not a human exposure assessment.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "Reassess distance, beam direction, power, operating time, and access to the antenna.",
+            "en": "A model-based comparison, but not approval of the real occupied position.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Exposure depends on the radiated field and where people can be. Use the relevant exposure framework; low SWR is not clearance.",
+            "en": "The simple ratio helps explain distance effects. A real assessment must account for the installation and actual operating conditions.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Approval whenever the calculated ratio is below the old value, regardless of the old exposure.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A relative reduction does not establish a safe absolute exposure, even if the model applied exactly.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Equipment matching and human exposure are separate checks. Antenna placement, beam direction, power, time, and access all affect the exposure plan.",
+        "en": "An estimate can guide planning without proving compliance or safety at a real location.",
         "fr": null
       }
     }

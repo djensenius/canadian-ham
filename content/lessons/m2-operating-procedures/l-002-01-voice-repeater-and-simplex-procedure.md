@@ -172,7 +172,7 @@ Changing propagation can bring new interference into an ongoing contact. Agree o
 
 Pause here. Work through each prompt before reading the feedback below.
 
-1. Finish this setup: an illustrative two-metre output is 147.180 MHz with a positive standard offset. Convert the offset to MHz, then fill in 147.180 + ___ = ___ MHz.
+1. An illustrative two-metre repeater output is 147.180 MHz with a positive standard offset. Find the radio's transmit frequency.
 2. You hear your friend clearly on a repeater input. What still needs checking before you move the conversation off the repeater?
 3. A nearby station says your voice is strong but distorted. Recall the signal-quality lesson: should your first move be more RF power or an audio-setting check?
 

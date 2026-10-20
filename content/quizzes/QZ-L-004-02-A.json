@@ -15,57 +15,57 @@
     {
       "id": "QZ-L-004-02-A-C1",
       "prompt": {
-        "en": "A transistor relay switch is driven into saturation, while an audio preamplifier must preserve a smooth waveform. Which bias choice fits both jobs?",
+        "en": "A control pin cannot safely supply a fan's current. In a suitable transistor driver, what provides the energy that runs the fan?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Keep both devices in the middle of the active region for their intended on state.",
+            "en": "The pin supplies all fan power; the transistor only changes its voltage.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The active region suits smooth gain, but an intended switch on state commonly uses saturation rather than partial conduction.",
+            "en": "The driver controls a larger current path from the fan supply. It does not make the pin deliver all the fan energy.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Drive both devices into saturation whenever the input is present.",
+            "en": "The transistor supplies stored energy continuously without drawing from the fan supply.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Saturation can be useful for switching, but it does not preserve proportional changes at audio peaks.",
+            "en": "A transistor is not a continuous energy source. The supply still powers the load.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Use saturation for the relay on state and the active region for smooth audio gain.",
+            "en": "The fan supply provides the load energy while the small pin signal controls that current path.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "A switch deliberately moves between cut-off and saturation. A linear preamplifier needs room to vary smoothly in its active region.",
+            "en": "The control and power paths have different jobs. Device and pin ratings must still suit the circuit.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Keep the relay device in cut-off and use saturation for smooth audio gain.",
+            "en": "The base resistor converts the pin's small power into a larger amount of fan power.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Cut-off is the switch off state. Saturation is not the smooth-gain region for the audio stage.",
+            "en": "A resistor cannot multiply energy. It limits control current; the fan supply provides the load power.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "The same device family can serve different jobs. Bias must match switching or proportional amplification rather than treating saturation as always good or always faulty.",
+        "en": "A small signal can control a larger supply current without providing the load's energy itself.",
         "fr": null
       }
     },
@@ -129,57 +129,57 @@
     {
       "id": "QZ-L-004-02-A-C3",
       "prompt": {
-        "en": "In a triode exercise, heater and plate supply settings stay steady. Making the grid more negative reduces plate current. What explains that result?",
+        "en": "A learner compares a FET with a vacuum triode. Which similarity is useful without treating them as interchangeable parts?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The grid screens interference but has no control over electron flow.",
+            "en": "Both use the same solid semiconductor channel, so the same bias and ratings apply.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A triode grid is the control element between cathode and plate. It does more than act as a passive shield.",
+            "en": "A FET uses semiconductor material, while a triode has an electron path through a vacuum.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "A steady heater fixes plate current regardless of grid voltage.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "The heater supports electron emission, but the grid can still control how much of that stream reaches the plate.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "A more negative grid attracts more electrons into the plate circuit.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "A more negative grid opposes the electron stream toward the plate in this operating model.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "Grid voltage controls the electron stream between cathode and plate.",
+            "en": "Both use an electric field at a control terminal to influence a separate current path.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Changing grid voltage controls the larger plate-circuit current, which is the basis of triode amplification.",
+            "en": "That is the useful analogy. Their construction, bias requirements, and ratings are still different.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both need the same heated cathode before their channel conducts.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A triode uses a heated electron-emitting cathode. A FET is not a heated-cathode vacuum device.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both can replace a bipolar transistor without checking terminal functions.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Similar control roles do not establish pin compatibility or suitable bias and ratings.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Cathode emission, plate attraction, and grid control have different roles. The grid can vary output current without being the source of that output energy.",
+        "en": "Use analogies to connect control ideas, not to approve component substitutions.",
         "fr": null
       }
     }

@@ -15,57 +15,57 @@
     {
       "id": "QZ-L-003-06-A-C1",
       "prompt": {
-        "en": "VOX catches the first words correctly in a quiet room, but holds transmit on for several seconds after each sentence. Which change targets that symptom?",
+        "en": "An SSB processor raises average output while the transmitter is already at its clean peak limit. Which operating decision follows?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Increase trigger sensitivity so speech starts transmit sooner.",
+            "en": "Increase drive until the peak reading rises as much as the average reading.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The start of speech is already caught. Sensitivity controls triggering, not the intended hold after speech ends.",
+            "en": "The clean peak limit is already reached. More drive can cause clipping and unwanted bandwidth.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Raise microphone gain so the trigger sees larger voice peaks.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "More microphone gain can create overdrive or false triggering. It does not directly shorten the hold time.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "Shorten attack time so the transmitter starts more quickly.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "Attack affects the beginning of transmit. This symptom occurs after the sentence ends.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "Shorten VOX delay or hang time while retaining reliable triggering.",
+            "en": "Reduce processing or drive as needed to keep peaks within the clean limit.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Hang time controls how long transmit stays on after speech stops. Retest so pauses remain usable without holding the channel too long.",
+            "en": "A higher average reading does not justify exceeding the peak limit or losing clean operation.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Treat a higher average reading as proof that the peak limit has increased.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Processing changes the distribution of signal levels, not the transmitter's allowed clean peak.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Judge the setting by the average meter alone because processed speech has no separate peak limit.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Processing does not remove peak limits. Both the envelope peaks and the transmitted quality still matter.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "VOX has separate start and end controls. Trigger sensitivity and attack affect speech onset; hang time controls the tail after speech.",
+        "en": "Average power and peak envelope power are different. Processing cannot create extra clean peak headroom.",
         "fr": null
       }
     },

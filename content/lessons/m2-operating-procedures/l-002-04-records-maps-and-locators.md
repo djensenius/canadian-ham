@@ -160,8 +160,8 @@ Standard time and frequency stations CHU, WWV, and WWVH provide accurate referen
 
 Work these out before reading the feedback. Keep dates beside your times.
 
-1. Finish a local-time reminder: an event is at 0145 UTC on 20 May. Your stated zone is UTC minus 5 hours. After subtracting, the local time is ___ on ___ May. Express it in AM/PM too.
-2. A map shows a short-path heading of 235 degrees. Add half a turn, then remove a full turn if needed. What heading should you try for long path?
+1. An event is at 0145 UTC on 20 May. Your stated zone is UTC minus 5 hours. Find the local date and time, including an AM/PM version.
+2. A map shows a short-path heading of 235 degrees. Find the long-path heading.
 3. Your contact partner's local date differs from yours. Which record fields should you compare before assuming you logged different contacts?
 
 ### Check your thinking

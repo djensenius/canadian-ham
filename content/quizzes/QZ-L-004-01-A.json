@@ -72,114 +72,114 @@
     {
       "id": "QZ-L-004-01-A-C2",
       "prompt": {
-        "en": "An audio amplifier is overdriven until voice peaks flatten. Which interpretation fits the change in waveform shape?",
+        "en": "Two amplifiers preserve a test waveform equally well, but one draws more DC power for the same RF output. Which comparison follows?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Uniform gain reduction that preserves the full speech waveform.",
+            "en": "The higher-draw amplifier must be more non-linear.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Uniform scaling preserves shape. Flattening only the peaks changes the relative shape of the waveform.",
+            "en": "Extra DC draw can mean more wasted heat even when the waveform is equally clean.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Non-linear clipping that can create extra frequency products.",
+            "en": "The lower-draw amplifier has less voltage gain even if its RF output is the same.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Efficiency compares power conversion. The observations do not establish a voltage-gain difference.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both have equal efficiency because both preserve waveform shape.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Clean shape addresses linearity, not how much DC power is converted to useful output.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The higher-draw amplifier is less efficient; the test does not show worse linearity.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "The output no longer follows the input proportionally. Clipping changes the shape and can create unwanted products.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "Linear gain with greater output headroom for the same voice peaks.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "Headroom is room for peaks before clipping. Flattened peaks show that the clean range has been exceeded.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "Filtering that removes only background noise while retaining the original peaks.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "The wanted speech peaks themselves changed. This is not evidence that only unwanted noise was removed.",
+            "en": "For equal useful output, more DC input means lower efficiency. The equal waveform quality is separate evidence about linearity.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Linearity concerns preserving shape, not simply making the output louder or more efficient. Excess drive can turn useful gain into distortion.",
+        "en": "Judge signal shape and power conversion separately. Clean amplification can still waste considerable heat.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-01-A-C3",
       "prompt": {
-        "en": "A training supply has a sine-wave input and output pulses of the same polarity on both half-cycles, even with its smoothing capacitor removed. Which function produced that change?",
+        "en": "An LED indicator is moved to a higher supply voltage while its series resistor and assumed LED drop stay unchanged. What should be rechecked?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Holding output near a fixed voltage with a regulator.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "Regulation holds voltage closer to a target as conditions change. It is not what steers both AC half-cycles into the same polarity.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "Storing charge between peaks with a filter capacitor.",
-            "fr": null
-          },
-          "isCorrect": false,
-          "feedback": {
-            "en": "The pulses remain when the capacitor is removed. Filtering smooths pulses rather than creating the one-polarity waveform.",
-            "fr": null
-          }
-        },
-        {
-          "text": {
-            "en": "Steering current with a bridge rectifier.",
+            "en": "The greater resistor voltage raises current and heat, so its value and wattage need checking.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "The bridge uses diode direction to make both half-cycles feed the same DC polarity. Filtering is a later job.",
+            "en": "The resistor must now drop more voltage. With unchanged resistance, current and power dissipation rise.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Blocking a reversed battery with a series protection diode.",
+            "en": "Keep the resistor unchanged if the replacement supply has the same maximum current rating.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A series input diode can block a reversed DC source. It does not steer both halves of AC into a full-wave output.",
+            "en": "Supply current capacity is not a current regulator for the LED. The higher applied voltage still changes current through the resistor.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Only the resistor wattage; its current stays fixed because the LED holds its own drop.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A roughly fixed LED drop leaves more voltage across the same resistor, increasing current as well as heat.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Only the resistance; its wattage becomes less important as supply voltage rises.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Both current-setting resistance and safe heat dissipation matter at the higher supply.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Rectification changes current direction behaviour. Filtering smooths the result, while regulation controls the output level.",
+        "en": "A resistor chosen for one supply is not automatically suitable when the supply changes.",
         "fr": null
       }
     }
