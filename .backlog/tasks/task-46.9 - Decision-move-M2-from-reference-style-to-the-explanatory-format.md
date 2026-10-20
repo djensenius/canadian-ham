@@ -1,11 +1,11 @@
 ---
 id: TASK-46.9
 title: Move M2 from reference style to the explanatory format
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-20 13:28'
+updated_date: '2026-10-20 13:36'
 labels:
   - content
 dependencies: []
@@ -62,10 +62,16 @@ pnpm test: release-permission self-test, content-tools 153/153, Morse 21/21, cal
 No Apple UI suites/app builds were run (content-only, per request). All four figure-bearing lessons changed surrounding text: coordinator should run the CanadianHamLessonFigures plan before merge; sources, directives, alt text, text equivalents and briefs are unchanged. No lesson renumbering or progress migration. Independent branch review still required; no PR opened.
 
 Internal review requested changes (findings 1–9): reopening for the approved focused revision. No Apple runs in this round.
+
+Internal-review fixes committed as ea3b173b0197c8cad96558f3f81dc81449dd70ba. Replaced/reworked exactly the six flagged checks (01-C1/C3, 02-C1, 03-C3, 04-C1/C3) for changed-condition/transfer reasoning, with unchanged IDs, one correct choice each, varied positions and explanations addressing every distractor. Added concept headings for simplex, plain-language location, voice reports, above-S9 strength, repeater reports, indirect help and standard time/frequency; retargeted 12 hints and rechecked all 99 M2 anchors. Addressed all wording/memory-cue notes 3–9 and updated the taught-facts ledger with review-round details.
+All requested checks passed: coverage 100/100 across 37 lessons; all-lesson originality 0 issues/0 stale; explanations 984/984 with 2952 notes; quizzes 37 files/521 official refs/92 checks; links; figures 53 fixtures/39 SVGs; complete hints 984/984 plus explicit 99/99 M2 run; schemas 2034 targets/55 tests; both bank imports and 34 reference-sheet entries; content-swift 23/23 including hint anchors and real Markdown. Re-ran quiz validation after final distractor wording. Invariant comparison against 52b9e572 confirms unchanged front matter, four figure directives/text equivalents/briefs, all ordered 99 official refs and 12 concept IDs; hint changes are anchors only, and all 99 IDs remain in the ledger. git diff --check passed. Validation outputs and comparison-script location are recorded in docs/lesson-review/m2-explanatory-taught-facts.md.
+No Apple app builds/UI suites, no new full pnpm test run, no PR. Earlier web aggregate timeouts remain historical evidence, not relabelled green. Requires independent re-review; coordinator figure-plan validation remains deferred.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
 Reworked all four M2 lessons into concept-led teaching with worked and faded practice, separated Try-it feedback, common mistakes, and 12 original concept checks. Preserved every fact needed for all 99 mapped bank questions, all lesson front matter/IDs, ordered official quiz lists, and figure directives; the library remains 37 lessons. Added a before/after fact ledger and updated M2 format guidance, removed two stale originality exceptions, and remapped 99 hint anchors without changing EN/FR hint prose. Required content checks and 23 content-swift tests passed. The aggregate pnpm test run had two unchanged web timeout failures; both passed focused default-timeout reruns, with no test-source changes. Task notes and the ledger record the initial failures and reruns transparently. Content-only worker did not run Apple UI suites; coordinator should run the figure plan for the changed figure-bearing lessons. Committed/pushed lesson groups; no PR opened; ready for required independent branch review.
+
+Review round: addressed both blocking findings and notes 3–9 in ea3b173b0197c8cad96558f3f81dc81449dd70ba. Six concept checks now test transfer or changed conditions; moved concepts have precise headings and 12 retargeted hints, with all 99 anchors validated. Standard report wording, urgency linkage, unambiguous channel wording and old Q-signal cues are restored. All requested content checks and 23 content-swift tests passed; immutable lesson/quiz/figure data verified. Ready for required independent re-review; no PR or Apple app/UI runs.
 <!-- SECTION:FINAL_SUMMARY:END -->
