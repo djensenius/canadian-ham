@@ -4,7 +4,7 @@ title: Investigate residual iOS heading-wait and single-figure audit flakes
 status: To Do
 assignee: []
 created_date: '2026-10-20 06:58'
-updated_date: '2026-10-20 10:39'
+updated_date: '2026-10-20 12:13'
 labels:
   - apple
   - testing
@@ -28,3 +28,14 @@ TASK-33 required iPhone 17 Pro runs exposed three unchanged test flakes. (1) tes
 - [ ] #2 Relevant light/dark sending-results and Ohms-law/M7 figure tests retain every existing assertion and accessibility audit without skips, narrowed audit types, or relaxed exception handlers.
 - [ ] #3 Targeted iPhone 17 Pro results for the affected methods and any residual flakiness are recorded; do not repeat full suites solely for this follow-up.
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+TASK-33 final evidence (all tests unchanged; no flake fix claimed):
+1. Sending-results light failed at the 5 s post-Grade heading wait in /tmp/task-33-after.log (78.654 s); isolated /tmp/task-33-sending-results-rerun.log passed 91.923 s, outer wall208 s, exit0.
+2. Ohms-law dark failed with accessibilityAudit Code=-56 in /tmp/task-33-after.log (471.508 s); the figure full run subsequently passed dark1316.588 s and light1321.591 s; isolated /tmp/task-33-ohms-dark-rerun.log passed1217.286 s, outer wall1253 s, exit0. Both pure-figure methods moved intact into the figure plan.
+3. Single-figure M7 dark failed with Code=-56 in /tmp/task-33-figures.log (230.276 s); coordinator-run isolated /tmp/task-33-m7-dark-rerun.log passed257.999 s, outer wall402 s, exit0. It already has one lesson and one figure and cannot be range-split further.
+Full-run totals: default126 UI (superset of final124),3 existing skips,2 failures, UI elapsed11390.378 s/outer11533 s; figure47 UI,1 failure, elapsed11444.382 s/outer11520 s. Units190 passed. Complete per-test results and literal failure lines: docs/testing/task-33-ios-results.md; result bundles use corresponding /tmp log basenames.
+Host-load evidence at2026-10-20T10:39:35Z: load81.94/81.56/88.02, simulator testmanagerd99.9%CPU, two lockf84.9%/84.1%, host/simulator diagnosticd55.8%/50.2%, exactly one active xcodebuild observed. Coordinator confirmed FluxTerm builds shared the xbuild lock. No other lane process stopped; contention is context, not demonstrated causation. Supervisor approved TASK-33 acceptance with these documented unchanged failures plus passing isolated reruns; this follow-up remains To Do.
+<!-- SECTION:NOTES:END -->
