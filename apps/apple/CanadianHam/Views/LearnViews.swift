@@ -610,6 +610,25 @@ final class LessonQuizSessionState: ObservableObject {
     @Published var hintQualifiedQuestionIds: Set<String> = []
     @Published var answeredWithHelpIds: Set<String> = []
 
+    func select(_ sourceOrChoiceIndex: Int, for item: LessonQuizRuntimeItem) {
+        guard selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return }
+        if let questionID = item.questionID {
+            answeredWithHelpIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
+                questionID: questionID,
+                qualifiedQuestionIds: hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: answeredWithHelpIds
+            )
+        }
+        selectedByItemId[item.id] = sourceOrChoiceIndex
+    }
+
+    @discardableResult
+    func qualifyHint(for item: LessonQuizRuntimeItem) -> Bool {
+        guard items[safe: currentIndex]?.id == item.id, let questionID = item.questionID,
+              selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return false }
+        return hintQualifiedQuestionIds.insert(questionID).inserted
+    }
+
     init() {
 #if DEBUG
         seed = AppLaunchArguments.value(after: "-CanadianHamLessonQuizSeed") ?? "lesson-quiz/\(UUID().uuidString)"
@@ -778,15 +797,7 @@ private struct LessonQuizView: View {
                     answeredWithHelp: item.questionID.map { state.answeredWithHelpIds.contains($0) } ?? false,
                     disabled: selectedByItemId[item.id] != nil || submittedAttemptID != nil
                 ) { selected in
-                    guard selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return }
-                    if let questionID = item.questionID {
-                        state.answeredWithHelpIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
-                            questionID: questionID,
-                            qualifiedQuestionIds: state.hintQualifiedQuestionIds,
-                            answeredWithHelpQuestionIds: state.answeredWithHelpIds
-                        )
-                    }
-                    selectedByItemId[item.id] = selected
+                    state.select(selected, for: item)
                 }
                 ViewThatFits(in: .horizontal) {
                     HStack { navigationButtons }
@@ -829,9 +840,7 @@ private struct LessonQuizView: View {
             referenceSheetAvailable: false,
             revealLevel: { state.hintLevelsByQuestionId[questionID] = max(state.hintLevelsByQuestionId[questionID] ?? 0, $0) },
             hintVisibleLongEnough: {
-                guard items[safe: currentIndex]?.id == item.id,
-                      selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return false }
-                return state.hintQualifiedQuestionIds.insert(questionID).inserted
+                state.qualifyHint(for: item)
             },
             openLesson: { link in
                 selectedTool = nil

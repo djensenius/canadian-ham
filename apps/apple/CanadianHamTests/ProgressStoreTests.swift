@@ -58,6 +58,40 @@ final class ProgressStoreTests: XCTestCase {
         }
     }
 
+    func testLessonQuizHintVisibilityUsesHalfSecondAndFreezesHelpAtChoice() async throws {
+        let state = LessonQuizSessionState()
+        let item = LessonQuizRuntimeItem.official(id: "official", questionId: "B-005-001-001", choicePermutation: [0, 1, 2, 3])
+        state.items = [item]
+        let timer = HintVisibilityQualificationTimer()
+        XCTAssertEqual(HintVisibilityQualificationTimer.defaultDelayNanoseconds, 500_000_000)
+        timer.begin(questionID: "B-005-001-001", canRecordHelp: true, alreadyQualified: false) {
+            state.qualifyHint(for: item)
+        }
+        try await Task.sleep(nanoseconds: 200_000_000)
+        XCTAssertTrue(state.hintQualifiedQuestionIds.isEmpty)
+        state.select(0, for: item)
+        try await Task.sleep(nanoseconds: 600_000_000)
+        XCTAssertTrue(state.answeredWithHelpIds.isEmpty, "A later timer must not change an already-scored answer")
+        XCTAssertFalse(state.qualifyHint(for: item))
+        timer.cancel()
+
+        let helped = LessonQuizSessionState()
+        helped.items = [item]
+        timer.begin(questionID: "B-005-001-001", canRecordHelp: true, alreadyQualified: false) {
+            helped.qualifyHint(for: item)
+        }
+        try await Task.sleep(nanoseconds: 750_000_000)
+        XCTAssertEqual(helped.hintQualifiedQuestionIds, ["B-005-001-001"])
+        XCTAssertTrue(helped.answeredWithHelpIds.isEmpty, "Qualification alone is not an answered record")
+        helped.select(0, for: item)
+        XCTAssertEqual(helped.answeredWithHelpIds, ["B-005-001-001"])
+        helped.select(1, for: item)
+        XCTAssertEqual(helped.selectedByItemId[item.id], 0, "Choices are frozen after revealing correctness")
+        helped.submittedAttemptID = "saved"
+        XCTAssertFalse(helped.qualifyHint(for: item))
+        timer.cancel()
+    }
+
     func testLessonQuizSessionCachePreservesAnswersAndFrozenHelpAcrossNavigation() {
         let cache = LessonQuizSessionStateCache()
         let session = cache.state(for: "QZ-L-005-01-A")
