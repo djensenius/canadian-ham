@@ -150,4 +150,15 @@ the older content behind the historical timeout; it remains covered in the figur
 - Core and sending launch count: **22 → 8** across both appearances (14 fewer), with
   identical 24 audit tuples. Other launches and all unchanged audit loops remain.
 - Runtime wall clocks, executed counts, per-test results, and any existing skips/flakes
-  are recorded separately in the task notes and runtime evidence document.
+  are recorded separately in the task notes and runtime evidence document. The
+  supervisor-approved full baseline is the historical `train-2026-10-17` run at
+  `029f2d4992f52df72fae258daf892a465cb53841`, not a same-revision control: it had
+  138 UI methods (31 figure + 107 other), 142 unit tests, three existing UI skips,
+  and one largest-text Enlarge-sheet failure. Its UI suite elapsed wall clock was
+  18,233.683 seconds. It predates the current branch by more than two days, so
+  raw wall-clock differences cannot be attributed entirely to this consolidation.
+  A current pre-consolidation calibration sample passed the same dark/light
+  medium-detent audits in 322.972/311.446 seconds versus 281.381/286.590 seconds
+  historically (combined 634.418 vs 567.971 seconds, 11.7% slower). The current
+  baseline was intentionally interrupted only after supervisor approval; it is
+  not represented as a completed suite. No other build was stopped.
