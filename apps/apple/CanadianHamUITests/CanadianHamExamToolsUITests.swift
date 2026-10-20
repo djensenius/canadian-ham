@@ -180,13 +180,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testSimulatedHingeStableSlightOpenPeeksHintOneInPractice() throws {
-        let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
-            "-CanadianHamExamToolInitialDetent", "large",
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0"
-        ])
+        let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments(
+            "partiallyOpen:25@0.1",
+            includeProgress: false,
+            additionalArguments: ["-CanadianHamExamToolInitialDetent", "large", "-CanadianHamHingePlaybackDebugTriggerHidesAfterTap"]
+        ))
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the practice question before the simulated hinge peek")
+        triggerSimulatedHingePlayback(in: app, context: "starting stable slight-open hinge playback")
         XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "A stable slight-open simulated hinge posture should open the existing hint panel")
         XCTAssertTrue(app.staticTexts["hint-level-1-title"].firstMatch.waitForExistence(timeout: 5), "The hinge peek should reveal Hint 1 through the existing hint UI")
         XCTAssertTrue(app.buttons["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "The normal hint ladder remains available after the peek reveals Hint 1")
@@ -195,31 +197,37 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testSimulatedHingeDismissedPeekReopensOnlyAfterReset() throws {
-        let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
-            "-CanadianHamExamToolInitialDetent", "large",
-            "-CanadianHamHingePlaybackDebugStatus",
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:45@6.0,partiallyOpen:25@6.5,partiallyOpen:45@7.5,unfolded:180@10.0,partiallyOpen:25@10.4"
-        ])
+        let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments(
+            "partiallyOpen:25@0.1|partiallyOpen:45@2.1,partiallyOpen:25@2.2,partiallyOpen:25@3.0,partiallyOpen:45@3.1|unfolded:180@4.1,partiallyOpen:25@4.2",
+            additionalArguments: ["-CanadianHamExamToolInitialDetent", "large"]
+        ))
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the practice question before the simulated hinge peek")
+        triggerSimulatedHingePlayback(in: app, context: "starting initial stable peek")
+        waitForSimulatedHingePlayback(in: app, atLeast: 0.1, context: "initial stable peek delivered its peek-band sample")
         let hintPanel = app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch
         XCTAssertTrue(hintPanel.waitForExistence(timeout: 5), "The initial stable peek should open Hint")
         closeTool(in: app)
         XCTAssertTrue(hintPanel.waitForNonExistence(timeout: 2), "Dismissing the peek-opened Hint panel should close it")
-        waitForSimulatedHingePlayback(in: app, atLeast: 7.5, context: "dismissed peek should stay closed after leaving and re-entering the peek band without a reset")
+        triggerSimulatedHingePlayback(in: app, context: "playing no-reset leave-and-reenter posture segment")
+        waitForSimulatedHingePlayback(in: app, atLeast: 3.1, context: "dismissed peek should stay closed after leaving and re-entering the peek band without a reset")
         XCTAssertFalse(hintPanel.exists, "Leaving the band and returning without a closed or fully-open reset must not reopen a dismissed panel")
-        XCTAssertTrue(hintPanel.waitForExistence(timeout: 8), "After a fully-open reset, a fresh stable dwell may peek again")
+        triggerSimulatedHingePlayback(in: app, context: "playing fully-open reset and fresh slight-open segment")
+        waitForSimulatedHingePlayback(in: app, atLeast: 4.2, context: "fully-open reset segment delivered its fresh peek-band sample")
+        XCTAssertTrue(hintPanel.waitForExistence(timeout: 5), "After a fully-open reset, a fresh stable dwell may peek again")
     }
 
     func testSimulatedHingePeekStillWorksAfterHintLessonRoundTrip() throws {
-        let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
-            "-CanadianHamExamToolInitialDetent", "large",
-            "-CanadianHamHingePlaybackDebugStatus",
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@1.0,partiallyOpen:45@6.0,partiallyOpen:25@6.5,partiallyOpen:45@7.5,unfolded:180@60.0,partiallyOpen:25@60.4"
-        ])
+        let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments(
+            "partiallyOpen:25@0.1|partiallyOpen:45@2.1,partiallyOpen:25@2.2,partiallyOpen:25@3.0,partiallyOpen:45@3.1|unfolded:180@4.1,partiallyOpen:25@4.2",
+            additionalArguments: ["-CanadianHamExamToolInitialDetent", "large"]
+        ))
         defer { app.terminate() }
 
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the practice question before the simulated hinge peek")
+        triggerSimulatedHingePlayback(in: app, context: "starting initial stable peek before lesson")
+        waitForSimulatedHingePlayback(in: app, atLeast: 0.1, context: "initial stable peek before lesson delivered its peek-band sample")
         let hintPanel = app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch
         XCTAssertTrue(hintPanel.waitForExistence(timeout: 5), "The initial simulated hinge peek should open Hint")
         let second = app.buttons["hint-show-level-2-button"].firstMatch
@@ -232,20 +240,21 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(heading.waitForExistence(timeout: 10), "Hint lesson link should open the shared sectionAnchor")
         tapNavigationBack(in: app, context: "returning from hint lesson before delayed hinge peek")
         XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10), "Back from the hint lesson should return to the practice question")
-        waitForSimulatedHingePlayback(in: app, atLeast: 7.5, context: "returned from the lesson with no closed or fully-open reset")
+        triggerSimulatedHingePlayback(in: app, context: "playing no-reset posture segment after lesson return")
+        waitForSimulatedHingePlayback(in: app, atLeast: 3.1, context: "returned from the lesson with no closed or fully-open reset")
         XCTAssertFalse(hintPanel.exists, "A peek dismissed by the lesson link must stay dismissed after a lesson round trip until a real posture reset")
-        waitForSimulatedHingePlayback(in: app, atLeast: 60.4, context: "fully-open reset and fresh slight-open sample after the lesson", timeout: 45)
-        XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 3), "After a fully-open reset following the lesson, a fresh stable dwell may peek again")
+        triggerSimulatedHingePlayback(in: app, context: "playing fully-open reset and fresh slight-open segment after lesson")
+        waitForSimulatedHingePlayback(in: app, atLeast: 4.2, context: "fully-open reset after the lesson delivered its fresh peek-band sample")
+        XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "After a fully-open reset following the lesson, a fresh stable dwell may peek again")
     }
 
     func testSimulatedHingeFastUnfoldDoesNotPeekHintOneInPractice() throws {
-        let app = launchTwoLevelHintPracticeQuestion(extraArguments: [
-            "-CanadianHamSimulatedHingeSequence", "closed:0@0,partiallyOpen:25@0.2,unfolded:180@0.35"
-        ])
+        let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments("partiallyOpen:25@0.1,unfolded:180@0.2,unfolded:180@1.5"))
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the practice question before the simulated fast unfold")
-        waitBriefly(1.2)
+        triggerSimulatedHingePlayback(in: app, context: "starting fast-unfold hinge playback")
+        waitForSimulatedHingePlayback(in: app, atLeast: 1.5, context: "fast unfold reached a stable unfolded posture well past the dwell window")
         XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.exists, "A normal fast unfold through the peek band must not open the hint panel")
         XCTAssertFalse(app.staticTexts["hint-level-1-title"].firstMatch.exists, "A normal fast unfold must not reveal Hint 1")
         XCTAssertTrue(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "The Hint button remains the primary accessible path")
@@ -262,9 +271,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         defer { app.terminate() }
 
         tapStartMockExam(in: app)
-        waitBriefly(1.2)
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the mock exam question before asserting hinge posture cannot reveal hints")
         XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "Mock exams must never expose the Hint button")
-        XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.exists, "Mock exams must never open the hint panel from hinge posture")
+        // Mock exams have no playback trigger or progress hook, so give the automatic sequence time to pass
+        // its dwell deadline (about 0.9 s after launch) before asserting the negative.
+        XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 3), "Mock exams must never open the hint panel from hinge posture")
         XCTAssertFalse(app.staticTexts["hint-level-1-title"].firstMatch.exists, "Mock exams must never reveal Hint 1 from hinge posture")
     }
 
@@ -908,6 +919,25 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             waitBriefly(0.2)
         }
         XCTFail("\(context): expected the DEBUG simulated size-class hook to apply \(expectedSizeClassValue); button value is \(String(describing: observedValue)), label is \(String(describing: observedLabel))", file: file, line: line)
+    }
+
+    private func triggeredHingeArguments(_ sequenceSegments: String, includeProgress: Bool = true, additionalArguments: [String] = []) -> [String] {
+        additionalArguments
+            + (includeProgress ? ["-CanadianHamHingePlaybackDebugStatus"] : [])
+            + [
+                "-CanadianHamHingePlaybackDebugTrigger",
+                "-CanadianHamSimulatedHingeTriggeredSequences", sequenceSegments
+            ]
+    }
+
+    private func triggerSimulatedHingePlayback(in app: XCUIApplication, context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let triggers = app.buttons.matching(identifier: "debug-hinge-playback-trigger")
+        XCTAssertTrue(triggers.firstMatch.waitForExistence(timeout: 5), "\(context): expected the DEBUG hinge playback trigger", file: file, line: line)
+        guard let trigger = triggers.allElementsBoundByIndex.first(where: { $0.exists && $0.isHittable }) else {
+            XCTFail("\(context): expected a hittable DEBUG hinge playback trigger", file: file, line: line)
+            return
+        }
+        trigger.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
     private func waitForSimulatedHingePlayback(in app: XCUIApplication, atLeast timestamp: TimeInterval, context: String, timeout: TimeInterval = 10, file: StaticString = #filePath, line: UInt = #line) {
