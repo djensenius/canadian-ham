@@ -46,7 +46,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(question.waitForExistence(timeout: 10))
         XCTAssertEqual(question.label, original)
         openTool(.hint, in: app)
-        XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5))
+        let secondHint = app.staticTexts["hint-level-2-title"].firstMatch
+        let hintScroll = app.scrollViews["hint-tool-scroll"].firstMatch
+        XCTAssertTrue(hintScroll.waitForExistence(timeout: 5))
+        for _ in 0..<10 where !secondHint.isHittable {
+            hintScroll.swipeUp()
+            waitBriefly()
+        }
+        XCTAssertTrue(secondHint.isHittable, "The restored Hint 2 must be reachable in the reopened panel")
         closeTool(in: app)
         chooseLessonQuizCorrectAnswer(in: app)
         let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
@@ -123,7 +130,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(question.waitForExistence(timeout: 10))
         XCTAssertEqual(question.label, original)
         openTool(.hint, in: app)
-        XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5))
+        let secondHint = app.staticTexts["hint-level-2-title"].firstMatch
+        let hintScroll = app.scrollViews["hint-tool-scroll"].firstMatch
+        XCTAssertTrue(hintScroll.waitForExistence(timeout: 5))
+        for _ in 0..<10 where !secondHint.isHittable {
+            hintScroll.swipeUp()
+            waitBriefly()
+        }
+        XCTAssertTrue(secondHint.isHittable, "The restored Hint 2 must be reachable in the reopened panel")
         closeTool(in: app)
         chooseLessonQuizCorrectAnswer(in: app)
         let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
@@ -155,7 +169,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         submit.tap()
         XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10))
         let summary = app.staticTexts["lesson-quiz-help-summary"].firstMatch
-        scrollBackgroundUntilHittable(summary, in: app, maxSwipes: 15)
+        let quizScroll = app.scrollViews.firstMatch
+        for _ in 0..<16 where !summary.isHittable {
+            quizScroll.swipeDown()
+            waitBriefly()
+        }
+        XCTAssertTrue(summary.isHittable, "Saved help summary must be reachable above the question feedback")
     }
 
     private func verifyLessonQuizHintsAndAudits(appearance: String) throws {
@@ -174,6 +193,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
         scrollBackgroundUntilHittable(marker, in: app, maxSwipes: 12)
         XCTAssertTrue(marker.isHittable)
+        scrollBackgroundPastElement(app.staticTexts["QZ-L-005-01-A"].firstMatch, preserving: marker, in: app, maxSwipes: 12)
+        XCTAssertTrue(isFullyVisible(marker, in: app, requiresHittable: true))
         try app.performAccessibilityAudit()
         submitLessonQuiz(in: app)
         XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
