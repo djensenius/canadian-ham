@@ -1,10 +1,11 @@
 ---
 id: TASK-46.9
 title: Move M2 from reference style to the explanatory format
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-16 08:05'
+updated_date: '2026-10-20 13:02'
 labels:
   - content
 dependencies: []
@@ -25,6 +26,15 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 - [ ] #2 M2 lessons use the explanatory format from content/lessons/README.md with no loss of covered facts
 - [ ] #3 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Extract the taught facts and all 99 covered bank-question IDs from the four current M2 lessons into a review ledger before rewriting; preserve IDs, front matter, figure directives, and official quiz mappings.
+2. Rewrite each lesson around concepts, worked/faded examples, separate Try-it prompts and feedback, common mistakes, and original plain-language concept checks; commit and push each lesson/group. Keep any existing French versions aligned and remove stale M2 originality exceptions.
+3. Compare every ledger fact against the revised lessons, update format guidance for the approved M2 change, run all requested content/web and content-swift checks (37 lessons), and record evidence. No Apple UI suites; flag the figure-only test plan for coordinator follow-up.
+4. Check acceptance criteria with evidence, finalize the task, commit and push; report branch, full SHA, files and checks without opening a PR.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
