@@ -1379,7 +1379,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 
     private func scrollCalculatorPanelUntilElementExists(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int, file: StaticString = #filePath, line: UInt = #line) {
         for _ in 0..<maxSwipes where !element.exists {
-            let scrollView = calculatorScrollView(in: app, requiredFor: "revealing calculator element \(element.identifier)", file: file, line: line)
+            // Offscreen lazy-grid keys have no snapshot yet, so even reading their identifier fails before scrolling.
+            let scrollView = calculatorScrollView(in: app, requiredFor: "revealing an offscreen calculator element", file: file, line: line)
             scrollView.swipeUp()
             waitBriefly()
         }
