@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 08:37'
-updated_date: '2026-10-20 01:43'
+updated_date: '2026-10-20 01:59'
 labels:
   - apple
   - accessibility
@@ -35,3 +35,11 @@ Follow-up from the PR #290 review (TASK-57). The Hint button's visible label alr
 3. Run focused iPhone and iPad practice audits, exam-tool/hint tests, affected Morse/Learn UI tests, macOS units, and localization/source checks through nohup xbuild with grep-only log polling; run tvOS/visionOS only if target membership requires them.
 4. Record per-test evidence, verify the unchanged audit helpers, finalize TASK-59, commit/push the branch, and obtain required independent review before PR creation.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented shared .accessibilityLabel(Text(title)) on AccessibleSecondaryButtonLabel (LocalizedStringKey); removed the redundant exam-tool override. Existing Morse Play/Stop overrides remain on outer Buttons, with exact-label UI assertions. Added exact Previous/Next assertions in Learn and two-launch default-L vs AX-XXXL Hint frame-height comparison. No audit/exception/positioning helpers, visible layout, colours, or localization keys changed.
+Target membership: CanadianHam includes the full CanadianHam directory for iOS/macOS. CanadianHamTV and CanadianHamVision list only Design/Tokens.swift, not AccessibleSecondaryButtonStyle.swift or the changed exam-tool views, so their test suites are not affected.
+Implementation commit: 0ba702fd0fa95c120c58b4fbd7770d2ae9577e11. Text-source gate and test-guard self-test/base diff check passed. Nohup sequential test runner /tmp/task-59-runs.sh (PID 56658), logs /tmp/task-59-*.log, is queued on the shared xbuild lock; no other builds interrupted. Localization gate reruns in that runner (the initial foreground invocation timed out while waiting on the lock, before export).
+<!-- SECTION:NOTES:END -->
