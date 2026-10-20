@@ -20,6 +20,7 @@ import { HintTool } from "./components/HintTool";
 import { MarkdownContent } from "./components/MarkdownContent";
 import { PwaStatus } from "./components/PwaStatus";
 import {
+  BASIC_BANK_ID,
   bankCatalog,
   bankDataForId,
   categoryNameWithLanguage,
@@ -113,6 +114,30 @@ interface MockExamSession {
   readonly secondsElapsed: number;
   readonly timerRunning: boolean;
   readonly confirmingSubmit: boolean;
+}
+
+interface LessonQuizSession {
+  readonly seed: string;
+  readonly items: readonly LessonQuizItem[];
+  readonly currentIndex: number;
+  readonly selectedByItemId: ReadonlyMap<string, number>;
+  readonly submittedAttemptId: string | null;
+  readonly hintLevelsByQuestionId: ReadonlyMap<string, number>;
+  readonly hintQualifiedQuestionIds: ReadonlySet<string>;
+  readonly answeredWithHelpIds: ReadonlySet<string>;
+}
+
+function createLessonQuizSession(quiz: LessonQuiz, seed: string): LessonQuizSession {
+  return {
+    seed,
+    items: buildLessonQuizItems(quiz, seed),
+    currentIndex: 0,
+    selectedByItemId: new Map(),
+    submittedAttemptId: null,
+    hintLevelsByQuestionId: new Map(),
+    hintQualifiedQuestionIds: new Set(),
+    answeredWithHelpIds: new Set(),
+  };
 }
 
 type ExamToolKind = "calculator" | "reference" | "hint";
@@ -267,6 +292,7 @@ function AppContent({
   const [progress, setProgress] = useState<readonly QuestionProgressRecord[]>([]);
   const [examAttempts, setExamAttempts] = useState<readonly ExamAttempt[]>([]);
   const [lessonProgress, setLessonProgress] = useState<readonly LessonProgressRecord[]>([]);
+  const [lessonQuizSessions, setLessonQuizSessions] = useState<ReadonlyMap<string, LessonQuizSession>>(() => new Map());
   const [lessonQuizAttempts, setLessonQuizAttempts] = useState<readonly LessonQuizAttempt[]>([]);
   const [preferences, setPreferencesState] = useState<WebPreferences>(initialPreferences);
   const language = resolveLanguagePreference(preferences.language);
@@ -744,6 +770,22 @@ function AppContent({
             onLessonRead={(lesson) => void markLessonRead(lesson)}
             onOpenLesson={navigateToLesson}
             onOpenModule={navigateToModule}
+            quizSessions={lessonQuizSessions}
+            onQuizSessionChange={(quizId, update) => setLessonQuizSessions((current) => new Map(current).set(quizId, update(current.get(quizId))))}
+            onOpenHintLesson={(lessonId, anchor) => {
+              const lesson = lessonsById.get(lessonId);
+              if (lesson !== undefined) {
+                navigateToLesson(lesson.moduleId, lessonId, anchor);
+                if (currentLessonId === lessonId && (anchor === undefined || currentLessonAnchor === anchor)) {
+                  // Same route: the hash doesn't change, so route focus management won't run. Make the target focusable first.
+                  const target = document.getElementById(anchor ?? "lesson-title");
+                  if (target !== null) {
+                    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+                    target.focus();
+                  }
+                }
+              }
+            }}
             onQuizAttempt={(attempt, nextProgress) => void commitLessonQuizAttempt(attempt, nextProgress)}
             progress={activeProgress}
           /> : <AdvancedLessonsComingSoon interfaceLanguage={interfaceLanguage} />
@@ -803,6 +845,7 @@ function AppContent({
               if (importBank.hasLessons) {
                 setLessonProgress(data.lessonProgress ?? []);
                 setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
+                setLessonQuizSessions(new Map());
               }
               savedPreferencesRef.current = importedPreferences;
               latestRequestedPreferencesRef.current = importedPreferences;
@@ -820,6 +863,7 @@ function AppContent({
               setExamAttempts([]);
               setLessonProgress([]);
               setLessonQuizAttempts([]);
+              setLessonQuizSessions(new Map());
               savedPreferencesRef.current = defaultPreferences;
               latestRequestedPreferencesRef.current = defaultPreferences;
               setPreferencesState(defaultPreferences);
@@ -1047,6 +1091,9 @@ interface LessonPageProps {
   readonly attempts: readonly LessonQuizAttempt[];
   readonly now: () => string;
   readonly targetAnchor?: string;
+  readonly quizSessions: ReadonlyMap<string, LessonQuizSession>;
+  readonly onQuizSessionChange: (quizId: string, update: (current: LessonQuizSession | undefined) => LessonQuizSession) => void;
+  readonly onOpenHintLesson: (lessonId: string, anchor?: string) => void;
   readonly onLessonRead: (lesson: LessonMeta) => void;
   readonly onOpenModule: (moduleId: string) => void;
   readonly onOpenLesson: (moduleId: string, lessonId: string) => void;
@@ -1082,7 +1129,7 @@ function LessonPrerequisites({ interfaceLanguage, lesson, onOpenLesson }: { read
   );
 }
 
-function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, targetAnchor, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt }: LessonPageProps) {
+function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, targetAnchor, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt, quizSessions, onQuizSessionChange, onOpenHintLesson }: LessonPageProps) {
   const lesson = lessonsById.get(lessonId);
   const module = modulesById.get(moduleId) ?? (lesson !== undefined ? modulesById.get(lesson.moduleId) : undefined);
   useEffect(() => {
@@ -1160,6 +1207,9 @@ function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuest
               lesson={lesson}
               now={now}
               onQuizAttempt={onQuizAttempt}
+              session={quizSessions.get(quiz.id)}
+              onSessionChange={(update) => onQuizSessionChange(quiz.id, update)}
+              onOpenHintLesson={onOpenHintLesson}
               progress={progress}
               quiz={quiz}
             />
@@ -1170,32 +1220,53 @@ function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuest
   );
 }
 
-function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestionsById, progress, attempts, now, onQuizAttempt }: { readonly quiz: LessonQuiz; readonly lesson: LessonMeta; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly bankQuestionsById: ReadonlyMap<string, Question>; readonly progress: readonly QuestionProgressRecord[]; readonly attempts: readonly LessonQuizAttempt[]; readonly now: () => string; readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void }) {
-  const [seed, setSeed] = useState(() => `${quiz.id}:${Date.now().toString(36)}`);
-  const [items, setItems] = useState(() => buildLessonQuizItems(quiz, seed));
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedByItemId, setSelectedByItemId] = useState<ReadonlyMap<string, number>>(() => new Map());
-  const [submittedAttemptId, setSubmittedAttemptId] = useState<string | null>(null);
+interface LessonQuizViewProps {
+  readonly quiz: LessonQuiz;
+  readonly lesson: LessonMeta;
+  readonly interfaceLanguage: InterfaceLanguage;
+  readonly language: Language;
+  readonly bankQuestionsById: ReadonlyMap<string, Question>;
+  readonly progress: readonly QuestionProgressRecord[];
+  readonly attempts: readonly LessonQuizAttempt[];
+  readonly now: () => string;
+  readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void;
+  readonly session: LessonQuizSession | undefined;
+  readonly onSessionChange: (update: (current: LessonQuizSession | undefined) => LessonQuizSession) => void;
+  readonly onOpenHintLesson: (lessonId: string, anchor?: string) => void;
+}
+
+function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestionsById, progress, attempts, now, onQuizAttempt, session: storedSession, onSessionChange, onOpenHintLesson }: LessonQuizViewProps) {
+  const [initialSession] = useState(() => createLessonQuizSession(quiz, `${quiz.id}:${Date.now().toString(36)}`));
+  const session = storedSession ?? initialSession;
+  const { seed, items, currentIndex, selectedByItemId, submittedAttemptId } = session;
   const currentItem = items[currentIndex];
   const allAnswered = items.every((item) => selectedByItemId.has(item.id));
   const latestAttempt = attempts[attempts.length - 1];
 
+  // Build every update from the latest stored session so a hint timer and a click in the same batch can't overwrite each other.
+  function updateSession(update: (current: LessonQuizSession) => LessonQuizSession): void {
+    onSessionChange((current) => update(current ?? initialSession));
+  }
+
   function restart(): void {
     const nextSeed = `${quiz.id}:${Date.now().toString(36)}:${attempts.length + 1}`;
-    setSeed(nextSeed);
-    setItems(buildLessonQuizItems(quiz, nextSeed));
-    setCurrentIndex(0);
-    setSelectedByItemId(new Map());
-    setSubmittedAttemptId(null);
+    onSessionChange(() => createLessonQuizSession(quiz, nextSeed));
   }
 
   function selectCurrent(displayIndex: number): void {
     if (currentItem === undefined || submittedAttemptId !== null || selectedByItemId.has(currentItem.id)) {
       return;
     }
-    const selected = new Map(selectedByItemId);
-    selected.set(currentItem.id, currentItem.choicePermutation[displayIndex]!);
-    setSelectedByItemId(selected);
+    const item = currentItem;
+    updateSession((current) => {
+      if (current.submittedAttemptId !== null || current.selectedByItemId.has(item.id)) return current;
+      const selected = new Map(current.selectedByItemId);
+      selected.set(item.id, item.choicePermutation[displayIndex]!);
+      // Correctness is revealed immediately: freeze help at choice, not final submission.
+      const helped = new Set(current.answeredWithHelpIds);
+      if (item.type === "official" && current.hintQualifiedQuestionIds.has(item.questionId)) helped.add(item.questionId);
+      return { ...current, selectedByItemId: selected, answeredWithHelpIds: helped };
+    });
   }
 
   function submitQuiz(): void {
@@ -1215,7 +1286,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
           incorrectOfficialQuestionIds.push(item.questionId);
         }
         if (selected !== undefined) {
-          nextProgress = applyPracticeAnswer(nextProgress, item.questionId, selected, submittedAt);
+          nextProgress = applyPracticeAnswer(nextProgress, item.questionId, selected, submittedAt, undefined, session.answeredWithHelpIds.has(item.questionId));
         }
       } else {
         const isCorrect = selected !== undefined && item.conceptCheck.choices[selected]?.isCorrect === true;
@@ -1237,11 +1308,14 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
       officialQuestionIds,
       incorrectOfficialQuestionIds,
       incorrectConceptCheckIds,
+      answeredWithHelpIds: [...session.answeredWithHelpIds].sort(),
     };
-    setSubmittedAttemptId(attempt.id);
+    updateSession((current) => ({ ...current, submittedAttemptId: attempt.id }));
     onQuizAttempt(attempt, nextProgress);
   }
 
+  const hint = currentItem?.type === "official" ? hintForQuestion(currentItem.questionId, BASIC_BANK_ID) : null;
+  const hintLesson = hint === null ? undefined : lessonsById.get(hint.lessonLink.lessonId);
   return (
     <section className="lesson-quiz" aria-labelledby={`${quiz.id}-title`}>
       <div className="lesson-quiz__header">
@@ -1249,17 +1323,40 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
           <p className="eyebrow">{t(interfaceLanguage, "lessonQuizEyebrow")}</p>
           <h3 id={`${quiz.id}-title`}>{quiz.id}</h3>
           <p>{t(interfaceLanguage, "lessonQuizSummary", items.length)}</p>
-          {latestAttempt !== undefined ? <p>{t(interfaceLanguage, "lessonQuizLatestScore", latestAttempt.correct, latestAttempt.total, latestAttempt.percent.toFixed(0), attempts.length)}</p> : null}
+          {latestAttempt !== undefined ? <>
+            <p>{t(interfaceLanguage, "lessonQuizLatestScore", latestAttempt.correct, latestAttempt.total, latestAttempt.percent.toFixed(0), attempts.length)}</p>
+            <p>{t(interfaceLanguage, "lessonQuizHelpSummary", latestAttempt.answeredWithHelpIds?.length ?? 0)}</p>
+          </> : null}
         </div>
         <button type="button" className="secondary-button" onClick={restart}>{t(interfaceLanguage, "lessonQuizRetry")}</button>
       </div>
       {currentItem === undefined ? <p>{t(interfaceLanguage, "lessonQuizNoItems")}</p> : (
         <>
           <p>{t(interfaceLanguage, "questionProgress", currentIndex + 1, items.length)}</p>
-          <LessonQuizQuestion interfaceLanguage={interfaceLanguage} item={currentItem} language={language} questionsById={bankQuestionsById} selectedSourceOrChoiceIndex={selectedByItemId.get(currentItem.id)} showCorrectness={selectedByItemId.has(currentItem.id)} onChoose={selectCurrent} />
+          <ExamTools
+            context="lesson-quiz"
+            interfaceLanguage={interfaceLanguage}
+            referenceSheetAvailable={false}
+            hint={hint}
+            hintLessonHref={hintLesson === undefined ? undefined : `#/learn/${hintLesson.moduleId}/${hintLesson.id}`}
+            hintVisibleLevel={hint === null ? 0 : session.hintLevelsByQuestionId.get(hint.questionId) ?? 0}
+            hintAnsweredWithHelpQualified={hint !== null && session.hintQualifiedQuestionIds.has(hint.questionId)}
+            hintCanRecordHelp={!selectedByItemId.has(currentItem.id) && submittedAttemptId === null}
+            onRevealHintLevel={(questionId, level) => updateSession((current) => ({ ...current, hintLevelsByQuestionId: new Map(current.hintLevelsByQuestionId).set(questionId, level) }))}
+            onHintVisibleLongEnough={(questionId) => {
+              const itemId = currentItem.id;
+              updateSession((current) => current.selectedByItemId.has(itemId) || current.submittedAttemptId !== null
+                ? current
+                : { ...current, hintQualifiedQuestionIds: new Set(current.hintQualifiedQuestionIds).add(questionId) });
+            }}
+            onOpenHintLesson={onOpenHintLesson}
+            instanceId={quiz.id}
+          >
+            <LessonQuizQuestion answeredWithHelp={currentItem.type === "official" && session.answeredWithHelpIds.has(currentItem.questionId)} interfaceLanguage={interfaceLanguage} item={currentItem} language={language} questionsById={bankQuestionsById} selectedSourceOrChoiceIndex={selectedByItemId.get(currentItem.id)} showCorrectness={selectedByItemId.has(currentItem.id)} onChoose={selectCurrent} />
+          </ExamTools>
           <div className="action-row">
-            <button type="button" disabled={currentIndex === 0} onClick={() => setCurrentIndex(currentIndex - 1)}>{t(interfaceLanguage, "previous")}</button>
-            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => setCurrentIndex(currentIndex + 1)}>{t(interfaceLanguage, "next")}</button>
+            <button type="button" disabled={currentIndex === 0} onClick={() => updateSession((current) => ({ ...current, currentIndex: Math.max(0, current.currentIndex - 1) }))}>{t(interfaceLanguage, "previous")}</button>
+            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => updateSession((current) => ({ ...current, currentIndex: Math.min(current.items.length - 1, current.currentIndex + 1) }))}>{t(interfaceLanguage, "next")}</button>
             <button type="button" className="primary-button" disabled={!allAnswered || submittedAttemptId !== null} onClick={submitQuiz}>{t(interfaceLanguage, "lessonQuizSubmit")}</button>
           </div>
         </>
@@ -1279,7 +1376,7 @@ function useFocusOnAnswerChosen(answerableId: string, showCorrectness: boolean, 
   }, [answerableId, showCorrectness, feedbackRef]);
 }
 
-function LessonQuizQuestion({ item, interfaceLanguage, language, questionsById, selectedSourceOrChoiceIndex, showCorrectness, onChoose }: { readonly item: LessonQuizItem; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly questionsById: ReadonlyMap<string, Question>; readonly selectedSourceOrChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly onChoose: (displayIndex: number) => void }) {
+function LessonQuizQuestion({ item, answeredWithHelp, interfaceLanguage, language, questionsById, selectedSourceOrChoiceIndex, showCorrectness, onChoose }: { readonly item: LessonQuizItem; readonly answeredWithHelp: boolean; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly questionsById: ReadonlyMap<string, Question>; readonly selectedSourceOrChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly onChoose: (displayIndex: number) => void }) {
   const feedbackRef = useRef<HTMLParagraphElement>(null);
   useFocusOnAnswerChosen(item.id, showCorrectness, feedbackRef);
 
@@ -1293,7 +1390,7 @@ function LessonQuizQuestion({ item, interfaceLanguage, language, questionsById, 
         <QuestionCard choicePermutation={item.choicePermutation} disabled={showCorrectness} headingLevel={4} interfaceLanguage={interfaceLanguage} language={language} onChoose={onChoose} question={question} selectedSourceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} />
         {showCorrectness ? (
           <div className="feedback">
-            <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedSourceOrChoiceIndex === 0 ? t(interfaceLanguage, "feedbackCorrectSentence") : t(interfaceLanguage, "feedbackIncorrectSentence")}</p>
+            <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedSourceOrChoiceIndex === 0 ? t(interfaceLanguage, "feedbackCorrectSentence") : t(interfaceLanguage, "feedbackIncorrectSentence")}{answeredWithHelp ? ` ${t(interfaceLanguage, "answeredWithHelp")}` : ""}</p>
             <ExplanationPanel explanation={explanationForQuestion(question.id)} interfaceLanguage={interfaceLanguage} language={language} choicePermutation={item.choicePermutation} />
           </div>
         ) : null}
@@ -1696,7 +1793,8 @@ function PracticeReview({ interfaceLanguage, session, language }: { readonly int
 }
 
 interface ExamToolsProps {
-  readonly context: "practice" | "mock";
+  readonly context: "practice" | "mock" | "lesson-quiz";
+  readonly instanceId?: string;
   readonly interfaceLanguage: InterfaceLanguage;
   readonly referenceSheetAvailable: boolean;
   readonly children: ReactNode;
@@ -1710,15 +1808,15 @@ interface ExamToolsProps {
   readonly onRevealHintLevel?: (questionId: string, level: 1 | 2) => void;
 }
 
-function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, children, hint = null, hintAnsweredWithHelpQualified = false, hintCanRecordHelp = false, hintLessonHref, hintVisibleLevel = 0, onHintVisibleLongEnough, onOpenHintLesson, onRevealHintLevel }: ExamToolsProps) {
+function ExamTools({ context, instanceId, interfaceLanguage, referenceSheetAvailable, children, hint = null, hintAnsweredWithHelpQualified = false, hintCanRecordHelp = false, hintLessonHref, hintVisibleLevel = 0, onHintVisibleLongEnough, onOpenHintLesson, onRevealHintLevel }: ExamToolsProps) {
   const [activeTool, setActiveTool] = useState<ExamToolKind | null>(null);
   const [calculatorState, setCalculatorState] = useState<CalculatorState>(() => createCalculatorState({ locale: interfaceLanguage }));
   const calculatorButtonRef = useRef<HTMLButtonElement>(null);
   const referenceButtonRef = useRef<HTMLButtonElement>(null);
   const hintButtonRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLButtonElement | null>(null);
-  const panelId = `exam-tools-${context}-panel`;
-  const hintAvailable = context === "practice" && hint !== null && hintLessonHref !== undefined && onHintVisibleLongEnough !== undefined && onOpenHintLesson !== undefined && onRevealHintLevel !== undefined;
+  const panelId = `exam-tools-${instanceId ?? context}-panel`;
+  const hintAvailable = context !== "mock" && hint !== null && hintLessonHref !== undefined && onHintVisibleLongEnough !== undefined && onOpenHintLesson !== undefined && onRevealHintLevel !== undefined;
 
   useEffect(() => {
     setCalculatorState(createCalculatorState({ locale: interfaceLanguage }));
@@ -1783,25 +1881,29 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
 
   return (
     <div className={shellClassName} data-testid={`${context}-exam-tools`}>
-      <div className="exam-tools-toolbar" role="group" aria-label={t(interfaceLanguage, "examToolsToolbarAria")}>
-        <button
-          aria-controls={activeTool === "calculator" ? panelId : undefined}
-          aria-expanded={activeTool === "calculator"}
-          className="secondary-button"
-          ref={calculatorButtonRef}
-          type="button"
-          onClick={() => openTool("calculator", calculatorButtonRef.current)}
-        >{t(interfaceLanguage, "examToolCalculator")}</button>
-        <button
-          aria-controls={activeTool === "reference" ? panelId : undefined}
-          aria-disabled={!referenceSheetAvailable}
-          aria-expanded={activeTool === "reference"}
-          className="secondary-button"
-          disabled={!referenceSheetAvailable}
-          ref={referenceButtonRef}
-          type="button"
-          onClick={() => openTool("reference", referenceButtonRef.current)}
-        >{t(interfaceLanguage, "examToolReferenceSheet")}</button>
+      {context !== "lesson-quiz" || hintAvailable ? <div className="exam-tools-toolbar" role="group" aria-label={t(interfaceLanguage, "examToolsToolbarAria")}>
+        {context !== "lesson-quiz" ? (
+          <>
+            <button
+              aria-controls={activeTool === "calculator" ? panelId : undefined}
+              aria-expanded={activeTool === "calculator"}
+              className="secondary-button"
+              ref={calculatorButtonRef}
+              type="button"
+              onClick={() => openTool("calculator", calculatorButtonRef.current)}
+            >{t(interfaceLanguage, "examToolCalculator")}</button>
+            <button
+              aria-controls={activeTool === "reference" ? panelId : undefined}
+              aria-disabled={!referenceSheetAvailable}
+              aria-expanded={activeTool === "reference"}
+              className="secondary-button"
+              disabled={!referenceSheetAvailable}
+              ref={referenceButtonRef}
+              type="button"
+              onClick={() => openTool("reference", referenceButtonRef.current)}
+            >{t(interfaceLanguage, "examToolReferenceSheet")}</button>
+          </>
+        ) : null}
         {hintAvailable ? (
           <button
             aria-controls={activeTool === "hint" ? panelId : undefined}
@@ -1812,7 +1914,7 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
             onClick={() => openTool("hint", hintButtonRef.current)}
           >{t(interfaceLanguage, "examToolHint")}</button>
         ) : null}
-      </div>
+      </div> : null}
       <div className="exam-tools-content">
         {children}
       </div>
@@ -1838,7 +1940,12 @@ function ExamTools({ context, interfaceLanguage, referenceSheetAvailable, childr
               interfaceLanguage={interfaceLanguage}
               lessonHref={hintLessonHref}
               onHintVisibleLongEnough={onHintVisibleLongEnough}
-              onOpenLesson={onOpenHintLesson}
+              onOpenLesson={(lessonId, anchor) => {
+                // Same-lesson links do not unmount the quiz: hide the hint so its
+                // visibility timer cannot keep running while reading the lesson.
+                if (context === "lesson-quiz") setActiveTool(null);
+                onOpenHintLesson(lessonId, anchor);
+              }}
               onRevealLevel={onRevealHintLevel}
               referenceSheetAvailable={referenceSheetAvailable}
               visibleLevel={hintVisibleLevel}

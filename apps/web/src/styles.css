@@ -978,6 +978,13 @@ input[type="checkbox"]:checked::after {
       "content panel";
   }
 
+  .exam-tools-shell--lesson-quiz.exam-tools-shell--open {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.42fr);
+    grid-template-areas:
+      "tools tools"
+      "content panel";
+  }
+
   .exam-tools-shell--mock.exam-tools-shell--open {
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.42fr);
     grid-template-areas:
