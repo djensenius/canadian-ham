@@ -622,6 +622,10 @@ schemes:
         CanadianHamUITests: [test]
     test:
       gatherCoverageData: false
+      testPlans:
+        - path: TestPlans/CanadianHamDefault.xctestplan
+          defaultPlan: true
+        - path: TestPlans/CanadianHamLessonFigures.xctestplan
       targets:
         - CanadianHamTests
         - CanadianHamUITests

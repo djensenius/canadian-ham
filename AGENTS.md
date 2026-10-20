@@ -74,12 +74,16 @@ platform) and share one build lock, so don't run them by reflex.
   after a commit that only changes `.backlog/` or docs.
 - **Fix rounds:** rerun only the failing or changed tests with `-only-testing:`; the single full
   run happens in the merge batch (above).
-- **Lesson figure audits:** the per-lesson figure audits (`CanadianHamLessonFiguresUITests`) run
+- **Lesson figure audits:** the per-lesson figure audits (`CanadianHamLessonFiguresUITests`
+  and `CanadianHamPracticeUITests.testOhmsLawLessonFiguresAndAccessibilityLight`/`Dark`) run
   in their own test plan, only when figures, `content/figures/`, lesson Markdown with figure
-  directives, or the lesson reader change (owner decision 2026-10-14; task-33 moves them out of
-  the default plan).
-- **Release candidate (task-1.6):** the full four-platform run with every accessibility audit,
-  plus the manual checks in `docs/release/release-checklist.md`.
+  directives, the lesson reader, or the figure tests and their lesson audit/positioning helpers
+  change (owner decision 2026-10-14 for the figure class; coordinator decision 2026-10-20 in
+  task-33 added the two Ohm's law figure integration audits after audit timeouts). The default
+  `CanadianHamDefault` plan excludes those tests. Run the figure-only plan with:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamLessonFigures -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
+- **Release candidate (task-1.6):** the full four-platform run with every accessibility audit
+  (including the `CanadianHamLessonFigures` plan), plus the manual checks in `docs/release/release-checklist.md`.
 - Record per-test results for the full runs you did in the task notes and PR body, and say
   which platforms you skipped and why.
 

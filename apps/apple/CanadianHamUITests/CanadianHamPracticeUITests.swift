@@ -195,7 +195,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMorseBeaconOutputDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMorseVisualQuickListen(outputMode: "visualBeacon", outputIdentifier: "morse-visual-beacon", appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testAccessibilityAuditMorseTapeOutputLight() throws {
@@ -206,7 +205,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMorseTapeOutputDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMorseVisualQuickListen(outputMode: "visualTape", outputIdentifier: "morse-visual-tape", appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testAccessibilityAuditMorseCourseLessonAndSummaryLight() throws {
@@ -217,7 +215,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMorseCourseLessonAndSummaryDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMorseCourseFlow(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testMorseCopyPracticeAndExamFlow() throws {
@@ -314,26 +311,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(app.descendants(matching: .any)["compact-root-list"].firstMatch.exists, "A single tap must not pop past the Morse screen")
     }
 
-    func testAccessibilityAuditMorseSendingMainScreenLight() throws {
+    func testAccessibilityAuditMorseSendingMainAndExamScreensLight() throws {
         XCUIDevice.shared.appearance = .light
-        try auditMorseSendingMainScreen(appearance: .light)
+        try auditMorseSendingMainAndExamScreens(appearance: .light)
     }
 
-    func testAccessibilityAuditMorseSendingMainScreenDark() throws {
+    func testAccessibilityAuditMorseSendingMainAndExamScreensDark() throws {
         XCUIDevice.shared.appearance = .dark
-        try auditMorseSendingMainScreen(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
-    }
-
-    func testAccessibilityAuditMorseSendingExamScreenLight() throws {
-        XCUIDevice.shared.appearance = .light
-        try auditMorseSendingExamScreen(appearance: .light)
-    }
-
-    func testAccessibilityAuditMorseSendingExamScreenDark() throws {
-        XCUIDevice.shared.appearance = .dark
-        try auditMorseSendingExamScreen(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
+        try auditMorseSendingMainAndExamScreens(appearance: .dark)
     }
 
     func testAccessibilityAuditMorseSendingResultsLight() throws {
@@ -344,7 +329,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMorseSendingResultsDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMorseSendingResults(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {
@@ -658,7 +642,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMorseExamGradedDiffDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMorseExamGradedDiff(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testCompactTopLevelListPushesMorseThenLearn() throws {
@@ -939,7 +922,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testLessonPrerequisiteNavigationAndAccessibilityDark() throws {
         XCUIDevice.shared.appearance = .dark
-        defer { XCUIDevice.shared.appearance = .light }
         try auditLessonPrerequisiteNavigation(appearance: .dark)
     }
 
@@ -1256,7 +1238,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testCourseSwitchConfirmationAuditsDark() throws {
         XCUIDevice.shared.appearance = .dark
         try exerciseCourseSwitchConfirmation(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testCourseSwitchCancelKeepsImmediatePracticeFeedbackAndConfirmOpensAdvancedPractice() throws {
@@ -1553,7 +1534,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditCoreScreensDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditCoreScreens(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testAccessibilityAuditPracticeSessionLight() throws {
@@ -1564,7 +1544,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditPracticeSessionDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditPracticeSession(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testAccessibilityAuditLearnFlowLight() throws {
@@ -1575,7 +1554,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditLearnFlowDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditLearnFlow(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testOhmsLawLessonFiguresAndAccessibilityLight() throws {
@@ -1586,7 +1564,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testOhmsLawLessonFiguresAndAccessibilityDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditOhmsLawLessonFigures(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testLessonIllustrationBriefsAreHiddenInEnglishAndFrench() throws {
@@ -1666,7 +1643,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMockExamFlowDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMockExamFlow(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
     func testAccessibilityAuditAdvancedCourseScreensLight() throws {
@@ -1677,11 +1653,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditAdvancedCourseScreensDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditAdvancedCourseScreens(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
     }
 
-    private func auditMorseSendingMainScreen(appearance: AuditAppearance) throws {
-        var app = launchApp(arguments: [
+    private func auditMorseSendingMainAndExamScreens(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
             "-CanadianHamMorseSendingDebugHook",
             "-CanadianHamMorseSendingExamSeconds", "600"
@@ -1700,16 +1675,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)", preserving: feedback, preserveByScrollingUp: true)
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
-    }
 
-    private func auditMorseSendingExamScreen(appearance: AuditAppearance) throws {
-        let app = launchApp(arguments: [
-            "-CanadianHamInitialScreen", "morse",
-            "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "600"
-        ])
-        defer { app.terminate() }
-        openSendingPractice(in: app)
+        // Restore the entry above the lower-content audit without changing the sending session.
+        scrollToTop(in: app)
         openSendingExamStyleCheck(in: app)
         XCTAssertTrue(app.buttons["morse-sending-start-exam-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) sending exam audit should show the start button")
         app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
@@ -1917,41 +1885,40 @@ final class CanadianHamPracticeUITests: XCTestCase {
         var app = launchApp()
         XCTAssertTrue(app.descendants(matching: .any)["compact-root-list"].firstMatch.waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) compact root list")
-        app.terminate()
 
-        app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+        // These read-only destinations use the same reset data and compact routes as launch navigation.
+        tap("Home", in: app)
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) home")
-        app.terminate()
+        tapCompactBack(in: app)
 
-        app = launchApp(arguments: ["-CanadianHamInitialScreen", "practice"])
+        tap("Practice", in: app)
         XCTAssertTrue(app.staticTexts["Practice"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) practice hub")
+        tapCompactBack(in: app)
+
+        tap("Learn", in: app)
+        XCTAssertTrue(app.staticTexts["Learn"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) learn module list")
+        tapCompactBack(in: app)
+
+        tap("Morse", in: app)
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) morse")
+        tapCompactBack(in: app)
+
+        tap("Settings", in: app)
+        XCTAssertTrue(app.staticTexts["Settings"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) settings")
+        scrollAndTap("About Canadian Ham", in: app)
+        XCTAssertTrue(app.staticTexts["About Canadian Ham"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) about")
         app.terminate()
 
+        // Keep distinct launch fixtures isolated: mock navigation and forced store failure.
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "mock"])
         XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam start")
-        app.terminate()
-
-        app = launchApp(arguments: ["-CanadianHamInitialScreen", "learn"])
-        XCTAssertTrue(app.staticTexts["Learn"].waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) learn module list")
-        app.terminate()
-
-        app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
-        XCTAssertTrue(app.staticTexts["Settings"].waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) settings")
-        app.terminate()
-
-        app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
-        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) morse")
-        app.terminate()
-
-        app = launchApp(arguments: ["-CanadianHamInitialScreen", "about"])
-        XCTAssertTrue(app.staticTexts["About Canadian Ham"].waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) about")
         app.terminate()
 
         app = launchApp(arguments: ["-CanadianHamForceStoreOpenError"], resetData: false)
