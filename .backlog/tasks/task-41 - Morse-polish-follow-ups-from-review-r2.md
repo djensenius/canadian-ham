@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-20 13:02'
+updated_date: '2026-10-20 13:08'
 labels:
   - apple
   - web
@@ -37,3 +37,9 @@ Low items from the task-12.18/12.19/12.20 review r2 (~/.cache/canadian-ham-revie
 4. Cover the actual Settings/Study import paths and document enum fallback parity.
 5. Run targeted iPhone/iPad Morse UI, macOS units, web Morse and localization checks; commit/push each coherent step, record evidence and finalize.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented distinct practice/exam focus targets with a hardware-keyboard navigation regression test. Added live Reduce Motion UI coverage using a DEBUG-only environment control (the real onChange path), grouped square-point safety wording assertions, and web axe strings derived from engine constants and translations. Relevant web App Morse tests: 21 passed. Initial localization command exceeded the foreground tool timeout; will rerun all Apple checks detached with grep-only polling.
+<!-- SECTION:NOTES:END -->
