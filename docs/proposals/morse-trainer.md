@@ -392,9 +392,9 @@ Per [`AGENTS.md`](../../AGENTS.md), track this work in Backlog.md, not `tasks/PL
 Both Apple import confirmations (native macOS Settings and the Study Settings screen)
 apply Morse settings only after the progress import succeeds, normalize their live
 settings, save them locally, and notify the rest of the app of the replacement.
-Unknown `timingProfile` strings fall back to `isedParis`; unknown `outputMode`
-strings fall back to `audio`. Other valid imported Morse fields are retained.
-This preserves Apple's existing permissive behavior and matches web's settings
-normalization. There is an intentional file-validation difference: web rejects
-unknown enum strings before normalization, while Apple accepts and defaults them.
-Tests in `MorseTrainerTests.swift` and `progressStore.test.ts` record that difference.
+Unknown `timingProfile` or `outputMode` strings reject the file before any settings
+are applied, matching web import validation. This preserves the current validation
+policy and its existing regression tests; the old review's permissive-import note
+no longer describes the code. The settings converter's defensive `isedParis` and
+`audio` fallbacks do not bypass file validation. Tests in `MorseTrainerTests.swift`
+and `progressStore.test.ts` cover rejection and unchanged live/persisted settings.

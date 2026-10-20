@@ -569,11 +569,12 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(replacements, Array(repeating: true, count: morseImportCases.count))
 
         let beforeFailure = settings
-        let invalid = try morseImportFixture(bankId: "unknown-bank", morseJSON: morseImportCases[0].0)
-        XCTAssertThrowsError(try view.importProgress(invalid, defaults: defaults))
-        XCTAssertEqual(settings, beforeFailure)
-        XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), beforeFailure)
-        XCTAssertEqual(replacements.count, morseImportCases.count, "A rejected import must not announce replacement")
+        for invalid in try rejectedMorseImportFixtures(bankId: bank.manifest.bankId) {
+            XCTAssertThrowsError(try view.importProgress(invalid, defaults: defaults))
+            XCTAssertEqual(settings, beforeFailure)
+            XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), beforeFailure)
+            XCTAssertEqual(replacements.count, morseImportCases.count, "A rejected import must not announce replacement")
+        }
     }
 
 #if os(macOS)
@@ -600,11 +601,12 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(appSettings.localDataReplacementRevision, initialRevision + morseImportCases.count)
 
         let beforeFailure = appSettings.morseSettings
-        let invalid = try morseImportFixture(bankId: "unknown-bank", morseJSON: morseImportCases[0].0)
-        XCTAssertThrowsError(try view.importProgress(invalid, defaults: defaults))
-        XCTAssertEqual(appSettings.morseSettings, beforeFailure)
-        XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), beforeFailure)
-        XCTAssertEqual(appSettings.localDataReplacementRevision, initialRevision + morseImportCases.count)
+        for invalid in try rejectedMorseImportFixtures(bankId: bank.manifest.bankId) {
+            XCTAssertThrowsError(try view.importProgress(invalid, defaults: defaults))
+            XCTAssertEqual(appSettings.morseSettings, beforeFailure)
+            XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), beforeFailure)
+            XCTAssertEqual(appSettings.localDataReplacementRevision, initialRevision + morseImportCases.count)
+        }
     }
 #endif
 
@@ -612,8 +614,16 @@ final class MorseTrainerTests: XCTestCase {
         [
             (#"{"toneHz":1200,"characterWpm":30,"effectiveWpm":28,"timingProfile":"general","volume":2,"outputMode":"visualTape"}"#,
              MorseTrainerSettings(toneHz: 900, characterWpm: 25, effectiveWpm: 25, timingProfile: .general, volume: 1, outputMode: .visualTape)),
-            (#"{"toneHz":700,"characterWpm":18,"effectiveWpm":6,"timingProfile":"future-profile","volume":0.4,"outputMode":"future-output"}"#,
-             MorseTrainerSettings(toneHz: 700, characterWpm: 18, effectiveWpm: 6, timingProfile: .isedParis, volume: 0.4, outputMode: .audio))
+            (#"{"toneHz":700,"characterWpm":18,"effectiveWpm":6,"timingProfile":"ric1Literal","volume":0.4,"outputMode":"visualBeacon"}"#,
+             MorseTrainerSettings(toneHz: 700, characterWpm: 18, effectiveWpm: 6, timingProfile: .ric1Literal, volume: 0.4, outputMode: .visualBeacon))
+        ]
+    }
+
+    private func rejectedMorseImportFixtures(bankId: String) throws -> [CanadianHam.ProgressExportV1] {
+        try [
+            morseImportFixture(bankId: "unknown-bank", morseJSON: morseImportCases[0].0),
+            morseImportFixture(bankId: bankId, morseJSON: #"{"timingProfile":"future-profile"}"#),
+            morseImportFixture(bankId: bankId, morseJSON: #"{"outputMode":"future-output"}"#)
         ]
     }
 
