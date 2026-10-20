@@ -1,9 +1,11 @@
 ---
 id: TASK-52
 title: Verify long category titles are not truncated on iPhone
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-16 08:06'
+updated_date: '2026-10-20 13:02'
 labels:
   - apple
 dependencies: []
@@ -21,3 +23,11 @@ Seen during task-44.3 work: long category titles such as 'Regulations and Polici
 <!-- AC:BEGIN -->
 - [ ] #1 Every category title on iPhone wraps or fits at default and accessibility text sizes, with screenshots or a test as evidence
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect category title rendering in practice, study, mock and weak areas, including TASK-55 inline titles and existing UI-test patterns.
+2. Add EN/FR default and maximum-accessibility iPhone UI coverage and screenshot evidence; apply only wrapping fixes if truncation remains.
+3. Run only added/touched UI tests through nohup xbuild on iPhone 17 Pro, and macOS unit tests if app code changes; record evidence and finalize, commit and push.
+<!-- SECTION:PLAN:END -->
