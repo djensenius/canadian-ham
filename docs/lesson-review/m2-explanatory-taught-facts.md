@@ -50,11 +50,11 @@ The original review is historical: [m1-m2.md](m1-m2.md). This ledger records the
 
 | Bank IDs (suffixes within B-002) | Taught facts extracted from the old lesson | Revised teaching location / comparison |
 |---|---|---|
-| 008-001 through 008-004, 008-010 | Immediate threat to life is distress: voice MAYDAY repeated three times, Morse SOS. Serious help without immediate life risk is urgent. Distress precedes emergency messages, which precede safety hazard information. | Pending rewrite comparison. |
-| 008-005, 008-009 | Break into busy repeater traffic between overs with call sign and situation; responders acknowledge, obtain location and assistance needed. | Pending rewrite comparison. |
-| 008-006 through 008-008 | Alternate power enables outage communications; handhelds need charged spare batteries; portable HF can use a dipole or vertical. | Pending rewrite comparison. |
-| 008-011 | If unable to help directly, contact authorities and keep monitoring. | Pending rewrite comparison. |
-| Additional old teaching, no extra quiz mapping | Record time, calls, place, frequency, names supplied, needs and actions. Plain language reduces stress errors. Pack feedline/supports/settings with the radio. Estimate battery time as Ah / average A, with cold, age and reserve caveats. | Pending rewrite comparison. |
+| 008-001 through 008-004, 008-010 | Immediate threat to life is distress: voice MAYDAY repeated three times, Morse SOS. Serious help without immediate life risk is urgent. Distress precedes emergency messages, which precede safety hazard information. | Retained — Match the priority to the danger. |
+| 008-005, 008-009 | Break into busy repeater traffic between overs with call sign and situation; responders acknowledge, obtain location and assistance needed. | Retained — Open a path for help; Worked example: turn a break-in into useful action. |
+| 008-006 through 008-008 | Alternate power enables outage communications; handhelds need charged spare batteries; portable HF can use a dipole or vertical. | Retained — Prepare the whole station. |
+| 008-011 | If unable to help directly, contact authorities and keep monitoring. | Retained — Open a path for help. |
+| Additional old teaching, no extra quiz mapping | Record time, calls, place, frequency, names supplied, needs and actions. Plain language reduces stress errors. Pack feedline/supports/settings with the radio. Estimate battery time as Ah / average A, with cold, age and reserve caveats. | Retained — Keep a record you can relay; Prepare the whole station; Worked example: estimate a battery budget. |
 
 ## Lesson 4: L-002-04
 

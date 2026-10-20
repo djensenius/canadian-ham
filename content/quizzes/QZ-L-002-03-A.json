@@ -14,5 +14,129 @@
     "B-002-008-010",
     "B-002-008-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-03-A-C1",
+      "prompt": {
+        "en": "During an exercise, two relays give different locations for the same person needing help. What should the next relay do?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Pick the location heard most recently and present it as certain.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Forward both as confirmed locations without noting the conflict.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Ask the reporting station to clarify, and record the corrected location.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Use the first location until the exercise is finished.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A relay must preserve facts, not choose a convenient guess. Ask the source to resolve the conflict and record the correction. Neither report is automatically right, and passing both as confirmed hides the uncertainty.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-03-A-C2",
+      "prompt": {
+        "en": "A portable kit passed an indoor runtime check. It will now be used outdoors in cold weather with longer transmissions. How should the operator treat the earlier estimate?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Keep it unchanged because the battery rating is printed on the case.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use a more cautious budget and prepare charged spare power.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Increase the predicted runtime because transmitting warms the radio.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use receiving current alone because listening uses less power.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Cold can reduce usable capacity, and longer transmissions can increase average current. Keep reserve and spare power instead of promising the indoor result. Warming the radio is not a runtime guarantee; receiving current alone leaves out the transmit load.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-03-A-C3",
+      "prompt": {
+        "en": "You have notified authorities about a distress report. The distressed station can still reach only you by radio. Why should you stay at the receiver?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "To wait until the next scheduled net before relaying any updates.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "To repeat the first report continuously until help arrives.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "To wait for a perfect signal before writing anything down.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "To pass new information and questions between the station and help.",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "The radio link may still be needed after notification. Listen for updates and pass questions accurately. Waiting for the next net can delay important facts, continuous repetition blocks replies, and useful notes do not need to wait for a perfect signal.",
+        "fr": null
+      }
+    }
+  ]
 }
