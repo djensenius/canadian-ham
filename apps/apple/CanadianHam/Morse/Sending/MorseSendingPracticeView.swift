@@ -49,24 +49,24 @@ struct MorseSendingPracticeView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                Text("Sending practice") // l10n: localized
-                    .font(DesignTokens.FontScale.title.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityAddTraits(.isHeader)
-                Text("Practise tap timing with a straight key or iambic-style paddles. With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets. Aim for steady dot/dash ratio and timing consistency.") // l10n: localized
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                morseTokenButton("Exam-style check") { openExamStyleCheck() }
-                    .accessibilityIdentifier("morse-sending-exam-open-button")
-                sendingControls
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Sending practice") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Practise tap timing with a straight key or iambic-style paddles. With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets. Aim for steady dot/dash ratio and timing consistency.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    morseTokenButton("Exam-style check") { openExamStyleCheck() }
+                        .accessibilityIdentifier("morse-sending-exam-open-button")
+                    sendingControls
+                    }
+                    .paperCard()
                 }
-                .paperCard()
+                .pagePadding()
             }
-            .pagePadding()
-        }
         }
         .background(DesignTokens.Colors.paper)
         .contentShape(Rectangle())
@@ -201,28 +201,28 @@ struct MorseSendingPracticeView: View {
     private var sendingExamScreen: some View {
         // Keep Space on the keying focus target, not the ScrollView's paging handler.
         VStack(spacing: 0) {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("Exam-style check") // l10n: localized
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors.") // l10n: localized
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                    MorseSendingExamCard(
-                        examText: examText,
-                        examRemaining: examRemaining,
-                        start: startExam,
-                        grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
-                    )
-                    sendingControls
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        Text("Exam-style check") // l10n: localized
+                            .font(DesignTokens.FontScale.title.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text("Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                        MorseSendingExamCard(
+                            examText: examText,
+                            examRemaining: examRemaining,
+                            start: startExam,
+                            grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
+                        )
+                        sendingControls
+                    }
+                    .paperCard()
                 }
-                .paperCard()
+                .pagePadding()
             }
-            .pagePadding()
-        }
         }
         .background(DesignTokens.Colors.paper)
         .contentShape(Rectangle())
