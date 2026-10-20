@@ -169,12 +169,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         submit.tap()
         XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10))
         let summary = app.staticTexts["lesson-quiz-help-summary"].firstMatch
+        let quizTitle = app.staticTexts["QZ-L-005-01-A"].firstMatch
         let quizScroll = app.scrollViews.firstMatch
-        for _ in 0..<16 where !summary.isHittable {
+        for _ in 0..<16 where !isFullyVisible(summary, in: app, requiresHittable: true) || !isFullyVisible(quizTitle, in: app, requiresHittable: true) {
             quizScroll.swipeDown()
             waitBriefly()
         }
-        XCTAssertTrue(summary.isHittable, "Saved help summary must be reachable above the question feedback")
+        XCTAssertTrue(isFullyVisible(summary, in: app, requiresHittable: true), "Saved help summary must be fully visible below the navigation bar")
+        XCTAssertTrue(isFullyVisible(quizTitle, in: app, requiresHittable: true), "Quiz title must not be clipped under the navigation bar")
     }
 
     private func verifyLessonQuizHintsAndAudits(appearance: String) throws {
