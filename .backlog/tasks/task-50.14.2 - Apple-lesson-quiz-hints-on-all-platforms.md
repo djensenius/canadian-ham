@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-20 16:22'
+updated_date: '2026-10-20 16:47'
 labels:
   - apple
 dependencies:
@@ -52,4 +52,6 @@ Validation so far (all through nohup xbuild scripts, logs /tmp/task-50.14.2-runs
 Initial iPhone UI run: concept exclusions, French/current-lesson round trip, one-level-help persistence and post-choice immutability/persistence PASS. AX/layout was blocked by the existing debug overlay covering Hint; new-test positioning now scrolls Hint below that overlay and explicitly asserts it is not overlapped. Light/dark feedback audits exposed only opaque-navigation-bar occluded text false positives (xcresult screenshots in /tmp/task-50.14.2-runs/phone-failures). R2 confirmed moving one header merely exposed the next occluded element. Coordinator explicitly authorized calling existing auditIgnoringOccludedLessonTextContrast for quiz feedback in light/dark under owner decision 2026-10-12. The helper is byte-identical; fully visible contrast and all non-contrast issues still fail. Removed the attempt to position-shuffle the occluded header. Hint-panel and top-visible saved-results audits remain unfiltered defaults. PR marker now required: Test-guard-approved: owner decision 2026-10-12. All affected tests queued for targeted rerun; no full suite.
 
 Localization validation completed PASS: pnpm check:apple-l10n (complete French XLIFF export, catalogue unchanged, generic CanadianHamTV and CanadianHamVision builds both BUILD SUCCEEDED). R2 iPhone: French/current-lesson round trip PASS (238.844s), one-level hinted-help persistence PASS (135.128s), post-choice immutability/persistence PASS (139.328s), light full-default panel/feedback/result audits PASS (182.198s); AX failed because the existing test-only layout overlay intercepted the tap, and dark failed on the next occluded header text. Those two causes are addressed in current source. R3 is queued for AX plus light/dark audit tests, followed by the 7-test iPad Pro 13-inch (M5) run. Programmatic suffix comparison against e04991d8 confirms every pre-existing ExamTools UI test and every audit/positioning helper remains byte-identical. No full suites.
+
+R3 dark panel/approved-feedback/default-result audits PASS (201.045s). AX still failed before reopening because content would not scroll, revealing the actual integration error: examToolPresentation had been attached inside the outer quiz ScrollView, producing a fixed inspector container around tall card content at regular width. Moved the presenter outside the quiz ScrollView exactly as practice does; retained all load-error handling. Current source ce146da5 is pushed. R4 nohup script queued: targeted macOS cache+timing tests to compile the revised screen, then all 7 affected new quiz UI methods on iPhone 17 Pro and iPad Pro 13-inch (M5), stop on first failed command. Shared/approved helpers remain byte-identical; no suite or test/audit removal.
 <!-- SECTION:NOTES:END -->
