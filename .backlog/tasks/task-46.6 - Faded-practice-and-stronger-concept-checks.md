@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 14:34'
+updated_date: '2026-10-20 14:45'
 labels:
   - content
 dependencies:
@@ -44,4 +44,6 @@ Part B: coordinator starts M5-M8 content branch from the pushed foundation commi
 
 <!-- SECTION:NOTES:BEGIN -->
 From task-46.3 r463-2 review: QZ-L-007-03-A C1 and C3 were rewritten to avoid copying bank questions, but they should receive a stronger technical redesign in the faded-practice/stronger-concept-check pass. Also check EXP-B-008-004-004's spurious-emissions distractor note: the current 'broad category' wording may conflict with the cause-based out-of-band vs spurious distinction.
+
+Part A foundation pushed at 93d75d3330bc4474f59409edbf4550e9579df1dc; coordinator notified for Part B branch. Added optional feedback schema, staged --require-feedback checker, focused chosen-option web feedback and EN/FR light/dark axe regressions, optional Swift decoding/round-trip test (37 lessons retained). Apple display tracked in TASK-46.6.1, blocked on TASK-50.14.2. M1 audited and deliberately unchanged: reference-only tables and empty conceptChecks remain required by the teaching guide. M2 now has faded completion problems immediately after offset, S-meter, battery-runtime, long-path-bearing and UTC worked-example sets; story-only headings renamed or converted to steps. All 12 M2 checks now have plausible misconception-based options and 48 per-option notes. M2 strict feedback checker, originality, links and complete hints passed; all example arithmetic recomputed. No new regulatory claims or real channel recommendations.
 <!-- SECTION:NOTES:END -->
