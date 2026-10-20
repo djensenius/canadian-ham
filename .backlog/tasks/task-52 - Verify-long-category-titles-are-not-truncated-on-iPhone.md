@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-20 16:38'
+updated_date: '2026-10-20 17:30'
 labels:
   - apple
 dependencies: []
@@ -51,4 +51,6 @@ Coordinator clarification 2026-10-20: the approved native-title exception also c
 Coordinator-approved measurement correction: SwiftUI text frames omit outer font leading, so the new metric helper now measures glyph/line fragments without usesFontLeading. A complete default-size one-line title was 20.333 pt high versus the old 22-pt leading-inclusive estimate. The unchanged 1-pt pixel-rounding tolerance is far smaller than a full line (~20 pt or more); the new helper also asserts that subtracting a line from a measured multi-line title fails its height predicate. All four TASK-52 cases will be rerun using the final helper, per coordinator instruction; no pre-existing test/audit/helper changed.
 
 Final-helper default EN passed all Home, Practice, Study/module and weak-area checks, then the sidebar selector could not find a standalone Regulations and Policies StaticText at default size. AX sidebar coverage had passed. Coordinator approved stopping only the already-failed TASK-52 run for a short native hierarchy/screenshot diagnostic; verified xcodebuild PID 26932 by all four TASK-52 selectors, result path and exact task-worktree cwd before SIGINT. No other build was touched. This is not yet an app truncation finding; the actual visible row/title must be inspected before adapting the selector.
+
+Blocked: a full CanadianHamLessonFigures plan (no only-testing selectors) occupies the shared xbuild lock; the short default-sidebar diagnostic could not start. Coordinator directed an In Progress handoff. Cancelled only the verified TASK-52 queued probe lockf waiter (PID 92875 under probe xbuild parent 92872, cwd verified); probe log ends XBUILD_EXIT=1 and all its xbuild parents exited. No other build was touched. Evidence docs explicitly distinguish historical observations from final acceptance. Continuation instructions, exact probe/all-four commands, query rules and evidence are in /tmp/task-52-handoff.md. Temporary diagnostic method is intentionally uncommitted for the next worker; remove it after inspection. AC remains unchecked; no final success summary or Done status is claimed.
 <!-- SECTION:NOTES:END -->
