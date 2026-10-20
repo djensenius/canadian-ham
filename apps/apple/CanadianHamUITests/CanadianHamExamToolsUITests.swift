@@ -192,6 +192,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "A stable slight-open simulated hinge posture should open the existing hint panel")
         XCTAssertTrue(app.staticTexts["hint-level-1-title"].firstMatch.waitForExistence(timeout: 5), "The hinge peek should reveal Hint 1 through the existing hint UI")
         XCTAssertTrue(app.buttons["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "The normal hint ladder remains available after the peek reveals Hint 1")
+        waitBriefly(0.8)
         try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
@@ -248,12 +249,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testSimulatedHingeFastUnfoldDoesNotPeekHintOneInPractice() throws {
-        let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments("partiallyOpen:25@0.1,unfolded:180@0.2,unfolded:180@0.8"))
+        let app = launchTwoLevelHintPracticeQuestion(extraArguments: triggeredHingeArguments("partiallyOpen:25@0.1,unfolded:180@0.2,unfolded:180@1.5"))
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the practice question before the simulated fast unfold")
         triggerSimulatedHingePlayback(in: app, context: "starting fast-unfold hinge playback")
-        waitForSimulatedHingePlayback(in: app, atLeast: 0.8, context: "fast unfold reached a stable unfolded posture past the dwell window")
+        waitForSimulatedHingePlayback(in: app, atLeast: 1.5, context: "fast unfold reached a stable unfolded posture well past the dwell window")
         XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.exists, "A normal fast unfold through the peek band must not open the hint panel")
         XCTAssertFalse(app.staticTexts["hint-level-1-title"].firstMatch.exists, "A normal fast unfold must not reveal Hint 1")
         XCTAssertTrue(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "The Hint button remains the primary accessible path")
@@ -272,7 +273,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         tapStartMockExam(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Expected the mock exam question before asserting hinge posture cannot reveal hints")
         XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "Mock exams must never expose the Hint button")
-        XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.exists, "Mock exams must never open the hint panel from hinge posture")
+        // Mock exams have no playback trigger or progress hook, so give the automatic sequence time to pass
+        // its dwell deadline (about 0.9 s after launch) before asserting the negative.
+        XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 3), "Mock exams must never open the hint panel from hinge posture")
         XCTAssertFalse(app.staticTexts["hint-level-1-title"].firstMatch.exists, "Mock exams must never reveal Hint 1 from hinge posture")
     }
 
