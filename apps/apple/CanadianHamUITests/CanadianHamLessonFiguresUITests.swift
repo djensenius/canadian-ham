@@ -51,7 +51,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule1LessonFiguresLightPart2() throws {
-        try verifyLessonRange(Self.module1Lessons, 2..<3, appearance: .light, evidenceModuleID: "m1")
+        try verifyLessonRange(Self.module1Lessons, 2..<3, appearance: .light, evidenceModuleID: "m1", writeEvidence: true)
     }
 
     func testModule1LessonFiguresLightPart3() throws {
@@ -107,11 +107,11 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule5LessonFiguresLightPart4() throws {
-        try verifyLessonRange(Self.module5Lessons, 4..<5, appearance: .light, evidenceModuleID: "m5")
+        try verifyLessonRange(Self.module5Lessons, 4..<5, appearance: .light, evidenceModuleID: "m5", writeEvidence: true)
     }
 
     func testModule5LessonFiguresLightPart5() throws {
-        try verifyLessonRange(Self.module5Lessons, 5..<6, appearance: .light, evidenceModuleID: "m5")
+        try verifyLessonRange(Self.module5Lessons, 5..<6, appearance: .light, evidenceModuleID: "m5", writeEvidence: true)
     }
 
     func testModule6LessonFiguresLightPart1() throws {
