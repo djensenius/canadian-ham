@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-20 15:27'
+updated_date: '2026-10-20 15:55'
 labels:
   - apple
   - web
@@ -31,11 +31,11 @@ Low items from the task-12.18/12.19/12.20 review r2 (~/.cache/canadian-ham-revie
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect current Morse focus, playback safety, import, and web test seams; preserve all audit helpers.
-2. Give the pushed sending exam independent keyboard focus and add targeted regression coverage.
-3. Cover live reduced-flashing playback changes and grouped square-point safety wording; derive the web assertion.
-4. Cover the actual Settings/Study import paths and document enum fallback parity.
-5. Run targeted iPhone/iPad Morse UI, macOS units, web Morse and localization checks; commit/push each coherent step, record evidence and finalize.
+1. Inspect current Morse focus, playback safety, import, and web test seams; preserve every existing audit/test/helper.
+2. Give practice and pushed exam distinct keyboard focus targets outside native scroll paging, restore focus after layout/Start, and verify actual key events through navigation (AC #1 still under targeted validation).
+3. Verify running Quick listen beacon stops when its Reduce Motion input changes, and next playback uses tape; cover grouped square-point safety wording and derive the web axe string.
+4. Test the actual Native Settings and Study Settings import methods for normalized live/persisted settings, notifications, and rejection without mutation. Preserve and document current unknown-enum rejection, matching web validation (the old review is stale).
+5. Run only targeted iPhone/iPad Morse UI, relevant macOS Morse units, web Morse, localization/text-source and test-guard checks. Use detached xbuild scripts and grep-only polling; respect the shared lock. Commit/push coherent steps, record evidence, and finalize only after remaining keyboard/iPad/localization checks pass.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
