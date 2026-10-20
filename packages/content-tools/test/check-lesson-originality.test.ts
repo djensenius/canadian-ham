@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { checkLessonOriginality, LessonOriginalityError } from "../src/check-lesson-originality.ts";
+import { checkLessonOriginality, LessonOriginalityError, type LessonOriginalityAllowlistEntry, type LessonOriginalityOptions } from "../src/check-lesson-originality.ts";
 
 const CHECK_SCRIPT = fileURLToPath(new URL("../src/check-lesson-originality.ts", import.meta.url));
 
@@ -69,11 +69,16 @@ async function writeFixture(root: string, questions: FixtureQuestion[], markdown
   await writeFile(path.join(root, "content/lessons/lesson.md"), markdown, "utf8");
 }
 
-async function runCheck(root: string) {
+async function writeAllowlist(root: string, entries: LessonOriginalityAllowlistEntry[]): Promise<void> {
+  await writeFile(path.join(root, "content/lessons/originality-allowlist.json"), `${JSON.stringify(entries, null, 2)}\n`, "utf8");
+}
+
+async function runCheck(root: string, options: LessonOriginalityOptions = {}) {
   return checkLessonOriginality({
     lessonRoot: path.join(root, "content/lessons"),
     questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
     allowlistPath: path.join(root, "content/lessons/originality-allowlist.json"),
+    ...options,
   });
 }
 
@@ -566,5 +571,150 @@ test("five-gram originality allows a case just below the ratio threshold", async
     const report = await runCheck(root);
 
     assert.equal(report.issueCount, 0);
+  });
+});
+
+test("originality allowlist rejects a stale common dB entry with its lesson and heading", async () => {
+  await withFixture("stale-db-allowlist", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-DB-001", "A two-times increase in power results in a change of how many dB?", "3 dB higher"),
+    ], lessonMarkdown("# Lesson\n\n## Power shortcuts\n\nA 2x power step is about +3 dB.\n"));
+    const entry = {
+      lessonId: "L-TEST-01",
+      blockHeading: "Power shortcuts",
+      reason: "Previously reviewed standard dB shortcut values, not a copied scenario.",
+    };
+    await writeAllowlist(root, [entry]);
+
+    await assert.rejects(() => runCheck(root), (error: unknown) => {
+      assert.ok(error instanceof LessonOriginalityError);
+      assert.equal(error.report.issueCount, 0);
+      assert.equal(error.report.allowlistedBlockCount, 0);
+      assert.equal(error.report.staleAllowlistEntryCount, 1);
+      assert.deepEqual(error.report.staleAllowlistEntries, [entry]);
+      assert.ok(error.report.summaryLines.includes("Stale allow-list entries: 1"));
+      return true;
+    });
+  });
+});
+
+test("originality allowlist suppresses numeric issues but still reports unallowlisted issues", async () => {
+  await withFixture("numeric-allowlist", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-NUMERIC-001", "A 12 volt circuit draws 3 amperes. What power is used?", "36 watts"),
+    ], lessonMarkdown("# Lesson\n\n## Reviewed example\n\nA 12 V accessory drawing 3 A needs 36 W.\n\n## Unreviewed example\n\nA 12 V accessory drawing 3 A needs 36 W.\n"));
+    await writeAllowlist(root, [{
+      lessonId: "L-TEST-01",
+      blockHeading: "Reviewed example",
+      reason: "Fixture review accepts this numeric overlap only in the reviewed example.",
+    }]);
+
+    await assert.rejects(() => runCheck(root), (error: unknown) => {
+      assert.ok(error instanceof LessonOriginalityError);
+      assert.equal(error.report.allowlistedBlockCount, 1);
+      assert.equal(error.report.staleAllowlistEntryCount, 0);
+      assert.deepEqual(error.report.staleAllowlistEntries, []);
+      assert.equal(error.report.issueCount, 1);
+      assert.equal(error.report.issues[0]?.blockHeading, "Unreviewed example");
+      assert.equal(error.report.issues[0]?.issueType, "numeric-overlap");
+      return true;
+    });
+  });
+});
+
+test("originality allowlist is current when it suppresses only a whole-bank near-verbatim issue", async () => {
+  await withFixture("verbatim-allowlist", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-VERBATIM-001", "Which antenna part keeps the feed line shield away from RF current?", "A choke balun", "B-006-001"),
+    ], lessonMarkdown("# Lesson\n\n## Reviewed vocabulary\n\nWhich antenna part keeps the feed line shield away from RF current? A choke balun.\n"));
+    await writeAllowlist(root, [{
+      lessonId: "L-TEST-01",
+      blockHeading: "Reviewed vocabulary",
+      reason: "Fixture review accepts the wording in this vocabulary block.",
+    }]);
+
+    const report = await runCheck(root);
+
+    assert.equal(report.allowlistedBlockCount, 1);
+    assert.equal(report.staleAllowlistEntryCount, 0);
+    assert.deepEqual(report.staleAllowlistEntries, []);
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("originality allowlist reports a missing heading in a checked lesson", async () => {
+  await withFixture("missing-allowlisted-heading", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    const entry = { lessonId: "L-TEST-01", blockHeading: "Deleted heading", reason: "Reviewed reference wording in the former heading." };
+    await writeAllowlist(root, [entry]);
+
+    await assert.rejects(() => runCheck(root), (error: unknown) => error instanceof LessonOriginalityError
+      && error.report.staleAllowlistEntryCount === 1
+      && error.report.staleAllowlistEntries[0]?.blockHeading === "Deleted heading");
+  });
+});
+
+test("originality allowlist audits missing lessons only in full-allowlist runs", async () => {
+  await withFixture("missing-allowlisted-lesson", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    const entry = { lessonId: "L-OTHER-01", blockHeading: "Other heading", reason: "Reviewed reference wording in a different lesson." };
+    await writeAllowlist(root, [entry]);
+
+    const report = await runCheck(root);
+    assert.equal(report.staleAllowlistEntryCount, 0);
+    assert.equal(report.allowlistedBlockCount, 0);
+
+    await assert.rejects(() => runCheck(root, { auditAllAllowlistEntries: true }), (error: unknown) => {
+      assert.ok(error instanceof LessonOriginalityError);
+      assert.deepEqual(error.report.staleAllowlistEntries, [entry]);
+      return true;
+    });
+  });
+});
+
+test("originality allowlist does not count numeric overlaps outside the lesson categories as suppression", async () => {
+  await withFixture("allowlist-category-scope", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-OTHER-001", "A 24 volt circuit draws 2 amperes. What power is used?", "48 watts", "B-006-001"),
+    ], lessonMarkdown("# Lesson\n\nA fresh exercise uses 24 V and 2 A for a 48 W result.\n"));
+    await writeAllowlist(root, [{ lessonId: "L-TEST-01", blockHeading: "Lesson", reason: "Previously reviewed numeric exercise." }]);
+
+    await assert.rejects(() => runCheck(root), (error: unknown) => error instanceof LessonOriginalityError
+      && error.report.issueCount === 0
+      && error.report.staleAllowlistEntryCount === 1);
+  });
+});
+
+test("originality allowlist rejects duplicate entries rather than silently hiding a reason", async () => {
+  await withFixture("duplicate-allowlist", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    const entry = { lessonId: "L-TEST-01", blockHeading: "Lesson", reason: "Reviewed reference wording." };
+    await writeAllowlist(root, [entry, { ...entry, reason: "Another review of the same block." }]);
+
+    await assert.rejects(() => runCheck(root), /duplicate allow-list entry for L-TEST-01, heading block "Lesson"/);
+  });
+});
+
+test("originality allowlist requires a non-empty reason", async () => {
+  await withFixture("empty-allowlist-reason", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    await writeAllowlist(root, [{ lessonId: "L-TEST-01", blockHeading: "Lesson", reason: "  " }]);
+
+    await assert.rejects(() => runCheck(root), /must include non-empty lessonId, blockHeading, and reason/);
+  });
+});
+
+test("originality check --all fails with actionable stale-allowlist diagnostics even for missing lessons", async () => {
+  await withFixture("stale-allowlist-cli", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    const defaultAllowlist: LessonOriginalityAllowlistEntry[] = JSON.parse(await readFile(new URL("../../../content/lessons/originality-allowlist.json", import.meta.url), "utf8"));
+    assert.ok(defaultAllowlist.length > 0);
+
+    const result = spawnSync(process.execPath, [CHECK_SCRIPT, "--all", `--lesson-root=${path.join(root, "content/lessons")}`], { encoding: "utf8" });
+
+    assert.equal(result.status, 1);
+    for (const entry of defaultAllowlist) {
+      assert.ok(result.stderr.includes(`stale allow-list entry for ${entry.lessonId}, heading block "${entry.blockHeading}" suppresses no current originality issues; remove it from the allow-list`));
+    }
   });
 });

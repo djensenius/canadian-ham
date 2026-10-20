@@ -325,6 +325,8 @@ export type LessonOriginalityOptions = {
   questionsPath?: string;
   allowlistPath?: string;
   requireLessonFiles?: boolean;
+  // Full-course runs also audit entries whose lesson or heading no longer exists.
+  auditAllAllowlistEntries?: boolean;
 };
 
 export type LessonOriginalityIssue = {
@@ -345,6 +347,8 @@ export type LessonOriginalityReport = {
   lessonFileCount: number;
   checkedQuestionCount: number;
   allowlistedBlockCount: number;
+  staleAllowlistEntryCount: number;
+  staleAllowlistEntries: LessonOriginalityAllowlistEntry[];
   issueCount: number;
   issues: LessonOriginalityIssue[];
   summaryLines: string[];
@@ -369,7 +373,7 @@ type LessonBlock = {
   text: string;
 };
 
-type AllowlistEntry = {
+export type LessonOriginalityAllowlistEntry = {
   lessonId: string;
   blockHeading: string;
   reason: string;
@@ -832,7 +836,7 @@ async function loadQuestions(questionsPath: string): Promise<QuestionCheck[]> {
   return records;
 }
 
-async function loadAllowlist(allowlistPath: string): Promise<Map<string, AllowlistEntry>> {
+async function loadAllowlist(allowlistPath: string): Promise<Map<string, LessonOriginalityAllowlistEntry>> {
   let raw: string;
   try {
     raw = await readFile(allowlistPath, "utf8");
@@ -847,7 +851,7 @@ async function loadAllowlist(allowlistPath: string): Promise<Map<string, Allowli
   if (!Array.isArray(parsed)) {
     throw new Error(`${allowlistPath}: expected an array of allow-list entries`);
   }
-  const entries = new Map<string, AllowlistEntry>();
+  const entries = new Map<string, LessonOriginalityAllowlistEntry>();
   for (const [index, item] of parsed.entries()) {
     if (!isRecord(item) || typeof item.lessonId !== "string" || item.lessonId.trim().length === 0 || typeof item.blockHeading !== "string" || item.blockHeading.trim().length === 0 || typeof item.reason !== "string" || item.reason.trim().length === 0) {
       throw new Error(`${allowlistPath}: entry ${index} must include non-empty lessonId, blockHeading, and reason`);
@@ -857,7 +861,11 @@ async function loadAllowlist(allowlistPath: string): Promise<Map<string, Allowli
       blockHeading: item.blockHeading.trim(),
       reason: item.reason.trim(),
     };
-    entries.set(allowlistKey(entry.lessonId, entry.blockHeading), entry);
+    const key = allowlistKey(entry.lessonId, entry.blockHeading);
+    if (entries.has(key)) {
+      throw new Error(`${allowlistPath}: duplicate allow-list entry for ${entry.lessonId}, heading block "${entry.blockHeading}"`);
+    }
+    entries.set(key, entry);
   }
   return entries;
 }
@@ -910,11 +918,13 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTIONS_PATH;
   const allowlistPath = options.allowlistPath ?? DEFAULT_ALLOWLIST_PATH;
   const requireLessonFiles = options.requireLessonFiles ?? false;
+  const auditAllAllowlistEntries = options.auditAllAllowlistEntries ?? false;
   const questionChecks = await loadQuestions(questionsPath);
   const allowlist = await loadAllowlist(allowlistPath);
   const files = await findMarkdownFiles(lessonRoot);
   const issues: LessonOriginalityIssue[] = [];
   const allowlistedBlocks = new Set<string>();
+  const checkedLessonIds = new Set<string>();
   let checkedFileCount = 0;
 
   for (const filePath of files) {
@@ -924,17 +934,14 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
     }
     checkedFileCount += 1;
     const metadata = lessonMetadata(markdown);
+    checkedLessonIds.add(metadata.id);
     const numericChecksForFile = metadata.categoryIds.size === 0
       ? questionChecks
       : questionChecks.filter((question) => metadata.categoryIds.has(question.categoryId));
 
     for (const block of lessonBlocks(markdown)) {
       const blockAllowlistKey = allowlistKey(metadata.id, block.heading);
-      if (allowlist.has(blockAllowlistKey)) {
-        allowlistedBlocks.add(blockAllowlistKey);
-        continue;
-      }
-
+      const blockIssues: LessonOriginalityIssue[] = [];
       const blockNumericTokens = numericTokens(block.text);
       const blockNumericUnitPairs = numericUnitPairTokens(block.text);
       const blockContextTokens = new Set(numericContextTokens(block.text));
@@ -950,7 +957,7 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
             && matchingAnswerTokens !== null
             && hasDistinctiveNumericQuestionEvidence(question, matchingQuestionTokens, matchingAnswerTokens, blockContextTokens, blockNumericUnitPairs)
           ) {
-            issues.push({
+            blockIssues.push({
               filePath,
               lessonId: metadata.id,
               blockHeading: block.heading,
@@ -972,7 +979,7 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
         const sharedFiveGramRatio = question.sourceFiveGrams.size === 0 ? 0 : sharedFiveGrams.length / question.sourceFiveGrams.size;
         const longestRun = longestSharedWordRun(question.sourceWords, blockWords);
         if (sharedFiveGrams.length >= SHARED_FIVE_GRAM_THRESHOLD || sharedFiveGramRatio >= SHARED_FIVE_GRAM_RATIO_THRESHOLD || longestRun >= LONGEST_SHARED_WORD_RUN_THRESHOLD) {
-          issues.push({
+          blockIssues.push({
             filePath,
             lessonId: metadata.id,
             blockHeading: block.heading,
@@ -987,30 +994,45 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
           });
         }
       }
+
+      if (allowlist.has(blockAllowlistKey)) {
+        if (blockIssues.length > 0) {
+          allowlistedBlocks.add(blockAllowlistKey);
+        }
+      } else {
+        issues.push(...blockIssues);
+      }
     }
   }
 
+  // A partial lesson run cannot judge entries for lessons outside its selected root.
+  const staleAllowlistEntries = [...allowlist.entries()]
+    .filter(([key, entry]) => (auditAllAllowlistEntries || checkedLessonIds.has(entry.lessonId)) && !allowlistedBlocks.has(key))
+    .map(([, entry]) => entry);
   const summaryLines = [
     `Lesson files checked: ${checkedFileCount}`,
     `Official questions checked: ${questionChecks.length}`,
     `Numeric originality window: one #/##/### heading block, scoped by lesson categoryIds; keyed answers require a distinctive question number, matching number+unit evidence, or ${NUMERIC_CONTEXT_MATCH_THRESHOLD} distinctive context words`,
     `Near-verbatim threshold: ${SHARED_FIVE_GRAM_THRESHOLD} shared word ${FIVE_GRAM_SIZE}-grams, ${Math.round(SHARED_FIVE_GRAM_RATIO_THRESHOLD * 100)}% of source ${FIVE_GRAM_SIZE}-grams, or ${LONGEST_SHARED_WORD_RUN_THRESHOLD} shared words in a row, across the whole bank`,
-    `Allow-listed heading blocks skipped: ${allowlistedBlocks.size}`,
+    `Allow-listed heading blocks suppressing issues: ${allowlistedBlocks.size}`,
+    `Stale allow-list entries: ${staleAllowlistEntries.length}`,
     `Originality issues: ${issues.length}`,
   ];
   const report = {
     lessonFileCount: checkedFileCount,
     checkedQuestionCount: questionChecks.length,
     allowlistedBlockCount: allowlistedBlocks.size,
+    staleAllowlistEntryCount: staleAllowlistEntries.length,
+    staleAllowlistEntries,
     issueCount: issues.length,
     issues,
     summaryLines,
   };
-  if (issues.length > 0) {
-    throw new LessonOriginalityError(report);
-  }
   if (requireLessonFiles && checkedFileCount === 0) {
     throw new LessonOriginalityError(report, "no lesson Markdown files were checked");
+  }
+  if (issues.length > 0 || staleAllowlistEntries.length > 0) {
+    throw new LessonOriginalityError(report);
   }
   return report;
 }
@@ -1018,19 +1040,20 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
 type LessonRootSelection = {
   lessonRoot?: string;
   requireLessonFiles: boolean;
+  auditAllAllowlistEntries: boolean;
 };
 
 function lessonRootFromArgs(args: string[]): LessonRootSelection {
   const rootArg = args.find((arg) => arg.startsWith("--lesson-root="));
   const requireLessonFiles = args.includes("--all");
   if (rootArg !== undefined) {
-    return { lessonRoot: path.resolve(rootArg.slice("--lesson-root=".length)), requireLessonFiles };
+    return { lessonRoot: path.resolve(rootArg.slice("--lesson-root=".length)), requireLessonFiles, auditAllAllowlistEntries: requireLessonFiles };
   }
   if (requireLessonFiles) {
-    return { lessonRoot: ALL_LESSON_ROOT, requireLessonFiles };
+    return { lessonRoot: ALL_LESSON_ROOT, requireLessonFiles, auditAllAllowlistEntries: true };
   }
   const positional = args.find((arg) => !arg.startsWith("--"));
-  return { lessonRoot: positional === undefined ? undefined : path.resolve(positional), requireLessonFiles };
+  return { lessonRoot: positional === undefined ? undefined : path.resolve(positional), requireLessonFiles, auditAllAllowlistEntries: false };
 }
 
 async function main(): Promise<void> {
@@ -1046,6 +1069,9 @@ if (isMainModule(import.meta)) {
     if (error instanceof LessonOriginalityError) {
       if (error.report.issues.length === 0) {
         console.error(`check-lesson-originality: ${error.message}`);
+      }
+      for (const entry of error.report.staleAllowlistEntries) {
+        console.error(`check-lesson-originality: stale allow-list entry for ${entry.lessonId}, heading block "${entry.blockHeading}" suppresses no current originality issues; remove it from the allow-list`);
       }
       for (const issue of error.report.issues) {
         if (issue.issueType === "numeric-overlap") {
