@@ -168,6 +168,7 @@ A transmitter drops from 36 W to 9 W. Keep the same calibrated meter and stable-
 - Formula: power ratio = new power / old power.
 - Complete: ratio = 9 / 36 = ___; 36 W -> ___ W -> 9 W.
 - Predict: the meter moves about ___ S-unit in which direction?
+- Sanity check: did you count both halvings rather than treating one halving as a full S-unit?
 
 Finish both halvings before reading on.
 

@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-004-01-A-C1",
       "prompt": {
-        "en": "A 7 MHz signal enters a receiver stage and leaves at the same frequency with the same modulation, but at a larger voltage. What did the stage do?",
+        "en": "A receiver stage takes a 7 MHz modulated signal and produces a larger voltage at the same frequency with the same modulation. Which block behaviour fits?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Amplified the RF signal without changing it to audio",
+            "en": "RF amplification.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The stage raises the existing RF level while preserving frequency and information.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Detected audio from the carrier",
+            "en": "Envelope detection into audio.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Detection recovers the information as audio. The described output is still modulated RF at 7 MHz.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Protected the battery from reverse polarity",
+            "en": "Frequency conversion to an IF.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A frequency-converting mixer moves the signal to another frequency. The described carrier frequency did not change.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Changed the resistor tolerance",
+            "en": "Oscillation without an input signal.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "An oscillator generates a repeating signal. Here an existing input is being made larger with its modulation preserved.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Amplification raises signal level while preserving the wanted waveform; a 7 MHz signal is still RF when it leaves at 7 MHz.",
+        "en": "Gain can apply to RF or audio. Identify the signal type and whether frequency or information changed, not just whether the output grew.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-01-A-C2",
       "prompt": {
-        "en": "An audio amplifier is overdriven until the voice waveform has flattened peaks. What problem is most likely?",
+        "en": "An audio amplifier is overdriven until voice peaks flatten. Which interpretation fits the change in waveform shape?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "A cleaner, narrower transmitted signal",
+            "en": "Uniform gain reduction that preserves the full speech waveform.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Uniform scaling preserves shape. Flattening only the peaks changes the relative shape of the waveform.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Distortion products from non-linear operation",
+            "en": "Non-linear clipping that can create extra frequency products.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The output no longer follows the input proportionally. Clipping changes the shape and can create unwanted products.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Automatic cancellation of all harmonics",
+            "en": "Linear gain with greater output headroom for the same voice peaks.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Headroom is room for peaks before clipping. Flattened peaks show that the clean range has been exceeded.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Less occupied bandwidth because all peaks are flattened",
+            "en": "Filtering that removes only background noise while retaining the original peaks.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The wanted speech peaks themselves changed. This is not evidence that only unwanted noise was removed.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Clipping is non-linear operation: it changes the waveform shape and produces distortion products.",
+        "en": "Linearity concerns preserving shape, not simply making the output louder or more efficient. Excess drive can turn useful gain into distortion.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-01-A-C3",
       "prompt": {
-        "en": "A power supply uses four diodes before a filter capacitor so both halves of the AC waveform feed the same DC polarity. Which diode job is this?",
+        "en": "A training supply has a sine-wave input and output pulses of the same polarity on both half-cycles, even with its smoothing capacitor removed. Which function produced that change?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Voltage regulation by a Zener diode",
+            "en": "Holding output near a fixed voltage with a regulator.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Regulation holds voltage closer to a target as conditions change. It is not what steers both AC half-cycles into the same polarity.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Light emission from an LED",
+            "en": "Storing charge between peaks with a filter capacitor.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The pulses remain when the capacitor is removed. Filtering smooths pulses rather than creating the one-polarity waveform.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Rectification",
+            "en": "Steering current with a bridge rectifier.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The bridge uses diode direction to make both half-cycles feed the same DC polarity. Filtering is a later job.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Reverse-polarity protection at a DC input",
+            "en": "Blocking a reversed battery with a series protection diode.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A series input diode can block a reversed DC source. It does not steer both halves of AC into a full-wave output.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "A rectifier uses diode one-way action to turn alternating current into current of one polarity before filtering.",
+        "en": "Rectification changes current direction behaviour. Filtering smooths the result, while regulation controls the output level.",
         "fr": null
       }
     }

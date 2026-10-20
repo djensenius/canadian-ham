@@ -129,7 +129,7 @@
     {
       "id": "QZ-L-003-07-A-C3",
       "prompt": {
-        "en": "A switching supply is rated 30 A continuous for a 19 A transceiver. Which added check tests something the current rating does not establish?",
+        "en": "A switching supply rated 30 A powers a 19 A radio. DC voltage is correct at idle and during transmit. Which further check addresses remaining signal-quality risks?",
         "fr": null
       },
       "choices": [

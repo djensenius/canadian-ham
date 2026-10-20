@@ -70,6 +70,22 @@ A test generator applies 0.08 V of audio to a preamplifier. The preamplifier out
 - Answer: gain = 10 times.
 - Sanity check: the waveform is larger, but the extra output energy comes from the amplifier power supply.
 
+### Faded practice: finish a voltage-gain ratio
+
+An audio stage takes a 0.012 V input and produces 0.36 V with the same waveform shape.
+
+- Given: input E = 0.012 V; output E = 0.36 V.
+- Find: voltage gain ratio.
+- Formula: gain = output E / input E.
+- Complete: gain = 0.36 / ___ = ___ times.
+- Sanity check: multiply the input by your ratio. Does it give the output?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a voltage-gain ratio
+
+0.36 / 0.012 = 30 times. The ratio describes voltage, not power gain. The output energy comes from the stage power supply.
+
 ## Linearity keeps signals clean
 
 A linear amplifier changes signal size without changing the shape more than intended. If the input waveform rises smoothly, the output should rise smoothly by the same proportion. If the input crosses through a low point, the output should cross through a matching low point.
@@ -164,6 +180,22 @@ The same red LED from a 9.0 V battery needs more series resistance because the r
 - Sanity check: a higher source voltage needs more resistance for the same LED current.
 
 A common E12 choice above the ideal value is 390 ohms. Current becomes I = 6.9 V / 390 ohms = 0.0177 A, or 17.7 mA. Resistor power is P = 0.0177 A x 6.9 V = 0.122 W, so a 0.25 W resistor is suitable.
+
+### Faded practice: complete an LED resistor choice
+
+For a training indicator, assume an LED drop of 1.8 V from a 6.0 V source. Target current is 14 mA. Find the ideal series resistance before selecting a real rated part.
+
+- Given: source E = 6.0 V; LED drop = 1.8 V; resistor E = 4.2 V; I = 14 mA = ___ A.
+- Find: ideal series resistance and resistor heat.
+- Formula: R = resistor E / I; P = I x resistor E.
+- Complete: R = 4.2 V / ___ A = ___ ohms; P = ___ A x 4.2 V = ___ W.
+- Sanity check: if source voltage rises with the same LED and target current, should the resistance rise too?
+
+Fill the gaps before checking below.
+
+### Check your work: complete an LED resistor choice
+
+14 mA = 0.014 A. Ideal R = 4.2 / 0.014 = 300 ohms. Heat is 0.014 x 4.2 = 0.0588 W, about 0.059 W. Check real LED and resistor ratings. A higher source voltage needs more series resistance for the same current.
 
 ## Try it
 

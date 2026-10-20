@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-004-02-A-C1",
       "prompt": {
-        "en": "You are checking an NPN transistor symbol before replacing the part. Which terminal carries the arrow that tells you the device polarity?",
+        "en": "A transistor relay switch is driven into saturation, while an audio preamplifier must preserve a smooth waveform. Which bias choice fits both jobs?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Collector",
+            "en": "Keep both devices in the middle of the active region for their intended on state.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The active region suits smooth gain, but an intended switch on state commonly uses saturation rather than partial conduction.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Base",
+            "en": "Drive both devices into saturation whenever the input is present.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Saturation can be useful for switching, but it does not preserve proportional changes at audio peaks.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Emitter",
+            "en": "Use saturation for the relay on state and the active region for smooth audio gain.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "A switch deliberately moves between cut-off and saturation. A linear preamplifier needs room to vary smoothly in its active region.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Gate",
+            "en": "Keep the relay device in cut-off and use saturation for smooth audio gain.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Cut-off is the switch off state. Saturation is not the smooth-gain region for the audio stage.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "The emitter is the bipolar-transistor terminal with the schematic arrow; its direction helps distinguish NPN from PNP.",
+        "en": "The same device family can serve different jobs. Bias must match switching or proportional amplification rather than treating saturation as always good or always faulty.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-02-A-C2",
       "prompt": {
-        "en": "A JFET gate is changed from -1 V bias to -3 V bias relative to its source. What happens in the Basic-level channel model?",
+        "en": "An N-channel JFET gate changes from -1 V to -3 V relative to its source. In the lesson's reverse-bias channel model, what happens?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The channel narrows and drain current decreases",
+            "en": "The channel narrows and drain current decreases.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The gate becomes more reverse biased. Its electric field narrows the conducting channel and reduces drain current.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The channel widens and drain current increases",
+            "en": "The channel widens and drain current increases.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "That is the direction expected from reducing reverse bias in this model, not increasing it.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Drain current stays fixed because the gate is insulated from control",
+            "en": "Drain current stays fixed because the gate draws little steady current.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Small gate current does not mean weak control. Gate voltage controls channel conduction through an electric field.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The source and drain must swap terminal names",
+            "en": "The channel narrows and drain current increases.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A narrower channel opposes the drain current more. It does not squeeze a larger current through the device.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Increasing reverse bias on a junction FET gate narrows the channel, so the controlled drain current is reduced.",
+        "en": "A high-impedance control terminal can strongly affect another current path while drawing little current itself. Keep the specified FET family and bias model in view.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-02-A-C3",
       "prompt": {
-        "en": "In a tube RF amplifier, making the grid more negative reduces the current drawn by the plate circuit. What principle is being applied?",
+        "en": "In a triode exercise, heater and plate supply settings stay steady. Making the grid more negative reduces plate current. What explains that result?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The grid is only a shield and cannot affect plate current",
+            "en": "The grid screens interference but has no control over electron flow.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A triode grid is the control element between cathode and plate. It does more than act as a passive shield.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The plate current is controlled only by heater brightness",
+            "en": "A steady heater fixes plate current regardless of grid voltage.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The heater supports electron emission, but the grid can still control how much of that stream reaches the plate.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "A more negative grid always increases plate current",
+            "en": "A more negative grid attracts more electrons into the plate circuit.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A more negative grid opposes the electron stream toward the plate in this operating model.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "A small grid voltage controls a larger plate current",
+            "en": "Grid voltage controls the electron stream between cathode and plate.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Changing grid voltage controls the larger plate-circuit current, which is the basis of triode amplification.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "A triode amplifies because grid-voltage changes control the electron stream and therefore the larger plate current.",
+        "en": "Cathode emission, plate attraction, and grid control have different roles. The grid can vary output current without being the source of that output energy.",
         "fr": null
       }
     }
