@@ -40,41 +40,41 @@
     {
       "id": "QZ-L-002-02-A-C1",
       "prompt": {
-        "en": "During a CW contact, the note stays clean and loud, but the sender runs words together faster than you can copy. Which request addresses the problem you can identify?",
+        "en": "You send QRL? and hear no direct reply. During the listening pause, a faint ongoing contact becomes audible. What does that new evidence mean for your plan to call CQ there?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "QRP: ask for less power.",
+            "en": "No direct reply means your earlier busy check takes priority over the contact.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "QSY: ask for another frequency.",
+            "en": "Repeat the busy check over the contact until someone answers you.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "QRS: ask for a slower pace.",
+            "en": "The channel is occupied even though nobody answered your check.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "QRZ?: ask the caller to identify.",
+            "en": "Calling CQ would reserve the channel because you checked it first.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The problem described is speed, so request slower sending with QRS. Less power may make reception harder, moving frequency does not set the pace, and asking for identification does not tell the sender why you are missing words.",
+        "en": "The listening pause revealed traffic that was not apparent at first. Lack of a direct answer is not proof of an empty channel. The ongoing contact matters more than that earlier silence. Repeated checks would cover it, and neither a busy check nor CQ grants a reservation. Find another clear frequency and listen there before calling.",
         "fr": null
       }
     },

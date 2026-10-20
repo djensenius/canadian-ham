@@ -88,11 +88,11 @@ The letters RST fix the order: readability, signal strength, then tone. Voice re
 
 | Part | Digit | What the digit describes |
 |---|---:|---|
-| Readability | 1 | No usable copy. |
-| Readability | 3 | Copy takes considerable effort. |
-| Readability | 4 | Quite readable. |
+| Readability | 1 | Unreadable. |
+| Readability | 3 | Readable with considerable difficulty. |
+| Readability | 4 | Quite readable; practically no difficulty. |
 | Readability | 5 | Perfectly readable. |
-| Strength | 1 | Just perceptible. |
+| Strength | 1 | Faint signals, barely perceptible. |
 | Strength | 3 | Weak. |
 | Strength | 5 | Fair strength. |
 | Strength | 7 | Moderately strong. |
@@ -101,11 +101,17 @@ The letters RST fix the order: readability, signal strength, then tone. Voice re
 
 ### Worked example: keep the three observations separate
 
-A Morse signal takes some effort to read but is quite readable. Its strength is moderately strong and its note is clean. Reading the table by part gives R = 4, S = 7, T = 9, so the report is 479.
+A Morse signal is quite readable, with practically no difficulty. Its strength is moderately strong and its note is clean. Reading the table by part gives R = 4, S = 7, T = 9, so the report is 479.
 
-For a voice signal with the same readability and strength, leave off the tone digit. Voice does not get a Morse-tone score merely because the speaker sounds pleasant.
+### Voice reports use readability and strength
+
+For a voice signal, leave off the tone digit. Voice does not get a Morse-tone score merely because the speaker sounds pleasant.
+
+### Read strength above S9
 
 An S9 report with an added decibel value means the meter indicates that many decibels above S9. The added value describes strength, not an extension to the readability scale.
+
+### Reports through a repeater
 
 On a repeater, describe the relayed station's audio and intelligibility as you hear them from the repeater. You cannot infer every detail of its signal into the repeater from that output alone.
 
@@ -170,11 +176,11 @@ Q signals are compact three-letter groups. A question mark can turn a statement 
 | Arrange a later call | QRX | Pause; the sender will call again later. |
 | Give a location | QTH | Introduce the station's location. |
 
-### Memory trick: interference or natural noise
+### Memory trick: group Q signals by job
 
-- Helps remember: the difference between QRM and QRN.
-- Trick: M can suggest man-made signals; N can suggest natural noise.
-- Limit: this cue does not decode every Q signal. Learn the operating job of each group separately.
+- Helps remember: QRM, QRN, QTH, QSY, and QRZ?.
+- Trick: M suggests man-made signals; N suggests natural noise. Pair QTH with “there” for location, QSY with “shift” for a frequency move, and QRZ? with “who is calling?”
+- Limit: these cues cover only the listed groups. Use the table for their exact meanings.
 
 On voice, use plain language when it is clearer. Abbreviations help only when both operators understand them.
 

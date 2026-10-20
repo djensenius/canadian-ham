@@ -61,6 +61,8 @@ For an illustrative setup, a repeater transmits on 146.940 MHz and uses a negati
 - Answer: transmit on 146.340 MHz and receive on 146.940 MHz.
 - Sanity check: a negative offset puts the input below the output.
 
+### Use simplex for a direct path
+
 Simplex is the direct alternative: both stations use a single frequency for sending and receiving. While on a repeater, listen for the other station on its input channel. If you hear that station clearly, a direct path may work. Both operators should check reliable copy before moving to a suitable simplex channel.
 
 A repeater input can sound quiet because you cannot hear distant users. Avoid local repeater channels when choosing simplex; move if your direct contact is using one. For local work that VHF or UHF can handle, use those bands and leave HF less crowded for longer paths.
@@ -89,6 +91,8 @@ A club member hears two stations discussing an antenna. The member has a short q
 2. Send your call sign, for example “VA3PQR”.
 3. Wait for an invitation rather than launching into the question.
 4. Ask briefly, then release the microphone so others can reply.
+
+### Use plain language for location
 
 When asking where someone is, use ordinary words. Plain language is clearer than 10-codes on a shared amateur channel.
 
@@ -132,7 +136,9 @@ VA3PQR hears VE2LMN calling CQ. VA3PQR replies, “VE2LMN, this is VA3PQR.” Th
 
 ## Give a voice signal enough space
 
-Single-sideband voice, or SSB, occupies a few kilohertz, not just the displayed dial frequency. Allow about 3 kHz from an SSB contact already under way. For a brief antenna-tuner adjustment before joining an HF SSB net, find a clear spot 3 kHz to 5 kHz away. Listen there first and return to the net ready to wait for net control.
+Single-sideband voice, or SSB, occupies a few kilohertz, not just the displayed dial frequency. Allow about 3 kHz from an SSB contact already under way.
+
+A tuner adjustment radiates a test signal too. Before joining an HF SSB net, keep that brief test in clear spectrum 3 kHz to 5 kHz away. Listen before testing so the adjustment does not cover another contact. Return to the net ready to wait for net control.
 
 Sideband choice is also a shared convention. As a practical rule for ordinary amateur HF voice, operators generally use lower sideband below 10 MHz and upper sideband from 10 MHz upward. This is not a universal rule for every mode or service. It explains the usual choices: lower sideband at 3 755 kHz and upper sideband on twenty metres, around 14 MHz.
 

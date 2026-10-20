@@ -43,7 +43,7 @@ Distress means immediate danger to life. The voice signal is MAYDAY, repeated th
 
 An urgent request needs serious assistance but has no immediate threat to life. Safety traffic warns of hazards affecting people, navigation, or weather. A warning about a developing hazard is different from a call from someone whose life is already at risk.
 
-Distress takes priority over emergency messages; emergency messages take priority over safety messages. Keep that order in mind, but listen to the actual situation rather than guessing from an anxious voice alone.
+Distress takes priority over emergency messages; emergency messages take priority over safety messages. In this order, urgent requests for help belong with emergency messages, below distress and above safety warnings. Keep that order in mind, but listen to the actual situation rather than guessing from an anxious voice alone.
 
 ### Worked example: sort the facts before choosing a signal
 
@@ -79,6 +79,8 @@ In a practice scenario, VA3PQR hears a distressed station enter during a gap. VA
 2. Obtain the location and the assistance needed. Ask for unclear details again.
 3. Contact the appropriate authorities if direct help is beyond your station.
 4. Continue listening so you can relay follow-up information.
+
+### Keep the link when help is indirect
 
 A station unable to provide direct assistance still has a job. Contacting authorities and maintaining watch can preserve a link that nobody else has. More transmitter power is not a replacement for clear location details or accurate relaying.
 
@@ -130,7 +132,7 @@ Emergency communication is a chain: recognize the situation, make room, collect 
 ## Common mistakes
 
 - Choosing a priority from the speaker's tone alone: classify the danger described.
-- Continuing a routine exchange after distress enters: clear space and acknowledge the caller.
+- Continuing a routine exchange after distress enters: keep the channel for the caller and acknowledge them.
 - Going silent because you cannot help in person: contact authorities and maintain watch.
 - Relaying a guessed location: ask for missing or unclear details.
 - Counting a battery's ideal runtime as guaranteed: allow for cold, age, heavier traffic, and reserve.

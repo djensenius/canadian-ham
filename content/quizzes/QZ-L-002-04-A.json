@@ -18,41 +18,41 @@
     {
       "id": "QZ-L-002-04-A-C1",
       "prompt": {
-        "en": "You log a contact at 0040 UTC on 8 March. The stated local offset is UTC minus 3 hours. Which local reminder matches the UTC entry?",
+        "en": "A weekly net keeps the same UTC schedule. Your local clock offset changes for the season. What should happen to the reminder in your local calendar?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "0340 on 8 March",
+            "en": "Keep the local time fixed and shift the published UTC schedule instead.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "2140 on 7 March",
+            "en": "Recalculate the local reminder using the new offset; keep the UTC schedule unchanged.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "2140 on 8 March",
+            "en": "Keep both times unchanged because the net still has the same name.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "0040 on 7 March",
+            "en": "Change only the calendar date, without checking the local clock time.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Subtract three hours: the local clock reads 2140 on the previous date, 7 March. Adding moves in the wrong direction. Keeping 8 March with 2140 misses the date change; changing only the date leaves the clock wrong. Keep the original UTC date and time together in the log.",
+        "en": "The event stays at the same UTC time, but its relationship to your local clock has changed. Apply the offset in force on the event date to update the reminder, checking the local date too. Moving the UTC schedule changes the event rather than the conversion. Keeping everything fixed ignores the new offset, and changing only the date does not perform the conversion.",
         "fr": null
       }
     },
@@ -100,41 +100,41 @@
     {
       "id": "QZ-L-002-04-A-C3",
       "prompt": {
-        "en": "A confirmation lists the right call sign but a different band from your log. What is the useful next step?",
+        "en": "Your log notes that reception improved just after you turned the antenna. The distant station kept the same power. Does that record prove the antenna turn caused the improvement?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Compare UTC date, time, band, and mode with the other operator before accepting a match.",
+            "en": "No. It records a useful change to investigate, but propagation could have changed too.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Accept it because a matching call sign proves every other field is correct.",
+            "en": "Yes. Events recorded next to each other in a log must have the same cause.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Change your log to the confirmation details without checking.",
+            "en": "Yes. Constant transmitter power rules out every other cause of stronger reception.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Discard the log because Canadian amateurs do not have to keep one.",
+            "en": "No. Optional Canadian station logs cannot provide useful evidence.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "A call sign alone does not identify a particular contact. Compare the contact details and resolve the mismatch rather than overwriting evidence. Optional logs can still help match confirmations and find recording errors.",
+        "en": "A log preserves observations, not a controlled test of every possible cause. The antenna turn is worth investigating, but changing propagation can also affect reception. A sequence of events alone does not establish a cause, and fixed transmitter power does not hold the path steady. Optional logs remain useful for comparing later tests and conditions.",
         "fr": null
       }
     }

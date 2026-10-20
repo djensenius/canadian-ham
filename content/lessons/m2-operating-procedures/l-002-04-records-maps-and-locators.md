@@ -53,7 +53,7 @@ That record gives the investigation a starting point. It does not prove that you
 
 ## Use a compact location label
 
-In a VHF contest, an operator may request your grid square rather than a town name. A Maidenhead locator expresses location with a short code. The versions taught here have four or six characters.
+A Maidenhead locator divides geography into labelled areas, often called grid squares. Its four- or six-character code gives operators a compact, shared way to describe location. VHF contests use these labels to exchange locations quickly.
 
 A locator identifies a geographic area; it is not a signal report or a compass bearing. It gives contest and weak-signal operators location information that is quick to send. At VHF and UHF, location matters because terrain and line-of-sight paths can change over short distances.
 
@@ -119,6 +119,8 @@ A contact occurs at 0210 UTC on 12 April. The stated local offset is still UTC m
 - Substitute: 0210 - 0500 = 2110 on the previous local date.
 - Answer: 11 April at 2110, or 9:10 PM locally.
 - Sanity check: adding the offset back reaches 0210 on 12 April. The log still records the contact's UTC date as 12 April.
+
+### Check time and frequency against a standard
 
 Standard time and frequency stations CHU, WWV, and WWVH provide accurate reference signals. Operators can use them to check time or frequency, supporting careful logging and receiver checks.
 

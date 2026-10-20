@@ -100,41 +100,41 @@
     {
       "id": "QZ-L-002-03-A-C3",
       "prompt": {
-        "en": "You have notified authorities about a distress report. The distressed station can still reach only you by radio. Why should you stay at the receiver?",
+        "en": "A go-kit exercise succeeds through a repeater. In the next exercise, the repeater loses power, although both handhelds still have charged batteries. What conclusion should the operators draw about their readiness?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "To wait until the next scheduled net before relaying any updates.",
+            "en": "Their spare handheld batteries guarantee power at the remote repeater too.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "To repeat the first report continuously until help arrives.",
+            "en": "A written contact record can replace the missing radio path.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "To wait for a perfect signal before writing anything down.",
+            "en": "Their saved repeater settings will carry the contact without a powered relay.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "To pass new information and questions between the station and help.",
+            "en": "They still need to test a usable path that does not depend on that repeater.",
             "fr": null
           },
           "isCorrect": true
         }
       ],
       "explanation": {
-        "en": "The radio link may still be needed after notification. Listen for updates and pass questions accurately. Waiting for the next net can delay important facts, continuous repetition blocks replies, and useful notes do not need to wait for a perfect signal.",
+        "en": "The first exercise tested a path that included a working relay. Charged handhelds keep the endpoints ready, not the repeater between them. The operators still need to test a suitable alternative, such as a direct path where coverage permits. Notes preserve information but cannot carry it by radio; saved settings cannot restore an unpowered relay.",
         "fr": null
       }
     }
