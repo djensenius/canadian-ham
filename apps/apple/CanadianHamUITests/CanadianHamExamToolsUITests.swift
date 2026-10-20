@@ -657,6 +657,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
         let heading = showsQuiz ? app.staticTexts["QZ-L-005-01-A"].firstMatch : title
         XCTAssertTrue(heading.waitForExistence(timeout: 10), file: file, line: line)
+        // The lesson reader's quiz summary also shows the quiz ID, so prove the quiz screen itself is pushed.
+        let quizCard = app.descendants(matching: .any)["lesson-quiz-card"].firstMatch
+        if showsQuiz {
+            XCTAssertTrue(quizCard.waitForExistence(timeout: 10), "The quiz screen must be pushed before the transition", file: file, line: line)
+        }
         let expectedHeading = heading.label
         XCTAssertFalse(expectedHeading.isEmpty, file: file, line: line)
         assertSimulatedLayoutMode(in: app, expectedMode: initialSizeClass == "compact" ? "compact" : "split", context: "before deep Learn transition", file: file, line: line)
@@ -666,6 +671,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(heading.waitForExistence(timeout: 10), "The exact deep route must stay presented", file: file, line: line)
         XCTAssertEqual(heading.label, showsQuiz ? expectedHeading : expectedLessonTitle, file: file, line: line)
         XCTAssertTrue(heading.isHittable, "The lesson or quiz heading must be visible after the transition", file: file, line: line)
+        if showsQuiz {
+            XCTAssertTrue(quizCard.waitForExistence(timeout: 10), "The quiz screen itself must stay pushed after the transition", file: file, line: line)
+        }
     }
 
     func testRegularWidthMockExamUsesCalculatorInspectorWithoutHints() throws {

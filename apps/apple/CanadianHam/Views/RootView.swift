@@ -811,6 +811,9 @@ struct RootView: View {
             bankLoadError = nil
             if !bankId.hasLessons, selection == .learn {
                 selection = .home
+                // Selection changes outside the sidebar don't reset the split stack, so clear any
+                // pushed Learn module, lesson or quiz from the bank that had lessons.
+                navigationPath.removeAll()
             }
         } catch {
             bank = nil

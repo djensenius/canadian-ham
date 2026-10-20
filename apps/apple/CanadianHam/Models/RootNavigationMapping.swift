@@ -83,4 +83,3 @@ enum RootNavigationMapping {
         return root + state.path.map { .learn($0) }
     }
 }
-
