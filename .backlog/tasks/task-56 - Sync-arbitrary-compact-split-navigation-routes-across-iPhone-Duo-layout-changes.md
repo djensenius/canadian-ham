@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 03:22'
-updated_date: '2026-10-20 00:05'
+updated_date: '2026-10-20 00:38'
 labels:
   - apple
 dependencies:
@@ -44,4 +44,6 @@ PR #286 preserves practice and mock exam session state across simulated Duo fold
 Also keep the open exam tool (calculator/hint) presented across size-class transitions; currently it dismisses and must be reopened (value is preserved).
 
 Implementation: compact navigation now uses a typed route array shared with Learn NavigationLinks, with a pure RootNavigationMapping compact/split conversion that preserves module/lesson/section/quiz stacks and practice/mock destinations. Selected calculator/hint is retained in the root-owned session models. Added six mapping/session-state unit tests and eight strict UI tests (both directions for lesson, quiz, calculator and hint). Existing ExamTools tests and shared/exception helpers are byte-identical, verified by reconstructing the pre-insertion source. XcodeGen output was deterministic over two runs. Targeted xbuild validation is queued in /tmp/task-56-initial.sh and /tmp/task-56-macos.sh; waiting on the shared build lock without interruption. No app strings changed.
+
+Validation iteration: initial iPhone build exposed two remaining DEBUG category/subsection references to the removed compact enum; fixed. Retry compiled and all six RootNavigationMappingTests passed. The first strict calculator compact-to-split UI test then reproduced a real native inspector/AttributeGraph render loop (app 100% CPU, sample /tmp/task-56-hang.sample). Interrupted only this task-owned xbuild child after confirming its parent script/PID; no other builds interrupted. Added a presentation-host lifecycle gate so a retained tool is presented after the new native host attaches, and disappearing hosts cannot clear its selected state. Strict test assertions are unchanged. Targeted two-direction calculator retry is queued in /tmp/task-56-tool-retry.sh; macOS units and remaining platforms are queued. pnpm typecheck and pnpm test passed (144 content, 21 Morse, 127 calculator, 209 web tests). Test guard self-test and merge-base diff check passed without an approval marker; no guarded changes.
 <!-- SECTION:NOTES:END -->
