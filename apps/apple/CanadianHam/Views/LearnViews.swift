@@ -718,7 +718,8 @@ private struct LessonQuizView: View {
     let onOpenHintLesson: (QuestionHintLessonLink) -> Void
     let onSaved: () -> Void
     @State private var selectedTool: ExamTool?
-    @StateObject private var unusedCalculator = ExamCalculatorViewModel()
+    // The shared tool presenter requires a calculator model; this quiz exposes only .hint.
+    @StateObject private var presentationCalculator = ExamCalculatorViewModel()
     @State private var calculatorFocused = false
 
     private var seed: String {
@@ -820,7 +821,7 @@ private struct LessonQuizView: View {
         .task { if items.isEmpty { restart(keepSeed: true) } }
         .examToolPresentation(
             selectedTool: $selectedTool,
-            calculator: unusedCalculator,
+            calculator: presentationCalculator,
             calculatorFocused: $calculatorFocused,
             hintContext: hintToolContext
         )

@@ -214,9 +214,21 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
     let officialQuestionIds: [String]
     let incorrectOfficialQuestionIds: [String]
     let incorrectConceptCheckIds: [String]
-    var answeredWithHelpIds: [String]? = nil
+    let answeredWithHelpIds: [String]?
 
-    init(id: String, quizId: String, lessonId: String, submittedAt: String, correct: Int, total: Int, percent: Double, officialQuestionIds: [String], incorrectOfficialQuestionIds: [String], incorrectConceptCheckIds: [String], answeredWithHelpIds: [String]? = nil) {
+    init(
+        id: String,
+        quizId: String,
+        lessonId: String,
+        submittedAt: String,
+        correct: Int,
+        total: Int,
+        percent: Double,
+        officialQuestionIds: [String],
+        incorrectOfficialQuestionIds: [String],
+        incorrectConceptCheckIds: [String],
+        answeredWithHelpIds: [String]? = nil
+    ) {
         self.id = id
         self.quizId = quizId
         self.lessonId = lessonId
@@ -244,14 +256,16 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
         incorrectConceptCheckIds = try container.decode([String].self, forKey: .incorrectConceptCheckIds)
         if container.contains(.answeredWithHelpIds) {
             let ids = try container.decode([String].self, forKey: .answeredWithHelpIds)
-            guard Self.validHelpIDs(ids, officialQuestionIds: officialQuestionIds) else {
+            guard Self.validAnsweredWithHelpIds(ids, officialQuestionIds: officialQuestionIds) else {
                 throw DecodingError.dataCorruptedError(forKey: .answeredWithHelpIds, in: container, debugDescription: "Help IDs must be sorted unique official IDs from this attempt.")
             }
             answeredWithHelpIds = ids
+        } else {
+            answeredWithHelpIds = nil
         }
     }
 
-    static func validHelpIDs(_ ids: [String], officialQuestionIds: [String]) -> Bool {
+    static func validAnsweredWithHelpIds(_ ids: [String], officialQuestionIds: [String]) -> Bool {
         ids == ids.sorted() && Set(ids).count == ids.count && ids.allSatisfy { $0.hasPrefix("B-") && officialQuestionIds.contains($0) }
     }
 }
@@ -2784,12 +2798,11 @@ private func validateLessonQuizAttempts(
         }
 
         if let value = attempt.storage["answeredWithHelpIds"] {
-            if let ids = stringArray(value),
-               let official = stringArray(attempt.storage["officialQuestionIds"]),
-               LessonQuizAttempt.validHelpIDs(ids, officialQuestionIds: official),
-               ids.allSatisfy(knownQuestionIds.contains) {
-                // The optional field is a sorted unique subset of this attempt's official items.
-            } else {
+            let official = stringArray(attempt.storage["officialQuestionIds"]) ?? []
+            let valid = stringArray(value).map { ids in
+                LessonQuizAttempt.validAnsweredWithHelpIds(ids, officialQuestionIds: official) && ids.allSatisfy(knownQuestionIds.contains)
+            } ?? false
+            if !valid {
                 errors.append(String(localized: "\(prefix).answeredWithHelpIds must be sorted unique official question IDs from this attempt."))
             }
         }
