@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-18 06:03'
-updated_date: '2026-10-20 00:05'
+updated_date: '2026-10-20 00:15'
 labels:
   - apple
 dependencies: []
@@ -40,4 +40,6 @@ The iPhone 17 Pro Max targeted run reproduced a main-branch failure in CanadianH
 
 <!-- SECTION:NOTES:BEGIN -->
 Baseline reproduced at 79b47a9e (main after TASK-60): iPhone 17 Pro Max OS 27.0 targeted xbuild exited 65. Test failed after 132.787s at CanadianHamExamToolsUITests.swift:1352 with "Failed to get matching snapshot" for calculator-key-percent. Evidence: /tmp/task-58/reproduce.log, /tmp/task-58/reproduce.xcresult, /tmp/task-58/reproduce-attachments/. The test-local scrollCalculatorPanelUntilElementExists helper reads element.identifier in its context string while !element.exists, causing XCTest to fail before the first swipe. The failure hierarchy shows five lazy-grid rows through equals (y356.7...402.7) inside the calculator ScrollView (y86.7...408), with the sixth row not yet instantiated. Replaced only that premature identifier lookup with literal diagnostic context; no product layout change is warranted unless corrected scrolling reveals an actual reachability issue. All assertions and guarded shared helpers remain unchanged.
+
+Corrected targeted Pro Max OS 27.0 reachability test passed (xbuild exit 0): /tmp/task-58/fixed-reachability.log and /tmp/task-58/fixed-reachability.xcresult. Product already scrolls every key correctly; this is a genuine test-helper snapshot bug, not a sheet/home-indicator/detent defect. Supervisor reviewed implementation commit 78a2857e33741199f2035e0110cf0b4aaedd8bdc and approved the test-only fix before PR creation. Test guard passed with no guarded changes. Remaining device matrix is running via /tmp/task-58/verify.sh.
 <!-- SECTION:NOTES:END -->
