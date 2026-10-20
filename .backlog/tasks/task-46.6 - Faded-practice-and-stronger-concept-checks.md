@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 15:55'
+updated_date: '2026-10-20 16:01'
 labels:
   - content
 dependencies:
@@ -118,6 +118,8 @@ Run the existing CanadianHamLessonFigures plan once for this complete content ba
 AC #1 evidence (both parts): 67 source-tested faded sets in every quantitative lesson (30 total); 74/74 focused regressions verify completion labels/blanks before separate solutions, plus the qualitative M6 exception and reference-only M1. AC #2 evidence: all 92 checks reviewed through Part A review plus the six repaired overlaps and Part B manual bank/Try-it comparisons; every choice has distinct diagnostic feedback (368 notes). Default and explicit strict checker, schema validation, overlap lint and all module feedback/no-negative-stem regressions PASS. Source implementation final commit dea1b6a3beb5daf64248f13f0143cc48f0bf9872. Parent closure follows the explicit user instruction and does not imply Apple subtask completion or independent reviewer approval.
 
 Reopened after independent re-review REQUEST CHANGES at 48dcc7cb; AC #2 unchecked pending transfer-check, distractor and wording repairs. No PR will be opened by this worker.
+
+Re-review implementation: redesigned seven overlap/elimination checks as transfers (capacitor energy under heavier load; steady-DC transformer induction; corroded connector under load; trap-antenna emission retest; controlled VHF mast comparison; isolating two simultaneous noise-test changes; cover-on versus cover-off emission validation). Read every officialQuestionIds record from the actual source path content/sources/ised/basic-2025-07-15/questions/amat_basic_quest_delim.txt and every same-lesson Try-it for these seven, including all option feedback; no replacement discloses a same-quiz bank answer. Also compared the other edited quizzes with their full same-quiz bank Q+A/choices and Try-its. Audited all 92 M2–M8 checks for absolute/prefix cues, revising 18 quiz files in total; retained legitimate quantitative uses such as all four branches in 005-03 C3. Broke the repeated Approval prefix in 003-08 C3 and replaced all named prompt-contradicting distractors. Kept concept IDs, ordered official mappings, and answer keys unchanged. Chose the smaller documentation fix for the Try-it nit: narrow the separate-heading rule to new/restructured material and extend existing TASK-46.5 (already AC #2 all lessons converted) rather than duplicate its follow-up. Legacy M3/M4 conversion is explicitly recorded there. Schema README now documents feedback required by default; l-006-02 completion blank uses ___ %.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
