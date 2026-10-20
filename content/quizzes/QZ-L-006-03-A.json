@@ -14,57 +14,57 @@
     {
       "id": "QZ-L-006-03-A-C1",
       "prompt": {
-        "en": "Two nearby portable Yagis point their booms at each other, but one has upright elements and the other has level elements. Which change addresses polarization mismatch?",
+        "en": "Two nearby portable Yagis point their booms at each other, but one has upright elements and the other has level elements. Which change aligns their polarizations while keeping their aim?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Rotate one antenna about its boom until the elements have the same orientation.",
+            "en": "Rotate one antenna about its boom by a quarter turn.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "The elements set polarization. Matching them addresses the stated local line-of-sight mismatch.",
+            "en": "A quarter turn changes that element orientation by 90 degrees, aligning it with the other antenna.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Turn both booms away while keeping element orientations unchanged.",
+            "en": "Rotate both antennas about their booms by a quarter turn.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Changing aim does not align the electric-field orientations and may reduce directional gain.",
+            "en": "Both orientations change together, so they remain perpendicular to each other.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Add an equal length of coax to both stations.",
+            "en": "Rotate one antenna about its boom by a half turn.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Cable length does not align the antennas' polarizations.",
+            "en": "A half turn leaves the element axis with the same upright or level orientation, so the mismatch remains.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Move a feed-point balun to the radio while leaving both antennas unchanged.",
+            "en": "Turn both booms in azimuth while keeping one set of elements upright and the other level.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A balun addresses a balance transition, not the mismatch between electric-field orientations.",
+            "en": "Changing compass aim does not align the element orientations, and it can reduce directional gain toward each other.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "For a Yagi, separate pointing direction from element orientation. Both matter on a local path.",
+        "en": "Keep aim and element orientation separate. Rotating a single antenna about its boom can change polarization without changing the main pointing direction.",
         "fr": null
       }
     },
@@ -110,12 +110,12 @@
         },
         {
           "text": {
-            "en": "Whether equal transmitter power forces equal resonant frequencies.",
+            "en": "Whether identical conductor diameter makes installation surroundings irrelevant.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Operating power does not replace the length and environment factors that set resonance.",
+            "en": "Equal diameter does not remove the effects of nearby objects, insulation, height, or end conditions.",
             "fr": null
           }
         }

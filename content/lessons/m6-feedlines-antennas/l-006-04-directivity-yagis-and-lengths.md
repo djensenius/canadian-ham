@@ -92,9 +92,9 @@ Element diameter matters. Larger-diameter elements can broaden the useful freque
 
 ### Worked example: original Yagi element estimates
 
-For an exercise near 24.2 MHz, use the practical half-wave estimate for the driven element. The 5% shorter director and 5% longer reflector are the Basic-bank convention for these estimates.
+For an exercise near 24.2 MHz, use the practical half-wave estimate for the driven element. The 5 % shorter director and 5 % longer reflector are the Basic-bank convention for these estimates.
 
-- Given: frequency = 24.2 MHz; director about 5% shorter; reflector about 5% longer.
+- Given: frequency = 24.2 MHz; director about 5 % shorter; reflector about 5 % longer.
 - Find: first-cut driven element, director, and reflector lengths.
 - Formula: driven element length ≈ 143 / f(MHz).
 - Substitute: driven element length ≈ 143 / 24.2.
@@ -107,7 +107,7 @@ Real Yagi dimensions are design-specific. The key relationship is director short
 
 Use the lesson's simple first-cut conventions, not final construction dimensions.
 
-- Given: f = 22.3 MHz; director 5% shorter; reflector 5% longer.
+- Given: f = 22.3 MHz; director 5 % shorter; reflector 5 % longer.
 - Find: driven, director, and reflector lengths.
 - Formula: driven ≈ 143 / f(MHz); director ≈ driven x 0.95; reflector ≈ driven x 1.05.
 - Complete: driven ≈ 143 / ___ ≈ 6.41 m; director ≈ 6.41 x ___ ≈ ___ m; reflector ≈ 6.41 x ___ ≈ ___ m.

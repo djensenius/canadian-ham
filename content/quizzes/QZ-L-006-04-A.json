@@ -21,34 +21,34 @@
       "choices": [
         {
           "text": {
-            "en": "An unfed element cannot affect radiation, so only the meter calibration can change.",
+            "en": "A reflector only screens unwanted signals, so the forward radiation pattern should stay unchanged.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A parasitic element re-radiates coupled energy even without its own feedline.",
+            "en": "A reflector is a coupled parasitic element that re-radiates energy and helps shape the whole pattern.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The remaining driven element automatically takes over the reflector's length and position.",
+            "en": "Only the feed-point match can change; an intact driven element preserves the original pattern.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Its physical dimensions do not change when another element is lost.",
+            "en": "An intact driven element does not preserve the coupled array structure when another element is lost.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The reflector supplied extra transmitter power, which the array now lacks.",
+            "en": "Removing metal must improve forward gain by reducing losses.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The reflector did not generate power. It helped redistribute coupled energy.",
+            "en": "A parasitic element is part of the intended pattern-forming structure. Removing it does not guarantee a gain improvement.",
             "fr": null
           }
         },
@@ -168,12 +168,12 @@
         },
         {
           "text": {
-            "en": "Both gains are equal because changing the reference changes the antenna pattern.",
+            "en": "B is about 5.5 dB higher, after adding the reference offset twice to B before comparison.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Reference labels do not change either antenna. These figures still differ after conversion.",
+            "en": "The conversion is applied once and in the proper direction. Adding 4.2 dB to B incorrectly gives 12.2, then 12.2 - 6.7 = 5.5.",
             "fr": null
           }
         }

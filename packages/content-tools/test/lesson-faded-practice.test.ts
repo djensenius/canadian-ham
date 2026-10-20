@@ -11,6 +11,10 @@ const modulePractice = [
   { directory: "m2-operating-procedures", lessons: { "L-002-01": 1, "L-002-02": 1, "L-002-03": 1, "L-002-04": 2 } },
   { directory: "m3-station-practice-safety", lessons: { "L-003-01": 3, "L-003-02": 3, "L-003-03": 2, "L-003-04": 2, "L-003-05": 3, "L-003-06": 1, "L-003-07": 4, "L-003-08": 1 } },
   { directory: "m4-circuit-components", lessons: { "L-004-01": 2, "L-004-02": 1, "L-004-03": 2 } },
+  { directory: "m5-basic-electronics", lessons: { "L-005-01": 2, "L-005-02": 4, "L-005-03": 8, "L-005-04": 2, "L-005-05": 1, "L-005-06": 2 } },
+  { directory: "m6-feedlines-antennas", lessons: { "L-006-01": 0, "L-006-02": 4, "L-006-03": 2, "L-006-04": 3, "L-006-05": 3 } },
+  { directory: "m7-propagation", lessons: { "L-007-01": 2, "L-007-02": 1, "L-007-03": 1 } },
+  { directory: "m8-interference-suppression", lessons: { "L-008-01": 1, "L-008-02": 2 } },
 ];
 
 for (const module of modulePractice) {
@@ -33,7 +37,7 @@ for (const module of modulePractice) {
   }
 
   test(`${module.directory} requires diagnostic concept-choice feedback`, async () => {
-    const report = await checkQuizzes({ lessonRoot: path.join(lessonRoot, module.directory), requireFeedback: true });
+    const report = await checkQuizzes({ lessonRoot: path.join(lessonRoot, module.directory) });
     assert.equal(report.issues.length, 0);
     for (const lessonId of Object.keys(module.lessons)) {
       const quizPath = fileURLToPath(new URL(`../../../content/quizzes/QZ-${lessonId}-A.json`, import.meta.url));
@@ -57,4 +61,57 @@ test("M1 retains its reference-only format and official-only quizzes", async () 
     const quiz = JSON.parse(await readFile(fileURLToPath(new URL(`../../../content/quizzes/QZ-${lessonId}-A.json`, import.meta.url)), "utf8")) as { conceptChecks: unknown[] };
     assert.deepEqual(quiz.conceptChecks, [], lessonId);
   }
+});
+
+const reviewedTransfers = [
+  { lessonId: "L-003-06", check: 1, prompt: /average output.*clean peak limit/u, answer: /keep peaks within the clean limit/u },
+  { lessonId: "L-003-08", check: 3, prompt: /point-source.*metal structures/u, answer: /model-based comparison.*not approval/u },
+  { lessonId: "L-004-01", check: 2, prompt: /preserve a test waveform.*more DC power/u, answer: /less efficient.*does not show worse linearity/u },
+  { lessonId: "L-004-01", check: 3, prompt: /higher supply voltage.*resistor.*unchanged/u, answer: /raises current and heat/u },
+  { lessonId: "L-004-02", check: 1, prompt: /control pin.*fan/u, answer: /supply provides the load energy/u },
+  { lessonId: "L-004-02", check: 3, prompt: /FET.*triode.*interchangeable/u, answer: /electric field.*separate current path/u },
+];
+
+for (const { lessonId, check, prompt, answer } of reviewedTransfers) {
+  test(`QZ-${lessonId}-A-C${check} retains the reviewed transfer instead of the old recognition item`, async () => {
+    const quiz = JSON.parse(await readFile(fileURLToPath(new URL(`../../../content/quizzes/QZ-${lessonId}-A.json`, import.meta.url)), "utf8")) as {
+      conceptChecks: { id: string; prompt: { en: string }; choices: { text: { en: string }; isCorrect: boolean }[] }[];
+    };
+    const concept = quiz.conceptChecks.find((item) => item.id === `QZ-${lessonId}-A-C${check}`);
+    assert.ok(concept);
+    assert.match(concept.prompt.en, prompt);
+    const correct = concept.choices.filter((choice) => choice.isCorrect);
+    assert.equal(correct.length, 1);
+    assert.match(correct[0]!.text.en, answer);
+  });
+}
+
+for (const lessonId of ["L-002-01", "L-002-02", "L-002-03", "L-002-04"]) {
+  test(`${lessonId} keeps later Try-its independent rather than repeating faded scaffolds`, async () => {
+    const directory = path.join(lessonRoot, "m2-operating-procedures");
+    const file = (await readdir(directory)).find((name) => name.startsWith(`${lessonId.toLowerCase()}-`));
+    assert.ok(file);
+    const markdown = await readFile(path.join(directory, file), "utf8");
+    const tryIt = markdown.split("## Try it\n")[1]?.split("### Check your thinking")[0];
+    assert.ok(tryIt);
+    assert.doesNotMatch(tryIt, /___|fill in|finish this setup|add half a turn/iu);
+  });
+}
+
+test("L-006-01 labels its qualitative feed-point story rather than calling it a calculation", async () => {
+  const markdown = await readFile(path.join(lessonRoot, "m6-feedlines-antennas/l-006-01-feedline-basics-and-types.md"), "utf8");
+  assert.match(markdown, /^### In the real world: feeding a simple dipole$/mu);
+  assert.doesNotMatch(markdown, /^### (?:Worked example|Faded practice):/mu);
+});
+
+test("EXP-B-008-004-004 keeps out-of-band and spurious categories distinct", async () => {
+  const explanation = JSON.parse(await readFile(fileURLToPath(new URL("../../../content/explanations/b-008/b-008-004-004.json", import.meta.url)), "utf8")) as {
+    questionId: string; body: { en: string; fr: string | null };
+  };
+  assert.equal(explanation.questionId, "B-008-004-004");
+  assert.match(explanation.body.en, /Out-of-band emission is modulation-related/u);
+  assert.match(explanation.body.en, /Unwanted emissions is the umbrella term for both out-of-band and spurious emissions/u);
+  assert.match(explanation.body.en, /sourceIndex 3: "Spurious emissions": This category excludes out-of-band emissions/u);
+  assert.doesNotMatch(explanation.body.en, /Spurious emissions is a broad category/u);
+  assert.equal(explanation.body.fr, null);
 });

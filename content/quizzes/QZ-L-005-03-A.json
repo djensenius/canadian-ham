@@ -132,57 +132,57 @@
     {
       "id": "QZ-L-005-03-A-C3",
       "prompt": {
-        "en": "A parallel test load uses equal resistance values, but one resistor has a lower wattage rating. What sets the safe test level?",
+        "en": "Four equal-resistance branches share power evenly. One resistor is rated 1 W and the other three are rated 3 W each. Which total power ceiling follows before practical margin?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Add every nameplate wattage, even if one part overheats.",
+            "en": "10 W, by adding every nameplate rating.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The summed rating is usable only if each part stays within its own limit.",
+            "en": "That total would put 2.5 W in each equal branch and overload the 1 W part.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Check each branch's dissipation; the lower-rated part may limit the whole load.",
+            "en": "4 W, because each branch reaches 1 W when the lowest-rated resistor reaches its limit.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Equal resistances at equal voltage share power equally, so the weakest heat rating can limit the network.",
+            "en": "Equal sharing limits every branch to the weakest part's 1 W ceiling: 4 x 1 W = 4 W total.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Use the largest individual wattage because it protects the smaller parts.",
+            "en": "12 W, by applying the largest part rating to all four branches.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The larger part does not absorb the smaller parts' shares of heat.",
+            "en": "That would put 3 W in the 1 W branch. Other branches cannot lend it their unused heat rating.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Divide total resistance by the sum of wattages to get the safe power.",
+            "en": "3 W, because the largest individual nameplate is the whole network's rating.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Resistance and wattage describe different limits. That division does not calculate branch dissipation.",
+            "en": "The largest single rating does not set the network ceiling. At 3 W total, every branch is only at 0.75 W.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Even current sharing is not enough when individual heat ratings differ.",
+        "en": "Use each branch's actual dissipation and rating. Summing unlike wattage labels can overstate a network's safe capability.",
         "fr": null
       }
     }

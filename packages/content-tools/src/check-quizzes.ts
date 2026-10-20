@@ -613,7 +613,7 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
     }
     quizFileCount += 1;
     seenQuizFileBasenames.add(basenameId);
-    const quiz = validateQuizShape(rawQuiz, filePath, issues, options.requireFeedback ?? false);
+    const quiz = validateQuizShape(rawQuiz, filePath, issues, options.requireFeedback ?? true);
     if (quiz === null) {
       continue;
     }
@@ -732,7 +732,7 @@ function lessonRootFromArgs(args: string[]): string | undefined {
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
-  const report = await checkQuizzes({ lessonRoot: lessonRootFromArgs(args), requireFeedback: args.includes("--require-feedback") });
+  const report = await checkQuizzes({ lessonRoot: lessonRootFromArgs(args) });
   for (const line of report.summaryLines) {
     console.log(line);
   }

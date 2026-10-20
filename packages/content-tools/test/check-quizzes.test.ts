@@ -78,8 +78,8 @@ function quiz(overrides: Record<string, unknown> = {}): string {
         id: "QZ-L-TEST-01-A-C1",
         prompt: { en: "What is checked?", fr: null },
         choices: [
-          { text: { en: "Correct", fr: null }, isCorrect: true },
-          { text: { en: "Wrong", fr: null }, isCorrect: false },
+          { text: { en: "Correct", fr: null }, isCorrect: true, feedback: { en: "This matches the fixture condition.", fr: null } },
+          { text: { en: "Wrong", fr: null }, isCorrect: false, feedback: { en: "This misses the fixture condition.", fr: null } },
         ],
         explanation: { en: "One choice is correct.", fr: null },
       },
@@ -157,8 +157,8 @@ test("quiz check rejects concept checks that overlap official questions in the s
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "Which fixture value should be selected for the calibration step?", fr: null },
           choices: [
-            { text: { en: "Use the calibrated reference value", fr: null }, isCorrect: true },
-            { text: { en: "Use an unrelated guess", fr: null }, isCorrect: false },
+            { text: { en: "Use the calibrated reference value", fr: null }, isCorrect: true, feedback: { en: "This duplicates the keyed official answer.", fr: null } },
+            { text: { en: "Use an unrelated guess", fr: null }, isCorrect: false, feedback: { en: "This ignores the reference.", fr: null } },
           ],
           explanation: { en: "The concept check restates the fixture official item.", fr: null },
         },
@@ -180,8 +180,8 @@ test("quiz check rejects concept checks that overlap lesson Try-it lines", async
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "What is checked?", fr: null },
           choices: [
-            { text: { en: "Correct", fr: null }, isCorrect: true },
-            { text: { en: "Wrong", fr: null }, isCorrect: false },
+            { text: { en: "Correct", fr: null }, isCorrect: true, feedback: { en: "This matches the fixture condition.", fr: null } },
+            { text: { en: "Wrong", fr: null }, isCorrect: false, feedback: { en: "This misses the fixture condition.", fr: null } },
           ],
           explanation: { en: "One choice is correct.", fr: null },
         },
@@ -208,8 +208,8 @@ test("quiz check rejects concept checks without exactly one correct choice", asy
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "What is checked?", fr: null },
           choices: [
-            { text: { en: "Correct", fr: null }, isCorrect: true },
-            { text: { en: "Also correct", fr: null }, isCorrect: true },
+            { text: { en: "Correct", fr: null }, isCorrect: true, feedback: { en: "This matches the fixture condition.", fr: null } },
+            { text: { en: "Also correct", fr: null }, isCorrect: true, feedback: { en: "This creates an invalid second key.", fr: null } },
           ],
           explanation: { en: "Only one choice should be correct.", fr: null },
         },
@@ -231,8 +231,8 @@ test("quiz check rejects empty localized text", async () => {
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "", fr: null },
           choices: [
-            { text: { en: "Correct", fr: null }, isCorrect: true },
-            { text: { en: "Wrong", fr: null }, isCorrect: false },
+            { text: { en: "Correct", fr: null }, isCorrect: true, feedback: { en: "This matches the fixture condition.", fr: null } },
+            { text: { en: "Wrong", fr: null }, isCorrect: false, feedback: { en: "This misses the fixture condition.", fr: null } },
           ],
           explanation: { en: "One choice is correct.", fr: null },
         },
@@ -254,8 +254,8 @@ test("quiz check accepts non-empty French localized text", async () => {
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "What is checked?", fr: "Que vérifie-t-on?" },
           choices: [
-            { text: { en: "Correct", fr: "Correct" }, isCorrect: true },
-            { text: { en: "Wrong", fr: "Incorrect" }, isCorrect: false },
+            { text: { en: "Correct", fr: "Correct" }, isCorrect: true, feedback: { en: "This matches.", fr: "Ce choix convient." } },
+            { text: { en: "Wrong", fr: "Incorrect" }, isCorrect: false, feedback: { en: "This does not match.", fr: "Ce choix ne convient pas." } },
           ],
           explanation: { en: "One choice is correct.", fr: "Un choix est correct." },
         },
@@ -276,8 +276,8 @@ test("quiz check rejects empty French localized text", async () => {
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "What is checked?", fr: "" },
           choices: [
-            { text: { en: "Correct", fr: null }, isCorrect: true },
-            { text: { en: "Wrong", fr: null }, isCorrect: false },
+            { text: { en: "Correct", fr: null }, isCorrect: true, feedback: { en: "This matches the fixture condition.", fr: null } },
+            { text: { en: "Wrong", fr: null }, isCorrect: false, feedback: { en: "This misses the fixture condition.", fr: null } },
           ],
           explanation: { en: "One choice is correct.", fr: null },
         },
@@ -299,8 +299,8 @@ test("quiz check rejects missing French localized text", async () => {
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "What is checked?" },
           choices: [
-            { text: { en: "Correct", fr: null }, isCorrect: true },
-            { text: { en: "Wrong", fr: null }, isCorrect: false },
+            { text: { en: "Correct", fr: null }, isCorrect: true, feedback: { en: "This matches the fixture condition.", fr: null } },
+            { text: { en: "Wrong", fr: null }, isCorrect: false, feedback: { en: "This misses the fixture condition.", fr: null } },
           ],
           explanation: { en: "One choice is correct.", fr: null },
         },
@@ -346,8 +346,8 @@ test("quiz check rejects duplicate concept-check IDs", async () => {
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "First?", fr: null },
           choices: [
-            { text: { en: "Correct", fr: null }, isCorrect: true },
-            { text: { en: "Wrong", fr: null }, isCorrect: false },
+            { text: { en: "Correct", fr: null }, isCorrect: true, feedback: { en: "This matches the fixture condition.", fr: null } },
+            { text: { en: "Wrong", fr: null }, isCorrect: false, feedback: { en: "This misses the fixture condition.", fr: null } },
           ],
           explanation: { en: "First explanation.", fr: null },
         },
@@ -355,8 +355,8 @@ test("quiz check rejects duplicate concept-check IDs", async () => {
           id: "QZ-L-TEST-01-A-C1",
           prompt: { en: "Second?", fr: null },
           choices: [
-            { text: { en: "Correct", fr: null }, isCorrect: true },
-            { text: { en: "Wrong", fr: null }, isCorrect: false },
+            { text: { en: "Correct", fr: null }, isCorrect: true, feedback: { en: "This matches the fixture condition.", fr: null } },
+            { text: { en: "Wrong", fr: null }, isCorrect: false, feedback: { en: "This misses the fixture condition.", fr: null } },
           ],
           explanation: { en: "Second explanation.", fr: null },
         },
@@ -496,32 +496,54 @@ test("quiz check scoped to a module ignores other modules' quiz files but keeps 
   });
 });
 
-test("quiz check stages required feedback and rejects malformed feedback even without the flag", async () => {
+test("quiz check requires every choice's feedback by default and with the compatibility flag", async () => {
   await withFixture("choice-feedback", async (root) => {
     const options = {
       lessonRoot: path.join(root, "content/lessons"),
       questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
       quizRoot: path.join(root, "content/quizzes"),
-      requireFeedback: true,
     };
     const check = JSON.parse(quiz()).conceptChecks[0];
+    for (const missingCount of [1, 2]) {
+      const choices = check.choices.map((choice: { text: object; isCorrect: boolean; feedback: object }, index: number) => {
+        const { feedback, ...legacyChoice } = choice;
+        return index < missingCount ? legacyChoice : choice;
+      });
+      await writeBaseFixture(root, quiz({ conceptChecks: [{ ...check, choices }] }));
+      for (const mode of [options, { ...options, requireFeedback: true }]) {
+        await assert.rejects(checkQuizzes(mode), (error: unknown) => {
+          assert.ok(error instanceof QuizCheckError);
+          assert.equal(error.report.issues.filter((issue) => issue.includes("feedback is required")).length, missingCount);
+          return true;
+        });
+      }
+      assert.equal((await checkQuizzes({ ...options, requireFeedback: false })).conceptCheckCount, 1);
+    }
     await writeBaseFixture(root);
-    await assert.rejects(checkQuizzes(options), (error: unknown) => {
-      assert.ok(error instanceof QuizCheckError);
-      assert.equal(error.report.issues.filter((issue) => issue.includes("feedback is required")).length, 2);
-      return true;
-    });
+    assert.equal((await runCheck(root)).conceptCheckCount, 1);
+    await writeBaseFixture(root, quiz({ conceptChecks: [] }));
+    assert.equal((await runCheck(root)).conceptCheckCount, 0);
+  });
+});
+
+test("quiz check rejects malformed feedback even when legacy completeness is explicitly allowed", async () => {
+  await withFixture("malformed-feedback", async (root) => {
+    const options = {
+      lessonRoot: path.join(root, "content/lessons"),
+      questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+      quizRoot: path.join(root, "content/quizzes"),
+      requireFeedback: false,
+    };
+    const check = JSON.parse(quiz()).conceptChecks[0];
     for (const feedback of [null, "note", {}, { en: "", fr: null }, { en: "note", fr: "" }, { en: "note" }]) {
       await writeBaseFixture(root, quiz({ conceptChecks: [{ ...check, choices: check.choices.map((choice: object) => ({ ...choice, feedback })) }] }));
-      await assert.rejects(runCheck(root), (error: unknown) => {
+      await assert.rejects(checkQuizzes(options), (error: unknown) => {
         assert.ok(error instanceof QuizCheckError);
         assert.ok(error.report.issues.some((issue) => issue.includes("feedback must have non-empty en text")));
         return true;
       });
     }
     await writeBaseFixture(root, quiz({ conceptChecks: [{ ...check, choices: check.choices.map((choice: object, index: number) => ({ ...choice, feedback: { en: "Explain this option.", fr: index === 0 ? null : "Expliquer ce choix." } })) }] }));
-    assert.equal((await checkQuizzes(options)).conceptCheckCount, 1);
-    await writeBaseFixture(root, quiz({ conceptChecks: [] }));
-    assert.equal((await checkQuizzes(options)).conceptCheckCount, 0);
+    assert.equal((await runCheck(root)).conceptCheckCount, 1);
   });
 });

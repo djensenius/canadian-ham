@@ -43,12 +43,12 @@
         },
         {
           "text": {
-            "en": "The resistor supplies extra current to replace what the lamp uses.",
+            "en": "Equal series current means the lamp and resistor must dissipate equal power.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A passive resistor does not generate replacement current; neither part uses up charge.",
+            "en": "Equal current does not establish equal power. Each part's voltage drop also matters in P = I x E.",
             "fr": null
           }
         },
@@ -146,12 +146,12 @@
         },
         {
           "text": {
-            "en": "The fuse senses reversed voltage even though the wires kept their polarity.",
+            "en": "The fuse is primarily responding to supply voltage rather than excessive current.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "An ordinary fuse responds to excessive current and heating, not polarity itself.",
+            "en": "An ordinary fuse opens through excessive current and heating. The short creates the overcurrent path.",
             "fr": null
           }
         },

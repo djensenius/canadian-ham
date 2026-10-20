@@ -111,9 +111,9 @@ Text equivalent:
 
 ### Worked example: picking a working frequency
 
-A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85% of the MUF.
+A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85 % of the MUF.
 
-- Given: MUF = 18.6 MHz; planning factor = 85% = 0.85.
+- Given: MUF = 18.6 MHz; planning factor = 85 % = 0.85.
 - Find: estimated OWF.
 - Formula: OWF = MUF x 0.85.
 - Substitute: OWF = 18.6 MHz x 0.85.
@@ -194,5 +194,5 @@ Description: Draw two panels. In the first, show the Sun lighting the lower iono
 - More sunspots and higher 10.7 cm solar flux usually indicate stronger ionization and higher usable HF frequencies; the average solar cycle is about 11 years.
 - HF sky-wave paths can change polarization through refraction, reflection, and Faraday rotation.
 - Critical frequency is a vertical-incidence measurement; MUF is for a particular path.
-- A practical working frequency is below the MUF and above the LUF, often estimated near 85% of the MUF for planning.
+- A practical working frequency is below the MUF and above the LUF, often estimated near 85 % of the MUF for planning.
 - When propagation changes, changing band is often more useful than changing audio settings or adding power.

@@ -25,7 +25,7 @@ status: draft
 
 This lesson brings the first electronics module into radio practice. Transformers transfer energy by changing magnetic fields. Meters let you measure what is happening instead of guessing.
 
-The calculations here use ideal transformer assumptions when the question says to neglect losses or assume 100% efficiency. Real transformers waste some energy as heat, so practical equipment needs margin.
+The calculations here use ideal transformer assumptions when the question says to neglect losses or assume 100 % efficiency. Real transformers waste some energy as heat, so practical equipment needs margin.
 
 ## Learning objectives
 

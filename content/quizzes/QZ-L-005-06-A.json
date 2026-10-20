@@ -22,12 +22,12 @@
       "choices": [
         {
           "text": {
-            "en": "The extra input means the turns ratio must be reversed.",
+            "en": "The readings should be treated as apparent power only, because core heating cannot affect real input power.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Heat loss does not by itself establish a winding-ratio mistake.",
+            "en": "The stated readings are real power in watts. Energy lost as core heat contributes to real input power.",
             "fr": null
           }
         },
@@ -55,12 +55,12 @@
         },
         {
           "text": {
-            "en": "The extra power is stored permanently in the core rather than lost.",
+            "en": "The difference proves a meter fault, because ideal power equality must also hold in a warm real transformer.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A warming core shows energy converted to heat, not permanent accumulation of useful output energy.",
+            "en": "A meter fault is possible in general, but the ideal lossless rule does not justify dismissing observed heat loss in real equipment.",
             "fr": null
           }
         }

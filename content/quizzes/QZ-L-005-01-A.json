@@ -72,114 +72,114 @@
     {
       "id": "QZ-L-005-01-A-C2",
       "prompt": {
-        "en": "A cable has sound copper conductors, but its plastic separator cracks and lets them touch. Which change explains the fault?",
+        "en": "A cable passes a continuity test along each copper conductor, but the plastic separator is cracked. Which inspection conclusion follows?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The copper now has the resistance of an insulator.",
+            "en": "Continuity proves that the two conductors are still safely separated.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The copper is still conductive. The failed separation creates the unwanted path.",
+            "en": "Continuity along a conductor does not test the insulation between conductors.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The return conductor has stopped carrying charge because plastic supplies it.",
+            "en": "A separator fault can be ignored unless a copper conductor also breaks.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Plastic normally separates the conductors; it does not supply their current.",
+            "en": "Insulation can fail while each conductor remains continuous. The faults are separate.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "An insulating barrier has failed, allowing an unintended conductive path.",
+            "en": "The conducting paths are intact, but separation between them still needs checking.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "The separator keeps the intended paths apart. Contact between conductors can create a short.",
+            "en": "The test confirms an unbroken conductor path, not sound insulation or freedom from an unintended cross-connection.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The plastic has become a normal series resistor in the intended path.",
+            "en": "The separator must be sound if both conductors have similar end-to-end resistance.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The described fault is conductor contact, not a resistor deliberately inserted in series.",
+            "en": "Equal conductor resistance says little about the insulating barrier between them.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Materials have different jobs: conductors carry current, and insulation keeps those paths separate.",
+        "en": "Check both the intended conducting paths and the insulation that keeps them apart.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-005-01-A-C3",
       "prompt": {
-        "en": "A DC accessory has equal-sized red and black leads. Which check matters before connecting a replacement supply?",
+        "en": "A replacement DC supply has the specified voltage and enough current capacity. Why should the accessory's wiring instructions still be checked?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Confirm the required positive and negative connections in its instructions.",
+            "en": "Correct voltage and current capacity do not establish the required positive and negative connections.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Equal wire size does not remove polarity requirements. Verify the specified connections.",
+            "en": "The accessory may be polarity-sensitive even when the supply ratings suit it.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Choose polarity from which wire has the lower resistance.",
+            "en": "A higher current capacity makes reversed connections safe.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Wire resistance does not establish the required input polarity.",
+            "en": "A supply capable of more current does not protect a polarity-sensitive circuit from reversed leads.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Swap the leads if the supply has a lower current rating.",
+            "en": "Matching voltage automatically guarantees matching polarity.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Current capacity and polarity are separate. Swapping leads does not correct a rating mismatch.",
+            "en": "Voltage magnitude and positive/negative connection direction are separate checks.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Use either orientation if the two leads have equal length.",
+            "en": "Equal-sized supply leads make the accessory reversible.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Lead length does not make a polarity-sensitive circuit reversible.",
+            "en": "Wire size does not establish whether the internal circuit tolerates reversed polarity.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "A DC circuit can depend on current direction even when both supply leads look alike.",
+        "en": "Suitable supply ratings do not replace a polarity check.",
         "fr": null
       }
     }

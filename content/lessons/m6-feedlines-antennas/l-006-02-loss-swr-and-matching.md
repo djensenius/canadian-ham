@@ -109,9 +109,9 @@ Reflection coefficient is the reflected voltage wave compared with the forward v
 
 | SWR | Reflection coefficient | Reflected power estimate |
 |---|---:|---:|
-| 1.5:1 | (1.5 - 1) / (1.5 + 1) = 0.2 | 0.2 x 0.2 = 0.04, or 4% |
-| 2:1 | (2 - 1) / (2 + 1) = 0.333 | 0.333 x 0.333 = 0.111, or about 11% |
-| 3:1 | (3 - 1) / (3 + 1) = 0.5 | 0.5 x 0.5 = 0.25, or 25% |
+| 1.5:1 | (1.5 - 1) / (1.5 + 1) = 0.2 | 0.2 x 0.2 = 0.04, or 4 % |
+| 2:1 | (2 - 1) / (2 + 1) = 0.333 | 0.333 x 0.333 = 0.111, or about 11 % |
+| 3:1 | (3 - 1) / (3 + 1) = 0.5 | 0.5 x 0.5 = 0.25, or 25 % |
 
 These estimates apply at the point where the SWR is measured. Reflected power is not simply "lost." Some may be lost as heat in the feedline, and the transmitter-end network or protection circuit affects what happens next.
 
@@ -129,7 +129,7 @@ Fill the gaps before checking below.
 
 ### Check your work: finish a reflected-power estimate
 
-The coefficient is about 0.429 and the reflected fraction is about 0.184, or 18.4%. This is not a claim that all that power is lost; its fate depends on the line and transmitter-end network.
+The coefficient is about 0.429 and the reflected fraction is about 0.184, or 18.4 %. This is not a claim that all that power is lost; its fate depends on the line and transmitter-end network.
 
 ### In the real world: line loss masks trouble
 

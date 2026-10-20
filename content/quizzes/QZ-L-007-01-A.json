@@ -89,7 +89,7 @@
         },
         {
           "text": {
-            "en": "That higher frequency follows terrain more closely and automatically extends ground-wave coverage.",
+            "en": "Higher frequency follows terrain more closely and automatically extends ground-wave coverage.",
             "fr": null
           },
           "isCorrect": false,
@@ -100,7 +100,7 @@
         },
         {
           "text": {
-            "en": "That a higher band automatically replaces the surface path with an F2 return at the same checkpoints.",
+            "en": "A higher band automatically replaces the surface path with an F2 return at the same checkpoints.",
             "fr": null
           },
           "isCorrect": false,
@@ -111,7 +111,7 @@
         },
         {
           "text": {
-            "en": "That only antenna size changes, leaving useful ground-wave range fixed.",
+            "en": "Only antenna size changes, leaving useful ground-wave range fixed.",
             "fr": null
           },
           "isCorrect": false,

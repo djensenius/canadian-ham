@@ -101,23 +101,23 @@
         },
         {
           "text": {
-            "en": "It now acts as an RF choke in series with the lead.",
+            "en": "Its reactance stays unchanged because its capacitance label has not changed.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The part is still a capacitor in a shunt connection. Changing frequency does not turn it into a series coil.",
+            "en": "A fixed capacitance still has frequency-dependent reactance. The label alone does not fix its opposition.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Its DC resistance now sets the same opposition at all frequencies.",
+            "en": "Only lead length matters, so the capacitor's frequency response can be ignored.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The relevant opposition is frequency-dependent capacitive reactance, not a fixed DC resistor value.",
+            "en": "Lead layout can matter, but the capacitor's reactance still changes with frequency and affects the shunt path.",
             "fr": null
           }
         }
@@ -169,12 +169,12 @@
         },
         {
           "text": {
-            "en": "It becomes a parallel resonant circuit because its impedance rises.",
+            "en": "Its resonant frequency falls, so the unchanged source is now below resonance.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Changing a value does not change the series connection into parallel branches.",
+            "en": "The direction of the frequency shift is right, but the comparison is reversed. The source stayed at the old, higher frequency.",
             "fr": null
           }
         }

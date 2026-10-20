@@ -100,7 +100,7 @@ A small bypass capacitor is marked 470 000 pF.
 - Answer: 470 000 pF = 0.47 µF.
 - Sanity check: picofarads are tiny, so the number is much smaller in microfarads.
 
-### Faded practice: finish a two-step prefix change
+### Faded practice: finish a prefix change
 
 A coil label gives millihenries, but your parts list uses microhenries.
 
@@ -112,7 +112,7 @@ A coil label gives millihenries, but your parts list uses microhenries.
 
 Fill the gaps before checking below.
 
-### Check your work: finish a two-step prefix change
+### Check your work: finish a prefix change
 
 2.7 x 1 000 = 2 700 µH. The coil value stayed the same; only its unit changed.
 

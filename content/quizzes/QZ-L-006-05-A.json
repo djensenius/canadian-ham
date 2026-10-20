@@ -14,57 +14,57 @@
     {
       "id": "QZ-L-006-05-A-C1",
       "prompt": {
-        "en": "A free-space dipole sketch predicts a deep end null, but an installed wire near buildings still receives a station off its end. What should be checked before declaring the antenna faulty?",
+        "en": "In the simple free-space model, a wanted station is north and a noise source is east. Which horizontal dipole wire route puts the wanted station broadside and the noise source off an end?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Whether ground and nearby structures have changed the ideal pattern.",
+            "en": "East-west.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "The free-space picture is a starting model. Ground and surrounding objects can change installed patterns.",
+            "en": "The north station is broadside to an east-west wire, while the east noise source lies along an end direction.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Whether every practical dipole must have the exact free-space pattern.",
+            "en": "North-south.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "That assumes away the surroundings. The lesson warns that real ground and objects affect the pattern.",
+            "en": "This reverses the intended use of the pattern: north is near an end direction and east is broadside.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Whether a low SWR guarantees an exact end null.",
+            "en": "Northeast-southwest.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Impedance match does not guarantee the free-space radiation pattern.",
+            "en": "The north station and east noise source both lie about 45 degrees from this wire axis, rather than at the broadside and end directions.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Whether a centre-fed dipole is actually isotropic whenever it is installed outdoors.",
+            "en": "Northwest-southeast.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Outdoor installation does not make radiation equal in every direction.",
+            "en": "This diagonal also places both directions between the maximum and null; its end points northwest and southeast, not east.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "Use the free-space pattern to reason, but do not treat it as a guarantee for a cluttered installation.",
+        "en": "Use the pattern for both signal pickup and noise rejection. Real ground and surroundings can alter this ideal comparison.",
         "fr": null
       }
     },
@@ -82,29 +82,29 @@
           },
           "isCorrect": false,
           "feedback": {
-            "en": "300 / f is free-space wavelength. It does not fix the perimeter-versus-side mistake.",
+            "en": "That changes the estimate slightly but leaves the perimeter-versus-side mistake. It would still use about four wavelengths of wire.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Keep each side as calculated, then shorten only the feedline.",
+            "en": "Use 306 / (f / 4) for each side.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Feedline length does not correct four times too much loop wire.",
+            "en": "Dividing frequency by four makes the result four times the perimeter, rather than finding a quarter of it.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Halve each side because every antenna uses a half-wave total.",
+            "en": "Divide 306 / f by two for each side, as for dipole legs.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A full-wave loop is not a half-wave dipole. Four equal sides share the loop perimeter.",
+            "en": "A square has four sides, unlike the two legs of a dipole. Halving would still use twice the planned perimeter.",
             "fr": null
           }
         },
@@ -115,7 +115,7 @@
           },
           "isCorrect": true,
           "feedback": {
-            "en": "The loop estimate gives total wire around the square, not one side.",
+            "en": "The loop estimate gives total wire around the square. Four equal sides share that perimeter.",
             "fr": null
           }
         }
@@ -156,12 +156,12 @@
         },
         {
           "text": {
-            "en": "Only a broken dipole centre insulator, because every wire antenna is centre-fed.",
+            "en": "Ordinary linear feedline attenuation, treating every reduction in RF power as audio distortion.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "An end-fed arrangement has different feed and return-path issues from a centre-fed dipole.",
+            "en": "Linear attenuation reduces signal level rather than creating the described audio distortion. Lead-sensitive changes call for an RF coupling investigation.",
             "fr": null
           }
         },
