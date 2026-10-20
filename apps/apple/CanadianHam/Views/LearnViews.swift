@@ -667,31 +667,22 @@ private struct LessonQuizScreen: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if let errorMessage {
-                    MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
-                }
-                LessonQuizView(
-                    quiz: quiz,
-                    lesson: lesson,
-                    bank: bank,
-                    library: library,
-                    language: language,
-                    progressStore: progressStore,
-                    attempts: attempts,
-                    state: sessions.state(for: quiz.id),
-                    onOpenHintLesson: onOpenHintLesson,
-                    onSaved: {
-                        refresh()
-                        onDataChanged()
-                    }
-                )
+        LessonQuizView(
+            quiz: quiz,
+            lesson: lesson,
+            bank: bank,
+            library: library,
+            language: language,
+            progressStore: progressStore,
+            attempts: attempts,
+            loadErrorMessage: errorMessage,
+            state: sessions.state(for: quiz.id),
+            onOpenHintLesson: onOpenHintLesson,
+            onSaved: {
+                refresh()
+                onDataChanged()
             }
-            .pagePadding()
-        }
-        .background(DesignTokens.Colors.paper)
-        .navigationTitle("Lesson quiz")
+        )
         .task { refresh() }
     }
 
@@ -713,6 +704,7 @@ private struct LessonQuizView: View {
     let language: BankLanguage
     @ObservedObject var progressStore: ProgressStoreService
     let attempts: [LessonQuizAttempt]
+    let loadErrorMessage: String?
 
     @ObservedObject var state: LessonQuizSessionState
     let onOpenHintLesson: (QuestionHintLessonLink) -> Void
@@ -748,6 +740,29 @@ private struct LessonQuizView: View {
     }
 
     var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                if let loadErrorMessage {
+                    MessagePanel(title: "Lesson quiz unavailable", message: loadErrorMessage, kind: .warning)
+                }
+                quizCard
+            }
+            .pagePadding()
+        }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle("Lesson quiz")
+        .task { if items.isEmpty { restart(keepSeed: true) } }
+        .examToolPresentation(
+            selectedTool: $selectedTool,
+            calculator: presentationCalculator,
+            calculatorFocused: $calculatorFocused,
+            hintContext: hintToolContext
+        )
+        .onChange(of: currentIndex) { _, _ in selectedTool = nil }
+        .onDisappear { selectedTool = nil }
+    }
+
+    private var quizCard: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -818,15 +833,6 @@ private struct LessonQuizView: View {
         .paperCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("lesson-quiz-card")
-        .task { if items.isEmpty { restart(keepSeed: true) } }
-        .examToolPresentation(
-            selectedTool: $selectedTool,
-            calculator: presentationCalculator,
-            calculatorFocused: $calculatorFocused,
-            hintContext: hintToolContext
-        )
-        .onChange(of: currentIndex) { _, _ in selectedTool = nil }
-        .onDisappear { selectedTool = nil }
     }
 
     private var hintToolContext: HintToolContext? {
