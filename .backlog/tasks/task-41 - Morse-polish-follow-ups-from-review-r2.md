@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-20 15:55'
+updated_date: '2026-10-20 17:12'
 labels:
   - apple
   - web
@@ -54,4 +54,10 @@ iPhone first integration round passed all four existing sending regressions: tes
 Detached runner: /tmp/task-41-validate-r6.sh; evidence/logs/results: /tmp/task-41-validation-20261020. Only 2 failing iPhone methods rerun, then 1 iPad keyboard method, then localization gate. Shared xbuild lock waits have been lengthy and respected; no other builds interrupted.
 
 AC #2 verified: testMorseRunningBeaconStopsWhenReduceMotionTurnsOn passed on iPhone 17 Pro (57.198s) after local DEBUG flag injection; it asserts a real beacon is running before the flag change, Stop disables and beacon disappears after it, then the next Play renders tape. AC #3 verified by passed testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas plus the passed derived-string web axe test. AC #4 verified by both passed app view-path import tests and web unknown-enum rejection regression; both platforms reject unknown enum strings. AC #1 remains unchecked while actual hardware-event regression is debugged. Final iPad and localization validation remain pending; task stays In Progress.
+
+Coordinator-approved partial handoff (2026-10-20): the shared lock is now held by the coordinator TASK-46.6 full CanadianHamLessonFigures plan (~3 hours). The keyboard-only retry waited from 15:16 UTC without starting. Per coordinator direction, cancelled ONLY this worktree's queued /tmp/task-41-validate-r7.sh runner and its waiting xbuild/lockf descendants; no active build or other lane was signalled.
+
+ACs #2, #3, #4 remain verified/checked. AC #1 remains unverified/unchecked: previous keyboard tests decoded no character; the latest non-scrolling focus-container fix and focus/key-phase diagnostics have NOT yet run. Current source has zero-spacing outer focus containers to keep Space away from native scroll paging, distinct practice/exam targets, post-layout/Start restoration, and strict E/EE assertions with diagnostic output. No existing tests or audit/shared/exception helper bytes were changed.
+
+Remaining coordinator work after the figure plan: run the single keyboard method on iPhone 17 Pro, fix only with targeted reruns if necessary, run it on iPad Pro 13-inch (M5), then pnpm check:apple-l10n (must not rewrite the catalog) and text-source/test-guard gates. Exact commands, passing criteria, current SHA, and all per-test results are in /tmp/task-41-handoff.md. This task intentionally stays In Progress, not Done; no PR opened.
 <!-- SECTION:NOTES:END -->
