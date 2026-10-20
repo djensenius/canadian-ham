@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-20 16:04'
+updated_date: '2026-10-20 16:22'
 labels:
   - apple
 dependencies:
@@ -50,4 +50,6 @@ Coordinator confirmed tvOS/visionOS have no lesson quizzes: no new quiz surface;
 Validation so far (all through nohup xbuild scripts, logs /tmp/task-50.14.2-runs): macOS targeted run PASS, 32/32 tests (HintSessionStateTests 26/26; ProgressStoreTests: help fixture/payload/import/export/sync parity, session cache, split migration, concept-inclusive migration fixture, atomic archived multi-device migration and save rollback all PASS). Separate real 0.5-second/freeze-at-choice test PASS, 1/1. pnpm check:schemas PASS (2,034 targets); node scripts/check-apple-text-sources.ts PASS; test-guard self-test PASS. Guard reports only the three added full-default audit calls, intentional under the owner 2026-10-20 lesson-quiz decision; current checker does not accept dotted task IDs in approval markers, so PR should use Test-guard-approved: owner decision 2026-10-20. iPhone/iPad focused UI tests and full localization/tvOS/visionOS builds pending shared lock. No full test suites run.
 
 Initial iPhone UI run: concept exclusions, French/current-lesson round trip, one-level-help persistence and post-choice immutability/persistence PASS. AX/layout was blocked by the existing debug overlay covering Hint; new-test positioning now scrolls Hint below that overlay and explicitly asserts it is not overlapped. Light/dark feedback audits exposed only opaque-navigation-bar occluded text false positives (xcresult screenshots in /tmp/task-50.14.2-runs/phone-failures). R2 confirmed moving one header merely exposed the next occluded element. Coordinator explicitly authorized calling existing auditIgnoringOccludedLessonTextContrast for quiz feedback in light/dark under owner decision 2026-10-12. The helper is byte-identical; fully visible contrast and all non-contrast issues still fail. Removed the attempt to position-shuffle the occluded header. Hint-panel and top-visible saved-results audits remain unfiltered defaults. PR marker now required: Test-guard-approved: owner decision 2026-10-12. All affected tests queued for targeted rerun; no full suite.
+
+Localization validation completed PASS: pnpm check:apple-l10n (complete French XLIFF export, catalogue unchanged, generic CanadianHamTV and CanadianHamVision builds both BUILD SUCCEEDED). R2 iPhone: French/current-lesson round trip PASS (238.844s), one-level hinted-help persistence PASS (135.128s), post-choice immutability/persistence PASS (139.328s), light full-default panel/feedback/result audits PASS (182.198s); AX failed because the existing test-only layout overlay intercepted the tap, and dark failed on the next occluded header text. Those two causes are addressed in current source. R3 is queued for AX plus light/dark audit tests, followed by the 7-test iPad Pro 13-inch (M5) run. Programmatic suffix comparison against e04991d8 confirms every pre-existing ExamTools UI test and every audit/positioning helper remains byte-identical. No full suites.
 <!-- SECTION:NOTES:END -->
