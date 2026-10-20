@@ -1,11 +1,11 @@
 ---
 id: TASK-46.9
 title: Move M2 from reference style to the explanatory format
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-20 13:20'
+updated_date: '2026-10-20 13:21'
 labels:
   - content
 dependencies: []
@@ -23,8 +23,8 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Owner decision recorded
-- [ ] #2 M2 lessons use the explanatory format from content/lessons/README.md with no loss of covered facts
-- [ ] #3 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
+- [x] #2 M2 lessons use the explanatory format from content/lessons/README.md with no loss of covered facts
+- [x] #3 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -59,3 +59,9 @@ Required checks passed: coverage 100/100 across 37 lessons; all-lesson originali
 pnpm test: release-permission self-test, content-tools 153/153, Morse 21/21, calculator 127/127 passed; web initially 221/223, with unchanged Settings-loading and v6-device-migration tests timing out. Both cases passed focused default-timeout reruns with no app/test changes. The migration case first timed out again isolated, then passed a diagnostic 30 s CLI-timeout run and a subsequent default-timeout rerun. Aggregate pnpm test remains recorded as failed; do not describe it as a green second full run. Exact commands and outcomes are in the comparison document.
 No Apple UI suites/app builds were run (content-only, per request). All four figure-bearing lessons changed surrounding text: coordinator should run the CanadianHamLessonFigures plan before merge; sources, directives, alt text, text equivalents and briefs are unchanged. No lesson renumbering or progress migration. Independent branch review still required; no PR opened.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Reworked all four M2 lessons into concept-led teaching with worked and faded practice, separated Try-it feedback, common mistakes, and 12 original concept checks. Preserved every fact needed for all 99 mapped bank questions, all lesson front matter/IDs, ordered official quiz lists, and figure directives; the library remains 37 lessons. Added a before/after fact ledger and updated M2 format guidance, removed two stale originality exceptions, and remapped 99 hint anchors without changing EN/FR hint prose. Required content checks and 23 content-swift tests passed. The aggregate pnpm test run had two unchanged web timeout failures; both passed focused default-timeout reruns, with no test-source changes. Task notes and the ledger record the initial failures and reruns transparently. Content-only worker did not run Apple UI suites; coordinator should run the figure plan for the changed figure-bearing lessons. Committed/pushed lesson groups; no PR opened; ready for required independent branch review.
+<!-- SECTION:FINAL_SUMMARY:END -->
