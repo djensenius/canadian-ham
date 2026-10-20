@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-20 15:15'
+updated_date: '2026-10-20 15:17'
 labels:
   - content
 dependencies:
@@ -64,4 +64,6 @@ Part B M5 complete: 19 faded sets across all six quantitative lessons, with conv
 Part B review steering incorporated: read Part A reviewer artifact f39562f8. Manually compared every M5/M6 check against its full officialQuestionIds and lesson Try-its rather than relying on lint. M5 C1/C2 in L-005-05 now test a wrong-topology quarter-total comparison and bypass reuse at a lower frequency; L-005-06 C1 now tests the limits of an ideal transformer calculation using observed core heat. These changed-condition/transfer checks replace possible near-restatements. Further M6 checks redesigned before its module commit; six specified Part A blockers and nits will be repaired separately.
 
 M6 complete: 12 faded sets after cable loss, excess-cable comparison, reflected power, impedance ratio, wavelength, dipole, gain-reference, Yagi, vertical and loop sets. L-006-01 has no calculations; its narrative worked example was renamed. All 15 checks now have 60 distinct per-option notes and plausible same-domain distractors; manually audited against the 38 official references and all Try-its. Changed-condition cases include replacing a tuner, solid dielectric on a toroid, differing loss-per-metre and route lengths, remote vs desk measurements, repaired lossy coax revealing SWR, identical cuts in different surroundings, loss of an unfed reflector, and catalogue claims with different references. Try-it answers separated. Retargeted b-006-005-011 after narrative heading rename. Strict quizzes, full originality (0 issues/stale entries), coverage, links, complete hints and diff check PASS. All five edited M6 lessons contain figure directives; assets/directives unchanged.
+
+Part A review fixes complete: redesigned QZ-L-003-06 C1 (average vs clean peak headroom), QZ-L-003-08 C3 (point-source model limits near real structures), QZ-L-004-01 C2 (efficiency vs linearity) and C3 (changed LED supply/rating checks), QZ-L-004-02 C1 (load energy vs small control signal) and C3 (FET/triode analogy limits). Manually checked each against all same-quiz official Q+A and lesson Try-its; none asks the old recognition item in a new costume. Removed scaffolds from the M2 offset, power-ratio, runtime, UTC and bearing Try-its so they are independent practice. Fixed the weak tuning-range distractor in QZ-L-003-05 C1 (the steering called it C2; actual source was C1), Yagi feedback now says names swapped only, and 50 % spacing. Strict M3/M4 quizzes including overlap lint, full originality, links, complete hints and diff check PASS.
 <!-- SECTION:NOTES:END -->
