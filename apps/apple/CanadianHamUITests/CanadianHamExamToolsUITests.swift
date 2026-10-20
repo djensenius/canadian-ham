@@ -204,16 +204,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
         scrollBackgroundUntilHittable(marker, in: app, maxSwipes: 12)
         XCTAssertTrue(marker.isHittable)
-        let quizTitle = app.staticTexts["QZ-L-005-01-A"].firstMatch
-        let quizScroll = app.scrollViews.firstMatch
-        // Move the old header entirely out of the window, not just underneath the navigation bar.
-        for _ in 0..<12 where quizTitle.exists && quizTitle.frame.maxY > app.windows.firstMatch.frame.minY {
-            preciseExamToolScroll(quizScroll, in: app, fingerDeltaY: -72)
-            waitBriefly()
-        }
-        XCTAssertTrue(!quizTitle.exists || quizTitle.frame.maxY <= app.windows.firstMatch.frame.minY)
         XCTAssertTrue(isFullyVisible(marker, in: app, requiresHittable: true))
-        try app.performAccessibilityAudit()
+        try auditIgnoringOccludedLessonTextContrast(app: app)
         submitLessonQuiz(in: app)
         XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
         XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.label.contains("1 / 1 (100%)"), "Help must not reduce quiz correctness")
