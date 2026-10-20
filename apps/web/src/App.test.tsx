@@ -1366,7 +1366,7 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
       render(<App store={createStore("lesson-anchorless-hint-link")} now={() => fixedNow} />);
       await screen.findByRole("heading", { name: quiz.id });
       const section = getLessonQuizSection();
-      while (within(section).queryAllByTestId("answer-choice").length === 0) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      while (!(section.querySelector(".question-meta")?.textContent ?? "").includes("B-005-002-003")) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
       await user.click(within(section).getByRole("button", { name: "Hint" }));
       await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
       await user.click(within(section).getByRole("link", { name: "Review in lesson" }));
