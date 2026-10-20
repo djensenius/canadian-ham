@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-20 13:04'
+updated_date: '2026-10-20 13:10'
 labels:
   - web
   - engine
@@ -42,4 +42,6 @@ Apply the owner-approved 2026-10-20 lesson-quiz hint decision recorded verbatim 
 
 <!-- SECTION:NOTES:BEGIN -->
 Coordinator approved optional answeredWithHelpIds (readonly string[]) matching existing attempt ID-array shape: sorted, unique subset of officialQuestionIds; missing means none. Help freezes on choice because feedback scores immediately; final submit passes the flag to existing applyAnswer. Apple app model/persistence is deferred to .2. No engine parity change is needed: engines do not own quiz attempts and applyAnswer already supports help.
+
+Model step committed/pushed: optional sorted unique official answeredWithHelpIds, shared compatibility fixture, schema (including sortedSubset assertion), import/sync validation and split-migration filtering. New focused compatibility tests: 3 passed; schema tests: 56 passed. Whole progressStore test file initially hit existing v6-device migration 5 s timeout under load; no tests or timeouts were weakened. UI work is in progress.
 <!-- SECTION:NOTES:END -->
