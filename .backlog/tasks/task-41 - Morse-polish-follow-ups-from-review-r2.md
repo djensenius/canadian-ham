@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-20 13:08'
+updated_date: '2026-10-20 13:10'
 labels:
   - apple
   - web
@@ -42,4 +42,6 @@ Low items from the task-12.18/12.19/12.20 review r2 (~/.cache/canadian-ham-revie
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented distinct practice/exam focus targets with a hardware-keyboard navigation regression test. Added live Reduce Motion UI coverage using a DEBUG-only environment control (the real onChange path), grouped square-point safety wording assertions, and web axe strings derived from engine constants and translations. Relevant web App Morse tests: 21 passed. Initial localization command exceeded the foreground tool timeout; will rerun all Apple checks detached with grep-only polling.
+
+Added testable import methods used directly by both confirmation actions. Apple unit tests cover their live binding/observable model, normalized persisted Morse settings, replacement notifications, unknown-enum fallback and rejection without settings mutation. Added a web validation regression and documented the intentional Apple-default/web-reject file-validation difference. Web Morse settings + progress-store tests: 42 passed.
 <!-- SECTION:NOTES:END -->
