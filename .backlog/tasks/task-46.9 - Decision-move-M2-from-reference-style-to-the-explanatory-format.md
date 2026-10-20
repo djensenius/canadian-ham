@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-20 13:10'
+updated_date: '2026-10-20 13:13'
 labels:
   - content
 dependencies: []
@@ -50,4 +50,6 @@ L-002-01 complete: concept-led path/access, calling and spectrum-sharing section
 L-002-02 complete: Morse contact sequence and group jobs, honest RS/RST interpretation, explicit two-doubling S-unit derivation plus upward/downward worked examples, faded reduction Try it and three original checks. All 33 mapped questions plus the old extra Q signals retained in the ledger. Removed its stale calling-pattern exception. Targeted M2 quiz check passed (99 official, 6 concept checks); originality initially flagged the standard 6 dB/fourfold pair repeated in the new worked example, so removed the redundant dB restatement from that example while retaining the derivation in the concept section. All-lesson originality rerun passed with no issues or stale entries.
 
 L-002-03 complete: priority decisions, a worked break-in response, accurate relaying and whole-station readiness; explicit battery formula with original values, faded practice and three original checks. All 11 mapped questions and additional record/readiness teaching retained in the comparison ledger. M2 quizzes passed (99 official, 9 concept checks); all-lesson originality passed with 0 issues/stale entries. Distress signals and priority order checked against the active bank; runtime estimate 12 Ah / 1.5 A = 8 h, practice 9 Ah / 1.5 A = 6 h, with reserve/cold/age caveats.
+
+L-002-04 complete: confirmation/log evidence, locator versus bearing, station-centred maps, worked reciprocal heading, UTC conversions with AM/PM and date rollover, faded practice and three original checks. All 11 mapped questions retained in the ledger. M2 quiz check passed (99 official, 12 concept checks). Originality first caught incidental 6 and 4 in the UTC example as the S-unit fact; changed the illustrative time-zone offset to minus 5 rather than adding an exception. All-lesson originality now passes (0 issues/stale entries). Numbers recomputed: 65 + 180 = 245 degrees; 2245 - 0500 = 1745 / 5:45 PM; 0210 - 0500 = 2110 previous day / 9:10 PM; practice 0145 - 0500 = 2045 previous day / 8:45 PM and 235 + 180 - 360 = 55 degrees.
 <!-- SECTION:NOTES:END -->
