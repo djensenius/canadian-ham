@@ -325,7 +325,10 @@ struct NativeDataSettingsTab: View {
     }
 
     private func confirmImport() {
-        guard let pendingImport else { return }
+        guard appSettings.progressStore != nil, appSettings.bank != nil, let pendingImport else {
+            errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
+            return
+        }
         do {
             try importProgress(pendingImport)
             self.pendingImport = nil

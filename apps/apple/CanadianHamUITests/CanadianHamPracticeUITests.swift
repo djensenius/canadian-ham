@@ -369,7 +369,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         openSendingPractice(in: app)
         openSendingExamStyleCheck(in: app)
-        XCTAssertTrue(app.buttons["morse-sending-start-exam-button"].firstMatch.waitForExistence(timeout: 5))
+        let start = app.buttons["morse-sending-start-exam-button"].firstMatch
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
+        XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5))
         app.typeKey(" ", modifierFlags: [])
         let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
         let decodedE = NSPredicate(format: "label == %@", "E")
