@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-08 04:35'
-updated_date: '2026-10-20 05:14'
+updated_date: '2026-10-20 05:15'
 labels:
   - apple
   - testing
@@ -39,6 +39,8 @@ Task-31 attempted to combine iOS light/dark accessibility audits into one launch
 3. Consolidate safe audit flows without changing shared/exception helpers or dropping assertions; record method-to-assertion and coverage mappings.
 4. Run the default iOS suite and figure plan via nohup/xbuild on iPhone 17 Pro, use grep-only log polling, record per-test results and any flakes, and run focused static checks.
 5. Verify AC evidence, finalize Backlog notes, commit and push for internal review; no PR.
+
+Baseline adjustment approved by supervisor: use full train-2026-10-17 evidence at 029f2d49, explicitly distinguish its older membership and known failure from current source counts, and use the completed current dark/light calculator audits as a timing calibration. Complete the after-default and figure runs in full.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
