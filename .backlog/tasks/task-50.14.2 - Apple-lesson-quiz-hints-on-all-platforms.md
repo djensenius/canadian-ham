@@ -1,10 +1,11 @@
 ---
 id: TASK-50.14.2
 title: Apple lesson-quiz hints on all platforms
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-20 13:39'
+updated_date: '2026-10-20 13:57'
 labels:
   - apple
 dependencies:
@@ -29,6 +30,15 @@ Apply the owner-approved 2026-10-20 rules in TASK-50.14 after the web/model cont
 - [ ] #6 Match the web attempt contract: optional answeredWithHelpIds array, sorted unique subset of officialQuestionIds, missing means none; reject unknown/concept IDs in import/sync, preserve the field through persistence/export/import/sync and lesson-ID migrations (filter to destination official membership if an attempt splits).
 - [ ] #7 Lesson quizzes have a hint-only toolbar/panel: no calculator or reference sheet is added. Use referenceSheetAvailable=false and hide existing reference-sheet pointer labels, including when the hint metadata has a pointer.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Extend Apple quiz attempt payload, validation, sync and lesson migration to preserve the shared helped-ID contract; add fixture and round-trip tests.
+2. Reuse practice hint presentation and timing in every rendered lesson quiz, freeze help at choice, retain session on lesson-link visits, and add localized score/feedback markers.
+3. Add focused unit and UI coverage (EN/FR, timing, exclusions, navigation and full light/dark audits); run localization checks and targeted macOS/iPhone/iPad/tvOS/visionOS xbuild tests using nohup scripts.
+4. Commit/push before build waits, record per-test evidence, and finalize only verified acceptance criteria.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
