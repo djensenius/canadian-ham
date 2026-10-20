@@ -1,11 +1,11 @@
 ---
 id: TASK-62
 title: Audit lesson-originality allowlist staleness
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-19 13:14'
-updated_date: '2026-10-20 04:05'
+updated_date: '2026-10-20 04:06'
 labels: []
 dependencies: []
 ordinal: 137000
@@ -19,9 +19,9 @@ TASK-47 review noted that some originality allowlist entries may now be unnecess
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Checker reports or tests identify allowlist entries that no longer suppress any issue
-- [ ] #2 Unneeded allowlist entries are removed or justified with current checker output
-- [ ] #3 All lesson originality checks still pass after the allowlist audit
+- [x] #1 Checker reports or tests identify allowlist entries that no longer suppress any issue
+- [x] #2 Unneeded allowlist entries are removed or justified with current checker output
+- [x] #3 All lesson originality checks still pass after the allowlist audit
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -134,4 +134,24 @@ After allowlist (28 entries), with current suppressed-issue evidence:
 - L-006-05: Dipole patterns — B-006-012-004 (numeric-overlap)
 
 Post-prune all-lessons check: 37 lesson files, 984 official questions, 28 effective entries, 0 stale entries, 0 issues. M5-only check: 6 lesson files, 2 effective entries, 0 stale entries, 0 issues; entries for other modules are not falsely reported. Targeted originality tests: 37/37 passed, including nine new allowlist regression tests. Content-tools typecheck and git diff --check passed.
+
+Acceptance evidence and final validation:
+- AC1: nine new regression tests exercise stale common-dB entries, numeric suppression with unallowlisted failures preserved, near-verbatim-only suppression across categories, removed headings, full-vs-partial missing-lesson auditing, out-of-category numeric non-suppression, duplicate keys, required reasons, and --all CLI failure diagnostics. node --test packages/content-tools/test/check-lesson-originality.test.ts: 37/37 passed.
+- AC2: full new-checker audit intentionally failed with all 16 stale entries named; removed all 16. Complete before/after lists and the 66 current suppressed findings are recorded above. Every retained reason includes specific content justification plus exact current source question IDs and issue types. No stale guard exemptions.
+- AC3: pnpm --dir packages/content-tools check:lesson-originality:all passed (37 lessons, 984 questions, 28 effective entries, 0 stale entries, 0 originality issues). M5-only check also passed (6 lessons, 2 effective entries, 0 stale entries/issues).
+- pnpm typecheck: passed across all workspace packages/apps.
+- pnpm test: passed; release-permission self-test, content-tools 153/153, Morse 21/21, calculator 127/127, web 223/223. Web tests emitted existing jsdom canvas getContext-not-implemented warnings but no failures.
+- pnpm --dir packages/content-tools check:explanations: passed, 984 explanation files/references, 2952 per-choice notes, 984/984 present.
+- pnpm check:links: passed, Markdown relative links verified.
+- pnpm check:hints -- --require-complete: passed, 984/984 active Basic hints, completeness enabled.
+- pnpm check:schemas: passed, 2034 validation targets, 55/55 tests.
+- pnpm import:check: passed, Basic and Advanced generated banks verified and 34 reference-sheet entries validated.
+- git diff --check: passed.
+No Apple work, builds, or tests: only the TypeScript checker/tests and allowlist metadata changed; no lesson Markdown, bank data, or app code changed. Required branch review and CI remain pre-merge gates.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added stale originality-allowlist reporting and failure enforcement: blocks are checked before suppression, full --all runs audit every entry (including missing lessons/headings), and partial runs avoid judging unselected lessons. Removed all 16 stale entries (44 → 28) with no guard exceptions and enriched every retained reason with current question IDs and issue types. Nine new regression tests cover effective/stale suppression, scope, validation, and CLI diagnostics. All requested TypeScript/content checks plus schemas/import checks pass; final originality audit reports 37 lessons, 984 questions, 28 effective entries, zero stale entries, and zero issues. No lesson prose or Apple changes. Branch review and CI are still required before merge.
+<!-- SECTION:FINAL_SUMMARY:END -->
