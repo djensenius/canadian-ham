@@ -379,8 +379,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         expectation(for: decodedE, evaluatedWith: decoded)
         waitForExpectations(timeout: 5)
 
-        // Going Back hands focus to practice, rather than leaving it on the off-screen exam.
-        tapCompactBack(in: app)
+        // Scope Back to the detail stack: iPad also has a sidebar navigation bar.
+        let back = app.navigationBars["Exam-style check"].buttons.matching(
+            NSPredicate(format: "label == %@ OR label == %@", "Sending practice", "Back")
+        ).firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
         XCTAssertTrue(app.buttons["morse-sending-exam-open-button"].firstMatch.waitForExistence(timeout: 5))
         app.typeKey(" ", modifierFlags: [])
         let decodedEE = NSPredicate(format: "label == %@", "EE")
