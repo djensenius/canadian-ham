@@ -195,7 +195,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
         scrollBackgroundUntilHittable(marker, in: app, maxSwipes: 12)
         XCTAssertTrue(marker.isHittable)
-        scrollBackgroundPastElement(app.staticTexts["QZ-L-005-01-A"].firstMatch, preserving: marker, in: app, maxSwipes: 12)
+        let quizTitle = app.staticTexts["QZ-L-005-01-A"].firstMatch
+        let quizScroll = app.scrollViews.firstMatch
+        // Move the old header entirely out of the window, not just underneath the navigation bar.
+        for _ in 0..<12 where quizTitle.exists && quizTitle.frame.maxY > app.windows.firstMatch.frame.minY {
+            preciseExamToolScroll(quizScroll, in: app, fingerDeltaY: -72)
+            waitBriefly()
+        }
+        XCTAssertTrue(!quizTitle.exists || quizTitle.frame.maxY <= app.windows.firstMatch.frame.minY)
         XCTAssertTrue(isFullyVisible(marker, in: app, requiresHittable: true))
         try app.performAccessibilityAudit()
         submitLessonQuiz(in: app)
