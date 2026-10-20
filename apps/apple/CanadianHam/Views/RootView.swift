@@ -505,7 +505,9 @@ struct RootView: View {
         .navigationTitle("Canadian Ham")
     }
 
+    // Reset stacks only for user selection, not when restoring selection and path together.
     private func selectSidebar(_ next: SidebarSelection) {
+        guard next != selection else { return }
         let previous = selection
         selection = next
         if next != .learn || previous.isExamSessionSelection {
