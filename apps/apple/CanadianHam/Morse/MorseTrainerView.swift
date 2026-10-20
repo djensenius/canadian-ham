@@ -100,8 +100,8 @@ func morseBeaconPalette(for colorScheme: ColorScheme) -> MorseFlashBeaconPalette
         : morseBeaconPalette(accent: morseLightAccentRGB, background: morseLightPaperInsetRGB)
 }
 
-func formattedMorseArea(_ value: Double) -> String {
-    value.formatted(.number.precision(.fractionLength(0)))
+func formattedMorseArea(_ value: Double, locale: Locale = .current) -> String {
+    value.formatted(.number.precision(.fractionLength(0)).locale(locale))
 }
 
 @MainActor

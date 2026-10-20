@@ -238,6 +238,18 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertTrue(requestedTape.useTape)
     }
 
+    func testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas() throws {
+        let sequence = try textToTimedMorse("5", profile: profileForName(.isedParis))
+        let plan = morseVisualPlaybackPlan(sequence: sequence, requestedMode: .visualBeacon, reduceFlashing: false, colorScheme: .light)
+
+        XCTAssertEqual(formattedMorseArea(12_544, locale: Locale(identifier: "en_CA")), "12,544")
+        XCTAssertEqual(formattedMorseArea(21_824, locale: Locale(identifier: "en_CA")), "21,824")
+        XCTAssertEqual(formattedMorseArea(12_544, locale: Locale(identifier: "fr_CA")), "12\u00a0544")
+        XCTAssertTrue(plan.safetyNote.contains("\(formattedMorseArea(morseBeaconAreaCssPixels)) square points"), plan.safetyNote)
+        XCTAssertTrue(plan.safetyNote.contains("\(formattedMorseArea(plan.safety.maxAreaCssPixels)) square-point WCAG flash cap"), plan.safetyNote)
+        XCTAssertFalse(plan.safetyNote.contains("px"), "Apple's measured area is in square points, not CSS pixels")
+    }
+
     func testReduceFlashingDecisionUsesInjectedFlags() {
         XCTAssertFalse(shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: false, dimFlashingLights: false)))
         XCTAssertTrue(shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags(environmentReduceMotion: true, systemReduceMotion: false, dimFlashingLights: false)))

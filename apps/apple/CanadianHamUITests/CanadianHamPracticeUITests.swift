@@ -125,6 +125,37 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["morse-visual-beacon"].firstMatch.waitForExistence(timeout: 5), "Choosing visual beacon should show a visual Morse output when Quick listen plays")
     }
 
+    func testMorseRunningBeaconStopsWhenReduceMotionTurnsOn() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseOutputMode", "visualBeacon",
+            "-CanadianHamMorseReduceMotionControl"
+        ])
+        defer { app.terminate() }
+
+        let play = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(play.waitForExistence(timeout: 10))
+        scrollUntilHittable(play, in: app, maxSwipes: 8)
+        play.tap()
+        let beacon = app.staticTexts["morse-visual-beacon"].firstMatch
+        XCTAssertTrue(beacon.waitForExistence(timeout: 5), "Start with a real running beacon, not tape or idle playback")
+        let stop = app.buttons["morse-quick-stop-button"].firstMatch
+        XCTAssertTrue(stop.isEnabled)
+
+        app.buttons["morse-enable-reduce-motion-test-button"].firstMatch.tap()
+        expectation(for: NSPredicate(format: "enabled == false"), evaluatedWith: stop)
+        expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: beacon)
+        waitForExpectations(timeout: 5)
+        XCTAssertTrue(app.staticTexts["Morse playback stopped."].firstMatch.exists)
+        XCTAssertTrue(play.isEnabled)
+
+        // The changed environment must also route the next playback to non-flashing tape.
+        play.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["morse-visual-tape"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(beacon.exists)
+    }
+
     func testCompletesFirstMorseLessonSessionOnIOS() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
