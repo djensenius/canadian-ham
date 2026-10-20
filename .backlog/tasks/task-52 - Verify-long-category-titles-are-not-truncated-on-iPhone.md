@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-20 13:23'
+updated_date: '2026-10-20 13:29'
 labels:
   - apple
 dependencies: []
@@ -38,4 +38,6 @@ Seen during task-44.3 work: long category titles such as 'Regulations and Polici
 Baseline targeted UI test confirms TASK-55 removed the original default-size English Regulations and Policies truncation; the longer Basic Station Assembly, Practice and Safety navigation title and wrapped content header also fit on iPhone 17 Pro. Continuing largest-accessibility French coverage and all shared category surfaces (including Advanced). Test header identifiers resolve to the existing combined accessibility header; tests preserve that hierarchy and all shared helpers.
 
 Reproduced remaining native inline-navigation truncation in French B-003 at Accessibility XXXL. Regression test detects a 314-pt one-line navigation frame where even 17-pt text requires 342.7 pt; screenshot retained from baseline-fr-ax-3.xcresult. Testing a wrapping principal toolbar Text while retaining the system navigation title, with no font shrinking or point-width rules.
+
+Coordinator decision 2026-10-20 (owner may revisit): retain TASK-55 native inline category navigation titles; the owner previously rejected generic Practice titles. Native inline truncation at accessibility sizes is accepted platform behaviour provided VoiceOver receives the full title and the prominent scrollable header visibly wraps the complete category name. Reverted the multiline principal-toolbar experiment: UIKit constrained the bar and the unscaled AX-XXXL title overflowed (y=-201.7, height=571.3). Tests will assert complete native navigation accessibility labels plus full wrapped content headers and investigate native Large Content Viewer support. No font capping/shrinking, custom navigation bar, or generic title changes approved.
 <!-- SECTION:NOTES:END -->
