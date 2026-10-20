@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-20 14:33'
+updated_date: '2026-10-20 15:12'
 labels:
   - apple
 dependencies:
@@ -46,4 +46,6 @@ Apply the owner-approved 2026-10-20 rules in TASK-50.14 after the web/model cont
 Review note (TASK-50.14.1 review 2026-10-20): current Apple builds, including TestFlight, accept and then DROP answeredWithHelpIds on lesson-quiz attempts. LessonQuizAttempt (ProgressStore.swift ~206) and DeviceLessonQuizAttemptRecord (ProgressSyncMerge.swift 43-59) use default Decodable, which ignores unknown keys, and upsertLessonQuizAttempt (~2019) re-encodes without the field, so web → Apple import/sync → export loses the flag (scores unaffected). Storage: Apple keeps attempts as a JSON payload blob (payloadData), so adding the optional field needs no SwiftData model migration, but old blobs and archived JSON must decode as none. Validation must reject unknown, concept-check, unsorted and duplicate IDs, matching web.
 
 Coordinator confirmed tvOS/visionOS have no lesson quizzes: no new quiz surface; iOS/iPadOS/macOS UI and shared attempt payload are in scope. tvOS/visionOS build-only validation required if their compiled shared files change. Implemented optional payload field, strict help-ID validation, migration filtering, root-owned quiz session cache, practice hint-only panel and markers. Added fixture/persistence/import/sync tests and focused UI/audit tests; validation starting.
+
+Validation so far (all through nohup xbuild scripts, logs /tmp/task-50.14.2-runs): macOS targeted run PASS, 32/32 tests (HintSessionStateTests 26/26; ProgressStoreTests: help fixture/payload/import/export/sync parity, session cache, split migration, concept-inclusive migration fixture, atomic archived multi-device migration and save rollback all PASS). Separate real 0.5-second/freeze-at-choice test PASS, 1/1. pnpm check:schemas PASS (2,034 targets); node scripts/check-apple-text-sources.ts PASS; test-guard self-test PASS. Guard reports only the three added full-default audit calls, intentional under the owner 2026-10-20 lesson-quiz decision; current checker does not accept dotted task IDs in approval markers, so PR should use Test-guard-approved: owner decision 2026-10-20. iPhone/iPad focused UI tests and full localization/tvOS/visionOS builds pending shared lock. No full test suites run.
 <!-- SECTION:NOTES:END -->
