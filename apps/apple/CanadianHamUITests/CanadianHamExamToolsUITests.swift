@@ -119,6 +119,17 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testLargestDynamicTypeKeepsHintToolButtonReachable() throws {
+        let defaultApp = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"])
+        XCTAssertTrue(defaultApp.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        let defaultHint = defaultApp.buttons[Tool.hint.buttonIdentifier].firstMatch
+        XCTAssertTrue(defaultHint.waitForExistence(timeout: 5), "Expected the hint button at the default text size")
+        scrollExamToolUntilHittable(defaultHint, in: defaultApp, maxSwipes: 8)
+        XCTAssertTrue(defaultHint.isHittable, "The default-size hint button should be visible before measuring it")
+        XCTAssertEqual(defaultHint.label, "Hint", "The default-size hint button should expose its title exactly once")
+        let defaultHintHeight = defaultHint.frame.height
+        XCTAssertGreaterThan(defaultHintHeight, 0)
+        defaultApp.terminate()
+
         let app = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
         defer { app.terminate() }
 
@@ -132,6 +143,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(calculator.isHittable, "The calculator button should remain hittable at the largest accessibility text size. Frame: \(frameDescription(calculator.frame))")
         scrollExamToolUntilHittable(hint, in: app, maxSwipes: 8)
         XCTAssertTrue(hint.isHittable, "The hint button should remain hittable at the largest accessibility text size. Frame: \(frameDescription(hint.frame))")
+        XCTAssertGreaterThan(hint.frame.height, defaultHintHeight, "The visible Hint label must grow at AX-XXXL, not just expose scalable accessibility metadata. Default height: \(defaultHintHeight), AX-XXXL frame: \(frameDescription(hint.frame))")
         hint.tap()
         XCTAssertTrue(app.descendants(matching: .any)[Tool.hint.panelIdentifier].firstMatch.waitForExistence(timeout: 5), "Tapping the largest-text Hint button should open the hint tool")
     }

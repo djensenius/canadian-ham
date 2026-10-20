@@ -30,7 +30,6 @@ struct ExamToolButtons: View {
                 AccessibleSecondaryButtonLabel(title: tool.title)
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
-            .accessibilityLabel(Text(tool.title)) // l10n: localized
             .accessibilityIdentifier("exam-tool-\(tool.rawValue)-button")
         }
     }
