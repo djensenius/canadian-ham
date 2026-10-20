@@ -541,11 +541,11 @@ final class MorseTrainerTests: XCTestCase {
 
     @MainActor
     func testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess() throws {
-        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let bank = try CanadianHam.QuestionBankStore.load(from: Bundle(for: Self.self))
         let suiteName = "MorseTrainerTests.studyImport.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }
-        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
         var settings = MorseTrainerSettings.default
         var replacements: [Bool] = []
         let view = SettingsView(
@@ -579,11 +579,11 @@ final class MorseTrainerTests: XCTestCase {
 #if os(macOS)
     @MainActor
     func testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess() throws {
-        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let bank = try CanadianHam.QuestionBankStore.load(from: Bundle(for: Self.self))
         let suiteName = "MorseTrainerTests.nativeImport.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }
-        let store = try ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
         let appSettings = AppSettingsModel(morseSettings: .default)
         appSettings.bank = bank
         appSettings.progressStore = store
@@ -617,7 +617,7 @@ final class MorseTrainerTests: XCTestCase {
         ]
     }
 
-    private func morseImportFixture(bankId: String, morseJSON: String) throws -> ProgressExportV1 {
+    private func morseImportFixture(bankId: String, morseJSON: String) throws -> CanadianHam.ProgressExportV1 {
         let json = """
         {
           "schema": "canadian-ham.progress-export",
@@ -636,7 +636,7 @@ final class MorseTrainerTests: XCTestCase {
           }
         }
         """
-        return try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+        return try JSONDecoder().decode(CanadianHam.ProgressExportV1.self, from: Data(json.utf8))
     }
 
     func testMorseSettingsRoundTripThroughUserDefaults() throws {
