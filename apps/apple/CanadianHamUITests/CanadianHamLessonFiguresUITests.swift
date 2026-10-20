@@ -47,7 +47,11 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule1LessonFiguresLightPart1() throws {
-        try verifyLessonRange(Self.module1Lessons, 0..<2, appearance: .light, evidenceModuleID: "m1", writeEvidence: true)
+        try verifyLessonRange(Self.module1Lessons, 0..<1, appearance: .light, evidenceModuleID: "m1", writeEvidence: true)
+    }
+
+    func testModule1LessonFiguresLightPart1NextLesson() throws {
+        try verifyLessonRange(Self.module1Lessons, 1..<2, appearance: .light, evidenceModuleID: "m1")
     }
 
     func testModule1LessonFiguresLightPart2() throws {
@@ -59,35 +63,67 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule1LessonFiguresLightPart4() throws {
-        try verifyLessonRange(Self.module1Lessons, 4..<6, appearance: .light, evidenceModuleID: "m1")
+        try verifyLessonRange(Self.module1Lessons, 4..<5, appearance: .light, evidenceModuleID: "m1")
+    }
+
+    func testModule1LessonFiguresLightPart4NextLesson() throws {
+        try verifyLessonRange(Self.module1Lessons, 5..<6, appearance: .light, evidenceModuleID: "m1")
     }
 
     func testModule2LessonFiguresLightPart1() throws {
-        try verifyLessonRange(Self.module2Lessons, 0..<2, appearance: .light, evidenceModuleID: "m2", writeEvidence: true)
+        try verifyLessonRange(Self.module2Lessons, 0..<1, appearance: .light, evidenceModuleID: "m2", writeEvidence: true)
+    }
+
+    func testModule2LessonFiguresLightPart1NextLesson() throws {
+        try verifyLessonRange(Self.module2Lessons, 1..<2, appearance: .light, evidenceModuleID: "m2")
     }
 
     func testModule2LessonFiguresLightPart2() throws {
-        try verifyLessonRange(Self.module2Lessons, 2..<4, appearance: .light, evidenceModuleID: "m2")
+        try verifyLessonRange(Self.module2Lessons, 2..<3, appearance: .light, evidenceModuleID: "m2")
+    }
+
+    func testModule2LessonFiguresLightPart2NextLesson() throws {
+        try verifyLessonRange(Self.module2Lessons, 3..<4, appearance: .light, evidenceModuleID: "m2")
     }
 
     func testModule3LessonFiguresLightPart1() throws {
-        try verifyLessonRange(Self.module3Lessons, 0..<2, appearance: .light, evidenceModuleID: "m3", writeEvidence: true)
+        try verifyLessonRange(Self.module3Lessons, 0..<1, appearance: .light, evidenceModuleID: "m3", writeEvidence: true)
+    }
+
+    func testModule3LessonFiguresLightPart1NextLesson() throws {
+        try verifyLessonRange(Self.module3Lessons, 1..<2, appearance: .light, evidenceModuleID: "m3")
     }
 
     func testModule3LessonFiguresLightPart2() throws {
-        try verifyLessonRange(Self.module3Lessons, 2..<4, appearance: .light, evidenceModuleID: "m3")
+        try verifyLessonRange(Self.module3Lessons, 2..<3, appearance: .light, evidenceModuleID: "m3")
+    }
+
+    func testModule3LessonFiguresLightPart2NextLesson() throws {
+        try verifyLessonRange(Self.module3Lessons, 3..<4, appearance: .light, evidenceModuleID: "m3")
     }
 
     func testModule3LessonFiguresLightPart3() throws {
-        try verifyLessonRange(Self.module3Lessons, 4..<6, appearance: .light, evidenceModuleID: "m3")
+        try verifyLessonRange(Self.module3Lessons, 4..<5, appearance: .light, evidenceModuleID: "m3")
+    }
+
+    func testModule3LessonFiguresLightPart3NextLesson() throws {
+        try verifyLessonRange(Self.module3Lessons, 5..<6, appearance: .light, evidenceModuleID: "m3")
     }
 
     func testModule3LessonFiguresLightPart4() throws {
-        try verifyLessonRange(Self.module3Lessons, 6..<8, appearance: .light, evidenceModuleID: "m3")
+        try verifyLessonRange(Self.module3Lessons, 6..<7, appearance: .light, evidenceModuleID: "m3")
+    }
+
+    func testModule3LessonFiguresLightPart4NextLesson() throws {
+        try verifyLessonRange(Self.module3Lessons, 7..<8, appearance: .light, evidenceModuleID: "m3")
     }
 
     func testModule4LessonFiguresLightPart1() throws {
-        try verifyLessonRange(Self.module4Lessons, 0..<2, appearance: .light, evidenceModuleID: "m4", writeEvidence: true)
+        try verifyLessonRange(Self.module4Lessons, 0..<1, appearance: .light, evidenceModuleID: "m4", writeEvidence: true)
+    }
+
+    func testModule4LessonFiguresLightPart1NextLesson() throws {
+        try verifyLessonRange(Self.module4Lessons, 1..<2, appearance: .light, evidenceModuleID: "m4")
     }
 
     func testModule4LessonFiguresLightPart2() throws {
@@ -103,7 +139,11 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule5LessonFiguresLightPart3() throws {
-        try verifyLessonRange(Self.module5Lessons, 2..<4, appearance: .light, evidenceModuleID: "m5")
+        try verifyLessonRange(Self.module5Lessons, 2..<3, appearance: .light, evidenceModuleID: "m5")
+    }
+
+    func testModule5LessonFiguresLightPart3NextLesson() throws {
+        try verifyLessonRange(Self.module5Lessons, 3..<4, appearance: .light, evidenceModuleID: "m5")
     }
 
     func testModule5LessonFiguresLightPart4() throws {
@@ -115,11 +155,19 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule6LessonFiguresLightPart1() throws {
-        try verifyLessonRange(Self.module6Lessons, 0..<2, appearance: .light, evidenceModuleID: "m6", writeEvidence: true)
+        try verifyLessonRange(Self.module6Lessons, 0..<1, appearance: .light, evidenceModuleID: "m6", writeEvidence: true)
+    }
+
+    func testModule6LessonFiguresLightPart1NextLesson() throws {
+        try verifyLessonRange(Self.module6Lessons, 1..<2, appearance: .light, evidenceModuleID: "m6")
     }
 
     func testModule6LessonFiguresLightPart2() throws {
-        try verifyLessonRange(Self.module6Lessons, 2..<4, appearance: .light, evidenceModuleID: "m6")
+        try verifyLessonRange(Self.module6Lessons, 2..<3, appearance: .light, evidenceModuleID: "m6")
+    }
+
+    func testModule6LessonFiguresLightPart2NextLesson() throws {
+        try verifyLessonRange(Self.module6Lessons, 3..<4, appearance: .light, evidenceModuleID: "m6")
     }
 
     func testModule6LessonFiguresLightPart3() throws {
@@ -127,7 +175,11 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
     }
 
     func testModule7LessonFiguresLightPart1() throws {
-        try verifyLessonRange(Self.module7Lessons, 0..<2, appearance: .light, evidenceModuleID: "m7", writeEvidence: true)
+        try verifyLessonRange(Self.module7Lessons, 0..<1, appearance: .light, evidenceModuleID: "m7", writeEvidence: true)
+    }
+
+    func testModule7LessonFiguresLightPart1NextLesson() throws {
+        try verifyLessonRange(Self.module7Lessons, 1..<2, appearance: .light, evidenceModuleID: "m7")
     }
 
     func testModule7LessonFiguresLightPart2() throws {

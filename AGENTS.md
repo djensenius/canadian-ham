@@ -76,8 +76,9 @@ platform) and share one build lock, so don't run them by reflex.
   run happens in the merge batch (above).
 - **Lesson figure audits:** the per-lesson figure audits (`CanadianHamLessonFiguresUITests`) run
   in their own test plan, only when figures, `content/figures/`, lesson Markdown with figure
-  directives, or the lesson reader change (owner decision 2026-10-14; task-33 moves them out of
-  the default plan).
+  directives, or the lesson reader change (owner decision 2026-10-14). The default
+  `CanadianHamDefault` plan excludes that class. Run the figure-only plan with:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamLessonFigures -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
 - **Release candidate (task-1.6):** the full four-platform run with every accessibility audit,
   plus the manual checks in `docs/release/release-checklist.md`.
 - Record per-test results for the full runs you did in the task notes and PR body, and say
