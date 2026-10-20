@@ -78,4 +78,38 @@ Final validation: coverage 100/100 in 37 lessons (no duplicates); originality --
 Both-parts invariant audit against original base 1dca8f3b3b0559628f65904e7ed1e08f032261a5: all 31 edited lesson front matters, figure directive blocks/text equivalents and illustration briefs are byte-identical; ordered official references, quiz IDs, lesson IDs and concept IDs in all 31 edited quizzes are unchanged. Final 67 faded sets cover all 30 quantitative M2–M8 lessons: Part A 29 sets in 15 lessons, Part B 38 sets in 15 quantitative lessons; L-006-01 is qualitative only and M1 remains reference-only. Against Part B start 62c678bd: 20 lesson files and 23 quiz files changed, counting the requested M2/review fixes. Generated official banks and sources unchanged. Apple app code untouched; TASK-46.6.1 stays To Do. Independent quality review and figure positioning audits still required before PR/merge.
 
 content-swift full package run: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift PASS, 24/24, 0 failures (55.808 s tests). Per-test results: testBadHintFileDropsHintsWithoutDroppingLessonContent PASS; testBundledQuestionHintSectionAnchorsResolveInLessons PASS; testConceptCheckChoiceDecodesOptionalFeedbackAndRoundTrips PASS; testContentLibraryRejectsCoversOutsideLessonCategoryIds PASS; testContentLibraryRejectsEmptyModuleListWithoutCrashing PASS; testContentLibraryRejectsExplanationIdMismatch PASS; testContentLibraryRejectsMissingExplanationForQuestion PASS; testContentLibraryRejectsMissingSubsectionCoverage PASS; testContentLibraryRejectsUnknownOfficialQuestionInQuiz PASS; testContentLibraryRejectsUnknownPrerequisite PASS; testExplanationNoteParsingForSampleInEachCategory PASS; testExplanationParserRejectsDuplicateAndCorrectSourceIndexNotes PASS; testFigureDirectivesForOhmsLawLesson PASS; testFrontMatterParserMatchesNumericAndASCIIKeyRules PASS; testLessonIdRegexRejectsMalformedIds PASS; testLoadFromBundleFindsBundledContentDirectory PASS; testLoadsRealRepositoryContent PASS; testMarkdownInlineHandlingKeepsRawHTMLLiteralButPreservesCodeAndAutolinks PASS; testMarkdownRendererParsesEveryRealLesson PASS; testSharedFigureDirectiveFixtures PASS; testSharedLessonHeadingAnchorFixtures PASS; testStrictFrontMatterParserRejectsMalformedInput PASS; testTableIllustrationBriefAndBlockOrderForL00501 PASS; testTableParserHandlesAlignmentEscapedPipesAndFencedCode PASS. No iOS/macOS/tvOS/visionOS app suites run: no app-code changes; coordinator owns the separate CanadianHamLessonFigures positioning plan.
+
+Coordinator figure-plan list (all 31 edited lessons across both parts; directives/assets unchanged):
+- content/lessons/m2-operating-procedures/l-002-01-voice-repeater-and-simplex-procedure.md
+- content/lessons/m2-operating-procedures/l-002-02-morse-rst-and-q-signals.md
+- content/lessons/m2-operating-procedures/l-002-03-distress-urgency-and-safety-traffic.md
+- content/lessons/m2-operating-procedures/l-002-04-records-maps-and-locators.md
+- content/lessons/m3-station-practice-safety/l-003-01-station-filtering-and-radio-blocks.md
+- content/lessons/m3-station-practice-safety/l-003-02-cw-ssb-blocks-and-receivers.md
+- content/lessons/m3-station-practice-safety/l-003-03-digital-interfaces-and-power-supplies.md
+- content/lessons/m3-station-practice-safety/l-003-04-antennas-and-receiver-specs.md
+- content/lessons/m3-station-practice-safety/l-003-05-signal-quality-cw-ssb-fm.md
+- content/lessons/m3-station-practice-safety/l-003-06-controls-digital-voice-and-packet.md
+- content/lessons/m3-station-practice-safety/l-003-07-batteries-dc-supplies-and-ripple.md
+- content/lessons/m3-station-practice-safety/l-003-08-access-grounding-lightning-rf-safety.md
+- content/lessons/m4-circuit-components/l-004-01-amplifiers-and-diodes.md
+- content/lessons/m4-circuit-components/l-004-02-transistors-fets-and-tubes.md
+- content/lessons/m4-circuit-components/l-004-03-resistor-colour-codes.md
+- content/lessons/m5-basic-electronics/l-005-01-units-conductors-current.md
+- content/lessons/m5-basic-electronics/l-005-02-power-ohms-law.md
+- content/lessons/m5-basic-electronics/l-005-03-parallel-circuits-and-ratings.md
+- content/lessons/m5-basic-electronics/l-005-04-ac-and-decibels.md
+- content/lessons/m5-basic-electronics/l-005-05-reactance-and-resonance.md
+- content/lessons/m5-basic-electronics/l-005-06-transformers-and-meters.md
+- content/lessons/m6-feedlines-antennas/l-006-01-feedline-basics-and-types.md
+- content/lessons/m6-feedlines-antennas/l-006-02-loss-swr-and-matching.md
+- content/lessons/m6-feedlines-antennas/l-006-03-polarization-dipoles-wavelength.md
+- content/lessons/m6-feedlines-antennas/l-006-04-directivity-yagis-and-lengths.md
+- content/lessons/m6-feedlines-antennas/l-006-05-loops-quads-and-patterns.md
+- content/lessons/m7-propagation/l-007-01-paths-ionosphere-and-skip.md
+- content/lessons/m7-propagation/l-007-02-absorption-solar-cycle-and-muf.md
+- content/lessons/m7-propagation/l-007-03-vhf-uhf-and-unusual-modes.md
+- content/lessons/m8-interference-suppression/l-008-01-receiver-device-interference-and-filters.md
+- content/lessons/m8-interference-suppression/l-008-02-transmitter-emissions-and-harmonics.md
+Run the existing CanadianHamLessonFigures plan once for this complete content batch, including Ohm’s law integrations; worker did not run xbuild.
 <!-- SECTION:NOTES:END -->
