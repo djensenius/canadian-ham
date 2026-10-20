@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-20 13:08'
+updated_date: '2026-10-20 13:10'
 labels:
   - content
 dependencies: []
@@ -48,4 +48,6 @@ Before rewriting: extracted teaching from all four M2 lessons and checked all 99
 L-002-01 complete: concept-led path/access, calling and spectrum-sharing sections; worked offset and join-in examples; faded positive-offset Try it with separate feedback; three original concept checks (including signal-quality retrieval). All 44 mapped bank questions retained and compared in the ledger. Removed its now-stale calling-pattern originality exception. Targeted checks passed: coverage (37 lessons), M2 quizzes (99 official IDs, 3 concept checks), all-lesson originality (0 issues/stale entries).
 
 L-002-02 complete: Morse contact sequence and group jobs, honest RS/RST interpretation, explicit two-doubling S-unit derivation plus upward/downward worked examples, faded reduction Try it and three original checks. All 33 mapped questions plus the old extra Q signals retained in the ledger. Removed its stale calling-pattern exception. Targeted M2 quiz check passed (99 official, 6 concept checks); originality initially flagged the standard 6 dB/fourfold pair repeated in the new worked example, so removed the redundant dB restatement from that example while retaining the derivation in the concept section. All-lesson originality rerun passed with no issues or stale entries.
+
+L-002-03 complete: priority decisions, a worked break-in response, accurate relaying and whole-station readiness; explicit battery formula with original values, faded practice and three original checks. All 11 mapped questions and additional record/readiness teaching retained in the comparison ledger. M2 quizzes passed (99 official, 9 concept checks); all-lesson originality passed with 0 issues/stale entries. Distress signals and priority order checked against the active bank; runtime estimate 12 Ah / 1.5 A = 8 h, practice 9 Ah / 1.5 A = 6 h, with reserve/cold/age caveats.
 <!-- SECTION:NOTES:END -->
