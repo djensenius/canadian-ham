@@ -42,8 +42,9 @@ The plain audit and approved-exception implementations are unchanged.
   non-reset launch. Launches per appearance: **9 → 3**.
 - Sending: both original fixtures used exactly the same launch arguments (Morse,
   sending debug hook, 600-second exam duration). The first two audits only inspect
-  and scroll the untouched sending screen. The existing `openSendingExamStyleCheck`
-  positions/taps the same exam entry before the unchanged start/card assertions and
+  and scroll the untouched sending screen. The unchanged `scrollToTop` restores the
+  entry above the lower feedback; `openSendingExamStyleCheck` then positions/taps
+  the same exam entry before the unchanged start/card assertions and
   audit. Results retain their distinct 120-second fixture. Launches per appearance:
   **2 → 1**. No appearance changes while either app is running.
 - Dark test wrappers restore appearance only through the existing teardown, which

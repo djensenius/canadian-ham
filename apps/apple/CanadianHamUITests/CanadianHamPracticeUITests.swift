@@ -1676,7 +1676,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
 
-        // Both audits start with the same untouched sending session and appearance.
+        // Restore the entry above the lower-content audit without changing the sending session.
+        scrollToTop(in: app)
         openSendingExamStyleCheck(in: app)
         XCTAssertTrue(app.buttons["morse-sending-start-exam-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) sending exam audit should show the start button")
         app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
