@@ -56,19 +56,4 @@ final class RootNavigationMappingTests: XCTestCase {
         XCTAssertEqual(RootNavigationMapping.splitState(for: [.section(.settings), .section(.morse)]), SplitNavigationState(selection: .morse, path: []))
     }
 
-    @MainActor
-    func testSessionToolStateSurvivesViewOwnershipAndResetsWithNewSession() {
-        let cache = PracticeSessionStateCache()
-        let practice = cache.state(for: .all)
-        practice.selectedExamTool = .hint
-        XCTAssertEqual(cache.state(for: .all).selectedExamTool, .hint)
-        XCTAssertNil(cache.state(for: .due).selectedExamTool)
-        cache.clear()
-        XCTAssertNil(cache.state(for: .all).selectedExamTool)
-
-        let exam = MockExamState()
-        exam.selectedExamTool = .calculator
-        exam.resetSession(localDataReplacementRevision: 1)
-        XCTAssertNil(exam.selectedExamTool)
-    }
 }

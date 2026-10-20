@@ -51,23 +51,12 @@ struct ExamToolPresentationModifier: ViewModifier {
     @State private var selectedSheetDetent = PresentationDetent.medium
     @State private var compactSheetHeight: CGFloat = 0
     @State private var toolPanelFrameInWindow: CGRect?
-    @State private var presentationHostIsActive = false
-
-    private var presentedTool: Binding<ExamTool?> {
-        Binding(
-            get: { presentationHostIsActive ? selectedTool : nil },
-            set: { next in
-                guard presentationHostIsActive else { return }
-                selectedTool = next
-            }
-        )
-    }
 
     private var isPresented: Binding<Bool> {
         Binding(
-            get: { presentedTool.wrappedValue != nil },
+            get: { selectedTool != nil },
             set: {
-                if !$0, presentationHostIsActive {
+                if !$0 {
                     calculatorFocused = false
                     calculator.suspendHardwareKeyboardInput()
                     selectedTool = nil
@@ -78,19 +67,6 @@ struct ExamToolPresentationModifier: ViewModifier {
     }
 
     func body(content: Content) -> some View {
-        platformContent(content)
-            .task {
-                // A restored tool must wait until its new sheet/inspector host is attached.
-                // Presenting during NavigationSplitView construction can loop native layout.
-                await Task.yield()
-                guard !Task.isCancelled else { return }
-                presentationHostIsActive = true
-            }
-            .onDisappear { presentationHostIsActive = false }
-    }
-
-    @ViewBuilder
-    private func platformContent(_ content: Content) -> some View {
 #if os(iOS)
         let usesInspector = horizontalUsesInspector()
         if usesInspector {
@@ -107,7 +83,7 @@ struct ExamToolPresentationModifier: ViewModifier {
                 .safeAreaInset(edge: .bottom) {
                     Color.clear.frame(height: selectedTool == nil ? 0 : compactSheetHeight)
                 }
-                .sheet(item: presentedTool, onDismiss: onDismiss) { tool in
+                .sheet(item: $selectedTool, onDismiss: onDismiss) { tool in
                     toolPanel(for: tool, usesInspector: usesInspector)
                         .background {
                             GeometryReader { proxy in

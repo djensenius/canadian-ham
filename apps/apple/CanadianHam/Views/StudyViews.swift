@@ -340,7 +340,6 @@ final class PracticeSessionState: ObservableObject {
     @Published var answeredCount = 0
     @Published var correctCount = 0
     @Published var errorMessage: String?
-    @Published var selectedExamTool: ExamTool?
     let calculatorViewModel = ExamCalculatorViewModel()
 
     var hasUnfinishedCourseWork: Bool {
@@ -387,6 +386,7 @@ struct PracticeSessionView: View {
     let onOpenHintLesson: (QuestionHintLessonLink) -> Void
     let onDataChanged: () -> Void
 
+    @State private var selectedExamTool: ExamTool?
     @State private var calculatorFocused = false
 #if os(iOS)
     @State private var duoPostureProvider: (any DuoPostureProviding)?
@@ -427,11 +427,6 @@ struct PracticeSessionView: View {
         self.onDataChanged = onDataChanged
     }
 
-    private var selectedExamTool: ExamTool? {
-        get { state.selectedExamTool }
-        nonmutating set { state.selectedExamTool = newValue }
-    }
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
@@ -463,12 +458,9 @@ struct PracticeSessionView: View {
         .navigationBarTitleDisplayMode(.inline)
 #endif
         .lessonReaderOpaqueNavigationBar()
-        .examToolPresentation(selectedTool: $state.selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, hintContext: hintToolContext)
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, hintContext: hintToolContext)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
-        .onAppear {
-            calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
-            onExamToolPresentationChanged(selectedExamTool != nil)
-        }
+        .onAppear { calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale()) }
         .onChange(of: selectedExamTool) { _, next in
 #if os(iOS)
             applyHingePeekPresentation(.selectedToolChanged(next))
@@ -1065,7 +1057,6 @@ final class MockExamState: ObservableObject {
     @Published var errorMessage: String?
     @Published var timerStatus = String(localized: "Timer off")
     @Published var loadedLocalDataReplacementRevision = 0
-    @Published var selectedExamTool: ExamTool?
     let calculatorViewModel = ExamCalculatorViewModel()
 
     var hasUnfinishedCourseWork: Bool {
@@ -1073,7 +1064,6 @@ final class MockExamState: ObservableObject {
     }
 
     func resetSession(localDataReplacementRevision: Int) {
-        selectedExamTool = nil
         calculatorViewModel.clearForNewExam()
         seed = ""
         startedAt = ""
@@ -1152,6 +1142,7 @@ struct MockExamView: View {
     @State private var showingNavigator = false
     @State private var pendingNavigatorPresentation = false
     @State private var shouldFocusResultsHeading = false
+    @State private var selectedExamTool: ExamTool?
     @State private var calculatorFocused = false
     @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -1162,11 +1153,6 @@ struct MockExamView: View {
     }
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
-    private var selectedExamTool: ExamTool? {
-        get { state.selectedExamTool }
-        nonmutating set { state.selectedExamTool = newValue }
-    }
 
     var body: some View {
         ScrollView {
@@ -1189,7 +1175,7 @@ struct MockExamView: View {
         .navigationTitle("Mock exam")
         .lessonReaderOpaqueNavigationBar()
         .examToolPresentation(
-            selectedTool: $state.selectedExamTool,
+            selectedTool: $selectedExamTool,
             calculator: calculatorViewModel,
             calculatorFocused: $calculatorFocused,
             referenceSheetConfiguration: referenceSheetConfiguration,
@@ -1209,7 +1195,6 @@ struct MockExamView: View {
         .onAppear {
             calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
             refreshForCurrentTimerState()
-            onExamToolPresentationChanged(selectedExamTool != nil)
         }
         .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
         .onDisappear { onExamToolPresentationChanged(false) }
