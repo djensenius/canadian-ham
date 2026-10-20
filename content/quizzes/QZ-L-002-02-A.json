@@ -36,5 +36,129 @@
     "B-002-007-010",
     "B-002-007-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-02-A-C1",
+      "prompt": {
+        "en": "During a CW contact, the note stays clean and loud, but the sender runs words together faster than you can copy. Which request addresses the problem you can identify?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "QRP: ask for less power.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "QSY: ask for another frequency.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "QRS: ask for a slower pace.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "QRZ?: ask the caller to identify.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "The problem described is speed, so request slower sending with QRS. Less power may make reception harder, moving frequency does not set the pace, and asking for identification does not tell the sender why you are missing words.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-02-A-C2",
+      "prompt": {
+        "en": "A transmitter rises from 7 W to 28 W while the path stays steady. Assume a meter calibrated at 6 dB per S-unit. What change should you expect?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "About one S-unit upward.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "About two S-units upward.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "About one S-unit downward.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "No change, because readability was already good.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "28 / 7 = 4: two power doublings give about 6 dB, or one calibrated S-unit. Two S-units would need another fourfold increase. The direction is upward, and good readability does not prevent strength from rising.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-02-A-C3",
+      "prompt": {
+        "en": "You turn a directional antenna and the meter drops, although the distant station keeps the same power. Can you use that drop to calculate a transmitter-power reduction?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Yes. Any drop proves the transmitter reduced power.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Yes, if you add a tone digit to the report.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "No. Meter readings never respond to power.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "No. The antenna changed, so the power-only model does not apply.",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "The shortcut holds other conditions steady. Moving the antenna can change received strength without changing transmitted power. Tone is a different observation, and meters do respond to power when the model's conditions hold.",
+        "fr": null
+      }
+    }
+  ]
 }

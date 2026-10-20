@@ -35,11 +35,6 @@
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson. Current checker: five-gram-overlap for B-005-012-001, B-005-012-010."
   },
   {
-    "lessonId": "L-002-02",
-    "blockHeading": "Reference fact: Morse calling patterns",
-    "reason": "Reviewed official Morse calling-pattern reference table. The CQ/DE repetition counts and answer order are intentionally preserved as a compact reference fact, not as a copied scenario, worked example, or Try-it. Current checker: five-gram-overlap for B-002-005-002."
-  },
-  {
     "lessonId": "L-001-01",
     "blockHeading": "Reference facts: Certificate records, addresses, and call-sign fees",
     "reason": "Reviewed regulatory reference table: exact validity, deadline, retention, and fee facts are established by official answers. Current checker: numeric-overlap for B-001-002-009; five-gram-overlap for B-001-002-001, B-001-002-008."

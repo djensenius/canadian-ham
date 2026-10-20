@@ -34,17 +34,17 @@ The original review is historical: [m1-m2.md](m1-m2.md). This ledger records the
 
 | Bank IDs (suffixes within B-002) | Taught facts extracted from the old lesson | Revised teaching location / comparison |
 |---|---|---|
-| 005-001, 005-002, 005-003 | Morse CQ repeats CQ and the caller three times around DE; a reply repeats each call twice around DE. Call no faster than you can receive. | Pending rewrite comparison. |
-| 005-004 through 005-009, 005-011 | CQ invites all; DE marks the sender; K invites a reply; R confirms complete receipt; DX refers to distant stations; 73 closes with good wishes; QSK permits reception between keying elements. | Pending rewrite comparison. |
-| 005-010 | CW spacing is 150–500 Hz from an existing contact. | Pending rewrite comparison. |
-| 006-001, 006-002, 006-003, 006-004, 006-009, 006-010, 006-011 | Reports describe reception: R readability, S strength, T keyed-signal tone. Voice omits T. R1 unreadable, R3 difficult, R4 quite readable, R5 perfect; S1 barely heard, S3 weak, S5 fair, S7 moderately strong, S9 extremely strong; T9 clean tone. | Pending rewrite comparison. |
-| 006-005, 006-006 | A dB suffix measures strength above S9; repeater reports describe the relayed audio actually heard, not the remote input signal. | Pending rewrite comparison. |
-| 006-007, 006-008 | In the calibrated, stable-path model, each S-unit is 6 dB: two approximate power doublings or halvings; power ratio four upward, quarter downward. Real paths/meters limit the shortcut. | Pending rewrite comparison. |
-| 007-001, 007-009 | QRS requests slower sending. | Pending rewrite comparison. |
-| 007-002, 007-003, 007-004, 007-005 | QTH location, QRL? busy check, QSY frequency change, QSB fading. | Pending rewrite comparison. |
-| 007-006, 007-010, 007-011 | QRZ? asks the unidentified caller to identify; QRX signals a later call. | Pending rewrite comparison. |
-| 007-007, 007-008 | QRM interference from other signals; QRN natural noise/static. | Pending rewrite comparison. |
-| Additional old teaching, no extra quiz mapping | QRV? readiness; QRU? pending traffic; QRT stop; QSL? acknowledge; QRK readability; QRP reduce/low power. Question marks distinguish questions from statements. Give honest reports rather than automatic perfect reports. | Pending rewrite comparison. |
+| 005-001, 005-002, 005-003 | Morse CQ repeats CQ and the caller three times around DE; a reply repeats each call twice around DE. Call no faster than you can receive. | Retained — Build a contact from small pieces; Worked example: follow the direction of a reply. |
+| 005-004 through 005-009, 005-011 | CQ invites all; DE marks the sender; K invites a reply; R confirms complete receipt; DX refers to distant stations; 73 closes with good wishes; QSK permits reception between keying elements. | Retained — Use short groups for clear jobs. |
+| 005-010 | CW spacing is 150–500 Hz from an existing contact. | Retained — Use short groups for clear jobs. |
+| 006-001, 006-002, 006-003, 006-004, 006-009, 006-010, 006-011 | Reports describe reception: R readability, S strength, T keyed-signal tone. Voice omits T. R1 unreadable, R3 difficult, R4 quite readable, R5 perfect; S1 barely heard, S3 weak, S5 fair, S7 moderately strong, S9 extremely strong; T9 clean tone. | Retained — Report what reaches your receiver; Worked example: keep the three observations separate. |
+| 006-005, 006-006 | A dB suffix measures strength above S9; repeater reports describe the relayed audio actually heard, not the remote input signal. | Retained — Report what reaches your receiver. |
+| 006-007, 006-008 | In the calibrated, stable-path model, each S-unit is 6 dB: two approximate power doublings or halvings; power ratio four upward, quarter downward. Real paths/meters limit the shortcut. | Retained — Connect meter steps to power ratios; Worked examples: predicting a rise / predicting a fall (both directions shown). |
+| 007-001, 007-009 | QRS requests slower sending. | Retained — Choose Q signals by the task. |
+| 007-002, 007-003, 007-004, 007-005 | QTH location, QRL? busy check, QSY frequency change, QSB fading. | Retained — Choose Q signals by the task. |
+| 007-006, 007-010, 007-011 | QRZ? asks the unidentified caller to identify; QRX signals a later call. | Retained — Choose Q signals by the task. |
+| 007-007, 007-008 | QRM interference from other signals; QRN natural noise/static. | Retained — Choose Q signals by the task. |
+| Additional old teaching, no extra quiz mapping | QRV? readiness; QRU? pending traffic; QRT stop; QSL? acknowledge; QRK readability; QRP reduce/low power. Question marks distinguish questions from statements. Give honest reports rather than automatic perfect reports. | Retained — Choose Q signals by the task; In the real world: useful reports beat flattering reports. |
 
 ## Lesson 3: L-002-03
 

@@ -25,94 +25,93 @@ status: draft
 ---
 # Morse, RST, and Q signals
 
-Morse and voice contacts use many of the same operating ideas: call clearly, identify, leave space, and report what you actually hear. Morse adds short procedural signals that save time when every character is being sent by hand or keyer.
+You call a station in Morse and receive an answer too fast to copy. Sending faster will not solve that problem. A useful contact needs a shared pace, clear identification, and an honest report of what each operator hears.
 
-This lesson focuses on the abbreviations and signal-report habits used here: CQ, DE, K, R, DX, 73, QSK, RST reports, selected Q signals, and minimum separation for Morse contacts.
+Morse code sends characters as short and long elements, often called dots and dashes. CW, or continuous-wave operation, commonly carries those characters by keying an RF carrier on and off.
 
 ## Learning objectives
 
 By the end of this lesson, you can:
 
-- make and answer a routine Morse CQ at a speed you can copy;
-- distinguish CQ, DE, K, R, DX, 73, and full break-in QSK;
-- read two-number voice reports and three-number Morse RST reports;
-- use the S-unit relationship for simple power changes; and
-- recognize the common Q signals in this module.
+- call and answer in Morse at a pace you can receive;
+- use short procedural groups without mixing up their jobs;
+- separate readability, strength, and tone in a reception report;
+- estimate power changes from a calibrated S-meter under stable conditions; and
+- choose Q signals that make an operating step clearer.
 
-## Morse calling basics
+## Build a contact from small pieces
 
-A Morse CQ is a general call. In routine form, it sends CQ, gives DE to mean "from," sends the caller's call sign, and then listens. Send at a speed you can receive, because the answering station is likely to reply near that speed.
+Listen first, just as you would on voice. Send QRL? and listen for a response before starting a Morse contact. That group asks whether the frequency is occupied. A pause matters: sending the question without listening defeats its purpose.
 
-When answering a routine Morse CQ, identify the station you are calling and then yourself. DE separates the called station or CQ from the station sending. Repetition helps the two call signs survive fading and noise, while concise calling preserves the frequency for traffic.
+CQ invites any station to answer. DE identifies the source of the message; think of it as the divider before the sender's call sign. A routine Morse call and reply use different repetition patterns:
 
-### Reference fact: Morse calling patterns
+| Purpose | Opening | Sender identification |
+|---|---|---|
+| General call | Repeat CQ three times, then DE. | Repeat your own call three times. |
+| Reply to that call | Repeat the caller's identification twice, then DE. | Repeat your own call twice. |
 
-| Situation | Pattern to recognize |
+Send only as fast as you can reliably receive. The answering operator may match your calling speed. Repeated identification helps with fading, but endlessly repeating a call wastes listening time.
+
+### Worked example: follow the direction of a reply
+
+VE2LMN has just called CQ. VA3PQR answers. These are illustrative call signs for a practice exchange.
+
+1. VA3PQR sends VE2LMN twice so the intended listener is clear.
+2. VA3PQR sends DE to mark who the reply is from.
+3. VA3PQR sends VA3PQR twice, then leaves time for an answer.
+
+The destination-before-source order matches a directed voice call. The Morse reply repeats each call because individual characters can disappear in noise.
+
+## Use short groups for clear jobs
+
+Short groups save keying time. Learn the job of each group rather than treating them as interchangeable ways to end a transmission.
+
+| Group | Operating job |
 |---|---|
-| Routine Morse CQ | Send CQ three times, then DE, then your call sign three times. |
-| Answering routine Morse CQ | Send the other station's call sign twice, then DE, then your call sign twice. |
+| CQ | Invite anyone listening to make contact. |
+| DE | Mark the source: the sender's call follows it. |
+| K | Hand the channel over for a reply from any station. |
+| R | Confirm that the message was received completely. |
+| DX | Refer to a distant station or contact. |
+| 73 | Close with good wishes. |
+| QSK | Full break-in: the receiver works in the gaps between keyed elements. |
 
-## Short Morse signals and abbreviations
+Full break-in lets you hear incoming signals between your own dots and dashes. It is a station capability, not permission to cover someone else's transmission.
 
-Several short groups appear often in Basic operating procedure.
+A CW signal is narrow, but it still needs room. Allow 150 Hz to 500 Hz separation from a CW contact already in progress. Voice spacing is much wider because voice carries a wider range of frequencies.
 
-### Reference fact: Morse procedural groups
+## Report what reaches your receiver
 
-| Signal | Practical meaning in routine amateur use |
-|---|---|
-| CQ | General call for any station. |
-| DE | From; it separates the called station or CQ from the caller's call sign. |
-| K | Invitation for any station to reply. |
-| R | All received. |
-| DX | Distant station or distant contact. |
-| 73 | Best regards. |
-| QSK | Full break-in CW, where receive audio returns between transmitted dots and dashes. |
+A signal report describes reception at your station, not the other operator's equipment rating. Readability asks whether you can understand the message. Strength describes received signal level. Tone describes the quality of the keyed note in Morse.
 
-Full break-in is a station capability and operating style. With QSK, an operator may hear another station between elements being sent.
+The letters RST fix the order: readability, signal strength, then tone. Voice reports normally use only R and S. A loud signal can still be hard to understand, so strength alone does not tell the whole story.
 
-Morse contacts are narrow compared with voice, but they still need spacing. Allow 150 Hz to 500 Hz from a CW contact in progress.
-
-## Signal reports: RS and RST
-
-Signal reports describe reception at your station. For voice, operators normally use readability and strength: two numbers such as 5 7. For Morse, the report adds tone quality: readability, strength, and tone, often written as RST.
-
-Readability tells how understandable the signal is. Strength describes relative received signal level. Tone applies to a keyed carrier and is most meaningful for Morse. Report the signal you actually copy: readability, strength, and tone as heard at your receiver.
-
-For repeater contacts, report the relayed station's intelligibility and audio quality as you receive the retransmitted signal.
-
-### Reference fact: signal-report digits used in this lesson
-
-| Report part | Digit | Meaning used here |
+| Part | Digit | What the digit describes |
 |---|---:|---|
-| Readability | 1 | Unreadable. |
-| Readability | 3 | Readable with considerable difficulty. |
+| Readability | 1 | No usable copy. |
+| Readability | 3 | Copy takes considerable effort. |
 | Readability | 4 | Quite readable. |
 | Readability | 5 | Perfectly readable. |
-| Strength | 1 | Barely perceptible. |
+| Strength | 1 | Just perceptible. |
 | Strength | 3 | Weak. |
 | Strength | 5 | Fair strength. |
 | Strength | 7 | Moderately strong. |
 | Strength | 9 | Extremely strong. |
-| Tone | 9 | Perfect tone. |
+| Tone | 9 | A clean, steady note: perfect tone. |
 
-A two-number voice report leaves off the tone digit. A three-number Morse report reads the digits in order: readability, strength, and tone. A report marked as S9 plus a decibel value means the signal is stronger than S9 by the stated amount.
+### Worked example: keep the three observations separate
 
-### Memory trick: RST reads in order
+A Morse signal takes some effort to read but is quite readable. Its strength is moderately strong and its note is clean. Reading the table by part gives R = 4, S = 7, T = 9, so the report is 479.
 
-- Helps remember: RST means readability, signal strength, and tone.
-- Trick: read the letters left to right, then read the report digits left to right.
-- Limit: voice reports normally use readability and strength; tone is for Morse or keyed-signal quality.
+For a voice signal with the same readability and strength, leave off the tone digit. Voice does not get a Morse-tone score merely because the speaker sounds pleasant.
 
-### In the real world: giving a report
+An S9 report with an added decibel value means the meter indicates that many decibels above S9. The added value describes strength, not an extension to the readability scale.
 
-For a clear voice signal, an operator may give a two-number report such as 5 9. For a Morse signal with good copy, moderate strength, and clean tone, the same habit becomes a three-number RST report such as 5 7 9.
+On a repeater, describe the relayed station's audio and intelligibility as you hear them from the repeater. You cannot infer every detail of its signal into the repeater from that output alone.
 
-An illustrative voice report exchange can be short:
+### In the real world: useful reports beat flattering reports
 
-- VE3ABC: "VA3MOB, you are 5 9 here."
-- VA3MOB: "Thanks. You are 5 7 with light fading."
-
-The exact digits are observations at your receiver. Do not make every contact "perfect" out of politeness if the signal is actually hard to copy.
+If words disappear in fading, say so. If the relay is strong but the speaker is quiet, describe the audio problem. Automatic perfect reports hide the evidence that another operator needs to improve copy.
 
 ::figure morse-rst-contact-flow
 Alt text: A Morse contact flow showing a busy-frequency check, CQ, DE, call signs, a signal report, and sign-off.
@@ -121,61 +120,90 @@ Text equivalent:
 - The side panel has three gauges labelled R, S, and T, with a meter label.
 ::
 
-## S-units and power changes
+## Connect meter steps to power ratios
 
-An S-unit is one marked step on a receiver's signal-strength meter. Some receiver S-meters use 6 dB per S-unit. In the simplified Basic relationship, that step matches a quadrupling or quartering of transmitter power when the path is otherwise stable.
+An S-unit is a marked step on a receiver's strength meter. For the Basic model, assume a calibrated meter with 6 dB per S-unit. A rise of that size means about two power doublings: 3 dB + 3 dB, or 2 x 2. A fall reverses both doublings, leaving a quarter of the power.
 
-### In the real world: one S-unit as a power clue
+This model needs a steady path, unchanged antennas, and comparable receiver settings. Real S-meters may not follow the calibration closely. A change in fading or antenna direction can move the meter without any transmitter-power change.
 
-If stable conditions let the shortcut apply, raising transmitter power from 10 W to 40 W is a quadrupling. In decibel terms, 6 dB is 3 dB + 3 dB, or about 2 x 2 in power. That may move the other station's meter by about one S-unit on a meter using the Basic calibration model.
+### Worked example: predicting a rise
 
-The same shortcut works downward. Dropping one S-unit means about 6 dB less power, so 60 W becomes about 15 W: first half to 30 W, then half again to 15 W.
+An illustrative station raises its transmitter power while all other conditions stay steady. Assume the calibrated meter model above.
 
-Apply that shortcut only when the receive antenna, propagation path, and measurement conditions remain comparable. Otherwise the S-meter may have changed for reasons outside transmitter power.
+- Given: old power = 18 W; new power = 72 W.
+- Find: approximate S-meter change at the receiving station.
+- Formula: power ratio = new power / old power; each calibrated step needs about a fourfold ratio.
+- Substitute: power ratio = 72 / 18 = 4.
+- Answer: about one S-unit upward on the calibrated meter.
+- Sanity check: doubling to 36 W and doubling again to 72 W accounts for both power doublings.
 
-## Q signals in this module
+### Worked example: predicting a fall
 
-Q signals are three-letter operating abbreviations. In Morse they can be sent as questions or statements. A question mark changes the job: QRL? asks whether a frequency is busy; QRL as a statement can say that a station is busy.
+Now suppose another station cuts power from 60 W to 15 W under the same model.
 
-### Reference fact: Q signals used and compared in this lesson
+- Given: old power = 60 W; new power = 15 W.
+- Find: approximate S-meter change.
+- Formula: power ratio = new power / old power.
+- Substitute: power ratio = 15 / 60 = 0.25.
+- Answer: about one S-unit downward, or a 6 dB fall.
+- Sanity check: halving to 30 W and halving again to 15 W reverses the two doublings.
 
-| Q signal | Meaning taught here |
-|---|---|
-| QRL? | Is this frequency in use? |
-| QRV? | Are you ready? |
-| QRU? | Have you anything for me? |
-| QRZ? | Who is calling me? |
-| QRS | Send more slowly. |
-| QRT | Stop sending. |
-| QSY | Change frequency. |
-| QSB | Your signal is fading. |
-| QSL? | Can you acknowledge receipt? |
-| QRM | I am being interfered with by other signals. |
-| QRN | I am troubled by static or natural noise. |
-| QRK | Readability of signals. |
-| QRP | Decrease power, or low-power operation by extension. |
-| QRX | I will call you again. |
-| QTH | My location is ... |
+## Choose Q signals by the task
 
-Use Q signals when they make communication clearer. On voice, plain language is often better until both operators expect the abbreviation.
+Q signals are compact three-letter groups. A question mark can turn a statement into a request for information. For example, QRL? checks whether a frequency is busy; QRL can state that a station is busy.
 
-### Memory trick: Q codes group by job
+| Task | Q signal | Meaning in use |
+|---|---|---|
+| Check the channel | QRL? | Ask whether the frequency is occupied. |
+| Check readiness | QRV? | Ask if the other operator is ready. |
+| Check for traffic | QRU? | Ask if there is anything to pass to you. |
+| Identify a caller | QRZ? | Ask the station calling you to identify itself. |
+| Adjust the pace | QRS | Ask for slower sending. |
+| End sending | QRT | Stop transmitting. |
+| Move the contact | QSY | Move to another frequency. |
+| Describe fading | QSB | The received level is rising and falling. |
+| Confirm a message | QSL? | Ask for acknowledgement of receipt. |
+| Describe interference | QRM | Other signals are interfering. |
+| Describe static | QRN | Natural noise is troubling reception. |
+| Describe copy | QRK | Refer to readability. |
+| Reduce power | QRP | Reduce transmitter power; also used for low-power operation. |
+| Arrange a later call | QRX | Pause; the sender will call again later. |
+| Give a location | QTH | Introduce the station's location. |
 
-- Helps remember: QRM, QRN, QTH, QSY, and QRZ? from the Basic list.
-- Trick: M in QRM can point to man-made interference; N in QRN can point to natural noise. Pair QTH with "there" for station location, QSY with "shift," and QRZ? with "who is calling?"
-- Limit: this trick covers only the listed signals; use the reference table for the exact meaning.
+### Memory trick: interference or natural noise
 
-## How these procedures fit together
+- Helps remember: the difference between QRM and QRN.
+- Trick: M can suggest man-made signals; N can suggest natural noise.
+- Limit: this cue does not decode every Q signal. Learn the operating job of each group separately.
 
-Morse procedure reduces a contact to compact, recognizable pieces: check that the frequency is clear, call at a speed you can receive, identify who is calling whom, exchange a realistic report, and leave enough spacing from other contacts.
+On voice, use plain language when it is clearer. Abbreviations help only when both operators understand them.
 
-The Q signals and short groups are purposeful shortcuts. Each one serves an operating step: asking whether a frequency is busy, calling, inviting a reply, reporting copy, changing frequency, or closing politely.
+## Try it
+
+Try these without looking back. Finish the power example before reading the feedback.
+
+1. Under the calibrated, stable-path model, a transmitter drops from 48 W to 12 W. Fill in the two halvings: 48 W -> ___ W -> 12 W. Predict the meter change.
+2. You need slower Morse, then the signal fades before you copy the next word. Which group requests a slower pace, and which describes the fading?
+3. A relayed voice signal is very strong, but several words are lost in rough audio. Why should the report separate readability from strength?
+
+### Check your thinking
+
+1. The missing power is 24 W. The power becomes a quarter of its starting value, so expect roughly one S-unit downward. A changing path would make that prediction unreliable.
+2. Use QRS for the pace and QSB for fading. One asks the operator to change something; the other describes reception.
+3. The repeater output can be strong while speech remains hard to understand. Report both observations; do not add a Morse-tone digit to a voice report.
 
 ## Radio connection
 
-Morse procedure rewards listening discipline. A clean busy-frequency check before calling, a speed you can copy, and a realistic signal report all help contacts succeed with very little transmitted energy.
+Morse procedure is a listening loop, not a list of codes to recite. Check the channel, call at a usable pace, identify the stations, and report what arrived. A compact group is useful when it helps the next operator decide what to do.
 
-RST reports also train you to separate receiver impressions. Readability, strength, and tone are different observations. A good operator reports the path as heard.
+## Common mistakes
+
+- Calling faster than you can copy: the reply may arrive at that same pace.
+- Treating K and R as the same handover: K invites a reply; R confirms receipt.
+- Giving a strong signal full readability automatically: judge whether you can understand it.
+- Treating an S-unit as a single power doubling: the calibrated model needs two doublings.
+- Blaming every meter change on power: fading, antennas, and receiver settings also matter.
+- Using Q signals on voice when plain words would avoid confusion.
 
 ## Illustration brief
 
@@ -185,8 +213,4 @@ Description: Draw a small timeline with dots and dashes above labels: QRL? and l
 
 ## Summary
 
-- Morse procedure uses compact signals to call, identify, invite replies, confirm copy, and close courteously.
-- Sending speed, spacing, and busy-frequency checks all protect copyability for both stations.
-- RS and RST reports separate readability, strength, and tone observations.
-- The S-unit model connects receiver indications with transmitter-power ratios when path conditions stay comparable.
-- Q signals are compact operating tools whose meaning depends on the specific three-letter group and punctuation.
+A successful contact matches pace and procedure to what the other operator can copy. Calling groups tell listeners who should answer; RS and RST separate the quality of reception into useful parts. Q signals shorten specific tasks, while calibrated meter steps offer only a conditional estimate of power change.
