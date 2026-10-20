@@ -48,12 +48,11 @@ private extension View {
 }
 
 private struct MorseReduceMotionUITestModifier: ViewModifier {
-    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @State private var reduceMotion = false
 
     func body(content: Content) -> some View {
         content
-            .environment(\.accessibilityReduceMotion, systemReduceMotion || reduceMotion)
+            .environment(\.morseReduceMotionForUITests, reduceMotion)
             .safeAreaInset(edge: .bottom) {
                 Button { reduceMotion = true } label: {
                     Text(verbatim: "Enable Reduce Motion for Morse test") // l10n: verbatim DEBUG-only UI test hook

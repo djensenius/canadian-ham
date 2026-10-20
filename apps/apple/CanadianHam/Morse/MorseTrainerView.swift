@@ -215,6 +215,19 @@ final class MorsePlaybackCoordinator {
     }
 }
 
+#if DEBUG && os(iOS)
+private struct MorseReduceMotionUITestKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var morseReduceMotionForUITests: Bool {
+        get { self[MorseReduceMotionUITestKey.self] }
+        set { self[MorseReduceMotionUITestKey.self] = newValue }
+    }
+}
+#endif
+
 struct MorseTrainerView: View {
     @Binding var settings: MorseTrainerSettings
     let progressStore: ProgressStoreService
@@ -222,6 +235,9 @@ struct MorseTrainerView: View {
     let onProgressChanged: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+#if DEBUG && os(iOS)
+    @Environment(\.morseReduceMotionForUITests) private var reduceMotionForUITests
+#endif
     @Environment(\.colorScheme) private var colorScheme
     @State private var dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
     @State private var driver = MorseAudioDriver()
@@ -234,6 +250,14 @@ struct MorseTrainerView: View {
     @State private var errorMessage: String?
     @State private var stopTask: Task<Void, Never>?
     @State private var playbackCoordinator = MorsePlaybackCoordinator()
+
+    private var effectiveReduceMotion: Bool {
+#if DEBUG && os(iOS)
+        reduceMotion || reduceMotionForUITests
+#else
+        reduceMotion
+#endif
+    }
 
     private var normalizedSettings: MorseTrainerSettings {
         var normalized = settings.normalized()
@@ -364,7 +388,7 @@ struct MorseTrainerView: View {
                 stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
             }
         }
-        .onChange(of: reduceMotion) { _, _ in
+        .onChange(of: effectiveReduceMotion) { _, _ in
             stopBeaconPlaybackIfReducedFlashingIsEnabled()
         }
         .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
@@ -397,7 +421,7 @@ struct MorseTrainerView: View {
     }
 
     private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
-        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
+        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: effectiveReduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
         if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, isPlaybackRunning: isPlaying, flags: flags) {
             stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
         }
@@ -437,7 +461,7 @@ struct MorseTrainerView: View {
             visualPlaybackTasks = scheduleMorseVisualPlayback(
                 sequence: sequence,
                 requestedMode: normalizedSettings.outputMode,
-                reduceFlashing: shouldReduceMorseFlashing(flags: currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)),
+                reduceFlashing: shouldReduceMorseFlashing(flags: currentMorseReduceFlashingFlags(environmentReduceMotion: effectiveReduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)),
                 colorScheme: colorScheme
             ) { nextState in
                 visualPlaybackState = nextState
