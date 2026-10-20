@@ -15,13 +15,13 @@
     {
       "id": "QZ-L-007-01-A-C1",
       "prompt": {
-        "en": "A path sketch is revised with both a higher refracting region and a higher antenna launch angle. Which conclusion about the first return point follows without more geometry?",
+        "en": "A path sketch is revised with both a higher refracting region and a higher antenna launch angle. What can be concluded about the first return point?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "A farther return is the better estimate, using the height change and neglecting the angle change.",
+            "en": "The return moves farther away because the higher region lengthens the path even at the steeper launch angle.",
             "fr": null
           },
           "isCorrect": false,
@@ -32,7 +32,7 @@
         },
         {
           "text": {
-            "en": "A closer return is the better estimate, using the angle change and neglecting the height change.",
+            "en": "The return moves closer because the steeper launch angle shortens the path even with the higher region.",
             "fr": null
           },
           "isCorrect": false,
@@ -43,7 +43,7 @@
         },
         {
           "text": {
-            "en": "The return should stay about where it was, treating the opposing changes as equal.",
+            "en": "The return stays in the same place because higher altitude and a steeper angle produce equal distance changes.",
             "fr": null
           },
           "isCorrect": false,
@@ -129,18 +129,18 @@
     {
       "id": "QZ-L-007-01-A-C3",
       "prompt": {
-        "en": "A multi-hop sketch adds enough hop distance to span a route. Why should the agency still avoid treating it as assured backup coverage?",
+        "en": "A multi-hop sketch adds enough hop distance to span a route. Which assessment of its backup coverage is justified?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The added hop lengths provide enough evidence to list the route as routine coverage.",
+            "en": "Once a single hop works at the chosen frequency, the remaining hops should have similar conditions and losses.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The sum checks map distance. It does not establish current ionization, suitable launch angles, or adequate link strength over the whole route.",
+            "en": "One usable hop does not establish the conditions along the rest of the route. Additional surface returns also introduce losses rather than simply repeating the first hop's link budget.",
             "fr": null
           }
         },

@@ -113,12 +113,12 @@
         },
         {
           "text": {
-            "en": "Repeat both changes together several times and use the average to decide which one helped.",
+            "en": "Leave the charger off and compare noise at two nearby receive frequencies on the new cable route.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Repeating a combined test can confirm the combined effect. It still cannot assign the improvement to either individual change.",
+            "en": "Changing receive frequency can characterize the noise, but both original changes remain applied. It does not separate the charger contribution from the cable-route effect.",
             "fr": null
           }
         }

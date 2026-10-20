@@ -48,9 +48,22 @@ for (const module of modulePractice) {
         assert.doesNotMatch(check.prompt.en, /\bNOT\b|\b(?:not true|would not|spot the error)\b/iu, check.id);
         assert.equal(new Set(check.choices.map((choice) => choice.feedback.en)).size, check.choices.length, `${check.id}: each choice needs its own diagnosis`);
         const wrong = check.choices.filter((choice) => !choice.isCorrect);
-        const absoluteCue = /\b(?:must|always|guarantee\w*|automatic\w*|prove\w*|necessarily|only)\b/iu;
-        assert.ok(wrong.some((choice) => !absoluteCue.test(choice.text.en)), `${check.id}: avoid absolute-word cues in every distractor`);
+        const distractorCue = /\b(?:must|always|guarantee\w*|automatic\w*|prove\w*|necessarily|only|treating|neglecting|ignoring|sufficient|enough evidence|alone)\b/iu;
+        assert.ok(wrong.some((choice) => !distractorCue.test(choice.text.en)), `${check.id}: at least one distractor must be free of the checked wording cues so the key is not the only cue-free option`);
       }
+    }
+  });
+}
+
+for (const [lessonId, checkNumber] of [["L-006-01", 1], ["L-006-03", 2], ["L-007-01", 1]] as const) {
+  test(`QZ-${lessonId}-A-C${checkNumber} states wrong reasoning without labelling its own flaw`, async () => {
+    const quiz = JSON.parse(await readFile(fileURLToPath(new URL(`../../../content/quizzes/QZ-${lessonId}-A.json`, import.meta.url)), "utf8")) as {
+      conceptChecks: { id: string; choices: { text: { en: string }; isCorrect: boolean }[] }[];
+    };
+    const concept = quiz.conceptChecks.find((item) => item.id === `QZ-${lessonId}-A-C${checkNumber}`);
+    assert.ok(concept);
+    for (const choice of concept.choices.filter((item) => !item.isCorrect)) {
+      assert.doesNotMatch(choice.text.en, /\b(?:treating|neglecting|ignoring)\b/iu, concept.id);
     }
   });
 }
@@ -75,11 +88,11 @@ const reviewedTransfers = [
   { lessonId: "L-004-02", check: 3, prompt: /FET.*triode.*interchangeable/u, answer: /electric field.*separate current path/u },
   { lessonId: "L-005-05", check: 2, prompt: /heavier load.*dips/u, answer: /draws stored energy faster/u, excludedContent: /bypass|reactance/iu },
   { lessonId: "L-005-06", check: 2, prompt: /steady DC.*brief pulse/u, answer: /field changes during switching/u, excludedContent: /voltmeter|ammeter|high resistance|low resistance/iu },
-  { lessonId: "L-006-01", check: 3, prompt: /low-current continuity.*intermittent/u, answer: /connector contact quality.*checking/u, excludedContent: /velocity factor|dielectric/iu },
+  { lessonId: "L-006-01", check: 3, prompt: /low-current continuity.*intermittent/u, answer: /resistive contact.*small test current.*transmit load/u, excludedContent: /velocity factor|dielectric/iu },
   { lessonId: "L-006-05", check: 3, prompt: /trap antenna.*unwanted-output check/u, answer: /Recheck radiation on related bands/u, excludedContent: /audio distortion|counterpoise|RF feedback/iu },
   { lessonId: "L-007-03", check: 3, prompt: /taller VHF mast.*more power/u, answer: /same route, frequency, and power/u, excludedContent: /skip zone|scatter|ground wave/iu },
   { lessonId: "L-008-01", check: 2, prompt: /switching off a charger.*rerouting/u, answer: /changes separately/u, excludedContent: /IF filter|attenuator|suitable input filter/iu },
-  { lessonId: "L-008-02", check: 2, prompt: /metal cover.*removed for cooling/u, answer: /Refit the cover.*repeat the check/u, excludedContent: /keying|click|symbol rate|rise time/iu },
+  { lessonId: "L-008-02", check: 2, prompt: /metal cover.*removed for cooling/u, answer: /run uncovered, recheck it that way.*refit the cover/u, excludedContent: /keying|click|symbol rate|rise time/iu },
 ];
 
 for (const { lessonId, check, prompt, answer, excludedContent } of reviewedTransfers) {

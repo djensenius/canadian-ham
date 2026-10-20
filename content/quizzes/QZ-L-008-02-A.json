@@ -80,7 +80,7 @@
       "choices": [
         {
           "text": {
-            "en": "Refit the cover and repeat the check in the intended operating configuration.",
+            "en": "If it will run uncovered, recheck it that way; otherwise refit the cover for the check.",
             "fr": null
           },
           "isCorrect": true,

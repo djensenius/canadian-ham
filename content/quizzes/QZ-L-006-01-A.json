@@ -21,18 +21,18 @@
       "choices": [
         {
           "text": {
-            "en": "The coax-to-tuner input, treating the tuner itself as the start of the balanced system.",
+            "en": "The coax-to-tuner input, because the tuner's matching network balances the line on its output side.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The replacement has an unbalanced output. Treating the whole tuner as balanced puts the transition at the wrong boundary.",
+            "en": "A matching network can transform impedance without providing a balanced output. The replacement's unbalanced output still meets the balanced window line at its output connector.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The dipole feed point, treating the window-line run as an extension of the unbalanced output.",
+            "en": "The dipole feed point, because the window line carries the tuner's unbalanced current up to the antenna.",
             "fr": null
           },
           "isCorrect": false,
@@ -78,12 +78,12 @@
       "choices": [
         {
           "text": {
-            "en": "Choose foam only because lower loss guarantees better resistance to tight bending.",
+            "en": "Choose foam because its lower loss also makes it more resistant to compression during winding.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Low loss and mechanical stability are different properties. Foam does not give that guarantee.",
+            "en": "Lower dielectric loss does not mean better resistance to compression. Solid dielectric better supports the centre conductor during tight winding.",
             "fr": null
           }
         },
@@ -129,57 +129,57 @@
     {
       "id": "QZ-L-006-01-A-C3",
       "prompt": {
-        "en": "An older coax jumper passes a low-current continuity check. During a brief transmit test its connector becomes warm and RF readings turn intermittent. Which conclusion fits?",
+        "en": "An older coax jumper passes a low-current continuity check. During a brief transmit test its connector becomes warm and RF readings turn intermittent. Which explanation best fits both observations?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The continuity pass makes a connector fault unlikely, so the antenna should be investigated first.",
+            "en": "The continuity pass rules out a resistive contact; reflections from the antenna explain the heating instead.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A contact can pass a small test current yet heat or become intermittent under load. The connector symptom still warrants direct inspection.",
+            "en": "A contact can pass a small test current yet heat under load. The continuity result does not rule out contact resistance, and reflections do not explain away the intermittent connector symptom.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "The result is ordinary cable attenuation, so the connector can stay if total line loss is acceptable.",
+            "en": "The heating is ordinary distributed cable loss, with the connector simply showing the temperature change first.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Ordinary distributed cable loss does not explain intermittent behaviour at a warming connector. A loss budget is not a substitute for checking the contact.",
+            "en": "Ordinary distributed loss does not explain intermittent behaviour at a warming connector. The local symptom points to the connection rather than normal attenuation along the cable.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Retuning at the radio is sufficient if the station-end SWR improves.",
+            "en": "The cable's nominal impedance rises as it warms, so intermittent RF readings are expected from an intact connector.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "An improved match does not establish a sound connector. The local heating and intermittent behaviour still need attention.",
+            "en": "Normal warming does not make an intact connector intermittent. A cable's nominal impedance is not an explanation for this localized heating and loss of reliable contact.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "A path exists at low current, but connector contact quality still needs checking before reuse.",
+            "en": "A resistive contact can pass the small test current yet heat and become intermittent under transmit load.",
             "fr": null
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Continuity establishes an unbroken path under the test conditions. It does not establish a sound contact under transmit load; inspect and restore or replace the faulty connection.",
+            "en": "The test current can pass through a poor contact. Greater current produces more heating at that resistance; inspect and restore or replace the faulty connection before reuse.",
             "fr": null
           }
         }
       ],
       "explanation": {
-        "en": "A low-current continuity test and a transmit-load test answer different questions. Use the connector symptoms to guide the next inspection.",
+        "en": "A low-current continuity pass can coexist with a contact fault under transmit load. Localized heating and intermittent readings are different evidence from an unbroken path at small current.",
         "fr": null
       }
     }

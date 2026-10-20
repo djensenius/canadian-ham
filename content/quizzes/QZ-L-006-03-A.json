@@ -77,12 +77,12 @@
       "choices": [
         {
           "text": {
-            "en": "Small cutting errors, treating the first-cut dimensions as a finished installed design.",
+            "en": "The analyzer calibration, because equal wire dimensions should give the same resonant frequency in both locations.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Cutting accuracy is worth checking, but the nearby metal is a known difference between installations. A first-cut estimate is not a finished installed design.",
+            "en": "A calibration check may be useful, but equal physical dimensions do not establish equal installed resonance. The nearby metal is a known difference worth investigating first.",
             "fr": null
           }
         },
@@ -99,23 +99,23 @@
         },
         {
           "text": {
-            "en": "Coax length, treating it as the main adjustment for the wire's own resonance.",
+            "en": "The coax length, because its electrical length sets the dipole wire's resonant frequency.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Cable length can alter the impedance seen at the radio under mismatch. It does not resolve the effect of nearby metal on the wire's resonance.",
+            "en": "Cable length can alter the impedance seen at the radio under mismatch. It does not set the wire's own resonance or remove the influence of nearby metal.",
             "fr": null
           }
         },
         {
           "text": {
-            "en": "Conductor diameter, treating equal wire size as enough to disregard the siding.",
+            "en": "The conductor diameter, because wire thickness controls installed resonance more strongly than nearby metal.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Equal wire diameter does not remove environmental effects. Nearby objects can still alter the electrical behaviour of the installed dipole.",
+            "en": "Wire diameter can affect antenna behaviour, but that does not make it the leading cause here. The known difference is nearby metal, which can change the installed electrical length.",
             "fr": null
           }
         }

@@ -136,12 +136,12 @@
       "choices": [
         {
           "text": {
-            "en": "Good accuracy, because more digits put the reading closer to truth.",
+            "en": "Good accuracy, because adding digits improves the whole measurement.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Digits alone cannot establish accuracy. The reference comparison is still needed.",
+            "en": "Extra digits do not correct calibration errors or unstable readings.",
             "fr": null
           }
         },
@@ -174,7 +174,7 @@
           },
           "isCorrect": true,
           "feedback": {
-            "en": "Small display steps show resolution. They do not prove closeness to truth or agreement between readings.",
+            "en": "Small display steps establish resolution. The scattered readings and unverified calibration are separate concerns.",
             "fr": null
           }
         }

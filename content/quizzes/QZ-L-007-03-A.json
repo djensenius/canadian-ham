@@ -78,12 +78,12 @@
       "choices": [
         {
           "text": {
-            "en": "Yes; better VHF range is evidence that the same upper-atmosphere change should also help HF.",
+            "en": "Yes; an inversion that guides VHF should improve the HF route by the same guiding mechanism.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "The described weather-layer VHF path and the ionospheric HF route depend on different parts of the atmosphere.",
+            "en": "A weather-layer enhancement on VHF does not imply a comparable improvement on an ionospheric HF route. The bands and physical paths respond differently.",
             "fr": null
           }
         },
@@ -100,12 +100,12 @@
         },
         {
           "text": {
-            "en": "Yes; the inversion should provide a comparable path improvement on HF.",
+            "en": "Yes; poor HF propagation indicates increased absorption throughout the atmosphere, which should weaken the VHF path too.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "A lower-atmosphere enhancement on VHF does not imply a comparable improvement on an ionospheric HF route.",
+            "en": "A poor HF route does not establish increased absorption throughout the atmosphere or on VHF. Its ionospheric conditions can differ from those of the lower-atmosphere lake path.",
             "fr": null
           }
         },
@@ -135,12 +135,12 @@
       "choices": [
         {
           "text": {
-            "en": "Repeat the taller-mast trial at still higher power to separate the mast effect from the opening.",
+            "en": "Repeat the taller-mast trial at the new power on several ordinary days, then compare with the original short-mast result.",
             "fr": null
           },
           "isCorrect": false,
           "feedback": {
-            "en": "Changing power again adds another influence. It does not separate the height effect from the original power and propagation changes.",
+            "en": "Repeating on ordinary days helps remove the unusual opening, but power still differs from the original trial. Hold power fixed when comparing mast heights.",
             "fr": null
           }
         },
