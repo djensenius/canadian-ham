@@ -47,5 +47,129 @@
     "B-002-004-010",
     "B-002-004-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-01-A-C1",
+      "prompt": {
+        "en": "Two walkers hear each other through a repeater. Away from the relay, only one walker can hear the other directly. Should they move their conversation to simplex now?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Yes, because hearing the repeater proves both direct paths work.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "No. They need reliable direct copy in both directions first.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Yes, if they keep transmitting on the repeater input.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "No. Handheld radios cannot make direct contacts.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A relay can cover a weak direct path. Hearing the output is not a two-way simplex test, and one-way direct copy is not enough. Once both can copy directly, they can choose a suitable simplex channel; the input remains a repeater channel.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-01-A-C2",
+      "prompt": {
+        "en": "A radio receives an illustrative repeater output at 146.880 MHz. It needs a negative 0.600 MHz offset. Which stored transmit setting matches that plan?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "147.480 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "146.880 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "146.280 MHz",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "0.600 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Subtract the offset from the output: 146.880 - 0.600 = 146.280 MHz. Adding would reverse the direction. Using the output for transmission would miss the input, and the offset alone is not a channel frequency.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-01-A-C3",
+      "prompt": {
+        "en": "After you reduce RF power, a nearby operator still copies every word. They now ask you to fix harsh, distorted FM audio. What should you check next?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Microphone distance, gain, and deviation.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "RF power only; raise it until the distortion stops.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Offset direction; reverse it while continuing the conversation.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The phonetic alphabet; spelling every word will remove distortion.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Reliable copy at lower power shows that the path still works. Harsh FM speech points to audio level or deviation, so check those settings. Extra RF power does not repair overdriven audio. Reversing a working offset can lose the relay, and phonetics cannot fix distortion.",
+        "fr": null
+      }
+    }
+  ]
 }
