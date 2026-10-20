@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-08 04:35'
-updated_date: '2026-10-20 05:15'
+updated_date: '2026-10-20 06:58'
 labels:
   - apple
   - testing
@@ -55,4 +55,6 @@ Figure plan implemented first: CanadianHamDefault excludes only CanadianHamLesso
 Launch sharing committed as 5a3fc4be: core read-only screens 9->3 launches per appearance; sending main/lower/exam 2->1. All original assertions and audit call-line multisets retained. Four sending wrappers moved to two source-named combined methods; removal map and complete before/after coverage inventory are in docs/testing/task-33-ui-audit-inventory.md. Shared/exception/positioning helpers and every direct performAccessibilityAudit site remain byte-identical. Test guard self-test passes; diff flags exactly the four mapped wrapper deletions and passes with Test-guard-approved: task-33. Full after-default and figure runs are queued sequentially behind the baseline via nohup; no other builds killed.
 
 Supervisor-approved baseline adjustment: current baseline single medium-detent audits passed in 322.972s dark and 311.446s light; full suites are known to take ~5 hours. Stop only this task own baseline process and use the existing full train-2026-10-17 baseline at main 029f2d49 (/tmp/train1017-ios.log: 138 UI + 142 unit tests, ~18,233 s UI), explicitly dated two days before the task branch point. Treat the two completed current medium-detent audits as a timed calibration sample; do not label the interrupted current baseline a full suite. Required complete after-default and figure-plan runs remain queued unchanged, without filtering or weakening coverage.
+
+Required after-default run: changed core audits passed dark/light 90.380/95.254s; combined sending main/lower/exam passed 77.450/78.113s. Unchanged testAccessibilityAuditMorseSendingResultsLight failed at the 5-second results-heading wait after Grade (line1708), before its audit; dark passed67.311s; full log /tmp/task-33-after.log. Supervisor decision: if an isolated unchanged rerun passes, AC4 may be checked explicitly as full suite except this documented flake, with both log paths in task/PR body; if it fails again, leave TASK-33 In Progress. Search found no existing matching task; a separate low-priority follow-up tracks the post-Grade heading flake.
 <!-- SECTION:NOTES:END -->
