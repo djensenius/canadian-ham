@@ -106,6 +106,14 @@ A series tuned circuit has low impedance at resonance because the L and C reacta
 
 A parallel tuned circuit has high impedance at resonance. Energy swaps between the inductor's magnetic field and the capacitor's electric field, so the circuit draws little current from the source.
 
+::figure parallel-lc-resonance
+Alt text: Parallel LC tuned circuit with an inductor and capacitor between shared rails, labelled high Z at resonance.
+Text equivalent:
+- The inductor L and capacitor C form separate branches between the same top and bottom rails.
+- Z means impedance. This parallel circuit has high impedance at resonance and draws little current from the source.
+- The high-impedance label applies to parallel resonance. A series tuned circuit has low impedance at resonance.
+::
+
 The resonant frequency is the single centre frequency where the condition is exact. More inductance or more capacitance lowers that frequency. The useful range around it is called bandwidth.
 
 Receivers use resonant circuits to select desired signal frequencies and reject others. Adding a resistor to a simple coil-and-air-capacitor tuned circuit can change sharpness and losses.
@@ -147,9 +155,9 @@ Reactance depends on frequency, so the same part may act differently at audio, H
 
 ## Illustration brief
 
-Alt text: A split diagram showing frequency-reactance trends and a simple LC tuned circuit at resonance.
+Alt text: Parallel LC tuned circuit with an inductor and capacitor between shared rails, labelled high Z at resonance.
 
-Description: Draw paired line graphs: inductive reactance rising as frequency rises, and capacitive reactance falling as frequency rises. Beside them, draw a simple inductor-and-capacitor tuned circuit with a label saying the reactances are equal and opposite at resonance. Use distinct line styles, not colour alone, so the meaning survives grayscale rendering.
+Description: Draw an original ink-brush parallel LC circuit. Put the inductor labelled L and capacitor labelled C in separate branches between shared top and bottom rails. Label it "parallel LC" and "high Z at resonance." The text equivalent explains that Z means impedance and distinguishes parallel from series resonance. Use labels and line patterns rather than colour alone.
 
 ## Summary
 

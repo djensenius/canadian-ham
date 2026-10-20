@@ -128,3 +128,7 @@ The 20 module 1-4 figures added for task-38.3 (`authority-records-exams`, `stati
 ## Originality note for task-38.4
 
 The ten lesson figures added for task-38.4 (`transformer-resonance-meters`, `feedline-types-balun`, `swr-loss-matching`, `yagi-vertical-length`, `loop-antenna-patterns`, `propagation-paths-skip-zone`, `daytime-absorption-frequency-window`, `vhf-unusual-propagation-modes`, `interference-troubleshooting-map`, and `filter-response-sketches`) were drawn from scratch as simplified ink-style teaching diagrams based on the original lesson prose and standard circuit, antenna, propagation, and filter concepts. They were not traced from ISED reference art, RAC material, or third-party study guides.
+
+## Alignment note for task-46.12
+
+The original parallel LC panel from `transformer-resonance-meters` was split into `parallel-lc-resonance` for L-005-05, where resonance is taught. The remaining transformer and meter panels keep their stable figure id in L-005-06. The `communications-flowchart` in L-001-03 now has only interference and distress lanes; third-party rules are taught in L-001-05. These changes reuse and rearrange the repository's original ink-style artwork, not third-party reference art.

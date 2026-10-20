@@ -121,10 +121,9 @@ A meter should disturb the circuit as little as practical.
 | Final power amplifier current | Ammeter | In series with the final amplifier DC current path | Low resistance |
 
 ::figure transformer-resonance-meters
-Alt text: Multi-panel figure showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.
+Alt text: Two-panel figure showing transformer windings on a core and ammeter and voltmeter placement around a load.
 Text equivalent:
 - Transformer panel: separate P and S coil windings sit on a shared two-bar core.
-- Parallel LC panel: an inductor branch and capacitor branch connect between the same top and bottom rails.
 - Meter panel: a battery source is in the left branch, an A meter is in series on the top wire, the zigzag load is in the right branch, and a V meter is wired across the load.
 ::
 
@@ -170,9 +169,9 @@ Good operators measure before guessing. A wrong meter connection can blow a mete
 
 ## Illustration brief
 
-Alt text: Three small sketches: a transformer with primary and secondary coils, a parallel LC tuned circuit, and correct meter placements.
+Alt text: Two-panel figure showing transformer windings on a core and ammeter and voltmeter placement around a load.
 
-Description: Draw an original multi-panel ink-brush figure. The left panel shows paired coils on a core with arrows for changing magnetic flux. The centre panel shows an inductor and capacitor in parallel labelled "parallel tuned circuit: high impedance at resonance." The right panel shows a voltmeter across a load and an ammeter in series with the load. Use labels and line patterns rather than colour alone.
+Description: Draw an original two-panel ink-brush figure. The left panel shows separate coils labelled P and S on a shared two-bar core. The right panel shows a battery, a load, an ammeter labelled A in series, and a voltmeter labelled V across the load. Use labels and line patterns rather than colour alone.
 
 ## Summary
 
