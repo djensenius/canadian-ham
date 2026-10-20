@@ -22,6 +22,8 @@ All schema files use JSON Schema draft 2020-12 and are intentionally data-only: 
 
 The progress schema describes version `1` of `canadian-ham.progress-export`. It keeps `lessonProgress`, `lessonQuizAttempts`, and `preferences.theme` optional because both current importers accept older compatible files without those keys, while current web and Apple exports include them. Exam timer durations allow non-negative numbers (not just integers) to match the web importer and Apple's fractional-value rounding import path.
 
+Lesson quiz attempts optionally store `answeredWithHelpIds`: sorted unique official-question IDs, each in that attempt's `officialQuestionIds`. Missing means no helped answers. Correctness/quiz scores are unchanged; help qualifies only after a hint has been visible for 0.5 s before choice scoring. Import and sync validation enforce the same contract. Shared compatibility cases are in `fixtures/lesson-quiz-help.json`; Apple persistence adopts this field in TASK-50.14.2; until then, Apple builds accept the field on import and sync but drop it when they save or export an attempt (scores are unaffected).
+
 ## Validation
 
 Run the zero-dependency validator from the repository root through the same script used by CI:
@@ -68,6 +70,7 @@ Validated generated bank JSON, subsection titles, lesson front matter, explanati
 - `minLength`
 - `maxLength`
 - `pattern`
+- `sortedSubset: { "childArray": "parentArray" }`, a project-specific object assertion requiring each present child ID array to be strictly sorted, unique and contained in the parent ID array
 - `canonicalUtcTimestamp: true`, a project-specific assertion that the existing canonical timestamp pattern also round-trips through the calendar/time parser used by the engine/import contracts
 
 Schema metadata such as `$schema`, `$id`, `title`, and `$defs` is supported as data needed for resolution or ignored when it does not affect validation. Schemas fail during loading if they use any keyword outside this list or place sibling keywords next to `$ref`, because this validator forbids rather than silently ignoring unsupported constraints.
