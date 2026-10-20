@@ -14,5 +14,129 @@
     "B-002-009-010",
     "B-002-009-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-04-A-C1",
+      "prompt": {
+        "en": "A weekly net keeps the same UTC schedule. Your local clock offset changes for the season. What should happen to the reminder in your local calendar?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Keep the local time fixed and shift the published UTC schedule instead.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Recalculate the local reminder using the new offset; keep the UTC schedule unchanged.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Keep both times unchanged because the net still has the same name.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Change only the calendar date, without checking the local clock time.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "The event stays at the same UTC time, but its relationship to your local clock has changed. Apply the offset in force on the event date to update the reminder, checking the local date too. Moving the UTC schedule changes the event rather than the conversion. Keeping everything fixed ignores the new offset, and changing only the date does not perform the conversion.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-04-A-C2",
+      "prompt": {
+        "en": "A club gives you an azimuthal map centred on its station, far from yours. Can you use its printed bearings directly to aim your home antenna?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Yes. Bearings depend only on the destination.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Yes, if you use the same UTC time as the club.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "No. You need bearings from a map centred on your own location.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "No. Azimuthal maps cannot show antenna bearings.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A bearing has a starting point as well as a destination. A different map centre can change the direction to aim. Sharing a time standard does not change map geometry; a correctly centred azimuthal map does show useful bearings.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-04-A-C3",
+      "prompt": {
+        "en": "Your log notes that reception improved just after you turned the antenna. The distant station kept the same power. Does that record prove the antenna turn caused the improvement?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "No. It records a useful change to investigate, but propagation could have changed too.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Yes. Events recorded next to each other in a log must have the same cause.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Yes. Constant transmitter power rules out every other cause of stronger reception.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "No. Optional Canadian station logs cannot provide useful evidence.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A log preserves observations, not a controlled test of every possible cause. The antenna turn is worth investigating, but changing propagation can also affect reception. A sequence of events alone does not establish a cause, and fixed transmitter power does not hold the path steady. Optional logs remain useful for comparing later tests and conditions.",
+        "fr": null
+      }
+    }
+  ]
 }

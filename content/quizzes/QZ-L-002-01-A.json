@@ -47,5 +47,129 @@
     "B-002-004-010",
     "B-002-004-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-01-A-C1",
+      "prompt": {
+        "en": "On a direct test, two nearby radios still use the same repeater settings. Each transmits below the frequency it receives. The repeater is off, and neither operator hears the other. What setting mismatch explains this?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "The access tone must be louder to carry speech directly.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Each radio listens somewhere other than the other radio's transmit frequency.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Both radios need the offset reversed, while keeping the same receive frequency.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The time-out timer is preventing all direct reception.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "With the relay off, nothing moves the speech from the input frequency to the output. Each radio is listening above where the other transmits. A simplex setup must align their transmit and receive frequencies on a suitable channel. Making the access tone louder does not bridge that gap. Reversing both offsets leaves another gap, and a time-out timer does not explain this frequency mismatch.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-01-A-C2",
+      "prompt": {
+        "en": "A radio receives an illustrative repeater output at 146.880 MHz. It needs a negative 0.600 MHz offset. Which stored transmit setting matches that plan?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "147.480 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "146.880 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "146.280 MHz",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "0.600 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Subtract the offset from the output: 146.880 - 0.600 = 146.280 MHz. Adding would reverse the direction. Using the output for transmission would miss the input, and the offset alone is not a channel frequency.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-01-A-C3",
+      "prompt": {
+        "en": "A long transmitter test causes no reports of interference while a dummy load is connected. You then replace the load with an antenna, keeping the radio settings. Does the earlier result show that the same test will be harmless on air?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "No. The earlier test absorbed the output locally rather than testing how it shares the airwaves.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Yes. Keeping the dial setting means the surroundings cannot change the result.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Yes. Connecting the antenna reserves the test frequency for your station.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Yes, provided you lower the microphone volume before the test.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Changing from a dummy load to an antenna changes where the RF energy goes. The earlier result cannot establish that an on-air test will avoid other users. The same dial setting is not a channel check, an antenna does not reserve spectrum, and microphone volume cannot guarantee a harmless RF test. Use a suitable dummy load for lengthy testing.",
+        "fr": null
+      }
+    }
+  ]
 }

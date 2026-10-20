@@ -39,6 +39,6 @@ Four independent reviewers scored all 36 Basic lessons against the 14-criterion 
 ### Decisions for the owner
 
 - Restructure M1 around a few principles, with a qualifications-by-privileges matrix, a "Why" column and an M1 numbers board.
-- Move M2 from reference style to the explanatory format.
+- Move M2 from reference style to the explanatory format. Approved 2026-10-12 and implemented in TASK-46.9; see the [before/after taught-facts comparison](m2-explanatory-taught-facts.md).
 - Split or move lesson coverage: L-005-04 into AC and dB versus reactance and resonance; M8 into receiver-side versus transmitter-side; B-001-014 into L-001-05; L-004-03 taught first in M4.
 - Declare cross-module prerequisites in lesson front matter.
