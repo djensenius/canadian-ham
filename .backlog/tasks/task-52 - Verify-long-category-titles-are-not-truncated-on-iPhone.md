@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-20 13:37'
+updated_date: '2026-10-20 13:45'
 labels:
   - apple
 dependencies: []
@@ -27,9 +27,10 @@ Seen during task-44.3 work: long category titles such as 'Regulations and Polici
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect category title rendering in practice, study, mock and weak areas, including TASK-55 inline titles and existing UI-test patterns.
-2. Add EN/FR default and maximum-accessibility iPhone UI coverage and screenshot evidence; apply only wrapping fixes if truncation remains.
-3. Run only added/touched UI tests through nohup xbuild on iPhone 17 Pro, and macOS unit tests if app code changes; record evidence and finalize, commit and push.
+1. Verify the TASK-55 default-size baseline and inventory Home, Practice, Study, weak areas, mock category IDs and the regular-width sidebar.
+2. Add EN/FR default and AX-XXXL UI coverage for every Basic/Advanced category list/card/session header plus Study/weak-area headers; retain all existing tests and shared helpers unchanged.
+3. Apply the coordinator-approved native navigation exception: keep original titles, require complete accessibility labels and wrapped same-screen content headers, document measured ellipses, and check Large Content Viewer behaviour. No app layout changes remain.
+4. Run only the added tests through nohup xbuild on iPhone 17 Pro, save screenshots/results in docs/evidence/task-52, verify deterministic project generation, then finalize, commit and push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
