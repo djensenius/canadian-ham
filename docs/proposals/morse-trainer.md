@@ -386,6 +386,7 @@ Per [`AGENTS.md`](../../AGENTS.md), track this work in Backlog.md, not `tasks/PL
 - **2005 history:** rests on secondary but contemporary sources (ARRL Letter, CARAB excerpt). I didn't find the original 2005 Gazette notice.
 - **Device haptics:** that haptics work mainly on iPhone is an inference. Apple's pages only give API availability and the runtime check.
 - **Not audited:** the teaching parameters, and whether the proposed storage names fit the existing persistence code.
+
 ## Implemented progress-import compatibility (TASK-41)
 
 Both Apple import confirmations (native macOS Settings and the Study Settings screen)
