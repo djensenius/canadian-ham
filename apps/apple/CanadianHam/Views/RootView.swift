@@ -4,45 +4,6 @@ import SwiftUI
 import UIKit
 #endif
 
-private enum SidebarSelection: Hashable {
-    case home
-    case learn
-    case practiceHub
-    case practice(PracticeScope)
-    case mockExam
-    case morse
-    case settings
-    case about
-
-    var isExamSessionSelection: Bool {
-        switch self {
-        case .practice, .mockExam:
-            true
-        case .home, .learn, .practiceHub, .morse, .settings, .about:
-            false
-        }
-    }
-}
-
-#if os(iOS)
-private enum CompactSection: Hashable {
-    case home
-    case learn
-    case practice
-    case morse
-    case settings
-}
-
-private enum CompactPracticeRoute: Hashable {
-    case practice(PracticeScope)
-    case mockExam
-}
-
-private enum CompactSettingsRoute: Hashable {
-    case about
-}
-#endif
-
 struct RootView: View {
     @StateObject private var appSettings: AppSettingsModel
 #if os(iOS)
@@ -68,7 +29,7 @@ struct RootView: View {
     @State private var preToolSplitColumnVisibility: NavigationSplitViewVisibility?
     @State private var regularWidthExamToolPresented = false
 #if os(iOS)
-    @State private var compactNavigationPath = NavigationPath()
+    @State private var compactNavigationPath: [RootNavigationRoute] = []
 #if DEBUG
     @State private var debugHorizontalSizeClassOverride: UserInterfaceSizeClass?
 #endif
@@ -175,17 +136,19 @@ struct RootView: View {
     private func compactTabContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         NavigationStack(path: $compactNavigationPath) {
             compactRootList(progressStore: progressStore)
-                .navigationDestination(for: CompactSection.self) { section in
-                    compactSectionDestination(section, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                }
-                .navigationDestination(for: LearnRoute.self) { route in
-                    learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                }
-                .navigationDestination(for: CompactPracticeRoute.self) { route in
-                    compactPracticeDestination(route, bank: bank, progressStore: progressStore)
-                }
-                .navigationDestination(for: CompactSettingsRoute.self) { route in
-                    compactSettingsDestination(route, bank: bank)
+                .navigationDestination(for: RootNavigationRoute.self) { route in
+                    switch route {
+                    case .section(let section):
+                        compactSectionDestination(section, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    case .learn(let learnRoute):
+                        learnDestination(learnRoute, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    case .practice(let scope):
+                        compactPracticeDestination(.practice(scope), bank: bank, progressStore: progressStore)
+                    case .mockExam:
+                        compactPracticeDestination(.mockExam, bank: bank, progressStore: progressStore)
+                    case .about:
+                        AboutView(bank: bank)
+                    }
                 }
         }
         .onAppear {
@@ -243,7 +206,7 @@ struct RootView: View {
     }
 
     private func compactRootButton(_ title: LocalizedStringKey, systemImage: String, destination: CompactSection) -> some View {
-        NavigationLink(value: destination) {
+        NavigationLink(value: RootNavigationRoute.section(destination)) {
             HStack(spacing: DesignTokens.Spacing.md) {
                 Image(systemName: systemImage)
                     .font(DesignTokens.FontScale.body)
@@ -272,15 +235,12 @@ struct RootView: View {
         case .home:
             compactHomeView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
-                .onAppear { selection = .home }
         case .learn:
             compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
-                .onAppear { selection = .learn }
         case .practice:
             compactPracticeView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
-                .onAppear { selection = .practiceHub }
         case .morse:
             MorseTrainerView(settings: $morseSettings, progressStore: progressStore) { nextSettings in
                 morseSettings = nextSettings
@@ -288,11 +248,9 @@ struct RootView: View {
                 recordDataChanged()
             }
             .background(DesignTokens.Colors.paper)
-            .onAppear { selection = .morse }
         case .settings:
             compactSettingsView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
-                .onAppear { selection = .settings }
         }
     }
 
@@ -304,7 +262,7 @@ struct RootView: View {
             openCompactMockExam()
         } openMorse: {
             selection = .morse
-            compactNavigationPath.append(CompactSection.morse)
+            compactNavigationPath.append(.section(.morse))
         }
     }
 
@@ -324,13 +282,13 @@ struct RootView: View {
     @ViewBuilder
     private func compactPracticeView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision) { scope in
-            compactNavigationPath.append(CompactPracticeRoute.practice(scope))
+            compactNavigationPath.append(RootNavigationRoute.practice(scope))
             selection = .practice(scope)
         }
     }
 
     @ViewBuilder
-    private func compactPracticeDestination(_ route: CompactPracticeRoute, bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+    private func compactPracticeDestination(_ route: RootNavigationRoute, bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         switch route {
         case .practice(let scope):
             PracticeSessionView(
@@ -345,7 +303,6 @@ struct RootView: View {
             ) {
                 recordDataChanged()
             }
-            .onAppear { selection = .practice(scope) }
         case .mockExam:
             MockExamView(
                 bank: bank,
@@ -356,7 +313,8 @@ struct RootView: View {
             ) {
                 recordDataChanged()
             }
-            .onAppear { selection = .mockExam }
+        case .section, .learn, .about:
+            EmptyView()
         }
     }
 
@@ -368,10 +326,10 @@ struct RootView: View {
             morseSettings: $morseSettings,
             openMorse: {
                 selection = .morse
-                compactNavigationPath.append(CompactSection.morse)
+                compactNavigationPath.append(.section(.morse))
             },
             openAbout: {
-                compactNavigationPath.append(CompactSettingsRoute.about)
+                compactNavigationPath.append(RootNavigationRoute.about)
                 selection = .about
             },
             hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork },
@@ -381,35 +339,22 @@ struct RootView: View {
         }
     }
 
-    @ViewBuilder
-    private func compactSettingsDestination(_ route: CompactSettingsRoute, bank: QuestionBank) -> some View {
-        switch route {
-        case .about:
-            AboutView(bank: bank)
-                .onAppear { selection = .about }
-        }
-    }
-
     private func openCompactPractice(_ scope: PracticeScope) {
         selection = .practice(scope)
-        compactNavigationPath.append(CompactPracticeRoute.practice(scope))
+        compactNavigationPath.append(RootNavigationRoute.practice(scope))
     }
 
     private func openCompactMockExam() {
         selection = .mockExam
-        compactNavigationPath.append(CompactPracticeRoute.mockExam)
+        compactNavigationPath.append(RootNavigationRoute.mockExam)
     }
 
-    private func compactPath(to section: CompactSection) -> NavigationPath {
-        var path = NavigationPath()
-        path.append(section)
-        return path
+    private func compactPath(to section: CompactSection) -> [RootNavigationRoute] {
+        [.section(section)]
     }
 
-    private func compactPath(to section: CompactSection, appending route: some Hashable) -> NavigationPath {
-        var path = compactPath(to: section)
-        path.append(route)
-        return path
+    private func compactPath(to section: CompactSection, appending route: RootNavigationRoute) -> [RootNavigationRoute] {
+        [.section(section), route]
     }
 #endif
 
@@ -451,16 +396,6 @@ struct RootView: View {
         .onChange(of: appSettings.localDataReplacementRevision) { _, next in
             clearCachedSessions(localDataReplacementRevision: next)
         }
-        .onChange(of: selection) { previous, next in
-            // Lessons opened from a practice hint sit on the practice stack; clear them when
-            // switching to Learn so Learn opens at its list rather than the hint lesson.
-            if next != .learn || previous.isExamSessionSelection {
-                navigationPath.removeAll()
-            }
-            if !next.isExamSessionSelection {
-                regularWidthExamToolPresented = false
-            }
-        }
         .onChange(of: regularWidthExamToolPresented) { _, _ in
             updateRegularWidthExamToolColumnVisibility(usesRegularWidthIPhoneLayout: usesRegularWidthIPhoneLayout)
         }
@@ -501,10 +436,10 @@ struct RootView: View {
             Section {
                 SidebarButton(selection: .home, current: selection) {
                     Label("Home", systemImage: "house")
-                } action: { selection = .home }
+                } action: { selectSidebar(.home) }
                 SidebarButton(selection: .learn, current: selection) {
                     Label("Learn", systemImage: "book.closed")
-                } action: { selection = .learn }
+                } action: { selectSidebar(.learn) }
             } header: {
                 Text("Study")
                     .font(DesignTokens.FontScale.title.weight(.bold))
@@ -516,20 +451,20 @@ struct RootView: View {
             Section {
                 SidebarButton(selection: .practiceHub, current: selection) {
                     Label("Practice", systemImage: "checklist")
-                } action: { selection = .practiceHub }
+                } action: { selectSidebar(.practiceHub) }
                 SidebarButton(selection: .practice(.all), current: selection) {
                     Label("All questions", systemImage: "tray.full")
-                } action: { selection = .practice(.all) }
+                } action: { selectSidebar(.practice(.all)) }
                 SidebarButton(selection: .practice(.weak), current: selection) {
                     Label("Weak areas", systemImage: "exclamationmark.triangle")
-                } action: { selection = .practice(.weak) }
+                } action: { selectSidebar(.practice(.weak)) }
                 SidebarButton(selection: .practice(.due), current: selection) {
                     Label("Due review", systemImage: "calendar.badge.clock")
-                } action: { selection = .practice(.due) }
+                } action: { selectSidebar(.practice(.due)) }
                 ForEach(bank.categories) { category in
                     SidebarButton(selection: .practice(.category(category.id)), current: selection) {
                         CategoryRow(category: category, language: language)
-                    } action: { selection = .practice(.category(category.id)) }
+                    } action: { selectSidebar(.practice(.category(category.id))) }
                     .accessibilityLabel(Text(categoryAccessibilityLabel(category))) // l10n: content(question)
                 }
             } header: {
@@ -543,18 +478,18 @@ struct RootView: View {
             Section {
                 SidebarButton(selection: .mockExam, current: selection) {
                     Label("Mock exam", systemImage: "doc.text.magnifyingglass")
-                } action: { selection = .mockExam }
+                } action: { selectSidebar(.mockExam) }
                 SidebarButton(selection: .morse, current: selection) {
                     Label("Morse", systemImage: "waveform")
-                } action: { selection = .morse }
+                } action: { selectSidebar(.morse) }
 #if !os(macOS)
                 SidebarButton(selection: .settings, current: selection) {
                     Label("Settings", systemImage: "gearshape")
-                } action: { selection = .settings }
+                } action: { selectSidebar(.settings) }
 #endif
                 SidebarButton(selection: .about, current: selection) {
                     Label("About", systemImage: "info.circle")
-                } action: { selection = .about }
+                } action: { selectSidebar(.about) }
             } header: {
                 Text("Tools")
                     .font(DesignTokens.FontScale.title.weight(.bold))
@@ -570,12 +505,30 @@ struct RootView: View {
         .navigationTitle("Canadian Ham")
     }
 
+    // Reset stacks only for user selection, not when restoring selection and path together.
+    private func selectSidebar(_ next: SidebarSelection) {
+        guard next != selection else { return }
+        let previous = selection
+        selection = next
+        if next != .learn || previous.isExamSessionSelection {
+            navigationPath.removeAll()
+        }
+        if !next.isExamSessionSelection {
+            regularWidthExamToolPresented = false
+        }
+    }
+
     private func splitDetail(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack(path: Binding(
+            get: { navigationPath.map { RootNavigationRoute.learn($0) } },
+            set: { navigationPath = $0.compactMap { if case .learn(let route) = $0 { route } else { nil } } }
+        )) {
             detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
-                .navigationDestination(for: LearnRoute.self) { route in
-                    learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                .navigationDestination(for: RootNavigationRoute.self) { route in
+                    if case .learn(let learnRoute) = route {
+                        learnDestination(learnRoute, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    }
                 }
         }
     }
@@ -611,34 +564,14 @@ struct RootView: View {
     }
 
     private func synchronizeNavigationForLayoutChange(usesCompactNavigation: Bool) {
-        guard usesCompactNavigation else { return }
-        compactNavigationPath = compactPath(for: selection, including: navigationPath)
-        navigationPath = []
-    }
-
-    private func compactPath(for selection: SidebarSelection, including splitPath: [LearnRoute]) -> NavigationPath {
-        var path: NavigationPath
-        switch selection {
-        case .home:
-            path = compactPath(to: .home)
-        case .learn:
-            path = compactPath(to: .learn)
-            for route in splitPath { path.append(route) }
-        case .practiceHub:
-            path = compactPath(to: .practice)
-        case .practice(let scope):
-            path = compactPath(to: .practice, appending: CompactPracticeRoute.practice(scope))
-            for route in splitPath { path.append(route) }
-        case .mockExam:
-            path = compactPath(to: .practice, appending: CompactPracticeRoute.mockExam)
-        case .morse:
-            path = compactPath(to: .morse)
-        case .settings:
-            path = compactPath(to: .settings)
-        case .about:
-            path = compactPath(to: .settings, appending: CompactSettingsRoute.about)
+        if usesCompactNavigation {
+            compactNavigationPath = RootNavigationMapping.compactPath(for: SplitNavigationState(selection: selection, path: navigationPath))
+            navigationPath = []
+        } else {
+            let state = RootNavigationMapping.splitState(for: compactNavigationPath)
+            selection = state.selection
+            navigationPath = state.path
         }
-        return path
     }
 
 #if DEBUG
@@ -744,7 +677,7 @@ struct RootView: View {
         }
 #if os(iOS)
         if usesCompactNavigation(horizontalSizeClass: effectiveHorizontalSizeClass) {
-            compactNavigationPath.append(route)
+            compactNavigationPath.append(.learn(route))
             selection = .learn
             return
         }
@@ -878,6 +811,9 @@ struct RootView: View {
             bankLoadError = nil
             if !bankId.hasLessons, selection == .learn {
                 selection = .home
+                // Selection changes outside the sidebar don't reset the split stack, so clear any
+                // pushed Learn module, lesson or quiz from the bank that had lessons.
+                navigationPath.removeAll()
             }
         } catch {
             bank = nil
@@ -997,14 +933,14 @@ struct RootView: View {
             selection = .learn
             navigationPath = [.lesson(quiz.lessonId), .lessonQuiz(initialQuizID)]
 #if os(iOS)
-            compactNavigationPath = compactPath(to: .learn, appending: LearnRoute.lesson(quiz.lessonId))
-            compactNavigationPath.append(LearnRoute.lessonQuiz(initialQuizID))
+            compactNavigationPath = compactPath(to: .learn, appending: .learn(.lesson(quiz.lessonId)))
+            compactNavigationPath.append(.learn(.lessonQuiz(initialQuizID)))
 #endif
         } else if let initialLessonID = AppLaunchArguments.value(after: "-CanadianHamInitialLessonID") {
             selection = .learn
             navigationPath = [.lesson(initialLessonID)]
 #if os(iOS)
-            compactNavigationPath = compactPath(to: .learn, appending: LearnRoute.lesson(initialLessonID))
+            compactNavigationPath = compactPath(to: .learn, appending: .learn(.lesson(initialLessonID)))
 #endif
         }
         if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
@@ -1027,7 +963,7 @@ struct RootView: View {
             case "mock":
                 selection = .mockExam
 #if os(iOS)
-                compactNavigationPath = compactPath(to: .practice, appending: CompactPracticeRoute.mockExam)
+                compactNavigationPath = compactPath(to: .practice, appending: RootNavigationRoute.mockExam)
 #endif
             case "morse":
                 selection = .morse
@@ -1046,7 +982,7 @@ struct RootView: View {
             case "about":
                 selection = .about
 #if os(iOS)
-                compactNavigationPath = compactPath(to: .settings, appending: CompactSettingsRoute.about)
+                compactNavigationPath = compactPath(to: .settings, appending: RootNavigationRoute.about)
 #endif
             default: break
             }
@@ -1061,13 +997,13 @@ struct RootView: View {
                   bank.subsectionsById[requestedSubsectionID] != nil {
             selection = .practice(.subsection(requestedSubsectionID))
 #if os(iOS)
-            compactNavigationPath = compactPath(to: .practice, appending: CompactPracticeRoute.practice(.subsection(requestedSubsectionID)))
+            compactNavigationPath = compactPath(to: .practice, appending: RootNavigationRoute.practice(.subsection(requestedSubsectionID)))
 #endif
         } else if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
                   bank.categories.contains(where: { $0.id == requestedCategoryID }) {
             selection = .practice(.category(requestedCategoryID))
 #if os(iOS)
-            compactNavigationPath = compactPath(to: .practice, appending: CompactPracticeRoute.practice(.category(requestedCategoryID)))
+            compactNavigationPath = compactPath(to: .practice, appending: RootNavigationRoute.practice(.category(requestedCategoryID)))
 #endif
         }
     }

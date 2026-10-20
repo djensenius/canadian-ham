@@ -620,6 +620,73 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "2", "Simulated size-class change must preserve the calculator value")
     }
 
+    func testCompactToSplitKeepsDeepLearnLesson() throws {
+        assertDeepLearnTransition(initialSizeClass: "compact", showsQuiz: false)
+    }
+
+    func testSplitToCompactKeepsDeepLearnLesson() throws {
+        assertDeepLearnTransition(initialSizeClass: "regular", showsQuiz: false)
+    }
+
+    func testCompactToSplitKeepsDeepLearnQuiz() throws {
+        assertDeepLearnTransition(initialSizeClass: "compact", showsQuiz: true)
+    }
+
+    func testSplitToCompactKeepsDeepLearnQuiz() throws {
+        assertDeepLearnTransition(initialSizeClass: "regular", showsQuiz: true)
+    }
+
+    private func navigationTransitionArguments(initialSizeClass: String) -> [String] {
+        [
+            "-CanadianHamSimulatedHorizontalSizeClass", initialSizeClass,
+            "-CanadianHamShowSimulatedSizeClassChangeControl",
+            "-CanadianHamSimulatedHorizontalSizeClassAfterChange", initialSizeClass == "compact" ? "regular" : "compact"
+        ]
+    }
+
+    private func assertDeepLearnTransition(initialSizeClass: String, showsQuiz: Bool, file: StaticString = #filePath, line: UInt = #line) {
+        let app = launchApp(arguments: navigationTransitionArguments(initialSizeClass: initialSizeClass) + ["-CanadianHamInitialScreen", "learn"])
+        defer { app.terminate() }
+        let module = app.buttons["Open module"].firstMatch
+        XCTAssertTrue(module.waitForExistence(timeout: 10), file: file, line: line)
+        scrollBackgroundUntilHittable(module, in: app, maxSwipes: 20)
+        XCTAssertTrue(module.isHittable, file: file, line: line)
+        module.tap()
+        let lesson = app.staticTexts["Units, conductors, and current"].firstMatch
+        XCTAssertTrue(lesson.waitForExistence(timeout: 10), file: file, line: line)
+        lesson.tap()
+        let title = app.descendants(matching: .any)["lesson-reader-title"].firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 10), file: file, line: line)
+        let expectedLessonTitle = title.label
+        if showsQuiz {
+            let quizLink = app.buttons["go-to-lesson-quiz-button"].firstMatch
+            for _ in 0..<32 where !quizLink.isHittable {
+                app.scrollViews.firstMatch.swipeUp()
+            }
+            XCTAssertTrue(quizLink.isHittable, file: file, line: line)
+            quizLink.tap()
+        }
+        let heading = showsQuiz ? app.staticTexts["QZ-L-005-01-A"].firstMatch : title
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), file: file, line: line)
+        // The lesson reader's quiz summary also shows the quiz ID, so prove the quiz screen itself is pushed.
+        let quizCard = app.descendants(matching: .any)["lesson-quiz-card"].firstMatch
+        if showsQuiz {
+            XCTAssertTrue(quizCard.waitForExistence(timeout: 10), "The quiz screen must be pushed before the transition", file: file, line: line)
+        }
+        let expectedHeading = heading.label
+        XCTAssertFalse(expectedHeading.isEmpty, file: file, line: line)
+        assertSimulatedLayoutMode(in: app, expectedMode: initialSizeClass == "compact" ? "compact" : "split", context: "before deep Learn transition", file: file, line: line)
+        let target = initialSizeClass == "compact" ? "regular" : "compact"
+        applySimulatedSizeClassChange(in: app, expectedSizeClassValue: target, context: "deep Learn transition", file: file, line: line)
+        assertSimulatedLayoutMode(in: app, expectedMode: target == "compact" ? "compact" : "split", context: "after deep Learn transition", file: file, line: line)
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), "The exact deep route must stay presented", file: file, line: line)
+        XCTAssertEqual(heading.label, showsQuiz ? expectedHeading : expectedLessonTitle, file: file, line: line)
+        XCTAssertTrue(heading.isHittable, "The lesson or quiz heading must be visible after the transition", file: file, line: line)
+        if showsQuiz {
+            XCTAssertTrue(quizCard.waitForExistence(timeout: 10), "The quiz screen itself must stay pushed after the transition", file: file, line: line)
+        }
+    }
+
     func testRegularWidthMockExamUsesCalculatorInspectorWithoutHints() throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
