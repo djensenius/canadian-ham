@@ -118,6 +118,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
         scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        XCTAssertEqual(quickPlay.label, "Play Morse practice output", "The outer accessibility label must override the secondary label without duplicating Play")
+        let quickStop = app.buttons["morse-quick-stop-button"].firstMatch
+        XCTAssertEqual(quickStop.label, "Stop Morse practice output", "The outer accessibility label must override the secondary label without duplicating Stop")
         quickPlay.tap()
         XCTAssertTrue(app.descendants(matching: .any)["morse-visual-beacon"].firstMatch.waitForExistence(timeout: 5), "Choosing visual beacon should show a visual Morse output when Quick listen plays")
     }
@@ -979,6 +982,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
 
         goToLessonQuiz(in: app)
+        XCTAssertEqual(app.buttons["Previous"].firstMatch.label, "Previous", "The secondary button title should be exposed exactly once")
+        XCTAssertEqual(app.buttons["Next"].firstMatch.label, "Next", "The secondary button title should be exposed exactly once")
     }
 
     func testExplanationAppearsAfterAnsweringInPractice() throws {
