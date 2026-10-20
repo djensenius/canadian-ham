@@ -1,7 +1,7 @@
 ---
 id: TASK-50.14
 title: Lesson-quiz hints follow-up decision
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 07:58'
@@ -23,7 +23,7 @@ Lesson quizzes are explicitly out of scope for the initial question-hints featur
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Owner decision recorded on whether lesson quizzes should have hints.
-- [ ] #2 If approved, follow-up implementation tasks define lesson-quiz hint content, UI, and progress semantics separately from practice/review question hints.
+- [x] #2 If approved, follow-up implementation tasks define lesson-quiz hint content, UI, and progress semantics separately from practice/review question hints.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -45,4 +45,12 @@ Owner decision 2026-10-20: YES, lesson quizzes get hints.
 5. **Mock exams** never get hints. Timed modes are unchanged.
 
 Coordinator approved actual nested IDs TASK-50.14.1/.2 because the Backlog CLI allocates child IDs from their parent; next-free 50.x cannot be assigned under 50.14 through the CLI.
+
+Created TASK-50.14.1 (web + engines + schemas) and TASK-50.14.2 (all Apple platforms, depends on .1), defining the approved content/UI/progress/accessibility/localization/test contract. Decision task ACs are met; Apple implementation remains separately tracked.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Recorded the affirmative 2026-10-20 owner decision verbatim and created scoped web/model plus dependent all-platform Apple implementation subtasks. Both decision-task acceptance criteria are satisfied; implementation progress is tracked in the children.
+<!-- SECTION:FINAL_SUMMARY:END -->
