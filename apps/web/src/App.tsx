@@ -771,7 +771,7 @@ function AppContent({
             onOpenLesson={navigateToLesson}
             onOpenModule={navigateToModule}
             quizSessions={lessonQuizSessions}
-            onQuizSessionChange={(quizId, session) => setLessonQuizSessions((current) => new Map(current).set(quizId, session))}
+            onQuizSessionChange={(quizId, update) => setLessonQuizSessions((current) => new Map(current).set(quizId, update(current.get(quizId))))}
             onOpenHintLesson={(lessonId, anchor) => {
               const lesson = lessonsById.get(lessonId);
               if (lesson !== undefined) {
@@ -1087,7 +1087,7 @@ interface LessonPageProps {
   readonly now: () => string;
   readonly targetAnchor?: string;
   readonly quizSessions: ReadonlyMap<string, LessonQuizSession>;
-  readonly onQuizSessionChange: (quizId: string, session: LessonQuizSession) => void;
+  readonly onQuizSessionChange: (quizId: string, update: (current: LessonQuizSession | undefined) => LessonQuizSession) => void;
   readonly onOpenHintLesson: (lessonId: string, anchor?: string) => void;
   readonly onLessonRead: (lesson: LessonMeta) => void;
   readonly onOpenModule: (moduleId: string) => void;
@@ -1203,7 +1203,7 @@ function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuest
               now={now}
               onQuizAttempt={onQuizAttempt}
               session={quizSessions.get(quiz.id)}
-              onSessionChange={(session) => onQuizSessionChange(quiz.id, session)}
+              onSessionChange={(update) => onQuizSessionChange(quiz.id, update)}
               onOpenHintLesson={onOpenHintLesson}
               progress={progress}
               quiz={quiz}
@@ -1226,7 +1226,7 @@ interface LessonQuizViewProps {
   readonly now: () => string;
   readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void;
   readonly session: LessonQuizSession | undefined;
-  readonly onSessionChange: (session: LessonQuizSession) => void;
+  readonly onSessionChange: (update: (current: LessonQuizSession | undefined) => LessonQuizSession) => void;
   readonly onOpenHintLesson: (lessonId: string, anchor?: string) => void;
 }
 
@@ -1238,21 +1238,30 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
   const allAnswered = items.every((item) => selectedByItemId.has(item.id));
   const latestAttempt = attempts[attempts.length - 1];
 
+  // Build every update from the latest stored session so a hint timer and a click in the same batch can't overwrite each other.
+  function updateSession(update: (current: LessonQuizSession) => LessonQuizSession): void {
+    onSessionChange((current) => update(current ?? initialSession));
+  }
+
   function restart(): void {
     const nextSeed = `${quiz.id}:${Date.now().toString(36)}:${attempts.length + 1}`;
-    onSessionChange(createLessonQuizSession(quiz, nextSeed));
+    onSessionChange(() => createLessonQuizSession(quiz, nextSeed));
   }
 
   function selectCurrent(displayIndex: number): void {
     if (currentItem === undefined || submittedAttemptId !== null || selectedByItemId.has(currentItem.id)) {
       return;
     }
-    const selected = new Map(selectedByItemId);
-    selected.set(currentItem.id, currentItem.choicePermutation[displayIndex]!);
-    // Correctness is revealed immediately: freeze help at choice, not final submission.
-    const helped = new Set(session.answeredWithHelpIds);
-    if (currentItem.type === "official" && session.hintQualifiedQuestionIds.has(currentItem.questionId)) helped.add(currentItem.questionId);
-    onSessionChange({ ...session, selectedByItemId: selected, answeredWithHelpIds: helped });
+    const item = currentItem;
+    updateSession((current) => {
+      if (current.submittedAttemptId !== null || current.selectedByItemId.has(item.id)) return current;
+      const selected = new Map(current.selectedByItemId);
+      selected.set(item.id, item.choicePermutation[displayIndex]!);
+      // Correctness is revealed immediately: freeze help at choice, not final submission.
+      const helped = new Set(current.answeredWithHelpIds);
+      if (item.type === "official" && current.hintQualifiedQuestionIds.has(item.questionId)) helped.add(item.questionId);
+      return { ...current, selectedByItemId: selected, answeredWithHelpIds: helped };
+    });
   }
 
   function submitQuiz(): void {
@@ -1296,7 +1305,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
       incorrectConceptCheckIds,
       answeredWithHelpIds: [...session.answeredWithHelpIds].sort(),
     };
-    onSessionChange({ ...session, submittedAttemptId: attempt.id });
+    updateSession((current) => ({ ...current, submittedAttemptId: attempt.id }));
     onQuizAttempt(attempt, nextProgress);
   }
 
@@ -1328,11 +1337,12 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
             hintVisibleLevel={hint === null ? 0 : session.hintLevelsByQuestionId.get(hint.questionId) ?? 0}
             hintAnsweredWithHelpQualified={hint !== null && session.hintQualifiedQuestionIds.has(hint.questionId)}
             hintCanRecordHelp={!selectedByItemId.has(currentItem.id) && submittedAttemptId === null}
-            onRevealHintLevel={(questionId, level) => onSessionChange({ ...session, hintLevelsByQuestionId: new Map(session.hintLevelsByQuestionId).set(questionId, level) })}
+            onRevealHintLevel={(questionId, level) => updateSession((current) => ({ ...current, hintLevelsByQuestionId: new Map(current.hintLevelsByQuestionId).set(questionId, level) }))}
             onHintVisibleLongEnough={(questionId) => {
-              if (!selectedByItemId.has(currentItem.id) && submittedAttemptId === null) {
-                onSessionChange({ ...session, hintQualifiedQuestionIds: new Set(session.hintQualifiedQuestionIds).add(questionId) });
-              }
+              const itemId = currentItem.id;
+              updateSession((current) => current.selectedByItemId.has(itemId) || current.submittedAttemptId !== null
+                ? current
+                : { ...current, hintQualifiedQuestionIds: new Set(current.hintQualifiedQuestionIds).add(questionId) });
             }}
             onOpenHintLesson={onOpenHintLesson}
             instanceId={quiz.id}
@@ -1340,8 +1350,8 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
             <LessonQuizQuestion answeredWithHelp={currentItem.type === "official" && session.answeredWithHelpIds.has(currentItem.questionId)} interfaceLanguage={interfaceLanguage} item={currentItem} language={language} questionsById={bankQuestionsById} selectedSourceOrChoiceIndex={selectedByItemId.get(currentItem.id)} showCorrectness={selectedByItemId.has(currentItem.id)} onChoose={selectCurrent} />
           </ExamTools>
           <div className="action-row">
-            <button type="button" disabled={currentIndex === 0} onClick={() => onSessionChange({ ...session, currentIndex: currentIndex - 1 })}>{t(interfaceLanguage, "previous")}</button>
-            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => onSessionChange({ ...session, currentIndex: currentIndex + 1 })}>{t(interfaceLanguage, "next")}</button>
+            <button type="button" disabled={currentIndex === 0} onClick={() => updateSession((current) => ({ ...current, currentIndex: Math.max(0, current.currentIndex - 1) }))}>{t(interfaceLanguage, "previous")}</button>
+            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => updateSession((current) => ({ ...current, currentIndex: Math.min(current.items.length - 1, current.currentIndex + 1) }))}>{t(interfaceLanguage, "next")}</button>
             <button type="button" className="primary-button" disabled={!allAnswered || submittedAttemptId !== null} onClick={submitQuiz}>{t(interfaceLanguage, "lessonQuizSubmit")}</button>
           </div>
         </>
