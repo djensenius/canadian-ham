@@ -244,7 +244,7 @@ final class MorseTrainerTests: XCTestCase {
 
         XCTAssertEqual(formattedMorseArea(12_544, locale: Locale(identifier: "en_CA")), "12,544")
         XCTAssertEqual(formattedMorseArea(21_824, locale: Locale(identifier: "en_CA")), "21,824")
-        XCTAssertEqual(formattedMorseArea(12_544, locale: Locale(identifier: "fr_CA")), "12\u00a0544")
+        XCTAssertEqual(formattedMorseArea(12_544, locale: Locale(identifier: "fr_CA")), "12\u{00A0}544")
         XCTAssertTrue(plan.safetyNote.contains("\(formattedMorseArea(morseBeaconAreaCssPixels)) square points"), plan.safetyNote)
         XCTAssertTrue(plan.safetyNote.contains("\(formattedMorseArea(plan.safety.maxAreaCssPixels)) square-point WCAG flash cap"), plan.safetyNote)
         XCTAssertFalse(plan.safetyNote.contains("px"), "Apple's measured area is in square points, not CSS pixels")
