@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-20 13:02'
+updated_date: '2026-10-20 13:10'
 labels:
   - apple
 dependencies: []
@@ -31,3 +31,9 @@ Seen during task-44.3 work: long category titles such as 'Regulations and Polici
 2. Add EN/FR default and maximum-accessibility iPhone UI coverage and screenshot evidence; apply only wrapping fixes if truncation remains.
 3. Run only added/touched UI tests through nohup xbuild on iPhone 17 Pro, and macOS unit tests if app code changes; record evidence and finalize, commit and push.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Baseline targeted UI test confirms TASK-55 removed the original default-size English Regulations and Policies truncation; the longer Basic Station Assembly, Practice and Safety navigation title and wrapped content header also fit on iPhone 17 Pro. Continuing largest-accessibility French coverage and all shared category surfaces (including Advanced). Test header identifiers resolve to the existing combined accessibility header; tests preserve that hierarchy and all shared helpers.
+<!-- SECTION:NOTES:END -->
