@@ -24,6 +24,7 @@ struct RootView: View {
     @State private var navigationPath: [LearnRoute] = []
     @State private var unfinishedCourseWorkCheckID = UUID()
     @StateObject private var practiceSessionStates = PracticeSessionStateCache()
+    @StateObject private var lessonQuizSessions = LessonQuizSessionStateCache()
     @StateObject private var mockExamState = MockExamState()
     @State private var splitColumnVisibility = NavigationSplitViewVisibility.automatic
     @State private var preToolSplitColumnVisibility: NavigationSplitViewVisibility?
@@ -48,6 +49,7 @@ struct RootView: View {
             if let bank, let contentLibrary, let progressStore {
                 appContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     .environment(\.canadianHamContentLibrary, contentLibrary)
+                    .environmentObject(lessonQuizSessions)
                     .preferredColorScheme(launchColorScheme ?? colorScheme(for: progressStore.preferences.theme))
             } else if let progressStoreError {
                 StoreRecoveryView(message: progressStoreError) {
@@ -164,6 +166,7 @@ struct RootView: View {
         .onChange(of: progressStore.preferences.activeBankId) { _, next in
             loadBank(for: next)
             practiceSessionStates.clear()
+            lessonQuizSessions.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
         .onChange(of: appSettings.localDataReplacementRevision) { _, next in
@@ -391,6 +394,7 @@ struct RootView: View {
         .onChange(of: progressStore.preferences.activeBankId) { _, next in
             loadBank(for: next)
             practiceSessionStates.clear()
+            lessonQuizSessions.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
         .onChange(of: appSettings.localDataReplacementRevision) { _, next in
@@ -656,6 +660,7 @@ struct RootView: View {
     }
 
     private func clearCachedSessions(localDataReplacementRevision: Int) {
+        lessonQuizSessions.clear()
         practiceSessionStates.clear()
         mockExamState.resetSession(localDataReplacementRevision: localDataReplacementRevision)
     }
@@ -665,6 +670,7 @@ struct RootView: View {
         appSettings.recordDataChanged(replacesLocalData: replacesLocalData)
         if replacesLocalData {
             practiceSessionStates.clear()
+            lessonQuizSessions.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
     }
@@ -697,10 +703,19 @@ struct RootView: View {
             library: contentLibrary,
             bank: bank,
             progressStore: progressStore,
-            language: language
-        ) {
-            recordDataChanged()
-        }
+            language: language,
+            onDataChanged: { recordDataChanged() },
+            onOpenQuizHintLesson: { link in
+                let route: LearnRoute = link.sectionAnchor.map { .lessonSection(link.lessonId, $0) } ?? .lesson(link.lessonId)
+#if os(iOS)
+                if usesCompactNavigation(horizontalSizeClass: effectiveHorizontalSizeClass) {
+                    compactNavigationPath.append(.learn(route))
+                    return
+                }
+#endif
+                navigationPath.append(route)
+            }
+        )
     }
 
     @ViewBuilder

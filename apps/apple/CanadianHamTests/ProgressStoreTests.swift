@@ -8,6 +8,75 @@ import XCTest
 
 @MainActor
 final class ProgressStoreTests: XCTestCase {
+    func testLessonQuizHelpFixtureValidationAndPayloadRoundTrips() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+            .appending(path: "fixtures/lesson-quiz-help.json")
+        let fixture = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: fixtureURL)) as? [String: Any])
+        let base = try XCTUnwrap(fixture["attempt"] as? [String: Any])
+        let valid = try XCTUnwrap(fixture["validHelpIds"] as? [[String]])
+        let invalid = try XCTUnwrap(fixture["invalidHelpIds"] as? [Any])
+        let store = try ProgressStoreService.inMemoryForTests()
+        let emptyExport = try store.exportData(bank: bank, exportedAt: "2026-01-04T00:00:00.000Z")
+        let emptyJSON = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(emptyExport)) as? [String: Any])
+        for value in [nil] + valid.map { Optional<Any>($0) } + invalid.map { Optional<Any>($0) } {
+            var attemptJSON = base
+            if let value { attemptJSON["answeredWithHelpIds"] = value }
+            let attemptData = try JSONSerialization.data(withJSONObject: attemptJSON)
+            let expectedValid = value == nil || (value as? [String]).map(valid.contains) == true
+            var exportJSON = emptyJSON
+            exportJSON.removeValue(forKey: "syncDeviceRows")
+            exportJSON["lessonQuizAttempts"] = [attemptJSON]
+            let imported = try JSONDecoder().decode(ProgressExportV1.self, from: JSONSerialization.data(withJSONObject: exportJSON))
+            XCTAssertEqual(store.validate(imported, bank: bank).isEmpty, expectedValid, "Top-level help IDs: \(String(describing: value))")
+            let rowJSON: [String: Any] = ["deviceId": "web", "lessonIdVersion": 2, "attempt": attemptJSON]
+            let rowData = try JSONSerialization.data(withJSONObject: rowJSON)
+            if expectedValid {
+                let attempt = try JSONDecoder().decode(LessonQuizAttempt.self, from: attemptData)
+                let row = try JSONDecoder().decode(DeviceLessonQuizAttemptRecord.self, from: rowData)
+                XCTAssertEqual(row.attempt, attempt)
+                XCTAssertEqual(try JSONDecoder().decode(LessonQuizAttempt.self, from: JSONEncoder().encode(attempt)), attempt)
+                try store.saveLessonQuizAttempt(attempt, questionProgress: [])
+                XCTAssertEqual(try store.lessonQuizAttempts(), [attempt], "payloadData retains the field")
+                let exported = try store.exportData(bank: bank, exportedAt: "2026-01-04T00:00:00.000Z")
+                XCTAssertEqual(exported.syncDeviceRows?.lessonQuizAttempts.map(\.attempt), [attempt])
+                let target = try ProgressStoreService.inMemoryForTests()
+                let wireExport = try JSONDecoder().decode(ProgressExportV1.self, from: JSONEncoder().encode(exported))
+                try target.importData(wireExport, bank: bank)
+                XCTAssertEqual(try target.lessonQuizAttempts(), [attempt])
+                XCTAssertEqual(try target.exportData(bank: bank, exportedAt: exported.exportedAt).lessonQuizAttempts, exported.lessonQuizAttempts)
+                // Also exercise web top-level-only import, rather than only Apple device rows.
+                try target.importData(imported, bank: bank)
+                XCTAssertEqual(try target.lessonQuizAttempts(), [attempt])
+            } else {
+                XCTAssertThrowsError(try JSONDecoder().decode(LessonQuizAttempt.self, from: attemptData))
+                XCTAssertThrowsError(try JSONDecoder().decode(DeviceLessonQuizAttemptRecord.self, from: rowData))
+                XCTAssertThrowsError(try store.importData(imported, bank: bank))
+            }
+        }
+    }
+
+    func testLessonQuizSessionCachePreservesAnswersAndFrozenHelpAcrossNavigation() {
+        let cache = LessonQuizSessionStateCache()
+        let session = cache.state(for: "QZ-L-005-01-A")
+        session.items = [.official(id: "item", questionId: "B-005-001-001", choicePermutation: [2, 0, 3, 1])]
+        session.currentIndex = 0
+        session.hintLevelsByQuestionId["B-005-001-001"] = 2
+        session.hintQualifiedQuestionIds.insert("B-005-001-001")
+        session.selectedByItemId["item"] = 0
+        session.answeredWithHelpIds.insert("B-005-001-001")
+        XCTAssertTrue(cache.state(for: "QZ-L-005-01-A") === session)
+        XCTAssertEqual(cache.state(for: "QZ-L-005-01-A").items, session.items)
+        XCTAssertEqual(cache.state(for: "QZ-L-005-01-A").selectedByItemId["item"], 0)
+        XCTAssertEqual(cache.state(for: "QZ-L-005-01-A").hintLevelsByQuestionId["B-005-001-001"], 2)
+        XCTAssertEqual(cache.state(for: "QZ-L-005-01-A").answeredWithHelpIds, ["B-005-001-001"])
+        XCTAssertFalse(cache.state(for: "QZ-L-005-02-A") === session)
+        cache.clear()
+        XCTAssertFalse(cache.state(for: "QZ-L-005-01-A") === session)
+    }
+
     func testMockExamTimerRefreshPreservesFractionalRemainder() throws {
         let state = MockExamState()
         state.generatedItems = [GeneratedExamItem(
@@ -432,7 +501,8 @@ final class ProgressStoreTests: XCTestCase {
             percent: 100,
             officialQuestionIds: ["B-001-010-001", "B-001-014-001"],
             incorrectOfficialQuestionIds: [],
-            incorrectConceptCheckIds: []
+            incorrectConceptCheckIds: [],
+            answeredWithHelpIds: ["B-001-010-001", "B-001-014-001"]
         )
         let imported = ProgressExportV1(
             schema: "canadian-ham.progress-export",
@@ -460,6 +530,8 @@ final class ProgressStoreTests: XCTestCase {
             LessonProgressRecord(lessonId: "L-001-03", readAt: "2026-01-03T03:30:00.000Z", readCount: 1),
             LessonProgressRecord(lessonId: "L-005-04", readAt: "2026-01-02T03:30:00.000Z", readCount: 2),
         ])
+        XCTAssertEqual(try store.lessonQuizAttempts().map(\.answeredWithHelpIds), [["B-001-010-001"], ["B-001-014-001"]])
+        XCTAssertEqual(try store.exportData(bank: bank, exportedAt: imported.exportedAt).syncDeviceRows?.lessonQuizAttempts.map { $0.attempt.answeredWithHelpIds }, [["B-001-010-001"], ["B-001-014-001"]])
         XCTAssertEqual(try store.lessonQuizAttempts().map { attempt in
             [attempt.id, attempt.quizId, attempt.lessonId, attempt.officialQuestionIds.joined(separator: ",")]
         }, [
