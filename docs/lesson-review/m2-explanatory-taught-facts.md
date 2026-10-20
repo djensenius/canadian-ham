@@ -23,7 +23,7 @@ The original review is historical: [m1-m2.md](m1-m2.md). This ledger records the
 | 003-003, 003-004, 003-007 | Simplex uses a shared transmit/receive frequency; use it when direct copy is reliable; listen on the repeater input to test direct reception. | Retained — Choose a relay or a direct path. |
 | 003-005, 003-006, 003-008 | Prefer VHF/UHF for suitable local work; protect HF capacity. Avoid repeater inputs when choosing simplex and move if interfering with a repeater. | Retained — Choose a relay or a direct path. |
 | 003-009, 003-010 | Twenty-metre voice normally uses USB; the 3 755 kHz example uses LSB. | Retained — Give a voice signal enough space (adds the practical sideband convention). |
-| 004-001, 004-011 | Listen before transmitting to protect existing contacts. | Retained — Share the frequency, not just the microphone; Give a voice signal enough space. |
+| 004-001, 004-011 | Listen before transmitting to protect existing contacts. | Retained — Leave room on the repeater; Give a voice signal enough space. |
 | 004-002 | Reduce excessive power while preserving reliable copy. | Retained — Share the frequency, not just the microphone. |
 | 004-003, 004-009 | Brief HF net tuner checks use a clear spot 3–5 kHz away; SSB needs roughly 3 kHz separation because it occupies about that width. | Retained — Give a voice signal enough space. |
 | 004-004, 004-005 | A dummy load absorbs RF as heat for long tests without radiating test signals. | Retained — Give a voice signal enough space. |
@@ -68,4 +68,36 @@ The original review is historical: [m1-m2.md](m1-m2.md). This ledger records the
 
 ## Verification after rewriting
 
-Pending final comparison and checks. Lesson IDs, coverage, prerequisites, figure directives, and official quiz lists must stay unchanged. The total library must remain 37 lessons. All four lessons contain figures: the coordinator should schedule the `CanadianHamLessonFigures` test plan; no Apple UI suite runs in this content-only worker task.
+All ledger facts were compared with the revised teaching locations above: no covered fact was removed. The revised lessons retain all 99 M2 official questions and add three original concept checks per lesson (12 total). Each lesson now has concept sections, worked examples, Try-it prompts separated from feedback, and corrective common-mistake notes. Numerical lessons also include partly completed practice. Retrieval includes earlier signal-quality, power, and operating ideas.
+
+A before/after script verified that every lesson's entire front matter, figure directive, and ordered official quiz list is unchanged from `4c9dbc0f`. It also expanded the ID ranges in this ledger and confirmed that all 99 M2 question IDs appear in the comparison. The library remains at 37 lessons; no progress migration is needed. No bank records, explanations, figure assets, or French hint prose changed.
+
+Both M2 calling-pattern originality exceptions were removed: the reorganized, reworded teaching no longer needs them. Renamed sections required updates to all 99 M2 hint deep links. A JSON comparison verified that only `lessonLink.sectionAnchor` changed in those hint files.
+
+### Checks run (2026-10-20)
+
+| Command | Result |
+|---|---|
+| `node packages/content-tools/src/check-lesson-coverage.ts` | Passed: 100/100 subsections, 37 lessons, no duplicate coverage. |
+| `pnpm --dir packages/content-tools check:lesson-originality:all` | Passed: 37 lessons, 0 originality issues, 0 stale exceptions. |
+| `pnpm --dir packages/content-tools check:explanations` | Passed: 984 explanations and 2 952 per-choice notes. |
+| `pnpm --dir packages/content-tools check:quizzes` | Passed: 37 quizzes, 521 official references, 92 concept checks repository-wide; M2 remains 99 official references plus 12 new checks. |
+| `pnpm check:links` | Passed: relative Markdown links resolve. |
+| `pnpm check:figures` | Passed: 53 self-test fixtures, 39 SVGs/references, Apple assets in sync. |
+| `pnpm check:hints -- --require-complete` | Passed after remapping the renamed section anchors: 984/984 hints. |
+| `pnpm check:schemas` | Passed: 2 034 validation targets and 55 tests. |
+| `pnpm import:check` | Passed: Basic and Advanced generated banks plus 34 reference-sheet entries. |
+| `pnpm test` | Release-permission self-test, content-tools 153/153, Morse 21/21, calculator 127/127 passed. Web: 221/223 passed; two unchanged tests timed out. See focused reruns below. |
+| `cd packages/content-swift && DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test` | Passed: 23/23, including real-repository loading (unchanged 37-lesson assertion), every-lesson Markdown parsing, and bundled hint-anchor resolution. |
+
+The two web failures were `App.test.tsx` / “surfaces Settings import/reset UI errors and confirmations with focus management” (still loading at its wait deadline) and `progressStore.test.ts` / “migrates coherent stored device rows during the v6 upgrade and drops incoherent metadata” (5 s timeout). Both passed focused reruns with their default deadlines. The migration case first timed out again in isolation, then passed a diagnostic `--testTimeout=30000` run in under a second of test time and passed the subsequent default-timeout rerun. No app code, test source, timeout configuration, or assertions were changed. The original aggregate `pnpm test` invocation remains a recorded failure; the focused reruns resolve the two failing cases, not a second full-suite result.
+
+Focused commands:
+
+- `pnpm --filter @canadian-ham/web test src/App.test.tsx -t 'surfaces Settings import/reset UI errors and confirmations with focus management'`
+- `pnpm --filter @canadian-ham/web test src/lib/progressStore.test.ts -t 'migrates coherent stored device rows during the v6 upgrade and drops incoherent metadata'`
+- Diagnostic only: the same migration command with `--testTimeout=30000`.
+
+### Deferred platform validation
+
+All four lessons contain figures: the coordinator should schedule the `CanadianHamLessonFigures` test plan. No Apple UI suite or app build ran in this content-only worker task, as requested. Figure sources, directives, text equivalents, alt text, and illustration briefs are unchanged; figure layout may still shift because the surrounding lesson text changed.

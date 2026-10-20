@@ -144,7 +144,7 @@ A band plan voluntarily groups compatible modes and activities within a band. Fo
 
 If a net's usual channel is busy, net control should politely ask whether the current users can move. If they cannot, the net finds a clear channel. If you are already talking when a scheduled net is about to start, accommodate it by moving where possible.
 
-Changing propagation can bring new interference into an ongoing contact. Agree on another clear frequency rather than trying to overpower the other stations. If your signal is much stronger than needed, reduce power while checking that the other operator can still copy reliably.
+Changing propagation can bring new interference into an ongoing contact. Agree on another clear frequency rather than trying to overpower the other stations. If your signal is much stronger than needed, reduce power while checking that the other operator can still copy reliably. Lower power saves battery energy and reduces unnecessary RF exposure and interference potential.
 
 ## Try it
 
