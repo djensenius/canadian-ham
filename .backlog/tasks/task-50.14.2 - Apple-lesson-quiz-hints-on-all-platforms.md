@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 14:10'
+updated_date: '2026-10-21 14:22'
 labels:
   - apple
 dependencies:
@@ -56,4 +56,6 @@ Localization validation completed PASS: pnpm check:apple-l10n (complete French X
 R3 dark panel/approved-feedback/default-result audits PASS (201.045s). AX still failed before reopening because content would not scroll, revealing the actual integration error: examToolPresentation had been attached inside the outer quiz ScrollView, producing a fixed inspector container around tall card content at regular width. Moved the presenter outside the quiz ScrollView exactly as practice does; retained all load-error handling. Current source ce146da5 is pushed. R4 nohup script queued: targeted macOS cache+timing tests to compile the revised screen, then all 7 affected new quiz UI methods on iPhone 17 Pro and iPad Pro 13-inch (M5), stop on first failed command. Shared/approved helpers remain byte-identical; no suite or test/audit removal.
 
 Resume 2026-10-21: overnight R4 completed. macOS cache/timing recheck PASS (2/2) and current/other lesson route test PASS (1/1). iPhone: concept exclusions PASS (23.782s), dark audits PASS (146.398s), French/current-lesson round trip PASS (168.292s), light audits PASS (139.836s), one-level help persistence PASS (108.015s), post-choice immutability PASS (116.571s). AX successfully preserved state/reopened Hint 2, but existing DEBUG layout overlay intercepted the inspector Close tool (full close frame is inside overlay). Coordinator explicitly approved a DEBUG-only one-shot allowsHitTesting(false) after transition, retaining visible label/value and no Release behavior; shared helpers must stay byte-identical. Rerun all six existing users of -CanadianHamShowSimulatedSizeClassChangeControl (two practice transitions and four deep Learn transitions) on iPhone and iPad, plus AX and new iPad quiz tests. No other code/audit scope changes.
+
+R5 iPhone 17 Pro PASS (7/7) after the approved DEBUG-only one-shot control fix: AX-XXXL hint/layout round trip 189.978s; compact-to-split deep lesson 46.935s; compact-to-split deep quiz 81.995s; compact-to-regular practice selection/calculator 64.893s; regular-to-compact practice selection/calculator 64.359s; split-to-compact deep lesson 27.860s; split-to-compact deep quiz 87.757s. All six pre-existing launch-argument control tests and shared helpers are unmodified. Combined with R4, every new iPhone quiz test is now green. Nohup runner has started the iPad Pro 13-inch (M5) run with all seven new quiz methods plus the same six existing control users (13 methods); no finished checks repeated.
 <!-- SECTION:NOTES:END -->
