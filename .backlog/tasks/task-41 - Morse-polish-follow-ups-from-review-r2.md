@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-21 15:02'
+updated_date: '2026-10-21 15:10'
 labels:
   - apple
   - web
@@ -38,6 +38,8 @@ Low items from the task-12.18/12.19/12.20 review r2 (~/.cache/canadian-ham-revie
 5. Run only targeted iPhone/iPad Morse UI, relevant macOS Morse units, web Morse, localization/text-source and test-guard checks. Use detached xbuild scripts and grep-only polling; respect the shared lock. Commit/push coherent steps, record evidence, and finalize only after remaining keyboard/iPad/localization checks pass.
 
 6. Resume AC1: diagnose nil focus from the completed keyboard run; give each visible keying surface reliable post-navigation focus with explicit edit interactions/default focus, preserving underlying-screen isolation and all strict hardware-key assertions. Commit before detached targeted iPhone/iPad, sending-regression/macOS-unit and localization checks; finalize only with passing evidence.
+
+7. Coordinator-approved latency fix (2026-10-21): measured first Space hold 0.579024s, of which synchronous AVAudioEngine startup consumed 0.569211s, with a 0.2s dot limit. Keep E/EE/E unchanged. Move sending audio preparation/start off the main actor with serialized lifecycle and existing output/mute settings; record key event times before audio; add a unit regression with an injected slow audio starter; prepare on sending-screen appearance and clean up on disappearance. Rerun the unchanged two-device keyboard regression plus sending and macOS Morse tests, recording before/after timing.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
