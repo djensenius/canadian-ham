@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 21:26'
+updated_date: '2026-10-21 21:35'
 labels:
   - apple
 dependencies:
@@ -44,6 +44,8 @@ Apply the owner-approved 2026-10-20 rules in TASK-50.14 after the web/model cont
 6. Final approved follow-up supersedes point 5's literal ViewThatFits: keep one intrinsic-fitting Layout child tree to preserve audit-node provenance, verified by vertical-baseline control and final macOS 8/8 plus iPhone/iPad 7/7 per device; retain all audits/helpers and Done status.
 
 7. Re-review visual correction: use a single-tree AnyLayout header that keeps the original top-aligned HStack with Spacer and wrapping text at all non-accessibility sizes, and leading VStack at accessibility sizes. Leave intrinsic fitting navigation and the ViewThatFits provenance comment intact. Add explicit title existence and default iPhone/iPad horizontal-header assertions. Commit before nohup macOS lesson-quiz units and all seven quiz UI methods on each iPhone/iPad, poll logs, record per-test results, then push without opening a PR.
+
+8. PR #326 Copilot follow-up: give each quiz session a stable generation UUID, key guarded initialization to that generation, and publish cache clearing so mounted screens reacquire replacement sessions on macOS and iOS. Add mounted macOS regression coverage for import/reset-style session clearing and ordinary rerenders without reshuffling. Commit before nohup macOS lesson-quiz units and the seven iPhone 17 Pro quiz UI methods; poll logs, record per-test evidence, push, reply to and resolve thread PRRT_kwDOUxZq_M6u9l-y. No layout or audit changes; retain Done as review follow-up.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
