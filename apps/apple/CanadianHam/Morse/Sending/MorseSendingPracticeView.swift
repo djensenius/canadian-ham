@@ -120,7 +120,9 @@ struct MorseSendingPracticeView: View {
             stopAllKeying(finalizeStraight: false)
             clearPendingCharacterFinalization(clearPendingSamples: true)
             examTimerTask?.cancel()
-            keyer.release()
+            // The pushed exam uses the same prepared audio player, not this
+            // host's focus binding. Keep the silent engine for that handoff.
+            if !showingExam { keyer.release() }
         }
     }
 
@@ -244,7 +246,9 @@ struct MorseSendingPracticeView: View {
                 cancelRunningExam(clearExam: true)
             }
             stopAllKeying(finalizeStraight: false)
-            keyer.release()
+            // Back hands the silent player to practice; results or leaving the
+            // sending stack release it instead.
+            if showingExam || presentedResult != nil { keyer.release() }
         }
     }
 
