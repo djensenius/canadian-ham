@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 20:48'
+updated_date: '2026-10-21 20:52'
 labels:
   - apple
 dependencies:
@@ -42,6 +42,8 @@ Apply the owner-approved 2026-10-20 rules in TASK-50.14 after the web/model cont
 5. Review follow-up: restore horizontal-first ViewThatFits header/navigation with vertical fallback (no width thresholds); extend existing quiz UI test with default iPad horizontal-row proof and preserve AX audits. Remove Basic-only help-ID prefix restriction with official/known membership tests; widen real timer-test margins. Commit before nohup targeted macOS units and all seven lesson-quiz UI methods on iPhone/iPad, then record per-test results and push; retain Done and open no PR.
 
 6. Final approved follow-up supersedes point 5's literal ViewThatFits: keep one intrinsic-fitting Layout child tree to preserve audit-node provenance, verified by vertical-baseline control and final macOS 8/8 plus iPhone/iPad 7/7 per device; retain all audits/helpers and Done status.
+
+7. Re-review visual correction: use a single-tree AnyLayout header that keeps the original top-aligned HStack with Spacer and wrapping text at all non-accessibility sizes, and leading VStack at accessibility sizes. Leave intrinsic fitting navigation and the ViewThatFits provenance comment intact. Add explicit title existence and default iPhone/iPad horizontal-header assertions. Commit before nohup macOS lesson-quiz units and all seven quiz UI methods on each iPhone/iPad, poll logs, record per-test results, then push without opening a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
