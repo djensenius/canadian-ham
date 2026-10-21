@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 14:47'
+updated_date: '2026-10-21 14:55'
 labels:
   - apple
 dependencies:
@@ -38,6 +38,8 @@ Apply the owner-approved 2026-10-20 rules in TASK-50.14 after the web/model cont
 2. Reuse practice hint-only presentation around the complete iOS/iPadOS/macOS quiz ScrollView, freeze help at choice, cache state across lesson/layout navigation, and retain score/progress semantics with EN/FR markers. tvOS/visionOS quiz UI is N/A by coordinator decision.
 3. Validate targeted macOS units and final build, iPhone/iPad quiz/audit tests and all existing users of the approved DEBUG one-shot layout control. Use the unchanged owner-approved occluded-contrast helper only for feedback; keep full default panel/result audits. Validate localization and generic tvOS/visionOS catalogue builds.
 4. Record per-test evidence, preserve all original tests/helpers byte-identically, check verified criteria, commit/push, and return for independent review without opening a PR.
+
+5. Review follow-up: restore horizontal-first ViewThatFits header/navigation with vertical fallback (no width thresholds); extend existing quiz UI test with default iPad horizontal-row proof and preserve AX audits. Remove Basic-only help-ID prefix restriction with official/known membership tests; widen real timer-test margins. Commit before nohup targeted macOS units and all seven lesson-quiz UI methods on iPhone/iPad, then record per-test results and push; retain Done and open no PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
