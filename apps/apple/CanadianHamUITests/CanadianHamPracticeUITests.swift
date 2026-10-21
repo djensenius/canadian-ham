@@ -402,7 +402,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
         let outcome = XCTWaiter.wait(for: [matches], timeout: 10)
         let status = app.staticTexts["morse-sending-keyboard-test-status"].firstMatch
-        XCTAssertEqual(outcome, .completed, "Decoded: \(decoded.label); \(status.label)", file: file, line: line)
+        let keyboardStatus = status.label
+        print("Morse hardware keyboard expected \(text): \(keyboardStatus)")
+        XCTAssertEqual(outcome, .completed, "Decoded: \(decoded.label); \(keyboardStatus)", file: file, line: line)
     }
 
     func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {

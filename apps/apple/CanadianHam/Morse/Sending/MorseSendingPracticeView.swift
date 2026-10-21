@@ -1,5 +1,6 @@
 import Accessibility
 import CanadianHamMorseEngine
+import Combine
 import SwiftUI
 
 struct MorseSendingPracticeView: View {
@@ -13,15 +14,13 @@ struct MorseSendingPracticeView: View {
     @State private var keyboardFocusRequest = UUID()
 #if DEBUG
     @State private var keyboardEventDescription = "none"
-    @State private var keyboardTimingDescription = "none"
 #endif
-    @State private var driver = MorseAudioDriver()
+    @StateObject private var keyer = MorseSendingKeyer()
     @State private var pendingSamples: [MorseKeyTimingSample] = []
     @State private var decodedText = ""
     @State private var lastFeedback: MorseCharacterTimingFeedback?
     @State private var statusMessage = ""
     @State private var errorMessage: String?
-    @State private var straightKeyDownAt: Date?
     @State private var finalizeTask: Task<Void, Never>?
     @State private var pressedPaddles: Set<MorseKeyElement> = []
     @State private var paddleRepeatTask: Task<Void, Never>?
@@ -80,6 +79,7 @@ struct MorseSendingPracticeView: View {
             keyPress: handleKeyPress
         ))
         .onAppear {
+            keyer.prepare(settings: settings.normalized())
             // Another Morse mode starting playback stops any held key or paddle here.
             playbackCoordinator.register("sending-practice") {
                 stopAllKeying(finalizeStraight: true)
@@ -117,6 +117,7 @@ struct MorseSendingPracticeView: View {
             stopAllKeying(finalizeStraight: false)
             clearPendingCharacterFinalization(clearPendingSamples: true)
             examTimerTask?.cancel()
+            keyer.release()
         }
     }
 
@@ -162,7 +163,7 @@ struct MorseSendingPracticeView: View {
                 MorseSendingFeedbackView(decodedText: decodedText, pendingSamples: pendingSamples, lastFeedback: lastFeedback)
 #if DEBUG
                 if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseKeyboardStatus") {
-                    Text(verbatim: "Focus: \(String(describing: keyboardFocus)); event: \(keyboardEventDescription); held: \(straightKeyDownAt != nil); timing: \(keyboardTimingDescription)") // l10n: verbatim DEBUG-only keyboard test diagnostics
+                    Text(verbatim: "Focus: \(String(describing: keyboardFocus)); event: \(keyboardEventDescription); held: \(keyer.isStraightKeyDown); audio startup: \(keyer.audioStartupSeconds); hold: \(keyer.lastHoldSeconds); dot limit: \(2 * profile.dotSeconds)") // l10n: verbatim DEBUG-only keyboard test diagnostics
                         .accessibilityIdentifier("morse-sending-keyboard-test-status")
                 }
 #endif
@@ -193,7 +194,7 @@ struct MorseSendingPracticeView: View {
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                 }
-                if let errorMessage {
+                if let errorMessage = errorMessage ?? keyer.audioError {
                     MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
                 }
         }
@@ -234,10 +235,13 @@ struct MorseSendingPracticeView: View {
             focusChanged: { updateKeyboardFocus(.exam, isFocused: $0) },
             keyPress: handleKeyPress
         ))
+        .onAppear { keyer.prepare(settings: settings.normalized()) }
         .onDisappear {
             if presentedResult == nil, !examText.isEmpty {
                 cancelRunningExam(clearExam: true)
             }
+            stopAllKeying(finalizeStraight: false)
+            keyer.release()
         }
     }
 
@@ -250,6 +254,7 @@ struct MorseSendingPracticeView: View {
     }
 
     private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
+        let eventTime = ContinuousClock.now
 #if DEBUG
         keyboardEventDescription = "\(String(describing: press.phase)) \(press.characters)"
 #endif
@@ -258,7 +263,7 @@ struct MorseSendingPracticeView: View {
         switch press.phase {
         case .down:
             if press.key == .space {
-                beginStraightKey()
+                beginStraightKey(at: eventTime)
                 return .handled
             }
             if let element {
@@ -267,7 +272,7 @@ struct MorseSendingPracticeView: View {
             }
         case .up:
             if press.key == .space {
-                endStraightKey()
+                endStraightKey(at: eventTime)
                 return .handled
             }
             if let element {
@@ -280,35 +285,25 @@ struct MorseSendingPracticeView: View {
         return .ignored
     }
 
-    private func beginStraightKey() {
-        guard straightKeyDownAt == nil else { return }
+    private func beginStraightKey() { beginStraightKey(at: .now) }
+
+    private func beginStraightKey(at eventTime: ContinuousClock.Instant) {
+        guard !keyer.isStraightKeyDown else { return }
         cancelFiniteToneStop()
         finalizeTask?.cancel()
         finalizeTask = nil
         playbackCoordinator.claim("sending-practice")
-        straightKeyDownAt = Date()
-        do {
-            try driver.startTone(settings: settings.normalized())
-#if DEBUG
-            keyboardTimingDescription = "audio startup: \(Date().timeIntervalSince(straightKeyDownAt ?? Date()))"
-#endif
-            errorMessage = nil
-        } catch {
-            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
-            straightKeyDownAt = nil
-        }
+        keyer.beginStraightKey(at: eventTime, settings: settings.normalized())
+        errorMessage = nil
     }
 
-    private func endStraightKey() {
-        guard let started = straightKeyDownAt else { return }
-        let duration = max(0.001, Date().timeIntervalSince(started))
-#if DEBUG
-        keyboardTimingDescription += "; hold: \(duration); dot limit: \(2 * profile.dotSeconds)"
-#endif
-        straightKeyDownAt = nil
-        driver.stop()
+    private func endStraightKey() { endStraightKey(at: .now) }
+
+    private func endStraightKey(at eventTime: ContinuousClock.Instant) {
         do {
-            appendSample(try classifyMorseKeyDown(durationSeconds: duration, profile: profile))
+            if let sample = try keyer.endStraightKey(at: eventTime, profile: profile) {
+                appendSample(sample)
+            }
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -373,11 +368,9 @@ struct MorseSendingPracticeView: View {
         playbackCoordinator.claim("sending-practice")
         finalizeTask?.cancel()
         finalizeTask = nil
-        let text = element == .dot ? "E" : "T"
         let duration = element == .dot ? profile.dotSeconds : profile.dashSeconds
-        if let playbackDuration = try? driver.play(text: text, settings: settings.normalized()) {
-            scheduleFiniteToneStop(after: playbackDuration)
-        }
+        keyer.playElement(element, settings: settings.normalized())
+        scheduleFiniteToneStop(after: duration)
         appendSample(MorseKeyTimingSample(element: element, durationSeconds: duration, expectedSeconds: duration, ratioToExpected: 1), finalizeAfterElementSeconds: duration)
     }
 
@@ -422,7 +415,7 @@ struct MorseSendingPracticeView: View {
         finiteToneStopTask = Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(Int((duration * 1000).rounded(.up)) + 60))
             guard !Task.isCancelled, generation == finiteToneGeneration else { return }
-            driver.stop()
+            keyer.silence()
             finiteToneStopTask = nil
         }
     }
@@ -511,15 +504,11 @@ struct MorseSendingPracticeView: View {
     }
 
     private func stopAllKeying(finalizeStraight: Bool) {
-        if finalizeStraight, let started = straightKeyDownAt {
-            let duration = max(0.001, Date().timeIntervalSince(started))
-            if let sample = try? classifyMorseKeyDown(durationSeconds: duration, profile: profile) {
-                appendSample(sample)
-            }
+        if finalizeStraight {
+            endStraightKey()
         }
         cancelFiniteToneStop()
-        driver.stop()
-        straightKeyDownAt = nil
+        keyer.cancelStraightKey()
         pressedPaddles = []
         paddleRepeatTask?.cancel()
         paddleRepeatToken = UUID()
@@ -539,7 +528,7 @@ struct MorseSendingPracticeView: View {
     private func gradeHeldStraightKeyForUITest() {
         pendingSamples = []
         decodedText = ""
-        straightKeyDownAt = Date().addingTimeInterval(-profile.dotSeconds)
+        keyer.beginStraightKey(at: .now.advanced(by: .seconds(-profile.dotSeconds)), settings: settings.normalized())
         playbackCoordinator.claim("sending-practice")
         gradeExam(completedWithinTime: true)
     }
@@ -556,6 +545,131 @@ struct MorseSendingPracticeView: View {
     private func fillExamTextForUITest() {}
     private func gradeHeldStraightKeyForUITest() {}
 #endif
+}
+
+protocol MorseSendingAudioOutput: Sendable {
+    func prepare(settings: MorseTrainerSettings) async throws
+    func startTone(settings: MorseTrainerSettings) async throws
+    func playElement(_ element: MorseKeyElement, settings: MorseTrainerSettings) async throws
+    func silence() async
+    func release() async
+}
+
+private actor MorseSendingAudioPlayer: MorseSendingAudioOutput {
+    private let driver = MorseAudioDriver()
+
+    func prepare(settings: MorseTrainerSettings) throws {
+        try driver.prepareSendingTone(settings: settings)
+    }
+
+    func startTone(settings: MorseTrainerSettings) {
+        driver.startPreparedSendingTone(settings: settings)
+    }
+
+    func playElement(_ element: MorseKeyElement, settings: MorseTrainerSettings) throws {
+        try driver.playPreparedSendingElement(element, settings: settings)
+    }
+
+    func silence() { driver.silencePreparedSendingTone() }
+    func release() { driver.releasePreparedSendingTone() }
+}
+
+@MainActor
+final class MorseSendingKeyer: ObservableObject {
+    @Published private(set) var straightKeyDownAt: ContinuousClock.Instant?
+    @Published private(set) var lastHoldSeconds = 0.0
+    @Published private(set) var audioStartupSeconds = 0.0
+    @Published private(set) var audioError: String?
+
+    var isStraightKeyDown: Bool { straightKeyDownAt != nil }
+
+    private enum AudioCommand {
+        case prepare(MorseTrainerSettings)
+        case start(MorseTrainerSettings)
+        case element(MorseKeyElement, MorseTrainerSettings)
+        case silence
+        case release
+    }
+
+    private let output: any MorseSendingAudioOutput
+    private var audioTask: Task<Void, Never>?
+    private var audioRequest = 0
+
+    init(output: any MorseSendingAudioOutput = MorseSendingAudioPlayer()) {
+        self.output = output
+    }
+
+    func prepare(settings: MorseTrainerSettings) { queueAudio(.prepare(settings)) }
+
+    func beginStraightKey(at eventTime: ContinuousClock.Instant, settings: MorseTrainerSettings) {
+        guard straightKeyDownAt == nil else { return }
+        straightKeyDownAt = eventTime
+        queueAudio(.start(settings))
+    }
+
+    func endStraightKey(at eventTime: ContinuousClock.Instant, profile: MorseTimingProfile) throws -> MorseKeyTimingSample? {
+        guard let started = straightKeyDownAt else { return nil }
+        let components = started.duration(to: eventTime).components
+        let duration = max(0.001, Double(components.seconds) + Double(components.attoseconds) / 1e18)
+        straightKeyDownAt = nil
+        lastHoldSeconds = duration
+        silence()
+        return try classifyMorseKeyDown(durationSeconds: duration, profile: profile)
+    }
+
+    func cancelStraightKey() {
+        straightKeyDownAt = nil
+        silence()
+    }
+
+    func playElement(_ element: MorseKeyElement, settings: MorseTrainerSettings) {
+        queueAudio(.element(element, settings))
+    }
+
+    func silence() { queueAudio(.silence) }
+
+    func release() {
+        straightKeyDownAt = nil
+        queueAudio(.release)
+    }
+
+    private func queueAudio(_ command: AudioCommand) {
+        audioRequest += 1
+        let request = audioRequest
+        let previous = audioTask
+        // Keep lifecycle commands ordered, but discard a queued tone if its key
+        // was released (or its screen left) while the engine was preparing.
+        audioTask = Task { @MainActor in
+            await previous?.value
+            guard request == audioRequest else { return }
+            do {
+                switch command {
+                case .prepare(let settings):
+                    try await output.prepare(settings: settings)
+                case .start(let settings):
+                    let started = ContinuousClock.now
+                    try await output.prepare(settings: settings)
+                    guard request == audioRequest else { return }
+                    try await output.startTone(settings: settings)
+                    let components = started.duration(to: .now).components
+                    audioStartupSeconds = Double(components.seconds) + Double(components.attoseconds) / 1e18
+                case .element(let element, let settings):
+                    try await output.prepare(settings: settings)
+                    guard request == audioRequest else { return }
+                    try await output.playElement(element, settings: settings)
+                case .silence:
+                    await output.silence()
+                case .release:
+                    await output.release()
+                }
+                if request == audioRequest { audioError = nil }
+            } catch {
+                guard request == audioRequest else { return }
+                audioError = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+                straightKeyDownAt = nil
+            }
+        }
+    }
 }
 
 // Each navigation host owns its focus binding. A binding owned by the practice host

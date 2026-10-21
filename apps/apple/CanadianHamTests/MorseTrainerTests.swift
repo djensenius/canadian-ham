@@ -45,6 +45,44 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(schedule.amplitude(at: 55, stopRampStartFrame: 50), 0, accuracy: 0.000_001)
     }
 
+    @MainActor
+    func testMorseSendingKeyerClassifiesRecordedEventsWhileAudioStartupIsSuspended() async throws {
+        let startupBegan = expectation(description: "Audio starter is suspended")
+        let silenced = expectation(description: "Released key silences the delayed starter")
+        let output = SuspendedMorseSendingAudioOutput(stall: .start, operationBegan: startupBegan, finished: silenced)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        let keyDown = ContinuousClock.now
+        keyer.beginStraightKey(at: keyDown, settings: .default)
+        await fulfillment(of: [startupBegan], timeout: 3)
+
+        // Audio is still suspended: classification must use the two recorded
+        // monotonic event times, not wait for the starter or read the wall clock.
+        let sample = try XCTUnwrap(keyer.endStraightKey(at: keyDown.advanced(by: .milliseconds(50)), profile: profileForName(.isedParis)))
+        XCTAssertEqual(sample.element, .dot)
+        XCTAssertEqual(sample.durationSeconds, 0.05, accuracy: 0.000_001)
+        XCTAssertFalse(keyer.isStraightKeyDown)
+        XCTAssertNil(try keyer.endStraightKey(at: .now, profile: profileForName(.isedParis)))
+
+        await output.finishSlowOperation()
+        await fulfillment(of: [silenced], timeout: 3)
+    }
+
+    @MainActor
+    func testMorseSendingKeyerLeavingDuringPreparationDoesNotStartALateTone() async {
+        let preparationBegan = expectation(description: "Engine preparation is suspended")
+        let released = expectation(description: "Leaving releases the prepared engine")
+        let output = SuspendedMorseSendingAudioOutput(stall: .prepare, operationBegan: preparationBegan, finished: released)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        keyer.beginStraightKey(at: .now, settings: .default)
+        await fulfillment(of: [preparationBegan], timeout: 3)
+        keyer.release()
+        XCTAssertFalse(keyer.isStraightKeyDown)
+        await output.finishSlowOperation()
+        await fulfillment(of: [released], timeout: 3)
+        let starts = await output.toneStarts
+        XCTAssertEqual(starts, 0, "A queued tone must not sound after navigating away")
+    }
+
     func testMorseAudioSessionStaysActiveUntilLastPlayerReleases() {
         var usage = MorseAudioSessionUsage()
         usage.acquire() // course starts
@@ -668,5 +706,46 @@ final class MorseTrainerTests: XCTestCase {
 
         MorseTrainerSettings.reset(defaults: defaults)
         XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), .default)
+    }
+}
+
+private actor SuspendedMorseSendingAudioOutput: CanadianHam.MorseSendingAudioOutput {
+    enum Stall { case prepare, start }
+
+    let stall: Stall
+    let operationBegan: XCTestExpectation
+    let finished: XCTestExpectation
+    private var continuation: CheckedContinuation<Void, Never>?
+    private(set) var toneStarts = 0
+
+    init(stall: Stall, operationBegan: XCTestExpectation, finished: XCTestExpectation) {
+        self.stall = stall
+        self.operationBegan = operationBegan
+        self.finished = finished
+    }
+
+    func prepare(settings: CanadianHam.MorseTrainerSettings) async {
+        if stall == .prepare { await suspend() }
+    }
+
+    func startTone(settings: CanadianHam.MorseTrainerSettings) async {
+        toneStarts += 1
+        if stall == .start { await suspend() }
+    }
+
+    func playElement(_ element: MorseKeyElement, settings: CanadianHam.MorseTrainerSettings) {}
+    func silence() { if stall == .start { finished.fulfill() } }
+    func release() { if stall == .prepare { finished.fulfill() } }
+
+    func finishSlowOperation() {
+        continuation?.resume()
+        continuation = nil
+    }
+
+    private func suspend() async {
+        await withCheckedContinuation {
+            continuation = $0
+            operationBegan.fulfill()
+        }
     }
 }
