@@ -1155,6 +1155,7 @@ private struct ConceptCheckQuestionView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(isCorrect ? DesignTokens.Colors.correctBg : DesignTokens.Colors.incorrectBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 2))
+                .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("lesson-quiz-feedback")
             }
         }
