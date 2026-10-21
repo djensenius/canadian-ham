@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 14:22'
+updated_date: '2026-10-21 14:33'
 labels:
   - apple
 dependencies:
@@ -58,4 +58,6 @@ R3 dark panel/approved-feedback/default-result audits PASS (201.045s). AX still 
 Resume 2026-10-21: overnight R4 completed. macOS cache/timing recheck PASS (2/2) and current/other lesson route test PASS (1/1). iPhone: concept exclusions PASS (23.782s), dark audits PASS (146.398s), French/current-lesson round trip PASS (168.292s), light audits PASS (139.836s), one-level help persistence PASS (108.015s), post-choice immutability PASS (116.571s). AX successfully preserved state/reopened Hint 2, but existing DEBUG layout overlay intercepted the inspector Close tool (full close frame is inside overlay). Coordinator explicitly approved a DEBUG-only one-shot allowsHitTesting(false) after transition, retaining visible label/value and no Release behavior; shared helpers must stay byte-identical. Rerun all six existing users of -CanadianHamShowSimulatedSizeClassChangeControl (two practice transitions and four deep Learn transitions) on iPhone and iPad, plus AX and new iPad quiz tests. No other code/audit scope changes.
 
 R5 iPhone 17 Pro PASS (7/7) after the approved DEBUG-only one-shot control fix: AX-XXXL hint/layout round trip 189.978s; compact-to-split deep lesson 46.935s; compact-to-split deep quiz 81.995s; compact-to-regular practice selection/calculator 64.893s; regular-to-compact practice selection/calculator 64.359s; split-to-compact deep lesson 27.860s; split-to-compact deep quiz 87.757s. All six pre-existing launch-argument control tests and shared helpers are unmodified. Combined with R4, every new iPhone quiz test is now green. Nohup runner has started the iPad Pro 13-inch (M5) run with all seven new quiz methods plus the same six existing control users (13 methods); no finished checks repeated.
+
+iPad first targeted run: 11/13 methods PASS, including all six existing DEBUG control users, AX/layout, concept exclusions, French/current-lesson link, one-level and post-choice persistence. Both light/dark hint-panel default audits correctly failed a non-contrast Dynamic Type issue on the disabled background Submit lesson quiz button. Attachment says the font cannot be changed; the new ViewThatFits navigation swaps between two distinct button trees as text grows. Replaced that navigation-only container with a single wrapping vertical control stack for stable identity and scalable text at every size; this is the real quiz layout in all builds, not an audit-only layout. Full audits and shared helpers unchanged. Rerun only affected iPad/iPhone audit methods and iPad AX case.
 <!-- SECTION:NOTES:END -->
