@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-21 23:09'
+updated_date: '2026-10-21 23:15'
 labels:
   - content
   - web
@@ -25,7 +25,7 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [ ] #1 Answers are hidden by default and revealed by an accessible control (keyboard, VoiceOver, screen readers; the state is announced)
-- [ ] #2 All lessons converted; the content checker validates the format
+- [x] #2 All lessons converted; the content checker validates the format
 - [ ] #3 Full default accessibility audits pass in light and dark on every platform that renders lessons
 <!-- AC:END -->
 
@@ -52,4 +52,6 @@ Initial checks: content-tools 244/244; content-swift 26/26 with DEVELOPER_DIR (p
 First iPhone attempt exposed test positioning overhead at largest Dynamic Type: whole-lesson upward scrolling overshot the Try-it, then the existing generic middle-band positioning helper slowly scanned the full lesson accessibility tree. Coordinator approved a DEBUG-only -CanadianHamInitialLessonSectionAnchor beside the existing InitialLessonID seam, mapping to the existing lessonSection route. Release navigation is unchanged. Only the new Try-it reveal tests use the seam; they open the short resistor-colour prompt in L-004-03, explicitly assert the Try-it heading and Show answer control are fully visible before the collapsed audit/tap, and position only the control for the expanded audit. No shared positioning/audit helper was modified or weakened. tvOS buttons now reuse the existing custom secondary focus-ring style; other Apple buttons use large native controls with unrestricted vertical sizing.
 
 Anchor attempt 2: iPhone French labels/state passed (58.323 s); default-light and largest-text-dark audits failed on a fully offscreen preceding faded-practice paragraph, not the reveal controls (black element screenshots saved under /tmp/task-46.5-iphone-attachments). The unchanged lesson exception helper requires scrollFrame.intersects(frame), so it cannot ignore fully offscreen contrast findings. Coordinator declined helper changes without an explicit owner decision. Approved next test positioning: start at check-your-work-compare-matching-digits in L-004-03, audit that preceding solution as well, then scroll down to the fully visible Try-it heading/prompt/control and run collapsed/revealed audits. This adds audit coverage and changes no issue filters. If the next run still fails only on fully offscreen elements, stop and hand the evidence to the coordinator for the owner.
+
+AC #2 verified: all 141 Try-its in all 31 M2–M8 lessons use paired hidden-answer blocks; M1 has none by policy. Coverage checker now rejects legacy inline/missing/empty/malformed/unpaired answers; content-tools 244 tests, 100/100 coverage, schema 58 tests, all 984 hint anchors and originality-all checks pass. Remaining ACs await targeted Apple audit evidence.
 <!-- SECTION:NOTES:END -->
