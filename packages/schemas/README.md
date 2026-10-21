@@ -23,7 +23,7 @@ All schema files use JSON Schema draft 2020-12 and are intentionally data-only: 
 
 The progress schema describes version `1` of `canadian-ham.progress-export`. It keeps `lessonProgress`, `lessonQuizAttempts`, and `preferences.theme` optional because both current importers accept older compatible files without those keys, while current web and Apple exports include them. Exam timer durations allow non-negative numbers (not just integers) to match the web importer and Apple's fractional-value rounding import path.
 
-Lesson quiz attempts optionally store `answeredWithHelpIds`: sorted unique official-question IDs, each in that attempt's `officialQuestionIds`. Missing means no helped answers. Correctness/quiz scores are unchanged; help qualifies only after a hint has been visible for 0.5 s before choice scoring. Import and sync validation enforce the same contract. Shared compatibility cases are in `fixtures/lesson-quiz-help.json`; Apple persistence adopts this field in TASK-50.14.2; until then, Apple builds accept the field on import and sync but drop it when they save or export an attempt (scores are unaffected).
+Lesson quiz attempts optionally store `answeredWithHelpIds`: sorted unique official-question IDs, each in that attempt's `officialQuestionIds`. Missing means no helped answers. Correctness/quiz scores are unchanged; help qualifies only after a hint has been visible for 0.5 s before choice scoring. Import and sync validation enforce the same contract. Shared compatibility cases are in `fixtures/lesson-quiz-help.json`; Apple stores the optional field in the attempt payload, including import/export, sync and lesson-split migrations.
 
 ## Validation
 

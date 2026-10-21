@@ -214,6 +214,60 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
     let officialQuestionIds: [String]
     let incorrectOfficialQuestionIds: [String]
     let incorrectConceptCheckIds: [String]
+    let answeredWithHelpIds: [String]?
+
+    init(
+        id: String,
+        quizId: String,
+        lessonId: String,
+        submittedAt: String,
+        correct: Int,
+        total: Int,
+        percent: Double,
+        officialQuestionIds: [String],
+        incorrectOfficialQuestionIds: [String],
+        incorrectConceptCheckIds: [String],
+        answeredWithHelpIds: [String]? = nil
+    ) {
+        self.id = id
+        self.quizId = quizId
+        self.lessonId = lessonId
+        self.submittedAt = submittedAt
+        self.correct = correct
+        self.total = total
+        self.percent = percent
+        self.officialQuestionIds = officialQuestionIds
+        self.incorrectOfficialQuestionIds = incorrectOfficialQuestionIds
+        self.incorrectConceptCheckIds = incorrectConceptCheckIds
+        self.answeredWithHelpIds = answeredWithHelpIds
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        quizId = try container.decode(String.self, forKey: .quizId)
+        lessonId = try container.decode(String.self, forKey: .lessonId)
+        submittedAt = try container.decode(String.self, forKey: .submittedAt)
+        correct = try container.decode(Int.self, forKey: .correct)
+        total = try container.decode(Int.self, forKey: .total)
+        percent = try container.decode(Double.self, forKey: .percent)
+        officialQuestionIds = try container.decode([String].self, forKey: .officialQuestionIds)
+        incorrectOfficialQuestionIds = try container.decode([String].self, forKey: .incorrectOfficialQuestionIds)
+        incorrectConceptCheckIds = try container.decode([String].self, forKey: .incorrectConceptCheckIds)
+        if container.contains(.answeredWithHelpIds) {
+            let ids = try container.decode([String].self, forKey: .answeredWithHelpIds)
+            guard Self.validAnsweredWithHelpIds(ids, officialQuestionIds: officialQuestionIds) else {
+                throw DecodingError.dataCorruptedError(forKey: .answeredWithHelpIds, in: container, debugDescription: "Help IDs must be sorted unique official IDs from this attempt.")
+            }
+            answeredWithHelpIds = ids
+        } else {
+            answeredWithHelpIds = nil
+        }
+    }
+
+    static func validAnsweredWithHelpIds(_ ids: [String], officialQuestionIds: [String]) -> Bool {
+        ids == ids.sorted() && Set(ids).count == ids.count && ids.allSatisfy(officialQuestionIds.contains)
+    }
 }
 
 struct ExportedPreferences: Codable, Equatable, Sendable {
@@ -1583,7 +1637,8 @@ final class ProgressStoreService: ObservableObject {
                     percent: Double(correct) / Double(total) * 100,
                     officialQuestionIds: officialQuestionIds,
                     incorrectOfficialQuestionIds: incorrectOfficialQuestionIds,
-                    incorrectConceptCheckIds: incorrectConceptCheckIds
+                    incorrectConceptCheckIds: incorrectConceptCheckIds,
+                    answeredWithHelpIds: attempt.answeredWithHelpIds.map { $0.filter(officialQuestionIds.contains) }
                 )
             }
         }
@@ -2739,6 +2794,16 @@ private func validateLessonQuizAttempts(
             errors.append(String(localized: "\(prefix).officialQuestionIds must be an array of strings."))
             if stringArray(attempt.storage["incorrectOfficialQuestionIds"]) == nil {
                 errors.append(String(localized: "\(prefix).incorrectOfficialQuestionIds must be an array of strings."))
+            }
+        }
+
+        if let value = attempt.storage["answeredWithHelpIds"] {
+            let official = stringArray(attempt.storage["officialQuestionIds"]) ?? []
+            let valid = stringArray(value).map { ids in
+                LessonQuizAttempt.validAnsweredWithHelpIds(ids, officialQuestionIds: official) && ids.allSatisfy(knownQuestionIds.contains)
+            } ?? false
+            if !valid {
+                errors.append(String(localized: "\(prefix).answeredWithHelpIds must be sorted unique official question IDs from this attempt."))
             }
         }
 

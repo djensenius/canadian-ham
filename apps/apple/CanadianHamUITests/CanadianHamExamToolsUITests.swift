@@ -18,6 +18,238 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try super.tearDownWithError()
     }
 
+    func testLessonQuizHintsLightAndFullAccessibilityAudits() throws {
+        try verifyLessonQuizHintsAndAudits(appearance: "light")
+    }
+
+    func testLessonQuizHintsDarkAndFullAccessibilityAudits() throws {
+        try verifyLessonQuizHintsAndAudits(appearance: "dark")
+    }
+
+    func testLessonQuizHintsFrenchAndCurrentLessonRoundTrip() throws {
+        let app = launchLessonQuiz(extraArguments: ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"])
+        defer { app.terminate() }
+        let question = app.staticTexts["question-stem"].firstMatch
+        XCTAssertTrue(question.waitForExistence(timeout: 10))
+        let original = question.label
+        openTool(.hint, in: app)
+        XCTAssertEqual(app.buttons["hint-show-level-1-button"].firstMatch.label, "Afficher l’indice 1")
+        revealBothHints(in: app)
+        let notice = app.staticTexts["hint-english-only-lesson-notice"].firstMatch
+        scrollExamToolUntilHittable(notice, in: app, maxSwipes: 8)
+        XCTAssertTrue(notice.exists)
+        let link = app.buttons["hint-review-in-lesson-button"].firstMatch
+        scrollExamToolUntilHittable(link, in: app, maxSwipes: 8)
+        link.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-heading-the-metric-prefix-ladder"].firstMatch.waitForExistence(timeout: 10))
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(question.waitForExistence(timeout: 10))
+        XCTAssertEqual(question.label, original)
+        openTool(.hint, in: app)
+        let secondHint = app.staticTexts["hint-level-2-title"].firstMatch
+        let hintScroll = app.scrollViews["hint-tool-scroll"].firstMatch
+        XCTAssertTrue(hintScroll.waitForExistence(timeout: 5))
+        for _ in 0..<10 where !secondHint.isHittable {
+            hintScroll.swipeUp()
+            waitBriefly()
+        }
+        XCTAssertTrue(secondHint.isHittable, "The restored Hint 2 must be reachable in the reopened panel")
+        closeTool(in: app)
+        chooseLessonQuizCorrectAnswer(in: app)
+        let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
+        scrollBackgroundUntilHittable(marker, in: app, maxSwipes: 12)
+        XCTAssertEqual(marker.label, "Réponse avec aide")
+        submitLessonQuiz(in: app)
+        XCTAssertTrue(app.staticTexts["lesson-quiz-help-summary"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Réponses avec aide : 1.")
+    }
+
+    func testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch() throws {
+        var app = launchLessonQuiz(seed: "lesson-hints-2")
+        openTool(.hint, in: app)
+        let first = app.buttons["hint-show-level-1-button"].firstMatch
+        XCTAssertTrue(first.waitForExistence(timeout: 5))
+        first.tap()
+        XCTAssertTrue(app.buttons["hint-review-in-lesson-button"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["hint-show-level-2-button"].exists)
+        waitBriefly(0.8)
+        closeTool(in: app)
+        let answer = app.buttons["answer-A-button"].firstMatch
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        answer.tap()
+        submitLessonQuiz(in: app)
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
+        app.terminate()
+        app = XCUIApplication()
+        app.launchArguments = ["-CanadianHamInitialLessonQuizID", "QZ-L-005-01-A", "-CanadianHamAppearance", "light", "-AppleLanguages", "(en)"]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["lesson-quiz-help-summary"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
+    }
+
+    func testLessonQuizConceptCheckHasNoHintOrOtherTools() throws {
+        let app = launchLessonQuiz(seed: "lesson-hints-15")
+        defer { app.terminate() }
+        XCTAssertTrue(app.buttons["lesson-quiz-choice-A-button"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["exam-tool-hint-button"].exists)
+        XCTAssertFalse(app.buttons["exam-tool-calculator-button"].exists)
+        XCTAssertFalse(app.buttons["exam-tool-referenceSheet-button"].exists)
+#if os(iOS)
+        let title = app.staticTexts["QZ-L-005-01-A"].firstMatch
+        let retry = app.buttons["Retry quiz"].firstMatch
+        XCTAssertTrue(title.exists)
+        XCTAssertTrue(retry.exists)
+        XCTAssertGreaterThan(retry.frame.minX, title.frame.maxX, "The default-size quiz header keeps Retry alongside the title on iPhone and iPad")
+        XCTAssertLessThan(retry.frame.minY, title.frame.maxY, "The default-size quiz header must not stack Retry below its text on iPhone or iPad")
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let previous = app.buttons["Previous"].firstMatch
+            let next = app.buttons["Next"].firstMatch
+            let submit = app.buttons["submit-lesson-quiz-button"].firstMatch
+            scrollBackgroundUntilHittable(submit, in: app, maxSwipes: 12)
+            XCTAssertTrue(previous.exists)
+            XCTAssertTrue(next.exists)
+            XCTAssertEqual(previous.frame.minY, next.frame.minY, accuracy: 1, "Default-size iPad quiz navigation must remain horizontal")
+            XCTAssertLessThanOrEqual(previous.frame.maxX, next.frame.minX)
+            XCTAssertLessThanOrEqual(next.frame.maxX, submit.frame.minX)
+        }
+#endif
+    }
+
+    func testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount() throws {
+        var app = launchLessonQuiz()
+        chooseLessonQuizCorrectAnswer(in: app)
+        openTool(.hint, in: app)
+        revealBothHints(in: app)
+        waitBriefly(0.8)
+        closeTool(in: app)
+        XCTAssertFalse(app.staticTexts["lesson-quiz-with-help-marker"].exists)
+        submitLessonQuiz(in: app)
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 0.")
+        app.terminate()
+        app = XCUIApplication()
+        app.launchArguments = ["-CanadianHamInitialLessonQuizID", "QZ-L-005-01-A", "-CanadianHamAppearance", "light", "-AppleLanguages", "(en)"]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["lesson-quiz-help-summary"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 0.")
+    }
+
+    func testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip() throws {
+        let app = launchLessonQuiz(extraArguments: navigationTransitionArguments(initialSizeClass: "compact") + [
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
+        ])
+        defer { app.terminate() }
+        openTool(.hint, in: app)
+        revealBothHints(in: app)
+        closeTool(in: app)
+        let question = app.staticTexts["question-stem"].firstMatch
+        let original = question.label
+        applySimulatedSizeClassChange(in: app, expectedSizeClassValue: "regular", context: "lesson quiz hints at largest Dynamic Type")
+        XCTAssertTrue(question.waitForExistence(timeout: 10))
+        XCTAssertEqual(question.label, original)
+        let hintButton = app.buttons["exam-tool-hint-button"].firstMatch
+        let layoutControl = app.buttons["debug-simulated-size-class-change-button"].firstMatch
+        // At AX-XXXL the debug layout control overlaps the scroll content. Scroll the real Hint
+        // button below that overlay rather than tapping through the test control.
+        for _ in 0..<12 where hintButton.frame.minY <= layoutControl.frame.maxY + 12 {
+            preciseExamToolScroll(app.scrollViews.firstMatch, in: app, fingerDeltaY: 72)
+            waitBriefly()
+        }
+        XCTAssertGreaterThan(hintButton.frame.minY, layoutControl.frame.maxY)
+        openTool(.hint, in: app)
+        let secondHint = app.staticTexts["hint-level-2-title"].firstMatch
+        let hintScroll = app.scrollViews["hint-tool-scroll"].firstMatch
+        XCTAssertTrue(hintScroll.waitForExistence(timeout: 5))
+        for _ in 0..<12 where !secondHint.isHittable {
+            if secondHint.exists && secondHint.frame.minY < visibleFrameExcludingNavigationBar(in: app).minY {
+                hintScroll.swipeDown()
+            } else {
+                hintScroll.swipeUp()
+            }
+            waitBriefly()
+        }
+        let restoredHintFrame = secondHint.exists ? frameDescription(secondHint.frame) : "missing"
+        XCTAssertTrue(secondHint.isHittable, "The restored Hint 2 must be reachable in the reopened panel. Hint: \(restoredHintFrame); scroll: \(frameDescription(hintScroll.frame))")
+        closeTool(in: app)
+        chooseLessonQuizCorrectAnswer(in: app)
+        let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
+        scrollBackgroundUntilHittable(marker, in: app, maxSwipes: 15)
+        XCTAssertTrue(marker.isHittable)
+        let previous = app.buttons["Previous"].firstMatch
+        let next = app.buttons["Next"].firstMatch
+        scrollBackgroundUntilHittable(next, in: app, maxSwipes: 15)
+        XCTAssertTrue(previous.exists)
+        XCTAssertTrue(next.exists)
+        XCTAssertGreaterThanOrEqual(next.frame.minY, previous.frame.maxY, "AX-XXXL quiz navigation must fall back to a vertical stack")
+    }
+
+    private func launchLessonQuiz(seed: String = "lesson-hints-1", appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
+        launchApp(appearance: appearance, arguments: [
+            "-CanadianHamInitialLessonQuizID", "QZ-L-005-01-A",
+            "-CanadianHamLessonQuizLimit", "1", "-CanadianHamLessonQuizSeed", seed,
+            "-CanadianHamExamToolInitialDetent", "large"
+        ] + extraArguments)
+    }
+
+    private func chooseLessonQuizCorrectAnswer(in app: XCUIApplication) {
+        // Shared seeded shuffle: B-005-001-001 has source order [3, 2, 0, 1].
+        let correct = app.buttons["answer-C-button"].firstMatch
+        XCTAssertTrue(correct.waitForExistence(timeout: 10))
+        scrollBackgroundUntilHittable(correct, in: app, maxSwipes: 15)
+        correct.tap()
+        XCTAssertTrue(app.staticTexts["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5))
+    }
+
+    private func submitLessonQuiz(in app: XCUIApplication) {
+        let submit = app.buttons["submit-lesson-quiz-button"].firstMatch
+        scrollBackgroundUntilHittable(submit, in: app, maxSwipes: 15)
+        XCTAssertTrue(submit.isEnabled)
+        submit.tap()
+        XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10))
+        let summary = app.staticTexts["lesson-quiz-help-summary"].firstMatch
+        let quizTitle = app.staticTexts["QZ-L-005-01-A"].firstMatch
+        let quizScroll = app.scrollViews.firstMatch
+        for _ in 0..<16 where !isFullyVisible(summary, in: app, requiresHittable: true) || !isFullyVisible(quizTitle, in: app, requiresHittable: true) {
+            quizScroll.swipeDown()
+            waitBriefly()
+        }
+        XCTAssertTrue(isFullyVisible(summary, in: app, requiresHittable: true), "Saved help summary must be fully visible below the navigation bar")
+        XCTAssertTrue(isFullyVisible(quizTitle, in: app, requiresHittable: true), "Quiz title must not be clipped under the navigation bar")
+    }
+
+    private func verifyLessonQuizHintsAndAudits(appearance: String) throws {
+        let app = launchLessonQuiz(appearance: appearance)
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["question-stem"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["exam-tool-calculator-button"].exists)
+        XCTAssertFalse(app.buttons["exam-tool-referenceSheet-button"].exists)
+        openTool(.hint, in: app)
+        revealBothHints(in: app)
+        XCTAssertFalse(app.descendants(matching: .any)["hint-reference-pointer"].exists)
+        waitBriefly(0.8)
+        try app.performAccessibilityAudit()
+        closeTool(in: app)
+        chooseLessonQuizCorrectAnswer(in: app)
+        let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
+        let feedbackTitle = app.staticTexts["answer-feedback-title"].firstMatch
+        scrollBackgroundUntilHittable(feedbackTitle, in: app, maxSwipes: 12)
+        for _ in 0..<12 where !isFullyVisible(marker, in: app, requiresHittable: true) || !isFullyVisible(feedbackTitle, in: app, requiresHittable: true) {
+            let top = min(marker.frame.minY, feedbackTitle.frame.minY)
+            let delta: CGFloat = top < visibleFrameExcludingNavigationBar(in: app).minY ? 72 : -72
+            preciseExamToolScroll(app.scrollViews.firstMatch, in: app, fingerDeltaY: delta)
+            waitBriefly()
+        }
+        XCTAssertTrue(marker.isHittable)
+        XCTAssertTrue(isFullyVisible(marker, in: app, requiresHittable: true), "Help marker must be fully visible before auditing feedback. Frame: \(frameDescription(marker.frame))")
+        XCTAssertTrue(isFullyVisible(feedbackTitle, in: app, requiresHittable: true), "Feedback title must be fully visible before auditing it. Frame: \(frameDescription(feedbackTitle.frame))")
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+        submitLessonQuiz(in: app)
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
+        XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.label.contains("1 / 1 (100%)"), "Help must not reduce quiz correctness")
+        try app.performAccessibilityAudit()
+    }
+
     func testPracticeCalculatorSheetKeepsAnswersHittableAtMediumDetent() throws {
         let app = launchPracticeQuestion()
         defer { app.terminate() }

@@ -42,6 +42,23 @@ final class RootNavigationMappingTests: XCTestCase {
         }
     }
 
+    func testLessonQuizCurrentAndOtherHintLessonStacksPreserveQuizAcrossLayouts() {
+        let quizPath: [LearnRoute] = [.lesson("L-005-01"), .lessonQuiz("QZ-L-005-01-A")]
+        let lessonLinks: [LearnRoute] = [
+            .lessonSection("L-005-01", "the-metric-prefix-ladder"),
+            .lessonSection("L-006-03", "wavelength-and-frequency"),
+            .lesson("L-006-03")
+        ]
+        for lessonLink in lessonLinks {
+            let path = quizPath + [lessonLink]
+            let compact: [RootNavigationRoute] = [.section(.learn)] + path.map { .learn($0) }
+            let split = RootNavigationMapping.splitState(for: compact)
+            XCTAssertEqual(split, SplitNavigationState(selection: .learn, path: path))
+            XCTAssertEqual(RootNavigationMapping.compactPath(for: split), compact)
+            XCTAssertEqual(Array(split.path.dropLast()), quizPath, "Back from either lesson must retain the original quiz route")
+        }
+    }
+
     func testPracticeHintLessonStackKeepsSessionAsSplitSelection() {
         let path: [LearnRoute] = [.lessonSection("L-006-03", "wavelength-and-frequency"), .lessonQuiz("QZ-L-006-03-A")]
         let compact: [RootNavigationRoute] = [.section(.practice), .practice(.all)] + path.map { .learn($0) }

@@ -183,6 +183,7 @@ struct LearnRouteDestinationView: View {
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
     let onDataChanged: () -> Void
+    let onOpenQuizHintLesson: (QuestionHintLessonLink) -> Void
 
     var body: some View {
         switch route {
@@ -229,7 +230,8 @@ struct LearnRouteDestinationView: View {
                     library: library,
                     progressStore: progressStore,
                     language: language,
-                    onDataChanged: onDataChanged
+                    onDataChanged: onDataChanged,
+                    onOpenHintLesson: onOpenQuizHintLesson
                 )
             } else {
                 ContentUnavailableView("Lesson quiz not found", systemImage: "questionmark.circle")
@@ -596,7 +598,65 @@ private struct OutlineLessonView: View {
     }
 }
 
-private struct LessonQuizScreen: View {
+@MainActor
+final class LessonQuizSessionState: ObservableObject {
+    let generation = UUID()
+    @Published var seed: String
+    @Published var items: [LessonQuizRuntimeItem] = []
+    @Published var currentIndex = 0
+    @Published var selectedByItemId: [String: Int] = [:]
+    @Published var submittedAttemptID: String?
+    @Published var errorMessage: String?
+    @Published var hintLevelsByQuestionId: [String: Int] = [:]
+    @Published var hintQualifiedQuestionIds: Set<String> = []
+    @Published var answeredWithHelpIds: Set<String> = []
+
+    func select(_ sourceOrChoiceIndex: Int, for item: LessonQuizRuntimeItem) {
+        guard selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return }
+        if let questionID = item.questionID {
+            answeredWithHelpIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
+                questionID: questionID,
+                qualifiedQuestionIds: hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: answeredWithHelpIds
+            )
+        }
+        selectedByItemId[item.id] = sourceOrChoiceIndex
+    }
+
+    @discardableResult
+    func qualifyHint(for item: LessonQuizRuntimeItem) -> Bool {
+        guard items[safe: currentIndex]?.id == item.id, let questionID = item.questionID,
+              selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return false }
+        return hintQualifiedQuestionIds.insert(questionID).inserted
+    }
+
+    init() {
+#if DEBUG
+        seed = AppLaunchArguments.value(after: "-CanadianHamLessonQuizSeed") ?? "lesson-quiz/\(UUID().uuidString)"
+#else
+        seed = "lesson-quiz/\(UUID().uuidString)"
+#endif
+    }
+}
+
+@MainActor
+final class LessonQuizSessionStateCache: ObservableObject {
+    private var states: [String: LessonQuizSessionState] = [:]
+
+    func state(for quizID: String) -> LessonQuizSessionState {
+        if let state = states[quizID] { return state }
+        let state = LessonQuizSessionState()
+        states[quizID] = state
+        return state
+    }
+
+    func clear() {
+        objectWillChange.send()
+        states.removeAll()
+    }
+}
+
+struct LessonQuizScreen: View {
     let quiz: LessonQuiz
     let lesson: Lesson
     let bank: QuestionBank
@@ -604,34 +664,29 @@ private struct LessonQuizScreen: View {
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
     let onDataChanged: () -> Void
+    let onOpenHintLesson: (QuestionHintLessonLink) -> Void
+    @EnvironmentObject private var sessions: LessonQuizSessionStateCache
 
     @State private var attempts: [LessonQuizAttempt] = []
     @State private var errorMessage: String?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if let errorMessage {
-                    MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
-                }
-                LessonQuizView(
-                    quiz: quiz,
-                    lesson: lesson,
-                    bank: bank,
-                    library: library,
-                    language: language,
-                    progressStore: progressStore,
-                    attempts: attempts,
-                    onSaved: {
-                        refresh()
-                        onDataChanged()
-                    }
-                )
+        LessonQuizView(
+            quiz: quiz,
+            lesson: lesson,
+            bank: bank,
+            library: library,
+            language: language,
+            progressStore: progressStore,
+            attempts: attempts,
+            loadErrorMessage: errorMessage,
+            state: sessions.state(for: quiz.id),
+            onOpenHintLesson: onOpenHintLesson,
+            onSaved: {
+                refresh()
+                onDataChanged()
             }
-            .pagePadding()
-        }
-        .background(DesignTokens.Colors.paper)
-        .navigationTitle("Lesson quiz")
+        )
         .task { refresh() }
     }
 
@@ -645,6 +700,35 @@ private struct LessonQuizScreen: View {
     }
 }
 
+// Keep one child tree: ViewThatFits candidates can lose audit-node provenance when Dynamic Type changes.
+private struct LessonQuizControlLayout: Layout {
+    let horizontalAlignment: VerticalAlignment
+    let verticalSpacing: CGFloat
+    let forceVertical: Bool
+
+    private func fittingLayout(proposal: ProposedViewSize, subviews: Subviews) -> AnyLayout {
+        let horizontal = AnyLayout(HStackLayout(alignment: horizontalAlignment))
+        var cache = horizontal.makeCache(subviews: subviews)
+        let ideal = horizontal.sizeThatFits(proposal: .unspecified, subviews: subviews, cache: &cache)
+        if !forceVertical && ideal.width <= (proposal.width ?? .infinity) {
+            return horizontal
+        }
+        return AnyLayout(VStackLayout(alignment: .leading, spacing: verticalSpacing))
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let layout = fittingLayout(proposal: proposal, subviews: subviews)
+        var layoutCache = layout.makeCache(subviews: subviews)
+        return layout.sizeThatFits(proposal: proposal, subviews: subviews, cache: &layoutCache)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let layout = fittingLayout(proposal: proposal, subviews: subviews)
+        var layoutCache = layout.makeCache(subviews: subviews)
+        layout.placeSubviews(in: bounds, proposal: proposal, subviews: subviews, cache: &layoutCache)
+    }
+}
+
 private struct LessonQuizView: View {
     let quiz: LessonQuiz
     let lesson: Lesson
@@ -653,71 +737,68 @@ private struct LessonQuizView: View {
     let language: BankLanguage
     @ObservedObject var progressStore: ProgressStoreService
     let attempts: [LessonQuizAttempt]
+    let loadErrorMessage: String?
+
+    @ObservedObject var state: LessonQuizSessionState
+    let onOpenHintLesson: (QuestionHintLessonLink) -> Void
     let onSaved: () -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var selectedTool: ExamTool?
+    // The shared tool presenter requires a calculator model; this quiz exposes only .hint.
+    @StateObject private var presentationCalculator = ExamCalculatorViewModel()
+    @State private var calculatorFocused = false
 
-    @State private var seed: String
-    @State private var items: [LessonQuizRuntimeItem] = []
-    @State private var currentIndex = 0
-    @State private var selectedByItemId: [String: Int] = [:]
-    @State private var submittedAttemptID: String?
-    @State private var errorMessage: String?
-
-    init(
-        quiz: LessonQuiz,
-        lesson: Lesson,
-        bank: QuestionBank,
-        library: ContentLibrary,
-        language: BankLanguage,
-        progressStore: ProgressStoreService,
-        attempts: [LessonQuizAttempt],
-        onSaved: @escaping () -> Void
-    ) {
-        self.quiz = quiz
-        self.lesson = lesson
-        self.bank = bank
-        self.library = library
-        self.language = language
-        self.progressStore = progressStore
-        self.attempts = attempts
-        self.onSaved = onSaved
-        _seed = State(initialValue: Self.initialSeed())
+    private var seed: String {
+        get { state.seed }
+        nonmutating set { state.seed = newValue }
     }
-
-    private static func initialSeed() -> String {
-#if DEBUG
-        AppLaunchArguments.value(after: "-CanadianHamLessonQuizSeed") ?? "lesson-quiz/\(UUID().uuidString)"
-#else
-        "lesson-quiz/\(UUID().uuidString)"
-#endif
+    private var items: [LessonQuizRuntimeItem] {
+        get { state.items }
+        nonmutating set { state.items = newValue }
+    }
+    private var currentIndex: Int {
+        get { state.currentIndex }
+        nonmutating set { state.currentIndex = newValue }
+    }
+    private var selectedByItemId: [String: Int] {
+        get { state.selectedByItemId }
+        nonmutating set { state.selectedByItemId = newValue }
+    }
+    private var submittedAttemptID: String? {
+        get { state.submittedAttemptID }
+        nonmutating set { state.submittedAttemptID = newValue }
+    }
+    private var errorMessage: String? {
+        get { state.errorMessage }
+        nonmutating set { state.errorMessage = newValue }
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text("Lesson quiz")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(quiz.id) // l10n: verbatim
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("\(items.count) questions: official bank questions update practice progress; concept checks do not.")
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                    if let latest = attempts.last {
-                        Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
-                            .font(DesignTokens.FontScale.caption)
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                            .accessibilityIdentifier("lesson-quiz-latest-score")
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                if let loadErrorMessage {
+                    MessagePanel(title: "Lesson quiz unavailable", message: loadErrorMessage, kind: .warning)
                 }
-                Spacer()
-                Button { restart() } label: {
-                    AccessibleSecondaryButtonLabel(title: "Retry quiz")
-                }
-                .buttonStyle(AccessibleSecondaryButtonStyle())
+                quizCard
             }
+            .pagePadding()
+        }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle("Lesson quiz")
+        .task(id: state.generation) { if items.isEmpty { restart(keepSeed: true) } }
+        .examToolPresentation(
+            selectedTool: $selectedTool,
+            calculator: presentationCalculator,
+            calculatorFocused: $calculatorFocused,
+            hintContext: hintToolContext
+        )
+        .onChange(of: currentIndex) { _, _ in selectedTool = nil }
+        .onDisappear { selectedTool = nil }
+    }
+
+    private var quizCard: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            quizHeaderControls
 
             if let errorMessage {
                 MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
@@ -727,32 +808,21 @@ private struct LessonQuizView: View {
                 Text("Question \(currentIndex + 1) of \(items.count)")
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                if hintToolContext != nil {
+                    ExamToolButtons(availableTools: [.hint]) { selectedTool = $0 }
+                }
                 LessonQuizQuestionView(
                     item: item,
                     bank: bank,
                     library: library,
                     language: language,
                     selectedSourceOrChoiceIndex: selectedByItemId[item.id],
+                    answeredWithHelp: item.questionID.map { state.answeredWithHelpIds.contains($0) } ?? false,
                     disabled: selectedByItemId[item.id] != nil || submittedAttemptID != nil
                 ) { selected in
-                    selectedByItemId[item.id] = selected
+                    state.select(selected, for: item)
                 }
-                HStack {
-                    Button { currentIndex = max(0, currentIndex - 1) } label: {
-                        AccessibleSecondaryButtonLabel(title: "Previous")
-                    }
-                    .disabled(currentIndex == 0)
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
-                    Button { currentIndex = min(items.count - 1, currentIndex + 1) } label: {
-                        AccessibleSecondaryButtonLabel(title: "Next")
-                    }
-                    .disabled(currentIndex + 1 >= items.count)
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
-                    Button("Submit lesson quiz") { submit() }
-                        .buttonStyle(AccessiblePrimaryButtonStyle())
-                        .disabled(!allAnswered || submittedAttemptID != nil)
-                        .accessibilityIdentifier("submit-lesson-quiz-button")
-                }
+                quizNavigationControls
                 if let submittedAttemptID, let attempt = attempts.first(where: { $0.id == submittedAttemptID }) {
                     Text("Saved result: \(attempt.correct) / \(attempt.total) (\(attempt.percent, format: .number.precision(.fractionLength(0...0)))%).")
                         .font(DesignTokens.FontScale.body.weight(.bold))
@@ -767,7 +837,102 @@ private struct LessonQuizView: View {
         .paperCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("lesson-quiz-card")
-        .task { if items.isEmpty { restart(keepSeed: true) } }
+    }
+
+    private var quizHeaderControls: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: DesignTokens.Spacing.md))
+            : AnyLayout(HStackLayout(alignment: .top))
+        return layout {
+            quizHeader
+            if !dynamicTypeSize.isAccessibilitySize {
+                Spacer()
+            }
+            retryButton
+        }
+    }
+
+    private var quizNavigationControls: some View {
+        LessonQuizControlLayout(
+            horizontalAlignment: .center,
+            verticalSpacing: DesignTokens.Spacing.sm,
+            forceVertical: dynamicTypeSize.isAccessibilitySize
+        ) { navigationButtons }
+    }
+
+    private var quizHeader: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text("Lesson quiz")
+                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+            Text(quiz.id) // l10n: verbatim
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+            Text("\(items.count) questions: official bank questions update practice progress; concept checks do not.")
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+            if let latest = attempts.last {
+                Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .accessibilityIdentifier("lesson-quiz-latest-score")
+                Text("Answers with help: \(latest.answeredWithHelpIds?.count ?? 0).") // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityIdentifier("lesson-quiz-help-summary")
+            }
+        }
+    }
+
+    private var retryButton: some View {
+        Button { restart() } label: {
+            AccessibleSecondaryButtonLabel(title: "Retry quiz")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+    }
+
+    private var hintToolContext: HintToolContext? {
+        guard let item = items[safe: currentIndex], let questionID = item.questionID,
+              bank.courseBankID == .basic, let hint = library.questionHintsByQuestionId[questionID] else { return nil }
+        return HintToolContext(
+            hint: hint,
+            language: language,
+            visibleLevel: state.hintLevelsByQuestionId[questionID] ?? 0,
+            answeredWithHelpQualified: state.hintQualifiedQuestionIds.contains(questionID),
+            canRecordHelp: selectedByItemId[item.id] == nil && submittedAttemptID == nil,
+            referenceSheetAvailable: false,
+            revealLevel: { state.hintLevelsByQuestionId[questionID] = max(state.hintLevelsByQuestionId[questionID] ?? 0, $0) },
+            hintVisibleLongEnough: {
+                state.qualifyHint(for: item)
+            },
+            openLesson: { link in
+                selectedTool = nil
+                // Dismiss the compact tool sheet before pushing a lesson on its parent stack.
+                Task { @MainActor in
+                    await Task.yield()
+                    onOpenHintLesson(link)
+                }
+            }
+        )
+    }
+
+    @ViewBuilder
+    private var navigationButtons: some View {
+        Button { currentIndex = max(0, currentIndex - 1) } label: {
+            AccessibleSecondaryButtonLabel(title: "Previous")
+        }
+        .disabled(currentIndex == 0)
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        Button { currentIndex = min(items.count - 1, currentIndex + 1) } label: {
+            AccessibleSecondaryButtonLabel(title: "Next")
+        }
+        .disabled(currentIndex + 1 >= items.count)
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        Button("Submit lesson quiz") { submit() }
+            .buttonStyle(AccessiblePrimaryButtonStyle())
+            .disabled(!allAnswered || submittedAttemptID != nil)
+            .accessibilityIdentifier("submit-lesson-quiz-button")
     }
 
     private var allAnswered: Bool {
@@ -782,6 +947,10 @@ private struct LessonQuizView: View {
             items = try buildLessonQuizItems(quiz: quiz, seed: seed)
             currentIndex = 0
             selectedByItemId = [:]
+            state.hintLevelsByQuestionId = [:]
+            state.hintQualifiedQuestionIds = []
+            state.answeredWithHelpIds = []
+            selectedTool = nil
             submittedAttemptID = nil
             errorMessage = nil
         } catch {
@@ -837,7 +1006,7 @@ private struct LessonQuizView: View {
                         incorrectOfficialQuestionIds.append(questionId)
                     }
                     if let question = bank.question(id: questionId) {
-                        progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: selected, now: submittedAt)
+                        progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: selected, now: submittedAt, answeredWithHelp: state.answeredWithHelpIds.contains(questionId))
                     }
                 case .concept(_, let conceptCheck, _):
                     if conceptCheck.choices[safe: selected]?.isCorrect == true {
@@ -858,7 +1027,8 @@ private struct LessonQuizView: View {
                 percent: items.isEmpty ? 0 : (Double(correct) / Double(items.count)) * 100,
                 officialQuestionIds: officialQuestionIds,
                 incorrectOfficialQuestionIds: incorrectOfficialQuestionIds,
-                incorrectConceptCheckIds: incorrectConceptCheckIds
+                incorrectConceptCheckIds: incorrectConceptCheckIds,
+                answeredWithHelpIds: state.answeredWithHelpIds.sorted()
             )
             try progressStore.saveLessonQuizAttempt(attempt, questionProgress: progress)
             submittedAttemptID = attempt.id
@@ -870,7 +1040,7 @@ private struct LessonQuizView: View {
     }
 }
 
-private enum LessonQuizRuntimeItem: Identifiable, Equatable {
+enum LessonQuizRuntimeItem: Identifiable, Equatable {
     case official(id: String, questionId: String, choicePermutation: [Int])
     case concept(id: String, conceptCheck: ConceptCheck, choicePermutation: [Int])
 
@@ -878,6 +1048,11 @@ private enum LessonQuizRuntimeItem: Identifiable, Equatable {
         switch self {
         case .official(let id, _, _), .concept(let id, _, _): id
         }
+    }
+
+    var questionID: String? {
+        if case .official(_, let questionID, _) = self { return questionID }
+        return nil
     }
 }
 
@@ -887,6 +1062,7 @@ private struct LessonQuizQuestionView: View {
     let library: ContentLibrary
     let language: BankLanguage
     let selectedSourceOrChoiceIndex: Int?
+    let answeredWithHelp: Bool
     let disabled: Bool
     let onChoose: (Int) -> Void
 
@@ -909,6 +1085,12 @@ private struct LessonQuizQuestionView: View {
                         }
                     }
                     if let selectedSourceOrChoiceIndex {
+                        if answeredWithHelp {
+                            Text("Answered with help")
+                                .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .accessibilityIdentifier("lesson-quiz-with-help-marker")
+                        }
                         PracticeFeedback(question: question, selectedSourceIndex: selectedSourceOrChoiceIndex, language: language, choicePermutation: permutation)
                     }
                 }

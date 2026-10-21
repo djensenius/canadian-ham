@@ -12082,6 +12082,75 @@
           }
         }
       }
+    },
+    "%@.answeredWithHelpIds must be sorted unique official question IDs from this attempt." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds must be sorted unique official question IDs from this attempt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds doit contenir des identifiants de questions officielles de cette tentative, triés et sans doublons."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds doit contenir des identifiants de questions officielles de cette tentative, triés et sans doublons."
+          }
+        }
+      }
+    },
+    "Answered with help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answered with help"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponse avec aide"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponse avec aide"
+          }
+        }
+      }
+    },
+    "Answers with help: %lld." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answers with help: %lld."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponses avec aide : %lld."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponses avec aide : %lld."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

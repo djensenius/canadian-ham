@@ -24,6 +24,7 @@ struct RootView: View {
     @State private var navigationPath: [LearnRoute] = []
     @State private var unfinishedCourseWorkCheckID = UUID()
     @StateObject private var practiceSessionStates = PracticeSessionStateCache()
+    @StateObject private var lessonQuizSessions = LessonQuizSessionStateCache()
     @StateObject private var mockExamState = MockExamState()
     @State private var splitColumnVisibility = NavigationSplitViewVisibility.automatic
     @State private var preToolSplitColumnVisibility: NavigationSplitViewVisibility?
@@ -32,6 +33,7 @@ struct RootView: View {
     @State private var compactNavigationPath: [RootNavigationRoute] = []
 #if DEBUG
     @State private var debugHorizontalSizeClassOverride: UserInterfaceSizeClass?
+    @State private var didApplyDebugSizeClassChange = false
 #endif
 #endif
     @State private var didApplyLaunchNavigation = false
@@ -48,6 +50,7 @@ struct RootView: View {
             if let bank, let contentLibrary, let progressStore {
                 appContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     .environment(\.canadianHamContentLibrary, contentLibrary)
+                    .environmentObject(lessonQuizSessions)
                     .preferredColorScheme(launchColorScheme ?? colorScheme(for: progressStore.preferences.theme))
             } else if let progressStoreError {
                 StoreRecoveryView(message: progressStoreError) {
@@ -164,6 +167,7 @@ struct RootView: View {
         .onChange(of: progressStore.preferences.activeBankId) { _, next in
             loadBank(for: next)
             practiceSessionStates.clear()
+            lessonQuizSessions.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
         .onChange(of: appSettings.localDataReplacementRevision) { _, next in
@@ -391,6 +395,7 @@ struct RootView: View {
         .onChange(of: progressStore.preferences.activeBankId) { _, next in
             loadBank(for: next)
             practiceSessionStates.clear()
+            lessonQuizSessions.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
         .onChange(of: appSettings.localDataReplacementRevision) { _, next in
@@ -581,6 +586,7 @@ struct RootView: View {
            let sizeClass = debugSimulatedHorizontalSizeClassAfterChange {
             Button {
                 debugHorizontalSizeClassOverride = sizeClass
+                didApplyDebugSizeClassChange = true
             } label: {
                 Text(verbatim: "Apply simulated size class change (\(debugSimulatedSizeClassAccessibilityValue(usesCompactNavigation: usesCompactNavigation)))")
             }
@@ -589,6 +595,8 @@ struct RootView: View {
             .padding(.trailing, DesignTokens.Spacing.md)
             .accessibilityIdentifier("debug-simulated-size-class-change-button")
             .accessibilityValue(Text(verbatim: debugSimulatedSizeClassAccessibilityValue(usesCompactNavigation: usesCompactNavigation))) // l10n: verbatim
+            // This one-shot test control must not intercept tool controls after the transition.
+            .allowsHitTesting(!didApplyDebugSizeClassChange)
         }
     }
 
@@ -656,6 +664,7 @@ struct RootView: View {
     }
 
     private func clearCachedSessions(localDataReplacementRevision: Int) {
+        lessonQuizSessions.clear()
         practiceSessionStates.clear()
         mockExamState.resetSession(localDataReplacementRevision: localDataReplacementRevision)
     }
@@ -665,6 +674,7 @@ struct RootView: View {
         appSettings.recordDataChanged(replacesLocalData: replacesLocalData)
         if replacesLocalData {
             practiceSessionStates.clear()
+            lessonQuizSessions.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
     }
@@ -697,10 +707,19 @@ struct RootView: View {
             library: contentLibrary,
             bank: bank,
             progressStore: progressStore,
-            language: language
-        ) {
-            recordDataChanged()
-        }
+            language: language,
+            onDataChanged: { recordDataChanged() },
+            onOpenQuizHintLesson: { link in
+                let route: LearnRoute = link.sectionAnchor.map { .lessonSection(link.lessonId, $0) } ?? .lesson(link.lessonId)
+#if os(iOS)
+                if usesCompactNavigation(horizontalSizeClass: effectiveHorizontalSizeClass) {
+                    compactNavigationPath.append(.learn(route))
+                    return
+                }
+#endif
+                navigationPath.append(route)
+            }
+        )
     }
 
     @ViewBuilder
