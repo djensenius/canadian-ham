@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-20 17:30'
+updated_date: '2026-10-21 14:54'
 labels:
   - apple
 dependencies: []
@@ -31,6 +31,8 @@ Seen during task-44.3 work: long category titles such as 'Regulations and Polici
 2. Add EN/FR default and AX-XXXL UI coverage for every Basic/Advanced category list/card/session header plus Study/weak-area headers; retain all existing tests and shared helpers unchanged.
 3. Apply the coordinator-approved native navigation exception: keep original titles, require complete accessibility labels and wrapped same-screen content headers, document measured ellipses, and check Large Content Viewer behaviour. No app layout changes remain.
 4. Run only the added tests through nohup xbuild on iPhone 17 Pro, save screenshots/results in docs/evidence/task-52, verify deterministic project generation, then finalize, commit and push without a PR.
+
+5. Continuation: short sidebar hierarchy probe confirmed virtualized rows are skipped by full swipes. Preserve the exact full-title StaticText query, use bounded slow scrolling in only the new evidence helper, confirm default B-001/B-003 visibility, remove the temporary diagnostic, and commit before the all-four final xbuild run. Refresh evidence, rerun test guard against origin/main and XcodeGen determinism, then finalize and push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -53,4 +55,6 @@ Coordinator-approved measurement correction: SwiftUI text frames omit outer font
 Final-helper default EN passed all Home, Practice, Study/module and weak-area checks, then the sidebar selector could not find a standalone Regulations and Policies StaticText at default size. AX sidebar coverage had passed. Coordinator approved stopping only the already-failed TASK-52 run for a short native hierarchy/screenshot diagnostic; verified xcodebuild PID 26932 by all four TASK-52 selectors, result path and exact task-worktree cwd before SIGINT. No other build was touched. This is not yet an app truncation finding; the actual visible row/title must be inspected before adapting the selector.
 
 Blocked: a full CanadianHamLessonFigures plan (no only-testing selectors) occupies the shared xbuild lock; the short default-sidebar diagnostic could not start. Coordinator directed an In Progress handoff. Cancelled only the verified TASK-52 queued probe lockf waiter (PID 92875 under probe xbuild parent 92872, cwd verified); probe log ends XBUILD_EXIT=1 and all its xbuild parents exited. No other build was touched. Evidence docs explicitly distinguish historical observations from final acceptance. Continuation instructions, exact probe/all-four commands, query rules and evidence are in /tmp/task-52-handoff.md. Temporary diagnostic method is intentionally uncommitted for the next worker; remove it after inspection. AC remains unchecked; no final success summary or Done status is claimed.
+
+Continuation 2026-10-21: sidebar hierarchy probe passed in 37.018 s. The initial sidebar contains only upper virtualized rows; a single full swipe skips B-001/B-002 and leaves B-003 at y=-32. Exact full-title StaticText descendants are present when rows enter the hierarchy, including Station Assembly, Practice and Safety (216.7 x 42.3 pt). Visible default-size rows wrap fully in the host screenshot. Replacing only the new positioning helper's not-found swipe with a bounded slow drag; a second short probe will confirm B-001/B-003 before removing the temporary diagnostic. No app-code changes or relaxed text match.
 <!-- SECTION:NOTES:END -->
