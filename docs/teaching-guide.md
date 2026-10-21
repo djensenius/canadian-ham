@@ -99,14 +99,17 @@ Module 1 regulation lessons follow the reference style in `content/lessons/READM
 
 For M1 reference-style lessons:
 
-- keep single official facts in `## Reference facts: ...` tables;
+- organize the lesson around a few stated principles, introducing each `## Reference facts: ...` table with the principle it applies;
+- keep single official facts in original wording and add a short `Why` column that explains a relationship, purpose or useful distinction, not an invented legal rationale;
 - use `## How these rules fit together` for relationships and operating flow;
 - use positive rule statements;
 - avoid restating wrong answer options from the bank;
 - do not include `## Try it`, worked question-and-answer examples, original practice items, or `## Common mistakes`; and
 - keep lesson quiz JSON exhaustive for official question IDs and set `conceptChecks: []`.
 
-If a misconception needs coverage in an M1 lesson, handle it as a positive rule explanation in `How these rules fit together`, not as a `Misconception` or `Common mistakes` section. Avoid naming wrong answer options from the bank.
+TASK-46.8 retains M1's reference-only policy. Use the companion qualification-by-privilege matrices in L-001-02 and L-001-04 to distinguish station work, frequency access and power. The M1 numbers board in L-001-01 keeps similar values attached to their different jobs and units. A cue to cover table columns and recall the rule is allowed; it does not add a homemade regulatory question.
+
+If a misconception needs coverage in an M1 lesson, handle it as a positive rule explanation in the relevant principle or `How these rules fit together`, not as a `Misconception` or `Common mistakes` section. Avoid naming wrong answer options from the bank.
 
 ## 3. Teaching patterns for self-study
 

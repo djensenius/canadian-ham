@@ -61,13 +61,14 @@ Use the heading structure, plain-language rules, and calculation template in [`.
 
 Some modules are primarily made of rule facts already enumerated by the official question bank. For those modules, such as Module 1 regulations, lessons use a reference-style format instead of homemade practice prompts:
 
-- keep single facts in clearly labelled `Reference facts` tables;
+- organize teaching around a few named principles, not one row per bank question;
+- keep single facts in clearly labelled `Reference facts` tables with a short `Why` column; introduce each table with the principle it applies;
 - explain relationships in prose under a `How these rules fit together` section;
 - do not include Try-its, question-and-answer worked examples, original practice items, or `Common mistakes` sections;
 - phrase objectives, tables, and explanations as positive rule statements and avoid restating wrong answer options; and
 - use lesson quiz JSON that includes all official question IDs for the covered subsections and `conceptChecks: []`.
 
-The format lets the app teach the official rules without creating near-duplicate concept checks for a rule bank that is already exhaustive.
+The format lets the app teach the official rules without creating near-duplicate concept checks for a rule bank that is already exhaustive. M1 keeps this reference-only policy under TASK-46.8. Its companion qualification-by-privilege matrices in L-001-02 and L-001-04 separate station work from frequency access and power. The M1 numbers board in L-001-01 pairs each value with its job and unit. A cover-and-recall study cue may accompany a table; it is not a new practice item.
 
 ## Quiz check
 

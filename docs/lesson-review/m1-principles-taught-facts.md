@@ -158,22 +158,22 @@ The active bank is `content/generated/basic-2025-07-15/questions.json`. Regulato
 | Reference facts: Bandwidth and mode-fit cues | Amateur bands between 7 MHz and 25 MHz, except the special narrow band: 6 kHz maximum bandwidth. | Retained; reference-facts-mode-width-must-fit-the-band. |
 | Reference facts: Bandwidth and mode-fit cues | 10.100 MHz to 10.150 MHz: 1 kHz maximum bandwidth in RBR-4, which is less than 6 kHz. | Retained; reference-facts-mode-width-must-fit-the-band. |
 | Reference facts: Bandwidth and mode-fit cues | 10.100 MHz to 10.150 MHz: Single sideband is prohibited. | Retained; reference-facts-mode-width-must-fit-the-band. |
-| Reference facts: Bandwidth and mode-fit cues | Transmitting near band edges: The entire occupied bandwidth must remain within the amateur band. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | Transmitting near band edges: The entire occupied bandwidth must remain within the amateur band. | Retained; reference-facts-band-edges-contain-the-whole-signal. |
 | Reference facts: Bandwidth and mode-fit cues | CW / Morse radiotelegraphy: Narrower than SSB voice and FM voice in the mode-width ordering. | Retained; reference-facts-mode-width-must-fit-the-band. |
 | Reference facts: Bandwidth and mode-fit cues | FT8: A narrow digital mode, with many FT8 contacts fitting in the space needed for one SSB transmission. | Retained; reference-facts-mode-width-must-fit-the-band. |
 | Reference facts: Bandwidth and mode-fit cues | SSB voice: Usual SSB bandwidth is between 2 kHz and 3 kHz. | Retained; reference-facts-mode-width-must-fit-the-band. |
 | Reference facts: Bandwidth and mode-fit cues | FM voice: 5 kHz-deviation FM occupies between 10 kHz and 20 kHz; FM below 28 MHz exceeds regulatory bandwidth limits. | Retained; reference-facts-mode-width-must-fit-the-band. |
-| Reference facts: Bandwidth and mode-fit cues | Fast-scan television on 145 MHz: Prohibited because ATV exceeds the 30 kHz limit for 144 MHz to 148 MHz. | Retained; reference-facts-mode-width-must-fit-the-band. |
-| Reference facts: Bandwidth and mode-fit cues | Fast-scan television on 14.23 MHz: Prohibited because ATV exceeds the 6 kHz limit for amateur bands between 7 MHz and 25 MHz. | Retained; reference-facts-mode-width-must-fit-the-band. |
-| Reference facts: Power quantities and limits | General operating power: Use the minimum legal power necessary to communicate. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Bandwidth and mode-fit cues | Fast-scan television on 145 MHz: Prohibited because ATV exceeds the 30 kHz limit for 144 MHz to 148 MHz. | Retained through the 2 m bandwidth rule; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | Fast-scan television on 14.23 MHz: Prohibited because ATV exceeds the 6 kHz limit for amateur bands between 7 MHz and 25 MHz. | Retained through the 20 m bandwidth rule; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Power quantities and limits | General operating power: Use the minimum legal power necessary to communicate. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. The matrix retains the general ceiling, including eligible HF bands. |
 | Reference facts: Power quantities and limits | Power verification after RF exposure and radiated-power limits are determined: Verify at the output of the transmitter or external amplifier. | Retained; reference-facts-power-needs-a-quantity-and-a-measurement-point. |
-| Reference facts: Power quantities and limits | Basic, DC input to the final RF stage: 250 W. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
-| Reference facts: Power quantities and limits | Basic, single-sideband peak envelope power: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
-| Reference facts: Power quantities and limits | Basic and Morse, SSB on 3750 kHz: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
-| Reference facts: Power quantities and limits | Basic with Honours, SSB on 7055 kHz: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
-| Reference facts: Power quantities and limits | Basic-only non-SSB emissions for an operator without Advanced: 190 W carrier power. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
-| Reference facts: Power quantities and limits | Advanced, DC input to the final RF stage: 1 000 W. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
-| Reference facts: Power quantities and limits | Advanced, single-sideband peak envelope power: 2 250 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Basic, DC input to the final RF stage: 250 W. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. The matrix retains the general ceiling, including eligible HF bands. |
+| Reference facts: Power quantities and limits | Basic, single-sideband peak envelope power: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. The matrix retains the general ceiling, including eligible HF bands. |
+| Reference facts: Power quantities and limits | Basic and Morse, SSB on 3750 kHz: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. The matrix retains the general ceiling, including eligible HF bands. |
+| Reference facts: Power quantities and limits | Basic with Honours, SSB on 7055 kHz: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. The matrix retains the general ceiling, including eligible HF bands. |
+| Reference facts: Power quantities and limits | Basic-only non-SSB emissions for an operator without Advanced: 190 W carrier power. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. The matrix retains the general ceiling, including eligible HF bands. |
+| Reference facts: Power quantities and limits | Advanced, DC input to the final RF stage: 1 000 W. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. The matrix retains the general ceiling, including eligible HF bands. |
+| Reference facts: Power quantities and limits | Advanced, single-sideband peak envelope power: 2 250 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. The matrix retains the general ceiling, including eligible HF bands. |
 | Reference facts: Power quantities and limits | Advanced on the special band: On 60 metres, 100 W ERP expressed as PEP. | Retained; reference-facts-power-needs-a-quantity-and-a-measurement-point. |
 | Reference facts: Power quantities and limits | 630 metres and 2200 metres: Antenna gain must be taken into account because limits are expressed as EIRP. | Retained; reference-facts-power-needs-a-quantity-and-a-measurement-point. |
 | Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Repeater station: Automatically retransmits the signals of other stations. | Retained; reference-facts-automatic-signals-still-need-clean-control. |
@@ -243,3 +243,264 @@ The active bank is `content/generated/basic-2025-07-15/questions.json`. Regulato
 | Reference facts: EMCAB-2 interference criteria | Television-receiver complaint: The amateur transmission is the cause when field strength at the neighbour's premises is above ISED's specified immunity criteria. | Retained; reference-facts-investigate-interference-at-the-affected-equipment. |
 | Reference facts: EMCAB-2 interference criteria | Home-entertainment devices outside the strict radio-apparatus category: Associated equipment, such as audio or video recorders, playback devices, and amplifiers used with radio apparatus. | Retained; reference-facts-investigate-interference-at-the-affected-equipment. |
 | Reference facts: EMCAB-2 interference criteria | Garage door opener affected by transmissions: Radio-sensitive equipment, meaning other non-radio electronic equipment whose function can be affected by radio emissions. | Retained; reference-facts-investigate-interference-at-the-affected-equipment. |
+
+## Prose-only teaching comparison
+
+The baseline inventory above includes all 202 reference-table rows (including repeated facts). The following checks cover teaching outside those tables. Shorter station stories retain their operating point; incidental packing or binder suggestions are not new rules.
+
+| Lesson | Teaching extracted from baseline prose | After / comparison |
+|---|---|---|
+| L-001-01 | Act grants powers; Regulations and standards work in parallel, while ISED administers. Lifetime validity does not end address, retention or inspection duties. | Retained in Authority comes from named sources, A lifetime certificate needs current records, and How these rules fit together. |
+| L-001-01 | RGMC is a named certificate route, not a derived calculation. Accommodations change delivery, not required content. Reading/language oral delivery follows a written failure; answers remain personal in English/French. Physician evidence may be required. | Retained in Qualifications follow a learning path. |
+| L-001-01 | Study aids differ from exam aids. Download the unlabelled English ISED exam sheet; training version has labels. Follow examiner identification and scrap-paper instructions; virtual exams require workspace visibility, printed answer sheet, camera and microphone. Mock practice uses one item per subsection and an optional timer. | Retained in Exam aids support skills, not stored answers and Radio connection. The live downloads URL remains. |
+| L-001-02 | Check both people's authorization and the service, not who owns tools. Channel memories do not merge services. Publishing a digital method answers openness only. | Retained in Both sides need authority, Messages stay open and non-commercial, How these rules fit together, and club work-day connection. |
+| L-001-02 | Cross-band repeater receives on one band and sends on another; a beacon identifies or supports propagation checks. Control point is where the signal can be controlled/stopped. Control and ownership responsibilities continue during guest use. | Retained before/within the station-work matrix and Control stays with responsible people. |
+| L-001-03 | Protect primary services; classify routine, own-distress, unanswered distress response and organized relief separately. Direct distress involvement of your own station is the interference exception. Safety broadcasting does not open general public broadcasting. | Retained in Share spectrum without harm and Life safety has narrow exceptions. |
+| L-001-03 | Other non-broadcast disclosure has specific lawful purposes (protection, evidence, defence/security), not media enquiries. Identification is start/end/interval; a clock supports net discipline. | Retained in Message handling stays unpaid, Make the station traceable, and public-service net connection. |
+| L-001-04 | Fewer qualifications governs both call-sign-owner and control-operator cases. Basic-only direct transmission stays above 30 MHz; the 29.500 MHz fact concerns repeater output. Honours/Morse keep Basic power. | Retained in companion access/power matrix, including distinction between repeater input and output. |
+| L-001-04 | Whole emission must fit at an edge; dial value is not full signal width. Lower edges double 3.5 → 7 → 14 → 28 MHz; 21 MHz is 3 x 7. Upper edges must be learned separately. Thirty metres is too narrow for SSB. | Retained in Band edges contain the whole signal and Mode width must fit the band. The exact bank examples for ATV and SSB are now applications of these band-wide rules, not individual answer-key rows. |
+| L-001-04 | DC input, carrier output, PEP, ERP and EIRP are different quantities. ERP uses dipole reference; EIRP isotropic reference; gain matters. Minimum-power and special-band/exposure ceilings coexist. | Retained in access/power matrix and Power needs a quantity and a measurement point. |
+| L-001-04 | Whole-radio 20 A x 13.8 V = 276 W is not final-stage DC input; 100 W RF display is not DC input. Output connector is before tuner; radiated limits include gain. Quartz control resists drift; overdrive distorts/splatters. | Retained in supply-draw connection, power table and Automatic signals still need clean control. |
+| L-001-05 | Third parties may be present at both stations; certified supervision continues if a foreign station joins. The foreign administration may object. | Retained in A guest speaks under supervision and International permission includes purpose. |
+| L-001-05 | Region 2 includes the Americas; regions do not replace destination authority. Seven kilometres is about 3.8 nautical miles, inside the 12-nautical-mile (about 22 km) US territorial sea. | Retained in Location decides the applicable limits. |
+| L-001-05 | US visits lead with home call, CEPT with host prefix. CEPT pairs with Advanced in both directions. Travel card records location, permission, limits, ID and third-party conditions. | Retained in Visit arrangements pair permission with identification, How these rules fit together and travel card connection. |
+| L-001-06 | CPC-2-0-03 is ISED's siting procedure; local or ISED exclusion, default process, written concerns, applicable height exemption and final ISED decision are distinct checks. | Retained in Follow the applicable consultation process. |
+| L-001-06 | Controlled environments have assessed fields and people who understand/can control exposure; uncontrolled includes public and has lower limits. Body resonance explains VHF absorption; 80 MHz half-wave about 1.9 m is only a rough body-length model. Power, gain, distance and frequency combine. | Retained in Protect people by assessing exposure; the model's limitation is stated explicitly. |
+| L-001-06 | EMC means functioning in radio environment; EMCAB-2 compares fields at affected premises to category-specific immunity criteria. Radio-sensitive equipment excludes radio apparatus, distinct from broadcast receivers and associated equipment. Three records separate consultation, exposure and interference. | Retained in Investigate interference at the affected equipment, How these rules fit together and three-record connection. |
+
+## Every-question teaching cross-check
+
+Each row below was checked against the active bank and both lesson versions. The preceding inventory gives the baseline facts and original sections. Here, “Retained” means the revised principle teaches the needed rule, not merely that the ID is still in a quiz. Where an answer-key-shaped numeric case was consolidated, the band-wide or qualification-wide rule now teaches it. Each B-001 ID appears exactly once below.
+
+| Bank ID | Fact checked before and after (original paraphrase) | Revised teaching location / comparison |
+|---|---|---|
+| B-001-001-001 | Act supplies regulation-making power. | Retained; L-001-01#reference-facts-authority-comes-from-named-sources. |
+| B-001-001-002 | Act supplies power to issue operating standards. | Retained; L-001-01#reference-facts-authority-comes-from-named-sources. |
+| B-001-001-003 | ISED administers the Act. | Retained; L-001-01#reference-facts-authority-comes-from-named-sources. |
+| B-001-001-004 | Regulations supply the service definition. | Retained; L-001-01#reference-facts-authority-comes-from-named-sources. |
+| B-001-002-001 | Address-update duty: notify ISED within 30 days. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-002-002 | Certificate lifetime validity. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-002-003 | Address-update duty also applies after a move. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-002-004 | Keep certificate at station. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-002-005 | 48-hour response to certificate inspection request. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-002-006 | First certificate has no fee. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-002-007 | Keep certificate at address supplied to ISED. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-002-008 | New provincial/territorial prefix after moving has no fee. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-002-009 | Voluntary call-sign change costs $60, including two-letter change. | Retained; L-001-01#reference-facts-a-lifetime-certificate-needs-current-records. |
+| B-001-003-001 | Outside-band operation is prohibited and can penalize control operator. | Retained; L-001-01#reference-facts-trust-needs-honest-signals-and-fair-process. |
+| B-001-003-002 | Distress wording without distress is false/fraudulent. | Retained; L-001-01#reference-facts-trust-needs-honest-signals-and-fair-process. |
+| B-001-003-003 | False distress penalty: up to $5 000 and/or a year in prison. | Retained; L-001-01#reference-facts-trust-needs-honest-signals-and-fair-process. |
+| B-001-003-004 | Act contains the offences and penalties. | Retained; L-001-01#reference-facts-authority-comes-from-named-sources. |
+| B-001-003-005 | Suspension includes notice and opportunity to respond. | Retained; L-001-01#reference-facts-trust-needs-honest-signals-and-fair-process. |
+| B-001-003-006 | Dwelling entry needs consent or warrant. | Retained; L-001-01#reference-facts-trust-needs-honest-signals-and-fair-process. |
+| B-001-003-007 | False information is prohibited. | Retained; L-001-01#reference-facts-trust-needs-honest-signals-and-fair-process. |
+| B-001-003-008 | Unlawful interference/obstruction has same fine/prison ceiling. | Retained; L-001-01#reference-facts-trust-needs-honest-signals-and-fair-process. |
+| B-001-004-001 | Basic has no age restriction. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-004-002 | Basic precedes initial certification. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-004-003 | RGMC is the named alternate certificate route. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-004-004 | Later qualification sequence is unrestricted after Basic. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-004-005 | Morse sending and receiving rate is 5 words per minute. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-004-006 | Advanced still authorizes only the amateur service. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-004-007 | Candidate needs a valid Canadian address. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-005-001 | Advanced apparatus work still requires the recipient to be authorized. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-005-002 | Recipient of 2 m reprogramming needs amateur certification. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-005-003 | Two certificates needed for installing another person’s amateur transmitter. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-005-004 | Basic-plus-Morse installer still checks recipient’s amateur certificate. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-005-005 | Two certificates needed for repairing another person’s amateur transmitter. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-005-006 | Two certificates needed for commissioning another person’s amateur transmitter. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-006-001 | 2 W does not remove qualified supervision and call-sign duties. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-006-002 | Normal contacts use stations with similar authorization. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-006-003 | Amateur amplifier cannot boost licence-exempt transmitter. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-006-004 | Modification does not certify amateur equipment for other bands. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-006-005 | Amateur authorization does not cover aeronautical, marine or land-mobile use. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-006-006 | Land-mobile channels require equipment certification and licensing for that service. | Retained; L-001-02#reference-facts-both-sides-need-authority. |
+| B-001-007-001 | Club-net business planning is outside amateur purposes. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-002 | No routine broadcasting to the general public. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-003 | Occasional business is still business. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-004 | One-way amateur uses differ from public broadcasts. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-005 | New encoding must be publicly published before use. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-006 | Encoding must have open meaning. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-007 | Abbreviations and procedure signals must have open meaning. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-008 | Lower background audio so non-amateur material is not retransmitted. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-009 | Secret codes are prohibited. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-010 | Open Q codes are permitted. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-007-011 | Business traffic remains prohibited. | Retained; L-001-02#reference-facts-messages-stay-open-and-non-commercial. |
+| B-001-008-001 | Certificate allows operation across Canada within applicable limits. | Retained; L-001-02#reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| B-001-008-002 | Beacon can send one-way signals. | Retained; L-001-02#reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| B-001-008-003 | Basic permits assembly of commercially available professional-design kits. | Retained; L-001-02#reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| B-001-008-004 | Installing a single-band voice repeater needs Basic plus Advanced. | Retained; L-001-02#reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| B-001-008-005 | Installing a club station needs Basic plus Advanced. | Retained; L-001-02#reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| B-001-008-006 | Gear lacking both professional design and amateur commercial manufacture needs Advanced for installation/use. | Retained; L-001-02#reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| B-001-008-007 | Basic permits cross-band repeater operation. | Retained; L-001-02#reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| B-001-008-008 | Remote changes to frequency, mode or power need Basic plus Advanced. | Retained; L-001-02#reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| B-001-009-001 | Owner and control operator both responsible. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-009-002 | Visitor transmitting at another station shares responsibility with owner. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-009-003 | Owner keeps responsibility for compliant operation. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-009-004 | Owner selects a suitably qualified control operator. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-009-005 | Every transmission needs a control operator. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-009-006 | Control operator stays at control point during transmission. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-009-007 | Unqualified family member alone cannot take control. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-009-008 | Guest operation needs qualified presence and supervision. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-009-009 | No-certificate participant needs appropriately qualified presence and supervision. | Retained; L-001-02#reference-facts-control-stays-with-responsible-people. |
+| B-001-010-001 | Disturbing other communication is harmful interference. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-002 | No deliberate interference in ordinary operation. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-003 | Secondary use protects primary services. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-004 | Amateurs have equal frequency access rights. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-005 | Serious degradation, obstruction and repeated interruption are harmful interference. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-006 | Minister may order harmful operation stopped or changed. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-007 | 430–450 MHz requires protection of other services. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-008 | 902–928 MHz amateur use has no protection from other-service interference. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-009 | Tests protect amateur and other services from interference. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-010-010 | 902–928 MHz may have heavy licence-exempt use. | Retained; L-001-03#reference-facts-share-spectrum-without-harm. |
+| B-001-011-001 | Normal amateur communication is between amateur stations. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-002 | Organized disaster relief stays on amateur bands. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-003 | Unanswered amateur-band distress may be answered beyond normal privileges. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-004 | Necessary life/property safety traffic has broadcasting exception. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-005 | Operator in distress may use any radiocommunication means. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-006 | Relief supports essential needs when normal systems are overloaded, damaged or disrupted. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-007 | Operator in distress has no power limitation. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-008 | Nonparticipants leave relief frequency and nearby space clear. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-009 | Agency traffic is allowed in peacetime, emergencies and exercises. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-011-010 | Own station’s direct distress involvement is the interference exception. | Retained; L-001-03#reference-facts-life-safety-has-narrow-exceptions. |
+| B-001-012-001 | Third-party traffic accepts no payment of any kind. | Retained; L-001-03#reference-facts-message-handling-stays-unpaid. |
+| B-001-012-002 | Non-broadcast amateur content can be shared/used. | Retained; L-001-03#reference-facts-message-handling-stays-unpaid. |
+| B-001-012-003 | Message exchanges cannot earn remuneration. | Retained; L-001-03#reference-facts-message-handling-stays-unpaid. |
+| B-001-012-004 | Other non-broadcast disclosure needs a lawful purpose; media enquiry is not one. | Retained; L-001-03#reference-facts-message-handling-stays-unpaid. |
+| B-001-013-001 | Canadian call shape: recognized prefix, numeral, suffix. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-002 | Identification at contact start/end and within 30-minute intervals. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-003 | Identify with station call sign. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-004 | Both stations identify at start. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-005 | Both stations identify at end. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-006 | 30-minute maximum identification gap. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-007 | Model control is the only unidentified-communication exception. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-008 | Identification in English or French. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-009 | Contact endpoints plus 30-minute interval all apply. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-010 | Tests use contact identification rules. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-013-011 | Normal Canadian prefixes VA, VE, VO, VY. | Retained; L-001-03#reference-facts-make-the-station-traceable. |
+| B-001-014-001 | Supervision continues if a foreign station joins guest contact. | Retained; L-001-05#reference-facts-a-guest-speaks-under-supervision. |
+| B-001-014-002 | Non-US visitor needs agreement and appropriate permit. | Retained; L-001-05#reference-facts-visit-arrangements-pair-permission-with-identification. |
+| B-001-014-003 | Canada permits international third-party traffic. | Retained; L-001-05#reference-facts-a-guest-speaks-under-supervision. |
+| B-001-014-004 | Administration can bar contacts through ITU objection. | Retained; L-001-05#reference-facts-international-permission-includes-purpose. |
+| B-001-014-005 | CEPT licence visitor receives Advanced privileges in Canada. | Retained; L-001-05#reference-facts-visit-arrangements-pair-permission-with-identification. |
+| B-001-014-006 | Third parties lack certification; their traffic stays personal/non-commercial. | Retained; L-001-05#reference-facts-a-guest-speaks-under-supervision. |
+| B-001-014-007 | International relief third-party traffic allowed unless foreign administration prohibits. | Retained; L-001-05#reference-facts-a-guest-speaks-under-supervision. |
+| B-001-014-008 | Non-certified people at both stations both count as third parties. | Retained; L-001-05#reference-facts-a-guest-speaks-under-supervision. |
+| B-001-014-009 | US call holder in Canada states city/province at least once per contact. | Retained; L-001-05#reference-facts-visit-arrangements-pair-permission-with-identification. |
+| B-001-014-010 | US voice visitor adds mobile/portable and Canadian location prefix after home call. | Retained; L-001-05#reference-facts-visit-arrangements-pair-permission-with-identification. |
+| B-001-014-011 | Canadian third-party traffic can use any other amateur station. | Retained; L-001-05#reference-facts-a-guest-speaks-under-supervision. |
+| B-001-015-001 | Less-qualified call-sign holder limits more-qualified guest using that call. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-015-002 | Less-qualified control operator limits operation at more-qualified owner’s station. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-015-003 | Basic plus Honours (80%), Advanced or Morse opens below-30-MHz access. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-015-004 | Model-control access is amateur bands above 30 MHz. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-015-005 | 80 m edges: 3.5–4.0 MHz. | Retained; L-001-04#reference-facts-band-edges-contain-the-whole-signal. |
+| B-001-015-006 | 160 m edges: 1.8–2.0 MHz. | Retained; L-001-04#reference-facts-band-edges-contain-the-whole-signal. |
+| B-001-015-007 | 40 m edges: 7.0–7.3 MHz. | Retained; L-001-04#reference-facts-band-edges-contain-the-whole-signal. |
+| B-001-015-008 | 20 m edges: 14.000–14.350 MHz. | Retained; L-001-04#reference-facts-band-edges-contain-the-whole-signal. |
+| B-001-015-009 | 15 m edges: 21.000–21.450 MHz. | Retained; L-001-04#reference-facts-band-edges-contain-the-whole-signal. |
+| B-001-015-010 | 10 m edges: 28.000–29.700 MHz. | Retained; L-001-04#reference-facts-band-edges-contain-the-whole-signal. |
+| B-001-015-011 | Model-control access is amateur bands above 30 MHz. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-016-001 | 6 m and 2 m bandwidth ceiling is 30 kHz. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-002 | 10 m bandwidth ceiling is 20 kHz. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-003 | 7–25 MHz amateur bands have 6 kHz ceiling except 30 m. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-004 | 144–148 MHz bandwidth ceiling is 30 kHz. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-005 | 50–54 MHz bandwidth ceiling is 30 kHz. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-006 | 10.100–10.150 MHz is narrower than 6 kHz (1 kHz in RBR-4). | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-007 | SSB excluded from 10.100–10.150 MHz. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-008 | Entire emission remains inside band. | Retained; L-001-04#reference-facts-band-edges-contain-the-whole-signal. |
+| B-001-016-009 | ATV is too wide for 2 m, including 145 MHz. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-010 | ATV is too wide for 20 m, including 14.23 MHz. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-016-011 | 30 m excludes SSB, including 10.12 MHz. | Retained; L-001-04#reference-facts-mode-width-must-fit-the-band. |
+| B-001-017-001 | Use no more legal power than needed for communication. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-017-002 | Advanced SSB ceiling: 2 250 W PEP. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-017-003 | Check evaluated output power at transmitter/external amplifier output. | Retained; L-001-04#reference-facts-power-needs-a-quantity-and-a-measurement-point. |
+| B-001-017-004 | Basic plus Morse retains 560 W SSB PEP on eligible HF (including 3 750 kHz). | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-017-005 | Honours retains 560 W SSB PEP on eligible HF (including 7 055 kHz). | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-017-006 | Advanced 60 m ceiling: 100 W ERP expressed as PEP. | Retained; L-001-04#reference-facts-power-needs-a-quantity-and-a-measurement-point. |
+| B-001-017-007 | Advanced final-stage DC input ceiling: 1 000 W. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-017-008 | 630 m and 2 200 m EIRP checks include antenna gain. | Retained; L-001-04#reference-facts-power-needs-a-quantity-and-a-measurement-point. |
+| B-001-017-009 | Basic final-stage DC input ceiling: 250 W. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-017-010 | Without Advanced, non-SSB carrier ceiling: 190 W. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-018-001 | Repeater automatically retransmits other stations. | Retained; L-001-04#reference-facts-automatic-signals-still-need-clean-control. |
+| B-001-018-002 | Below-30-MHz unmodulated carrier is for brief tests. | Retained; L-001-04#reference-facts-automatic-signals-still-need-clean-control. |
+| B-001-018-003 | Basic-only repeater output lower boundary: 29.500 MHz; own input still above 30 MHz. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-018-004 | Lowest Basic-only repeater output segment: 29.500–29.700 MHz. | Retained; L-001-04#reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| B-001-019-001 | Below-148-MHz stability equivalent to crystal control. | Retained; L-001-04#reference-facts-automatic-signals-still-need-clean-control. |
+| B-001-019-002 | SSB needs overmodulation prevention or indication. | Retained; L-001-04#reference-facts-automatic-signals-still-need-clean-control. |
+| B-001-019-003 | Voice quality controls address overmodulation. | Retained; L-001-04#reference-facts-automatic-signals-still-need-clean-control. |
+| B-001-019-004 | Voice modulation maximum: 100%. | Retained; L-001-04#reference-facts-automatic-signals-still-need-clean-control. |
+| B-001-019-005 | All modes require reliable frequency measurement. | Retained; L-001-04#reference-facts-automatic-signals-still-need-clean-control. |
+| B-001-019-006 | Voice modulation maximum: 100%. | Retained; L-001-04#reference-facts-automatic-signals-still-need-clean-control. |
+| B-001-020-001 | Foreign messages stay amateur-purpose or personal. | Retained; L-001-05#reference-facts-international-permission-includes-purpose. |
+| B-001-020-002 | Operator ensures international message-purpose limit. | Retained; L-001-05#reference-facts-international-permission-includes-purpose. |
+| B-001-020-003 | International permission depends on absence of administration objection. | Retained; L-001-05#reference-facts-international-permission-includes-purpose. |
+| B-001-020-004 | Administrations decide Morse authorization requirements. | Retained; L-001-05#reference-facts-international-permission-includes-purpose. |
+| B-001-020-005 | ITU supplies additional international radio regulations. | Retained; L-001-05#reference-facts-location-decides-the-applicable-limits. |
+| B-001-021-001 | Canada is ITU Region 2. | Retained; L-001-05#reference-facts-location-decides-the-applicable-limits. |
+| B-001-021-002 | Florida operation uses US band limits. | Retained; L-001-05#reference-facts-location-decides-the-applicable-limits. |
+| B-001-021-003 | 7 km off Florida remains in US territorial waters and uses US band limits. | Retained; L-001-05#reference-facts-location-decides-the-applicable-limits. |
+| B-001-021-004 | Australia/Japan/Southeast Asia are ITU Region 3. | Retained; L-001-05#reference-facts-location-decides-the-applicable-limits. |
+| B-001-021-005 | Europe/Africa are ITU Region 1. | Retained; L-001-05#reference-facts-location-decides-the-applicable-limits. |
+| B-001-021-006 | Canadian CEPT visitor needs Advanced. | Retained; L-001-05#reference-facts-visit-arrangements-pair-permission-with-identification. |
+| B-001-021-007 | CEPT voice order: host prefix, stroke, Canadian call. | Retained; L-001-05#reference-facts-visit-arrangements-pair-permission-with-identification. |
+| B-001-021-008 | Canadian US visitor needs at least Basic. | Retained; L-001-05#reference-facts-visit-arrangements-pair-permission-with-identification. |
+| B-001-021-009 | US voice order: Canadian call, portable/mobile, US area prefix. | Retained; L-001-05#reference-facts-visit-arrangements-pair-permission-with-identification. |
+| B-001-022-001 | ISED office qualification exams have no charge. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-022-002 | Disability delivery changes do not waive required exam portions. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-022-003 | Accredited examiner may recover administration costs. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-022-004 | ISED office qualification exams have no charge. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-022-005 | Candidate answers personally in English/French; oral delivery is language aid. | Retained; L-001-01#reference-facts-qualifications-follow-a-learning-path. |
+| B-001-023-001 | Antenna installation/modification can require consultation. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-002 | Minister has authority over installations, masts and towers. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-003 | ISED exclusion can remove land-use-authority contact requirement. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-004 | Without local process, use ISED default. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-005 | Default process: written notice, address concerns, public response opportunity. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-006 | Address reasonable/relevant written concerns within 30-day comment period. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-007 | Local-process or CPC-2-0-03 exclusion can remove public consultation requirement. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-008 | ISED settles unresolved disagreement with non-public stakeholder. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-009 | Height without consultation follows applicable exemption, not universal height. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-023-010 | Local authority determines process where one exists. | Retained; L-001-06#reference-facts-follow-the-applicable-consultation-process. |
+| B-001-024-001 | Health Canada publishes human RF exposure guidelines. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-002 | Safety Code 6 limits human RF exposure. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-003 | 48–300 MHz has greatest absorption-related risk in bank facts. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-004 | Stronger human absorption explains lower limits in that range. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-005 | No universal specified safe antenna-input power for a handheld. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-006 | Both controlled and uncontrolled environments covered. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-007 | Below 10 MHz, nerve stimulation is another established effect. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-008 | Handhelds remain subject to Safety Code 6. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-009 | No transmitter category is exempt. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-024-010 | Exposure uses field/current/absorption quantities, not just antenna-feed watts. | Retained; L-001-06#reference-facts-protect-people-by-assessing-exposure. |
+| B-001-025-001 | Below criterion at neighbour’s premises: stereo immunity is cause. | Retained; L-001-06#reference-facts-investigate-interference-at-the-affected-equipment. |
+| B-001-025-002 | Above criterion at neighbour’s premises: amateur transmission is cause. | Retained; L-001-06#reference-facts-investigate-interference-at-the-affected-equipment. |
+| B-001-025-003 | Home-entertainment supporting devices are associated equipment. | Retained; L-001-06#reference-facts-investigate-interference-at-the-affected-equipment. |
+| B-001-025-004 | Garage door opener uses radio-sensitive equipment category. | Retained; L-001-06#reference-facts-investigate-interference-at-the-affected-equipment. |
+
+## Verification after rewriting
+
+Result: no covered regulatory or operating fact lost. The rewrite consolidates repeated facts and teaches the exact bank cases through the applicable general rule instead of one row per question. All six full front-matter blocks, every figure directive (including alt text and text equivalent), and every ordered official quiz list are unchanged from `8a82709b`. All six M1 quizzes still have `conceptChecks: []`. There is no lesson/quiz ID or coverage migration.
+
+All 199 B-001 hint links now point to the teaching principle, including special cases where the fact moved between tables. Hint text, French fields, reference-sheet metadata and ladder levels are unchanged. The new `m1-principles.test.ts` checks the specific destination for every question, not just anchor existence. It also checks the companion matrix rows, Why columns, numbers board and completeness of this question index. The existing M1 reference-only checks in `lesson-faded-practice.test.ts` remain unchanged.
+
+All six changed lessons contain figure directives: L-001-01 (`authority-records-exams`), L-001-02 (`station-control-decision-tree`), L-001-03 (`communications-flowchart`), L-001-04 (`privileges-station-checklist`), L-001-05 (`international-location-checklist`), L-001-06 (`antenna-rf-emc-checklists`). The directives and illustration briefs are unchanged. The coordinator runs the separate Apple figure plan because lesson positioning can change.
+
+### Check results (2026-10-21)
+
+| Command | Result |
+|---|---|
+| `node packages/content-tools/src/check-lesson-coverage.ts` | Passed: 100/100 subsections, 37 lessons, 8 modules, no duplicate coverage. |
+| `pnpm --filter @canadian-ham/content-tools check:lesson-originality:all` | Passed: 37 lessons, 984 bank items, 0 issues, 15 active exceptions and 0 stale exceptions. M1 now needs only 7 numeric reference-table exceptions, down from 18 mixed numeric/wording exceptions. |
+| `pnpm --filter @canadian-ham/content-tools check:explanations` | Passed: 984 explanations, 2 952 per-choice notes. |
+| `pnpm --filter @canadian-ham/content-tools check:quizzes` | Passed: 37 quizzes, 521 official references and 92 concept checks repository-wide; M1's 199 official references and empty concept checks are unchanged. |
+| `pnpm check:links` | Passed: relative Markdown links resolve. |
+| `pnpm check:figures` | Passed: 53 checker fixtures, 39 SVGs and lesson references; Apple assets in sync. |
+| `pnpm check:hints -- --require-complete` | Passed: 984/984 hints; all 199 B-001 anchors also checked against specific teaching destinations in the new regression test. |
+| `pnpm check:schemas` | Passed: 2 071 validation targets, 58 tests. |
+| `pnpm import:check` | Passed: both generated banks unchanged, 34 reference-sheet entries validated. |
+| `node --test packages/content-tools/test/m1-principles.test.ts packages/content-tools/test/lesson-faded-practice.test.ts` | Passed: 71/71 tests, including 10 new M1 tests and the unchanged reference-only checks. |
+| `pnpm test` (after installing all workspace dependencies) | Passed: release-permission self-test; content-tools 226/226; Morse 21/21; calculator 127/127; web 245/245 across 16 files. No load-flaky web reruns needed. |
+| `pnpm typecheck` (after installing all workspace dependencies) | Passed across the workspace. |
+| `cd packages/content-swift && DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test` | Passed: 24/24, including bundled hint-anchor resolution, real-repository content loading and every-lesson Markdown parsing. |
+| Before/after source invariant comparison against `8a82709b` | Passed: six entire front matters, six figure directives/text equivalents, six illustration briefs and six full quiz JSON files unchanged; 202 baseline table rows, 199 official questions and 199 anchor-only hint JSON changes. |
+
+Initial environment-only failures: before a full workspace install, `pnpm test` stopped after the passing content-tools tests because Morse's `vitest` executable was missing; `pnpm typecheck` could not find `tsc` in sibling packages. `pnpm install --frozen-lockfile` installed the missing workspace dependencies without changing tracked files. Both full commands then passed. An initial new matrix-test selector also included the separate Basic-only repeater row; narrowing the selector to qualification rows fixed the test, with no content change or assertion removal.
+
+The web run emitted existing jsdom canvas `getContext()` warnings but all 245 tests passed. No Apple app suites were run: this branch changes no Apple source, target membership, renderer or assets. The coordinator still runs the separate iOS lesson-figure plan for the six edited lessons listed above. UI round delivery is intentionally unimplemented here and leaves parent AC #3 open in TASK-46.8.1.
