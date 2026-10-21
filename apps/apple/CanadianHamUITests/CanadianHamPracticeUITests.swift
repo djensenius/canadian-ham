@@ -2454,7 +2454,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func recordTryItAuditGeometry(in app: XCUIApplication, stage: String) {
-        let solution = app.staticTexts["The values are 620 ohms and 62 000 ohms, or 62 kilohms. The ratio is 100. Changing the multiplier changes place value; the digit bands and tolerance need not change."].firstMatch
+        let solution = app.staticTexts.matching(NSPredicate(format: "label == %@", "The values are 620 ohms and 62 000 ohms, or 62 kilohms. The ratio is 100. Changing the multiplier changes place value; the digit bands and tolerance need not change.")).firstMatch
         let heading = app.staticTexts["lesson-heading-try-it"].firstMatch
         let control = app.buttons["lesson-try-it-1-toggle"].firstMatch
         let note = "stage=\(stage); visible=\(frameDescription(visibleFrameExcludingNavigationBar(in: app))); precedingSolution=\(frameDescription(solution.frame)); tryItHeading=\(frameDescription(heading.frame)); control=\(frameDescription(control.frame))"
