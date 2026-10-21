@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-21 14:58'
+updated_date: '2026-10-21 15:04'
 labels:
   - content
 dependencies: []
@@ -45,4 +45,6 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 Owner decision 2026-10-12: YES. Restructure M1 around a few generating principles, a qualification-by-privilege matrix spanning L-001-02/L-001-04, a short Why column, an M1 numbers board, and quiz rounds per section. Start after the 38.x figure branches merge (they edit M1 lessons).
 
 Owner decision 2026-10-12: yes, do it. See docs/lesson-review/README.md and docs/lesson-review/m1-m2.md.
+
+Created TASK-46.8.1 for web/Apple quiz rounds, dependent on TASK-50.14.2. Format decision: retain principles-led M1 reference-only rules and exhaustive official-only quizzes; no concept checks. Captured all baseline reference facts before rewriting. L-001-01 and L-001-02 rewritten and pushed separately; numbers board and station-work qualification matrix added, hint anchors retargeted, originality/hints/coverage checks green so far.
 <!-- SECTION:NOTES:END -->
