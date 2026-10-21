@@ -1,8 +1,8 @@
 # TASK-52: iPhone category titles
 
-> **Baseline validation complete — 2026-10-21.** All four cases passed before
-> the review fixes below; the dedicated-plan rerun is pending. Baseline coverage:
-> English and French at default and Accessibility XXXL sizes, including both
+> **Dedicated-plan validation passed — 2026-10-21.** All four review-fixed cases
+> passed in `CanadianHamTitleSweeps`: English and French at default and
+> Accessibility XXXL sizes, including both
 > banks' regular-width sidebar. Cards, lists and content headers passed strict
 > full-text/frame/height checks. Native navigation ellipses remain only under
 > the documented coordinator-approved exception below. No app code changed.
@@ -85,7 +85,7 @@ the same metric helper, verifies that it is exactly two lines, and asserts that
 its measured height passes the shared height predicate while a height of
 (measured height − one line) fails. This replaces the review's identified no-op
 per-element negative check; every sweep executes the fixture before launching
-an app. The dedicated-plan rerun below validates this fixture and French-only
+an app. The dedicated-plan rerun below passed with this fixture and French-only
 hyphenation.
 
 Four source-named tests in `CanadianHamPracticeUITests` cover English and French
@@ -221,6 +221,35 @@ module titles remain authored in English. French B-003's inline frame remains
 314 points wide versus a 342.7-point reference string, and its Study large title
 remains 346.3 × 71.7 points at AX-XXXL, under the documented exception.
 
+## Review-fixed dedicated-plan validation
+
+All four sweeps passed in **one run** of `CanadianHamTitleSweeps` at implementation
+commit `cdd2b25e618b0af59194d82d40f2d752a2ee367e`, on the same iPhone 17 Pro
+simulator / iOS 27.0 (24A434), device ID
+`DFEE5295-C8D6-4B87-8A04-1A15AF991B3E`. The plan selects only these four tests and
+has code coverage disabled. [Review-run summary](review-test-summary.json) and
+[per-test results](review-per-test-results.json) are extracted from the result
+bundle, separately from the historical baseline JSON and images above.
+
+| `CanadianHamPracticeUITests` case | Outcome | Duration |
+| --- | --- | ---: |
+| `testCategoryTitlesEnglishDefaultSize` | Passed | 673.640 s |
+| `testCategoryTitlesEnglishLargestAccessibilitySize` | Passed | 1243.685 s |
+| `testCategoryTitlesFrenchDefaultSize` | Passed | 689.232 s |
+| `testCategoryTitlesFrenchLargestAccessibilitySize` | Passed | 1357.641 s |
+
+`xcresulttool` confirms **4 passed, 0 failed, 0 skipped** and the environment
+`CanadianHamTitleSweeps`. Each case again retained 77 screenshots. All 92 native
+navigation widths and full labels exactly match the retained baseline TSV;
+height values match within 1e-9 pt (only floating-point serialization differs).
+Thus the width-derived truncation inventory remains unchanged. The measured
+two-line negative fixture runs in each sweep, and English now has hyphenation
+disabled; all strict full-text/height checks still pass. No app code changed.
+
+The default-plan exclusion probe is queued on the shared build lock. It selects
+the same four methods with `-only-testing:` under `CanadianHamDefault` and must
+execute zero tests; its result will be recorded before finalizing these fixes.
+
 Reproduce the review-fixed dedicated-plan run (one simulator, all four sweeps,
 no full suite):
 
@@ -234,13 +263,16 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
   test CODE_SIGNING_ALLOWED=NO
 ```
 
-The actual run used `nohup`, grep-only polling and a fresh result path, and ended
-`XBUILD_EXIT=0`. Full local evidence: `/tmp/task-52/final-confirmed.xcresult`,
-`/tmp/task-52/final-confirmed.log`, `/tmp/task-52/final-attachments/`. Use a new
-result path when rerunning. Earlier failed/interrupted investigative runs do not
-substitute for this final run; their diagnosis is recorded in the task notes.
+The review-fixed run used `nohup`, grep-only polling and a fresh result path, and
+ended `XBUILD_EXIT=0`. Full local evidence:
+`/tmp/task-52/title-sweeps-review.xcresult` and
+`/tmp/task-52/title-sweeps-review.log`. Historical baseline evidence remains at
+`/tmp/task-52/final-confirmed.xcresult`, `/tmp/task-52/final-confirmed.log`, and
+`/tmp/task-52/final-attachments/`. Use a new result path when rerunning. Earlier
+failed/interrupted investigative runs do not substitute for these successful
+runs; their diagnosis is recorded in the task notes.
 
-Other completed checks:
+Other baseline checks (review-fix checks are recorded below):
 
 - `node scripts/check-test-guard.mjs --self-test`: passed.
 - `node scripts/check-test-guard.mjs --base origin/main --head HEAD`: passed,
