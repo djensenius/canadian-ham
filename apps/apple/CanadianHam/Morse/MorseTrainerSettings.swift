@@ -100,6 +100,8 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
         try container.encode(outputMode, forKey: .outputMode)
     }
 
+    // Conversion has defensive enum defaults; progress-file validation rejects unknown
+    // strings before reaching this initializer, matching web import validation.
     init(exported: ExportedMorseSettings) {
         self.init(
             toneHz: exported.toneHz,

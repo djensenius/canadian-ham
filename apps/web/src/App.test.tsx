@@ -11,7 +11,7 @@ import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
 import { type QuestionProgressRecord } from "@canadian-ham/engine-ts";
-import { generateMorseExamText, profileForName } from "@canadian-ham/morse-engine";
+import { MORSE_BEACON_AREA_CSS_PIXELS, MORSE_LIGHT_ACCENT_RGB, MORSE_LIGHT_PAPER_INSET_RGB, evaluateMorseBeaconFlashSafety, generateMorseExamText, maxMorseFlashesPerSecond, morseBeaconPalette, morseSignalEvents, profileForName, textToTimedMorse } from "@canadian-ham/morse-engine";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
 import { answerMorseCourseSession, morseCourseSummaryMessage, type SessionState } from "./morse/course/MorseCoursePanel";
@@ -22,8 +22,8 @@ import { basicQuestionHints, basicQuestionHintsByQuestionId, hintForQuestion, ty
 import { lessonsById } from "./data/lessons";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
-import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
-import { MorseOutputView } from "./lib/morseOutput";
+import { INTERFACE_LANGUAGE_STORAGE_KEY, interfaceLanguageTag, t } from "./lib/i18n";
+import { MorseOutputView, morseOutputSafetyNote } from "./lib/morseOutput";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { applyPracticeAnswer, buildExamAttempt, createMockExam } from "./lib/studyEngine";
 import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ham/morse-engine";
@@ -2779,11 +2779,17 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
   });
 
   it("passes axe on static Morse beacon and tape output states", async () => {
-    const beacon = render(<MorseOutputView interfaceLanguage="en" state={{ mode: "visualBeacon", beaconActive: true, tape: "", safetyNote: "Beacon area 12,544 px² is below the 21,824 px² WCAG flash cap; max 5 flashes/s." }} />);
+    const sequence = textToTimedMorse("5", profileForName("isedParis"));
+    const flashesPerSecond = maxMorseFlashesPerSecond(morseSignalEvents(sequence));
+    const safety = evaluateMorseBeaconFlashSafety({ palette: morseBeaconPalette({ accent: MORSE_LIGHT_ACCENT_RGB, background: MORSE_LIGHT_PAPER_INSET_RGB }), flashesPerSecond });
+    const safetyNote = morseOutputSafetyNote("en", false, safety, flashesPerSecond);
+    const beacon = render(<MorseOutputView interfaceLanguage="en" state={{ mode: "visualBeacon", beaconActive: true, tape: "", safetyNote }} />);
+    assert.ok(beacon.container.textContent?.includes(safetyNote));
+    assert.ok(safetyNote.includes(new Intl.NumberFormat(interfaceLanguageTag("en")).format(MORSE_BEACON_AREA_CSS_PIXELS)));
     await expectNoAxeViolations(beacon.container);
     beacon.unmount();
 
-    const tape = render(<MorseOutputView interfaceLanguage="fr" state={{ mode: "visualTape", beaconActive: false, tape: ".-.", safetyNote: "La préférence de réduction des animations est activée; la lecture utilise donc le ruban non clignotant." }} />);
+    const tape = render(<MorseOutputView interfaceLanguage="fr" state={{ mode: "visualTape", beaconActive: false, tape: ".-.", safetyNote: t("fr", "morseOutputReducedMotionTape") }} />);
     assert.match(tape.container.textContent ?? "", /\.\-\./);
     await expectNoAxeViolations(tape.container);
   });

@@ -1,5 +1,7 @@
 @testable import CanadianHam
+import AVFoundation
 import CanadianHamMorseEngine
+import Combine
 import SwiftUI
 import XCTest
 
@@ -43,6 +45,176 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(schedule.amplitude(at: 100), 0, accuracy: 0.000_001)
         XCTAssertEqual(schedule.amplitude(at: 52, stopRampStartFrame: 50), 0.36, accuracy: 0.000_001)
         XCTAssertEqual(schedule.amplitude(at: 55, stopRampStartFrame: 50), 0, accuracy: 0.000_001)
+    }
+
+    @MainActor
+    func testMorseSendingKeyerClassifiesRecordedEventsWhileAudioStartupIsSuspended() async throws {
+        let startupBegan = expectation(description: "Audio starter is suspended")
+        let silenced = expectation(description: "Released key silences the delayed starter")
+        let output = SuspendedMorseSendingAudioOutput(stall: .start, operationBegan: startupBegan, finished: silenced)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        let keyDown = ContinuousClock.now
+        keyer.beginStraightKey(at: keyDown, settings: .default)
+        await fulfillment(of: [startupBegan], timeout: 3)
+
+        // Audio is still suspended: classification must use the two recorded
+        // monotonic event times, not wait for the starter or read the wall clock.
+        let sample = try XCTUnwrap(keyer.endStraightKey(at: keyDown.advanced(by: .milliseconds(50)), profile: profileForName(.isedParis)))
+        XCTAssertEqual(sample.element, .dot)
+        XCTAssertEqual(sample.durationSeconds, 0.05, accuracy: 0.000_001)
+        XCTAssertFalse(keyer.isStraightKeyDown)
+        XCTAssertNil(try keyer.endStraightKey(at: .now, profile: profileForName(.isedParis)))
+
+        await output.finishSlowOperation()
+        await fulfillment(of: [silenced], timeout: 3)
+    }
+
+    @MainActor
+    func testMorseSendingKeyerLeavingDuringPreparationDoesNotStartALateTone() async {
+        let preparationBegan = expectation(description: "Engine preparation is suspended")
+        let released = expectation(description: "Leaving releases the prepared engine")
+        let output = SuspendedMorseSendingAudioOutput(stall: .prepare, operationBegan: preparationBegan, finished: released)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        keyer.beginStraightKey(at: .now, settings: .default)
+        await fulfillment(of: [preparationBegan], timeout: 3)
+        keyer.release()
+        XCTAssertFalse(keyer.isStraightKeyDown)
+        await output.finishSlowOperation()
+        await fulfillment(of: [released], timeout: 3)
+        let starts = await output.toneStarts
+        XCTAssertEqual(starts, 0, "A queued tone must not sound after navigating away")
+    }
+
+    @MainActor
+    func testMorseSendingKeyerReleaseCannotBeSupersededBySilence() async {
+        let preparationBegan = expectation(description: "Engine preparation is suspended")
+        let released = expectation(description: "Pending release executes")
+        let silenced = expectation(description: "Later silence executes after release")
+        let output = SuspendedMorseSendingAudioOutput(stall: .prepare, operationBegan: preparationBegan, finished: released, silenced: silenced)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        keyer.prepare(settings: .default)
+        await fulfillment(of: [preparationBegan], timeout: 3)
+
+        // Simulate disappearance followed by focus loss, before release can run.
+        keyer.release()
+        keyer.silence()
+        await output.finishSlowOperation()
+        await fulfillment(of: [released, silenced], timeout: 3, enforceOrder: true)
+        let prepared = await output.isEnginePrepared
+        let usage = await output.sessionUsage
+        XCTAssertFalse(prepared, "Silence must not leave the prepared engine running")
+        XCTAssertEqual(usage.activeUsers, 0, "Release must drop the held audio session")
+    }
+
+    @MainActor
+    func testMorseSendingKeyerClassifiesPressWhenAudioFails() async throws {
+        let keyer = CanadianHam.MorseSendingKeyer(output: FailingMorseSendingAudioOutput())
+        let errorReported = expectation(description: "Audio failure is reported")
+        let observer = Task { @MainActor in
+            while keyer.audioError == nil {
+                try Task.checkCancellation()
+                try await Task.sleep(for: .milliseconds(1))
+            }
+            errorReported.fulfill()
+        }
+        defer { observer.cancel() }
+        let keyDown = ContinuousClock.now
+        keyer.beginStraightKey(at: keyDown, settings: .default)
+        await fulfillment(of: [errorReported], timeout: 3)
+        XCTAssertTrue(keyer.isStraightKeyDown, "Audio failure must not discard a recorded press")
+        let sample = try XCTUnwrap(keyer.endStraightKey(at: keyDown.advanced(by: .milliseconds(50)), profile: profileForName(.isedParis)))
+        XCTAssertEqual(sample.element, .dot)
+        XCTAssertEqual(sample.durationSeconds, 0.05, accuracy: 0.000_001)
+    }
+
+    @MainActor
+    func testMorseSendingKeyerReportsPreparationFailureAfterKeyUpAndClassifiesPress() async throws {
+        let preparationBegan = expectation(description: "Engine preparation is suspended")
+        let silenced = expectation(description: "Key-up silence executes after preparation fails")
+        let output = SuspendedMorseSendingAudioOutput(stall: .prepare, operationBegan: preparationBegan, silenced: silenced)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        let keyDown = ContinuousClock.now
+        keyer.beginStraightKey(at: keyDown, settings: .default)
+        await fulfillment(of: [preparationBegan], timeout: 3)
+
+        let sample = try XCTUnwrap(keyer.endStraightKey(at: keyDown.advanced(by: .milliseconds(50)), profile: profileForName(.isedParis)))
+        XCTAssertEqual(sample.element, .dot)
+        XCTAssertEqual(sample.durationSeconds, 0.05, accuracy: 0.000_001)
+        XCTAssertFalse(keyer.isStraightKeyDown)
+        await output.finishSlowOperation(throwing: CocoaError(.fileReadUnknown))
+        await fulfillment(of: [silenced], timeout: 3)
+
+        XCTAssertNotNil(keyer.audioError, "Key-up must not discard the missing sidetone's explanation")
+        let starts = await output.toneStarts
+        XCTAssertEqual(starts, 0)
+    }
+
+    @MainActor
+    func testMorseSendingKeyerSuccessfulPrepareDoesNotClearEarlierAudioError() async {
+        let preparationBegan = expectation(description: "Engine preparation is suspended")
+        let silenced = expectation(description: "Silence executes after failed preparation")
+        let released = expectation(description: "Release executes after successful preparation")
+        let prepared = expectation(description: "Silent preparation succeeds")
+        let output = SuspendedMorseSendingAudioOutput(stall: .prepare, operationBegan: preparationBegan, finished: released, silenced: silenced, prepared: prepared)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        keyer.prepare(settings: .default)
+        await fulfillment(of: [preparationBegan], timeout: 3)
+        keyer.silence()
+        await output.finishSlowOperation(throwing: CocoaError(.fileReadUnknown))
+        await fulfillment(of: [silenced], timeout: 3)
+        let earlierError = keyer.audioError
+        XCTAssertNotNil(earlierError)
+
+        let errorCleared = expectation(description: "Silent preparation must not clear the error")
+        errorCleared.isInverted = true
+        let observer = keyer.$audioError.dropFirst().sink { error in
+            if error == nil { errorCleared.fulfill() }
+        }
+        defer { observer.cancel() }
+        keyer.prepare(settings: .default)
+        await fulfillment(of: [prepared], timeout: 3)
+        await fulfillment(of: [errorCleared], timeout: 0.1)
+        keyer.release()
+        await fulfillment(of: [released], timeout: 3)
+        XCTAssertEqual(keyer.audioError, earlierError, "Silent preparation and release must preserve the warning until a tone succeeds")
+    }
+
+    @MainActor
+    func testMorseSendingKeyerLeavingDuringFailedPreparationDoesNotReportStaleError() async {
+        let preparationBegan = expectation(description: "Engine preparation is suspended")
+        let released = expectation(description: "Leaving releases the failed preparation")
+        let output = SuspendedMorseSendingAudioOutput(stall: .prepare, operationBegan: preparationBegan, finished: released)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        keyer.beginStraightKey(at: .now, settings: .default)
+        await fulfillment(of: [preparationBegan], timeout: 3)
+        keyer.release()
+        await output.finishSlowOperation(throwing: CocoaError(.fileReadUnknown))
+        await fulfillment(of: [released], timeout: 3)
+
+        XCTAssertNil(keyer.audioError, "A failure from a left screen must remain invalidated")
+        XCTAssertFalse(keyer.isStraightKeyDown)
+        let starts = await output.toneStarts
+        XCTAssertEqual(starts, 0)
+    }
+
+    func testMorseAudioDriverSendingRestartDetachesStoppedSourceAndBalancesSession() throws {
+        let engine = AVAudioEngine()
+        let driver = MorseAudioDriver(engine: engine)
+        let initialUsers = MorseAudioDriver.activeSessionUsers
+        defer { driver.releasePreparedSendingTone() }
+
+        for _ in 0..<3 {
+            try driver.prepareSendingTone(settings: .default)
+            XCTAssertTrue(driver.isPlaying)
+            XCTAssertEqual(engine.attachedNodes.filter { $0 is AVAudioSourceNode }.count, 1)
+            XCTAssertEqual(MorseAudioDriver.activeSessionUsers, initialUsers + 1)
+            // Model an interruption/route change stopping AVAudioEngine externally.
+            engine.stop()
+            XCTAssertFalse(driver.isPlaying)
+        }
+        driver.releasePreparedSendingTone()
+        XCTAssertTrue(engine.attachedNodes.filter { $0 is AVAudioSourceNode }.isEmpty)
+        XCTAssertEqual(MorseAudioDriver.activeSessionUsers, initialUsers)
     }
 
     func testMorseAudioSessionStaysActiveUntilLastPlayerReleases() {
@@ -236,6 +408,18 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(beacon.safety.reason, .belowAreaThreshold)
         XCTAssertTrue(reduced.useTape)
         XCTAssertTrue(requestedTape.useTape)
+    }
+
+    func testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas() throws {
+        let sequence = try textToTimedMorse("5", profile: profileForName(.isedParis))
+        let plan = morseVisualPlaybackPlan(sequence: sequence, requestedMode: .visualBeacon, reduceFlashing: false, colorScheme: .light)
+
+        XCTAssertEqual(formattedMorseArea(12_544, locale: Locale(identifier: "en_CA")), "12,544")
+        XCTAssertEqual(formattedMorseArea(21_824, locale: Locale(identifier: "en_CA")), "21,824")
+        XCTAssertEqual(formattedMorseArea(12_544, locale: Locale(identifier: "fr_CA")), "12\u{00A0}544")
+        XCTAssertTrue(plan.safetyNote.contains("\(formattedMorseArea(morseBeaconAreaCssPixels)) square points"), plan.safetyNote)
+        XCTAssertTrue(plan.safetyNote.contains("\(formattedMorseArea(plan.safety.maxAreaCssPixels)) square-point WCAG flash cap"), plan.safetyNote)
+        XCTAssertFalse(plan.safetyNote.contains("px"), "Apple's measured area is in square points, not CSS pixels")
     }
 
     func testReduceFlashingDecisionUsesInjectedFlags() {
@@ -527,6 +711,116 @@ final class MorseTrainerTests: XCTestCase {
         return try JSONDecoder().decode(MorseCourse.self, from: Data(json.utf8))
     }
 
+    @MainActor
+    func testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess() throws {
+        let bank = try CanadianHam.QuestionBankStore.load(from: Bundle(for: Self.self))
+        let suiteName = "MorseTrainerTests.studyImport.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        var settings = MorseTrainerSettings.default
+        var replacements: [Bool] = []
+        let view = SettingsView(
+            bank: bank,
+            progressStore: store,
+            morseSettings: Binding(get: { settings }, set: { settings = $0 }),
+            openMorse: {},
+            openAbout: {},
+            hasUnfinishedCourseWork: { false },
+            localDataReplacementRevision: 0,
+            onDataChanged: { replacements.append($0) }
+        )
+
+        for (json, expected) in morseImportCases {
+            let imported = try morseImportFixture(bankId: bank.manifest.bankId, morseJSON: json)
+            try view.importProgress(imported, defaults: defaults)
+            XCTAssertEqual(settings, expected, "Study Settings must normalize its live binding")
+            XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), expected)
+            XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        }
+        XCTAssertEqual(replacements, Array(repeating: true, count: morseImportCases.count))
+
+        let beforeFailure = settings
+        for invalid in try rejectedMorseImportFixtures(bankId: bank.manifest.bankId) {
+            XCTAssertThrowsError(try view.importProgress(invalid, defaults: defaults))
+            XCTAssertEqual(settings, beforeFailure)
+            XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), beforeFailure)
+            XCTAssertEqual(replacements.count, morseImportCases.count, "A rejected import must not announce replacement")
+        }
+    }
+
+#if os(macOS)
+    @MainActor
+    func testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess() throws {
+        let bank = try CanadianHam.QuestionBankStore.load(from: Bundle(for: Self.self))
+        let suiteName = "MorseTrainerTests.nativeImport.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests(defaults: defaults, defaultsDomainName: suiteName)
+        let appSettings = AppSettingsModel(morseSettings: .default)
+        appSettings.bank = bank
+        appSettings.progressStore = store
+        let view = NativeDataSettingsTab(appSettings: appSettings)
+        let initialRevision = appSettings.localDataReplacementRevision
+
+        for (json, expected) in morseImportCases {
+            let imported = try morseImportFixture(bankId: bank.manifest.bankId, morseJSON: json)
+            try view.importProgress(imported, defaults: defaults)
+            XCTAssertEqual(appSettings.morseSettings, expected, "Native Settings must normalize its live observable model")
+            XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), expected)
+            XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        }
+        XCTAssertEqual(appSettings.localDataReplacementRevision, initialRevision + morseImportCases.count)
+
+        let beforeFailure = appSettings.morseSettings
+        for invalid in try rejectedMorseImportFixtures(bankId: bank.manifest.bankId) {
+            XCTAssertThrowsError(try view.importProgress(invalid, defaults: defaults))
+            XCTAssertEqual(appSettings.morseSettings, beforeFailure)
+            XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), beforeFailure)
+            XCTAssertEqual(appSettings.localDataReplacementRevision, initialRevision + morseImportCases.count)
+        }
+    }
+#endif
+
+    private var morseImportCases: [(String, MorseTrainerSettings)] {
+        [
+            (#"{"toneHz":1200,"characterWpm":30,"effectiveWpm":28,"timingProfile":"general","volume":2,"outputMode":"visualTape"}"#,
+             MorseTrainerSettings(toneHz: 900, characterWpm: 25, effectiveWpm: 25, timingProfile: .general, volume: 1, outputMode: .visualTape)),
+            (#"{"toneHz":700,"characterWpm":18,"effectiveWpm":6,"timingProfile":"ric1Literal","volume":0.4,"outputMode":"visualBeacon"}"#,
+             MorseTrainerSettings(toneHz: 700, characterWpm: 18, effectiveWpm: 6, timingProfile: .ric1Literal, volume: 0.4, outputMode: .visualBeacon))
+        ]
+    }
+
+    private func rejectedMorseImportFixtures(bankId: String) throws -> [CanadianHam.ProgressExportV1] {
+        try [
+            morseImportFixture(bankId: "unknown-bank", morseJSON: morseImportCases[0].0),
+            morseImportFixture(bankId: bankId, morseJSON: #"{"timingProfile":"future-profile"}"#),
+            morseImportFixture(bankId: bankId, morseJSON: #"{"outputMode":"future-output"}"#)
+        ]
+    }
+
+    private func morseImportFixture(bankId: String, morseJSON: String) throws -> CanadianHam.ProgressExportV1 {
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "lessonProgress": [],
+          "lessonQuizAttempts": [],
+          "preferences": {
+            "practiceMode": "review-later",
+            "examTimerEnabled": false,
+            "theme": "system",
+            "morse": \(morseJSON)
+          }
+        }
+        """
+        return try JSONDecoder().decode(CanadianHam.ProgressExportV1.self, from: Data(json.utf8))
+    }
+
     func testMorseSettingsRoundTripThroughUserDefaults() throws {
         let suiteName = "MorseTrainerTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
@@ -547,4 +841,81 @@ final class MorseTrainerTests: XCTestCase {
         MorseTrainerSettings.reset(defaults: defaults)
         XCTAssertEqual(MorseTrainerSettings.load(defaults: defaults), .default)
     }
+}
+
+private actor SuspendedMorseSendingAudioOutput: CanadianHam.MorseSendingAudioOutput {
+    enum Stall { case prepare, start }
+
+    let stall: Stall
+    let operationBegan: XCTestExpectation
+    let finished: XCTestExpectation?
+    let silenced: XCTestExpectation?
+    let prepared: XCTestExpectation?
+    private var continuation: CheckedContinuation<Void, any Error>?
+    private var didSuspend = false
+    private(set) var toneStarts = 0
+    private(set) var isEnginePrepared = false
+    private(set) var sessionUsage = MorseAudioSessionUsage()
+
+    init(stall: Stall, operationBegan: XCTestExpectation, finished: XCTestExpectation? = nil, silenced: XCTestExpectation? = nil, prepared: XCTestExpectation? = nil) {
+        self.stall = stall
+        self.operationBegan = operationBegan
+        self.finished = finished
+        self.silenced = silenced
+        self.prepared = prepared
+    }
+
+    func prepare(settings: CanadianHam.MorseTrainerSettings) async throws {
+        if !isEnginePrepared {
+            isEnginePrepared = true
+            sessionUsage.acquire()
+        }
+        if stall == .prepare { try await suspend() }
+        prepared?.fulfill()
+    }
+
+    func startTone(settings: CanadianHam.MorseTrainerSettings) async throws {
+        toneStarts += 1
+        if stall == .start { try await suspend() }
+    }
+
+    func playElement(_ element: MorseKeyElement, settings: CanadianHam.MorseTrainerSettings) {}
+    func silence() {
+        if stall == .start { finished?.fulfill() }
+        silenced?.fulfill()
+    }
+
+    func release() {
+        if isEnginePrepared {
+            isEnginePrepared = false
+            _ = sessionUsage.release()
+        }
+        if stall == .prepare { finished?.fulfill() }
+    }
+
+    func finishSlowOperation(throwing error: CocoaError? = nil) {
+        if let error {
+            continuation?.resume(throwing: error)
+        } else {
+            continuation?.resume()
+        }
+        continuation = nil
+    }
+
+    private func suspend() async throws {
+        guard !didSuspend else { return }
+        didSuspend = true
+        try await withCheckedThrowingContinuation {
+            continuation = $0
+            operationBegan.fulfill()
+        }
+    }
+}
+
+private struct FailingMorseSendingAudioOutput: CanadianHam.MorseSendingAudioOutput {
+    func prepare(settings: CanadianHam.MorseTrainerSettings) throws { throw CocoaError(.fileReadUnknown) }
+    func startTone(settings: CanadianHam.MorseTrainerSettings) {}
+    func playElement(_ element: MorseKeyElement, settings: CanadianHam.MorseTrainerSettings) {}
+    func silence() {}
+    func release() {}
 }

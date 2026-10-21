@@ -128,6 +128,39 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["morse-visual-beacon"].firstMatch.waitForExistence(timeout: 5), "Choosing visual beacon should show a visual Morse output when Quick listen plays")
     }
 
+    func testMorseRunningBeaconStopsWhenReduceMotionTurnsOn() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseOutputMode", "visualBeacon",
+            "-CanadianHamMorseReduceMotionControl"
+        ])
+        defer { app.terminate() }
+
+        let play = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(play.waitForExistence(timeout: 10))
+        scrollUntilHittable(play, in: app, maxSwipes: 8)
+        play.tap()
+        let beacon = app.staticTexts["morse-visual-beacon"].firstMatch
+        XCTAssertTrue(beacon.waitForExistence(timeout: 5), "Start with a real running beacon, not tape or idle playback")
+        let stop = app.buttons["morse-quick-stop-button"].firstMatch
+        XCTAssertTrue(stop.isEnabled)
+
+        app.buttons["morse-enable-reduce-motion-test-button"].firstMatch.tap()
+        let stopped = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            !stop.isEnabled && !beacon.exists
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [stopped], timeout: 10), .completed,
+                       "Expected stopped playback: stop enabled=\(stop.isEnabled), beacon exists=\(beacon.exists)")
+        XCTAssertTrue(app.staticTexts["Morse playback stopped."].firstMatch.exists)
+        XCTAssertTrue(play.isEnabled)
+
+        // The changed environment must also route the next playback to non-flashing tape.
+        play.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["morse-visual-tape"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(beacon.exists)
+    }
+
     func testCompletesFirstMorseLessonSessionOnIOS() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
@@ -332,6 +365,50 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMorseSendingResultsDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMorseSendingResults(appearance: .dark)
+    }
+
+    func testMorseSendingExamHardwareKeyboardFocusIsSeparateFromPractice() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseKeyboardStatus"])
+        defer { app.terminate() }
+
+        openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
+        let start = app.buttons["morse-sending-start-exam-button"].firstMatch
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
+        XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5))
+        app.typeKey(" ", modifierFlags: [])
+        assertMorseKeyboardDecodedText("E", focus: "exam", in: app)
+
+        // Scope Back to the detail stack: iPad also has a sidebar navigation bar.
+        let back = app.navigationBars["Exam-style check"].buttons.matching(
+            NSPredicate(format: "label == %@ OR label == %@", "Sending practice", "Back")
+        ).firstMatch
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+        XCTAssertTrue(app.buttons["morse-sending-exam-open-button"].firstMatch.waitForExistence(timeout: 5))
+        app.typeKey(" ", modifierFlags: [])
+        assertMorseKeyboardDecodedText("EE", focus: "practice", in: app)
+
+        // Re-entry clears practice, and the pushed screen must acquire keyboard focus again.
+        openSendingExamStyleCheck(in: app)
+        app.typeKey(" ", modifierFlags: [])
+        assertMorseKeyboardDecodedText("E", focus: "exam", in: app)
+    }
+
+    private func assertMorseKeyboardDecodedText(_ text: String, focus: String, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
+        let matches = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@ OR label == %@", text, "Decoded text, \(text)"),
+            object: decoded
+        )
+        let outcome = XCTWaiter.wait(for: [matches], timeout: 10)
+        let status = app.staticTexts["morse-sending-keyboard-test-status"].firstMatch
+        let keyboardStatus = status.label
+        print("Morse hardware keyboard expected \(text): \(keyboardStatus)")
+        XCTAssertEqual(outcome, .completed, "Decoded: \(decoded.label); \(keyboardStatus)", file: file, line: line)
+        XCTAssertTrue(keyboardStatus.contains("Focus: \(focus);"), "Expected \(focus) keyboard focus; \(keyboardStatus)", file: file, line: line)
     }
 
     func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {

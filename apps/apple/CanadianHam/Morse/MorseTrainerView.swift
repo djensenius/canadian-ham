@@ -100,8 +100,8 @@ func morseBeaconPalette(for colorScheme: ColorScheme) -> MorseFlashBeaconPalette
         : morseBeaconPalette(accent: morseLightAccentRGB, background: morseLightPaperInsetRGB)
 }
 
-func formattedMorseArea(_ value: Double) -> String {
-    value.formatted(.number.precision(.fractionLength(0)))
+func formattedMorseArea(_ value: Double, locale: Locale = .current) -> String {
+    value.formatted(.number.precision(.fractionLength(0)).locale(locale))
 }
 
 @MainActor
@@ -222,6 +222,10 @@ struct MorseTrainerView: View {
     let onProgressChanged: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+#if DEBUG && os(iOS)
+    // SwiftUI's Reduce Motion environment is read-only; inject the same input locally in UI tests.
+    @State private var reduceMotionForUITests = false
+#endif
     @Environment(\.colorScheme) private var colorScheme
     @State private var dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
     @State private var driver = MorseAudioDriver()
@@ -234,6 +238,14 @@ struct MorseTrainerView: View {
     @State private var errorMessage: String?
     @State private var stopTask: Task<Void, Never>?
     @State private var playbackCoordinator = MorsePlaybackCoordinator()
+
+    private var effectiveReduceMotion: Bool {
+#if DEBUG && os(iOS)
+        reduceMotion || reduceMotionForUITests
+#else
+        reduceMotion
+#endif
+    }
 
     private var normalizedSettings: MorseTrainerSettings {
         var normalized = settings.normalized()
@@ -293,6 +305,14 @@ struct MorseTrainerView: View {
                             .accessibilityLabel(Text("Stop Morse practice output")) // l10n: localized
                             .accessibilityIdentifier("morse-quick-stop-button")
                     }
+#if DEBUG && os(iOS)
+                    if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseReduceMotionControl") {
+                        Button { reduceMotionForUITests = true } label: {
+                            Text(verbatim: "Enable Reduce Motion for Morse test") // l10n: verbatim DEBUG-only UI test hook
+                        }
+                        .accessibilityIdentifier("morse-enable-reduce-motion-test-button")
+                    }
+#endif
                     MorseVisualPlaybackView(state: visualPlaybackState)
                     if !statusMessage.isEmpty {
                         Text(statusMessage) // l10n: localized
@@ -364,7 +384,7 @@ struct MorseTrainerView: View {
                 stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
             }
         }
-        .onChange(of: reduceMotion) { _, _ in
+        .onChange(of: effectiveReduceMotion) { _, _ in
             stopBeaconPlaybackIfReducedFlashingIsEnabled()
         }
         .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
@@ -397,7 +417,7 @@ struct MorseTrainerView: View {
     }
 
     private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
-        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
+        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: effectiveReduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
         if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, isPlaybackRunning: isPlaying, flags: flags) {
             stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
         }
@@ -437,7 +457,7 @@ struct MorseTrainerView: View {
             visualPlaybackTasks = scheduleMorseVisualPlayback(
                 sequence: sequence,
                 requestedMode: normalizedSettings.outputMode,
-                reduceFlashing: shouldReduceMorseFlashing(flags: currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)),
+                reduceFlashing: shouldReduceMorseFlashing(flags: currentMorseReduceFlashingFlags(environmentReduceMotion: effectiveReduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)),
                 colorScheme: colorScheme
             ) { nextState in
                 visualPlaybackState = nextState
