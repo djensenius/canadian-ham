@@ -65,6 +65,9 @@
          <TestPlanReference
             reference = "container:TestPlans/CanadianHamLessonFigures.xctestplan">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:TestPlans/CanadianHamTitleSweeps.xctestplan">
+         </TestPlanReference>
       </TestPlans>
       <MacroExpansion>
          <BuildableReference

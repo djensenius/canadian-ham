@@ -1,6 +1,7 @@
 # TASK-52: iPhone category titles
 
-> **Validation complete — 2026-10-21.** All four final-helper cases passed:
+> **Baseline validation complete — 2026-10-21.** All four cases passed before
+> the review fixes below; the dedicated-plan rerun is pending. Baseline coverage:
 > English and French at default and Accessibility XXXL sizes, including both
 > banks' regular-width sidebar. Cards, lists and content headers passed strict
 > full-text/frame/height checks. Native navigation ellipses remain only under
@@ -42,14 +43,17 @@ change is included in this task.
   shared by both lists. Tests load every Basic and Advanced EN/FR title from the
   source category JSON, position its rendered text frame on screen, and compare
   its height with the full string's Dynamic Type font metrics. Measurements
-  preserve the text language and native hyphenation (for example, French
-  `Composants` can render as `Compo-` / `sants` without changing the bank text).
+  preserve the text language and enable native hyphenation only for `fr-CA`,
+  as confirmed on screen (`Composants` renders as `Compo-` / `sants` without
+  changing the bank text). English measurements do not assume hyphenation.
 - **Practice category sessions:** every Basic and Advanced title is checked in
   the native navigation accessibility label and the existing combined content
   header. The header keeps its existing accessibility hierarchy; title bounds
   are inferred from its actual width, serif title font, and content padding.
-  Screenshots supplement this geometry check because the combined accessibility
-  element also contains the session tally and summary.
+  The geometry check alone cannot prove title wrapping because the combined
+  accessibility element also contains the session tally and summary. Wrapping
+  is guaranteed by the title's `lineLimit(nil)` and `.fixedSize(horizontal: false,
+  vertical: true)` in `StudyViews.swift:505-506`, together with the screenshots.
 - **Study/Learn:** all eight module cards use the corresponding Basic category
   names. Lessons/modules remain authored in English in the French interface.
   Every module also exercises its content header and native navigation
@@ -61,7 +65,11 @@ change is included in this task.
   DEBUG regular-size-class override on a landscape iPhone exercises this list
   for both banks. At Accessibility XXXL, wrapped rows can exceed the short
   landscape viewport; tests require full text height, column-width fit, and
-  reachability by scrolling rather than shrinking them.
+  reachability by scrolling rather than shrinking them. Unlike the portrait
+  card checks, the sidebar does not separately call
+  `assertFullyVisibleBelowNavigationBar`: the positioning helper fails unless
+  it can place the complete row below the bar, or make an oversized AX row
+  reachable within the viewport. The exact text and full-height checks still apply.
 - **Mock exam:** source inspection of `MockExamView`, its result breakdown, and
   `QuestionCard` in `StudyViews.swift` confirms that they display category IDs
   (`B-001`, etc.), not the long category names. No category-name layout exists
@@ -71,15 +79,22 @@ The metric helper measures glyph/line fragments without outer font leading,
 which SwiftUI excludes from its text frame. A complete default-size one-line
 frame is 20.333 points high; including outer leading incorrectly estimated 22
 points. The unchanged 1-point pixel-rounding tolerance cannot hide a missing
-line (about 20 points or more). For each measured multi-line title, the helper
-also checks that subtracting a full line makes the same height predicate fail.
-The coordinator approved this correction and required a fresh run of all four
-cases with the final helper.
+line (about 20 points or more). A separate fixture measures the known title
+`Station Assembly, Practice and Safety` at 17 pt semibold and 200 pt width with
+the same metric helper, verifies that it is exactly two lines, and asserts that
+its measured height passes the shared height predicate while a height of
+(measured height − one line) fails. This replaces the review's identified no-op
+per-element negative check; every sweep executes the fixture before launching
+an app. The dedicated-plan rerun below validates this fixture and French-only
+hyphenation.
 
 Four source-named tests in `CanadianHamPracticeUITests` cover English and French
 at default size and `UICTContentSizeCategoryAccessibilityXXXL`. Appearance is
 fixed to light for each test; it is never toggled while an app is running. All
-pre-existing tests, audits, and shared helpers remain byte-identical.
+pre-existing tests, audits, and shared helpers remain byte-identical. The four
+sweeps run only in `CanadianHamTitleSweeps`, are excluded from
+`CanadianHamDefault`, and have code coverage disabled. See AGENTS.md for the
+category-title/layout change triggers and release-candidate requirement.
 
 ## Native Large Content Viewer
 
@@ -103,6 +118,55 @@ shows the distinction. The coordinator explicitly confirmed on 2026-10-20 that
 the exception also covers this existing native large-title style; no title or
 style change is included.
 
+## Visually truncated native titles (width-derived inventory)
+
+The following explicit inventory is derived from the frames in
+[native-title-measurements.tsv](native-title-measurements.tsv). These are the
+**native navigation titles only**; every corresponding full accessibility label
+and same-screen content header passed. Category cards, lists and content headers
+are not covered by the exception. IDs below identify the exact full labels in
+the TSV, not abbreviated strings supplied by the app.
+
+### Inline practice-session titles
+
+The cut titles reach the 314-pt frame cap. At default size their 17-pt reference
+width exceeds that cap; at AX-XXXL the native text grows (also apparent in the
+uncapped short-title frames), so the 17-pt reference alone understates the width.
+
+| UI language | Text size | Visually truncated native titles |
+| --- | --- | --- |
+| English | Default | A-005 **Transmitters, Modulation and Processing**; A-007 **Feedlines - Matching and Antenna Systems** |
+| English | AX-XXXL | B-003 **Station Assembly, Practice and Safety**; A-002 **Advanced Components and Circuits**; A-005 **Transmitters, Modulation and Processing**; A-007 **Feedlines - Matching and Antenna Systems** |
+| French | Default | B-003 **Montage d'une station, pratique et sécurité**; B-006 **Descentes d'antenne et systèmes d'antenne**; B-007 **Propagation des ondes radioélectriques**; A-002 **Notions avancées sur les composants et les circuits**; A-007 **Descentes d'antenne - adaptation et systèmes d'antenne** |
+| French | AX-XXXL | B-003 **Montage d'une station, pratique et sécurité**; B-005 **Éléments et théorie de l'électronique**; B-006 **Descentes d'antenne et systèmes d'antenne**; B-007 **Propagation des ondes radioélectriques**; A-002 **Notions avancées sur les composants et les circuits**; A-005 **Émetteurs, modulation et traitement**; A-007 **Descentes d'antenne - adaptation et systèmes d'antenne** |
+
+All other inline category titles fit at the indicated language/size.
+
+### Study module large titles
+
+**Nearly every Study module large title is visually cut even at default size, in
+both UI languages.** The titles remain English in the French UI. The default
+large-title font is about 34 pt, not the TSV's 17-pt reference: single-line widths
+are approximately twice that column. Seven titles exceed their approximately
+351–364-pt frames. Only B-004 fits (316.7 pt). At AX-XXXL even B-004 reaches the
+available width instead of its full large-font width; all eight titles are cut.
+
+| Native module title (both English and French UI) | Default visually truncated | AX-XXXL visually truncated |
+| --- | --- | --- |
+| B-001 Regulations and Policies | Yes | Yes |
+| B-002 Operating and Procedures | Yes | Yes |
+| B-003 Station Assembly, Practice and Safety | Yes | Yes |
+| B-004 Circuit Components | **No** | Yes |
+| B-005 Basic Electronics and Theory | Yes | Yes |
+| B-006 Feedlines and Antenna Systems | Yes | Yes |
+| B-007 Radio Wave Propagation | Yes | Yes |
+| B-008 Interference and Suppression | Yes | Yes |
+
+This is a width-derived exception inventory, not a claim of per-row OCR. The
+screenshots show representative inline and large-title ellipses and the complete
+wrapped content headers, so the owner can revisit the exception with its full
+scope visible.
+
 ## Default sidebar diagnosis
 
 The short hierarchy probe passed in **37.018 s**. At default size the sidebar
@@ -121,7 +185,7 @@ and [B-003 wrapping fully to two lines](sidebar-en-default-B-003-probe.png).
 These two supplemental images are from that bounded-scroll probe, not the final
 four-case run. The temporary diagnostic was removed before committing the fix.
 
-## Final validation
+## Baseline validation (before review fixes)
 
 Device: iPhone 17 Pro simulator, iOS 27.0 (24A434). Final test implementation:
 `9218ddfcc35989e2538c4c6c6e6654d16762c5a6`. Result: **4 passed, 0 failed,
@@ -157,18 +221,16 @@ module titles remain authored in English. French B-003's inline frame remains
 314 points wide versus a 342.7-point reference string, and its Study large title
 remains 346.3 × 71.7 points at AX-XXXL, under the documented exception.
 
-Reproduce the final run (one simulator, no full suite):
+Reproduce the review-fixed dedicated-plan run (one simulator, all four sweeps,
+no full suite):
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
   -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam \
+  -testPlan CanadianHamTitleSweeps \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
   -parallel-testing-enabled NO \
-  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesEnglishDefaultSize \
-  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesEnglishLargestAccessibilitySize \
-  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesFrenchDefaultSize \
-  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesFrenchLargestAccessibilitySize \
-  -resultBundlePath /tmp/task-52/final-confirmed.xcresult \
+  -resultBundlePath /tmp/task-52/title-sweeps-review.xcresult \
   test CODE_SIGNING_ALLOWED=NO
 ```
 

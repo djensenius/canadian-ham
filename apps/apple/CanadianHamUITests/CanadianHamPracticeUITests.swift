@@ -1471,6 +1471,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func verifyCategoryTitles(french: Bool, accessibilitySize: Bool) throws {
+        assertCategoryTitleHeightRejectsMissingLine()
         let language = french ? "fr" : "en"
         let size = accessibilitySize ? "accessibility-xxxl" : "default"
         let textLanguage = french ? "fr-CA" : "en-CA"
@@ -1605,18 +1606,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let frame = element.frame
         let bounds = categoryTitleBounds(title, font: font, width: frame.width + 1, languageCode: languageCode)
         let minimumHeight = ceil(bounds.height)
+        XCTAssertTrue(categoryTitleHasRequiredHeight(frame.height, minimumHeight: minimumHeight), "Category text must reserve its full wrapped height: \(frame), expected at least \(minimumHeight)")
+    }
+
+    private func categoryTitleHasRequiredHeight(_ height: CGFloat, minimumHeight: CGFloat) -> Bool {
         // The 1-pt pixel-rounding tolerance cannot hide a lost line (at least about 20 pt).
-        let hasRequiredHeight: (CGFloat) -> Bool = { $0 + 1 >= minimumHeight }
-        XCTAssertTrue(hasRequiredHeight(frame.height), "Category text must reserve its full wrapped height: \(frame), expected at least \(minimumHeight)")
-        if minimumHeight > ceil(font.lineHeight) {
-            XCTAssertFalse(hasRequiredHeight(minimumHeight - font.lineHeight), "Removing one line from the measured multi-line title must fail the height check")
-        }
+        height + 1 >= minimumHeight
+    }
+
+    private func assertCategoryTitleHeightRejectsMissingLine() {
+        let font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        let bounds = categoryTitleBounds("Station Assembly, Practice and Safety", font: font, width: 200, languageCode: "en-CA")
+        let measuredHeight = ceil(bounds.height)
+        XCTAssertGreaterThan(measuredHeight, font.lineHeight + 1, "The known title must wrap to two lines at 200 pt")
+        XCTAssertLessThanOrEqual(measuredHeight, font.lineHeight * 2 + 1, "The fixture must measure exactly two lines")
+        XCTAssertTrue(categoryTitleHasRequiredHeight(measuredHeight, minimumHeight: measuredHeight))
+        XCTAssertFalse(categoryTitleHasRequiredHeight(measuredHeight - font.lineHeight, minimumHeight: measuredHeight), "A one-line frame must fail for the measured two-line title")
     }
 
     private func categoryTitleBounds(_ title: String, font: UIFont, width: CGFloat, languageCode: String) -> CGRect {
-        // SwiftUI's language-tagged text uses native hyphenation (e.g. French "Compo-sants").
+        // French native hyphenation is confirmed on screen (e.g. "Compo-sants").
         let paragraph = NSMutableParagraphStyle()
-        paragraph.hyphenationFactor = 1
+        paragraph.hyphenationFactor = languageCode == "fr-CA" ? 1 : 0
         return (title as NSString).boundingRect(
             with: CGSize(width: width, height: .greatestFiniteMagnitude),
             // SwiftUI's text frame excludes outer font leading; measure the glyph/line fragments.

@@ -34,7 +34,11 @@
       "skippedTests": [
         "CanadianHamLessonFiguresUITests",
         "CanadianHamPracticeUITests/testOhmsLawLessonFiguresAndAccessibilityLight()",
-        "CanadianHamPracticeUITests/testOhmsLawLessonFiguresAndAccessibilityDark()"
+        "CanadianHamPracticeUITests/testOhmsLawLessonFiguresAndAccessibilityDark()",
+        "CanadianHamPracticeUITests/testCategoryTitlesEnglishDefaultSize()",
+        "CanadianHamPracticeUITests/testCategoryTitlesEnglishLargestAccessibilitySize()",
+        "CanadianHamPracticeUITests/testCategoryTitlesFrenchDefaultSize()",
+        "CanadianHamPracticeUITests/testCategoryTitlesFrenchLargestAccessibilitySize()"
       ]
     }
   ]

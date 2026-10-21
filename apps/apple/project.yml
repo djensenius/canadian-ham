@@ -634,6 +634,7 @@ schemes:
         - path: TestPlans/CanadianHamDefault.xctestplan
           defaultPlan: true
         - path: TestPlans/CanadianHamLessonFigures.xctestplan
+        - path: TestPlans/CanadianHamTitleSweeps.xctestplan
       targets:
         - CanadianHamTests
         - CanadianHamUITests
