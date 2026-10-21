@@ -272,7 +272,7 @@ final class MorseAudioDriver {
         let sampleRate = outputFormat.sampleRate > 0 ? outputFormat.sampleRate : 48_000
         renderState.configure(schedule: scheduleFactory(sampleRate))
 
-        try Self.sessionUsageLock.withLock {
+        try Self.sessionUsageLock.withLock { () throws -> Void in
 #if !os(macOS)
             let session = AVAudioSession.sharedInstance()
             try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
