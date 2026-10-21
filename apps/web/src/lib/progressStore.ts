@@ -73,6 +73,7 @@ export interface LessonQuizAttempt {
   readonly officialQuestionIds: readonly string[];
   readonly incorrectOfficialQuestionIds: readonly string[];
   readonly incorrectConceptCheckIds: readonly string[];
+  readonly answeredWithHelpIds?: readonly string[];
 }
 
 export interface DeviceQuestionProgressRecord {
@@ -547,6 +548,7 @@ export function migrateLessonQuizAttempts(attempts: readonly LessonQuizAttempt[]
         total,
         percent: (correct / total) * 100,
         officialQuestionIds,
+        ...(attempt.answeredWithHelpIds === undefined ? {} : { answeredWithHelpIds: attempt.answeredWithHelpIds.filter((id) => officialQuestionIds.includes(id)) }),
         incorrectOfficialQuestionIds,
         incorrectConceptCheckIds,
       });
@@ -1254,6 +1256,13 @@ function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData
     const officialQuestionIds = new Set(value.officialQuestionIds);
     if (!value.incorrectOfficialQuestionIds.every((id) => officialQuestionIds.has(id))) {
       errors.push(`${prefix}.incorrectOfficialQuestionIds must be a subset of officialQuestionIds.`);
+    }
+  }
+  if (value.answeredWithHelpIds !== undefined) {
+    if (!isKnownQuestionIdArray(value.answeredWithHelpIds, bank)
+      || !value.answeredWithHelpIds.every((id, index, ids) => Array.isArray(value.officialQuestionIds)
+        && value.officialQuestionIds.includes(id) && (index === 0 || ids[index - 1]! < id))) {
+      errors.push(`${prefix}.answeredWithHelpIds must be sorted, unique and a subset of officialQuestionIds.`);
     }
   }
   if (!Array.isArray(value.incorrectConceptCheckIds) || !value.incorrectConceptCheckIds.every((id) => typeof id === "string" && (quiz === undefined || (legacyMembership === undefined

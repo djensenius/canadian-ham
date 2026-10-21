@@ -24,32 +24,48 @@
             "en": "82 ohms",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "This forms the digits 82 but treats the multiplier as x 1. Brown is x 10.",
+            "fr": null
+          }
         },
         {
           "text": {
             "en": "820 ohms",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Grey and red form 82; brown multiplies by 10, giving 820 ohms. Gold marks tolerance here.",
+            "fr": null
+          }
         },
         {
           "text": {
             "en": "8 200 ohms",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "This applies x 100, the red multiplier. In the stated third position the band is brown, meaning x 10.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "92 ohms",
+            "en": "8.2 ohms",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "This uses x 0.1, the gold multiplier. Gold is in the tolerance position here; brown sets the value multiplier.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Grey and red form 82, and brown is the x 10 multiplier, so the nominal value is 82 x 10 = 820 ohms.",
+        "en": "Read band position as well as colour. The first pair gives digits, the next band sets place value, and the separated band sets tolerance.",
         "fr": null
       }
     },
@@ -62,42 +78,58 @@
       "choices": [
         {
           "text": {
-            "en": "A 1 kilohm ±1% part only",
+            "en": "A 1 kilohm ± 1 % part only.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A 1 % range is 990 to 1 010 ohms. The measured value is 80 ohms above nominal, beyond that range.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Both a 1 kilohm ±1% part and a 1 kilohm ±10% part",
+            "en": "Both a 1 kilohm ± 1 % part and a 1 kilohm ± 10 % part.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The 10 % part allows this value, but the 1 % part does not. Check each allowed change from nominal separately.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "A 1 kilohm ±10% part only",
+            "en": "A 1 kilohm ± 10 % part only.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The value is 8 % above nominal. It exceeds 1 % but fits the 10 % range of 900 to 1 100 ohms.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Neither part, because 1 080 ohms is outside both ranges",
+            "en": "Neither a 1 kilohm ± 1 % part nor a 1 kilohm ± 10 % part.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Tolerance allows a range, not just the exact nominal value. The measured value fits the wider 10 % range.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "A 1 kilohm ±1% resistor may range from 990 to 1 010 ohms, while ±10% allows 900 to 1 100 ohms; 1 080 ohms fits only the wider tolerance.",
+        "en": "Use the nominal resistance as the base for each percentage. A tighter tolerance allows a smaller spread, not a different nominal value.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-03-A-C3",
       "prompt": {
-        "en": "A 330 ohm resistor uses orange, orange, brown for its first three bands. Which multiplier colour would make the same first two digits into 3.3 kilohms?",
+        "en": "A 330 ohm resistor has orange, orange, brown value bands. Which third-band colour gives 3.3 kilohms while keeping the first two bands?",
         "fr": null
       },
       "choices": [
@@ -106,32 +138,48 @@
             "en": "Brown",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Brown keeps x 10, so the unchanged digits still give 330 ohms.",
+            "fr": null
+          }
         },
         {
           "text": {
             "en": "Red",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Red is x 100. The digits 33 become 3 300 ohms, or 3.3 kilohms.",
+            "fr": null
+          }
         },
         {
           "text": {
             "en": "Orange",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Orange is x 1 000, which gives 33 000 ohms, or 33 kilohms. That is another factor of ten too large.",
+            "fr": null
+          }
         },
         {
           "text": {
             "en": "Gold",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Gold as a multiplier is x 0.1, giving 3.3 ohms rather than 3.3 kilohms. Its role differs from gold in a tolerance position.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Orange-orange gives the digits 33. Red is the x 100 multiplier, so 33 x 100 = 3 300 ohms, or 3.3 kilohms.",
+        "en": "With fixed digit bands, the multiplier changes the resistance scale. Convert kilohms to ohms before choosing that multiplier.",
         "fr": null
       }
     }

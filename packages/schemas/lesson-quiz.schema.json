@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson-quiz.schema.json",
+  "title": "Authored lesson quiz",
+  "type": "object",
+  "required": ["id", "lessonId", "officialQuestionIds", "conceptChecks"],
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/quizId" },
+    "lessonId": { "$ref": "common.schema.json#/$defs/lessonId" },
+    "officialQuestionIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "common.schema.json#/$defs/questionId" }
+    },
+    "conceptChecks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "prompt", "choices", "explanation"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/conceptCheckId" },
+          "prompt": { "$ref": "common.schema.json#/$defs/nullableLocalizedText" },
+          "choices": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["text", "isCorrect"],
+              "properties": {
+                "text": { "$ref": "common.schema.json#/$defs/nullableLocalizedText" },
+                "isCorrect": { "type": "boolean" },
+                "feedback": { "$ref": "common.schema.json#/$defs/nullableLocalizedText" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "explanation": { "$ref": "common.schema.json#/$defs/nullableLocalizedText" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

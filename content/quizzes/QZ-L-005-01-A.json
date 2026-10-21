@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-005-01-A-C1",
-      "prompt": { "en": "A battery current is 640 mA. What is the same current in amperes?", "fr": null },
+      "prompt": {
+        "en": "A parts list needs 0.82 A. A meter on the same accessory reads 820 mA. What should the learner conclude?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "0.64 A", "fr": null }, "isCorrect": true },
-        { "text": { "en": "6.4 A", "fr": null }, "isCorrect": false },
-        { "text": { "en": "64 A", "fr": null }, "isCorrect": false },
-        { "text": { "en": "0.064 A", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The readings differ by a factor of ten.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That would follow from dividing by 100. Milli requires dividing by 1 000.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "They describe the same current.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "820 / 1 000 = 0.82 A, so only the display unit differs.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The meter reads a thousand times too high.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "820 is a larger number because mA is a smaller unit. The current itself is unchanged.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The readings differ by a factor of one hundred.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This treats milli as a tenfold step. It is a thousandth of an ampere.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Milliamperes are thousandths of an ampere, so divide 640 by 1 000.", "fr": null }
+      "explanation": {
+        "en": "Compare values only after expressing them in the same unit.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-01-A-C2",
-      "prompt": { "en": "Which statement best describes an insulator in a simple circuit?", "fr": null },
+      "prompt": {
+        "en": "A cable passes a continuity test along each copper conductor, but the plastic separator is cracked. Which inspection conclusion follows?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "It strongly resists normal current flow and is used to separate conductors.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It is chosen when a circuit needs the lowest possible resistance path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is a material whose conductivity is between metal conductors and insulators.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is used to carry the return current in a coax shield.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Good conductor continuity is sufficient evidence to keep using the damaged cable.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An unbroken path along each conductor does not establish sound insulation between them. The damaged separator needs its own check.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A separator fault can be ignored unless a copper conductor also breaks.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Insulation can fail while each conductor remains continuous. The faults are separate.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The conducting paths are intact, but separation between them still needs checking.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The test confirms an unbroken conductor path, not sound insulation or freedom from an unintended cross-connection.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Similar end-to-end conductor resistances suggest the cracked separator remains electrically sound.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Those readings describe the conductors, not the separator. Similar resistance cannot verify the insulation between them.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Insulators separate conductors and help keep current on the intended path.", "fr": null }
+      "explanation": {
+        "en": "Check both the intended conducting paths and the insulation that keeps them apart.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-01-A-C3",
-      "prompt": { "en": "Why is polarity important when connecting a DC radio accessory?", "fr": null },
+      "prompt": {
+        "en": "A replacement DC supply has the specified voltage and enough current capacity. Why should the accessory's wiring instructions still be checked?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Some DC circuits can be damaged when the positive and negative leads are swapped.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It changes a conductor into a semiconductor material.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It makes current flow in an open circuit with no return path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It sets the frequency shown on the receiver dial.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Correct voltage and current capacity do not establish the required positive and negative connections.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The accessory may be polarity-sensitive even when the supply ratings suit it.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Extra current capacity is useful protection against accidentally reversing the leads.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A larger available current does not limit reverse-polarity damage. Capacity and connection direction are separate issues.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A matching voltage label is reasonable evidence that the plug polarity also matches.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The label gives voltage magnitude, not the plug's positive and negative contact arrangement. Check the wiring specification.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Equal-sized supply leads suggest that either connection direction is suitable.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Lead size concerns current handling. It does not show whether the accessory tolerates reversed connections.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "DC equipment often expects positive and negative leads to be connected correctly.", "fr": null }
+      "explanation": {
+        "en": "Suitable supply ratings do not replace a polarity check.",
+        "fr": null
+      }
     }
   ]
 }

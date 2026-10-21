@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-005-02-A-C1",
-      "prompt": { "en": "A 13.8 V circuit draws 1.5 A. What power is being used?", "fr": null },
+      "prompt": {
+        "en": "A lamp and a resistor carry the same series current. The resistor becomes warm. Which account fits the measurements?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "9.2 W", "fr": null }, "isCorrect": false },
-        { "text": { "en": "20.7 W", "fr": null }, "isCorrect": true },
-        { "text": { "en": "15.3 W", "fr": null }, "isCorrect": false },
-        { "text": { "en": "0.11 W", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Equal current means the warm resistor has almost no voltage drop.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Heating requires power. With current flowing, the resistor voltage drop accounts for energy converted to heat; warmth is not evidence of negligible voltage.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Current is unchanged through the resistor, while electrical energy becomes heat.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "A series path carries the same current through both parts. The voltage drop and current account for power.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Equal series current means the lamp and resistor dissipate equal power.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Equal current does not establish equal power. Each part's voltage drop also matters in P = I x E.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The warmer part takes a larger share of the supply voltage because temperature alone sets that share.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Voltage division depends on the parts' electrical behaviour. Temperature alone does not establish which part has the larger voltage drop.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "P = I x E, so 1.5 x 13.8 = 20.7 W.", "fr": null }
+      "explanation": {
+        "en": "Use current for charge flow and power for the rate of energy conversion.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-02-A-C2",
-      "prompt": { "en": "A learner calculates resistance from 8.4 V and 0.021 A. Which setup is correct?", "fr": null },
+      "prompt": {
+        "en": "A learner divides 10.8 V by 45 and reports 0.24 ohms for a circuit drawing 45 mA. Which correction is needed?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "R = 8.4 x 0.021", "fr": null }, "isCorrect": false },
-        { "text": { "en": "R = 0.021 / 8.4", "fr": null }, "isCorrect": false },
-        { "text": { "en": "R = 8.4 / 0.021", "fr": null }, "isCorrect": true },
-        { "text": { "en": "R = 8.4 + 0.021", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Multiply 10.8 by 45 because resistance uses E x I.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "E x I is power when base units are used. Resistance requires E / I.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Keep 0.24 ohms because the unit prefix cancels automatically.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The prefix remains unless converted or tracked. Volts divided by milliamperes gives kilohms.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use 0.045 A in R = E / I, giving 240 ohms.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "45 mA = 0.045 A. 10.8 / 0.045 = 240 ohms.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use 45 000 A because milli means multiply the current by 1 000.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Milliamperes are smaller units. Convert mA to A by dividing, not multiplying.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The reference-sheet form is R = E / I.", "fr": null }
+      "explanation": {
+        "en": "The formula was chosen correctly; the missing conversion caused the wrong ohm value.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-02-A-C3",
-      "prompt": { "en": "Which fault is most likely to blow a fuse right away?", "fr": null },
+      "prompt": {
+        "en": "A fused DC accessory works until its supply wires are pinched together before the load. What explains the fuse opening?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "A switch that is open and stops all current.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A meter connected with correct polarity.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A load that is disconnected from both wires.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "An unintended very low-resistance path.", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "The new path has high resistance and stops current.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A high-resistance break would reduce current. Touching conductors bypass the intended load.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The fuse is primarily responding to supply voltage rather than excessive current.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An ordinary fuse opens through excessive current and heating. The short creates the overcurrent path.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The fuse opens because the intended load is now in series with more resistance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Contact between the supply wires adds a low-resistance parallel path, not a series resistance.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A low-resistance path bypasses the load and draws excessive current.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The fault is a short across the supply. The fuse limits the resulting overcurrent hazard.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A short circuit can draw excessive current until protection opens the circuit.", "fr": null }
+      "explanation": {
+        "en": "A complete intended circuit and an unintended short are different current paths.",
+        "fr": null
+      }
     }
   ]
 }

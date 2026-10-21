@@ -13,6 +13,7 @@ export interface NullableLocalizedText {
 export interface ConceptCheckChoice {
   readonly text: NullableLocalizedText;
   readonly isCorrect: boolean;
+  readonly feedback?: NullableLocalizedText;
 }
 
 export interface ConceptCheck {

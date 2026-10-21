@@ -63,6 +63,22 @@ A club wants a first-cut dipole near 18.9 MHz for a practice exercise.
 
 The installed antenna should be checked with an analyzer and adjusted in small steps.
 
+### Faded practice: finish dipole legs
+
+A wire dipole needs equal legs around its centre feed point.
+
+- Given: f = 16.7 MHz.
+- Find: overall starting length and each leg.
+- Formula: overall ≈ 143 / f(MHz); leg = overall / 2.
+- Complete: overall ≈ 143 / ___ ≈ ___ m; leg ≈ ___ / 2 ≈ ___ m.
+- Sanity check: Would using the overall value for both legs make the antenna much too long?
+
+Fill the gaps before checking below.
+
+### Check your work: finish dipole legs
+
+Overall ≈ 8.56 m; each leg ≈ 4.28 m. The formula gives total dipole length, not each leg.
+
 ## Random wires and end-fed antennas
 
 A random-wire antenna can be simple to install. The station end may also carry RF voltage and current unless matching and counterpoise are handled well. That can cause RF feedback, audio distortion, computer glitches, or a hot-feeling microphone.
@@ -95,6 +111,22 @@ loop length in metres ≈ 306 / f(MHz)
 - Sanity check: a square has four sides, so 12.44 m / 4 = 3.11 m.
 
 The same total-wire idea applies to delta loops, but the shape is triangular instead of square. The formula distinction matters. The 300 / f formula estimates free-space wavelength. The 306 / f formula is a practical full-wave loop starting estimate.
+
+### Faded practice: finish a square loop
+
+Estimate the perimeter before finding the sides.
+
+- Given: f = 19.3 MHz; square driven loop.
+- Find: total wire and each side.
+- Formula: perimeter ≈ 306 / f(MHz); side = perimeter / 4.
+- Complete: perimeter ≈ 306 / ___ ≈ ___ m; side ≈ ___ / 4 ≈ ___ m.
+- Sanity check: Do the four side lengths add back to the perimeter?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a square loop
+
+Perimeter ≈ 15.85 m; each side ≈ 3.96 m. The 306 estimate is slightly longer than the free-space wavelength estimate, unlike a practical dipole half-wave cut.
 
 ### Misconception: loop formulas are shorter too
 
@@ -131,13 +163,39 @@ A full-wave horizontal loop is planned near 10.1 MHz.
 
 The final shape may be irregular if the available trees are not in perfect positions.
 
+### Faded practice: finish another loop shape
+
+Use an equilateral triangular loop for a first-cut exercise.
+
+- Given: f = 11.3 MHz; three equal sides.
+- Find: total wire and each side.
+- Formula: total wire ≈ 306 / f(MHz); side = total / 3.
+- Complete: total ≈ 306 / ___ ≈ ___ m; side ≈ ___ / 3 ≈ ___ m.
+- Sanity check: Does changing the shape divide the perimeter differently without changing the total-wire formula?
+
+Fill the gaps before checking below.
+
+### Check your work: finish another loop shape
+
+Total ≈ 27.08 m; each side ≈ 9.03 m. Feed point, height, and installation still affect polarization, impedance, and final adjustment.
+
 ## Try it
 
-1. A dipole wire runs northeast-southwest in free space. Where are its strongest directions? Broadside to the wire, roughly northwest and southeast.
-2. A random wire causes audio distortion during transmit. What should you investigate? Look for RF feedback, bonding, matching, and counterpoise issues.
-3. A one-wavelength square loop is cut for a higher frequency. What happens to total wire length? It becomes shorter because wavelength and frequency move in opposite directions.
-4. A full-wave loop is planned for 15 MHz. Which estimate is the practical loop starting length? Use 306 / 15 = 20.4 m total wire; 300 / 15 = 20.0 m is the free-space wavelength estimate.
-5. The same triangular loop is fed at a different point. What antenna property can change? Polarization can change because feed-point location affects current distribution and electric-field orientation.
+Try these before reading the feedback below.
+
+1. A dipole runs northeast-southwest in free space. Where is radiation strongest?
+2. What should you investigate if a random wire causes transmit audio distortion?
+3. What happens to total wire length for a full-wave square loop designed for a higher frequency?
+4. Find the practical full-wave loop starting length at 15 MHz and compare with free space.
+5. Which antenna property may change if a triangular loop's feed point moves?
+
+### Try-it feedback
+
+1. Broadside, roughly northwest and southeast.
+2. RF feedback, bonding, matching, and counterpoise.
+3. It becomes shorter because wavelength and frequency move in opposite directions.
+4. 306 / 15 = 20.4 m total wire; free-space wavelength is 300 / 15 = 20.0 m.
+5. Polarization can change because current distribution and electric-field orientation change.
 
 ## Radio connection
 

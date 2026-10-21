@@ -119,7 +119,7 @@ Power-supply filter capacitors can retain charge after the unit is unplugged. Us
 - Mistaken idea: if equipment has a fuse, the operator is protected from electric shock.
 - Correction: a fuse protects wiring and equipment from excessive current. Shock safety also needs grounding, bonding, de-energizing before work, proper enclosures, and safe work practices.
 
-### Worked example: opening an offline supply
+### In the real world: opening an offline supply
 
 A qualified repair mentor supervises a student inspecting an unplugged supply.
 
@@ -142,7 +142,7 @@ Antenna work adds fall and falling-object hazards. Before any antenna repair, sh
 
 Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting. Touching an energized antenna or feed point can cause RF burns.
 
-### Worked example: feedline entry plan
+### In the real world: feedline entry plan
 
 A backyard station brings coax and rotator cable through a wall.
 
@@ -159,11 +159,42 @@ RF energy can heat body tissue when exposure is high enough. Eyes deserve care b
 
 Power density falls rapidly with distance in free space. In a simple free-space point-source model, RF field strength falls in proportion to `1/d`. Power density falls in proportion to `1/d^2`. Doubling distance can greatly reduce exposure before you even consider duty cycle or antenna pattern.
 
+### Worked example: compare power density at a distance
+
+Use only the simple free-space point-source model here, not a real installation assessment. Compare a point at 3 m with a point at 6 m while source power stays fixed.
+
+- Given: old distance = 3 m; new distance = 6 m.
+- Find: new power density as a fraction of the old value.
+- Formula: density ratio = (old distance / new distance) x (old distance / new distance).
+- Substitute: ratio = (3 / 6) x (3 / 6).
+- Answer: ratio = 0.25, or one quarter of the original power density.
+- Sanity check: doubling distance spreads power over four times the area in this model.
+
+Nearby antennas, reflections, and real patterns can depart from this simple model. Do not use the ratio alone to approve an occupied location.
+
+### Faded practice: square the distance ratio
+
+In that same model, compare points 4 m and 12 m from an unchanged source.
+
+- Given: old distance = 4 m; new distance = 12 m.
+- Find: new power density relative to the old point.
+- Formula: density ratio = (old / new) x (old / new).
+- Complete: ratio = (4 / 12) x (4 / 12) = ___ x ___ = ___.
+- Sanity check: should tripling distance give one third or one ninth of the power density?
+
+Fill the gaps before checking below.
+
+### Check your work: square the distance ratio
+
+The distance fraction is one third. Squaring it gives one ninth, about 0.111 of the original density. Field strength and power density use different distance relationships; this remains a simplified model.
+
+### Keep people outside the RF hazard area
+
 A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces. Better still, move the antenna outdoors and mount it as high as practical, out of reach. Mount directional high-gain antennas higher than nearby occupied structures so the main beam is not aimed through people in those structures.
 
 Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. It covers controlled and uncontrolled exposure situations. No transmitter class is automatically outside RF exposure regulation. This lesson does not invent numeric limits or replace a proper exposure evaluation.
 
-### Worked example: indoor antenna decision
+### In the real world: indoor antenna decision
 
 An apartment operator tests a compact indoor antenna for low-power contacts.
 
