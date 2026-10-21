@@ -47,11 +47,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         answer.tap()
         let status = app.staticTexts["lesson-quiz-feedback-status"].firstMatch
         positionConceptFeedback([status], in: app)
+        waitBriefly(0.8)
         XCTAssertEqual(status.label, "Correct 820 / 1 000 = 0.82 A, so only the display unit differs.")
         XCTAssertTrue(isFullyVisible(status, in: app, requiresHittable: true), "Feedback must wrap without truncation at AX-XXXL")
         try auditIgnoringOccludedLessonTextContrast(app: app)
         let explanation = app.staticTexts["lesson-quiz-feedback-explanation"].firstMatch
         positionConceptFeedback([explanation], in: app)
+        waitBriefly(0.8)
         XCTAssertEqual(explanation.label, "Compare values only after expressing them in the same unit.")
         XCTAssertTrue(isFullyVisible(explanation, in: app, requiresHittable: true), "Explanation must be fully visible after the audit's scroll changes. Frame: \(frameDescription(explanation.frame))")
         try auditIgnoringOccludedLessonTextContrast(app: app)
