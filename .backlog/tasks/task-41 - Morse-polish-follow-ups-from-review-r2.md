@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-21 16:45'
+updated_date: '2026-10-21 17:29'
 labels:
   - apple
   - web
@@ -102,4 +102,6 @@ Coordinator-approved AC1 latency fix (2026-10-21): unchanged iPhone test measure
 - testReduceFlashingStopsOnlyRunningVisualBeacon — PASS (0.001 seconds)
 - testScheduleMorseVisualPlaybackInitialStateAndFallback — PASS (0.001 seconds)
 - testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess — PASS (0.043 seconds)
+
+Validation still blocked on the shared xbuild lock after mac32 passed: the unchanged iPhone hardware-keyboard method has not yet begun on the async-audio fix. Live runner /tmp/task-41-audio-checks.sh, output /tmp/task-41-audio-validation-20261021T151530Z, stops on first failure and then covers iPad keyboard, four sending regressions, localization and guards. Other lanes repeatedly acquired the lock ahead of this waiter; no other processes were touched. Defensive continuation artifact /tmp/task-41-handoff2.md records the full diagnosis, approved app fix, exact live state, and remaining criteria; AC1 remains unchecked and task In Progress. Fresh git fetch origin main, text-source, test-guard --base origin/main --head HEAD, diff/index/clean-tree checks all pass on the current source. Localization and hardware-after timings remain unverified.
 <!-- SECTION:NOTES:END -->
