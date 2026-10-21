@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 14:55'
+updated_date: '2026-10-21 15:06'
 labels:
   - apple
 dependencies:
@@ -139,6 +139,8 @@ Other checks: pnpm check:schemas PASS (2,034 targets); pnpm check:apple-l10n PAS
 Scope: no tvOS/visionOS quiz UI exists, so their quiz tests are N/A; shared catalogue build checks passed. No full suites run. Native macOS final-source build PASS (mac-final-build.log).
 
 Acceptance evidence: AC1/AC7: 13/13 distinct UI methods per iPhone and iPad across final targeted runs cover bank ladders, one-level metadata, concept/tool exclusions, hidden reference pointers and all six old layout-control regressions; tvOS/visionOS quiz UI N/A explicitly approved, catalogue builds pass. Mock/timed code unchanged. AC2: real 0.5s timing/freeze unit, cache tests, current/other route mapper test and AX-XXXL layout + French current-lesson round trips pass. AC3: both appearances verify helped correct remains 1/1 (100%), help count and marker; French copy/notice and relaunch flags pass. AC4/AC6: shared fixture cases, payloadData save, legacy missing field, strict invalid-ID rejection, export/import/device rows, split filtering and archived atomic migration tests pass; submit forwards frozen flag to existing 50.15 engine path. AC5: 34 distinct macOS unit methods, current macOS source build, all seven new UI methods and six existing control users on each iPhone/iPad, light/dark audits, localization/text/schema checks pass. No manual VoiceOver session was run; native controls, existing announcements and full-type automated audits remain in use. No new animations were added (native presenter/navigation retains system Reduce Motion behavior). Final required PR marker: Test-guard-approved: owner decision 2026-10-12. Independent reviewer approval still required before PR. No full suites and no PR opened.
+
+Review follow-up (2026-10-21): restored horizontal-first ViewThatFits header/navigation and added default iPad header/row and AX vertical assertions. Removed Basic-prefix help-ID restriction; official/known-bank validation tests and widened real timer margins pass. macOS targeted 8/8 PASS, including all 5 LocalizationCatalogTests. Initial iPad default header/nav check PASS, but plain ViewThatFits reproduces Dynamic Type audit failure and AX wrapping; no audit was weakened. Coordinator approved intrinsic-width candidate first, then existing StudyViews accessibility-size vertical branch only if needed. Intrinsic-width fix committed; only the three failing iPad AX/light/dark methods queued via nohup, waiting for current targeted run/lock. Keep Done per assigned review-follow-up workflow.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
