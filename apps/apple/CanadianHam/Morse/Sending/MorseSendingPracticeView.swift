@@ -71,8 +71,10 @@ struct MorseSendingPracticeView: View {
         .background(DesignTokens.Colors.paper)
         .contentShape(Rectangle())
         .navigationTitle("Sending practice") // l10n: localized
-        .focusable(!showingExam && presentedResult == nil)
+        // Keying edits the decoded message; it must not depend on Full Keyboard Access.
+        .focusable(!showingExam && presentedResult == nil, interactions: .edit)
         .focused($keyboardFocus, equals: .practice)
+        .defaultFocus($keyboardFocus, .practice)
         .onAppear {
             focusKeyboardAfterLayout(.practice)
             // Another Morse mode starting playback stops any held key or paddle here.
@@ -227,8 +229,9 @@ struct MorseSendingPracticeView: View {
         .background(DesignTokens.Colors.paper)
         .contentShape(Rectangle())
         .navigationTitle("Exam-style check") // l10n: localized
-        .focusable(presentedResult == nil)
+        .focusable(presentedResult == nil, interactions: .edit)
         .focused($keyboardFocus, equals: .exam)
+        .defaultFocus($keyboardFocus, .exam)
         .onAppear { focusKeyboardAfterLayout(.exam) }
         .onKeyPress(phases: [.down, .up]) { press in
             guard showingExam, presentedResult == nil else { return .ignored }
