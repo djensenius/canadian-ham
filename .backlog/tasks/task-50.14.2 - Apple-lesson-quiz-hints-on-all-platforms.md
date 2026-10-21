@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 20:52'
+updated_date: '2026-10-21 20:54'
 labels:
   - apple
 dependencies:
@@ -199,6 +199,8 @@ Other final checks PASS: Apple text-source checker; git diff --check; test guard
 Skipped: full suites by targeted review policy; tvOS/visionOS reruns because follow-up files compile only in the iOS/macOS app/tests and the shared catalogue is unchanged (prior generic builds remain recorded above). No manual macOS UI or VoiceOver session was performed in this follow-up; native UI/automated AX coverage and macOS compile/unit checks were used.
 
 Control result retained: LearnViews.swift from 2a4f12b1 with the unchanged approved feedback helper/current positioning passed dark audit (170.163s); duplicate-tree adaptive source failed it. Direct temporary diagnostics proved the finding was non-nil occluded header count text, not fully visible feedback; the absence of an element screenshot was not evidence of nil. The single-tree Layout fixes the provenance regression with no added exceptions.
+
+Re-review note 1 correction committed as ec6d01f6e7b958041e5e7c1c7f54a7df2686ebcf: header now uses a single AnyLayout child tree, top-aligned HStack with original Spacer and natural text wrapping at every non-accessibility size, leading Spacing.md VStack only at accessibility sizes. Intrinsic fitting Layout remains navigation-only; provenance comment and all audits/helpers unchanged. Added title.exists and horizontal header assertions on default iPhone as well as iPad (note 3). Apple text-source and incremental test-guard checks PASS; git diff --check PASS. Nohup /tmp/task-50.14.2-runs/review-header-wrap.sh queued after code commit for 7 macOS lesson-quiz units and seven quiz UI tests each on iPhone 17 Pro/iPad Pro 13-inch (M5). Waiting for shared xbuild lock without interfering with other builds. Done retained; no PR.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
