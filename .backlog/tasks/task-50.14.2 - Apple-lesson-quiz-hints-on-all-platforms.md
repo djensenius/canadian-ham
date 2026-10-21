@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 20:54'
+updated_date: '2026-10-21 21:26'
 labels:
   - apple
 dependencies:
@@ -201,6 +201,49 @@ Skipped: full suites by targeted review policy; tvOS/visionOS reruns because fol
 Control result retained: LearnViews.swift from 2a4f12b1 with the unchanged approved feedback helper/current positioning passed dark audit (170.163s); duplicate-tree adaptive source failed it. Direct temporary diagnostics proved the finding was non-nil occluded header count text, not fully visible feedback; the absence of an element screenshot was not evidence of nil. The single-tree Layout fixes the provenance regression with no added exceptions.
 
 Re-review note 1 correction committed as ec6d01f6e7b958041e5e7c1c7f54a7df2686ebcf: header now uses a single AnyLayout child tree, top-aligned HStack with original Spacer and natural text wrapping at every non-accessibility size, leading Spacing.md VStack only at accessibility sizes. Intrinsic fitting Layout remains navigation-only; provenance comment and all audits/helpers unchanged. Added title.exists and horizontal header assertions on default iPhone as well as iPad (note 3). Apple text-source and incremental test-guard checks PASS; git diff --check PASS. Nohup /tmp/task-50.14.2-runs/review-header-wrap.sh queued after code commit for 7 macOS lesson-quiz units and seven quiz UI tests each on iPhone 17 Pro/iPad Pro 13-inch (M5). Waiting for shared xbuild lock without interfering with other builds. Done retained; no PR.
+
+## Re-review visual correction: final evidence
+
+Final source commit: ec6d01f6e7b958041e5e7c1c7f54a7df2686ebcf. The header no longer measures ideal-width fit: at every non-accessibility size it uses AnyLayout(HStackLayout(alignment: .top)), the original wrapping quizHeader, Spacer minimum gap and Retry. Accessibility sizes use the same header/Retry tree with leading Spacing.md VStackLayout (no horizontal Spacer). The intrinsic-fitting Layout is navigation-only and its ViewThatFits audit-provenance comment is retained. This supersedes previous notes describing an intrinsic-fitting header. The strengthened concept-check test now explicitly asserts title.exists and horizontal title/Retry X/Y geometry on both iPhone and iPad; the existing iPad navigation assertion is intact. All audits and shared helpers are unchanged.
+
+Executed after committing via nohup bash /tmp/task-50.14.2-runs/review-header-wrap.sh, with grep polling. All three xbuild commands exited 0; waited for shared lock without interrupting any builds. The script contains complete commands/selectors.
+
+### macOS lesson-quiz units: PASS 7/7
+Log: /tmp/task-50.14.2-runs/mac-review-header-wrap.log
+- CanadianHamTests.ProgressStoreTests/testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure: PASS (0.046s)
+- CanadianHamTests.ProgressStoreTests/testLessonQuizHelpFixtureValidationAndPayloadRoundTrips: PASS (0.141s)
+- CanadianHamTests.ProgressStoreTests/testLessonQuizHelpValidationUsesOfficialMembershipAndKnownBankIdsNotBasicPrefix: PASS (0.032s)
+- CanadianHamTests.ProgressStoreTests/testLessonQuizHintVisibilityUsesHalfSecondAndFreezesHelpAtChoice: PASS (2.631s)
+- CanadianHamTests.ProgressStoreTests/testLessonQuizSessionCachePreservesAnswersAndFrozenHelpAcrossNavigation: PASS (0.003s)
+- CanadianHamTests.ProgressStoreTests/testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist: PASS (0.048s)
+- CanadianHamTests.RootNavigationMappingTests/testLessonQuizCurrentAndOtherHintLessonStacksPreserveQuizAcrossLayouts: PASS (0.001s)
+xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-gbwfkszqitpwztancxhpvfvcfxsj/Logs/Test/Test-CanadianHam-2026.10.21_16-55-26--0400.xcresult
+
+### iPhone 17 Pro lesson-quiz UI: PASS 7/7
+Log: /tmp/task-50.14.2-runs/phone-review-header-wrap.log
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizConceptCheckHasNoHintOrOtherTools: PASS (21.419s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip: PASS (341.629s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizHintsDarkAndFullAccessibilityAudits: PASS (160.023s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizHintsFrenchAndCurrentLessonRoundTrip: PASS (162.703s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizHintsLightAndFullAccessibilityAudits: PASS (166.044s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch: PASS (102.356s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount: PASS (109.881s)
+xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-gbwfkszqitpwztancxhpvfvcfxsj/Logs/Test/Test-CanadianHam-2026.10.21_16-57-50--0400.xcresult
+
+### iPad Pro 13-inch (M5) lesson-quiz UI: PASS 7/7
+Log: /tmp/task-50.14.2-runs/pad-review-header-wrap.log
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizConceptCheckHasNoHintOrOtherTools: PASS (16.192s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip: PASS (96.518s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizHintsDarkAndFullAccessibilityAudits: PASS (61.475s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizHintsFrenchAndCurrentLessonRoundTrip: PASS (58.522s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizHintsLightAndFullAccessibilityAudits: PASS (58.635s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch: PASS (39.323s)
+- CanadianHamUITests.CanadianHamExamToolsUITests/testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount: PASS (46.977s)
+xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-gbwfkszqitpwztancxhpvfvcfxsj/Logs/Test/Test-CanadianHam-2026.10.21_17-18-05--0400.xcresult
+
+Default-size iPhone horizontal-header proof PASS in testLessonQuizConceptCheckHasNoHintOrOtherTools (Retry minY < title maxY, Retry minX > title maxX, both exist); same proof PASS on iPad. AX layout/round-trip and full light/dark audits PASS on both devices. No skips, audit/filter changes or helper edits.
+
+Other checks PASS: Apple text-source checker; incremental test guard from 21a3b46a to final source (no guarded changes); git diff --check. No full suites by targeted review policy; tvOS/visionOS follow-up reruns skipped because only the iOS/macOS quiz view/tests changed and shared catalogue/model did not. macOS compiled and all seven named lesson-quiz units passed; no manual native macOS window/VoiceOver session was performed. Done retained; no PR opened. Ready for independent review and push.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
@@ -209,4 +252,6 @@ Re-review note 1 correction committed as ec6d01f6e7b958041e5e7c1c7f54a7df2686ebc
 Implemented Apple lesson-quiz hints on the existing iOS/iPadOS/macOS quiz surfaces, matching web help timing, frozen choice semantics, score/progress behavior, hint-only tools and EN/FR result markers. Optional helped IDs now survive payload persistence, export/import/device-row sync and lesson-ID splits with strict shared-contract validation and legacy compatibility. Root-owned sessions retain quiz state across lesson links and layout changes. Fixed real inspector nesting and Dynamic Type control identity issues. The coordinator-approved DEBUG-only transition hook is now one-shot/nonintercepting after use; all six old hook tests pass on both devices and all original tests/helpers remain byte-identical. Verified 34 distinct macOS unit methods, final macOS build, 13 distinct UI methods on each iPhone/iPad, full-type light/dark audits (only existing approved occluded-contrast feedback exception), French export/text/schema checks and tvOS/visionOS catalogue builds. tvOS/visionOS quiz UI N/A by approved scope. No full suites or PR; ready for independent branch review.
 
 Review follow-up complete: restored horizontal-first adaptive header/navigation with a single intrinsic-fitting Layout (coordinator-approved after ViewThatFits audit-provenance regression), retaining vertical AX fallback and no width thresholds. Removed Basic-only help-ID prefix restriction, added membership/known-bank coverage and stronger timer margins. Final macOS units 8/8 (LocalizationCatalogTests 5/5), iPhone 7/7 and iPad 7/7 pass, including default iPad horizontal proof and unchanged full audits. Only new-test positioners were strengthened; old tests/helpers remain identical and all temporary diagnostics are removed. Done retained; pushed for re-review, no PR.
+
+Re-review visual correction complete: non-AX quiz headers now retain the original wrapping top-aligned horizontal layout and Spacer gap via single-tree AnyLayout; AX headers alone stack vertically. Navigation retains intrinsic fitting and the audit-provenance comment. Added title existence and default iPhone/iPad horizontal header proof. Final macOS lesson-quiz units 7/7, iPhone UI 7/7 and iPad UI 7/7 PASS (per-test evidence above). All audits/helpers unchanged. No full suites or PR; Done retained.
 <!-- SECTION:FINAL_SUMMARY:END -->
