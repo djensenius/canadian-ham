@@ -1646,7 +1646,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 let end = start.withOffset(CGVector(dx: 0, dy: min(limit, max(-limit, distance))))
                 start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
             } else {
-                scrollView.swipeUp()
+                // Sidebar rows are virtualized. A full swipe can skip a short default-size
+                // row before its exact title ever enters the accessibility hierarchy.
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+                let end = start.withOffset(CGVector(dx: 0, dy: -visibleFrame.height / 3))
+                start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
             }
             waitBriefly()
         }
