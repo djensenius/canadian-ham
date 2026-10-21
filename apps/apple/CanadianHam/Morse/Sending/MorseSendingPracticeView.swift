@@ -690,7 +690,14 @@ final class MorseSendingKeyer: ObservableObject {
                 case .release:
                     await output.release()
                 }
-                if request == audioRequest { audioError = nil }
+                // Only a successful tone-producing command clears an earlier audio error;
+                // the silence queued on key-up must not hide a failure the learner just hit.
+                switch command {
+                case .prepare, .start, .element:
+                    if request == audioRequest { audioError = nil }
+                case .silence, .release:
+                    break
+                }
             } catch {
                 guard request == audioRequest else { return }
                 audioError = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
