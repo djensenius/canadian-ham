@@ -207,11 +207,35 @@ Indoor antennas can work, but the safety margin comes from distance, lower power
 
 ## Try it
 
-1. A supply cover is opened and a cabinet interlock removes input power. What unsafe assumption must you avoid? Do not assume the unit is harmless; filter capacitors can still hold charge.
-2. A temporary control circuit measures 48 V in a damp work area. How should it be treated? Treat it as hazardous because it is above the usual 30 V shock threshold, and wet conditions can lower body resistance.
-3. A station bonding strap is clamped over painted, corroded metal. What should be corrected? Clean the contact area to bare metal, use proper bonding hardware, keep the bond short, and recheck continuity.
-4. A club schedules roof-antenna maintenance for the same afternoon that thunderstorms are forecast nearby. What conservative change should the team make? Postpone the work, shut the transmitter down, separate the feedline from station equipment before any repair, and keep antennas disconnected or grounded during storm conditions.
-5. An indoor antenna test is upgraded from a low-power whip to a directional antenna. What parts of the RF-safety plan should change? Recheck power, distance, access control, and beam direction.
+1. A supply cover is opened and a cabinet interlock removes input power. What unsafe assumption must you avoid?
+
+:::answer
+Do not assume the unit is harmless; filter capacitors can still hold charge.
+:::
+
+2. A temporary control circuit measures 48 V in a damp work area. How should it be treated?
+
+:::answer
+Treat it as hazardous because it is above the usual 30 V shock threshold, and wet conditions can lower body resistance.
+:::
+
+3. A station bonding strap is clamped over painted, corroded metal. What should be corrected?
+
+:::answer
+Clean the contact area to bare metal, use proper bonding hardware, keep the bond short, and recheck continuity.
+:::
+
+4. A club schedules roof-antenna maintenance for the same afternoon that thunderstorms are forecast nearby. What conservative change should the team make?
+
+:::answer
+Postpone the work, shut the transmitter down, separate the feedline from station equipment before any repair, and keep antennas disconnected or grounded during storm conditions.
+:::
+
+5. An indoor antenna test is upgraded from a low-power whip to a directional antenna. What parts of the RF-safety plan should change?
+
+:::answer
+Recheck power, distance, access control, and beam direction.
+:::
 
 ## Radio connection
 

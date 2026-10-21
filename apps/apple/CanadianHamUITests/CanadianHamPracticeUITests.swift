@@ -995,6 +995,31 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.exists)
     }
 
+    func testLessonTryItRevealAndAccessibilityLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditLessonTryItReveal(appearance: .light, accessibilitySize: false)
+    }
+
+    func testLessonTryItRevealAndAccessibilityDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditLessonTryItReveal(appearance: .dark, accessibilitySize: true)
+    }
+
+    func testLessonTryItRevealFrenchLabelsAndState() throws {
+        let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-006-01", "-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"])
+        defer { app.terminate() }
+        let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 10))
+        scrollUntilHittable(toggle, in: app, maxSwipes: 40)
+        XCTAssertEqual(toggle.label, "Afficher la réponse 1")
+        XCTAssertEqual(toggle.value as? String, "Réduit")
+        XCTAssertFalse(app.staticTexts["lesson-try-it-1-answer"].firstMatch.exists)
+        toggle.tap()
+        XCTAssertTrue(app.staticTexts["lesson-try-it-1-answer"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(toggle.label, "Masquer la réponse 1")
+        XCTAssertEqual(toggle.value as? String, "Développé")
+    }
+
     func testLessonPrerequisiteNavigationAndAccessibilityLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditLessonPrerequisiteNavigation(appearance: .light)
@@ -2363,6 +2388,37 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollPracticeReviewFeedbackIntoView(in: reviewApp)
         try auditIgnoringOccludedExamTextContrast(app: reviewApp, context: "\(appearance.rawValue) practice review feedback")
         reviewApp.terminate()
+    }
+
+    private func auditLessonTryItReveal(appearance: AuditAppearance, accessibilitySize: Bool) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialLessonID", "L-006-01",
+            "-CanadianHamTheme", appearance.rawValue,
+            "-UIPreferredContentSizeCategoryName", accessibilitySize ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL"
+        ])
+        defer { app.terminate() }
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
+        let answer = app.staticTexts["lesson-try-it-1-answer"].firstMatch
+        let secondAnswer = app.staticTexts["lesson-try-it-2-answer"].firstMatch
+        XCTAssertFalse(answer.exists, "Try-it answers must not enter the accessibility tree before disclosure")
+        scrollUntilHittable(toggle, in: app, maxSwipes: 60)
+        positionElementInMiddleVisibleBand(toggle, in: app, context: "\(appearance.rawValue) collapsed Try-it")
+        XCTAssertEqual(toggle.label, "Show answer 1")
+        XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+        toggle.tap()
+        XCTAssertTrue(answer.waitForExistence(timeout: 5))
+        XCTAssertEqual(answer.label, "It remains fifty ohms because geometry and dielectric did not change.")
+        XCTAssertEqual(toggle.label, "Hide answer 1")
+        XCTAssertEqual(toggle.value as? String, "Expanded")
+        XCTAssertFalse(secondAnswer.exists, "Revealing one Try-it must not reveal another")
+        scrollUntilHittable(toggle, in: app, maxSwipes: 3)
+        positionElementInMiddleVisibleBand(toggle, in: app, context: "\(appearance.rawValue) expanded Try-it")
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+        toggle.tap()
+        XCTAssertFalse(answer.exists, "Collapsing must remove the answer from the accessibility tree")
+        XCTAssertEqual(toggle.value as? String, "Collapsed")
     }
 
     private func auditLessonPrerequisiteNavigation(appearance: AuditAppearance) throws {

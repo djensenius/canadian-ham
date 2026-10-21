@@ -178,18 +178,34 @@ End insulators on a suspended wire mark where the antenna conductor ends electri
 Try these before reading the feedback below.
 
 1. Do vertical handheld and repeater antennas have matching polarization?
+
+:::answer
+Yes. Their electric fields are vertical.
+:::
+
 2. What happens to a horizontal wire dipole's resonant frequency if it is shortened?
+
+:::answer
+Resonance moves upward.
+:::
+
 3. Estimate the free-space wavelength at 72 MHz.
+
+:::answer
+λ = 300 / 72 ≈ 4.17 m.
+:::
+
 4. Which first-cut estimate suits a practical wire dipole at 14.2 MHz: 150 / f or 143 / f?
+
+:::answer
+143 / 14.2 ≈ 10.07 m overall is the practical starting estimate.
+:::
+
 5. What helps a short mobile HF whip tune below its natural resonant frequency?
 
-### Try-it feedback
-
-1. Yes. Their electric fields are vertical.
-2. Resonance moves upward.
-3. λ = 300 / 72 ≈ 4.17 m.
-4. 143 / 14.2 ≈ 10.07 m overall is the practical starting estimate.
-5. A loading coil adds series inductance, making it electrically longer.
+:::answer
+A loading coil adds series inductance, making it electrically longer.
+:::
 
 ## Radio connection
 

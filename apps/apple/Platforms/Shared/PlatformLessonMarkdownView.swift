@@ -32,6 +32,7 @@ struct LessonMarkdownView: View {
                 displayBlockView(displayBlock)
             }
         }
+        .id(markdown)
         .onAppear { focusTargetHeadingAfterLayout() }
         .onChange(of: targetAnchor) { _, _ in focusTargetHeadingAfterLayout() }
     }
@@ -39,6 +40,12 @@ struct LessonMarkdownView: View {
     @ViewBuilder
     private func displayBlockView(_ displayBlock: DisplayLessonBlock) -> some View {
 #if os(tvOS)
+        if case .tryIt = displayBlock.block {
+            blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
+                .padding(DesignTokens.Spacing.lg)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        } else {
         Group {
             blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
         }
@@ -55,6 +62,7 @@ struct LessonMarkdownView: View {
         .focusable(true)
         .focused($focusedBlockID, equals: displayBlock.id)
         .focusEffectDisabled()
+        }
 #else
         blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
 #endif
@@ -76,6 +84,8 @@ struct LessonMarkdownView: View {
 #else
                 .fixedSize(horizontal: false, vertical: true)
 #endif
+        case .tryIt(let number, let prompt, let answer):
+            LessonTryItView(number: number, prompt: strippingLinks(from: prompt), answer: strippingLinks(from: answer))
         case .list(let ordered, let items):
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
@@ -220,6 +230,70 @@ struct LessonMarkdownView: View {
 
     private func plainString(_ value: AttributedString) -> String {
         String(value.characters)
+    }
+}
+
+private struct LessonTryItView: View {
+    let number: Int
+    let prompt: AttributedString
+    let answer: AttributedString
+    @State private var expanded = false
+#if os(tvOS)
+    @FocusState private var answerFocused: Bool
+#endif
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                Text("\(number).") // l10n: verbatim
+                    .font(DesignTokens.FontScale.body.weight(.semibold))
+                Text(lessonEnglish(prompt)) // l10n: content(en)
+                    .font(DesignTokens.FontScale.body)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("lesson-try-it-\(number)-prompt")
+            }
+            Button {
+#if os(tvOS)
+                expanded = true
+#else
+                expanded.toggle()
+#endif
+            } label: {
+                if expanded {
+#if os(tvOS)
+                    Text("Answer \(number)") // l10n: localized
+#else
+                    Text("Hide answer \(number)") // l10n: localized
+#endif
+                } else {
+                    Text("Show answer \(number)") // l10n: localized
+                }
+            }
+            .font(DesignTokens.FontScale.body.weight(.semibold))
+            .buttonStyle(.bordered)
+            .accessibilityValue(expanded ? Text("Expanded") : Text("Collapsed")) // l10n: localized
+            .accessibilityIdentifier("lesson-try-it-\(number)-toggle")
+#if os(tvOS)
+            .focused($answerFocused)
+            .onChange(of: answerFocused) { _, focused in
+                if focused { expanded = true }
+            }
+#endif
+            if expanded {
+                Text(lessonEnglish(answer)) // l10n: content(en)
+                    .font(DesignTokens.FontScale.body)
+                    .fixedSize(horizontal: false, vertical: true)
+#if os(iOS) || os(macOS)
+                    .textSelection(.enabled)
+#endif
+                    .accessibilityIdentifier("lesson-try-it-\(number)-answer")
+            }
+        }
+        .foregroundStyle(DesignTokens.Colors.ink)
+        .onChange(of: expanded) { _, shown in
+            let announcement = shown ? String(localized: "Answer \(number) shown.") : String(localized: "Answer \(number) hidden.")
+            AccessibilityNotification.Announcement(announcement).post()
+        }
     }
 }
 

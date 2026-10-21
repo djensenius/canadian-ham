@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { ACTIVE_GENERATED_DIR } from "./active-bank.ts";
 import { isMainModule } from "./cli.ts";
+import { validateTryItAnswers } from "./try-it-answers.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
@@ -421,10 +422,13 @@ export async function checkLessonCoverage(options: LessonCoverageOptions = {}): 
   const markdownFiles = await listMarkdownFiles(lessonRoot);
   for (const filePath of markdownFiles) {
     try {
-      const data = parseFrontMatter(await readFile(filePath, "utf8"), filePath);
+      const markdown = await readFile(filePath, "utf8");
+      const data = parseFrontMatter(markdown, filePath);
       const type = requireString(data, "type", filePath);
       if (type === "lesson") {
         const lesson = validateLesson(data, filePath);
+        const answerIssues = validateTryItAnswers(markdown);
+        if (answerIssues.length > 0) throw new Error(`${filePath}: ${answerIssues.join("; ")}`);
         if (lessonsById.has(lesson.id)) {
           throw new Error(`${filePath}: duplicate lesson id ${lesson.id}`);
         }

@@ -184,18 +184,34 @@ Total ≈ 27.08 m; each side ≈ 9.03 m. Feed point, height, and installation st
 Try these before reading the feedback below.
 
 1. A dipole runs northeast-southwest in free space. Where is radiation strongest?
+
+:::answer
+Broadside, roughly northwest and southeast.
+:::
+
 2. What should you investigate if a random wire causes transmit audio distortion?
+
+:::answer
+RF feedback, bonding, matching, and counterpoise.
+:::
+
 3. What happens to total wire length for a full-wave square loop designed for a higher frequency?
+
+:::answer
+It becomes shorter because wavelength and frequency move in opposite directions.
+:::
+
 4. Find the practical full-wave loop starting length at 15 MHz and compare with free space.
+
+:::answer
+306 / 15 = 20.4 m total wire; free-space wavelength is 300 / 15 = 20.0 m.
+:::
+
 5. Which antenna property may change if a triangular loop's feed point moves?
 
-### Try-it feedback
-
-1. Broadside, roughly northwest and southeast.
-2. RF feedback, bonding, matching, and counterpoise.
-3. It becomes shorter because wavelength and frequency move in opposite directions.
-4. 306 / 15 = 20.4 m total wire; free-space wavelength is 300 / 15 = 20.0 m.
-5. Polarization can change because current distribution and electric-field orientation change.
+:::answer
+Polarization can change because current distribution and electric-field orientation change.
+:::
 
 ## Radio connection
 

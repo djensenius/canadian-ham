@@ -249,11 +249,35 @@ The values are 620 ohms and 62 000 ohms, or 62 kilohms. The ratio is 100. Changi
 
 ## Try it
 
-1. Orange orange brown gold: digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ± 5 % tolerance.
-2. Yellow violet orange gold: digits 4 and 7, multiplier x 1 000, so nominal value is 47 kilohms with ± 5 % tolerance.
-3. Brown green black brown: digits 1 and 5, multiplier x 1, so nominal value is 15 ohms with ± 1 % tolerance.
-4. A ± 1 % part is more precise than a ± 10 % part because the allowed percentage spread is smaller.
-5. If two resistors share the same first two digit bands but one has a larger multiplier, the multiplier band is what changed the value.
+1. Decode orange orange brown gold.
+
+:::answer
+digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ± 5 % tolerance.
+:::
+
+2. Decode yellow violet orange gold.
+
+:::answer
+digits 4 and 7, multiplier x 1 000, so nominal value is 47 kilohms with ± 5 % tolerance.
+:::
+
+3. Decode brown green black brown.
+
+:::answer
+digits 1 and 5, multiplier x 1, so nominal value is 15 ohms with ± 1 % tolerance.
+:::
+
+4. Which tolerance permits a smaller percentage spread: ± 1 % or ± 10 %?
+
+:::answer
+A ± 1 % part is more precise than a ± 10 % part because the allowed percentage spread is smaller.
+:::
+
+5. Two resistors share their first two digit bands but have different values. Which band should you compare?
+
+:::answer
+If two resistors share the same first two digit bands but one has a larger multiplier, the multiplier band is what changed the value.
+:::
 
 ## Radio connection
 

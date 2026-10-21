@@ -337,18 +337,34 @@ Rt = 80 ohms; combined rating = 12 W under the stated sharing and cooling condit
 Try these before reading the feedback below.
 
 1. Compare total resistance with branch resistance for equal parallel resistors.
+
+:::answer
+Total resistance is lower than any branch resistance.
+:::
+
 2. Find resistance, current, and power for three 18 ohm series resistors across 8.1 V.
+
+:::answer
+Rt = 54 ohms; I = 8.1 / 54 = 0.15 A; P = 0.15 x 8.1 = 1.215 W, about 1.2 W.
+:::
+
 3. Find the current of a 13.8 V cooling fan rated 18 W.
+
+:::answer
+I = P / E = 18 / 13.8 ≈ 1.3 A.
+:::
+
 4. What changes when matched battery packs are placed in parallel?
+
+:::answer
+Voltage stays the same; capacity can add if the packs are designed and matched for that arrangement.
+:::
+
 5. Before increasing power into a temporary load made of identical resistors on a heat sink, what should you check?
 
-### Try-it feedback
-
-1. Total resistance is lower than any branch resistance.
-2. Rt = 54 ohms; I = 8.1 / 54 = 0.15 A; P = 0.15 x 8.1 = 1.215 W, about 1.2 W.
-3. I = P / E = 18 / 13.8 ≈ 1.3 A.
-4. Voltage stays the same; capacity can add if the packs are designed and matched for that arrangement.
-5. Confirm even current sharing and that each part remains within its own heat rating.
+:::answer
+Confirm even current sharing and that each part remains within its own heat rating.
+:::
 
 ## Radio connection
 

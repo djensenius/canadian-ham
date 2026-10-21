@@ -152,18 +152,34 @@ This is the same idea as choosing one conversation from a crowded room. The circ
 Try these before reading the feedback below.
 
 1. As frequency rises, how does inductive reactance change?
+
+:::answer
+Inductive reactance increases.
+:::
+
 2. As frequency rises, how does capacitive reactance change?
+
+:::answer
+Capacitive reactance decreases.
+:::
+
 3. What happens to total capacitance when equal capacitors are placed in parallel?
+
+:::answer
+Total capacitance increases.
+:::
+
 4. Which tuned-circuit arrangement has low impedance at resonance?
+
+:::answer
+A series tuned circuit has low impedance at resonance.
+:::
+
 5. Which L or C change lowers the resonant frequency of a tuned circuit?
 
-### Try-it feedback
-
-1. Inductive reactance increases.
-2. Capacitive reactance decreases.
-3. Total capacitance increases.
-4. A series tuned circuit has low impedance at resonance.
-5. More inductance or more capacitance lowers resonant frequency.
+:::answer
+More inductance or more capacitance lowers resonant frequency.
+:::
 
 ## Radio connection
 

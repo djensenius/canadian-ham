@@ -161,14 +161,22 @@ Standard time and frequency stations CHU, WWV, and WWVH provide accurate referen
 Work these out before reading the feedback. Keep dates beside your times.
 
 1. An event is at 0145 UTC on 20 May. Your stated zone is UTC minus 5 hours. Find the local date and time, including an AM/PM version.
+
+:::answer
+The local reminder is 2045 on 19 May, or 8:45 PM. Keep 20 May and 0145 together in the UTC log entry.
+:::
+
 2. A map shows a short-path heading of 235 degrees. Find the long-path heading.
+
+:::answer
+235 + 180 = 415; 415 - 360 = 55 degrees. The headings point opposite ways.
+:::
+
 3. Your contact partner's local date differs from yours. Which record fields should you compare before assuming you logged different contacts?
 
-### Check your thinking
-
-1. The local reminder is 2045 on 19 May, or 8:45 PM. Keep 20 May and 0145 together in the UTC log entry.
-2. 235 + 180 = 415; 415 - 360 = 55 degrees. The headings point opposite ways.
-3. Compare UTC date and time along with call signs, band or frequency, and mode. Local dates alone can differ for the same moment.
+:::answer
+Compare UTC date and time along with call signs, band or frequency, and mode. Local dates alone can differ for the same moment.
+:::
 
 ## Radio connection
 

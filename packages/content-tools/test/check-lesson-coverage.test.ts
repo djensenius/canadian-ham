@@ -537,3 +537,13 @@ test("real lesson content covers the generated Basic subsections", async () => {
   assert.ok(report.lessonCount >= 30);
   assert.ok(report.lessonCount <= 45);
 });
+
+test("coverage checker rejects a legacy inline Try-it even when front matter and coverage are valid", async () => {
+  await withFixture("inline-try-it", async (root) => {
+    await writeFixture(root);
+    const fixture = baseFixture();
+    const lesson = fixture.lessons.get("L-003-01")!;
+    await writeFile(path.join(root, "content/lessons/m3", "l-003-01.md"), `${lessonMarkdown(lesson)}\n## Try it\n\n1. What changes? The frequency rises.\n`);
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /inline Try-it answers/.test(file.message)));
+  });
+});

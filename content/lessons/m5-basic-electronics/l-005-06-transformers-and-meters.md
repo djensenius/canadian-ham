@@ -182,18 +182,34 @@ Before measuring current, move the lead to the current jack, choose the current 
 Try these before reading the feedback below.
 
 1. An ideal transformer takes 54 W at its primary. Find secondary current at 18 V.
+
+:::answer
+I = P / E = 54 / 18 = 3 A.
+:::
+
 2. How do you connect a voltmeter to measure a resistor's voltage?
+
+:::answer
+Connect it in parallel across the resistor.
+:::
+
 3. How do you connect an ammeter to measure supply current?
+
+:::answer
+Open the path and insert the ammeter in series, with the correct range and lead jacks.
+:::
+
 4. How would you describe repeated readings close together but offset from the true value?
+
+:::answer
+They are precise but inaccurate.
+:::
+
 5. Why can a transformer change impedance?
 
-### Try-it feedback
-
-1. I = P / E = 54 / 18 = 3 A.
-2. Connect it in parallel across the resistor.
-3. Open the path and insert the ammeter in series, with the correct range and lead jacks.
-4. They are precise but inaccurate.
-5. It changes the AC voltage and current ratio. Impedance is E / I for AC.
+:::answer
+It changes the AC voltage and current ratio. Impedance is E / I for AC.
+:::
 
 ## Radio connection
 

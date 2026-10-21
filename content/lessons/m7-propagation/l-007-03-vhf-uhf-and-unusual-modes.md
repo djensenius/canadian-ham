@@ -155,18 +155,34 @@ Do not turn these clues into guarantees. The same station may need a higher ante
 Try these before reading the feedback below.
 
 1. A six-metre opening vanishes after twenty minutes. Which operating habits fit?
+
+:::answer
+Keep exchanges short, log quickly, and monitor beacons; the patch can move or fade.
+:::
+
 2. A long two-metre contact occurs over water during a calm evening. What evidence should be recorded before treating it as everyday range?
+
+:::answer
+Note weather layering, antenna direction and heights, time, and distance to test for enhanced lower-atmosphere conditions.
+:::
+
 3. Raspy VHF signals arrive from the north during short call-sign and grid exchanges. What operating style fits?
+
+:::answer
+Use a narrow, simple mode and short messages that tolerate flutter and distortion.
+:::
+
 4. A marginal HF path alternates intelligible peaks with smeared audio. What should be logged before blaming the radio?
+
+:::answer
+Record frequency, time, strength, and distortion pattern to compare mixed propagation with later openings.
+:::
+
 5. Why might a meteor-shower schedule use fast digital bursts instead of long voice transmissions?
 
-### Try-it feedback
-
-1. Keep exchanges short, log quickly, and monitor beacons; the patch can move or fade.
-2. Note weather layering, antenna direction and heights, time, and distance to test for enhanced lower-atmosphere conditions.
-3. Use a narrow, simple mode and short messages that tolerate flutter and distortion.
-4. Record frequency, time, strength, and distortion pattern to compare mixed propagation with later openings.
-5. Ionized trails last briefly. Short structured messages can fit into the brief reflection windows.
+:::answer
+Ionized trails last briefly. Short structured messages can fit into the brief reflection windows.
+:::
 
 ## Radio connection
 

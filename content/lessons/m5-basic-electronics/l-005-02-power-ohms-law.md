@@ -282,16 +282,28 @@ P = 7.5 x 12.8 = 96 W. This cannot establish the final-stage regulatory input or
 Try these before reading the feedback below.
 
 1. What resistance drops 7.5 V at 15 mA?
+
+:::answer
+15 mA = 0.015 A; R = 7.5 / 0.015 = 500 ohms.
+:::
+
 2. What voltage is across 220 ohms at 0.035 A?
+
+:::answer
+E = I x R = 0.035 x 220 = 7.7 V.
+:::
+
 3. What resistance draws 120 mA from 18 V?
+
+:::answer
+120 mA = 0.120 A; R = 18 / 0.120 = 150 ohms.
+:::
+
 4. A learner writes R = E x I. Which reference-sheet form should they use?
 
-### Try-it feedback
-
-1. 15 mA = 0.015 A; R = 7.5 / 0.015 = 500 ohms.
-2. E = I x R = 0.035 x 220 = 7.7 V.
-3. 120 mA = 0.120 A; R = 18 / 0.120 = 150 ohms.
-4. Resistance is R = E / I. Multiplying E by I gives power instead.
+:::answer
+Resistance is R = E / I. Multiplying E by I gives power instead.
+:::
 
 ## Radio connection
 

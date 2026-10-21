@@ -164,11 +164,35 @@ A decoded message does not prove the transmitted signal was clean.
 
 ## Try it
 
-1. You double your keyer speed before you can space characters steadily. Why might copy get worse? The keyer controls dit and dah lengths, but the operator still controls character and word spacing.
-2. Your VOX holds the transmitter on for several seconds after each sentence in a quiet room. Which control area should you revisit? VOX delay or hang time.
-3. Your VOX misses the first syllable. Which control area should you revisit first? VOX trigger sensitivity or attack, because the transmitter is starting late.
-4. A mobile receiver hears sharp clicking bursts from a nearby motor. Is DSP noise reduction or a noise blanker the better first experiment? Try the noise blanker first because the problem is short impulse noise.
-5. Why can a digital radio system send pictures as well as typed text? Pictures can be converted into digital values and sent as data symbols.
+1. You double your keyer speed before you can space characters steadily. Why might copy get worse?
+
+:::answer
+The keyer controls dit and dah lengths, but the operator still controls character and word spacing.
+:::
+
+2. Your VOX holds the transmitter on for several seconds after each sentence in a quiet room. Which control area should you revisit?
+
+:::answer
+VOX delay or hang time.
+:::
+
+3. Your VOX misses the first syllable. Which control area should you revisit first?
+
+:::answer
+VOX trigger sensitivity or attack, because the transmitter is starting late.
+:::
+
+4. A mobile receiver hears sharp clicking bursts from a nearby motor. Is DSP noise reduction or a noise blanker the better first experiment?
+
+:::answer
+Try the noise blanker first because the problem is short impulse noise.
+:::
+
+5. Why can a digital radio system send pictures as well as typed text?
+
+:::answer
+Pictures can be converted into digital values and sent as data symbols.
+:::
 
 ## Radio connection
 

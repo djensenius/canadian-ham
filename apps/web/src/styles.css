@@ -1487,7 +1487,8 @@ input[type="checkbox"]:checked::after {
 .lesson-article > ol,
 .lesson-article > .markdown-table-wrapper,
 .lesson-article > .markdown-code-block,
-.lesson-article > .lesson-figure {
+.lesson-article > .lesson-figure,
+.lesson-article > .lesson-try-it {
   margin-block-end: var(--ch-space-lg);
 }
 

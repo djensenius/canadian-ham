@@ -198,18 +198,34 @@ Compact loaded antennas may be narrow-band and less efficient than full-sized an
 Try these before reading the feedback below.
 
 1. What polarization follows from horizontal Yagi elements?
+
+:::answer
+Horizontal; element orientation sets polarization.
+:::
+
 2. Which parasitic element is slightly shorter and sits toward the wanted direction?
+
+:::answer
+The director.
+:::
+
 3. Which parasitic element is slightly longer and sits behind the driven element?
+
+:::answer
+The reflector.
+:::
+
 4. What ideal main-direction gain change can a stacked identical pair provide before losses?
+
+:::answer
+About 3 dB, or roughly doubled main-direction power density from pattern concentration, not new transmitter power.
+:::
+
 5. Find a practical quarter-wave vertical starting length at 25 MHz and compare with free space.
 
-### Try-it feedback
-
-1. Horizontal; element orientation sets polarization.
-2. The director.
-3. The reflector.
-4. About 3 dB, or roughly doubled main-direction power density from pattern concentration, not new transmitter power.
-5. 71.3 / 25 ≈ 2.85 m; free-space 75 / 25 = 3.0 m.
+:::answer
+71.3 / 25 ≈ 2.85 m; free-space 75 / 25 = 3.0 m.
+:::
 
 ## Radio connection
 

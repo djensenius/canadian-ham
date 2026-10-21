@@ -173,14 +173,22 @@ Changing propagation can bring new interference into an ongoing contact. Agree o
 Pause here. Work through each prompt before reading the feedback below.
 
 1. An illustrative two-metre repeater output is 147.180 MHz with a positive standard offset. Find the radio's transmit frequency.
+
+:::answer
+The offset is 0.600 MHz. Adding gives 147.780 MHz. Positive means your radio transmits above the output, unlike the worked example.
+:::
+
 2. You hear your friend clearly on a repeater input. What still needs checking before you move the conversation off the repeater?
+
+:::answer
+Your friend must also hear you directly. Choose a proper simplex channel, not a repeater input, and confirm reliable copy both ways.
+:::
+
 3. A nearby station says your voice is strong but distorted. Recall the signal-quality lesson: should your first move be more RF power or an audio-setting check?
 
-### Check your thinking
-
-1. The offset is 0.600 MHz. Adding gives 147.780 MHz. Positive means your radio transmits above the output, unlike the worked example.
-2. Your friend must also hear you directly. Choose a proper simplex channel, not a repeater input, and confirm reliable copy both ways.
-3. Check microphone technique, gain, and deviation. Strength and clean audio are different; more power does not cure distorted speech.
+:::answer
+Check microphone technique, gain, and deviation. Strength and clean audio are different; more power does not cure distorted speech.
+:::
 
 ## Radio connection
 

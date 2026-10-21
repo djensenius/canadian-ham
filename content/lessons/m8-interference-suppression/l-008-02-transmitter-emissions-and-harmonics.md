@@ -185,18 +185,34 @@ Keep notes. A written log prevents circular troubleshooting and makes it easier 
 Try these before reading the feedback below.
 
 1. A test carrier is 5.1 MHz and an unwanted output is 20.4 MHz. Which harmonic relationship fits?
+
+:::answer
+20.4 / 5.1 = 4, so the fourth harmonic fits.
+:::
+
 2. A CW change reduces RF-envelope rise time from about 6 ms to below 1 ms, and a nearby-frequency monitor hears ticks. Why is slower sending insufficient?
+
+:::answer
+Each carrier element still has abrupt edges. Correct the keying-shape network and following stages before on-air use.
+:::
+
 3. An amplifier's current and carrier multiples rise sharply as drive is advanced. Which adjustment should be checked before blaming the antenna?
+
+:::answer
+Reduce RF drive and follow the manufacturer's tuning guidance for clean operation.
+:::
+
 4. Unwanted energy appears just outside the needed bandwidth during voice peaks. Which transmitter setting deserves an early check?
+
+:::answer
+Check audio drive or microphone gain; overmodulation can create splatter.
+:::
+
 5. A transmitter is stable with one load but radiates an extra unstable output with another. What fault should be considered?
 
-### Try-it feedback
-
-1. 20.4 / 5.1 = 4, so the fourth harmonic fits.
-2. Each carrier element still has abrupt edges. Correct the keying-shape network and following stages before on-air use.
-3. Reduce RF drive and follow the manufacturer's tuning guidance for clean operation.
-4. Check audio drive or microphone gain; overmodulation can create splatter.
-5. Investigate parasitic oscillation or unintended feedback before further transmitting.
+:::answer
+Investigate parasitic oscillation or unintended feedback before further transmitting.
+:::
 
 ## Radio connection
 

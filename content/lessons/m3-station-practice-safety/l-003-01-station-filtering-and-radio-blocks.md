@@ -198,11 +198,35 @@ Fill the gaps before checking below.
 
 ## Try it
 
-1. A transmitter on 7.1 MHz can create a second harmonic. Where is that harmonic? It is at 7.1 MHz x 2 = 14.2 MHz.
-2. Why should the harmonic filter act before a long accessory cable? The unwanted energy should be reduced before the cable can carry it around the station.
-3. An FM exciter at 10.000 MHz has an instant when modulation nudges it 1.5 kHz above centre. A doubler follows. What are the doubled centre frequency and offset? The centre becomes 20.000 MHz, and the 1.5 kHz offset becomes 3.0 kHz.
-4. A superheterodyne receiver has a noisy first RF stage. Why can later audio gain not fully repair that problem? Later gain amplifies the wanted signal and the noise already added.
-5. A receiver with a 9.000 MHz IF tunes 28.400 MHz with a high-side oscillator. What oscillator frequency is the first estimate? Add the IF: 28.400 MHz + 9.000 MHz = 37.400 MHz.
+1. A transmitter on 7.1 MHz can create a second harmonic. Where is that harmonic?
+
+:::answer
+It is at 7.1 MHz x 2 = 14.2 MHz.
+:::
+
+2. Why should the harmonic filter act before a long accessory cable?
+
+:::answer
+The unwanted energy should be reduced before the cable can carry it around the station.
+:::
+
+3. An FM exciter at 10.000 MHz has an instant when modulation nudges it 1.5 kHz above centre. A doubler follows. What are the doubled centre frequency and offset?
+
+:::answer
+The centre becomes 20.000 MHz, and the 1.5 kHz offset becomes 3.0 kHz.
+:::
+
+4. A superheterodyne receiver has a noisy first RF stage. Why can later audio gain not fully repair that problem?
+
+:::answer
+Later gain amplifies the wanted signal and the noise already added.
+:::
+
+5. A receiver with a 9.000 MHz IF tunes 28.400 MHz with a high-side oscillator. What oscillator frequency is the first estimate?
+
+:::answer
+Add the IF: 28.400 MHz + 9.000 MHz = 37.400 MHz.
+:::
 
 ## Radio connection
 

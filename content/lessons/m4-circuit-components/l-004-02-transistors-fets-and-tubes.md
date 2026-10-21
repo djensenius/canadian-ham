@@ -197,11 +197,35 @@ Text equivalent:
 
 ## Try it
 
-1. An NPN symbol in a driver circuit has its emitter arrow pointing away from the base. Use the arrow to confirm the part family and polarity before replacing it.
-2. A sensor node must watch a tuned circuit without drawing much current from it. Choose a FET input stage and explain that the gate is the light-loading control terminal.
-3. A circuit drives a transistor fully on and fully off to operate a relay. Name the role: electronic switch.
+1. What does an outward-pointing emitter arrow identify, and how should you use it before replacement?
+
+:::answer
+An NPN symbol in a driver circuit has its emitter arrow pointing away from the base. Use the arrow to confirm the part family and polarity before replacing it.
+:::
+
+2. A sensor node must watch a tuned circuit without drawing much current from it. Which input stage and control terminal would suit this job?
+
+:::answer
+Choose a FET input stage and explain that the gate is the light-loading control terminal.
+:::
+
+3. A circuit drives a transistor fully on and fully off to operate a relay. Name the role.
+
+:::answer
+electronic switch.
+:::
+
 4. A high-power RF stage uses a hot glass device whose grid voltage changes the current drawn by the plate. Explain which element is doing the controlling and why high voltage caution matters.
-5. A circuit was biased for an N-channel FET, but the parts drawer has only a P-channel device. Do not assume it is a drop-in substitute; the channel type and bias polarity matter.
+
+:::answer
+The grid controls current through the tube. Its high-voltage supply can cause a dangerous shock, and stored charge may remain after power is removed.
+:::
+
+5. A circuit was biased for an N-channel FET, but the parts drawer has only a P-channel device. What should you check before substitution?
+
+:::answer
+Do not assume it is a drop-in substitute; the channel type and bias polarity matter.
+:::
 
 ## Radio connection
 

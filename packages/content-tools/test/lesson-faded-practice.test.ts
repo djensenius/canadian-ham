@@ -119,7 +119,7 @@ for (const lessonId of ["L-002-01", "L-002-02", "L-002-03", "L-002-04"]) {
     const file = (await readdir(directory)).find((name) => name.startsWith(`${lessonId.toLowerCase()}-`));
     assert.ok(file);
     const markdown = await readFile(path.join(directory, file), "utf8");
-    const tryIt = markdown.split("## Try it\n")[1]?.split("### Check your thinking")[0];
+    const tryIt = markdown.split("## Try it\n")[1]?.split("\n## ")[0]?.replace(/:::answer\n[^\n]+\n:::/gu, "");
     assert.ok(tryIt);
     assert.doesNotMatch(tryIt, /___|fill in|finish this setup|add half a turn/iu);
   });

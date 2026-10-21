@@ -3,6 +3,53 @@ import XCTest
 @testable import CanadianHamContent
 
 final class ContentLibraryTests: XCTestCase {
+    func testTryItAnswersAreSeparateBlocksAndDoNotLeakIntoFlattenedLessonText() throws {
+        let markdown = """
+        ## Try it
+
+        1. Find the current.
+
+        :::answer
+        The current is 3 A.
+        :::
+
+        2. Name the path.
+
+        :::answer
+        The audio path.
+        :::
+
+        ## Radio connection
+
+        Keep listening.
+        """
+        let rendered = try LessonMarkdownRenderer.render(markdown)
+        XCTAssertEqual(rendered.blocks[1], .tryIt(number: 1, prompt: AttributedString("Find the current."), answer: AttributedString("The current is 3 A.")))
+        XCTAssertEqual(rendered.blocks[2], .tryIt(number: 2, prompt: AttributedString("Name the path."), answer: AttributedString("The audio path.")))
+        let flattened = String(rendered.attributedString.characters)
+        XCTAssertTrue(flattened.contains("Find the current."))
+        XCTAssertFalse(flattened.contains("The current is 3 A."))
+        XCTAssertFalse(flattened.contains("The audio path."))
+        XCTAssertEqual(try LessonHeadingAnchors.anchors(for: markdown), ["try-it", "radio-connection"])
+    }
+
+    func testAllAuthoredTryItAnswersParseWithoutExposingDirectiveText() throws {
+        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
+        var lessonCount = 0
+        var answerCount = 0
+        for lesson in library.lessons where lesson.bodyMarkdown.contains("## Try it\n") {
+            lessonCount += 1
+            let rendered = try LessonMarkdownRenderer.render(lesson.bodyMarkdown)
+            let items = rendered.blocks.filter { if case .tryIt = $0 { return true }; return false }
+            let directiveCount = lesson.bodyMarkdown.components(separatedBy: ":::answer\n").count - 1
+            XCTAssertEqual(items.count, directiveCount, lesson.id)
+            XCTAssertFalse(String(rendered.attributedString.characters).contains(":::"), lesson.id)
+            answerCount += items.count
+        }
+        XCTAssertEqual(lessonCount, 31)
+        XCTAssertEqual(answerCount, 141)
+    }
+
     func testLoadsRealRepositoryContent() throws {
         let library = try ContentLibrary.load(fromDirectory: repoRootURL())
 
@@ -430,7 +477,7 @@ private func simplifiedBlocks(_ blocks: [LessonBlock]) -> [SimplifiedMarkdownBlo
             SimplifiedMarkdownBlock(type: "code", id: nil, altText: nil, textEquivalent: nil, text: text, language: language)
         case .heading(_, let text):
             SimplifiedMarkdownBlock(type: "heading", id: nil, altText: nil, textEquivalent: nil, text: String(text.characters), language: nil)
-        case .list, .table, .illustrationBrief, .blockquote:
+        case .list, .table, .illustrationBrief, .blockquote, .tryIt:
             SimplifiedMarkdownBlock(type: "other", id: nil, altText: nil, textEquivalent: nil, text: nil, language: nil)
         }
     }
