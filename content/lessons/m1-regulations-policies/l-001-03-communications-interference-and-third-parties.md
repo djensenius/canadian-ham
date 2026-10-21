@@ -27,70 +27,71 @@ status: draft
 ---
 # Communications, interference, identification, and message handling
 
-Operating courtesy and legal limits meet in this lesson. Interference, emergency communication, privacy, payment, and identification all affect whether a transmission should begin, continue, change, or stop.
+Before joining a busy frequency, listen and decide what kind of traffic you hear. Four principles guide the next step: share without harm, give life safety its narrow exceptions, keep messages unpaid, and identify the station.
 
-The tables hold the reference facts. The prose turns them into an operating sequence: listen, classify the situation, identify, and stand by when the rules or safety require it. Third-party and visiting-operator rules move to L-001-05, where the course teaches international operation and location.
+Use the reference tables to keep ordinary operation, organized relief and personal distress separate. L-001-05 covers third-party guests and international contacts; the rules here still apply to those messages.
 
 ## Learning objectives
 
 By the end of this lesson, you can:
 
-- distinguish accidental interference, harmful interference, secondary-service operation, and deliberate interference;
-- keep emergency and disaster-relief exceptions narrow;
-- apply message privacy, media, remuneration, and public-service rows as amateur-service boundary facts; and
-- identify station-identification timing and language requirements.
+- protect other users while sharing a frequency;
+- distinguish distress exceptions from organized disaster relief;
+- keep message handling unpaid and apply disclosure rules; and
+- identify with a call sign at the right times, including during tests.
 
-## Reference facts: Interference and shared bands
+## Reference facts: Share spectrum without harm
 
-| Topic | Fact established for this lesson |
-|---|---|
-| Transmission that disturbs other communications | Harmful interference. |
-| Serious degradation, obstruction, or repeated interruption of a radiocommunication service | Harmful interference. |
-| Deliberate interference with another amateur station | Unacceptable. |
-| Two amateur operators wanting the same frequency | Both station operators have an equal right to operate on the frequency. |
-| Amateur service as secondary user while another service is primary | Amateur operation must protect primary users from interference. |
-| Ministerial finding of harmful interference | The station's operation can be ordered to cease or change. |
-| 430.0 MHz to 450.0 MHz | Amateur operation must protect other radio services from interference because amateurs are secondary users in this range. |
-| 902 MHz to 928 MHz | Amateur operation is not protected from interference by another service, and the band may be heavily occupied by licence-exempt devices. |
-| Test transmissions | Allowed when they protect amateur stations and other services from interference. |
+No amateur owns a frequency. A secondary service may use a shared band only while protecting the primary service. "Primary" describes priority between services, not which amateur arrived first.
 
-## Reference facts: Emergency, disaster, and public-service communication
+| Sharing situation | Rule | Why |
+|---|---|---|
+| Harmful interference | A transmission disturbs communication, seriously degrades a service, obstructs it or repeatedly interrupts it. | Harm is more than a preference for a clear channel. |
+| Deliberate interference | Do not deliberately disrupt another amateur's communication. | Shared access requires restraint. |
+| Two amateurs seeking the same frequency | Neither has a greater right to that frequency. | Listen and cooperate rather than claim ownership. |
+| Amateur service is secondary | Protect the primary service from interference. | Permission to share comes with this condition. |
+| 430 MHz to 450 MHz | Amateurs must protect other services in this range. | The amateur service is secondary here. |
+| 902 MHz to 928 MHz | Amateur operation has no protection from other-service interference; licence-exempt devices may heavily occupy the band. | Sharing does not guarantee a quiet channel. |
+| A finding of harmful interference by the Minister | Station operation may be ordered to stop or change. | Harm can require a change to the station's operation. |
+| Test transmissions | Protect amateur and other services from interference during tests too. | A test is still a transmission. |
 
-| Topic | Fact established for this lesson |
-|---|---|
-| Ordinary amateur communication | Only with other amateur radio stations. |
-| Disaster-relief use outside amateur bands | Prohibited. |
-| Unanswered distress signal on an amateur band outside the operator's normal privileges | The operator may respond and offer assistance. |
-| Broadcasting exception | Radio communications required for the safety of life and property. |
-| Amateur operator in distress | May use any means of radiocommunication. |
-| Disaster-relief transmissions | May meet essential communication needs when normal systems are overloaded, damaged, or disrupted. |
-| Power limits for an amateur operator in distress | No limitations. |
-| Operators outside the active disaster-relief net | Keep the net frequency and nearby frequencies clear. |
-| Recognized public-service agency messages | May be handled during peace time, civil emergencies, and exercises. |
-| Interfering with another station's transmissions | Permitted only when your own station is directly involved with a distress situation. |
+## Reference facts: Life safety has narrow exceptions
 
-## Reference facts: Privacy, payment, and message handling
+Recall the distress procedures from L-002-03. An operator in distress, an operator answering distress, and an organized relief net have different permissions. A disaster does not turn every relief transmission into personal distress.
 
-| Topic | Fact established for this lesson |
-|---|---|
-| Payment for third-party messages sent by an amateur station | No payment of any kind is allowed. |
-| Amateur-station non-broadcast radiocommunications | May be divulged or used. |
-| Remuneration for exchanging messages | Prohibited. |
-| Other non-broadcast radiocommunication content | Divulging content to answer media questions is the offence. |
+| Situation | Rule | Why |
+|---|---|---|
+| Ordinary amateur communication | Communicate with other amateur stations. | This is the normal service boundary. |
+| Your own station is in distress | You may use any radiocommunication means, with no power limitation. | Immediate distress calls for the widest means of seeking help. |
+| Unanswered distress on an amateur band beyond your privileges | You may answer and offer help. | This is a distress response, not general band access. |
+| Direct involvement of your own station in distress | This is the narrow exception permitting interference with another station's transmission. | Tie the exception to your station's distress involvement. |
+| Safety of life and property | Necessary safety communications may be broadcast. | This differs from routine broadcasts to the public. |
+| Organized disaster relief | Meet essential needs when normal systems are overloaded, damaged or disrupted; stay on amateur bands. | Relief work does not open other services' frequencies. |
+| Not part of an active relief net | Avoid needless transmissions on its frequency and nearby. | Leave room for relief traffic. |
+| Recognized public-service agency traffic | May be handled in peacetime, civil emergencies and exercises. | Public-service work is not limited to an active disaster. |
 
-## Reference facts: Station identification
+## Reference facts: Message handling stays unpaid
 
-| Topic | Fact established for this lesson |
-|---|---|
-| Valid Canadian amateur call-sign example pattern | A Canadian call sign normally starts with VA, VE, VO, or VY. |
-| Identifying the station | Transmit the call sign. |
-| Beginning a contact | Each station transmits its own call sign. |
-| Ending a contact | Each station transmits its own call sign. |
-| Longest interval without identification | 30 minutes. |
-| General timing rule | At the beginning and end of each contact and at maximum 30-minute intervals. |
-| Test transmission identification | Same rules as a radio contact. |
-| Language for identification | English or French. |
-| Unidentified amateur communications | Only to control a model craft. |
+An open amateur message is not the same as every non-broadcast message you can hear. Keep the disclosure rule separate from payment: lawful amateur traffic still must be unpaid.
+
+| Message handling | Rule | Why |
+|---|---|---|
+| Exchanging messages | Do not demand or accept remuneration. | Amateur communication is non-commercial. |
+| Sending third-party messages | Accept no payment of any kind. | Carrying someone else's message is not a paid service. |
+| Non-broadcast amateur traffic | Its content may be shared or used. | Amateur content has a specific disclosure permission. |
+| Other non-broadcast traffic | Lawful disclosure purposes include protecting people or property, court evidence, and national defence or security. Answering media questions is not such a purpose. | Hearing a signal does not grant unrestricted disclosure rights. |
+
+## Reference facts: Make the station traceable
+
+Identify the station, not just the person speaking. Every station in a contact sends its own call sign. Starting, ending and interval identification are separate duties.
+
+| Identification check | Rule | Why |
+|---|---|---|
+| Canadian call-sign shape | A normal prefix is VA, VE, VO or VY, followed by a district numeral and suffix letters. | Recognize the station's Canadian identity. |
+| What to transmit | Send the station's call sign in English or French. | A name alone does not identify the station. |
+| Contact timing | Each station identifies at the start and end, and at intervals of no more than 30 minutes. | A short contact still has a start and end. |
+| Tests | Apply the same identification timing as for contacts. | A test signal must also be traceable. |
+| Model control | Unidentified transmission is allowed only for controlling a model craft. | This is a specific identification exception. |
 
 ::figure communications-flowchart
 Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference and emergency situations.
@@ -102,40 +103,27 @@ Text equivalent:
 
 ## How these rules fit together
 
-Interference rules start with restraint. Listen first, avoid deliberate or harmful interference, and treat a harmful-interference finding as a requirement to stop or change operation. Secondary-service facts add a priority relationship: amateur operation in a shared band protects the primary service.
+Listen, classify, then act. For routine traffic, share fairly and avoid harm. For a shared band, check which service has priority. For distress, use only the exception that matches the situation; for relief, protect the net's working space.
 
-Emergency rules are narrow because they respond to immediate communication need. Separate three cases before transmitting: if your own life is at risk, you may use any radiocommunication means and no power ceiling applies; if an unanswered distress call is on an amateur band, you may answer it; organized relief work stays on amateur bands. The safety-of-life broadcasting exception is not ordinary public broadcasting.
+The unpaid-message rule applies even to useful public-service work. Disclosure is another check: amateur content has its own permission, while other non-broadcast traffic needs a lawful purpose.
 
-Your own station's direct involvement with distress traffic is the only narrow exception to the usual rule against deliberate interference. Keep routine traffic, relief-net discipline, and distress response in their own categories.
-
-Privacy and payment rows keep amateur service non-commercial. A public-service agency message can be legitimate. Some non-broadcast content may be shared for protection, court evidence, or national defence and security; media questions are not one of those reasons. Payment for third-party messages and remuneration for exchanging messages do not fit amateur service.
-
-Station identification rows make contacts and tests traceable. The habit is simple: identify at the start, identify at the end, and watch the interval during longer contacts.
-
-### Memory trick: start, stop, and the interval check
-
-- Helps remember: station identification timing.
-- Trick: identify when the contact starts, when it stops, and at least every 30 minutes in between.
-- Limit: this does not replace the language and model-control rows in the table.
+Identification makes those decisions traceable. Keep a clock visible and identify at contact start, contact end and within the allowed interval. The M1 numbers board in L-001-01 distinguishes this interval from the module's deadlines and frequency boundaries.
 
 ## Radio connection
 
 ### In the real world: a public-service net
 
-A net script, a visible clock, and a short interference checklist help the operator stay calm. The clock reminds the station to identify. The script keeps each message category clear, including public-service agency messages and routine third-party traffic. The checklist reminds the net to stand by for distress or relief traffic when needed.
+Put a clock beside the net script. Use the script to distinguish an exercise, routine agency traffic, relief traffic and distress. Operators outside the relief net leave its frequency and nearby space clear.
 
-During public-service work, prepared operators sound calm because they have already separated routine practice, emergency relief, distress traffic, and casual conversation. The category of communication tells the operator how much room the rules provide.
-
-## Summary
-
-- Harmful interference is a serious station problem, and deliberate interference is unacceptable.
-- Secondary amateur operation must protect primary users, and some shared ranges have no interference protection or heavy licence-exempt use.
-- Emergency exceptions are tied to distress, safety of life and property, and essential relief needs.
-- Amateur message handling must be unpaid and non-commercial.
-- Identify with the station call sign at the required times and use the same identification discipline during tests.
+A calm net does not need constant transmissions. It needs short, useful messages, room for priority traffic and stations that can be identified.
 
 ## Illustration brief
 
 Alt text: Flowchart for an amateur operator deciding whether to transmit, identify, or stand by during interference and emergency situations.
 
 Description: Draw a two-lane ink-brush flowchart. The first lane is labelled "interf" and points to listen, then change/stop. The second lane is labelled "distress" and points to exception, then stand by. These are reminders to check the narrow emergency exceptions and keep relief-net frequencies clear, not a complete decision procedure. Add a clock icon labelled "ID start/end/30" for identification at the start, end, and maximum 30-minute intervals.
+
+
+## Summary
+
+Share the frequency without harm, then match any safety exception to the actual situation. Keep message handling unpaid and disclosure lawful. Identify the station throughout the contact so other people can tell who is responsible.

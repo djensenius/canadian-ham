@@ -104,38 +104,38 @@ The active bank is `content/generated/basic-2025-07-15/questions.json`. Regulato
 
 | Before section | Taught fact before rewrite | After section / comparison |
 |---|---|---|
-| Reference facts: Interference and shared bands | Transmission that disturbs other communications: Harmful interference. | Pending rewrite comparison. |
-| Reference facts: Interference and shared bands | Serious degradation, obstruction, or repeated interruption of a radiocommunication service: Harmful interference. | Pending rewrite comparison. |
-| Reference facts: Interference and shared bands | Deliberate interference with another amateur station: Unacceptable. | Pending rewrite comparison. |
-| Reference facts: Interference and shared bands | Two amateur operators wanting the same frequency: Both station operators have an equal right to operate on the frequency. | Pending rewrite comparison. |
-| Reference facts: Interference and shared bands | Amateur service as secondary user while another service is primary: Amateur operation must protect primary users from interference. | Pending rewrite comparison. |
-| Reference facts: Interference and shared bands | Ministerial finding of harmful interference: The station's operation can be ordered to cease or change. | Pending rewrite comparison. |
-| Reference facts: Interference and shared bands | 430.0 MHz to 450.0 MHz: Amateur operation must protect other radio services from interference because amateurs are secondary users in this range. | Pending rewrite comparison. |
-| Reference facts: Interference and shared bands | 902 MHz to 928 MHz: Amateur operation is not protected from interference by another service, and the band may be heavily occupied by licence-exempt devices. | Pending rewrite comparison. |
-| Reference facts: Interference and shared bands | Test transmissions: Allowed when they protect amateur stations and other services from interference. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Ordinary amateur communication: Only with other amateur radio stations. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Disaster-relief use outside amateur bands: Prohibited. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Unanswered distress signal on an amateur band outside the operator's normal privileges: The operator may respond and offer assistance. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Broadcasting exception: Radio communications required for the safety of life and property. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Amateur operator in distress: May use any means of radiocommunication. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Disaster-relief transmissions: May meet essential communication needs when normal systems are overloaded, damaged, or disrupted. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Power limits for an amateur operator in distress: No limitations. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Operators outside the active disaster-relief net: Keep the net frequency and nearby frequencies clear. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Recognized public-service agency messages: May be handled during peace time, civil emergencies, and exercises. | Pending rewrite comparison. |
-| Reference facts: Emergency, disaster, and public-service communication | Interfering with another station's transmissions: Permitted only when your own station is directly involved with a distress situation. | Pending rewrite comparison. |
-| Reference facts: Privacy, payment, and message handling | Payment for third-party messages sent by an amateur station: No payment of any kind is allowed. | Pending rewrite comparison. |
-| Reference facts: Privacy, payment, and message handling | Amateur-station non-broadcast radiocommunications: May be divulged or used. | Pending rewrite comparison. |
-| Reference facts: Privacy, payment, and message handling | Remuneration for exchanging messages: Prohibited. | Pending rewrite comparison. |
-| Reference facts: Privacy, payment, and message handling | Other non-broadcast radiocommunication content: Divulging content to answer media questions is the offence. | Pending rewrite comparison. |
-| Reference facts: Station identification | Valid Canadian amateur call-sign example pattern: A Canadian call sign normally starts with VA, VE, VO, or VY. | Pending rewrite comparison. |
-| Reference facts: Station identification | Identifying the station: Transmit the call sign. | Pending rewrite comparison. |
-| Reference facts: Station identification | Beginning a contact: Each station transmits its own call sign. | Pending rewrite comparison. |
-| Reference facts: Station identification | Ending a contact: Each station transmits its own call sign. | Pending rewrite comparison. |
-| Reference facts: Station identification | Longest interval without identification: 30 minutes. | Pending rewrite comparison. |
-| Reference facts: Station identification | General timing rule: At the beginning and end of each contact and at maximum 30-minute intervals. | Pending rewrite comparison. |
-| Reference facts: Station identification | Test transmission identification: Same rules as a radio contact. | Pending rewrite comparison. |
-| Reference facts: Station identification | Language for identification: English or French. | Pending rewrite comparison. |
-| Reference facts: Station identification | Unidentified amateur communications: Only to control a model craft. | Pending rewrite comparison. |
+| Reference facts: Interference and shared bands | Transmission that disturbs other communications: Harmful interference. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Interference and shared bands | Serious degradation, obstruction, or repeated interruption of a radiocommunication service: Harmful interference. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Interference and shared bands | Deliberate interference with another amateur station: Unacceptable. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Interference and shared bands | Two amateur operators wanting the same frequency: Both station operators have an equal right to operate on the frequency. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Interference and shared bands | Amateur service as secondary user while another service is primary: Amateur operation must protect primary users from interference. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Interference and shared bands | Ministerial finding of harmful interference: The station's operation can be ordered to cease or change. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Interference and shared bands | 430.0 MHz to 450.0 MHz: Amateur operation must protect other radio services from interference because amateurs are secondary users in this range. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Interference and shared bands | 902 MHz to 928 MHz: Amateur operation is not protected from interference by another service, and the band may be heavily occupied by licence-exempt devices. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Interference and shared bands | Test transmissions: Allowed when they protect amateur stations and other services from interference. | Retained; reference-facts-share-spectrum-without-harm. |
+| Reference facts: Emergency, disaster, and public-service communication | Ordinary amateur communication: Only with other amateur radio stations. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Disaster-relief use outside amateur bands: Prohibited. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Unanswered distress signal on an amateur band outside the operator's normal privileges: The operator may respond and offer assistance. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Broadcasting exception: Radio communications required for the safety of life and property. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Amateur operator in distress: May use any means of radiocommunication. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Disaster-relief transmissions: May meet essential communication needs when normal systems are overloaded, damaged, or disrupted. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Power limits for an amateur operator in distress: No limitations. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Operators outside the active disaster-relief net: Keep the net frequency and nearby frequencies clear. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Recognized public-service agency messages: May be handled during peace time, civil emergencies, and exercises. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Emergency, disaster, and public-service communication | Interfering with another station's transmissions: Permitted only when your own station is directly involved with a distress situation. | Retained; reference-facts-life-safety-has-narrow-exceptions. |
+| Reference facts: Privacy, payment, and message handling | Payment for third-party messages sent by an amateur station: No payment of any kind is allowed. | Retained; reference-facts-message-handling-stays-unpaid. |
+| Reference facts: Privacy, payment, and message handling | Amateur-station non-broadcast radiocommunications: May be divulged or used. | Retained; reference-facts-message-handling-stays-unpaid. |
+| Reference facts: Privacy, payment, and message handling | Remuneration for exchanging messages: Prohibited. | Retained; reference-facts-message-handling-stays-unpaid. |
+| Reference facts: Privacy, payment, and message handling | Other non-broadcast radiocommunication content: Divulging content to answer media questions is the offence. | Retained; reference-facts-message-handling-stays-unpaid. |
+| Reference facts: Station identification | Valid Canadian amateur call-sign example pattern: A Canadian call sign normally starts with VA, VE, VO, or VY. | Retained; reference-facts-make-the-station-traceable. |
+| Reference facts: Station identification | Identifying the station: Transmit the call sign. | Retained; reference-facts-make-the-station-traceable. |
+| Reference facts: Station identification | Beginning a contact: Each station transmits its own call sign. | Retained; reference-facts-make-the-station-traceable. |
+| Reference facts: Station identification | Ending a contact: Each station transmits its own call sign. | Retained; reference-facts-make-the-station-traceable. |
+| Reference facts: Station identification | Longest interval without identification: 30 minutes. | Retained; reference-facts-make-the-station-traceable. |
+| Reference facts: Station identification | General timing rule: At the beginning and end of each contact and at maximum 30-minute intervals. | Retained; reference-facts-make-the-station-traceable. |
+| Reference facts: Station identification | Test transmission identification: Same rules as a radio contact. | Retained; reference-facts-make-the-station-traceable. |
+| Reference facts: Station identification | Language for identification: English or French. | Retained; reference-facts-make-the-station-traceable. |
+| Reference facts: Station identification | Unidentified amateur communications: Only to control a model craft. | Retained; reference-facts-make-the-station-traceable. |
 
 ## L-001-04 baseline inventory
 
