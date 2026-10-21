@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 16:19'
+updated_date: '2026-10-21 19:11'
 labels:
   - apple
 dependencies:
@@ -143,6 +143,8 @@ Acceptance evidence: AC1/AC7: 13/13 distinct UI methods per iPhone and iPad acro
 Review follow-up (2026-10-21): restored horizontal-first ViewThatFits header/navigation and added default iPad header/row and AX vertical assertions. Removed Basic-prefix help-ID restriction; official/known-bank validation tests and widened real timer margins pass. macOS targeted 8/8 PASS, including all 5 LocalizationCatalogTests. Initial iPad default header/nav check PASS, but plain ViewThatFits reproduces Dynamic Type audit failure and AX wrapping; no audit was weakened. Coordinator approved intrinsic-width candidate first, then existing StudyViews accessibility-size vertical branch only if needed. Intrinsic-width fix committed; only the three failing iPad AX/light/dark methods queued via nohup, waiting for current targeted run/lock. Keep Done per assigned review-follow-up workflow.
 
 Intrinsic-width ViewThatFits candidate did not fix the iPad AX wrapping or full-default panel Dynamic Type audits (3/3 targeted failures, pad-review-intrinsic.log). Applied the coordinator-approved existing StudyViews pattern: explicit vertical header/navigation only for accessibility Dynamic Type sizes, otherwise original horizontal-first ViewThatFits with vertical fallback. No point thresholds or audit changes. Queuing the same three failing iPad methods, followed on success by all seven lesson-quiz tests on each iPhone/iPad.
+
+Review follow-up validation after approved accessibility-size branch (code 7c4255827bc900b7355cda44dfc21f6eeba28a6f): iPad failing-only AX/light/dark recheck PASS 3/3 (102.121s / 52.646s / 55.734s). Final iPad Pro 13-inch (M5) seven-method run PASS 7/7 (pad-review-final.log): concept/tool exclusions plus default-size horizontal header/navigation assertions 14.804s; AX-XXXL vertical/layout round trip 95.402s; dark full audits 51.629s; French/current-lesson route 56.537s; light full audits 50.083s; one-level help persistence 37.797s; post-choice immutability/relaunch 45.660s. Full-default panel/result audits and approved feedback helper remain unchanged. Final iPhone seven-method run is still queued on shared lock; nohup script /tmp/task-50.14.2-runs/review-accessibility-branch.sh continues without intervention. All logs and exit files are in /tmp/task-50.14.2-runs. No full suites or PR.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
