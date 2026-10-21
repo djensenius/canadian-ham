@@ -214,10 +214,20 @@ final class MorseAudioDriver {
     private static let sessionUsageLock = NSLock()
     private var holdsSession = false
 
-    private let engine = AVAudioEngine()
+    private let engine: AVAudioEngine
     private let renderState = MorseAudioRenderState()
     private var sourceNode: AVAudioSourceNode?
     private var pendingStopWorkItem: DispatchWorkItem?
+
+    init(engine: AVAudioEngine = AVAudioEngine()) {
+        self.engine = engine
+    }
+
+#if DEBUG
+    static var activeSessionUsers: Int {
+        sessionUsageLock.withLock { sessionUsage.activeUsers }
+    }
+#endif
 
     var isPlaying: Bool { engine.isRunning }
 
@@ -241,6 +251,9 @@ final class MorseAudioDriver {
     // AVAudioEngine startup. The sending audio actor serializes these operations.
     func prepareSendingTone(settings: MorseTrainerSettings) throws {
         guard !engine.isRunning else { return }
+        // An interruption can stop the engine without detaching its old source
+        // or releasing its session. Clean both up before attaching a replacement.
+        stopImmediately()
         var silentSettings = settings
         silentSettings.volume = 0
         try start(scheduleFactory: { sampleRate in

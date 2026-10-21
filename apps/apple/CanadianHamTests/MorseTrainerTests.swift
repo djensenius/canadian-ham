@@ -1,4 +1,5 @@
 @testable import CanadianHam
+import AVFoundation
 import CanadianHamMorseEngine
 import SwiftUI
 import XCTest
@@ -81,6 +82,68 @@ final class MorseTrainerTests: XCTestCase {
         await fulfillment(of: [released], timeout: 3)
         let starts = await output.toneStarts
         XCTAssertEqual(starts, 0, "A queued tone must not sound after navigating away")
+    }
+
+    @MainActor
+    func testMorseSendingKeyerReleaseCannotBeSupersededBySilence() async {
+        let preparationBegan = expectation(description: "Engine preparation is suspended")
+        let released = expectation(description: "Pending release executes")
+        let silenced = expectation(description: "Later silence executes after release")
+        let output = SuspendedMorseSendingAudioOutput(stall: .prepare, operationBegan: preparationBegan, finished: released, silenced: silenced)
+        let keyer = CanadianHam.MorseSendingKeyer(output: output)
+        keyer.prepare(settings: .default)
+        await fulfillment(of: [preparationBegan], timeout: 3)
+
+        // Simulate disappearance followed by focus loss, before release can run.
+        keyer.release()
+        keyer.silence()
+        await output.finishSlowOperation()
+        await fulfillment(of: [released, silenced], timeout: 3, enforceOrder: true)
+        let prepared = await output.isEnginePrepared
+        let usage = await output.sessionUsage
+        XCTAssertFalse(prepared, "Silence must not leave the prepared engine running")
+        XCTAssertEqual(usage.activeUsers, 0, "Release must drop the held audio session")
+    }
+
+    @MainActor
+    func testMorseSendingKeyerClassifiesPressWhenAudioFails() async throws {
+        let keyer = CanadianHam.MorseSendingKeyer(output: FailingMorseSendingAudioOutput())
+        let errorReported = expectation(description: "Audio failure is reported")
+        let observer = Task { @MainActor in
+            while keyer.audioError == nil {
+                try Task.checkCancellation()
+                try await Task.sleep(for: .milliseconds(1))
+            }
+            errorReported.fulfill()
+        }
+        defer { observer.cancel() }
+        let keyDown = ContinuousClock.now
+        keyer.beginStraightKey(at: keyDown, settings: .default)
+        await fulfillment(of: [errorReported], timeout: 3)
+        XCTAssertTrue(keyer.isStraightKeyDown, "Audio failure must not discard a recorded press")
+        let sample = try XCTUnwrap(keyer.endStraightKey(at: keyDown.advanced(by: .milliseconds(50)), profile: profileForName(.isedParis)))
+        XCTAssertEqual(sample.element, .dot)
+        XCTAssertEqual(sample.durationSeconds, 0.05, accuracy: 0.000_001)
+    }
+
+    func testMorseAudioDriverSendingRestartDetachesStoppedSourceAndBalancesSession() throws {
+        let engine = AVAudioEngine()
+        let driver = MorseAudioDriver(engine: engine)
+        let initialUsers = MorseAudioDriver.activeSessionUsers
+        defer { driver.releasePreparedSendingTone() }
+
+        for _ in 0..<3 {
+            try driver.prepareSendingTone(settings: .default)
+            XCTAssertTrue(driver.isPlaying)
+            XCTAssertEqual(engine.attachedNodes.filter { $0 is AVAudioSourceNode }.count, 1)
+            XCTAssertEqual(MorseAudioDriver.activeSessionUsers, initialUsers + 1)
+            // Model an interruption/route change stopping AVAudioEngine externally.
+            engine.stop()
+            XCTAssertFalse(driver.isPlaying)
+        }
+        driver.releasePreparedSendingTone()
+        XCTAssertTrue(engine.attachedNodes.filter { $0 is AVAudioSourceNode }.isEmpty)
+        XCTAssertEqual(MorseAudioDriver.activeSessionUsers, initialUsers)
     }
 
     func testMorseAudioSessionStaysActiveUntilLastPlayerReleases() {
@@ -715,16 +778,24 @@ private actor SuspendedMorseSendingAudioOutput: CanadianHam.MorseSendingAudioOut
     let stall: Stall
     let operationBegan: XCTestExpectation
     let finished: XCTestExpectation
+    let silenced: XCTestExpectation?
     private var continuation: CheckedContinuation<Void, Never>?
     private(set) var toneStarts = 0
+    private(set) var isEnginePrepared = false
+    private(set) var sessionUsage = MorseAudioSessionUsage()
 
-    init(stall: Stall, operationBegan: XCTestExpectation, finished: XCTestExpectation) {
+    init(stall: Stall, operationBegan: XCTestExpectation, finished: XCTestExpectation, silenced: XCTestExpectation? = nil) {
         self.stall = stall
         self.operationBegan = operationBegan
         self.finished = finished
+        self.silenced = silenced
     }
 
     func prepare(settings: CanadianHam.MorseTrainerSettings) async {
+        if !isEnginePrepared {
+            isEnginePrepared = true
+            sessionUsage.acquire()
+        }
         if stall == .prepare { await suspend() }
     }
 
@@ -734,8 +805,18 @@ private actor SuspendedMorseSendingAudioOutput: CanadianHam.MorseSendingAudioOut
     }
 
     func playElement(_ element: MorseKeyElement, settings: CanadianHam.MorseTrainerSettings) {}
-    func silence() { if stall == .start { finished.fulfill() } }
-    func release() { if stall == .prepare { finished.fulfill() } }
+    func silence() {
+        if stall == .start { finished.fulfill() }
+        silenced?.fulfill()
+    }
+
+    func release() {
+        if isEnginePrepared {
+            isEnginePrepared = false
+            _ = sessionUsage.release()
+        }
+        if stall == .prepare { finished.fulfill() }
+    }
 
     func finishSlowOperation() {
         continuation?.resume()
@@ -748,4 +829,12 @@ private actor SuspendedMorseSendingAudioOutput: CanadianHam.MorseSendingAudioOut
             operationBegan.fulfill()
         }
     }
+}
+
+private struct FailingMorseSendingAudioOutput: CanadianHam.MorseSendingAudioOutput {
+    func prepare(settings: CanadianHam.MorseTrainerSettings) throws { throw CocoaError(.fileReadUnknown) }
+    func startTone(settings: CanadianHam.MorseTrainerSettings) {}
+    func playElement(_ element: MorseKeyElement, settings: CanadianHam.MorseTrainerSettings) {}
+    func silence() {}
+    func release() {}
 }

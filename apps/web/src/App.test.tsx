@@ -23,7 +23,7 @@ import { lessonsById } from "./data/lessons";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
 import { INTERFACE_LANGUAGE_STORAGE_KEY, interfaceLanguageTag, t } from "./lib/i18n";
-import { MorseOutputView } from "./lib/morseOutput";
+import { MorseOutputView, morseOutputSafetyNote } from "./lib/morseOutput";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { applyPracticeAnswer, buildExamAttempt, createMockExam } from "./lib/studyEngine";
 import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ham/morse-engine";
@@ -2411,10 +2411,11 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     const sequence = textToTimedMorse("5", profileForName("isedParis"));
     const flashesPerSecond = maxMorseFlashesPerSecond(morseSignalEvents(sequence));
     const safety = evaluateMorseBeaconFlashSafety({ palette: morseBeaconPalette({ accent: MORSE_LIGHT_ACCENT_RGB, background: MORSE_LIGHT_PAPER_INSET_RGB }), flashesPerSecond });
-    const formatArea = new Intl.NumberFormat(interfaceLanguageTag("en"), { maximumFractionDigits: 0 });
-    const safetyNote = t("en", "morseOutputBeaconSafety", formatArea.format(MORSE_BEACON_AREA_CSS_PIXELS), formatArea.format(safety.maxAreaCssPixels), formatArea.format(flashesPerSecond));
+    const safetyNote = morseOutputSafetyNote("en", false, safety, flashesPerSecond);
     const beacon = render(<MorseOutputView interfaceLanguage="en" state={{ mode: "visualBeacon", beaconActive: true, tape: "", safetyNote }} />);
     assert.ok(beacon.container.textContent?.includes(safetyNote));
+    assert.match(safetyNote, /square points/);
+    assert.ok(safetyNote.includes(new Intl.NumberFormat(interfaceLanguageTag("en")).format(MORSE_BEACON_AREA_CSS_PIXELS)));
     await expectNoAxeViolations(beacon.container);
     beacon.unmount();
 

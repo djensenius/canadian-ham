@@ -376,7 +376,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         start.tap()
         XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5))
         app.typeKey(" ", modifierFlags: [])
-        assertMorseKeyboardDecodedText("E", in: app)
+        assertMorseKeyboardDecodedText("E", focus: "exam", in: app)
 
         // Scope Back to the detail stack: iPad also has a sidebar navigation bar.
         let back = app.navigationBars["Exam-style check"].buttons.matching(
@@ -386,15 +386,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         back.tap()
         XCTAssertTrue(app.buttons["morse-sending-exam-open-button"].firstMatch.waitForExistence(timeout: 5))
         app.typeKey(" ", modifierFlags: [])
-        assertMorseKeyboardDecodedText("EE", in: app)
+        assertMorseKeyboardDecodedText("EE", focus: "practice", in: app)
 
         // Re-entry clears practice, and the pushed screen must acquire keyboard focus again.
         openSendingExamStyleCheck(in: app)
         app.typeKey(" ", modifierFlags: [])
-        assertMorseKeyboardDecodedText("E", in: app)
+        assertMorseKeyboardDecodedText("E", focus: "exam", in: app)
     }
 
-    private func assertMorseKeyboardDecodedText(_ text: String, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+    private func assertMorseKeyboardDecodedText(_ text: String, focus: String, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
         let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
         let matches = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "label == %@ OR label == %@", text, "Decoded text, \(text)"),
@@ -405,6 +405,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let keyboardStatus = status.label
         print("Morse hardware keyboard expected \(text): \(keyboardStatus)")
         XCTAssertEqual(outcome, .completed, "Decoded: \(decoded.label); \(keyboardStatus)", file: file, line: line)
+        XCTAssertTrue(keyboardStatus.contains("Focus: Optional(\(focus))"), "Expected \(focus) keyboard focus; \(keyboardStatus)", file: file, line: line)
     }
 
     func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {

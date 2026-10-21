@@ -590,8 +590,10 @@ private actor MorseSendingAudioPlayer: MorseSendingAudioOutput {
 @MainActor
 final class MorseSendingKeyer: ObservableObject {
     @Published private(set) var straightKeyDownAt: ContinuousClock.Instant?
+#if DEBUG
     @Published private(set) var lastHoldSeconds = 0.0
     @Published private(set) var audioStartupSeconds = 0.0
+#endif
     @Published private(set) var audioError: String?
 
     var isStraightKeyDown: Bool { straightKeyDownAt != nil }
@@ -625,7 +627,9 @@ final class MorseSendingKeyer: ObservableObject {
         let components = started.duration(to: eventTime).components
         let duration = max(0.001, Double(components.seconds) + Double(components.attoseconds) / 1e18)
         straightKeyDownAt = nil
+#if DEBUG
         lastHoldSeconds = duration
+#endif
         silence()
         return try classifyMorseKeyDown(durationSeconds: duration, profile: profile)
     }
@@ -654,18 +658,29 @@ final class MorseSendingKeyer: ObservableObject {
         // was released (or its screen left) while the engine was preparing.
         audioTask = Task { @MainActor in
             await previous?.value
-            guard request == audioRequest else { return }
+            // Only tone requests are superseded. In particular, a focus-loss
+            // silence must never cancel the release queued by disappearance.
+            switch command {
+            case .start, .element:
+                guard request == audioRequest else { return }
+            case .prepare, .silence, .release:
+                break
+            }
             do {
                 switch command {
                 case .prepare(let settings):
                     try await output.prepare(settings: settings)
                 case .start(let settings):
+#if DEBUG
                     let started = ContinuousClock.now
+#endif
                     try await output.prepare(settings: settings)
                     guard request == audioRequest else { return }
                     try await output.startTone(settings: settings)
+#if DEBUG
                     let components = started.duration(to: .now).components
                     audioStartupSeconds = Double(components.seconds) + Double(components.attoseconds) / 1e18
+#endif
                 case .element(let element, let settings):
                     try await output.prepare(settings: settings)
                     guard request == audioRequest else { return }
@@ -679,7 +694,7 @@ final class MorseSendingKeyer: ObservableObject {
             } catch {
                 guard request == audioRequest else { return }
                 audioError = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
-                straightKeyDownAt = nil
+                // A failed sidetone must not discard the recorded key event.
             }
         }
     }
