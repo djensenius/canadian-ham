@@ -1006,11 +1006,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     func testLessonTryItRevealFrenchLabelsAndState() throws {
-        let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-006-01", "-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"])
+        let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-004-03", "-CanadianHamInitialLessonSectionAnchor", "try-it", "-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"])
         defer { app.terminate() }
         let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
         XCTAssertTrue(toggle.waitForExistence(timeout: 10))
-        scrollUntilHittable(toggle, in: app, maxSwipes: 40)
+        positionTryItSectionAtLaunch(in: app)
+        XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true))
         XCTAssertEqual(toggle.label, "Afficher la réponse 1")
         XCTAssertEqual(toggle.value as? String, "Réduit")
         XCTAssertFalse(app.staticTexts["lesson-try-it-1-answer"].firstMatch.exists)
@@ -2392,7 +2393,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func auditLessonTryItReveal(appearance: AuditAppearance, accessibilitySize: Bool) throws {
         let app = launchApp(arguments: [
-            "-CanadianHamInitialLessonID", "L-006-01",
+            "-CanadianHamInitialLessonID", "L-004-03",
+            "-CanadianHamInitialLessonSectionAnchor", "try-it",
             "-CanadianHamTheme", appearance.rawValue,
             "-UIPreferredContentSizeCategoryName", accessibilitySize ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL"
         ])
@@ -2402,23 +2404,48 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let answer = app.staticTexts["lesson-try-it-1-answer"].firstMatch
         let secondAnswer = app.staticTexts["lesson-try-it-2-answer"].firstMatch
         XCTAssertFalse(answer.exists, "Try-it answers must not enter the accessibility tree before disclosure")
-        scrollUntilHittable(toggle, in: app, maxSwipes: 60)
-        positionElementInMiddleVisibleBand(toggle, in: app, context: "\(appearance.rawValue) collapsed Try-it")
+        positionTryItSectionAtLaunch(in: app)
+        XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true), "Show answer must be fully visible beside the Try-it section before tapping or auditing")
         XCTAssertEqual(toggle.label, "Show answer 1")
         XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
         try auditIgnoringOccludedLessonTextContrast(app: app)
         toggle.tap()
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
-        XCTAssertEqual(answer.label, "It remains fifty ohms because geometry and dielectric did not change.")
+        XCTAssertEqual(answer.label, "digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ± 5 % tolerance.")
         XCTAssertEqual(toggle.label, "Hide answer 1")
         XCTAssertEqual(toggle.value as? String, "Expanded")
         XCTAssertFalse(secondAnswer.exists, "Revealing one Try-it must not reveal another")
-        scrollUntilHittable(toggle, in: app, maxSwipes: 3)
-        positionElementInMiddleVisibleBand(toggle, in: app, context: "\(appearance.rawValue) expanded Try-it")
+        positionTryItControlForAudit(toggle, in: app)
         try auditIgnoringOccludedLessonTextContrast(app: app)
         toggle.tap()
         XCTAssertFalse(answer.exists, "Collapsing must remove the answer from the accessibility tree")
         XCTAssertEqual(toggle.value as? String, "Collapsed")
+    }
+
+    private func positionTryItSectionAtLaunch(in app: XCUIApplication) {
+        let heading = app.staticTexts["lesson-heading-try-it"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10))
+        waitBriefly(0.5)
+        let scroll = scrollView(containing: heading, in: app)
+        for _ in 0..<8 where !isFullyVisible(heading, in: app, requiresHittable: false) {
+            let visible = visibleFrameExcludingNavigationBar(in: app)
+            preciseScroll(scroll, contentDeltaY: heading.frame.minY < visible.minY ? 80 : -80)
+            waitBriefly()
+        }
+        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: false), "Try-it section heading must be fully visible at the DEBUG launch anchor")
+    }
+
+    private func positionTryItControlForAudit(_ control: XCUIElement, in app: XCUIApplication) {
+        let scroll = scrollView(containing: control, in: app)
+        for _ in 0..<12 {
+            let visible = visibleFrameExcludingNavigationBar(in: app)
+            let targetY = visible.minY + visible.height * 0.25
+            let delta = targetY - control.frame.minY
+            if abs(delta) < 24 { break }
+            preciseScroll(scroll, contentDeltaY: delta)
+            waitBriefly()
+        }
+        XCTAssertTrue(isFullyVisible(control, in: app, requiresHittable: true), "Try-it reveal control must remain fully visible for the expanded-state audit")
     }
 
     private func auditLessonPrerequisiteNavigation(appearance: AuditAppearance) throws {

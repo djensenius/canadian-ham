@@ -956,10 +956,15 @@ struct RootView: View {
             compactNavigationPath.append(.learn(.lessonQuiz(initialQuizID)))
 #endif
         } else if let initialLessonID = AppLaunchArguments.value(after: "-CanadianHamInitialLessonID") {
+            let route: LearnRoute = if let anchor = AppLaunchArguments.value(after: "-CanadianHamInitialLessonSectionAnchor") {
+                .lessonSection(initialLessonID, anchor)
+            } else {
+                .lesson(initialLessonID)
+            }
             selection = .learn
-            navigationPath = [.lesson(initialLessonID)]
+            navigationPath = [route]
 #if os(iOS)
-            compactNavigationPath = compactPath(to: .learn, appending: .learn(.lesson(initialLessonID)))
+            compactNavigationPath = compactPath(to: .learn, appending: .learn(route))
 #endif
         }
         if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
