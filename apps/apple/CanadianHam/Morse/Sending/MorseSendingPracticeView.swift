@@ -609,6 +609,7 @@ final class MorseSendingKeyer: ObservableObject {
     private let output: any MorseSendingAudioOutput
     private var audioTask: Task<Void, Never>?
     private var audioRequest = 0
+    private var audioErrorGeneration = 0
 
     init(output: any MorseSendingAudioOutput = MorseSendingAudioPlayer()) {
         self.output = output
@@ -647,12 +648,15 @@ final class MorseSendingKeyer: ObservableObject {
 
     func release() {
         straightKeyDownAt = nil
+        // Leaving invalidates pending failures; key-up only cancels the tone.
+        audioErrorGeneration += 1
         queueAudio(.release)
     }
 
     private func queueAudio(_ command: AudioCommand) {
         audioRequest += 1
         let request = audioRequest
+        let errorGeneration = audioErrorGeneration
         let previous = audioTask
         // Keep lifecycle commands ordered, but discard a queued tone if its key
         // was released (or its screen left) while the engine was preparing.
@@ -693,13 +697,13 @@ final class MorseSendingKeyer: ObservableObject {
                 // Only a successful tone-producing command clears an earlier audio error;
                 // the silence queued on key-up must not hide a failure the learner just hit.
                 switch command {
-                case .prepare, .start, .element:
+                case .start, .element:
                     if request == audioRequest { audioError = nil }
-                case .silence, .release:
+                case .prepare, .silence, .release:
                     break
                 }
             } catch {
-                guard request == audioRequest else { return }
+                guard errorGeneration == audioErrorGeneration else { return }
                 audioError = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
                 // A failed sidetone must not discard the recorded key event.
             }
