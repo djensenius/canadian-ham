@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-21 22:23'
+updated_date: '2026-10-21 22:36'
 labels:
   - content
   - web
@@ -42,4 +42,10 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 
 <!-- SECTION:NOTES:BEGIN -->
 TASK-46.6 re-review follow-up (owner explicitly permits scoped README plus follow-up instead of converting legacy material now): content/lessons/README.md now applies separate feedback headings to new or restructured Try-its. Convert the remaining M3/M4 inline answers as part of this existing task, including l-003-08-access-grounding-lightning-rf-safety.md and l-004-01-amplifiers-and-diodes.md; inspect all eight M3 and three M4 lessons. Preserve prompts and identities while separating answers for the accessible reveal convention. This is already covered by AC #2 (all lessons converted), so no duplicate task was created.
+
+Implemented paired numbered prompt + :::answer / one-line original answer / ::: convention; converted 141 Try-its across all 31 M2–M8 lessons. M1 remains reference-only (no Try-its). Faded-practice Check your work headings and solutions are unchanged. Byte-for-byte comparison to base 78f6f995 verified all 126 non-M4 answers; existing M4 answer prose is retained verbatim with approved prompt/answer repairs. No heading anchor targeted by a hint changed (984 hints checked).
+Owner/coordinator approval via intercom: minimally split/reword M4 prompts and add an original answer only where no answer existed; remove redundant standalone feedback-list headings. M4 item review list: L-004-01 #1 asks what the next block does, #2 asks what audio stage helps, #3 asks the diode trade-off, #4 asks what clipped peaks suggest, #5 asks to name rectification; all original answer clauses retained. L-004-02 #1 moves both original sentences into the answer and asks what the emitter arrow identifies; #2 asks which stage/terminal, #3 asks the relay role, #5 asks what to check before substitution; original answers retained. L-004-02 #4 retains the original prompt and adds the only new answer: grid controls tube current; high voltage and stored charge require caution. L-004-03 #1–3 ask to decode the original colours; #4 asks which tolerance has less spread; #5 asks which band to compare; original answer clauses retained.
+Removed headings per lesson: Check your thinking in L-002-01, L-002-02, L-002-03, L-002-04; Try-it feedback in L-005-01, L-005-02, L-005-03, L-005-04, L-005-05, L-005-06, L-006-01, L-006-02, L-006-03, L-006-04, L-006-05, L-007-01, L-007-02, L-007-03, L-008-01, L-008-02. Searched web/Apple/content-tools tests and updated the faded-practice test to inspect prompts after removing paired answer blocks. No hint anchors referenced these headings.
+Changed figure-directive lessons (coordinator must run CanadianHamLessonFigures; worker will not): L-002-01–04; L-003-01–08; L-004-01–03; L-005-01–06; L-006-01–05; L-007-01–03; L-008-01–02 (all 31 changed lessons). Figure check passes: 39 SVGs, 39 references, assets in sync.
+Initial checks: content-tools 244/244; content-swift 26/26 with DEVELOPER_DIR (plain swift test first failed due CLI tools missing XCTest, then corrected a test anchor API call); web focused parser/reveal/EN-FR light-dark axe 38/38, App+Markdown rerun 151/151. A full web run initially had an unrelated French-screen timing failure plus status-role collisions from the first implementation; switched the new announcement to a stable aria-live region, then all affected App tests passed. Typecheck, schema 58/58, import integrity, coverage 100/100, quizzes, all 984 hint anchors, originality all 37 lessons (0 issues/0 stale allowlist entries), figure checks and Apple text-source checker pass. Apple targeted tests and localization export queued next; no full suites.
 <!-- SECTION:NOTES:END -->
