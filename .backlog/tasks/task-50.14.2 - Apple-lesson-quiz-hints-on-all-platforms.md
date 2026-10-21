@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 19:11'
+updated_date: '2026-10-21 19:40'
 labels:
   - apple
 dependencies:
@@ -145,6 +145,8 @@ Review follow-up (2026-10-21): restored horizontal-first ViewThatFits header/nav
 Intrinsic-width ViewThatFits candidate did not fix the iPad AX wrapping or full-default panel Dynamic Type audits (3/3 targeted failures, pad-review-intrinsic.log). Applied the coordinator-approved existing StudyViews pattern: explicit vertical header/navigation only for accessibility Dynamic Type sizes, otherwise original horizontal-first ViewThatFits with vertical fallback. No point thresholds or audit changes. Queuing the same three failing iPad methods, followed on success by all seven lesson-quiz tests on each iPhone/iPad.
 
 Review follow-up validation after approved accessibility-size branch (code 7c4255827bc900b7355cda44dfc21f6eeba28a6f): iPad failing-only AX/light/dark recheck PASS 3/3 (102.121s / 52.646s / 55.734s). Final iPad Pro 13-inch (M5) seven-method run PASS 7/7 (pad-review-final.log): concept/tool exclusions plus default-size horizontal header/navigation assertions 14.804s; AX-XXXL vertical/layout round trip 95.402s; dark full audits 51.629s; French/current-lesson route 56.537s; light full audits 50.083s; one-level help persistence 37.797s; post-choice immutability/relaunch 45.660s. Full-default panel/result audits and approved feedback helper remain unchanged. Final iPhone seven-method run is still queued on shared lock; nohup script /tmp/task-50.14.2-runs/review-accessibility-branch.sh continues without intervention. All logs and exit files are in /tmp/task-50.14.2-runs. No full suites or PR.
+
+Final iPhone seven-method run: 5/7 PASS; AX failed because the upward-only Hint 2 loop scrolled past its heading (video proves the retained Hint 2 body/lesson link at the bottom), and dark feedback audit produced a nil-element contrast finding with actual feedback title offscreen. These tests passed 7/7 at original review SHA 2a4f12b1; adaptive layout moved content. Coordinator explicitly approved changes limited to the new quiz tests: bidirectional Hint 2 scrolling with unchanged hittable assertion and frame diagnostics; fully-visible feedback title plus help marker before the same audit (stronger coverage). Shared helpers, exception helpers, audit calls and app visuals are untouched. Nil contrast findings still fail; if one recurs with fully visible feedback, stop and report rather than filtering. Queuing affected iPhone/iPad AX, light and dark only; earlier unaffected methods remain green.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
