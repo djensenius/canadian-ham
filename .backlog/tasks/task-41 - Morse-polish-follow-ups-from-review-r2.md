@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-21 20:27'
+updated_date: '2026-10-21 21:29'
 labels:
   - apple
   - web
@@ -114,6 +114,51 @@ AC1 hardware validation passed on the real, unchanged Space-key regression: iPho
 Final validation COMPLETE at 2026-10-21T20:10:02Z. /tmp/task-41-audio-checks.sh finished every step with exit=0; evidence directory /tmp/task-41-audio-validation-20261021T151530Z contains exact commands, status, logs and xcresults. Current execution totals: 32/32 macOS Morse units, both iPhone/iPad hardware-keyboard executions, and all four existing iPhone sending regressions passed (38 Apple test executions). All per-test results and before/after hardware timings are recorded above. pnpm check:apple-l10n PASS: French export complete, tvOS and visionOS generic simulator builds SUCCEEDED, compiler/XLIFF/catalogue checks passed, no catalogue rewrite. node scripts/check-apple-text-sources.ts PASS; node scripts/check-test-guard.mjs --base origin/main --head HEAD PASS (no guarded changes); git diff --check origin/main...HEAD PASS; working tree/index clean before final Backlog-only commits. The final explicit throwing-closure annotation compiled through the localization gate. Earlier AC2 beacon UI pass and 84 relevant web passes remain valid; web code did not change during this resume. No full Apple suites were run: they belong to coordinator merge batch, and shared MorseAudioDriver membership means that batch must cover all four platforms. No physical macOS keyboard interaction was manually exercised; the shared macOS app compiled and all Morse units passed. Existing local host CoreData unknown-model-version startup warning was not reset or changed. No PR opened; ready for required independent branch review.
 
 Review follow-up source 4add8428632715a79b0fbe12586abef57284db6b: lifecycle prepare/silence/release commands now always execute in queue order; only tone starts/elements are superseded. Added suspended-preparation release→silence regression asserting prepared engine false and modeled shared session users zero. Sending restart cleans up the stopped engine before attaching a new source; a real AVAudioEngine unit covers three external-stop/restart cycles, single source attachment and balanced shared session users. Hardware UI regression now asserts DEBUG exam→practice→exam focus as well as unchanged E/EE/E. Timing fields and measurements are DEBUG-only. Web axe now calls the production morseOutputSafetyNote builder (also used by playback) and asserts square-point/grouped-area text. Note 6 decision: preserve the recorded press when sidetone preparation fails, report the existing audio error, and classify on key-up; added failure-path unit. Note 8 deliberately unchanged per assignment: AVAudioSession category/activation remains under the shared lock, with rare brief possible main-thread contention. Note 3 remains explicit: no physical macOS keyboard manual run; macOS evidence is compilation plus Morse units. Targeted stop-on-first-failure runner /tmp/task-41-review-checks.sh queued behind the shared xbuild lock; evidence /tmp/task-41-review-validation-20261021T202728Z. Task remains Done per coordinator direction; no PR.
+
+2026-10-21 review follow-up targeted validation COMPLETE (all requested checks exit 0). Source: Swift 45421f5b plus web assertion cleanup af9b0442. Stable DEBUG Focus: exam/practice/exam labels replace runtime-qualified private-enum descriptions; both device tests assert those labels and unchanged E/EE/E. Web wording remains its existing px²; only Apple wording is square points. The web axe test calls the same morseOutputSafetyNote builder as production playback and checks grouped area text. All six iPhone methods ran in the requested order and passed on their first attempt; Results Light did not need the TASK-65 retry. Both hardware-keyboard tests assert focus, not just log it. Apple per-test results:
+- iphone-keyboard: testMorseSendingExamHardwareKeyboardFocusIsSeparateFromPractice — PASS (76.458 seconds)
+- iphone-main-light: testAccessibilityAuditMorseSendingMainAndExamScreensLight — PASS (91.837 seconds)
+- iphone-main-dark: testAccessibilityAuditMorseSendingMainAndExamScreensDark — PASS (86.496 seconds)
+- iphone-results-light: testAccessibilityAuditMorseSendingResultsLight — PASS (89.753 seconds)
+- iphone-results-dark: testAccessibilityAuditMorseSendingResultsDark — PASS (83.005 seconds)
+- iphone-deadline: testMorseSendingPracticeGradesImmediatelyAtDeadline — PASS (52.757 seconds)
+- ipad-keyboard: testMorseSendingExamHardwareKeyboardFocusIsSeparateFromPractice — PASS (40.504 seconds)
+- mac-morse: testCompletedMorseCourseSessionIgnoresResubmittedAnswer — PASS (0.001 seconds)
+- mac-morse: testFixedTimingProfilesUseEngineValues — PASS (0.001 seconds)
+- mac-morse: testLessonBodyAndBulletContrastTokensMeetMinimumRatio — PASS (0.001 seconds)
+- mac-morse: testMorseAudioDriverSendingRestartDetachesStoppedSourceAndBalancesSession — PASS (1.662 seconds)
+- mac-morse: testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp — PASS (0.002 seconds)
+- mac-morse: testMorseAudioSessionStaysActiveUntilLastPlayerReleases — PASS (0.002 seconds)
+- mac-morse: testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins — PASS (0.002 seconds)
+- mac-morse: testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas — PASS (0.003 seconds)
+- mac-morse: testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters — PASS (0.001 seconds)
+- mac-morse: testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone — PASS (0.002 seconds)
+- mac-morse: testMorseCourseProgressIgnoresStoredProgressForAnotherCourse — PASS (0.001 seconds)
+- mac-morse: testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition — PASS (0.001 seconds)
+- mac-morse: testMorseExamGeneratorMeetsReceivingExamConstraints — PASS (0.003 seconds)
+- mac-morse: testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime — PASS (0.001 seconds)
+- mac-morse: testMorsePressKeyButtonAccessibilityActionsTriggerConfiguredKeying — PASS (0.004 seconds)
+- mac-morse: testMorseSendingClassifiesTimingAndErrorSignal — PASS (0.001 seconds)
+- mac-morse: testMorseSendingKeyerClassifiesPressWhenAudioFails — PASS (0.004 seconds)
+- mac-morse: testMorseSendingKeyerClassifiesRecordedEventsWhileAudioStartupIsSuspended — PASS (0.002 seconds)
+- mac-morse: testMorseSendingKeyerLeavingDuringPreparationDoesNotStartALateTone — PASS (0.002 seconds)
+- mac-morse: testMorseSendingKeyerReleaseCannotBeSupersededBySilence — PASS (0.002 seconds)
+- mac-morse: testMorseSendingPendingFinalizationHelperCancelsAndClears — PASS (0.001 seconds)
+- mac-morse: testMorseSendingRemainingExamSecondsUsesFixedDeadline — PASS (0.001 seconds)
+- mac-morse: testMorseSendingScoreCountsTimeoutOnlyThroughMissingCharacters — PASS (0.001 seconds)
+- mac-morse: testMorseSettingsClampAndPreset — PASS (0.001 seconds)
+- mac-morse: testMorseSettingsCodableRoundTripPreservesOutputMode — PASS (0.001 seconds)
+- mac-morse: testMorseSettingsDecodesLegacyPayloadWithIsEnabled — PASS (0.001 seconds)
+- mac-morse: testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast — PASS (0.008 seconds)
+- mac-morse: testMorseSettingsRoundTripThroughUserDefaults — PASS (0.004 seconds)
+- mac-morse: testMorseStopDelayDrainsFadeBeforeStoppingEngine — PASS (0.001 seconds)
+- mac-morse: testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced — PASS (0.001 seconds)
+- mac-morse: testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess — PASS (0.047 seconds)
+- mac-morse: testReduceFlashingDecisionUsesInjectedFlags — PASS (0.001 seconds)
+- mac-morse: testReduceFlashingStopsOnlyRunningVisualBeacon — PASS (0.001 seconds)
+- mac-morse: testScheduleMorseVisualPlaybackInitialStateAndFallback — PASS (0.001 seconds)
+- mac-morse: testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess — PASS (0.036 seconds)
+42 Apple test executions total: 35/35 macOS Morse units, 6/6 iPhone UI methods, 1/1 iPad keyboard method. macOS new regressions: stopped-engine/source/session restart 1.662s; audio-failure classification 0.004s; non-droppable release→silence 0.002s. Web: 25/25 Morse library/settings/sending tests and 21/21 selected App Morse tests passed (73 non-Morse App tests excluded by name filter, no source skips added). pnpm typecheck, Apple text-source checker, test-guard self-test, branch guard against origin/main and diff-check all passed. No guarded changes found. Exact commands, complete logs and 8 xcresults: /tmp/task-41-review-validation-20261021T202728Z. Runner: /tmp/task-41-review-checks.sh. Shared lock waits respected; no other builds signalled. xbuild logged a non-fatal simctl lookup warning during keyboard-run cleanup; both test commands exited zero. No physical macOS keyboard manual run is claimed. No full Apple suites ran; the shared driver still requires all four platform suites in the coordinator merge batch. Per AGENTS SwiftUI-text policy, an additional detached pnpm check:apple-l10n is running (/tmp/task-41-review-l10n.sh), covering export and generic tvOS/visionOS builds without catalogue rewriting. Task remains Done by coordinator direction; final push follows that gate. Note 8 remains deliberately unchanged as recorded above.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
