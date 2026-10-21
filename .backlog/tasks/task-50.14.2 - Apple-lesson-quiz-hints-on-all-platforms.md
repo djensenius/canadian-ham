@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 21:35'
+updated_date: '2026-10-21 22:03'
 labels:
   - apple
 dependencies:
@@ -246,6 +246,21 @@ xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-gbwfkszqi
 Default-size iPhone horizontal-header proof PASS in testLessonQuizConceptCheckHasNoHintOrOtherTools (Retry minY < title maxY, Retry minX > title maxX, both exist); same proof PASS on iPad. AX layout/round-trip and full light/dark audits PASS on both devices. No skips, audit/filter changes or helper edits.
 
 Other checks PASS: Apple text-source checker; incremental test guard from 21a3b46a to final source (no guarded changes); git diff --check. No full suites by targeted review policy; tvOS/visionOS follow-up reruns skipped because only the iOS/macOS quiz view/tests changed and shared catalogue/model did not. macOS compiled and all seven named lesson-quiz units passed; no manual native macOS window/VoiceOver session was performed. Done retained; no PR opened. Ready for independent review and push.
+
+PR #326 Copilot session-replacement fix committed/pushed as a5d358dffd8cb8aec736d46b3133a0295ae80425. Each LessonQuizSessionState has an immutable construction UUID; the guarded initialization task is keyed to it. Cache clear now emits objectWillChange (but cache insertion does not publish during view evaluation), so mounted screens reacquire replacements. LessonQuizScreen is internal for @testable mounted-host regression coverage; no layout/audit/helper changes. Verified both compact iOS and split iOS/macOS RootView paths clear this same cache for Settings data replacement. No new iPhone Settings-navigation hook was added; the macOS regression hosts the real quiz while actual store import/reset occurs, then invokes RootView-equivalent cache clearing.
+
+Initial macOS validation failed before unit execution because merged main (#325) unconditionally imports UIKit in CanadianHamPracticeUITests.swift:1, even with -skip-testing:CanadianHamUITests (scheme still builds the explicit UI target). Logs: mac-review-session-replacement-with-ui-target.log and mac-review-session-replacement.log in /tmp/task-50.14.2-runs; both exit 65. Coordinator is repairing main separately; explicitly prohibited temporary schemes and requested waiting to merge the fix before rerunning normal macOS units. No unrelated source changes or build interference.
+
+iPhone 17 Pro final-source targeted run PASS 7/7 via nohup bash /tmp/task-50.14.2-runs/review-session-replacement-phone.sh with grep polling; xbuild exit 0, log phone-review-session-replacement.log. All methods are CanadianHamExamToolsUITests:
+- testLessonQuizConceptCheckHasNoHintOrOtherTools: PASS (24.519s)
+- testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip: PASS (273.548s)
+- testLessonQuizHintsDarkAndFullAccessibilityAudits: PASS (156.295s)
+- testLessonQuizHintsFrenchAndCurrentLessonRoundTrip: PASS (158.969s)
+- testLessonQuizHintsLightAndFullAccessibilityAudits: PASS (163.955s)
+- testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch: PASS (102.484s)
+- testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount: PASS (119.870s)
+xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-gbwfkszqitpwztancxhpvfvcfxsj/Logs/Test/Test-CanadianHam-2026.10.21_17-44-44--0400.xcresult.
+Other checks PASS: Apple text-source checker; incremental test guard from 24c9b14f (no guarded changes); git diff --check. No iPad rerun (no layout changes), no tvOS/visionOS reruns (files only belong to iOS/macOS targets), no full suites by targeted review policy. Awaiting fixed main for macOS 8-unit run, including new mounted import/reset regression.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
