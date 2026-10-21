@@ -18,6 +18,85 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try super.tearDownWithError()
     }
 
+    func testLessonQuizConceptOptionCorrectLightAndFullAccessibilityAudit() throws {
+        try verifyConceptOptionFeedback(appearance: "light", correct: true, french: false)
+    }
+
+    func testLessonQuizConceptOptionCorrectDarkAndFullAccessibilityAudit() throws {
+        try verifyConceptOptionFeedback(appearance: "dark", correct: true, french: false)
+    }
+
+    func testLessonQuizConceptOptionIncorrectFrenchFallbackLightAndFullAccessibilityAudit() throws {
+        try verifyConceptOptionFeedback(appearance: "light", correct: false, french: true)
+    }
+
+    func testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit() throws {
+        try verifyConceptOptionFeedback(appearance: "dark", correct: false, french: true)
+    }
+
+    func testLessonQuizConceptOptionFeedbackLargestDynamicType() throws {
+        let app = launchLessonQuiz(seed: "lesson-hints-15", extraArguments: [
+            "-AppleLanguages", "(en)",
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
+        ])
+        defer { app.terminate() }
+        let answer = app.buttons["lesson-quiz-choice-B-button"].firstMatch
+        XCTAssertTrue(answer.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["lesson-quiz-feedback-status"].exists)
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 20)
+        answer.tap()
+        let status = app.staticTexts["lesson-quiz-feedback-status"].firstMatch
+        positionConceptFeedback([status], in: app)
+        XCTAssertEqual(status.label, "Correct 820 / 1 000 = 0.82 A, so only the display unit differs.")
+        XCTAssertTrue(isFullyVisible(status, in: app, requiresHittable: true), "Feedback must wrap without truncation at AX-XXXL")
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+        let explanation = app.staticTexts["lesson-quiz-feedback-explanation"].firstMatch
+        positionConceptFeedback([explanation], in: app)
+        XCTAssertEqual(explanation.label, "Compare values only after expressing them in the same unit.")
+        XCTAssertTrue(isFullyVisible(explanation, in: app, requiresHittable: true))
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+    }
+
+    private func verifyConceptOptionFeedback(appearance: String, correct: Bool, french: Bool) throws {
+        // Real shared seeded shuffle: C1 source order [3, 1, 0, 2]. A is source 3, not source 0.
+        let app = launchLessonQuiz(seed: "lesson-hints-15", appearance: appearance, extraArguments: [
+            "-AppleLanguages", french ? "(fr)" : "(en)", "-AppleLocale", french ? "fr_CA" : "en_CA"
+        ])
+        defer { app.terminate() }
+        let answer = app.buttons[correct ? "lesson-quiz-choice-B-button" : "lesson-quiz-choice-A-button"].firstMatch
+        XCTAssertTrue(answer.waitForExistence(timeout: 10))
+        XCTAssertTrue(answer.label.contains(correct ? "They describe the same current." : "The readings differ by a factor of one hundred."))
+        XCTAssertFalse(app.staticTexts["lesson-quiz-feedback-status"].exists)
+        XCTAssertFalse(app.staticTexts["lesson-quiz-feedback-explanation"].exists)
+        XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "so only the display unit differs.")).firstMatch.exists)
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 15)
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+        answer.tap()
+        let status = app.staticTexts["lesson-quiz-feedback-status"].firstMatch
+        XCTAssertTrue(status.waitForExistence(timeout: 5))
+        let correctness = french ? "Mauvaise réponse" : "Correct"
+        let optionFeedback = correct
+            ? "820 / 1 000 = 0.82 A, so only the display unit differs."
+            : "This treats milli as a tenfold step. It is a thousandth of an ampere."
+        XCTAssertEqual(status.label, "\(correctness) \(optionFeedback)")
+        let explanation = app.staticTexts["lesson-quiz-feedback-explanation"].firstMatch
+        XCTAssertEqual(explanation.label, "Compare values only after expressing them in the same unit.")
+        positionConceptFeedback([status, explanation], in: app)
+        XCTAssertTrue(isFullyVisible(status, in: app, requiresHittable: true))
+        XCTAssertTrue(isFullyVisible(explanation, in: app, requiresHittable: true))
+        // This is the full default audit, using only the unchanged approved occluded-contrast exception.
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+    }
+
+    private func positionConceptFeedback(_ elements: [XCUIElement], in app: XCUIApplication) {
+        for _ in 0..<24 where !elements.allSatisfy({ isFullyVisible($0, in: app, requiresHittable: true) }) {
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            let top = elements.map(\.frame.minY).min() ?? visibleFrame.minY
+            preciseExamToolScroll(scrollView(containing: elements[0], in: app), in: app, fingerDeltaY: top < visibleFrame.minY ? 72 : -72)
+            waitBriefly()
+        }
+    }
+
     func testLessonQuizHintsLightAndFullAccessibilityAudits() throws {
         try verifyLessonQuizHintsAndAudits(appearance: "light")
     }
