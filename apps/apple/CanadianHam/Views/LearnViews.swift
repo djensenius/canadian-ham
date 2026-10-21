@@ -800,6 +800,7 @@ private struct LessonQuizView: View {
                 }
                 ViewThatFits(in: .horizontal) {
                     HStack { navigationButtons }
+                        .fixedSize(horizontal: true, vertical: false)
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
                 }
                 if let submittedAttemptID, let attempt = attempts.first(where: { $0.id == submittedAttemptID }) {
