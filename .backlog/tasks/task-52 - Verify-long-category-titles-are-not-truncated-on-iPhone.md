@@ -1,11 +1,11 @@
 ---
 id: TASK-52
 title: Verify long category titles are not truncated on iPhone
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-21 15:00'
+updated_date: '2026-10-21 16:20'
 labels:
   - apple
 dependencies: []
@@ -21,7 +21,7 @@ Seen during task-44.3 work: long category titles such as 'Regulations and Polici
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every category title on iPhone wraps or fits at default and accessibility text sizes, with screenshots or a test as evidence
+- [x] #1 Every category title on iPhone wraps or fits at default and accessibility text sizes, with screenshots or a test as evidence
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -59,4 +59,12 @@ Blocked: a full CanadianHamLessonFigures plan (no only-testing selectors) occupi
 Continuation 2026-10-21: sidebar hierarchy probe passed in 37.018 s. The initial sidebar contains only upper virtualized rows; a single full swipe skips B-001/B-002 and leaves B-003 at y=-32. Exact full-title StaticText descendants are present when rows enter the hierarchy, including Station Assembly, Practice and Safety (216.7 x 42.3 pt). Visible default-size rows wrap fully in the host screenshot. Replacing only the new positioning helper's not-found swipe with a bounded slow drag; a second short probe will confirm B-001/B-003 before removing the temporary diagnostic. No app-code changes or relaxed text match.
 
 Bounded-scroll sidebar probe passed in 74.495 s: exact full-title StaticText queries found B-001 and B-003, both fully visible below the navigation bar. Host screenshots confirm Regulations and Policies fits and Station Assembly, Practice and Safety wraps to two complete lines without an ellipsis. Removed the temporary diagnostic. Final change is only bounded slow scrolling when a virtualized title does not yet exist; exact full-text/frame/height assertions remain unchanged. Committing this fix before the required four-case final run.
+
+Final validation 2026-10-21: all four cases passed with final glyph helper and exact full-title sidebar query at implementation commit 9218ddfcc35989e2538c4c6c6e6654d16762c5a6. iPhone 17 Pro / iOS 27.0 (24A434): testCategoryTitlesEnglishDefaultSize 667.752 s; testCategoryTitlesEnglishLargestAccessibilitySize 1236.626 s; testCategoryTitlesFrenchDefaultSize 682.248 s; testCategoryTitlesFrenchLargestAccessibilitySize 1356.760 s. xcresulttool confirms 4 passed, 0 failed, 0 skipped; xbuild ended XBUILD_EXIT=0. Evidence: docs/evidence/task-52/README.md, test-summary.json, per-test-results.json, all 92 final session/module measurements, eight final-run portrait images (including confirmed native Large Content Viewer) and two explicitly labelled default-sidebar probe host images. Result bundle /tmp/task-52/final-confirmed.xcresult; log /tmp/task-52/final-confirmed.log. Each case covers all 8 Basic + 7 Advanced Home/Practice cards, sessions/native labels, regular-width sidebar rows, all 8 Study cards/modules/native labels and weak areas (77 screenshots per case). AC #1 verified under the documented coordinator-approved native-navigation ellipsis exception only: complete native accessibility label and full wrapped same-screen content header remain required; cards/lists/content headers passed strict checks. No app-code or navigation-title changes; no shrinking or custom bars. Test guard self-test and diff against fetched origin/main (4c9dbc0fb260a70e669f80459e3c197c2816f785) passed with no guarded changes. Two XcodeGen runs left generated project diff empty; git diff --check passed. macOS/tvOS/visionOS/Pro Max/full suites/figures skipped because this branch only adds iOS UI tests/resources and evidence; all existing tests/audits/shared helpers unchanged. Shared lock respected; no other build interrupted. No PR opened; independent reviewer gate still required.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Verified every Basic/Advanced category title across iPhone Home, Practice, Study, weak areas and regular-width sidebar in EN/FR at default and AX-XXXL sizes. Added four strict UI tests/resources and evidence; fixed only the new evidence helper's bounded scrolling so virtualized sidebar rows are not skipped. All four final cases pass (4 passed / 0 failed / 0 skipped); guard and XcodeGen determinism checks pass. docs/evidence/task-52 contains screenshots, per-test timings and 92 final native-title measurements. Native navigation ellipses remain solely as the coordinator-approved exception with full accessibility labels and wrapped same-screen content headers. No app code changed. Ready for independent review; no PR opened.
+<!-- SECTION:FINAL_SUMMARY:END -->
