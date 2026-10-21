@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-21 15:39'
+updated_date: '2026-10-21 16:45'
 labels:
   - apple
   - web
@@ -68,4 +68,38 @@ Remaining coordinator work after the figure plan: run the single keyboard method
 2026-10-21 AC1 resume: reproduced nil focus with explicit edit interactions/defaultFocus (9e4e963a). Isolated FocusState into a key-capture modifier instantiated separately in each navigation host (8d719a99), keeping inactive-screen guards and held-key cleanup. The next unchanged iPhone regression received real Space down/up and decoded exactly T; diagnostic Focus was exam, held false. No assertions/timeouts have changed. Per coordinator direction, instrumented DEBUG hold duration/dot threshold and audio-startup timing (9e535cac), committed/pushed before detached unchanged-test rerun. Evidence under /tmp/task-41-resume-20261021T145036Z (nil), /tmp/task-41-resume-20261021T145508Z (focused/T); current numeric diagnostic run /tmp/task-41-resume-20261021T150022Z is waiting for the shared lock. Existing settings inspection: slowest character speed is 12 WPM; both fixed profiles use a 0.1s dot, so maximum existing dot/dash threshold is 0.2s. Exact E/EE/E expectations remain unchanged pending measured evidence and coordinator decision.
 
 Coordinator-approved AC1 latency fix (2026-10-21): unchanged iPhone test measured hold=0.579024076s, synchronous audio startup=0.569211006s, dot limit=0.2s. No existing timing setting gives margin, so coordinator directed fixing the real app bug, not warming from the test or changing E/EE/E. Source 687e4f39 now gives each navigation host local FocusState, records monotonic key event times first, prepares/retains a silent engine on a sending audio actor, serializes async sound commands and discards stale starts, releases with the existing fade on inactivity/playback handoff/leaving, and retains only silence across practice/exam navigation. Shared audio-session changes are locked across actors; normalization/volume and finite-element schedules are preserved. Added deterministic injected-slow-starter classification and leave-during-preparation/no-late-tone units. Hardware test adds diagnostic logging only; exact E/EE/E assertions and timeouts remain unchanged. Stop-on-first-failure runner /tmp/task-41-audio-checks.sh is queued at its macOS Morse unit step behind another lane; no build interrupted. Text-source and test-guard checks against origin/main already pass; final gates repeat after Apple results. AudioDriver target membership affects all four platforms; targeted iOS/macOS tests plus the requested localization gate (including tvOS/visionOS builds) are this iteration, with full platform suites deferred to the coordinator merge batch per policy.
+
+2026-10-21 macOS targeted MorseTrainerTests: 32/32 passed (0 failures, 0.135s test time), source 0613b992. Evidence: /tmp/task-41-audio-validation-20261021T151530Z/mac-morse.log and mac-morse.xcresult. No full suites run. Afterward, 42c86998 only makes the session-lock closure explicitly throwing to remove a macOS compile warning (no runtime behavior change); the pending localization gate will compile it on macOS and the other targets. Existing local CoreData model-version startup warning remains; no local store was reset. Per-test results:
+- testCompletedMorseCourseSessionIgnoresResubmittedAnswer — PASS (0.001 seconds)
+- testFixedTimingProfilesUseEngineValues — PASS (0.001 seconds)
+- testLessonBodyAndBulletContrastTokensMeetMinimumRatio — PASS (0.001 seconds)
+- testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp — PASS (0.001 seconds)
+- testMorseAudioSessionStaysActiveUntilLastPlayerReleases — PASS (0.001 seconds)
+- testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins — PASS (0.001 seconds)
+- testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas — PASS (0.001 seconds)
+- testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters — PASS (0.001 seconds)
+- testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone — PASS (0.002 seconds)
+- testMorseCourseProgressIgnoresStoredProgressForAnotherCourse — PASS (0.002 seconds)
+- testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition — PASS (0.001 seconds)
+- testMorseExamGeneratorMeetsReceivingExamConstraints — PASS (0.002 seconds)
+- testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime — PASS (0.001 seconds)
+- testMorsePressKeyButtonAccessibilityActionsTriggerConfiguredKeying — PASS (0.001 seconds)
+- testMorseSendingClassifiesTimingAndErrorSignal — PASS (0.001 seconds)
+- testMorseSendingKeyerClassifiesRecordedEventsWhileAudioStartupIsSuspended — PASS (0.002 seconds)
+- testMorseSendingKeyerLeavingDuringPreparationDoesNotStartALateTone — PASS (0.002 seconds)
+- testMorseSendingPendingFinalizationHelperCancelsAndClears — PASS (0.001 seconds)
+- testMorseSendingRemainingExamSecondsUsesFixedDeadline — PASS (0.001 seconds)
+- testMorseSendingScoreCountsTimeoutOnlyThroughMissingCharacters — PASS (0.001 seconds)
+- testMorseSettingsClampAndPreset — PASS (0.001 seconds)
+- testMorseSettingsCodableRoundTripPreservesOutputMode — PASS (0.001 seconds)
+- testMorseSettingsDecodesLegacyPayloadWithIsEnabled — PASS (0.001 seconds)
+- testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast — PASS (0.009 seconds)
+- testMorseSettingsRoundTripThroughUserDefaults — PASS (0.004 seconds)
+- testMorseStopDelayDrainsFadeBeforeStoppingEngine — PASS (0.001 seconds)
+- testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced — PASS (0.001 seconds)
+- testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess — PASS (0.049 seconds)
+- testReduceFlashingDecisionUsesInjectedFlags — PASS (0.001 seconds)
+- testReduceFlashingStopsOnlyRunningVisualBeacon — PASS (0.001 seconds)
+- testScheduleMorseVisualPlaybackInitialStateAndFallback — PASS (0.001 seconds)
+- testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess — PASS (0.043 seconds)
 <!-- SECTION:NOTES:END -->
