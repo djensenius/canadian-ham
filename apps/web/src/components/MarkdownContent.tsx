@@ -1,4 +1,4 @@
-import { useId, useMemo, useState, type ReactNode } from "react";
+import { Fragment, useId, useMemo, useState, type ReactNode } from "react";
 
 import { t, type InterfaceLanguage } from "../lib/i18n";
 
@@ -36,7 +36,7 @@ export function MarkdownContent({ markdown, title, interfaceLanguage = "en", con
   let headingIndex = 0;
   const blocks = useMemo(() => parseMarkdownBlocks(markdown, title), [markdown, title]);
   const headingAnchors = useMemo(() => lessonHeadingAnchorEntries(blocks), [blocks]);
-  return <>{blocks.map((block, index) => {
+  return <Fragment key={markdown}>{blocks.map((block, index) => {
     if (block.type === "table") {
       tableIndex += 1;
       return renderBlock(block, index, interfaceLanguage, contentLanguage, `${tableLabel} ${tableIndex}`);
@@ -47,7 +47,7 @@ export function MarkdownContent({ markdown, title, interfaceLanguage = "en", con
       return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel, headingId);
     }
     return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel);
-  })}</>;
+  })}</Fragment>;
 }
 
 function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string, headingId?: string): ReactNode {

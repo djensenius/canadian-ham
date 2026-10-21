@@ -98,6 +98,10 @@ it("does not retain a revealed Try-it when the lesson content changes", async ()
   const user = userEvent.setup();
   const { rerender } = render(<MarkdownContent markdown={tryItMarkdown} />);
   await user.click(screen.getByRole("button", { name: "Show answer 1" }));
+  rerender(<MarkdownContent markdown={`## Another lesson\n\n${tryItMarkdown}`} />);
+  assert.equal(screen.getByRole("button", { name: "Show answer 1" }).getAttribute("aria-expanded"), "false");
+  assert.equal(screen.queryByText("The current is 3 A."), null);
+  await user.click(screen.getByRole("button", { name: "Show answer 1" }));
   rerender(<MarkdownContent markdown={tryItMarkdown.replace("The current is 3 A.", "The current is 4 A.")} />);
   assert.equal(screen.getByRole("button", { name: "Show answer 1" }).getAttribute("aria-expanded"), "false");
   assert.equal(screen.queryByText("The current is 4 A."), null);
