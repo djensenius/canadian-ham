@@ -815,10 +815,8 @@ private struct LessonQuizView: View {
                 ) { selected in
                     state.select(selected, for: item)
                 }
-                ViewThatFits(in: .horizontal) {
-                    HStack { navigationButtons }
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
-                }
+                // Keep control identity stable as Dynamic Type changes, including in the inspector layout.
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
                 if let submittedAttemptID, let attempt = attempts.first(where: { $0.id == submittedAttemptID }) {
                     Text("Saved result: \(attempt.correct) / \(attempt.total) (\(attempt.percent, format: .number.precision(.fractionLength(0...0)))%).")
                         .font(DesignTokens.FontScale.body.weight(.bold))
