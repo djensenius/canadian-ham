@@ -96,12 +96,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertFalse(app.buttons["exam-tool-calculator-button"].exists)
         XCTAssertFalse(app.buttons["exam-tool-referenceSheet-button"].exists)
 #if os(iOS)
+        let title = app.staticTexts["QZ-L-005-01-A"].firstMatch
+        let retry = app.buttons["Retry quiz"].firstMatch
+        XCTAssertTrue(title.exists)
+        XCTAssertTrue(retry.exists)
+        XCTAssertGreaterThan(retry.frame.minX, title.frame.maxX, "The default-size quiz header keeps Retry alongside the title on iPhone and iPad")
+        XCTAssertLessThan(retry.frame.minY, title.frame.maxY, "The default-size quiz header must not stack Retry below its text on iPhone or iPad")
         if UIDevice.current.userInterfaceIdiom == .pad {
-            let title = app.staticTexts["QZ-L-005-01-A"].firstMatch
-            let retry = app.buttons["Retry quiz"].firstMatch
-            XCTAssertTrue(retry.exists)
-            XCTAssertGreaterThan(retry.frame.minX, title.frame.maxX, "The default iPad quiz header keeps Retry alongside the title")
-            XCTAssertLessThan(retry.frame.minY, title.frame.maxY, "The default iPad header must not stack Retry below its text")
             let previous = app.buttons["Previous"].firstMatch
             let next = app.buttons["Next"].firstMatch
             let submit = app.buttons["submit-lesson-quiz-button"].firstMatch

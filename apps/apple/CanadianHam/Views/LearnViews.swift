@@ -836,12 +836,14 @@ private struct LessonQuizView: View {
     }
 
     private var quizHeaderControls: some View {
-        LessonQuizControlLayout(
-            horizontalAlignment: .top,
-            verticalSpacing: DesignTokens.Spacing.md,
-            forceVertical: dynamicTypeSize.isAccessibilitySize
-        ) {
-            quizHeader.frame(maxWidth: .infinity, alignment: .leading)
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: DesignTokens.Spacing.md))
+            : AnyLayout(HStackLayout(alignment: .top))
+        return layout {
+            quizHeader
+            if !dynamicTypeSize.isAccessibilitySize {
+                Spacer()
+            }
             retryButton
         }
     }
