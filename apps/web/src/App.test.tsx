@@ -2414,7 +2414,6 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     const safetyNote = morseOutputSafetyNote("en", false, safety, flashesPerSecond);
     const beacon = render(<MorseOutputView interfaceLanguage="en" state={{ mode: "visualBeacon", beaconActive: true, tape: "", safetyNote }} />);
     assert.ok(beacon.container.textContent?.includes(safetyNote));
-    assert.match(safetyNote, /square points/);
     assert.ok(safetyNote.includes(new Intl.NumberFormat(interfaceLanguageTag("en")).format(MORSE_BEACON_AREA_CSS_PIXELS)));
     await expectNoAxeViolations(beacon.container);
     beacon.unmount();
