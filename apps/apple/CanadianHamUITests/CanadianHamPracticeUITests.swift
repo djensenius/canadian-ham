@@ -1,3 +1,4 @@
+import UIKit
 import XCTest
 
 @MainActor
@@ -1524,6 +1525,223 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollAndTap("Submit for review", in: app)
         XCTAssertTrue(app.staticTexts["Practice review"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5), "Practice review should show answer feedback after a review-later subsection session is submitted")
+    }
+
+    func testCategoryTitlesEnglishDefaultSize() throws {
+        XCUIDevice.shared.appearance = .light
+        try verifyCategoryTitles(french: false, accessibilitySize: false)
+    }
+
+    func testCategoryTitlesFrenchDefaultSize() throws {
+        XCUIDevice.shared.appearance = .light
+        try verifyCategoryTitles(french: true, accessibilitySize: false)
+    }
+
+    func testCategoryTitlesEnglishLargestAccessibilitySize() throws {
+        XCUIDevice.shared.appearance = .light
+        try verifyCategoryTitles(french: false, accessibilitySize: true)
+    }
+
+    func testCategoryTitlesFrenchLargestAccessibilitySize() throws {
+        XCUIDevice.shared.appearance = .light
+        try verifyCategoryTitles(french: true, accessibilitySize: true)
+    }
+
+    private func verifyCategoryTitles(french: Bool, accessibilitySize: Bool) throws {
+        assertCategoryTitleHeightRejectsMissingLine()
+        let language = french ? "fr" : "en"
+        let size = accessibilitySize ? "accessibility-xxxl" : "default"
+        let textLanguage = french ? "fr-CA" : "en-CA"
+        let traits = UITraitCollection(preferredContentSizeCategory: accessibilitySize ? .accessibilityExtraExtraExtraLarge : .large)
+        let bodyDescriptor = UIFont.preferredFont(forTextStyle: .body, compatibleWith: traits).fontDescriptor
+            .addingAttributes([.traits: [UIFontDescriptor.TraitKey.weight: UIFont.Weight.semibold.rawValue]])
+        let bodyFont = UIFont(descriptor: bodyDescriptor, size: 0)
+        let titleDescriptor = try XCTUnwrap(UIFont.preferredFont(forTextStyle: .title1, compatibleWith: traits).fontDescriptor.withDesign(.serif)?.withSymbolicTraits(.traitBold))
+        let titleFont = UIFont(descriptor: titleDescriptor, size: 0)
+        var arguments = ["-AppleLanguages", "(\(language))", "-AppleLocale", french ? "fr_CA" : "en_CA"]
+        // Pin both cases to the size used for the reference fonts above, so the simulator's Text Size setting can't change the metrics.
+        arguments += ["-UIPreferredContentSizeCategoryName", accessibilitySize ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL"]
+        var basicCategories: [UITestCategory] = []
+        for (bank, resource) in [("basic-2025-07-15", "categories"), ("advanced-2025-02-04", "categories-advanced")] {
+            let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: resource, withExtension: "json"))
+            let categories = try JSONDecoder().decode([UITestCategory].self, from: Data(contentsOf: url))
+            XCTAssertFalse(categories.isEmpty)
+            if resource == "categories" { basicCategories = categories }
+            let bankArguments = arguments + ["-CanadianHamCourseBankId", bank]
+            for screen in ["home", "practice"] {
+                let app = launchApp(arguments: bankArguments + ["-CanadianHamInitialScreen", screen])
+                for category in categories {
+                    let title = try XCTUnwrap(french ? category.name.fr : category.name.en)
+                    let card = app.buttons["category-\(category.id)-button"].firstMatch
+                    let text = card.staticTexts[title].firstMatch
+                    positionCategoryTitleForEvidence(text, in: app)
+                    attachScreenshot(named: "task-52-\(language)-\(size)-\(screen)-\(category.id)", from: app)
+                    XCTAssertTrue(card.label.contains(title), "Category card must expose its complete title: \(card.label)")
+                    assertFullyVisibleBelowNavigationBar(text, in: app, context: "\(language) \(size) \(screen) \(category.id)")
+                    assertCategoryTextIsUntruncated(text, title: title, font: bodyFont, languageCode: textLanguage)
+                    if screen == "practice" {
+                        text.tap()
+                        let header = app.staticTexts["practice-category-title"].firstMatch
+                        XCTAssertTrue(header.waitForExistence(timeout: 10))
+                        attachScreenshot(named: "task-52-\(language)-\(size)-session-\(category.id)", from: app)
+                        assertPracticeCategoryHeader(header, title: title, font: titleFont, languageCode: textLanguage, in: app)
+                        // Native inline titles may visually ellipsize; their VoiceOver label must remain complete.
+                        let navigationTitle = app.navigationBars.staticTexts[title].firstMatch
+                        XCTAssertTrue(navigationTitle.exists, "Native navigation must expose the full category name to VoiceOver")
+                        XCTAssertEqual(navigationTitle.label, title)
+                        XCTAssertFalse(navigationTitle.label.contains("…"))
+                        let referenceWidth = (title as NSString).size(withAttributes: [.font: UIFont.systemFont(ofSize: 17, weight: .semibold)]).width
+                        print("TASK-52-NAV|\(language)|\(size)|session|\(category.id)|\(navigationTitle.frame.width)|\(navigationTitle.frame.height)|\(referenceWidth)|\(title)")
+                        if french && accessibilitySize && category.id == "B-003" {
+                            // Write the cue immediately so a host screenshot can capture the held gesture.
+                            FileHandle.standardOutput.write(Data("TASK-52-LCV-HOLD: French B-003 native navigation title\n".utf8))
+                            navigationTitle.press(forDuration: 10)
+                            let hierarchy = XCTAttachment(string: app.debugDescription)
+                            hierarchy.name = "task-52-native-navigation-after-long-press"
+                            hierarchy.lifetime = .keepAlways
+                            add(hierarchy)
+                        }
+                        tapCompactBack(in: app)
+                    }
+                }
+                app.terminate()
+            }
+        }
+        let app = launchApp(arguments: arguments + ["-CanadianHamInitialScreen", "learn"])
+        // Curriculum order, so the evidence sweep moves down the actual Study list.
+        let moduleCategoryIDs = ["B-005", "B-004", "B-006", "B-003", "B-007", "B-008", "B-002", "B-001"]
+        for (index, id) in moduleCategoryIDs.enumerated() {
+            let title = try XCTUnwrap(basicCategories.first { $0.id == id }?.name.en)
+            let text = app.scrollViews.staticTexts[title].firstMatch
+            positionCategoryTitleForEvidence(text, in: app)
+            attachScreenshot(named: "task-52-\(language)-\(size)-study-\(id)", from: app)
+            assertFullyVisibleBelowNavigationBar(text, in: app, context: "\(language) \(size) Study \(id)")
+            assertCategoryTextIsUntruncated(text, title: title, font: UIFont.preferredFont(forTextStyle: .headline, compatibleWith: traits), languageCode: "en-CA")
+            let openModule = app.buttons.matching(NSPredicate(format: "label == %@", french ? "Ouvrir le module" : "Open module")).element(boundBy: index)
+            positionCategoryTitleForEvidence(openModule, in: app)
+            openModule.tap()
+            let header = app.scrollViews.staticTexts[title].firstMatch
+            XCTAssertTrue(header.waitForExistence(timeout: 10))
+            attachScreenshot(named: "task-52-\(language)-\(size)-module-\(id)", from: app)
+            assertFullyVisibleBelowNavigationBar(header, in: app, context: "\(language) \(size) module \(id)")
+            assertCategoryTextIsUntruncated(header, title: title, font: titleFont, languageCode: "en-CA")
+            let navigationTitle = app.navigationBars.staticTexts[title].firstMatch
+            XCTAssertEqual(navigationTitle.label, title)
+            let referenceWidth = (title as NSString).size(withAttributes: [.font: UIFont.systemFont(ofSize: 17, weight: .semibold)]).width
+            print("TASK-52-NAV|\(language)|\(size)|module|\(id)|\(navigationTitle.frame.width)|\(navigationTitle.frame.height)|\(referenceWidth)|\(title)")
+            tapCompactBack(in: app)
+        }
+        app.terminate()
+
+        let weakApp = launchApp(arguments: arguments + ["-CanadianHamInitialScreen", "practice", "-CanadianHamSeedPracticeProgressFixture", "weak-due"])
+        let weakButton = weakApp.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", french ? "Commencer les points à travailler." : "Start weak areas.")).firstMatch
+        positionCategoryTitleForEvidence(weakButton, in: weakApp)
+        weakButton.tap()
+        let weakHeader = weakApp.staticTexts["practice-category-title"].firstMatch
+        XCTAssertTrue(weakHeader.waitForExistence(timeout: 10))
+        let weakTitle = french ? "Points faibles" : "Weak areas"
+        attachScreenshot(named: "task-52-\(language)-\(size)-weak-areas", from: weakApp)
+        assertPracticeCategoryHeader(weakHeader, title: weakTitle, font: titleFont, languageCode: textLanguage, in: weakApp)
+        XCTAssertEqual(weakApp.navigationBars.staticTexts[weakTitle].firstMatch.label, weakTitle)
+        weakApp.terminate()
+
+        XCUIDevice.shared.orientation = .landscapeLeft
+        defer { XCUIDevice.shared.orientation = .portrait }
+        for (bank, resource) in [("basic-2025-07-15", "categories"), ("advanced-2025-02-04", "categories-advanced")] {
+            let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: resource, withExtension: "json"))
+            let categories = try JSONDecoder().decode([UITestCategory].self, from: Data(contentsOf: url))
+            let sidebarApp = launchApp(arguments: arguments + ["-CanadianHamCourseBankId", bank, "-CanadianHamForceRegularHorizontalSizeClass"])
+            let sidebar = sidebarApp.descendants(matching: .any)["root-sidebar"].firstMatch
+            XCTAssertTrue(sidebar.waitForExistence(timeout: 10))
+            for category in categories {
+                let title = try XCTUnwrap(french ? category.name.fr : category.name.en)
+                let text = sidebar.staticTexts[title].firstMatch
+                positionCategoryTitleForEvidence(text, in: sidebarApp, container: sidebar)
+                attachScreenshot(named: "task-52-\(language)-\(size)-sidebar-\(category.id)", from: sidebarApp)
+                assertCategoryTextIsUntruncated(text, title: title, font: bodyFont, languageCode: textLanguage)
+                XCTAssertLessThanOrEqual(text.frame.width, sidebar.frame.width, "Sidebar category text must wrap within its column")
+            }
+            sidebarApp.terminate()
+        }
+    }
+
+    private func assertPracticeCategoryHeader(_ header: XCUIElement, title: String, font: UIFont, languageCode: String, in app: XCUIApplication) {
+        XCTAssertTrue(header.label.hasPrefix(title + "."), "Expected the complete category title in the combined session header: \(header.label)")
+        // The existing combined accessibility header also includes the tally and summary. Infer only
+        // the title's bounds from its font and 16-pt content padding; screenshots verify the glyphs.
+        let padding: CGFloat = 16
+        let bounds = categoryTitleBounds(title, font: font, width: header.frame.width - padding * 2, languageCode: languageCode)
+        let titleFrame = CGRect(x: header.frame.minX + padding, y: header.frame.minY + padding, width: header.frame.width - padding * 2, height: ceil(bounds.height))
+        XCTAssertTrue(visibleFrameExcludingNavigationBar(in: app).contains(titleFrame), "Full wrapped category title must fit below the navigation bar: \(titleFrame)")
+        XCTAssertGreaterThanOrEqual(header.frame.height, titleFrame.height + padding * 2, "Header must reserve the full wrapped title height")
+    }
+
+    private func assertCategoryTextIsUntruncated(_ element: XCUIElement, title: String, font: UIFont, languageCode: String) {
+        XCTAssertEqual(element.label, title)
+        XCTAssertFalse(element.label.contains("…"))
+        let frame = element.frame
+        let bounds = categoryTitleBounds(title, font: font, width: frame.width + 1, languageCode: languageCode)
+        let minimumHeight = ceil(bounds.height)
+        XCTAssertTrue(categoryTitleHasRequiredHeight(frame.height, minimumHeight: minimumHeight), "Category text must reserve its full wrapped height: \(frame), expected at least \(minimumHeight)")
+    }
+
+    private func categoryTitleHasRequiredHeight(_ height: CGFloat, minimumHeight: CGFloat) -> Bool {
+        // The 1-pt pixel-rounding tolerance cannot hide a lost line (at least about 20 pt).
+        height + 1 >= minimumHeight
+    }
+
+    private func assertCategoryTitleHeightRejectsMissingLine() {
+        let font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        let bounds = categoryTitleBounds("Station Assembly, Practice and Safety", font: font, width: 200, languageCode: "en-CA")
+        let measuredHeight = ceil(bounds.height)
+        XCTAssertGreaterThan(measuredHeight, font.lineHeight + 1, "The known title must wrap to two lines at 200 pt")
+        XCTAssertLessThanOrEqual(measuredHeight, font.lineHeight * 2 + 1, "The fixture must measure exactly two lines")
+        XCTAssertTrue(categoryTitleHasRequiredHeight(measuredHeight, minimumHeight: measuredHeight))
+        XCTAssertFalse(categoryTitleHasRequiredHeight(measuredHeight - font.lineHeight, minimumHeight: measuredHeight), "A one-line frame must fail for the measured two-line title")
+    }
+
+    private func categoryTitleBounds(_ title: String, font: UIFont, width: CGFloat, languageCode: String) -> CGRect {
+        // French native hyphenation is confirmed on screen (e.g. "Compo-sants").
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.hyphenationFactor = languageCode == "fr-CA" ? 1 : 0
+        return (title as NSString).boundingRect(
+            with: CGSize(width: width, height: .greatestFiniteMagnitude),
+            // SwiftUI's text frame excludes outer font leading; measure the glyph/line fragments.
+            options: [.usesLineFragmentOrigin],
+            attributes: [.font: font, .paragraphStyle: paragraph, .languageIdentifier: languageCode],
+            context: nil
+        )
+    }
+
+    private func positionCategoryTitleForEvidence(_ title: XCUIElement, in app: XCUIApplication, container: XCUIElement? = nil) {
+        let scrollView = container ?? app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 10) else {
+            XCTFail("Expected a scroll container for category-title evidence")
+            return
+        }
+        for _ in 0..<30 {
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app).intersection(scrollView.frame)
+            if title.exists {
+                let frame = title.frame
+                if visibleFrame.contains(frame) { return }
+                // At AX-XXXL a wrapped sidebar title can be taller than a landscape viewport.
+                // Its full text height is checked separately; it must remain reachable by scrolling.
+                if frame.height > visibleFrame.height && frame.intersects(visibleFrame) && frame.minX >= visibleFrame.minX && frame.maxX <= visibleFrame.maxX { return }
+                let distance = visibleFrame.midY - frame.midY
+                let limit = visibleFrame.height / 2
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+                let end = start.withOffset(CGVector(dx: 0, dy: min(limit, max(-limit, distance))))
+                start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
+            } else {
+                // Sidebar rows are virtualized. A full swipe can skip a short default-size
+                // row before its exact title ever enters the accessibility hierarchy.
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+                let end = start.withOffset(CGVector(dx: 0, dy: -visibleFrame.height / 3))
+                start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
+            }
+            waitBriefly()
+        }
+        XCTFail("Could not position full category title for evidence: \(title)")
     }
 
     func testPracticeFlowSupportsLargestAccessibilityTextSize() throws {
@@ -3388,6 +3606,11 @@ private struct UITestAnswer: Decodable {
 private struct UITestLocalizedText: Decodable {
     let en: String?
     let fr: String?
+}
+
+private struct UITestCategory: Decodable {
+    let id: String
+    let name: UITestLocalizedText
 }
 
 private struct UITestLongestAnswer {

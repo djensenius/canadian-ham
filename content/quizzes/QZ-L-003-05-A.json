@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-003-05-A-C1",
       "prompt": {
-        "en": "A CW rig's carrier is steady when cold, then moves about 200 Hz upward as the cabinet warms; keying edges were already shaped. If the oscillator mounting and supply regulation are improved but the key-click filter is unchanged, what should change?",
+        "en": "A CW carrier drifts upward as the cabinet warms. Keying edges were already shaped. Only oscillator mounting and supply stability are improved. Which result is expected?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The RF note should stay nearer its starting frequency over time, while edge-click energy is about the same",
+            "en": "Less RF frequency drift; little change to the existing keying-edge spectrum.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The change targets oscillator stability. Edge shaping and harmonic suppression remain separate functions.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The key-click sidebands should disappear, while long-term carrier movement is about the same",
+            "en": "Less key-click energy; little change to the existing RF frequency drift.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Key clicks come from abrupt on-off edges. The stated work targets frequency drift, not edge shaping.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The oscillator should lose its tuning range because better stability turns a VFO into fixed crystal channels",
+            "en": "Less harmonic energy; little change to the existing RF frequency drift.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Harmonics are multiples of the RF frequency. Stabilizing that frequency does not replace harmonic filtering.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Harmonic suppression should improve automatically, so the low-pass filter becomes unnecessary",
+            "en": "Less RF frequency drift and automatic removal of existing key clicks.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Improved oscillator stability can reduce drift, but it does not automatically change the on-off envelope that causes key clicks.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Improving oscillator stability predicts less frequency movement as the rig warms. Key-click shaping and harmonic filtering are separate signal-quality controls.",
+        "en": "Frequency stability, keying-edge shaping, and harmonic filtering address different signal-quality problems. Improving one does not automatically fix the others.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-003-05-A-C2",
       "prompt": {
-        "en": "During an SSB audio check, the ALC meter is pinned and a nearby receiver hears splatter on adjacent frequencies. Which action would NOT help clean up the signal?",
+        "en": "An SSB transmitter has pinned ALC and adjacent-frequency splatter. Which adjustment sequence addresses the likely cause?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Reduce microphone gain until voice peaks stay within the recommended ALC range",
+            "en": "Raise speech processing, then lower speaker volume to judge the result.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "More processing can increase average drive and distortion. Speaker volume does not repair the transmitted waveform.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Back off speech processing and compare reports before raising it again",
+            "en": "Raise RF drive, then rely on stronger ALC action to restore waveform shape.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A pinned ALC indication already suggests excessive drive. More limiting is not a substitute for staying inside the clean range.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Increase speech processing until average output rises further",
+            "en": "Reduce microphone drive and processing, then check voice peaks and a clean-audio report.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Start with less drive and processing. Use the manufacturer's ALC guidance and a clean-signal report, not maximum meter movement.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Lower the audio drive so limiting only occurs within the manufacturer's recommended range",
+            "en": "Retune the antenna match, then restore the same high audio drive without another report.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A good match does not cure audio overdrive. Recheck transmitted quality after correcting the level.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Pinned ALC and splatter call for less drive or processing and a clean-audio report. More processing raises average output and can make the signal wider.",
+        "en": "An SSB signal needs clean linear operation, not maximum meter movement. Excess audio drive or processing can spread unwanted energy into adjacent channels.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-003-05-A-C3",
       "prompt": {
-        "en": "An 80 m voice signal is below 28 MHz, where Canadian occupied-bandwidth limits are narrow. A separate 10 m channel can accept a many-kilohertz FM signal. A station plans 3.0 kHz peak deviation with 2.7 kHz audio. Using Carson's rule first, which plan fits both cases?",
+        "en": "A station considers FM with 3.0 kHz peak deviation and 2.7 kHz audio. It must choose between 80 m with a narrow voice bandwidth limit and a suitable wider 10 m channel. Which estimate and plan fit?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Put the FM signal on 80 m because the 3.0 kHz deviation number seems close to the narrow limit",
+            "en": "3.0 kHz; use that FM setup on 80 m because deviation alone sets occupied width.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Deviation is only part of Carson's rule. Including audio and both sides gives a much wider signal.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Use SSB for 80 m and reserve that FM setup for 10 m because the estimate is about 11.4 kHz",
+            "en": "11.4 kHz; use SSB for 80 m and keep that FM setup for the wider 10 m channel.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Carson's rule gives 2 x (3.0 + 2.7) = 11.4 kHz. That wide voice signal does not fit the narrow limit below 28 MHz.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Estimate about 5.7 kHz by adding deviation and audio but forgetting to double, then use FM in the 10 m channel only because it is under 6 kHz",
+            "en": "5.7 kHz; use that FM setup on 80 m because adding deviation and audio is enough.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The sum is 5.7 kHz, but the rule doubles that sum. Omitting the factor of two understates the bandwidth.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Use the FM setup on 80 m after a clear audio report, without rechecking occupied bandwidth",
+            "en": "6.0 kHz; use that FM setup on 80 m because only twice the deviation counts.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Twice deviation leaves out the highest audio frequency. The estimate must include both terms before doubling.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "The two-step check is bandwidth first, then band choice: 2 x (3.0 + 2.7) is about 11.4 kHz. That FM voice signal exceeds the narrow occupied-bandwidth limit below 28 MHz, while SSB voice can fit there.",
+        "en": "The occupied-width estimate must come before band choice. Wide FM voice does not fit the narrow voice limits below 28 MHz.",
         "fr": null
       }
     }

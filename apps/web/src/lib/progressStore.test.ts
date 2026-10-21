@@ -1062,3 +1062,42 @@ describe("ProgressStore", () => {
     assert.deepEqual(await store.getPreferences(), defaultPreferences);
   });
 });
+
+describe("lesson-quiz answeredWithHelpIds", () => {
+  const fixture = JSON.parse(readFileSync(path.resolve(import.meta.dirname, "../../../../fixtures/lesson-quiz-help.json"), "utf8")) as {
+    attempt: LessonQuizAttempt; validHelpIds: string[][]; invalidHelpIds: unknown[];
+  };
+  it("round trips old and helped attempts through IndexedDB, export/import and sync rows", async () => {
+    for (const ids of [undefined, ...fixture.validHelpIds]) {
+      const attempt = { ...fixture.attempt, ...(ids === undefined ? {} : { answeredWithHelpIds: ids }) };
+      const rows: ProgressSyncDeviceRows = { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: 2, attempt }], morseCourseProgress: [] };
+      const data = validExport({ lessonIdVersion: 2, lessonQuizAttempts: [attempt], syncDeviceRows: rows });
+      const result = validateProgressImport(data);
+      assert.equal(result.ok, true, result.errors.join("\n"));
+      const store = createStore(`quiz-help-${ids?.length ?? "legacy"}`);
+      await store.importData(data);
+      assert.deepEqual(await store.getLessonQuizAttempts(), [attempt]);
+      const exported = await store.exportData("2026-01-02T05:00:00.000Z");
+      assert.deepEqual(exported.lessonQuizAttempts, [attempt]);
+      assert.deepEqual(exported.syncDeviceRows?.lessonQuizAttempts, rows.lessonQuizAttempts);
+      assert.equal(validateProgressImport(JSON.parse(JSON.stringify(exported))).ok, true);
+    }
+  });
+  it("rejects unsorted, duplicate, unknown and concept IDs in both import and sync attempts", () => {
+    for (const ids of fixture.invalidHelpIds) {
+      const attempt = { ...fixture.attempt, answeredWithHelpIds: ids } as LessonQuizAttempt;
+      for (const data of [validExport({ lessonQuizAttempts: [attempt] }), validExport({ syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", attempt }], morseCourseProgress: [] } })]) {
+        const result = validateProgressImport(data);
+        assert.equal(result.ok, false);
+        assert(result.errors.some((error) => error.includes("answeredWithHelpIds")));
+      }
+    }
+  });
+  it("preserves bank help IDs across lesson-ID migration and filters split attempts to their membership", () => {
+    const legacy: LessonQuizAttempt = { ...fixture.attempt, quizId: "QZ-L-005-04-A", lessonId: "L-005-04", officialQuestionIds: ["B-005-007-001", "B-005-009-003"], incorrectOfficialQuestionIds: ["B-005-009-003"], answeredWithHelpIds: ["B-005-007-001", "B-005-009-003"] };
+    const migrated = migrateLessonQuizAttempts([legacy]);
+    assert.equal(migrated.length, 2);
+    assert.deepEqual(migrated.map((attempt) => attempt.answeredWithHelpIds), [["B-005-007-001"], ["B-005-009-003"]]);
+    assert.deepEqual(migrateLessonQuizAttempts([fixture.attempt]), [fixture.attempt]);
+  });
+});

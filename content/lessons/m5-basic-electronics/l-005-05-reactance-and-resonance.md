@@ -63,6 +63,22 @@ Equal parts often make the pattern easier to see.
 - Answer: 14 mH, 9 mH, 16.5 µF, and 94 µF.
 - Sanity check: the capacitor series answer is smaller than either capacitor, while the capacitor parallel answer is larger.
 
+### Faded practice: finish equal reactive parts
+
+Use the ideal combination rules, with negligible magnetic coupling between coils.
+
+- Given: three 15 mH inductors in series; a separate pair of 22 µF capacitors in series.
+- Find: total inductance and total capacitance.
+- Formula: series inductors add; equal series capacitors use Ct = C / count.
+- Complete: Lt = 15 + ___ + ___ = ___ mH; Ct = 22 / ___ = ___ µF.
+- Sanity check: Did the coil total rise while the capacitor total fell?
+
+Fill the gaps before checking below.
+
+### Check your work: finish equal reactive parts
+
+Lt = 45 mH and Ct = 11 µF. These rules describe the ideal parts, not frequency-independent reactance.
+
 ## What sets inductance and capacitance?
 
 For an air-core coil, inductance depends mainly on the coil's size, its winding count, and its shape. Changing the diameter, length, or turn count changes the magnetic field. That changes the inductance.
@@ -133,11 +149,21 @@ This is the same idea as choosing one conversation from a crowded room. The circ
 
 ## Try it
 
-1. If frequency increases, what happens to inductive reactance? It increases.
-2. If frequency increases, what happens to capacitive reactance? It decreases.
-3. Two equal capacitors are connected in parallel. Does the total capacitance get larger or smaller? It gets larger.
-4. Which kind of tuned circuit has low impedance at resonance, series or parallel? A series tuned circuit.
-5. If a coil-and-capacitor tuned circuit needs a lower resonant frequency, what change could move it that way? More inductance or more capacitance lowers the resonant frequency.
+Try these before reading the feedback below.
+
+1. As frequency rises, how does inductive reactance change?
+2. As frequency rises, how does capacitive reactance change?
+3. What happens to total capacitance when equal capacitors are placed in parallel?
+4. Which tuned-circuit arrangement has low impedance at resonance?
+5. Which L or C change lowers the resonant frequency of a tuned circuit?
+
+### Try-it feedback
+
+1. Inductive reactance increases.
+2. Capacitive reactance decreases.
+3. Total capacitance increases.
+4. A series tuned circuit has low impedance at resonance.
+5. More inductance or more capacitance lowers resonant frequency.
 
 ## Radio connection
 

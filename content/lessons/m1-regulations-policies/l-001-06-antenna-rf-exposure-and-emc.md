@@ -27,59 +27,68 @@ status: draft
 ---
 # Antenna consultation, RF exposure, and EMC
 
-Antenna projects are visible, RF fields are invisible, and interference complaints can become emotional. A responsible station owner considers neighbours, land-use authorities, people near antennas, and affected electronic equipment.
+One antenna project needs three separate checks: follow the siting process, protect people from excessive RF exposure, and assess interference at affected equipment. Passing one check does not settle the other two.
 
-This lesson states verified reference facts. Use it for the exam and for careful habits. For a real installation or RF exposure evaluation, consult current ISED and Health Canada material.
+For a real installation, use current ISED and Health Canada guidance. These reference facts explain the responsibilities and distinctions you need to study.
 
 ## Learning objectives
 
 By the end of this lesson, you can:
 
-- identify who decides antenna-siting consultation questions;
-- describe the ISED default consultation steps and local-process exclusions;
-- explain why the RF exposure code uses different limits by frequency and setting;
-- name the RF exposure factors and quantities in the reference tables; and
-- apply EMCAB-2 field-strength and equipment-category facts for interference complaints.
+- find the applicable antenna-consultation process or exclusion;
+- describe the default notice, concern and response steps;
+- distinguish exposure limits from transmitter power;
+- explain controlled and uncontrolled environments; and
+- compare interference field strength with the criterion for the affected equipment.
 
-## Reference facts: Antenna siting and public consultation
+## Reference facts: Follow the applicable consultation process
 
-| Topic | Fact established for this lesson |
-|---|---|
-| Installation or modification of an antenna structure | Consultation duties can apply to antenna structures. |
-| Antenna installations, including masts and towers | Authority rests with the Minister of Innovation, Science and Industry. |
-| ISED-defined exclusion criterion | An exclusion can remove the requirement to contact land-use authorities to determine public consultation requirements. |
-| No local land-use approval process | Follow ISED's default public consultation process. |
-| ISED default-process elements | Provide written notice, address relevant questions, comments, and concerns, and give the public an opportunity to respond to the measures taken. |
-| ISED default-process concerns | Address reasonable and relevant concerns provided in writing within the 30-day public comment period. |
-| Municipality with a consultation process | Exclusion by the municipal process OR by CPC-2-0-03 can remove the public-consultation requirement. |
-| Proponent and non-public stakeholder fail to agree | ISED makes the final decision. |
-| Tallest structure without public consultation | The tallest exempted by the land-use authority or ISED. |
-| Local process exists | The municipality or local land-use authority determines how public consultation should take place. |
+The local land-use authority may have its own consultation process. CPC-2-0-03 is ISED's antenna-siting procedure. Check both the applicable process and exclusions before deciding what consultation is required.
 
-## Reference facts: Safety Code 6 and RF exposure
+| Siting check | Rule | Why |
+|---|---|---|
+| Installing or changing an antenna structure | Consultation duties may apply. | A structure's size alone does not settle the duty. |
+| Federal authority | Antenna installations, masts and towers fall under the authority of the Minister of Innovation, Science and Industry. | Local consultation sits within the federal framework. |
+| ISED exclusion | An applicable ISED exclusion can remove the need to contact the land-use authority about public consultation requirements. | Check the exclusion before choosing a process. |
+| Local process exists | The municipality or land-use authority determines how public consultation takes place. | Start with the process for the installation's location. |
+| Exclusions where a local process exists | An exclusion in that process or in CPC-2-0-03 can remove the public-consultation duty. | Either source can provide an applicable exclusion. |
+| No local approval process | Use ISED's default public-consultation process. | Absence of a local process is not permission to omit consultation. |
+| Default process steps | Give written notice, address relevant questions and concerns, and allow public responses to the measures taken. | Consultation includes listening and responding. |
+| Default public comment period | Address reasonable, relevant concerns submitted in writing within 30 days. | Timing, relevance and written form belong together. |
+| Height without public consultation | Use the tallest structure exempted by the land-use authority or ISED. | There is no single height answer for every site. |
+| Unresolved disagreement with a non-public stakeholder | ISED makes the final decision. | The proponent cannot settle this simply by proceeding. |
 
-| Topic | Fact established for this lesson |
-|---|---|
-| Organization publishing guidelines for maximum RF energy near the human body | Health Canada. |
-| Purpose of Safety Code 6 | Gives RF exposure limits for the human body. |
-| Greatest RF-energy risk range | 48 MHz to 300 MHz. |
-| Reason for the lowest exposure limit in that range | The human body absorbs RF energy the most in this range. |
-| Maximum safe power output to the antenna of a hand-held VHF or UHF radio | No specified value. |
-| Basic exposure situations | Controlled and uncontrolled environments; uncontrolled areas include the general public and have lower public limits. |
-| Other established adverse effect below 10 MHz | Nerve stimulation. |
-| Hand-held transmitters | Included in Safety Code 6 requirements. |
-| Transmitter exemptions | No transmitters are exempt. |
-| Exposure quantities | Safety Code 6 uses exposure quantities such as fields, currents, and absorption rate. |
-| Exposure factors | Antenna gain, distance, transmitter power, and frequency. |
+## Reference facts: Protect people by assessing exposure
 
-## Reference facts: EMCAB-2 interference criteria
+Health Canada's Safety Code 6 sets human RF exposure limits. A transmitter's rated output is only one input to the assessment; gain, distance and frequency also affect exposure.
 
-| Topic | Fact established for this lesson |
-|---|---|
-| Stereo-system complaint | Lack of immunity is the cause when field strength at the neighbour's premises is below ISED's specified immunity criteria. |
-| Television-receiver complaint | The amateur transmission is the cause when field strength at the neighbour's premises is above ISED's specified immunity criteria. |
-| Home-entertainment devices outside the strict radio-apparatus category | Associated equipment, such as audio or video recorders, playback devices, and amplifiers used with radio apparatus. |
-| Garage door opener affected by transmissions | Radio-sensitive equipment, meaning other non-radio electronic equipment whose function can be affected by radio emissions. |
+A controlled environment has assessed RF fields and people who understand the potential exposure and can control or reduce it. An uncontrolled environment includes the general public, who may not have that knowledge or control.
+
+| Exposure check | Rule | Why |
+|---|---|---|
+| Publisher and purpose | Health Canada publishes Safety Code 6 to limit human exposure to RF energy. | Use the human-exposure framework, not a transmitter rating. |
+| 48 MHz to 300 MHz | Safety Code 6 treats this as the greatest-risk range, with the lowest exposure limits because body absorption is strongest. | Frequency changes how strongly the body absorbs RF. |
+| Below 10 MHz | Nerve stimulation is another established adverse effect, apart from absorption. | Heating is not the only effect addressed. |
+| Controlled and uncontrolled settings | The code covers both; uncontrolled settings have lower public limits. | Public exposure needs protection without relying on trained control. |
+| Hand-held radios and other transmitters | Every transmitter type is included; hand-held transmitters are not exempt. | Small size does not remove the exposure duty. |
+| A hand-held VHF/UHF radio | There is no single specified maximum safe power fed to its antenna. | Power alone cannot describe a person's exposure. |
+| Limit quantities | Limits use quantities such as fields, currents and specific absorption rate. | These describe exposure of people, not just watts at a connector. |
+| Assessment inputs | Account for antenna gain, distance, transmitter power and frequency. | The antenna and the person's location affect the result. |
+
+A human body is roughly resonant in the VHF range. At 80 MHz, a half-wavelength is about 1.9 m, near an adult's body length. That helps explain stronger whole-body absorption; it is not a complete exposure model.
+
+## Reference facts: Investigate interference at the affected equipment
+
+Electromagnetic compatibility (EMC) means equipment keeps working in its radio environment. Electromagnetic Compatibility Advisory Bulletin 2 (EMCAB-2) compares the field at the affected premises with ISED's immunity criterion for that equipment. Immunity means the equipment's ability to keep working in that field.
+
+| Complaint or equipment | Rule | Why |
+|---|---|---|
+| Stereo malfunction, field below the criterion at the neighbour's premises | EMCAB-2 attributes the problem to the stereo's lack of immunity. | Compare the field where the affected device is located. |
+| Television malfunction, field above the criterion at the neighbour's premises | EMCAB-2 attributes the problem to the amateur transmission. | Being within a power ceiling does not by itself settle this comparison. |
+| Home-entertainment equipment used with radio apparatus | Recorders, playback devices and amplifiers are associated equipment. | They support the radio system without being radio apparatus themselves. |
+| A garage door opener | Use the radio-sensitive equipment category: other non-radio electronics whose operation can be affected by radio emissions. | Choose the category before choosing its field-strength criterion. |
+
+The Radiocommunication Act's radio-sensitive equipment definition excludes radio apparatus. Keep the EMCAB-2 categories for broadcast receivers, associated equipment and other non-radio electronics separate when selecting a criterion.
 
 ::figure antenna-rf-emc-checklists
 Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.
@@ -91,43 +100,27 @@ Text equivalent:
 
 ## How these rules fit together
 
-Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. CPC-2-0-03 is ISED's antenna-siting procedure, and an exclusion can come from that procedure or from the local process. If there is no local approval process, the ISED default process is the relevant path.
+Consultation is a process check. Exposure is a people check. EMC is an equipment check. An exclusion from consultation does not exclude an exposure assessment, and a safe exposure result does not diagnose an interference complaint.
 
-Use the timeliness and relevance criteria in the table when responding to written concerns in the default process. The tallest structure that avoids public consultation is the tallest one exempted by the land-use authority or ISED, so check the applicable exemption instead of using one universal height. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
+For consultation, identify the local process or ISED default and any applicable exclusion. For exposure, consider both the station system and where people can be. For interference, identify the device category and compare field strength at the affected premises with the matching criterion.
 
-The exposure rows describe human RF exposure. A controlled environment is one where RF fields are assessed, and the people there are aware of the potential exposure and can control or reduce it, such as trained operators or workers. An uncontrolled environment covers everyone else, including the general public, so its limits are lower.
-
-The VHF range named in the table matters because a human body is roughly resonant there. At 80 MHz, one half-wavelength is about 1.9 m, which is close to adult body length, so whole-body absorption can be stronger. At the low-frequency range named in the table, RF current can stimulate nerves, so the exposure code also treats nerve stimulation as an established effect.
-
-Transmitter power matters as one factor among gain, distance, and frequency. Hand-held transmitters are still included, and no transmitter category is exempt from the RF exposure check.
-
-Electromagnetic compatibility means equipment keeps working in its radio environment. Electromagnetic Compatibility Advisory Bulletin 2 (EMCAB-2) rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category.
-
-The Radiocommunication Act definition of radio-sensitive equipment excludes radio apparatus. EMCAB-2 therefore separates broadcast receivers and associated home-entertainment equipment from other non-radio electronic equipment, such as the garage-door example.
+The M1 numbers board in L-001-01 keeps the public comment period separate from address reporting. It also lists the absorption range; the exposure table here supplies its meaning and conditions.
 
 ## Radio connection
 
-### In the real world: three folders for one station change
+### In the real world: three records for one change
 
-A useful installation file has three parts. One part tracks the antenna consultation path. One records RF exposure inputs such as power, gain, distance, and frequency. One records interference contacts, field-strength information if available, and equipment categories.
+Keep a consultation record, an exposure assessment and an interference record. Note the mast position, antenna height, feedline route and places people can reach. Record relevant contacts, measurement information and changes made during an investigation.
 
-Tie that file to the hardware. Note the mast or tower location, feedline route, antenna height, places where people can stand, and any station changes made during an interference investigation.
-
-Those notes do not replace the rules. They help the station owner show what was checked, who was contacted, what changed, and why.
-
-These rules connect directly to station design. A tidy antenna installation is easier to discuss with neighbours. A station layout that keeps people away from radiating elements is easier to operate responsibly. A clean transmitter, good feedline, and proper filtering help the technical side of that responsibility.
-
-## Summary
-
-- Antenna installation and modification can involve ISED procedures, local land-use processes, exclusions, and responsible handling of community concerns.
-- The ISED default process uses written notice, written concern handling, and a public reply opportunity.
-- Safety Code 6 uses lower limits where body absorption is stronger or where the public is in an uncontrolled environment.
-- Exposure checks combine antenna gain, distance, transmitter power, frequency, and all transmitter types, including hand-held radios.
-- Safety Code 6 limits are expressed as fields, currents, and specific absorption rate; transmitter power is an exposure factor.
-- EMCAB-2 cause decisions use field strength at the affected premises relative to ISED immunity criteria, plus the relevant equipment category.
+These records help show what you checked and why. They do not replace consultation, exposure limits or the technical work needed to keep a clean signal.
 
 ## Illustration brief
 
 Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.
 
 Description: Draw three panels. Panel one shows a house, a mast, a neighbour, and a folder labelled "consultation path." Panel two shows a person standing outside a marked antenna area with callouts for power, gain, distance, and frequency. Panel three shows a transmitter, a field-strength meter symbol at a neighbour's premises, and two labelled devices: home entertainment gear and an affected control device. Keep all text original.
+
+
+## Summary
+
+Check process, people and equipment separately. Use the applicable consultation path, assess exposure rather than guessing from transmitter power, and investigate interference at the affected device. A responsible installation needs all three checks.

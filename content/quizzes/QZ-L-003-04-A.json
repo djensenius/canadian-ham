@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-04-A-C1",
-      "prompt": { "en": "A three-element Yagi is pointed forward from left to right, and the feedline is attached to the centre element. Which rear-to-front order is consistent with that description?", "fr": null },
+      "prompt": {
+        "en": "A simple three-element Yagi points from left to right. The feedline is on the centre element. Which order fits its RF roles, from rear to front?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Short director, fed driven element, long reflector", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Long reflector, fed driven element, short director", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Fed driven element, long reflector, short director", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Long director, fed driven element, short reflector", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Short director, fed driven element, long reflector.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This reverses the main direction: the shorter director belongs at the front, not behind the fed element.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Long reflector, fed driven element, short director.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The longer reflector is behind the fed driven element; the shorter director is forward.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Fed driven element, long reflector, short director.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The description puts the feedline on the centre element, so the driven element cannot be the rear element here.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Long director, fed driven element, short reflector.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The element names are swapped. The long rear element is the reflector; the short front element is the director.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "For a simple Yagi, the reflector is the longer rear element, the driven element is fed in the middle, and the shorter director is forward.", "fr": null }
+      "explanation": {
+        "en": "A simple Yagi directs its main beam toward the shorter director. The fed driven element lies between that director and the longer rear reflector.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-04-A-C2",
-      "prompt": { "en": "Which statement is NOT true when comparing common receiver performance controls and specifications?", "fr": null },
+      "prompt": {
+        "en": "A nearby signal remains audible beside a wanted CW signal even though AGC keeps loudness steady. Which change most directly improves separation?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "A weak-signal input number is meaningful only with a stated signal-to-noise target", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A narrow IF filter can reject nearby signals but may remove information if made too narrow", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Strong-signal overload behavior matters when weak and strong signals arrive together", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Turning on AGC replaces IF filtering, so nearby signals no longer need to be rejected", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "Set a faster AGC response while keeping the same passband.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "AGC manages gain as strength varies. It does not narrow the frequency range reaching the detector.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Raise audio volume while keeping both signals in the passband.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Audio volume raises what is already present, including the interfering signal. It does not separate the frequencies.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use a wider IF filter to give the detector more signal.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A wider filter admits more nearby spectrum. It is the opposite of the needed selectivity change.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use a narrower filter that still passes the wanted CW signal.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Suitable filter width rejects nearby frequencies while retaining the wanted signal. AGC and selectivity do different jobs.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "AGC reduces volume swings as signal strength changes; it does not widen or narrow the IF filter and cannot replace selectivity.", "fr": null }
+      "explanation": {
+        "en": "AGC regulates level as strength changes. Selectivity determines which nearby frequencies pass through to detection.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-04-A-C3",
-      "prompt": { "en": "A waterfall shows two nearby traces, but the receiver audio blends them into one rough sound. Which conclusion best connects the display to the receiver settings?", "fr": null },
+      "prompt": {
+        "en": "A waterfall shows two close traces. The receiver audio blends them into a rough sound. Which next step best uses that display?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The display can reveal separate frequencies; the receiver still needs suitable selectivity to isolate one in the audio", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Increase the display contrast until one trace fades, because the receiver passband narrows with the screen setting", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Tune halfway between the traces, because the detector will separate them into two audio channels", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Use AGC to make both traces equal brightness, because equal levels replace the need for IF selectivity", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Tune to the wanted trace and select a filter narrow enough to separate it.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The display locates the signals. Tuning and suitable selectivity determine which reaches the recovered audio.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Lower display contrast until the weaker trace fades, keeping the audio passband.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Display contrast changes what you see. It does not narrow the receive passband.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Tune halfway between the traces, keeping both inside a wide passband.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Keeping both signals inside the passband still sends both to the detector. Centre on the wanted one with suitable filtering.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Reduce AF gain until the unwanted trace is quiet, keeping both inside the passband.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "AF gain changes audio level after reception. It lowers both signals instead of separating their frequencies.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A waterfall helps the operator see signal positions, but it is not the receiver's selectivity. Suitable filtering is still needed to separate close signals in the recovered audio.", "fr": null }
+      "explanation": {
+        "en": "The waterfall helps locate signals, while receive tuning and filter width determine which of them become audio.",
+        "fr": null
+      }
     }
   ]
 }

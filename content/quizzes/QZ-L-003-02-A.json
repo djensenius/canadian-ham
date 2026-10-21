@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-02-A-C1",
-      "prompt": { "en": "A signal tracer finds the selected IF signal at the product detector input of an SSB/CW receiver, but nothing reaches the speaker. Which diagnostic plan best uses the block diagram?", "fr": null },
+      "prompt": {
+        "en": "A tracer finds the selected IF signal at an SSB receiver product-detector input, but no sound reaches the speaker. Where should the next checks be concentrated?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Start at the product detector, BFO, and audio path, because the selected IF signal has already arrived there", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Start by replacing the antenna, because a present IF signal proves the front end has failed", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Retune the final amplifier, because received audio is created by the transmitter output stage", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Bypass the IF filter first, because silence at the speaker means too much nearby spectrum is present", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "At the BFO, product detector, and following audio path.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The wanted IF has reached the detector. Check the reference signal needed for detection and the path that carries recovered audio.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "At the antenna connector, before checking any later receive blocks.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A useful IF signal has already passed through the upstream path. Start near the last confirmed signal rather than replacing the antenna first.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "At the local oscillator tuning, because every silent speaker means a wrong IF.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The selected IF is already present at the detector. Check its recovery into audio before assuming a tuning fault.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "At the IF bandwidth control, widening it before checking audio recovery.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A wider filter can admit more signals and noise. It does not supply a missing BFO or repair a silent audio stage.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A selected IF signal at the detector input means the upstream receive path has already done much of its job. Silence points the troubleshooting to the product detector, BFO, AF amplifier, speaker, or their connections.", "fr": null }
+      "explanation": {
+        "en": "Trace from the last confirmed signal toward the output. A product detector also needs its BFO reference before the audio chain can reproduce sound.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-02-A-C2",
-      "prompt": { "en": "An SSB exciter has a filtered signal at 9.000 MHz and a 5.250 MHz VFO. A following band-pass network accepts 14.0 to 14.35 MHz and rejects the lower HF band. Which mixer product should be kept?", "fr": null },
+      "prompt": {
+        "en": "An SSB exciter mixes a filtered 9.000 MHz signal with a 5.250 MHz VFO. The following network passes 14.0 to 14.35 MHz. Which frequency should it select?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "14.250 MHz sum product; it lands in the accepted 20 m range", "fr": null }, "isCorrect": true },
-        { "text": { "en": "3.750 MHz difference product; it is the one inside the accepted range", "fr": null }, "isCorrect": false },
-        { "text": { "en": "9.000 MHz original filtered signal; mixing should leave the VFO unused", "fr": null }, "isCorrect": false },
-        { "text": { "en": "5.250 MHz VFO signal; the sideband information is no longer needed", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "14.250 MHz",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The sum product is 9.000 + 5.250 = 14.250 MHz, within the stated passband.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "3.750 MHz",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This is the difference product. It is a mixer output, but outside this network's passband.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "9.000 MHz",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This is the original filtered signal before translation. It is outside the following passband.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "5.250 MHz",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This is the VFO signal alone, not the wanted translated sideband. It is also outside the passband.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The mixer produces sum and difference products. The sum is 9.000 MHz + 5.250 MHz = 14.250 MHz, which is inside the stated 14.0 to 14.35 MHz pass range; the 3.750 MHz difference is rejected.", "fr": null }
+      "explanation": {
+        "en": "The mixer supplies sum and difference products. The following filter chooses the wanted translated sideband in its stated range.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-02-A-C3",
-      "prompt": { "en": "A CW note slides upward during a dash, and an SSB training transmitter's VFO drifts 120 Hz upward after its sideband has been formed. Which prediction is most consistent with the block diagrams?", "fr": null },
+      "prompt": {
+        "en": "A CW oscillator drifts upward during a dash. In a separate SSB exciter, a VFO rises 120 Hz after the sideband is formed; the sum product is selected. What is expected?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The CW pitch heard by others can slide, and the SSB signal moves 120 Hz higher while carrying the same voice information", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Only the CW pitch changes; the SSB RF output stays fixed because the sideband filter locks the channel", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The CW pitch is fixed by the key, and the SSB drift is removed by the microphone speech amplifier", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Both transmitters keep the same RF frequency; drift can only change recovered audio loudness", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The CW note can slide; the SSB signal shifts 120 Hz upward with the same voice information.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Oscillator drift moves the RF frequency. The SSB mixer translates the already-formed sideband, so the message stays intact but its RF position moves.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The CW note can slide; the SSB filter holds the final RF frequency fixed despite the later VFO drift.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The sideband filter acts before the drifting VFO and mixer. It cannot lock the later translated output frequency.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The key timing holds the CW pitch fixed; the SSB signal shifts 120 Hz upward.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The key controls carrier amplitude and timing. It does not hold a drifting oscillator frequency fixed.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The CW note can slide; the SSB RF stays fixed while only its audio level changes.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Changing the VFO changes the mixer sum frequency. It is not an audio-gain adjustment.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Frequency drift changes the RF frequency being transmitted. In CW that can be heard as a sliding received tone; in the SSB transmitter the already-formed voice sideband is shifted slightly in RF frequency, not rewritten as a different message.", "fr": null }
+      "explanation": {
+        "en": "Keying controls amplitude; oscillator drift changes frequency. A later SSB mixer moves the already-formed sideband when its VFO moves.",
+        "fr": null
+      }
     }
   ]
 }

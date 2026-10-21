@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-03-A-C1",
-      "prompt": { "en": "A digital-mode program's input level meter shows clipping because the interface input is being overdriven, but the RF signal on the air is normal. Which change is most likely to help decoding?", "fr": null },
+      "prompt": {
+        "en": "The receive-input meter in digital-mode software clips because the audio interface is overdriven. The incoming RF signal is normal. Which adjustment targets the fault?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Reduce the receiver-audio or interface input level before software samples it", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Raise the AF output further so the clipped waveform fills more of the sound-card range", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Adjust the push-to-talk control line because receive clipping is caused by transmit switching", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Change the transmit playback level because receive clipping is fixed on the transmit-audio path", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Reduce receiver-audio or interface input level before sampling.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The excessive level is on the receive-audio path before conversion. Reduce it there so peaks fit the sampling range.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Increase receiver-audio level to fill the converter range more fully.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The peaks already exceed the input range. More audio drive makes clipping worse.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Reduce computer transmit-playback level before the radio audio input.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Playback is the opposite audio direction. It does not reduce the receive-input level.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Change push-to-talk timing so the software samples later.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Push-to-talk controls transmit switching, not the amplitude range of receive samples.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "This is receive-audio level trouble at the interface input. Reducing the audio before conversion keeps the samples from clipping; raising AF level makes clipping worse, PTT only switches transmit/receive, and transmit playback level is the opposite audio direction.", "fr": null }
+      "explanation": {
+        "en": "Receive and transmit audio are separate directions. Fix clipping before the overloaded receive converter rather than adjusting transmit controls.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-03-A-C2",
-      "prompt": { "en": "A regulator has 19 V input, 13.8 V output, and 3 A load. The installed heat sink is rated for about 10 W in this exercise. What decision follows?", "fr": null },
+      "prompt": {
+        "en": "A linear regulator has 19 V input, 13.8 V output, and a 3 A load. The exercise heat sink can handle 10 W. Which heat estimate and decision fit?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "It must handle about 15.6 W, so the stated 10 W heat sink is not enough", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It must handle about 5.2 W, so the 10 W heat sink has plenty of margin", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It must handle about 13.8 W, because only output voltage makes heat", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It must handle about 57 W, because input voltage is multiplied by load current", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "15.6 W; the stated heat sink is too small.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The regulator drops 5.2 V. At 3 A, 5.2 x 3 = 15.6 W becomes heat, above the exercise rating.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "5.2 W; the stated heat sink has margin.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "5.2 is the voltage drop in volts, not heat in watts. Multiply it by the load current.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "41.4 W; the stated heat sink is too small.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "13.8 x 3 = 41.4 W is delivered to the load. Regulator heat comes from the voltage dropped across the regulator.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "57 W; the stated heat sink is too small.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "19 x 3 = 57 W is input power. Subtract the output power, or multiply current by the regulator voltage drop.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The regulator drops 19 V - 13.8 V = 5.2 V. At 3 A that is 5.2 V x 3 A = 15.6 W, which exceeds the stated 10 W heat-sink capacity for this exercise.", "fr": null }
+      "explanation": {
+        "en": "Linear-regulator heat is input-output voltage difference times current. Input power and useful load power are different quantities.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-03-A-C3",
-      "prompt": { "en": "Spot the error in this safety plan for a qualified technician preparing to troubleshoot ripple in a mains-powered linear supply.", "fr": null },
+      "prompt": {
+        "en": "A qualified technician has unplugged a linear supply before internal service. Which next plan accounts for stored capacitor energy?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Unplug the supply and follow the service procedure before handling internal parts", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Verify stored capacitor voltage with a meter after the discharge step", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Wait for the bleeder resistor, then begin work without a discharge tool or meter check", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Use a controlled discharge step instead of a screwdriver short", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Use the dark power lamp as the indication that internal work can begin.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The lamp can be off while capacitors remain charged. It is not a stored-voltage measurement.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Wait for the bleeder resistor, then begin once the case has cooled.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A bleeder may fail, and a cool case does not show capacitor voltage. Controlled discharge and verification are still needed.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Follow controlled discharge procedures, then verify capacitor voltage with a meter.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Unplugging removes the source, not necessarily stored charge. Qualified service follows the specified discharge procedure and verifies the result.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Open the interlocked cover and use the open switch as proof of discharge.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An interlock removes a power path. It does not prove stored energy is gone.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A bleeder can fail or take longer than expected. Safe service uses de-energizing, controlled discharge, meter verification, and qualified procedures.", "fr": null }
+      "explanation": {
+        "en": "Removing input power and removing stored energy are separate safety steps. An indicator or interlock does not replace controlled discharge and verification.",
+        "fr": null
+      }
     }
   ]
 }

@@ -16,6 +16,7 @@
 		0AC69A16CC0A913D051094F7 /* PlatformHintPanelSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */; };
 		0B481C38251FAE9490A00C29 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		0CC2A80AA55592C499041495 /* PlatformLessonMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDB66EC2C530873730DEE2A /* PlatformLessonMarkdownView.swift */; };
+		0DD9162DBD0D0F0D028D0939 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 14A9B5491781DCE16B2A7EA4 /* categories.json */; };
 		10FA036510A648A0BD33F258 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CEF53E707EFDB7074F0A99 /* Assets.xcassets */; };
 		15DF729E9580619EDE8400FF /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		1A532FBCB03EEDAB5AD727F0 /* StudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0390C2BF7D07DEAD8A246557 /* StudyViews.swift */; };
@@ -137,6 +138,7 @@
 		B5AD43BEDB6E39F3768DC085 /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
+		BDA1A66DD8DC830BCFE19678 /* categories-advanced.json in Resources */ = {isa = PBXBuildFile; fileRef = 478E222D59BA4BFF3E6CBD54 /* categories-advanced.json */; };
 		C11811604AA55578350262B5 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
 		C35F4DB3660A226431C7A5B4 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
 		C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */; };
@@ -222,6 +224,7 @@
 		119AECAEDB885D3C3A535950 /* CanadianHamVision.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1384BDF3C806AC3EEC29FB6C /* CanadianHam.macOS.CloudKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.CloudKit.entitlements; sourceTree = "<group>"; };
 		140A13D95FE054984DF26281 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		14A9B5491781DCE16B2A7EA4 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
 		19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationCatalogTests.swift; sourceTree = "<group>"; };
 		1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
 		21AA88F601A0455484A38F9D /* MorseCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseCourseView.swift; sourceTree = "<group>"; };
@@ -238,6 +241,7 @@
 		3E31A65DF43C45C6F15475C7 /* LearnViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnViews.swift; sourceTree = "<group>"; };
 		40DB3982B264049F7F9EF053 /* RootNavigationMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationMapping.swift; sourceTree = "<group>"; };
 		41444275857B5CF1758CE3B6 /* CanadianHamPracticeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamPracticeUITests.swift; sourceTree = "<group>"; };
+		478E222D59BA4BFF3E6CBD54 /* categories-advanced.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "categories-advanced.json"; sourceTree = "<group>"; };
 		487D077D63B8DBAF59046380 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr-CA.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
 		49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformHintPanelSupport.swift; sourceTree = "<group>"; };
 		49EC771E2AC082EB0E486561 /* CanadianHamExamToolsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamExamToolsUITests.swift; sourceTree = "<group>"; };
@@ -669,6 +673,8 @@
 		EBF0E9962FF2249E5EB6BC6B /* content */ = {
 			isa = PBXGroup;
 			children = (
+				478E222D59BA4BFF3E6CBD54 /* categories-advanced.json */,
+				14A9B5491781DCE16B2A7EA4 /* categories.json */,
 				0CE325C0851B44E13EA76E8A /* subsection-titles.json */,
 			);
 			name = content;
@@ -1037,6 +1043,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDA1A66DD8DC830BCFE19678 /* categories-advanced.json in Resources */,
+				0DD9162DBD0D0F0D028D0939 /* categories.json in Resources */,
 				4A3F7F0CD01A2A85311ACD13 /* questions.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

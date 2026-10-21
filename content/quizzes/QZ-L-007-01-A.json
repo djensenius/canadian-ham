@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-007-01-A-C1",
       "prompt": {
-        "en": "A sky-wave sketch shows a gradual bend in the ionosphere, then part of the energy leaving the ground for another hop. Which wording best fits those two parts?",
+        "en": "A path sketch is revised with both a higher refracting region and a higher antenna launch angle. What can be concluded about the first return point?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Refraction in the ionosphere, then reflection from the Earth's surface.",
+            "en": "The return moves farther away because the higher region lengthens the path even at the steeper launch angle.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "Greater region height lengthens the path at fixed angle, but the angle also changed. Its opposing effect cannot be discarded without comparing the changes.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Diffraction in the ionosphere, then absorption by the Earth's surface.",
+            "en": "The return moves closer because the steeper launch angle shortens the path even with the higher region.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A higher angle shortens skip at fixed region height, but region height also rose. The sizes of both changes matter.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Ground-wave bending in the ionosphere, then Faraday rotation at the surface.",
+            "en": "The return stays in the same place because higher altitude and a steeper angle produce equal distance changes.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Opposing trends do not establish equal effects. Their magnitudes are needed before estimating the net movement.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Tropospheric ducting in the ionosphere, then desensitization at the surface.",
+            "en": "The two changes act in opposite directions, so their net effect needs more information.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "More height tends to lengthen skip while a higher launch angle tends to shorten it. Neither fixed-condition rule settles the combined change.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "The lesson uses refraction for the gradual ionospheric return and reflection for the surface return that can start another hop. Diffraction and scattering describe different effects.",
+        "en": "Keep the fixed conditions attached to each trend. A combined change needs more geometry than either trend alone.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-01-A-C2",
       "prompt": {
-        "en": "A shoreline station can cover nearby checkpoints by ground wave on a lower HF band. If the same route is moved much higher in frequency, what should the planner expect?",
+        "en": "A shoreline ground-wave route is moved much higher in frequency while the checkpoints stay fixed. Which revised expectation fits?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Ground-wave coverage becomes less useful as frequency rises, so use the lower band or choose another path.",
+            "en": "Useful surface-wave coverage may shrink, so the old checkpoint route may need a different band or path.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Ground wave is most useful at lower frequencies. The same checkpoint route may need a lower band or a different path.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The surface-guided part should extend farther, because higher frequency tends to follow terrain more closely.",
+            "en": "Higher frequency should follow the shoreline more closely and extend surface-wave coverage.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "That reverses the frequency trend. Higher-frequency ground wave generally becomes less useful over the same surface route.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Mostly the antenna length changes; the ground-wave distance changes little with frequency.",
+            "en": "A higher band should replace the surface path with a useful F2 return at the old checkpoints.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A sky-wave path depends on ionization and geometry as well as frequency. It need not cover the former surface-wave checkpoints.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The path is likely to become an F2-region hop once it is above the lower HF band.",
+            "en": "Allow for smaller antennas but keep the earlier surface-wave coverage estimate.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The frequency change affects propagation, not just antenna dimensions. The former coverage estimate needs rechecking.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Ground wave is the part of the signal guided by and affected by the Earth's surface. It is most useful at lower frequencies; moving higher can shorten the useful surface path and may require a different band or propagation mode.",
+        "en": "Do not carry a coverage map from a lower-frequency surface path onto a much higher band without new evidence.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-01-A-C3",
       "prompt": {
-        "en": "A route is about 6 000 km. Use planning scales of about 2 000 km for one E-region hop and 4 000 km for one F2-region hop. Which plan has enough distance on paper with the fewest hops?",
+        "en": "A multi-hop sketch adds enough hop distance to span a route. Which assessment of its backup coverage is justified?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "One E-region hop",
+            "en": "Once a single hop works at the chosen frequency, the remaining hops should have similar conditions and losses.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "One usable hop does not establish the conditions along the rest of the route. Additional surface returns also introduce losses rather than simply repeating the first hop's link budget.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Two E-region hops",
+            "en": "Each extra surface return can add loss, and the required ionospheric path still has to exist.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "A geometrically long enough plan can still fail when conditions or link strength are unsuitable.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "One F2-region hop",
+            "en": "Surface reflections largely restore the signal, so hop count adds little to the loss budget.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A surface reflection redirects part of the arriving energy. It does not regenerate losses accumulated along the path.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Two F2-region hops",
+            "en": "A modest power reserve should make up for uncertainty in where the planned hops return.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "Power can improve link strength along a usable path. It does not control the return geometry or replace a missing path.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "One E hop is about 2 000 km, two E hops about 4 000 km, and one F2 hop about 4 000 km. Two F2-scale hops provide enough planning distance for a 6 000 km route, if conditions support them.",
+        "en": "Hop scales support an initial plan. Listening and path evidence are still needed before relying on it.",
         "fr": null
       }
     }

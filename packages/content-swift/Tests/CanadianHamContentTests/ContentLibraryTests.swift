@@ -26,6 +26,23 @@ final class ContentLibraryTests: XCTestCase {
         XCTAssertEqual(Set(library.quizzes.map(\.id)), try quizIdsOnDisk())
     }
 
+    func testConceptCheckChoiceDecodesOptionalFeedbackAndRoundTrips() throws {
+        let decoder = JSONDecoder()
+        let legacy = Data(#"{"text":{"en":"Detection","fr":null},"isCorrect":false}"#.utf8)
+        XCTAssertNil(try decoder.decode(ConceptCheckChoice.self, from: legacy).feedback)
+        XCTAssertNil(ConceptCheckChoice(text: LocalizedNullableText(en: "Detection", fr: nil), isCorrect: false).feedback)
+
+        for french in ["null", #""La détection récupère l’audio.""#] {
+            let json = Data("""
+            {"text":{"en":"Detection","fr":null},"isCorrect":false,"feedback":{"en":"Detection recovers audio.","fr":\(french)}}
+            """.utf8)
+            let choice = try decoder.decode(ConceptCheckChoice.self, from: json)
+            XCTAssertEqual(choice.feedback?.en, "Detection recovers audio.")
+            XCTAssertEqual(choice.feedback?.fr, french == "null" ? nil : "La détection récupère l’audio.")
+            XCTAssertEqual(try decoder.decode(ConceptCheckChoice.self, from: JSONEncoder().encode(choice)), choice)
+        }
+    }
+
     func testExplanationNoteParsingForSampleInEachCategory() throws {
         let library = try ContentLibrary.load(fromDirectory: repoRootURL())
 
