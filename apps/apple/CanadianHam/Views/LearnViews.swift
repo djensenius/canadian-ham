@@ -709,6 +709,7 @@ private struct LessonQuizView: View {
     @ObservedObject var state: LessonQuizSessionState
     let onOpenHintLesson: (QuestionHintLessonLink) -> Void
     let onSaved: () -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selectedTool: ExamTool?
     // The shared tool presenter requires a calculator model; this quiz exposes only .hint.
     @StateObject private var presentationCalculator = ExamCalculatorViewModel()
@@ -764,17 +765,7 @@ private struct LessonQuizView: View {
 
     private var quizCard: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .top) {
-                    quizHeader
-                    Spacer()
-                    retryButton
-                }
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    quizHeader
-                    retryButton
-                }
-            }
+            quizHeaderControls
 
             if let errorMessage {
                 MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
@@ -798,11 +789,7 @@ private struct LessonQuizView: View {
                 ) { selected in
                     state.select(selected, for: item)
                 }
-                ViewThatFits(in: .horizontal) {
-                    HStack { navigationButtons }
-                        .fixedSize(horizontal: true, vertical: false)
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
-                }
+                quizNavigationControls
                 if let submittedAttemptID, let attempt = attempts.first(where: { $0.id == submittedAttemptID }) {
                     Text("Saved result: \(attempt.correct) / \(attempt.total) (\(attempt.percent, format: .number.precision(.fractionLength(0...0)))%).")
                         .font(DesignTokens.FontScale.body.weight(.bold))
@@ -817,6 +804,40 @@ private struct LessonQuizView: View {
         .paperCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("lesson-quiz-card")
+    }
+
+    @ViewBuilder
+    private var quizHeaderControls: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                quizHeader
+                retryButton
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .top) {
+                    quizHeader
+                    Spacer()
+                    retryButton
+                }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    quizHeader
+                    retryButton
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var quizNavigationControls: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack { navigationButtons }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
+            }
+        }
     }
 
     private var quizHeader: some View {
