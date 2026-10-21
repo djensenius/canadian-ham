@@ -155,7 +155,7 @@ Assume the propagation path and receiver settings stay unchanged.
 
 - Given: initial report = S9 plus 19 dB; transmitter power falls from 48 W to 24 W.
 - Find: new amount above S9.
-- Formula: halving power is about -3 dB; subtract that from the initial amount above S9.
+- Formula: halving power is a drop of about 3 dB; subtract 3 dB from the initial amount above S9.
 - Complete: new report = S9 plus (19 - ___) dB = S9 plus ___ dB.
 - Sanity check: Is the report lower while still above S9?
 
