@@ -4,7 +4,7 @@ title: Investigate residual iOS heading-wait and single-figure audit flakes
 status: To Do
 assignee: []
 created_date: '2026-10-20 06:58'
-updated_date: '2026-10-20 12:13'
+updated_date: '2026-10-21 23:42'
 labels:
   - apple
   - testing
@@ -38,4 +38,6 @@ TASK-33 final evidence (all tests unchanged; no flake fix claimed):
 3. Single-figure M7 dark failed with Code=-56 in /tmp/task-33-figures.log (230.276 s); coordinator-run isolated /tmp/task-33-m7-dark-rerun.log passed257.999 s, outer wall402 s, exit0. It already has one lesson and one figure and cannot be range-split further.
 Full-run totals: default126 UI (superset of final124),3 existing skips,2 failures, UI elapsed11390.378 s/outer11533 s; figure47 UI,1 failure, elapsed11444.382 s/outer11520 s. Units190 passed. Complete per-test results and literal failure lines: docs/testing/task-33-ios-results.md; result bundles use corresponding /tmp log basenames.
 Host-load evidence at2026-10-20T10:39:35Z: load81.94/81.56/88.02, simulator testmanagerd99.9%CPU, two lockf84.9%/84.1%, host/simulator diagnosticd55.8%/50.2%, exactly one active xcodebuild observed. Coordinator confirmed FluxTerm builds shared the xbuild lock. No other lane process stopped; contention is context, not demonstrated causation. Supervisor approved TASK-33 acceptance with these documented unchanged failures plus passing isolated reruns; this follow-up remains To Do.
+
+TASK-46.6.1 follow-up (supervisor-approved addition, 2026-10-21): the NEW concept-check AX-XXXL method testLessonQuizConceptOptionFeedbackLargestDynamicType passes its option-feedback/explanation text and full-visibility assertions, then its second full default audit auto-scrolls to the unchanged quiz header and reports Contrast for fully visible Question 1 of 1. Reproduced on iPhone 17 Pro twice without source changes: /tmp/task-46.6.1-iphone-largest-fix.log (184.329 s) and /tmp/task-46.6.1-iphone-largest-retry.log (196.875 s); matching xcresult basenames. Both element screenshots have the identical payload hash and show near-black ink on paper, not the new feedback. Screenshots: /tmp/task-46.6.1-contrast-app.png, /tmp/task-46.6.1-contrast-element.png and -contrast-retry-app/element.png. The first full option-status audit passed; second audit of the fully visible existing explanation reports the header. Investigate audit auto-scroll/timing/contrast false-positive provenance; no claim that host load is causal. The unchanged approved occluded-only contrast helper correctly fails this fully visible finding and was not changed or narrowed. Four default-size light/dark option-feedback audits pass. An unrelated existing hint AX-XXXL restore test also failed once then passed an unchanged targeted retry (269.356 s). No full suites or additional audit exception.
 <!-- SECTION:NOTES:END -->
