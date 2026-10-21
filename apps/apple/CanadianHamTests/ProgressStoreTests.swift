@@ -1,10 +1,14 @@
 @testable import CanadianHam
+import CanadianHamContent
 import CanadianHamEngine
 import CanadianHamMorseEngine
 import Combine
 import SwiftData
 import SwiftUI
 import XCTest
+#if os(macOS)
+import AppKit
+#endif
 
 @MainActor
 final class ProgressStoreTests: XCTestCase {
@@ -139,6 +143,71 @@ final class ProgressStoreTests: XCTestCase {
         cache.clear()
         XCTAssertFalse(cache.state(for: "QZ-L-005-01-A") === session)
     }
+
+#if os(macOS)
+    func testMountedLessonQuizRepopulatesAfterImportAndResetWithoutReshufflingOnRerender() async throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let quiz = try XCTUnwrap(library.quizzesById["QZ-L-005-01-A"])
+        let lesson = try XCTUnwrap(library.lessonsById[quiz.lessonId])
+        let store = try ProgressStoreService.inMemoryForTests()
+        let exported = try store.exportData(bank: bank, exportedAt: "2026-01-04T00:00:00.000Z")
+        let cache = LessonQuizSessionStateCache()
+        let screen = LessonQuizScreen(
+            quiz: quiz, lesson: lesson, bank: bank, library: library,
+            progressStore: store, language: .english,
+            onDataChanged: {}, onOpenHintLesson: { _ in }
+        )
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 900, height: 700),
+            styleMask: [.titled], backing: .buffered, defer: false
+        )
+        window.isReleasedWhenClosed = false
+        window.contentView = NSHostingView(rootView: NavigationStack { screen }.environmentObject(cache))
+        window.orderFront(nil)
+        defer { window.close() }
+
+        func waitForItems(in session: LessonQuizSessionState) async throws {
+            for _ in 0..<100 where session.items.isEmpty {
+                try await Task.sleep(nanoseconds: 50_000_000)
+            }
+            XCTAssertFalse(session.items.isEmpty, "The mounted quiz must initialize each replacement session without Retry")
+        }
+
+        var session = cache.state(for: quiz.id)
+        try await waitForItems(in: session)
+        let firstItem = try XCTUnwrap(session.items.first)
+        session.select(0, for: firstItem)
+        let generation = session.generation
+        let seed = session.seed
+        let items = session.items
+        // Re-evaluating the mounted screen with the same cache entry must retain its quiz.
+        cache.objectWillChange.send()
+        try await Task.sleep(nanoseconds: 150_000_000)
+        XCTAssertEqual(cache.state(for: quiz.id).generation, generation)
+        XCTAssertEqual(session.seed, seed)
+        XCTAssertEqual(session.items, items)
+        XCTAssertEqual(session.selectedByItemId[firstItem.id], 0)
+
+        for replacement in ["import", "reset"] {
+            if replacement == "import" {
+                try store.importData(exported, bank: bank)
+            } else {
+                try store.resetAllData()
+            }
+            // RootView clears the same cache after either Settings operation on iOS and macOS.
+            cache.clear()
+            let next = cache.state(for: quiz.id)
+            XCTAssertNotEqual(next.generation, session.generation, replacement)
+            XCTAssertTrue(next.items.isEmpty, replacement)
+            XCTAssertTrue(next.selectedByItemId.isEmpty, replacement)
+            try await waitForItems(in: next)
+            XCTAssertEqual(next.items.count, quiz.officialQuestionIds.count + quiz.conceptChecks.count)
+            XCTAssertEqual(cache.state(for: quiz.id).generation, next.generation)
+            session = next
+        }
+    }
+#endif
 
     func testMockExamTimerRefreshPreservesFractionalRemainder() throws {
         let state = MockExamState()

@@ -600,6 +600,7 @@ private struct OutlineLessonView: View {
 
 @MainActor
 final class LessonQuizSessionState: ObservableObject {
+    let generation = UUID()
     @Published var seed: String
     @Published var items: [LessonQuizRuntimeItem] = []
     @Published var currentIndex = 0
@@ -649,10 +650,13 @@ final class LessonQuizSessionStateCache: ObservableObject {
         return state
     }
 
-    func clear() { states.removeAll() }
+    func clear() {
+        objectWillChange.send()
+        states.removeAll()
+    }
 }
 
-private struct LessonQuizScreen: View {
+struct LessonQuizScreen: View {
     let quiz: LessonQuiz
     let lesson: Lesson
     let bank: QuestionBank
@@ -781,7 +785,7 @@ private struct LessonQuizView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Lesson quiz")
-        .task { if items.isEmpty { restart(keepSeed: true) } }
+        .task(id: state.generation) { if items.isEmpty { restart(keepSeed: true) } }
         .examToolPresentation(
             selectedTool: $selectedTool,
             calculator: presentationCalculator,
