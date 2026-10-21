@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-21 21:31'
+updated_date: '2026-10-21 22:04'
 labels:
   - apple
   - web
@@ -42,6 +42,8 @@ Low items from the task-12.18/12.19/12.20 review r2 (~/.cache/canadian-ham-revie
 7. Coordinator-approved latency fix (2026-10-21): measured first Space hold 0.579024s, of which synchronous AVAudioEngine startup consumed 0.569211s, with a 0.2s dot limit. Keep E/EE/E unchanged. Move sending audio preparation/start off the main actor with serialized lifecycle and existing output/mute settings; record key event times before audio; add a unit regression with an injected slow audio starter; prepare on sending-screen appearance and clean up on disappearance. Rerun the unchanged two-device keyboard regression plus sending and macOS Morse tests, recording before/after timing.
 
 8. Review follow-up (2026-10-21): make queued lifecycle commands non-droppable; regress release then silence while preparation is suspended and verify engine/session cleanup. Detach stopped-engine nodes before sending restart and cover repeated restarts. Assert exam/practice/exam DEBUG focus, gate timing diagnostics to DEBUG, and reuse the production web safety-note builder. Preserve key classification on audio failure with a unit test (note 6); leave the brief shared session lock contention unchanged (note 8). Commit before detached targeted checks: ordered six iPhone methods with one allowed Results Light heading-only retry, iPad keyboard, macOS Morse units, web Morse tests and test guard. Keep Done, append evidence, push; no PR.
+
+9. PR #327 Copilot follow-up: preserve audio errors through silent prepare/silence/release, and separate error-generation invalidation (release only) from tone-request supersession. Add suspended failing-preparation regressions for key-up classification/visible error, silent-prepare recovery, and stale failures after leaving. Run detached macOS MorseTrainerTests plus iPhone hardware-keyboard and sending regressions, respecting the shared build lock; integrate origin/main after PR #328 if its UIKit fix is required. Commit/push results and reply to/resolve the two assigned review threads.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
