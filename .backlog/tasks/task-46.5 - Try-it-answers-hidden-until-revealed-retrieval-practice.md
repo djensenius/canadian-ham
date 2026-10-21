@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-21 22:36'
+updated_date: '2026-10-21 22:57'
 labels:
   - content
   - web
@@ -48,4 +48,6 @@ Owner/coordinator approval via intercom: minimally split/reword M4 prompts and a
 Removed headings per lesson: Check your thinking in L-002-01, L-002-02, L-002-03, L-002-04; Try-it feedback in L-005-01, L-005-02, L-005-03, L-005-04, L-005-05, L-005-06, L-006-01, L-006-02, L-006-03, L-006-04, L-006-05, L-007-01, L-007-02, L-007-03, L-008-01, L-008-02. Searched web/Apple/content-tools tests and updated the faded-practice test to inspect prompts after removing paired answer blocks. No hint anchors referenced these headings.
 Changed figure-directive lessons (coordinator must run CanadianHamLessonFigures; worker will not): L-002-01–04; L-003-01–08; L-004-01–03; L-005-01–06; L-006-01–05; L-007-01–03; L-008-01–02 (all 31 changed lessons). Figure check passes: 39 SVGs, 39 references, assets in sync.
 Initial checks: content-tools 244/244; content-swift 26/26 with DEVELOPER_DIR (plain swift test first failed due CLI tools missing XCTest, then corrected a test anchor API call); web focused parser/reveal/EN-FR light-dark axe 38/38, App+Markdown rerun 151/151. A full web run initially had an unrelated French-screen timing failure plus status-role collisions from the first implementation; switched the new announcement to a stable aria-live region, then all affected App tests passed. Typecheck, schema 58/58, import integrity, coverage 100/100, quizzes, all 984 hint anchors, originality all 37 lessons (0 issues/0 stale allowlist entries), figure checks and Apple text-source checker pass. Apple targeted tests and localization export queued next; no full suites.
+
+First iPhone attempt exposed test positioning overhead at largest Dynamic Type: whole-lesson upward scrolling overshot the Try-it, then the existing generic middle-band positioning helper slowly scanned the full lesson accessibility tree. Coordinator approved a DEBUG-only -CanadianHamInitialLessonSectionAnchor beside the existing InitialLessonID seam, mapping to the existing lessonSection route. Release navigation is unchanged. Only the new Try-it reveal tests use the seam; they open the short resistor-colour prompt in L-004-03, explicitly assert the Try-it heading and Show answer control are fully visible before the collapsed audit/tap, and position only the control for the expanded audit. No shared positioning/audit helper was modified or weakened. tvOS buttons now reuse the existing custom secondary focus-ring style; other Apple buttons use large native controls with unrestricted vertical sizing.
 <!-- SECTION:NOTES:END -->
