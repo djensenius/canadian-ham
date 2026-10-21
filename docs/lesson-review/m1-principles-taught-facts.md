@@ -62,43 +62,43 @@ The active bank is `content/generated/basic-2025-07-15/questions.json`. Regulato
 
 | Before section | Taught fact before rewrite | After section / comparison |
 |---|---|---|
-| Reference facts: Work done for another person | Advanced holder installing, placing in operation, modifying, or repairing radio apparatus for another person: The other person must hold an authorization for the apparatus. | Pending rewrite comparison. |
-| Reference facts: Work done for another person | Reprogramming a land-mobile transmitter for another person's two-metre amateur use: The other person must hold an Amateur Radio Operator Certificate. | Pending rewrite comparison. |
-| Reference facts: Work done for another person | Installing an amateur radio transmitter for another person: Both people must hold Amateur Radio Operator Certificates. | Pending rewrite comparison. |
-| Reference facts: Work done for another person | Basic and Morse holder installing another person's amateur station: The other person must hold a valid Amateur Radio Operator Certificate. | Pending rewrite comparison. |
-| Reference facts: Work done for another person | Repairing an amateur radio transmitter for another person: Both people must hold Amateur Radio Operator Certificates. | Pending rewrite comparison. |
-| Reference facts: Work done for another person | Placing an amateur radio transmitter in service for another person: Both people must hold Amateur Radio Operator Certificates. | Pending rewrite comparison. |
-| Reference facts: Amateur service boundaries | Even a 2 W amateur station: Still must be under supervision of a certificate holder with a call sign. | Pending rewrite comparison. |
-| Reference facts: Amateur service boundaries | Amateur station communications: With stations operated under similar authorizations. | Pending rewrite comparison. |
-| Reference facts: Amateur service boundaries | Amplifying a licence-exempt transmitter with amateur equipment: Prohibited. | Pending rewrite comparison. |
-| Reference facts: Amateur service boundaries | Amateur equipment outside amateur bands: Transmitting outside amateur bands with amateur equipment, modified or not, is prohibited because the equipment has no certification for other bands. | Pending rewrite comparison. |
-| Reference facts: Amateur service boundaries | Amateur-authorized apparatus in other services: Aeronautical, marine, and land-mobile operation require the applicable service authorization. | Pending rewrite comparison. |
-| Reference facts: Amateur service boundaries | VHF/UHF FM radio also programmed for land-mobile service: Permissible only if the radio is certified and licensed for land-mobile use. | Pending rewrite comparison. |
-| Reference facts: Communications that fit amateur radio | Recreation planning, code-practice planning, or emergency planning on a club net: Permitted amateur discussion examples. | Pending rewrite comparison. |
-| Reference facts: Communications that fit amateur radio | Business planning or business communications: Prohibited. | Pending rewrite comparison. |
-| Reference facts: Communications that fit amateur radio | Broadcasts intended for the general public: Prohibited. | Pending rewrite comparison. |
-| Reference facts: Communications that fit amateur radio | Radio-control commands to model craft, brief transmissions to adjust the station, and Morse code practice: Permitted one-way examples. | Pending rewrite comparison. |
-| Reference facts: Communications that fit amateur radio | Q codes, abbreviations, and procedural signals: Permitted when the signals or codes have open meaning. | Pending rewrite comparison. |
-| Reference facts: Communications that fit amateur radio | New digital encoding technique: Must be published in the public domain before use on amateur bands. | Pending rewrite comparison. |
-| Reference facts: Communications that fit amateur radio | Secret code, unpublished encoding, programming from a broadcasting undertaking, or commercially recorded material: Prohibited. | Pending rewrite comparison. |
-| Reference facts: Communications that fit amateur radio | Background music or non-amateur audio reaching the microphone: Keep microphone audio limited to amateur communication. | Pending rewrite comparison. |
-| Reference facts: Station privileges and construction | Operating an amateur station in Canada: Certificate holders may operate anywhere in Canada, subject to their privileges and the other rules in this course. | Pending rewrite comparison. |
-| Reference facts: Station privileges and construction | Assembling commercially available transmitter kits of professional design: Basic. | Pending rewrite comparison. |
-| Reference facts: Station privileges and construction | Operating cross-band repeaters: Basic. | Pending rewrite comparison. |
-| Reference facts: Station privileges and construction | Beacon station one-way communications: A beacon station may transmit one-way communications. | Pending rewrite comparison. |
-| Reference facts: Station privileges and construction | Installing a single-band voice repeater: Basic and Advanced. | Pending rewrite comparison. |
-| Reference facts: Station privileges and construction | Installing an amateur radio club station: Basic and Advanced. | Pending rewrite comparison. |
-| Reference facts: Station privileges and construction | Installing or operating a transmitter or RF amplifier that is neither professionally designed nor commercially manufactured for amateur use: Basic and Advanced. | Pending rewrite comparison. |
-| Reference facts: Station privileges and construction | Remotely operating a transmitter while changing frequency, emission mode, or output power: Basic and Advanced. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Responsibility for station operation: Both the control operator and the station owner. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Transmitting from another amateur station: Both the visiting operator and the station owner are responsible. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Station owner responsibility: Operation of the station in accordance with the regulations. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Choice of control operator: Any qualified amateur radio operator chosen by the station owner. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Need for a control operator: Whenever the station is transmitting. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Control-operator location during transmission: At the station's control point. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Unqualified family member alone with equipment: Transmitting as control operator requires suitable amateur qualifications. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Owner allowing another person to operate: May allow operation under supervision and in the presence of a certificate holder. | Pending rewrite comparison. |
-| Reference facts: Control operator and station owner | Person without an Amateur Radio Operator Certificate: May operate only under supervision and in the presence of a person holding appropriate qualifications. | Pending rewrite comparison. |
+| Reference facts: Work done for another person | Advanced holder installing, placing in operation, modifying, or repairing radio apparatus for another person: The other person must hold an authorization for the apparatus. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Work done for another person | Reprogramming a land-mobile transmitter for another person's two-metre amateur use: The other person must hold an Amateur Radio Operator Certificate. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Work done for another person | Installing an amateur radio transmitter for another person: Both people must hold Amateur Radio Operator Certificates. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Work done for another person | Basic and Morse holder installing another person's amateur station: The other person must hold a valid Amateur Radio Operator Certificate. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Work done for another person | Repairing an amateur radio transmitter for another person: Both people must hold Amateur Radio Operator Certificates. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Work done for another person | Placing an amateur radio transmitter in service for another person: Both people must hold Amateur Radio Operator Certificates. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Amateur service boundaries | Even a 2 W amateur station: Still must be under supervision of a certificate holder with a call sign. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Amateur service boundaries | Amateur station communications: With stations operated under similar authorizations. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Amateur service boundaries | Amplifying a licence-exempt transmitter with amateur equipment: Prohibited. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Amateur service boundaries | Amateur equipment outside amateur bands: Transmitting outside amateur bands with amateur equipment, modified or not, is prohibited because the equipment has no certification for other bands. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Amateur service boundaries | Amateur-authorized apparatus in other services: Aeronautical, marine, and land-mobile operation require the applicable service authorization. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Amateur service boundaries | VHF/UHF FM radio also programmed for land-mobile service: Permissible only if the radio is certified and licensed for land-mobile use. | Retained; reference-facts-both-sides-need-authority. |
+| Reference facts: Communications that fit amateur radio | Recreation planning, code-practice planning, or emergency planning on a club net: Permitted amateur discussion examples. | Retained; reference-facts-messages-stay-open-and-non-commercial. |
+| Reference facts: Communications that fit amateur radio | Business planning or business communications: Prohibited. | Retained; reference-facts-messages-stay-open-and-non-commercial. |
+| Reference facts: Communications that fit amateur radio | Broadcasts intended for the general public: Prohibited. | Retained; reference-facts-messages-stay-open-and-non-commercial. |
+| Reference facts: Communications that fit amateur radio | Radio-control commands to model craft, brief transmissions to adjust the station, and Morse code practice: Permitted one-way examples. | Retained; reference-facts-messages-stay-open-and-non-commercial. |
+| Reference facts: Communications that fit amateur radio | Q codes, abbreviations, and procedural signals: Permitted when the signals or codes have open meaning. | Retained; reference-facts-messages-stay-open-and-non-commercial. |
+| Reference facts: Communications that fit amateur radio | New digital encoding technique: Must be published in the public domain before use on amateur bands. | Retained; reference-facts-messages-stay-open-and-non-commercial. |
+| Reference facts: Communications that fit amateur radio | Secret code, unpublished encoding, programming from a broadcasting undertaking, or commercially recorded material: Prohibited. | Retained; reference-facts-messages-stay-open-and-non-commercial. |
+| Reference facts: Communications that fit amateur radio | Background music or non-amateur audio reaching the microphone: Keep microphone audio limited to amateur communication. | Retained; reference-facts-messages-stay-open-and-non-commercial. |
+| Reference facts: Station privileges and construction | Operating an amateur station in Canada: Certificate holders may operate anywhere in Canada, subject to their privileges and the other rules in this course. | Retained; reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| Reference facts: Station privileges and construction | Assembling commercially available transmitter kits of professional design: Basic. | Retained; reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| Reference facts: Station privileges and construction | Operating cross-band repeaters: Basic. | Retained; reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| Reference facts: Station privileges and construction | Beacon station one-way communications: A beacon station may transmit one-way communications. | Retained; reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| Reference facts: Station privileges and construction | Installing a single-band voice repeater: Basic and Advanced. | Retained; reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| Reference facts: Station privileges and construction | Installing an amateur radio club station: Basic and Advanced. | Retained; reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| Reference facts: Station privileges and construction | Installing or operating a transmitter or RF amplifier that is neither professionally designed nor commercially manufactured for amateur use: Basic and Advanced. | Retained; reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| Reference facts: Station privileges and construction | Remotely operating a transmitter while changing frequency, emission mode, or output power: Basic and Advanced. | Retained; reference-facts-qualification-by-privilege-matrix-for-station-work. |
+| Reference facts: Control operator and station owner | Responsibility for station operation: Both the control operator and the station owner. | Retained; reference-facts-control-stays-with-responsible-people. |
+| Reference facts: Control operator and station owner | Transmitting from another amateur station: Both the visiting operator and the station owner are responsible. | Retained; reference-facts-control-stays-with-responsible-people. |
+| Reference facts: Control operator and station owner | Station owner responsibility: Operation of the station in accordance with the regulations. | Retained; reference-facts-control-stays-with-responsible-people. |
+| Reference facts: Control operator and station owner | Choice of control operator: Any qualified amateur radio operator chosen by the station owner. | Retained; reference-facts-control-stays-with-responsible-people. |
+| Reference facts: Control operator and station owner | Need for a control operator: Whenever the station is transmitting. | Retained; reference-facts-control-stays-with-responsible-people. |
+| Reference facts: Control operator and station owner | Control-operator location during transmission: At the station's control point. | Retained; reference-facts-control-stays-with-responsible-people. |
+| Reference facts: Control operator and station owner | Unqualified family member alone with equipment: Transmitting as control operator requires suitable amateur qualifications. | Retained; reference-facts-control-stays-with-responsible-people. |
+| Reference facts: Control operator and station owner | Owner allowing another person to operate: May allow operation under supervision and in the presence of a certificate holder. | Retained; reference-facts-control-stays-with-responsible-people. |
+| Reference facts: Control operator and station owner | Person without an Amateur Radio Operator Certificate: May operate only under supervision and in the presence of a person holding appropriate qualifications. | Retained; reference-facts-control-stays-with-responsible-people. |
 
 ## L-001-03 baseline inventory
 
