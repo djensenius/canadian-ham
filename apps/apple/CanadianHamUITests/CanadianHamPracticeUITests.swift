@@ -2405,11 +2405,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let secondAnswer = app.staticTexts["lesson-try-it-2-answer"].firstMatch
         XCTAssertFalse(answer.exists, "Try-it answers must not enter the accessibility tree before disclosure")
         positionLessonHeadingForTryItAudit("check-your-work-compare-matching-digits", in: app)
+        recordTryItAuditGeometry(in: app, stage: "preceding solution")
         try auditIgnoringOccludedLessonTextContrast(app: app)
         positionLessonHeadingForTryItAudit("try-it", in: app)
         XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true), "Show answer must be fully visible beside the Try-it section before tapping or auditing")
         XCTAssertEqual(toggle.label, "Show answer 1")
         XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
+        recordTryItAuditGeometry(in: app, stage: "collapsed answer")
         try auditIgnoringOccludedLessonTextContrast(app: app)
         toggle.tap()
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
@@ -2418,6 +2420,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertEqual(toggle.value as? String, "Expanded")
         XCTAssertFalse(secondAnswer.exists, "Revealing one Try-it must not reveal another")
         positionTryItControlForAudit(toggle, in: app)
+        recordTryItAuditGeometry(in: app, stage: "expanded answer")
         try auditIgnoringOccludedLessonTextContrast(app: app)
         toggle.tap()
         XCTAssertFalse(answer.exists, "Collapsing must remove the answer from the accessibility tree")
@@ -2448,6 +2451,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
             waitBriefly()
         }
         XCTAssertTrue(isFullyVisible(control, in: app, requiresHittable: true), "Try-it reveal control must remain fully visible for the expanded-state audit")
+    }
+
+    private func recordTryItAuditGeometry(in app: XCUIApplication, stage: String) {
+        let solution = app.staticTexts["The values are 620 ohms and 62 000 ohms, or 62 kilohms. The ratio is 100. Changing the multiplier changes place value; the digit bands and tolerance need not change."].firstMatch
+        let heading = app.staticTexts["lesson-heading-try-it"].firstMatch
+        let control = app.buttons["lesson-try-it-1-toggle"].firstMatch
+        let note = "stage=\(stage); visible=\(frameDescription(visibleFrameExcludingNavigationBar(in: app))); precedingSolution=\(frameDescription(solution.frame)); tryItHeading=\(frameDescription(heading.frame)); control=\(frameDescription(control.frame))"
+        print("Try-it audit geometry: \(note)")
+        XCTContext.runActivity(named: "Try-it audit geometry: \(stage)") { activity in
+            let attachment = XCTAttachment(string: note)
+            attachment.lifetime = .keepAlways
+            activity.add(attachment)
+        }
     }
 
     private func auditLessonPrerequisiteNavigation(appearance: AuditAppearance) throws {
