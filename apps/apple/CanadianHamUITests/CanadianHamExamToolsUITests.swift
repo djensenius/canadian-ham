@@ -95,6 +95,24 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertFalse(app.buttons["exam-tool-hint-button"].exists)
         XCTAssertFalse(app.buttons["exam-tool-calculator-button"].exists)
         XCTAssertFalse(app.buttons["exam-tool-referenceSheet-button"].exists)
+#if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let title = app.staticTexts["QZ-L-005-01-A"].firstMatch
+            let retry = app.buttons["Retry quiz"].firstMatch
+            XCTAssertTrue(retry.exists)
+            XCTAssertGreaterThan(retry.frame.minX, title.frame.maxX, "The default iPad quiz header keeps Retry alongside the title")
+            XCTAssertLessThan(retry.frame.minY, title.frame.maxY, "The default iPad header must not stack Retry below its text")
+            let previous = app.buttons["Previous"].firstMatch
+            let next = app.buttons["Next"].firstMatch
+            let submit = app.buttons["submit-lesson-quiz-button"].firstMatch
+            scrollBackgroundUntilHittable(submit, in: app, maxSwipes: 12)
+            XCTAssertTrue(previous.exists)
+            XCTAssertTrue(next.exists)
+            XCTAssertEqual(previous.frame.minY, next.frame.minY, accuracy: 1, "Default-size iPad quiz navigation must remain horizontal")
+            XCTAssertLessThanOrEqual(previous.frame.maxX, next.frame.minX)
+            XCTAssertLessThanOrEqual(next.frame.maxX, submit.frame.minX)
+        }
+#endif
     }
 
     func testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount() throws {
@@ -152,6 +170,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
         scrollBackgroundUntilHittable(marker, in: app, maxSwipes: 15)
         XCTAssertTrue(marker.isHittable)
+        let previous = app.buttons["Previous"].firstMatch
+        let next = app.buttons["Next"].firstMatch
+        scrollBackgroundUntilHittable(next, in: app, maxSwipes: 15)
+        XCTAssertTrue(previous.exists)
+        XCTAssertTrue(next.exists)
+        XCTAssertGreaterThanOrEqual(next.frame.minY, previous.frame.maxY, "AX-XXXL quiz navigation must fall back to a vertical stack")
     }
 
     private func launchLessonQuiz(seed: String = "lesson-hints-1", appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {

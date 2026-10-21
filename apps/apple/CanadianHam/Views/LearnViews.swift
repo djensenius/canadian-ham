@@ -764,33 +764,16 @@ private struct LessonQuizView: View {
 
     private var quizCard: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text("Lesson quiz")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(quiz.id) // l10n: verbatim
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("\(items.count) questions: official bank questions update practice progress; concept checks do not.")
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                    if let latest = attempts.last {
-                        Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
-                            .font(DesignTokens.FontScale.caption)
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                            .accessibilityIdentifier("lesson-quiz-latest-score")
-                        Text("Answers with help: \(latest.answeredWithHelpIds?.count ?? 0).") // l10n: localized
-                            .font(DesignTokens.FontScale.body)
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .accessibilityIdentifier("lesson-quiz-help-summary")
-                    }
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .top) {
+                    quizHeader
+                    Spacer()
+                    retryButton
                 }
-                Button { restart() } label: {
-                    AccessibleSecondaryButtonLabel(title: "Retry quiz")
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    quizHeader
+                    retryButton
                 }
-                .buttonStyle(AccessibleSecondaryButtonStyle())
             }
 
             if let errorMessage {
@@ -815,8 +798,10 @@ private struct LessonQuizView: View {
                 ) { selected in
                     state.select(selected, for: item)
                 }
-                // Keep control identity stable as Dynamic Type changes, including in the inspector layout.
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
+                ViewThatFits(in: .horizontal) {
+                    HStack { navigationButtons }
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
+                }
                 if let submittedAttemptID, let attempt = attempts.first(where: { $0.id == submittedAttemptID }) {
                     Text("Saved result: \(attempt.correct) / \(attempt.total) (\(attempt.percent, format: .number.precision(.fractionLength(0...0)))%).")
                         .font(DesignTokens.FontScale.body.weight(.bold))
@@ -831,6 +816,38 @@ private struct LessonQuizView: View {
         .paperCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("lesson-quiz-card")
+    }
+
+    private var quizHeader: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text("Lesson quiz")
+                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+            Text(quiz.id) // l10n: verbatim
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+            Text("\(items.count) questions: official bank questions update practice progress; concept checks do not.")
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+            if let latest = attempts.last {
+                Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .accessibilityIdentifier("lesson-quiz-latest-score")
+                Text("Answers with help: \(latest.answeredWithHelpIds?.count ?? 0).") // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityIdentifier("lesson-quiz-help-summary")
+            }
+        }
+    }
+
+    private var retryButton: some View {
+        Button { restart() } label: {
+            AccessibleSecondaryButtonLabel(title: "Retry quiz")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
     }
 
     private var hintToolContext: HintToolContext? {

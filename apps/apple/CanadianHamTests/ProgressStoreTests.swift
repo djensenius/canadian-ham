@@ -58,19 +58,48 @@ final class ProgressStoreTests: XCTestCase {
         }
     }
 
+    func testLessonQuizHelpValidationUsesOfficialMembershipAndKnownBankIdsNotBasicPrefix() throws {
+        let questionID = "A-001-001-001"
+        let attempt = LessonQuizAttempt(
+            id: "non-basic-help", quizId: "QZ-L-005-01-A", lessonId: "L-005-01",
+            submittedAt: "2026-01-02T03:45:00.000Z", correct: 1, total: 1, percent: 100,
+            officialQuestionIds: [questionID], incorrectOfficialQuestionIds: [], incorrectConceptCheckIds: [],
+            answeredWithHelpIds: [questionID]
+        )
+        XCTAssertTrue(LessonQuizAttempt.validAnsweredWithHelpIds([questionID], officialQuestionIds: [questionID]))
+        XCTAssertFalse(LessonQuizAttempt.validAnsweredWithHelpIds([questionID], officialQuestionIds: ["B-005-001-001"]))
+        XCTAssertFalse(LessonQuizAttempt.validAnsweredWithHelpIds(["QZ-L-005-01-A-C1"], officialQuestionIds: [questionID]))
+        let data = try JSONEncoder().encode(attempt)
+        XCTAssertEqual(try JSONDecoder().decode(LessonQuizAttempt.self, from: data), attempt,
+                       "Attempt decoding uses official membership, not a bank-specific prefix")
+
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let exported = try store.exportData(bank: bank, exportedAt: "2026-01-04T00:00:00.000Z")
+        var exportJSON = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(exported)) as? [String: Any])
+        exportJSON.removeValue(forKey: "syncDeviceRows")
+        exportJSON["lessonQuizAttempts"] = [try JSONSerialization.jsonObject(with: data)]
+        let imported = try JSONDecoder().decode(ProgressExportV1.self, from: JSONSerialization.data(withJSONObject: exportJSON))
+        XCTAssertTrue(store.validate(imported, bank: bank).contains { $0.contains(".answeredWithHelpIds") },
+                      "Official membership alone must not allow IDs unknown to the active bank")
+        XCTAssertThrowsError(try store.importData(imported, bank: bank))
+    }
+
     func testLessonQuizHintVisibilityUsesHalfSecondAndFreezesHelpAtChoice() async throws {
         let state = LessonQuizSessionState()
         let item = LessonQuizRuntimeItem.official(id: "official", questionId: "B-005-001-001", choicePermutation: [0, 1, 2, 3])
         state.items = [item]
         let timer = HintVisibilityQualificationTimer()
         XCTAssertEqual(HintVisibilityQualificationTimer.defaultDelayNanoseconds, 500_000_000)
+        let shortPeekStart = ContinuousClock.now
         timer.begin(questionID: "B-005-001-001", canRecordHelp: true, alreadyQualified: false) {
             state.qualifyHint(for: item)
         }
-        try await Task.sleep(nanoseconds: 200_000_000)
+        try await Task.sleep(nanoseconds: 50_000_000)
+        XCTAssertLessThan(shortPeekStart.duration(to: .now), .milliseconds(500), "The unqualified check must occur before the half-second threshold")
         XCTAssertTrue(state.hintQualifiedQuestionIds.isEmpty)
         state.select(0, for: item)
-        try await Task.sleep(nanoseconds: 600_000_000)
+        try await Task.sleep(nanoseconds: 1_250_000_000)
         XCTAssertTrue(state.answeredWithHelpIds.isEmpty, "A later timer must not change an already-scored answer")
         XCTAssertFalse(state.qualifyHint(for: item))
         timer.cancel()
@@ -80,7 +109,7 @@ final class ProgressStoreTests: XCTestCase {
         timer.begin(questionID: "B-005-001-001", canRecordHelp: true, alreadyQualified: false) {
             helped.qualifyHint(for: item)
         }
-        try await Task.sleep(nanoseconds: 750_000_000)
+        try await Task.sleep(nanoseconds: 1_250_000_000)
         XCTAssertEqual(helped.hintQualifiedQuestionIds, ["B-005-001-001"])
         XCTAssertTrue(helped.answeredWithHelpIds.isEmpty, "Qualification alone is not an answered record")
         helped.select(0, for: item)

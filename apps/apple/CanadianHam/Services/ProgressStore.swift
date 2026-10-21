@@ -266,7 +266,7 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
     }
 
     static func validAnsweredWithHelpIds(_ ids: [String], officialQuestionIds: [String]) -> Bool {
-        ids == ids.sorted() && Set(ids).count == ids.count && ids.allSatisfy { $0.hasPrefix("B-") && officialQuestionIds.contains($0) }
+        ids == ids.sorted() && Set(ids).count == ids.count && ids.allSatisfy(officialQuestionIds.contains)
     }
 }
 
