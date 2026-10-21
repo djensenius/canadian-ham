@@ -35,21 +35,6 @@
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson. Current checker: five-gram-overlap for B-005-012-001, B-005-012-010."
   },
   {
-    "lessonId": "L-001-06",
-    "blockHeading": "Reference facts: Antenna siting and public consultation",
-    "reason": "Reviewed regulatory reference table: antenna authority, process, exclusion, and consultation facts are established by official answers. Current checker: five-gram-overlap for B-001-023-003, B-001-023-006, B-001-023-009, B-001-023-010."
-  },
-  {
-    "lessonId": "L-001-06",
-    "blockHeading": "Reference facts: Safety Code 6 and RF exposure",
-    "reason": "Reviewed regulatory reference table: Safety Code 6, exposure-factor, and exposure-quantity facts are established by official answers. Current checker: numeric-overlap for B-001-024-003, B-001-024-010; five-gram-overlap for B-001-024-001, B-001-024-002, B-001-024-004, B-001-024-005."
-  },
-  {
-    "lessonId": "L-001-06",
-    "blockHeading": "Summary",
-    "reason": "Reviewed summary rule: Safety Code 6 exposure-limit wording distinguishes limit quantities from transmitter power as an exposure factor. Current checker: numeric-overlap for B-001-024-010."
-  },
-  {
     "lessonId": "L-006-05",
     "blockHeading": "Dipole patterns",
     "reason": "Reviewed teaching fact: the free-space centre-fed half-wave dipole feed-point impedance of about 73 ohms (B-006-012-004) was a pre-existing coverage gap. It is stated in original prose; 'half-wave' tokenizes to 0.5, so the numeric heuristic flags the unavoidable term plus value. Current checker: numeric-overlap for B-006-012-004."
@@ -83,5 +68,10 @@
     "lessonId": "L-001-04",
     "blockHeading": "Reference facts: Power needs a quantity and a measurement point",
     "reason": "TASK-46.8 reviewed special-band ERP ceiling in an original reference table distinguishing power quantities and measurement points. Current checker: numeric-overlap for B-001-017-006."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Reference facts: Protect people by assessing exposure",
+    "reason": "TASK-46.8 reviewed exposure reference table: exact absorption range and Safety Code 6 exposure quantities remain necessary regulatory facts, with original explanations of frequency, environment and power. Current checker: numeric-overlap for B-001-024-003, B-001-024-010."
   }
 ]
