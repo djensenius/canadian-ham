@@ -1,7 +1,7 @@
 ---
 id: TASK-41
 title: Morse polish follow-ups from review r2
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
