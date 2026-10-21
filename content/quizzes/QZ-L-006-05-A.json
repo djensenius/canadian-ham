@@ -13,36 +13,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-05-A-C1",
-      "prompt": { "en": "A dipole wire runs northeast-southwest in free space. Where is radiation strongest?", "fr": null },
+      "prompt": {
+        "en": "In the simple free-space model, a wanted station is north and a noise source is east. Which horizontal dipole wire route puts the wanted station broadside and the noise source off an end?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Broadside to the wire, northwest and southeast", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Mainly along the wire toward northeast and southwest", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Only straight upward because the wire is horizontal", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Only toward the feedline because current enters there", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "East-west.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The north station is broadside to an east-west wire, while the east noise source lies along an end direction.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "North-south.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This reverses the intended use of the pattern: north is near an end direction and east is broadside.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Northeast-southwest.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The north station and east noise source both lie about 45 degrees from this wire axis, rather than at the broadside and end directions.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Northwest-southeast.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This diagonal also places both directions between the maximum and null; its end points northwest and southeast, not east.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A free-space half-wave dipole has maximum radiation broadside to the wire and nulls off the ends.", "fr": null }
+      "explanation": {
+        "en": "Use the pattern for both signal pickup and noise rejection. Real ground and surroundings can alter this ideal comparison.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-05-A-C2",
-      "prompt": { "en": "A full-wave loop is estimated with 306 / f(MHz). About how much wire is needed at 12 MHz?", "fr": null },
+      "prompt": {
+        "en": "For a square full-wave loop, a learner calculates 306 / f and uses that value for every side. What is the right correction?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "25.5 m", "fr": null }, "isCorrect": true },
-        { "text": { "en": "12.8 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "6.0 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "49.0 m", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Use 300 / f on each side because loops use the free-space formula.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That changes the estimate slightly but leaves the perimeter-versus-side mistake. It would still use about four wavelengths of wire.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use 306 / (f / 4) for each side.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Dividing frequency by four makes the result four times the perimeter, rather than finding a quarter of it.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Divide 306 / f by two for each side, as for dipole legs.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A square has four sides, unlike the two legs of a dipole. Halving would still use twice the planned perimeter.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Treat 306 / f as the full perimeter and divide by four for each side.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The loop estimate gives total wire around the square. Four equal sides share that perimeter.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "306 divided by 12 is 25.5, so the loop starts near 25.5 metres total wire.", "fr": null }
+      "explanation": {
+        "en": "Choose the antenna formula, then divide the total according to the geometry.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-05-A-C3",
-      "prompt": { "en": "What is a likely station symptom when a poorly matched random-wire antenna brings RF back into the operating area?", "fr": null },
+      "prompt": {
+        "en": "A station replaces a single-band dipole with a trap antenna for several related bands. An earlier unwanted-output check used the old antenna. What should be reconsidered?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The antenna becomes an isotropic point source", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The feedline changes into open-wire line", "fr": null }, "isCorrect": false },
-        { "text": { "en": "RF feedback, such as distorted transmitted audio", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The resonant frequency is guaranteed to stay fixed", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Recheck radiation on related bands; the new antenna sections may radiate existing unwanted output more effectively.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The antenna change can alter how unwanted transmitter energy reaches the air. A satisfactory result with the old antenna does not validate the new arrangement.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use the low SWR on the operating band as evidence that unwanted output on other bands is suppressed.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Match on the wanted band does not measure suppression on other bands. Those responses need their own checks.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Keep the earlier result because the transmitter settings and wanted frequency have not changed.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Unchanged settings do not keep the radiating system unchanged. The new antenna can respond differently to the same unwanted energy.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Rely on the traps to attenuate output on bands other than the one currently selected.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Traps isolate sections at selected frequencies. Other sections can still respond at related bands, so traps are not a substitute for emission checks.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Uncontrolled RF return paths can put RF current into station equipment and cause feedback symptoms.", "fr": null }
+      "explanation": {
+        "en": "Changing a radiating system can change unwanted radiation even with the same transmitter settings. Recheck the complete operating arrangement.",
+        "fr": null
+      }
     }
   ]
 }

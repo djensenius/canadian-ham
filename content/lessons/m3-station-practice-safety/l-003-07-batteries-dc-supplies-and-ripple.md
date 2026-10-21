@@ -61,7 +61,7 @@ Text equivalent:
 
 
 
-### In the real world: four cells for a portable accessory
+### Worked example: four cells for a portable accessory
 
 A small accessory can use four 1.5 V cells in series.
 
@@ -74,7 +74,23 @@ A small accessory can use four 1.5 V cells in series.
 
 Use only battery holders and chargers meant for the cell type.
 
-### Worked example: voltage sag on transmit
+### Faded practice: combine matched cells in series
+
+An approved holder uses six matched 1.2 V, 2.5 Ah cells in series for an accessory designed for that pack.
+
+- Given: six cells; each = 1.2 V at 2.5 Ah.
+- Find: pack voltage and ampere-hour capacity.
+- Formula: series voltages add; capacity stays that of a matched string.
+- Complete: pack E = 6 x 1.2 V = ___ V; capacity = ___ Ah.
+- Sanity check: did you add voltage without also adding ampere-hours?
+
+Fill the gaps before checking below.
+
+### Check your work: combine matched cells in series
+
+The series pack is 7.2 V at 2.5 Ah. The same string current passes through every cell; series wiring does not add their ampere-hour ratings.
+
+### In the real world: voltage sag on transmit
 
 A portable radio receives normally from a battery pack, but the display dims when transmitting.
 
@@ -108,6 +124,22 @@ Two matched 6 V, 10 Ah packs are connected in parallel with an approved combiner
 
 Only connect batteries in ways approved for their chemistry and protection system. Do not improvise lithium charging or paralleling.
 
+### Faded practice: combine approved parallel packs
+
+An approved combiner connects two matched 12.8 V, 6 Ah packs in parallel. The protection system permits this arrangement.
+
+- Given: two matched packs; each = 12.8 V at 6 Ah.
+- Find: combined voltage and capacity.
+- Formula: parallel voltage stays the same; capacities add.
+- Complete: pack E = ___ V; capacity = 6 Ah + ___ Ah = ___ Ah.
+- Sanity check: which rating increases in parallel?
+
+Fill the gaps before checking below.
+
+### Check your work: combine approved parallel packs
+
+The result is 12.8 V at 12 Ah. Capacity increases, not voltage. This assumes compatible packs, protection, and a manufacturer-approved connection.
+
 ## Station DC supplies
 
 Many amateur transceivers are designed for nominal low-voltage DC from a regulated supply. Current capability is one of the most important supply ratings. The supply must handle transmit current without dropping below the radio's voltage requirement.
@@ -118,7 +150,7 @@ A linear supply is usually heavier and less efficient than a switching supply. I
 
 A simple supply often has a transformer, rectifier, and filter capacitor. Poor filtering or regulation can let residual AC ripple into the transmitter. In CW, varying voltage can contribute to chirp. In voice, ripple can appear as low-frequency hum on the transmitted signal.
 
-### In the real world: charger labels and radio supplies
+### Worked example: charger labels and radio supplies
 
 A charger may say 9.0 V at 3.0 A. That is a 27 W charger, because P = I x E = 3.0 A x 9.0 V = 27 W.
 
@@ -133,7 +165,23 @@ A typical mobile transceiver needs a different kind of supply. If the manual lis
 
 A 262.2 W supply calculation does not mean the radio exceeds the Basic power limit. Follow the radio manual for supply current and fuse ratings.
 
-### Worked example: choosing current headroom
+### Faded practice: read a DC input budget
+
+A radio and its accessories draw 16 A from a 13.6 V supply during a stated bench test.
+
+- Given: E = 13.6 V; I = 16 A.
+- Find: whole-station DC input power for that test.
+- Formula: P = I x E.
+- Complete: P = ___ A x 13.6 V = ___ W.
+- Sanity check: is this RF output power, or electrical power supplied to the equipment?
+
+Fill the gaps before checking below.
+
+### Check your work: read a DC input budget
+
+16 x 13.6 = 217.6 W of DC input to the stated equipment. It is not an RF-output reading or a measurement of input to the final RF stage alone. Follow the equipment manual for supply and fuse selection.
+
+### In the real world: choosing current headroom
 
 A transceiver manual lists a transmit current draw of 19 A on high power. Two supplies are available: 18 A continuous and 28 A continuous at the required voltage.
 
@@ -176,6 +224,22 @@ A mobile radio draws 17 A on transmit. The battery connection is 2.4 m away one 
 - Sanity check: that is below a 0.4 V design limit for this original example.
 
 Use cable data for the actual wire and current, and include both positive and negative lead lengths. If a table lists several gauges that meet the drop limit, the minimum acceptable gauge is the thinnest one that still passes, not the heaviest cable in the table.
+
+### Faded practice: count both DC leads
+
+A field radio is 3.2 m from its battery. At the planned current, each metre of the chosen wire drops 0.03 V. The exercise limit is 0.25 V.
+
+- Given: one-way length = 3.2 m; drop = 0.03 V per metre.
+- Find: total drop through the positive and return leads.
+- Formula: round trip = 2 x one-way length; drop = round trip x drop per metre.
+- Complete: round trip = ___ m; drop = ___ m x 0.03 V per metre = ___ V.
+- Sanity check: does your result fit the exercise limit?
+
+Fill the gaps before checking below.
+
+### Check your work: count both DC leads
+
+The round trip is 6.4 m. Total drop is 6.4 x 0.03 = 0.192 V, below 0.25 V. Counting only the outgoing lead would understate the loss.
 
 ## Try it
 

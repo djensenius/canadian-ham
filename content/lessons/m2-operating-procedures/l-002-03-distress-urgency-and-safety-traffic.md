@@ -45,7 +45,7 @@ An urgent request needs serious assistance but has no immediate threat to life. 
 
 Distress takes priority over emergency messages; emergency messages take priority over safety messages. In this order, urgent requests for help belong with emergency messages, below distress and above safety warnings. Keep that order in mind, but listen to the actual situation rather than guessing from an anxious voice alone.
 
-### Worked example: sort the facts before choosing a signal
+### In the real world: sort the facts before choosing a signal
 
 During a club exercise, a trail team reports that a bridge is washed out. Everyone is safely on dry ground and they want other teams warned. That is safety information about a hazard.
 
@@ -111,12 +111,28 @@ Suppose a portable station has a 12 Ah battery and averages 1.5 A during an exer
 
 Plan for less time in practice. Battery age, cold weather, and a reserve for unexpected traffic all reduce the time you should count on. Longer transmitting periods can raise the average current too.
 
+### Faded practice: leave a battery reserve
+
+A training kit has a 14 Ah battery and averages 1.75 A. Use only three quarters of the ideal time for this exercise's planning budget. That reserve is an exercise choice, not a universal battery rule.
+
+- Given: capacity = 14 Ah; average current = 1.75 A; planning fraction = 0.75.
+- Find: ideal time, then the exercise budget.
+- Formula: ideal time = capacity / average current; budget = ideal time x planning fraction.
+- Complete: ideal time = 14 / 1.75 = ___ h; budget = ___ h x 0.75 = ___ h.
+- Sanity check: should the budget be shorter than the ideal time?
+
+Fill the gaps before checking.
+
+### Check your work: battery reserve
+
+Ideal time is 8 h. The exercise budget is 8 h x 0.75 = 6 h. Real use still needs allowance for battery condition, temperature, and changing traffic.
+
 ## Try it
 
 Stop and make your decisions before reading the feedback.
 
 1. You hear a distress break-in, but your station cannot reach the people directly. Name two useful actions you can still take.
-2. Finish a planning estimate: a 9 Ah battery supplies an average 1.5 A. Ideal time = 9 / ___ = ___ h. Why should the operating plan use less than that time?
+2. Estimate the ideal runtime of a 9 Ah battery supplying an average 1.5 A. Explain why the operating plan should use less time.
 3. An exercise note lists a call sign and “needs assistance” but no location. What should you obtain before relaying the request?
 
 ### Check your thinking

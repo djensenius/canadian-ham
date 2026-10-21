@@ -51,48 +51,64 @@
     {
       "id": "QZ-L-002-01-A-C1",
       "prompt": {
-        "en": "On a direct test, two nearby radios still use the same repeater settings. Each transmits below the frequency it receives. The repeater is off, and neither operator hears the other. What setting mismatch explains this?",
+        "en": "Two nearby radios still use identical repeater memories for a direct test. Each transmits below its receive frequency. The repeater is off, and neither hears the other. Which setting change addresses this mismatch?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The access tone must be louder to carry speech directly.",
+            "en": "Keep the split frequencies and change only the access tone.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "An access tone can open a tone-controlled squelch, but it cannot move speech between different frequencies.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Each radio listens somewhere other than the other radio's transmit frequency.",
+            "en": "Set both radios to transmit and receive on the same suitable simplex channel.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "A shared simplex channel aligns each transmitter with the other receiver. Check reliable copy in both directions.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Both radios need the offset reversed, while keeping the same receive frequency.",
+            "en": "Reverse both offsets but keep their receive frequencies unchanged.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Both radios would still listen away from where the other transmits. Reversing identical offsets preserves a mismatch.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The time-out timer is preventing all direct reception.",
+            "en": "Swap transmit and receive in both memories, keeping a split between them.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Both radios would again share a transmit frequency different from their shared receive frequency. Swapping both split memories leaves a mismatch.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "With the relay off, nothing moves the speech from the input frequency to the output. Each radio is listening above where the other transmits. A simplex setup must align their transmit and receive frequencies on a suitable channel. Making the access tone louder does not bridge that gap. Reversing both offsets leaves another gap, and a time-out timer does not explain this frequency mismatch.",
+        "en": "A repeater moves speech between its input and output frequencies. Without it, both radios need a suitable shared simplex channel and reliable copy in both directions.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-002-01-A-C2",
       "prompt": {
-        "en": "A radio receives an illustrative repeater output at 146.880 MHz. It needs a negative 0.600 MHz offset. Which stored transmit setting matches that plan?",
+        "en": "An illustrative repeater output is 146.880 MHz with a negative 600 kHz offset. Which transmit frequency belongs in the radio memory?",
         "fr": null
       },
       "choices": [
@@ -101,73 +117,105 @@
             "en": "147.480 MHz",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Adding 0.600 MHz gives a positive offset. The stated offset is negative, so subtract.",
+            "fr": null
+          }
         },
         {
           "text": {
             "en": "146.880 MHz",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "This is the output you listen to. Transmitting there would ignore the split.",
+            "fr": null
+          }
         },
         {
           "text": {
             "en": "146.280 MHz",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "600 kHz = 0.600 MHz. Subtracting gives 146.280 MHz, below the output.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "0.600 MHz",
+            "en": "146.820 MHz",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "This subtracts 0.060 MHz, or 60 kHz. Convert 600 kHz to 0.600 MHz first.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Subtract the offset from the output: 146.880 - 0.600 = 146.280 MHz. Adding would reverse the direction. Using the output for transmission would miss the input, and the offset alone is not a channel frequency.",
+        "en": "Convert 600 kHz to 0.600 MHz before subtracting. A negative offset puts transmit below the repeater output.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-002-01-A-C3",
       "prompt": {
-        "en": "A long transmitter test causes no reports of interference while a dummy load is connected. You then replace the load with an antenna, keeping the radio settings. Does the earlier result show that the same test will be harmless on air?",
+        "en": "A transmitter passes a long dummy-load test without reported interference. For a later antenna test at the same dial setting, which next step uses that result appropriately?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "No. The earlier test absorbed the output locally rather than testing how it shares the airwaves.",
+            "en": "Check the channel and make a brief on-air test; the earlier load test did not test sharing the airwaves.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The dummy load absorbed RF locally. An antenna sends it into a shared channel, so listen and keep the radiated test brief.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Yes. Keeping the dial setting means the surroundings cannot change the result.",
+            "en": "Repeat the full-length test on the antenna; the unchanged dial setting makes the earlier result applicable.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The dial setting stayed fixed, but the RF path changed from a load to an antenna. Other users can now receive the test.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Yes. Connecting the antenna reserves the test frequency for your station.",
+            "en": "Lower microphone gain and repeat the long test; reduced audio makes another channel check unnecessary.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Audio drive affects modulation, not whether RF reaches other users. A quiet carrier can still interfere.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Yes, provided you lower the microphone volume before the test.",
+            "en": "Match the antenna with the tuner and repeat the long test; the new match gives the same RF containment as the load.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A tuner changes the impedance seen by the radio. It does not absorb the signal instead of radiating it.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Changing from a dummy load to an antenna changes where the RF energy goes. The earlier result cannot establish that an on-air test will avoid other users. The same dial setting is not a channel check, an antenna does not reserve spectrum, and microphone volume cannot guarantee a harmless RF test. Use a suitable dummy load for lengthy testing.",
+        "en": "A dummy load absorbs RF locally. An antenna radiates into shared spectrum, so the on-air test still needs a channel check and a brief transmission.",
         "fr": null
       }
     }

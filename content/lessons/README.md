@@ -53,7 +53,7 @@ The checker parses lesson front matter, compares lesson `covers` entries with `c
 
 ## Explanatory lessons
 
-Modules 2 through 8 teach through concept sections, worked examples, Try it, common mistakes, and original concept checks. Module 2 moved to this format under TASK-46.9 (owner approval 2026-10-12). Keep standard procedure facts accurate while explaining their purpose; do not restate bank questions or answers as practice items. Separate Try-it prompts from their feedback, and keep concept checks distinct from both the official bank and the Try-its.
+Modules 2 through 8 teach through concept sections, worked examples, Try it, common mistakes, and original concept checks. Module 2 moved to this format under TASK-46.9 (owner approval 2026-10-12). Keep standard procedure facts accurate while explaining their purpose; do not restate bank questions or answers as practice items. Separate new or restructured Try-it prompts from their feedback, and keep concept checks distinct from both the official bank and the Try-its. Legacy inline Try-it answers are tracked in TASK-46.5.
 
 Use the heading structure, plain-language rules, and calculation template in [`../../docs/teaching-guide.md`](../../docs/teaching-guide.md). Keep lesson IDs, coverage, figure directives, and quiz references valid when revising. Module 2 retains its exhaustive official quiz lists alongside its new concept checks.
 
@@ -84,6 +84,12 @@ pnpm --dir packages/content-tools check:quizzes:module ../../content/lessons/m4-
 ```
 
 A module-scoped run checks the quiz files referenced by lessons under that root and reports orphan quiz files only for that module's `QZ-L-00N-*` prefix.
+
+Every authored concept-check choice must carry `feedback: {"en": "...", "fr": null}` (or translated French text). Explain why that choice fits or which misconception it reveals, rather than repeating the generic explanation. The quiz checker requires complete feedback by default, including module-scoped runs with `--lesson-root=<module path>`. The earlier `--require-feedback` flag remains accepted but is no longer needed. The shared schema and readers still accept older content without feedback.
+
+For calculation lessons, follow each worked-example set with `### Faded practice: ...`: supply the givens and formula, leave completion blanks, and offer a sanity-check cue. Put its solution under a separate `### Check your work: ...` heading. Keep new or restructured Try-it prompts unscaffolded, with answers below a separate feedback heading, so practice moves from worked to faded to independent. Legacy M3/M4 Try-its still have inline answers; TASK-46.5 tracks their conversion and accessible answer-reveal controls.
+
+Review concept checks by hand against every Try-it and every `officialQuestionIds` entry in the same quiz. Official and concept items are shuffled together, so do not reveal a bank question and its answer through a renamed example. Test a changed condition, a transfer, or a model limit instead. Use plausible same-topic misconceptions for every distractor, positive stems, and exactly one correct answer. The overlap lint below is a narrow backstop, not a substitute for this review.
 
 The quiz checker also runs a **CONCEPT-CHECK OVERLAP** lint. For each concept check, it compares the prompt plus correct choice with every official question plus correct answer in the same quiz, and with each line in that lesson's `## Try it` section. The heuristic uses content-word token Jaccard after stop-word removal plus shared content-word 5-grams. Current thresholds are documented in `packages/content-tools/src/check-quizzes.ts`: Jaccard `>= 0.88`, at least `4` shared 5-grams, or at least `1` shared 5-gram with Jaccard `>= 0.82`. The check is intentionally narrow: it catches restatements of the official bank or Try-it items, but it does not attempt a broad "off-topic distractor" judgment.
 

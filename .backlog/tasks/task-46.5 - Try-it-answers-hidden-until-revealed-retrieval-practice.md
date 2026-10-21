@@ -4,6 +4,7 @@ title: Try it answers hidden until revealed (retrieval practice)
 status: To Do
 assignee: []
 created_date: '2026-10-12 14:57'
+updated_date: '2026-10-20 16:01'
 labels:
   - content
   - web
@@ -26,3 +27,9 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 - [ ] #2 All lessons converted; the content checker validates the format
 - [ ] #3 Full default accessibility audits pass in light and dark on every platform that renders lessons
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+TASK-46.6 re-review follow-up (owner explicitly permits scoped README plus follow-up instead of converting legacy material now): content/lessons/README.md now applies separate feedback headings to new or restructured Try-its. Convert the remaining M3/M4 inline answers as part of this existing task, including l-003-08-access-grounding-lightning-rf-safety.md and l-004-01-amplifiers-and-diodes.md; inspect all eight M3 and three M4 lessons. Preserve prompts and identities while separating answers for the accessible reveal convention. This is already covered by AC #2 (all lessons converted), so no duplicate task was created.
+<!-- SECTION:NOTES:END -->

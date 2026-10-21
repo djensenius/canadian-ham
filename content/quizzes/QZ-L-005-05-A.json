@@ -15,36 +15,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-005-05-A-C1",
-      "prompt": { "en": "Two equal 56 µF capacitors are connected in series. What is the total capacitance?", "fr": null },
+      "prompt": {
+        "en": "A timer was designed for a pair of equal capacitors in parallel, but they were wired in series. How does the actual total compare with the planned total?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "28 µF", "fr": null }, "isCorrect": true },
-        { "text": { "en": "56 µF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "112 µF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "3 136 µF", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "It is unchanged because the same parts were used.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Connection changes the total even when the parts stay the same.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It is half the planned total.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The series total is half a single part, but the plan called for twice a single part.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It is a quarter of the planned total.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "For each value C, the plan gives 2 x C and the actual circuit gives C / 2. Their ratio is 1/4.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "It is four times the planned total.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That reverses the comparison. The actual series total is smaller, not larger.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Two equal capacitors in series have half the capacitance of one.", "fr": null }
+      "explanation": {
+        "en": "Check both the intended topology and the actual topology before comparing their totals.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-05-A-C2",
-      "prompt": { "en": "Which part is useful when you want high opposition to RF but low opposition at low frequency?", "fr": null },
+      "prompt": {
+        "en": "A supply has a smoothing capacitor after its rectifier. A heavier load makes the dips between charging peaks deeper. Which explanation fits?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "A bypass capacitor chosen to shunt RF to ground.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "An inductor used as an RF choke.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A small capacitor placed in the audio path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A resistor chosen for a DC voltage drop.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The load draws stored energy faster between charging peaks.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The capacitor has to support a larger load between recharges. More of its stored energy is used in that interval, so the voltage dips farther.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The capacitor voltage rating sets a slower recharge schedule under heavier load.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The voltage rating is a limit for the part, not a timing control. It does not set when the rectifier can recharge it.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The deeper dips mean the capacitor has permanently used up its storage capacity.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Discharging uses stored energy, not the ability to store it again. The next charging peak can replenish that energy.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The heavier load increases the energy stored between peaks, causing the deeper dips.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The load draws energy from the capacitor between peaks. It does not add energy during that interval.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Inductive reactance increases with frequency, so a choke can impede RF.", "fr": null }
+      "explanation": {
+        "en": "A smoothing capacitor supports the load between charging peaks. A larger load can deepen the voltage dips without changing the capacitor itself.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-05-A-C3",
-      "prompt": { "en": "Which statement is true at resonance in a series RLC circuit?", "fr": null },
+      "prompt": {
+        "en": "A series tuned circuit is at resonance. Its capacitance is then increased while the source frequency stays fixed. What happens?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The L and C reactances cancel, so current is at a maximum.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The circuit behaves like a parallel tuned trap with high impedance.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The capacitor stops storing energy.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Adding more capacitance would have no effect on tuning.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "It remains exactly resonant because the resistance stayed the same.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Resistance affects losses and sharpness. L and C set the ideal resonant frequency.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Its resonant frequency falls, so the source is now above resonance.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "More capacitance lowers the resonant frequency; the unchanged source now lies above it.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Its resonant frequency rises, so the source is now below resonance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "More capacitance lowers, rather than raises, the resonant frequency.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Its resonant frequency falls, so the unchanged source is now below resonance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The direction of the frequency shift is right, but the comparison is reversed. The source stayed at the old, higher frequency.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Series resonance gives low impedance at the resonant frequency, so current is highest.", "fr": null }
+      "explanation": {
+        "en": "Resonance is a frequency condition as well as a circuit arrangement. Changing C moves that condition.",
+        "fr": null
+      }
     }
   ]
 }

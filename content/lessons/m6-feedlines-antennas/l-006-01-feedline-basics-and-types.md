@@ -105,7 +105,7 @@ Text equivalent:
 - The open-wire cross-section shows two balanced conductors held apart by spreaders.
 ::
 
-### Worked example: feeding a simple dipole
+### In the real world: feeding a simple dipole
 
 A backyard dipole is fed by fifty-ohm coax. The dipole legs should carry equal and opposite RF currents. The coax shield, however, is part of an unbalanced line.
 
@@ -123,11 +123,21 @@ Start with the route, not a catalogue page.
 
 ## Try it
 
-1. A fifty-ohm coax jumper is shortened from 9 m to 5 m. What happens to its characteristic impedance? It remains fifty ohms because the cable geometry and dielectric did not change.
-2. A window-line run is draped along a steel railing. What should you change? Move it away from the metal or choose coax for that section.
-3. A handheld antenna connector feels stiff. What is the safe next action? Stop and realign the SMA threads instead of forcing them.
-4. A dipole is fed with coax and the shack microphone tingles during transmit. What feed-point device may be missing? A balun or common-mode choke is a likely troubleshooting step.
-5. A wet garden route must lie close to soil for part of the run. Which feedline type is practical there? Coax is the practical choice for that route.
+Try these before reading the feedback below.
+
+1. A fifty-ohm coax jumper is shortened from 9 m to 5 m. What happens to its characteristic impedance?
+2. A window-line run is draped along a steel railing. What should you change?
+3. A handheld antenna connector feels stiff. What is the safe next action?
+4. A dipole is fed with coax and the microphone tingles during transmit. What feed-point device might help?
+5. Which feedline is practical for a wet garden route close to soil?
+
+### Try-it feedback
+
+1. It remains fifty ohms because geometry and dielectric did not change.
+2. Move it away from metal or choose coax for that section.
+3. Stop and realign the SMA threads; do not force them.
+4. Investigate common-mode current and a suitable feed-point balun or choke. Stop using the unsafe setup while troubleshooting.
+5. Coax is the practical choice for that route.
 
 ## Radio connection
 

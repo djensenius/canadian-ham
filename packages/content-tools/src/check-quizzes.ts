@@ -130,6 +130,7 @@ type LocalizedText = {
 type QuizChoice = {
   text: LocalizedText;
   isCorrect: boolean;
+  feedback?: LocalizedText;
 };
 
 type ConceptCheck = {
@@ -168,6 +169,7 @@ type LessonRecord = {
 };
 
 export type QuizCheckOptions = {
+  requireFeedback?: boolean;
   lessonRoot?: string;
   questionsPath?: string;
   quizRoot?: string;
@@ -348,7 +350,7 @@ async function loadQuestions(questionsPath: string): Promise<Map<string, Questio
   return questions;
 }
 
-function validateQuizShape(value: unknown, filePath: string, issues: string[]): LessonQuiz | null {
+function validateQuizShape(value: unknown, filePath: string, issues: string[], requireFeedback: boolean): LessonQuiz | null {
   if (!isRecord(value)) {
     issues.push(`${filePath}: quiz file must contain a JSON object`);
     return null;
@@ -404,13 +406,18 @@ function validateQuizShape(value: unknown, filePath: string, issues: string[]): 
       if (!hasLocalizedText(choice.text)) {
         issues.push(`${choicePath}: text must have non-empty en text and fr:null or non-empty fr text`);
       }
+      if (choice.feedback === undefined && requireFeedback) {
+        issues.push(`${choicePath}: feedback is required`);
+      } else if (choice.feedback !== undefined && !hasLocalizedText(choice.feedback)) {
+        issues.push(`${choicePath}: feedback must have non-empty en text and fr:null or non-empty fr text`);
+      }
       if (typeof choice.isCorrect !== "boolean") {
         issues.push(`${choicePath}: isCorrect must be boolean`);
       } else if (choice.isCorrect) {
         correctCount += 1;
       }
       if (hasLocalizedText(choice.text) && typeof choice.isCorrect === "boolean") {
-        choices.push({ text: choice.text, isCorrect: choice.isCorrect });
+        choices.push({ text: choice.text, isCorrect: choice.isCorrect, ...(hasLocalizedText(choice.feedback) ? { feedback: choice.feedback } : {}) });
       }
     }
     if (correctCount !== 1) {
@@ -606,7 +613,7 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
     }
     quizFileCount += 1;
     seenQuizFileBasenames.add(basenameId);
-    const quiz = validateQuizShape(rawQuiz, filePath, issues);
+    const quiz = validateQuizShape(rawQuiz, filePath, issues, options.requireFeedback ?? true);
     if (quiz === null) {
       continue;
     }
@@ -724,7 +731,8 @@ function lessonRootFromArgs(args: string[]): string | undefined {
 }
 
 async function main(): Promise<void> {
-  const report = await checkQuizzes({ lessonRoot: lessonRootFromArgs(process.argv.slice(2)) });
+  const args = process.argv.slice(2);
+  const report = await checkQuizzes({ lessonRoot: lessonRootFromArgs(args) });
   for (const line of report.summaryLines) {
     console.log(line);
   }

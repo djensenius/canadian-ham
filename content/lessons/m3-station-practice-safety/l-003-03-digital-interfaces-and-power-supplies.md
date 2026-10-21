@@ -90,11 +90,34 @@ Overvoltage protection must monitor the regulated output. The radio is connected
 
 ### Worked example: transformer and rectifier roles
 
-A bench supply uses a transformer to reduce 120 V AC mains to 18 V AC at its secondary. A bridge rectifier turns that AC waveform into pulsating DC. A filter capacitor charges near the peaks and supplies current between peaks. The peak is about 18 V x 1.414 = 25.5 V, or roughly 23 V to 24 V after the bridge diodes, before ripple and load. The regulator holds the output near 13.8 V DC for the radio.
+A bench supply transformer reduces mains voltage to 18 V AC RMS. RMS is the effective AC value; for a sine wave, its peak is about 1.414 times larger. A bridge rectifier steers both halves into the same polarity. The capacitor charges near the peaks.
 
-The numbers are approximate because real supplies include diode drops, ripple, and load changes. The block sequence is the key idea.
+- Given: secondary E = 18 V AC RMS; sine-wave peak factor = 1.414.
+- Find: peak voltage before allowing for diode drops.
+- Formula: peak E = RMS E x 1.414.
+- Substitute: peak E = 18 V x 1.414.
+- Answer: peak E is about 25.5 V before diode drops, or roughly 23 V to 24 V after the bridge, before ripple and load.
+- Sanity check: filtered DC is related to the sine-wave peaks, not simply the AC RMS label.
 
-### Worked example: ripple after filtering
+The regulator then holds the output near 13.8 V DC. The separate regulator-heat example below starts with a different stated DC input. Real diode drops, ripple, and loading change the available voltage.
+
+### Faded practice: estimate a sine-wave peak
+
+A separate training transformer has a 16 V AC RMS secondary. Estimate its sine-wave peak before bridge-diode drops.
+
+- Given: RMS E = 16 V; peak factor = 1.414.
+- Find: peak E before diode drops.
+- Formula: peak E = RMS E x 1.414.
+- Complete: peak E = ___ V x 1.414 = about ___ V.
+- Sanity check: should the peak exceed the RMS label?
+
+Fill the gaps before checking below.
+
+### Check your work: estimate a sine-wave peak
+
+16 x 1.414 = 22.624, or about 22.6 V. Bridge drops, ripple, and load reduce the DC available to a regulator. This is not a measurement instruction for an open mains supply.
+
+### In the real world: ripple after filtering
 
 A training supply has a rectifier-only test point and a filtered test point. Under the same load, the rectifier-only point has a strong rising and falling waveform. The filtered point has a smaller ripple riding on DC, such as 0.35 V peak-to-peak.
 
@@ -108,13 +131,30 @@ Never open or probe inside a mains-powered supply unless you are qualified and e
 
 A regulator has 18 V DC at its input. It supplies 13.8 V DC at its output and carries 2.5 A to a receiver and accessories.
 
-```text
-voltage dropped by regulator = 18 V - 13.8 V = 4.2 V
-heat in regulator ≈ voltage drop x current
-heat in regulator ≈ 4.2 V x 2.5 A = 10.5 W
-```
+- Given: input E = 18 V DC; output E = 13.8 V DC; I = 2.5 A.
+- Find: regulator heat.
+- Formula: heat power = (input E - output E) x I.
+- Substitute: heat power = (18 V - 13.8 V) x 2.5 A.
+- Answer: heat power = 4.2 V x 2.5 A = 10.5 W.
+- Sanity check: this is the power lost in the regulator, not power delivered to the radio.
 
 About ten watts of heat is enough to require serious heat sinking.
+
+### Faded practice: finish a heat budget
+
+A linear regulator supplies 13.6 V from 17.6 V DC while carrying 1.8 A.
+
+- Given: input E = 17.6 V; output E = 13.6 V; I = 1.8 A.
+- Find: heat in the regulator.
+- Formula: heat power = voltage drop x current.
+- Complete: drop = 17.6 - 13.6 = ___ V; heat = ___ V x 1.8 A = ___ W.
+- Sanity check: would a larger input voltage at the same output and load make more heat?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a heat budget
+
+The drop is 4.0 V and heat is 7.2 W. A larger input-output difference at the same current makes more heat; it does not give the radio more output voltage.
 
 ## Try it
 

@@ -101,7 +101,12 @@ The letters RST fix the order: readability, signal strength, then tone. Voice re
 
 ### Worked example: keep the three observations separate
 
-A Morse signal is quite readable, with practically no difficulty. Its strength is moderately strong and its note is clean. Reading the table by part gives R = 4, S = 7, T = 9, so the report is 479.
+A Morse signal is quite readable, with practically no difficulty. Its strength is moderately strong and its note is clean.
+
+1. Match readability to the table: R = 4.
+2. Match received strength separately: S = 7.
+3. Match the clean note to tone: T = 9.
+4. Keep the table order, R then S then T: send 479.
 
 ### Voice reports use readability and strength
 
@@ -154,6 +159,23 @@ Now suppose another station cuts power from 60 W to 15 W under the same model.
 - Answer: about one S-unit downward, or a 6 dB fall.
 - Sanity check: halving to 30 W and halving again to 15 W reverses the two doublings.
 
+### Faded practice: predict a smaller signal
+
+A transmitter drops from 36 W to 9 W. Keep the same calibrated meter and stable-path assumptions.
+
+- Given: old power = 36 W; new power = 9 W.
+- Find: the approximate meter change.
+- Formula: power ratio = new power / old power.
+- Complete: ratio = 9 / 36 = ___; 36 W -> ___ W -> 9 W.
+- Predict: the meter moves about ___ S-unit in which direction?
+- Sanity check: did you count both halvings rather than treating one halving as a full S-unit?
+
+Finish both halvings before reading on.
+
+### Check your work: smaller signal
+
+The ratio is 0.25. Halving gives 36 W -> 18 W -> 9 W. Two halvings mean about one S-unit downward, or a 6 dB fall. The estimate no longer isolates power if the path or antenna changes.
+
 ## Choose Q signals by the task
 
 Q signals are compact three-letter groups. A question mark can turn a statement into a request for information. For example, QRL? checks whether a frequency is busy; QRL can state that a station is busy.
@@ -186,15 +208,15 @@ On voice, use plain language when it is clearer. Abbreviations help only when bo
 
 ## Try it
 
-Try these without looking back. Finish the power example before reading the feedback.
+Try these independently before reading the feedback.
 
-1. Under the calibrated, stable-path model, a transmitter drops from 48 W to 12 W. Fill in the two halvings: 48 W -> ___ W -> 12 W. Predict the meter change.
+1. Under the calibrated, stable-path model, a transmitter drops from 48 W to 12 W. Predict the S-meter change and explain your reasoning.
 2. You need slower Morse, then the signal fades before you copy the next word. Which group requests a slower pace, and which describes the fading?
 3. A relayed voice signal is very strong, but several words are lost in rough audio. Why should the report separate readability from strength?
 
 ### Check your thinking
 
-1. The missing power is 24 W. The power becomes a quarter of its starting value, so expect roughly one S-unit downward. A changing path would make that prediction unreliable.
+1. Power halves from 48 W to 24 W, then to 12 W. That is a quarter of the starting power, so expect roughly one S-unit downward. A changing path would make that prediction unreliable.
 2. Use QRS for the pace and QSB for fading. One asks the operator to change something; the other describes reception.
 3. The repeater output can be strong while speech remains hard to understand. Report both observations; do not add a Morse-tone digit to a voice report.
 

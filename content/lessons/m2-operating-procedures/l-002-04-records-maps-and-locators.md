@@ -45,7 +45,7 @@ Canadian amateur station logs are optional, not a regulatory requirement. They a
 
 Record enough information to identify what happened: UTC date and time, the other call sign, band or frequency, mode, signal report, location, and useful station notes. A power or antenna change can matter when you compare results later.
 
-### Worked example: a log narrows an interference enquiry
+### In the real world: a log narrows an interference enquiry
 
 A neighbour reports a burst of interference at 0215 UTC. Your log shows the band and mode used at that time, with a note about an antenna change.
 
@@ -75,6 +75,22 @@ Suppose a station-centred map gives a short-path bearing of 65 degrees for a dis
 - Substitute: long-path heading = 65 + 180 degrees.
 - Answer: long-path heading = 245 degrees.
 - Sanity check: the new heading is half a turn from the original, not a small trim of the antenna.
+
+### Faded practice: wrap a bearing around north
+
+Your station-centred map gives a short-path heading of 248 degrees.
+
+- Given: short-path heading = 248 degrees.
+- Find: the opposite long-path heading.
+- Formula: add 180 degrees, then subtract 360 degrees if the result reaches a full turn.
+- Complete: 248 + 180 = ___; ___ - 360 = ___ degrees.
+- Sanity check: are the original and new headings half a turn apart?
+
+Work through the wrap before checking.
+
+### Check your work: bearing wrap
+
+248 + 180 = 428; 428 - 360 = 68 degrees. Try 68 degrees for long path. This changes the direction to test, not the available propagation.
 
 ### Memory trick: the other way around
 
@@ -120,6 +136,22 @@ A contact occurs at 0210 UTC on 12 April. The stated local offset is still UTC m
 - Answer: 11 April at 2110, or 9:10 PM locally.
 - Sanity check: adding the offset back reaches 0210 on 12 April. The log still records the contact's UTC date as 12 April.
 
+### Faded practice: carry the local date back
+
+An event is at 0325 UTC on 18 June. The stated local offset is UTC minus 4 hours.
+
+- Given: UTC = 0325 on 18 June; offset = minus 4 h.
+- Find: local time and date.
+- Formula: subtract the offset magnitude; carry the date back if needed.
+- Complete: 0325 - 0400 = ___ on ___ June.
+- Sanity check: add 4 hours to your local answer. Does it reach the original UTC time and date?
+
+Keep the date beside your answer before checking.
+
+### Check your work: local date
+
+The local reminder is 2325 on 17 June, or 11:25 PM. Adding 4 hours reaches 0325 on 18 June. The UTC log entry keeps 18 June.
+
 ### Check time and frequency against a standard
 
 Standard time and frequency stations CHU, WWV, and WWVH provide accurate reference signals. Operators can use them to check time or frequency, supporting careful logging and receiver checks.
@@ -128,8 +160,8 @@ Standard time and frequency stations CHU, WWV, and WWVH provide accurate referen
 
 Work these out before reading the feedback. Keep dates beside your times.
 
-1. Finish a local-time reminder: an event is at 0145 UTC on 20 May. Your stated zone is UTC minus 5 hours. After subtracting, the local time is ___ on ___ May. Express it in AM/PM too.
-2. A map shows a short-path heading of 235 degrees. Add half a turn, then remove a full turn if needed. What heading should you try for long path?
+1. An event is at 0145 UTC on 20 May. Your stated zone is UTC minus 5 hours. Find the local date and time, including an AM/PM version.
+2. A map shows a short-path heading of 235 degrees. Find the long-path heading.
 3. Your contact partner's local date differs from yours. Which record fields should you compare before assuming you logged different contacts?
 
 ### Check your thinking

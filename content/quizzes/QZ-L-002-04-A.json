@@ -18,123 +18,171 @@
     {
       "id": "QZ-L-002-04-A-C1",
       "prompt": {
-        "en": "A weekly net keeps the same UTC schedule. Your local clock offset changes for the season. What should happen to the reminder in your local calendar?",
+        "en": "A weekly net keeps the same UTC schedule. Your local clock offset changes for the season. How should you update a local calendar reminder?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Keep the local time fixed and shift the published UTC schedule instead.",
+            "en": "Keep local time fixed by moving the published UTC event time.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "That changes the event instead of converting its time. A fixed UTC schedule may have a different local time.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Recalculate the local reminder using the new offset; keep the UTC schedule unchanged.",
+            "en": "Recalculate local time using the offset on the event date, keeping UTC fixed.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Use the event-date offset and check for a date crossing. UTC stays the shared schedule.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Keep both times unchanged because the net still has the same name.",
+            "en": "Keep the earlier local reminder until the net changes its UTC schedule.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The local offset changed even though the UTC event did not. The old reminder can now be an hour off.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Change only the calendar date, without checking the local clock time.",
+            "en": "Use the offset on the date you entered the reminder, rather than the event date.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The relevant offset is the one in force when the event occurs. Entry time does not set the conversion.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "The event stays at the same UTC time, but its relationship to your local clock has changed. Apply the offset in force on the event date to update the reminder, checking the local date too. Moving the UTC schedule changes the event rather than the conversion. Keeping everything fixed ignores the new offset, and changing only the date does not perform the conversion.",
+        "en": "A fixed UTC schedule can move on the local clock when the offset changes. Convert using the offset on the event date.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-002-04-A-C2",
       "prompt": {
-        "en": "A club gives you an azimuthal map centred on its station, far from yours. Can you use its printed bearings directly to aim your home antenna?",
+        "en": "A club gives you an azimuthal map centred far from your home station. You want a bearing from home to a distant contact. Which method is suitable?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Yes. Bearings depend only on the destination.",
+            "en": "Use the club map bearing because the destination is unchanged.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A bearing depends on the starting point as well as the destination. The club centre is a different starting point.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Yes, if you use the same UTC time as the club.",
+            "en": "Use the reciprocal of the club bearing because your station is at a different centre.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A reciprocal reverses a path from the same starting point. It does not move the map centre to your station.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "No. You need bearings from a map centred on your own location.",
+            "en": "Use an azimuthal map centred on your home station.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "A home-centred map gives outward bearings from your own location to the destination.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "No. Azimuthal maps cannot show antenna bearings.",
+            "en": "Use the club bearing after adjusting it by your UTC offset.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Time-zone conversion changes clock labels, not the map geometry between stations.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "A bearing has a starting point as well as a destination. A different map centre can change the direction to aim. Sharing a time standard does not change map geometry; a correctly centred azimuthal map does show useful bearings.",
+        "en": "Azimuthal bearings radiate from the map centre. Use your own station as that centre for home antenna headings.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-002-04-A-C3",
       "prompt": {
-        "en": "Your log notes that reception improved just after you turned the antenna. The distant station kept the same power. Does that record prove the antenna turn caused the improvement?",
+        "en": "Your log shows better reception just after you turn the antenna. The distant station kept the same power. What would best test whether antenna direction caused the improvement?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "No. It records a useful change to investigate, but propagation could have changed too.",
+            "en": "Compare repeated turns between the headings while watching for path changes.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Repeated comparisons with other settings held steady give better evidence than one change. Propagation can still vary, so watch the path.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Yes. Events recorded next to each other in a log must have the same cause.",
+            "en": "Treat the time order in the log as sufficient proof of the cause.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The log shows sequence, not control over other causes. A path change could have happened at the same time.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Yes. Constant transmitter power rules out every other cause of stronger reception.",
+            "en": "Treat unchanged transmitter power as proof that propagation stayed fixed.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Transmitter power and propagation are different conditions. One can stay fixed while the other changes.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "No. Optional Canadian station logs cannot provide useful evidence.",
+            "en": "Compare a later reading using a different receiver gain setting.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Changing receiver gain adds another cause for a meter difference. Hold settings steady to compare antenna headings.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "A log preserves observations, not a controlled test of every possible cause. The antenna turn is worth investigating, but changing propagation can also affect reception. A sequence of events alone does not establish a cause, and fixed transmitter power does not hold the path steady. Optional logs remain useful for comparing later tests and conditions.",
+        "en": "A log preserves observations. Repeated comparisons with other conditions held steady help distinguish an antenna effect from changing propagation.",
         "fr": null
       }
     }
