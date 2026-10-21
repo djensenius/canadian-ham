@@ -1010,7 +1010,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { app.terminate() }
         let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
         XCTAssertTrue(toggle.waitForExistence(timeout: 10))
-        positionTryItSectionAtLaunch(in: app)
+        positionLessonHeadingForTryItAudit("try-it", in: app)
         XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true))
         XCTAssertEqual(toggle.label, "Afficher la réponse 1")
         XCTAssertEqual(toggle.value as? String, "Réduit")
@@ -2394,7 +2394,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func auditLessonTryItReveal(appearance: AuditAppearance, accessibilitySize: Bool) throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialLessonID", "L-004-03",
-            "-CanadianHamInitialLessonSectionAnchor", "try-it",
+            "-CanadianHamInitialLessonSectionAnchor", "check-your-work-compare-matching-digits",
             "-CanadianHamTheme", appearance.rawValue,
             "-UIPreferredContentSizeCategoryName", accessibilitySize ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL"
         ])
@@ -2404,7 +2404,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let answer = app.staticTexts["lesson-try-it-1-answer"].firstMatch
         let secondAnswer = app.staticTexts["lesson-try-it-2-answer"].firstMatch
         XCTAssertFalse(answer.exists, "Try-it answers must not enter the accessibility tree before disclosure")
-        positionTryItSectionAtLaunch(in: app)
+        positionLessonHeadingForTryItAudit("check-your-work-compare-matching-digits", in: app)
+        try auditIgnoringOccludedLessonTextContrast(app: app)
+        positionLessonHeadingForTryItAudit("try-it", in: app)
         XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true), "Show answer must be fully visible beside the Try-it section before tapping or auditing")
         XCTAssertEqual(toggle.label, "Show answer 1")
         XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
@@ -2422,17 +2424,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertEqual(toggle.value as? String, "Collapsed")
     }
 
-    private func positionTryItSectionAtLaunch(in app: XCUIApplication) {
-        let heading = app.staticTexts["lesson-heading-try-it"].firstMatch
+    private func positionLessonHeadingForTryItAudit(_ anchor: String, in app: XCUIApplication) {
+        let heading = app.staticTexts["lesson-heading-\(anchor)"].firstMatch
         XCTAssertTrue(heading.waitForExistence(timeout: 10))
         waitBriefly(0.5)
         let scroll = scrollView(containing: heading, in: app)
-        for _ in 0..<8 where !isFullyVisible(heading, in: app, requiresHittable: false) {
+        for _ in 0..<24 where !isFullyVisible(heading, in: app, requiresHittable: false) {
             let visible = visibleFrameExcludingNavigationBar(in: app)
             preciseScroll(scroll, contentDeltaY: heading.frame.minY < visible.minY ? 80 : -80)
             waitBriefly()
         }
-        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: false), "Try-it section heading must be fully visible at the DEBUG launch anchor")
+        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: false), "Lesson heading \(anchor) must be fully visible before the Try-it audit")
     }
 
     private func positionTryItControlForAudit(_ control: XCUIElement, in app: XCUIApplication) {
