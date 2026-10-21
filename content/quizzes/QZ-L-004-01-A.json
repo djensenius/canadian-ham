@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-004-01-A-C1",
       "prompt": {
-        "en": "A 7 MHz signal enters a receiver stage and leaves at the same frequency with the same modulation, but at a larger voltage. What did the stage do?",
+        "en": "A receiver stage takes a 7 MHz modulated signal and produces a larger voltage at the same frequency with the same modulation. Which block behaviour fits?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Amplified the RF signal without changing it to audio",
+            "en": "RF amplification.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The stage raises the existing RF level while preserving frequency and information.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Detected audio from the carrier",
+            "en": "Envelope detection into audio.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Detection recovers the information as audio. The described output is still modulated RF at 7 MHz.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Protected the battery from reverse polarity",
+            "en": "Frequency conversion to an IF.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A frequency-converting mixer moves the signal to another frequency. The described carrier frequency did not change.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Changed the resistor tolerance",
+            "en": "Oscillation without an input signal.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "An oscillator generates a repeating signal. Here an existing input is being made larger with its modulation preserved.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Amplification raises signal level while preserving the wanted waveform; a 7 MHz signal is still RF when it leaves at 7 MHz.",
+        "en": "Gain can apply to RF or audio. Identify the signal type and whether frequency or information changed, not just whether the output grew.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-01-A-C2",
       "prompt": {
-        "en": "An audio amplifier is overdriven until the voice waveform has flattened peaks. What problem is most likely?",
+        "en": "Two amplifiers preserve a test waveform equally well, but one draws more DC power for the same RF output. Which comparison follows?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "A cleaner, narrower transmitted signal",
+            "en": "The higher-draw amplifier must be more non-linear.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Extra DC draw can mean more wasted heat even when the waveform is equally clean.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Distortion products from non-linear operation",
+            "en": "The lower-draw amplifier has less voltage gain even if its RF output is the same.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "Efficiency compares power conversion. The observations do not establish a voltage-gain difference.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Automatic cancellation of all harmonics",
+            "en": "Both have equal efficiency because both preserve waveform shape.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Clean shape addresses linearity, not how much DC power is converted to useful output.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Less occupied bandwidth because all peaks are flattened",
+            "en": "The higher-draw amplifier is less efficient; the test does not show worse linearity.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "For equal useful output, more DC input means lower efficiency. The equal waveform quality is separate evidence about linearity.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Clipping is non-linear operation: it changes the waveform shape and produces distortion products.",
+        "en": "Judge signal shape and power conversion separately. Clean amplification can still waste considerable heat.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-01-A-C3",
       "prompt": {
-        "en": "A power supply uses four diodes before a filter capacitor so both halves of the AC waveform feed the same DC polarity. Which diode job is this?",
+        "en": "An LED indicator is moved to a higher supply voltage while its series resistor and assumed LED drop stay unchanged. What should be rechecked?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Voltage regulation by a Zener diode",
+            "en": "The greater resistor voltage raises current and heat, so its value and wattage need checking.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "The resistor must now drop more voltage. With unchanged resistance, current and power dissipation rise.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Light emission from an LED",
+            "en": "Keep the resistor unchanged if the replacement supply has the same maximum current rating.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Supply current capacity is not a current regulator for the LED. The higher applied voltage still changes current through the resistor.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Rectification",
+            "en": "Raise the wattage rating but keep the resistance, since the LED drop sets the current.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "The approximately fixed LED drop leaves more voltage across the same resistor. Current rises as well as heat, so wattage alone is not the complete check.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Reverse-polarity protection at a DC input",
+            "en": "Recalculate resistance but keep the old wattage rating, since current control also establishes safe heat dissipation.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Current-setting resistance does not by itself establish a safe wattage rating. Check power dissipation at the new operating point.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "A rectifier uses diode one-way action to turn alternating current into current of one polarity before filtering.",
+        "en": "A resistor chosen for one supply is not automatically suitable when the supply changes.",
         "fr": null
       }
     }

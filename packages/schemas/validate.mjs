@@ -17,6 +17,7 @@ const schemaFiles = [
   "subsection-titles.schema.json",
   "lesson-module-front-matter.schema.json",
   "lesson-front-matter.schema.json",
+  "lesson-quiz.schema.json",
   "explanation.schema.json",
   "hint.schema.json",
   "progress-export-v1.schema.json",
@@ -89,6 +90,10 @@ for (const file of walk(path.join(projectRoot, "content/lessons"), ".md")) {
   }
 }
 
+for (const file of walk(path.join(projectRoot, "content/quizzes"), ".json")) {
+  validateJsonFile(path.relative(projectRoot, file), "lesson-quiz.schema.json");
+}
+
 for (const file of walk(path.join(projectRoot, "content/explanations"), ".json")) {
   validateJsonFile(path.relative(projectRoot, file), "explanation.schema.json");
 }
@@ -117,7 +122,7 @@ if (failures.length > 0) {
 }
 
 console.log(`Schema validation passed: ${validationCount} validation target(s).`);
-console.log("Validated generated bank JSON, subsection titles, lesson front matter, explanations, hints, engine fixtures, and progress export samples.");
+console.log("Validated generated bank JSON, subsection titles, lesson front matter, lesson quizzes, explanations, hints, engine fixtures, and progress export samples.");
 
 function validateJsonFile(relativePath, schemaFile) {
   const absolutePath = path.join(projectRoot, relativePath);

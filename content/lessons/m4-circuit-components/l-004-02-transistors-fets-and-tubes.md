@@ -110,6 +110,22 @@ A 3.3 V control pin can drive an NPN transistor through a base resistor. The tra
 
 A relay coil is an inductor. When the transistor turns off, the coil can make a voltage spike. A flyback diode across a DC relay coil gives that current a safe path and helps protect the transistor.
 
+### Faded practice: find base-resistor current
+
+A training NPN relay switch uses a 4.5 V control signal, an assumed 0.7 V base-emitter drop, and a 1.0 kilohm base resistor.
+
+- Given: control E = 4.5 V; base-emitter drop = 0.7 V; R = 1.0 kilohm = ___ ohms.
+- Find: base current.
+- Formula: I = (control E - base-emitter drop) / R.
+- Complete: resistor E = 4.5 - 0.7 = ___ V; I = ___ / 1 000 = ___ A = ___ mA.
+- Sanity check: is this the small control current or the relay-coil current?
+
+Fill the gaps before checking below.
+
+### Check your work: find base-resistor current
+
+The resistor is 1 000 ohms and drops 3.8 V. Base current is 0.0038 A, or 3.8 mA. This does not establish the allowed coil current; the transistor, control pin, coil, and flyback protection still need suitable ratings.
+
 ### In the real world: switching a cooling fan
 
 A microcontroller output cannot supply a station accessory fan directly. It drives a resistor connected to a transistor base instead. When the base drive is present, the collector-emitter path conducts and the fan runs. When the base drive is removed, the transistor turns off and the fan stops.

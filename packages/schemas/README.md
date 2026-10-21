@@ -15,6 +15,7 @@ All schema files use JSON Schema draft 2020-12 and are intentionally data-only: 
 | `subsection-titles.schema.json` | `content/subsection-titles.json` |
 | `lesson-module-front-matter.schema.json` | `type: module` front matter in `content/lessons/**/*.md` |
 | `lesson-front-matter.schema.json` | `type: lesson` front matter in `content/lessons/**/*.md` |
+| `lesson-quiz.schema.json` | `content/quizzes/*.json`, including optional per-choice localized concept-check feedback |
 | `explanation.schema.json` | `content/explanations/**/*.json` |
 | `progress-export-v1.schema.json` | Progress export/import JSON shared by the web `ProgressStore` and Apple `ProgressStoreService` |
 | `engine-fixture.schema.json` | `fixtures/engine/*.json` language-neutral engine fixtures |
@@ -34,13 +35,13 @@ pnpm check:schemas
 
 For direct debugging, the validator entry point is `node packages/schemas/validate.mjs`.
 
-The script validates the real generated bank JSON, subsection titles, lesson front matter, explanation JSON, engine fixtures, and two progress-export samples that cover the current full export shape and the optional-field import compatibility accepted by both platforms, including non-negative fractional exam timer values. Lesson front matter is parsed through the canonical `packages/content-tools` parser before schema validation.
+The script validates the real generated bank JSON, subsection titles, lesson front matter, lesson quiz JSON, explanation JSON, engine fixtures, and two progress-export samples that cover the current full export shape and the optional-field import compatibility accepted by both platforms, including non-negative fractional exam timer values. Lesson front matter is parsed through the canonical `packages/content-tools` parser before schema validation.
 
 Expected success output:
 
 ```text
-Schema validation passed: 1042 validation target(s).
-Validated generated bank JSON, subsection titles, lesson front matter, explanations, engine fixtures, and progress export samples.
+Schema validation passed: 2071 validation target(s).
+Validated generated bank JSON, subsection titles, lesson front matter, lesson quizzes, explanations, hints, engine fixtures, and progress export samples.
 ```
 
 ## Validator keyword subset
@@ -81,3 +82,5 @@ Schema metadata such as `$schema`, `$id`, `title`, and `$defs` is supported as d
 - Lesson and module status values use the same `outline`, `draft`, `review`, and `published` lifecycle accepted by `check-lesson-coverage.ts`; explanation status is any non-empty string because `check-explanations.ts` only enforces presence/non-emptiness today.
 - Lesson schemas validate the front matter contract only; Markdown body content is checked by existing content tools.
 - The schemas do not enforce cross-file referential integrity such as “this question ID exists in `questions.json`.” Existing content checks and app import validation cover those semantic relationships; these schemas cover JSON shape, scalar domains, and ID/timestamp formats.
+
+Concept-check choice `feedback` is optional in the interchange schema for compatibility with older content. It uses the same `{en, fr}` text contract as the prompt (`fr` may be null). The quiz checker requires complete per-choice feedback by default for authored content and validates feedback whenever present. The earlier `--require-feedback` flag remains accepted but is no longer needed.

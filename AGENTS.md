@@ -82,8 +82,14 @@ platform) and share one build lock, so don't run them by reflex.
   task-33 added the two Ohm's law figure integration audits after audit timeouts). The default
   `CanadianHamDefault` plan excludes those tests. Run the figure-only plan with:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamLessonFigures -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
+- **Category-title sweeps:** the four `CanadianHamPracticeUITests.testCategoryTitles…` tests
+  run in their own `CanadianHamTitleSweeps` plan, not `CanadianHamDefault`. Run this plan
+  when category titles, category or module names in the string catalogue, or the layout of
+  category cards, lists, headers or the sidebar change (TASK-52). Run the title-only plan with:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamTitleSweeps -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
 - **Release candidate (task-1.6):** the full four-platform run with every accessibility audit
-  (including the `CanadianHamLessonFigures` plan), plus the manual checks in `docs/release/release-checklist.md`.
+  (including the `CanadianHamLessonFigures` plan) and the `CanadianHamTitleSweeps` plan,
+  plus the manual checks in `docs/release/release-checklist.md`.
 - Record per-test results for the full runs you did in the task notes and PR body, and say
   which platforms you skipped and why.
 

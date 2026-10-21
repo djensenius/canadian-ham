@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-003-06-A-C1",
       "prompt": {
-        "en": "In hands-free testing, the desk fan sometimes starts transmit and the first syllable of real speech is clipped. Which change would NOT address either problem?",
+        "en": "An SSB processor raises average output while the transmitter is already at its clean peak limit. Which operating decision follows?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Set the voice trigger threshold high enough to ignore the fan, then retest the start of words",
+            "en": "Increase drive until the peak reading rises as much as the average reading.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The clean peak limit is already reached. More drive can cause clipping and unwanted bandwidth.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Move the fan away from or behind the microphone's pickup pattern",
+            "en": "Reduce processing or drive as needed to keep peaks within the clean limit.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "A higher average reading does not justify exceeding the peak limit or losing clean operation.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Use a closer directional headset microphone so speech is stronger than nearby fan noise",
+            "en": "Treat a higher average reading as proof that the peak limit has increased.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Processing changes the distribution of signal levels, not the transmitter's allowed clean peak.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Add maximum speech processing to raise average SSB output",
+            "en": "Judge the setting by the average meter alone because processed speech has no separate peak limit.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "Processing does not remove peak limits. Both the envelope peaks and the transmitted quality still matter.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "False trips and clipped starts are VOX trigger, timing, or acoustic-pickup problems. Moving the fan or improving the microphone pickup can change what trips VOX; speech processing changes audio density, not when transmit starts or stops.",
+        "en": "Average power and peak envelope power are different. Processing cannot create extra clean peak headroom.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-003-06-A-C2",
       "prompt": {
-        "en": "Two packet links both detect a bad frame. Link A logs the error and continues; Link B asks for the frame again until it passes a check or retries run out. For a short form that must not be silently corrupted, which conclusion is best?",
+        "en": "Two packet links detect damaged frames. Link A records an error and moves on. Link B requests a repeat until a check passes or retries run out. Which suits a form that must arrive intact or be reported as failed?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Link A is preferable because fewer repeats are faster even if a bad frame is kept",
+            "en": "Link A, because detecting the error makes a damaged frame usable without a repeat.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Detecting damage identifies a problem. It does not supply the missing or corrupted information.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Link B is preferable because a damaged frame can be replaced instead of only noticed",
+            "en": "Link B, because it can replace damaged data with a checked copy or report failure.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Repeat requests can obtain a clean copy within a retry limit. Failure can be reported rather than silently keeping damaged data.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The links are equivalent because detecting an error automatically repairs the data",
+            "en": "Either link, because both have already corrected the frame by checking it.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "An error check alone is detection, not reconstruction of the original content. The repeat supplies a new copy.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Link B is worse because retries erase the receiver's ability to detect errors",
+            "en": "Link A, because fewer transmissions give stronger evidence that every field arrived.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Fewer transmissions may be faster, but speed does not verify delivery of each field.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Detection-only systems can know something went wrong, but a repeat-request exchange can obtain a clean copy or stop after the retry limit.",
+        "en": "ARQ adds a repeat-request exchange to error detection. It can obtain a verified copy or report that delivery failed within the retry limit.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-003-06-A-C3",
       "prompt": {
-        "en": "A digital subband receiver shows a 2.5 kHz slice. If each weak-signal trace is about 50 Hz wide and you reserve roughly 200 Hz total for guard space, what is the closest planning estimate before practical spacing limits?",
+        "en": "A receiver shows a 2.5 kHz slice. Each trace is about 50 Hz wide, with 200 Hz total reserved for guard space. What is the closest count before practical spacing limits?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "About 23 traces",
+            "en": "About 23 traces.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "After the guard space, 2 300 Hz remains. Dividing by 100 Hz would give 23, but each stated trace is only 50 Hz wide.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "About 50 traces",
+            "en": "About 50 traces.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "This divides the full 2 500 Hz by 50 Hz without reserving the 200 Hz guard space.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "About 46 traces",
+            "en": "About 46 traces.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "Convert first: 2.5 kHz = 2 500 Hz. Then (2 500 - 200) / 50 = 46. Real operation also needs practical spacing.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "About 2,300 traces",
+            "en": "About 42 traces.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "This subtracts 200 Hz at each edge. The prompt reserves 200 Hz in total, so subtract it once.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Subtract the guard allowance, then divide by signal width: (2,500 - 200) / 50 ≈ 46. Real operation still leaves spacing for filters, drift, and courtesy.",
+        "en": "Convert widths to the same unit, subtract the total reserved space, then divide. The result is a simple planning count, not a real channel allocation.",
         "fr": null
       }
     }

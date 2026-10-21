@@ -147,6 +147,23 @@ A resistor has green, blue, black, and brown bands.
 - Answer: value = 56 ohms.
 - Sanity check: black as a multiplier means the two-digit value stays unchanged.
 
+### Faded practice: decode value and range
+
+A resistor has violet, green, red, and silver bands. Use the table to finish its value and allowed range.
+
+- Given: violet = 7; green = 5; red multiplier = x 100; silver tolerance = ± 10 %.
+- Find: nominal resistance and tolerance range.
+- Formula: nominal = two-digit number x multiplier; allowed change = nominal x 0.10.
+- Complete: nominal = 75 x ___ = ___ ohms; change = ___ x 0.10 = ___ ohms.
+- Finish: lower limit = nominal - change; upper limit = nominal + change.
+- Sanity check: the silver band changes the allowed range, not the nominal value.
+
+Fill the gaps before checking below.
+
+### Check your work: decode value and range
+
+Nominal resistance is 7 500 ohms, or 7.5 kilohms. The allowed change is 750 ohms, giving 6 750 to 8 250 ohms. The multiplier sets the scale; tolerance sets the spread.
+
 ## Tolerance ranges
 
 Tolerance is not an error you add on purpose. It is the allowed manufacturing variation around the nominal value. A smaller percentage means higher precision. For example, a ± 0.5 % resistor is more precise than a ± 10 % resistor, because its allowed spread is narrower.
@@ -212,6 +229,23 @@ A resistor marked yellow violet red has the same value digits, but multiplier x 
 - Substitute: value = 47 x 100.
 - Answer: value = 4 700 ohms.
 - Sanity check: only the multiplier band changed, so the nominal resistance changed by a factor of ten.
+
+### Faded practice: compare matching digits
+
+Compare blue-red-brown and blue-red-orange value bands. Their first two bands match.
+
+- Given: blue = 6; red = 2; brown multiplier = x 10; orange multiplier = x 1 000.
+- Find: both nominal values and their ratio.
+- Formula: value = two-digit number x multiplier; ratio = larger value / smaller value.
+- Complete: smaller = 62 x 10 = ___ ohms; larger = 62 x 1 000 = ___ ohms.
+- Finish: ratio = larger / smaller = ___ times.
+- Sanity check: did two added zeros change the value by ten or by a hundred?
+
+Fill the gaps before checking below.
+
+### Check your work: compare matching digits
+
+The values are 620 ohms and 62 000 ohms, or 62 kilohms. The ratio is 100. Changing the multiplier changes place value; the digit bands and tolerance need not change.
 
 ## Try it
 

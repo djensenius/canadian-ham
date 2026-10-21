@@ -241,9 +241,12 @@ public struct ConceptCheckChoice: Codable, Equatable, Sendable {
     public let text: LocalizedNullableText
     public let isCorrect: Bool
 
-    public init(text: LocalizedNullableText, isCorrect: Bool) {
+    public let feedback: LocalizedNullableText?
+
+    public init(text: LocalizedNullableText, isCorrect: Bool, feedback: LocalizedNullableText? = nil) {
         self.text = text
         self.isCorrect = isCorrect
+        self.feedback = feedback
     }
 }
 
