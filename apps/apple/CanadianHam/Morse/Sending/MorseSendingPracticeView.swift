@@ -9,7 +9,8 @@ struct MorseSendingPracticeView: View {
     private enum KeyboardFocus: Hashable { case practice, exam }
 
     @Environment(\.scenePhase) private var scenePhase
-    @FocusState private var keyboardFocus: KeyboardFocus?
+    @State private var keyboardFocus: KeyboardFocus?
+    @State private var keyboardFocusRequest = UUID()
 #if DEBUG
     @State private var keyboardEventDescription = "none"
 #endif
@@ -71,20 +72,17 @@ struct MorseSendingPracticeView: View {
         .background(DesignTokens.Colors.paper)
         .contentShape(Rectangle())
         .navigationTitle("Sending practice") // l10n: localized
-        // Keying edits the decoded message; it must not depend on Full Keyboard Access.
-        .focusable(!showingExam && presentedResult == nil, interactions: .edit)
-        .focused($keyboardFocus, equals: .practice)
-        .defaultFocus($keyboardFocus, .practice)
+        .modifier(MorseSendingKeyboardFocus(
+            isActive: !showingExam && presentedResult == nil,
+            request: keyboardFocusRequest,
+            focusChanged: { updateKeyboardFocus(.practice, isFocused: $0) },
+            keyPress: handleKeyPress
+        ))
         .onAppear {
-            focusKeyboardAfterLayout(.practice)
             // Another Morse mode starting playback stops any held key or paddle here.
             playbackCoordinator.register("sending-practice") {
                 stopAllKeying(finalizeStraight: true)
             }
-        }
-        .onKeyPress(phases: [.down, .up]) { press in
-            guard !showingExam, presentedResult == nil else { return .ignored }
-            return handleKeyPress(press)
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
@@ -229,14 +227,12 @@ struct MorseSendingPracticeView: View {
         .background(DesignTokens.Colors.paper)
         .contentShape(Rectangle())
         .navigationTitle("Exam-style check") // l10n: localized
-        .focusable(presentedResult == nil, interactions: .edit)
-        .focused($keyboardFocus, equals: .exam)
-        .defaultFocus($keyboardFocus, .exam)
-        .onAppear { focusKeyboardAfterLayout(.exam) }
-        .onKeyPress(phases: [.down, .up]) { press in
-            guard showingExam, presentedResult == nil else { return .ignored }
-            return handleKeyPress(press)
-        }
+        .modifier(MorseSendingKeyboardFocus(
+            isActive: showingExam && presentedResult == nil,
+            request: keyboardFocusRequest,
+            focusChanged: { updateKeyboardFocus(.exam, isFocused: $0) },
+            keyPress: handleKeyPress
+        ))
         .onDisappear {
             if presentedResult == nil, !examText.isEmpty {
                 cancelRunningExam(clearExam: true)
@@ -244,11 +240,11 @@ struct MorseSendingPracticeView: View {
         }
     }
 
-    private func focusKeyboardAfterLayout(_ target: KeyboardFocus) {
-        Task { @MainActor in
-            await Task.yield()
-            guard presentedResult == nil, showingExam == (target == .exam) else { return }
+    private func updateKeyboardFocus(_ target: KeyboardFocus, isFocused: Bool) {
+        if isFocused {
             keyboardFocus = target
+        } else if keyboardFocus == target {
+            keyboardFocus = nil
         }
     }
 
@@ -458,7 +454,7 @@ struct MorseSendingPracticeView: View {
             examDeadline = Date().addingTimeInterval(TimeInterval(debugExamDurationSeconds))
             examRunning = true
             statusMessage = String(localized: "Sending check started. Send the displayed passage within 3:00.")
-            focusKeyboardAfterLayout(.exam)
+            keyboardFocusRequest = UUID()
             examTimerTask?.cancel()
             examTimerTask = Task { @MainActor in
                 while !Task.isCancelled, examRunning {
@@ -553,6 +549,40 @@ struct MorseSendingPracticeView: View {
     private func fillExamTextForUITest() {}
     private func gradeHeldStraightKeyForUITest() {}
 #endif
+}
+
+// Each navigation host owns its focus binding. A binding owned by the practice host
+// cannot reliably focus the pushed exam's key capture surface.
+private struct MorseSendingKeyboardFocus: ViewModifier {
+    let isActive: Bool
+    let request: UUID
+    let focusChanged: (Bool) -> Void
+    let keyPress: (KeyPress) -> KeyPress.Result
+
+    @FocusState private var hasKeyboardFocus: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .focusable(isActive, interactions: .edit)
+            .focused($hasKeyboardFocus)
+            .defaultFocus($hasKeyboardFocus, true, priority: .userInitiated)
+            .task(id: request) {
+                // Wait for the pushed host to finish its initial navigation layout.
+                await Task.yield()
+                guard !Task.isCancelled, isActive else { return }
+                hasKeyboardFocus = true
+            }
+            .onChange(of: isActive) { _, active in
+                hasKeyboardFocus = active
+            }
+            .onChange(of: hasKeyboardFocus) { _, focused in
+                focusChanged(focused)
+            }
+            .onKeyPress(phases: [.down, .up]) { press in
+                guard isActive else { return .ignored }
+                return keyPress(press)
+            }
+    }
 }
 
 func clearMorseSendingPendingCharacterFinalization(finalizeTask: inout Task<Void, Never>?, pendingSamples: inout [MorseKeyTimingSample], clearPendingSamples: Bool) {
