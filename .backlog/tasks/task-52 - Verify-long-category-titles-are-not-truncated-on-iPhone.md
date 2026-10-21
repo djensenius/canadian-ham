@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-21 14:54'
+updated_date: '2026-10-21 15:00'
 labels:
   - apple
 dependencies: []
@@ -57,4 +57,6 @@ Final-helper default EN passed all Home, Practice, Study/module and weak-area ch
 Blocked: a full CanadianHamLessonFigures plan (no only-testing selectors) occupies the shared xbuild lock; the short default-sidebar diagnostic could not start. Coordinator directed an In Progress handoff. Cancelled only the verified TASK-52 queued probe lockf waiter (PID 92875 under probe xbuild parent 92872, cwd verified); probe log ends XBUILD_EXIT=1 and all its xbuild parents exited. No other build was touched. Evidence docs explicitly distinguish historical observations from final acceptance. Continuation instructions, exact probe/all-four commands, query rules and evidence are in /tmp/task-52-handoff.md. Temporary diagnostic method is intentionally uncommitted for the next worker; remove it after inspection. AC remains unchecked; no final success summary or Done status is claimed.
 
 Continuation 2026-10-21: sidebar hierarchy probe passed in 37.018 s. The initial sidebar contains only upper virtualized rows; a single full swipe skips B-001/B-002 and leaves B-003 at y=-32. Exact full-title StaticText descendants are present when rows enter the hierarchy, including Station Assembly, Practice and Safety (216.7 x 42.3 pt). Visible default-size rows wrap fully in the host screenshot. Replacing only the new positioning helper's not-found swipe with a bounded slow drag; a second short probe will confirm B-001/B-003 before removing the temporary diagnostic. No app-code changes or relaxed text match.
+
+Bounded-scroll sidebar probe passed in 74.495 s: exact full-title StaticText queries found B-001 and B-003, both fully visible below the navigation bar. Host screenshots confirm Regulations and Policies fits and Station Assembly, Practice and Safety wraps to two complete lines without an ellipsis. Removed the temporary diagnostic. Final change is only bounded slow scrolling when a virtualized title does not yet exist; exact full-text/frame/height assertions remain unchanged. Committing this fix before the required four-case final run.
 <!-- SECTION:NOTES:END -->
