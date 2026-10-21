@@ -83,13 +83,16 @@ struct MorseSendingPracticeView: View {
             // Another Morse mode starting playback stops any held key or paddle here.
             playbackCoordinator.register("sending-practice") {
                 stopAllKeying(finalizeStraight: true)
+                keyer.release()
             }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 refreshExamCountdown()
+                keyer.prepare(settings: settings.normalized())
             } else {
                 stopAllKeying(finalizeStraight: true)
+                keyer.release()
             }
         }
         .onChange(of: keyboardFocus) { previous, _ in
@@ -571,7 +574,13 @@ private actor MorseSendingAudioPlayer: MorseSendingAudioOutput {
     }
 
     func silence() { driver.silencePreparedSendingTone() }
-    func release() { driver.releasePreparedSendingTone() }
+
+    func release() async {
+        driver.silencePreparedSendingTone()
+        // Drain the same fade used by the other Morse players before teardown.
+        try? await Task.sleep(for: .seconds(MorseAudioStopTiming.stopDelay(rampDuration: 0.005)))
+        driver.releasePreparedSendingTone()
+    }
 }
 
 @MainActor
