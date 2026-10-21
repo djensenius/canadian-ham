@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-21 14:50'
+updated_date: '2026-10-21 15:02'
 labels:
   - apple
   - web
@@ -62,4 +62,6 @@ Coordinator-approved partial handoff (2026-10-20): the shared lock is now held b
 ACs #2, #3, #4 remain verified/checked. AC #1 remains unverified/unchecked: previous keyboard tests decoded no character; the latest non-scrolling focus-container fix and focus/key-phase diagnostics have NOT yet run. Current source has zero-spacing outer focus containers to keep Space away from native scroll paging, distinct practice/exam targets, post-layout/Start restoration, and strict E/EE assertions with diagnostic output. No existing tests or audit/shared/exception helper bytes were changed.
 
 Remaining coordinator work after the figure plan: run the single keyboard method on iPhone 17 Pro, fix only with targeted reruns if necessary, run it on iPad Pro 13-inch (M5), then pnpm check:apple-l10n (must not rewrite the catalog) and text-source/test-guard gates. Exact commands, passing criteria, current SHA, and all per-test results are in /tmp/task-41-handoff.md. This task intentionally stays In Progress, not Done; no PR opened.
+
+2026-10-21 AC1 resume: reproduced nil focus with explicit edit interactions/defaultFocus (9e4e963a). Isolated FocusState into a key-capture modifier instantiated separately in each navigation host (8d719a99), keeping inactive-screen guards and held-key cleanup. The next unchanged iPhone regression received real Space down/up and decoded exactly T; diagnostic Focus was exam, held false. No assertions/timeouts have changed. Per coordinator direction, instrumented DEBUG hold duration/dot threshold and audio-startup timing (9e535cac), committed/pushed before detached unchanged-test rerun. Evidence under /tmp/task-41-resume-20261021T145036Z (nil), /tmp/task-41-resume-20261021T145508Z (focused/T); current numeric diagnostic run /tmp/task-41-resume-20261021T150022Z is waiting for the shared lock. Existing settings inspection: slowest character speed is 12 WPM; both fixed profiles use a 0.1s dot, so maximum existing dot/dash threshold is 0.2s. Exact E/EE/E expectations remain unchanged pending measured evidence and coordinator decision.
 <!-- SECTION:NOTES:END -->
