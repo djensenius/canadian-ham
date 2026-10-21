@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-21 17:29'
+updated_date: '2026-10-21 18:12'
 labels:
   - apple
   - web
@@ -22,7 +22,7 @@ Low items from the task-12.18/12.19/12.20 review r2 (~/.cache/canadian-ham-revie
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Hardware-keyboard keying works on the pushed exam-style sending screen on macOS and iPad keyboards (focus isn't shared with the screen underneath), with a test where feasible
+- [x] #1 Hardware-keyboard keying works on the pushed exam-style sending screen on macOS and iPad keyboards (focus isn't shared with the screen underneath), with a test where feasible
 - [x] #2 A UI test shows a running beacon stops (or switches to tape) when Reduce Motion or Dim Flashing Lights turns on, in at least one playback screen, beyond the decision-function unit test
 - [x] #3 An Apple test asserts the safety-note wording (square points, grouped digits); the web axe test derives its expected string rather than hard-coding it
 - [x] #4 Apple settings import from the Settings and Study views is covered by a test; behaviour for an unknown timingProfile/outputMode is documented (default vs reject) and matches web or the difference is recorded
@@ -104,4 +104,6 @@ Coordinator-approved AC1 latency fix (2026-10-21): unchanged iPhone test measure
 - testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess — PASS (0.043 seconds)
 
 Validation still blocked on the shared xbuild lock after mac32 passed: the unchanged iPhone hardware-keyboard method has not yet begun on the async-audio fix. Live runner /tmp/task-41-audio-checks.sh, output /tmp/task-41-audio-validation-20261021T151530Z, stops on first failure and then covers iPad keyboard, four sending regressions, localization and guards. Other lanes repeatedly acquired the lock ahead of this waiter; no other processes were touched. Defensive continuation artifact /tmp/task-41-handoff2.md records the full diagnosis, approved app fix, exact live state, and remaining criteria; AC1 remains unchecked and task In Progress. Fresh git fetch origin main, text-source, test-guard --base origin/main --head HEAD, diff/index/clean-tree checks all pass on the current source. Localization and hardware-after timings remain unverified.
+
+AC1 hardware validation passed on the real, unchanged Space-key regression: iPhone 17 Pro testMorseSendingExamHardwareKeyboardFocusIsSeparateFromPractice PASS (86.027s); iPad Pro 13-inch (M5) same method PASS (41.222s). Both assert exact E -> EE -> E through running pushed exam, Back to practice, and re-entry; logged focus is exam -> practice -> exam, with key-up received and held=false at each stage. No expected character, assertion, timeout, or test warm-up was changed. iPhone measured holds 0.117308875/0.10954525/0.132496541s and async tone-start latencies 0.000985375/0.00026775/0.00153075s. iPad holds 0.114616416/0.1173235/0.102765375s and starts 0.000944459/0.0003395/0.000771083s. Dot threshold stays 0.2s; before fix hold was 0.579024076s with 0.569211006s synchronous startup. Shared macOS app code compiled and mac32 units passed (including the injected slow-starter test); no macOS UI-test target or physical-keyboard manual run was used. Evidence: /tmp/task-41-audio-validation-20261021T151530Z/{iphone,ipad}-keyboard.log and matching xcresults. Runner advanced to the four existing sending regressions, then localization and final guards; task remains In Progress until those gates complete.
 <!-- SECTION:NOTES:END -->
