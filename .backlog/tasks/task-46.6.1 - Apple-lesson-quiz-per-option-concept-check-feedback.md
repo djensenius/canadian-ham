@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-21 22:26'
+updated_date: '2026-10-21 22:54'
 labels:
   - apple
 dependencies:
@@ -39,4 +39,6 @@ TASK-46.6 adds optional localized feedback to each concept-check choice and disp
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented post-answer source-indexed option feedback in the existing concept feedback card. Correctness remains explicit localized text; option feedback is a language-tagged attributed run within the focused status, with the general explanation retained. No official/mock code, catalogue, content or shared audit helper changes. Supervisor direction: use test-target-only bilingual/legacy quiz fixtures (no app DEBUG fixture). Real authored feedback currently has neither French translations nor absent-feedback choices, so UI tests use EN content plus French interface/EN fallback; model mapping and attributed language metadata, actual FR and legacy/no-answer behavior are covered by units.
+
+Validation progress: macOS new units PASS (3/3). Initial iPhone run: 6/7 untouched existing lesson-quiz methods PASS; AX-XXXL hint/layout round-trip failed reaching restored Hint 2 (y844 below panel maxY828) and is queued for a targeted retry. The five new UI methods initially failed querying their IDs: xcresult accessibility hierarchy confirms the existing lesson-quiz-feedback container ID was propagated onto both new status and existing explanation Text children (feedback itself and shuffled text were correct). Fixed by adding children: .contain, matching PracticeFeedback, in ac85def5. A single-method smoke, then only remaining new/failed methods, all 12 methods on iPad, and l10n checks are queued via nohup and waiting normally for the shared xbuild lock. No existing tests/audits or shared helper were weakened.
 <!-- SECTION:NOTES:END -->
