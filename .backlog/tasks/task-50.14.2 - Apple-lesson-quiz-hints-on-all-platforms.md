@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
-updated_date: '2026-10-21 22:03'
+updated_date: '2026-10-21 22:18'
 labels:
   - apple
 dependencies:
@@ -261,6 +261,27 @@ iPhone 17 Pro final-source targeted run PASS 7/7 via nohup bash /tmp/task-50.14.
 - testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount: PASS (119.870s)
 xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-gbwfkszqitpwztancxhpvfvcfxsj/Logs/Test/Test-CanadianHam-2026.10.21_17-44-44--0400.xcresult.
 Other checks PASS: Apple text-source checker; incremental test guard from 24c9b14f (no guarded changes); git diff --check. No iPad rerun (no layout changes), no tvOS/visionOS reruns (files only belong to iOS/macOS targets), no full suites by targeted review policy. Awaiting fixed main for macOS 8-unit run, including new mounted import/reset regression.
+
+## PR #326 Copilot session replacement: completed validation
+
+Merged fixed main (PR #328 / 1ddf1f82) at d05a5115f1fc47b610b41a502698cd2433f8c93e, with no temporary scheme/source workaround. The initial post-merge macOS run failed at compile time because this unit target also compiles its own copies of QuestionBank/ProgressStoreService: the real hosted app screen requires CanadianHam-qualified models. Qualified only those two declarations in the macOS regression (49adfa9e3ffd59775bbada75bc8dc48a4c3ec31f), then committed before the final nohup wait. No production or iOS-test change after the successful iPhone run.
+
+Final macOS normal-scheme targeted command: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests` plus the eight `-only-testing:CanadianHamTests/<class>/<method>` selectors below, `test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES`. Complete selectors/command are preserved in `/tmp/task-50.14.2-runs/review-session-replacement-mac-r2.sh`. Launched with nohup and polled using grep; all 8 PASS, exit 0. Log: mac-review-session-replacement-mac-r2.log.
+
+- ProgressStoreTests/testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure: PASS (0.040s)
+- ProgressStoreTests/testLessonQuizHelpFixtureValidationAndPayloadRoundTrips: PASS (0.119s)
+- ProgressStoreTests/testLessonQuizHelpValidationUsesOfficialMembershipAndKnownBankIdsNotBasicPrefix: PASS (0.030s)
+- ProgressStoreTests/testLessonQuizHintVisibilityUsesHalfSecondAndFreezesHelpAtChoice: PASS (2.637s)
+- ProgressStoreTests/testLessonQuizSessionCachePreservesAnswersAndFrozenHelpAcrossNavigation: PASS (0.004s)
+- ProgressStoreTests/testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist: PASS (0.056s)
+- ProgressStoreTests/testMountedLessonQuizRepopulatesAfterImportAndResetWithoutReshufflingOnRerender: PASS (0.921s)
+- RootNavigationMappingTests/testLessonQuizCurrentAndOtherHintLessonStacksPreserveQuizAcrossLayouts: PASS (0.001s)
+
+xcresult: `/Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-gbwfkszqitpwztancxhpvfvcfxsj/Logs/Test/Test-CanadianHam-2026.10.21_18-16-01--0400.xcresult`.
+
+The new regression mounts the actual LessonQuizScreen in an NSHostingView/NSWindow, confirms normal rerender retains generation/seed/items/answer, imports data and resets data with the quiz still mounted, invokes the same cache clear used by both RootView Settings paths, and waits for each new generation to populate itself without Retry. Initial source a5d358dffd8cb8aec736d46b3133a0295ae80425 passed all 7 iPhone tests above; follow-up changes only qualify macOS-test model types and merge the unrelated main UIKit guard. Those seven UI methods and production quiz source remain unchanged, so no repeat iPhone run. No new test skips, audit/filter/helper changes, layout changes, or extra simulator destinations.
+
+Final static checks PASS: Apple text-source checker; test guard for the entire follow-up from 24c9b14f (no guarded changes); git diff --check. No staged files. The macOS host startup logged its existing local persistent-store unknown-model migration diagnostic, but all regression stores are in-memory and all eight tests passed; this follow-up did not reset/delete the persistent store. No full suites, iPad (no layout changes), or tvOS/visionOS (changed files excluded from their targets) runs. Task remains Done; ready for independent review.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
@@ -271,4 +292,6 @@ Implemented Apple lesson-quiz hints on the existing iOS/iPadOS/macOS quiz surfac
 Review follow-up complete: restored horizontal-first adaptive header/navigation with a single intrinsic-fitting Layout (coordinator-approved after ViewThatFits audit-provenance regression), retaining vertical AX fallback and no width thresholds. Removed Basic-only help-ID prefix restriction, added membership/known-bank coverage and stronger timer margins. Final macOS units 8/8 (LocalizationCatalogTests 5/5), iPhone 7/7 and iPad 7/7 pass, including default iPad horizontal proof and unchanged full audits. Only new-test positioners were strengthened; old tests/helpers remain identical and all temporary diagnostics are removed. Done retained; pushed for re-review, no PR.
 
 Re-review visual correction complete: non-AX quiz headers now retain the original wrapping top-aligned horizontal layout and Spacer gap via single-tree AnyLayout; AX headers alone stack vertically. Navigation retains intrinsic fitting and the audit-provenance comment. Added title existence and default iPhone/iPad horizontal header proof. Final macOS lesson-quiz units 7/7, iPhone UI 7/7 and iPad UI 7/7 PASS (per-test evidence above). All audits/helpers unchanged. No full suites or PR; Done retained.
+
+PR #326 Copilot mounted-session replacement follow-up complete: stable session-generation UUID, keyed guarded initialization and cache-clear notifications repopulate an open quiz after import/reset without reshuffling ordinary rerenders. Real hosted macOS regression passes; all 8 targeted macOS lesson-quiz units and 7 iPhone 17 Pro quiz UI methods pass. Fixed main #328 merged normally; no temporary schemes, layout/audit changes or full-suite runs. Per-test evidence and the earlier main UIKit/test-model compile failures with fixes are recorded above.
 <!-- SECTION:FINAL_SUMMARY:END -->
