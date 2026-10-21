@@ -1,7 +1,7 @@
 ---
 id: TASK-50.14.2
 title: Apple lesson-quiz hints on all platforms
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 13:03'
@@ -22,13 +22,13 @@ Apply the owner-approved 2026-10-20 rules in TASK-50.14 after the web/model cont
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Official bank quiz items on iOS/iPadOS/macOS/tvOS/visionOS reuse practice hint ladder, one-level handling, generic lesson link (including current lesson), reference-sheet availability gating and offline content; concept checks expose no Hint control; mock exams and timed modes stay unchanged.
-- [ ] #2 At least 0.5 s hint visibility before scoring qualifies help; post-score hints never mutate records; quiz/hint/answer state survives lesson-link round trips and layout/navigation changes.
-- [ ] #3 Hinted correct answers count as correct, results summary counts helped answers, each per-question result marks with help, and passing/completion are unchanged; UI strings are plain translated EN/FR with French English-only-lesson notice.
-- [ ] #4 Existing question-progress paths apply TASK-50.15 scheduling/weak-area/recent-answer semantics; persist answeredWithHelp in quiz attempts using the shared model and preserve old attempts without flags, including import/export/sync round trips.
-- [ ] #5 Targeted unit/UI tests cover timing, score, progress, persistence, EN/FR, current/other lesson links and hint exclusions; VoiceOver/focus/Dynamic Type and light/dark accessibility audits cover affected screens without weakening tests; Apple localization/text checks and relevant platform checks pass. Web axe evidence remains covered by dependency TASK-50.14.1.
-- [ ] #6 Match the web attempt contract: optional answeredWithHelpIds array, sorted unique subset of officialQuestionIds, missing means none; reject unknown/concept IDs in import/sync, preserve the field through persistence/export/import/sync and lesson-ID migrations (filter to destination official membership if an attempt splits).
-- [ ] #7 Lesson quizzes have a hint-only toolbar/panel: no calculator or reference sheet is added. Use referenceSheetAvailable=false and hide existing reference-sheet pointer labels, including when the hint metadata has a pointer.
+- [x] #1 Official bank quiz items on iOS/iPadOS/macOS/tvOS/visionOS reuse practice hint ladder, one-level handling, generic lesson link (including current lesson), reference-sheet availability gating and offline content; concept checks expose no Hint control; mock exams and timed modes stay unchanged.
+- [x] #2 At least 0.5 s hint visibility before scoring qualifies help; post-score hints never mutate records; quiz/hint/answer state survives lesson-link round trips and layout/navigation changes.
+- [x] #3 Hinted correct answers count as correct, results summary counts helped answers, each per-question result marks with help, and passing/completion are unchanged; UI strings are plain translated EN/FR with French English-only-lesson notice.
+- [x] #4 Existing question-progress paths apply TASK-50.15 scheduling/weak-area/recent-answer semantics; persist answeredWithHelp in quiz attempts using the shared model and preserve old attempts without flags, including import/export/sync round trips.
+- [x] #5 Targeted unit/UI tests cover timing, score, progress, persistence, EN/FR, current/other lesson links and hint exclusions; VoiceOver/focus/Dynamic Type and light/dark accessibility audits cover affected screens without weakening tests; Apple localization/text checks and relevant platform checks pass. Web axe evidence remains covered by dependency TASK-50.14.1.
+- [x] #6 Match the web attempt contract: optional answeredWithHelpIds array, sorted unique subset of officialQuestionIds, missing means none; reject unknown/concept IDs in import/sync, preserve the field through persistence/export/import/sync and lesson-ID migrations (filter to destination official membership if an attempt splits).
+- [x] #7 Lesson quizzes have a hint-only toolbar/panel: no calculator or reference sheet is added. Use referenceSheetAvailable=false and hide existing reference-sheet pointer labels, including when the hint metadata has a pointer.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -135,4 +135,12 @@ macOS: 34 distinct unit methods passed (the later focused cache/timing recheck r
 Other checks: pnpm check:schemas PASS (2,034 targets); pnpm check:apple-l10n PASS (complete French export; catalogue unchanged; generic tvOS/visionOS builds PASS); Apple text-source checker PASS; test-guard self-test PASS; guarded diff PASS with owner decision 2026-10-12 marker; all pre-existing UI test/helper suffix bytes match base e04991d8; git diff --check PASS.
 
 Scope: no tvOS/visionOS quiz UI exists, so their quiz tests are N/A; shared catalogue build checks passed. No full suites run. Native macOS final-source build PASS (mac-final-build.log).
+
+Acceptance evidence: AC1/AC7: 13/13 distinct UI methods per iPhone and iPad across final targeted runs cover bank ladders, one-level metadata, concept/tool exclusions, hidden reference pointers and all six old layout-control regressions; tvOS/visionOS quiz UI N/A explicitly approved, catalogue builds pass. Mock/timed code unchanged. AC2: real 0.5s timing/freeze unit, cache tests, current/other route mapper test and AX-XXXL layout + French current-lesson round trips pass. AC3: both appearances verify helped correct remains 1/1 (100%), help count and marker; French copy/notice and relaunch flags pass. AC4/AC6: shared fixture cases, payloadData save, legacy missing field, strict invalid-ID rejection, export/import/device rows, split filtering and archived atomic migration tests pass; submit forwards frozen flag to existing 50.15 engine path. AC5: 34 distinct macOS unit methods, current macOS source build, all seven new UI methods and six existing control users on each iPhone/iPad, light/dark audits, localization/text/schema checks pass. No manual VoiceOver session was run; native controls, existing announcements and full-type automated audits remain in use. No new animations were added (native presenter/navigation retains system Reduce Motion behavior). Final required PR marker: Test-guard-approved: owner decision 2026-10-12. Independent reviewer approval still required before PR. No full suites and no PR opened.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented Apple lesson-quiz hints on the existing iOS/iPadOS/macOS quiz surfaces, matching web help timing, frozen choice semantics, score/progress behavior, hint-only tools and EN/FR result markers. Optional helped IDs now survive payload persistence, export/import/device-row sync and lesson-ID splits with strict shared-contract validation and legacy compatibility. Root-owned sessions retain quiz state across lesson links and layout changes. Fixed real inspector nesting and Dynamic Type control identity issues. The coordinator-approved DEBUG-only transition hook is now one-shot/nonintercepting after use; all six old hook tests pass on both devices and all original tests/helpers remain byte-identical. Verified 34 distinct macOS unit methods, final macOS build, 13 distinct UI methods on each iPhone/iPad, full-type light/dark audits (only existing approved occluded-contrast feedback exception), French export/text/schema checks and tvOS/visionOS catalogue builds. tvOS/visionOS quiz UI N/A by approved scope. No full suites or PR; ready for independent branch review.
+<!-- SECTION:FINAL_SUMMARY:END -->
