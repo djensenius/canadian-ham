@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-16 08:06'
-updated_date: '2026-10-21 16:20'
+updated_date: '2026-10-21 16:26'
 labels:
   - apple
 dependencies: []
@@ -33,6 +33,8 @@ Seen during task-44.3 work: long category titles such as 'Regulations and Polici
 4. Run only the added tests through nohup xbuild on iPhone 17 Pro, save screenshots/results in docs/evidence/task-52, verify deterministic project generation, then finalize, commit and push without a PR.
 
 5. Continuation: short sidebar hierarchy probe confirmed virtualized rows are skipped by full swipes. Preserve the exact full-title StaticText query, use bounded slow scrolling in only the new evidence helper, confirm default B-001/B-003 visibility, remove the temporary diagnostic, and commit before the all-four final xbuild run. Refresh evidence, rerun test guard against origin/main and XcodeGen determinism, then finalize and push without a PR.
+
+Review fixes: isolate the four title sweeps in CanadianHamTitleSweeps and exclude them from CanadianHamDefault using TASK-33 method selectors; add conditional/RC test rules, a real two-line negative fixture, French-only hyphenation and explicit native-title/visibility evidence notes. Regenerate twice, commit, run the dedicated four-case plan and default zero-test probe via nohup xbuild, check guard against origin/main, then record results, keep Done and push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
