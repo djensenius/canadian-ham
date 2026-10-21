@@ -1,4 +1,6 @@
+#if os(iOS)
 import UIKit
+#endif
 import XCTest
 
 @MainActor
@@ -1527,6 +1529,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5), "Practice review should show answer feedback after a review-later subsection session is submitted")
     }
 
+#if os(iOS)  // The title sweeps measure text with UIKit fonts; UI tests run only on iOS.
     func testCategoryTitlesEnglishDefaultSize() throws {
         XCUIDevice.shared.appearance = .light
         try verifyCategoryTitles(french: false, accessibilitySize: false)
@@ -1712,6 +1715,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             context: nil
         )
     }
+#endif
 
     private func positionCategoryTitleForEvidence(_ title: XCUIElement, in app: XCUIApplication, container: XCUIElement? = nil) {
         let scrollView = container ?? app.scrollViews.firstMatch
