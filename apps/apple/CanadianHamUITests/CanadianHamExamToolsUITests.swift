@@ -160,11 +160,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let secondHint = app.staticTexts["hint-level-2-title"].firstMatch
         let hintScroll = app.scrollViews["hint-tool-scroll"].firstMatch
         XCTAssertTrue(hintScroll.waitForExistence(timeout: 5))
-        for _ in 0..<10 where !secondHint.isHittable {
-            hintScroll.swipeUp()
+        for _ in 0..<12 where !secondHint.isHittable {
+            if secondHint.exists && secondHint.frame.minY < visibleFrameExcludingNavigationBar(in: app).minY {
+                hintScroll.swipeDown()
+            } else {
+                hintScroll.swipeUp()
+            }
             waitBriefly()
         }
-        XCTAssertTrue(secondHint.isHittable, "The restored Hint 2 must be reachable in the reopened panel")
+        let restoredHintFrame = secondHint.exists ? frameDescription(secondHint.frame) : "missing"
+        XCTAssertTrue(secondHint.isHittable, "The restored Hint 2 must be reachable in the reopened panel. Hint: \(restoredHintFrame); scroll: \(frameDescription(hintScroll.frame))")
         closeTool(in: app)
         chooseLessonQuizCorrectAnswer(in: app)
         let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
@@ -226,9 +231,17 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         closeTool(in: app)
         chooseLessonQuizCorrectAnswer(in: app)
         let marker = app.staticTexts["lesson-quiz-with-help-marker"].firstMatch
-        scrollBackgroundUntilHittable(marker, in: app, maxSwipes: 12)
+        let feedbackTitle = app.staticTexts["answer-feedback-title"].firstMatch
+        scrollBackgroundUntilHittable(feedbackTitle, in: app, maxSwipes: 12)
+        for _ in 0..<12 where !isFullyVisible(marker, in: app, requiresHittable: true) || !isFullyVisible(feedbackTitle, in: app, requiresHittable: true) {
+            let top = min(marker.frame.minY, feedbackTitle.frame.minY)
+            let delta: CGFloat = top < visibleFrameExcludingNavigationBar(in: app).minY ? 72 : -72
+            preciseExamToolScroll(app.scrollViews.firstMatch, in: app, fingerDeltaY: delta)
+            waitBriefly()
+        }
         XCTAssertTrue(marker.isHittable)
-        XCTAssertTrue(isFullyVisible(marker, in: app, requiresHittable: true))
+        XCTAssertTrue(isFullyVisible(marker, in: app, requiresHittable: true), "Help marker must be fully visible before auditing feedback. Frame: \(frameDescription(marker.frame))")
+        XCTAssertTrue(isFullyVisible(feedbackTitle, in: app, requiresHittable: true), "Feedback title must be fully visible before auditing it. Frame: \(frameDescription(feedbackTitle.frame))")
         try auditIgnoringOccludedLessonTextContrast(app: app)
         submitLessonQuiz(in: app)
         XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
