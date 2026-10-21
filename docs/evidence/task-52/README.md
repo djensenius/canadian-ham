@@ -1,7 +1,8 @@
 # TASK-52: iPhone category titles
 
-> **Dedicated-plan validation passed — 2026-10-21.** All four review-fixed cases
-> passed in `CanadianHamTitleSweeps`: English and French at default and
+> **Validation complete — 2026-10-21.** All four review-fixed cases passed in
+> `CanadianHamTitleSweeps`; the default-plan probe executed zero tests.
+> Coverage: English and French at default and
 > Accessibility XXXL sizes, including both
 > banks' regular-width sidebar. Cards, lists and content headers passed strict
 > full-text/frame/height checks. Native navigation ellipses remain only under
@@ -246,9 +247,13 @@ Thus the width-derived truncation inventory remains unchanged. The measured
 two-line negative fixture runs in each sweep, and English now has hyphenation
 disabled; all strict full-text/height checks still pass. No app code changed.
 
-The default-plan exclusion probe is queued on the shared build lock. It selects
-the same four methods with `-only-testing:` under `CanadianHamDefault` and must
-execute zero tests; its result will be recorded before finalizing these fixes.
+The default-plan exclusion probe selected the same four methods with
+`-only-testing:` under `CanadianHamDefault` and executed **0 tests, 0 failures**
+(`TEST SUCCEEDED`, `XBUILD_EXIT=0`). The [probe summary](default-plan-probe-summary.json)
+confirms `CanadianHamDefault` and `totalTestCount: 0`; xcresulttool reports the
+aggregate `result` as `unknown` because no tests ran, rather than `Passed`.
+The local bundle and log are `/tmp/task-52/title-sweeps-default-probe.xcresult`
+and `/tmp/task-52/title-sweeps-default-probe.log`.
 
 Reproduce the review-fixed dedicated-plan run (one simulator, all four sweeps,
 no full suite):
@@ -260,6 +265,22 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
   -parallel-testing-enabled NO \
   -resultBundlePath /tmp/task-52/title-sweeps-review.xcresult \
+  test CODE_SIGNING_ALLOWED=NO
+```
+
+Reproduce the default-plan exclusion probe (expect **0 tests**, not four):
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
+  -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam \
+  -testPlan CanadianHamDefault \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -parallel-testing-enabled NO \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesEnglishDefaultSize \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesEnglishLargestAccessibilitySize \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesFrenchDefaultSize \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesFrenchLargestAccessibilitySize \
+  -resultBundlePath /tmp/task-52/title-sweeps-default-probe.xcresult \
   test CODE_SIGNING_ALLOWED=NO
 ```
 
@@ -287,3 +308,21 @@ Other baseline checks (review-fix checks are recorded below):
   remains changed. The narrower Pro portrait layout and forced regular-width
   landscape sidebar are the intended iPhone coverage. No other build was
   interrupted; shared-lock waits were respected.
+
+## Review-fix checks
+
+- Dedicated title plan: **4 passed, 0 failed, 0 skipped**, with per-test results
+  above. Default-plan probe: **0 tests, 0 failures**, exit 0. Both ran through
+  `nohup`/`xbuild` with grep polling; shared-lock waits were respected.
+- XcodeGen was run twice after registration; generated diffs were byte-identical.
+  It was also run twice against the committed generated project, with
+  `git diff --exit-code -- apps/apple/CanadianHam.xcodeproj` empty after each run.
+- Test-guard self-test and `--base origin/main --head HEAD` passed with no
+  guarded changes; fetched `origin/main` was
+  `fd8da4010dc244cd914e4cf123c8e17f80b61676` (merge-base
+  `4c9dbc0fb260a70e669f80459e3c197c2816f785`). `git diff --check` passed.
+- No other platform or full suite was rerun: these fixes affect only iOS UI
+  tests, their test plans/generated scheme, and documentation. Historical
+  screenshots remain explicitly tied to the baseline run; the new result
+  bundle retains all 308 review-run screenshots. Independent review is still
+  required; no PR was opened.
