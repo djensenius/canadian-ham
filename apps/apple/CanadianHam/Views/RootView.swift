@@ -33,6 +33,7 @@ struct RootView: View {
     @State private var compactNavigationPath: [RootNavigationRoute] = []
 #if DEBUG
     @State private var debugHorizontalSizeClassOverride: UserInterfaceSizeClass?
+    @State private var didApplyDebugSizeClassChange = false
 #endif
 #endif
     @State private var didApplyLaunchNavigation = false
@@ -585,6 +586,7 @@ struct RootView: View {
            let sizeClass = debugSimulatedHorizontalSizeClassAfterChange {
             Button {
                 debugHorizontalSizeClassOverride = sizeClass
+                didApplyDebugSizeClassChange = true
             } label: {
                 Text(verbatim: "Apply simulated size class change (\(debugSimulatedSizeClassAccessibilityValue(usesCompactNavigation: usesCompactNavigation)))")
             }
@@ -593,6 +595,8 @@ struct RootView: View {
             .padding(.trailing, DesignTokens.Spacing.md)
             .accessibilityIdentifier("debug-simulated-size-class-change-button")
             .accessibilityValue(Text(verbatim: debugSimulatedSizeClassAccessibilityValue(usesCompactNavigation: usesCompactNavigation))) // l10n: verbatim
+            // This one-shot test control must not intercept tool controls after the transition.
+            .allowsHitTesting(!didApplyDebugSizeClassChange)
         }
     }
 
