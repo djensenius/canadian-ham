@@ -141,47 +141,47 @@ The active bank is `content/generated/basic-2025-07-15/questions.json`. Regulato
 
 | Before section | Taught fact before rewrite | After section / comparison |
 |---|---|---|
-| Reference facts: Operator privileges and below-30-MHz access | Another operator with additional qualifications controls your station under your call sign: Only the privileges allowed by your qualifications. | Pending rewrite comparison. |
-| Reference facts: Operator privileges and below-30-MHz access | You control another station whose owner has more certificate qualifications: Only the privileges allowed by your qualifications. | Pending rewrite comparison. |
-| Reference facts: Operator privileges and below-30-MHz access | Frequencies below 30 MHz: In addition to Basic, the operator needs 80% on Basic, or Advanced, or Morse code. | Pending rewrite comparison. |
-| Reference facts: Operator privileges and below-30-MHz access | Radio-controlled models: Certificate holders may operate them on all amateur bands above 30 MHz. | Pending rewrite comparison. |
-| Reference facts: Operator privileges and below-30-MHz access | Basic-only repeater use: Holders with only Basic may use repeaters whose output is at 29.500 MHz and above; this row does not open ordinary below-30-MHz transmitting. | Pending rewrite comparison. |
-| Reference facts: Operator privileges and below-30-MHz access | Lowest Basic-only repeater output segment: 29.500 MHz to 29.700 MHz. | Pending rewrite comparison. |
-| Reference facts: HF band ranges | 160 metres: 1.8 MHz to 2.0 MHz. | Pending rewrite comparison. |
-| Reference facts: HF band ranges | 80 metres: 3.5 MHz to 4.0 MHz. | Pending rewrite comparison. |
-| Reference facts: HF band ranges | 40 metres: 7.0 MHz to 7.3 MHz. | Pending rewrite comparison. |
-| Reference facts: HF band ranges | 20 metres: 14.000 MHz to 14.350 MHz. | Pending rewrite comparison. |
-| Reference facts: HF band ranges | 15 metres: 21.000 MHz to 21.450 MHz. | Pending rewrite comparison. |
-| Reference facts: HF band ranges | 10 metres: 28.000 MHz to 29.700 MHz. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | 50 MHz to 54 MHz and 144 MHz to 148 MHz: 30 kHz maximum bandwidth. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | 28 MHz to 29.7 MHz: 20 kHz maximum bandwidth. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | Amateur bands between 7 MHz and 25 MHz, except the special narrow band: 6 kHz maximum bandwidth. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | 10.100 MHz to 10.150 MHz: 1 kHz maximum bandwidth in RBR-4, which is less than 6 kHz. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | 10.100 MHz to 10.150 MHz: Single sideband is prohibited. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | Transmitting near band edges: The entire occupied bandwidth must remain within the amateur band. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | CW / Morse radiotelegraphy: Narrower than SSB voice and FM voice in the mode-width ordering. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | FT8: A narrow digital mode, with many FT8 contacts fitting in the space needed for one SSB transmission. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | SSB voice: Usual SSB bandwidth is between 2 kHz and 3 kHz. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | FM voice: 5 kHz-deviation FM occupies between 10 kHz and 20 kHz; FM below 28 MHz exceeds regulatory bandwidth limits. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | Fast-scan television on 145 MHz: Prohibited because ATV exceeds the 30 kHz limit for 144 MHz to 148 MHz. | Pending rewrite comparison. |
-| Reference facts: Bandwidth and mode-fit cues | Fast-scan television on 14.23 MHz: Prohibited because ATV exceeds the 6 kHz limit for amateur bands between 7 MHz and 25 MHz. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | General operating power: Use the minimum legal power necessary to communicate. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Power verification after RF exposure and radiated-power limits are determined: Verify at the output of the transmitter or external amplifier. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Basic, DC input to the final RF stage: 250 W. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Basic, single-sideband peak envelope power: 560 W PEP. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Basic and Morse, SSB on 3750 kHz: 560 W PEP. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Basic with Honours, SSB on 7055 kHz: 560 W PEP. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Basic-only non-SSB emissions for an operator without Advanced: 190 W carrier power. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Advanced, DC input to the final RF stage: 1 000 W. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Advanced, single-sideband peak envelope power: 2 250 W PEP. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | Advanced on the special band: On 60 metres, 100 W ERP expressed as PEP. | Pending rewrite comparison. |
-| Reference facts: Power quantities and limits | 630 metres and 2200 metres: Antenna gain must be taken into account because limits are expressed as EIRP. | Pending rewrite comparison. |
-| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Repeater station: Automatically retransmits the signals of other stations. | Pending rewrite comparison. |
-| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Unmodulated carrier: May be transmitted only for brief tests on frequencies below 30 MHz. | Pending rewrite comparison. |
-| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Frequency stability: Equivalent to crystal control below 148 MHz; with crystal control, a quartz crystal sets the frequency so it drifts very little. | Pending rewrite comparison. |
-| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Overmodulation indication or prevention: Required for SSB and for voice-transmission quality control; overmodulation means driving the audio past the clean limit so the signal distorts and can splatter. | Pending rewrite comparison. |
-| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Voice modulation maximum: 100%, meaning full modulation without going past the clean voice limit. | Pending rewrite comparison. |
-| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Frequency measurement: All amateur stations must be capable of reliably measuring frequency, regardless of emission mode. | Pending rewrite comparison. |
+| Reference facts: Operator privileges and below-30-MHz access | Another operator with additional qualifications controls your station under your call sign: Only the privileges allowed by your qualifications. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| Reference facts: Operator privileges and below-30-MHz access | You control another station whose owner has more certificate qualifications: Only the privileges allowed by your qualifications. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| Reference facts: Operator privileges and below-30-MHz access | Frequencies below 30 MHz: In addition to Basic, the operator needs 80% on Basic, or Advanced, or Morse code. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| Reference facts: Operator privileges and below-30-MHz access | Radio-controlled models: Certificate holders may operate them on all amateur bands above 30 MHz. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| Reference facts: Operator privileges and below-30-MHz access | Basic-only repeater use: Holders with only Basic may use repeaters whose output is at 29.500 MHz and above; this row does not open ordinary below-30-MHz transmitting. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| Reference facts: Operator privileges and below-30-MHz access | Lowest Basic-only repeater output segment: 29.500 MHz to 29.700 MHz. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. |
+| Reference facts: HF band ranges | 160 metres: 1.8 MHz to 2.0 MHz. | Retained; reference-facts-band-edges-contain-the-whole-signal. |
+| Reference facts: HF band ranges | 80 metres: 3.5 MHz to 4.0 MHz. | Retained; reference-facts-band-edges-contain-the-whole-signal. |
+| Reference facts: HF band ranges | 40 metres: 7.0 MHz to 7.3 MHz. | Retained; reference-facts-band-edges-contain-the-whole-signal. |
+| Reference facts: HF band ranges | 20 metres: 14.000 MHz to 14.350 MHz. | Retained; reference-facts-band-edges-contain-the-whole-signal. |
+| Reference facts: HF band ranges | 15 metres: 21.000 MHz to 21.450 MHz. | Retained; reference-facts-band-edges-contain-the-whole-signal. |
+| Reference facts: HF band ranges | 10 metres: 28.000 MHz to 29.700 MHz. | Retained; reference-facts-band-edges-contain-the-whole-signal. |
+| Reference facts: Bandwidth and mode-fit cues | 50 MHz to 54 MHz and 144 MHz to 148 MHz: 30 kHz maximum bandwidth. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | 28 MHz to 29.7 MHz: 20 kHz maximum bandwidth. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | Amateur bands between 7 MHz and 25 MHz, except the special narrow band: 6 kHz maximum bandwidth. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | 10.100 MHz to 10.150 MHz: 1 kHz maximum bandwidth in RBR-4, which is less than 6 kHz. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | 10.100 MHz to 10.150 MHz: Single sideband is prohibited. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | Transmitting near band edges: The entire occupied bandwidth must remain within the amateur band. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | CW / Morse radiotelegraphy: Narrower than SSB voice and FM voice in the mode-width ordering. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | FT8: A narrow digital mode, with many FT8 contacts fitting in the space needed for one SSB transmission. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | SSB voice: Usual SSB bandwidth is between 2 kHz and 3 kHz. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | FM voice: 5 kHz-deviation FM occupies between 10 kHz and 20 kHz; FM below 28 MHz exceeds regulatory bandwidth limits. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | Fast-scan television on 145 MHz: Prohibited because ATV exceeds the 30 kHz limit for 144 MHz to 148 MHz. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Bandwidth and mode-fit cues | Fast-scan television on 14.23 MHz: Prohibited because ATV exceeds the 6 kHz limit for amateur bands between 7 MHz and 25 MHz. | Retained; reference-facts-mode-width-must-fit-the-band. |
+| Reference facts: Power quantities and limits | General operating power: Use the minimum legal power necessary to communicate. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Power verification after RF exposure and radiated-power limits are determined: Verify at the output of the transmitter or external amplifier. | Retained; reference-facts-power-needs-a-quantity-and-a-measurement-point. |
+| Reference facts: Power quantities and limits | Basic, DC input to the final RF stage: 250 W. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Basic, single-sideband peak envelope power: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Basic and Morse, SSB on 3750 kHz: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Basic with Honours, SSB on 7055 kHz: 560 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Basic-only non-SSB emissions for an operator without Advanced: 190 W carrier power. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Advanced, DC input to the final RF stage: 1 000 W. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Advanced, single-sideband peak envelope power: 2 250 W PEP. | Retained; reference-facts-qualification-by-privilege-matrix-for-access-and-power. General limits consolidate the original band-specific Honours/Morse examples. |
+| Reference facts: Power quantities and limits | Advanced on the special band: On 60 metres, 100 W ERP expressed as PEP. | Retained; reference-facts-power-needs-a-quantity-and-a-measurement-point. |
+| Reference facts: Power quantities and limits | 630 metres and 2200 metres: Antenna gain must be taken into account because limits are expressed as EIRP. | Retained; reference-facts-power-needs-a-quantity-and-a-measurement-point. |
+| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Repeater station: Automatically retransmits the signals of other stations. | Retained; reference-facts-automatic-signals-still-need-clean-control. |
+| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Unmodulated carrier: May be transmitted only for brief tests on frequencies below 30 MHz. | Retained; reference-facts-automatic-signals-still-need-clean-control. |
+| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Frequency stability: Equivalent to crystal control below 148 MHz; with crystal control, a quartz crystal sets the frequency so it drifts very little. | Retained; reference-facts-automatic-signals-still-need-clean-control. |
+| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Overmodulation indication or prevention: Required for SSB and for voice-transmission quality control; overmodulation means driving the audio past the clean limit so the signal distorts and can splatter. | Retained; reference-facts-automatic-signals-still-need-clean-control. |
+| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Voice modulation maximum: 100%, meaning full modulation without going past the clean voice limit. | Retained; reference-facts-automatic-signals-still-need-clean-control. |
+| Reference facts: Repeaters, automatic transmissions, stability, and modulation quality | Frequency measurement: All amateur stations must be capable of reliably measuring frequency, regardless of emission mode. | Retained; reference-facts-automatic-signals-still-need-clean-control. |
 
 ## L-001-05 baseline inventory
 

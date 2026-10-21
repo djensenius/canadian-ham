@@ -40,31 +40,6 @@
     "reason": "Reviewed regulatory reference table: third-party, visitor, and international permission facts are established by official answers. Current checker: five-gram-overlap for B-001-014-006."
   },
   {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: Operator privileges and below-30-MHz access",
-    "reason": "Reviewed regulatory reference table: operator-privilege and below-30-MHz gate facts are established by official answers and docs/exam-facts.md. Current checker: numeric-overlap for B-001-015-003."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: HF band ranges",
-    "reason": "Reviewed regulatory reference table: HF band ranges are established by official answers and intentionally taught as exact facts. Current checker: numeric-overlap for B-001-015-005, B-001-015-006, B-001-015-007, B-001-015-008, B-001-015-009, B-001-015-010, B-001-016-002."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: Bandwidth and mode-fit cues",
-    "reason": "Reviewed regulatory reference table: bandwidth limits and mode-fit cues are established by official answers, with no unsupported mode-width expansion. Current checker: numeric-overlap for B-001-015-010, B-001-016-001, B-001-016-002, B-001-016-003, B-001-016-004, B-001-016-005, B-001-016-006; five-gram-overlap for B-001-016-006."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: Power quantities and limits",
-    "reason": "Reviewed regulatory reference table: power values and quantities are established by official answers and docs/exam-facts.md. Current checker: numeric-overlap for B-001-017-004, B-001-017-005, B-001-017-006; five-gram-overlap for B-001-017-003."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: Repeaters, automatic transmissions, stability, and modulation quality",
-    "reason": "Reviewed regulatory reference table: station-type, frequency-stability, measurement, and modulation-quality facts are established by official answers. Current checker: five-gram-overlap for B-001-018-001, B-001-018-002."
-  },
-  {
     "lessonId": "L-001-05",
     "blockHeading": "Reference facts: United States and CEPT-style visits",
     "reason": "Reviewed regulatory reference table: United States and CEPT qualification and voice-identification facts are established by official answers. Current checker: five-gram-overlap for B-001-021-009."
@@ -98,5 +73,25 @@
     "lessonId": "L-001-01",
     "blockHeading": "Reference facts: M1 numbers board",
     "reason": "TASK-46.8 owner-approved numbers board: exact deadlines, fee, access threshold, bandwidths and RF exposure range are grouped with units and their separate jobs, not copied question scenarios. Current checker: numeric-overlap for B-001-002-009, B-001-015-003, B-001-016-001, B-001-016-003, B-001-016-006, B-001-024-003."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Qualification-by-privilege matrix for access and power",
+    "reason": "TASK-46.8 reviewed owner-approved qualification-by-privilege matrix in original prose; exact access threshold and power quantities are necessary reference facts. Current checker: numeric-overlap for B-001-015-003."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Band edges contain the whole signal",
+    "reason": "TASK-46.8 reviewed exact band edges paired with wavelength names and an explanatory recall pattern, not a copied practice question. Current checker: numeric-overlap for B-001-015-005, B-001-015-006, B-001-015-007, B-001-015-008, B-001-015-009, B-001-015-010, B-001-016-002."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Mode width must fit the band",
+    "reason": "TASK-46.8 reviewed bandwidth and mode-fit reference table with original explanations; exact band ranges and limits must remain. Current checker: numeric-overlap for B-001-015-010, B-001-016-001, B-001-016-002, B-001-016-003, B-001-016-004, B-001-016-005, B-001-016-006."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Power needs a quantity and a measurement point",
+    "reason": "TASK-46.8 reviewed special-band ERP ceiling in an original reference table distinguishing power quantities and measurement points. Current checker: numeric-overlap for B-001-017-006."
   }
 ]
