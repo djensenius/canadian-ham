@@ -1091,7 +1091,7 @@ private struct TVPrimaryButtonStyle: ButtonStyle {
     }
 }
 
-private struct TVSecondaryButtonStyle: ButtonStyle {
+struct TVSecondaryButtonStyle: ButtonStyle {
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @Environment(\.tvReduceMotionOverride) private var reduceMotionOverride
     @Environment(\.isEnabled) private var isEnabled

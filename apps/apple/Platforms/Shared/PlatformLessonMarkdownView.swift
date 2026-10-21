@@ -46,22 +46,22 @@ struct LessonMarkdownView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         } else {
-        Group {
-            blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
-        }
-        .padding(DesignTokens.Spacing.lg)
-        .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
-        .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-        .tvFocusRing(
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous),
-            isFocused: focusedBlockID == displayBlock.id,
-            unfocusedColor: DesignTokens.Colors.border,
-            unfocusedLineWidth: 1
-        )
-        .accessibilityElement(children: .combine)
-        .focusable(true)
-        .focused($focusedBlockID, equals: displayBlock.id)
-        .focusEffectDisabled()
+            Group {
+                blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
+            }
+            .padding(DesignTokens.Spacing.lg)
+            .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
+            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .tvFocusRing(
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous),
+                isFocused: focusedBlockID == displayBlock.id,
+                unfocusedColor: DesignTokens.Colors.border,
+                unfocusedLineWidth: 1
+            )
+            .accessibilityElement(children: .combine)
+            .focusable(true)
+            .focused($focusedBlockID, equals: displayBlock.id)
+            .focusEffectDisabled()
         }
 #else
         blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
@@ -270,7 +270,13 @@ private struct LessonTryItView: View {
                 }
             }
             .font(DesignTokens.FontScale.body.weight(.semibold))
+            .fixedSize(horizontal: false, vertical: true)
+#if os(tvOS)
+            .buttonStyle(TVSecondaryButtonStyle())
+#else
             .buttonStyle(.bordered)
+            .controlSize(.large)
+#endif
             .accessibilityValue(expanded ? Text("Expanded") : Text("Collapsed")) // l10n: localized
             .accessibilityIdentifier("lesson-try-it-\(number)-toggle")
 #if os(tvOS)
