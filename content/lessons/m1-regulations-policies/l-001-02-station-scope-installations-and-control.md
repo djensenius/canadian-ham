@@ -65,7 +65,7 @@ Advanced adds particular station responsibilities; Honours and Morse do not. Kee
 
 In this matrix, "special work" means installing a single-band voice repeater or club station; installing or operating transmitters or RF amplifiers lacking both professional design and commercial manufacture for amateur use; or remotely changing transmitter frequency, mode or output power.
 
-| Qualifications held | Assemble a commercial transmitter kit of professional design; operate a cross-band repeater | Special work defined above | Why |
+| Qualifications held | Assemble a commercial transmitter kit of professional design; operate a cross-band repeater | Special work: install a repeater or club station, use home-built transmitters or amplifiers, or change transmitter settings remotely | Why |
 |---|---|---|---|
 | Basic only | Permitted. | Requires Advanced as well. | Basic covers these designed-kit and cross-band activities. |
 | Basic with Honours | Permitted. | Requires Advanced as well. | Honours adds frequency access, not these station-work privileges. |

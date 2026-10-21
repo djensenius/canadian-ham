@@ -145,13 +145,13 @@ Attach each number to a job and a unit. Similar numbers do not create a shared r
 | 30 minutes | Longest interval between call-sign identifications; also identify at contact start and end. | L-001-03: this is not a record deadline. |
 | 30 MHz | Basic-only direct transmitting boundary: amateur bands above it. | L-001-04: repeater output and your transmit frequency are different. |
 | 250 W DC input; 560 W SSB PEP; 190 W non-SSB carrier | Basic power limits without Advanced, including Honours or Morse. | L-001-04: select the quantity before the number. |
-| 1 000 W DC input; 2 250 W SSB PEP | Advanced power limits. | L-001-04: special-band and exposure limits still apply. |
+| 1 000 W DC input; 2 250 W SSB PEP; 750 W non-SSB carrier | Advanced power limits. | L-001-04: special-band and exposure limits still apply. |
 | 30 kHz | Maximum bandwidth on 6 m and 2 m. | L-001-04: the whole signal must fit. |
 | 20 kHz | Maximum bandwidth on 10 m. | L-001-04: a bandwidth limit, not a band edge. |
 | 6 kHz | Maximum bandwidth between 7 MHz and 25 MHz, except 30 m. | L-001-04: check the narrow-band exception. |
 | 1 kHz | Maximum bandwidth on 30 m, 10.100 MHz to 10.150 MHz. | L-001-04: too narrow for SSB voice. |
 | 30 days | Default antenna-consultation public comment period. | L-001-06: a different duty from address reporting. |
-| 48 MHz to 300 MHz | Range of strongest human-body RF absorption in the bank's exposure facts. | L-001-06: exposure depends on more than transmitter power. |
+| 48 MHz to 300 MHz | Range of strongest human-body RF absorption in Safety Code 6, with its lowest exposure limits. | L-001-06: exposure depends on more than transmitter power. |
 
 ## Radio connection
 

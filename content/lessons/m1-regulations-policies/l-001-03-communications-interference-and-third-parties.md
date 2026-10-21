@@ -79,7 +79,7 @@ An open amateur message is not the same as every non-broadcast message you can h
 | Exchanging messages | Do not demand or accept remuneration. | Amateur communication is non-commercial. |
 | Sending third-party messages | Accept no payment of any kind. | Carrying someone else's message is not a paid service. |
 | Non-broadcast amateur traffic | Its content may be shared or used. | Amateur content has a specific disclosure permission. |
-| Other non-broadcast traffic | Lawful disclosure purposes include protecting people or property, court evidence, and national defence or security. Answering media questions is not such a purpose. | Hearing a signal does not grant unrestricted disclosure rights. |
+| Other non-broadcast traffic | Disclose it only for the specific lawful purposes the law sets out. Answering media questions is not one of them. | Hearing a signal does not grant unrestricted disclosure rights. |
 
 ## Reference facts: Make the station traceable
 

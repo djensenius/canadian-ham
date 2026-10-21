@@ -54,14 +54,14 @@ The matrix shows general power ceilings, not a target for every contact. Use the
 | Basic only | Amateur bands above 30 MHz. | 250 W DC input to the final RF stage; 560 W SSB PEP; 190 W carrier for non-SSB emissions. | Frequency access and power are separate checks. |
 | Basic with Honours | Also below 30 MHz, through a Basic mark of at least 80%. | Same Basic limits. | Honours opens frequency access, not Advanced power. |
 | Basic plus Morse | Also below 30 MHz. | Same Basic limits. | Morse opens frequency access, not Advanced power. |
-| Basic plus Advanced | Also below 30 MHz. | 1 000 W DC input to the final RF stage; 2 250 W SSB PEP. | Advanced adds higher general power ceilings. |
+| Basic plus Advanced | Also below 30 MHz. | 1 000 W DC input to the final RF stage; 2 250 W SSB PEP; 750 W carrier for non-SSB emissions. | Advanced adds higher general power ceilings. |
 
 Honours and Morse retain the Basic power ceilings on their newly available bands too. For station construction, installation and remote settings, use the companion matrix in L-001-02.
 
 | Other access check | Rule | Why |
 |---|---|---|
 | Model control | Certificate holders may use amateur bands above 30 MHz for radio-controlled models. | Model control has a stated frequency scope. |
-| Basic-only repeater use | A repeater's lowest allowed output is 29.500 MHz; the lowest output segment is 29.500 MHz to 29.700 MHz. | Repeater output is not your own transmitting frequency. |
+| Basic-only repeater use | The lowest repeater output a Basic-only holder may use is 29.500 MHz; the lowest output segment is 29.500 MHz to 29.700 MHz. | Repeater output is not your own transmitting frequency. |
 
 Basic-only operators still transmit into the repeater on an amateur frequency above 30 MHz. A cross-band system can retransmit that signal below the boundary. Hearing or using its output does not grant direct below-30-MHz transmitting access.
 

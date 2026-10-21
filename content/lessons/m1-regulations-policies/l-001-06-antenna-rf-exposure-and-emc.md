@@ -67,7 +67,7 @@ A controlled environment has assessed RF fields and people who understand the po
 | Exposure check | Rule | Why |
 |---|---|---|
 | Publisher and purpose | Health Canada publishes Safety Code 6 to limit human exposure to RF energy. | Use the human-exposure framework, not a transmitter rating. |
-| 48 MHz to 300 MHz | The bank identifies this as the greatest-risk range, with the lowest exposure limits because body absorption is strongest. | Frequency changes how strongly the body absorbs RF. |
+| 48 MHz to 300 MHz | Safety Code 6 treats this as the greatest-risk range, with the lowest exposure limits because body absorption is strongest. | Frequency changes how strongly the body absorbs RF. |
 | Below 10 MHz | Nerve stimulation is another established adverse effect, apart from absorption. | Heating is not the only effect addressed. |
 | Controlled and uncontrolled settings | The code covers both; uncontrolled settings have lower public limits. | Public exposure needs protection without relying on trained control. |
 | Hand-held radios and other transmitters | Every transmitter type is included; hand-held transmitters are not exempt. | Small size does not remove the exposure duty. |
