@@ -146,11 +146,11 @@ final class ProgressStoreTests: XCTestCase {
 
 #if os(macOS)
     func testMountedLessonQuizRepopulatesAfterImportAndResetWithoutReshufflingOnRerender() async throws {
-        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let bank = try CanadianHam.QuestionBankStore.load(from: Bundle(for: Self.self))
         let library = try ContentLibrary.load(from: Bundle(for: Self.self))
         let quiz = try XCTUnwrap(library.quizzesById["QZ-L-005-01-A"])
         let lesson = try XCTUnwrap(library.lessonsById[quiz.lessonId])
-        let store = try ProgressStoreService.inMemoryForTests()
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
         let exported = try store.exportData(bank: bank, exportedAt: "2026-01-04T00:00:00.000Z")
         let cache = LessonQuizSessionStateCache()
         let screen = LessonQuizScreen(
