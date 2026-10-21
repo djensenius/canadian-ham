@@ -53,7 +53,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let explanation = app.staticTexts["lesson-quiz-feedback-explanation"].firstMatch
         positionConceptFeedback([explanation], in: app)
         XCTAssertEqual(explanation.label, "Compare values only after expressing them in the same unit.")
-        XCTAssertTrue(isFullyVisible(explanation, in: app, requiresHittable: true))
+        XCTAssertTrue(isFullyVisible(explanation, in: app, requiresHittable: true), "Explanation must be fully visible after the audit's scroll changes. Frame: \(frameDescription(explanation.frame))")
         try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
@@ -92,7 +92,16 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         for _ in 0..<24 where !elements.allSatisfy({ isFullyVisible($0, in: app, requiresHittable: true) }) {
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
             let top = elements.map(\.frame.minY).min() ?? visibleFrame.minY
-            preciseExamToolScroll(scrollView(containing: elements[0], in: app), in: app, fingerDeltaY: top < visibleFrame.minY ? 72 : -72)
+            let bottom = elements.map(\.frame.maxY).max() ?? visibleFrame.maxY
+            let scroll = scrollView(containing: elements[0], in: app)
+            // Audits can scroll back to the quiz header. Cover long distances before fine positioning.
+            if top > visibleFrame.maxY {
+                scroll.swipeUp()
+            } else if bottom < visibleFrame.minY {
+                scroll.swipeDown()
+            } else {
+                preciseExamToolScroll(scroll, in: app, fingerDeltaY: top < visibleFrame.minY ? 72 : -72)
+            }
             waitBriefly()
         }
     }
