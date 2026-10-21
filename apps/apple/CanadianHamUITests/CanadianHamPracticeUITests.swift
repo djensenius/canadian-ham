@@ -405,7 +405,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let keyboardStatus = status.label
         print("Morse hardware keyboard expected \(text): \(keyboardStatus)")
         XCTAssertEqual(outcome, .completed, "Decoded: \(decoded.label); \(keyboardStatus)", file: file, line: line)
-        XCTAssertTrue(keyboardStatus.contains("Focus: Optional(\(focus))"), "Expected \(focus) keyboard focus; \(keyboardStatus)", file: file, line: line)
+        XCTAssertTrue(keyboardStatus.contains("Focus: \(focus);"), "Expected \(focus) keyboard focus; \(keyboardStatus)", file: file, line: line)
     }
 
     func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {

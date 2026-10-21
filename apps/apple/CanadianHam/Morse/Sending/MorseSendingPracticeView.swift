@@ -7,7 +7,7 @@ struct MorseSendingPracticeView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
 
-    private enum KeyboardFocus: Hashable { case practice, exam }
+    private enum KeyboardFocus: String, Hashable { case practice, exam }
 
     @Environment(\.scenePhase) private var scenePhase
     @State private var keyboardFocus: KeyboardFocus?
@@ -168,7 +168,7 @@ struct MorseSendingPracticeView: View {
                 MorseSendingFeedbackView(decodedText: decodedText, pendingSamples: pendingSamples, lastFeedback: lastFeedback)
 #if DEBUG
                 if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseKeyboardStatus") {
-                    Text(verbatim: "Focus: \(String(describing: keyboardFocus)); event: \(keyboardEventDescription); held: \(keyer.isStraightKeyDown); audio startup: \(keyer.audioStartupSeconds); hold: \(keyer.lastHoldSeconds); dot limit: \(2 * profile.dotSeconds)") // l10n: verbatim DEBUG-only keyboard test diagnostics
+                    Text(verbatim: "Focus: \(keyboardFocus?.rawValue ?? "none"); event: \(keyboardEventDescription); held: \(keyer.isStraightKeyDown); audio startup: \(keyer.audioStartupSeconds); hold: \(keyer.lastHoldSeconds); dot limit: \(2 * profile.dotSeconds)") // l10n: verbatim DEBUG-only keyboard test diagnostics
                         .accessibilityIdentifier("morse-sending-keyboard-test-status")
                 }
 #endif
