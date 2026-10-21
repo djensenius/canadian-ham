@@ -3,10 +3,11 @@ id: TASK-46.8
 title: >-
   Restructure M1 around principles (privilege matrix, Why column, numbers board,
   quiz rounds)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-16 08:04'
+updated_date: '2026-10-21 14:58'
 labels:
   - content
 dependencies: []
@@ -28,6 +29,15 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 - [ ] #3 Lesson quizzes are delivered in section-sized rounds on web and Apple
 - [ ] #4 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Split section-sized quiz rounds into a UI subtask depending on TASK-50.14.2; keep this branch content-only.
+2. Inventory every M1 taught fact before rewriting and retain the principles-led reference style with exhaustive official quizzes and no concept checks.
+3. Rewrite each lesson around named principles, short Why columns, a shared privilege matrix across L-001-02/L-001-04 and an M1 numbers board; preserve front matter, coverage, figures and quiz IDs. Retarget B-001 hint anchors and keep originality allowlist entries current. Commit and push after each lesson.
+4. Record before/after taught-facts evidence, run requested content/package/Swift checks, check ACs 2 and 4 only, and leave the parent In Progress for UI rounds.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
