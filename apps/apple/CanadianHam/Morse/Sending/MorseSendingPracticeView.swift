@@ -13,6 +13,7 @@ struct MorseSendingPracticeView: View {
     @State private var keyboardFocusRequest = UUID()
 #if DEBUG
     @State private var keyboardEventDescription = "none"
+    @State private var keyboardTimingDescription = "none"
 #endif
     @State private var driver = MorseAudioDriver()
     @State private var pendingSamples: [MorseKeyTimingSample] = []
@@ -161,7 +162,7 @@ struct MorseSendingPracticeView: View {
                 MorseSendingFeedbackView(decodedText: decodedText, pendingSamples: pendingSamples, lastFeedback: lastFeedback)
 #if DEBUG
                 if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseKeyboardStatus") {
-                    Text(verbatim: "Focus: \(String(describing: keyboardFocus)); event: \(keyboardEventDescription); held: \(straightKeyDownAt != nil)") // l10n: verbatim DEBUG-only keyboard test diagnostics
+                    Text(verbatim: "Focus: \(String(describing: keyboardFocus)); event: \(keyboardEventDescription); held: \(straightKeyDownAt != nil); timing: \(keyboardTimingDescription)") // l10n: verbatim DEBUG-only keyboard test diagnostics
                         .accessibilityIdentifier("morse-sending-keyboard-test-status")
                 }
 #endif
@@ -288,6 +289,9 @@ struct MorseSendingPracticeView: View {
         straightKeyDownAt = Date()
         do {
             try driver.startTone(settings: settings.normalized())
+#if DEBUG
+            keyboardTimingDescription = "audio startup: \(Date().timeIntervalSince(straightKeyDownAt ?? Date()))"
+#endif
             errorMessage = nil
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
@@ -298,6 +302,9 @@ struct MorseSendingPracticeView: View {
     private func endStraightKey() {
         guard let started = straightKeyDownAt else { return }
         let duration = max(0.001, Date().timeIntervalSince(started))
+#if DEBUG
+        keyboardTimingDescription += "; hold: \(duration); dot limit: \(2 * profile.dotSeconds)"
+#endif
         straightKeyDownAt = nil
         driver.stop()
         do {
