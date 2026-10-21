@@ -1,18 +1,17 @@
 # TASK-52: iPhone category titles
 
-> **Status: In Progress — continuation required (2026-10-20).** These are
-> investigative observations and screenshots, not final acceptance evidence.
-> The final helper fixes the font-leading false positive, but the default-size
-> regular-width sidebar selector still needs diagnosis. No visual sidebar
-> truncation has been established. The final all-four-case run was interrupted
-> after that selector failure with coordinator approval. All four cases must be
-> rerun after the query fix; no acceptance criterion is checked yet.
+> **Validation complete — 2026-10-21.** All four final-helper cases passed:
+> English and French at default and Accessibility XXXL sizes, including both
+> banks' regular-width sidebar. Cards, lists and content headers passed strict
+> full-text/frame/height checks. Native navigation ellipses remain only under
+> the documented coordinator-approved exception below. No app code changed.
+> Independent branch review is still required before opening a PR.
 
 ## Baseline and navigation-title decision
 
 TASK-55's inline practice navigation title fixes the originally reported English
 `Regulations and Polici…` at default text size on iPhone 17 Pro. The full title and
-wrapped content header are visible in [the baseline screenshot](session-en-default-B-001.png).
+wrapped content header are visible in [the final confirmation screenshot](session-en-default-B-001.png).
 The longer English B-003 title also fits at default size.
 
 The native navigation bar still visually ellipsizes longer titles. In particular,
@@ -87,9 +86,9 @@ pre-existing tests, audits, and shared helpers remain byte-identical.
 **Confirmed on the iPhone 17 Pro simulator at Accessibility XXXL.** Holding the
 French B-003 native navigation title for ten seconds opens the system Large
 Content Viewer. Its overlay displays the complete category title without an
-ellipsis, using native wrapping/hyphenation. Two host screenshots captured during
-the held gesture (after 3- and 7-second capture delays) both show the overlay;
-[the later capture is retained here](native-large-content-viewer-fr-accessibility-xxxl-B-003.png).
+ellipsis, using native wrapping/hyphenation. Earlier 3- and 7-second host captures
+both showed the overlay; [the retained image](native-large-content-viewer-fr-accessibility-xxxl-B-003.png)
+is a fresh host capture seven seconds into the final four-case run's gesture.
 The gesture and an accessibility hierarchy attachment are also recorded by
 `testCategoryTitlesFrenchLargestAccessibilitySize`. No app implementation of a
 custom viewer, toolbar, or navigation bar was added.
@@ -104,41 +103,93 @@ shows the distinction. The coordinator explicitly confirmed on 2026-10-20 that
 the exception also covers this existing native large-title style; no title or
 style change is included.
 
-## Validation so far (not final acceptance)
+## Default sidebar diagnosis
 
-Device: iPhone 17 Pro simulator, iOS 27.0 (24A434). No app-code changes remain.
-Committed implementation: `c7365f585c7b48b714a1845e93f57b074516e65d`.
-A temporary `testCategoryTitleSidebarDefaultDiagnostic` is uncommitted in the
-worktree for the next worker; remove it after the sidebar inspection.
+The short hierarchy probe passed in **37.018 s**. At default size the sidebar
+virtualizes its rows: B-001 does not initially exist in the accessibility tree,
+and one full swipe jumps past B-001/B-002 to B-003 at y = -32. The displayed rows
+still have exact full-title `StaticText` descendants inside buttons whose labels
+include the complete title and counts. There was no merged-label query problem
+and no visual truncation finding.
 
-| Case/run | Outcome | Duration | Meaning |
-| --- | --- | ---: | --- |
-| French AX-XXXL, earlier leading-inclusive helper | Passed | 1278.551 s | All category surfaces passed; this is not the final helper. |
-| English AX-XXXL, earlier leading-inclusive helper | Passed | 1383.723 s | All category surfaces passed; this is not the final helper. |
-| English default, glyph helper `c7365f58` | Failed | 716.525 s | Home, Practice, all Study/module headers and weak areas passed; a standalone sidebar `StaticText` was not found. |
-| All-four final-helper attempt | Interrupted | — | Coordinator approved stopping only our own already-failed run before diagnosing the sidebar selector. |
+The fix preserves the exact full-title query and all text/frame/height checks.
+Only the new evidence-positioning helper's not-found branch changes: a slow drag
+of one-third of the visible height replaces the full swipe, preventing skipped
+virtualized rows. A second probe passed in **74.495 s**, checking B-001 and B-003
+fully below the navigation bar. Host captures show [B-001 fitting](sidebar-en-default-B-001-probe.png)
+and [B-003 wrapping fully to two lines](sidebar-en-default-B-003-probe.png).
+These two supplemental images are from that bounded-scroll probe, not the final
+four-case run. The temporary diagnostic was removed before committing the fix.
+
+## Final validation
+
+Device: iPhone 17 Pro simulator, iOS 27.0 (24A434). Final test implementation:
+`9218ddfcc35989e2538c4c6c6e6654d16762c5a6`. Result: **4 passed, 0 failed,
+0 skipped**, confirmed by `xcresulttool` ([summary](test-summary.json),
+[per-test results and screenshot counts](per-test-results.json)).
+
+| `CanadianHamPracticeUITests` case | Outcome | Duration |
+| --- | --- | ---: |
+| `testCategoryTitlesEnglishDefaultSize` | Passed | 667.752 s |
+| `testCategoryTitlesEnglishLargestAccessibilitySize` | Passed | 1236.626 s |
+| `testCategoryTitlesFrenchDefaultSize` | Passed | 682.248 s |
+| `testCategoryTitlesFrenchLargestAccessibilitySize` | Passed | 1356.760 s |
+
+Each case covers all 8 Basic and 7 Advanced titles on Home, Practice cards,
+session headers/native labels and the regular-width sidebar; all 8 Study
+cards/module headers/native labels; and the weak-area header. Each case retained
+77 screenshots in the result bundle. All eight portrait images in this directory
+are replaced with final-run evidence, including the native Large Content Viewer
+host capture. The two landscape probe images are explicitly identified above.
+
+Representative additional final-run screenshots:
+
+- [Advanced French Practice card at AX-XXXL](practice-fr-accessibility-xxxl-A-007.png).
+- [Advanced French session header at AX-XXXL](session-fr-accessibility-xxxl-A-007.png).
+- [French weak-area header at AX-XXXL](weak-areas-fr-accessibility-xxxl.png).
+- [French Home card with native hyphenation at AX-XXXL](home-fr-accessibility-xxxl-B-004.png).
+
+[Final native-title measurements](native-title-measurements.tsv) contain all
+**92** session/module frames and complete accessibility labels from the four-case
+log. The 17-point width is a reference lower bound, not a claim that the native
+bar always renders at 17 points. `interfaceLanguage` is the UI language; Study
+module titles remain authored in English. French B-003's inline frame remains
+314 points wide versus a 342.7-point reference string, and its Study large title
+remains 346.3 × 71.7 points at AX-XXXL, under the documented exception.
+
+Reproduce the final run (one simulator, no full suite):
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
+  -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -parallel-testing-enabled NO \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesEnglishDefaultSize \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesEnglishLargestAccessibilitySize \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesFrenchDefaultSize \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testCategoryTitlesFrenchLargestAccessibilitySize \
+  -resultBundlePath /tmp/task-52/final-confirmed.xcresult \
+  test CODE_SIGNING_ALLOWED=NO
+```
+
+The actual run used `nohup`, grep-only polling and a fresh result path, and ended
+`XBUILD_EXIT=0`. Full local evidence: `/tmp/task-52/final-confirmed.xcresult`,
+`/tmp/task-52/final-confirmed.log`, `/tmp/task-52/final-attachments/`. Use a new
+result path when rerunning. Earlier failed/interrupted investigative runs do not
+substitute for this final run; their diagnosis is recorded in the task notes.
 
 Other completed checks:
 
 - `node scripts/check-test-guard.mjs --self-test`: passed.
-- `node scripts/check-test-guard.mjs --base 4c9dbc0f --head c7365f58`: passed,
-  no guarded changes.
-- XcodeGen run twice after committing the intended project changes:
-  `git diff --exit-code -- apps/apple/CanadianHam.xcodeproj` stayed empty.
+- `node scripts/check-test-guard.mjs --base origin/main --head HEAD`: passed,
+  no guarded changes (fetched base `4c9dbc0fb260a70e669f80459e3c197c2816f785`).
+- XcodeGen run twice after the scrolling fix using
+  `cd apps/apple && /opt/homebrew/bin/xcodegen generate --spec project.yml`:
+  `git diff --exit-code -- apps/apple/CanadianHam.xcodeproj` stayed empty after
+  each generation.
 - `git diff --check`: passed.
 - No macOS, tvOS, visionOS, Pro Max, full app suites or figure suites were run
   for this task. Only iOS UI-test sources/test resources changed; no app code
   remains changed. The narrower Pro portrait layout and forced regular-width
-  landscape sidebar are the intended iPhone coverage.
-
-[Historical native-title measurements](native-title-measurements-so-far.tsv)
-list 69 observed frames and complete accessibility titles, with the originating
-helper/run explicitly identified. The 17-point width is a reference lower bound,
-not a claim that the native bar always renders at 17 points. `interfaceLanguage`
-is the UI language; Study module titles remain authored in English. This table
-must be replaced or supplemented with the final all-four-case measurements.
-
-Full local result bundles/logs are under `/tmp/task-52/`; the continuation steps
-and exact probe/rerun commands are in `/tmp/task-52-handoff.md`. The short probe
-was cancelled while still waiting for the shared lock, as requested by the
-coordinator. The active full `CanadianHamLessonFigures` plan was not interrupted.
+  landscape sidebar are the intended iPhone coverage. No other build was
+  interrupted; shared-lock waits were respected.
