@@ -35,16 +35,6 @@
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson. Current checker: five-gram-overlap for B-005-012-001, B-005-012-010."
   },
   {
-    "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Certificate records, addresses, and call-sign fees",
-    "reason": "Reviewed regulatory reference table: exact validity, deadline, retention, and fee facts are established by official answers. Current checker: numeric-overlap for B-001-002-009; five-gram-overlap for B-001-002-001, B-001-002-008."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Offences, penalties, and process boundaries",
-    "reason": "Reviewed regulatory reference table: offence, penalty, and process-boundary facts are established by official answers. Current checker: five-gram-overlap for B-001-003-001."
-  },
-  {
     "lessonId": "L-001-02",
     "blockHeading": "Reference facts: Work done for another person",
     "reason": "Reviewed regulatory reference table: authorization requirements for work on another person's apparatus are established by official answers. Current checker: five-gram-overlap for B-001-005-006."
@@ -128,5 +118,15 @@
     "lessonId": "L-006-05",
     "blockHeading": "Dipole patterns",
     "reason": "Reviewed teaching fact: the free-space centre-fed half-wave dipole feed-point impedance of about 73 ohms (B-006-012-004) was a pre-existing coverage gap. It is stated in original prose; 'half-wave' tokenizes to 0.5, so the numeric heuristic flags the unavoidable term plus value. Current checker: numeric-overlap for B-006-012-004."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: A lifetime certificate needs current records",
+    "reason": "TASK-46.8 reviewed regulatory reference table in original prose: a voluntary two-letter call-sign change has the exact $60 fee. Current checker: numeric-overlap for B-001-002-009."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: M1 numbers board",
+    "reason": "TASK-46.8 owner-approved numbers board: exact deadlines, fee, access threshold, bandwidths and RF exposure range are grouped with units and their separate jobs, not copied question scenarios. Current checker: numeric-overlap for B-001-002-009, B-001-015-003, B-001-016-001, B-001-016-003, B-001-016-006, B-001-024-003."
   }
 ]
