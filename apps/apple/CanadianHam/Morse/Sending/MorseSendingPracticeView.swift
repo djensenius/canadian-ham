@@ -89,7 +89,7 @@ struct MorseSendingPracticeView: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 refreshExamCountdown()
-                keyer.prepare(settings: settings.normalized())
+                if presentedResult == nil { keyer.prepare(settings: settings.normalized()) }
             } else {
                 stopAllKeying(finalizeStraight: true)
                 keyer.release()
