@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-11 01:16'
-updated_date: '2026-10-21 21:29'
+updated_date: '2026-10-21 21:31'
 labels:
   - apple
   - web
@@ -159,10 +159,14 @@ Review follow-up source 4add8428632715a79b0fbe12586abef57284db6b: lifecycle prep
 - mac-morse: testScheduleMorseVisualPlaybackInitialStateAndFallback — PASS (0.001 seconds)
 - mac-morse: testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess — PASS (0.036 seconds)
 42 Apple test executions total: 35/35 macOS Morse units, 6/6 iPhone UI methods, 1/1 iPad keyboard method. macOS new regressions: stopped-engine/source/session restart 1.662s; audio-failure classification 0.004s; non-droppable release→silence 0.002s. Web: 25/25 Morse library/settings/sending tests and 21/21 selected App Morse tests passed (73 non-Morse App tests excluded by name filter, no source skips added). pnpm typecheck, Apple text-source checker, test-guard self-test, branch guard against origin/main and diff-check all passed. No guarded changes found. Exact commands, complete logs and 8 xcresults: /tmp/task-41-review-validation-20261021T202728Z. Runner: /tmp/task-41-review-checks.sh. Shared lock waits respected; no other builds signalled. xbuild logged a non-fatal simctl lookup warning during keyboard-run cleanup; both test commands exited zero. No physical macOS keyboard manual run is claimed. No full Apple suites ran; the shared driver still requires all four platform suites in the coordinator merge batch. Per AGENTS SwiftUI-text policy, an additional detached pnpm check:apple-l10n is running (/tmp/task-41-review-l10n.sh), covering export and generic tvOS/visionOS builds without catalogue rewriting. Task remains Done by coordinator direction; final push follows that gate. Note 8 remains deliberately unchanged as recorded above.
+
+Review follow-up final gate PASS at 2026-10-21T21:31:02Z: pnpm check:apple-l10n exited 0, French export/compiler/catalogue checks passed, and generic tvOS plus visionOS simulator builds both SUCCEEDED. Catalogue unchanged and working tree clean. All requested targeted tests/checks plus the SwiftUI-text localization gate are now complete with no failures/retries. Evidence and exact commands remain /tmp/task-41-review-validation-20261021T202728Z; full per-test results are in the preceding note. All Apple invocations used xbuild, all waits used detached nohup runners and grep polling, and no other build was killed. No full Apple suites or physical macOS keyboard manual run claimed. Note 8 shared-session lock contention is intentionally retained. Task kept Done, ready for reviewer verification and coordinator merge-batch policy; no PR opened.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
 Completed all four Morse-polish acceptance criteria. Practice and pushed exam own separate keyboard focus bindings; the real keyboard regression preserves exact E/EE/E through exam, Back and re-entry on iPhone and iPad. A measured first-key audio stall (0.569s startup stretching a 0.579s hold) is fixed with asynchronous silent preparation, ordered/cancelled tone requests and monotonic event-time classification; injected slow-start and no-late-tone units pass. Existing live-beacon safety, localized square-point wording/derived web axe expectations, and Settings/Study import rejection coverage are retained. Validation: 32 macOS units, 2 device keyboard executions, 4 sending regressions, localization export plus tvOS/visionOS builds, text-source and test-guard checks all pass; previous 84 relevant web tests and beacon UI pass are recorded. Full per-test/timing evidence is in task notes and /tmp/task-41-audio-validation-20261021T151530Z. No PR; internal review required. Full four-platform suites are deferred to the coordinator merge batch; no physical macOS keyboard manual run claimed.
+
+Review notes addressed: queued release/lifecycle work cannot be superseded by silence; stopped-engine restart detaches old sources and balances session users; device keyboard tests assert exam/practice/exam focus; diagnostic timing is DEBUG-only; web axe uses the production safety-note builder. Audio failure now preserves recorded press classification. Fresh validation passed 35 macOS Morse units (including 3 new regressions), all 6 ordered iPhone methods and iPad keyboard, 46 web Morse tests, typecheck, localization with tvOS/visionOS builds, text-source and test guard. Results Light passed first try. Full per-test evidence: /tmp/task-41-review-validation-20261021T202728Z. Note 8 remains unchanged; physical macOS keyboard behavior is not manually verified. No PR.
 <!-- SECTION:FINAL_SUMMARY:END -->
