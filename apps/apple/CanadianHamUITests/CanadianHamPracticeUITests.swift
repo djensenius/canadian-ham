@@ -1482,9 +1482,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let titleDescriptor = try XCTUnwrap(UIFont.preferredFont(forTextStyle: .title1, compatibleWith: traits).fontDescriptor.withDesign(.serif)?.withSymbolicTraits(.traitBold))
         let titleFont = UIFont(descriptor: titleDescriptor, size: 0)
         var arguments = ["-AppleLanguages", "(\(language))", "-AppleLocale", french ? "fr_CA" : "en_CA"]
-        if accessibilitySize {
-            arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
-        }
+        // Pin both cases to the size used for the reference fonts above, so the simulator's Text Size setting can't change the metrics.
+        arguments += ["-UIPreferredContentSizeCategoryName", accessibilitySize ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL"]
         var basicCategories: [UITestCategory] = []
         for (bank, resource) in [("basic-2025-07-15", "categories"), ("advanced-2025-02-04", "categories-advanced")] {
             let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: resource, withExtension: "json"))
