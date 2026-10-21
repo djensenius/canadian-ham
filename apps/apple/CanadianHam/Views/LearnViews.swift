@@ -696,6 +696,35 @@ private struct LessonQuizScreen: View {
     }
 }
 
+// Keep one child tree: ViewThatFits candidates can lose audit-node provenance when Dynamic Type changes.
+private struct LessonQuizControlLayout: Layout {
+    let horizontalAlignment: VerticalAlignment
+    let verticalSpacing: CGFloat
+    let forceVertical: Bool
+
+    private func fittingLayout(proposal: ProposedViewSize, subviews: Subviews) -> AnyLayout {
+        let horizontal = AnyLayout(HStackLayout(alignment: horizontalAlignment))
+        var cache = horizontal.makeCache(subviews: subviews)
+        let ideal = horizontal.sizeThatFits(proposal: .unspecified, subviews: subviews, cache: &cache)
+        if !forceVertical && ideal.width <= (proposal.width ?? .infinity) {
+            return horizontal
+        }
+        return AnyLayout(VStackLayout(alignment: .leading, spacing: verticalSpacing))
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let layout = fittingLayout(proposal: proposal, subviews: subviews)
+        var layoutCache = layout.makeCache(subviews: subviews)
+        return layout.sizeThatFits(proposal: proposal, subviews: subviews, cache: &layoutCache)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let layout = fittingLayout(proposal: proposal, subviews: subviews)
+        var layoutCache = layout.makeCache(subviews: subviews)
+        layout.placeSubviews(in: bounds, proposal: proposal, subviews: subviews, cache: &layoutCache)
+    }
+}
+
 private struct LessonQuizView: View {
     let quiz: LessonQuiz
     let lesson: Lesson
@@ -806,38 +835,23 @@ private struct LessonQuizView: View {
         .accessibilityIdentifier("lesson-quiz-card")
     }
 
-    @ViewBuilder
     private var quizHeaderControls: some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                quizHeader
-                retryButton
-            }
-        } else {
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .top) {
-                    quizHeader
-                    Spacer()
-                    retryButton
-                }
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    quizHeader
-                    retryButton
-                }
-            }
+        LessonQuizControlLayout(
+            horizontalAlignment: .top,
+            verticalSpacing: DesignTokens.Spacing.md,
+            forceVertical: dynamicTypeSize.isAccessibilitySize
+        ) {
+            quizHeader.frame(maxWidth: .infinity, alignment: .leading)
+            retryButton
         }
     }
 
-    @ViewBuilder
     private var quizNavigationControls: some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
-        } else {
-            ViewThatFits(in: .horizontal) {
-                HStack { navigationButtons }
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { navigationButtons }
-            }
-        }
+        LessonQuizControlLayout(
+            horizontalAlignment: .center,
+            verticalSpacing: DesignTokens.Spacing.sm,
+            forceVertical: dynamicTypeSize.isAccessibilitySize
+        ) { navigationButtons }
     }
 
     private var quizHeader: some View {
