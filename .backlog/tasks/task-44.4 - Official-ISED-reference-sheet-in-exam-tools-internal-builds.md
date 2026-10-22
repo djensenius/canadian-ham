@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 02:05'
+updated_date: '2026-10-22 02:13'
 labels:
   - content
   - web
@@ -41,6 +41,8 @@ Owner decision 2026-10-12 (2A): use the official ISED Basic reference sheet (EN 
 3. Integrate page/zoom/text controls plus original-study fallback on web and iOS/iPadOS/macOS; OFFICIAL_REFERENCE_SHEET defaults off in Release/production and is explicitly enabled only for dev/Debug/internal beta.
 4. Add EN/FR light/dark, AX, unit and gate coverage. Preserve all existing shared/audit helpers. With coordinator approval, use only approved exception (a) for AX and a new identical-rule, explicit-reference-scroll helper for the iPad fallback. Document licensing/TestFlight/public-release exclusion.
 5. Run targeted requested checks (no full Apple suites), record per-test results, check AC3, set Done, commit/push; no PR or upload.
+
+Review follow-up: 6. Make beta archive opt-in explicit, validate every Release config and default web output with regression fixtures. 7. Restore hit target, remove diagnostics, label zoom, repair catalogue fr-CA/order/newline, inspect high-resolution page 4, and add iPhone medium-detent coverage. 8. Rerun only requested reference-sheet UI/macOS units and web/gate/l10n/URL/text/guard checks; record results, keep Done, commit/push, no PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
