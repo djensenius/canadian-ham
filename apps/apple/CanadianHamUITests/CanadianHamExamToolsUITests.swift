@@ -409,42 +409,65 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let mediumHeaderFrame = header.frame
         XCTAssertGreaterThan(mediumHeaderFrame.minY, app.windows.firstMatch.frame.height * 0.25, "This test must exercise the medium detent")
         let fullSheet = app.buttons["reference-sheet-show-full-sheet"].firstMatch
-        positionReferenceSheetControl(fullSheet, in: app)
+        positionReferenceSheetControl(fullSheet, in: app, dragColumn: 0.5)
         XCTAssertGreaterThanOrEqual(fullSheet.frame.width, 44)
         XCTAssertGreaterThanOrEqual(fullSheet.frame.height, 44)
         let image = app.images["reference-sheet-official-page"].firstMatch
         XCTAssertTrue(image.waitForExistence(timeout: 5))
         let next = app.buttons["reference-sheet-page-next"].firstMatch
-        positionReferenceSheetControl(next, in: app)
+        positionReferenceSheetControl(next, in: app, dragColumn: 0.5)
         next.tap()
         XCTAssertTrue(image.label.contains("page 2"))
         let previous = app.buttons["reference-sheet-page-previous"].firstMatch
-        positionReferenceSheetControl(previous, in: app)
+        positionReferenceSheetControl(previous, in: app, dragColumn: 0.5)
         previous.tap()
         XCTAssertTrue(image.label.contains("page 1"))
         let zoomIn = app.buttons["reference-sheet-zoom-in"].firstMatch
-        positionReferenceSheetControl(zoomIn, in: app)
+        positionReferenceSheetControl(zoomIn, in: app, dragColumn: 0.5)
         zoomIn.tap()
         XCTAssertEqual(zoomIn.value as? String, "150%")
         let zoomOut = app.buttons["reference-sheet-zoom-out"].firstMatch
-        positionReferenceSheetControl(zoomOut, in: app)
+        positionReferenceSheetControl(zoomOut, in: app, dragColumn: 0.5)
         zoomOut.tap()
         XCTAssertEqual(zoomOut.value as? String, "100%")
         let text = app.switches["reference-sheet-text-equivalent"].firstMatch
-        positionReferenceSheetControl(text, in: app)
+        positionReferenceSheetControl(text, in: app, dragColumn: 0.5)
         text.tap()
         XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-official-text"].firstMatch.waitForExistence(timeout: 5))
         text.tap()
         let version = app.buttons["reference-sheet-version"].firstMatch
-        positionReferenceSheetControl(version, in: app)
+        positionReferenceSheetControl(version, in: app, dragColumn: 0.5)
         version.tap()
         XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-study-text"].firstMatch.waitForExistence(timeout: 5))
-        positionReferenceSheetControl(version, in: app)
+        positionReferenceSheetControl(version, in: app, dragColumn: 0.5)
         version.tap()
         XCTAssertTrue(image.waitForExistence(timeout: 5))
-        positionReferenceSheetControl(fullSheet, in: app)
+        positionReferenceSheetControl(fullSheet, in: app, dragColumn: 0.5)
+        let referenceScroll = app.scrollViews["reference-sheet-scroll"].firstMatch
+        guard referenceScroll.waitForExistence(timeout: 5) else {
+            XCTFail("Expected reference-sheet-scroll; refusing to audit a different scroll view")
+            return
+        }
+        XCTAssertGreaterThan(header.frame.minY, app.windows.firstMatch.frame.height * 0.25, "The exception is limited to the iPhone medium detent")
         XCTAssertEqual(header.frame.minY, mediumHeaderFrame.minY, accuracy: 6, "Scrolling the controls must not expand the medium sheet")
-        try app.performAccessibilityAudit()
+        var ignoredTextClippedIssues = 0
+        // Owner decision 2026-10-12 permits larger-Dynamic-Type clipping inside medium-detent tool scroll content.
+        // Keep the existing nil-element rule; named findings must match this explicit reference scroll view.
+        try app.performAccessibilityAudit { issue in
+#if os(iOS)
+            guard UIDevice.current.userInterfaceIdiom == .phone, issue.auditType == .textClipped else { return false }
+            if !self.isApprovedMediumDetentToolScrollTextClip(issue, in: app) {
+                guard let element = issue.element,
+                      self.element(element, withFrame: element.frame, isDescendantOf: referenceScroll) else { return false }
+            }
+            ignoredTextClippedIssues += 1
+            NSLog("Ignoring approved owner-decision-2026-10-12 iPhone medium-detent reference-scroll textClipped issue: %@", String(describing: issue))
+            return ignoredTextClippedIssues <= 5
+#else
+            return false
+#endif
+        }
+        XCTAssertLessThanOrEqual(ignoredTextClippedIssues, 5, "Medium-detent reference audit must preserve the existing five-issue cap")
         fullSheet.tap()
         waitBriefly(0.8)
         XCTAssertFalse(fullSheet.exists, "Show full sheet must expand the sheet and disappear")
@@ -478,7 +501,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
-    private func positionReferenceSheetControl(_ control: XCUIElement, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+    private func positionReferenceSheetControl(_ control: XCUIElement, in app: XCUIApplication, dragColumn: CGFloat = 0.85, file: StaticString = #filePath, line: UInt = #line) {
         let scroll = app.scrollViews["reference-sheet-scroll"].firstMatch
         XCTAssertTrue(scroll.waitForExistence(timeout: 5), file: file, line: line)
         XCTAssertTrue(control.waitForExistence(timeout: 5), file: file, line: line)
@@ -486,12 +509,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             let frame = scroll.frame.intersection(app.windows.firstMatch.frame)
             let top = max(frame.minY, protectedNavigationFrame(in: app).maxY)
             let visible = CGRect(x: frame.minX, y: top, width: frame.width, height: max(0, frame.maxY - top))
-            if visible.contains(control.frame) {
+            // Sheet transforms can differ by subpixel rounding at the shared leading edge.
+            if visible.insetBy(dx: -0.5, dy: -0.5).contains(control.frame) {
                 return
             }
             let distance: CGFloat = control.frame.midY < visible.midY ? 72 : -72
-            // Drag in the blank column between the button capsules and scroll indicator.
-            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5))
+            // Use a blank column, not the Text equivalent switch thumb in the medium sheet.
+            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: dragColumn, dy: 0.5))
             start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)), withVelocity: XCUIGestureVelocity.slow, thenHoldForDuration: 0.4)
         }
         XCTFail("Reference-sheet control \(control.identifier) should be fully inside the visible scroll frame below navigation. Control: \(frameDescription(control.frame)); scroll: \(frameDescription(scroll.frame))", file: file, line: line)

@@ -1090,18 +1090,20 @@ struct ReferenceSheetToolView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     if showsFullSheetButton {
-                        Button("Show full sheet") { onShowFullSheet() } // l10n: localized
-                            .font(DesignTokens.FontScale.body.weight(.semibold))
-                            .buttonStyle(.bordered)
-                            .controlSize(.large)
-                            .frame(minWidth: 44, minHeight: 44)
-                            .contentShape(Rectangle())
-                            .accessibilityIdentifier("reference-sheet-show-full-sheet")
+                        Button { onShowFullSheet() } label: {
+                            AccessibleSecondaryButtonLabel(title: "Show full sheet")
+                        }
+                        .buttonStyle(AccessibleSecondaryButtonStyle())
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                        .accessibilityIdentifier("reference-sheet-show-full-sheet")
                     }
                     if officialDocument != nil {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                             Text(showsOfficial ? LocalizedStringKey("Official sheet") : LocalizedStringKey("Study sheet")) // l10n: localized
                                 .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
                                 .accessibilityIdentifier("reference-sheet-version-title")
                             Button { showsOfficial.toggle() } label: {
                                 AccessibleSecondaryButtonLabel(title: showsOfficial ? "Study sheet" : "Official sheet")
@@ -1109,6 +1111,7 @@ struct ReferenceSheetToolView: View {
                             .buttonStyle(AccessibleSecondaryButtonStyle())
                             .accessibilityIdentifier("reference-sheet-version")
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel(Text("Sheet version")) // l10n: localized
                     }
@@ -1133,8 +1136,23 @@ struct ReferenceSheetToolView: View {
 
     @ViewBuilder
     private func officialSheet(_ document: OfficialReferenceSheetDocument, width: CGFloat) -> some View {
-        Toggle("Text equivalent", isOn: $showsTextEquivalent) // l10n: localized
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                Text("Text equivalent") // l10n: localized
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                Toggle("Text equivalent", isOn: $showsTextEquivalent) // l10n: localized
+                    .labelsHidden()
+                    .accessibilityIdentifier("reference-sheet-text-equivalent")
+            }
+        } else {
+            Toggle(isOn: $showsTextEquivalent) {
+                Text("Text equivalent") // l10n: localized
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             .accessibilityIdentifier("reference-sheet-text-equivalent")
+        }
         if showsTextEquivalent {
             LessonMarkdownView(markdown: document.markdown, title: "")
                 .accessibilityIdentifier("reference-sheet-official-text")

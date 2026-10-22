@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%lld / 5" : {
-      "shouldTranslate" : false
-    },
     ", %@" : {
       "localizations" : {
         "fr" : {
@@ -1810,6 +1807,9 @@
         }
       }
     },
+    "%lld / 5" : {
+      "shouldTranslate" : false
+    },
     "%lld answered question" : {
       "localizations" : {
         "en" : {
@@ -2784,198 +2784,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Résultat de la calculatrice : %@"
-          }
-        }
-      }
-    },
-    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
-          }
-        }
-      }
-    },
-    "Official sheet" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Official sheet"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille officielle"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille officielle"
-          }
-        }
-      }
-    },
-    "Official sheet, page %lld of 5. Use Text equivalent for accessible content." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Official sheet, page %lld of 5. Use Text equivalent for accessible content."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille officielle, page %lld sur 5. Utilisez l’équivalent textuel pour le contenu accessible."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille officielle, page %lld sur 5. Utilisez l’équivalent textuel pour le contenu accessible."
-          }
-        }
-      }
-    },
-    "Page %lld of 5" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Page %lld of 5"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Page %lld sur 5"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Page %lld sur 5"
-          }
-        }
-      }
-    },
-    "Sheet version" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sheet version"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version de la feuille"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version de la feuille"
-          }
-        }
-      }
-    },
-    "Study sheet" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Study sheet"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille d’étude"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille d’étude"
-          }
-        }
-      }
-    },
-    "Text equivalent" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text equivalent"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Équivalent textuel"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Équivalent textuel"
-          }
-        }
-      }
-    },
-    "This content is currently available in English only." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This content is currently available in English only."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce contenu est actuellement offert en anglais seulement."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce contenu est actuellement offert en anglais seulement."
-          }
-        }
-      }
-    },
-    "Zoom" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoom"
           }
         }
       }
@@ -6352,6 +6160,28 @@
         }
       }
     },
+    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
+          }
+        }
+      }
+    },
     "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps." : {
       "localizations" : {
         "en" : {
@@ -8138,6 +7968,50 @@
         }
       }
     },
+    "Official sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Official sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle"
+          }
+        }
+      }
+    },
+    "Official sheet, page %lld of 5. Use Text equivalent for accessible content." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Official sheet, page %lld of 5. Use Text equivalent for accessible content."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle, page %lld sur 5. Utilisez l’équivalent textuel pour le contenu accessible."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle, page %lld sur 5. Utilisez l’équivalent textuel pour le contenu accessible."
+          }
+        }
+      }
+    },
     "Offline Basic question-bank practice" : {
       "localizations" : {
         "en" : {
@@ -8290,6 +8164,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mode de sortie"
+          }
+        }
+      }
+    },
+    "Page %lld of 5" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld of 5"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld sur 5"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld sur 5"
           }
         }
       }
@@ -9912,6 +9808,28 @@
         }
       }
     },
+    "Sheet version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sheet version"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version de la feuille"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version de la feuille"
+          }
+        }
+      }
+    },
     "Short" : {
       "localizations" : {
         "fr" : {
@@ -10692,6 +10610,28 @@
         }
       }
     },
+    "Study sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Study sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille d’étude"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille d’étude"
+          }
+        }
+      }
+    },
     "Study the eight modules in order. Lessons are currently authored in English; official practice questions follow your Language setting." : {
       "localizations" : {
         "fr" : {
@@ -10954,6 +10894,28 @@
         }
       }
     },
+    "Text equivalent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text equivalent"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel"
+          }
+        }
+      }
+    },
     "The bundled Basic reference sheet is not installed in this build." : {
       "localizations" : {
         "fr" : {
@@ -11080,6 +11042,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette catégorie ne contient aucune question intégrée."
+          }
+        }
+      }
+    },
+    "This content is currently available in English only." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is currently available in English only."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce contenu est actuellement offert en anglais seulement."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce contenu est actuellement offert en anglais seulement."
           }
         }
       }
@@ -11962,6 +11946,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
+          }
+        }
+      }
+    },
+    "Zoom" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom"
           }
         }
       }
