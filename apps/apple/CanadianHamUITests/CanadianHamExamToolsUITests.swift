@@ -411,19 +411,21 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertGreaterThanOrEqual(zoom.frame.height, 44)
         zoom.tap()
         XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.label, "150%")
+        positionReferenceSheetControl(app.buttons["reference-sheet-page-previous"].firstMatch, in: app, alignToTop: true)
         try app.performAccessibilityAudit()
     }
 
-    private func positionReferenceSheetControl(_ control: XCUIElement, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+    private func positionReferenceSheetControl(_ control: XCUIElement, in app: XCUIApplication, alignToTop: Bool = false, file: StaticString = #filePath, line: UInt = #line) {
         let scroll = app.scrollViews["reference-sheet-scroll"].firstMatch
         XCTAssertTrue(scroll.waitForExistence(timeout: 5), file: file, line: line)
         XCTAssertTrue(control.waitForExistence(timeout: 5), file: file, line: line)
         for _ in 0..<30 {
-            let frame = scroll.frame.intersection(app.windows.firstMatch.frame).insetBy(dx: 2, dy: 4)
+            let frame = scroll.frame.intersection(app.windows.firstMatch.frame)
             let top = max(frame.minY, protectedNavigationFrame(in: app).maxY)
             let visible = CGRect(x: frame.minX, y: top, width: frame.width, height: max(0, frame.maxY - top))
-            if visible.contains(control.frame) {
-                if !control.isHittable && !hasLoggedReferenceHitPoint {
+            let topDifference = control.frame.minY - (visible.minY + 6)
+            if visible.contains(control.frame) && (!alignToTop || abs(topDifference) <= 6) {
+                if !hasLoggedReferenceHitPoint && control.identifier == "reference-sheet-page-next" {
                     hasLoggedReferenceHitPoint = true
                     let point = CGPoint(x: control.frame.midX, y: control.frame.midY)
                     let overlapping = app.descendants(matching: .any).allElementsBoundByIndex.compactMap { element -> String? in
@@ -432,7 +434,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                         return "type=\(element.elementType.rawValue) id=\(element.identifier) label=\(element.label.prefix(100)) frame=\(frameDescription(frame))"
                     }
                     XCTContext.runActivity(named: "Reference control hit-point diagnostics") { activity in
-                        let note = "Control \(control.identifier) at \(point), fully inside \(frameDescription(visible)); isHittable=false.\n" + overlapping.joined(separator: "\n")
+                        let note = "Control \(control.identifier) at \(point), fully inside \(frameDescription(visible)); isHittable=\(control.isHittable).\n" + overlapping.joined(separator: "\n")
                         NSLog("%@", note)
                         let attachment = XCTAttachment(string: note)
                         attachment.lifetime = .keepAlways
@@ -444,7 +446,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 }
                 return
             }
-            let distance: CGFloat = control.frame.midY < visible.midY ? 72 : -72
+            let proposedDistance: CGFloat = alignToTop
+                ? -max(-72, min(72, topDifference))
+                : (control.frame.midY < visible.midY ? 72 : -72)
+            // Tiny drags are interpreted as taps rather than a scroll pan.
+            let distance = proposedDistance >= 0 ? max(12, proposedDistance) : min(-12, proposedDistance)
             let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5))
             start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)), withVelocity: XCUIGestureVelocity.slow, thenHoldForDuration: 0.4)
         }

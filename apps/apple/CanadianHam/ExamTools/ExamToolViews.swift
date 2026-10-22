@@ -1072,6 +1072,7 @@ struct ReferenceSheetToolView: View {
     @State private var showsOfficial = true
     @State private var showsTextEquivalent = false
     @State private var page = 0
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         Group {
@@ -1090,6 +1091,7 @@ struct ReferenceSheetToolView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     if showsFullSheetButton {
                         Button("Show full sheet") { onShowFullSheet() } // l10n: localized
+                            .font(DesignTokens.FontScale.body.weight(.semibold))
                             .buttonStyle(.bordered)
                             .controlSize(.large)
                             .frame(minHeight: 44)
@@ -1219,39 +1221,35 @@ struct ReferenceSheetToolView: View {
         .accessibilityIdentifier("reference-sheet-scroll")
     }
 
+    @ViewBuilder
     private var zoomControls: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                zoomButtons
-            }
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                zoomButtons
-            }
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { zoomButtons }
+        } else {
+            HStack(spacing: DesignTokens.Spacing.sm) { zoomButtons }
         }
     }
 
     @ViewBuilder
     private var zoomButtons: some View {
-            Button("Zoom out") { zoom = max(1, zoom - 0.5) } // l10n: localized
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(Rectangle())
-                .disabled(zoom <= 1)
-                .accessibilityIdentifier("reference-sheet-zoom-out")
-            Text("\(Int((zoom * 100).rounded()))%") // l10n: verbatim
-                .font(DesignTokens.FontScale.body.weight(.semibold))
-                .fixedSize(horizontal: false, vertical: true)
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
-                .monospacedDigit()
-                .accessibilityIdentifier("reference-sheet-zoom-level")
-            Button("Zoom in") { zoom = min(3, zoom + 0.5) } // l10n: localized
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(Rectangle())
-                .disabled(zoom >= 3)
-                .accessibilityIdentifier("reference-sheet-zoom-in")
+        Button { zoom = max(1, zoom - 0.5) } label: {
+            AccessibleSecondaryButtonLabel(title: "Zoom out")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        .disabled(zoom <= 1)
+        .accessibilityIdentifier("reference-sheet-zoom-out")
+        Text("\(Int((zoom * 100).rounded()))%") // l10n: verbatim
+            .font(DesignTokens.FontScale.body.weight(.semibold))
+            .fixedSize(horizontal: false, vertical: true)
+            .foregroundStyle(DesignTokens.Colors.inkMuted)
+            .monospacedDigit()
+            .accessibilityIdentifier("reference-sheet-zoom-level")
+        Button { zoom = min(3, zoom + 0.5) } label: {
+            AccessibleSecondaryButtonLabel(title: "Zoom in")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        .disabled(zoom >= 3)
+        .accessibilityIdentifier("reference-sheet-zoom-in")
     }
 
     private func loadDocument() {
