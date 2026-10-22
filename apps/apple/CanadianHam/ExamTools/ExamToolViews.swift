@@ -1094,7 +1094,8 @@ struct ReferenceSheetToolView: View {
                             .font(DesignTokens.FontScale.body.weight(.semibold))
                             .buttonStyle(.bordered)
                             .controlSize(.large)
-                            .frame(minHeight: 44)
+                            .frame(minWidth: 44, minHeight: 44)
+                            .contentShape(Rectangle())
                             .accessibilityIdentifier("reference-sheet-show-full-sheet")
                     }
                     if officialDocument != nil {
@@ -1238,18 +1239,22 @@ struct ReferenceSheetToolView: View {
         }
         .buttonStyle(AccessibleSecondaryButtonStyle())
         .disabled(zoom <= 1)
+        .accessibilityValue(Text("\(Int((zoom * 100).rounded()))%")) // l10n: verbatim
         .accessibilityIdentifier("reference-sheet-zoom-out")
         Text("\(Int((zoom * 100).rounded()))%") // l10n: verbatim
             .font(DesignTokens.FontScale.body.weight(.semibold))
             .fixedSize(horizontal: false, vertical: true)
             .foregroundStyle(DesignTokens.Colors.inkMuted)
             .monospacedDigit()
+            .accessibilityLabel(Text("Zoom")) // l10n: localized
+            .accessibilityValue(Text("\(Int((zoom * 100).rounded()))%")) // l10n: verbatim
             .accessibilityIdentifier("reference-sheet-zoom-level")
         Button { zoom = min(3, zoom + 0.5) } label: {
             AccessibleSecondaryButtonLabel(title: "Zoom in")
         }
         .buttonStyle(AccessibleSecondaryButtonStyle())
         .disabled(zoom >= 3)
+        .accessibilityValue(Text("\(Int((zoom * 100).rounded()))%")) // l10n: verbatim
         .accessibilityIdentifier("reference-sheet-zoom-in")
     }
 

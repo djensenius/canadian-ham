@@ -5,8 +5,6 @@ import UIKit
 
 @MainActor
 final class CanadianHamExamToolsUITests: XCTestCase {
-    private var hasLoggedReferenceHitPoint = false
-
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
@@ -366,7 +364,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 let zoom = app.buttons["reference-sheet-zoom-in"].firstMatch
                 positionReferenceSheetControl(zoom, in: app)
                 zoom.tap()
-                XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.label, "150%")
+                XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.label, "Zoom")
+                XCTAssertEqual(zoom.value as? String, "150%")
+                XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.value as? String, "150%")
                 let nextPage = app.buttons["reference-sheet-page-next"].firstMatch
                 positionReferenceSheetControl(nextPage, in: app)
                 XCTAssertEqual(nextPage.label, language == "fr" ? "Suivant" : "Next", "Page navigation follows the interface language")
@@ -397,6 +397,61 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         }
     }
 
+    func testOfficialReferenceSheetMediumDetentControlsAndShowFullSheet() throws {
+#if os(iOS)
+        try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "The medium-detent path is iPhone-only; iPad uses the reference inspector matrix.")
+#endif
+        let app = launchPracticeQuestion()
+        defer { app.terminate() }
+        openTool(.referenceSheet, in: app)
+        let header = app.descendants(matching: .any)[Tool.referenceSheet.panelIdentifier].firstMatch
+        XCTAssertTrue(header.waitForExistence(timeout: 5))
+        let mediumHeaderFrame = header.frame
+        XCTAssertGreaterThan(mediumHeaderFrame.minY, app.windows.firstMatch.frame.height * 0.25, "This test must exercise the medium detent")
+        let fullSheet = app.buttons["reference-sheet-show-full-sheet"].firstMatch
+        positionReferenceSheetControl(fullSheet, in: app)
+        XCTAssertGreaterThanOrEqual(fullSheet.frame.width, 44)
+        XCTAssertGreaterThanOrEqual(fullSheet.frame.height, 44)
+        let image = app.images["reference-sheet-official-page"].firstMatch
+        XCTAssertTrue(image.waitForExistence(timeout: 5))
+        let next = app.buttons["reference-sheet-page-next"].firstMatch
+        positionReferenceSheetControl(next, in: app)
+        next.tap()
+        XCTAssertTrue(image.label.contains("page 2"))
+        let previous = app.buttons["reference-sheet-page-previous"].firstMatch
+        positionReferenceSheetControl(previous, in: app)
+        previous.tap()
+        XCTAssertTrue(image.label.contains("page 1"))
+        let zoomIn = app.buttons["reference-sheet-zoom-in"].firstMatch
+        positionReferenceSheetControl(zoomIn, in: app)
+        zoomIn.tap()
+        XCTAssertEqual(zoomIn.value as? String, "150%")
+        let zoomOut = app.buttons["reference-sheet-zoom-out"].firstMatch
+        positionReferenceSheetControl(zoomOut, in: app)
+        zoomOut.tap()
+        XCTAssertEqual(zoomOut.value as? String, "100%")
+        let text = app.switches["reference-sheet-text-equivalent"].firstMatch
+        positionReferenceSheetControl(text, in: app)
+        text.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-official-text"].firstMatch.waitForExistence(timeout: 5))
+        text.tap()
+        let version = app.buttons["reference-sheet-version"].firstMatch
+        positionReferenceSheetControl(version, in: app)
+        version.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-study-text"].firstMatch.waitForExistence(timeout: 5))
+        positionReferenceSheetControl(version, in: app)
+        version.tap()
+        XCTAssertTrue(image.waitForExistence(timeout: 5))
+        positionReferenceSheetControl(fullSheet, in: app)
+        XCTAssertEqual(header.frame.minY, mediumHeaderFrame.minY, accuracy: 6, "Scrolling the controls must not expand the medium sheet")
+        try app.performAccessibilityAudit()
+        fullSheet.tap()
+        waitBriefly(0.8)
+        XCTAssertFalse(fullSheet.exists, "Show full sheet must expand the sheet and disappear")
+        XCTAssertLessThan(header.frame.minY, mediumHeaderFrame.minY - 100)
+        XCTAssertTrue(image.exists, "Expanding must preserve the official sheet")
+    }
+
     func testReferenceSheetLargestDynamicTypeKeepsControlsReachable() throws {
         let app = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL", "-CanadianHamExamToolInitialDetent", "large"])
         defer { app.terminate() }
@@ -418,7 +473,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         positionReferenceSheetControl(zoom, in: app)
         XCTAssertGreaterThanOrEqual(zoom.frame.height, 44)
         zoom.tap()
-        XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.label, "150%")
+        XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.value as? String, "150%")
         positionReferenceSheetControl(app.staticTexts["reference-sheet-version-title"].firstMatch, in: app)
         try auditIgnoringOccludedLessonTextContrast(app: app)
     }
@@ -432,25 +487,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             let top = max(frame.minY, protectedNavigationFrame(in: app).maxY)
             let visible = CGRect(x: frame.minX, y: top, width: frame.width, height: max(0, frame.maxY - top))
             if visible.contains(control.frame) {
-                if !hasLoggedReferenceHitPoint && control.identifier == "reference-sheet-page-next" {
-                    hasLoggedReferenceHitPoint = true
-                    let point = CGPoint(x: control.frame.midX, y: control.frame.midY)
-                    let overlapping = app.descendants(matching: .any).allElementsBoundByIndex.compactMap { element -> String? in
-                        let frame = element.frame
-                        guard frame.contains(point) else { return nil }
-                        return "type=\(element.elementType.rawValue) id=\(element.identifier) label=\(element.label.prefix(100)) frame=\(frameDescription(frame))"
-                    }
-                    XCTContext.runActivity(named: "Reference control hit-point diagnostics") { activity in
-                        let note = "Control \(control.identifier) at \(point), fully inside \(frameDescription(visible)); isHittable=\(control.isHittable).\n" + overlapping.joined(separator: "\n")
-                        NSLog("%@", note)
-                        let attachment = XCTAttachment(string: note)
-                        attachment.lifetime = .keepAlways
-                        activity.add(attachment)
-                        let screenshot = XCTAttachment(screenshot: app.screenshot())
-                        screenshot.lifetime = .keepAlways
-                        activity.add(screenshot)
-                    }
-                }
                 return
             }
             let distance: CGFloat = control.frame.midY < visible.midY ? 72 : -72

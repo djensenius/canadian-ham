@@ -47,7 +47,7 @@ The diagrams on pages 2–5 have no written labels. The following descriptions g
 
 - Top diagram: circle containing a sine wave → box with a transformer symbol → box with four diodes in a diamond → box with a capacitor symbol, one plate curved → box with a bent-bar diode symbol pointing upward → box with a resistor symbol.
 - Middle diagram: three parallel vertical antenna elements mounted across a horizontal boom. The left element is longest, the centre element is shorter, and the right element is shortest. A narrow parallel matching section sits beside the upper half of the centre element, with a connection at its upper end and a feed connection near the boom.
-- Bottom diagram: laptop ↔ interface box ↔ radio connected to an antenna. There are two parallel bidirectional connections between the interface box and the radio.
+- Bottom diagram: laptop ↔ interface box ↔ radio connected to an antenna. There are two parallel connections between the interface box and the radio: the upper connection is bidirectional, and the lower connection points from the interface box toward the radio.
 
 ## Page 5
 

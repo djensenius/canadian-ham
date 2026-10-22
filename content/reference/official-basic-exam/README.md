@@ -12,7 +12,9 @@ swift scripts/render-official-reference-sheet.swift \
   content/reference/official-basic-exam
 ```
 
-`text-equivalent.md` transcribes the printed wording and formulas verbatim using linear fractions and Unicode subscripts. The original PDF's text layer omits its diagrams. Their spatial/symbol descriptions are therefore explicitly marked **project accessibility text, not ISED labels**, without supplying inferred block names/answers. The repeated header/footer is stated once and described as repeated on all pages. No French official sheet is available; French UI keeps the official content English.
+`text-equivalent.md` transcribes the printed wording and formulas verbatim using linear fractions and Unicode subscripts. The original PDF's text layer omits its diagrams. Their spatial/symbol descriptions are therefore explicitly marked **project accessibility text, not ISED labels**, without supplying inferred block names/answers. The repeated header/footer is stated once and described as repeated on all pages. No French official sheet is available; French UI keeps the official content English. The Markdown renderers currently accept only a document-level language, not per-line language metadata, so the French department-name line remains untagged within this English transcript.
+
+Page 4's lower diagram was checked directly against a 576 dpi PDFKit render: the upper interface-to-radio connection has arrowheads at both ends; the lower connection has an arrowhead only at the radio. The text equivalent describes these separately.
 
 Owner decision 2026-10-12 (2A) authorizes private development/internal TestFlight use under the interim risk policy, not public release. This reproduction is not an official version and Canadian Ham is not affiliated with or endorsed by the Government of Canada. See `docs/content-licensing.md`. Only the PNGs and transcript are copied by the opt-in build gate; neither this README nor the training PDF ships.
 
@@ -22,4 +24,4 @@ Owner decision 2026-10-12 (2A) authorizes private development/internal TestFligh
 440fde861fcbb550fd33299fd3e41f44caebc8b888be4e5a84902cb3050134ae  page-3.png
 98a9bce94a23cb182034148abea4bf710e903566c861fccfb810a0687b4415bc  page-4.png
 f63a28f0ae447e78a14e2d77e24924d8db001a154d3a444e6f30eb93b407b840  page-5.png
-e12733ce22d628646373d7310c016677c040b00394c364d2fe96be08f3fab57d  text-equivalent.md
+88f1157a87d1126d360e390cb25b2d33a2dabb0ead027ee611e2b26a7d4f02a7  text-equivalent.md

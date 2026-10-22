@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%lld / 5" : {
+      "shouldTranslate" : false
+    },
     ", %@" : {
       "localizations" : {
         "fr" : {
@@ -297,29 +300,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@. %@."
-          }
-        }
-      }
-    },
-    "%@.answeredWithHelpIds must be sorted unique official question IDs from this attempt." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.answeredWithHelpIds must be sorted unique official question IDs from this attempt."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.answeredWithHelpIds doit contenir des identifiants de questions officielles de cette tentative, triés et sans doublons."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.answeredWithHelpIds doit contenir des identifiants de questions officielles de cette tentative, triés et sans doublons."
           }
         }
       }
@@ -1830,9 +1810,6 @@
         }
       }
     },
-    "%lld / 5" : {
-      "shouldTranslate" : false
-    },
     "%lld answered question" : {
       "localizations" : {
         "en" : {
@@ -2741,6 +2718,268 @@
         }
       }
     },
+    "Before this lesson" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avant cette leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avant cette leçon"
+          }
+        }
+      }
+    },
+    "Calculator" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculatrice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculatrice"
+          }
+        }
+      }
+    },
+    "Calculator result" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice"
+          }
+        }
+      }
+    },
+    "Calculator result: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculator result: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice : %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice : %@"
+          }
+        }
+      }
+    },
+    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
+          }
+        }
+      }
+    },
+    "Official sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Official sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle"
+          }
+        }
+      }
+    },
+    "Official sheet, page %lld of 5. Use Text equivalent for accessible content." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Official sheet, page %lld of 5. Use Text equivalent for accessible content."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle, page %lld sur 5. Utilisez l’équivalent textuel pour le contenu accessible."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle, page %lld sur 5. Utilisez l’équivalent textuel pour le contenu accessible."
+          }
+        }
+      }
+    },
+    "Page %lld of 5" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld of 5"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld sur 5"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld sur 5"
+          }
+        }
+      }
+    },
+    "Sheet version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sheet version"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version de la feuille"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version de la feuille"
+          }
+        }
+      }
+    },
+    "Study sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Study sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille d’étude"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille d’étude"
+          }
+        }
+      }
+    },
+    "Text equivalent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text equivalent"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel"
+          }
+        }
+      }
+    },
+    "This content is currently available in English only." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is currently available in English only."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce contenu est actuellement offert en anglais seulement."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce contenu est actuellement offert en anglais seulement."
+          }
+        }
+      }
+    },
+    "Zoom" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom"
+          }
+        }
+      }
+    },
     "•" : {
       "localizations" : {
         "fr" : {
@@ -3075,29 +3314,6 @@
         }
       }
     },
-    "Answered with help" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Answered with help"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réponse avec aide"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réponse avec aide"
-          }
-        }
-      }
-    },
     "Answers" : {
       "localizations" : {
         "fr" : {
@@ -3132,29 +3348,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les réponses à cette question seront enregistrées comme réponses avec aide."
-          }
-        }
-      }
-    },
-    "Answers with help: %lld." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Answers with help: %lld."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réponses avec aide : %lld."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réponses avec aide : %lld."
           }
         }
       }
@@ -3309,28 +3502,6 @@
         }
       }
     },
-    "Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les examens de compétence de base sont à livre fermé. La leçon sur l’autorité, les certificats et les examens explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les examens de compétence de base sont à livre fermé. La leçon sur l’autorité, les certificats et les examens explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer."
-          }
-        }
-      }
-    },
     "Basic with Honours" : {
       "localizations" : {
         "fr" : {
@@ -3369,28 +3540,6 @@
         }
       }
     },
-    "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
-          }
-        }
-      }
-    },
     "Beacon safety limits were exceeded, so playback uses the non-flashing tape." : {
       "localizations" : {
         "en" : {
@@ -3409,76 +3558,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les limites de sécurité de la balise sont dépassées; la lecture utilise donc le ruban non clignotant."
-          }
-        }
-      }
-    },
-    "Before this lesson" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avant cette leçon"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avant cette leçon"
-          }
-        }
-      }
-    },
-    "Calculator" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Calculatrice"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Calculatrice"
-          }
-        }
-      }
-    },
-    "Calculator result" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultat de la calculatrice"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultat de la calculatrice"
-          }
-        }
-      }
-    },
-    "Calculator result: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Calculator result: %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultat de la calculatrice : %@"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultat de la calculatrice : %@"
           }
         }
       }
@@ -4963,50 +5042,6 @@
         }
       }
     },
-    "Enlarge figure" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enlarge figure"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agrandir la figure"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agrandir la figure"
-          }
-        }
-      }
-    },
-    "Enlarged figure" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enlarged figure"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Figure agrandie"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Figure agrandie"
-          }
-        }
-      }
-    },
     "Enter the characters you heard, not dot and dash notation." : {
       "localizations" : {
         "fr" : {
@@ -5093,28 +5128,6 @@
         }
       }
     },
-    "Exam day" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exam day"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le jour de l’examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le jour de l’examen"
-          }
-        }
-      }
-    },
     "Exam playback started. It cannot be paused or replayed." : {
       "localizations" : {
         "en" : {
@@ -5197,22 +5210,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Profil de minutage d’examen"
-          }
-        }
-      }
-    },
-    "Exam-style check" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’examen"
           }
         }
       }
@@ -5337,28 +5334,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ÉCHEC, %1$lld %%, avec %2$lld erreurs."
-          }
-        }
-      }
-    },
-    "Figure text equivalent" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Figure text equivalent"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Équivalent textuel de la figure"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Équivalent textuel de la figure"
           }
         }
       }
@@ -6095,50 +6070,6 @@
         }
       }
     },
-    "Import preferences.morse.outputMode is invalid." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import preferences.morse.outputMode is invalid."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.outputMode est invalide."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.outputMode est invalide."
-          }
-        }
-      }
-    },
-    "Import preferences.morse.timingProfile is invalid." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import preferences.morse.timingProfile is invalid."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.timingProfile est invalide."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.timingProfile est invalide."
-          }
-        }
-      }
-    },
     "Import preferences.practiceMode is invalid." : {
       "localizations" : {
         "en" : {
@@ -6443,28 +6374,6 @@
         }
       }
     },
-    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
-          }
-        }
-      }
-    },
     "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear." : {
       "localizations" : {
         "en" : {
@@ -6659,22 +6568,6 @@
         }
       }
     },
-    "Lesson" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçon"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçon"
-          }
-        }
-      }
-    },
     "Lesson %lld\n%@\n%@" : {
       "localizations" : {
         "en" : {
@@ -6789,6 +6682,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Progression de la leçon indisponible"
+          }
+        }
+      }
+    },
+    "Lesson" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon"
           }
         }
       }
@@ -8229,38 +8138,6 @@
         }
       }
     },
-    "Official sheet" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Official sheet"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille officielle"
-          }
-        }
-      }
-    },
-    "Official sheet, page %lld of 5. Use Text equivalent for accessible content." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Official sheet, page %lld of 5. Use Text equivalent for accessible content."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille officielle, page %lld sur 5. Utilisez l’équivalent textuel pour le contenu accessible."
-          }
-        }
-      }
-    },
     "Offline Basic question-bank practice" : {
       "localizations" : {
         "en" : {
@@ -8385,28 +8262,6 @@
         }
       }
     },
-    "Opens enlarged figure" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opens enlarged figure"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvre la figure agrandie"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvre la figure agrandie"
-          }
-        }
-      }
-    },
     "Outline available" : {
       "localizations" : {
         "fr" : {
@@ -8435,22 +8290,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mode de sortie"
-          }
-        }
-      }
-    },
-    "Page %lld of 5" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Page %lld of 5"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Page %lld sur 5"
           }
         }
       }
@@ -8875,22 +8714,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes iambiques."
-          }
-        }
-      }
-    },
-    "Practise tap timing with a straight key or iambic-style paddles. With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets. Aim for steady dot/dash ratio and timing consistency." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/tirets et un minutage constants."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/tirets et un minutage constants."
           }
         }
       }
@@ -9347,28 +9170,6 @@
         }
       }
     },
-    "Read exam-day guidance" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Read exam-day guidance"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lire les conseils pour le jour de l’examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lire les conseils pour le jour de l’examen"
-          }
-        }
-      }
-    },
     "Readiness" : {
       "localizations" : {
         "fr" : {
@@ -9557,6 +9358,28 @@
         }
       }
     },
+    "Restart Canadian Ham to change the interface language." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Canadian Ham to change the interface language."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrez Canadian Ham pour changer la langue de l’interface."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrez Canadian Ham pour changer la langue de l’interface."
+          }
+        }
+      }
+    },
     "Reset all data" : {
       "localizations" : {
         "fr" : {
@@ -9585,22 +9408,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réinitialiser toutes les données locales?"
-          }
-        }
-      }
-    },
-    "Reset iCloud progress through the cloud deletion flow." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
           }
         }
       }
@@ -9655,28 +9462,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réinitialiser…"
-          }
-        }
-      }
-    },
-    "Restart Canadian Ham to change the interface language." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restart Canadian Ham to change the interface language."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redémarrez Canadian Ham pour changer la langue de l’interface."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Redémarrez Canadian Ham pour changer la langue de l’interface."
           }
         }
       }
@@ -10031,22 +9816,6 @@
         }
       }
     },
-    "Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
-          }
-        }
-      }
-    },
     "Sending check started. Send the displayed passage within 3:00." : {
       "localizations" : {
         "fr" : {
@@ -10139,22 +9908,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erreur de réglages"
-          }
-        }
-      }
-    },
-    "Sheet version" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sheet version"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version de la feuille"
           }
         }
       }
@@ -10939,22 +10692,6 @@
         }
       }
     },
-    "Study sheet" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Study sheet"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Feuille d’étude"
-          }
-        }
-      }
-    },
     "Study the eight modules in order. Lessons are currently authored in English; official practice questions follow your Language setting." : {
       "localizations" : {
         "fr" : {
@@ -11217,22 +10954,6 @@
         }
       }
     },
-    "Text equivalent" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text equivalent"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Équivalent textuel"
-          }
-        }
-      }
-    },
     "The bundled Basic reference sheet is not installed in this build." : {
       "localizations" : {
         "fr" : {
@@ -11359,22 +11080,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette catégorie ne contient aucune question intégrée."
-          }
-        }
-      }
-    },
-    "This content is currently available in English only." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This content is currently available in English only."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce contenu est actuellement offert en anglais seulement."
           }
         }
       }
@@ -12143,6 +11848,22 @@
         }
       }
     },
+    "Practise tap timing with a straight key or iambic-style paddles. With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets. Aim for steady dot/dash ratio and timing consistency." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/tirets et un minutage constants."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/tirets et un minutage constants."
+          }
+        }
+      }
+    },
     "Wrong-answer review" : {
       "localizations" : {
         "fr" : {
@@ -12285,6 +12006,343 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réduire le zoom"
+          }
+        }
+      }
+    },
+    "Reset iCloud progress through the cloud deletion flow." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
+          }
+        }
+      }
+    },
+    "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        }
+      }
+    },
+    "Exam-style check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        }
+      }
+    },
+    "Import preferences.morse.outputMode is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.outputMode is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        }
+      }
+    },
+    "Import preferences.morse.timingProfile is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.timingProfile is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        }
+      }
+    },
+    "Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
+          }
+        }
+      }
+    },
+    "Exam day" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exam day"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le jour de l’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le jour de l’examen"
+          }
+        }
+      }
+    },
+    "Read exam-day guidance" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read exam-day guidance"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire les conseils pour le jour de l’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire les conseils pour le jour de l’examen"
+          }
+        }
+      }
+    },
+    "Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les examens de compétence de base sont à livre fermé. La leçon sur l’autorité, les certificats et les examens explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les examens de compétence de base sont à livre fermé. La leçon sur l’autorité, les certificats et les examens explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer."
+          }
+        }
+      }
+    },
+    "Enlarge figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarge figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir la figure"
+          }
+        }
+      }
+    },
+    "Enlarged figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarged figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure agrandie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure agrandie"
+          }
+        }
+      }
+    },
+    "Figure text equivalent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure text equivalent"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        }
+      }
+    },
+    "Opens enlarged figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens enlarged figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre la figure agrandie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre la figure agrandie"
+          }
+        }
+      }
+    },
+    "%@.answeredWithHelpIds must be sorted unique official question IDs from this attempt." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds must be sorted unique official question IDs from this attempt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds doit contenir des identifiants de questions officielles de cette tentative, triés et sans doublons."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds doit contenir des identifiants de questions officielles de cette tentative, triés et sans doublons."
+          }
+        }
+      }
+    },
+    "Answered with help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answered with help"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponse avec aide"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponse avec aide"
+          }
+        }
+      }
+    },
+    "Answers with help: %lld." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answers with help: %lld."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponses avec aide : %lld."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponses avec aide : %lld."
           }
         }
       }
