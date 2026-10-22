@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 01:18'
+updated_date: '2026-10-22 01:36'
 labels:
   - content
   - web
@@ -59,4 +59,6 @@ AC3 implementation: official exam PDF reproduced as five unannotated offline pag
 Targeted audit fix rounds: the new positioning helper wrongly inset its visible rectangle by 2pt, excluding leading-edge controls; corrected to the full visible scroll frame below navigation. Coordinator approved viewport positioning plus real tap/state checks in this new helper only. Once-per-test diagnostics show Next isHittable=true, no blocking transparent overlay, and actual page/sheet/zoom state changes succeed. Shared/audit/exception helpers remain unchanged. Reused the existing accessible secondary-button style and explicit Dynamic Type layouts for zoom after the full-default audit flagged the native button style. AX-XXXL audit setup aligns a whole control boundary so an offscreen Page label is not sampled through the opaque tool header; no audit types or findings are ignored.
 Latest iPhone official-sheet EN/FR light/dark method passed (253.426s), including all 12 full-default image/text/fallback audits. AX-XXXL and iPad checks still running. macOS units 38/38 passed; the completed l10n check passed, including tvOS and visionOS build checks. The catalogue exporter reordered keys; semantic comparison against the merge baseline confirms no existing translation was changed or removed.
 Test guard: self-test passed. Use exactly Test-guard-approved: owner decision 2026-10-12 in the eventual PR body (coordinator approval). The only guarded changes are replacing testReferenceSheetToolHiddenUntilTask44Dot4 with testReferenceSheetToolAvailableOnlyForBasic (the obsolete hidden assertion is superseded by the requested feature; Advanced still explicitly rejects the sheet), and adding testOfficialReferenceSheetLightAndDarkEnglishAndFrench plus testReferenceSheetLargestDynamicTypeKeepsControlsReachable with full-default audits.
+
+Coordinator clarification/approval 2026-10-21: the existing approved exception (a), using unchanged auditIgnoringOccludedLessonTextContrast(app:), covers exam tools as part of practice/mock screens (owner 2026-10-14). Use it ONLY for the new AX-XXXL reference-sheet audit, where the Page label is partly clipped by the tool scroll area; nonnil-element, scroll ancestry/intersection and not-fully-visible constraints remain exactly as implemented, and fully visible contrast/non-contrast issues still fail. The 12 EN/FR light/dark official-image/text-equivalent/study audits remain raw performAccessibilityAudit() default calls. Removed brittle exact top-alignment setup rather than adding or widening any exception/helper. 44pt assertions and actual sheet/page/zoom state checks remain intact.
 <!-- SECTION:NOTES:END -->
