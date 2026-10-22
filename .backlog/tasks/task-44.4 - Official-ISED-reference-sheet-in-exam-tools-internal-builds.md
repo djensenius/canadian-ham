@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-13 00:06'
+updated_date: '2026-10-22 00:04'
 labels:
   - content
   - web
@@ -36,10 +36,11 @@ Owner decision 2026-10-12 (2A): use the official ISED Basic reference sheet (EN 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Update docs/content-licensing.md only for the owner-approved ISED reference-sheet licensing decision and release block/fallback facts.
-2. Draft docs/release/ised-reference-sheet-request.md from the earlier permission-request tone and repository licensing context.
-3. Inspect the EN reference PDFs and record a technical integration plan in task notes; do not implement web or Apple integration.
-4. Run pnpm check:links, check ACs 1-2 only, commit, and push.
+1. Merge origin/main (branch task file retained) and push.
+2. Render the official five-page exam PDF offline with source checksums; maintain a faithful English text equivalent separately from the original study sheet.
+3. Integrate zoomable official/study selector on web and iOS/iPadOS/macOS, gated by OFFICIAL_REFERENCE_SHEET (Debug/dev on; Release/production off; explicit internal beta opt-in only).
+4. Add targeted reference-sheet unit, EN/FR light/dark accessibility, resource-gate and Apple UI coverage without changing audit helpers. Document public-release exclusion.
+5. Run requested targeted web/Apple checks via nohup/polling, record per-test evidence, check AC3, finalize, commit and push (no PR).
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -50,4 +51,6 @@ Docs-only slice complete: updated docs/content-licensing.md with owner decision 
 PDF inspection for integration lane (no integration implemented; depends on task-44.3): inspected content/sources/ised/basic-2025-07-15/reference/*.pdf with file(1), mdls, raw PDF object counts, and a Swift/PDFKit text extraction script because poppler pdfinfo/pdftotext is not installed on this machine. Exam PDF (Reference Material for Amateur Radio Exam Basic EN 2025.pdf): PDF 1.7, 5 pages, PDFKit extracted 1,307 characters total; page 1 has formula text, pages 2-5 mostly headers/titles plus object placeholders for diagrams; raw scan found 12 /Subtype/Image XObjects, fonts, and ToUnicode maps. Training PDF: PDF 1.7, 7 pages, PDFKit extracted 2,610 characters total; page 1 has formula table text, pages 2-7 mostly headings plus diagram/image placeholders; raw scan found 12 image XObjects. Integration plan: use only the exam-version sheet for exam tools. Web should prefer pre-rendered page images for stable offline fidelity/zoom plus a maintained/extracted text equivalent/transcript instead of embedding the PDF directly. Apple can use PDFKit/PDFView for the official PDF fidelity and zoom if accessibility is verified, but still needs a separate accessible text equivalent because the diagram pages are image-based and the PDF text layer is incomplete; fall back to page images plus transcript if PDFKit accessibility is insufficient.
 
 2026-10-12: Owner sent the ISED follow-up request (docs/release/ised-reference-sheet-request.md) asking to add the Basic reference sheets (EN and FR) to the permission. Awaiting reply; public release stays blocked until permission covers the sheet.
+
+2026-10-21: Merged origin/main and pushed 3ba41fef; retained branch task version per instruction. Coordinator approved Debug/dev ON and default Release/production OFF gate with explicit internal beta opt-in, public permission gate unchanged.
 <!-- SECTION:NOTES:END -->
