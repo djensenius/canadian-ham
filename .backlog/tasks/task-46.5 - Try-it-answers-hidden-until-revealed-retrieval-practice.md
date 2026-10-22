@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-21 23:15'
+updated_date: '2026-10-22 00:08'
 labels:
   - content
   - web
@@ -54,4 +54,7 @@ First iPhone attempt exposed test positioning overhead at largest Dynamic Type: 
 Anchor attempt 2: iPhone French labels/state passed (58.323 s); default-light and largest-text-dark audits failed on a fully offscreen preceding faded-practice paragraph, not the reveal controls (black element screenshots saved under /tmp/task-46.5-iphone-attachments). The unchanged lesson exception helper requires scrollFrame.intersects(frame), so it cannot ignore fully offscreen contrast findings. Coordinator declined helper changes without an explicit owner decision. Approved next test positioning: start at check-your-work-compare-matching-digits in L-004-03, audit that preceding solution as well, then scroll down to the fully visible Try-it heading/prompt/control and run collapsed/revealed audits. This adds audit coverage and changes no issue filters. If the next run still fails only on fully offscreen elements, stop and hand the evidence to the coordinator for the owner.
 
 AC #2 verified: all 141 Try-its in all 31 M2–M8 lessons use paired hidden-answer blocks; M1 has none by policy. Coverage checker now rejects legacy inline/missing/empty/malformed/unpaired answers; content-tools 244 tests, 100/100 coverage, schema 58 tests, all 984 hint anchors and originality-all checks pass. Remaining ACs await targeted Apple audit evidence.
+
+Remaining independent checks: localization export/generic tvOS+visionOS builds passed without changing the xcstrings catalogue; text-source gate passed. macOS LocalizationCatalogTests: 6/6 passed, including testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench (0.001 s). tvOS testLessonTryItRevealsOnRemoteFocusAndSelectWithAccessibilityLightAndDark passed (77.169 s; full audits both appearances). visionOS testLessonTryItDisclosureAndAccessibilityLightAndDark passed (86.354 s; full collapsed/expanded audits both appearances). MAIN inspected in a detached /tmp worktree at 78f6f995 and removed: no existing targeted test reaches the L-004-03 faded-practice/Try-it position; only its figure at line53 has an existing audit. No main reproduction claim and no figure audit run. Inspection report: /tmp/task-46.5-main-baseline-inspection.txt.
+First iPad run: dark preceding-solution audit passed, but the audit itself scrolled the lesson away; bounded 80-point-only positioning could not recover Try-it within 24 steps (test failed at 176.358 s). Fixed only the new local test helper to use direction-aware coarse swipes when far from the target, then precise alignment; all visibility assertions and shared helpers unchanged. Light failed its preceding-solution full contrast audit (92.524 s). Queueing only the failed dark navigation test plus the existing pure French reveal/state test on iPad, while the final iPhone French test runs.
 <!-- SECTION:NOTES:END -->
