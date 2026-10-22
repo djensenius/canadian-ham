@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-001-010",
+  "questionId": "B-007-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how far each main radio path usually carries an HF signal.",
+      "fr": "Revoyez jusqu’où chacun des principaux trajets radio porte habituellement un signal HF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "the-main-radio-paths"
+  },
+  "singleLevelReason": "Concept recall: a second hint would identify or eliminate a path, layer, mode, value, or effect; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

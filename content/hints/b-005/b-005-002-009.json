@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-009",
+  "questionId": "B-005-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what happens to E across each part of a working circuit.",
+      "fr": "Revoyez ce qui arrive à E aux bornes de chaque partie d'un circuit en fonctionnement."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "voltage-drop-and-polarity"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: any second hint would paraphrase the definition."
+}

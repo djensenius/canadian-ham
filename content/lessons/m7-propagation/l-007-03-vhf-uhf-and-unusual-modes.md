@@ -60,6 +60,22 @@ This is a planning estimate, not an ISED exam formula.
 
 This explains why an FM repeater on a hill can cover much more area than two handhelds in streets. It also explains why a better antenna location often helps more than a small power increase.
 
+### Faded practice: finish a combined radio horizon
+
+Use the practical horizon model, not a terrain guarantee.
+
+- Given: antenna heights = 4 m and 81 m; their square roots = 2 and 9.
+- Find: combined horizon estimate.
+- Formula: combined distance ≈ 4.12 x √h1 + 4.12 x √h2, with heights in metres and distance in kilometres.
+- Complete: distance ≈ 4.12 x ___ + 4.12 x ___ = ___ km.
+- Sanity check: Do both antenna heights contribute, and can terrain still shorten the path?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a combined radio horizon
+
+Distance ≈ 8.24 + 37.08 = 45.32 km. Buildings, terrain, clutter, and actual propagation can change coverage. The model is a practical estimate, not an ISED exam formula.
+
 ### Misconception: VHF range is only about watts
 
 - Mistaken idea: doubling power makes a VHF handheld cover far beyond the horizon.
@@ -107,6 +123,15 @@ Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect
 
 HF scatter can put weak, distorted signals into a skip zone. Near the MUF, the main sky-wave return is marginal and the skip zone can be wide, so weak scattered energy becomes noticeable. Only a small part of the transmitted energy is redirected toward the receiver, and multiple paths can smear the signal.
 
+::figure vhf-unusual-propagation-modes
+Alt text: Four mini-panels showing sporadic E, tropospheric ducting, auroral scatter, and meteor scatter paths.
+Text equivalent:
+- Sporadic E panel: a six-metre path returns from a patchy E-region cloud.
+- Ducting panel: a VHF path is trapped between paired weather layers over water.
+- Aurora panel: a small beam points north toward a wavy auroral curtain, with a raspy signal label.
+- Meteor panel: a burst path touches a short meteor trail between the stations.
+::
+
 ### In the real world: choosing the mode for a rough auroral path
 
 A VHF operator hears signals from the north with a harsh, buzzing tone. FM voice is difficult to understand, but short Morse characters can still be copied.
@@ -127,11 +152,21 @@ Do not turn these clues into guarantees. The same station may need a higher ante
 
 ## Try it
 
-1. A six-metre opening appears suddenly and vanishes after twenty minutes. What operating habit follows from that timing? Keep exchanges short, log quickly, and keep monitoring beacons because the patch can move or fade before a long conversation finishes.
-2. A two-metre contact reaches just beyond the normal planning scale during a calm evening over water. What evidence should the operator record before calling it a new everyday range? Note the weather layering, antenna direction, time, and distance so the contact can be tied to enhanced lower-atmosphere conditions.
-3. During a northern VHF opening, a club hears raspy signals but needs only short call-sign and grid exchanges. What operating style fits the clue? Use a narrow, simple mode and short messages that tolerate rapid flutter and distortion.
-4. A marginal HF path produces intelligible peaks followed by smeared audio on the same frequency. What should the operator log before blaming the radio? Record the frequency, time, signal strength, and distortion pattern so mixed propagation can be compared with later openings.
-5. A meteor-shower schedule uses fast digital bursts instead of long voice transmissions. Explain the timing choice. The ionized trails last briefly, so short structured messages have a better chance of fitting into each reflection.
+Try these before reading the feedback below.
+
+1. A six-metre opening vanishes after twenty minutes. Which operating habits fit?
+2. A long two-metre contact occurs over water during a calm evening. What evidence should be recorded before treating it as everyday range?
+3. Raspy VHF signals arrive from the north during short call-sign and grid exchanges. What operating style fits?
+4. A marginal HF path alternates intelligible peaks with smeared audio. What should be logged before blaming the radio?
+5. Why might a meteor-shower schedule use fast digital bursts instead of long voice transmissions?
+
+### Try-it feedback
+
+1. Keep exchanges short, log quickly, and monitor beacons; the patch can move or fade.
+2. Note weather layering, antenna direction and heights, time, and distance to test for enhanced lower-atmosphere conditions.
+3. Use a narrow, simple mode and short messages that tolerate flutter and distortion.
+4. Record frequency, time, strength, and distortion pattern to compare mixed propagation with later openings.
+5. Ionized trails last briefly. Short structured messages can fit into the brief reflection windows.
 
 ## Radio connection
 

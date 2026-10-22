@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-009-002",
+  "questionId": "B-001-009-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review who is responsible when you operate someone else’s station.",
+      "fr": "Revoyez qui est responsable lorsque vous exploitez la station d’une autre personne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-stays-with-responsible-people"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

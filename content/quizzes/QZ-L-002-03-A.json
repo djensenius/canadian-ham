@@ -14,5 +14,177 @@
     "B-002-008-010",
     "B-002-008-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-03-A-C1",
+      "prompt": {
+        "en": "During an exercise, two relays report different locations for the same person needing help. What should the next relay do?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Use the most recent location as confirmed and leave the earlier one out.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A newer report is not automatically a correction. Confirm which location is intended before presenting it as certain.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Merge both reports into a nearby location between them.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An invented midpoint is neither reported location. Relaying accurately means preserving facts, not averaging guesses.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Ask the reporting station to resolve the conflict and record the correction.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Clarifying with the source preserves the uncertainty until it can be resolved. Record the corrected detail for the next relay.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Keep the first location as confirmed until the exercise ends.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The first report may be wrong too. Waiting preserves an unresolved error in information others may need.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "Resolve conflicting details with the reporting source. Preserve what was reported and identify uncertainty rather than guessing.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-03-A-C2",
+      "prompt": {
+        "en": "A portable kit passed an indoor runtime test. Outdoors it will be colder, with longer transmissions. Which planning approach fits those changes?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Use the indoor time unchanged because the same rated battery is installed.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The label did not change, but usable capacity and average current can change. The indoor result is not a guarantee.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use a shorter budget with reserve and charged spare power.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Cold can reduce usable capacity and longer transmissions can raise average current. A cautious budget and spare power cover those uncertainties.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use a longer budget because transmit heat compensates for the cold battery.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Warming the radio does not establish the battery temperature or restore the indoor runtime. Transmitting also consumes more energy.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Recalculate using receive current alone because most of the exercise is spent listening.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Average current must include transmit periods. Receive current alone overestimates runtime when transmission uses more current.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "Runtime depends on usable capacity and average current. Cold and heavier transmitting call for a cautious budget and spare power.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-03-A-C3",
+      "prompt": {
+        "en": "A go-kit exercise worked through a repeater. In the next exercise that repeater loses power. Both handhelds remain charged. Which readiness claim is supported?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "The first exercise confirms direct handheld coverage over that same route.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The first path used a better-sited relay. It did not test the direct path between the handhelds.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A saved repeater memory can still relay speech if both handhelds use it.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A memory stores settings. It cannot receive and retransmit speech from an unpowered repeater site.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Extra handheld transmit power supplies the missing relay function on the split channel.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "More handheld power does not move speech from the repeater input to its output. The missing relay remains missing.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A suitable repeater-independent path still needs a separate coverage test.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The endpoints have power, but the tested middle link is gone. Test an appropriate alternative, including a suitable simplex path where possible.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "A working relay was part of the first tested path. Charged handhelds do not establish coverage without it.",
+        "fr": null
+      }
+    }
+  ]
 }

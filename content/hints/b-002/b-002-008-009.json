@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-008-009",
+  "questionId": "B-002-008-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what routine stations do when distress traffic breaks in.",
+      "fr": "Revoyez ce que font les stations en communication de routine lorsque du trafic de détresse interrompt."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "open-a-path-for-help"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
+}

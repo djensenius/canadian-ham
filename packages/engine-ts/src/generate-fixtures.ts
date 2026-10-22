@@ -323,6 +323,12 @@ function buildWeakSubsectionsFixture(): unknown {
     makeProgress("B-001-009-002", [true, true, false, false, false]),
   ];
   const pooledSingleAttemptRecords = [makeProgress("B-001-010-001", [false])];
+  const helpedCorrectChangesWeakOutcomeRecords = [makeProgress("B-001-011-001", [false, true, true, true], [false, false, true, false])];
+  const helpedCorrectAllFalseControlRecords = [makeProgress("B-001-012-001", [false, true, true, true], [false, false, false, false])];
+  const helpedCorrectRolloverDoesNotClearWeakRecords = [
+    makeProgress("B-001-013-001", [false, true, true, true, true], [false, false, false, false, true]),
+  ];
+  const helpedIncorrectCountsAsIncorrectRecords = [makeProgress("B-001-014-001", [false, true, true], [true, false, false])];
 
   return {
     schemaVersion: 1,
@@ -354,6 +360,26 @@ function buildWeakSubsectionsFixture(): unknown {
         id: "weak-subsections-pooled-single-attempt-is-not-weak",
         input: { records: pooledSingleAttemptRecords, latestExamItems: [] },
         expectedOutput: { weakSubsectionIds: weakSubsectionIds(pooledSingleAttemptRecords) },
+      },
+      {
+        id: "weak-subsections-hinted-correct-changes-proficiency-outcome-to-weak",
+        input: { records: helpedCorrectChangesWeakOutcomeRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedCorrectChangesWeakOutcomeRecords) },
+      },
+      {
+        id: "weak-subsections-same-results-with-no-help-stay-above-threshold",
+        input: { records: helpedCorrectAllFalseControlRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedCorrectAllFalseControlRecords) },
+      },
+      {
+        id: "weak-subsections-hinted-correct-rollover-counts-attempt-without-credit",
+        input: { records: helpedCorrectRolloverDoesNotClearWeakRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedCorrectRolloverDoesNotClearWeakRecords) },
+      },
+      {
+        id: "weak-subsections-hinted-incorrect-counts-as-incorrect",
+        input: { records: helpedIncorrectCountsAsIncorrectRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(helpedIncorrectCountsAsIncorrectRecords) },
       },
     ],
   };
@@ -403,12 +429,26 @@ function buildLeitnerFixture(): unknown {
       input: { existing: existingBox3, update: { questionId: "B-006-004-008", bankId, isCorrect: false, now } },
       expectedOutput: { record: applyAnswer(existingBox3, { questionId: "B-006-004-008", bankId, isCorrect: false, now }) },
     },
+    {
+      id: "leitner-hinted-correct-preserves-accuracy-keeps-current-box-and-is-due-immediately",
+      input: { existing: existingBox3, update: { questionId: "B-006-004-008", bankId, isCorrect: true, answeredWithHelp: true, now } },
+      expectedOutput: { record: applyAnswer(existingBox3, { questionId: "B-006-004-008", bankId, isCorrect: true, answeredWithHelp: true, now }) },
+    },
+    {
+      id: "leitner-hinted-incorrect-records-help-and-is-due-immediately",
+      input: { existing: existingBox3, update: { questionId: "B-006-004-008", bankId, isCorrect: false, answeredWithHelp: true, now } },
+      expectedOutput: { record: applyAnswer(existingBox3, { questionId: "B-006-004-008", bankId, isCorrect: false, answeredWithHelp: true, now }) },
+    },
   ];
 
   const sequenceUpdates = [
     { questionId: "B-006-004-010", bankId, isCorrect: true, now: "2026-01-02T00:00:00.000Z" },
     { questionId: "B-006-004-010", bankId, isCorrect: false, now: "2026-01-02T01:00:00.000Z" },
     { questionId: "B-006-004-011", bankId, isCorrect: false, now: "2026-01-02T01:05:00.000Z" },
+  ];
+  const hintedThenUnaidedSequenceUpdates = [
+    { questionId: "B-006-004-014", bankId, isCorrect: true, answeredWithHelp: true, now: "2026-01-02T00:00:00.000Z" },
+    { questionId: "B-006-004-014", bankId, isCorrect: true, now: "2026-01-02T01:00:00.000Z" },
   ];
   const dueRecords = [
     { ...makeProgress("B-006-004-001", [false]), leitner: { box: 0, dueAt: "2026-01-02T00:00:00.000Z" } },
@@ -425,6 +465,11 @@ function buildLeitnerFixture(): unknown {
         id: "leitner-repeated-session-answers-apply-in-order",
         input: { initialRecords: [], updates: sequenceUpdates },
         expectedOutput: { records: applyAnswerSequence([], sequenceUpdates) },
+      },
+      {
+        id: "leitner-repeated-hinted-then-unaided-correct-promotes-only-after-unaided-answer",
+        input: { initialRecords: [], updates: hintedThenUnaidedSequenceUpdates },
+        expectedOutput: { records: applyAnswerSequence([], hintedThenUnaidedSequenceUpdates) },
       },
     ],
     dueCases: [
@@ -572,7 +617,11 @@ function makeAdvancedBoundaryItems(correctCount: number): ScoreInputItem[] {
   }));
 }
 
-function makeProgress(questionId: string, recentResults: readonly boolean[]): QuestionProgressRecord {
+function makeProgress(
+  questionId: string,
+  recentResults: readonly boolean[],
+  recentAnsweredWithHelp: readonly boolean[] = recentResults.map(() => false),
+): QuestionProgressRecord {
   const correctAttempts = recentResults.filter(Boolean).length;
   const lastCorrect = recentResults.at(-1) ?? false;
   return {
@@ -582,7 +631,9 @@ function makeProgress(questionId: string, recentResults: readonly boolean[]): Qu
     correctAttempts,
     lastAttemptedAt: "2026-01-01T00:00:00.000Z",
     lastResult: lastCorrect ? "correct" : "incorrect",
+    lastAnsweredWithHelp: recentAnsweredWithHelp.at(-1) ?? false,
     recentResults,
+    recentAnsweredWithHelp,
     leitner: {
       box: lastCorrect ? 1 : 0,
       dueAt: lastCorrect ? "2026-01-02T00:00:00.000Z" : "2026-01-01T00:00:00.000Z",

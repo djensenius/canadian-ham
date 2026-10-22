@@ -1,4 +1,5 @@
 import Accessibility
+import CanadianHamContent
 import CanadianHamEngine
 import Combine
 import SwiftUI
@@ -33,14 +34,14 @@ struct HomeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text(bank.courseBankID == .advanced ? "Offline, private, Advanced bank" : "Offline, private, 2025 bank") // l10n: localized
+                    Text(bank.courseBankID == .advanced ? "Offline, private Advanced practice" : "Offline, private study") // l10n: localized
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                     Text(bank.courseBankID == .advanced ? "Ready for the Advanced qualification?" : "Ready for Basic with Honours?") // l10n: localized
                         .font(DesignTokens.FontScale.display.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text(bank.courseBankID == .advanced ? "Study with the bundled ISED Advanced 2025-02-04 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it and is separate from Basic." : "Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it.") // l10n: localized
+                    Text(bank.courseBankID == .advanced ? "Study for the Amateur Radio Operator Certificate with Advanced Qualification using the official ISED question bank. Advanced progress is tracked separately from Basic." : "Study for the Amateur Radio Operator Certificate with Basic Qualification using the official ISED question bank.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     homeActionLayout
@@ -327,6 +328,9 @@ final class PracticeSessionState: ObservableObject {
     @Published var items: [PracticeQuestionItem] = []
     @Published var currentIndex = 0
     @Published var selectedByQuestionId: [String: Int] = [:]
+    @Published var hintLevelsByQuestionId: [String: Int] = [:]
+    @Published var hintQualifiedQuestionIds: Set<String> = []
+    @Published var answeredWithHelpQuestionIds: Set<String> = []
     @Published var committedQuestionIds: Set<String> = []
     @Published var reviewSubmitted = false
     @Published var loadedScope: PracticeScope?
@@ -336,6 +340,7 @@ final class PracticeSessionState: ObservableObject {
     @Published var answeredCount = 0
     @Published var correctCount = 0
     @Published var errorMessage: String?
+    let calculatorViewModel = ExamCalculatorViewModel()
 
     var hasUnfinishedCourseWork: Bool {
         guard !items.isEmpty, let loadedPracticeMode else { return false }
@@ -377,7 +382,24 @@ struct PracticeSessionView: View {
     let dataRevision: Int
     let localDataReplacementRevision: Int
     let headerAccessory: AnyView?
+    let onExamToolPresentationChanged: (Bool) -> Void
+    let onOpenHintLesson: (QuestionHintLessonLink) -> Void
     let onDataChanged: () -> Void
+
+    @State private var selectedExamTool: ExamTool?
+    @State private var calculatorFocused = false
+#if os(iOS)
+    @State private var duoPostureProvider: (any DuoPostureProviding)?
+    @State private var hingePeekStateMachine = HingePeekStateMachine()
+    @State private var hingePeekPresentationState = HingeHintPeekPresentationState()
+    @State private var hingePeekDwellRecheckTask: Task<Void, Never>?
+#if DEBUG
+    @State private var debugHingePlaybackTimestamp: TimeInterval = 0
+    @State private var debugHingePlaybackTriggerHidden = false
+#endif
+#endif
+    @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
+    @Environment(\.canadianHamContentLibrary) private var contentLibrary
 
     init(
         bank: QuestionBank,
@@ -388,6 +410,8 @@ struct PracticeSessionView: View {
         dataRevision: Int,
         localDataReplacementRevision: Int,
         headerAccessory: AnyView? = nil,
+        onExamToolPresentationChanged: @escaping (Bool) -> Void = { _ in },
+        onOpenHintLesson: @escaping (QuestionHintLessonLink) -> Void = { _ in },
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
@@ -395,9 +419,12 @@ struct PracticeSessionView: View {
         self.scope = scope
         _language = language
         self.state = state
+        _calculatorViewModel = ObservedObject(wrappedValue: state.calculatorViewModel)
         self.dataRevision = dataRevision
         self.localDataReplacementRevision = localDataReplacementRevision
         self.headerAccessory = headerAccessory
+        self.onExamToolPresentationChanged = onExamToolPresentationChanged
+        self.onOpenHintLesson = onOpenHintLesson
         self.onDataChanged = onDataChanged
     }
 
@@ -428,7 +455,46 @@ struct PracticeSessionView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+        .lessonReaderOpaqueNavigationBar()
+        .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel, calculatorFocused: $calculatorFocused, referenceSheetConfiguration: referenceSheetConfiguration, hintContext: hintToolContext)
         .task(id: sessionReloadKey) { loadSessionIfNeeded() }
+        .onAppear { calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale()) }
+        .onChange(of: selectedExamTool) { _, next in
+#if os(iOS)
+            applyHingePeekPresentation(.selectedToolChanged(next))
+#endif
+            onExamToolPresentationChanged(next != nil)
+        }
+        .onDisappear { onExamToolPresentationChanged(false) }
+#if os(iOS)
+        .background {
+            if let duoPostureProvider {
+                DuoPostureObserverView(provider: duoPostureProvider)
+                    .frame(width: 0, height: 0)
+            }
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugStatus") {
+                Text(verbatim: "Hinge playback progress") // l10n: verbatim DEBUG-only UI test hook
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(width: 1, height: 1)
+                    .accessibilityIdentifier("debug-hinge-playback-progress")
+                    .accessibilityValue(Text(verbatim: String(format: "%.3f", debugHingePlaybackTimestamp))) // l10n: verbatim
+                    .allowsHitTesting(false)
+            }
+#endif
+        }
+        .onAppear { configureDuoPostureProviderIfNeeded() }
+        .onDisappear { clearDuoPostureProviderCallback() }
+        .onChange(of: scope) { _, _ in resetHingePeekForSessionChange() }
+        .onChange(of: ObjectIdentifier(state)) { _, _ in resetHingePeekForSessionChange() }
+        .onChange(of: state.currentIndex) { _, _ in resetHingePeekForQuestionChange() }
+        .onChange(of: state.selectedByQuestionId) { _, _ in applyHingePeekPresentation(.eligibilityChanged) }
+        .onChange(of: state.reviewSubmitted) { _, _ in applyHingePeekPresentation(.eligibilityChanged) }
+#endif
     }
 
     private var header: some View {
@@ -436,6 +502,8 @@ struct PracticeSessionView: View {
             Text(scopeTitleAttributed) // l10n: localized
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("practice-category-title")
             Text(sessionProgressText) // l10n: localized
@@ -522,7 +590,25 @@ struct PracticeSessionView: View {
         let question = item.question
         let selected = state.selectedByQuestionId[question.id]
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            QuestionCard(question: question, language: language)
+            ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
+#if os(iOS) && DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTrigger"), !debugHingePlaybackTriggerHidden {
+                Button {
+                    configureDuoPostureProviderIfNeeded()
+                    duoPostureProvider?.triggerNextDebugPlaybackSegment()
+                    if ProcessInfo.processInfo.arguments.contains("-CanadianHamHingePlaybackDebugTriggerHidesAfterTap") {
+                        debugHingePlaybackTriggerHidden = true
+                    }
+                } label: {
+                    Text(verbatim: "Run") // l10n: verbatim DEBUG-only UI test hook
+                }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+                .frame(minHeight: 44)
+                .accessibilityIdentifier("debug-hinge-playback-trigger")
+            }
+#endif
+            QuestionCard(question: question, language: language, onInteraction: clearCalculatorKeyboardFocus)
+                .simultaneousGesture(examContentTapGesture)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Answers")
                     .font(DesignTokens.FontScale.title.weight(.bold))
@@ -537,13 +623,19 @@ struct PracticeSessionView: View {
                             language: language,
                             selectedSourceIndex: selected,
                             showCorrectness: selected != nil && progressStore.preferences.practiceMode == .immediate,
-                            disabled: selected != nil && progressStore.preferences.practiceMode == .immediate
+                            disabled: selected != nil && progressStore.preferences.practiceMode == .immediate,
+                            onKeyboardFocus: clearCalculatorKeyboardFocus
                         ) {
+                            clearCalculatorKeyboardFocus()
                             select(sourceIndex: sourceIndex, question: question)
                         }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            clearCalculatorKeyboardFocus()
+                        })
                     }
                 }
             }
+            .simultaneousGesture(examContentTapGesture)
             if let selected, progressStore.preferences.practiceMode == .immediate {
                 PracticeFeedback(question: question, selectedSourceIndex: selected, language: language, choicePermutation: item.choicePermutation)
                 Button(state.currentIndex + 1 == state.items.count ? "Finish session" : "Next question") { // l10n: localized
@@ -563,6 +655,221 @@ struct PracticeSessionView: View {
                 .accessibilityHint(selected == nil ? Text("Choose an answer before continuing") : Text("Continues without feedback until review")) // l10n: localized
             }
         }
+    }
+
+    private var availableExamTools: [ExamTool] {
+        var tools = appleExamTools(for: bank, referenceSheetConfiguration: referenceSheetConfiguration)
+        if currentQuestionHint != nil {
+            tools.insert(.hint, at: min(1, tools.count))
+        }
+        return tools
+    }
+
+    private var currentQuestionHint: QuestionHint? {
+        guard let item = state.items[safe: state.currentIndex], bank.courseBankID == .basic else { return nil }
+        return contentLibrary?.questionHintsByQuestionId[item.question.id]
+    }
+
+    private var hintToolContext: HintToolContext? {
+        guard let item = state.items[safe: state.currentIndex], let hint = currentQuestionHint else { return nil }
+        let questionID = item.question.id
+        return HintToolContext(
+            hint: hint,
+            language: language,
+            visibleLevel: state.hintLevelsByQuestionId[questionID] ?? 0,
+            answeredWithHelpQualified: state.hintQualifiedQuestionIds.contains(questionID),
+            canRecordHelp: hintCanAffectAnswer(questionID: questionID),
+            referenceSheetAvailable: referenceSheetConfiguration.availableOnApple,
+            revealLevel: { level in revealHintLevel(questionID: questionID, level: level) },
+            hintVisibleLongEnough: { qualifyAnsweredWithHelp(questionID: questionID) },
+            openLesson: { link in openHintLesson(link) }
+        )
+    }
+
+    private func openExamTool(_ tool: ExamTool) {
+        selectedExamTool = tool
+        calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
+        if tool == .calculator {
+            Task { @MainActor in
+                calculatorViewModel.acceptHardwareKeyboardInput()
+                calculatorFocused = true
+            }
+        }
+    }
+
+    @discardableResult
+    private func revealHintLevel(questionID: String, level: Int) -> Bool {
+        let previousLevel = state.hintLevelsByQuestionId[questionID] ?? 0
+        let nextLevel = max(previousLevel, level)
+        state.hintLevelsByQuestionId[questionID] = nextLevel
+        return nextLevel > previousLevel
+    }
+
+    private func qualifyAnsweredWithHelp(questionID: String) -> Bool {
+        let currentQualified = state.hintQualifiedQuestionIds
+        let currentAnsweredWithHelp = state.answeredWithHelpQuestionIds
+        let result = PracticeHintRules.qualifyingHint(
+            questionID: questionID,
+            mode: progressStore.preferences.practiceMode,
+            alreadySelected: state.selectedByQuestionId[questionID] != nil,
+            reviewSubmitted: state.reviewSubmitted,
+            qualifiedQuestionIds: currentQualified,
+            answeredWithHelpQuestionIds: currentAnsweredWithHelp
+        )
+        state.hintQualifiedQuestionIds = result.qualifiedQuestionIds
+        state.answeredWithHelpQuestionIds = result.answeredWithHelpQuestionIds
+        return result.qualifiedQuestionIds != currentQualified || result.answeredWithHelpQuestionIds != currentAnsweredWithHelp
+    }
+
+    private func hintCanAffectAnswer(questionID: String) -> Bool {
+        PracticeHintRules.canRecordHelp(
+            mode: progressStore.preferences.practiceMode,
+            alreadySelected: state.selectedByQuestionId[questionID] != nil,
+            reviewSubmitted: state.reviewSubmitted
+        )
+    }
+
+#if os(iOS)
+    private func configureDuoPostureProviderIfNeeded() {
+        if duoPostureProvider == nil {
+            duoPostureProvider = DuoPostureProviderFactory.makeProvider()
+        }
+        applyHingePeekPresentation(.viewAppeared)
+        duoPostureProvider?.onPostureChanged = { sample in
+            handleDuoPosture(sample)
+        }
+        if let sample = duoPostureProvider?.sample {
+            handleDuoPosture(sample)
+        }
+    }
+
+    private func clearDuoPostureProviderCallback() {
+        applyHingePeekPresentation(.viewDisappeared)
+        duoPostureProvider?.onPostureChanged = nil
+        hingePeekStateMachine.reset()
+        cancelHingePeekDwellRecheck()
+    }
+
+    private func handleDuoPosture(_ sample: DuoPostureSample) {
+#if DEBUG
+        debugHingePlaybackTimestamp = sample.timestamp
+#endif
+        var receivedSample = sample
+        receivedSample.timestamp = ProcessInfo.processInfo.systemUptime
+        let result = hingePeekStateMachine.update(sample: receivedSample)
+        applyHingePeekUpdateResult(result, lastSampleTimestamp: receivedSample.timestamp)
+    }
+
+    private func applyHingePeekUpdateResult(_ result: HingePeekUpdateResult, lastSampleTimestamp: TimeInterval) {
+        if let deadline = result.pendingDwellDeadline {
+            scheduleHingePeekDwellRecheck(deadline: deadline, lastSampleTimestamp: lastSampleTimestamp)
+        } else {
+            cancelHingePeekDwellRecheck()
+        }
+
+        if result.startedPeeking {
+            applyHingePeekPresentation(.postureStarted)
+        } else if result.endedByPostureReset {
+            applyHingePeekPresentation(.postureEnded)
+        }
+    }
+
+    private func scheduleHingePeekDwellRecheck(deadline: TimeInterval, lastSampleTimestamp: TimeInterval) {
+        hingePeekDwellRecheckTask?.cancel()
+        let delayNanoseconds = UInt64(max(0, deadline - lastSampleTimestamp) * 1_000_000_000)
+        hingePeekDwellRecheckTask = Task { @MainActor in
+            if delayNanoseconds > 0 {
+                try? await Task.sleep(nanoseconds: delayNanoseconds)
+            }
+            guard !Task.isCancelled else { return }
+            let result = hingePeekStateMachine.recheck(timestamp: deadline)
+            applyHingePeekUpdateResult(result, lastSampleTimestamp: deadline)
+        }
+    }
+
+    private func cancelHingePeekDwellRecheck() {
+        hingePeekDwellRecheckTask?.cancel()
+        hingePeekDwellRecheckTask = nil
+    }
+
+    private var hingePeekPresentationContext: HingeHintPeekPresentationContext {
+        guard let item = state.items[safe: state.currentIndex] else {
+            return HingeHintPeekPresentationContext(questionID: nil, canPeek: false, selectedTool: selectedExamTool)
+        }
+        let questionID = item.question.id
+        let canPeek = HingeHintPeekRules.canPeekHint(
+            sessionKind: .practice(progressStore.preferences.practiceMode),
+            hasHint: currentQuestionHint != nil,
+            alreadySelected: state.selectedByQuestionId[questionID] != nil,
+            reviewSubmitted: state.reviewSubmitted
+        )
+        return HingeHintPeekPresentationContext(questionID: questionID, canPeek: canPeek, selectedTool: selectedExamTool)
+    }
+
+    private func applyHingePeekPresentation(_ action: HingeHintPeekPresentationAction) {
+        let effects = HingeHintPeekPresentationReducer.reduce(
+            state: &hingePeekPresentationState,
+            action: action,
+            context: hingePeekPresentationContext
+        )
+        for effect in effects {
+            applyHingePeekPresentationEffect(effect)
+        }
+    }
+
+    private func applyHingePeekPresentationEffect(_ effect: HingeHintPeekPresentationEffect) {
+        switch effect {
+        case .presentHint(let questionID):
+            let revealedNewLevel = revealHintLevel(questionID: questionID, level: 1)
+            if revealedNewLevel {
+                HintAccessibilityAnnouncements.postHintShown(level: 1)
+            }
+            calculatorFocused = false
+            calculatorViewModel.suspendHardwareKeyboardInput()
+            if selectedExamTool != .hint {
+                selectedExamTool = .hint
+            }
+        case .closeHint:
+            if selectedExamTool == .hint {
+                selectedExamTool = nil
+            }
+        }
+    }
+
+    private func resetHingePeekForQuestionChange() {
+        applyHingePeekPresentation(.questionChanged)
+        hingePeekStateMachine.reset()
+        cancelHingePeekDwellRecheck()
+    }
+
+    private func resetHingePeekForSessionChange() {
+        hingePeekPresentationState = HingeHintPeekPresentationState()
+        hingePeekStateMachine.reset()
+        cancelHingePeekDwellRecheck()
+        configureDuoPostureProviderIfNeeded()
+    }
+#endif
+
+    private func openHintLesson(_ link: QuestionHintLessonLink) {
+        calculatorFocused = false
+        calculatorViewModel.suspendHardwareKeyboardInput()
+        selectedExamTool = nil
+        onOpenHintLesson(link)
+    }
+
+    private func clearCalculatorKeyboardFocus() {
+        calculatorFocused = false
+        calculatorViewModel.suspendHardwareKeyboardInput()
+    }
+
+    private var examContentTapGesture: some Gesture {
+        TapGesture().onEnded {
+            clearCalculatorKeyboardFocus()
+        }
+    }
+
+    private var referenceSheetConfiguration: ReferenceSheetConfiguration {
+        appleReferenceSheetConfigurationFromLaunchArguments()
     }
 
     private var practiceReview: some View {
@@ -630,11 +937,22 @@ struct PracticeSessionView: View {
             state.loadedLocalDataReplacementRevision = localDataReplacementRevision
             state.currentIndex = 0
             state.selectedByQuestionId = [:]
+            state.hintLevelsByQuestionId = [:]
+            state.hintQualifiedQuestionIds = []
+            state.answeredWithHelpQuestionIds = []
             state.committedQuestionIds = []
             state.reviewSubmitted = false
             state.answeredCount = 0
             state.correctCount = 0
             state.errorMessage = nil
+            selectedExamTool = nil
+            calculatorFocused = false
+#if os(iOS)
+            hingePeekStateMachine.reset()
+            hingePeekPresentationState = HingeHintPeekPresentationState()
+            cancelHingePeekDwellRecheck()
+#endif
+            calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             state.items = []
@@ -667,12 +985,22 @@ struct PracticeSessionView: View {
         if let previous = state.selectedByQuestionId[question.id] {
             guard progressStore.preferences.practiceMode == .reviewLater else { return }
             state.selectedByQuestionId[question.id] = sourceIndex
+            state.answeredWithHelpQuestionIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
+                questionID: question.id,
+                qualifiedQuestionIds: state.hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds
+            )
             if previous == 0, sourceIndex != 0 { state.correctCount -= 1 }
             if previous != 0, sourceIndex == 0 { state.correctCount += 1 }
             AccessibilityNotification.Announcement(String(localized: "Selected answer updated")).post()
             return
         }
         state.selectedByQuestionId[question.id] = sourceIndex
+        state.answeredWithHelpQuestionIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
+            questionID: question.id,
+            qualifiedQuestionIds: state.hintQualifiedQuestionIds,
+            answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds
+        )
         state.answeredCount += 1
         if sourceIndex == 0 { state.correctCount += 1 }
         if progressStore.preferences.practiceMode == .immediate {
@@ -687,7 +1015,12 @@ struct PracticeSessionView: View {
         do {
             let now = try AppleStudyEngine.canonicalNow()
             let progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
-            let next = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: sourceIndex, now: now)
+            let answeredWithHelp = PracticeHintRules.shouldCommitAnswerWithHelp(
+                questionID: question.id,
+                qualifiedQuestionIds: state.hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds
+            )
+            let next = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: sourceIndex, now: now, answeredWithHelp: answeredWithHelp)
             try progressStore.saveQuestionProgress(next)
             state.committedQuestionIds.insert(question.id)
             onDataChanged()
@@ -714,7 +1047,8 @@ struct PracticeSessionView: View {
             let now = try AppleStudyEngine.canonicalNow()
             for item in state.items {
                 guard let selected = state.selectedByQuestionId[item.question.id] else { continue }
-                progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: item.question, selectedSourceIndex: selected, now: now)
+                let answeredWithHelp = PracticeHintRules.shouldSubmitAnswerWithHelp(questionID: item.question.id, qualifiedQuestionIds: state.hintQualifiedQuestionIds, answeredWithHelpQuestionIds: state.answeredWithHelpQuestionIds)
+                progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: item.question, selectedSourceIndex: selected, now: now, answeredWithHelp: answeredWithHelp)
             }
             try progressStore.saveQuestionProgress(progress)
             state.reviewSubmitted = true
@@ -740,12 +1074,14 @@ final class MockExamState: ObservableObject {
     @Published var errorMessage: String?
     @Published var timerStatus = String(localized: "Timer off")
     @Published var loadedLocalDataReplacementRevision = 0
+    let calculatorViewModel = ExamCalculatorViewModel()
 
     var hasUnfinishedCourseWork: Bool {
         !generatedItems.isEmpty && result == nil
     }
 
     func resetSession(localDataReplacementRevision: Int) {
+        calculatorViewModel.clearForNewExam()
         seed = ""
         startedAt = ""
         generatedItems = []
@@ -794,6 +1130,7 @@ struct MockExamView: View {
     let language: BankLanguage
     @ObservedObject private var state: MockExamState
     let localDataReplacementRevision: Int
+    let onExamToolPresentationChanged: (Bool) -> Void
     let onDataChanged: () -> Void
 
     init(
@@ -802,13 +1139,16 @@ struct MockExamView: View {
         language: BankLanguage,
         state: MockExamState,
         localDataReplacementRevision: Int,
+        onExamToolPresentationChanged: @escaping (Bool) -> Void = { _ in },
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
         self.progressStore = progressStore
         self.language = language
         self.state = state
+        _calculatorViewModel = ObservedObject(wrappedValue: state.calculatorViewModel)
         self.localDataReplacementRevision = localDataReplacementRevision
+        self.onExamToolPresentationChanged = onExamToolPresentationChanged
         self.onDataChanged = onDataChanged
     }
 
@@ -817,7 +1157,11 @@ struct MockExamView: View {
     @State private var confirmingEndExam = false
     @State private var isSubmitting = false
     @State private var showingNavigator = false
+    @State private var pendingNavigatorPresentation = false
     @State private var shouldFocusResultsHeading = false
+    @State private var selectedExamTool: ExamTool?
+    @State private var calculatorFocused = false
+    @ObservedObject private var calculatorViewModel: ExamCalculatorViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -846,6 +1190,14 @@ struct MockExamView: View {
         .id(state.result?.id ?? "mock-exam-active")
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
+        .lessonReaderOpaqueNavigationBar()
+        .examToolPresentation(
+            selectedTool: $selectedExamTool,
+            calculator: calculatorViewModel,
+            calculatorFocused: $calculatorFocused,
+            referenceSheetConfiguration: referenceSheetConfiguration,
+            onDismiss: presentPendingNavigatorSheetIfNeeded
+        )
         .sheet(isPresented: $showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 navigator
@@ -857,7 +1209,12 @@ struct MockExamView: View {
             .pagePadding()
             .background(DesignTokens.Colors.paper)
         }
-        .onAppear { refreshForCurrentTimerState() }
+        .onAppear {
+            calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
+            refreshForCurrentTimerState()
+        }
+        .onChange(of: selectedExamTool) { _, next in onExamToolPresentationChanged(next != nil) }
+        .onDisappear { onExamToolPresentationChanged(false) }
         .task(id: localDataReplacementRevision) { resetIfLocalDataWasReplaced() }
         .onReceive(timer) { _ in
             refreshForCurrentTimerState()
@@ -913,7 +1270,10 @@ struct MockExamView: View {
             }
             .paperCard()
 
-            QuestionCard(question: question, language: language)
+            ExamToolButtons(availableTools: availableExamTools) { openExamTool($0) }
+
+            QuestionCard(question: question, language: language, onInteraction: clearCalculatorKeyboardFocus)
+                .simultaneousGesture(examContentTapGesture)
                 .accessibilityAction(named: Text("Next unanswered")) {
                     jumpToNextUnanswered()
                 }
@@ -925,6 +1285,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("mock-answers-title")
                 ForEach(Array(item.choicePermutation.enumerated()), id: \.offset) { displayIndex, sourceIndex in
                     if let answer = question.answers.first(where: { $0.sourceIndex == sourceIndex }) {
                         AnswerChoiceButton(
@@ -933,13 +1294,19 @@ struct MockExamView: View {
                             language: language,
                             selectedSourceIndex: state.selectedByQuestionId[question.id] ?? nil,
                             showCorrectness: false,
-                            disabled: false
+                            disabled: false,
+                            onKeyboardFocus: clearCalculatorKeyboardFocus
                         ) {
+                            clearCalculatorKeyboardFocus()
                             state.selectedByQuestionId[question.id] = sourceIndex
                         }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            clearCalculatorKeyboardFocus()
+                        })
                     }
                 }
             }
+            .simultaneousGesture(examContentTapGesture)
 
             HStack {
                 Button { state.currentIndex = max(0, state.currentIndex - 1) } label: {
@@ -977,6 +1344,36 @@ struct MockExamView: View {
 #else
         false
 #endif
+    }
+
+    private var availableExamTools: [ExamTool] {
+        appleExamTools(for: bank, referenceSheetConfiguration: referenceSheetConfiguration)
+    }
+
+    private func openExamTool(_ tool: ExamTool) {
+        selectedExamTool = tool
+        calculatorFocused = shouldFocusCalculator(for: tool, calculatorViewModel: calculatorViewModel)
+        if tool == .calculator {
+            Task { @MainActor in
+                calculatorViewModel.acceptHardwareKeyboardInput()
+                calculatorFocused = true
+            }
+        }
+    }
+
+    private func clearCalculatorKeyboardFocus() {
+        calculatorFocused = false
+        calculatorViewModel.suspendHardwareKeyboardInput()
+    }
+
+    private var examContentTapGesture: some Gesture {
+        TapGesture().onEnded {
+            clearCalculatorKeyboardFocus()
+        }
+    }
+
+    private var referenceSheetConfiguration: ReferenceSheetConfiguration {
+        appleReferenceSheetConfigurationFromLaunchArguments()
     }
 
     @ViewBuilder
@@ -1035,12 +1432,31 @@ struct MockExamView: View {
     @ViewBuilder
     private var questionsButton: some View {
         if usesNavigatorSheet {
-            Button { showingNavigator = true } label: {
+            Button { presentNavigatorSheet() } label: {
                 AccessibleSecondaryButtonLabel(title: "Questions")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("mock-questions-button")
         }
+    }
+
+    private func presentNavigatorSheet() {
+        guard usesNavigatorSheet else { return }
+        if selectedExamTool != nil {
+            pendingNavigatorPresentation = true
+            calculatorFocused = false
+            calculatorViewModel.suspendHardwareKeyboardInput()
+            selectedExamTool = nil
+        } else {
+            showingNavigator = true
+        }
+    }
+
+
+    private func presentPendingNavigatorSheetIfNeeded() {
+        guard pendingNavigatorPresentation else { return }
+        pendingNavigatorPresentation = false
+        showingNavigator = true
     }
 
     @ViewBuilder
@@ -1267,8 +1683,12 @@ struct MockExamView: View {
         confirmingSubmit = false
         confirmingEndExam = false
         showingNavigator = false
+        pendingNavigatorPresentation = false
+        selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
+        calculatorFocused = false
+        calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
     }
 
     private func refreshForCurrentTimerState(now: Date = Date()) {
@@ -1317,6 +1737,9 @@ struct MockExamView: View {
             state.loadedLocalDataReplacementRevision = localDataReplacementRevision
             state.result = nil
             state.errorMessage = nil
+            selectedExamTool = nil
+            calculatorFocused = false
+            calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -1387,8 +1810,12 @@ struct MockExamView: View {
         confirmingSubmit = false
         confirmingEndExam = false
         showingNavigator = false
+        pendingNavigatorPresentation = false
+        selectedExamTool = nil
         shouldFocusResultsHeading = false
         isSubmitting = false
+        calculatorFocused = false
+        calculatorViewModel.clearForNewExam(locale: canadianHamInterfaceCalculatorLocale())
     }
 }
 
@@ -1747,16 +2174,20 @@ struct SettingsView: View {
     private func confirmImport() {
         guard let pendingImport else { return }
         do {
-            try progressStore.importData(pendingImport, bank: bank)
-            morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse).normalized()
-            morseSettings.save()
+            try importProgress(pendingImport)
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
             errorMessage = nil
-            onDataChanged(true)
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
+    }
+
+    func importProgress(_ imported: ProgressExportV1, defaults: UserDefaults = .standard) throws {
+        try progressStore.importData(imported, bank: bank)
+        morseSettings = MorseTrainerSettings(exported: imported.preferences.morse).normalized()
+        morseSettings.save(defaults: defaults)
+        onDataChanged(true)
     }
 
     private func resetAllData() {
@@ -1831,9 +2262,10 @@ struct ProgressExportDocument: FileDocument {
 struct QuestionCard: View {
     let question: BankQuestion
     let language: BankLanguage
+    var onInteraction: (() -> Void)? = nil
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        let card = VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text(question.id) // l10n: verbatim
                 .font(DesignTokens.FontScale.body.monospaced())
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -1845,8 +2277,15 @@ struct QuestionCard: View {
                 .accessibilityIdentifier("question-stem")
         }
         .paperCard()
+        .contentShape(Rectangle())
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("question-card")
+
+        if let onInteraction {
+            card.simultaneousGesture(TapGesture().onEnded { onInteraction() }, including: .all)
+        } else {
+            card
+        }
     }
 }
 
@@ -1857,7 +2296,9 @@ struct AnswerChoiceButton: View {
     let selectedSourceIndex: Int?
     let showCorrectness: Bool
     let disabled: Bool
+    var onKeyboardFocus: (() -> Void)? = nil
     let action: () -> Void
+    @FocusState private var isKeyboardFocused: Bool
 
     private var letter: String { ["A", "B", "C", "D"][safe: displayIndex] ?? "\(displayIndex + 1)" }
     private var isSelected: Bool { selectedSourceIndex == answer.sourceIndex }
@@ -1900,6 +2341,12 @@ struct AnswerChoiceButton: View {
         .accessibilityLabel(accessibilityLabel) // l10n: content(question)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("answer-\(letter)-button")
+        .focused($isKeyboardFocused)
+        .onChange(of: isKeyboardFocused) { _, isFocused in
+            if isFocused {
+                onKeyboardFocus?()
+            }
+        }
     }
 
     private var statusText: String? {
@@ -2129,6 +2576,33 @@ struct MessagePanel: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(kind == .success ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.warningBorder, lineWidth: 1))
         .accessibilityElement(children: .combine)
     }
+}
+
+private func appleExamTools(for bank: QuestionBank, referenceSheetConfiguration: ReferenceSheetConfiguration) -> [ExamTool] {
+    var tools: [ExamTool] = [.calculator]
+    if bank.courseBankID != .advanced, referenceSheetConfiguration.availableOnApple {
+        tools.append(.referenceSheet)
+    }
+    return tools
+}
+
+@MainActor
+private func shouldFocusCalculator(for tool: ExamTool, calculatorViewModel: ExamCalculatorViewModel) -> Bool {
+    if tool == .calculator {
+        calculatorViewModel.acceptHardwareKeyboardInput()
+        return true
+    }
+    calculatorViewModel.suspendHardwareKeyboardInput()
+    return false
+}
+
+private func appleReferenceSheetConfigurationFromLaunchArguments() -> ReferenceSheetConfiguration {
+#if DEBUG
+    if let resourceName = AppLaunchArguments.value(after: "-CanadianHamReferenceSheetResourceName") {
+        return ReferenceSheetConfiguration(resourceName: resourceName, resourceExtension: "md", subdirectory: "reference-sheet")
+    }
+#endif
+    return .basic
 }
 
 private extension ApplePreferences.PracticeMode {

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-007-008",
+  "questionId": "B-001-007-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how amateur stations avoid carrying outside material.",
+      "fr": "Revoyez comment les stations de radioamateur évitent de relayer du contenu externe."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-messages-stay-open-and-non-commercial"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

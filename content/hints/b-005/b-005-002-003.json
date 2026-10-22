@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-003",
+  "questionId": "B-005-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the circuit quantity name for moving charge in a complete path.",
+      "fr": "Revoyez le nom de la grandeur de circuit liée aux charges en mouvement dans un trajet complet."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "current-resistance-and-conductance"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name or clearly distinguish the correct quantity from the options.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

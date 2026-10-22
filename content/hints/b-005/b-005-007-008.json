@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-007-008",
+  "questionId": "B-005-007-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the unit definitions in the AC basics section.",
+      "fr": "Revoyez les définitions des unités dans la section des bases du CA."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure unit-definition recall: any second hint would paraphrase the definition."
+}

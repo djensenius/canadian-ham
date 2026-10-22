@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-003-006",
+  "questionId": "B-005-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the unit used when electrical energy use is stated as a rate.",
+      "fr": "Revoyez l'unité utilisée quand l'utilisation de l'énergie électrique est exprimée comme un débit."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "power-how-fast-energy-is-used"
+  },
+  "singleLevelReason": "Pure unit recall: a second hint would name the unit and identify the answer.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

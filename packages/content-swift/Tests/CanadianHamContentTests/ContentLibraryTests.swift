@@ -12,10 +12,11 @@ final class ContentLibraryTests: XCTestCase {
         XCTAssertEqual(library.subsectionTitles.count, 100)
         XCTAssertEqual(library.modules.count, 8)
         XCTAssertEqual(library.modules.map(\.order), Array(1...8))
-        XCTAssertEqual(library.lessons.count, 36)
-        XCTAssertEqual(library.orderedLessons().count, 36)
-        XCTAssertEqual(library.quizzes.count, 36)
+        XCTAssertEqual(library.lessons.count, 37)
+        XCTAssertEqual(library.orderedLessons().count, 37)
+        XCTAssertEqual(library.quizzes.count, 37)
         XCTAssertEqual(library.explanations.count, 984)
+        XCTAssertEqual(library.questionHints.count, 984)
         XCTAssertEqual(library.manifest.counts.questions, 984)
         XCTAssertEqual(library.manifest.counts.subsections, 100)
         XCTAssertEqual(library.manifest.counts.categories, 8)
@@ -23,6 +24,23 @@ final class ContentLibraryTests: XCTestCase {
         let emptyConceptCheckQuizzes = library.quizzes.filter { $0.conceptChecks.isEmpty }
         XCTAssertFalse(emptyConceptCheckQuizzes.isEmpty)
         XCTAssertEqual(Set(library.quizzes.map(\.id)), try quizIdsOnDisk())
+    }
+
+    func testConceptCheckChoiceDecodesOptionalFeedbackAndRoundTrips() throws {
+        let decoder = JSONDecoder()
+        let legacy = Data(#"{"text":{"en":"Detection","fr":null},"isCorrect":false}"#.utf8)
+        XCTAssertNil(try decoder.decode(ConceptCheckChoice.self, from: legacy).feedback)
+        XCTAssertNil(ConceptCheckChoice(text: LocalizedNullableText(en: "Detection", fr: nil), isCorrect: false).feedback)
+
+        for french in ["null", #""La détection récupère l’audio.""#] {
+            let json = Data("""
+            {"text":{"en":"Detection","fr":null},"isCorrect":false,"feedback":{"en":"Detection recovers audio.","fr":\(french)}}
+            """.utf8)
+            let choice = try decoder.decode(ConceptCheckChoice.self, from: json)
+            XCTAssertEqual(choice.feedback?.en, "Detection recovers audio.")
+            XCTAssertEqual(choice.feedback?.fr, french == "null" ? nil : "La détection récupère l’audio.")
+            XCTAssertEqual(try decoder.decode(ConceptCheckChoice.self, from: JSONEncoder().encode(choice)), choice)
+        }
     }
 
     func testExplanationNoteParsingForSampleInEachCategory() throws {
@@ -124,6 +142,80 @@ final class ContentLibraryTests: XCTestCase {
                 return false
             }, lesson.id)
         }
+    }
+
+    func testSharedFigureDirectiveFixtures() throws {
+        let fixtureURL = try repoRootURL().appendingPathComponent("fixtures/markdown-figure-directives.json")
+        let fixtures = try JSONDecoder().decode([FigureDirectiveFixture].self, from: Data(contentsOf: fixtureURL))
+        for fixture in fixtures {
+            let rendered = try LessonMarkdownRenderer.render(fixture.markdown)
+            XCTAssertEqual(simplifiedBlocks(rendered.blocks), fixture.expected, fixture.name)
+        }
+    }
+
+    func testSharedLessonHeadingAnchorFixtures() throws {
+        let fixtureURL = try repoRootURL().appendingPathComponent("fixtures/lesson-heading-anchors.json")
+        let fixtures = try JSONDecoder().decode(LessonHeadingAnchorFixtures.self, from: Data(contentsOf: fixtureURL))
+
+        for fixture in fixtures.slugCases {
+            XCTAssertEqual(LessonHeadingAnchors.slug(for: fixture.headingText), fixture.expectedSlug, fixture.name)
+        }
+        for fixture in fixtures.anchorCases {
+            let anchors = try LessonHeadingAnchors.anchors(for: fixture.markdown, title: fixture.title)
+            XCTAssertEqual(anchors, fixture.expectedAnchors, fixture.name)
+            for rejectedAnchor in fixture.rejectedAnchors {
+                XCTAssertFalse(anchors.contains(rejectedAnchor), "\(fixture.name) should not expose \(rejectedAnchor)")
+            }
+        }
+    }
+
+    func testBundledQuestionHintSectionAnchorsResolveInLessons() throws {
+        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
+
+        for hint in library.questionHints {
+            guard let sectionAnchor = hint.lessonLink.sectionAnchor else { continue }
+            let lesson = try XCTUnwrap(library.lessonsById[hint.lessonLink.lessonId], "\(hint.id) should reference an existing lesson")
+            let anchors = try LessonHeadingAnchors.anchors(for: lesson.bodyMarkdown, title: lesson.title.en)
+            XCTAssertTrue(anchors.contains(sectionAnchor), "\(hint.id) sectionAnchor \(sectionAnchor) should resolve in \(lesson.id)")
+        }
+    }
+
+    func testBadHintFileDropsHintsWithoutDroppingLessonContent() throws {
+        try withTemporaryContentFixture { root in
+            let hintsDirectory = root.appendingPathComponent("content/hints/b-001", isDirectory: true)
+            try FileManager.default.createDirectory(at: hintsDirectory, withIntermediateDirectories: true)
+            try "{".write(to: hintsDirectory.appendingPathComponent("bad-hint.json"), atomically: true, encoding: .utf8)
+
+            let library = try ContentLibrary.load(fromDirectory: root)
+
+            XCTAssertEqual(library.questionHints.count, 0)
+            XCTAssertEqual(library.lessons.count, 8)
+            XCTAssertEqual(library.questions.count, 1)
+        }
+    }
+
+    func testFigureDirectivesForOhmsLawLesson() throws {
+        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
+        let lesson = try XCTUnwrap(library.lessonsById["L-005-02"])
+        let rendered = try LessonMarkdownRenderer.render(lesson.bodyMarkdown)
+
+        XCTAssertEqual(rendered.figures.map(\.id), ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"])
+        let wheel = try XCTUnwrap(rendered.figures.last)
+        XCTAssertTrue(wheel.altText.contains("quadrants for P, E, I, and R"))
+        XCTAssertEqual(wheel.textEquivalent, [
+            "To find P: I x E.",
+            "To find P: I² x R.",
+            "To find P: E² / R.",
+            "To find E: I x R.",
+            "To find E: P / I.",
+            "To find E: √(P x R).",
+            "To find I: E / R.",
+            "To find I: P / E.",
+            "To find I: √(P / R).",
+            "To find R: E / I.",
+            "To find R: E² / P.",
+            "To find R: P / I²."
+        ])
     }
 
     func testTableParserHandlesAlignmentEscapedPipesAndFencedCode() throws {
@@ -289,6 +381,57 @@ final class ContentLibraryTests: XCTestCase {
             XCTAssertThrowsError(try ContentLibrary.load(fromDirectory: root)) { error in
                 XCTAssertTrue(String(describing: error).contains("lesson id must match"), String(describing: error))
             }
+        }
+    }
+}
+
+private struct FigureDirectiveFixture: Decodable {
+    let name: String
+    let markdown: String
+    let expected: [SimplifiedMarkdownBlock]
+}
+
+private struct SimplifiedMarkdownBlock: Decodable, Equatable {
+    let type: String
+    let id: String?
+    let altText: String?
+    let textEquivalent: [String]?
+    let text: String?
+    let language: String?
+}
+
+private struct LessonHeadingAnchorFixtures: Decodable {
+    let slugCases: [LessonHeadingAnchorSlugFixture]
+    let anchorCases: [LessonHeadingAnchorCaseFixture]
+}
+
+private struct LessonHeadingAnchorSlugFixture: Decodable {
+    let name: String
+    let headingText: String
+    let expectedSlug: String
+}
+
+private struct LessonHeadingAnchorCaseFixture: Decodable {
+    let name: String
+    let title: String?
+    let markdown: String
+    let expectedAnchors: [String]
+    let rejectedAnchors: [String]
+}
+
+private func simplifiedBlocks(_ blocks: [LessonBlock]) -> [SimplifiedMarkdownBlock] {
+    blocks.map { block in
+        switch block {
+        case .figure(let figure):
+            SimplifiedMarkdownBlock(type: "figure", id: figure.id, altText: figure.altText, textEquivalent: figure.textEquivalent, text: nil, language: nil)
+        case .paragraph(let text):
+            SimplifiedMarkdownBlock(type: "paragraph", id: nil, altText: nil, textEquivalent: nil, text: String(text.characters), language: nil)
+        case .code(let language, let text):
+            SimplifiedMarkdownBlock(type: "code", id: nil, altText: nil, textEquivalent: nil, text: text, language: language)
+        case .heading(_, let text):
+            SimplifiedMarkdownBlock(type: "heading", id: nil, altText: nil, textEquivalent: nil, text: String(text.characters), language: nil)
+        case .list, .table, .illustrationBrief, .blockquote:
+            SimplifiedMarkdownBlock(type: "other", id: nil, altText: nil, textEquivalent: nil, text: nil, language: nil)
         }
     }
 }

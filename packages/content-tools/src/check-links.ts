@@ -100,10 +100,20 @@ function extractMarkdownLinks(file: string, text: string): MarkdownLink[] {
   return links;
 }
 
-function slugForHeadingText(headingText: string): string {
-  return headingText
-    .trim()
+function stripInlineMarkdown(value: string): string {
+  return value
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
     .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/\*([^\s*](?:[^*]*[^\s*])?)\*/g, "$1")
+    .replace(/(^|[^\w])_([^\s_](?:[^\s_]*[^\s_])?)_(?=$|[^\w])/g, "$1$2")
+    .replace(/\\([\\`*_[\]{}()#+\-.!|])/g, "$1");
+}
+
+export function slugForHeadingText(headingText: string): string {
+  return stripInlineMarkdown(headingText)
+    .trim()
     .replace(/<[^>]+>/g, "")
     .toLowerCase()
     .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
@@ -111,11 +121,32 @@ function slugForHeadingText(headingText: string): string {
     .replace(/\s/g, "-");
 }
 
+function fenceClosingIndex(lines: readonly string[], startIndex: number): number | null {
+  if (!/^ {0,3}```(?:[ \t]*([^`\s]+))?[ \t]*$/.test(lines[startIndex] ?? "")) {
+    return null;
+  }
+  for (let index = startIndex + 1; index < lines.length; index += 1) {
+    if (/^ {0,3}```[ \t]*$/.test(lines[index] ?? "")) {
+      return index;
+    }
+  }
+  return null;
+}
+
 function markdownAnchors(text: string): Set<string> {
   const anchors = new Set<string>();
   const seen = new Map<string, number>();
-  const headingPattern = /^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$/gm;
-  for (const match of text.matchAll(headingPattern)) {
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
+  for (let index = 0; index < lines.length; index += 1) {
+    const fenceEndIndex = fenceClosingIndex(lines, index);
+    if (fenceEndIndex !== null) {
+      index = fenceEndIndex;
+      continue;
+    }
+    const match = /^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$/.exec(lines[index] ?? "");
+    if (match === null) {
+      continue;
+    }
     const baseSlug = slugForHeadingText(match[1] ?? "");
     if (baseSlug.length === 0) {
       continue;

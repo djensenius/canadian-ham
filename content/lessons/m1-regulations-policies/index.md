@@ -23,7 +23,7 @@ Finish with the legal framework once learners understand the technical and opera
 
 - L-001-01 — Authority, certificates, and exams
 - L-001-02 — Station scope, installations, and control
-- L-001-03 — Communications, interference, and third parties
+- L-001-03 — Communications, interference, identification, and message handling
 - L-001-04 — Privileges, bandwidth, power, and repeaters
-- L-001-05 — International operation and station location
+- L-001-05 — International, third-party, and station location rules
 - L-001-06 — Antenna consultation, RF exposure, and EMC

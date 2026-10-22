@@ -54,7 +54,17 @@ The station power supply provides direct current. The RF stages create and ampli
 
 Practical keying needs controlled rise and fall times. Edges that are too abrupt can spread energy as clicks. The power amplifier raises the keyed signal to the intended transmit power.
 
-### In the real world: supply sag can make chirp
+::figure cw-ssb-signal-paths
+Alt text: Three labelled block diagrams show a CW transmitter, an SSB/CW receiver, and an SSB transmitter with signal-flow arrows.
+Text equivalent:
+- CW row: osc, buf, PA, and key feeding the PA.
+- RX row: ant, RF, mix with LO, IF filter, IF amp, prod with BFO, AF, and spkr.
+- SSB row: mic, spch, bal with fixed, filt, mix with VFO, and final.
+::
+
+
+
+### Worked example: supply sag can make chirp
 
 A CW transmitter sounds steady at low power. At higher power, another operator reports that the note slides at the start of each element. The higher current may pull the DC supply voltage down for an instant.
 
@@ -67,7 +77,23 @@ A CW transmitter sounds steady at low power. At higher power, another operator r
 
 Check the supply rating, cable size, connectors, oscillator stability, and buffer stage. Turning up RF power can make supply sag worse.
 
-### Worked example: why a buffer helps
+### Faded practice: compare loaded voltage
+
+A training rig supply reads 13.6 V at idle and 12.8 V during a key-down test.
+
+- Given: starting E = 13.6 V; loaded E = 12.8 V.
+- Find: voltage sag.
+- Formula: sag = starting E - loaded E.
+- Complete: sag = 13.6 V - ___ V = ___ V.
+- Sanity check: would more cable resistance at the same current make the sag larger or smaller?
+
+Fill the gaps before checking below.
+
+### Check your work: compare loaded voltage
+
+The sag is 0.8 V. More cable resistance would add voltage drop. Check the DC path and regulation instead of assuming more RF power will cure an unsteady note.
+
+### In the real world: why a buffer helps
 
 A practice oscillator is adjusted to 7.040 MHz. A power stage connected directly changes its input loading as it warms. If that loading shifts the oscillator by 120 Hz, another operator hears an unsteady note.
 
@@ -89,15 +115,32 @@ The IF amplifier provides most receiver gain after the desired signal has been s
 
 ### Worked example: product detection idea
 
-A receiver's IF signal is centred near 9.000 MHz. The BFO is set so the product detector produces an 800 Hz CW tone.
+A training product detector combines a CW signal at 9.0008 MHz with a BFO at 9.0000 MHz.
 
-The exact internal frequencies are less important than the relationship:
+- Given: IF signal = 9.0008 MHz; BFO = 9.0000 MHz.
+- Find: the difference-frequency audio tone.
+- Formula: tone frequency = magnitude of the IF-to-BFO difference.
+- Substitute: tone = 9.0008 MHz - 9.0000 MHz = 0.0008 MHz.
+- Answer: tone = 800 Hz.
+- Sanity check: the small RF difference lies in the audio range.
 
-```text
-small RF/IF frequency difference -> audio tone in hertz
-```
+The detector's following audio path keeps that difference tone. Changing the BFO changes the pitch, not the station's transmitted frequency.
 
-That is why a CW operator can tune a signal for a comfortable tone.
+### Faded practice: recover a CW tone
+
+The IF signal stays at 9.0008 MHz, but the BFO is now 9.0002 MHz.
+
+- Given: IF = 9.0008 MHz; BFO = 9.0002 MHz.
+- Find: the new audio tone.
+- Formula: tone = magnitude of the IF-to-BFO difference.
+- Complete: tone = 9.0008 - 9.0002 = ___ MHz = ___ Hz.
+- Sanity check: moving the BFO closer to the IF should make this difference smaller.
+
+Fill the gaps before checking below.
+
+### Check your work: recover a CW tone
+
+The difference is 0.0006 MHz, or 600 Hz. The tone is lower because the two RF frequencies are closer together.
 
 ## SSB transmitter path
 
@@ -123,6 +166,22 @@ A training exciter produces a filtered SSB signal near 8.998 MHz. A VFO is set t
 - Substitute: output = 8.998 MHz + 5.200 MHz.
 - Answer: output = 14.198 MHz.
 - Sanity check: the mixer moved the sideband signal; it did not change the spoken message.
+
+### Faded practice: choose a mixer product
+
+A training SSB signal at 8.997 MHz mixes with a 5.300 MHz VFO. The following filter selects the sum.
+
+- Given: sideband signal = 8.997 MHz; VFO = 5.300 MHz.
+- Find: selected output frequency.
+- Formula: sum output = sideband signal + VFO.
+- Complete: sum = 8.997 + ___ = ___ MHz; rejected difference = 8.997 - 5.300 = ___ MHz.
+- Sanity check: which product is above both input frequencies?
+
+Fill the gaps before checking below.
+
+### Check your work: choose a mixer product
+
+The selected sum is 14.297 MHz. The difference is 3.697 MHz and is rejected here. The mixer moves the voice sideband to a new RF position.
 
 ## Try it
 

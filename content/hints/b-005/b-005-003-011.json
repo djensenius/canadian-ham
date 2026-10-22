@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-003-011",
+  "questionId": "B-005-003-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A fuse opens when current becomes excessive, so look for a fault that makes current surge immediately.",
+      "fr": "Un fusible ouvre le circuit lorsque le courant devient excessif; cherchez donc une panne qui fait monter le courant immédiatement."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "open-closed-and-short-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Fault-condition recall: a second hint would define or name the fault."
+}

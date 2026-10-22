@@ -225,7 +225,7 @@ struct NativeSettingsPreferenceBindings {
     }
 }
 
-private struct NativeDataSettingsTab: View {
+struct NativeDataSettingsTab: View {
     @ObservedObject var appSettings: AppSettingsModel
     @State private var exportDocument: ProgressExportDocument?
     @State private var showingExporter = false
@@ -325,21 +325,28 @@ private struct NativeDataSettingsTab: View {
     }
 
     private func confirmImport() {
-        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank, let pendingImport else {
+        guard appSettings.progressStore != nil, appSettings.bank != nil, let pendingImport else {
             errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
             return
         }
         do {
-            try progressStore.importData(pendingImport, bank: bank)
-            appSettings.morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse).normalized()
-            appSettings.morseSettings.save()
-            appSettings.recordDataChanged(replacesLocalData: true)
+            try importProgress(pendingImport)
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
             errorMessage = ""
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
+    }
+
+    func importProgress(_ imported: ProgressExportV1, defaults: UserDefaults = .standard) throws {
+        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank else {
+            throw ProgressStoreError.openFailed(String(localized: "Open a Canadian Ham window to load settings."))
+        }
+        try progressStore.importData(imported, bank: bank)
+        appSettings.morseSettings = MorseTrainerSettings(exported: imported.preferences.morse).normalized()
+        appSettings.morseSettings.save(defaults: defaults)
+        appSettings.recordDataChanged(replacesLocalData: true)
     }
 
     private func resetAllData() {

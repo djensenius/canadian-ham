@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-004-010",
+  "questionId": "B-007-004-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the named path effects in the absorption and fading section.",
+      "fr": "Revoyez les effets de trajet nommés dans la section sur l’absorption et l’évanouissement."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "absorption-and-fading"
+  },
+  "singleLevelReason": "Effect recall: a second hint would identify or eliminate the wave property being changed; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -9,41 +9,181 @@
     "B-008-002-001",
     "B-008-002-005",
     "B-008-002-011",
-    "B-008-003-005"
+    "B-008-005-002",
+    "B-008-005-007",
+    "B-008-005-009"
   ],
   "conceptChecks": [
     {
       "id": "QZ-L-008-01-A-C1",
-      "prompt": { "en": "At a public-service site, a scanner hears a phantom tone only when a paging transmitter and a data link are both active. Moving the scanner and adding an input filter reduce the symptom. What did those tests point toward?", "fr": null },
+      "prompt": {
+        "en": "A whole-cable ferrite reduces RF that flows the same way on both power leads, but a different noise current flowing out on one lead and back on the other remains. Why?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Mixing in a non-linear input path before the wanted channel was selected.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A keying waveform fault, because two voice or data transmitters always create Morse clicks.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A telephone audio pickup path, because an input filter at the scanner fixed telephone wiring.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A transmitter low-pass filter failure, because receiver location changes prove harmonic radiation.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The remaining noise is probably generated inside the receiver, since the cable cure has already been applied.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "An external noise current can remain when the cure does not address its path. One cable test does not locate the remaining source.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The ferrite is probably damaged, since success on one cable current should carry over to the other.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The two current paths interact differently with a whole-cable core. Different results do not by themselves indicate damage.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The first current was common mode; the second is differential mode and may need a different filter.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "A whole-cable choke mainly impedes common-mode RF. It is not a universal cure for differential noise.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A ferrite should mainly block the intended DC current, so both tests used the wrong principle.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The intended out-and-back current is usually left mostly unchanged; unwanted common-mode current is the target.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The symptom needs two strong sources and improves when less off-channel energy reaches the scanner input. That points to intermodulation or overload in a non-linear input path, not an automatic transmitter repair.", "fr": null }
+      "explanation": {
+        "en": "Identify how the unwanted current travels before expecting the same cure to work on every noise path.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-008-01-A-C2",
-      "prompt": { "en": "Powered speakers reproduce muffled SSB audio during nearby transmissions. The volume control barely changes the unwanted sound, and shortening the audio lead helps. Which path does that support?", "fr": null },
+      "prompt": {
+        "en": "A noise test combines switching off a charger with rerouting the receiver cable. The noise falls. Which follow-up would best identify which change helped?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "RF pickup and audio rectification in the speaker lead or input circuit.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A distant receiver hearing key clicks from sharp CW keying.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A harmonic relationship that must affect only one television channel.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A solved problem, because volume controls always remove rectified RF.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Test the two changes separately with brief, repeatable comparisons.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Changing one thing at a time separates their effects. The combined result does not tell whether the charger change, cable route, or both mattered.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Attribute the improvement to the charger because powered devices are more likely sources than cables.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That is a hypothesis, not a result of this test. The cable change may have reduced pickup even if the charger was involved.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Attribute the improvement to the cable because it is closer to the receiver.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Physical closeness alone does not isolate the cause. The charger was also changed, so its contribution remains unresolved.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Leave the charger off and compare noise at two nearby receive frequencies on the new cable route.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Changing receive frequency can characterize the noise, but both original changes remain applied. It does not separate the charger contribution from the cable-route effect.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Lead length, weak volume-control effect, and demodulated speech in an audio device fit audio rectification. Short leads, routing changes, and ferrites near the affected device test that path.", "fr": null }
+      "explanation": {
+        "en": "A combined test can show improvement without identifying its cause. Separate the changes before choosing which cure to keep.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-008-01-A-C3",
-      "prompt": { "en": "A receiver loses weak signals across several tuned frequencies whenever a nearby clean transmitter runs. The unwanted frequency is outside the desired band. What first cure best matches the diagnosis?", "fr": null },
+      "prompt": {
+        "en": "A filter rejects the unwanted frequency correctly, but it was designed for a different nominal impedance than the receiver line. Why can wanted-signal delivery still suffer?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Place a suitable filter before the receiver front end so the strong unwanted signal is reduced before overload.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Add only an audio tone control after detection, because overload starts in the speaker.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Open the transmitter first, because a clean off-channel signal proves spurious emissions.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Use an RF attenuator as the equal first choice, with no cost to wanted weak signals.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The measured rejection is enough to approve the filter without a wanted-band check.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Good rejection at the unwanted frequency does not establish acceptable wanted-band transfer in the installed system.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "An impedance mismatch can cause reflections and loss even when the rejected frequency is right.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Match the filter to the line and equipment as well as choosing the correct response.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The rejection measurement is evidence that the cable has taken on the filter's nominal impedance.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The cable keeps the characteristic impedance set by its own construction. One rejection measurement does not establish the system match.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A better station-end reading after adding coax is enough evidence to keep the filter.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A changed line length can improve a reading through impedance transformation. It does not establish that the filter transfers the wanted signal well in this system.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The symptom fits receiver front-end overload or desensitization. The filter belongs before the overloaded stage; attenuation can be a fallback, but it also weakens wanted signals.", "fr": null }
+      "explanation": {
+        "en": "Frequency selection, impedance, and placement are separate filter requirements.",
+        "fr": null
+      }
     }
   ]
 }

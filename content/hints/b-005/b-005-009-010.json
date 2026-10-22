@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-009-010",
+  "questionId": "B-005-009-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For two equal capacitors in series, divide one value by two.",
+      "fr": "Pour deux condensateurs égaux en série, divisez une valeur par deux."
+    },
+    {
+      "level": 2,
+      "en": "Set up Ct = 20 µF / 2; keep the final unit as microfarads.",
+      "fr": "Posez Ct = 20 µF / 2; gardez le microfarad comme unité finale."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "inductors-and-capacitors-in-combinations"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

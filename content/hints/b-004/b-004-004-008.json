@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-004-008",
+  "questionId": "B-004-004-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how gate bias and channel current are related in the FET section.",
+      "fr": "Revoyez le lien entre la polarisation de la porte et le courant du canal dans la section sur les FET."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "gate-control-and-channel-current"
+  },
+  "singleLevelReason": "Relationship recall: a second hint would identify the bias change that increases current.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

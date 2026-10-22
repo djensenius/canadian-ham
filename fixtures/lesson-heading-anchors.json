@@ -1,0 +1,99 @@
+{
+  "slugCases": [
+    {
+      "name": "inline code and raw html are ignored",
+      "headingText": "A  `B` <em>C</em>!",
+      "expectedSlug": "a--b-c"
+    },
+    {
+      "name": "accents are preserved and punctuation is removed",
+      "headingText": "Réglages d’émetteur : VFO",
+      "expectedSlug": "réglages-démetteur--vfo"
+    },
+    {
+      "name": "authority table anchor",
+      "headingText": "Reference facts: Authority and source roles",
+      "expectedSlug": "reference-facts-authority-and-source-roles"
+    },
+    {
+      "name": "inline links and emphasis are stripped before slugging",
+      "headingText": "Review [linked *power*](https://example.invalid) and **gain**",
+      "expectedSlug": "review-linked-power-and-gain"
+    },
+    {
+      "name": "unicode number characters are preserved",
+      "headingText": "I²R and ½-wave shortcuts",
+      "expectedSlug": "i²r-and-½-wave-shortcuts"
+    },
+    {
+      "name": "combining marks are removed like JavaScript Unicode property escapes",
+      "headingText": "Café gain and phase",
+      "expectedSlug": "cafe-gain-and-phase"
+    }
+  ],
+  "anchorCases": [
+    {
+      "name": "depth-1 title is not linkable",
+      "title": "Fixture Lesson",
+      "markdown": "# Fixture Lesson\n\n## Shared setup\n",
+      "expectedAnchors": [
+        "shared-setup"
+      ],
+      "rejectedAnchors": [
+        "fixture-lesson"
+      ]
+    },
+    {
+      "name": "duplicate headings receive numeric suffixes",
+      "title": null,
+      "markdown": "## Shared setup\n\nText.\n\n## Shared setup\n",
+      "expectedAnchors": [
+        "shared-setup",
+        "shared-setup-1"
+      ],
+      "rejectedAnchors": []
+    },
+    {
+      "name": "inline code html and accents follow shared slug rules",
+      "title": null,
+      "markdown": "## Réglages `VFO` <em>émetteur</em>!\n",
+      "expectedAnchors": [
+        "réglages-vfo-émetteur"
+      ],
+      "rejectedAnchors": []
+    },
+    {
+      "name": "illustration brief is not linkable",
+      "title": null,
+      "markdown": "## Illustration brief\n\nAlt text: Fixture.\n\nDescription: Draw a fixture.\n\n## Summary\n",
+      "expectedAnchors": [
+        "summary"
+      ],
+      "rejectedAnchors": [
+        "illustration-brief"
+      ]
+    },
+    {
+      "name": "headings inside fenced code are not linkable",
+      "title": null,
+      "markdown": "```md\n## Hidden heading\n```\n\n## Visible heading\n",
+      "expectedAnchors": [
+        "visible-heading"
+      ],
+      "rejectedAnchors": [
+        "hidden-heading"
+      ]
+    },
+    {
+      "name": "inline links and emphasis in rendered headings follow shared slug rules",
+      "title": null,
+      "markdown": "## Review [linked *power*](https://example.invalid) and **gain**\n",
+      "expectedAnchors": [
+        "review-linked-power-and-gain"
+      ],
+      "rejectedAnchors": [
+        "review-linked-powerhttps-exampleinvalid-and-gain"
+      ]
+    }
+  ]
+}

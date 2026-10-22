@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-013-002",
+  "questionId": "B-005-013-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how test meters are connected to a circuit.",
+      "fr": "Revoyez comment les appareils de mesure se raccordent à un circuit."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-06",
+    "sectionAnchor": "meters-and-how-to-connect-them"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Any principle about what the meter must carry identifies the connection option; topic pointer and lesson link only."
+}

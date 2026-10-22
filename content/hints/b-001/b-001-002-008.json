@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-002-008",
+  "questionId": "B-001-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review certificate records, inspections, and fees.",
+      "fr": "Revoyez les dossiers de certificat, les inspections et les droits."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "reference-facts-a-lifetime-certificate-needs-current-records"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

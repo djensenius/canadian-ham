@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-003-010-006",
+  "questionId": "B-003-010-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the high-side superheterodyne setup: convert the IF to the same unit as the signal, then add it once.",
+      "fr": "Utilisez le montage superhétérodyne avec oscillateur au-dessus : convertissez la FI dans la même unité que le signal, puis ajoutez-la une seule fois."
+    },
+    {
+      "level": 2,
+      "en": "Express 455 kHz in MHz, then add it to the receive frequency.",
+      "fr": "Exprimez 455 kHz en MHz, puis ajoutez-le à la fréquence de réception."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-04",
+    "sectionAnchor": "local-oscillator-and-image-basics"
+  },
+  "referenceSheetSection": "metric-prefixes",
+  "licenseClass": "original"
+}

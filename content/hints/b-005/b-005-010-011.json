@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-010-011",
+  "questionId": "B-005-010-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "An inductor opposes changes in current.",
+      "fr": "Une bobine s'oppose aux changements de courant."
+    },
+    {
+      "level": 2,
+      "en": "Ask which property of the applied AC sets how quickly the current must change, then decide whether the opposition grows or shrinks with it.",
+      "fr": "Demandez-vous quelle propriété du CA appliqué fixe la rapidité avec laquelle le courant doit changer, puis décidez si l'opposition augmente ou diminue avec elle."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "reactance-and-impedance"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

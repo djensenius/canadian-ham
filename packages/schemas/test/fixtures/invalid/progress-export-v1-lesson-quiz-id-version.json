@@ -1,0 +1,42 @@
+{
+  "schema": "canadian-ham.progress-export",
+  "version": 1,
+  "lessonIdVersion": 2,
+  "exportedAt": "2026-01-02T03:04:05.000Z",
+  "bankId": "basic-2025-07-15",
+  "questionProgress": [],
+  "examAttempts": [],
+  "lessonProgress": [],
+  "lessonQuizAttempts": [],
+  "preferences": {
+    "practiceMode": "immediate",
+    "examTimerEnabled": false,
+    "theme": "system"
+  },
+  "syncDeviceRows": {
+    "questionProgress": [],
+    "examAttempts": [],
+    "lessonProgress": [],
+    "lessonQuizAttempts": [
+      {
+        "deviceId": "phone",
+        "lessonIdVersion": 3,
+        "attempt": {
+          "id": "quiz",
+          "quizId": "QZ-L-005-01-A",
+          "lessonId": "L-005-01",
+          "submittedAt": "2026-01-02T03:04:05.000Z",
+          "correct": 1,
+          "total": 1,
+          "percent": 100,
+          "officialQuestionIds": [
+            "B-005-001-001"
+          ],
+          "incorrectOfficialQuestionIds": [],
+          "incorrectConceptCheckIds": []
+        }
+      }
+    ],
+    "morseCourseProgress": []
+  }
+}

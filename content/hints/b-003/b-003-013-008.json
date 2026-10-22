@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-013-008",
+  "questionId": "B-003-013-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review FM deviation, squelch and capture effect.",
+      "fr": "Revoyez l'excursion FM, le silencieux et l'effet de capture."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "fm-deviation-squelch-and-capture-effect"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

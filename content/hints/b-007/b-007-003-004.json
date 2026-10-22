@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-003-004",
+  "questionId": "B-007-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the skip-distance and skip-zone section.",
+      "fr": "Revoyez la section sur la distance de saut et la zone de silence."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "skip-distance-and-skip-zone"
+  },
+  "singleLevelReason": "Definition recall: a second hint would restate the boundary definition or eliminate options; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

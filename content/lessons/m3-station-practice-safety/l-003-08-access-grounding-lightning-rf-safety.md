@@ -19,6 +19,7 @@ objectives:
   - "Recognize extra precautions for UHF and microwave work."
 prerequisites:
   - L-003-07
+  - L-006-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-08-A
@@ -78,6 +79,16 @@ A driven earth electrode is often copper-clad steel. The steel provides strength
 
 RF grounding has an extra complication. A long wire that looks like a ground at DC can have high impedance at radio frequencies. A third-floor wire down a building may not cure RF burns at the desk. The fix may involve antenna balance, common-mode choking, a better bonding layout, or moving the antenna.
 
+::figure grounding-lightning-rf-safety
+Alt text: A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod bonded to the building grounding electrode system, and an outside antenna mast.
+Text equivalent:
+- Radio, tuner, and supply boxes bond down to a labelled bonding bar.
+- Coax runs to a box labelled single entry, then to a surge box and the antenna mast.
+- The surge box bonds to the bonding bar and to a labelled ground rod outside, and that rod bonds to the building grounding electrode system.
+::
+
+
+
 ### In the real world: single-point station bonding
 
 A small station has a transceiver, tuner, power supply, and coax entry panel.
@@ -108,7 +119,7 @@ Power-supply filter capacitors can retain charge after the unit is unplugged. Us
 - Mistaken idea: if equipment has a fuse, the operator is protected from electric shock.
 - Correction: a fuse protects wiring and equipment from excessive current. Shock safety also needs grounding, bonding, de-energizing before work, proper enclosures, and safe work practices.
 
-### Worked example: opening an offline supply
+### In the real world: opening an offline supply
 
 A qualified repair mentor supervises a student inspecting an unplugged supply.
 
@@ -131,7 +142,7 @@ Antenna work adds fall and falling-object hazards. Before any antenna repair, sh
 
 Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting. Touching an energized antenna or feed point can cause RF burns.
 
-### Worked example: feedline entry plan
+### In the real world: feedline entry plan
 
 A backyard station brings coax and rotator cable through a wall.
 
@@ -148,11 +159,42 @@ RF energy can heat body tissue when exposure is high enough. Eyes deserve care b
 
 Power density falls rapidly with distance in free space. In a simple free-space point-source model, RF field strength falls in proportion to `1/d`. Power density falls in proportion to `1/d^2`. Doubling distance can greatly reduce exposure before you even consider duty cycle or antenna pattern.
 
+### Worked example: compare power density at a distance
+
+Use only the simple free-space point-source model here, not a real installation assessment. Compare a point at 3 m with a point at 6 m while source power stays fixed.
+
+- Given: old distance = 3 m; new distance = 6 m.
+- Find: new power density as a fraction of the old value.
+- Formula: density ratio = (old distance / new distance) x (old distance / new distance).
+- Substitute: ratio = (3 / 6) x (3 / 6).
+- Answer: ratio = 0.25, or one quarter of the original power density.
+- Sanity check: doubling distance spreads power over four times the area in this model.
+
+Nearby antennas, reflections, and real patterns can depart from this simple model. Do not use the ratio alone to approve an occupied location.
+
+### Faded practice: square the distance ratio
+
+In that same model, compare points 4 m and 12 m from an unchanged source.
+
+- Given: old distance = 4 m; new distance = 12 m.
+- Find: new power density relative to the old point.
+- Formula: density ratio = (old / new) x (old / new).
+- Complete: ratio = (4 / 12) x (4 / 12) = ___ x ___ = ___.
+- Sanity check: should tripling distance give one third or one ninth of the power density?
+
+Fill the gaps before checking below.
+
+### Check your work: square the distance ratio
+
+The distance fraction is one third. Squaring it gives one ninth, about 0.111 of the original density. Field strength and power density use different distance relationships; this remains a simplified model.
+
+### Keep people outside the RF hazard area
+
 A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces. Better still, move the antenna outdoors and mount it as high as practical, out of reach. Mount directional high-gain antennas higher than nearby occupied structures so the main beam is not aimed through people in those structures.
 
 Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. It covers controlled and uncontrolled exposure situations. No transmitter class is automatically outside RF exposure regulation. This lesson does not invent numeric limits or replace a proper exposure evaluation.
 
-### Worked example: indoor antenna decision
+### In the real world: indoor antenna decision
 
 An apartment operator tests a compact indoor antenna for low-power contacts.
 
@@ -188,9 +230,9 @@ Safety choices affect station performance too. Good bonding can reduce hum and R
 
 ## Illustration brief
 
-Alt text: A station safety layout shows locked power control, single-point bonding, outside surge protection, and RF separation from people.
+Alt text: A left-to-right station safety layout shows indoor equipment bonded to a bar, a single-point entry, a surge arrestor, a ground rod bonded to the building grounding electrode system, and an outside antenna mast.
 
-Description: Draw an original room-and-wall cross-section. Inside, show a transceiver, supply, and tuner bonded to one ground bar. At the wall, show an outside coax entry panel with surge protectors bonded to the building grounding system. Add a locked power switch at the station desk, a disconnected microphone icon, a storm-disconnect note, and people standing outside a shaded RF keep-clear area around an antenna.
+Description: Draw an original left-to-right station bonding sketch. Indoors, show the radio, tuner, and supply bonded to one labelled station bonding bar. At the wall, show the coax passing through a labelled single-point entry to a surge arrestor. Bond the entry and surge arrestor to the station bonding bar and to one outside ground rod, then bond that rod to the building grounding electrode system. Outside, show the coax continuing to an antenna on a mast.
 
 ## Summary
 

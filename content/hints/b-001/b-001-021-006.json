@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-021-006",
+  "questionId": "B-001-021-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review Canadian qualification requirements for CEPT visits.",
+      "fr": "Revoyez les exigences de compétence canadiennes pour les visites CEPT."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-05",
+    "sectionAnchor": "reference-facts-visit-arrangements-pair-permission-with-identification"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

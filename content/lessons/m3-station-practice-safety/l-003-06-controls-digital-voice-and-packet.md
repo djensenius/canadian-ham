@@ -41,9 +41,19 @@ By the end of this lesson, you can:
 
 A straight key depends on the operator's hand for timing. An electronic keyer still needs operator skill, but it automatically controls dit and dah length after the paddle is moved. That helps make readable characters at a steady speed.
 
+::figure controls-digital-voice-packet
+Alt text: A station control map links keyer timing, microphone gain, VOX, receiver noise tools, and a packet digipeater block.
+Text equivalent:
+- Paddle feeds keyer and TX key; microphone feeds gain and spch.
+- VOX controls the transmit path, and the radio box is labelled noise tools.
+- Packet frames go from station A to digipeater to station B.
+::
+
+
+
 A microphone is also a station control. Before using a different microphone, adjust microphone gain and check the transmitted audio. A dynamic microphone uses a coil and magnet principle, like a small loudspeaker working in reverse. Crystal microphones use a piezoelectric element. Condenser and electret microphones are capacitor-style elements that may need bias voltage and different gain.
 
-### Worked example: setting up a new hand microphone
+### In the real world: setting up a new hand microphone
 
 A borrowed microphone sounds louder than the desk microphone it replaces.
 
@@ -104,6 +114,35 @@ A portable station wants to exchange short grid and signal reports through a noi
 
 If the task is a conversation, SSB or digital voice may fit better. Match the mode to the information.
 
+### Worked example: plan a narrow-mode slice
+
+A display shows a 1.8 kHz slice. Reserve 150 Hz total for unused guard space, then estimate how many 50 Hz traces could fit.
+
+- Given: slice = 1.8 kHz = 1 800 Hz; guard space = 150 Hz total; trace width = 50 Hz.
+- Find: a simple upper planning count.
+- Formula: count = (slice width - total guard space) / trace width.
+- Substitute: count = (1 800 - 150) / 50.
+- Answer: count = 33 traces before practical spacing limits.
+- Sanity check: there is room for fewer traces than 1 800 / 50 because some width was reserved.
+
+This arithmetic is not an operating channel plan. Real filters, drift, and courtesy require useful spacing.
+
+### Faded practice: reserve space before dividing
+
+A different display slice is 2.2 kHz wide. Reserve 100 Hz total for guard space, with 50 Hz traces.
+
+- Given: slice = 2.2 kHz = ___ Hz; total guard space = 100 Hz; trace width = 50 Hz.
+- Find: a simple upper planning count.
+- Formula: count = (slice width - total guard space) / trace width.
+- Complete: usable width = 2 200 - 100 = ___ Hz; count = ___ / 50 = ___.
+- Sanity check: subtract the total guard allowance once, not once per edge.
+
+Fill the gaps before checking below.
+
+### Check your work: reserve space before dividing
+
+The slice is 2 200 Hz. After the guard allowance, 2 100 Hz remains. Dividing by 50 gives 42 traces before extra practical spacing.
+
 ## Packet, digipeaters, and reliability
 
 Packet radio sends data in framed chunks. A digipeater receives digital packets and retransmits packets marked for forwarding. That is different from a voice repeater that retransmits analog FM audio. Linked together, packet stations and digipeaters form a network that can carry messages well beyond one direct radio path.
@@ -112,7 +151,7 @@ Some digital protocols use automatic repeat request, or ARQ. The receiver can de
 
 Sound-card digital modes use audio from a computer or interface to drive the transmitter. Excessive audio has the same bad result as excessive SSB microphone gain. It can make splatter and out-of-channel emissions.
 
-### Worked example: sound-card audio check
+### In the real world: sound-card audio check
 
 A digital-mode waterfall shows extra bright traces beside the intended signal after a station raises computer audio.
 

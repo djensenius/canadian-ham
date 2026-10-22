@@ -135,12 +135,29 @@ final class QuestionBankTests: XCTestCase {
         XCTAssertEqual(library.lessons.count, library.orderedLessons().count)
         XCTAssertFalse(library.lessons.isEmpty)
         XCTAssertEqual(library.explanations.count, library.questions.count)
+        XCTAssertEqual(library.questionHints.count, library.questions.count)
+        XCTAssertNotNil(library.questionHintsByQuestionId["B-001-002-002"])
         for lesson in library.lessons {
             XCTAssertNoThrow(try LessonMarkdownRenderer.render(lesson.bodyMarkdown), "Lesson \(lesson.id) should render")
         }
         for explanation in library.explanations {
             XCTAssertNoThrow(try ExplanationBodyParser.parse(explanation), "Explanation \(explanation.id) should parse")
         }
+    }
+
+    func testBundledLessonModelExposesPrerequisites() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let lesson = try XCTUnwrap(library.lessonsById["L-006-03"])
+        let prerequisite = try XCTUnwrap(library.lessonsById["L-006-02"])
+        let missingPrerequisites = library.lessons.flatMap { lesson in
+            lesson.prerequisites.compactMap { prerequisiteID in
+                library.lessonsById[prerequisiteID] == nil ? "\(lesson.id) -> \(prerequisiteID)" : nil
+            }
+        }
+
+        XCTAssertEqual(lesson.prerequisites, ["L-006-02"])
+        XCTAssertEqual(prerequisite.title.en, "Loss, SWR, and matching")
+        XCTAssertEqual(missingPrerequisites, [], "Bundled lesson prerequisites should reference bundled lessons")
     }
 
     private func bundledReadmePaths(in bundle: Bundle) throws -> [String] {

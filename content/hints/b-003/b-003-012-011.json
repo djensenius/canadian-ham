@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-012-011",
+  "questionId": "B-003-012-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review SSB amplification and level control.",
+      "fr": "Revoyez l'amplification et le contrôle de niveau en BLU."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "ssb-linear-amplification-and-level-control"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-006-011",
+  "questionId": "B-002-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Read a two-number voice report left to right: copy quality first, then meter strength.",
+      "fr": "Lisez un rapport vocal à deux chiffres de gauche à droite : lisibilité d’abord, puis intensité au S-mètre."
+    },
+    {
+      "level": 2,
+      "en": "Look up each digit on its own scale, then combine the two descriptions.",
+      "fr": "Repérez chaque chiffre sur sa propre échelle, puis combinez les deux descriptions."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "report-what-reaches-your-receiver"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

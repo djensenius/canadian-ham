@@ -6,75 +6,6 @@ import CanadianHamMorseEngine
 import Foundation
 import SwiftData
 
-struct ApplePreferences: Codable, Equatable, Sendable {
-    enum PracticeMode: String, Codable, CaseIterable, Identifiable, Sendable {
-        case immediate
-        case reviewLater = "review-later"
-
-        var id: String { rawValue }
-
-        var label: String {
-            switch self {
-            case .immediate: "Immediate feedback"
-            case .reviewLater: "Review later"
-            }
-        }
-    }
-
-    enum Theme: String, Codable, CaseIterable, Identifiable, Sendable {
-        case system
-        case light
-        case dark
-
-        var id: String { rawValue }
-        var label: String { rawValue.capitalized }
-    }
-
-    enum LanguagePreference: String, Codable, CaseIterable, Identifiable, Sendable {
-        case system
-        case english = "en"
-        case french = "fr"
-
-        var id: String { rawValue }
-
-        func resolvedLanguage(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
-            switch self {
-            case .system:
-                Self.systemLanguage(preferredLanguages: preferredLanguages)
-            case .english:
-                .english
-            case .french:
-                .french
-            }
-        }
-
-        func requiresInterfaceRestart(
-            currentLocalizations: [String] = Bundle.main.preferredLocalizations,
-            preferredLanguages: [String] = Locale.preferredLanguages
-        ) -> Bool {
-            resolvedLanguage(preferredLanguages: preferredLanguages) != BankLanguage.systemPreferred(preferredLanguages: currentLocalizations)
-        }
-
-        static func systemLanguage(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
-            BankLanguage.systemPreferred(preferredLanguages: preferredLanguages)
-        }
-    }
-
-    var practiceMode: PracticeMode
-    var examTimerEnabled: Bool
-    var language: LanguagePreference
-    var theme: Theme
-    var activeBankId: CourseBankID
-
-    static let `default` = ApplePreferences(
-        practiceMode: .immediate,
-        examTimerEnabled: false,
-        language: .system,
-        theme: .system,
-        activeBankId: .basic
-    )
-}
-
 enum ICloudSyncDatabaseSelection: Equatable, Sendable {
     case none
     case privateDatabase(String)
@@ -208,6 +139,7 @@ extension BankLanguage: Codable {}
 struct ProgressExportV1: Codable, Equatable, Sendable {
     let schema: String
     let version: Int
+    let lessonIdVersion: Int?
     let exportedAt: String
     let bankId: String
     let questionProgress: [QuestionProgressRecord]
@@ -221,6 +153,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
     init(
         schema: String,
         version: Int,
+        lessonIdVersion: Int? = nil,
         exportedAt: String,
         bankId: String,
         questionProgress: [QuestionProgressRecord],
@@ -233,6 +166,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
     ) {
         self.schema = schema
         self.version = version
+        self.lessonIdVersion = lessonIdVersion
         self.exportedAt = exportedAt
         self.bankId = bankId
         self.questionProgress = questionProgress
@@ -248,6 +182,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schema = try container.decode(String.self, forKey: .schema)
         version = try container.decode(Int.self, forKey: .version)
+        lessonIdVersion = container.contains(.lessonIdVersion) ? try container.decode(Int.self, forKey: .lessonIdVersion) : nil
         exportedAt = try container.decode(String.self, forKey: .exportedAt)
         bankId = try container.decodeIfPresent(String.self, forKey: .bankId) ?? basicBankId
         questionProgress = try container.decode([QuestionProgressRecord].self, forKey: .questionProgress)
@@ -279,6 +214,60 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
     let officialQuestionIds: [String]
     let incorrectOfficialQuestionIds: [String]
     let incorrectConceptCheckIds: [String]
+    let answeredWithHelpIds: [String]?
+
+    init(
+        id: String,
+        quizId: String,
+        lessonId: String,
+        submittedAt: String,
+        correct: Int,
+        total: Int,
+        percent: Double,
+        officialQuestionIds: [String],
+        incorrectOfficialQuestionIds: [String],
+        incorrectConceptCheckIds: [String],
+        answeredWithHelpIds: [String]? = nil
+    ) {
+        self.id = id
+        self.quizId = quizId
+        self.lessonId = lessonId
+        self.submittedAt = submittedAt
+        self.correct = correct
+        self.total = total
+        self.percent = percent
+        self.officialQuestionIds = officialQuestionIds
+        self.incorrectOfficialQuestionIds = incorrectOfficialQuestionIds
+        self.incorrectConceptCheckIds = incorrectConceptCheckIds
+        self.answeredWithHelpIds = answeredWithHelpIds
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        quizId = try container.decode(String.self, forKey: .quizId)
+        lessonId = try container.decode(String.self, forKey: .lessonId)
+        submittedAt = try container.decode(String.self, forKey: .submittedAt)
+        correct = try container.decode(Int.self, forKey: .correct)
+        total = try container.decode(Int.self, forKey: .total)
+        percent = try container.decode(Double.self, forKey: .percent)
+        officialQuestionIds = try container.decode([String].self, forKey: .officialQuestionIds)
+        incorrectOfficialQuestionIds = try container.decode([String].self, forKey: .incorrectOfficialQuestionIds)
+        incorrectConceptCheckIds = try container.decode([String].self, forKey: .incorrectConceptCheckIds)
+        if container.contains(.answeredWithHelpIds) {
+            let ids = try container.decode([String].self, forKey: .answeredWithHelpIds)
+            guard Self.validAnsweredWithHelpIds(ids, officialQuestionIds: officialQuestionIds) else {
+                throw DecodingError.dataCorruptedError(forKey: .answeredWithHelpIds, in: container, debugDescription: "Help IDs must be sorted unique official IDs from this attempt.")
+            }
+            answeredWithHelpIds = ids
+        } else {
+            answeredWithHelpIds = nil
+        }
+    }
+
+    static func validAnsweredWithHelpIds(_ ids: [String], officialQuestionIds: [String]) -> Bool {
+        ids == ids.sorted() && Set(ids).count == ids.count && ids.allSatisfy(officialQuestionIds.contains)
+    }
 }
 
 struct ExportedPreferences: Codable, Equatable, Sendable {
@@ -656,6 +645,7 @@ final class ProgressStoreService: ObservableObject {
     @Published private(set) var iCloudAccountSignalError: String?
 
     private static let legacyEnglishLanguageMigrationMarkerKey = "CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete"
+    static let task4610LessonSplitMigrationMarkerKey = "CanadianHam.progress.task46_10LessonSplitMigrationComplete"
     private static let appleLanguagesLastAppliedPreferenceKey = "CanadianHam.preferences.appleLanguagesLastApplied"
     private static let appleLanguagesPreferenceKey = "AppleLanguages"
 
@@ -711,6 +701,7 @@ final class ProgressStoreService: ObservableObject {
         self.preferences = try loadPreferences()
         try adoptLegacyDeviceRowsIfNeeded()
         try migrateLearningProgressFromLegacyStorageIfNeeded()
+        try migrateTask4610LessonReferencesIfNeeded()
 #if ICLOUD_SYNC
         if iCloudSyncEnabled, startICloudMonitoring {
             startICloudAccountMonitoring()
@@ -918,7 +909,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let configuration: ModelConfiguration
         if isStoredInMemoryOnly {
             configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
@@ -929,7 +920,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func makeSplitModelContainer(iCloudSyncEnabled: Bool, isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV4.self)
         let plan = configurationPlan(iCloudSyncEnabled: iCloudSyncEnabled)
         let progressSchema = Schema([QuestionProgressEntity.self, ExamAttemptEntity.self, LessonProgressEntity.self, LessonQuizAttemptEntity.self, MorseCourseProgressEntity.self])
         let preferencesSchema = Schema([PreferencesEntity.self])
@@ -1333,7 +1324,7 @@ final class ProgressStoreService: ObservableObject {
             try context.delete(model: LessonProgressEntity.self)
             try context.delete(model: LessonQuizAttemptEntity.self)
             try removeMorseCourseProgressIfPresent()
-            try context.delete(model: PreferencesEntity.self)
+            if let entity = try existingPreferencesEntity() { context.delete(entity) }
             defaults.removeObject(forKey: Self.activeBankPreferenceKey)
             preferences = .default
             if layout == .split {
@@ -1369,6 +1360,7 @@ final class ProgressStoreService: ObservableObject {
         return ProgressExportV1(
             schema: "canadian-ham.progress-export",
             version: 1,
+            lessonIdVersion: LessonIDContentVersion.current,
             exportedAt: exportedAt,
             bankId: bank.manifest.bankId,
             questionProgress: questionProgress,
@@ -1405,6 +1397,7 @@ final class ProgressStoreService: ObservableObject {
         if !errors.isEmpty {
             throw ProgressStoreError.validationFailed(errors)
         }
+        let data = try migratedProgressExportForTask4610(data)
 
         let usableSyncDeviceRows = try usableSyncDeviceRows(from: data, bank: bank)
         let previousSnapshot = try snapshotForRollback()
@@ -1489,7 +1482,179 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
+    private func migratedProgressExportForTask4610(_ data: ProgressExportV1) throws -> ProgressExportV1 {
+        let migratesTopLevelRows = (data.lessonIdVersion ?? LessonIDContentVersion.legacy) == LessonIDContentVersion.legacy
+        let decodedLessonProgress = try decodeArchivedArray(data.lessonProgress, as: LessonProgressRecord.self)
+        let decodedLessonQuizAttempts = try decodeArchivedArray(data.lessonQuizAttempts, as: LessonQuizAttempt.self)
+        var lessonProgress = migratesTopLevelRows ? migrateTask4610LessonProgress(decodedLessonProgress) : decodedLessonProgress
+        let lessonQuizAttempts = migratesTopLevelRows ? migrateTask4610LessonQuizAttempts(decodedLessonQuizAttempts) : decodedLessonQuizAttempts
+        let syncDeviceRows = data.syncDeviceRows.map(migrateTask4610SyncDeviceRows)
+        if migratesTopLevelRows, let rawRows = data.syncDeviceRows, let migratedRows = syncDeviceRows,
+           ProgressSyncMerge.deduplicateDeviceLessonProgress(rawRows.lessonProgress) == decodedLessonProgress.sorted(by: { $0.lessonId < $1.lessonId }) {
+            lessonProgress = ProgressSyncMerge.deduplicateDeviceLessonProgress(migratedRows.lessonProgress)
+        }
+        return ProgressExportV1(
+            schema: data.schema,
+            version: data.version,
+            lessonIdVersion: LessonIDContentVersion.isSupported(data.lessonIdVersion) ? LessonIDContentVersion.current : data.lessonIdVersion,
+            exportedAt: data.exportedAt,
+            bankId: data.bankId,
+            questionProgress: data.questionProgress,
+            examAttempts: data.examAttempts,
+            lessonProgress: try archivedArray(lessonProgress),
+            lessonQuizAttempts: try archivedArray(lessonQuizAttempts),
+            morseCourseProgress: data.morseCourseProgress,
+            syncDeviceRows: syncDeviceRows,
+            preferences: data.preferences
+        )
+    }
+
+    private func migrateTask4610SyncDeviceRows(_ rows: ProgressSyncDeviceRows) -> ProgressSyncDeviceRows {
+        ProgressSyncDeviceRows(
+            questionProgress: rows.questionProgress,
+            examAttempts: rows.examAttempts,
+            lessonProgress: migrateTask4610DeviceLessonProgress(rows.lessonProgress),
+            lessonQuizAttempts: rows.lessonQuizAttempts.flatMap { row in
+                guard LessonIDContentVersion.isSupported(row.lessonIdVersion) else { return [row] }
+                guard row.lessonIdVersion != LessonIDContentVersion.current else { return [row] }
+                return migrateTask4610LessonQuizAttempts([row.attempt]).map { DeviceLessonQuizAttemptRecord(deviceId: row.deviceId, attempt: $0, lessonIdVersion: LessonIDContentVersion.current) }
+            },
+            morseCourseProgress: rows.morseCourseProgress
+        )
+    }
+
+    private func migrateTask4610LessonProgress(_ records: [LessonProgressRecord]) -> [LessonProgressRecord] {
+        let sourcesByDestination: [String: [String]] = [
+            "L-001-03": ["L-001-03"],
+            "L-001-05": ["L-001-03", "L-001-05"],
+            "L-005-04": ["L-005-04"],
+            "L-005-05": ["L-005-04", "L-005-05"],
+            "L-005-06": ["L-005-05"],
+            "L-008-01": ["L-008-01", "L-008-02"],
+            "L-008-02": ["L-008-01", "L-008-02"],
+        ]
+        let byId = Dictionary(records.map { ($0.lessonId, $0) }, uniquingKeysWith: { _, last in last })
+        let destinations = Set(records.map(\.lessonId)).union(sourcesByDestination.keys)
+        return destinations.sorted().compactMap { lessonId in
+            let sourceIds = sourcesByDestination[lessonId] ?? [lessonId]
+            let sources = sourceIds.compactMap { byId[$0] }
+            guard sources.count == sourceIds.count else { return nil }
+            return LessonProgressRecord(
+                lessonId: lessonId,
+                readAt: sources.map(\.readAt).max()!,
+                readCount: sources.map(\.readCount).min()!
+            )
+        }
+    }
+
+    private func migrateTask4610DeviceLessonProgress(_ rows: [DeviceLessonProgressRecord]) -> [DeviceLessonProgressRecord] {
+        let preserved = rows.filter { !LessonIDContentVersion.isSupported($0.lessonIdVersion) || $0.lessonIdVersion == LessonIDContentVersion.current }
+        let legacy = rows.filter { LessonIDContentVersion.isSupported($0.lessonIdVersion) && $0.lessonIdVersion != LessonIDContentVersion.current }
+        return preserved + Dictionary(grouping: legacy, by: \.deviceId).values.flatMap { deviceRows in
+            migrateTask4610LessonProgress(ProgressSyncMerge.deduplicateDeviceLessonProgress(deviceRows)).map {
+                DeviceLessonProgressRecord(deviceId: deviceRows[0].deviceId, record: $0, lessonIdVersion: LessonIDContentVersion.current)
+            }
+        }
+    }
+
+    private func migrateTask4610LessonQuizAttempts(_ attempts: [LessonQuizAttempt]) -> [LessonQuizAttempt] {
+        let targetsByQuizId: [String: [(quizId: String, lessonId: String, prefixes: [String])]] = [
+            "QZ-L-005-04-A": [
+                ("QZ-L-005-04-A", "L-005-04", ["B-005-007-", "B-005-008-"]),
+                ("QZ-L-005-05-A", "L-005-05", ["B-005-009-", "B-005-010-", "B-005-012-"]),
+            ],
+            "QZ-L-005-05-A": [
+                ("QZ-L-005-05-A", "L-005-05", ["B-005-009-", "B-005-010-", "B-005-012-"]),
+                ("QZ-L-005-06-A", "L-005-06", ["B-005-011-", "B-005-013-"]),
+            ],
+            "QZ-L-008-01-A": [
+                ("QZ-L-008-01-A", "L-008-01", ["B-008-001-", "B-008-002-", "B-008-005-"]),
+                ("QZ-L-008-02-A", "L-008-02", ["B-008-003-", "B-008-004-"]),
+            ],
+            "QZ-L-008-02-A": [
+                ("QZ-L-008-01-A", "L-008-01", ["B-008-001-", "B-008-002-", "B-008-005-"]),
+                ("QZ-L-008-02-A", "L-008-02", ["B-008-003-", "B-008-004-"]),
+            ],
+            "QZ-L-001-03-A": [
+                ("QZ-L-001-03-A", "L-001-03", ["B-001-010-", "B-001-011-", "B-001-012-", "B-001-013-"]),
+                ("QZ-L-001-05-A", "L-001-05", ["B-001-014-", "B-001-020-", "B-001-021-"]),
+            ],
+        ]
+        // Ordered as in 350a3b53. Nil explicitly drops the old filter checks:
+        // their text has no current equivalent, despite reuse of their IDs.
+        let conceptMapping: [(old: String, new: String?)] = [
+            ("QZ-L-005-04-A-C1", "QZ-L-005-04-A-C1"),
+            ("QZ-L-005-04-A-C2", "QZ-L-005-05-A-C1"),
+            ("QZ-L-005-04-A-C3", "QZ-L-005-05-A-C2"),
+            ("QZ-L-005-05-A-C1", "QZ-L-005-06-A-C1"),
+            ("QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"),
+            ("QZ-L-005-05-A-C3", "QZ-L-005-06-A-C2"),
+            ("QZ-L-008-01-A-C1", "QZ-L-008-01-A-C1"),
+            ("QZ-L-008-01-A-C2", "QZ-L-008-01-A-C2"),
+            ("QZ-L-008-01-A-C3", "QZ-L-008-01-A-C3"),
+            ("QZ-L-008-02-A-C1", "QZ-L-008-02-A-C1"),
+            ("QZ-L-008-02-A-C2", nil),
+            ("QZ-L-008-02-A-C3", nil),
+        ]
+        var migrated: [String: LessonQuizAttempt] = [:]
+        for attempt in attempts {
+            guard let targets = targetsByQuizId[attempt.quizId] else {
+                migrated[attempt.id] = attempt
+                continue
+            }
+            // Partial attempts record a concept count, not correct concept IDs. Include
+            // explicit wrong IDs first, then fill only the remaining slots in UI order.
+            let oldConcepts = conceptMapping.filter { $0.old.hasPrefix("\(attempt.quizId)-C") }
+            let wrongConceptIDs = Set(attempt.incorrectConceptCheckIds)
+            let remainingConceptCount = max(0, attempt.total - attempt.officialQuestionIds.count - wrongConceptIDs.count)
+            let answered = wrongConceptIDs.union(oldConcepts.filter { !wrongConceptIDs.contains($0.old) }.prefix(remainingConceptCount).map(\.old))
+            let assignedConcepts = oldConcepts.filter { answered.contains($0.old) }.compactMap(\.new)
+            let wrongConcepts = oldConcepts.filter { attempt.incorrectConceptCheckIds.contains($0.old) }.compactMap(\.new)
+            // Inconsistent historical scores must not gain correct answers. Allocate the
+            // recorded budget to the original destination first, then sorted quiz IDs.
+            var remainingCorrect = max(0, attempt.correct)
+            let orderedTargets = targets.sorted {
+                if ($0.quizId == attempt.quizId) != ($1.quizId == attempt.quizId) { return $0.quizId == attempt.quizId }
+                return $0.quizId < $1.quizId
+            }
+            for target in orderedTargets {
+                let officialQuestionIds = attempt.officialQuestionIds.filter { questionId in target.prefixes.contains { questionId.hasPrefix($0) } }
+                let incorrectOfficialQuestionIds = attempt.incorrectOfficialQuestionIds.filter { officialQuestionIds.contains($0) }
+                let concepts = assignedConcepts.filter { $0.hasPrefix("\(target.quizId)-C") }
+                let incorrectConceptCheckIds = wrongConcepts.filter { concepts.contains($0) }
+                let total = officialQuestionIds.count + concepts.count
+                if total == 0 { continue }
+                let correct = min(remainingCorrect, officialQuestionIds.count - incorrectOfficialQuestionIds.count + concepts.count - incorrectConceptCheckIds.count)
+                remainingCorrect -= correct
+                let id = target.quizId == attempt.quizId ? attempt.id : "\(attempt.id)::\(target.quizId)"
+                migrated[id] = LessonQuizAttempt(
+                    id: id,
+                    quizId: target.quizId,
+                    lessonId: target.lessonId,
+                    submittedAt: attempt.submittedAt,
+                    correct: correct,
+                    total: total,
+                    percent: Double(correct) / Double(total) * 100,
+                    officialQuestionIds: officialQuestionIds,
+                    incorrectOfficialQuestionIds: incorrectOfficialQuestionIds,
+                    incorrectConceptCheckIds: incorrectConceptCheckIds,
+                    answeredWithHelpIds: attempt.answeredWithHelpIds.map { $0.filter(officialQuestionIds.contains) }
+                )
+            }
+        }
+        return migrated.values.sorted { lhs, rhs in
+            lhs.submittedAt == rhs.submittedAt ? lhs.id < rhs.id : lhs.submittedAt < rhs.submittedAt
+        }
+    }
+
     func validate(_ data: ProgressExportV1, bank: QuestionBank) -> [String] {
+        let errors = validateProgressExport(data, bank: bank)
+        guard errors.isEmpty else { return errors }
+        guard let migrated = try? migratedProgressExportForTask4610(data) else { return errors }
+        return validateProgressExport(migrated, bank: bank)
+    }
+
+    private func validateProgressExport(_ data: ProgressExportV1, bank: QuestionBank) -> [String] {
         var errors: [String] = []
         let knownQuestionIds = Set(bank.questions.map(\.id))
         let knownCategoryIds = Set(bank.categories.map(\.id))
@@ -1497,6 +1662,7 @@ final class ProgressStoreService: ObservableObject {
 
         if data.schema != "canadian-ham.progress-export" { errors.append(String(localized: "Import file schema is not canadian-ham.progress-export.")) }
         if data.version != 1 { errors.append(String(localized: "Import file version must be 1.")) }
+        if !LessonIDContentVersion.isSupported(data.lessonIdVersion) { errors.append(String(localized: "Import lessonIdVersion must be 1 or 2 when present.")) }
         if data.bankId != bank.manifest.bankId { errors.append(String(localized: "Import bankId must be \(bank.manifest.bankId).")) }
         appendTimestampError(&errors, value: data.exportedAt, field: String(localized: "Import exportedAt"))
 
@@ -1510,6 +1676,8 @@ final class ProgressStoreService: ObservableObject {
             if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).correctAttempts must be between 0 and attempts.")) }
             appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).lastAttemptedAt")
             if record.recentResults.count > 5 { errors.append(String(localized: "\(prefix).recentResults must contain at most five booleans.")) }
+            if record.recentAnsweredWithHelp.count > 5 { errors.append(String(localized: "\(prefix).recentAnsweredWithHelp must contain at most five booleans.")) }
+            if record.recentAnsweredWithHelp.count != record.recentResults.count { errors.append(String(localized: "\(prefix).recentAnsweredWithHelp must have the same length as recentResults.")) }
             if !(0...5).contains(record.leitner.box) { errors.append(String(localized: "\(prefix).leitner.box must be an integer between 0 and 5.")) }
             appendTimestampError(&errors, value: record.leitner.dueAt, field: "\(prefix).leitner.dueAt")
         }
@@ -1537,6 +1705,7 @@ final class ProgressStoreService: ObservableObject {
             knownQuestionIds: knownQuestionIds,
             knownLessonIds: bank.knownLessonIds,
             lessonQuizzesById: bank.lessonQuizzesById,
+            lessonIdVersion: data.lessonIdVersion,
             errors: &errors
         )
         if let morseCourseProgress = data.morseCourseProgress {
@@ -1577,6 +1746,8 @@ final class ProgressStoreService: ObservableObject {
             if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).record.correctAttempts must be between 0 and attempts.")) }
             appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).record.lastAttemptedAt")
             if record.recentResults.count > 5 { errors.append(String(localized: "\(prefix).record.recentResults must contain at most five booleans.")) }
+            if record.recentAnsweredWithHelp.count > 5 { errors.append(String(localized: "\(prefix).record.recentAnsweredWithHelp must contain at most five booleans.")) }
+            if record.recentAnsweredWithHelp.count != record.recentResults.count { errors.append(String(localized: "\(prefix).record.recentAnsweredWithHelp must have the same length as recentResults.")) }
             if !(0...5).contains(record.leitner.box) { errors.append(String(localized: "\(prefix).record.leitner.box must be an integer between 0 and 5.")) }
             appendTimestampError(&errors, value: record.leitner.dueAt, field: "\(prefix).record.leitner.dueAt")
         }
@@ -1600,6 +1771,7 @@ final class ProgressStoreService: ObservableObject {
         for (index, row) in rows.lessonProgress.enumerated() {
             let prefix = "Import syncDeviceRows.lessonProgress[\(index)]"
             if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            if !LessonIDContentVersion.isSupported(row.lessonIdVersion) { errors.append(String(localized: "\(prefix).lessonIdVersion must be 1 or 2 when present.")) }
             if let archived = try? archivedArray([row.record]) {
                 if bank.courseBankID.hasLessons { validateLessonProgress(archived, knownLessonIds: bank.knownLessonIds, errors: &errors) }
             } else {
@@ -1609,8 +1781,9 @@ final class ProgressStoreService: ObservableObject {
         for (index, row) in rows.lessonQuizAttempts.enumerated() {
             let prefix = "Import syncDeviceRows.lessonQuizAttempts[\(index)]"
             if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            if !LessonIDContentVersion.isSupported(row.lessonIdVersion) { errors.append(String(localized: "\(prefix).lessonIdVersion must be 1 or 2 when present.")) }
             if let archived = try? archivedArray([row.attempt]) {
-                if bank.courseBankID.hasLessons { validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, errors: &errors) }
+                if bank.courseBankID.hasLessons { validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, lessonIdVersion: row.lessonIdVersion, errors: &errors) }
             } else {
                 errors.append(String.localizedStringWithFormat(String(localized: "%@.attempt must be a valid lesson quiz attempt."), "Import syncDeviceRows.lessonQuizAttempts[\(index)]"))
             }
@@ -1728,7 +1901,9 @@ final class ProgressStoreService: ObservableObject {
                 correctAttempts: ownCorrectAttempts,
                 lastAttemptedAt: record.lastAttemptedAt,
                 lastResult: record.lastResult,
+                lastAnsweredWithHelp: record.lastAnsweredWithHelp,
                 recentResults: record.recentResults,
+                recentAnsweredWithHelp: record.recentAnsweredWithHelp,
                 leitner: record.leitner,
                 notes: record.notes
             )
@@ -1736,13 +1911,16 @@ final class ProgressStoreService: ObservableObject {
             writeRecord = record
         }
         let data = try encoder.encode(writeRecord.recentResults)
+        let recentAnsweredWithHelpData = try encoder.encode(writeRecord.recentAnsweredWithHelp)
         if let entity = existing {
             entity.bankId = writeRecord.bankId
             entity.attempts = writeRecord.attempts
             entity.correctAttempts = writeRecord.correctAttempts
             entity.lastAttemptedAt = writeRecord.lastAttemptedAt
             entity.lastResult = writeRecord.lastResult.rawValue
+            entity.lastAnsweredWithHelp = writeRecord.lastAnsweredWithHelp
             entity.recentResultsData = data
+            entity.recentAnsweredWithHelpData = recentAnsweredWithHelpData
             entity.leitnerBox = writeRecord.leitner.box
             entity.dueAt = writeRecord.leitner.dueAt
             entity.notes = writeRecord.notes
@@ -1755,7 +1933,9 @@ final class ProgressStoreService: ObservableObject {
                 correctAttempts: writeRecord.correctAttempts,
                 lastAttemptedAt: writeRecord.lastAttemptedAt,
                 lastResult: writeRecord.lastResult.rawValue,
+                lastAnsweredWithHelp: writeRecord.lastAnsweredWithHelp,
                 recentResultsData: data,
+                recentAnsweredWithHelpData: recentAnsweredWithHelpData,
                 leitnerBox: writeRecord.leitner.box,
                 dueAt: writeRecord.leitner.dueAt,
                 notes: writeRecord.notes,
@@ -2190,6 +2370,35 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
+    private func migrateTask4610LessonReferencesIfNeeded() throws {
+        let markerKey = Self.task4610LessonSplitMigrationMarkerKey
+        let markerDescriptor = FetchDescriptor<PreferencesEntity>(predicate: #Predicate { $0.key == markerKey })
+        guard try context.fetch(markerDescriptor).isEmpty else { return }
+        let lessonRows = try deviceLessonProgressRows().map {
+            DeviceLessonProgressRecord(deviceId: $0.deviceId, record: $0.record, lessonIdVersion: LessonIDContentVersion.legacy)
+        }
+        let quizRows = try deviceLessonQuizAttemptRows()
+        try context.delete(model: LessonProgressEntity.self)
+        try context.delete(model: LessonQuizAttemptEntity.self)
+        for row in migrateTask4610DeviceLessonProgress(lessonRows) {
+            try upsertLessonProgress(row.record, deviceId: row.deviceId)
+        }
+        for row in quizRows {
+            for attempt in migrateTask4610LessonQuizAttempts([row.attempt]) {
+                try upsertLessonQuizAttempt(attempt, deviceId: row.deviceId)
+            }
+        }
+        // A keyed local preferences row is the durable marker. It participates in
+        // the same SwiftData transaction as the rewritten lesson/quiz rows, without
+        // changing a released versioned schema or relying on UserDefaults flushing.
+        context.insert(PreferencesEntity(
+            key: markerKey, practiceMode: "immediate", examTimerEnabled: false,
+            language: "system", theme: "system"
+        ))
+        try context.save()
+        objectWillChange.send()
+    }
+
     private func saveExamAttemptWithoutSave(_ attempt: StoredExamAttempt, deviceId: String? = nil) throws {
         let rowDeviceId = deviceId ?? localDeviceID
         let data = try encoder.encode(attempt)
@@ -2263,7 +2472,7 @@ final class ProgressStoreService: ObservableObject {
         try context.delete(model: ExamAttemptEntity.self)
         try context.delete(model: LessonProgressEntity.self)
         try context.delete(model: LessonQuizAttemptEntity.self)
-        try context.delete(model: PreferencesEntity.self)
+        if let entity = try existingPreferencesEntity() { context.delete(entity) }
         let entity = PreferencesEntity(
             practiceMode: snapshot.preferences.practiceMode.rawValue,
             examTimerEnabled: snapshot.preferences.examTimerEnabled,
@@ -2311,14 +2520,22 @@ final class ProgressStoreService: ObservableObject {
     private func deviceLessonProgressRows() throws -> [DeviceLessonProgressRecord] {
         let descriptor = FetchDescriptor<LessonProgressEntity>(sortBy: [SortDescriptor(\.lessonId), SortDescriptor(\.deviceId), SortDescriptor(\.readAt)])
         return try context.fetch(descriptor).map { entity in
-            DeviceLessonProgressRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, record: LessonProgressRecord(lessonId: entity.lessonId, readAt: entity.readAt, readCount: entity.readCount))
+            DeviceLessonProgressRecord(
+                deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId,
+                record: LessonProgressRecord(lessonId: entity.lessonId, readAt: entity.readAt, readCount: entity.readCount),
+                lessonIdVersion: LessonIDContentVersion.current
+            )
         }
     }
 
     private func deviceLessonQuizAttemptRows() throws -> [DeviceLessonQuizAttemptRecord] {
         let descriptor = FetchDescriptor<LessonQuizAttemptEntity>(sortBy: [SortDescriptor(\.submittedAt), SortDescriptor(\.deviceId), SortDescriptor(\.id)])
         return try context.fetch(descriptor).map { entity in
-            DeviceLessonQuizAttemptRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, attempt: try decoder.decode(LessonQuizAttempt.self, from: entity.payloadData))
+            DeviceLessonQuizAttemptRecord(
+                deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId,
+                attempt: try decoder.decode(LessonQuizAttempt.self, from: entity.payloadData),
+                lessonIdVersion: LessonIDContentVersion.current
+            )
         }
     }
 
@@ -2361,6 +2578,8 @@ final class ProgressStoreService: ObservableObject {
 
     private func questionProgressRecord(from entity: QuestionProgressEntity) throws -> QuestionProgressRecord {
         let recentResults = try decoder.decode([Bool].self, from: entity.recentResultsData)
+        let decodedRecentAnsweredWithHelp = (try? decoder.decode([Bool].self, from: entity.recentAnsweredWithHelpData)) ?? []
+        let recentAnsweredWithHelp = decodedRecentAnsweredWithHelp.count == recentResults.count ? decodedRecentAnsweredWithHelp : Array(repeating: false, count: recentResults.count)
         return QuestionProgressRecord(
             questionId: entity.questionId,
             bankId: entity.bankId,
@@ -2368,7 +2587,9 @@ final class ProgressStoreService: ObservableObject {
             correctAttempts: entity.correctAttempts,
             lastAttemptedAt: entity.lastAttemptedAt,
             lastResult: AnswerResult(rawValue: entity.lastResult) ?? .incorrect,
+            lastAnsweredWithHelp: entity.lastAnsweredWithHelp,
             recentResults: recentResults,
+            recentAnsweredWithHelp: recentAnsweredWithHelp,
             leitner: LeitnerState(box: entity.leitnerBox, dueAt: entity.dueAt),
             notes: entity.notes
         )
@@ -2469,11 +2690,21 @@ private func validateLessonProgress(_ records: [ArchivedJSON], knownLessonIds: S
     }
 }
 
+// Version-1 membership before TASK-46.10, from content/quizzes at 350a3b53658c64f12e89c0b48d6b97c7c3040e88.
+private let legacyLessonQuizMembership: [String: (officialQuestionIds: Set<String>, conceptCheckIds: Set<String>)] = [
+    "QZ-L-005-04-A": (["B-005-007-001", "B-005-007-005", "B-005-007-009", "B-005-008-003", "B-005-008-004", "B-005-008-005", "B-005-008-009", "B-005-008-011", "B-005-009-003", "B-005-009-011", "B-005-010-001", "B-005-010-009"], ["QZ-L-005-04-A-C1", "QZ-L-005-04-A-C2", "QZ-L-005-04-A-C3"]),
+    "QZ-L-005-05-A": (["B-005-011-001", "B-005-011-002", "B-005-011-004", "B-005-011-008", "B-005-012-001", "B-005-012-006", "B-005-012-008", "B-005-012-011", "B-005-013-001", "B-005-013-005", "B-005-013-006", "B-005-013-007", "B-005-013-010"], ["QZ-L-005-05-A-C1", "QZ-L-005-05-A-C2", "QZ-L-005-05-A-C3"]),
+    "QZ-L-008-01-A": (["B-008-001-001", "B-008-001-004", "B-008-001-006", "B-008-001-011", "B-008-002-001", "B-008-002-005", "B-008-002-011", "B-008-003-005"], ["QZ-L-008-01-A-C1", "QZ-L-008-01-A-C2", "QZ-L-008-01-A-C3"]),
+    "QZ-L-008-02-A": (["B-008-004-002", "B-008-004-005", "B-008-004-006", "B-008-004-008", "B-008-004-010", "B-008-005-002", "B-008-005-007", "B-008-005-009"], ["QZ-L-008-02-A-C1", "QZ-L-008-02-A-C2", "QZ-L-008-02-A-C3"]),
+    "QZ-L-001-03-A": (["B-001-010-001", "B-001-010-002", "B-001-010-003", "B-001-010-004", "B-001-010-005", "B-001-010-006", "B-001-010-007", "B-001-010-008", "B-001-010-009", "B-001-010-010", "B-001-011-001", "B-001-011-002", "B-001-011-003", "B-001-011-004", "B-001-011-005", "B-001-011-006", "B-001-011-007", "B-001-011-008", "B-001-011-009", "B-001-011-010", "B-001-012-001", "B-001-012-002", "B-001-012-003", "B-001-012-004", "B-001-013-001", "B-001-013-002", "B-001-013-003", "B-001-013-004", "B-001-013-005", "B-001-013-006", "B-001-013-007", "B-001-013-008", "B-001-013-009", "B-001-013-010", "B-001-013-011", "B-001-014-001", "B-001-014-002", "B-001-014-003", "B-001-014-004", "B-001-014-005", "B-001-014-006", "B-001-014-007", "B-001-014-008", "B-001-014-009", "B-001-014-010", "B-001-014-011"], []),
+]
+
 private func validateLessonQuizAttempts(
     _ attempts: [ArchivedJSON],
     knownQuestionIds: Set<String>,
     knownLessonIds: Set<String>,
     lessonQuizzesById: [String: BankLessonQuiz],
+    lessonIdVersion: Int? = LessonIDContentVersion.current,
     errors: inout [String]
 ) {
     var ids = Set<String>()
@@ -2497,6 +2728,10 @@ private func validateLessonQuizAttempts(
             quiz = nil
             errors.append(String(localized: "\(prefix).quizId must be a non-empty string."))
         }
+
+        let legacyMembership = (lessonIdVersion ?? LessonIDContentVersion.legacy) == LessonIDContentVersion.legacy
+            ? attempt.storage["quizId"]?.stringValue.flatMap { legacyLessonQuizMembership[$0] }
+            : nil
 
         if let lessonId = attempt.storage["lessonId"]?.nonEmptyStringValue {
             if !knownLessonIds.contains(lessonId) || (quiz != nil && lessonId != quiz?.lessonId) {
@@ -2531,9 +2766,15 @@ private func validateLessonQuizAttempts(
 
         if let officialQuestionIds = stringArray(attempt.storage["officialQuestionIds"]) {
             let quizQuestionIds = Set(quiz?.officialQuestionIds ?? [])
+            let belongsToQuiz = officialQuestionIds.allSatisfy { questionId in
+                if let legacyMembership {
+                    return legacyMembership.officialQuestionIds.contains(questionId)
+                }
+                return quizQuestionIds.contains(questionId)
+            }
             if !officialQuestionIds.allSatisfy(knownQuestionIds.contains) {
                 errors.append(String(localized: "\(prefix).officialQuestionIds must contain known question IDs."))
-            } else if quiz != nil && !officialQuestionIds.allSatisfy(quizQuestionIds.contains) {
+            } else if quiz != nil && !belongsToQuiz {
                 errors.append(String(localized: "\(prefix).officialQuestionIds must belong to the lesson quiz."))
             }
 
@@ -2556,8 +2797,18 @@ private func validateLessonQuizAttempts(
             }
         }
 
+        if let value = attempt.storage["answeredWithHelpIds"] {
+            let official = stringArray(attempt.storage["officialQuestionIds"]) ?? []
+            let valid = stringArray(value).map { ids in
+                LessonQuizAttempt.validAnsweredWithHelpIds(ids, officialQuestionIds: official) && ids.allSatisfy(knownQuestionIds.contains)
+            } ?? false
+            if !valid {
+                errors.append(String(localized: "\(prefix).answeredWithHelpIds must be sorted unique official question IDs from this attempt."))
+            }
+        }
+
         if let incorrectConceptCheckIds = stringArray(attempt.storage["incorrectConceptCheckIds"]) {
-            let conceptCheckIds = quiz?.conceptCheckIds ?? []
+            let conceptCheckIds = legacyMembership?.conceptCheckIds ?? quiz?.conceptCheckIds ?? []
             if quiz != nil && !incorrectConceptCheckIds.allSatisfy(conceptCheckIds.contains) {
                 errors.append(String(localized: "\(prefix).incorrectConceptCheckIds must contain known concept check IDs for the quiz."))
             }

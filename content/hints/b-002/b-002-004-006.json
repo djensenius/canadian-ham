@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-004-006",
+  "questionId": "B-002-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review net etiquette when the scheduled frequency is busy.",
+      "fr": "Revoyez l’étiquette de réseau lorsque la fréquence prévue est occupée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "share-the-frequency-not-just-the-microphone"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-007",
+  "questionId": "B-008-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the key-click section of the lesson.",
+      "fr": "Revoyez la section sur les claquements de manipulation."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "key-clicks-and-waveform-shape"
+  },
+  "singleLevelReason": "Cause recall: another hint would name the waveform problem that selects the option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-012-004",
+  "questionId": "B-001-012-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review offences related to divulging non-broadcast radiocommunications.",
+      "fr": "Revoyez les infractions liées à la divulgation des radiocommunications non radiodiffusées."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-message-handling-stays-unpaid"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

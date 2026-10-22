@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-006-006",
+  "questionId": "B-004-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the tolerance percentage relates to resistor precision.",
+      "fr": "Revoyez le lien entre le pourcentage de tolérance et la précision d’une résistance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "tolerance-ranges"
+  },
+  "singleLevelReason": "Concept recall: a second hint would identify which percentage has the tightest spread.",
+  "referenceSheetSection": "resistor-colour-code",
+  "licenseClass": "original"
+}

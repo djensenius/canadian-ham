@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-004-007",
+  "questionId": "B-005-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "To find voltage across a resistor, use E = I x R.",
+      "fr": "Pour trouver la tension aux bornes d'une résistance, utilisez E = I x R."
+    },
+    {
+      "level": 2,
+      "en": "Substitute the given values as E = 0.44 A x 50 ohms, then keep the unit as volts.",
+      "fr": "Remplacez les valeurs données par E = 0,44 A x 50 ohms, puis gardez le volt comme unité."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "ohms-law"
+  },
+  "referenceSheetSection": "ohms-law",
+  "licenseClass": "original"
+}

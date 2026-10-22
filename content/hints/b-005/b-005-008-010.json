@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-008-010",
+  "questionId": "B-005-008-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Break the line loss into repeated basic halving steps, then apply them to the transmitter power.",
+      "fr": "Décomposez la perte de ligne en étapes de réduction de moitié répétées, puis appliquez-les à la puissance de l'émetteur."
+    },
+    {
+      "level": 2,
+      "en": "The stated loss is two basic negative steps, so start with 100 W and halve it twice.",
+      "fr": "La perte indiquée contient deux petits pas négatifs; partez donc de 100 W et réduisez cette valeur de moitié deux fois."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original"
+}

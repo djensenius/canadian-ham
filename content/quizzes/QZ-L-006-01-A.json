@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-01-A-C1",
-      "prompt": { "en": "An HF tuner has only an unbalanced output, but the antenna will be fed with window line. Where should the balanced-to-unbalanced device go?", "fr": null },
+      "prompt": {
+        "en": "A balanced-output tuner is replaced by one with only an unbalanced output. The window line and dipole are unchanged. Which new boundary needs attention?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "At the tuner output before the window line begins", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Midway along the window line so the losses split evenly", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Only at the antenna feed point after the window-line run", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Inside the radio, because the transceiver output is already balanced", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The coax-to-tuner input, because the tuner's matching network balances the line on its output side.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A matching network can transform impedance without providing a balanced output. The replacement's unbalanced output still meets the balanced window line at its output connector.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The dipole feed point, because the window line carries the tuner's unbalanced current up to the antenna.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Window line is balanced. The balance transition needs attention before that run, not after it.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The new tuner output feeding the existing balanced line.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The replacement creates an unbalanced-to-balanced transition before the window line begins.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The midpoint of the window line, to equalize losses in its two halves.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Equal cable halves do not define a balance transition. Follow the electrical boundary instead.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The transition belongs where balanced and unbalanced parts meet; in this setup, that is where the unbalanced tuner output hands off to the window line.", "fr": null }
+      "explanation": {
+        "en": "A replacement component can create a new interface requirement even if the antenna itself stays unchanged.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-01-A-C2",
-      "prompt": { "en": "Why is open-wire line usually kept away from metal gutters and railings?", "fr": null },
+      "prompt": {
+        "en": "A coax jumper will be wound tightly on a ferrite toroid for common-mode control. Which dielectric choice follows the construction guidance?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Metal nearby can disturb the fields and change the line behaviour.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Metal nearby turns the route into a better balanced-line support.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The line needs nearby metal to set its velocity factor.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Keeping it near metal is the normal way to reduce line loss.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Choose foam because its lower loss also makes it more resistant to compression during winding.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Lower dielectric loss does not mean better resistance to compression. Solid dielectric better supports the centre conductor during tight winding.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Prefer solid dielectric to help keep the centre conductor from shifting toward the shield.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Solid dielectric supports the conductor during tight winding, reducing the risk of a short.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Choose the thinnest insulation because the shield alone keeps the conductor centred.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The dielectric separates and supports the conductors. Thinner insulation is not automatically safer.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Treat foam and solid dielectric as mechanically identical if both cables have the same Z0.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Equal characteristic impedance does not establish identical mechanical behaviour under tight winding.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Balanced line depends on geometry and surrounding fields; nearby conductors can upset the balance and impedance.", "fr": null }
+      "explanation": {
+        "en": "Choose cable for its mechanical job as well as attenuation and characteristic impedance.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-01-A-C3",
-      "prompt": { "en": "A dipole is fed with coax. Where is the balanced-to-unbalanced transition normally handled?", "fr": null },
+      "prompt": {
+        "en": "An older coax jumper passes a low-current continuity check. During a brief transmit test its connector becomes warm and RF readings turn intermittent. Which explanation best fits both observations?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "At the microphone connector", "fr": null }, "isCorrect": false },
-        { "text": { "en": "At the wall outlet", "fr": null }, "isCorrect": false },
-        { "text": { "en": "At the antenna feed point with a suitable balun or choke arrangement", "fr": null }, "isCorrect": true },
-        { "text": { "en": "By adding extra coax length anywhere in the run", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The continuity pass rules out a resistive contact; reflections from the antenna explain the heating instead.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A contact can pass a small test current yet heat under load. The continuity result does not rule out contact resistance, and reflections do not explain away the intermittent connector symptom.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The heating is ordinary distributed cable loss, with the connector simply showing the temperature change first.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Ordinary distributed loss does not explain intermittent behaviour at a warming connector. The local symptom points to the connection rather than normal attenuation along the cable.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The cable's nominal impedance rises as it warms, so intermittent RF readings are expected from an intact connector.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Normal warming does not make an intact connector intermittent. A cable's nominal impedance is not an explanation for this localized heating and loss of reliable contact.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A resistive contact can pass the small test current yet heat and become intermittent under transmit load.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The test current can pass through a poor contact. Greater current produces more heating at that resistance; inspect and restore or replace the faulty connection before reuse.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "The feed point is where the balanced antenna meets the unbalanced coax, so that is the natural place to handle the transition.", "fr": null }
+      "explanation": {
+        "en": "A low-current continuity pass can coexist with a contact fault under transmit load. Localized heating and intermittent readings are different evidence from an unbroken path at small current.",
+        "fr": null
+      }
     }
   ]
 }

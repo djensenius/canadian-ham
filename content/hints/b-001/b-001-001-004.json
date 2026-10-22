@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-001-004",
+  "questionId": "B-001-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "First ask what type of legal text sets a formal definition.",
+      "fr": "Demandez-vous d'abord quel type de texte juridique fixe une définition officielle."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "reference-facts-authority-comes-from-named-sources"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Any Hint 2 explaining where legal definitions of radio services live identifies the Regulations."
+}

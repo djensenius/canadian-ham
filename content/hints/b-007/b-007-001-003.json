@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-001-003",
+  "questionId": "B-007-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the main radio paths are named.",
+      "fr": "Revoyez la façon dont les principaux trajets radio sont nommés."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "the-main-radio-paths"
+  },
+  "singleLevelReason": "Term recall: a second hint would name or distinguish the correct propagation term; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

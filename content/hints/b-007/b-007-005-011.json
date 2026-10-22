@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-005-011",
+  "questionId": "B-007-005-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the long-term patterns that shape HF band choices.",
+      "fr": "Revoyez les rythmes à long terme qui orientent le choix des bandes HF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "solar-activity-and-the-solar-cycle"
+  },
+  "singleLevelReason": "Cause recall: a second hint would identify or eliminate the cyclical driver; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

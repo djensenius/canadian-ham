@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-005-002",
+  "questionId": "B-007-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the solar-cycle timing note.",
+      "fr": "Revoyez la note sur la durée du cycle solaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "solar-activity-and-the-solar-cycle"
+  },
+  "singleLevelReason": "Numeric recall: a second hint would identify or eliminate a cycle length; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

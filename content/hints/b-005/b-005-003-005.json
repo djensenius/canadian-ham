@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-003-005",
+  "questionId": "B-005-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use I = E / R: for a fixed supply, ask what must happen to the circuit's resistance for I to grow too large, then recall which fault does that.",
+      "fr": "Utilisez I = E / R : pour une alimentation fixe, demandez-vous ce qui doit arriver à la résistance du circuit pour que I devienne trop grand, puis rappelez-vous quelle panne produit cela."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "open-closed-and-short-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Fault-condition recall: a second hint would define or name the fault."
+}

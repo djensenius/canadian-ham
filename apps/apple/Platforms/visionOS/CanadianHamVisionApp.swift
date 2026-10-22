@@ -1,4 +1,6 @@
 import Accessibility
+import CanadianHamContent
+import CanadianHamEngine
 import SwiftUI
 
 @main
@@ -21,6 +23,7 @@ private struct VisionLaunchOptions {
     let answeredSourceIndex: Int?
     let colorScheme: ColorScheme?
     let initialLanguage: BankLanguage
+    let simulateContentLoadFailure: Bool
 
     init(arguments: [String] = ProcessInfo.processInfo.arguments) {
 #if DEBUG
@@ -34,6 +37,7 @@ private struct VisionLaunchOptions {
         default: colorScheme = nil
         }
         initialLanguage = BankLanguage.resolvedPreference(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments))
+        simulateContentLoadFailure = AppLaunchArguments.value(after: "-CanadianHamSimulateContentLoadFailure", in: arguments) == "content"
 #else
         _ = arguments
         initialScreen = .categories
@@ -42,6 +46,7 @@ private struct VisionLaunchOptions {
         answeredSourceIndex = nil
         colorScheme = nil
         initialLanguage = BankLanguage.systemPreferred()
+        simulateContentLoadFailure = false
 #endif
     }
 }
@@ -49,6 +54,7 @@ private struct VisionLaunchOptions {
 private enum VisionScreen: String {
     case categories
     case practice
+    case lesson
     case morse
     case about
 }
@@ -57,12 +63,15 @@ private struct CanadianHamVisionRootView: View {
     let launchOptions: VisionLaunchOptions
 
     @State private var bank: QuestionBank?
+    @State private var contentLibrary: ContentLibrary?
     @State private var loadError: String?
+    @State private var contentLoadError: String?
     @State private var screen: VisionScreen
     @State private var selectedCategoryID: String
     @State private var language: BankLanguage
     @State private var morseSettings = MorseTrainerSettings.load()
     @State private var practiceSession = VisionPracticeSessionState()
+    @State private var activeLessonLink: QuestionHintLessonLink?
 
     init(launchOptions: VisionLaunchOptions) {
         self.launchOptions = launchOptions
@@ -112,16 +121,27 @@ private struct CanadianHamVisionRootView: View {
             if let category = bank.categories.first(where: { $0.id == selectedCategoryID }) ?? bank.categories.first {
                 VisionPracticeView(
                     bank: bank,
+                    contentLibrary: contentLibrary,
                     category: category,
                     forcedQuestionID: launchOptions.practiceQuestionID,
                     answeredSourceIndex: launchOptions.answeredSourceIndex,
                     language: language,
                     session: $practiceSession,
                     onCategories: { screen = .categories },
-                    onAbout: { screen = .about }
+                    onAbout: { screen = .about },
+                    onOpenHintLesson: { link in
+                        activeLessonLink = link
+                        screen = .lesson
+                    }
                 )
             } else {
                 VisionMessageView(title: "No categories", message: String(localized: "The bundled question bank has no practice categories."), systemImage: "questionmark.folder")
+            }
+        case .lesson:
+            if let activeLessonLink, let contentLibrary, let lesson = contentLibrary.lessonsById[activeLessonLink.lessonId] {
+                VisionLessonView(lesson: lesson, sectionAnchor: activeLessonLink.sectionAnchor, onPractice: { screen = .practice })
+            } else {
+                VisionMessageView(title: "Lesson", message: contentLoadError ?? localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: PlatformLessonUnavailableError()), systemImage: "book.closed")
             }
         case .morse:
             VisionMorseView(settings: $morseSettings, onCategories: { screen = .categories })
@@ -136,6 +156,17 @@ private struct CanadianHamVisionRootView: View {
             bank = try QuestionBankStore.load()
         } catch {
             loadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
+            return
+        }
+
+        guard contentLibrary == nil, contentLoadError == nil else { return }
+        do {
+            if launchOptions.simulateContentLoadFailure {
+                throw PlatformContentLoadSimulationError()
+            }
+            contentLibrary = try ContentLibrary.load()
+        } catch {
+            contentLoadError = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -158,7 +189,7 @@ private struct VisionCategoryGridView: View {
                             .font(DesignTokens.FontScale.display.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
-                        Text("Offline Basic question-bank practice for visionOS")
+                        Text("Offline Basic question-bank practice")
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
@@ -323,6 +354,9 @@ private struct VisionPracticeSessionState {
     var answeredCount = 0
     var correctCount = 0
     var errorMessage: String?
+    var hintLevelsByQuestionId: [String: Int] = [:]
+    var hintQualifiedQuestionIds: Set<String> = []
+    var answeredWithHelpQuestionIds: Set<String> = []
 
     mutating func reset(for categoryID: String) {
         self.categoryID = categoryID
@@ -333,6 +367,9 @@ private struct VisionPracticeSessionState {
         answeredCount = 0
         correctCount = 0
         errorMessage = nil
+        hintLevelsByQuestionId = [:]
+        hintQualifiedQuestionIds = []
+        answeredWithHelpQuestionIds = []
     }
 
     mutating func resetIfNeeded(for categoryID: String) {
@@ -344,6 +381,7 @@ private struct VisionPracticeSessionState {
 
 private struct VisionPracticeView: View {
     let bank: QuestionBank
+    let contentLibrary: ContentLibrary?
     let category: BankCategory
     let forcedQuestionID: String?
     let answeredSourceIndex: Int?
@@ -351,6 +389,7 @@ private struct VisionPracticeView: View {
     @Binding var session: VisionPracticeSessionState
     let onCategories: () -> Void
     let onAbout: () -> Void
+    let onOpenHintLesson: (QuestionHintLessonLink) -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -361,6 +400,11 @@ private struct VisionPracticeView: View {
 
     private var correctAnswer: ShuffledAnswer? {
         AppleQuestionShuffle.correctAnswer(in: session.shuffledAnswers)
+    }
+
+    private var currentQuestionHint: QuestionHint? {
+        guard let question = session.currentQuestion, bank.courseBankID == .basic else { return nil }
+        return contentLibrary?.questionHintsByQuestionId[question.id]
     }
 
     var body: some View {
@@ -389,8 +433,22 @@ private struct VisionPracticeView: View {
                     VisionMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
                 } else if let currentQuestion = session.currentQuestion {
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.xl) {
-                        VisionQuestionCard(question: currentQuestion, category: category, language: language)
-                            .frame(maxWidth: .infinity)
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                            VisionQuestionCard(question: currentQuestion, category: category, language: language)
+                            if let hint = currentQuestionHint {
+                                VisionHintPanel(
+                                    hint: hint,
+                                    language: language,
+                                    visibleLevel: session.hintLevelsByQuestionId[currentQuestion.id] ?? 0,
+                                    answeredWithHelpQualified: session.hintQualifiedQuestionIds.contains(currentQuestion.id),
+                                    canRecordHelp: hintCanAffectAnswer(questionID: currentQuestion.id),
+                                    revealLevel: { level in revealHintLevel(questionID: currentQuestion.id, level: level) },
+                                    hintVisibleLongEnough: { qualifyAnsweredWithHelp(questionID: currentQuestion.id) },
+                                    openLesson: onOpenHintLesson
+                                )
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                             Text("Answers")
                                 .font(DesignTokens.FontScale.title.weight(.bold))
@@ -437,6 +495,14 @@ private struct VisionPracticeView: View {
 
     private func select(_ answer: ShuffledAnswer) {
         guard session.selectedSourceIndex == nil else { return }
+        if let question = session.currentQuestion {
+            let selection = PlatformPracticeSelectionLogic.selectAnswer(
+                questionID: question.id,
+                qualifiedQuestionIds: session.hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: session.answeredWithHelpQuestionIds
+            )
+            session.answeredWithHelpQuestionIds = selection.answeredWithHelpQuestionIds
+        }
         withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
             session.selectedSourceIndex = answer.sourceIndex
         }
@@ -444,6 +510,34 @@ private struct VisionPracticeView: View {
         if answer.isCorrect { session.correctCount += 1 }
         let announcement = answer.isCorrect ? String(localized: "Correct") : String(localized: "Incorrect")
         AccessibilityNotification.Announcement(announcement).post()
+    }
+
+    @discardableResult
+    private func revealHintLevel(questionID: String, level: Int) -> Bool {
+        let previousLevel = session.hintLevelsByQuestionId[questionID] ?? 0
+        let nextLevel = max(previousLevel, level)
+        guard nextLevel != previousLevel else { return false }
+        session.hintLevelsByQuestionId[questionID] = nextLevel
+        return true
+    }
+
+    private func qualifyAnsweredWithHelp(questionID: String) -> Bool {
+        let result = PracticeHintRules.qualifyingHint(
+            questionID: questionID,
+            mode: .immediate,
+            alreadySelected: session.selectedSourceIndex != nil,
+            reviewSubmitted: false,
+            qualifiedQuestionIds: session.hintQualifiedQuestionIds,
+            answeredWithHelpQuestionIds: session.answeredWithHelpQuestionIds
+        )
+        let changed = result.qualifiedQuestionIds != session.hintQualifiedQuestionIds || result.answeredWithHelpQuestionIds != session.answeredWithHelpQuestionIds
+        session.hintQualifiedQuestionIds = result.qualifiedQuestionIds
+        session.answeredWithHelpQuestionIds = result.answeredWithHelpQuestionIds
+        return changed
+    }
+
+    private func hintCanAffectAnswer(questionID _: String) -> Bool {
+        PracticeHintRules.canRecordHelp(mode: .immediate, alreadySelected: session.selectedSourceIndex != nil, reviewSubmitted: false)
     }
 
     private func loadNextQuestion() {
@@ -530,6 +624,193 @@ private struct VisionQuestionCard: View {
         var label = englishVision("Question \(question.id). ")
         label += localizedVision(question.text.text(for: language), language: language)
         return label
+    }
+}
+
+private struct VisionHintPanel: View {
+    let hint: QuestionHint
+    let language: BankLanguage
+    let visibleLevel: Int
+    let answeredWithHelpQualified: Bool
+    let canRecordHelp: Bool
+    let revealLevel: (Int) -> Void
+    let hintVisibleLongEnough: () -> Bool
+    let openLesson: (QuestionHintLessonLink) -> Void
+
+    @State private var qualificationTimer = HintVisibilityQualificationTimer()
+
+    private var panelState: PlatformHintPanelState {
+        PlatformHintPanelState(hint: hint, language: language, visibleLevel: visibleLevel)
+    }
+
+    private var nextLevel: Int? { panelState.nextLevel }
+    private var visibleHints: [QuestionHintText] { panelState.visibleHints }
+    private var showsLessonLink: Bool { panelState.showsLessonLink }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Label {
+                Text("Hint") // l10n: localized
+            } icon: {
+                Image(systemName: "lightbulb")
+            }
+            .font(DesignTokens.FontScale.title.weight(.bold))
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .accessibilityAddTraits(.isHeader)
+
+            Text(canRecordHelp ? String(localized: "Use hints when you need help. Answers after a shown hint are saved as answered with help.") : String(localized: "This hint is available for review. Your current answer has already been scored.")) // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("hint-tool-intro")
+
+            if visibleHints.isEmpty {
+                Text("No hint is shown yet.")
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .accessibilityIdentifier("hint-tool-empty")
+            }
+
+            ForEach(visibleHints, id: \.level) { entry in
+                hintCard(entry)
+            }
+
+            if showsLessonLink {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Button("Review in lesson") { openLesson(hint.lessonLink) } // l10n: localized
+                        .buttonStyle(.bordered)
+                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .hoverEffect(.highlight)
+                        .accessibilityIdentifier("hint-review-in-lesson-button")
+                    if visionUsesFrenchInterface {
+                        Text("Lesson offered in English only.")
+                            .font(DesignTokens.FontScale.caption.weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+                            .accessibilityIdentifier("hint-english-only-lesson-notice")
+                    }
+                }
+            }
+
+            if let nextLevel {
+                Button(nextLevel == 1 ? String(localized: "Show Hint 1") : String(localized: "Show Hint 2")) { // l10n: localized
+                    revealLevel(nextLevel)
+                    HintAccessibilityAnnouncements.postHintShown(level: nextLevel)
+                }
+                .buttonStyle(VisionPrimaryButtonStyle())
+                .font(DesignTokens.FontScale.body.weight(.bold))
+                .hoverEffect(.highlight)
+                .accessibilityIdentifier("hint-show-level-\(nextLevel)-button")
+            }
+        }
+        .padding(DesignTokens.Spacing.xl)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DesignTokens.Colors.paperElevated.opacity(0.96), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous)
+                .strokeBorder(DesignTokens.Colors.border, lineWidth: 1.5)
+        )
+        .glassBackgroundEffect()
+        .onAppear { syncQualificationTimer() }
+        .onDisappear { qualificationTimer.cancel() }
+        .onChange(of: hint.questionId) { _, _ in syncQualificationTimer() }
+        .onChange(of: visibleLevel) { _, _ in syncQualificationTimer() }
+        .onChange(of: canRecordHelp) { _, _ in syncQualificationTimer() }
+        .onChange(of: answeredWithHelpQualified) { _, _ in syncQualificationTimer() }
+    }
+
+    private func hintCard(_ entry: QuestionHintText) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(String.localizedStringWithFormat(String(localized: "Hint %d"), entry.level)) // l10n: localized
+                .font(DesignTokens.FontScale.body.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("hint-level-\(entry.level)-title")
+            Text(panelState.localizedHintText(entry)) // l10n: content(question)
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("hint-level-\(entry.level)-body")
+        }
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+    }
+
+    private func syncQualificationTimer() {
+        guard visibleLevel > 0 else {
+            qualificationTimer.cancel()
+            return
+        }
+        qualificationTimer.begin(
+            questionID: hint.questionId,
+            canRecordHelp: canRecordHelp,
+            alreadyQualified: answeredWithHelpQualified
+        ) {
+            guard hintVisibleLongEnough() else { return }
+            AccessibilityNotification.Announcement(String(localized: "Answers to this question will be saved as answered with help.")).post()
+        }
+    }
+}
+
+private struct VisionLessonView: View {
+    let lesson: Lesson
+    let sectionAnchor: String?
+    let onPractice: () -> Void
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        ScrollViewReader { scrollProxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    Button("Practice", action: onPractice) // l10n: localized
+                        .buttonStyle(.bordered)
+                        .accessibilityIdentifier("lesson-return-to-practice-button")
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Text(englishVision(lesson.id)) // l10n: content(en)
+                            .font(DesignTokens.FontScale.caption.weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        Text(englishVision(lesson.title.en)) // l10n: content(en)
+                            .font(DesignTokens.FontScale.display.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                            .accessibilityIdentifier("lesson-reader-title")
+                        if visionUsesFrenchInterface {
+                            Text("Lesson offered in English only.")
+                                .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                                .accessibilityIdentifier("hint-english-only-lesson-notice")
+                        }
+                    }
+                    .padding(DesignTokens.Spacing.xl)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(DesignTokens.Colors.paperElevated.opacity(0.96), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
+                    .glassBackgroundEffect()
+
+                    LessonMarkdownView(lesson: lesson, targetAnchor: sectionAnchor)
+                        .padding(DesignTokens.Spacing.xl)
+                        .background(DesignTokens.Colors.paperElevated.opacity(0.96), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
+                        .glassBackgroundEffect()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, DesignTokens.Spacing.xxl)
+            }
+            .onAppear { scrollToTarget(with: scrollProxy) }
+            .onChange(of: sectionAnchor) { _, _ in scrollToTarget(with: scrollProxy) }
+        }
+        .accessibilityIdentifier("vision-lesson-screen")
+    }
+
+    private func scrollToTarget(with proxy: ScrollViewProxy) {
+        guard let sectionAnchor else { return }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
+                proxy.scrollTo(sectionAnchor, anchor: .top)
+            }
+            AccessibilityNotification.Announcement(String(localized: "Lesson section opened.")).post()
+        }
     }
 }
 
@@ -776,7 +1057,7 @@ private struct VisionAboutView: View {
                             .accessibilityLabel(Text(englishVision("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."))) // l10n: content(en)
                     }
                     VisionPaperSection(title: "Privacy") {
-                        Text("This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.")
+                        Text("Canadian Ham works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.")
                     }
                 }
             }
@@ -810,6 +1091,14 @@ private struct VisionPaperSection<Content: View>: View {
         )
         .glassBackgroundEffect()
     }
+}
+
+private struct PlatformContentLoadSimulationError: LocalizedError {
+    var errorDescription: String? { "Content library unavailable for testing." }
+}
+
+private struct PlatformLessonUnavailableError: LocalizedError {
+    var errorDescription: String? { "Lesson content is unavailable." }
 }
 
 private let localizedErrorDetailSeparator = "\u{1E}"
@@ -890,6 +1179,10 @@ private func localizedVision(_ string: String, language: BankLanguage) -> Attrib
 
 private func verbatimVisionText(_ string: String) -> Text {
     Text(verbatim: string) // l10n: verbatim
+}
+
+private var visionUsesFrenchInterface: Bool {
+    Bundle.main.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true
 }
 
 private func englishVision(_ string: String) -> AttributedString {

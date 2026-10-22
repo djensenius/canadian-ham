@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-010-005",
+  "questionId": "B-005-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the AC E-over-I quantity in the lesson section on circuit opposition.",
+      "fr": "Revoyez la grandeur CA E sur I dans la section de la leçon sur l'opposition en circuit."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "reactance-and-impedance"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name the E/I quantity for AC circuits.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -50,6 +50,15 @@ A prefix tells you how many base units are being counted. In Basic exam electron
 | micro | µ | a millionth | 4 mH = 4 000 µH |
 | pico | p | a trillionth | 0.47 µF = 470 000 pF |
 
+::figure metric-prefix-ladder
+Alt text: Metric prefix ladder from giga to pico showing multiply or divide direction arrows and a skipped nano marker between micro and pico.
+Text equivalent:
+- Prefix order in the lesson table: G giga, M mega, k kilo, base unit, m milli, µ micro, p pico; the figure marks nano as skipped between micro and pico.
+- Moving toward smaller units multiplies by 1 000 for each adjacent active step through micro; moving toward larger units divides by 1 000 for those same steps.
+- The micro-to-pico step is x 1 000 000 toward pico, or ÷ 1 000 000 toward micro, because nano is only shown as a skipped marker and is not included in this table.
+- Example: 14.230 MHz = 14 230 kHz.
+::
+
 When you change from a large unit to a smaller unit, the number gets larger. When you change from a small unit to a larger unit, the number gets smaller.
 
 ### Memory trick: prefix ladder
@@ -91,11 +100,43 @@ A small bypass capacitor is marked 470 000 pF.
 - Answer: 470 000 pF = 0.47 µF.
 - Sanity check: picofarads are tiny, so the number is much smaller in microfarads.
 
+### Faded practice: finish a prefix change
+
+A coil label gives millihenries, but your parts list uses microhenries.
+
+- Given: L = 2.7 mH; 1 mH = 1 000 µH.
+- Find: the same inductance in microhenries.
+- Formula: µH = mH x 1 000.
+- Complete: 2.7 x ___ = ___ µH.
+- Sanity check: Should smaller units give a larger number?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a prefix change
+
+2.7 x 1 000 = 2 700 µH. The coil value stayed the same; only its unit changed.
+
 ### In the real world: reading a charger label
 
 A phone charger may say 9.0 V at 3.0 A. The volts tell the electrical pressure. The amperes tell the current the charger can supply under that rating.
 
 The same label might also list watts. If it says 27 W, that matches P = I x E because 3.0 A x 9.0 V = 27 W. You will use that power formula in the next lesson.
+
+### Faded practice: finish a label power check
+
+A different charger label lists its output voltage and current.
+
+- Given: E = 8.0 V; I = 2.2 A.
+- Find: rated output power P.
+- Formula: P = I x E.
+- Complete: P = ___ A x 8.0 V = ___ W.
+- Sanity check: Should the power exceed 8 W when current exceeds 1 A?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a label power check
+
+P = 2.2 x 8.0 = 17.6 W. This checks the label relationship, not a promise that every connected device draws that power.
 
 ### Analogy: electrical pressure and voltage
 
@@ -139,13 +180,21 @@ Temperature can change the resistance of a conductor. In many metal conductors, 
 
 ## Try it
 
-Do these in your head before checking the answer.
+Try these before reading the feedback below.
 
-1. A trail radio beacon produces 750 mW. Since milli means a thousandth, 750 mW is 0.75 W.
-2. A resistor is marked 4.7 kilohms. Kilo means 1 000, so 4.7 kilohms is 4 700 ohms.
-3. A frequency is 21 375 kHz. Divide by 1 000 to get megahertz: 21.375 MHz.
-4. A current is 0.18 A. An ampere is 1 000 mA, so 0.18 A is 180 mA.
-5. A supply is 13.8 V. Each volt is 1 000 mV, so 13.8 V is 13 800 mV.
+1. A trail radio beacon produces 750 mW. Express that in watts.
+2. Express 4.7 kilohms in ohms.
+3. Convert 21 375 kHz to megahertz.
+4. Express 0.18 A in milliamperes.
+5. Express 13.8 V in millivolts.
+
+### Try-it feedback
+
+1. 750 / 1 000 = 0.75 W.
+2. 4.7 x 1 000 = 4 700 ohms.
+3. 21 375 / 1 000 = 21.375 MHz.
+4. 0.18 x 1 000 = 180 mA.
+5. 13.8 x 1 000 = 13 800 mV.
 
 ## Radio connection
 
@@ -167,7 +216,7 @@ If the insulator fails or a conductor touches where it should not, the circuit b
 
 Alt text: A horizontal metric-prefix ladder from giga to pico, with arrows showing when to multiply or divide by 1 000.
 
-Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, m, µ, p. Add a small radio dial labelled 14.230 MHz beside the MHz step and 14 230 kHz beside the kHz step. Use arrows that say "multiply by 1 000" when moving toward smaller units and "divide by 1 000" when moving toward larger units.
+Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, m, µ, p. Add a small radio dial labelled 14.230 MHz beside the MHz step and 14 230 kHz beside the kHz step. Use arrows that say "multiply by 1 000" when moving toward smaller units and "divide by 1 000" when moving toward larger units for adjacent rows through micro; label the micro-to-pico jump as x 1 000 000 or ÷ 1 000 000 because nano is skipped.
 
 ## Summary
 

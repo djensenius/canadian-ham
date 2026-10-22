@@ -1,20 +1,26 @@
 import Accessibility
 import CanadianHamMorseEngine
+import Combine
 import SwiftUI
 
 struct MorseSendingPracticeView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
 
+    private enum KeyboardFocus: String, Hashable { case practice, exam }
+
     @Environment(\.scenePhase) private var scenePhase
-    @FocusState private var keyFocusActive: Bool
-    @State private var driver = MorseAudioDriver()
+    @State private var keyboardFocus: KeyboardFocus?
+    @State private var keyboardFocusRequest = UUID()
+#if DEBUG
+    @State private var keyboardEventDescription = "none"
+#endif
+    @StateObject private var keyer = MorseSendingKeyer()
     @State private var pendingSamples: [MorseKeyTimingSample] = []
     @State private var decodedText = ""
     @State private var lastFeedback: MorseCharacterTimingFeedback?
     @State private var statusMessage = ""
     @State private var errorMessage: String?
-    @State private var straightKeyDownAt: Date?
     @State private var finalizeTask: Task<Void, Never>?
     @State private var pressedPaddles: Set<MorseKeyElement> = []
     @State private var paddleRepeatTask: Task<Void, Never>?
@@ -43,47 +49,55 @@ struct MorseSendingPracticeView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                Text("Sending practice") // l10n: localized
-                    .font(DesignTokens.FontScale.title.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityAddTraits(.isHeader)
-                Text("Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets.") // l10n: localized
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                morseTokenButton("Exam-style check") { openExamStyleCheck() }
-                    .accessibilityIdentifier("morse-sending-exam-open-button")
-                sendingControls
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Sending practice") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Practise tap timing with a straight key or iambic-style paddles. With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets. Aim for steady dot/dash ratio and timing consistency.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    morseTokenButton("Exam-style check") { openExamStyleCheck() }
+                        .accessibilityIdentifier("morse-sending-exam-open-button")
+                    sendingControls
+                    }
+                    .paperCard()
                 }
-                .paperCard()
+                .pagePadding()
             }
-            .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+        .contentShape(Rectangle())
         .navigationTitle("Sending practice") // l10n: localized
-        .focusable(true)
-        .focused($keyFocusActive)
+        .modifier(MorseSendingKeyboardFocus(
+            isActive: !showingExam && presentedResult == nil,
+            request: keyboardFocusRequest,
+            focusChanged: { updateKeyboardFocus(.practice, isFocused: $0) },
+            keyPress: handleKeyPress
+        ))
         .onAppear {
-            keyFocusActive = true
+            keyer.prepare(settings: settings.normalized())
             // Another Morse mode starting playback stops any held key or paddle here.
             playbackCoordinator.register("sending-practice") {
                 stopAllKeying(finalizeStraight: true)
+                keyer.release()
             }
-        }
-        .onKeyPress(phases: [.down, .up]) { press in
-            handleKeyPress(press)
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 refreshExamCountdown()
+                if presentedResult == nil { keyer.prepare(settings: settings.normalized()) }
             } else {
                 stopAllKeying(finalizeStraight: true)
+                keyer.release()
             }
         }
-        .onChange(of: keyFocusActive) { _, isFocused in
-            if !isFocused { stopAllKeying(finalizeStraight: true) }
+        .onChange(of: keyboardFocus) { previous, _ in
+            // Release held keys even when focus moves directly between the two screens.
+            if previous != nil { stopAllKeying(finalizeStraight: true) }
         }
         .navigationDestination(isPresented: $showingExam) {
             sendingExamScreen
@@ -106,6 +120,9 @@ struct MorseSendingPracticeView: View {
             stopAllKeying(finalizeStraight: false)
             clearPendingCharacterFinalization(clearPendingSamples: true)
             examTimerTask?.cancel()
+            // The pushed exam uses the same prepared audio player, not this
+            // host's focus binding. Keep the silent engine for that handoff.
+            if !showingExam { keyer.release() }
         }
     }
 
@@ -149,6 +166,12 @@ struct MorseSendingPracticeView: View {
                     }
                 }
                 MorseSendingFeedbackView(decodedText: decodedText, pendingSamples: pendingSamples, lastFeedback: lastFeedback)
+#if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseKeyboardStatus") {
+                    Text(verbatim: "Focus: \(keyboardFocus?.rawValue ?? "none"); event: \(keyboardEventDescription); held: \(keyer.isStraightKeyDown); audio startup: \(keyer.audioStartupSeconds); hold: \(keyer.lastHoldSeconds); dot limit: \(2 * profile.dotSeconds)") // l10n: verbatim DEBUG-only keyboard test diagnostics
+                        .accessibilityIdentifier("morse-sending-keyboard-test-status")
+                }
+#endif
                 HStack {
                     morseTokenButton("Clear sending practice") { resetSending(clearExam: false) }
 #if DEBUG
@@ -176,57 +199,78 @@ struct MorseSendingPracticeView: View {
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                 }
-                if let errorMessage {
+                if let errorMessage = errorMessage ?? keyer.audioError {
                     MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
                 }
         }
     }
 
     private var sendingExamScreen: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("Exam-style check") // l10n: localized
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors.") // l10n: localized
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                    MorseSendingExamCard(
-                        examText: examText,
-                        examRemaining: examRemaining,
-                        start: startExam,
-                        grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
-                    )
-                    sendingControls
+        // Keep Space on the keying focus target, not the ScrollView's paging handler.
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        Text("Exam-style check") // l10n: localized
+                            .font(DesignTokens.FontScale.title.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text("Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                        MorseSendingExamCard(
+                            examText: examText,
+                            examRemaining: examRemaining,
+                            start: startExam,
+                            grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
+                        )
+                        sendingControls
+                    }
+                    .paperCard()
                 }
-                .paperCard()
+                .pagePadding()
             }
-            .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+        .contentShape(Rectangle())
         .navigationTitle("Exam-style check") // l10n: localized
-        .focusable(true)
-        .focused($keyFocusActive)
-        .onAppear { keyFocusActive = true }
-        .onKeyPress(phases: [.down, .up]) { press in
-            handleKeyPress(press)
-        }
+        .modifier(MorseSendingKeyboardFocus(
+            isActive: showingExam && presentedResult == nil,
+            request: keyboardFocusRequest,
+            focusChanged: { updateKeyboardFocus(.exam, isFocused: $0) },
+            keyPress: handleKeyPress
+        ))
+        .onAppear { keyer.prepare(settings: settings.normalized()) }
         .onDisappear {
             if presentedResult == nil, !examText.isEmpty {
                 cancelRunningExam(clearExam: true)
             }
+            stopAllKeying(finalizeStraight: false)
+            // Back hands the silent player to practice; results or leaving the
+            // sending stack release it instead.
+            if showingExam || presentedResult != nil { keyer.release() }
+        }
+    }
+
+    private func updateKeyboardFocus(_ target: KeyboardFocus, isFocused: Bool) {
+        if isFocused {
+            keyboardFocus = target
+        } else if keyboardFocus == target {
+            keyboardFocus = nil
         }
     }
 
     private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
+        let eventTime = ContinuousClock.now
+#if DEBUG
+        keyboardEventDescription = "\(String(describing: press.phase)) \(press.characters)"
+#endif
         let character = press.characters.lowercased()
         let element = character == "j" ? MorseKeyElement.dot : character == "k" ? MorseKeyElement.dash : nil
         switch press.phase {
         case .down:
             if press.key == .space {
-                beginStraightKey()
+                beginStraightKey(at: eventTime)
                 return .handled
             }
             if let element {
@@ -235,7 +279,7 @@ struct MorseSendingPracticeView: View {
             }
         case .up:
             if press.key == .space {
-                endStraightKey()
+                endStraightKey(at: eventTime)
                 return .handled
             }
             if let element {
@@ -248,29 +292,25 @@ struct MorseSendingPracticeView: View {
         return .ignored
     }
 
-    private func beginStraightKey() {
-        guard straightKeyDownAt == nil else { return }
+    private func beginStraightKey() { beginStraightKey(at: .now) }
+
+    private func beginStraightKey(at eventTime: ContinuousClock.Instant) {
+        guard !keyer.isStraightKeyDown else { return }
         cancelFiniteToneStop()
         finalizeTask?.cancel()
         finalizeTask = nil
         playbackCoordinator.claim("sending-practice")
-        straightKeyDownAt = Date()
-        do {
-            try driver.startTone(settings: settings.normalized())
-            errorMessage = nil
-        } catch {
-            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
-            straightKeyDownAt = nil
-        }
+        keyer.beginStraightKey(at: eventTime, settings: settings.normalized())
+        errorMessage = nil
     }
 
-    private func endStraightKey() {
-        guard let started = straightKeyDownAt else { return }
-        let duration = max(0.001, Date().timeIntervalSince(started))
-        straightKeyDownAt = nil
-        driver.stop()
+    private func endStraightKey() { endStraightKey(at: .now) }
+
+    private func endStraightKey(at eventTime: ContinuousClock.Instant) {
         do {
-            appendSample(try classifyMorseKeyDown(durationSeconds: duration, profile: profile))
+            if let sample = try keyer.endStraightKey(at: eventTime, profile: profile) {
+                appendSample(sample)
+            }
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -335,11 +375,9 @@ struct MorseSendingPracticeView: View {
         playbackCoordinator.claim("sending-practice")
         finalizeTask?.cancel()
         finalizeTask = nil
-        let text = element == .dot ? "E" : "T"
         let duration = element == .dot ? profile.dotSeconds : profile.dashSeconds
-        if let playbackDuration = try? driver.play(text: text, settings: settings.normalized()) {
-            scheduleFiniteToneStop(after: playbackDuration)
-        }
+        keyer.playElement(element, settings: settings.normalized())
+        scheduleFiniteToneStop(after: duration)
         appendSample(MorseKeyTimingSample(element: element, durationSeconds: duration, expectedSeconds: duration, ratioToExpected: 1), finalizeAfterElementSeconds: duration)
     }
 
@@ -384,7 +422,7 @@ struct MorseSendingPracticeView: View {
         finiteToneStopTask = Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(Int((duration * 1000).rounded(.up)) + 60))
             guard !Task.isCancelled, generation == finiteToneGeneration else { return }
-            driver.stop()
+            keyer.silence()
             finiteToneStopTask = nil
         }
     }
@@ -423,6 +461,7 @@ struct MorseSendingPracticeView: View {
             examDeadline = Date().addingTimeInterval(TimeInterval(debugExamDurationSeconds))
             examRunning = true
             statusMessage = String(localized: "Sending check started. Send the displayed passage within 3:00.")
+            keyboardFocusRequest = UUID()
             examTimerTask?.cancel()
             examTimerTask = Task { @MainActor in
                 while !Task.isCancelled, examRunning {
@@ -472,15 +511,11 @@ struct MorseSendingPracticeView: View {
     }
 
     private func stopAllKeying(finalizeStraight: Bool) {
-        if finalizeStraight, let started = straightKeyDownAt {
-            let duration = max(0.001, Date().timeIntervalSince(started))
-            if let sample = try? classifyMorseKeyDown(durationSeconds: duration, profile: profile) {
-                appendSample(sample)
-            }
+        if finalizeStraight {
+            endStraightKey()
         }
         cancelFiniteToneStop()
-        driver.stop()
-        straightKeyDownAt = nil
+        keyer.cancelStraightKey()
         pressedPaddles = []
         paddleRepeatTask?.cancel()
         paddleRepeatToken = UUID()
@@ -500,7 +535,7 @@ struct MorseSendingPracticeView: View {
     private func gradeHeldStraightKeyForUITest() {
         pendingSamples = []
         decodedText = ""
-        straightKeyDownAt = Date().addingTimeInterval(-profile.dotSeconds)
+        keyer.beginStraightKey(at: .now.advanced(by: .seconds(-profile.dotSeconds)), settings: settings.normalized())
         playbackCoordinator.claim("sending-practice")
         gradeExam(completedWithinTime: true)
     }
@@ -517,6 +552,197 @@ struct MorseSendingPracticeView: View {
     private func fillExamTextForUITest() {}
     private func gradeHeldStraightKeyForUITest() {}
 #endif
+}
+
+protocol MorseSendingAudioOutput: Sendable {
+    func prepare(settings: MorseTrainerSettings) async throws
+    func startTone(settings: MorseTrainerSettings) async throws
+    func playElement(_ element: MorseKeyElement, settings: MorseTrainerSettings) async throws
+    func silence() async
+    func release() async
+}
+
+private actor MorseSendingAudioPlayer: MorseSendingAudioOutput {
+    private let driver = MorseAudioDriver()
+
+    func prepare(settings: MorseTrainerSettings) throws {
+        try driver.prepareSendingTone(settings: settings)
+    }
+
+    func startTone(settings: MorseTrainerSettings) {
+        driver.startPreparedSendingTone(settings: settings)
+    }
+
+    func playElement(_ element: MorseKeyElement, settings: MorseTrainerSettings) throws {
+        try driver.playPreparedSendingElement(element, settings: settings)
+    }
+
+    func silence() { driver.silencePreparedSendingTone() }
+
+    func release() async {
+        driver.silencePreparedSendingTone()
+        // Drain the same fade used by the other Morse players before teardown.
+        try? await Task.sleep(for: .seconds(MorseAudioStopTiming.stopDelay(rampDuration: 0.005)))
+        driver.releasePreparedSendingTone()
+    }
+}
+
+@MainActor
+final class MorseSendingKeyer: ObservableObject {
+    @Published private(set) var straightKeyDownAt: ContinuousClock.Instant?
+#if DEBUG
+    @Published private(set) var lastHoldSeconds = 0.0
+    @Published private(set) var audioStartupSeconds = 0.0
+#endif
+    @Published private(set) var audioError: String?
+
+    var isStraightKeyDown: Bool { straightKeyDownAt != nil }
+
+    private enum AudioCommand {
+        case prepare(MorseTrainerSettings)
+        case start(MorseTrainerSettings)
+        case element(MorseKeyElement, MorseTrainerSettings)
+        case silence
+        case release
+    }
+
+    private let output: any MorseSendingAudioOutput
+    private var audioTask: Task<Void, Never>?
+    private var audioRequest = 0
+    private var audioErrorGeneration = 0
+
+    init(output: any MorseSendingAudioOutput = MorseSendingAudioPlayer()) {
+        self.output = output
+    }
+
+    func prepare(settings: MorseTrainerSettings) { queueAudio(.prepare(settings)) }
+
+    func beginStraightKey(at eventTime: ContinuousClock.Instant, settings: MorseTrainerSettings) {
+        guard straightKeyDownAt == nil else { return }
+        straightKeyDownAt = eventTime
+        queueAudio(.start(settings))
+    }
+
+    func endStraightKey(at eventTime: ContinuousClock.Instant, profile: MorseTimingProfile) throws -> MorseKeyTimingSample? {
+        guard let started = straightKeyDownAt else { return nil }
+        let components = started.duration(to: eventTime).components
+        let duration = max(0.001, Double(components.seconds) + Double(components.attoseconds) / 1e18)
+        straightKeyDownAt = nil
+#if DEBUG
+        lastHoldSeconds = duration
+#endif
+        silence()
+        return try classifyMorseKeyDown(durationSeconds: duration, profile: profile)
+    }
+
+    func cancelStraightKey() {
+        straightKeyDownAt = nil
+        silence()
+    }
+
+    func playElement(_ element: MorseKeyElement, settings: MorseTrainerSettings) {
+        queueAudio(.element(element, settings))
+    }
+
+    func silence() { queueAudio(.silence) }
+
+    func release() {
+        straightKeyDownAt = nil
+        // Leaving invalidates pending failures; key-up only cancels the tone.
+        audioErrorGeneration += 1
+        queueAudio(.release)
+    }
+
+    private func queueAudio(_ command: AudioCommand) {
+        audioRequest += 1
+        let request = audioRequest
+        let errorGeneration = audioErrorGeneration
+        let previous = audioTask
+        // Keep lifecycle commands ordered, but discard a queued tone if its key
+        // was released (or its screen left) while the engine was preparing.
+        audioTask = Task { @MainActor in
+            await previous?.value
+            // Only tone requests are superseded. In particular, a focus-loss
+            // silence must never cancel the release queued by disappearance.
+            switch command {
+            case .start, .element:
+                guard request == audioRequest else { return }
+            case .prepare, .silence, .release:
+                break
+            }
+            do {
+                switch command {
+                case .prepare(let settings):
+                    try await output.prepare(settings: settings)
+                case .start(let settings):
+#if DEBUG
+                    let started = ContinuousClock.now
+#endif
+                    try await output.prepare(settings: settings)
+                    guard request == audioRequest else { return }
+                    try await output.startTone(settings: settings)
+#if DEBUG
+                    let components = started.duration(to: .now).components
+                    audioStartupSeconds = Double(components.seconds) + Double(components.attoseconds) / 1e18
+#endif
+                case .element(let element, let settings):
+                    try await output.prepare(settings: settings)
+                    guard request == audioRequest else { return }
+                    try await output.playElement(element, settings: settings)
+                case .silence:
+                    await output.silence()
+                case .release:
+                    await output.release()
+                }
+                // Only a successful tone-producing command clears an earlier audio error;
+                // the silence queued on key-up must not hide a failure the learner just hit.
+                switch command {
+                case .start, .element:
+                    if request == audioRequest { audioError = nil }
+                case .prepare, .silence, .release:
+                    break
+                }
+            } catch {
+                guard errorGeneration == audioErrorGeneration else { return }
+                audioError = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+                // A failed sidetone must not discard the recorded key event.
+            }
+        }
+    }
+}
+
+// Each navigation host owns its focus binding. A binding owned by the practice host
+// cannot reliably focus the pushed exam's key capture surface.
+private struct MorseSendingKeyboardFocus: ViewModifier {
+    let isActive: Bool
+    let request: UUID
+    let focusChanged: (Bool) -> Void
+    let keyPress: (KeyPress) -> KeyPress.Result
+
+    @FocusState private var hasKeyboardFocus: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .focusable(isActive, interactions: .edit)
+            .focused($hasKeyboardFocus)
+            .defaultFocus($hasKeyboardFocus, true, priority: .userInitiated)
+            .task(id: request) {
+                // Wait for the pushed host to finish its initial navigation layout.
+                await Task.yield()
+                guard !Task.isCancelled, isActive else { return }
+                hasKeyboardFocus = true
+            }
+            .onChange(of: isActive) { _, active in
+                hasKeyboardFocus = active
+            }
+            .onChange(of: hasKeyboardFocus) { _, focused in
+                focusChanged(focused)
+            }
+            .onKeyPress(phases: [.down, .up]) { press in
+                guard isActive else { return .ignored }
+                return keyPress(press)
+            }
+    }
 }
 
 func clearMorseSendingPendingCharacterFinalization(finalizeTask: inout Task<Void, Never>?, pendingSamples: inout [MorseKeyTimingSample], clearPendingSamples: Bool) {

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-002-010",
+  "questionId": "B-008-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the lesson’s cable-wrapping cure for speaker wiring that picks up RF.",
+      "fr": "Revoyez la mesure de la leçon qui consiste à enrouler le câble lorsque les fils de haut-parleurs captent de la RF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "ferrite-chokes-and-bypass-capacitors"
+  },
+  "singleLevelReason": "Material recall: any second hint would identify the core material among the options.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

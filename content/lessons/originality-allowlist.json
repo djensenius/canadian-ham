@@ -2,196 +2,76 @@
   {
     "lessonId": "L-005-04",
     "blockHeading": "Decibels as power ratios",
-    "reason": "Reviewed principle table: Basic-level dB power-ratio shortcuts are standard facts, not a copied worked example. Numerals are intentionally preserved for clarity."
+    "reason": "Reviewed principle table: Basic-level dB power-ratio shortcuts are standard facts, not a copied worked example. Numerals are intentionally preserved for clarity. Current checker: numeric-overlap for B-005-008-011."
   },
   {
-    "lessonId": "L-006-02",
-    "blockHeading": "In the real world: reflected-power estimates",
-    "reason": "Reviewed standard SWR reflected-power table requested by docs/teaching-guide.md for task-39.3. The values are calculated from the reflection-coefficient formula and are not copied from ISED question text. The numeric false-positive trigger was B-006-011-010, where the bank's Yagi-spacing numbers overlap the unrelated 3:1 and 0.2 SWR table values."
+    "lessonId": "L-006-01",
+    "blockHeading": "In the real world: cutting coax does not change Z0",
+    "reason": "Reviewed fifty-ohm coax teaching fact for B-006-001-006: the block teaches characteristic impedance and cable length using an original cut-coax scenario; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem. Current checker: numeric-overlap for B-006-001-006."
+  },
+  {
+    "lessonId": "L-006-01",
+    "blockHeading": "Coaxial cable",
+    "reason": "Reviewed fifty-ohm coax teaching fact for B-006-001-006: the block contrasts amateur fifty-ohm coax with seventy-five-ohm TV coax and expected station hardware; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem. Current checker: numeric-overlap for B-006-001-006."
+  },
+  {
+    "lessonId": "L-006-01",
+    "blockHeading": "In the real world: TV coax and radio coax",
+    "reason": "Reviewed fifty-ohm coax teaching fact for B-006-001-006: the block explains practical radio-vs-TV coax expectations; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem. Current checker: numeric-overlap for B-006-001-006."
+  },
+  {
+    "lessonId": "L-006-01",
+    "blockHeading": "Try it",
+    "reason": "Reviewed fifty-ohm coax practice for B-006-001-006: the item asks about cable length and characteristic impedance in an original jumper scenario; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem. Current checker: numeric-overlap for B-006-001-006."
+  },
+  {
+    "lessonId": "L-006-01",
+    "blockHeading": "Summary",
+    "reason": "Reviewed fifty-ohm coax teaching fact for B-006-001-006: the summary states amateur/TV coax norms; it does not mirror the transmitter, resistive-load, or RF-energy-absorption stem. Current checker: numeric-overlap for B-006-001-006."
   },
   {
     "lessonId": "L-005-05",
     "blockHeading": "Resonance and tuned circuits",
-    "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
-  },
-  {
-    "lessonId": "L-002-01",
-    "blockHeading": "Reference fact: ITU phonetic alphabet words used in this lesson",
-    "reason": "Reviewed reference table: the ITU spelling words are standardized operating vocabulary needed for the phonetic-alphabet questions, not a worked example or copied scenario."
-  },
-  {
-    "lessonId": "L-002-01",
-    "blockHeading": "Reference fact: voice calling patterns",
-    "reason": "Reviewed official calling-pattern reference table. The repetition counts and call-sign order are intentionally preserved because learners must recognize these exact procedural patterns; the block is labelled as reference, not a worked example or Try-it."
-  },
-  {
-    "lessonId": "L-002-02",
-    "blockHeading": "Reference fact: Morse calling patterns",
-    "reason": "Reviewed official Morse calling-pattern reference table. The CQ/DE repetition counts and answer order are intentionally preserved as a compact reference fact, not as a copied scenario, worked example, or Try-it."
-  },
-  {
-    "lessonId": "L-002-02",
-    "blockHeading": "Reference fact: Morse procedural groups",
-    "reason": "Reviewed reference table: the Morse procedural groups are standard abbreviations whose short meanings must remain recognizable; the table is reference vocabulary, not practice content."
-  },
-  {
-    "lessonId": "L-002-02",
-    "blockHeading": "Reference fact: signal-report digits used in this lesson",
-    "reason": "Reviewed reference table: RST digit meanings are standardized report facts required by the explanations; compact tabular presentation avoids creating copied scenarios."
-  },
-  {
-    "lessonId": "L-002-02",
-    "blockHeading": "Reference fact: Q signals used and compared in this lesson",
-    "reason": "Reviewed reference table: Q signals and their short meanings are standard operating vocabulary required by the official questions and explanations, presented as a labelled reference."
-  },
-  {
-    "lessonId": "L-002-03",
-    "blockHeading": "Reference fact: priority terms in this lesson",
-    "reason": "Reviewed reference table: distress, urgent, emergency, and safety terms are official Basic operating facts summarized without adding scenarios, practice items, or an unverified priority ladder."
-  },
-  {
-    "lessonId": "L-002-04",
-    "blockHeading": "Reference fact: grid locator code length",
-    "reason": "Reviewed reference table: the 4- or 6-character Maidenhead locator length is intentionally preserved in a labelled reference table because the numeric locator length is the fact being taught."
-  },
-  {
-    "lessonId": "L-002-04",
-    "blockHeading": "Reference fact: map and bearing relationships",
-    "reason": "Reviewed reference table: azimuthal-map and long-path bearing facts include standard terminology and the 180-degree relationship needed by the explanations."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Authority and source roles",
-    "reason": "Reviewed regulatory reference table: single source-role facts are established by official answers and kept in a labelled table rather than a practice prompt."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Certificate records, addresses, and call-sign fees",
-    "reason": "Reviewed regulatory reference table: exact validity, deadline, retention, and fee facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Offences, penalties, and process boundaries",
-    "reason": "Reviewed regulatory reference table: offence, penalty, and process-boundary facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Basic eligibility, qualifications, exams, and accommodations",
-    "reason": "Reviewed regulatory reference table: eligibility, qualification sequence, fee, and accommodation facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-02",
-    "blockHeading": "Reference facts: Work done for another person",
-    "reason": "Reviewed regulatory reference table: authorization requirements for work on another person's apparatus are established by official answers."
-  },
-  {
-    "lessonId": "L-001-02",
-    "blockHeading": "Reference facts: Amateur service boundaries",
-    "reason": "Reviewed regulatory reference table: service-boundary and equipment-certification facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-02",
-    "blockHeading": "Reference facts: Communications that fit amateur radio",
-    "reason": "Reviewed regulatory reference table: communication-purpose and encoding facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-02",
-    "blockHeading": "Reference facts: Station privileges and construction",
-    "reason": "Reviewed regulatory reference table: Basic and Basic-plus-Advanced station-privilege facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-02",
-    "blockHeading": "Reference facts: Control operator and station owner",
-    "reason": "Reviewed regulatory reference table: responsibility and supervision facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-03",
-    "blockHeading": "Reference facts: Interference and shared bands",
-    "reason": "Reviewed regulatory reference table: interference, secondary-service, and shared-band facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-03",
-    "blockHeading": "Reference facts: Emergency, disaster, and public-service communication",
-    "reason": "Reviewed regulatory reference table: emergency and relief-operation facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-03",
-    "blockHeading": "Reference facts: Privacy, payment, and message handling",
-    "reason": "Reviewed regulatory reference table: privacy and remuneration facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-03",
-    "blockHeading": "Reference facts: Station identification",
-    "reason": "Reviewed regulatory reference table: identification timing and language facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-03",
-    "blockHeading": "Reference facts: Third-party and visiting-operator communication",
-    "reason": "Reviewed regulatory reference table: third-party, visitor, and international permission facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: Operator privileges and below-30-MHz access",
-    "reason": "Reviewed regulatory reference table: operator-privilege and below-30-MHz gate facts are established by official answers and docs/exam-facts.md."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: HF band ranges",
-    "reason": "Reviewed regulatory reference table: HF band ranges are established by official answers and intentionally taught as exact facts."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: Bandwidth and mode-fit cues",
-    "reason": "Reviewed regulatory reference table: bandwidth limits and mode-fit cues are established by official answers, with no unsupported mode-width expansion."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: Power quantities and limits",
-    "reason": "Reviewed regulatory reference table: power values and quantities are established by official answers and docs/exam-facts.md."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: Repeaters, automatic transmissions, stability, and modulation quality",
-    "reason": "Reviewed regulatory reference table: station-type, frequency-stability, measurement, and modulation-quality facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-05",
-    "blockHeading": "Reference facts: International message purpose and regulatory source",
-    "reason": "Reviewed regulatory reference table: international message-purpose, administration-objection, Morse, and ITU-source facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-05",
-    "blockHeading": "Reference facts: ITU regions and operating location",
-    "reason": "Reviewed regulatory reference table: ITU-region and operating-location facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-05",
-    "blockHeading": "Reference facts: United States and CEPT-style visits",
-    "reason": "Reviewed regulatory reference table: United States and CEPT qualification and voice-identification facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-06",
-    "blockHeading": "Reference facts: Antenna siting and public consultation",
-    "reason": "Reviewed regulatory reference table: antenna authority, process, exclusion, and consultation facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-06",
-    "blockHeading": "Reference facts: Safety Code 6 and RF exposure",
-    "reason": "Reviewed regulatory reference table: Safety Code 6, exposure-factor, and exposure-quantity facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-06",
-    "blockHeading": "Reference facts: EMCAB-2 interference criteria",
-    "reason": "Reviewed regulatory reference table: EMCAB-2 field-strength and equipment-category facts are established by official answers."
-  },
-  {
-    "lessonId": "L-001-06",
-    "blockHeading": "Summary",
-    "reason": "Reviewed summary rule: Safety Code 6 exposure-limit wording distinguishes limit quantities from transmitter power as an exposure factor."
+    "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson. Current checker: five-gram-overlap for B-005-012-001, B-005-012-010."
   },
   {
     "lessonId": "L-006-05",
     "blockHeading": "Dipole patterns",
-    "reason": "Reviewed teaching fact: the free-space centre-fed half-wave dipole feed-point impedance of about 73 ohms (B-006-012-004) was a pre-existing coverage gap. It is stated in original prose; 'half-wave' tokenizes to 0.5, so the numeric heuristic flags the unavoidable term plus value."
+    "reason": "Reviewed teaching fact: the free-space centre-fed half-wave dipole feed-point impedance of about 73 ohms (B-006-012-004) was a pre-existing coverage gap. It is stated in original prose; 'half-wave' tokenizes to 0.5, so the numeric heuristic flags the unavoidable term plus value. Current checker: numeric-overlap for B-006-012-004."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: A lifetime certificate needs current records",
+    "reason": "TASK-46.8 reviewed regulatory reference table in original prose: a voluntary two-letter call-sign change has the exact $60 fee. Current checker: numeric-overlap for B-001-002-009."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: M1 numbers board",
+    "reason": "TASK-46.8 owner-approved numbers board: exact deadlines, fee, access threshold, bandwidths and RF exposure range are grouped with units and their separate jobs, not copied question scenarios. Current checker: numeric-overlap for B-001-002-009, B-001-015-003, B-001-016-001, B-001-016-003, B-001-016-006, B-001-024-003."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Qualification-by-privilege matrix for access and power",
+    "reason": "TASK-46.8 reviewed owner-approved qualification-by-privilege matrix in original prose; exact access threshold and power quantities are necessary reference facts. Current checker: numeric-overlap for B-001-015-003."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Band edges contain the whole signal",
+    "reason": "TASK-46.8 reviewed exact band edges paired with wavelength names and an explanatory recall pattern, not a copied practice question. Current checker: numeric-overlap for B-001-015-005, B-001-015-006, B-001-015-007, B-001-015-008, B-001-015-009, B-001-015-010, B-001-016-002."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Mode width must fit the band",
+    "reason": "TASK-46.8 reviewed bandwidth and mode-fit reference table with original explanations; exact band ranges and limits must remain. Current checker: numeric-overlap for B-001-015-010, B-001-016-001, B-001-016-002, B-001-016-003, B-001-016-004, B-001-016-005, B-001-016-006."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Power needs a quantity and a measurement point",
+    "reason": "TASK-46.8 reviewed special-band ERP ceiling in an original reference table distinguishing power quantities and measurement points. Current checker: numeric-overlap for B-001-017-006."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Reference facts: Protect people by assessing exposure",
+    "reason": "TASK-46.8 reviewed exposure reference table: exact absorption range and Safety Code 6 exposure quantities remain necessary regulatory facts, with original explanations of frequency, environment and power. Current checker: numeric-overlap for B-001-024-003, B-001-024-010."
   }
 ]

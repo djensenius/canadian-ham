@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-007-004",
+  "questionId": "B-002-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Q-signal meanings in the Morse procedures lesson.",
+      "fr": "Revoyez la signification des codes Q dans la leçon sur les procédures Morse."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "choose-q-signals-by-the-task"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

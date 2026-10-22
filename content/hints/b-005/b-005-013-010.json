@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-013-010",
+  "questionId": "B-005-013-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the meter-quality terms in the meters section.",
+      "fr": "Revoyez les termes de qualité des appareils de mesure dans la section sur les appareils de mesure."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-06",
+    "sectionAnchor": "meters-and-how-to-connect-them"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name the meter-quality term.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

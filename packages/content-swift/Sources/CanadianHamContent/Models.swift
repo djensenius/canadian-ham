@@ -241,9 +241,12 @@ public struct ConceptCheckChoice: Codable, Equatable, Sendable {
     public let text: LocalizedNullableText
     public let isCorrect: Bool
 
-    public init(text: LocalizedNullableText, isCorrect: Bool) {
+    public let feedback: LocalizedNullableText?
+
+    public init(text: LocalizedNullableText, isCorrect: Bool, feedback: LocalizedNullableText? = nil) {
         self.text = text
         self.isCorrect = isCorrect
+        self.feedback = feedback
     }
 }
 
@@ -303,6 +306,62 @@ public struct Explanation: Codable, Equatable, Sendable {
         self.status = status
         self.body = body
         self.citations = citations
+        self.licenseClass = licenseClass
+    }
+}
+
+public struct QuestionHintText: Codable, Equatable, Sendable {
+    public let level: Int
+    public let en: String
+    public let fr: String
+
+    public init(level: Int, en: String, fr: String) {
+        self.level = level
+        self.en = en
+        self.fr = fr
+    }
+}
+
+public struct QuestionHintLessonLink: Codable, Equatable, Sendable {
+    public let lessonId: String
+    public let sectionAnchor: String?
+
+    public init(lessonId: String, sectionAnchor: String? = nil) {
+        self.lessonId = lessonId
+        self.sectionAnchor = sectionAnchor
+    }
+}
+
+public struct QuestionHint: Codable, Equatable, Sendable {
+    public let id: String
+    public let questionId: String
+    public let bankId: String
+    public let status: String
+    public let hints: [QuestionHintText]
+    public let lessonLink: QuestionHintLessonLink
+    public let singleLevelReason: String?
+    public let referenceSheetSection: String?
+    public let licenseClass: String
+
+    public init(
+        id: String,
+        questionId: String,
+        bankId: String,
+        status: String,
+        hints: [QuestionHintText],
+        lessonLink: QuestionHintLessonLink,
+        singleLevelReason: String? = nil,
+        referenceSheetSection: String? = nil,
+        licenseClass: String
+    ) {
+        self.id = id
+        self.questionId = questionId
+        self.bankId = bankId
+        self.status = status
+        self.hints = hints
+        self.lessonLink = lessonLink
+        self.singleLevelReason = singleLevelReason
+        self.referenceSheetSection = referenceSheetSection
         self.licenseClass = licenseClass
     }
 }

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-004-004",
+  "questionId": "B-003-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review where the Morse control acts in a three-stage CW transmitter.",
+      "fr": "Revoyez où agit le manipulateur Morse dans un émetteur CW à trois étages."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-02",
+    "sectionAnchor": "basic-cw-transmitter-stages"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

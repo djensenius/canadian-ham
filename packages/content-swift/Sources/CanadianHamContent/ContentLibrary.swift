@@ -1,4 +1,7 @@
 import Foundation
+import os
+
+private let questionHintLogger = Logger(subsystem: "org.davidjensenius.CanadianHam", category: "QuestionHints")
 
 public struct ContentLibrary: Sendable {
     public let manifest: BankManifest
@@ -10,6 +13,7 @@ public struct ContentLibrary: Sendable {
     public let lessons: [Lesson]
     public let quizzes: [LessonQuiz]
     public let explanations: [Explanation]
+    public let questionHints: [QuestionHint]
 
     public let questionsById: [String: Question]
     public let subsectionsById: [String: Subsection]
@@ -19,6 +23,7 @@ public struct ContentLibrary: Sendable {
     public let lessonsById: [String: Lesson]
     public let quizzesById: [String: LessonQuiz]
     public let explanationsByQuestionId: [String: Explanation]
+    public let questionHintsByQuestionId: [String: QuestionHint]
 
     public static func load(from bundle: Bundle = .main, bankId: String = canadianHamDefaultBankId, contentFolderName: String = "content") throws -> ContentLibrary {
         let candidates = [
@@ -44,8 +49,54 @@ public struct ContentLibrary: Sendable {
         let quizzes = try loadJSONFiles(LessonQuiz.self, root: layout.quizzesRoot, fileExtension: "json")
         let explanations = try loadJSONFiles(Explanation.self, root: layout.explanationsRoot, fileExtension: "json")
             .sorted { ordinalLess($0.questionId, $1.questionId) }
+        let questionHints = loadQuestionHintsIfValid(layout: layout, bankId: bankId)
 
-        let library = try ContentLibrary(
+        let libraryWithoutHints = try makeLibrary(
+            manifest: manifest,
+            questions: questions,
+            subsections: subsections,
+            categories: categories,
+            subsectionTitles: subsectionTitles,
+            modulesAndLessons: modulesAndLessons,
+            quizzes: quizzes,
+            explanations: explanations,
+            questionHints: []
+        )
+        try libraryWithoutHints.validate()
+
+        guard !questionHints.isEmpty else { return libraryWithoutHints }
+        do {
+            let library = try makeLibrary(
+                manifest: manifest,
+                questions: questions,
+                subsections: subsections,
+                categories: categories,
+                subsectionTitles: subsectionTitles,
+                modulesAndLessons: modulesAndLessons,
+                quizzes: quizzes,
+                explanations: explanations,
+                questionHints: questionHints
+            )
+            try library.validateQuestionHints()
+            return library
+        } catch {
+            questionHintLogger.warning("Question hints failed validation; continuing without hints: \(String(describing: error), privacy: .public)")
+            return libraryWithoutHints
+        }
+    }
+
+    private static func makeLibrary(
+        manifest: BankManifest,
+        questions: [Question],
+        subsections: [Subsection],
+        categories: [Category],
+        subsectionTitles: [SubsectionTitle],
+        modulesAndLessons: (modules: [LessonModule], lessons: [Lesson]),
+        quizzes: [LessonQuiz],
+        explanations: [Explanation],
+        questionHints: [QuestionHint]
+    ) throws -> ContentLibrary {
+        try ContentLibrary(
             manifest: manifest,
             questions: questions.sorted { ordinalLess($0.id, $1.id) },
             subsections: subsections.sorted { ordinalLess($0.id, $1.id) },
@@ -54,10 +105,21 @@ public struct ContentLibrary: Sendable {
             modules: modulesAndLessons.modules.sorted { $0.order == $1.order ? ordinalLess($0.id, $1.id) : $0.order < $1.order },
             lessons: modulesAndLessons.lessons.sorted { ordinalLess($0.id, $1.id) },
             quizzes: quizzes.sorted { ordinalLess($0.id, $1.id) },
-            explanations: explanations
+            explanations: explanations,
+            questionHints: questionHints
         )
-        try library.validate()
-        return library
+    }
+
+    private static func loadQuestionHintsIfValid(layout: ContentLayout, bankId: String) -> [QuestionHint] {
+        guard directoryExists(layout.hintsRoot) else { return [] }
+        do {
+            return try loadJSONFiles(QuestionHint.self, root: layout.hintsRoot, fileExtension: "json")
+                .filter { $0.bankId == bankId }
+                .sorted { ordinalLess($0.questionId, $1.questionId) }
+        } catch {
+            questionHintLogger.warning("Question hint files could not be decoded; continuing without hints: \(String(describing: error), privacy: .public)")
+            return []
+        }
     }
 
     public init(
@@ -69,7 +131,8 @@ public struct ContentLibrary: Sendable {
         modules: [LessonModule],
         lessons: [Lesson],
         quizzes: [LessonQuiz],
-        explanations: [Explanation]
+        explanations: [Explanation],
+        questionHints: [QuestionHint] = []
     ) throws {
         self.manifest = manifest
         self.questions = questions
@@ -80,6 +143,7 @@ public struct ContentLibrary: Sendable {
         self.lessons = lessons
         self.quizzes = quizzes
         self.explanations = explanations
+        self.questionHints = questionHints
 
         self.questionsById = try uniqueDictionary(questions, key: \.id, label: "question id")
         self.subsectionsById = try uniqueDictionary(subsections, key: \.id, label: "subsection id")
@@ -89,6 +153,7 @@ public struct ContentLibrary: Sendable {
         self.lessonsById = try uniqueDictionary(lessons, key: \.id, label: "lesson id")
         self.quizzesById = try uniqueDictionary(quizzes, key: \.id, label: "quiz id")
         self.explanationsByQuestionId = try uniqueDictionary(explanations, key: \.questionId, label: "explanation question id")
+        self.questionHintsByQuestionId = try uniqueDictionary(questionHints, key: \.questionId, label: "hint question id")
     }
 
     public func questions(inSubsection subsectionId: String) -> [Question] {
@@ -112,6 +177,7 @@ public struct ContentLibrary: Sendable {
         try validateLessonsAndModules()
         try validateQuizzes()
         try validateExplanations()
+        try validateQuestionHints()
     }
 
     private func validateManifestCounts() throws {
@@ -287,6 +353,32 @@ public struct ContentLibrary: Sendable {
             throw ContentError("missing explanations for questionIds \(missingExplanationIds.joined(separator: ", "))")
         }
     }
+
+    private func validateQuestionHints() throws {
+        for hint in questionHints {
+            guard hint.id == "HINT-\(hint.questionId)" else {
+                throw ContentError("hint \(hint.id) id must be HINT-\(hint.questionId)")
+            }
+            guard hint.bankId == manifest.bankId else {
+                throw ContentError("hint \(hint.id) bankId \(hint.bankId) does not match manifest \(manifest.bankId)")
+            }
+            guard questionsById[hint.questionId] != nil else {
+                throw ContentError("hint \(hint.id) references unknown questionId \(hint.questionId)")
+            }
+            guard (1...2).contains(hint.hints.count) else {
+                throw ContentError("hint \(hint.id) must contain one or two levels")
+            }
+            guard hint.hints.map(\.level) == Array(1...hint.hints.count) else {
+                throw ContentError("hint \(hint.id) levels must start at 1 and be contiguous")
+            }
+            guard lessonsById[hint.lessonLink.lessonId] != nil else {
+                throw ContentError("hint \(hint.id) references unknown lessonId \(hint.lessonLink.lessonId)")
+            }
+            if hint.hints.count == 1, hint.singleLevelReason == nil {
+                throw ContentError("hint \(hint.id) with one level must include singleLevelReason")
+            }
+        }
+    }
 }
 
 private struct ContentLayout {
@@ -302,6 +394,7 @@ private struct ContentLayout {
     var lessonsRoot: URL { contentRoot.appendingPathComponent("lessons", isDirectory: true) }
     var quizzesRoot: URL { contentRoot.appendingPathComponent("quizzes", isDirectory: true) }
     var explanationsRoot: URL { contentRoot.appendingPathComponent("explanations", isDirectory: true) }
+    var hintsRoot: URL { contentRoot.appendingPathComponent("hints", isDirectory: true) }
 
     init(directoryURL: URL, bankId: String) throws {
         self.bankId = bankId

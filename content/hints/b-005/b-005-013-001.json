@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-013-001",
+  "questionId": "B-005-013-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Decide what quantity a voltmeter compares: a difference between two points, or a flow through one point.",
+      "fr": "Déterminez ce que compare un voltmètre : une différence entre deux points, ou un débit à travers un point."
+    },
+    {
+      "level": 2,
+      "en": "Decide whether the meter must see the same E as the part or carry the same I, then choose the connection that does that.",
+      "fr": "Décidez si l'appareil de mesure doit mesurer le même E que la pièce ou porter le même I, puis choisissez le raccordement qui fait cela."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-06",
+    "sectionAnchor": "meters-and-how-to-connect-them"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

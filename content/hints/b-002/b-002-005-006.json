@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-005-006",
+  "questionId": "B-002-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the meaning of K among the Morse procedural groups.",
+      "fr": "Revoyez la signification de K parmi les groupes de procédure Morse."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "use-short-groups-for-clear-jobs"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

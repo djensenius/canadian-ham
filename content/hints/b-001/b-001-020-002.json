@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-020-002",
+  "questionId": "B-001-020-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review message-handling rules for amateur operators.",
+      "fr": "Revoyez les règles de traitement des messages pour les radioamateurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-05",
+    "sectionAnchor": "reference-facts-international-permission-includes-purpose"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

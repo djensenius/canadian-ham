@@ -16,6 +16,7 @@ objectives:
   - "Interpret common receiver specifications and waterfall displays."
 prerequisites:
   - L-003-03
+  - L-006-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-04-A
@@ -50,7 +51,17 @@ The boom is the mechanical support. The driven element is where the feedline att
 
 The parasitic elements are not directly fed. Their length and placement shape the pattern.
 
-### Worked example: identifying parts from a sketch
+::figure yagi-receiver-specs
+Alt text: A labelled Yagi antenna appears beside a receiver display with wide, medium, and narrow passband choices, plus an image-frequency marker.
+Text equivalent:
+- Yagi labels are reflector, driven, director, boom, and feedline from the driven element.
+- The receiver display shows three passband shapes labelled wide, med, and narrow under their own curves.
+- The frequency line labels desired, LO, image, and two IF spacings.
+::
+
+
+
+### In the real world: identifying parts from a sketch
 
 A sketch shows three horizontal rods on a boom. The centre rod has the coax attached. The rear rod is 5.4 m long, the centre rod is 5.1 m long, and the forward rod is 4.8 m long.
 
@@ -90,6 +101,22 @@ A receiver has 300 Hz, 600 Hz, 2.7 kHz, and 8 kHz filters. The waterfall shows a
 
 For SSB voice, 2.7 kHz is the better match in this filter set.
 
+### Faded practice: find audio filter edges
+
+A CW audio filter is centred at 700 Hz and has 80 Hz total width.
+
+- Given: centre = 700 Hz; total width = 80 Hz.
+- Find: lower and upper edges for this symmetric filter.
+- Formula: half-width = total width / 2; edges = centre minus and plus half-width.
+- Complete: half-width = ___ Hz; lower edge = 700 - ___ = ___ Hz; upper edge = 700 + ___ = ___ Hz.
+- Sanity check: subtract the lower edge from the upper edge. Is the full width 80 Hz?
+
+Fill the gaps before checking below.
+
+### Check your work: find audio filter edges
+
+Half-width is 40 Hz. The edges are 660 Hz and 740 Hz. Using 80 Hz on each side would accidentally double the intended width.
+
 ## Local oscillator and image basics
 
 A superheterodyne receiver converts the desired signal to an intermediate frequency. If the local oscillator is above the desired signal, use:
@@ -108,13 +135,30 @@ image frequency = signal frequency + 2 x IF
 
 A receiver is tuned to 7.120 MHz. It uses a 455 kHz IF and runs the local oscillator above the signal.
 
-```text
-IF = 455 kHz = 0.455 MHz
-local oscillator = 7.120 MHz + 0.455 MHz = 7.575 MHz
-image = 7.120 MHz + 2 x 0.455 MHz = 8.030 MHz
-```
+- Given: signal = 7.120 MHz; IF = 455 kHz = 0.455 MHz; high-side injection.
+- Find: local oscillator and image frequencies.
+- Formula: oscillator = signal + IF; image = signal + 2 x IF.
+- Substitute: oscillator = 7.120 + 0.455; image = 7.120 + 2 x 0.455.
+- Answer: oscillator = 7.575 MHz; image = 8.030 MHz.
+- Sanity check: the desired signal and image each lie one IF from the oscillator.
 
 The image is not the station you intended to hear. Front-end filtering helps reject it before the mixer.
+
+### Faded practice: separate oscillator and image
+
+A training receiver tunes 7.240 MHz with a 455 kHz IF and high-side injection.
+
+- Given: signal = 7.240 MHz; IF = 455 kHz = ___ MHz.
+- Find: local oscillator and image frequencies.
+- Formula: oscillator = signal + IF; image = signal + 2 x IF.
+- Complete: oscillator = 7.240 + 0.455 = ___ MHz; image = 7.240 + ___ = ___ MHz.
+- Sanity check: is the image one IF or two IFs above the desired signal?
+
+Fill the gaps before checking below.
+
+### Check your work: separate oscillator and image
+
+455 kHz = 0.455 MHz. The oscillator is 7.695 MHz. Twice the IF is 0.910 MHz, so the image is 8.150 MHz. The image is two IFs above the desired signal.
 
 ## Tuning accuracy for narrow modes
 

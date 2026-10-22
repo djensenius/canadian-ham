@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-011-002",
+  "questionId": "B-006-011-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the practical driven-element estimate: length ≈ 143 / f(MHz).",
+      "fr": "Utilisez l’estimation pratique de l’élément alimenté : longueur ≈ 143 / f(MHz)."
+    },
+    {
+      "level": 2,
+      "en": "Substitute f = 14.0 MHz and keep the result in metres.",
+      "fr": "Remplacez f par 14,0 MHz et gardez le résultat en mètres."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "worked-example-original-yagi-element-estimates"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

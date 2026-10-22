@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-001-009",
+  "questionId": "B-006-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what a bad load match does to measurements made back at the radio end.",
+      "fr": "Revoyez l’effet d’une mauvaise adaptation de charge sur les mesures prises du côté de la radio."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "what-a-feedline-does"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

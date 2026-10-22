@@ -2,6 +2,15 @@ import CanadianHamEngine
 import CanadianHamMorseEngine
 import Foundation
 
+enum LessonIDContentVersion {
+    static let legacy = 1
+    static let current = 2
+
+    static func isSupported(_ version: Int?) -> Bool {
+        version == nil || version == legacy || version == current
+    }
+}
+
 struct DeviceQuestionProgressRecord: Codable, Equatable, Sendable {
     let deviceId: String
     let record: QuestionProgressRecord
@@ -15,11 +24,39 @@ struct DeviceExamAttemptRecord: Codable, Equatable, Sendable {
 struct DeviceLessonProgressRecord: Codable, Equatable, Sendable {
     let deviceId: String
     let record: LessonProgressRecord
+    let lessonIdVersion: Int?
+
+    init(deviceId: String, record: LessonProgressRecord, lessonIdVersion: Int? = nil) {
+        self.deviceId = deviceId
+        self.record = record
+        self.lessonIdVersion = lessonIdVersion
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        record = try container.decode(LessonProgressRecord.self, forKey: .record)
+        lessonIdVersion = container.contains(.lessonIdVersion) ? try container.decode(Int.self, forKey: .lessonIdVersion) : nil
+    }
 }
 
 struct DeviceLessonQuizAttemptRecord: Codable, Equatable, Sendable {
     let deviceId: String
     let attempt: LessonQuizAttempt
+    let lessonIdVersion: Int?
+
+    init(deviceId: String, attempt: LessonQuizAttempt, lessonIdVersion: Int? = nil) {
+        self.deviceId = deviceId
+        self.attempt = attempt
+        self.lessonIdVersion = lessonIdVersion
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        attempt = try container.decode(LessonQuizAttempt.self, forKey: .attempt)
+        lessonIdVersion = container.contains(.lessonIdVersion) ? try container.decode(Int.self, forKey: .lessonIdVersion) : nil
+    }
 }
 
 struct DeviceMorseCourseProgressRecord: Codable, Equatable, Sendable {
@@ -75,7 +112,9 @@ enum ProgressSyncMerge {
             correctAttempts: deviceRows.map(\.record.correctAttempts).reduce(0, +),
             lastAttemptedAt: latest.record.lastAttemptedAt,
             lastResult: latest.record.lastResult,
+            lastAnsweredWithHelp: latest.record.lastAnsweredWithHelp,
             recentResults: Array(latest.record.recentResults.suffix(5)),
+            recentAnsweredWithHelp: Array(latest.record.recentAnsweredWithHelp.suffix(5)),
             leitner: latest.record.leitner,
             notes: latest.record.notes
         )
@@ -93,7 +132,7 @@ enum ProgressSyncMerge {
     }
 
     static func deduplicateLessonProgress(_ records: [LessonProgressRecord]) -> [LessonProgressRecord] {
-        deduplicateDeviceLessonProgress(records.map { DeviceLessonProgressRecord(deviceId: "local", record: $0) })
+        deduplicateDeviceLessonProgress(records.map { DeviceLessonProgressRecord(deviceId: "local", record: $0, lessonIdVersion: LessonIDContentVersion.current) })
     }
 
     static func deduplicateDeviceLessonProgress(_ rows: [DeviceLessonProgressRecord]) -> [LessonProgressRecord] {
@@ -112,7 +151,7 @@ enum ProgressSyncMerge {
     }
 
     static func deduplicateLessonQuizAttempts(_ attempts: [LessonQuizAttempt]) -> [LessonQuizAttempt] {
-        deduplicateDeviceLessonQuizAttempts(attempts.map { DeviceLessonQuizAttemptRecord(deviceId: "local", attempt: $0) })
+        deduplicateDeviceLessonQuizAttempts(attempts.map { DeviceLessonQuizAttemptRecord(deviceId: "local", attempt: $0, lessonIdVersion: LessonIDContentVersion.current) })
     }
 
     static func deduplicateDeviceLessonQuizAttempts(_ rows: [DeviceLessonQuizAttemptRecord]) -> [LessonQuizAttempt] {
@@ -200,9 +239,13 @@ enum ProgressSyncMerge {
         if l.leitner.dueAt != r.leitner.dueAt { return l.leitner.dueAt < r.leitner.dueAt }
         if l.leitner.box != r.leitner.box { return l.leitner.box < r.leitner.box }
         if l.lastResult != r.lastResult { return l.lastResult.rawValue < r.lastResult.rawValue }
+        if l.lastAnsweredWithHelp != r.lastAnsweredWithHelp { return !l.lastAnsweredWithHelp && r.lastAnsweredWithHelp }
         let lResults = l.recentResults.map { $0 ? "1" : "0" }.joined()
         let rResults = r.recentResults.map { $0 ? "1" : "0" }.joined()
         if lResults != rResults { return lResults < rResults }
+        let lHelp = l.recentAnsweredWithHelp.map { $0 ? "1" : "0" }.joined()
+        let rHelp = r.recentAnsweredWithHelp.map { $0 ? "1" : "0" }.joined()
+        if lHelp != rHelp { return lHelp < rHelp }
         return (l.notes ?? "") < (r.notes ?? "")
     }
 

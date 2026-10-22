@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-011",
+  "questionId": "B-005-012-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "In a series RLC path at resonance, the reactive effects cancel in the current path.",
+      "fr": "Dans un trajet RLC série à la résonance, les effets réactifs se compensent dans le trajet du courant."
+    },
+    {
+      "level": 2,
+      "en": "Use I = E / Z with only R left in Z, and compare with Z away from resonance.",
+      "fr": "Utilisez I = E / Z avec seulement R qui reste dans Z, puis comparez avec Z loin de la résonance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

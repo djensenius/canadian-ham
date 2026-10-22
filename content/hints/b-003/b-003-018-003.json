@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-018-003",
+  "questionId": "B-003-018-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review station access and electrical shock.",
+      "fr": "Revoyez l'accès à la station et les chocs électriques."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "station-access-and-electrical-shock"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

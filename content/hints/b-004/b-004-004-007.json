@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-004-007",
+  "questionId": "B-004-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the control-terminal comparison for FETs and bipolar devices.",
+      "fr": "Revoyez la comparaison des bornes de commande entre les FET et les composants bipolaires."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "gate-control-and-channel-current"
+  },
+  "singleLevelReason": "Terminal-role recall: a second hint would name the FET control electrode.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

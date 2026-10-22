@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-001-009",
+  "questionId": "B-005-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Millivolts are smaller than volts, so a voltage written in mV uses a larger number.",
+      "fr": "Les millivolts sont plus petits que les volts; une tension écrite en mV utilise donc un nombre plus grand."
+    },
+    {
+      "level": 2,
+      "en": "Set it up as 2 V x 1 000, then keep mV as the final unit.",
+      "fr": "Posez 2 V x 1 000, puis gardez mV comme unité finale."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "the-metric-prefix-ladder"
+  },
+  "referenceSheetSection": "metric-prefixes",
+  "licenseClass": "original"
+}

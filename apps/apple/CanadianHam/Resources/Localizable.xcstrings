@@ -1041,6 +1041,28 @@
         }
       }
     },
+    "%@.lessonIdVersion must be 1 or 2 when present." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonIdVersion must be 1 or 2 when present."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonIdVersion doit être 1 ou 2 lorsqu’il est présent."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonIdVersion doit être 1 ou 2 lorsqu’il est présent."
+          }
+        }
+      }
+    },
     "%@.lessonsCompleted must be non-negative." : {
       "localizations" : {
         "fr" : {
@@ -1365,6 +1387,50 @@
         }
       }
     },
+    "%@.recentAnsweredWithHelp must contain at most five booleans." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp must contain at most five booleans."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp doit contenir au plus cinq booléens."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp doit contenir au plus cinq booléens."
+          }
+        }
+      }
+    },
+    "%@.recentAnsweredWithHelp must have the same length as recentResults." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp must have the same length as recentResults."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
+          }
+        }
+      }
+    },
     "%@.recentResults must contain at most 20 booleans." : {
       "localizations" : {
         "fr" : {
@@ -1479,6 +1545,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.record.questionId doit être un identifiant de question connu."
+          }
+        }
+      }
+    },
+    "%@.record.recentAnsweredWithHelp must contain at most five booleans." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp must contain at most five booleans."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp doit contenir au plus cinq valeurs booléennes."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp doit contenir au plus cinq valeurs booléennes."
+          }
+        }
+      }
+    },
+    "%@.record.recentAnsweredWithHelp must have the same length as recentResults." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp must have the same length as recentResults."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentAnsweredWithHelp doit avoir la même longueur que recentResults."
           }
         }
       }
@@ -2583,6 +2693,98 @@
         }
       }
     },
+    "%lld%%" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
+    },
+    "Before this lesson" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avant cette leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avant cette leçon"
+          }
+        }
+      }
+    },
+    "Calculator" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculatrice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculatrice"
+          }
+        }
+      }
+    },
+    "Calculator result" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice"
+          }
+        }
+      }
+    },
+    "Calculator result: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculator result: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice : %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat de la calculatrice : %@"
+          }
+        }
+      }
+    },
     "•" : {
       "localizations" : {
         "fr" : {
@@ -2701,6 +2903,22 @@
         }
       }
     },
+    "Add" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additionner"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additionner"
+          }
+        }
+      }
+    },
     "Advanced" : {
       "localizations" : {
         "fr" : {
@@ -2749,18 +2967,34 @@
         }
       }
     },
-    "Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored." : {
+    "Advanced lessons are coming. Use Advanced practice and mock exams in the meantime." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
+            "value" : "Les leçons de compétence supérieure sont à venir. Entre-temps, utilisez les exercices et les examens simulés de compétence supérieure."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
+            "value" : "Les leçons de compétence supérieure sont à venir. Entre-temps, utilisez les exercices et les examens simulés de compétence supérieure."
+          }
+        }
+      }
+    },
+    "All clear" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout effacer"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout effacer"
           }
         }
       }
@@ -2821,28 +3055,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toutes les questions ont une réponse. Vous pouvez soumettre maintenant."
-          }
-        }
-      }
-    },
-    "Alt text: " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alt text: "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte de remplacement : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte de remplacement : "
           }
         }
       }
@@ -2919,6 +3131,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réponses"
+          }
+        }
+      }
+    },
+    "Answers to this question will be saved as answered with help." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answers to this question will be saved as answered with help."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les réponses à cette question seront enregistrées comme réponses avec aide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les réponses à cette question seront enregistrées comme réponses avec aide."
           }
         }
       }
@@ -3021,6 +3255,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tonalité audio"
+          }
+        }
+      }
+    },
+    "Backspace" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retour arrière"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retour arrière"
           }
         }
       }
@@ -3129,6 +3379,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Canadian Ham"
+          }
+        }
+      }
+    },
+    "Canadian Ham works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canadian Ham works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canadian Ham fonctionne entièrement hors ligne avec du contenu intégré et ne comporte aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canadian Ham fonctionne entièrement hors ligne avec du contenu intégré et ne comporte aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
+          }
+        }
+      }
+    },
+    "Canadian Ham works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canadian Ham works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canadian Ham fonctionne entièrement hors ligne avec du contenu intégré, ne comporte aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canadian Ham fonctionne entièrement hors ligne avec du contenu intégré, ne comporte aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
           }
         }
       }
@@ -3349,6 +3643,22 @@
         }
       }
     },
+    "Clear entry" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l’entrée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l’entrée"
+          }
+        }
+      }
+    },
     "Clear sending practice" : {
       "localizations" : {
         "fr" : {
@@ -3361,6 +3671,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Effacer l’exercice d’envoi"
+          }
+        }
+      }
+    },
+    "Close tool" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close tool"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer l’outil"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer l’outil"
           }
         }
       }
@@ -3821,6 +4153,22 @@
         }
       }
     },
+    "Decimal point" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virgule décimale"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virgule décimale"
+          }
+        }
+      }
+    },
     "Decoded %@." : {
       "localizations" : {
         "fr" : {
@@ -3949,6 +4297,166 @@
         }
       }
     },
+    "Digit 0" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 0"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 0"
+          }
+        }
+      }
+    },
+    "Digit 1" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 1"
+          }
+        }
+      }
+    },
+    "Digit 2" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 2"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 2"
+          }
+        }
+      }
+    },
+    "Digit 3" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 3"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 3"
+          }
+        }
+      }
+    },
+    "Digit 4" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 4"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 4"
+          }
+        }
+      }
+    },
+    "Digit 5" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 5"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 5"
+          }
+        }
+      }
+    },
+    "Digit 6" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 6"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 6"
+          }
+        }
+      }
+    },
+    "Digit 7" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 7"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 7"
+          }
+        }
+      }
+    },
+    "Digit 8" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 8"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 8"
+          }
+        }
+      }
+    },
+    "Digit 9" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 9"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffre 9"
+          }
+        }
+      }
+    },
     "Discard this in-progress mock exam and return to the start screen." : {
       "localizations" : {
         "en" : {
@@ -4011,6 +4519,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choix affiché %@"
+          }
+        }
+      }
+    },
+    "Divide" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diviser"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diviser"
           }
         }
       }
@@ -4335,6 +4859,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entrez les caractères entendus, et non la notation en points et tirets."
+          }
+        }
+      }
+    },
+    "Equals" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Égal"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Égal"
           }
         }
       }
@@ -4857,6 +5397,94 @@
         }
       }
     },
+    "Hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice"
+          }
+        }
+      }
+    },
+    "Hint %d" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint %d"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice %d"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice %d"
+          }
+        }
+      }
+    },
+    "Hint %d shown." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint %d shown."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice %d affiché."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice %d affiché."
+          }
+        }
+      }
+    },
+    "Hint unavailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint unavailable"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice non disponible"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice non disponible"
+          }
+        }
+      }
+    },
     "Hold key" : {
       "localizations" : {
         "fr" : {
@@ -5001,44 +5629,6 @@
         }
       }
     },
-    "Illustration brief" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration"
-          }
-        }
-      }
-    },
-    "Illustration brief. " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Illustration brief. "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration. "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration. "
-          }
-        }
-      }
-    },
     "Immediate feedback" : {
       "localizations" : {
         "fr" : {
@@ -5177,6 +5767,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importation : la version du fichier doit être 1."
+          }
+        }
+      }
+    },
+    "Import lessonIdVersion must be 1 or 2 when present." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import lessonIdVersion must be 1 or 2 when present."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : lessonIdVersion doit être 1 ou 2 lorsqu’il est présent."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : lessonIdVersion doit être 1 ou 2 lorsqu’il est présent."
           }
         }
       }
@@ -5567,6 +6179,28 @@
         }
       }
     },
+    "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyboard input works only while focus is in the calculator: digits, operators, Enter for equals, Backspace, Escape for clear entry, Delete for all clear."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La saisie au clavier fonctionne seulement lorsque le focus est dans la calculatrice : chiffres, opérateurs, Entrée pour égal, Retour arrière, Échap pour effacer l’entrée, Supprimer pour tout effacer."
+          }
+        }
+      }
+    },
     "Koch course" : {
       "localizations" : {
         "fr" : {
@@ -5857,6 +6491,22 @@
         }
       }
     },
+    "Lesson" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon"
+          }
+        }
+      }
+    },
     "Lesson quiz" : {
       "localizations" : {
         "fr" : {
@@ -5901,6 +6551,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Questionnaire de leçon indisponible"
+          }
+        }
+      }
+    },
+    "Lesson section opened." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesson section opened."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Section de leçon ouverte."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Section de leçon ouverte."
           }
         }
       }
@@ -6513,6 +7185,22 @@
         }
       }
     },
+    "Module %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Module %lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Module %lld"
+          }
+        }
+      }
+    },
     "Module %lld · %@" : {
       "localizations" : {
         "en" : {
@@ -6747,6 +7435,22 @@
         }
       }
     },
+    "Multiply" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multiplier"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multiplier"
+          }
+        }
+      }
+    },
     "Needs review" : {
       "localizations" : {
         "fr" : {
@@ -6957,6 +7661,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune copie saisie."
+          }
+        }
+      }
+    },
+    "No hint is shown yet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hint is shown yet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun indice n’est affiché pour l’instant."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun indice n’est affiché pour l’instant."
           }
         }
       }
@@ -7239,50 +7965,34 @@
         }
       }
     },
-    "Offline Basic question-bank practice for visionOS" : {
+    "Offline, private Advanced practice" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exercices hors ligne avec la banque de questions de compétence de base pour visionOS"
+            "value" : "Exercices de compétence supérieure hors ligne et privés"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exercices hors ligne avec la banque de questions de compétence de base pour visionOS"
+            "value" : "Exercices de compétence supérieure hors ligne et privés"
           }
         }
       }
     },
-    "Offline, private, 2025 bank" : {
+    "Offline, private study" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hors ligne, privé, banque 2025"
+            "value" : "Étude hors ligne et privée"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hors ligne, privé, banque 2025"
-          }
-        }
-      }
-    },
-    "Offline, private, Advanced bank" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hors ligne, privé, banque supérieure"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hors ligne, privé, banque supérieure"
+            "value" : "Étude hors ligne et privée"
           }
         }
       }
@@ -7519,6 +8229,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mettre la minuterie en pause"
+          }
+        }
+      }
+    },
+    "Percent" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourcentage"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourcentage"
           }
         }
       }
@@ -7793,22 +8519,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes iambiques."
-          }
-        }
-      }
-    },
-    "Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Sur Mac et avec les claviers matériels iPad, placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets. Sur iPhone et iPad, utilisez les grandes cibles tactiles."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Sur Mac et avec les claviers matériels iPad, placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets. Sur iPhone et iPad, utilisez les grandes cibles tactiles."
           }
         }
       }
@@ -8345,6 +9055,22 @@
         }
       }
     },
+    "Reciprocal" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverse"
+          }
+        }
+      }
+    },
     "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape." : {
       "localizations" : {
         "en" : {
@@ -8363,6 +9089,60 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réduire les animations ou Atténuer les lumières clignotantes est activé; la lecture utilise donc le ruban non clignotant."
+          }
+        }
+      }
+    },
+    "Reference sheet" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence"
+          }
+        }
+      }
+    },
+    "Reference sheet unavailable" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence non disponible"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence non disponible"
+          }
+        }
+      }
+    },
+    "Reference sheet: " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reference sheet: "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille de référence : "
           }
         }
       }
@@ -8573,6 +9353,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voir les questions à réviser"
+          }
+        }
+      }
+    },
+    "Review in lesson" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review in lesson"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoir dans la leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoir dans la leçon"
           }
         }
       }
@@ -8931,6 +9733,72 @@
         }
       }
     },
+    "Show full sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show full sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher la feuille complète"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher la feuille complète"
+          }
+        }
+      }
+    },
+    "Show Hint 1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Hint 1"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’indice 1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’indice 1"
+          }
+        }
+      }
+    },
+    "Show Hint 2" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Hint 2"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’indice 2"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’indice 2"
+          }
+        }
+      }
+    },
     "Simulated 5 wpm exam" : {
       "localizations" : {
         "fr" : {
@@ -9019,6 +9887,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sources"
+          }
+        }
+      }
+    },
+    "Square" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carré"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carré"
+          }
+        }
+      }
+    },
+    "Square root" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racine carrée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racine carrée"
           }
         }
       }
@@ -9565,50 +10465,50 @@
         }
       }
     },
-    "Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions follow your Language setting." : {
+    "Study for the Amateur Radio Operator Certificate with Advanced Qualification using the official ISED question bank. Advanced progress is tracked separately from Basic." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercice suivent votre réglage de langue."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence supérieure à l’aide de la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercice suivent votre réglage de langue."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence supérieure à l’aide de la banque de questions officielle d’ISDE. La progression de la compétence supérieure est suivie séparément de celle de la compétence de base."
           }
         }
       }
     },
-    "Study with the bundled ISED Advanced 2025-02-04 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it and is separate from Basic." : {
+    "Study for the Amateur Radio Operator Certificate with Basic Qualification using the official ISED question bank." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez la banque de questions ISDE EN/FR de compétence supérieure 2025-02-04 incluse sur iPhone, iPad et Mac. La progression reste sur cet appareil sauf si vous l’exportez et est séparée de celle de la compétence de base."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence de base à l’aide de la banque de questions officielle d’ISDE."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez la banque de questions ISDE EN/FR de compétence supérieure 2025-02-04 incluse sur iPhone, iPad et Mac. La progression reste sur cet appareil sauf si vous l’exportez et est séparée de celle de la compétence de base."
+            "value" : "Préparez-vous au certificat d’opérateur radioamateur avec compétence de base à l’aide de la banque de questions officielle d’ISDE."
           }
         }
       }
     },
-    "Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it." : {
+    "Study the eight modules in order. Lessons are currently authored in English; official practice questions follow your Language setting." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez avec la banque de questions ISDE compétence de base 2025-07-15 intégrée sur iPhone, iPad et Mac. La progression reste sur cet appareil, sauf si vous l’exportez."
+            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais; les questions officielles d’exercice suivent votre réglage de langue."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez avec la banque de questions ISDE compétence de base 2025-07-15 intégrée sur iPhone, iPad et Mac. La progression reste sur cet appareil, sauf si vous l’exportez."
+            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais; les questions officielles d’exercice suivent votre réglage de langue."
           }
         }
       }
@@ -9721,6 +10621,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sous-sections"
+          }
+        }
+      }
+    },
+    "Subtract" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soustraire"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soustraire"
           }
         }
       }
@@ -9843,6 +10759,22 @@
         }
       }
     },
+    "The bundled Basic reference sheet is not installed in this build." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La feuille de référence de base intégrée n’est pas installée dans cette version."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La feuille de référence de base intégrée n’est pas installée dans cette version."
+          }
+        }
+      }
+    },
     "The bundled question bank has no practice categories." : {
       "localizations" : {
         "en" : {
@@ -9935,72 +10867,6 @@
         }
       }
     },
-    "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
-          }
-        }
-      }
-    },
-    "This Apple TV app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Apple TV app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple TV fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple TV fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
-          }
-        }
-      }
-    },
-    "This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
-          }
-        }
-      }
-    },
     "This category has no bundled questions." : {
       "localizations" : {
         "en" : {
@@ -10057,6 +10923,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ce profil de minutage d’examen fixe les vitesses à %@ pour les caractères et %@ en vitesse effective. Choisissez Farnsworth général pour modifier les vitesses."
+          }
+        }
+      }
+    },
+    "This hint is available for review. Your current answer has already been scored." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This hint is available for review. Your current answer has already been scored."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cet indice est disponible pour la révision. Votre réponse actuelle a déjà été notée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cet indice est disponible pour la révision. Votre réponse actuelle a déjà été notée."
           }
         }
       }
@@ -10315,6 +11203,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Profil de minutage"
+          }
+        }
+      }
+    },
+    "Toggle sign" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change sign"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer le signe"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer le signe"
           }
         }
       }
@@ -10651,6 +11561,28 @@
         }
       }
     },
+    "Use hints when you need help. Answers after a shown hint are saved as answered with help." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use hints when you need help. Answers after a shown hint are saved as answered with help."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez les indices lorsque vous avez besoin d’aide. Les réponses après un indice affiché sont enregistrées avec aide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez les indices lorsque vous avez besoin d’aide. Les réponses après un indice affiché sont enregistrées avec aide."
+          }
+        }
+      }
+    },
     "Use Settings to change Morse tone, timing, and playback volume." : {
       "localizations" : {
         "fr" : {
@@ -10717,6 +11649,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Révision des caractères faibles"
+          }
+        }
+      }
+    },
+    "Practise tap timing with a straight key or iambic-style paddles. With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets. Aim for steady dot/dash ratio and timing consistency." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/tirets et un minutage constants."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/tirets et un minutage constants."
           }
         }
       }
@@ -10819,6 +11767,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
+          }
+        }
+      }
+    },
+    "Zoom in" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom in"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir le zoom"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir le zoom"
+          }
+        }
+      }
+    },
+    "Zoom out" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom out"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire le zoom"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire le zoom"
           }
         }
       }
@@ -10999,6 +11991,163 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les examens de compétence de base sont à livre fermé. La leçon sur l’autorité, les certificats et les examens explique quoi apporter, les calculatrices permises, les examens virtuels et où télécharger la feuille de référence non étiquetée d’ISDE pour la compétence de base (en anglais) afin de s’exercer."
+          }
+        }
+      }
+    },
+    "Enlarge figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarge figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir la figure"
+          }
+        }
+      }
+    },
+    "Enlarged figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarged figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure agrandie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure agrandie"
+          }
+        }
+      }
+    },
+    "Figure text equivalent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure text equivalent"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        }
+      }
+    },
+    "Opens enlarged figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens enlarged figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre la figure agrandie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre la figure agrandie"
+          }
+        }
+      }
+    },
+    "%@.answeredWithHelpIds must be sorted unique official question IDs from this attempt." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds must be sorted unique official question IDs from this attempt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds doit contenir des identifiants de questions officielles de cette tentative, triés et sans doublons."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.answeredWithHelpIds doit contenir des identifiants de questions officielles de cette tentative, triés et sans doublons."
+          }
+        }
+      }
+    },
+    "Answered with help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answered with help"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponse avec aide"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponse avec aide"
+          }
+        }
+      }
+    },
+    "Answers with help: %lld." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answers with help: %lld."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponses avec aide : %lld."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponses avec aide : %lld."
           }
         }
       }

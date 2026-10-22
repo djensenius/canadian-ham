@@ -1,10 +1,102 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { render, screen } from "@testing-library/react";
 import { describe, it } from "vitest";
 
-import { MarkdownContent, parseMarkdownBlocks } from "./MarkdownContent";
+import { lessonHeadingAnchorSlug, lessonHeadingAnchors, MarkdownContent, parseMarkdownBlocks } from "./MarkdownContent";
+
+interface FigureDirectiveFixture {
+  readonly name: string;
+  readonly markdown: string;
+  readonly expected: readonly Record<string, unknown>[];
+}
+
+interface LessonHeadingAnchorFixture {
+  readonly slugCases: ReadonlyArray<{ readonly name: string; readonly headingText: string; readonly expectedSlug: string }>;
+  readonly anchorCases: ReadonlyArray<{ readonly name: string; readonly title: string | null; readonly markdown: string; readonly expectedAnchors: readonly string[]; readonly rejectedAnchors: readonly string[] }>;
+}
+
+const moduleUrl = new URL(import.meta.url);
+const modulePath = moduleUrl.protocol === "file:"
+  ? fileURLToPath(moduleUrl)
+  : join(process.cwd(), moduleUrl.pathname.replace(/^\/+/, ""));
+const fixturesRoot = join(dirname(modulePath), "../../../../fixtures");
+const figureDirectiveFixtures = JSON.parse(readFileSync(join(fixturesRoot, "markdown-figure-directives.json"), "utf8")) as FigureDirectiveFixture[];
+const lessonHeadingAnchorFixture = JSON.parse(readFileSync(join(fixturesRoot, "lesson-heading-anchors.json"), "utf8")) as LessonHeadingAnchorFixture;
+
+function simplifiedBlocks(markdown: string) {
+  return parseMarkdownBlocks(markdown).map((block) => {
+    if (block.type === "figure") {
+      return { type: "figure", id: block.id, altText: block.alt, textEquivalent: block.textEquivalent };
+    }
+    if (block.type === "paragraph") {
+      return { type: "paragraph", text: block.text };
+    }
+    if (block.type === "code") {
+      return { type: "code", language: block.language, text: block.code };
+    }
+    if (block.type === "heading") {
+      return { type: "heading", text: block.text };
+    }
+    return { type: block.type };
+  });
+}
 
 describe("MarkdownContent parser", () => {
+  for (const fixture of figureDirectiveFixtures) {
+    it(`matches shared figure-directive fixture: ${fixture.name}`, () => {
+      assert.deepEqual(simplifiedBlocks(fixture.markdown), fixture.expected);
+    });
+  }
+
+  for (const slugCase of lessonHeadingAnchorFixture.slugCases) {
+    it(`matches shared heading slug fixture: ${slugCase.name}`, () => {
+      assert.equal(lessonHeadingAnchorSlug(slugCase.headingText), slugCase.expectedSlug);
+    });
+  }
+
+  for (const anchorCase of lessonHeadingAnchorFixture.anchorCases) {
+    it(`matches shared rendered-heading anchor fixture: ${anchorCase.name}`, () => {
+      const anchors = lessonHeadingAnchors(anchorCase.markdown, anchorCase.title ?? undefined);
+      assert.deepEqual(anchors, anchorCase.expectedAnchors);
+      for (const rejectedAnchor of anchorCase.rejectedAnchors) {
+        assert.equal(anchors.includes(rejectedAnchor), false, rejectedAnchor);
+      }
+    });
+  }
+
+  it("renders shared heading ids on linkable headings and keeps duplicates unique", () => {
+    render(<MarkdownContent markdown={"# Fixture Lesson\n\n## Shared setup\n\n## Shared setup"} title="Fixture Lesson" />);
+
+    assert.equal(screen.queryByRole("heading", { name: "Fixture Lesson" }), null);
+    const headings = screen.getAllByRole("heading", { name: "Shared setup" });
+    assert.equal(headings[0]?.id, "shared-setup");
+    assert.equal(headings[1]?.id, "shared-setup-1");
+    assert.equal(headings[0]?.getAttribute("tabindex"), "-1");
+  });
+
+  it("updates rendered content when markdown and title props change", () => {
+    const { rerender } = render(<MarkdownContent markdown={"# First Lesson\n\n## Shared setup\n\nInitial body"} title="First Lesson" />);
+
+    assert.equal(screen.queryByRole("heading", { name: "First Lesson" }), null);
+    assert.ok(screen.getByRole("heading", { name: "Shared setup" }));
+    assert.ok(screen.getByText("Initial body"));
+
+    rerender(<MarkdownContent markdown={"# Second Lesson\n\n## Updated setup\n\nUpdated body"} title="Second Lesson" />);
+
+    assert.equal(screen.queryByText("Initial body"), null);
+    assert.equal(screen.queryByRole("heading", { name: "Shared setup" }), null);
+    assert.equal(screen.queryByRole("heading", { name: "Second Lesson" }), null);
+    assert.ok(screen.getByRole("heading", { name: "Updated setup" }));
+    assert.ok(screen.getByText("Updated body"));
+
+    rerender(<MarkdownContent markdown={"# Second Lesson\n\n## Updated setup\n\nUpdated body"} title="Displayed Title" />);
+
+    assert.ok(screen.getByRole("heading", { name: "Second Lesson" }));
+  });
+
   it("handles dash, star, and plus unordered bullets", () => {
     const blocks = parseMarkdownBlocks("- dash\n* star\n+ plus");
 
@@ -54,11 +146,29 @@ describe("MarkdownContent parser", () => {
     assert.deepEqual(blocks, [{ type: "paragraph", text: "```text value = 300 / f" }]);
   });
 
-  it("stops an illustration brief after its description", () => {
-    const blocks = parseMarkdownBlocks("## Illustration brief\n\nAlt text: Meter\n\nDescription: Draw a meter.\n\nThis paragraph stays separate.");
+  it("stops an illustration brief after its description without showing the author brief to learners", () => {
+    const markdown = "## Illustration brief\n\nAlt text: Meter\n\nDescription: Draw a meter.\n\nThis paragraph stays separate.";
+    const blocks = parseMarkdownBlocks(markdown);
 
     assert.equal(blocks[0]?.type, "illustration");
     assert.deepEqual(blocks[1], { type: "paragraph", text: "This paragraph stays separate." });
+
+    render(<MarkdownContent markdown={markdown} />);
+    assert.equal(screen.queryByText("Illustration placeholder"), null);
+    assert.equal(screen.queryByText(/Draw a meter/u), null);
+    assert.ok(screen.getByText("This paragraph stays separate."));
+  });
+
+  it("parses and renders figure directives with alt text and text equivalents", () => {
+    const markdown = "::figure ohms-law-power-wheel\nAlt text: Ohm wheel alt.\nText equivalent:\n- To find P: I x E.\n::";
+    const blocks = parseMarkdownBlocks(markdown);
+
+    assert.deepEqual(blocks, [{ type: "figure", id: "ohms-law-power-wheel", alt: "Ohm wheel alt.", textEquivalent: ["To find P: I x E."] }]);
+
+    render(<MarkdownContent markdown={markdown} />);
+    assert.ok(screen.getByRole("img", { name: "Ohm wheel alt." }));
+    assert.ok(screen.getByText("Figure text equivalent"));
+    assert.ok(screen.getByText("To find P: I x E."));
   });
 
   it("renders parsed content without unsafe HTML injection", () => {

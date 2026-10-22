@@ -1,0 +1,91 @@
+---
+id: TASK-50.7
+title: 'Hint content batch: B-005 basic electronics and theory'
+status: Done
+assignee:
+  - '@worker'
+created_date: '2026-10-16 07:58'
+updated_date: '2026-10-16 15:39'
+labels:
+  - content
+dependencies:
+  - TASK-50.2
+references:
+  - content/generated/basic-2025-07-15/questions.json
+  - content/explanations/b-005
+  - content/lessons
+documentation:
+  - docs/teaching-guide.md
+parent_task_id: TASK-50
+priority: medium
+type: task
+ordinal: 121000
+---
+
+## Description
+
+<!-- SECTION:DESCRIPTION:BEGIN -->
+Write and review original EN/FR hint content for B-005 electronics and theory questions, including formula/setup hints that follow E/I/R/P notation and SI spacing.
+<!-- SECTION:DESCRIPTION:END -->
+
+## Acceptance Criteria
+<!-- AC:BEGIN -->
+- [x] #1 Hints follow the approved ladder, use original wording, and do not leak answers, options, question phrasing, or copied reference-sheet content.
+- [x] #2 A content reviewer checks the batch for accuracy and tone; review notes and sample corrections are recorded.
+- [x] #3 The hint checker, schema check, explanations checker, and originality checker pass after the batch.
+- [x] #4 Batch review explicitly checks that hints do not copy reference-sheet content; review notes record any findings or corrections.
+- [x] #5 Batch review explicitly checks equivalent unit conversions (for example 1.5 MHz for 1 500 kHz) and distractor numeric values listed as eliminations; review notes record any findings or corrections.
+- [x] #6 All in-scope B-005 basic electronics and theory active Basic questions have one or two EN/FR hint levels; files with only Hint 1 include singleLevelReason.
+<!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read the B-005 source questions, M5 lessons, explanations, reference-sheet keys, and calibrated B-001 hint examples.\n2. Write hand-authored EN/FR hints for B-005 one subsection at a time, using formula/setup ladders where useful and single-level topic pointers only for pure recall.\n3. After each subsection, run pnpm check:hints with --subsection and --require-complete, commit, push, and record progress notes.\n4. Stop after B-005-001 and B-005-002 for calibration with six EN/FR samples before continuing.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Completed B-005-001 calibration slice: wrote 11 hint files (9 two-level method, 2 single-level prefix recall); pnpm check:hints -- --subsection B-005-001 --require-complete passed.
+
+Completed B-005-002 calibration slice: wrote 11 hint files (3 two-level concept/method, 8 single-level recall); pnpm check:hints -- --subsection B-005-002 --require-complete passed. Stopping for calibration with sample questions/options as requested.
+
+Calibration fixes applied after review: neutralized B-005-002-002 L1 and B-005-002-006 pointer; re-ran B-005-001 and B-005-002 subsection checks successfully. Continuing through remaining B-005 subsections.
+
+Completed B-005-003: wrote 11 hint files (6 two-level concept/method, 5 single-level recall); pnpm check:hints -- --subsection B-005-003 --require-complete passed.
+
+Completed B-005-004: wrote 11 two-level Ohm's law method hints; pnpm check:hints -- --subsection B-005-004 --require-complete passed.
+
+Completed B-005-005: wrote 11 two-level series/parallel method hints; pnpm check:hints -- --subsection B-005-005 --require-complete passed.
+
+Completed B-005-006: wrote 11 hint files (9 two-level power/rating method, 2 single-level recall); pnpm check:hints -- --subsection B-005-006 --require-complete passed.
+
+Completed B-005-007: wrote 11 hint files (6 two-level AC/frequency method, 5 single-level recall); pnpm check:hints -- --subsection B-005-007 --require-complete passed.
+
+Completed B-005-008: wrote 11 hint files (10 two-level dB method, 1 single-level concept recall); pnpm check:hints -- --subsection B-005-008 --require-complete passed.
+
+Completed B-005-009: wrote 11 hint files (8 two-level L/C combination method, 3 single-level recall); pnpm check:hints -- --subsection B-005-009 --require-complete passed.
+
+Completed B-005-010: wrote 11 hint files (9 two-level reactance method/concept, 2 single-level term recall); pnpm check:hints -- --subsection B-005-010 --require-complete passed.
+
+Completed B-005-011: wrote 11 hint files (6 two-level transformer method/concept, 5 single-level recall); pnpm check:hints -- --subsection B-005-011 --require-complete passed.
+
+Completed B-005-012: wrote 11 hint files (9 two-level resonance/tuned-circuit concept hints, 2 single-level recall); pnpm check:hints -- --subsection B-005-012 --require-complete passed.
+
+Completed B-005-013: wrote 10 hint files (4 two-level meter-placement concept, 6 single-level recall); pnpm check:hints -- --subsection B-005-013 --require-complete passed.
+
+Finished B-005 hint content: 142/142 active questions covered (101 two-level, 41 single-level). Full validation passed: pnpm check:hints -- --category B-005 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test. PR handoff will include per-subsection counts and samples.
+
+Opened PR #269 (task-50.7: B-005 hints) with per-subsection counts, 10 EN/FR samples with options, and checks run; added @copilot as reviewer.
+
+PR #269 review fixes applied in 03a987aca062f37c0e82170d970aefcb603d17c8: corrected B-005-001-001 mega/kilo factual error; converted definition/concept leaks to neutral single-level pointers; rewrote method hints flagged for answer/option leakage; fixed FR terminology/style and lesson-link anchors; added the README rule that concept-question principles cannot restate the answer. Updated B-005 counts: 142 files, 88 two-level, 54 single-level. Manual EN/FR option self-test applied to every touched hint file. Validation passed: pnpm check:hints -- --category B-005 --require-complete; pnpm check:hints:self-test; pnpm check:schemas; pnpm --filter @canadian-ham/content-tools check:explanations; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all; pnpm typecheck; pnpm test.
+
+Coordinator closeout 2026-10-16: batch content review completed (review files ~/.cache/canadian-ham-reviews/r269*.md), all findings fixed and coordinator spot-checked against ISED options; merged in PR #269.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Hand-written EN/FR hints for every active question in this category, reviewed (no answer leakage, no elimination, neutral section-level pointers, verified method hints), merged in PR #269.
+<!-- SECTION:FINAL_SUMMARY:END -->

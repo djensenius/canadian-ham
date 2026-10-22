@@ -1,0 +1,19 @@
+{
+  "id": "HINT-B-005-003-009",
+  "questionId": "B-005-003-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what causes a resistor to heat up in normal operation.",
+      "fr": "Revoyez ce qui fait chauffer une résistance en fonctionnement normal."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02"
+  },
+  "singleLevelReason": "Pure concept-term recall: a second hint would name the heat-producing quantity.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

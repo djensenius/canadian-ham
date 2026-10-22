@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-009-008",
+  "questionId": "B-001-009-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review station-owner responsibilities when another person operates.",
+      "fr": "Revoyez les responsabilités du propriétaire de station lorsqu’une autre personne exploite la station."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-stays-with-responsible-people"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

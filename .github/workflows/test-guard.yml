@@ -1,0 +1,53 @@
+name: Test guard
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test_guard:
+    name: Test guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Select base test-guard checker
+        shell: bash
+        env:
+          TEST_GUARD_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          guard_script="${RUNNER_TEMP}/check-test-guard.mjs"
+          if git cat-file -e "${TEST_GUARD_BASE_SHA}:scripts/check-test-guard.mjs" 2>/dev/null; then
+            git show "${TEST_GUARD_BASE_SHA}:scripts/check-test-guard.mjs" > "${guard_script}"
+            echo "Using base-branch test guard checker."
+          else
+            cp scripts/check-test-guard.mjs "${guard_script}"
+            echo "Base branch has no test guard checker yet; using PR copy for bootstrap."
+          fi
+          chmod +x "${guard_script}"
+          echo "TEST_GUARD_SCRIPT=${guard_script}" >> "${GITHUB_ENV}"
+
+      - name: Test test-guard checker
+        run: node "${TEST_GUARD_SCRIPT}" --self-test
+
+      - name: Check guarded Apple test/view changes
+        env:
+          TEST_GUARD_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          TEST_GUARD_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TEST_GUARD_PR_BODY: ${{ github.event.pull_request.body }}
+        run: node "${TEST_GUARD_SCRIPT}"

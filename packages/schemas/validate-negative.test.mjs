@@ -87,6 +87,19 @@ test("progress export schema rejects Basic lesson quizzes that reference Advance
   );
 });
 
+test("progress export schema rejects invalid answered-with-help fields", () => {
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-answered-with-help-non-boolean.json"),
+    "progress-export-v1.schema.json",
+    "$.questionProgress[0].lastAnsweredWithHelp: expected type \"boolean\"",
+  );
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-recent-answered-with-help-too-long.json"),
+    "progress-export-v1.schema.json",
+    "$.questionProgress[0].recentAnsweredWithHelp: expected at most 5 item(s)",
+  );
+});
+
 test("progress export schema rejects Advanced exports that carry lesson data", () => {
   const advancedExport = { ...validProgressExport, bankId: "advanced-2025-02-04" };
   assertSchemaRejects(
@@ -258,6 +271,50 @@ test("generated bank subsections reject non-importer lesson and title fields", (
   );
 });
 
+test("hint schema rejects each ladder constraint independently", () => {
+  const hint = readValidFixture("hint.json");
+  assertSchemaRejects(
+    { ...hint, hints: [{ ...hint.hints[0], level: 2 }, hint.hints[1]] },
+    "hint.schema.json",
+    "$.hints[0].level: expected const 1",
+  );
+  assertSchemaRejects(
+    { ...hint, hints: [hint.hints[0]] },
+    "hint.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    { ...hint, hints: [] },
+    "hint.schema.json",
+    "$.hints: expected at least 1 item(s)",
+  );
+  assertSchemaRejects(
+    { ...hint, singleLevelReason: "Only for one-level hints." },
+    "hint.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    { ...hint, lessonLink: { sectionAnchor: "how-these-rules-fit-together" } },
+    "hint.schema.json",
+    "$.lessonLink: missing required property lessonId",
+  );
+  assertSchemaRejects(
+    { ...hint, lessonLink: { lessonId: "NOT-A-LESSON" } },
+    "hint.schema.json",
+    "$.lessonLink.lessonId: expected string to match",
+  );
+  assertSchemaRejects(
+    { ...hint, referenceSheetSection: "unknown-section" },
+    "hint.schema.json",
+    "$.referenceSheetSection: expected one of",
+  );
+  assertSchemaRejects(
+    { ...hint, licenseClass: "copied" },
+    "hint.schema.json",
+    "$.licenseClass: expected const",
+  );
+});
+
 function readValidFixture(fixture) {
   return JSON.parse(fs.readFileSync(path.join(validFixturesDir, fixture), "utf8"));
 }
@@ -283,4 +340,19 @@ test("oneOf discriminator shortcut applies only to a required const property in 
   // Const in only one branch: no shortcut.
   const noConst = { type: "object", required: ["kind"], properties: { kind: { type: "string" } } };
   assert.equal(selectOneOfBranchByConstDiscriminator([a, noConst], { kind: "a" }), null);
+});
+
+test("lesson-quiz help IDs are optional sorted unique official subsets in attempts and sync rows", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(projectRoot, "fixtures/lesson-quiz-help.json"), "utf8"));
+  for (const ids of [undefined, ...fixture.validHelpIds, ...fixture.invalidHelpIds]) {
+    const attempt = { ...fixture.attempt, ...(ids === undefined ? {} : { answeredWithHelpIds: ids }) };
+    const exports = [
+      { ...validProgressExport, lessonQuizAttempts: [attempt] },
+      { ...validProgressExport, syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", attempt }], morseCourseProgress: [] } },
+    ];
+    for (const data of exports) {
+      const errors = validateDataAgainstSchema(data, "progress-export-v1.schema.json");
+      assert.equal(errors.length === 0, ids === undefined || fixture.validHelpIds.includes(ids), errors.join("\n"));
+    }
+  }
 });

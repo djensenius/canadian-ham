@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-007-006",
+  "questionId": "B-002-007-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Q-signal list for identifying an unknown caller.",
+      "fr": "Revoyez la liste des codes Q pour identifier une station appelante inconnue."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "choose-q-signals-by-the-task"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

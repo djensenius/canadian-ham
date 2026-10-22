@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-002-009",
+  "questionId": "B-007-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the low-band daylight discussion in the layer section.",
+      "fr": "Revoyez l’explication sur les bandes basses de jour dans la section sur les couches."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "the-ionosphere-in-layers"
+  },
+  "singleLevelReason": "Layer-effect recall: a second hint would identify or eliminate a layer or effect; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

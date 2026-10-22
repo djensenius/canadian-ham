@@ -1,6 +1,16 @@
-import type { ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 
 import { t, type InterfaceLanguage } from "../lib/i18n";
+
+const figureSourceModules = import.meta.glob("../../../../content/figures/*.svg", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+}) as Record<string, string>;
+
+const figureSourcesById = new Map(
+  Object.entries(figureSourceModules).map(([path, source]) => [path.split("/").pop()?.replace(/\.svg$/, "") ?? path, source]),
+);
 
 interface MarkdownContentProps {
   readonly markdown: string;
@@ -17,32 +27,41 @@ type MarkdownBlock =
   | { readonly type: "ordered-list"; readonly items: readonly string[] }
   | { readonly type: "table"; readonly headers: readonly string[]; readonly rows: readonly (readonly string[])[] }
   | { readonly type: "code"; readonly language: string | null; readonly code: string }
+  | { readonly type: "figure"; readonly id: string; readonly alt: string; readonly textEquivalent: readonly string[] }
   | { readonly type: "illustration"; readonly alt: string; readonly description: string };
 
 export function MarkdownContent({ markdown, title, interfaceLanguage = "en", contentLanguage, tableLabel = t(interfaceLanguage, "markdownTableAria") }: MarkdownContentProps) {
   let tableIndex = 0;
-  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => {
+  let headingIndex = 0;
+  const blocks = useMemo(() => parseMarkdownBlocks(markdown, title), [markdown, title]);
+  const headingAnchors = useMemo(() => lessonHeadingAnchorEntries(blocks), [blocks]);
+  return <>{blocks.map((block, index) => {
     if (block.type === "table") {
       tableIndex += 1;
       return renderBlock(block, index, interfaceLanguage, contentLanguage, `${tableLabel} ${tableIndex}`);
+    }
+    if (block.type === "heading") {
+      const headingId = headingAnchors[headingIndex];
+      headingIndex += 1;
+      return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel, headingId);
     }
     return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel);
   })}</>;
 }
 
-function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string): ReactNode {
+function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string, headingId?: string): ReactNode {
   if (block.type === "heading") {
     const Tag = `h${Math.min(block.depth + 1, 6)}` as "h2" | "h3" | "h4" | "h5" | "h6";
-    return <Tag key={index} lang={contentLanguage}>{block.text}</Tag>;
+    return <Tag id={headingId} key={index} lang={contentLanguage} tabIndex={headingId === undefined ? undefined : -1}>{block.text}</Tag>;
   }
   if (block.type === "paragraph") {
     return <p key={index} lang={contentLanguage}>{block.text}</p>;
   }
   if (block.type === "unordered-list") {
-    return <ul key={index} lang={contentLanguage}>{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
+    return <ul key={index} lang={contentLanguage}>{block.items.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}</ul>;
   }
   if (block.type === "ordered-list") {
-    return <ol key={index} lang={contentLanguage}>{block.items.map((item) => <li key={item}>{item}</li>)}</ol>;
+    return <ol key={index} lang={contentLanguage}>{block.items.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}</ol>;
   }
   if (block.type === "table") {
     return (
@@ -71,16 +90,64 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
       ><code lang={contentLanguage}>{block.code}</code></pre>
     );
   }
-  return (
-    <figure className="illustration-placeholder" key={index}>
-      <div className="illustration-placeholder__art" role="img" aria-label={block.alt}>
-        {t(interfaceLanguage, "markdownIllustrationPlaceholder")}
-      </div>
-      <figcaption>
-        <strong>{t(interfaceLanguage, "markdownIllustrationBrief")}</strong> {block.description}
-      </figcaption>
-    </figure>
-  );
+  if (block.type === "figure") {
+    const source = figureSourcesById.get(block.id);
+    return (
+      <figure className="lesson-figure" data-figure-id={block.id} key={index}>
+        <div
+          className="lesson-figure__art"
+          role="img"
+          aria-label={block.alt}
+          dangerouslySetInnerHTML={source === undefined ? undefined : { __html: source }}
+        >{source === undefined ? block.alt : undefined}</div>
+        {block.textEquivalent.length > 0 ? (
+          <details className="lesson-figure__text-equivalent">
+            <summary>{t(interfaceLanguage, "markdownFigureTextEquivalent")}</summary>
+            <ul>
+              {block.textEquivalent.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}
+            </ul>
+          </details>
+        ) : null}
+      </figure>
+    );
+  }
+  return null;
+}
+
+export function lessonHeadingAnchorSlug(headingText: string): string {
+  return stripInlineMarkdown(headingText)
+    .trim()
+    .replace(/<[^>]+>/g, "")
+    .toLowerCase()
+    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+    .trim()
+    .replace(/\s/g, "-");
+}
+
+export function lessonHeadingAnchors(markdown: string, title?: string): string[] {
+  return lessonHeadingAnchorEntries(parseMarkdownBlocks(markdown, title)).filter((anchor): anchor is string => anchor !== undefined);
+}
+
+function lessonHeadingAnchorEntries(blocks: readonly MarkdownBlock[]): Array<string | undefined> {
+  const seen = new Map<string, number>();
+  const anchors: Array<string | undefined> = [];
+  for (const block of blocks) {
+    if (block.type !== "heading") {
+      continue;
+    }
+    const baseSlug = lessonHeadingAnchorSlug(block.text);
+    if (baseSlug.length === 0) {
+      anchors.push(undefined);
+      continue;
+    }
+    const previousCount = seen.get(baseSlug) ?? 0;
+    seen.set(baseSlug, previousCount + 1);
+    // Keep these IDs identical to fixtures/lesson-heading-anchors.json and hint sectionAnchor values.
+    // Prefixing them to avoid collisions with app chrome IDs would break the shared fixture algorithm
+    // and existing lesson hash targets.
+    anchors.push(previousCount === 0 ? baseSlug : `${baseSlug}-${previousCount}`);
+  }
+  return anchors;
 }
 
 export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownBlock[] {
@@ -102,6 +169,14 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
     if (fencedCode !== null) {
       blocks.push(fencedCode.block);
       index = fencedCode.nextIndex;
+      assertParserProgress(previousIndex, index);
+      continue;
+    }
+
+    const figure = parseFigure(lines, index);
+    if (figure !== null) {
+      blocks.push(figure.block);
+      index = figure.nextIndex;
       assertParserProgress(previousIndex, index);
       continue;
     }
@@ -163,7 +238,7 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
     const paragraphLines: string[] = [];
     while (index < lines.length) {
       const paragraphLine = lines[index] ?? "";
-      if (paragraphLine.trim() === "" || /^(#{1,6})(?:\s|$)/.test(paragraphLine) || /^\s*[-*+]\s+/.test(paragraphLine) || /^\s*\d+\.\s+/.test(paragraphLine) || isTableStart(lines, index) || parseFencedCode(lines, index) !== null) {
+      if (paragraphLine.trim() === "" || /^(#{1,6})(?:\s|$)/.test(paragraphLine) || /^\s*[-*+]\s+/.test(paragraphLine) || /^\s*\d+\.\s+/.test(paragraphLine) || figureDirectiveId(paragraphLine) !== null || isTableStart(lines, index) || parseFencedCode(lines, index) !== null) {
         break;
       }
       paragraphLines.push(paragraphLine.trim());
@@ -215,6 +290,68 @@ function assertParserProgress(previousIndex: number, nextIndex: number): void {
   if (nextIndex <= previousIndex) {
     throw new Error(`Markdown parser failed to advance at line ${previousIndex + 1}.`);
   }
+}
+
+function figureDirectiveId(line: string): string | null {
+  return /^::figure\s+([a-z0-9][a-z0-9-]*)\s*$/.exec(line.trim())?.[1] ?? null;
+}
+
+function parseFigure(lines: readonly string[], startIndex: number): { readonly block: MarkdownBlock; readonly nextIndex: number } | null {
+  const id = figureDirectiveId(lines[startIndex] ?? "");
+  if (id === null) {
+    return null;
+  }
+
+  let index = startIndex + 1;
+  let alt = "";
+  const textEquivalent: string[] = [];
+  const fallbackLines = [lines[startIndex]?.trim() ?? ""];
+  let readingTextEquivalent = false;
+
+  while (index < lines.length) {
+    const line = lines[index] ?? "";
+    const trimmed = line.trim();
+    if (trimmed === "::") {
+      return {
+        block: {
+          type: "figure",
+          id,
+          alt: stripInlineMarkdown(alt.length > 0 ? alt : id),
+          textEquivalent,
+        },
+        nextIndex: index + 1,
+      };
+    }
+    if (trimmed === "" || /^(#{1,6})(?:\s|$)/.test(line)) {
+      return {
+        block: { type: "paragraph", text: stripInlineMarkdown(fallbackLines.join(" ")) },
+        nextIndex: index,
+      };
+    }
+    fallbackLines.push(trimmed);
+
+    const altMatch = /^Alt text:\s*(.+)$/i.exec(trimmed);
+    if (altMatch !== null) {
+      alt = altMatch[1].trim();
+      readingTextEquivalent = false;
+      index += 1;
+      continue;
+    }
+    if (/^Text equivalent:\s*$/i.test(trimmed)) {
+      readingTextEquivalent = true;
+      index += 1;
+      continue;
+    }
+    if (readingTextEquivalent && /^[-*+]\s+/.test(trimmed)) {
+      textEquivalent.push(stripInlineMarkdown(trimmed.replace(/^[-*+]\s+/, "").trim()));
+    }
+    index += 1;
+  }
+
+  return {
+    block: { type: "paragraph", text: stripInlineMarkdown(fallbackLines.join(" ")) },
+    nextIndex: index,
+  };
 }
 
 function parseIllustration(lines: readonly string[], startIndex: number): { readonly block: MarkdownBlock; readonly nextIndex: number } {

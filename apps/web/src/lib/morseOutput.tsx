@@ -70,11 +70,7 @@ export function useWebMorseOutput(interfaceLanguage: InterfaceLanguage): WebMors
     const flashesPerSecond = maxMorseFlashesPerSecond(signalEvents);
     const safety = evaluateMorseBeaconFlashSafety({ palette: currentWebBeaconPalette(), flashesPerSecond });
     const useTape = normalized.outputMode === "visualTape" || reduceMotion || !safety.safe;
-    const safetyNote = reduceMotion
-      ? t(interfaceLanguage, "morseOutputReducedMotionTape")
-      : !safety.safe
-        ? t(interfaceLanguage, "morseOutputSafetyFallback")
-        : t(interfaceLanguage, "morseOutputBeaconSafety", formatLocaleNumber(MORSE_BEACON_AREA_CSS_PIXELS, interfaceLanguage, 0), formatLocaleNumber(safety.maxAreaCssPixels, interfaceLanguage, 0), formatLocaleNumber(flashesPerSecond, interfaceLanguage, 0));
+    const safetyNote = morseOutputSafetyNote(interfaceLanguage, reduceMotion, safety, flashesPerSecond);
 
     if (useTape) {
       setState({ mode: "visualTape", beaconActive: false, tape: "", safetyNote });
@@ -138,6 +134,14 @@ export function MorseOutputView({ state, interfaceLanguage }: { readonly state: 
       <p className="help-text">{state.safetyNote}</p>
     </div>
   );
+}
+
+export function morseOutputSafetyNote(interfaceLanguage: InterfaceLanguage, reduceMotion: boolean, safety: ReturnType<typeof evaluateMorseBeaconFlashSafety>, flashesPerSecond: number): string {
+  return reduceMotion
+    ? t(interfaceLanguage, "morseOutputReducedMotionTape")
+    : !safety.safe
+      ? t(interfaceLanguage, "morseOutputSafetyFallback")
+      : t(interfaceLanguage, "morseOutputBeaconSafety", formatLocaleNumber(MORSE_BEACON_AREA_CSS_PIXELS, interfaceLanguage, 0), formatLocaleNumber(safety.maxAreaCssPixels, interfaceLanguage, 0), formatLocaleNumber(flashesPerSecond, interfaceLanguage, 0));
 }
 
 function currentWebBeaconPalette() {

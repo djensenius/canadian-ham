@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-005-006",
+  "questionId": "B-005-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For resistors in series, add the resistance values directly.",
+      "fr": "Pour des résistances en série, additionnez directement les valeurs de résistance."
+    },
+    {
+      "level": 2,
+      "en": "Set up the total as five copies of 10 ohms, or 10 + 10 + 10 + 10 + 10.",
+      "fr": "Posez le total comme cinq valeurs de 10 ohms, soit 10 + 10 + 10 + 10 + 10."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "series-resistors-add"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}

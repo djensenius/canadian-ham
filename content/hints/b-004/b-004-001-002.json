@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-002",
+  "questionId": "B-004-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the linearity section of the amplifier lesson.",
+      "fr": "Revoyez la section sur la linéarité dans la leçon sur les amplificateurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "linearity-keeps-signals-clean"
+  },
+  "singleLevelReason": "Concept recall: a second hint would state the signal-quality consequence.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

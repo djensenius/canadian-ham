@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-004",
+  "questionId": "B-008-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why covers and shields matter in the transmitter-output section.",
+      "fr": "Revoyez pourquoi les couvercles et les blindages comptent dans la section sur la sortie d’un émetteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "spurious-emissions-and-intermodulation"
+  },
+  "singleLevelReason": "Cause-effect recall: any second hint would state the resulting emission problem.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

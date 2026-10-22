@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-003-002",
+  "questionId": "B-006-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how coax dielectrics differ.",
+      "fr": "Revoyez les différences entre les diélectriques de câble coaxial."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "inside-the-coax"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

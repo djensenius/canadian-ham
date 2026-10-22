@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-015-011",
+  "questionId": "B-003-015-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what excessive computer-audio drive can do to a transmitted digital-mode signal.",
+      "fr": "Revoyez ce qu’un niveau audio d’ordinateur excessif peut faire au signal numérique transmis."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-06",
+    "sectionAnchor": "in-the-real-world-sound-card-audio-check"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

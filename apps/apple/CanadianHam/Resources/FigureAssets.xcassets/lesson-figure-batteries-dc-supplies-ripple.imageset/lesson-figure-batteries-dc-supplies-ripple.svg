@@ -1,0 +1,19 @@
+<svg id="batteries-dc-supplies-ripple" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Station DC power and ripple</title>
+  <desc>Positive lead fuse near source, heavy DC leads, regulation and ripple insets, and series and parallel battery icons.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="48" y="104" width="92" height="72" rx="12" ry="12" stroke-width="6"/><line x1="66" y1="92" x2="66" y2="104" stroke-width="5"/><line x1="96" y1="84" x2="96" y2="104" stroke-width="5"/>
+    <rect x="180" y="112" width="54" height="38" rx="8" ry="8" stroke-width="6"/>
+    <line x1="140" y1="124" x2="180" y2="124" stroke-width="7"/><line x1="234" y1="124" x2="494" y2="124" stroke-width="8"/>
+    <line x1="140" y1="164" x2="494" y2="164" stroke-width="8"/>
+    <rect x="494" y="90" width="108" height="104" rx="18" ry="18" stroke-width="7"/>
+    <rect x="64" y="258" width="220" height="72" rx="16" ry="16" stroke-width="5"/><line x1="94" y1="294" x2="254" y2="294" stroke-width="5"/>
+    <rect x="366" y="258" width="220" height="72" rx="16" ry="16" stroke-width="5"/><path d="M396 294 C422 270 450 270 476 294 C502 318 530 318 558 294" stroke-width="5"/>
+    <rect x="112" y="382" width="36" height="42" rx="6" ry="6" stroke-width="4"/><rect x="176" y="382" width="36" height="42" rx="6" ry="6" stroke-width="4"/><line x1="148" y1="403" x2="176" y2="403" stroke-width="4"/>
+    <rect x="438" y="382" width="36" height="42" rx="6" ry="6" stroke-width="4"/><rect x="512" y="382" width="36" height="42" rx="6" ry="6" stroke-width="4"/><line x1="456" y1="382" x2="456" y2="362" stroke-width="4"/><line x1="530" y1="382" x2="530" y2="362" stroke-width="4"/><line x1="456" y1="362" x2="530" y2="362" stroke-width="4"/><line x1="456" y1="424" x2="456" y2="444" stroke-width="4"/><line x1="530" y1="424" x2="530" y2="444" stroke-width="4"/><line x1="456" y1="444" x2="530" y2="444" stroke-width="4"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="78" y="62" font-size="24">DC source</text><text x="220" y="94" font-size="24">+ fuse</text><text x="380" y="94" font-size="24">heavy leads</text><text x="548" y="76" font-size="24">radio</text>
+    <text x="174" y="244" font-size="24">good regulation</text><text x="476" y="244" font-size="24">ripple hum</text><text x="162" y="462" font-size="24">series</text><text x="493" y="350" font-size="24">parallel</text>
+  </g>
+</svg>

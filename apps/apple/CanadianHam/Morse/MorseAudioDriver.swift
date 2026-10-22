@@ -210,12 +210,24 @@ enum MorseOutputError: LocalizedError {
 
 final class MorseAudioDriver {
     nonisolated(unsafe) private static var sessionUsage = MorseAudioSessionUsage()
+    // Sending prepares on its audio actor while other players use the main actor.
+    private static let sessionUsageLock = NSLock()
     private var holdsSession = false
 
-    private let engine = AVAudioEngine()
+    private let engine: AVAudioEngine
     private let renderState = MorseAudioRenderState()
     private var sourceNode: AVAudioSourceNode?
     private var pendingStopWorkItem: DispatchWorkItem?
+
+    init(engine: AVAudioEngine = AVAudioEngine()) {
+        self.engine = engine
+    }
+
+#if DEBUG
+    static var activeSessionUsers: Int {
+        sessionUsageLock.withLock { sessionUsage.activeUsers }
+    }
+#endif
 
     var isPlaying: Bool { engine.isRunning }
 
@@ -235,19 +247,54 @@ final class MorseAudioDriver {
         }, settings: settings)
     }
 
+    // Sending retains a silent engine between elements so key events never wait for
+    // AVAudioEngine startup. The sending audio actor serializes these operations.
+    func prepareSendingTone(settings: MorseTrainerSettings) throws {
+        guard !engine.isRunning else { return }
+        // An interruption can stop the engine without detaching its old source
+        // or releasing its session. Clean both up before attaching a replacement.
+        stopImmediately()
+        var silentSettings = settings
+        silentSettings.volume = 0
+        try start(scheduleFactory: { sampleRate in
+            MorseAudioSchedule(continuousSettings: silentSettings, sampleRate: sampleRate)
+        }, settings: silentSettings)
+    }
+
+    func startPreparedSendingTone(settings: MorseTrainerSettings) {
+        let sampleRate = engine.outputNode.outputFormat(forBus: 0).sampleRate
+        renderState.configure(schedule: MorseAudioSchedule(continuousSettings: settings, sampleRate: sampleRate > 0 ? sampleRate : 48_000))
+    }
+
+    func playPreparedSendingElement(_ element: MorseKeyElement, settings: MorseTrainerSettings) throws {
+        let sequence = try textToTimedMorse(element == .dot ? "E" : "T", profile: settings.timingProfileValue())
+        let sampleRate = engine.outputNode.outputFormat(forBus: 0).sampleRate
+        renderState.configure(schedule: MorseAudioSchedule(sequence: sequence, settings: settings, sampleRate: sampleRate > 0 ? sampleRate : 48_000))
+    }
+
+    func silencePreparedSendingTone() {
+        _ = renderState.requestStopRamp()
+    }
+
+    func releasePreparedSendingTone() {
+        stopImmediately()
+    }
+
     private func start(scheduleFactory: (Double) -> MorseAudioSchedule, settings: MorseTrainerSettings) throws {
         let outputFormat = engine.outputNode.outputFormat(forBus: 0)
         let sampleRate = outputFormat.sampleRate > 0 ? outputFormat.sampleRate : 48_000
         renderState.configure(schedule: scheduleFactory(sampleRate))
 
+        try Self.sessionUsageLock.withLock { () throws -> Void in
 #if !os(macOS)
-        let session = AVAudioSession.sharedInstance()
-        try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-        try session.setActive(true)
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try session.setActive(true)
 #endif
-        if !holdsSession {
-            holdsSession = true
-            Self.sessionUsage.acquire()
+            if !holdsSession {
+                holdsSession = true
+                Self.sessionUsage.acquire()
+            }
         }
 
         let node = AVAudioSourceNode { [weak self] _, _, frameCount, audioBufferList -> OSStatus in
@@ -297,13 +344,15 @@ final class MorseAudioDriver {
         renderState.reset()
         guard holdsSession else { return }
         holdsSession = false
-        let wasLastUser = Self.sessionUsage.release()
+        Self.sessionUsageLock.withLock {
+            let wasLastUser = Self.sessionUsage.release()
 #if !os(macOS)
-        if wasLastUser {
-            try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
-        }
+            if wasLastUser {
+                try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
+            }
 #else
-        _ = wasLastUser
+            _ = wasLastUser
 #endif
+        }
     }
 }

@@ -15,7 +15,8 @@ objectives:
   - "Compare ground wave, sky wave, line-of-sight, and NVIS paths."
   - "Name ionospheric regions and what creates ionization."
   - "Explain skip distance, skip zone, and hop length."
-prerequisites: []
+prerequisites:
+  - L-006-03
 estimatedMinutes: 40
 quizIds:
   - QZ-L-007-01-A
@@ -132,6 +133,32 @@ Use this table as a compact reference, not as a full band-plan chart.
 | 2 m | 144 MHz to 148 MHz | Common VHF local and repeater band |
 | 70 cm | 430 MHz to 450 MHz | Common UHF local and repeater band |
 
+### Faded practice: finish a rough wave-label estimate
+
+Use a hypothetical wavelength label to practise the shortcut, not to select a transmit frequency.
+
+- Given: wavelength = 54 m.
+- Find: approximate frequency in megahertz.
+- Formula: f(MHz) = 300 / wavelength(m).
+- Complete: f ≈ 300 / ___ ≈ ___ MHz.
+- Sanity check: Is a larger wavelength label associated with a lower frequency?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a rough wave-label estimate
+
+f ≈ 5.56 MHz. Real amateur band names are rounded labels; look up actual band frequencies and privileges before operating.
+
+::figure propagation-paths-skip-zone
+Alt text: Side-view Earth diagram showing VHF direct, ground wave, NVIS, and low-angle sky-wave paths through labelled D, E, F1, and F2 regions.
+Text equivalent:
+- The ionosphere labels climb upward as D, E, F1, and F2.
+- A VHF direct path runs between two hilltops.
+- A ground-wave path follows the Earth and fades after a short distance.
+- A steep NVIS path rises to the F-region area and returns nearby.
+- A lower-angle sky-wave path rises to the F-region area and returns much farther away; a skip-zone bracket is shown for that low-angle path.
+::
+
 ## Skip distance and skip zone
 
 Skip distance is the distance from the transmitter to the closest point reached by a returning sky wave on a chosen path. The skip zone is the gap after useful ground-wave coverage fades out but before the first sky-wave return point.
@@ -160,6 +187,22 @@ A field station needs to report expected coverage to a served agency. A route is
 
 For a mid-distance check-in area, an E-region return has a shorter single-hop planning scale, up to about 2 000 km in good conditions. The actual opening still depends on frequency, time, and ionization.
 
+### Faded practice: finish a hop-scale comparison
+
+Compare distance scales on paper before considering whether the path is open.
+
+- Given: route = 7 200 km; F2 single-hop scale ≈ 4 000 km.
+- Find: whether a single hop or a pair has enough planning distance.
+- Formula: compare route length with the sum of the hop scales.
+- Complete: a single F2 scale covers 4 000 km; a pair covers ___ + ___ = ___ km, so the route needs at least ___ hops on this simple plan.
+- Sanity check: Does enough distance on paper prove that usable propagation exists?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a hop-scale comparison
+
+A pair covers about 8 000 km, so the simple plan needs at least two hops. Real ionization, angles, surface returns, and losses still decide whether signals arrive.
+
 ### Misconception: more power fills the skip zone
 
 - Mistaken idea: raising transmitter power will fill every gap between ground wave and the first sky-wave return.
@@ -167,11 +210,21 @@ For a mid-distance check-in area, an E-region return has a shorter single-hop pl
 
 ## Try it
 
-1. A club moves a VHF antenna from a low parking lot to a clear mast on a nearby building, and the same radios cover more of town. Explain the planning lesson. Extra height and a clearer path improve the radio horizon; the radios did not make the ionosphere return the signal.
-2. An HF net wants regional coverage over rough terrain rather than an overseas contact. What antenna-angle tradeoff should it favour? Favour higher-angle radiation when conditions suit it, because the goal is a closer regional return.
-3. In a layer diagram, a wave passes through D and bends back from a much higher region. What concern belongs to the lower layer? Daylight absorption in the lower ionosphere can weaken the signal before it reaches the useful refracting region.
-4. A route map shows reliable reports close to the transmitter and again much farther out, but very few in the middle. What planning step should net control take? Plan an alternate band, relay, or antenna angle instead of assuming extra power will fill the gap.
-5. A trainee draws an HF sky-wave path as a sharp bounce from a shiny ceiling above Earth. What wording should the caption use instead? Show gradual refraction through an ionized region; skip describes where the signal returns, not a metal-like reflection.
+Try these before reading the feedback below.
+
+1. A VHF antenna moves from a low parking lot to a clear mast. The same radios now cover more of town. Explain the planning lesson.
+2. An HF net needs regional coverage over rough terrain rather than an overseas contact. What antenna-angle tradeoff fits?
+3. A layer sketch shows a wave passing through D before bending back from a higher region. What concern belongs to D?
+4. Reports are reliable close to a transmitter and far away, with few in the middle. What should net control plan?
+5. A trainee draws sky wave as a sharp bounce from a shiny ceiling. How should the caption explain it instead?
+
+### Try-it feedback
+
+1. Height and a clearer path improve ordinary radio-horizon coverage; the radios did not make the ionosphere return VHF.
+2. Favour higher-angle radiation when frequency and ionospheric conditions support a closer regional return.
+3. Daylight absorption in D can weaken the wave before it reaches the useful refracting region.
+4. Arrange an alternate band, relay, or antenna angle rather than assuming more power fills the gap.
+5. Describe gradual refraction through an ionized region. Skip describes the return location, not a metal-like mirror.
 
 ## Radio connection
 

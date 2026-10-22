@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-008-003",
+  "questionId": "B-002-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the formal voice distress signal.",
+      "fr": "Revoyez le signal officiel de détresse en phonie."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "match-the-priority-to-the-danger"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

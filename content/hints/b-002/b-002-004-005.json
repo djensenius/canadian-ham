@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-004-005",
+  "questionId": "B-002-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the dummy load topic in the testing section.",
+      "fr": "Revoyez le sujet de la charge fictive dans la section sur les essais."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "give-a-voice-signal-enough-space"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
+}

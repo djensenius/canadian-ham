@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-001-003",
+  "questionId": "B-002-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the frequency coordination topic for VHF and UHF.",
+      "fr": "Revoyez le sujet de la coordination des fréquences en VHF et UHF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "choose-a-relay-or-a-direct-path"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
+}

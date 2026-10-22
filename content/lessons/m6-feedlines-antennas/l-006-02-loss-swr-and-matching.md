@@ -57,11 +57,43 @@ A coax has 0.7 dB loss over a 14 m run at a chosen frequency. The same cable and
 - Answer: loss is about 1.4 dB.
 - Sanity check: the characteristic impedance did not change; only attenuation increased.
 
+### Faded practice: finish a cable-loss estimate
+
+Compare lengths of the same cable at the same frequency and match.
+
+- Given: loss = 0.9 dB over 15 m; new length = 45 m.
+- Find: new dB loss.
+- Formula: new loss = old loss x new length / old length.
+- Complete: new loss = 0.9 x (45 / ___) = ___ dB.
+- Sanity check: Did you scale dB loss rather than characteristic impedance?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a cable-loss estimate
+
+The length factor is 3, so loss = 2.7 dB. Cable geometry and dielectric still set Z0.
+
 ### In the real world: trimming excess cable
 
 A temporary antenna is 11 m from the operating table, but the station uses a 33 m coil of small coax because it was already assembled.
 
 Replacing it with a 12 m run removes 21 m of unnecessary cable. Coiling the spare cable neatly does not remove its attenuation.
+
+### Faded practice: finish an excess-cable comparison
+
+A portable station can replace an unnecessarily long coax run.
+
+- Given: installed length = 38 m; needed length = 19 m; same cable and frequency.
+- Find: length removed and remaining fraction of dB loss.
+- Formula: removed length = installed - needed; remaining loss fraction = needed / installed.
+- Complete: removed length = 38 - ___ = ___ m; remaining loss fraction = 19 / ___ = ___.
+- Sanity check: Does halving cable length halve its dB attenuation under these assumptions?
+
+Fill the gaps before checking below.
+
+### Check your work: finish an excess-cable comparison
+
+Remove 19 m. The remaining dB loss is half the original value. This does not mean half the watts are lost; dB is a ratio scale.
 
 ## SWR in plain language
 
@@ -77,13 +109,29 @@ Reflection coefficient is the reflected voltage wave compared with the forward v
 
 | SWR | Reflection coefficient | Reflected power estimate |
 |---|---:|---:|
-| 1.5:1 | (1.5 - 1) / (1.5 + 1) = 0.2 | 0.2 x 0.2 = 0.04, or 4% |
-| 2:1 | (2 - 1) / (2 + 1) = 0.333 | 0.333 x 0.333 = 0.111, or about 11% |
-| 3:1 | (3 - 1) / (3 + 1) = 0.5 | 0.5 x 0.5 = 0.25, or 25% |
+| 1.5:1 | (1.5 - 1) / (1.5 + 1) = 0.2 | 0.2 x 0.2 = 0.04, or 4 % |
+| 2:1 | (2 - 1) / (2 + 1) = 0.333 | 0.333 x 0.333 = 0.111, or about 11 % |
+| 3:1 | (3 - 1) / (3 + 1) = 0.5 | 0.5 x 0.5 = 0.25, or 25 % |
 
 These estimates apply at the point where the SWR is measured. Reflected power is not simply "lost." Some may be lost as heat in the feedline, and the transmitter-end network or protection circuit affects what happens next.
 
-### Worked example: line loss masks trouble
+### Faded practice: finish a reflected-power estimate
+
+Use the measurement-point formulas from the table.
+
+- Given: SWR = 2.5:1.
+- Find: reflection coefficient and reflected-power percentage.
+- Formula: coefficient = (SWR - 1) / (SWR + 1); reflected fraction = coefficient x coefficient.
+- Complete: coefficient = (2.5 - 1) / (2.5 + 1) = 1.5 / ___ ≈ ___; reflected fraction ≈ 0.429 x 0.429 ≈ ___, or ___ %.
+- Sanity check: Did you square the voltage ratio before expressing a power percentage?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a reflected-power estimate
+
+The coefficient is about 0.429 and the reflected fraction is about 0.184, or 18.4 %. This is not a claim that all that power is lost; its fate depends on the line and transmitter-end network.
+
+### In the real world: line loss masks trouble
 
 Station A and Station B both show low SWR at the transmitter. Station A uses a short, low-loss feedline. Station B uses a long old run that is warm after transmitting.
 
@@ -100,6 +148,15 @@ A very high reading can come from an open circuit, a short circuit, the wrong an
 An antenna tuner does not tune the air. It transforms impedance so the transceiver sees a load it can safely drive. Many solid-state transmitters reduce output when the load at the radio is too far from the expected range. A tuner can help the transmitter deliver power into a mismatched antenna system.
 
 A tuner near the transceiver protects the radio, but it does not remove loss in a feedline carrying high SWR. A tuner or matching transformer near the antenna feed point can reduce mismatch on the main feedline and reduce feedline loss.
+
+::figure swr-loss-matching
+Alt text: A station chain showing forward and reflected waves, plus a second sketch with the tuner at the antenna feed point.
+Text equivalent:
+- Top sketch: the rig, SWR meter, station-end ATU, lossy line, and antenna are in one chain.
+- A forward wave arrow travels from the station toward the antenna.
+- A reflected wave starts thick near the antenna and becomes thinner after the lossy line.
+- Bottom sketch: the rig feeds a long main line to a tuner placed at the antenna feed point.
+::
 
 Matching can be done with inductors, capacitors, transmission-line sections, or transformers. A transformer ratio is set mainly by its turns, not by a narrow tuned LC resonance, so a well-designed RF transformer can cover a broad frequency range. If source and load are purely resistive, maximum power transfer happens when their impedances are equal. Once the antenna is correctly matched to the line, changing feedline length does not improve the match.
 
@@ -119,13 +176,39 @@ A folded-dipole feed point is near 300 ohms in a simplified receive experiment. 
 - Answer: ratio = 4.
 - Sanity check: a 4:1 impedance transformer is the first idea to investigate for this simplified resistive case.
 
+### Faded practice: finish an impedance ratio
+
+Use a simplified purely resistive load and line.
+
+- Given: load = 450 ohms; line Z0 = 75 ohms.
+- Find: impedance transformation ratio.
+- Formula: impedance ratio = load / line Z0.
+- Complete: ratio = 450 / ___ = ___, written ___:1.
+- Sanity check: Is this an impedance ratio rather than a turns ratio?
+
+Fill the gaps before checking below.
+
+### Check your work: finish an impedance ratio
+
+450 / 75 = 6, so the impedance ratio is 6:1. Transformer turns ratios follow a different relationship; practical matching still depends on design and frequency.
+
 ## Try it
 
-1. A 22 m feedline run is replaced with an 11 m run of the same coax at the same frequency. What happens to dB loss? It is cut roughly in half because loss in dB accumulates with length.
-2. A meter reading jumps when the feedline is moved. What should you inspect before trimming the antenna? Check connectors and conductor continuity.
-3. A tuner at the desk gives the transmitter a comfortable load, but the feedline is still hot. Where might matching help more? Matching closer to the antenna can reduce high-SWR loss on the main feedline.
-4. A short VHF jumper uses thin coax. Why might the same cable be poor as a long roof run? At VHF and UHF, thin coax loss rises with frequency and becomes important over distance.
-5. A low SWR reading appears at the radio. What other evidence should you consider? Cable type, cable length, heat, analyzer results, and on-air performance still matter.
+Try these before reading the feedback below.
+
+1. What happens to dB loss when a 22 m feedline is replaced with 11 m of the same cable at the same frequency?
+2. An SWR reading jumps when the feedline moves. What should you inspect first?
+3. A desk tuner gives a comfortable transmitter load but the line is hot. Where might matching help more?
+4. Why can thin coax be fine for a short jumper but poor for a long roof run at VHF or UHF?
+5. What evidence beyond low station-end SWR helps assess the system?
+
+### Try-it feedback
+
+1. It is roughly halved because dB loss accumulates with length.
+2. Check connectors and conductor continuity before trimming the antenna.
+3. Matching closer to the antenna can reduce high-SWR loss on the main feedline.
+4. Loss rises with length and usually with frequency, making a long run much more demanding.
+5. Consider cable type, length, heat, analyzer results, and on-air performance.
 
 ## Radio connection
 

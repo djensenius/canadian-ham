@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-004-005",
+  "questionId": "B-004-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the FET terminal list and what each terminal does with charge carriers.",
+      "fr": "Revoyez la liste des bornes du FET et ce que chaque borne fait des porteurs de charge."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "field-effect-transistors-voltage-controlled-channel-devices"
+  },
+  "singleLevelReason": "Terminal-role recall: a second hint would state which channel end is meant.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-007-02-A-C1",
       "prompt": {
-        "en": "A daytime forecast raises the LUF on a path from 4 MHz to 7 MHz while the MUF remains near 18 MHz. What should happen to a 5.3 MHz plan compared with a 14.2 MHz plan?",
+        "en": "The LUF rises from 4 MHz to 7 MHz while the path MUF stays near 18 MHz. How do plans at 5.3 MHz and 14.2 MHz compare now?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Both plans improve equally because a higher LUF makes every HF frequency more usable.",
+            "en": "Both plans improve because raising the lower edge indicates stronger support throughout HF.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A higher lower edge excludes more low-frequency choices. It is not evidence that the whole HF range has improved.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The 5.3 MHz plan moves from inside the old window to below the new lower edge, while 14.2 MHz remains inside.",
+            "en": "5.3 MHz moves below the usable window; 14.2 MHz stays inside it.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The changed window runs from 7 to 18 MHz. Only the higher example remains inside.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The 14.2 MHz plan fails first because D-region absorption is always worse at higher HF.",
+            "en": "14.2 MHz is the riskier choice because absorption should be greater at the higher frequency.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "That reverses the lower-HF absorption trend. In the stated forecast, 14.2 MHz remains inside the usable window.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Both plans must move to 18 MHz because every usable choice equals the upper limit.",
+            "en": "Prefer the 18 MHz boundary for both plans because the upper limit is also the best working point.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The upper limit is a boundary, not a required working point. Planning should allow margin and consider the whole usable window.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Before the change, 5.3 MHz was above the 4 MHz LUF. After the LUF rises to 7 MHz, it is below the usable window. A 14.2 MHz signal remains between 7 and 18 MHz, so it is still a plausible path choice.",
+        "en": "Recheck both edges of a forecast when conditions change; a fixed MUF does not mean every earlier choice remains useful.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-02-A-C2",
       "prompt": {
-        "en": "A forecast gives an afternoon MUF of 22 MHz for a path. If the operator uses an 85% OWF planning estimate, which target is closest?",
+        "en": "A forecast gives MUF 11.4 MHz and LUF 10.5 MHz. A learner applies 85 % and proposes 9.69 MHz. How should that proposal be judged?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "18.7 MHz",
+            "en": "It is suitable on the strength of the correct planning-factor calculation.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "The multiplication is correct, but the result is below the forecast lower edge. Both boundaries still need checking.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "22.0 MHz",
+            "en": "It is above the MUF because 85 % raises the starting frequency.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Multiplying by 0.85 lowers the value. The problem is the lower, not upper, boundary.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "11.0 MHz",
+            "en": "It fails the LUF check; the usual planning factor cannot replace checking the whole window.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "9.69 MHz is below 10.5 MHz. A practical factor does not guarantee a usable choice in a narrow window.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "25.9 MHz",
+            "en": "Prefer it to 10.8 MHz because the lower choice should suffer less absorption.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Lower HF can suffer greater absorption. The forecast excludes 9.69 MHz, while 10.8 MHz lies inside the window.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Multiplying 22 MHz by 0.85 gives 18.7 MHz. OWF is a practical choice below the MUF, not at or above it.",
+        "en": "A useful planning shortcut still has conditions. Check its output against the complete path forecast.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-02-A-C3",
       "prompt": {
-        "en": "A straight-up ionosonde test and a shallow long-distance path use the same F region. Why can the shallow path work at a higher frequency than the vertical test?",
+        "en": "A forecast supports an oblique long-distance path at a frequency above the local vertical critical frequency. Does that alone support a near-vertical regional path at the same frequency?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The shallow path needs less bending to return to Earth.",
+            "en": "Yes, using the oblique forecast as a common frequency limit for the whole region.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "A slant path and a near-vertical path have different geometry. A frequency returned obliquely may pass through on the near-vertical route.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The shallow path spends more time in the D region, so absorption becomes useful.",
+            "en": "Yes, if transmitter power is raised until it changes the critical frequency.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Ordinary transmitter power does not set the ionospheric critical frequency.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The vertical test ignores sunlight, while the shallow path creates ionization by itself.",
+            "en": "Yes, because a high-angle path should require less bending than the oblique path.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The nearly vertical path needs a greater bend to return to the nearby region. The oblique forecast cannot simply be reused.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The path frequency limit rises because transmitter power changes the critical frequency.",
+            "en": "No; the near-vertical path has a different geometry and must meet the vertical-frequency condition.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "An oblique path MUF cannot be applied unchanged to NVIS. Check frequency against the relevant near-vertical conditions.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Critical frequency is a vertical test. At a shallow angle, less bending is needed to return the wave, so the path MUF can be higher than the vertical critical frequency.",
+        "en": "A path-specific forecast is not a blanket approval for every route and launch angle through the region.",
         "fr": null
       }
     }

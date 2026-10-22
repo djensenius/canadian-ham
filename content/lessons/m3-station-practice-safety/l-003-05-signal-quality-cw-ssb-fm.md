@@ -49,6 +49,16 @@ Key clicks are different. They sound like sharp ticks around the signal. They co
 
 A variable-frequency oscillator lets a CW transmitter tune anywhere across a range, instead of being limited to the few frequencies of the fixed-frequency quartz crystals on hand. That is useful only if the oscillator is electrically and mechanically stable, so the carrier doesn't drift over time. Keep VFOs away from heat, loose hardware, and changing supply conditions.
 
+::figure signal-quality-cw-ssb-fm
+Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
+Text equivalent:
+- CW panel: a smooth on-off envelope and a square-edged clicks sketch.
+- SSB panel: one clipped waveform flattened at the limit with a clipped -> splatter label.
+- FM panel: a centre line, normal small deviation arrows, and over-deviation large arrows beyond dashed limits.
+::
+
+
+
 ### In the real world: diagnosing two CW reports
 
 During a club practice net, one report says, "Your note slides at the start of each element." Another says, "I hear ticks above and below your signal."
@@ -79,6 +89,22 @@ An original bench demonstration limits audio to 2.4 kHz before feeding an AM exc
 - Sanity check: AM has upper and lower sidebands, so the bandwidth is about twice the audio limit.
 
 That estimate assumes a clean signal. Distortion or overdrive can make the occupied bandwidth worse.
+
+### Faded practice: estimate both AM sidebands
+
+A clean AM bench signal carries audio up to 2.6 kHz.
+
+- Given: highest audio frequency = 2.6 kHz.
+- Find: approximate occupied bandwidth.
+- Formula: AM bandwidth = 2 x highest audio frequency.
+- Complete: bandwidth = ___ x 2.6 kHz = ___ kHz.
+- Sanity check: have you counted both sides of the carrier?
+
+Fill the gaps before checking below.
+
+### Check your work: estimate both AM sidebands
+
+2 x 2.6 kHz = 5.2 kHz. Keeping only the audio limit would count one side rather than the full AM width.
 
 ## SSB: linear amplification and level control
 
@@ -119,6 +145,22 @@ In an original lower-sideband practice example, the suppressed carrier setting i
 
 For upper sideband, the same tone would appear above the carrier setting.
 
+### Faded practice: place an upper sideband
+
+A bench USB exciter has a suppressed-carrier setting of 14 260 kHz and an 850 Hz audio tone.
+
+- Given: carrier setting = 14 260 kHz; audio = 850 Hz = ___ kHz.
+- Find: upper-sideband RF tone.
+- Formula: USB RF = carrier setting + audio tone.
+- Complete: USB RF = 14 260 + ___ = ___ kHz.
+- Sanity check: should USB energy be above or below the carrier setting?
+
+Fill the gaps before checking below.
+
+### Check your work: place an upper sideband
+
+850 Hz = 0.850 kHz. The tone is at 14 260.850 kHz, above the suppressed-carrier setting. Subtracting would place a lower-sideband tone instead.
+
 ## FM: deviation, squelch, and capture effect
 
 FM carries audio by changing the carrier frequency around its assigned channel. The amount of swing from the centre frequency is deviation. Louder audio produces more deviation until the transmitter limiter or audio stages run out of clean range.
@@ -131,11 +173,40 @@ For repeaters and local channels, transmitter deviation should match the system.
 
 Text formula: FM bandwidth by Carson's rule ≈ 2 x (peak deviation + highest audio frequency).
 
-For example, 2.5 kHz deviation with 3 kHz audio estimates to about 2 x (2.5 + 3) = 11 kHz. A typical FM voice signal is somewhere between about 11 kHz and 16 kHz wide, so plan for a channel many kilohertz wide. Higher deviation produces a wider channel by the same formula. Canadian regulations limit occupied bandwidth below 28 MHz, leaving only a few kilohertz for voice operation, so wide FM voice does not fit there.
+A typical FM voice signal is somewhere between about 11 kHz and 16 kHz wide, so plan for a channel many kilohertz wide. Higher deviation produces a wider channel by the same formula. Canadian regulations limit occupied bandwidth below 28 MHz, leaving only a few kilohertz for voice operation, so wide FM voice does not fit there.
+
+### Worked example: FM bandwidth estimate
+
+A training FM transmitter has 2.5 kHz peak deviation and carries audio up to 3 kHz.
+
+- Given: deviation = 2.5 kHz; highest audio = 3 kHz.
+- Find: approximate FM bandwidth.
+- Formula: bandwidth = 2 x (deviation + highest audio frequency).
+- Substitute: bandwidth = 2 x (2.5 + 3) kHz.
+- Answer: bandwidth is about 11 kHz.
+- Sanity check: the width must exceed twice the deviation because the audio term also contributes.
+
+### Faded practice: include deviation and audio
+
+A separate FM demonstration uses 2.2 kHz peak deviation and audio up to 2.8 kHz.
+
+- Given: deviation = 2.2 kHz; highest audio = 2.8 kHz.
+- Find: approximate bandwidth.
+- Formula: bandwidth = 2 x (deviation + highest audio).
+- Complete: sum = 2.2 + 2.8 = ___ kHz; bandwidth = 2 x ___ = ___ kHz.
+- Sanity check: did you double the sum, rather than just the deviation?
+
+Fill the gaps before checking below.
+
+### Check your work: include deviation and audio
+
+The sum is 5.0 kHz, giving about 10 kHz bandwidth. Omitting the final doubling or the audio term would understate the occupied width.
+
+### Receive FM and judge the audio
 
 FM is popular for local VHF and UHF voice because it gives a good signal-to-noise ratio even when the received signal is fairly weak. An FM receiver often has high gain before the discriminator. With no usable signal present, that gain makes speaker noise loud unless squelch mutes it. When multiple FM signals are present, the receiver tends to demodulate the strongest one. This is the capture effect.
 
-### Worked example: repeater audio report
+### In the real world: repeater audio report
 
 A repeater operator reports, "Your signal is full quieting, but your words are thin and quiet." Full quieting means the FM signal is strong enough that receiver noise is mostly quieted. The RF path is adequate, so increasing RF power is not the first fix.
 

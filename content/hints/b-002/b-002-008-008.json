@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-008-008",
+  "questionId": "B-002-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For emergency HF, choose antenna styles that a portable operator can carry and put up in the field.",
+      "fr": "Pour le HF d’urgence, choisissez des styles d’antenne qu’un opérateur portable peut transporter et installer sur le terrain."
+    },
+    {
+      "level": 2,
+      "en": "Think about what a portable kit can realistically carry and erect, and compare that with each antenna's size.",
+      "fr": "Pensez à ce qu’une station portable peut réellement transporter et ériger, puis comparez avec la taille de chaque antenne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-03",
+    "sectionAnchor": "prepare-the-whole-station"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

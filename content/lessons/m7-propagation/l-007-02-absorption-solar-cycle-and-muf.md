@@ -60,7 +60,7 @@ AM broadcast stations are in the medium-frequency range, below the amateur HF ba
 
 After sunset, the D region weakens. Less energy is absorbed on the way up, so higher ionospheric regions can return some signals to Earth. That is why distant AM stations often appear at night.
 
-### Worked example: fading in an evening net
+### In the real world: fading in an evening net
 
 During an evening HF net, a station is readable for a minute, then becomes hollow and weak, then returns. The receiver hears no local noise burst and the antenna connection is sound.
 
@@ -99,11 +99,21 @@ Lowest usable frequency, or LUF, is the low-frequency limit set mainly by absorp
 
 Optimum working frequency, or OWF, is the practical choice a little below the MUF. Accessible text formula: choose a working frequency below the MUF but above the LUF. Too high may pass through; too low may be absorbed.
 
+::figure daytime-absorption-frequency-window
+Alt text: Daytime HF path diagram with D-region absorption, F-region return, and a frequency window labelled LUF, OWF, and MUF.
+Text equivalent:
+- The left panel shows the Sun, a lower D band, and a higher F line.
+- A lower HF ray stops at the D band beside the D absorbs label.
+- A higher HF ray passes the D band, reaches the F line, and returns to Earth.
+- The right panel marks LUF at the lower edge of the usable window, OWF closer to MUF, and MUF at the upper edge.
+- Frequencies below the window are labelled too low and absorbed; frequencies above it are labelled too high and through.
+::
+
 ### Worked example: picking a working frequency
 
-A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85% of the MUF.
+A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85 % of the MUF.
 
-- Given: MUF = 18.6 MHz; planning factor = 85% = 0.85.
+- Given: MUF = 18.6 MHz; planning factor = 85 % = 0.85.
 - Find: estimated OWF.
 - Formula: OWF = MUF x 0.85.
 - Substitute: OWF = 18.6 MHz x 0.85.
@@ -111,6 +121,22 @@ A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and th
 - Sanity check: 15.8 MHz is below the MUF and above the example LUF.
 
 The 20-metre band is comfortably inside that usable window. The 17-metre band is closer to the upper edge. A voice operator would start with a real band inside the window rather than park at the top edge.
+
+### Faded practice: finish an OWF planning check
+
+Use the planning factor, then check the whole usable window.
+
+- Given: path MUF = 23.4 MHz; LUF = 6.8 MHz; planning factor = 85 % = 0.85.
+- Find: estimated OWF and whether it lies inside the forecast window.
+- Formula: estimated OWF = MUF x 0.85.
+- Complete: OWF ≈ 23.4 x ___ = ___ MHz; compare that with ___ MHz at the lower edge and ___ MHz at the upper edge.
+- Sanity check: Is the result below MUF and above LUF?
+
+Fill the gaps before checking below.
+
+### Check your work: finish an OWF planning check
+
+OWF ≈ 19.89 MHz, or about 19.9 MHz. It lies between 6.8 and 23.4 MHz. This is a planning target, not an assigned channel; choose a permitted real band and verify conditions.
 
 ## What to try when a path fails
 
@@ -124,11 +150,21 @@ Use evidence from the band you want to use. A beacon in that same amateur band a
 
 ## Try it
 
-1. An operator raises microphone gain after a sunlit low-band path becomes noisy, but distant stations do not improve. Explain why an RF planning change is more useful. Daylight lower-ionosphere absorption is reducing the received signal before audio settings matter, so a better band or time is the practical fix.
-2. A wide digital signal sounds distorted while a narrow signal on the same path remains copyable. What station choice might improve readability? Try a narrower mode or bandwidth, because multipath can affect different parts of a wider signal unequally.
-3. A forecast says the path MUF is below the band you planned to use. What does adding transmitter power fail to change? It does not raise the path frequency limit, so choosing a suitable lower band is the better first test.
-4. The LUF is 5.8 MHz and the MUF is 18.6 MHz for a route. Compare trying 20 metres with trying 17 metres. Both are below the MUF, but 20 metres is the more conservative first try near the OWF estimate, while 17 metres is closer to the upper edge and may fail sooner if the MUF falls.
-5. A solar-cycle high arrives and higher HF bands become lively. What changed physically? Greater solar activity increased ionization enough to support higher usable frequencies on some paths.
+Try these before reading the feedback below.
+
+1. Microphone gain fails to improve a sunlit low-band path. Why would an RF planning change help more?
+2. A wide digital signal sounds distorted while a narrow signal remains copyable on the same path. What might help?
+3. The path MUF falls below the planned band. Why is more transmitter power insufficient?
+4. With LUF 5.8 MHz and MUF 18.6 MHz, compare 20 metres and 17 metres as first attempts.
+5. Higher HF bands become lively near a solar-cycle high. What changed physically?
+
+### Try-it feedback
+
+1. Daylight lower-ionosphere absorption acts before audio controls matter. A suitable band or time addresses the path.
+2. Try a narrower mode or bandwidth. Multipath can affect different parts of a wide signal unequally.
+3. More power does not raise the path frequency limit. Try a suitable lower band.
+4. Both are inside the window. Twenty metres is the more conservative first try near the OWF estimate; 17 metres is closer to the upper edge and may fail sooner if MUF falls.
+5. Greater solar activity increased ionization enough to support higher usable frequencies on some paths.
 
 ## Radio connection
 
@@ -158,5 +194,5 @@ Description: Draw two panels. In the first, show the Sun lighting the lower iono
 - More sunspots and higher 10.7 cm solar flux usually indicate stronger ionization and higher usable HF frequencies; the average solar cycle is about 11 years.
 - HF sky-wave paths can change polarization through refraction, reflection, and Faraday rotation.
 - Critical frequency is a vertical-incidence measurement; MUF is for a particular path.
-- A practical working frequency is below the MUF and above the LUF, often estimated near 85% of the MUF for planning.
+- A practical working frequency is below the MUF and above the LUF, often estimated near 85 % of the MUF for planning.
 - When propagation changes, changing band is often more useful than changing audio settings or adding power.

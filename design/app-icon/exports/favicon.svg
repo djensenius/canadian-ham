@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <style>
-    .paper { fill: #f6eedc; }
+    .paper { fill: #e8d5b7; }
     .ink { fill: none; stroke: #15120f; stroke-linecap: round; stroke-linejoin: round; }
     .perimeter { stroke-width: 4.0; }
     .spoke { stroke-width: 2.4; }
     .hub { fill: #15120f; stroke: none; }
     @media (prefers-color-scheme: dark) {
-      .paper { fill: #201B16; }
-      .ink { stroke: #f3e8d2; }
-      .hub { fill: #f3e8d2; }
+      .paper { fill: #453316; }
+      .ink { stroke: #ffffff; }
+      .hub { fill: #ffffff; }
     }
   </style>
   <rect width="64" height="64" rx="14" class="paper"/>

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-006-011",
+  "questionId": "B-005-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what a resistor wattage rating describes about physical operation.",
+      "fr": "Revoyez ce que la cote en watts d'une résistance indique au sujet du fonctionnement physique du composant."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "power-ratings-and-heat"
+  },
+  "singleLevelReason": "Pure concept recall: a second hint would closely define the correct basis for the rating.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

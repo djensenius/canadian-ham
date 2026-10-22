@@ -1,0 +1,93 @@
+interfaceLanguage	textSize	surface	categoryId	frameWidthPt	frameHeightPt	reference17PtWidthPt	completeAccessibilityLabel
+en	default	session	B-001	193.0	20.66666666666667	192.67300641536713	Regulations and Policies
+en	default	session	B-002	209.0	20.66666666666667	208.70928490161896	Operating and Procedures
+en	default	session	B-003	301.6666666666667	20.66666666666667	301.5727653503418	Station Assembly, Practice and Safety
+en	default	session	B-004	158.66666666666669	20.66666666666667	158.3530879020691	Circuit Components
+en	default	session	B-005	230.0	20.66666666666667	229.80331897735596	Basic Electronics and Theory
+en	default	session	B-006	253.66666666666663	20.66666666666667	253.42949056625366	Feedlines and Antenna Systems
+en	default	session	B-007	193.33333333333331	20.66666666666667	193.04188454151154	Radio Wave Propagation
+en	default	session	B-008	235.33333333333331	20.66666666666667	235.01351630687714	Interference and Suppression
+en	default	session	A-001	139.66666666666663	20.66666666666667	139.6155252456665	Advanced Theory
+en	default	session	A-002	284.3333333333333	20.66666666666667	284.2729320526123	Advanced Components and Circuits
+en	default	session	A-003	118.33333333333331	20.66666666666667	118.29567587375641	Measurements
+en	default	session	A-004	122.33333333333331	20.66666666666667	122.0672744512558	Power Supplies
+en	default	session	A-005	314.0	20.66666666666667	325.5644347667694	Transmitters, Modulation and Processing
+en	default	session	A-006	77.66666666666666	20.66666666666667	77.44278717041016	Receivers
+en	default	session	A-007	314.0	20.66666666666667	343.563645362854	Feedlines - Matching and Antenna Systems
+en	default	module	B-005	351.0	40.66666666666667	229.80331897735596	Basic Electronics and Theory
+en	default	module	B-004	316.66666666666663	40.66666666666667	158.3530879020691	Circuit Components
+en	default	module	B-006	355.3333333333333	40.66666666666667	253.42949056625366	Feedlines and Antenna Systems
+en	default	module	B-003	355.66666666666674	40.66666666666667	301.5727653503418	Station Assembly, Practice and Safety
+en	default	module	B-007	358.66666666666674	40.66666666666667	193.04188454151154	Radio Wave Propagation
+en	default	module	B-008	364.33333333333326	40.66666666666667	235.01351630687714	Interference and Suppression
+en	default	module	B-002	359.0	40.66666666666667	208.70928490161896	Operating and Procedures
+en	default	module	B-001	360.66666666666674	40.66666666666667	192.67300641536713	Regulations and Policies
+en	accessibility-xxxl	session	B-001	232.33333333333331	25.33333333333333	192.67300641536713	Regulations and Policies
+en	accessibility-xxxl	session	B-002	251.33333333333331	25.33333333333333	208.70928490161896	Operating and Procedures
+en	accessibility-xxxl	session	B-003	314.0	25.33333333333333	301.5727653503418	Station Assembly, Practice and Safety
+en	accessibility-xxxl	session	B-004	191.33333333333331	25.33333333333333	158.3530879020691	Circuit Components
+en	accessibility-xxxl	session	B-005	276.6666666666667	25.33333333333333	229.80331897735596	Basic Electronics and Theory
+en	accessibility-xxxl	session	B-006	305.6666666666667	25.33333333333333	253.42949056625366	Feedlines and Antenna Systems
+en	accessibility-xxxl	session	B-007	233.0	25.33333333333333	193.04188454151154	Radio Wave Propagation
+en	accessibility-xxxl	session	B-008	282.6666666666667	25.33333333333333	235.01351630687714	Interference and Suppression
+en	accessibility-xxxl	session	A-001	169.0	25.333333333333343	139.6155252456665	Advanced Theory
+en	accessibility-xxxl	session	A-002	314.0	25.333333333333343	284.2729320526123	Advanced Components and Circuits
+en	accessibility-xxxl	session	A-003	143.0	25.333333333333343	118.29567587375641	Measurements
+en	accessibility-xxxl	session	A-004	147.33333333333331	25.333333333333343	122.0672744512558	Power Supplies
+en	accessibility-xxxl	session	A-005	314.0	25.333333333333343	325.5644347667694	Transmitters, Modulation and Processing
+en	accessibility-xxxl	session	A-006	93.66666666666666	25.333333333333343	77.44278717041016	Receivers
+en	accessibility-xxxl	session	A-007	314.0	25.333333333333343	343.563645362854	Feedlines - Matching and Antenna Systems
+en	accessibility-xxxl	module	B-005	352.66666666666674	71.66666666666666	229.80331897735596	Basic Electronics and Theory
+en	accessibility-xxxl	module	B-004	357.0	71.66666666666666	158.3530879020691	Circuit Components
+en	accessibility-xxxl	module	B-006	342.0	71.66666666666666	253.42949056625366	Feedlines and Antenna Systems
+en	accessibility-xxxl	module	B-003	346.33333333333326	71.66666666666666	301.5727653503418	Station Assembly, Practice and Safety
+en	accessibility-xxxl	module	B-007	353.3333333333333	71.66666666666666	193.04188454151154	Radio Wave Propagation
+en	accessibility-xxxl	module	B-008	368.66666666666674	71.66666666666666	235.01351630687714	Interference and Suppression
+en	accessibility-xxxl	module	B-002	353.66666666666674	71.66666666666666	208.70928490161896	Operating and Procedures
+en	accessibility-xxxl	module	B-001	360.0	71.66666666666666	192.67300641536713	Regulations and Policies
+fr	default	session	B-001	196.66666666666669	20.66666666666667	196.49508047103882	Règlements et politiques
+fr	default	session	B-002	209.0	20.66666666666667	208.84342277050018	Exploitation et procédures
+fr	default	session	B-003	314.0	20.66666666666667	342.7337739467621	Montage d'une station, pratique et sécurité
+fr	default	session	B-004	196.33333333333331	20.66666666666667	196.30279660224915	Composants des circuits
+fr	default	session	B-005	291.3333333333333	20.66666666666667	291.2502291202545	Éléments et théorie de l'électronique
+fr	default	session	B-006	314.0	20.66666666666667	352.99769401550293	Descentes d'antenne et systèmes d'antenne
+fr	default	session	B-007	314.0	20.66666666666667	316.2199133634567	Propagation des ondes radioélectriques
+fr	default	session	B-008	201.0	20.66666666666667	200.93099689483643	Brouillage et suppression
+fr	default	session	A-001	130.66666666666669	20.66666666666667	130.59329545497894	Théorie avancée
+fr	default	session	A-002	314.0	20.66666666666667	408.7885296344757	Notions avancées sur les composants et les circuits
+fr	default	session	A-003	68.33333333333334	20.66666666666667	68.19380784034729	Mesures
+fr	default	session	A-004	101.0	20.66666666666667	100.74490809440613	Alimentation
+fr	default	session	A-005	288.0	20.66666666666667	287.71791434288025	Émetteurs, modulation et traitement
+fr	default	session	A-006	91.0	20.66666666666667	90.86719524860382	Récepteurs
+fr	default	session	A-007	314.0	20.66666666666667	454.36220598220825	Descentes d'antenne - adaptation et systèmes d'antenne
+fr	default	module	B-005	351.0	40.66666666666667	229.80331897735596	Basic Electronics and Theory
+fr	default	module	B-004	316.66666666666663	40.66666666666667	158.3530879020691	Circuit Components
+fr	default	module	B-006	355.3333333333333	40.66666666666667	253.42949056625366	Feedlines and Antenna Systems
+fr	default	module	B-003	355.66666666666674	40.66666666666667	301.5727653503418	Station Assembly, Practice and Safety
+fr	default	module	B-007	358.66666666666674	40.66666666666667	193.04188454151154	Radio Wave Propagation
+fr	default	module	B-008	364.33333333333326	40.66666666666667	235.01351630687714	Interference and Suppression
+fr	default	module	B-002	359.0	40.66666666666667	208.70928490161896	Operating and Procedures
+fr	default	module	B-001	360.66666666666674	40.66666666666667	192.67300641536713	Regulations and Policies
+fr	accessibility-xxxl	session	B-001	236.66666666666669	25.333333333333343	196.49508047103882	Règlements et politiques
+fr	accessibility-xxxl	session	B-002	251.0	25.333333333333343	208.84342277050018	Exploitation et procédures
+fr	accessibility-xxxl	session	B-003	314.0	25.333333333333343	342.7337739467621	Montage d'une station, pratique et sécurité
+fr	accessibility-xxxl	session	B-004	236.66666666666669	25.333333333333343	196.30279660224915	Composants des circuits
+fr	accessibility-xxxl	session	B-005	314.0	25.333333333333343	291.2502291202545	Éléments et théorie de l'électronique
+fr	accessibility-xxxl	session	B-006	314.0	25.333333333333343	352.99769401550293	Descentes d'antenne et systèmes d'antenne
+fr	accessibility-xxxl	session	B-007	314.0	25.333333333333343	316.2199133634567	Propagation des ondes radioélectriques
+fr	accessibility-xxxl	session	B-008	241.66666666666663	25.333333333333343	200.93099689483643	Brouillage et suppression
+fr	accessibility-xxxl	session	A-001	158.0	25.33333333333333	130.59329545497894	Théorie avancée
+fr	accessibility-xxxl	session	A-002	314.0	25.33333333333333	408.7885296344757	Notions avancées sur les composants et les circuits
+fr	accessibility-xxxl	session	A-003	82.66666666666669	25.33333333333333	68.19380784034729	Mesures
+fr	accessibility-xxxl	session	A-004	121.66666666666669	25.33333333333333	100.74490809440613	Alimentation
+fr	accessibility-xxxl	session	A-005	314.0	25.33333333333333	287.71791434288025	Émetteurs, modulation et traitement
+fr	accessibility-xxxl	session	A-006	110.0	25.33333333333333	90.86719524860382	Récepteurs
+fr	accessibility-xxxl	session	A-007	314.0	25.33333333333333	454.36220598220825	Descentes d'antenne - adaptation et systèmes d'antenne
+fr	accessibility-xxxl	module	B-005	352.66666666666674	71.66666666666666	229.80331897735596	Basic Electronics and Theory
+fr	accessibility-xxxl	module	B-004	357.0	71.66666666666666	158.3530879020691	Circuit Components
+fr	accessibility-xxxl	module	B-006	342.0	71.66666666666666	253.42949056625366	Feedlines and Antenna Systems
+fr	accessibility-xxxl	module	B-003	346.33333333333326	71.66666666666666	301.5727653503418	Station Assembly, Practice and Safety
+fr	accessibility-xxxl	module	B-007	353.3333333333333	71.66666666666666	193.04188454151154	Radio Wave Propagation
+fr	accessibility-xxxl	module	B-008	368.66666666666674	71.66666666666666	235.01351630687714	Interference and Suppression
+fr	accessibility-xxxl	module	B-002	353.66666666666674	71.66666666666666	208.70928490161896	Operating and Procedures
+fr	accessibility-xxxl	module	B-001	360.0	71.66666666666666	192.67300641536713	Regulations and Policies

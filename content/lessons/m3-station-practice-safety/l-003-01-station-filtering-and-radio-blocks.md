@@ -15,7 +15,10 @@ objectives:
   - "Place low-pass filters in a basic HF station."
   - "Trace audio through an FM transmitter."
   - "Name the main blocks of a superheterodyne receiver."
-prerequisites: []
+prerequisites:
+  - L-006-02
+  - L-004-01
+  - L-005-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-01-A
@@ -59,7 +62,16 @@ If an external RF power amplifier is used, the amplifier becomes the final RF so
 transceiver -> external RF amplifier -> low-pass filter -> SWR meter -> tuner -> switch -> antenna
 ```
 
-### In the real world: filter before the long jumper
+::figure station-filtering-radio-blocks
+Alt text: Two block diagrams show an HF station accessory chain and an FM superheterodyne receiver chain, with arrows marking signal flow.
+Text equivalent:
+- HF chain: TX/amp, LPF, SWR, tuner, switch, ant, with a branch to dummy.
+- FM receiver chain: ant, RF, mix with LO, IF, amp, lim, disc, AF amp, and speaker.
+::
+
+
+
+### Worked example: filter before the long jumper
 
 A 14.2 MHz HF transmitter can also produce a second harmonic at 28.4 MHz.
 
@@ -72,7 +84,23 @@ A 14.2 MHz HF transmitter can also produce a second harmonic at 28.4 MHz.
 
 Place the low-pass filter before a long accessory cable. Then the cable is less likely to carry the unwanted harmonic around the station.
 
-### Worked example: locating the filter
+### Faded practice: place a harmonic
+
+A bench transmitter runs at 11.6 MHz. Find the third harmonic before choosing a filter.
+
+- Given: operating frequency = 11.6 MHz; harmonic number = 3.
+- Find: third-harmonic frequency.
+- Formula: harmonic frequency = operating frequency x harmonic number.
+- Complete: harmonic frequency = 11.6 MHz x ___ = ___ MHz.
+- Sanity check: is the unwanted signal above or below the wanted frequency?
+
+Fill the gaps before checking below.
+
+### Check your work: place a harmonic
+
+11.6 MHz x 3 = 34.8 MHz. It is above the wanted signal. A suitable low-pass filter near the final RF output can reduce higher harmonics.
+
+### In the real world: locating the filter
 
 A 20 m transceiver feeds a borrowed linear amplifier. The station also has a power meter, a tuner, and a remote antenna switch. Put the low-pass filter at the first point after the last active RF source.
 
@@ -107,6 +135,22 @@ A teaching transmitter uses an oscillator near 12.2 MHz and a multiplier stage t
 
 If voice modulation moves the oscillator frequency a little, the multiplied output moves too. FM carries speech as a controlled frequency change, not as a planned amplitude change.
 
+### Faded practice: multiply an FM signal
+
+A training oscillator at 8.4 MHz feeds a tripler. At an instant, modulation moves it 0.8 kHz above centre.
+
+- Given: centre = 8.4 MHz; offset = 0.8 kHz; multiplier = 3.
+- Find: multiplied centre and offset.
+- Formula: multiply both RF frequency and its offset by the stage multiplier.
+- Complete: centre = 8.4 MHz x 3 = ___ MHz; offset = 0.8 kHz x ___ = ___ kHz.
+- Sanity check: does multiplying increase the FM swing as well as the centre frequency?
+
+Fill the gaps before checking below.
+
+### Check your work: multiply an FM signal
+
+The centre becomes 25.2 MHz and the offset becomes 2.4 kHz. Both are multiplied by three; the information still controls frequency, not amplitude.
+
 ## Superheterodyne receiver blocks
 
 A superheterodyne receiver does not process every signal at its original radio frequency all the way to the speaker. It converts the selected signal to an intermediate frequency, or IF. Filtering and gain are easier to make stable at a fixed IF.
@@ -135,6 +179,22 @@ A training receiver is tuned to 146.520 MHz. It uses a 10.700 MHz IF, and the lo
 - Sanity check: with high-side injection, the oscillator is above the received signal.
 
 The mixer makes several products. The IF stages keep the 10.700 MHz difference product and reject the rest.
+
+### Faded practice: complete a high-side setting
+
+A receiver tunes 145.650 MHz with a 10.700 MHz IF. Its oscillator runs above the signal.
+
+- Given: signal = 145.650 MHz; IF = 10.700 MHz.
+- Find: local oscillator frequency.
+- Formula: local oscillator = signal + IF.
+- Complete: local oscillator = 145.650 + ___ = ___ MHz.
+- Sanity check: subtract the signal from your oscillator answer. Does the difference equal the IF?
+
+Fill the gaps before checking below.
+
+### Check your work: complete a high-side setting
+
+145.650 + 10.700 = 156.350 MHz. The oscillator is above the signal by exactly 10.700 MHz.
 
 ## Try it
 

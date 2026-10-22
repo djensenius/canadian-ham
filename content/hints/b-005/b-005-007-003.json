@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-007-003",
+  "questionId": "B-005-007-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the AC basics notes on the audio-frequency range.",
+      "fr": "Revoyez les notes de base sur le CA au sujet de la gamme des fréquences audio."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure range recall: any second hint would paraphrase the range definition or eliminate options."
+}

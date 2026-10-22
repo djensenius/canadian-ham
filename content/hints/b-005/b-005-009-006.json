@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-009-006",
+  "questionId": "B-005-009-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the capacitor notes in the section on what sets capacitance.",
+      "fr": "Revoyez les notes sur les condensateurs dans la section sur ce qui détermine la capacité."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "what-sets-inductance-and-capacitance"
+  },
+  "singleLevelReason": "Pure construction-factor recall: a second hint would list or eliminate the factors in the options.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

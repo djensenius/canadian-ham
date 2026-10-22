@@ -9,45 +9,122 @@
     "B-005-008-004",
     "B-005-008-005",
     "B-005-008-009",
-    "B-005-008-011",
-    "B-005-009-003",
-    "B-005-009-011",
-    "B-005-010-001",
-    "B-005-010-009"
+    "B-005-008-011"
   ],
   "conceptChecks": [
     {
       "id": "QZ-L-005-04-A-C1",
-      "prompt": { "en": "A transmitter power is reduced from 120 W to 30 W. What is the approximate dB change?", "fr": null },
+      "prompt": {
+        "en": "An amplifier is followed by an equal dB loss. What comparison is valid if neither stage is overloaded?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "+6 dB", "fr": null }, "isCorrect": false },
-        { "text": { "en": "-3 dB", "fr": null }, "isCorrect": false },
-        { "text": { "en": "+10 dB", "fr": null }, "isCorrect": false },
-        { "text": { "en": "-6 dB", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "The output is above the input because gain is applied first.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Equal gain and loss ratios cancel regardless of their order in this simple model.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The output is below the input because loss is applied last.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The loss cancels the gain; being last does not make it count more.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The output cannot be compared with the input until the starting wattage is known.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A starting wattage is needed for an absolute output value. Equal opposing dB ratios are enough to compare input and output levels.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The output power is approximately the input power.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The positive and negative dB values add to zero, giving a net power ratio of one.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "120 W to 30 W divides power by 4, which is a 6 dB decrease.", "fr": null }
+      "explanation": {
+        "en": "Add signed dB changes to find the net ratio, then apply it to the starting power.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-005-04-A-C2",
-      "prompt": { "en": "Two equal 56 µF capacitors are connected in series. What is the total capacitance?", "fr": null },
+      "prompt": {
+        "en": "Two signals each fall by 3 dB on the same receiver. One starts just above S9; the other is much stronger. Which conclusion follows?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "28 µF", "fr": null }, "isCorrect": true },
-        { "text": { "en": "56 µF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "112 µF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "3 136 µF", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "They end at the same received power.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Equal ratios do not make different starting levels equal.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Each loses about half its received power.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The same dB change gives the same power ratio, regardless of starting level.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Each loses the same fixed number of watts.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Half of a stronger signal is a larger absolute power change.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Each drops by three whole S-units.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "dB and S-units are different scales. Three dB is not three S-units.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Two equal capacitors in series have half the capacitance of one.", "fr": null }
-    },
-    {
-      "id": "QZ-L-005-04-A-C3",
-      "prompt": { "en": "Which part is useful when you want high opposition to RF but low opposition at low frequency?", "fr": null },
-      "choices": [
-        { "text": { "en": "A bypass capacitor chosen to shunt RF to ground.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "An inductor used as an RF choke.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A small capacitor placed in the audio path.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A resistor chosen for a DC voltage drop.", "fr": null }, "isCorrect": false }
-      ],
-      "explanation": { "en": "Inductive reactance increases with frequency, so a choke can impede RF.", "fr": null }
+      "explanation": {
+        "en": "A dB change describes a relative change, including when the display is marked above S9.",
+        "fr": null
+      }
     }
   ]
 }

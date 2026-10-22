@@ -49,6 +49,18 @@ Do not add new syntax. Avoid raw HTML, LaTeX, footnotes, blockquotes (`>`), nest
 
 Renderer details to remember: the web parser joins consecutive paragraph lines with spaces, while the Swift parser preserves paragraph newlines. Use blank lines or list items for labelled callout lines. Swift tables require leading and trailing `|` and stop when a row has a different column count; the web table parser is looser, so write tables to the stricter Swift shape.
 
+### Front matter prerequisites
+
+The front-matter freeze is still in force except where a task explicitly opens a field. The `prerequisites` field may name cross-module lesson IDs when a lesson genuinely relies on earlier material in the recommended order in `content/lessons/README.md`.
+
+Rules for `prerequisites`:
+
+- Use lesson IDs only, such as `L-005-04`; every ID must exist.
+- List direct learning dependencies, not every transitive earlier lesson.
+- Include cross-module dependencies when the lesson needs earlier concepts such as Ohm's law, dB, AC, impedance, 300 / f, station filtering, signal quality, or operating procedure.
+- Do not list a later lesson. If a draft currently needs a later concept, define the concept locally and file or use the relevant content-fix task.
+- Keep the graph acyclic. The lesson coverage checker enforces existing IDs, acyclicity, and recommended-order precedence.
+
 ### Standard headings for explanatory lessons
 
 Use these headings when the lesson is not a reference-style rule lesson:
@@ -83,18 +95,21 @@ Not every lesson needs every optional `###` callout. Use only what helps the obj
 
 ### Reference-style rule modules
 
-Module 1 regulation lessons follow the reference style in `content/lessons/README.md`. Existing Module 2 operating lessons also use a reference-style operating format: they use `### Reference fact:` tables and `## How these procedures fit together`, and they omit `## Try it` and `## Common mistakes`.
+Module 1 regulation lessons follow the reference style in `content/lessons/README.md`. Module 2 operating lessons use the explanatory format above (owner approval 2026-10-12, TASK-46.9). They include concept sections, worked examples, Try it, common mistakes, and original concept checks. Keep the official quiz mappings intact and separate practice prompts from their feedback so learners can try before reading the answer.
 
-For M1 and M2 reference-style lessons:
+For M1 reference-style lessons:
 
-- keep single official facts in `## Reference facts: ...` tables;
-- use `## How these rules fit together` (or the M2 equivalent, `## How these procedures fit together`) for relationships and operating flow; keep each module's existing heading names;
+- organize the lesson around a few stated principles, introducing each `## Reference facts: ...` table with the principle it applies;
+- keep single official facts in original wording and add a short `Why` column that explains a relationship, purpose or useful distinction, not an invented legal rationale;
+- use `## How these rules fit together` for relationships and operating flow;
 - use positive rule statements;
 - avoid restating wrong answer options from the bank;
 - do not include `## Try it`, worked question-and-answer examples, original practice items, or `## Common mistakes`; and
 - keep lesson quiz JSON exhaustive for official question IDs and set `conceptChecks: []`.
 
-If a misconception needs coverage in an M1 or M2 lesson, handle it as a positive rule or procedure explanation in `How these rules fit together` (M2: `How these procedures fit together`), not as a `Misconception` or `Common mistakes` section. Avoid naming wrong answer options from the bank.
+TASK-46.8 retains M1's reference-only policy. Use the companion qualification-by-privilege matrices in L-001-02 and L-001-04 to distinguish station work, frequency access and power. The M1 numbers board in L-001-01 keeps similar values attached to their different jobs and units. A cue to cover table columns and recall the rule is allowed; it does not add a homemade regulatory question.
+
+If a misconception needs coverage in an M1 lesson, handle it as a positive rule explanation in the relevant principle or `How these rules fit together`, not as a `Misconception` or `Common mistakes` section. Avoid naming wrong answer options from the bank.
 
 ## 3. Teaching patterns for self-study
 
@@ -194,7 +209,7 @@ Format:
 - Correction: current is the flow through the loop. The lamp converts electrical energy into light and heat.
 ```
 
-Do not use this format in Module 1 or Module 2 reference-style lessons.
+Do not use this format in Module 1 reference-style lessons.
 
 ## 4. Real-world example bank
 
@@ -360,11 +375,11 @@ When the bank is silent, either cite a verified external source in task notes or
 
 Use this checklist for tasks 39.2 through 39.5.
 
-1. Read the lesson front matter and keep `type`, `id`, `moduleId`, `categoryIds`, `title`, `covers`, `objectives`, `prerequisites`, `estimatedMinutes`, `quizIds`, and `status` intact unless the task explicitly says otherwise.
+1. Read the lesson front matter and keep `type`, `id`, `moduleId`, `categoryIds`, `title`, `covers`, `objectives`, `prerequisites`, `estimatedMinutes`, `quizIds`, and `status` intact unless the task explicitly says otherwise. When a task does open `prerequisites`, follow the front-matter prerequisite rules above and keep every prerequisite earlier than the lesson in the recommended order.
 2. Keep coverage IDs unchanged unless a coordinator approves a coverage move.
 3. Keep quiz references unchanged. Do not edit quiz JSON unless the task says to revise quizzes.
 4. Keep the `## Illustration brief` heading and both `Alt text:` and `Description:` lines. Improve them only if the lesson change requires it.
-5. Check whether the lesson is reference-style. M1 and the existing M2 lessons are reference-style for this revision pass. Do not add Try-its, worked Q&A, original practice items, or Common mistakes to those lessons.
+5. Check whether the lesson is reference-style. M1 remains reference-style; M2 uses the explanatory format under TASK-46.9. Do not add Try-its, worked Q&A, original practice items, or Common mistakes to M1 lessons.
 6. Replace abstract paragraphs with concrete-to-abstract teaching where it helps.
 7. Add worked examples only where the lesson teaches calculations or practical sizing.
 8. Add memory tricks only from the vetted table or after verifying the trick and its limits.
