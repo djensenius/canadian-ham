@@ -2432,12 +2432,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(heading.waitForExistence(timeout: 10))
         waitBriefly(0.5)
         let scroll = scrollView(containing: heading, in: app)
-        for _ in 0..<24 where !isFullyVisible(heading, in: app, requiresHittable: false) {
+        for _ in 0..<40 where !isFullyVisible(heading, in: app, requiresHittable: false) {
             let visible = visibleFrameExcludingNavigationBar(in: app)
-            preciseScroll(scroll, contentDeltaY: heading.frame.minY < visible.minY ? 80 : -80)
+            let frame = heading.frame
+            if frame.minY > visible.maxY + visible.height * 0.25 {
+                scroll.swipeUp()
+            } else if frame.maxY < visible.minY - visible.height * 0.25 {
+                scroll.swipeDown()
+            } else {
+                preciseScroll(scroll, contentDeltaY: visible.minY + 16 - frame.minY)
+            }
             waitBriefly()
         }
-        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: false), "Lesson heading \(anchor) must be fully visible before the Try-it audit")
+        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: false), "Lesson heading \(anchor) must be fully visible before the Try-it audit. Frame: \(frameDescription(heading.frame))")
     }
 
     private func positionTryItControlForAudit(_ control: XCUIElement, in app: XCUIApplication) {
