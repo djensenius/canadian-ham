@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 02:33'
+updated_date: '2026-10-22 02:49'
 labels:
   - content
   - web
@@ -154,6 +154,8 @@ AC1/AC2 evidence remains the licensing decision/public-release block and the own
 Internal review follow-up implemented: archive_and_export defaults official_reference_sheet off and upload_beta alone passes true; the gate inspects all base/Release YAML scopes and all 10 generated Release configurations, with mutation fixtures per Release buildSettings. Root build:web now runs a default-output scan for official page PNGs and transcript text/names (explicit opt-in builds are exempt). Removed hit-point diagnostics, restored Show full sheet hit shape/minWidth, labelled Zoom and added current percentage values. Added fr-CA for all translatable new keys and Zoom, restored newline and main relative key order (baseline catalogue diff is additions only). New iPhone medium test covers page/zoom/text/fallback controls, full-default audit and Show full sheet expansion; targeted Apple runs started with nohup. High-resolution PDFKit inspection at 576 dpi confirms upper interface-radio line is bidirectional and lower line points toward radio; transcript and hash corrected. Both Markdown renderers expose document-level language only, so the French department-name line cannot be tagged per-line without expanding renderer scope; limitation recorded in asset README. Searched Backlog and created TASK-44.5 for mock-exam path tests rather than expanding this fix round. Task remains Done pending requested validation evidence.
 
 Medium test fix round: first setup dragged through the Toggle thumb, then exposed subpixel leading-edge frame rounding in the medium sheet. The new reference-only position helper now accepts a drag column (medium uses the blank centre column) and a 0.5pt measurement tolerance; real page/zoom/text/fallback taps and medium header position are verified. The full-default audit then reported nonnil Text equivalent textClipped at larger Dynamic Type. Coordinator explicitly confirmed no new handler is allowed (the existing medium exception is nil-element only): fixed the Toggle label with lineLimit(nil) and fixedSize(horizontal:false,vertical:true), no default-size visual change or point threshold. Rerunning all affected reference tests plus queued macOS/l10n checks via nohup. Existing approved audit helpers/handlers remain unchanged; new medium test still uses raw performAccessibilityAudit().
+
+Further medium-detent accessibility checks: explicit wrapping fixed Show full sheet; the native Toggle still clipped at larger sizes, so its label and named native switch now stack vertically only at accessibility Dynamic Type sizes, as coordinator approved. The next raw audit has only a nil-element textClipped finding (no element screenshot or named node), fitting the existing approved task-44.3 rule. The new medium test now calls the unchanged isApprovedMediumDetentToolScrollTextClip handler with the existing five-issue cap after real controls/state and stable medium-header prechecks. Every named finding and all other audit types still fail. No existing helper or audit handler was changed; matrix/AX regressions, iPad, macOS and l10n are queued after medium passes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
