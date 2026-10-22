@@ -43,6 +43,8 @@ Owner decision 2026-10-12 (2A): use the official ISED Basic reference sheet (EN 
 5. Run targeted requested checks (no full Apple suites), record per-test results, check AC3, set Done, commit/push; no PR or upload.
 
 Review follow-up: 6. Make beta archive opt-in explicit, validate every Release config and default web output with regression fixtures. 7. Restore hit target, remove diagnostics, label zoom, repair catalogue fr-CA/order/newline, inspect high-resolution page 4, and add iPhone medium-detent coverage. 8. Rerun only requested reference-sheet UI/macOS units and web/gate/l10n/URL/text/guard checks; record results, keep Done, commit/push, no PR.
+
+9. Coordinator follow-up approval supersedes the original matrix-only exception plan for the new medium test: preserve every existing helper; add only the local iPhone/medium/reference-scroll textClipped handler with logging and combined cap five under owner decision 2026-10-12. Keep approved Toggle/secondary-button layout improvements, validate repeated medium passes and document this handler for reviewer/PR guard-marker checking.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
