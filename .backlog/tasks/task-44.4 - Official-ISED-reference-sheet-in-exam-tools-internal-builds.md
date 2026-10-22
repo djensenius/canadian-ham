@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 01:50'
+updated_date: '2026-10-22 01:54'
 labels:
   - content
   - web
@@ -63,4 +63,6 @@ Test guard: self-test passed. Use exactly Test-guard-approved: owner decision 20
 Coordinator clarification/approval 2026-10-21: the existing approved exception (a), using unchanged auditIgnoringOccludedLessonTextContrast(app:), covers exam tools as part of practice/mock screens (owner 2026-10-14). Use it ONLY for the new AX-XXXL reference-sheet audit, where the Page label is partly clipped by the tool scroll area; nonnil-element, scroll ancestry/intersection and not-fully-visible constraints remain exactly as implemented, and fully visible contrast/non-contrast issues still fail. The 12 EN/FR light/dark official-image/text-equivalent/study audits remain raw performAccessibilityAudit() default calls. Removed brittle exact top-alignment setup rather than adding or widening any exception/helper. 44pt assertions and actual sheet/page/zoom state checks remain intact.
 
 Latest: iPhone AX-XXXL passed (139.160s) after returning the reference scroll view to its top before its approved full-default audit; iPad AX-XXXL passed (46.312s). iPad normal matrix image/text audits passed, then its Study fallback audit sampled a clipped -3 dB table row at the bottom edge (blank-paper element screenshot). Coordinator approved the unchanged occluded-scroll contrast helper for the iPad Study fallback only as the same existing exception (a); image/official-text audits and every iPhone normal audit remain raw/default. Rerunning only that iPad matrix method; no shared/audit helper changes.
+
+Coordinator approval 2026-10-21 for the iPad fallback only: add NEW auditIgnoringOccludedReferenceSheetTextContrast. The unchanged generic helper picks the main/background scroll view in the inspector layout, so it cannot classify the reference panel clip. The new helper selects only reference-sheet-scroll and fails if absent (no fallback). Its performAccessibilityAudit handler is byte-for-byte identical to the approved exception (a) rule: contrast-only, nonnil element, non-navigation frame, explicit reference scroll ancestry/intersection, not fully contained in visible reference area. All 67 pre-existing helpers remain byte-for-byte unchanged. The internal reviewer should diff the new handler line by line against the original; the eventual PR must explain the second-scroll-view reason under Test-guard-approved: owner decision 2026-10-12.
 <!-- SECTION:NOTES:END -->
