@@ -1,11 +1,11 @@
 ---
 id: TASK-44.4
 title: Official ISED reference sheet in exam tools (internal builds)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 01:54'
+updated_date: '2026-10-22 02:05'
 labels:
   - content
   - web
@@ -30,17 +30,17 @@ Owner decision 2026-10-12 (2A): use the official ISED Basic reference sheet (EN 
 <!-- AC:BEGIN -->
 - [x] #1 docs/content-licensing.md records the decision, the risk basis, and that public release is blocked until permission covers the sheet
 - [x] #2 A ready-to-send follow-up request to ISED (EN, asking for the reference sheets in EN and FR) is drafted for the owner
-- [ ] #3 Web and Apple exam tools show the official sheet (zoomable, accessible text equivalent) in internal builds; the original sheet remains available as fallback
+- [x] #3 Web and Apple exam tools show the official sheet (zoomable, accessible text equivalent) in internal builds; the original sheet remains available as fallback
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Merge origin/main (branch task file retained) and push.
-2. Render the official five-page exam PDF offline with source checksums; maintain a faithful English text equivalent separately from the original study sheet.
-3. Integrate zoomable official/study selector on web and iOS/iPadOS/macOS, gated by OFFICIAL_REFERENCE_SHEET (Debug/dev on; Release/production off; explicit internal beta opt-in only).
-4. Add targeted reference-sheet unit, EN/FR light/dark accessibility, resource-gate and Apple UI coverage without changing audit helpers. Document public-release exclusion.
-5. Run requested targeted web/Apple checks via nohup/polling, record per-test evidence, check AC3, finalize, commit and push (no PR).
+1. Merge origin/main (retain branch task file) and push.
+2. Render the unlabelled five-page ISED exam PDF offline with source/asset hashes and a faithful English text equivalent, separating project diagram descriptions.
+3. Integrate page/zoom/text controls plus original-study fallback on web and iOS/iPadOS/macOS; OFFICIAL_REFERENCE_SHEET defaults off in Release/production and is explicitly enabled only for dev/Debug/internal beta.
+4. Add EN/FR light/dark, AX, unit and gate coverage. Preserve all existing shared/audit helpers. With coordinator approval, use only approved exception (a) for AX and a new identical-rule, explicit-reference-scroll helper for the iPad fallback. Document licensing/TestFlight/public-release exclusion.
+5. Run targeted requested checks (no full Apple suites), record per-test results, check AC3, set Done, commit/push; no PR or upload.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -65,4 +65,93 @@ Coordinator clarification/approval 2026-10-21: the existing approved exception (
 Latest: iPhone AX-XXXL passed (139.160s) after returning the reference scroll view to its top before its approved full-default audit; iPad AX-XXXL passed (46.312s). iPad normal matrix image/text audits passed, then its Study fallback audit sampled a clipped -3 dB table row at the bottom edge (blank-paper element screenshot). Coordinator approved the unchanged occluded-scroll contrast helper for the iPad Study fallback only as the same existing exception (a); image/official-text audits and every iPhone normal audit remain raw/default. Rerunning only that iPad matrix method; no shared/audit helper changes.
 
 Coordinator approval 2026-10-21 for the iPad fallback only: add NEW auditIgnoringOccludedReferenceSheetTextContrast. The unchanged generic helper picks the main/background scroll view in the inspector layout, so it cannot classify the reference panel clip. The new helper selects only reference-sheet-scroll and fails if absent (no fallback). Its performAccessibilityAudit handler is byte-for-byte identical to the approved exception (a) rule: contrast-only, nonnil element, non-navigation frame, explicit reference scroll ancestry/intersection, not fully contained in visible reference area. All 67 pre-existing helpers remain byte-for-byte unchanged. The internal reviewer should diff the new handler line by line against the original; the eventual PR must explain the second-scroll-view reason under Test-guard-approved: owner decision 2026-10-12.
+
+FINAL VALIDATION (2026-10-21 local): all final per-test outcomes green. Results are accumulated across targeted fix rounds, not a rerun of unrelated/full suites. Earlier failed UI/setup attempts were corrected; only affected tests were rerun. The first iPad destination ID pointed at iOS 26.5 and ran no tests; corrected to iOS 27.0 ID 31F24CB8-5C15-40EA-8793-FE0A95398AB1.
+
+Web/packages:
+- pnpm typecheck: PASS.
+- pnpm test: PASS (content-tools 226; Morse 21; calculator 127; web 253; official-reference gate and release-permission self-tests also pass).
+- Default and OFFICIAL_REFERENCE_SHEET=YES pnpm build:web: PASS; both URL/CSP audits PASS. Final default rebuild after opt-in PASS; no page PNGs or transcript in dist (stale opt-in assets removed).
+- New web matrix covers EN/FR x light/dark, all five pages, zoom, English text equivalent, original study fallback and default axe rules; off-gate fallback and build gate tests also pass.
+- pnpm check:links, node scripts/check-apple-text-sources.ts, pnpm check:apple-l10n, pnpm check:apple-icloud-gate, pnpm check:apple-network, ruby -c fastlane/Fastfile, git diff --check: PASS.
+- XcodeGen generated twice with identical project.pbxproj. PDF source SHA-256 matches e4e6a0ec35d9ccec2732b6c2a950b3ea721f826d44160b54b4e6298e86b93ae9; five-page raster regeneration deterministic on this host; six app-asset hashes match provenance README.
+
+Apple UI per-test results (CanadianHamExamToolsUITests):
+- iPhone 17 Pro: testReferenceSheetToolAvailableOnlyForBasic: PASS (19.568s).
+- iPhone 17 Pro: testHintToolLadderAndLessonLink: PASS (63.064s).
+- iPhone 17 Pro: testOfficialReferenceSheetLightAndDarkEnglishAndFrench: PASS (253.426s).
+- iPhone 17 Pro: testReferenceSheetLargestDynamicTypeKeepsControlsReachable: PASS (139.160s).
+- iPad Pro 11-inch (M5), iOS 27.0: testReferenceSheetToolAvailableOnlyForBasic: PASS (16.709s).
+- iPad Pro 11-inch (M5), iOS 27.0: testOfficialReferenceSheetLightAndDarkEnglishAndFrench: PASS (210.435s).
+- iPad Pro 11-inch (M5), iOS 27.0: testReferenceSheetLargestDynamicTypeKeepsControlsReachable: PASS (46.312s).
+
+The official-sheet matrix runs all four EN/FR x light/dark scenarios and audits image, accessible text, and study fallback. iPhone uses 12 raw full-default audits; iPad uses 8 raw image/text audits plus 4 full-default fallback audits with only the approved occluded-scroll contrast rule. AX-XXXL on both platforms verifies real sheet/page/zoom changes and >=44pt controls, returns to the panel top, and runs the full-default audit with the unchanged approved helper. No non-contrast or fully visible contrast issue is ignored.
+
+iPhone unit per-test results (12/12, ExamCalculatorViewModelTests; models unchanged after this pass):
+- testCalculatorToolLayoutCanRepresentFittingContentWithAndWithoutHelp: PASS (0.001s).
+- testCalculatorToolLayoutFittingCandidatesPreferLargeKeysBeforeMinimumKeys: PASS (0.001s).
+- testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere: PASS (0.001s).
+- testCalculatorToolLayoutUsesExplicitScrollingModeWithoutHeightThresholds: PASS (0.001s).
+- testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes: PASS (0.001s).
+- testClearForNewExamResetsCurrentCalculationButKeepsRequestedLocale: PASS (0.001s).
+- testFrenchLocaleUsesFrenchDecimalDisplayAndSpokenString: PASS (0.001s).
+- testKeyHandlingProducesEngineDisplayAndSpokenResult: PASS (0.001s).
+- testOfficialReferenceSheetGateAndBundledPages: PASS (0.002s).
+- testQuestionCardFocusResetKeepsTextSelectionEnabled: PASS (0.004s).
+- testReferenceSheetLoaderReturnsNilWhenBundledFileIsMissingAndLoadsBasicSheet: PASS (0.001s).
+- testUpdateLocaleRefreshesDisplayAndSpokenStringImmediately: PASS (0.001s).
+
+macOS unit per-test results (38/38; relevant unit models unchanged after this pass):
+- CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutCanRepresentFittingContentWithAndWithoutHelp: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutFittingCandidatesPreferLargeKeysBeforeMinimumKeys: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutUsesExplicitScrollingModeWithoutHeightThresholds: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testClearForNewExamResetsCurrentCalculationButKeepsRequestedLocale: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testFrenchLocaleUsesFrenchDecimalDisplayAndSpokenString: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testKeyHandlingProducesEngineDisplayAndSpokenResult: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testOfficialReferenceSheetGateAndBundledPages: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testQuestionCardFocusResetKeepsTextSelectionEnabled: PASS (0.004s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testReferenceSheetLoaderReturnsNilWhenBundledFileIsMissingAndLoadsBasicSheet: PASS (0.001s).
+- CanadianHamTests.ExamCalculatorViewModelTests.testUpdateLocaleRefreshesDisplayAndSpokenStringImmediately: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testApplyPracticeAnswerSubmitsAnsweredWithHelpToEngine: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekEligibilityAllowsPracticeReviewLaterButNeverMockExamOrScoredImmediateAnswer: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekEndsWhenPhoneFullyOpensOrCloses: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekFastUnfoldThroughBandNeverPeeks: PASS (0.000s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekLeavingToleranceDoesNotResetDismissalSuppression: PASS (0.000s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekPresentationAppearanceAllowsCurrentResetToClearSuppression: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekPresentationClosesPeekOpenedHintOnQuestionChangeAndRequiresFreshDwell: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekPresentationDismissalSuppressesReopenUntilReset: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekPresentationImmediateAnswerEndsEligibility: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekPresentationKeepsButtonOpenedHintOpenOnReset: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekPresentationLifecycleKeepsDismissalSuppressionAcrossDisappear: PASS (0.000s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekPresentationStartsOnlyOnceUntilPostureReset: PASS (0.000s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekRecheckPeeksWithoutNewSamples: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekRequiresStableDwellInSlightOpenBand: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekSlowCloseThroughBandNeverPeeks: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekStartsOnlyInsideRealBandAndDoesNotUseEdgeJitterBeforePeek: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekToleratesSmallJitterOnlyAfterPeekStarts: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHingePeekUnavailableSampleDoesNotResetDismissalSuppression: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHintQualificationMarksUnansweredQuestionAsQualifiedOnly: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerCancelsShortPeekBeforeRecordingHelp: PASS (0.395s).
+- CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerDoesNotQualifyShortPeekRoute: PASS (0.287s).
+- CanadianHamTests.HintSessionStateTests.testImmediateModeHintAfterScoredAnswerDoesNotRecordHelp: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testReferencePointerRuleShowsOnlyWhenReferenceSheetIsAvailable: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testReviewLaterHintAfterSelectionRecordsHelp: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testSelectingAfterQualifiedHintRecordsHelpForReviewLaterSubmission: PASS (0.001s).
+- CanadianHamTests.HintSessionStateTests.testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange: PASS (2.549s).
+
+Apple commands used DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam, one destination per run, nohup/grep polling, no killed builds. iPhone destination: platform=iOS Simulator,name=iPhone 17 Pro. iPad destination: platform=iOS Simulator,id=31F24CB8-5C15-40EA-8793-FE0A95398AB1. UI selectors: -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/<each method above>. iPhone unit selector: -only-testing:CanadianHamTests/ExamCalculatorViewModelTests. Simulator runs used test CODE_SIGNING_ALLOWED=NO. macOS: destination platform=macOS,arch=arm64; selectors -only-testing:CanadianHamTests/ExamCalculatorViewModelTests -only-testing:CanadianHamTests/HintSessionStateTests; test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES.
+
+No full Apple suites were run, per request. tvOS/visionOS have no reference-sheet tool and no feature changes; their localization builds passed as part of check:apple-l10n. No TestFlight upload, public distribution, or PR was performed.
+
+Review/guard: check-test-guard self-test PASS; branch diff PASS with Test-guard-approved: owner decision 2026-10-12. Intentional guarded changes: supersede obsolete hidden-until-task44.4 test with Basic-only availability (Advanced stays negative); add full-default reference matrix/AX audits; use the approved existing helper for AX, and the new explicit-reference-scroll copy for iPad fallback only. All 67 pre-existing private helpers remain byte-for-byte unchanged; the new handler is byte-for-byte identical to the existing approved rule, apart from explicit geometry selection before the handler. It fails if reference-sheet-scroll is absent. Internal reviewer must compare handler line by line and confirm this scope.
+
+AC1/AC2 evidence remains the licensing decision/public-release block and the owner-sent ready-to-send ISED follow-up. AC3 is now verified by the interactive tests above and physical resource-exclusion checks. Written ISED permission still pending; public release remains blocked. Default Release/production excludes the sheet; only internal beta/dev/Debug opts in. Independent branch/commit review is still required; no PR opened.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented AC3: official five-page ISED Basic exam sheet is available offline with zoom, page controls and a faithful accessible English equivalent on web and iOS/iPadOS/macOS. The original study sheet remains selectable and is the sole default Release/production fallback. OFFICIAL_REFERENCE_SHEET gates actual resource inclusion and removes stale Apple resources; internal beta lanes explicitly opt in under owner decision 2A. Licensing, TestFlight and release checklists document the public-release block. Requested web/package, localization, URL/CSP, resource-gate and targeted Apple checks passed; detailed per-test results and narrowly approved audit scopes are recorded above. No existing helper or official question text was changed; no full Apple suites, upload or PR performed. Independent review and written ISED permission remain separate gates.
+<!-- SECTION:FINAL_SUMMARY:END -->
