@@ -1724,3 +1724,12 @@ input[type="checkbox"]:checked::after {
     transition: none;
   }
 }
+
+.reference-sheet-tool select { max-width: 100%; }
+.sheet-zoom-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ch-space-sm); }
+.official-sheet-viewport { overflow: auto; max-height: 65vh; background: white; }
+.official-sheet-viewport img { display: block; max-width: none; height: auto; width: 100%; }
+.official-sheet-viewport.sheet-zoom-150 img { width: 150%; }
+.official-sheet-viewport.sheet-zoom-200 img { width: 200%; }
+.official-sheet-viewport.sheet-zoom-250 img { width: 250%; }
+.official-sheet-viewport.sheet-zoom-300 img { width: 300%; }

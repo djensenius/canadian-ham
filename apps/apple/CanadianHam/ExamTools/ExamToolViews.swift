@@ -1068,6 +1068,11 @@ struct ReferenceSheetToolView: View {
     var onShowFullSheet: () -> Void = {}
     @State private var document: ReferenceSheetDocument?
     @State private var zoom = 1.0
+    @State private var officialDocument: OfficialReferenceSheetDocument?
+    @State private var showsOfficial = true
+    @State private var showsTextEquivalent = false
+    @State private var page = 0
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         Group {
@@ -1081,29 +1086,126 @@ struct ReferenceSheetToolView: View {
     }
 
     private func referenceSheet(_ document: ReferenceSheetDocument) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                if showsFullSheetButton {
-                    Button("Show full sheet") { onShowFullSheet() } // l10n: localized
-                        .font(DesignTokens.FontScale.body.weight(.semibold))
-                        .buttonStyle(.bordered)
-                        .controlSize(.large)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    if showsFullSheetButton {
+                        Button { onShowFullSheet() } label: {
+                            AccessibleSecondaryButtonLabel(title: "Show full sheet")
+                        }
+                        .buttonStyle(AccessibleSecondaryButtonStyle())
                         .frame(minWidth: 44, minHeight: 44)
                         .contentShape(Rectangle())
                         .accessibilityIdentifier("reference-sheet-show-full-sheet")
-                } else {
-                    zoomControls
+                    }
+                    if officialDocument != nil {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                            Text(showsOfficial ? LocalizedStringKey("Official sheet") : LocalizedStringKey("Study sheet")) // l10n: localized
+                                .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("reference-sheet-version-title")
+                            Button { showsOfficial.toggle() } label: {
+                                AccessibleSecondaryButtonLabel(title: showsOfficial ? "Study sheet" : "Official sheet")
+                            }
+                            .buttonStyle(AccessibleSecondaryButtonStyle())
+                            .accessibilityIdentifier("reference-sheet-version")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel(Text("Sheet version")) // l10n: localized
+                    }
+                    if Bundle.main.preferredLocalizations.first?.hasPrefix("fr") == true {
+                        Text("This content is currently available in English only.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                    }
+                    if showsOfficial, let officialDocument {
+                        officialSheet(officialDocument, width: geometry.size.width)
+                    } else {
+                        LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid")
+                            .accessibilityIdentifier("reference-sheet-study-text")
+                    }
                 }
-
-                LessonMarkdownView(markdown: document.markdown, title: "Original Basic formula and reference study aid")
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
-                    .padding(DesignTokens.Spacing.md)
-                    .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding(.bottom, DesignTokens.Spacing.xl)
             }
-            .padding(.bottom, DesignTokens.Spacing.xl)
+            .accessibilityIdentifier("reference-sheet-scroll")
         }
-        .accessibilityIdentifier("reference-sheet-scroll")
+    }
+
+    @ViewBuilder
+    private func officialSheet(_ document: OfficialReferenceSheetDocument, width: CGFloat) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                Text("Text equivalent") // l10n: localized
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                Toggle("Text equivalent", isOn: $showsTextEquivalent) // l10n: localized
+                    .labelsHidden()
+                    .accessibilityIdentifier("reference-sheet-text-equivalent")
+            }
+        } else {
+            Toggle(isOn: $showsTextEquivalent) {
+                Text("Text equivalent") // l10n: localized
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .accessibilityIdentifier("reference-sheet-text-equivalent")
+        }
+        if showsTextEquivalent {
+            LessonMarkdownView(markdown: document.markdown, title: "")
+                .accessibilityIdentifier("reference-sheet-official-text")
+        } else {
+            Text("Page \(page + 1) of 5") // l10n: localized
+                .font(DesignTokens.FontScale.body.weight(.semibold))
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("reference-sheet-page-number")
+            Button { page = max(0, page - 1) } label: {
+                AccessibleSecondaryButtonLabel(title: "Previous")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+            .disabled(page == 0)
+            .accessibilityIdentifier("reference-sheet-page-previous")
+            Button { page = min(document.pages.count - 1, page + 1) } label: {
+                AccessibleSecondaryButtonLabel(title: "Next")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+            .disabled(page == document.pages.count - 1)
+            .accessibilityValue(Text("\(page + 1) / 5")) // l10n: verbatim
+            .accessibilityIdentifier("reference-sheet-page-next")
+            zoomControls
+            ScrollView(.horizontal) {
+                if let image = officialPageImage(document.pages[page]) {
+                    image.resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: max(1, width) * zoom)
+                    .accessibilityLabel(Text("Official sheet, page \(page + 1) of 5. Use Text equivalent for accessible content.")) // l10n: localized
+                    .accessibilityIdentifier("reference-sheet-official-page")
+                } else {
+                    unavailableSheet
+                }
+            }
+            // The source pages are 612 × 792 points. A definite height keeps the
+            // nested horizontal viewport from covering controls in the outer scroll view.
+            .frame(height: max(1, width) * zoom * 792 / 612)
+        }
+        Text(officialSheetAttribution) // l10n: content(en)
+            .font(DesignTokens.FontScale.body)
+    }
+
+    private var officialSheetAttribution: AttributedString {
+        var text = AttributedString("Source: Innovation, Science and Economic Development Canada (ISED), Reference Material for Amateur Radio Exam – Basic Qualification, Version 1 (May 2025). Reproduced for internal use; this reproduction is not an official version. Canadian Ham is not affiliated with or endorsed by the Government of Canada.")
+        text.languageIdentifier = BankLanguage.english.accessibilityLanguageCode
+        return text
+    }
+
+    private func officialPageImage(_ url: URL) -> Image? {
+#if os(iOS)
+        UIImage(contentsOfFile: url.path).map { Image(uiImage: $0) }
+#else
+        NSImage(contentsOf: url).map { Image(nsImage: $0) }
+#endif
     }
 
     private var unavailableSheet: some View {
@@ -1139,41 +1241,44 @@ struct ReferenceSheetToolView: View {
         .accessibilityIdentifier("reference-sheet-scroll")
     }
 
+    @ViewBuilder
     private var zoomControls: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                zoomButtons
-            }
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                zoomButtons
-            }
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) { zoomButtons }
+        } else {
+            HStack(spacing: DesignTokens.Spacing.sm) { zoomButtons }
         }
     }
 
     @ViewBuilder
     private var zoomButtons: some View {
-            Button("Zoom out") { zoom = max(0.8, zoom - 0.1) } // l10n: localized
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(Rectangle())
-                .disabled(zoom <= 0.8)
-                .accessibilityIdentifier("reference-sheet-zoom-out")
-            Text("\(Int((zoom * 100).rounded()))%") // l10n: verbatim
-                .font(DesignTokens.FontScale.caption.weight(.semibold))
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
-                .monospacedDigit()
-            Button("Zoom in") { zoom = min(1.8, zoom + 0.1) } // l10n: localized
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(Rectangle())
-                .disabled(zoom >= 1.8)
-                .accessibilityIdentifier("reference-sheet-zoom-in")
+        Button { zoom = max(1, zoom - 0.5) } label: {
+            AccessibleSecondaryButtonLabel(title: "Zoom out")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        .disabled(zoom <= 1)
+        .accessibilityValue(Text("\(Int((zoom * 100).rounded()))%")) // l10n: verbatim
+        .accessibilityIdentifier("reference-sheet-zoom-out")
+        Text("\(Int((zoom * 100).rounded()))%") // l10n: verbatim
+            .font(DesignTokens.FontScale.body.weight(.semibold))
+            .fixedSize(horizontal: false, vertical: true)
+            .foregroundStyle(DesignTokens.Colors.inkMuted)
+            .monospacedDigit()
+            .accessibilityLabel(Text("Zoom")) // l10n: localized
+            .accessibilityValue(Text("\(Int((zoom * 100).rounded()))%")) // l10n: verbatim
+            .accessibilityIdentifier("reference-sheet-zoom-level")
+        Button { zoom = min(3, zoom + 0.5) } label: {
+            AccessibleSecondaryButtonLabel(title: "Zoom in")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        .disabled(zoom >= 3)
+        .accessibilityValue(Text("\(Int((zoom * 100).rounded()))%")) // l10n: verbatim
+        .accessibilityIdentifier("reference-sheet-zoom-in")
     }
 
     private func loadDocument() {
         guard document == nil else { return }
         document = try? ReferenceSheetLoader.load(configuration: configuration)
+        officialDocument = try? OfficialReferenceSheetLoader.load()
     }
 }
