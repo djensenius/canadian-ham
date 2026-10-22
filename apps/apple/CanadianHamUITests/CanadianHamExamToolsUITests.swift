@@ -333,14 +333,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
 #endif
     }
 
-    func testReferenceSheetToolHiddenUntilTask44Dot4() throws {
+    func testReferenceSheetToolAvailableOnlyForBasic() throws {
         let app = launchPracticeQuestion()
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
         XCTAssertTrue(app.buttons[Tool.hint.buttonIdentifier].firstMatch.exists)
-        XCTAssertFalse(app.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "task-44.3 ships only the calculator on Apple; the reference sheet follows in task-44.4")
+        XCTAssertTrue(app.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "Basic offers the official sheet and study fallback in task-44.4")
 
         let advancedApp = launchAdvancedPracticeQuestion()
         defer { advancedApp.terminate() }
@@ -348,6 +348,70 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(advancedApp.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
         XCTAssertFalse(advancedApp.buttons[Tool.hint.buttonIdentifier].firstMatch.exists, "Advanced course has no active Apple hints in task-50.12")
         XCTAssertFalse(advancedApp.buttons[Tool.referenceSheet.buttonIdentifier].firstMatch.exists, "Advanced course must not offer the Basic reference sheet")
+    }
+
+    func testOfficialReferenceSheetLightAndDarkEnglishAndFrench() throws {
+        for language in ["en", "fr"] {
+            for appearance in ["light", "dark"] {
+                let app = launchPracticeQuestion(appearance: appearance, extraArguments: [
+                    "-AppleLanguages", "(\(language))", "-AppleLocale", language == "fr" ? "fr_CA" : "en_CA",
+                    "-CanadianHamExamToolInitialDetent", "large"
+                ])
+                defer { app.terminate() }
+                openTool(.referenceSheet, in: app)
+                let image = app.images["reference-sheet-official-page"].firstMatch
+                XCTAssertTrue(image.waitForExistence(timeout: 5), "The official sheet should be the default")
+                let zoom = app.buttons["reference-sheet-zoom-in"].firstMatch
+                positionReferenceSheetControl(zoom, in: app)
+                zoom.tap()
+                let page = app.buttons["reference-sheet-page"].firstMatch
+                positionReferenceSheetControl(page, in: app)
+                page.tap()
+                app.buttons["5 / 5"].firstMatch.tap()
+                XCTAssertTrue(image.label.contains("5"), "All five PDF pages should be available offline")
+                try app.performAccessibilityAudit()
+                let text = app.switches["reference-sheet-text-equivalent"].firstMatch
+                positionReferenceSheetControl(text, in: app)
+                text.tap()
+                XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-official-text"].firstMatch.waitForExistence(timeout: 5))
+                try app.performAccessibilityAudit()
+                let version = app.buttons["reference-sheet-version"].firstMatch
+                positionReferenceSheetControl(version, in: app)
+                version.tap()
+                app.buttons[language == "fr" ? "Feuille d’étude" : "Study sheet"].firstMatch.tap()
+                XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-study-text"].firstMatch.waitForExistence(timeout: 5))
+                try app.performAccessibilityAudit()
+                closeTool(in: app)
+                XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.exists, "The question remains available after using the tool")
+            }
+        }
+    }
+
+    func testReferenceSheetLargestDynamicTypeKeepsControlsReachable() throws {
+        let app = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL", "-CanadianHamExamToolInitialDetent", "large"])
+        defer { app.terminate() }
+        openTool(.referenceSheet, in: app)
+        for identifier in ["reference-sheet-version", "reference-sheet-page", "reference-sheet-zoom-in"] {
+            let control = app.buttons[identifier].firstMatch
+            positionReferenceSheetControl(control, in: app)
+            XCTAssertTrue(control.isHittable, "\(identifier) must remain reachable at AX-XXXL")
+            XCTAssertGreaterThanOrEqual(control.frame.height, 44)
+        }
+        try app.performAccessibilityAudit()
+    }
+
+    private func positionReferenceSheetControl(_ control: XCUIElement, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let scroll = app.scrollViews["reference-sheet-scroll"].firstMatch
+        XCTAssertTrue(scroll.waitForExistence(timeout: 5), file: file, line: line)
+        XCTAssertTrue(control.waitForExistence(timeout: 5), file: file, line: line)
+        for _ in 0..<30 {
+            let visible = scroll.frame.intersection(app.windows.firstMatch.frame).insetBy(dx: 2, dy: 4)
+            if control.isHittable && visible.contains(control.frame) { return }
+            let distance: CGFloat = control.frame.midY < visible.midY ? 72 : -72
+            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)))
+        }
+        XCTFail("Reference-sheet control \(control.identifier) should be fully visible and hittable. Control: \(frameDescription(control.frame)); scroll: \(frameDescription(scroll.frame))", file: file, line: line)
     }
 
     func testLargestDynamicTypeKeepsHintToolButtonReachable() throws {
@@ -392,7 +456,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         app.buttons["hint-show-level-1-button"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["hint-level-1-title"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["hint-show-level-2-button"].firstMatch.waitForExistence(timeout: 5), "Two-level hint files should reveal Hint 2 only after Hint 1")
-        XCTAssertFalse(app.descendants(matching: .any)["hint-reference-pointer"].firstMatch.exists, "Reference-sheet pointers stay hidden until the Apple sheet is available")
+        XCTAssertTrue(app.descendants(matching: .any)["hint-reference-pointer"].firstMatch.exists, "Basic hints may point to the now-available reference sheet")
 
         app.buttons["hint-show-level-2-button"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["hint-level-2-title"].firstMatch.waitForExistence(timeout: 5))

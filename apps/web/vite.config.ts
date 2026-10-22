@@ -4,6 +4,7 @@ import { defineConfig } from "vitest/config";
 import type { Plugin } from "vite";
 
 import { createPrecacheManifest, createServiceWorkerSource, createWebAppManifest } from "./src/lib/pwa.ts";
+import { officialReferenceSheetPlugin } from "./officialReferenceSheetPlugin.ts";
 import { computePwaVersion } from "./src/lib/pwaVersion.ts";
 
 function allowDevInlineStyles(): Plugin {
@@ -110,7 +111,7 @@ function walkPublicDir(directory: string): string[] {
 
 export default defineConfig({
   base: resolveWebBase(),
-  plugins: [allowDevInlineStyles(), canadianHamPwa()],
+  plugins: [allowDevInlineStyles(), officialReferenceSheetPlugin(), canadianHamPwa()],
   test: {
     environment: "jsdom",
     globals: true,

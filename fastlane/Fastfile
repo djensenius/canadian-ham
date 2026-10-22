@@ -279,6 +279,8 @@ def archive_and_export(platform_key)
     "archive",
     "CURRENT_PROJECT_VERSION=#{build_number}",
     "CODE_SIGNING_ALLOWED=YES",
+    # Owner decision 2A: internal beta only; never copy this opt-in to a public lane.
+    "OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET",
     *(config[:build_settings] || [])
   ]
   run_xbuild(archive_args)

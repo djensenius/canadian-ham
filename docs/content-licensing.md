@@ -163,6 +163,15 @@ Rules:
 - Keep checksums in the source manifest.
 - Do not recreate ISED diagrams unless permission scope explicitly allows derivative formats.
 
+### Official-sheet implementation gate (TASK-44.4)
+
+`OFFICIAL_REFERENCE_SHEET` is the single opt-in concept for both apps. It controls resource inclusion, not just visibility. The original project study sheet stays bundled and is selectable whenever the official sheet is enabled; it is the sole sheet when the gate is off. Only Basic has this tool on iOS/iPadOS/macOS and web; tvOS/visionOS do not currently have a reference-sheet tool.
+
+- **Apple:** Debug and DebugCloudKit set `-DOFFICIAL_REFERENCE_SHEET`; default Release does not. `scripts/copy-official-reference-sheet.sh` copies the five rendered pages plus English text equivalent only when the compilation condition is present, and removes any stale opted-in resources on every build. The loader is also compile-gated. The four internal-only fastlane `beta` lanes explicitly pass `OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET` under decision 2A (tvOS/visionOS do not copy/use the resources because they have no tool). A future public/App Store lane must not opt in until written permission covers the sheet. Do not copy the beta override into such a lane.
+- **Web:** local development/tests default on. Production (`pnpm build:web`) defaults off; the Vite virtual module resolves to `null` without importing any official assets/text. `OFFICIAL_REFERENCE_SHEET=YES pnpm build:web` is an explicit **private internal preview only** opt-in; `OFFICIAL_REFERENCE_SHEET=NO` also disables it in development. Offline precaching includes the sheet only in opted-in builds. Public deployment remains prohibited by the permission gate above.
+- **Release verification:** run `pnpm test:official-reference-sheet` (also part of `pnpm test`), build web without the opt-in and verify no `page-*.png` assets/text equivalent in `apps/web/dist`, and inspect the unsigned Release app bundle to confirm `official-basic-exam/` is absent. There is no runtime preference that can re-enable absent content. Record permission scope before intentionally changing the public-build default.
+- **Provenance:** `content/reference/official-basic-exam/README.md` records source/asset hashes and the offline render command. Pages are unannotated PDF rasterizations; the accessible equivalent preserves the English printed text/formulas, with separate, clearly identified project descriptions of the unlabelled diagrams. The source PDF and training version are not bundled.
+
 ## Source update policy
 
 When ISED updates the bank, follow the detailed [content update process](content-update-process.md) as well as the summary below:

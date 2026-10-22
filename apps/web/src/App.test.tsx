@@ -2094,6 +2094,7 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     await user.click(screen.getByRole("button", { name: "Feuille de référence" }));
     const referencePanel = await screen.findByRole("region", { name: "Feuille de référence" });
     assert.equal(referencePanel.getAttribute("lang"), null);
+    await user.selectOptions(within(referencePanel).getByRole("combobox", { name: "Version de la feuille" }), "study");
     const ohmsHeading = within(referencePanel).getByRole("heading", { level: 3, name: "Ohm's law" });
     assert.equal(ohmsHeading.getAttribute("lang"), "en");
     const tableRegion = within(referencePanel).getByRole("region", { name: "Tableau de la feuille de référence 1" });
@@ -2117,6 +2118,8 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
       await user.click(referenceButton);
       const referencePanel = await screen.findByRole("region", { name: "Reference sheet" });
       await waitFor(() => assert.equal(document.activeElement, referencePanel));
+      assert.ok(within(referencePanel).getByRole("img", { name: /Official sheet, page 1 of 5/ }));
+      await user.selectOptions(within(referencePanel).getByRole("combobox", { name: "Sheet version" }), "study");
       assert.equal(within(referencePanel).queryByRole("heading", { name: "Original Basic formula and reference study aid" }), null);
       assert.ok(within(referencePanel).getByRole("heading", { level: 3, name: "Ohm's law" }));
       assert.match(referencePanel.textContent ?? "", /E = I x R/);
@@ -2154,7 +2157,10 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
 
     await user.click(screen.getByRole("button", { name: "Reference sheet" }));
     await screen.findByRole("heading", { name: "Reference sheet" });
-    assert.match(screen.getByRole("region", { name: "Reference sheet" }).textContent ?? "", /Metric prefixes/);
+    const referencePanel = screen.getByRole("region", { name: "Reference sheet" });
+    assert.ok(within(referencePanel).getByRole("img", { name: /Official sheet, page 1 of 5/ }));
+    await user.selectOptions(within(referencePanel).getByRole("combobox", { name: "Sheet version" }), "study");
+    assert.match(referencePanel.textContent ?? "", /Metric prefixes/);
   });
 
   it("switches to Advanced, persists the course, hides lessons, and generates a 50-question no-Honours mock", async () => {

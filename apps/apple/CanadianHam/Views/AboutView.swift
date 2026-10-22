@@ -26,7 +26,7 @@ struct AboutView: View {
                     Text("RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(verbatimText(aboutRBR4CitationURL))")
                         .font(DesignTokens.FontScale.caption)
                         .textSelection(.enabled)
-                    Text(bank.courseBankID == .advanced ? "There is no ISED-approved Advanced exam reference sheet; the Basic reference sheet must not be presented as exam-allowed for Advanced." : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.") // l10n: localized
+                    Text(bank.courseBankID == .advanced ? "There is no ISED-approved Advanced exam reference sheet; the Basic reference sheet must not be presented as exam-allowed for Advanced." : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet.") // l10n: localized
                 }
 
                 paperSection("Attribution") {

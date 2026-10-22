@@ -37,7 +37,7 @@ import { explanationForQuestion, mainExplanationText, parseChoiceNotes, type Exp
 import { hintForQuestion, type QuestionHint } from "./data/hints";
 import { lessonNeighbors, lessonsById, lessonsByModuleId, modules, modulesById, type LessonMeta } from "./data/lessons";
 import { buildLessonQuizItems, lessonQuizzesById, type ConceptCheck, type LessonQuiz, type LessonQuizItem } from "./data/quizzes";
-import { basicReferenceSheetMarkdownForWeb } from "./data/referenceSheet";
+import { ReferenceSheetTool } from "./components/ReferenceSheetTool";
 import {
   defaultPreferences,
   defaultProgressStore,
@@ -1999,19 +1999,9 @@ function CalculatorTool({ calculatorState, interfaceLanguage, onPressKey }: { re
   );
 }
 
-function firstMarkdownHeading(markdown: string): string | undefined {
-  return /^#\s+(.+)$/m.exec(markdown)?.[1]?.trim();
-}
 
-function ReferenceSheetTool({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
-  const referenceSheetMarkdown = basicReferenceSheetMarkdownForWeb();
-  return (
-    <section className="reference-sheet-tool" aria-label={t(interfaceLanguage, "referenceSheetTitle")} data-exam-tool-focus tabIndex={-1}>
-      {interfaceLanguage === "fr" ? <p className="reference-note" lang="fr-CA">{t(interfaceLanguage, "englishOnlyContentNotice")}</p> : null}
-      <MarkdownContent markdown={referenceSheetMarkdown} title={firstMarkdownHeading(referenceSheetMarkdown)} tableLabel={t(interfaceLanguage, "referenceSheetTableAria")} interfaceLanguage={interfaceLanguage} contentLanguage="en" />
-    </section>
-  );
-}
+
+
 
 const calculatorKeyRows: readonly (readonly CalculatorKey[])[] = [
   ["AC", "C/CE", "backspace", "÷"],

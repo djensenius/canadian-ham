@@ -6157,24 +6157,24 @@
         }
       }
     },
-    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps." : {
+    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps."
+            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base pendant l’examen. Les versions internes peuvent inclure sa feuille en anglais; les versions publiques utilisent la feuille d’étude originale en attendant l’autorisation pour la feuille officielle."
           }
         }
       }
@@ -12148,6 +12148,121 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réponses avec aide : %lld."
+          }
+        }
+      }
+    },
+    "%lld / 5" : {
+      "shouldTranslate" : false
+    },
+    "Official sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Official sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle"
+          }
+        }
+      }
+    },
+    "Official sheet, page %lld of 5. Use Text equivalent for accessible content." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Official sheet, page %lld of 5. Use Text equivalent for accessible content."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille officielle, page %lld sur 5. Utilisez l’équivalent textuel pour le contenu accessible."
+          }
+        }
+      }
+    },
+    "Page" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page"
+          }
+        }
+      }
+    },
+    "Sheet version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sheet version"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version de la feuille"
+          }
+        }
+      }
+    },
+    "Study sheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Study sheet"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feuille d’étude"
+          }
+        }
+      }
+    },
+    "Text equivalent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text equivalent"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel"
+          }
+        }
+      }
+    },
+    "This content is currently available in English only." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is currently available in English only."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce contenu est actuellement offert en anglais seulement."
           }
         }
       }
