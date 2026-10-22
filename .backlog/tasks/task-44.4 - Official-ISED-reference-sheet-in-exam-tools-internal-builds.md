@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 02:13'
+updated_date: '2026-10-22 02:17'
 labels:
   - content
   - web
@@ -150,6 +150,8 @@ No full Apple suites were run, per request. tvOS/visionOS have no reference-shee
 Review/guard: check-test-guard self-test PASS; branch diff PASS with Test-guard-approved: owner decision 2026-10-12. Intentional guarded changes: supersede obsolete hidden-until-task44.4 test with Basic-only availability (Advanced stays negative); add full-default reference matrix/AX audits; use the approved existing helper for AX, and the new explicit-reference-scroll copy for iPad fallback only. All 67 pre-existing private helpers remain byte-for-byte unchanged; the new handler is byte-for-byte identical to the existing approved rule, apart from explicit geometry selection before the handler. It fails if reference-sheet-scroll is absent. Internal reviewer must compare handler line by line and confirm this scope.
 
 AC1/AC2 evidence remains the licensing decision/public-release block and the owner-sent ready-to-send ISED follow-up. AC3 is now verified by the interactive tests above and physical resource-exclusion checks. Written ISED permission still pending; public release remains blocked. Default Release/production excludes the sheet; only internal beta/dev/Debug opts in. Independent branch/commit review is still required; no PR opened.
+
+Internal review follow-up implemented: archive_and_export defaults official_reference_sheet off and upload_beta alone passes true; the gate inspects all base/Release YAML scopes and all 10 generated Release configurations, with mutation fixtures per Release buildSettings. Root build:web now runs a default-output scan for official page PNGs and transcript text/names (explicit opt-in builds are exempt). Removed hit-point diagnostics, restored Show full sheet hit shape/minWidth, labelled Zoom and added current percentage values. Added fr-CA for all translatable new keys and Zoom, restored newline and main relative key order (baseline catalogue diff is additions only). New iPhone medium test covers page/zoom/text/fallback controls, full-default audit and Show full sheet expansion; targeted Apple runs started with nohup. High-resolution PDFKit inspection at 576 dpi confirms upper interface-radio line is bidirectional and lower line points toward radio; transcript and hash corrected. Both Markdown renderers expose document-level language only, so the French department-name line cannot be tagged per-line without expanding renderer scope; limitation recorded in asset README. Searched Backlog and created TASK-44.5 for mock-exam path tests rather than expanding this fix round. Task remains Done pending requested validation evidence.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
