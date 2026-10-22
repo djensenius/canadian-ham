@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 02:49'
+updated_date: '2026-10-22 02:54'
 labels:
   - content
   - web
@@ -156,6 +156,8 @@ Internal review follow-up implemented: archive_and_export defaults official_refe
 Medium test fix round: first setup dragged through the Toggle thumb, then exposed subpixel leading-edge frame rounding in the medium sheet. The new reference-only position helper now accepts a drag column (medium uses the blank centre column) and a 0.5pt measurement tolerance; real page/zoom/text/fallback taps and medium header position are verified. The full-default audit then reported nonnil Text equivalent textClipped at larger Dynamic Type. Coordinator explicitly confirmed no new handler is allowed (the existing medium exception is nil-element only): fixed the Toggle label with lineLimit(nil) and fixedSize(horizontal:false,vertical:true), no default-size visual change or point threshold. Rerunning all affected reference tests plus queued macOS/l10n checks via nohup. Existing approved audit helpers/handlers remain unchanged; new medium test still uses raw performAccessibilityAudit().
 
 Further medium-detent accessibility checks: explicit wrapping fixed Show full sheet; the native Toggle still clipped at larger sizes, so its label and named native switch now stack vertically only at accessibility Dynamic Type sizes, as coordinator approved. The next raw audit has only a nil-element textClipped finding (no element screenshot or named node), fitting the existing approved task-44.3 rule. The new medium test now calls the unchanged isApprovedMediumDetentToolScrollTextClip handler with the existing five-issue cap after real controls/state and stable medium-header prechecks. Every named finding and all other audit types still fail. No existing helper or audit handler was changed; matrix/AX regressions, iPad, macOS and l10n are queued after medium passes.
+
+Coordinator approval for Show full sheet styling: native bordered Button still intermittently reports named textClipped despite explicit wrapping. Reference tool was not user-visible before this branch, so change Show full sheet to the existing AccessibleSecondaryButtonLabel/Style used by other reference controls, retain minWidth:44 and Rectangle contentShape; this is consistent styling rather than a regression. No new handler/filter approved or added. Coordinator requests two consecutive medium-detent passes plus affected matrix/AX tests. These and iPad/macOS/l10n are running via nohup; eventual PR must note this style change.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
