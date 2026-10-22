@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 00:04'
+updated_date: '2026-10-22 00:25'
 labels:
   - content
   - web
@@ -53,4 +53,6 @@ PDF inspection for integration lane (no integration implemented; depends on task
 2026-10-12: Owner sent the ISED follow-up request (docs/release/ised-reference-sheet-request.md) asking to add the Basic reference sheets (EN and FR) to the permission. Awaiting reply; public release stays blocked until permission covers the sheet.
 
 2026-10-21: Merged origin/main and pushed 3ba41fef; retained branch task version per instruction. Coordinator approved Debug/dev ON and default Release/production OFF gate with explicit internal beta opt-in, public permission gate unchanged.
+
+AC3 implementation: official exam PDF reproduced as five unannotated offline pages (144 dpi, deterministic render/checksums recorded); English printed text/formulas transcribed, with explicitly project-authored symbol/connection descriptions for otherwise unlabelled diagrams. Web and iOS/iPadOS/macOS have page selection, zoom, accessible text, and Study sheet fallback. tvOS/visionOS have no reference-sheet tool and are unchanged. OFFICIAL_REFERENCE_SHEET excludes imports/resources in default production/Release, removes stale Apple resources, and is enabled only in dev/Debug or explicit internal beta opt-in. Gate script plus web gate/fallback tests added; licensing, release checklist and internal TestFlight instructions updated.\nValidation so far: typecheck passed; pnpm test passed (content-tools 226, Morse 21, calculator 127, web 253); default and opted-in web builds + both URL/CSP audits passed, default official-asset/transcript absence verified; Markdown links and text-source gate passed; XcodeGen second generation identical; 12 iPhone exam-tool unit tests passed, Basic-only availability and hint ladder UI regressions passed. First new UI run found a too-small caption zoom percentage and an over-flinging generic scroll setup at AX-XXXL; fixed app typography and added reference-specific precise positioning without changing shared/audit helpers. Rerunning only failed UI tests; macOS unit checks and l10n queued via nohup.
 <!-- SECTION:NOTES:END -->
