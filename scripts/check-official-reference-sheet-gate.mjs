@@ -11,7 +11,7 @@ function checkProjectYml(project) {
   // Inspect every base/Release mapping, including target-level and multiline settings.
   const lines = project.split("\n");
   for (let index = 0; index < lines.length; index += 1) {
-    const match = lines[index].match(/^(\s*)(base|Release):(?:\s|$)/);
+    const match = lines[index].match(/^(\s*)(["']?)(base|Release)\2:(?:\s|$)/);
     if (!match) continue;
     let end = index + 1;
     while (end < lines.length) {
@@ -20,7 +20,7 @@ function checkProjectYml(project) {
       end += 1;
     }
     assert.doesNotMatch(lines.slice(index, end).join("\n"), /OFFICIAL_REFERENCE_SHEET/,
-      `project.yml ${match[2]} settings at line ${index + 1} must not enable public Release content`);
+      `project.yml ${match[3]} settings at line ${index + 1} must not enable public Release content`);
   }
 }
 
@@ -60,6 +60,8 @@ function selfTest(temporary, project, generatedProject) {
   assert.throws(() => checkProjectYml(`targets:\n  App:\n    ${releaseMapping.replaceAll("\n", "\n    ")}`), /must not enable/);
   assert.throws(() => checkProjectYml("targets:\n  Tests:\n    settings:\n      configs:\n        Release: { OTHER_SWIFT_FLAGS: -DOFFICIAL_REFERENCE_SHEET }\n"), /must not enable/);
   assert.throws(() => checkProjectYml("targets:\n  App:\n    settings:\n      base:\n        SWIFT_ACTIVE_COMPILATION_CONDITIONS: OFFICIAL_REFERENCE_SHEET\n"), /must not enable/);
+  assert.throws(() => checkProjectYml(releaseMapping.replace("Release:", '"Release":')), /must not enable/);
+  assert.throws(() => checkProjectYml("settings:\n  'base': { OTHER_SWIFT_FLAGS: -DOFFICIAL_REFERENCE_SHEET }\n"), /must not enable/);
   checkProjectYml(project);
   checkProjectYml(releaseMapping.replace("-DOFFICIAL_REFERENCE_SHEET", ""));
   const releases = [...generatedProject.matchAll(/^\s*[A-F0-9]+ \/\*[^\n]*\*\/ = \{\n\s*isa = XCBuildConfiguration;([\s\S]*?)^\t\t\};/gm)]
