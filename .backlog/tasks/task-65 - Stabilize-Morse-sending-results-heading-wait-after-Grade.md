@@ -4,7 +4,7 @@ title: Investigate residual iOS heading-wait and single-figure audit flakes
 status: To Do
 assignee: []
 created_date: '2026-10-20 06:58'
-updated_date: '2026-10-21 23:42'
+updated_date: '2026-10-22 00:01'
 labels:
   - apple
   - testing
@@ -40,4 +40,6 @@ Full-run totals: default126 UI (superset of final124),3 existing skips,2 failure
 Host-load evidence at2026-10-20T10:39:35Z: load81.94/81.56/88.02, simulator testmanagerd99.9%CPU, two lockf84.9%/84.1%, host/simulator diagnosticd55.8%/50.2%, exactly one active xcodebuild observed. Coordinator confirmed FluxTerm builds shared the xbuild lock. No other lane process stopped; contention is context, not demonstrated causation. Supervisor approved TASK-33 acceptance with these documented unchanged failures plus passing isolated reruns; this follow-up remains To Do.
 
 TASK-46.6.1 follow-up (supervisor-approved addition, 2026-10-21): the NEW concept-check AX-XXXL method testLessonQuizConceptOptionFeedbackLargestDynamicType passes its option-feedback/explanation text and full-visibility assertions, then its second full default audit auto-scrolls to the unchanged quiz header and reports Contrast for fully visible Question 1 of 1. Reproduced on iPhone 17 Pro twice without source changes: /tmp/task-46.6.1-iphone-largest-fix.log (184.329 s) and /tmp/task-46.6.1-iphone-largest-retry.log (196.875 s); matching xcresult basenames. Both element screenshots have the identical payload hash and show near-black ink on paper, not the new feedback. Screenshots: /tmp/task-46.6.1-contrast-app.png, /tmp/task-46.6.1-contrast-element.png and -contrast-retry-app/element.png. The first full option-status audit passed; second audit of the fully visible existing explanation reports the header. Investigate audit auto-scroll/timing/contrast false-positive provenance; no claim that host load is causal. The unchanged approved occluded-only contrast helper correctly fails this fully visible finding and was not changed or narrowed. Four default-size light/dark option-feedback audits pass. An unrelated existing hint AX-XXXL restore test also failed once then passed an unchanged targeted retry (269.356 s). No full suites or additional audit exception.
+
+Bounded TASK-46.6.1 investigation result: existing passing testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip has NO accessibility audit and does not validate the AX-XXXL header. Adding the same 0.8 s settle used by existing hint tests before each full audit still failed on Question 1 of 1 (203.610 s), /tmp/task-46.6.1-iphone-largest-settle.log + .xcresult, at commit 7fe7bd37. iPad Pro 13-inch (M5) targeted run also reports Contrast in the new AX-XXXL method (40.552 s), /tmp/task-46.6.1-ipad.log + .xcresult; the other 11 methods all pass. No focus ring is present in failure screenshots; VoiceOver is not enabled by these launches. Full feedback text and visibility assertions pass before the audit. Supervisor stopped investigation rather than accepting a newly reproducible failing test; TASK-46.6.1 stays In Progress, AC3 unchecked. No helper or audit filtering changes. Required localization/text/test-guard checks pass.
 <!-- SECTION:NOTES:END -->
