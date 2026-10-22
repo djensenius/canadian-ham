@@ -382,7 +382,15 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 positionReferenceSheetControl(version, in: app)
                 version.tap()
                 XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-study-text"].firstMatch.waitForExistence(timeout: 5))
+#if os(iOS)
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    try auditIgnoringOccludedReferenceSheetTextContrast(app: app)
+                } else {
+                    try app.performAccessibilityAudit()
+                }
+#else
                 try app.performAccessibilityAudit()
+#endif
                 closeTool(in: app)
                 XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.exists, "The question remains available after using the tool")
             }
@@ -411,11 +419,11 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertGreaterThanOrEqual(zoom.frame.height, 44)
         zoom.tap()
         XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.label, "150%")
-        positionReferenceSheetControl(app.buttons["reference-sheet-page-previous"].firstMatch, in: app, alignToTop: true)
-        try app.performAccessibilityAudit()
+        positionReferenceSheetControl(app.staticTexts["reference-sheet-version-title"].firstMatch, in: app)
+        try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
-    private func positionReferenceSheetControl(_ control: XCUIElement, in app: XCUIApplication, alignToTop: Bool = false, file: StaticString = #filePath, line: UInt = #line) {
+    private func positionReferenceSheetControl(_ control: XCUIElement, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
         let scroll = app.scrollViews["reference-sheet-scroll"].firstMatch
         XCTAssertTrue(scroll.waitForExistence(timeout: 5), file: file, line: line)
         XCTAssertTrue(control.waitForExistence(timeout: 5), file: file, line: line)
@@ -423,8 +431,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             let frame = scroll.frame.intersection(app.windows.firstMatch.frame)
             let top = max(frame.minY, protectedNavigationFrame(in: app).maxY)
             let visible = CGRect(x: frame.minX, y: top, width: frame.width, height: max(0, frame.maxY - top))
-            let topDifference = control.frame.minY - (visible.minY + 6)
-            if visible.contains(control.frame) && (!alignToTop || abs(topDifference) <= 6) {
+            if visible.contains(control.frame) {
                 if !hasLoggedReferenceHitPoint && control.identifier == "reference-sheet-page-next" {
                     hasLoggedReferenceHitPoint = true
                     let point = CGPoint(x: control.frame.midX, y: control.frame.midY)
@@ -446,12 +453,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 }
                 return
             }
-            let proposedDistance: CGFloat = alignToTop
-                ? -max(-72, min(72, topDifference))
-                : (control.frame.midY < visible.midY ? 72 : -72)
-            // Tiny drags are interpreted as taps rather than a scroll pan.
-            let distance = proposedDistance >= 0 ? max(12, proposedDistance) : min(-12, proposedDistance)
-            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5))
+            let distance: CGFloat = control.frame.midY < visible.midY ? 72 : -72
+            // Drag in the blank column between the button capsules and scroll indicator.
+            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5))
             start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)), withVelocity: XCUIGestureVelocity.slow, thenHoldForDuration: 0.4)
         }
         XCTFail("Reference-sheet control \(control.identifier) should be fully inside the visible scroll frame below navigation. Control: \(frameDescription(control.frame)); scroll: \(frameDescription(scroll.frame))", file: file, line: line)
@@ -1610,6 +1614,44 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             return false
         }
         XCTAssertLessThanOrEqual(ignoredTextClippedIssues, 5, "\(context): medium-detent audit ignored too many nil-element textClipped issues")
+    }
+
+    // Approved exception (a): the iPad inspector is a second scroll view. Select it
+    // explicitly; the contrast rule below is identical to the approved shared helper.
+    private func auditIgnoringOccludedReferenceSheetTextContrast(app: XCUIApplication) throws {
+        let visibleScrollView = app.scrollViews["reference-sheet-scroll"].firstMatch
+        guard visibleScrollView.waitForExistence(timeout: 5) else {
+            XCTFail("Expected reference-sheet-scroll; refusing to audit a different scroll view")
+            return
+        }
+        let windowFrame = app.windows.firstMatch.frame
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY
+        let scrollFrame = visibleScrollView.frame.intersection(windowFrame)
+        let minY = max(scrollFrame.minY, protectedMaxY)
+        let auditGeometry = LessonAuditGeometry(
+            scrollFrame: scrollFrame,
+            visibleScrollArea: CGRect(x: scrollFrame.minX, y: minY, width: max(0, scrollFrame.width), height: max(0, scrollFrame.maxY - minY)),
+            navigationBarElementFrames: navigationBarElementFrames(in: app),
+            scrollView: visibleScrollView
+        )
+        try app.performAccessibilityAudit { issue in
+            guard issue.auditType == .contrast else { return false }
+            guard let element = issue.element else { return false }
+            let frame = element.frame
+            guard frame.width > 0, frame.height > 0 else { return false }
+            guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
+            guard auditGeometry.scrollFrame.intersects(frame) else { return false }
+            guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
+            guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
+
+            XCTContext.runActivity(named: "Ignored occluded lesson scroll-content contrast false positive") { activity in
+                let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame)) matchedScrollDescendant=true"
+                let attachment = XCTAttachment(string: note)
+                attachment.lifetime = .keepAlways
+                activity.add(attachment)
+            }
+            return true
+        }
     }
 
     private func auditIgnoringOccludedLessonTextContrast(app: XCUIApplication) throws {

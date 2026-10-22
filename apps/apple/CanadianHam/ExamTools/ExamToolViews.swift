@@ -1101,6 +1101,7 @@ struct ReferenceSheetToolView: View {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                             Text(showsOfficial ? LocalizedStringKey("Official sheet") : LocalizedStringKey("Study sheet")) // l10n: localized
                                 .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .accessibilityIdentifier("reference-sheet-version-title")
                             Button { showsOfficial.toggle() } label: {
                                 AccessibleSecondaryButtonLabel(title: showsOfficial ? "Study sheet" : "Official sheet")
                             }
