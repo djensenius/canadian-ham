@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 22:21'
-updated_date: '2026-10-22 02:54'
+updated_date: '2026-10-22 03:08'
 labels:
   - content
   - web
@@ -158,6 +158,8 @@ Medium test fix round: first setup dragged through the Toggle thumb, then expose
 Further medium-detent accessibility checks: explicit wrapping fixed Show full sheet; the native Toggle still clipped at larger sizes, so its label and named native switch now stack vertically only at accessibility Dynamic Type sizes, as coordinator approved. The next raw audit has only a nil-element textClipped finding (no element screenshot or named node), fitting the existing approved task-44.3 rule. The new medium test now calls the unchanged isApprovedMediumDetentToolScrollTextClip handler with the existing five-issue cap after real controls/state and stable medium-header prechecks. Every named finding and all other audit types still fail. No existing helper or audit handler was changed; matrix/AX regressions, iPad, macOS and l10n are queued after medium passes.
 
 Coordinator approval for Show full sheet styling: native bordered Button still intermittently reports named textClipped despite explicit wrapping. Reference tool was not user-visible before this branch, so change Show full sheet to the existing AccessibleSecondaryButtonLabel/Style used by other reference controls, retain minWidth:44 and Rectangle contentShape; this is consistent styling rather than a regression. No new handler/filter approved or added. Coordinator requests two consecutive medium-detent passes plus affected matrix/AX tests. These and iPad/macOS/l10n are running via nohup; eventual PR must note this style change.
+
+Final coordinator clarification (supersedes earlier nil-only direction for this new test): owner decision 2026-10-12 approves larger-Dynamic-Type text clipping inside medium-detent tool scroll content, including named elements. Add a handler LOCAL to the new medium test: iPhone only, textClipped only, named elements must be descendants of reference-sheet-scroll, fail if that scroll is missing, medium detent asserted immediately before audit, logged and capped at five combined findings. Existing nil-only helper/rule remains unchanged; contrast and every other issue still fail. Coordinator approved retaining the real Toggle/Button wrapping/style improvements and requires two passes plus PR guard-marker explanation and reviewer line-by-line checking. Added title wrapping/full-width version layout too (no default visual change). Final medium repeats queued with this exact local scope; all other requested Apple checks continue independently. No build killed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
