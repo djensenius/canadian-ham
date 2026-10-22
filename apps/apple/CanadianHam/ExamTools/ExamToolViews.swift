@@ -1096,12 +1096,17 @@ struct ReferenceSheetToolView: View {
                             .accessibilityIdentifier("reference-sheet-show-full-sheet")
                     }
                     if officialDocument != nil {
-                        Picker("Sheet version", selection: $showsOfficial) { // l10n: localized
-                            Text("Official sheet").tag(true) // l10n: localized
-                            Text("Study sheet").tag(false) // l10n: localized
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                            Text(showsOfficial ? LocalizedStringKey("Official sheet") : LocalizedStringKey("Study sheet")) // l10n: localized
+                                .font(DesignTokens.FontScale.body.weight(.semibold))
+                            Button { showsOfficial.toggle() } label: {
+                                AccessibleSecondaryButtonLabel(title: showsOfficial ? "Study sheet" : "Official sheet")
+                            }
+                            .buttonStyle(AccessibleSecondaryButtonStyle())
+                            .accessibilityIdentifier("reference-sheet-version")
                         }
-                        .pickerStyle(.menu)
-                        .accessibilityIdentifier("reference-sheet-version")
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel(Text("Sheet version")) // l10n: localized
                     }
                     if Bundle.main.preferredLocalizations.first?.hasPrefix("fr") == true {
                         Text("This content is currently available in English only.") // l10n: localized
@@ -1130,13 +1135,23 @@ struct ReferenceSheetToolView: View {
             LessonMarkdownView(markdown: document.markdown, title: "")
                 .accessibilityIdentifier("reference-sheet-official-text")
         } else {
-            Picker("Page", selection: $page) { // l10n: localized
-                ForEach(0..<document.pages.count, id: \.self) { index in
-                    Text("\(index + 1) / 5").tag(index) // l10n: verbatim
-                }
+            Text("Page \(page + 1) of 5") // l10n: localized
+                .font(DesignTokens.FontScale.body.weight(.semibold))
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("reference-sheet-page-number")
+            Button { page = max(0, page - 1) } label: {
+                AccessibleSecondaryButtonLabel(title: "Previous")
             }
-            .pickerStyle(.menu)
-            .accessibilityIdentifier("reference-sheet-page")
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+            .disabled(page == 0)
+            .accessibilityIdentifier("reference-sheet-page-previous")
+            Button { page = min(document.pages.count - 1, page + 1) } label: {
+                AccessibleSecondaryButtonLabel(title: "Next")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+            .disabled(page == document.pages.count - 1)
+            .accessibilityValue(Text("\(page + 1) / 5")) // l10n: verbatim
+            .accessibilityIdentifier("reference-sheet-page-next")
             zoomControls
             ScrollView(.horizontal) {
                 if let image = officialPageImage(document.pages[page]) {
@@ -1149,6 +1164,9 @@ struct ReferenceSheetToolView: View {
                     unavailableSheet
                 }
             }
+            // The source pages are 612 × 792 points. A definite height keeps the
+            // nested horizontal viewport from covering controls in the outer scroll view.
+            .frame(height: max(1, width) * zoom * 792 / 612)
         }
         Text(officialSheetAttribution) // l10n: content(en)
             .font(DesignTokens.FontScale.body)
@@ -1226,6 +1244,7 @@ struct ReferenceSheetToolView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
                 .monospacedDigit()
+                .accessibilityIdentifier("reference-sheet-zoom-level")
             Button("Zoom in") { zoom = min(3, zoom + 0.5) } // l10n: localized
                 .buttonStyle(.bordered)
                 .controlSize(.large)

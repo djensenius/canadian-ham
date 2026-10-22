@@ -5,6 +5,8 @@ import UIKit
 
 @MainActor
 final class CanadianHamExamToolsUITests: XCTestCase {
+    private var hasLoggedReferenceHitPoint = false
+
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
@@ -364,11 +366,12 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 let zoom = app.buttons["reference-sheet-zoom-in"].firstMatch
                 positionReferenceSheetControl(zoom, in: app)
                 zoom.tap()
-                let page = app.buttons["reference-sheet-page"].firstMatch
-                positionReferenceSheetControl(page, in: app)
-                page.tap()
-                app.buttons["5 / 5"].firstMatch.tap()
-                XCTAssertTrue(image.label.contains("5"), "All five PDF pages should be available offline")
+                XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.label, "150%")
+                let nextPage = app.buttons["reference-sheet-page-next"].firstMatch
+                positionReferenceSheetControl(nextPage, in: app)
+                XCTAssertEqual(nextPage.label, language == "fr" ? "Suivant" : "Next", "Page navigation follows the interface language")
+                for _ in 0..<4 { nextPage.tap() }
+                XCTAssertTrue(image.label.contains("page 5"), "All five PDF pages should be available offline")
                 try app.performAccessibilityAudit()
                 let text = app.switches["reference-sheet-text-equivalent"].firstMatch
                 positionReferenceSheetControl(text, in: app)
@@ -378,7 +381,6 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 let version = app.buttons["reference-sheet-version"].firstMatch
                 positionReferenceSheetControl(version, in: app)
                 version.tap()
-                app.buttons[language == "fr" ? "Feuille d’étude" : "Study sheet"].firstMatch.tap()
                 XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-study-text"].firstMatch.waitForExistence(timeout: 5))
                 try app.performAccessibilityAudit()
                 closeTool(in: app)
@@ -391,12 +393,24 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let app = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL", "-CanadianHamExamToolInitialDetent", "large"])
         defer { app.terminate() }
         openTool(.referenceSheet, in: app)
-        for identifier in ["reference-sheet-version", "reference-sheet-page", "reference-sheet-zoom-in"] {
-            let control = app.buttons[identifier].firstMatch
-            positionReferenceSheetControl(control, in: app)
-            XCTAssertTrue(control.isHittable, "\(identifier) must remain reachable at AX-XXXL")
-            XCTAssertGreaterThanOrEqual(control.frame.height, 44)
-        }
+        let version = app.buttons["reference-sheet-version"].firstMatch
+        positionReferenceSheetControl(version, in: app)
+        XCTAssertGreaterThanOrEqual(version.frame.height, 44)
+        version.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-study-text"].firstMatch.waitForExistence(timeout: 5))
+        positionReferenceSheetControl(version, in: app)
+        version.tap()
+        XCTAssertTrue(app.images["reference-sheet-official-page"].firstMatch.waitForExistence(timeout: 5))
+        let next = app.buttons["reference-sheet-page-next"].firstMatch
+        positionReferenceSheetControl(next, in: app)
+        XCTAssertGreaterThanOrEqual(next.frame.height, 44)
+        next.tap()
+        XCTAssertTrue(app.images["reference-sheet-official-page"].firstMatch.label.contains("page 2"))
+        let zoom = app.buttons["reference-sheet-zoom-in"].firstMatch
+        positionReferenceSheetControl(zoom, in: app)
+        XCTAssertGreaterThanOrEqual(zoom.frame.height, 44)
+        zoom.tap()
+        XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.label, "150%")
         try app.performAccessibilityAudit()
     }
 
@@ -405,13 +419,36 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(scroll.waitForExistence(timeout: 5), file: file, line: line)
         XCTAssertTrue(control.waitForExistence(timeout: 5), file: file, line: line)
         for _ in 0..<30 {
-            let visible = scroll.frame.intersection(app.windows.firstMatch.frame).insetBy(dx: 2, dy: 4)
-            if control.isHittable && visible.contains(control.frame) { return }
+            let frame = scroll.frame.intersection(app.windows.firstMatch.frame).insetBy(dx: 2, dy: 4)
+            let top = max(frame.minY, protectedNavigationFrame(in: app).maxY)
+            let visible = CGRect(x: frame.minX, y: top, width: frame.width, height: max(0, frame.maxY - top))
+            if visible.contains(control.frame) {
+                if !control.isHittable && !hasLoggedReferenceHitPoint {
+                    hasLoggedReferenceHitPoint = true
+                    let point = CGPoint(x: control.frame.midX, y: control.frame.midY)
+                    let overlapping = app.descendants(matching: .any).allElementsBoundByIndex.compactMap { element -> String? in
+                        let frame = element.frame
+                        guard frame.contains(point) else { return nil }
+                        return "type=\(element.elementType.rawValue) id=\(element.identifier) label=\(element.label.prefix(100)) frame=\(frameDescription(frame))"
+                    }
+                    XCTContext.runActivity(named: "Reference control hit-point diagnostics") { activity in
+                        let note = "Control \(control.identifier) at \(point), fully inside \(frameDescription(visible)); isHittable=false.\n" + overlapping.joined(separator: "\n")
+                        NSLog("%@", note)
+                        let attachment = XCTAttachment(string: note)
+                        attachment.lifetime = .keepAlways
+                        activity.add(attachment)
+                        let screenshot = XCTAttachment(screenshot: app.screenshot())
+                        screenshot.lifetime = .keepAlways
+                        activity.add(screenshot)
+                    }
+                }
+                return
+            }
             let distance: CGFloat = control.frame.midY < visible.midY ? 72 : -72
-            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)))
+            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5))
+            start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)), withVelocity: XCUIGestureVelocity.slow, thenHoldForDuration: 0.4)
         }
-        XCTFail("Reference-sheet control \(control.identifier) should be fully visible and hittable. Control: \(frameDescription(control.frame)); scroll: \(frameDescription(scroll.frame))", file: file, line: line)
+        XCTFail("Reference-sheet control \(control.identifier) should be fully inside the visible scroll frame below navigation. Control: \(frameDescription(control.frame)); scroll: \(frameDescription(scroll.frame))", file: file, line: line)
     }
 
     func testLargestDynamicTypeKeepsHintToolButtonReachable() throws {

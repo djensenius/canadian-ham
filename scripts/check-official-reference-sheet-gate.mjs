@@ -10,6 +10,7 @@ const temporary = mkdtempSync(join(tmpdir(), "official-reference-gate-"));
 try {
   const project = readFileSync(join(root, "apps/apple/project.yml"), "utf8");
   const settings = project.slice(project.indexOf("settings:"), project.indexOf("targets:"));
+  assert.doesNotMatch(settings.slice(0, settings.indexOf("  configs:")), /OFFICIAL_REFERENCE_SHEET/, "base settings must not enable public Release content");
   assert.match(settings, /Debug:\n\s+OTHER_SWIFT_FLAGS: \$\(inherited\) -DOFFICIAL_REFERENCE_SHEET/);
   assert.doesNotMatch(settings, /Release:\n\s+[^\n]*OFFICIAL_REFERENCE_SHEET/);
   assert.equal((project.match(/name: Copy gated official exam reference sheet/g) ?? []).length, 2);
