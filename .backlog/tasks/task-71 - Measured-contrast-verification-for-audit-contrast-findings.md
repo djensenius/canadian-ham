@@ -1,11 +1,11 @@
 ---
 id: TASK-71
 title: Measured-contrast verification for audit contrast findings
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 12:56'
+updated_date: '2026-10-23 13:00'
 labels:
   - accessibility
   - tests
@@ -35,6 +35,10 @@ Owner-delegated decision 2026-10-22 (owner: make the best decisions you can). XC
 2. Add a pure quantized WCAG contrast measurement helper, strict default-audit wrapper, synthetic proofs and three exported element-image resources; document the narrow approved scope.
 3. Regenerate XcodeGen twice and verify no second-run changes; run only the new pure UI-test class on iPhone 17 Pro through nohup/xbuild, polling its log. Verify the test guard flags the handler.
 4. Record evidence per AC, finalize TASK-71, commit and push the task branch (no PR).
+
+5. Review fixes B1/B2: report the minimum significant non-background contrast, reject ambiguous multi-backgrounds, and discard only colour-line blends supported by spatial edge evidence; retain existing proofs and add mixed blocks/text/icon/panel/black-band and bold 3× edge-band regressions.
+6. Review fixes S1/S2: reject empty/off-window/under-nav frames before screenshots; attach label/frame/ratio or unmeasurable for every contrast failure. Update measurement docs.
+7. Run the targeted proof class via nohup/xbuild and grep polling, recheck the test guard with dated marker, record all results, restore Done, commit and push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
