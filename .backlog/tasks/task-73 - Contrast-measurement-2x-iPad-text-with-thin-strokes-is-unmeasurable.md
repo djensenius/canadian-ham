@@ -1,7 +1,7 @@
 ---
 id: TASK-73
 title: 'Contrast measurement: rounded-control measurement'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-23 16:51'
@@ -25,7 +25,7 @@ Owner-delegated decision 2026-10-22, coordinator, plus supervisor-approved revie
 - [x] #1 The unaltered 3× rounded-button fixture measures at least4.5 using the smallest passing horizontal cap from4/6/8/12/16pt and vertical2pt; crop and audit path apply only to buttons after a nil or below4.5 full-image measurement
 - [x] #2 Low-contrast #9A9A9A pill text and retained low-contrast text beside high-contrast text fail safe; add explicit end-inset exclusion proof and document the limit
 - [x] #3 All existing measurements/adversarial regressions remain unchanged for non-buttons; document fixture provenance, inset sweep and unresolved2× thin-stroke limitation without loosening the conservative algorithm
-- [ ] #4 iPhone17Pro UITestContrastMeasurementTests and the documented macOS unit command pass via nohup/xbuild with grep polling; commit and push branch without a PR
+- [x] #4 iPhone17Pro UITestContrastMeasurementTests and the documented macOS unit command pass via nohup/xbuild with grep polling; commit and push branch without a PR
 - [x] #5 Discarded-strip hardening rejects the prior excluded-end false pass and More trailing-grey-chevron (2-3% coverage) while preserving the real fixture13.62039; full/final ratio, crop-used and pixel-inset metadata are logged keepAlways
 - [x] #6 Meaningful nil non-button test has a measurable button counterpart; matched dark-text positive controls cover each synthetic low-contrast crop plus2x/3x fallback; a positive-size crop with no text returns nil; AGENTS records TASK-73 and docs state any-button and sub-2% retained-corner limits
 <!-- AC:END -->
@@ -325,10 +325,12 @@ Final post-review commands passed, no helper/test edits after launch: /tmp/task-
 | `CanadianHamTests.RootNavigationMappingTests.testEveryRootSelectionRoundTrips` | PASS | 0.001 |
 | `CanadianHamTests.RootNavigationMappingTests.testLessonQuizCurrentAndOtherHintLessonStacksPreserveQuizAcrossLayouts` | PASS | 0.001 |
 | `CanadianHamTests.RootNavigationMappingTests.testPracticeHintLessonStackKeepsSessionAsSplitSelection` | PASS | 0.001 |
+
+Review-fix code/docs commit94d90a3f07c1d7c691c8bfa72c6c3f06622a3690 pushed to origin/task-73-contrast-2x (no PR). git diff --check and Test-guard self-test passed. Focused c7e7dc36...94d90a3f and whole-branch80ca2871...94d90a3f guard checks passed with Test-guard-approved: task-73, reporting only the intentionally changed audit wrapper at lines409/417. Working tree and index clean after code commit; final task metadata commit will also be pushed. All six criteria verified; further independent review is the coordinator review gate, not a claim of live audit integration.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented rounded-control measurement under the narrowed owner-delegated scope. Smallest passing tested horizontal cap6pt plus2pt vertical inset raises the unaltered Hide answer1 fixture from1.199:1 to13.620:1 while leaving the conservative base algorithm and non-button behavior unchanged. Added8 regression methods; all39 iPhone methods have green results across class+two-method fix runs; macOS210 unit tests pass and UI-test sources compile. Documented excluded-end false-pass risk and retained all blocked2× diagnostics as unresolved. Code/evidence committed and pushed on task-73-contrast-2x; no PR. TASK-46.5/46.6.1 composite-helper integration and independent review remain separate.
+Addressed every requested adversarial-review note. Any-button6pt/2pt fallback now rejects every discarded pixel outside approved background clusters/RGB-8 blends; explicit supervisor-approved endpoint refinement uses the most-covered non-crop-background strip cluster only at<=1.5 contrast. Real fixture still13.62039(full1.19937); More-grey-chevron and prior excluded-end false pass now nil. Added five tests (44total), matched dark controls including2x/3x, meaningful non-button nil and valid-no-text crop; log full/final/crop-used/native insets keepAlways. Corrected retained-corner/cutoff/gate docs and AGENTS TASK-73 exception; PR marker Test-guard-approved: task-73. Final full iPhone44/44 and macOS210/210 passed via nohup/xbuild/grep; all per-test results recorded. Base algorithm and31 original test methods unchanged. Commit94d90a3f code/docs pushed; final task metadata also pushed, no PR. Remaining limits: permitted-background indistinguishability/sub2% foreground, narrow capsules/Dynamic Type, unresolved original2x thin strokes; TASK-46.5/46.6.1 integration and independent review separate.
 <!-- SECTION:FINAL_SUMMARY:END -->
