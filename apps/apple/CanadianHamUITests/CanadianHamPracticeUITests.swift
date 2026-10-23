@@ -2411,6 +2411,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let prompt = app.staticTexts["lesson-try-it-1-prompt"].firstMatch
         XCTAssertFalse(answer.exists, "Try-it answers must not enter the accessibility tree before disclosure")
         positionLessonHeadingForTryItAudit("try-it", in: app)
+        positionTryItPromptAndControlForAudit(prompt, control: toggle, in: app)
         XCTAssertTrue(isFullyVisible(prompt, in: app, requiresHittable: false), "Try-it prompt must be fully visible below the navigation bar before auditing")
         XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true), "Show answer must be fully visible beside the Try-it section before tapping or auditing")
         XCTAssertEqual(toggle.label, "Show answer 1")
@@ -2500,6 +2501,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
             waitBriefly()
         }
         XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: false), "Lesson heading \(anchor) must be fully visible before the Try-it audit. Frame: \(frameDescription(heading.frame))")
+    }
+
+    private func positionTryItPromptAndControlForAudit(_ prompt: XCUIElement, control: XCUIElement, in app: XCUIApplication) {
+        let scroll = scrollView(containing: prompt, in: app)
+        for _ in 0..<10 {
+            if isFullyVisible(prompt, in: app, requiresHittable: false)
+                && isFullyVisible(control, in: app, requiresHittable: true) { return }
+            let visible = visibleFrameExcludingNavigationBar(in: app)
+            let contentFrame = prompt.frame.union(control.frame)
+            if contentFrame.minY < visible.minY {
+                preciseScroll(scroll, contentDeltaY: visible.minY + 8 - contentFrame.minY)
+            } else if contentFrame.maxY > visible.maxY {
+                preciseScroll(scroll, contentDeltaY: visible.maxY - 8 - contentFrame.maxY)
+            } else {
+                break
+            }
+            waitBriefly()
+        }
+        if !isFullyVisible(prompt, in: app, requiresHittable: false)
+            || !isFullyVisible(control, in: app, requiresHittable: true) {
+            recordTryItAuditGeometry(in: app, stage: "prompt/control positioning exhausted")
+        }
     }
 
     private func positionTryItControlForAudit(_ control: XCUIElement, in app: XCUIApplication) {
