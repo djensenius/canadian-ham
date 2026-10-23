@@ -236,7 +236,7 @@ def upload_beta(platform_key, options = {})
       UI.user_error!("No artifact at #{path}") unless File.file?(path)
       { artifact: config[:artifact], artifact_path: path, app_platform: config[:app_platform] }
     else
-      archive_and_export(platform_key)
+      archive_and_export(platform_key, official_reference_sheet: true)
     end
   upload_args = {
     app_identifier: PRIMARY_BUNDLE_ID,
@@ -259,7 +259,7 @@ def unlock_build_keychain
   unlock_keychain(path: BUILD_KEYCHAIN_PATH, password: build_keychain_password, add_to_search_list: true, set_default: false)
 end
 
-def archive_and_export(platform_key)
+def archive_and_export(platform_key, official_reference_sheet: false)
   unlock_build_keychain
   config = BETA_PLATFORMS.fetch(platform_key)
   build_number = Time.now.strftime("%Y%m%d%H%M")
@@ -281,6 +281,8 @@ def archive_and_export(platform_key)
     "CODE_SIGNING_ALLOWED=YES",
     *(config[:build_settings] || [])
   ]
+  # Owner decision 2A: upload_beta explicitly opts in; shared archives default off.
+  archive_args << "OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET" if official_reference_sheet
   run_xbuild(archive_args)
 
   export_args = [

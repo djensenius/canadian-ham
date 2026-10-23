@@ -799,6 +799,7 @@
 				4FE4C84A891821D7B82536D3 /* Sources */,
 				23EFF3AF5EC7CDF323BDAB20 /* Resources */,
 				39816581DD568C8D999E55A7 /* Frameworks */,
+				B26816A4272FA0DE1F6F380F /* Copy gated official exam reference sheet */,
 				2263374E432643E94FF9B070 /* Remove content authoring README files */,
 				2CB5C6A88CF14A45641BF6BC /* Copy Basic and Advanced generated content */,
 			);
@@ -844,6 +845,7 @@
 				F710CCDBCCEE6DD06C3718C8 /* Sources */,
 				70820DEF5BA3FD3C91F0105E /* Resources */,
 				FE99BEB5CDFBA2F79EC4ED86 /* Frameworks */,
+				E48E9054848D137364FA3131 /* Copy gated official exam reference sheet */,
 				3DF185F25EDB7A03ED8C3208 /* Remove content authoring README files */,
 				F39EEE4D2D3C9993911AA3FC /* Copy Basic and Advanced generated content */,
 			);
@@ -1249,6 +1251,44 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations hints; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
+		};
+		B26816A4272FA0DE1F6F380F /* Copy gated official exam reference sheet */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy gated official exam reference sheet";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${SRCROOT}/../../scripts/copy-official-reference-sheet.sh\"";
+		};
+		E48E9054848D137364FA3131 /* Copy gated official exam reference sheet */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy gated official exam reference sheet";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${SRCROOT}/../../scripts/copy-official-reference-sheet.sh\"";
 		};
 		EF037CBDD3EA4055405557AC /* Copy Basic generated content */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2025,6 +2065,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -DOFFICIAL_REFERENCE_SHEET";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -2163,7 +2204,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "$(inherited) -DICLOUD_SYNC";
+				OTHER_SWIFT_FLAGS = "$(inherited) -DICLOUD_SYNC -DOFFICIAL_REFERENCE_SHEET";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;

@@ -80,3 +80,10 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 - [ ] Confirm no reference PDFs are shipped in web or Apple app artifacts, and no out-of-scope official source artifacts are included in public release history unless the recorded permission allows them.
 - [ ] Confirm the owner has approved public visibility after reviewing the release-candidate evidence from `task-1.6`.
 - [ ] If permission is refused or narrower than needed, follow the contingency in [`docs/content-licensing.md`](../content-licensing.md#public-release-gate) instead of making this repository public.
+
+## Official reference sheet build gate (TASK-44.4)
+
+- [ ] Written ISED permission explicitly covers the sheet before public distribution; the gate in [content licensing](../content-licensing.md#public-release-gate) still applies even with the fallback.
+- [ ] Public Apple Release build has no `OFFICIAL_REFERENCE_SHEET` compilation condition / `-DOFFICIAL_REFERENCE_SHEET` flag and no `official-basic-exam/` in its resources. Internal fastlane `beta` lanes opt in under decision 2A; do **not** reuse that override in a public/App Store lane.
+- [ ] Public web build runs without `OFFICIAL_REFERENCE_SHEET=YES`. Inspect `apps/web/dist` and its service-worker precache for absence of official `page-*.png` assets and text equivalent. The original study sheet remains available.
+- [ ] `pnpm test:official-reference-sheet` passes, including stale-resource removal on an off build. See [internal TestFlight](testflight.md) for the internal-only exception.
