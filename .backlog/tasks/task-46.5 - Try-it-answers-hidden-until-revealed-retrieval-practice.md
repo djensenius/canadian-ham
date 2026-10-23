@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-22 00:14'
+updated_date: '2026-10-23 11:32'
 labels:
   - content
   - web
@@ -36,6 +36,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 2. Validate the convention in the content checker with regressions; parse hidden answer blocks in web and content-swift.
 3. Add EN/FR accessible reveal controls on web and all Apple platforms (tvOS focus/select), with unit, axe, and targeted reader tests.
 4. Run content/web/package checks; commit before serialized nohup xbuild targeted iPhone/iPad, macOS, tvOS, visionOS checks. Record per-test evidence and changed figure lessons for coordinator, finalize, commit and push without opening a PR.
+
+5. Resume 2026-10-23: merge and push origin/main (TASK-70 aligned helper), rerun only unchanged failing iPhone/iPad Try-it light/dark audits via nohup. If a fully visible lone bullet remains, export and inspect its screenshot before applying only the authorized local contrast label-exact/cap-1 exception and dated AGENTS entry. Stop for any other failure. Refresh only stale figure-free checks; record per-test evidence, finish AC3 and task, push without a PR; coordinator runs figure plan.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
