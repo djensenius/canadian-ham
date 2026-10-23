@@ -2514,10 +2514,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 recordTryItAuditGeometry(in: app, stage: "prompt/control union taller than visible area")
                 return
             }
+            // Residual corrections must still exceed the drag recognizer's threshold.
             if contentFrame.minY < visible.minY {
-                preciseScroll(scroll, contentDeltaY: visible.minY + 8 - contentFrame.minY)
+                preciseScroll(scroll, contentDeltaY: max(24, visible.minY + 8 - contentFrame.minY))
             } else if contentFrame.maxY > visible.maxY {
-                preciseScroll(scroll, contentDeltaY: visible.maxY - 8 - contentFrame.maxY)
+                preciseScroll(scroll, contentDeltaY: min(-24, visible.maxY - 8 - contentFrame.maxY))
             } else {
                 break
             }
