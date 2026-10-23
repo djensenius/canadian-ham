@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 11:54'
+updated_date: '2026-10-23 12:01'
 labels:
   - apple
 dependencies:
@@ -76,6 +76,8 @@ Raw evidence: /tmp/task-46.6.1-{macos,iphone,iphone-smoke,iphone-fix,iphone-larg
 Blocked: passes except reproducible audit false positive on unchanged header. The settled iPhone run still reports Contrast on Question 1 of 1 (203.610 s) after all feedback text/full-visibility assertions pass. iPad AX-XXXL also fails Contrast (40.552 s). Per supervisor, stop investigation; do not merge a newly failing test, leave AC3 unchecked/task In Progress, push for owner review. Existing AX-XXXL hint/layout test has no audit; its passing result cannot validate this header contrast at that size. No filter, skip, helper change, narrowed audit or unrelated visual fix was added. The added settle is only 0.8 s before each full audit; it did not resolve the finding. Manual VoiceOver speech/focus was not exercised; implementation uses AccessibilityFocusState and language-tagged Text, covered by attributed-run unit checks and normal-size full audits.
 
 Resumed 2026-10-23 under coordinator direction. Merged origin/main through ba5eb4f5 (PR #1005/TASK-70) without conflicts and pushed merge 8ca78a41. The new AX-XXXL method PASSED unchanged on iPhone 17 Pro using the aligned auditIgnoringOccludedLessonTextContrast: 210.917 s, /tmp/task-46.6.1-iphone-aligned.{log,xcresult}. No local header exception, audit narrowing, shared helper edit, or AGENTS exception entry has been added. iPad unchanged rerun is queued via the same nohup runner, waiting normally on the shared xbuild lock.
+
+The unchanged aligned-helper AX-XXXL rerun also PASSED on iPad Pro 13-inch (M5): 54.424 s, /tmp/task-46.6.1-ipad-aligned.{log,xcresult}. Both result bundles report one pass, zero failures/skips. Conditional authorization for a fully visible Question N of M header exception was NOT used; shared helpers match origin/main, and AGENTS.md is unchanged by this task. Started the requested final 12-method lesson-quiz selection (seven existing plus five feedback methods), iPhone then iPad, via nohup /tmp/task-46.6.1-final-targeted.sh. Resumed Apple text-source and test-guard self-test checks pass; the diff against origin/main passes with the coordinator-provided Test-guard-approved: owner decision 2026-10-22 marker (only the existing task-added calls to the approved occluded helper are flagged without approval).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
