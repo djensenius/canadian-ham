@@ -209,10 +209,10 @@ An NPN symbol in a driver circuit has its emitter arrow pointing away from the b
 Choose a FET input stage and explain that the gate is the light-loading control terminal.
 :::
 
-3. A circuit drives a transistor fully on and fully off to operate a relay. Name the role.
+3. A relay driver pushes its transistor fully on or off. You now want a transistor stage to preserve small microphone variations. How should its operating condition change?
 
 :::answer
-electronic switch.
+Bias the transistor in its active region so the current can vary smoothly with speech. Driving it only fully on or off would lose the microphone waveform's shape.
 :::
 
 4. A high-power RF stage uses a hot glass device whose grid voltage changes the current drawn by the plate. Explain which element is doing the controlling and why high voltage caution matters.

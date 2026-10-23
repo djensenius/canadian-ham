@@ -250,8 +250,15 @@ private struct LessonTryItView: View {
                 Text(lessonEnglish(prompt)) // l10n: content(en)
                     .font(DesignTokens.FontScale.body)
                     .fixedSize(horizontal: false, vertical: true)
+#if !os(tvOS)
                     .accessibilityIdentifier("lesson-try-it-\(number)-prompt")
+#endif
             }
+#if os(tvOS)
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("lesson-try-it-\(number)-prompt")
+            .focusable(true)
+#endif
             Button {
 #if os(tvOS)
                 expanded = true
@@ -291,6 +298,10 @@ private struct LessonTryItView: View {
                     .fixedSize(horizontal: false, vertical: true)
 #if os(iOS) || os(macOS)
                     .textSelection(.enabled)
+#endif
+#if os(tvOS)
+                    .accessibilityElement(children: .combine)
+                    .focusable(true)
 #endif
                     .accessibilityIdentifier("lesson-try-it-\(number)-answer")
             }

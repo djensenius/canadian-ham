@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { cleanup, render, screen } from "@testing-library/react";
@@ -108,6 +108,36 @@ it("does not retain a revealed Try-it when the lesson content changes", async ()
 });
 
 describe("MarkdownContent parser", () => {
+  it("pairs all 141 Try-its in the real lessons without leaking answer delimiters into paragraphs", () => {
+    const lessonsRoot = join(fixturesRoot, "../content/lessons");
+    const lessonPaths = readdirSync(lessonsRoot, { recursive: true, encoding: "utf8" })
+      .filter((path) => /(?:^|\/)l-\d{3}-\d{2}-[^/]+\.md$/.test(path));
+    assert.equal(lessonPaths.length, 37);
+    let lessonsWithTryIts = 0;
+    let totalTryIts = 0;
+    for (const path of lessonPaths) {
+      const markdown = readFileSync(join(lessonsRoot, path), "utf8").replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
+      const blocks = parseMarkdownBlocks(markdown);
+      const tryIts = blocks.filter((block) => block.type === "try-it");
+      const section = markdown.split(/^## Try it\r?$/m)[1]?.split(/^## /m)[0] ?? "";
+      const promptCount = [...section.matchAll(/^\d+\. /gm)].length;
+      const answerCount = [...markdown.matchAll(/^:::answer\r?$/gm)].length;
+      assert.equal(tryIts.length, promptCount, `${path}: each authored Try-it prompt must parse as a pair`);
+      assert.equal(tryIts.length, answerCount, `${path}: each authored answer must parse as a pair`);
+      assert.deepEqual(tryIts.map((block) => block.number), Array.from({ length: promptCount }, (_, index) => index + 1), path);
+      for (const block of blocks) {
+        if (block.type === "paragraph") assert.ok(!block.text.includes(":::"), `${path}: answer delimiter leaked into a paragraph`);
+      }
+      for (const block of tryIts) {
+        assert.ok(block.prompt.trim().length > 0 && block.answer.trim().length > 0, `${path}: paired content must be nonempty`);
+      }
+      if (tryIts.length > 0) lessonsWithTryIts += 1;
+      totalTryIts += tryIts.length;
+    }
+    assert.equal(lessonsWithTryIts, 31);
+    assert.equal(totalTryIts, 141);
+  });
+
   it("parses Try-it prompts and answers without changing numbering or later heading anchors", () => {
     const blocks = parseMarkdownBlocks(`${tryItMarkdown}\n\n## Radio connection\n\nKeep listening.`);
     assert.deepEqual(blocks.slice(1, 3), [

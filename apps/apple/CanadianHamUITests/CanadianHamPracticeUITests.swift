@@ -2417,10 +2417,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertEqual(toggle.label, "Show answer 1")
         XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
         recordTryItAuditGeometry(in: app, stage: "collapsed answer")
-        // TASK-73 (owner-delegated decision 2026-10-22): on iPad the XCTest audit intermittently flags a
-        // fully visible faded-practice line that the measured-contrast check cannot measure at 2x, so the
-        // English light iPad run keeps every reveal assertion but skips the two full audits. iPhone keeps
-        // the light, dark and French audits of the same colours and components; iPad keeps the dark audit.
+        // TASK-73 (coordinator decision 2026-10-23 under the owner delegation of 2026-10-22): on iPad
+        // the XCTest audit intermittently flags a fully visible faded-practice line that the measured-contrast
+        // check cannot measure at 2x, so the English light iPad run keeps every reveal assertion but skips
+        // the two full audits. iPhone keeps the light (default size) and dark (largest Dynamic Type) Try-it
+        // audits; the French test is reveal/state only; iPad keeps the dark audit.
         let skipsAuditForTask73 = tryItAuditSkippedOnIPadLight(appearance: appearance, accessibilitySize: accessibilitySize)
         if !skipsAuditForTask73 { try auditIgnoringOccludedOrMeasuredContrast(app: app) }
         toggle.tap()

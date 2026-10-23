@@ -137,8 +137,13 @@ final class CanadianHamTVUITests: XCTestCase {
             XCTAssertTrue(app.descendants(matching: .any)["tv-lesson-screen"].firstMatch.waitForExistence(timeout: 10))
             let answer = app.staticTexts["lesson-try-it-1-answer"].firstMatch
             XCTAssertFalse(answer.exists, "Answer must be hidden until its reveal control is focused or selected")
+            let prompt = app.staticTexts["lesson-try-it-1-prompt"].firstMatch
+            XCTAssertTrue(prompt.waitForExistence(timeout: 5), "Try-it prompt must be a reachable accessibility element")
+            pressDownUntilFocused(prompt, remote: .shared, maxPresses: 90)
+            XCTAssertTrue(prompt.hasFocus, "Remote and VoiceOver focus must reach the numbered prompt")
+            XCTAssertFalse(answer.exists, "Reading the prompt must not reveal its answer")
             let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
-            pressDownUntilFocused(toggle, remote: .shared, maxPresses: 90)
+            pressDownUntilFocused(toggle, remote: .shared, maxPresses: 3)
             XCTAssertTrue(answer.waitForExistence(timeout: 5), "Remote focus must reveal the answer without requiring a tap")
             XCTAssertEqual(toggle.value as? String, "Expanded")
             XCTAssertEqual(answer.label, "It remains fifty ohms because geometry and dielectric did not change.")
@@ -147,6 +152,9 @@ final class CanadianHamTVUITests: XCTestCase {
             XCUIRemote.shared.press(.select)
             XCTAssertTrue(answer.exists, "Select must keep the focused answer revealed")
             XCTAssertTrue(toggle.hasFocus, "Revealing the answer must retain remote focus")
+            pressDownUntilFocused(answer, remote: .shared, maxPresses: 3)
+            XCTAssertTrue(answer.hasFocus, "Remote and VoiceOver focus must reach the revealed answer text")
+            assertFocusedElementIsOnScreen(answer, in: app, description: "tvOS revealed Try-it answer")
             app.terminate()
         }
     }

@@ -208,13 +208,13 @@ The next block should raise the RF level without changing the station's frequenc
 2. A speech processor is an audio stage that changes microphone audio before transmission, and a modulator applies that information to a carrier. If the processor receives only a few millivolts from a headset mic, what stage would help?
 
 :::answer
-choose an audio gain stage because the information is still sound-frequency speech.
+Choose an audio gain stage because the information is still sound-frequency speech.
 :::
 
 3. A battery-powered accessory includes a series diode and now measures about one diode drop less at its circuit board. Explain the trade-off.
 
 :::answer
-the diode can block a reversed battery, but it also drops some voltage during normal operation.
+The diode can block a reversed battery, but it also drops some voltage during normal operation.
 :::
 
 4. A waveform leaving an amplifier has clipped peaks. What does that suggest?
@@ -223,10 +223,10 @@ the diode can block a reversed battery, but it also drops some voltage during no
 That is a warning sign of non-linearity and distortion.
 :::
 
-5. A small diode circuit changes a sine-like AC waveform into pulses all in one direction. Name that action.
+5. A diode supply produces pulses all in one direction, but an accessory needs steadier DC. What should follow the diode circuit to reduce those pulses?
 
 :::answer
-That action is rectification.
+Add power-supply filtering after the diode circuit. The diode establishes current direction; filtering smooths the pulsating output.
 :::
 
 ## Radio connection

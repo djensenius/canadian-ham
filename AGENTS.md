@@ -105,11 +105,12 @@ platform) and share one build lock, so don't run them by reflex.
     crop background, a page-like outside background (most-covered non-crop-background strip
     cluster, contrast <= 1.5:1 against the crop background), or RGB-line blends (residual <= 8).
     Log the full-image ratio, whether the crop was used, and pixel insets in the keepAlways attachment.
-- Owner-delegated decision 2026-10-22, TASK-73 limitation: the measured-contrast check cannot safely
-  measure thin 2x strokes, and on iPad the audit intermittently flags a fully visible faded-practice
-  line in the Try-it lesson. Only the new TASK-46.5 English light Try-it test on iPad skips its two
-  full audits (all reveal assertions stay); iPhone keeps light, dark and French audits and iPad keeps
-  the dark audit. Remove this when TASK-73 makes 2x measurement safe.
+- Coordinator decision 2026-10-23 under the owner delegation of 2026-10-22, TASK-73 limitation:
+  the measured-contrast check cannot safely measure thin 2x strokes, and on iPad the audit
+  intermittently flags a fully visible faded-practice line in the Try-it lesson. Only the new
+  TASK-46.5 English light Try-it test on iPad skips its two full audits (all reveal assertions stay);
+  iPhone keeps the light (default size) and dark (largest Dynamic Type) Try-it audits; the French
+  test is reveal/state only; iPad keeps the dark audit. Remove this when TASK-73 makes 2x measurement safe.
   Existing audit helpers and tests remain unchanged.
 - Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
   whose element frame is not fully contained in the visible scroll area below an opaque navigation
