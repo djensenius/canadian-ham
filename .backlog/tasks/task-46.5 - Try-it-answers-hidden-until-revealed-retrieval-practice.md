@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 15:56'
+updated_date: '2026-10-23 16:51'
 labels:
   - content
   - web
@@ -50,6 +50,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 10. Coordinator-approved after the bounded10-pass dark retry left Show answer2pt below visible area: retain union-based overshoot targeting with8pt margin and <=80pt precise scrolls; allow12 passes; explicitly log/return if prompt/control union is taller than visible area. Keep unchanged containment assertions and exhaustion logging; rerun dark-first then rest.
 
 11. Coordinator-approved after12-pass dark positioning stalled with identical2pt residual clipping: only the new Try-it positioning helper now requests at least24pt whenever vertical overshoot remains, still clamped by unchanged preciseScroll to80pt and bounded to12 passes. Keep all containment assertions, union-height stop and exhaustion logs. Rerun dark then remaining iPhone/iPad and l10n checks.
+
+12. Coordinator-approved after iPad light failed only an unmeasurable fully visible high-contrast paragraph: leave shared/local measurement logic unchanged and AC3 unchecked; run independent iPad dark/French plus l10n/text/guard. Record all findings/screenshots and push paused handoff. Coordinator owns separate TASK-71 measurement follow-up; await explicit merge-main/iPad-only rerun instruction after it lands.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -90,6 +92,8 @@ TASK-71 resume: merged/pushed main d05ff6e8; local approved composed audit helpe
 TASK-72 merged/pushed (d71b76b0); local composite uses contrastMeasurementCGImage(from:). Dark retry FAIL201.431s before audit: prompt y195.259 height497.333 fully visible, control y704.667 height155.333 ends860 vs visible maxY858. Bounded10-pass positioning exhausted; unchanged control visibility assertion correctly failed. No contrast findings suppressed or tests skipped; script stopped before all remaining tests/l10n. Evidence /tmp/task-46.5-measured-v2-iphone-dark.log, -results.json, -xcresult-path.txt, -attachments/8B11344A-FF0D-438F-941B-FD75A1B520D4.txt (geometry). Coordinator approved union-targeted12-pass refinement with unchanged assertions.
 
 v3 dark FAIL253.514s before audit after roughly69min waiting on shared xbuild lock (never interrupted):12 union-targeted passes ended at exactly the same2pt-clipped control geometry as v2. Repeated residual10pt drags (2pt overshoot+8pt margin) did not move content, consistent with pan-recognition threshold. Evidence /tmp/task-46.5-measured-v3-iphone-dark.log, -results.json, -xcresult-path.txt and -attachments (geometry + video). Script stopped; remaining tests/l10n not started. Coordinator explicitly approved a new-test-local minimum24pt drag when overshoot remains; shared preciseScroll and all assertions unchanged. AC3 remains unchecked pending actual audits.
+
+Final v4 iPhone17Pro PASS: light174.198s; dark235.735s (largest Dynamic Type); French183.936s. Dark accepted3 findings by existing occluded-content rule only (S-meter learning outcome twice at negative y; frequency paragraph extends below visible scroll area); no measured findings. Light verified one finding at16.336427704401043:1 (The report is about S9 plus16dB...); keepAlways note3DB439B1-F27E-406F-BD74-216E7D32EF10.txt. iPad13-inchM5 light FAIL137.543s in expanded full audit: fully visible Given: initial report = S9 plus19dB; transmitter power falls from48W to24W. frame(92,259.09444444444443,597.5,20.5), ratio=unmeasurable; correctly NOT ignored. Five other iPad findings verified16.336427704401043:1 (four bullets plus Sanity check: Is the report lower while still above S9?). Full bundle /tmp/task-46.5-measured-v4-ipad-light.xcresult; all exported attachments/measurement notes under corresponding-attachments directory; summary /tmp/task-46.5-measured-results-summary.json. Serial script stopped; coordinator now authorizes independent dark/French/l10n checks only, with no measurement edits and AC3 unchecked pending separate follow-up. Later builds pruned original dark DerivedData bundle; its already-exported keepAlways attachments, console per-test result and summary remain; remaining bundles now preserved under/tmp immediately.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
