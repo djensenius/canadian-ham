@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 03:00'
-updated_date: '2026-10-23 04:00'
+updated_date: '2026-10-23 06:27'
 labels: []
 dependencies: []
 priority: high
@@ -79,4 +79,6 @@ Command (DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer):
 xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -parallel-testing-enabled NO -testPlan CanadianHamDefault -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -resultBundlePath /tmp/task70-iphone-default.xcresult -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testAccessibilityAuditHintToolLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testAccessibilityAuditHintedAnswerResultLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testLargeDetentCalculatorRunsFullAccessibilityAuditLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testLargestDynamicTypeKeepsCalculatorGridReachableLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testLessonQuizHintsDarkAndFullAccessibilityAudits -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testLessonQuizHintsLightAndFullAccessibilityAudits -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testOfficialReferenceSheetLightAndDarkEnglishAndFrench -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testReferenceSheetLargestDynamicTypeKeepsControlsReachable -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testRegularWidthInspectorAccessibilityAuditLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testSimulatedHingeStableSlightOpenPeeksHintOneInPractice -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testSizeClassRegularInspectorAccessibilityAuditLightAndDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowLight -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummaryDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummaryLight -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionLight -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testLessonPrerequisiteNavigationAndAccessibilityDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testLessonPrerequisiteNavigationAndAccessibilityLight test CODE_SIGNING_ALLOWED=NO
 ```
 Figure-plan run is now waiting for the shared build lock; no builds interrupted.
+
+Long-running figure sweep progress at 2026-10-23 06:27 UTC: first 27/47 methods passed with no failures (modules 1–4 complete, module 5 in progress). Timings are 181–492 seconds per method so far. Existing xbuild run remains untouched; iPad batch still queued after it.
 <!-- SECTION:NOTES:END -->
