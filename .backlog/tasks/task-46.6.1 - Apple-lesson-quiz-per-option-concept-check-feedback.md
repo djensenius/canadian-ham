@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 12:48'
+updated_date: '2026-10-23 14:21'
 labels:
   - apple
 dependencies:
@@ -41,6 +41,8 @@ TASK-46.6 adds optional localized feedback to each concept-check choice and disp
 6. Supervisor-directed final-run failure handling: if final normal-size correct light/dark audits fail, let the already-started xbuild finish and extract element labels/frames, app/element screenshots, and visibility evidence. Rerun only those two methods once unchanged; if both pass, record both runs and continue the iPad selection. If either fails again, stop and report with evidence.
 
 7. Updated supervisor direction after all five failures were identified: retry each of the other three failed methods once unchanged after the correct dark/light retry. If any retry fails, run the closest existing light/dark lesson-quiz audit controls on the same simulator in a detached /tmp worktree at current origin/main, then report evidence and stop. If all five retries pass, continue the requested iPad selection. No source edits or exceptions.
+
+8. Resume with PR #1007/TASK-71: merge/push origin/main, then add a local auditIgnoringOccludedOrMeasuredContrast helper used only by the five new feedback methods. Preserve the existing occlusion guards verbatim and compose with the unchanged exported measurement predicates (>=4.5, keepAlways label/frame/ratio logging on pass/fail); leave every existing test/shared helper unchanged. Run the 12 selected methods on iPhone and iPad and three mapping units on macOS via nohup xbuild, then localization/text/approved guard checks. Stop on failures other than unverified contrast; record per-test/ignored-finding ratios, verify AC3, finalize and push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -111,6 +113,8 @@ Evidence: /tmp/task-46.6.1-iphone-{final,correct-retry,remaining-retry}.{log,xcr
 Per supervisor, controls are now running on the same iPhone 17 Pro simulator in detached /tmp/canadian-ham-task-46.6.1-main-control at origin/main ba5eb4f5c0ee0ff7477b708b73696474a143a303: existing testLessonQuizHintsLightAndFullAccessibilityAudits and testLessonQuizHintsDarkAndFullAccessibilityAudits. Ordered nohup runner /tmp/task-46.6.1-remaining-retry-and-control.sh; control log/bundle /tmp/task-46.6.1-main-control.{log,xcresult}.
 
 Main-control result: origin/main ba5eb4f5c0ee0ff7477b708b73696474a143a303 PASSED both closest existing lesson-quiz audit controls on the same iPhone 17 Pro: testLessonQuizHintsDarkAndFullAccessibilityAudits 166.384 s, testLessonQuizHintsLightAndFullAccessibilityAudits 143.205 s; /tmp/task-46.6.1-main-control.{log,xcresult}, xbuild exit 0. These controls do not reproduce a general main/environment regression and do not validate the new option-feedback status itself. STOPPED as directed after the three repeat failures outside the authorized header-only scope. No source edit, shared-helper edit, local exception or AGENTS change was made in this resume. AC3 deliberately remains unchecked and the task remains In Progress; no PR. Full iPad selection skipped because the requested iPhone gate failed. Previous macOS units/localization checks remain recorded above (untouched implementation); resumed text-source check, guard self-test, approved guard against origin/main, and git diff --check passed. All new Apple invocations used nohup xbuild, one destination, targeted methods, grep polling, and natural completion; no builds were killed and no full suites were run.
+
+Merged/pushed origin/main including PR #1007/TASK-71 as f45a6aeb. Coordinator approved a bounded local composite audit helper because neither existing audit wrapper accepts an issue predicate. It will preserve the occlusion guards verbatim and reuse the exported measured visibility/contrast predicates; scope remains only the five new feedback tests.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
