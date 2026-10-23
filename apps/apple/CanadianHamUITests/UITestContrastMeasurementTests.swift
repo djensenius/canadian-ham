@@ -182,6 +182,34 @@ final class UITestContrastMeasurementTests: XCTestCase {
         XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
     }
 
+    func testDifferentCoreBlendsCannotBridgeInsetDarkStrokesToBackground() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 30, y: 30, width: 7, height: 20))
+        context.setFillColor(CGColor(srgbRed: 159.5 / 255, green: 156.0 / 255, blue: 148.0 / 255, alpha: 1))
+        for x in [31, 35] {
+            context.fill(CGRect(x: x, y: 32, width: 1, height: 16))
+        }
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 33, y: 32, width: 1, height: 16))
+        context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        // Extend the disconnected-blend fixture with a second retained core (#002060).
+        context.setFillColor(CGColor(srgbRed: 0, green: 32.0 / 255, blue: 96.0 / 255, alpha: 1))
+        for x in [28, 38] {
+            context.fill(CGRect(x: x, y: 32, width: 1, height: 16))
+        }
+        context.fill(CGRect(x: 70, y: 10, width: 10, height: 30))
+        // These #808CA4 blends reach cream, but cannot lend that path to the near-black blends.
+        context.setFillColor(CGColor(srgbRed: 128.0 / 255, green: 140.0 / 255, blue: 164.0 / 255, alpha: 1))
+        for x in [30, 36] {
+            context.fill(CGRect(x: x, y: 32, width: 1, height: 16))
+        }
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())),
+                     "The inset near-black stroke is only 1.6324:1 against its panel")
+    }
+
     func testPartiallyOverlappingStrokesCannotPassAgainstCream() throws {
         let context = try bitmapContext()
         context.setFillColor(cream)

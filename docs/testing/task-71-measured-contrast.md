@@ -588,7 +588,7 @@ Independent reviewer approval and PR CI remain required; these targeted proofs
 are not live-audit integration or universal contrast-verification claims.
 
 
-### Final adversarial hardening (2026-10-23, current)
+### Final adversarial hardening (2026-10-23, before cross-core follow-up)
 
 User-requested follow-up to the adversarial re-review of `5da09a53`:
 
@@ -736,3 +736,99 @@ original default-audit handler at lines289/297. Logs:
 `/tmp/task-71-hardening-test-guard-{self,focused,unapproved,approved}.log`.
 `git diff 5da09a53 --check` passed. Implementation commit:
 `d57d10ced6eb95b052aaf685023368dfd0bd7bd7`.
+
+### Copilot PR #1007 cross-core blend-reachability follow-up (2026-10-23, current)
+
+Addressed `PRRT_kwDOUxZq_M6von_z`. The flood fill previously combined every
+validated blend's reachability, regardless of its assigned retained core colour.
+Checking the endpoint's supporting core during boundary validation was not enough:
+that blend could have reached cream through blends assigned to a different core.
+Each flood-fill step now requires **the same supporting retained-core key** as
+the current pixel. Seeds still require four-neighbour contact with actual
+background, and boundary support still requires the endpoint's own core key.
+No component, blend, ratio, coverage, colour or distance threshold changed.
+
+Added `testDifferentCoreBlendsCannotBridgeInsetDarkStrokesToBackground` alongside
+the unchanged `testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes`.
+It duplicates the latter's 100×100 cream / 7×20 #404040 panel, near-black inset
+stroke and disconnected block, then adds the reviewer's exact second core:
+
+- **#002060** columns at **x=28/38, y=32…47**, plus a **10×30** block at **(70,10)**.
+- **#808CA4** blend columns at **x=30/36, y=32…47**.
+
+The second core's blends touch cream and the near-black blends. Before the fix,
+they lent cream reachability to the inset stroke, whose actual panel contrast is
+only **1.6324:1**. The exact fixture **failed** on the unchanged `93f71274`
+helper, returning **14.426790204267782:1** against a `<4.5` assertion. Targeted
+pre-fix xbuild exit **65**, **1 failed / 0 passed / 0 skipped**, test **0.736 s**.
+After the fix the fixture returns **nil**, now asserted directly. Its final
+runtime was **0.072 s**. All 30 existing test methods, the visibility gate and
+audit wrapper are byte-identical to `93f71274`.
+
+Both runs used nohup with grep polling, one iPhone 17 Pro / iOS 27.0 destination;
+no builds were killed. Pre-fix log/result/summary:
+`/tmp/task-71-cross-core-before.{log,xcresult}` and
+`/tmp/task-71-cross-core-before-summary.json`. Final command:
+
+```sh
+nohup bash /tmp/task-71-cross-core-final.sh > /tmp/task-71-cross-core-final.log 2>&1 < /dev/null &
+# Script exports DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer and runs:
+xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam \
+  -testPlan CanadianHamDefault \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -only-testing:CanadianHamUITests/UITestContrastMeasurementTests \
+  -resultBundlePath /tmp/task-71-cross-core-final.xcresult \
+  test CODE_SIGNING_ALLOWED=NO
+```
+
+**31 passed / 0 failed / 0 skipped**, exit **0**, class **13.365 s**. Summary and
+test tree: `/tmp/task-71-cross-core-final-{summary,tests}.json`; keepAlways
+attachments: `/tmp/task-71-cross-core-proof-attachments/`. All three real
+screenshots remain **non-nil and unchanged**: light feedback
+**8.344323837747055:1**, dark feedback **11.403364958858397:1**, Try-it paragraph
+**16.336427704401043:1**. Actual bold15pt3× significant edge coverage is still
+**2.6667%**, measuring **15.9942758247219:1**. No loosening was needed.
+
+| Test (`UITestContrastMeasurementTests`) | Result | Seconds |
+| --- | --- | ---: |
+| `testAntialiased15PointBoldEdgeCoverageAt3x` | PASS | 4.675 |
+| `testAntialiased15PointBoldMixedContrastLinesFailAt3x` | PASS | 0.180 |
+| `testAntialiased15PointLowContrastTextStillFails` | PASS | 0.165 |
+| `testAntialiased15PointTextMeasuresExpectedContrast` | PASS | 0.156 |
+| `testBlackOffscreenBandDoesNotRescueMidGreyText` | PASS | 0.075 |
+| `testChainedBlendsCannotUseAnExcludedCore` | PASS | 0.082 |
+| `testContrastMeasurementRejectsInvisibleFrames` | PASS | 0.065 |
+| `testDarkIconDoesNotRescueMidGreyText` | PASS | 0.169 |
+| `testDifferentCoreBlendsCannotBridgeInsetDarkStrokesToBackground` | PASS | 0.072 |
+| `testDisconnectedDarkBlockCannotRescueInsetLowContrastText` | PASS | 0.072 |
+| `testEqualLargeTonesAreUnmeasurable` | PASS | 0.069 |
+| `testExportedCorrectFeedbackDarkPasses` | PASS | 0.222 |
+| `testExportedCorrectFeedbackLightPasses` | PASS | 0.195 |
+| `testExportedTryItParagraphLightPasses` | PASS | 4.660 |
+| `testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary` | PASS | 0.351 |
+| `testInsetPanelCannotUseTheSurroundingCreamAsTextBackground` | PASS | 1.040 |
+| `testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText` | PASS | 0.079 |
+| `testMidGreyOnCreamFails` | PASS | 0.077 |
+| `testNearBlackOnCreamPasses` | PASS | 0.068 |
+| `testOnlyTinyForegroundIsUnmeasurable` | PASS | 0.071 |
+| `testPaleOnDarkGreenPasses` | PASS | 0.080 |
+| `testPartiallyOverlappingStrokesCannotPassAgainstCream` | PASS | 0.068 |
+| `testSignificantAntialiasedEdgeBandsMeasureCoreContrast` | PASS | 0.082 |
+| `testSignificantNearBackgroundNoiseIsUnmeasurable` | PASS | 0.068 |
+| `testSignificantNearBlackAndMidGreyBlocksDoNotPass` | PASS | 0.079 |
+| `testSolidBlendColourIsNotMistakenForAntialiasing` | PASS | 0.073 |
+| `testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes` | PASS | 0.071 |
+| `testTinyHighContrastTailDoesNotRescueLowContrastText` | PASS | 0.084 |
+| `testTransparentImageIsUnmeasurable` | PASS | 0.070 |
+| `testTwoTonePanelWithDarkTextIsUnmeasurable` | PASS | 0.071 |
+| `testUniformImageIsUnmeasurable` | PASS | 0.074 |
+
+No changed-source Swift warnings/errors; only the unrelated AppIntents metadata
+warning. The deliberately red run also printed a post-test xbuild cleanup
+`simctl` lookup warning; its assertion failure is independently recorded in the
+result bundle. The green full-class run had no such cleanup warning. No live
+app/audit integration is claimed. Full iOS suites and macOS/tvOS/visionOS were
+skipped because only iOS UI-test code changed; no target membership changed or
+XcodeGen regeneration was needed. Existing dominant-background, 5-bit-clustering,
+sub-2%-coverage and tiny-component limitations remain unchanged. Independent
+review and PR CI are still required.

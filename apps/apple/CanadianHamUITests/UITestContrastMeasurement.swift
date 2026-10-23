@@ -137,7 +137,7 @@ func measuredTextContrast(in image: CGImage) -> Double? {
 
     // Subthreshold colours never affect the reported ratio, but may supply spatial edge evidence
     // under the SAME strict blend tests. A support pixel must also be four-connected through
-    // validated blends to an actual background pixel; a panel's unrelated edge is not evidence.
+    // blends assigned to the SAME core colour to background; another core's edge is not evidence.
     // Small low-contrast content remains a known limit: see docs/testing/task-71-measured-contrast.md.
     var boundarySupportCores = blendCores
     for key in keys where key != backgroundKey && Double(clusters[key]!.count) < pixelCount * 0.02 {
@@ -163,12 +163,13 @@ func measuredTextContrast(in image: CGImage) -> Double? {
     while blendCursor < pendingBlends.count {
         let index = pendingBlends[blendCursor]
         blendCursor += 1
+        let coreKey = boundarySupportCores[pixelKeys[index]]!
         let x = index % width
         let y = index / width
         for (column, row) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
             where column >= 0 && column < width && row >= 0 && row < height {
             let neighbor = row * width + column
-            if !backgroundConnectedBlend[neighbor] && boundarySupportCores[pixelKeys[neighbor]] != nil {
+            if !backgroundConnectedBlend[neighbor] && boundarySupportCores[pixelKeys[neighbor]] == coreKey {
                 backgroundConnectedBlend[neighbor] = true
                 pendingBlends.append(neighbor)
             }
