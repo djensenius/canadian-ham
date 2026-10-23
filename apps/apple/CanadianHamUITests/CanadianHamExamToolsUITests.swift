@@ -125,7 +125,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             var ratio: Double?
             if let element, let frame,
                isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
-               let image = element.screenshot().image.cgImage {
+               let image = contrastMeasurementCGImage(from: element.screenshot()) {
                 ratio = measuredTextContrast(in: image)
             }
             let verified = ratio.map { $0 >= 4.5 } ?? false
