@@ -99,7 +99,12 @@ platform) and share one build lock, so don't run them by reflex.
   accessibility audit; ignore only contrast findings on non-nil elements whose element screenshot
   yields a measured WCAG contrast ratio of at least 4.5:1, logging label, frame and ratio in a
   keepAlways attachment. Non-contrast, nil-element, unmeasurable and lower-contrast findings fail.
-  Existing audit helpers and tests remain unchanged.
+  Existing audit helpers and tests remain unchanged except for the TASK-73 refinement below.
+  - TASK-73: the measured paths may retry any button's nil/below-4.5 full-image result with a
+    6 pt horizontal / 2 pt vertical native-pixel crop. Discarded strips must contain only the
+    crop background, a page-like outside background (most-covered non-crop-background strip
+    cluster, contrast <= 1.5:1 against the crop background), or RGB-line blends (residual <= 8).
+    Log the full-image ratio, whether the crop was used, and pixel insets in the keepAlways attachment.
 - Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
   whose element frame is not fully contained in the visible scroll area below an opaque navigation
   bar. Owner decision 2026-10-14 adds practice and mock exam screens to this same occluded-content

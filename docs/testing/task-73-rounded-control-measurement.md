@@ -1,7 +1,8 @@
 # TASK-73: rounded-control measurement
 
 Owner-delegated decision 2026-10-22, coordinator: extend the TASK-71 measured
-path narrowly for rounded **buttons**, not general multi-background elements.
+path with a native-pixel crop for **any button** (the gate is element type, not
+shape recognition), not non-button multi-background elements.
 The earlier [2× thin-stroke investigation](task-73-contrast-2x-blocked.md) remains
 **unresolved**. Its unsafe per-pixel prototypes are not part of this change.
 
@@ -48,39 +49,74 @@ without a crop. Only a button with a nil or below-4.5 full image may retry:
 - The retry runs **the exact same base algorithm** on a native crop. Background
   dominance, significant coverage, minimum-ratio semantics, retained-core/blend
   rules, radius-two checks and component-boundary validation are unchanged.
-- Return only the crop's result, including nil if it cannot be measured. No
-  search for a more flattering crop, threshold change or image resampling.
+- Before measuring the crop, require **every discarded pixel** to belong to the
+  crop's dominant background cluster, the approved outside-background cluster,
+  or a blend on the RGB line between their mean colours (projection 0…1,
+  residual distance ≤8 RGB-8 units). Clusters use the base algorithm's 5-bit
+  channel bins and deterministic ties. The crop background must cover >50%.
+- The outside endpoint is the discarded strips' most-covered **non-crop-background**
+  cluster, and its WCAG contrast against the crop background must be **≤1.5:1**.
+  If there is no second cluster, only crop-background pixels are allowed.
+  Transparency, an unsafe endpoint, or any unapproved strip pixel returns nil.
+- Return only the validated crop's result, including nil if it cannot be measured.
+  No search for a more flattering crop, threshold change or image resampling.
+
+The supervisor explicitly refined the initially requested full-image-dominant
+endpoint: the fixture's same beige cluster dominates the full image (**57,365**
+pixels), crop (**51,226**) and discarded strips (**6,139**). That cannot explain
+its **3,874** discarded cream pixels. The most-covered non-crop-background
+strip cluster supplies cream, with the ≤1.5 guard preventing a secondary-grey
+chevron from becoming an alleged background. This is an approved endpoint
+refinement, not a change to the underlying text measurement.
 
 The shared `auditVerifyingMeasuredContrast` passes the actual
 `element.elementType == .button` flag and pixels per point computed as
 `image.width / element.frame.width`. It retains the fully-visible/below-bars
 gate, full default accessibility audit, contrast-only handling and keepAlways
-label/frame/ratio-or-unmeasurable logging. Owner decision 2026-10-22 approves
-this guarded wrapper modification; the future PR needs the standalone marker:
+label/frame/ratio-or-unmeasurable logging. `controlTextContrastMeasurement`
+supplies the same ratio as `measuredControlTextContrast`, plus the original
+full-image ratio, `cropUsed` flag and horizontal/vertical insets in native pixels;
+the keepAlways attachment records all of them. `cropUsed=true` means the valid
+crop passed strip validation and was measured (its ratio can still be nil).
+Rejected strips or invalid crops log `cropUsed=false`; computed insets are logged
+when available, otherwise `none`. TASK-73 is recorded under TASK-71 in AGENTS.md;
+the future PR needs the standalone marker:
 
 ```text
-Test-guard-approved: owner decision 2026-10-22
+Test-guard-approved: task-73
 ```
 
 Local TASK-46.5/TASK-46.6.1 composite helpers must use the **same** function,
-with real element type and screenshot scale, in their measured paths. Their
-integration is separate; no existing live audit call site is changed here and
+with real element type and screenshot scale, in their measured paths; use its
+`controlTextContrastMeasurement` detail variant for the full/crop evidence log.
+Their integration is separate; no existing live audit call site is changed here and
 the TASK-71 exception's approved scope is not widened.
 
 ## Known crop limits and adversarial proofs
 
 This is a heuristic over retained image pixels, **not a contrast proof for the
-entire button**. Text entirely within the horizontal 6 pt end strips or the
-vertical 2 pt strips is excluded. A 6 pt cap is smaller than a typical 15 pt
-wide glyph (the regression's M), reducing but not eliminating this risk: narrow
-letters, punctuation, truncated labels, icons or very small text can fit there.
-No semantic text recognition or control-padding safety guarantee is claimed.
+entire button**. The fixed insets **do not remove all rounded corners**: the real
+fixture retains **873 cream pixels**, about **1.51%** of the 416×139 crop, plus
+its antialiased edge bins. These corners are tolerated only because each
+remaining cluster is below the unchanged **2%** significant-colour cutoff. (The
+review's geometric estimate was about 1.7%.) Narrower capsules or larger Dynamic
+Type can retain ≥2% corners and still fail. The 6 pt choice is a measured fit for
+this fixture, not a universal capsule fix, and **any button** can reach the retry.
 
-`testRoundedButtonTextEntirelyWithinEndInsetsIsNotMeasured` deliberately shows
-the false-pass limit: two low-contrast #9A9A9A glyph-width strokes, 4 × 30 pt,
-lie wholly at x=1…5 and 145…149 in a 150 × 50 pt pill, with high-contrast text
-in the middle. The full image fails; the cropped retry passes because those
-strokes are gone. This test documents exclusion, not safety.
+Text/chevrons in the discarded 6 pt horizontal or 2 pt vertical strips are not
+assigned a contrast ratio. Instead, the entire retry is rejected unless every
+strip pixel satisfies the background-only rule. This closes the prior exclusion
+false pass without attempting semantic text recognition or guaranteeing padding.
+Content indistinguishable from the allowed background clusters/blends can still
+escape; the unchanged sub-2% foreground limits inside the crop also remain.
+
+`testRoundedButtonTextEntirelyWithinEndInsetsIsNotMeasured` now proves that the
+raw crop would pass after hiding two #9A9A9A 4×30 pt end strokes, **but the
+hardened measurement returns nil**. `testMoreButtonTrailingLowContrastChevronInStripsIsRejected`
+uses a borderless **More ›**-style button with a secondary-grey chevron whose
+cluster covers **2–3%** of the full image. The full image fails, its raw crop
+passes, and strip validation returns **nil** (the grey cannot be the outside
+background because its contrast exceeds 1.5).
 
 Fail-safe proofs retain actual 15 pt bold #9A9A9A text:
 
@@ -89,8 +125,13 @@ Fail-safe proofs retain actual 15 pt bold #9A9A9A text:
   the crop beside high-contrast middle text and must be nil or <4.5.
 - Low-contrast middle text beside high-contrast text must also be nil or <4.5.
 
-Other new proofs cover non-button fixture equality, nil non-button results,
-passing full-image preservation, invalid scales and empty crops. All 31
+Matched dark-text positive controls show that each low-contrast geometry's raw
+crop is measurable. A separate positive control proves the actual fallback
+passes dark text at **2× and 3×**, and records 12×4 / 18×6 px insets. The
+non-button nil regression now uses a full-image nil / measurable-button-crop
+image, so it actually proves the gate. A positive-size crop with no text is nil.
+Other proofs cover non-button fixture equality, passing full-image preservation,
+logging metadata, invalid scales and empty crops. All 31
 pre-existing test methods and all three pre-existing PNG fixtures are retained;
 `measuredTextContrast(in:)` itself is byte-identical to the starting revision.
 Its existing sub-2% foreground, tiny-component, quantization, multi-background
@@ -98,114 +139,113 @@ and thin-stroke limits remain documented in the TASK-71 and blocked 2× notes.
 The narrow approved audit scope, logged evidence and independent token-level
 contrast checks remain essential mitigations.
 
-## Validation (2026-10-23)
+## Final adversarial-review validation (2026-10-23)
 
-Commands below ran through `nohup bash <script> > <log> 2>&1 < /dev/null &`
-and were polled with grep. xbuild serialized platforms; macOS waited for the
-lock. No builds or simulators owned by others were killed. No XcodeGen was
-needed: the existing folder resource reference includes the new PNG.
+Both commands ran **after the final helper/test edits**, through
+`nohup bash <script> > <log> 2>&1 < /dev/null &`, polled with grep. Both initially
+waited for the shared xbuild lock; no builds or simulators were killed.
 
-### iphone command
+### iPhone 17 Pro — full measurement class
 
-Script: `/tmp/task-73-control-iphone.sh`.
-
-```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamDefault -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/UITestContrastMeasurementTests -resultBundlePath /tmp/task-73-control-iphone.xcresult test CODE_SIGNING_ALLOWED=NO
-```
-
-### iphone-fix command
-
-Script: `/tmp/task-73-control-iphone-fix.sh`.
+Script `/tmp/task-73-review-iphone.sh`, log `/tmp/task-73-review-iphone.log`,
+result bundle `/tmp/task-73-review-iphone.xcresult`:
 
 ```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamDefault -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/UITestContrastMeasurementTests/testControlMeasurementRejectsInvalidScaleAndEmptyCrop -only-testing:CanadianHamUITests/UITestContrastMeasurementTests/testRoundedButtonTextEntirelyWithinEndInsetsIsNotMeasured -resultBundlePath /tmp/task-73-control-iphone-fix.xcresult test CODE_SIGNING_ALLOWED=NO
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamDefault -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/UITestContrastMeasurementTests -resultBundlePath /tmp/task-73-review-iphone.xcresult test CODE_SIGNING_ALLOWED=NO
 ```
 
-### macos command
+**44 passed / 0 failed / 0 skipped**, **24.802 s**, exit **0**, `TEST SUCCEEDED`.
+This is a single final full-class run, superseding the earlier 39-test class
+plus two-method fix run. The fixture assertion still pins **13.62039:1** (full
+**1.19937:1**). All five added methods and the revised regressions passed.
 
-Script: `/tmp/task-73-control-macos.sh`.
+### macOS — documented unit command, UI-test sources also compiled
+
+Script `/tmp/task-73-review-macos.sh`, log `/tmp/task-73-review-macos.log`,
+result bundle `/tmp/task-73-review-macos.xcresult`:
 
 ```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -resultBundlePath /tmp/task-73-control-macos.xcresult test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -resultBundlePath /tmp/task-73-review-macos.xcresult test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
 ```
 
+**210 passed / 0 failed / 0 skipped**, **17.034 s**, exit **0**, `TEST SUCCEEDED`.
+Both builds have no changed-source compiler warnings; the logs include the
+unrelated AppIntents metadata warning. macOS has expected corrupt-store recovery
+diagnostics in passing migration tests, not build/test failures.
 
-- Initial iPhone class: **37 passed, 2 failed methods, 0 skipped**, exit65,
-  39 methods total, 19.505 s. The invalid-scale test exposed CGRect's
-  standardization of negative crop dimensions; raw dimensions are now checked
-  **before** constructing CGRect. The exclusion proof incorrectly required a
-  non-nil failing full image; it now accepts nil or <4.5, exactly as the fallback
-  contract specifies. Both changes are covered by the targeted rerun.
-- Fix run: **2 passed, 0 failed, 0 skipped**, exit0, 1.767 s. Per policy only
-  failed/changed tests were rerun, not the full class. Thus **all 39 methods have
-  green results across the class run plus targeted fix run**, not a claimed
-  single final 39-test run. All 31 pre-existing methods passed unchanged.
-- macOS unit command: **210 passed, 0 failed, 0 skipped**, exit0, 16.649 s.
-  It also compiled the UI-test target, including the platform-specific image
-  bridge. Added `@MainActor` to that bridge to match XCUIScreenshot.image's
-  isolation; no changed-source Swift warnings remain in the fix/macOS runs.
-- Logs are `/tmp/task-73-control-{iphone,iphone-fix,macos}.log`; result bundles
-  have the same basename with `.xcresult`. The initial red run printed a
-  post-test xbuild simctl lookup warning, separate from its recorded assertions.
-  Both final green commands exited0. macOS emitted pre-existing MorseAudioDriver
-  deprecation, plural-catalogue and AppIntents warnings, plus expected corrupt-store
-  recovery diagnostics from passing migration tests.
-- tvOS/visionOS and full iOS suites were not run: only the UI-test helper/proof
-  target changed; no app or Swift package source changed. No live audit/app
-  integration is claimed. Independent review remains required.
-- `git diff --check` passed. A source comparison confirmed the base algorithm
-  and all 31 pre-existing test methods byte-identical to `57f7991a`.
-- Test-guard self-test passed; the focused `57f7991a...0a617ef6` check passed
-  with the dated approval marker, reporting the intended shared audit-wrapper
-  changes at lines307/315. The future PR must retain the marker above.
+### Other checks and scope
 
-### iPhone per-test results
+- `git diff --check` and `node scripts/check-test-guard.mjs --self-test` passed.
+  The focused base-to-HEAD guard check uses `Test-guard-approved: task-73` for
+  the intentional audit-wrapper hunk (see task notes for the checked commit).
+- Source comparison confirms `measuredTextContrast(in:)` byte-identical to
+  `c7e7dc36`, and all **31** pre-existing test methods byte-identical to
+  `57f7991a`. Final class has **44** methods, five more than the reviewed head.
+- Diagnostic host harness `/tmp/task-73-review-host-tests.swift` also reports
+  `HOST_FAILURES=0` over all 44 methods; this is not the XCTest acceptance proof.
+  Direct host fixture probe reports **13.620392055674973:1**, full
+  **1.1993729121750754:1**, `cropUsed=true`, **18×6 px** symmetric insets.
+- tvOS, visionOS, full iOS app suites, figure/title plans and web checks were
+  skipped: only UI-test measurement code/tests, instructions and docs changed.
+  No app/package source, target membership, live audit call site or strings
+  changed; no XcodeGen was needed. Live TASK-46.5/TASK-46.6.1 integration and
+  independent review remain separate; no PR was opened.
+- Initial validation remains historical: `/tmp/task-73-control-iphone` had
+  37 pass / 2 fail before the raw negative-dimension/exclusion-proof fixes,
+  `/tmp/task-73-control-iphone-fix` passed both, and
+  `/tmp/task-73-control-macos` passed 210. Their per-test tables are preserved
+  in commit `ddcedc84`; all current methods now passed together above.
 
-Last recorded result per method; the two fix-run methods are marked below.
+### Final iPhone per-test results
 
-| UITestContrastMeasurementTests method | Result | Seconds | Run |
-| --- | --- | ---: | --- |
-| `testAntialiased15PointBoldEdgeCoverageAt3x` | PASS | 1.482 | iphone |
-| `testAntialiased15PointBoldMixedContrastLinesFailAt3x` | PASS | 0.170 | iphone |
-| `testAntialiased15PointLowContrastTextStillFails` | PASS | 0.241 | iphone |
-| `testAntialiased15PointTextMeasuresExpectedContrast` | PASS | 0.207 | iphone |
-| `testBlackOffscreenBandDoesNotRescueMidGreyText` | PASS | 0.075 | iphone |
-| `testChainedBlendsCannotUseAnExcludedCore` | PASS | 0.074 | iphone |
-| `testContrastMeasurementRejectsInvisibleFrames` | PASS | 0.079 | iphone |
-| `testControlMeasurementPreservesPassingFullImage` | PASS | 0.070 | iphone |
-| `testControlMeasurementRejectsInvalidScaleAndEmptyCrop` | PASS | 1.409 | iphone-fix |
-| `testDarkIconDoesNotRescueMidGreyText` | PASS | 4.419 | iphone |
-| `testDifferentCoreBlendsCannotBridgeInsetDarkStrokesToBackground` | PASS | 0.557 | iphone |
-| `testDisconnectedDarkBlockCannotRescueInsetLowContrastText` | PASS | 0.070 | iphone |
-| `testEqualLargeTonesAreUnmeasurable` | PASS | 0.071 | iphone |
-| `testExportedCorrectFeedbackDarkPasses` | PASS | 0.272 | iphone |
-| `testExportedCorrectFeedbackLightPasses` | PASS | 0.189 | iphone |
-| `testExportedRoundedButtonPassesOnlyWithButtonFallback` | PASS | 0.400 | iphone |
-| `testExportedTryItParagraphLightPasses` | PASS | 2.627 | iphone |
-| `testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary` | PASS | 0.340 | iphone |
-| `testInsetPanelCannotUseTheSurroundingCreamAsTextBackground` | PASS | 0.389 | iphone |
-| `testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText` | PASS | 0.514 | iphone |
-| `testMidGreyOnCreamFails` | PASS | 0.337 | iphone |
-| `testNearBlackOnCreamPasses` | PASS | 0.362 | iphone |
-| `testNonButtonUnmeasurableImageDoesNotRetry` | PASS | 0.219 | iphone |
-| `testOnlyTinyForegroundIsUnmeasurable` | PASS | 1.127 | iphone |
-| `testPaleOnDarkGreenPasses` | PASS | 0.087 | iphone |
-| `testPartiallyOverlappingStrokesCannotPassAgainstCream` | PASS | 0.069 | iphone |
-| `testRoundedButtonLowContrastTextFailsAt2xAnd3x` | PASS | 0.253 | iphone |
-| `testRoundedButtonRetainedLowContrastMiddleTextFails` | PASS | 0.200 | iphone |
-| `testRoundedButtonRetainedLowContrastTextNearEndsFails` | PASS | 0.188 | iphone |
-| `testRoundedButtonTextEntirelyWithinEndInsetsIsNotMeasured` | PASS | 0.357 | iphone-fix |
-| `testSignificantAntialiasedEdgeBandsMeasureCoreContrast` | PASS | 0.069 | iphone |
-| `testSignificantNearBackgroundNoiseIsUnmeasurable` | PASS | 0.085 | iphone |
-| `testSignificantNearBlackAndMidGreyBlocksDoNotPass` | PASS | 0.549 | iphone |
-| `testSolidBlendColourIsNotMistakenForAntialiasing` | PASS | 0.105 | iphone |
-| `testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes` | PASS | 0.220 | iphone |
-| `testTinyHighContrastTailDoesNotRescueLowContrastText` | PASS | 0.515 | iphone |
-| `testTransparentImageIsUnmeasurable` | PASS | 0.832 | iphone |
-| `testTwoTonePanelWithDarkTextIsUnmeasurable` | PASS | 0.686 | iphone |
-| `testUniformImageIsUnmeasurable` | PASS | 0.157 | iphone |
+| Method | Result | Seconds |
+| --- | --- | ---: |
+| `testAntialiased15PointBoldEdgeCoverageAt3x` | PASS | 0.923 |
+| `testAntialiased15PointBoldMixedContrastLinesFailAt3x` | PASS | 0.207 |
+| `testAntialiased15PointLowContrastTextStillFails` | PASS | 0.197 |
+| `testAntialiased15PointTextMeasuresExpectedContrast` | PASS | 0.188 |
+| `testBlackOffscreenBandDoesNotRescueMidGreyText` | PASS | 0.077 |
+| `testChainedBlendsCannotUseAnExcludedCore` | PASS | 0.077 |
+| `testContrastMeasurementRejectsInvisibleFrames` | PASS | 0.083 |
+| `testControlMeasurementPreservesPassingFullImage` | PASS | 0.083 |
+| `testControlMeasurementRejectsInvalidScaleAndEmptyCrop` | PASS | 0.476 |
+| `testDarkIconDoesNotRescueMidGreyText` | PASS | 0.186 |
+| `testDifferentCoreBlendsCannotBridgeInsetDarkStrokesToBackground` | PASS | 0.165 |
+| `testDisconnectedDarkBlockCannotRescueInsetLowContrastText` | PASS | 5.812 |
+| `testEqualLargeTonesAreUnmeasurable` | PASS | 0.777 |
+| `testExportedCorrectFeedbackDarkPasses` | PASS | 0.279 |
+| `testExportedCorrectFeedbackLightPasses` | PASS | 0.195 |
+| `testExportedRoundedButtonPassesOnlyWithButtonFallback` | PASS | 0.383 |
+| `testExportedTryItParagraphLightPasses` | PASS | 0.287 |
+| `testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary` | PASS | 0.078 |
+| `testInsetPanelCannotUseTheSurroundingCreamAsTextBackground` | PASS | 0.078 |
+| `testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText` | PASS | 0.073 |
+| `testMidGreyOnCreamFails` | PASS | 0.165 |
+| `testMoreButtonTrailingLowContrastChevronInStripsIsRejected` | PASS | 0.178 |
+| `testNearBlackOnCreamPasses` | PASS | 0.137 |
+| `testNonButtonUnmeasurableImageDoesNotRetry` | PASS | 1.600 |
+| `testOnlyTinyForegroundIsUnmeasurable` | PASS | 1.004 |
+| `testPaleOnDarkGreenPasses` | PASS | 3.809 |
+| `testPartiallyOverlappingStrokesCannotPassAgainstCream` | PASS | 0.110 |
+| `testRoundedButtonDarkTextPassesAt2xAnd3x` | PASS | 0.490 |
+| `testRoundedButtonLowContrastTextFailsAt2xAnd3x` | PASS | 0.288 |
+| `testRoundedButtonMiddleDarkTextCropIsMeasurable` | PASS | 0.112 |
+| `testRoundedButtonNearEndDarkTextCropIsMeasurable` | PASS | 0.126 |
+| `testRoundedButtonRetainedLowContrastMiddleTextFails` | PASS | 0.221 |
+| `testRoundedButtonRetainedLowContrastTextNearEndsFails` | PASS | 0.181 |
+| `testRoundedButtonTextEntirelyWithinEndInsetsIsNotMeasured` | PASS | 0.459 |
+| `testSignificantAntialiasedEdgeBandsMeasureCoreContrast` | PASS | 1.959 |
+| `testSignificantNearBackgroundNoiseIsUnmeasurable` | PASS | 2.622 |
+| `testSignificantNearBlackAndMidGreyBlocksDoNotPass` | PASS | 0.094 |
+| `testSolidBlendColourIsNotMistakenForAntialiasing` | PASS | 0.070 |
+| `testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes` | PASS | 0.082 |
+| `testTinyHighContrastTailDoesNotRescueLowContrastText` | PASS | 0.090 |
+| `testTransparentImageIsUnmeasurable` | PASS | 0.073 |
+| `testTwoTonePanelWithDarkTextIsUnmeasurable` | PASS | 0.077 |
+| `testUniformImageIsUnmeasurable` | PASS | 0.074 |
+| `testValidButtonCropWithoutTextIsUnmeasurable` | PASS | 0.158 |
 
-### macOS per-test results
+### Final macOS per-test results
 
 | Class.method | Result | Seconds |
 | --- | --- | ---: |
@@ -214,7 +254,7 @@ Last recorded result per method; the two fix-run methods are marked below.
 | `CanadianHamTests.DuoLayoutPolicyTests.testIPadInspectorRuleRemainsSizeClassDriven` | PASS | 0.001 |
 | `CanadianHamTests.DuoLayoutPolicyTests.testMacAndOtherIdiomsNeverUseIPhonePolicy` | PASS | 0.001 |
 | `CanadianHamTests.DuoLayoutPolicyTests.testNilVerticalSizeClassDoesNotBlockRegularWidthIPhonePolicy` | PASS | 0.001 |
-| `CanadianHamTests.DuoLayoutPolicyTests.testRegularWidthIPhoneUsesUnfoldedInspectorPolicyWhenVerticalIsNotCompact` | PASS | 0.000 |
+| `CanadianHamTests.DuoLayoutPolicyTests.testRegularWidthIPhoneUsesUnfoldedInspectorPolicyWhenVerticalIsNotCompact` | PASS | 0.001 |
 | `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutCanRepresentFittingContentWithAndWithoutHelp` | PASS | 0.001 |
 | `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutFittingCandidatesPreferLargeKeysBeforeMinimumKeys` | PASS | 0.001 |
 | `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere` | PASS | 0.001 |
@@ -236,7 +276,7 @@ Last recorded result per method; the two fix-run methods are marked below.
 | `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationClosesPeekOpenedHintOnQuestionChangeAndRequiresFreshDwell` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationDismissalSuppressesReopenUntilReset` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationImmediateAnswerEndsEligibility` | PASS | 0.001 |
-| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationKeepsButtonOpenedHintOpenOnReset` | PASS | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationKeepsButtonOpenedHintOpenOnReset` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationLifecycleKeepsDismissalSuppressionAcrossDisappear` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationStartsOnlyOnceUntilPostureReset` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testHingePeekRecheckPeeksWithoutNewSamples` | PASS | 0.001 |
@@ -245,24 +285,24 @@ Last recorded result per method; the two fix-run methods are marked below.
 | `CanadianHamTests.HintSessionStateTests.testHingePeekStartsOnlyInsideRealBandAndDoesNotUseEdgeJitterBeforePeek` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testHingePeekToleratesSmallJitterOnlyAfterPeekStarts` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testHingePeekUnavailableSampleDoesNotResetDismissalSuppression` | PASS | 0.001 |
-| `CanadianHamTests.HintSessionStateTests.testHintQualificationMarksUnansweredQuestionAsQualifiedOnly` | PASS | 0.001 |
-| `CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerCancelsShortPeekBeforeRecordingHelp` | PASS | 0.398 |
-| `CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerDoesNotQualifyShortPeekRoute` | PASS | 0.288 |
+| `CanadianHamTests.HintSessionStateTests.testHintQualificationMarksUnansweredQuestionAsQualifiedOnly` | PASS | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerCancelsShortPeekBeforeRecordingHelp` | PASS | 0.391 |
+| `CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerDoesNotQualifyShortPeekRoute` | PASS | 0.297 |
 | `CanadianHamTests.HintSessionStateTests.testImmediateModeHintAfterScoredAnswerDoesNotRecordHelp` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testReferencePointerRuleShowsOnlyWhenReferenceSheetIsAvailable` | PASS | 0.001 |
 | `CanadianHamTests.HintSessionStateTests.testReviewLaterHintAfterSelectionRecordsHelp` | PASS | 0.001 |
-| `CanadianHamTests.HintSessionStateTests.testSelectingAfterQualifiedHintRecordsHelpForReviewLaterSubmission` | PASS | 0.001 |
-| `CanadianHamTests.HintSessionStateTests.testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange` | PASS | 2.562 |
-| `CanadianHamTests.LocalizationCatalogTests.testEveryCatalogKeyHasFrenchTranslations` | PASS | 0.009 |
-| `CanadianHamTests.LocalizationCatalogTests.testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries` | PASS | 0.004 |
+| `CanadianHamTests.HintSessionStateTests.testSelectingAfterQualifiedHintRecordsHelpForReviewLaterSubmission` | PASS | 0.002 |
+| `CanadianHamTests.HintSessionStateTests.testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange` | PASS | 2.563 |
+| `CanadianHamTests.LocalizationCatalogTests.testEveryCatalogKeyHasFrenchTranslations` | PASS | 0.019 |
+| `CanadianHamTests.LocalizationCatalogTests.testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries` | PASS | 0.005 |
 | `CanadianHamTests.LocalizationCatalogTests.testLanguagePreferenceResolvesSystemAndOverrides` | PASS | 0.001 |
 | `CanadianHamTests.LocalizationCatalogTests.testLocalizedNullableTextAndLanguageFallsBackToEnglish` | PASS | 0.001 |
-| `CanadianHamTests.LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale` | PASS | 0.003 |
+| `CanadianHamTests.LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale` | PASS | 0.004 |
 | `CanadianHamTests.MorseTrainerTests.testCompletedMorseCourseSessionIgnoresResubmittedAnswer` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testFixedTimingProfilesUseEngineValues` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testLessonBodyAndBulletContrastTokensMeetMinimumRatio` | PASS | 0.001 |
-| `CanadianHamTests.MorseTrainerTests.testMorseAudioDriverSendingRestartDetachesStoppedSourceAndBalancesSession` | PASS | 1.658 |
-| `CanadianHamTests.MorseTrainerTests.testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp` | PASS | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseAudioDriverSendingRestartDetachesStoppedSourceAndBalancesSession` | PASS | 1.670 |
+| `CanadianHamTests.MorseTrainerTests.testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp` | PASS | 0.002 |
 | `CanadianHamTests.MorseTrainerTests.testMorseAudioSessionStaysActiveUntilLastPlayerReleases` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas` | PASS | 0.001 |
@@ -270,149 +310,149 @@ Last recorded result per method; the two fix-run methods are marked below.
 | `CanadianHamTests.MorseTrainerTests.testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone` | PASS | 0.002 |
 | `CanadianHamTests.MorseTrainerTests.testMorseCourseProgressIgnoresStoredProgressForAnotherCourse` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition` | PASS | 0.001 |
-| `CanadianHamTests.MorseTrainerTests.testMorseExamGeneratorMeetsReceivingExamConstraints` | PASS | 0.002 |
+| `CanadianHamTests.MorseTrainerTests.testMorseExamGeneratorMeetsReceivingExamConstraints` | PASS | 0.003 |
 | `CanadianHamTests.MorseTrainerTests.testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testMorsePressKeyButtonAccessibilityActionsTriggerConfiguredKeying` | PASS | 0.106 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingClassifiesTimingAndErrorSignal` | PASS | 0.002 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerClassifiesPressWhenAudioFails` | PASS | 0.007 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerClassifiesRecordedEventsWhileAudioStartupIsSuspended` | PASS | 0.001 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerLeavingDuringFailedPreparationDoesNotReportStaleError` | PASS | 0.105 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingClassifiesTimingAndErrorSignal` | PASS | 0.003 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerClassifiesPressWhenAudioFails` | PASS | 0.006 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerClassifiesRecordedEventsWhileAudioStartupIsSuspended` | PASS | 0.004 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerLeavingDuringFailedPreparationDoesNotReportStaleError` | PASS | 0.106 |
 | `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerLeavingDuringPreparationDoesNotStartALateTone` | PASS | 0.006 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerReleaseCannotBeSupersededBySilence` | PASS | 0.004 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerReportsPreparationFailureAfterKeyUpAndClassifiesPress` | PASS | 0.001 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerSuccessfulPrepareDoesNotClearEarlierAudioError` | PASS | 0.107 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingPendingFinalizationHelperCancelsAndClears` | PASS | 0.001 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSendingRemainingExamSecondsUsesFixedDeadline` | PASS | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerReleaseCannotBeSupersededBySilence` | PASS | 0.005 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerReportsPreparationFailureAfterKeyUpAndClassifiesPress` | PASS | 0.105 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerSuccessfulPrepareDoesNotClearEarlierAudioError` | PASS | 0.109 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingPendingFinalizationHelperCancelsAndClears` | PASS | 0.002 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingRemainingExamSecondsUsesFixedDeadline` | PASS | 0.002 |
 | `CanadianHamTests.MorseTrainerTests.testMorseSendingScoreCountsTimeoutOnlyThroughMissingCharacters` | PASS | 0.002 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSettingsClampAndPreset` | PASS | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsClampAndPreset` | PASS | 0.002 |
 | `CanadianHamTests.MorseTrainerTests.testMorseSettingsCodableRoundTripPreservesOutputMode` | PASS | 0.002 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSettingsDecodesLegacyPayloadWithIsEnabled` | PASS | 0.002 |
-| `CanadianHamTests.MorseTrainerTests.testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast` | PASS | 0.010 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsDecodesLegacyPayloadWithIsEnabled` | PASS | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast` | PASS | 0.008 |
 | `CanadianHamTests.MorseTrainerTests.testMorseSettingsRoundTripThroughUserDefaults` | PASS | 0.004 |
 | `CanadianHamTests.MorseTrainerTests.testMorseStopDelayDrainsFadeBeforeStoppingEngine` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced` | PASS | 0.001 |
-| `CanadianHamTests.MorseTrainerTests.testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess` | PASS | 0.041 |
+| `CanadianHamTests.MorseTrainerTests.testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess` | PASS | 0.047 |
 | `CanadianHamTests.MorseTrainerTests.testReduceFlashingDecisionUsesInjectedFlags` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testReduceFlashingStopsOnlyRunningVisualBeacon` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testScheduleMorseVisualPlaybackInitialStateAndFallback` | PASS | 0.001 |
 | `CanadianHamTests.MorseTrainerTests.testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess` | PASS | 0.037 |
-| `CanadianHamTests.ProgressStoreTests.testAdvancedImportKeepsBasicProgressExamsAndLessonsThenBasicImportKeepsAdvancedProgress` | PASS | 0.075 |
+| `CanadianHamTests.ProgressStoreTests.testAdvancedImportKeepsBasicProgressExamsAndLessonsThenBasicImportKeepsAdvancedProgress` | PASS | 0.078 |
 | `CanadianHamTests.ProgressStoreTests.testAdvancedImportRejectsHonoursAttempts` | PASS | 0.024 |
-| `CanadianHamTests.ProgressStoreTests.testAppleInterfaceLanguagePreferenceWritesAppleLanguagesForNextLaunch` | PASS | 0.003 |
+| `CanadianHamTests.ProgressStoreTests.testAppleInterfaceLanguagePreferenceWritesAppleLanguagesForNextLaunch` | PASS | 0.004 |
 | `CanadianHamTests.ProgressStoreTests.testAppSettingsModelPublishesMorseSettingsForRootViewSync` | PASS | 0.001 |
 | `CanadianHamTests.ProgressStoreTests.testAppSettingsModelReplacementRevisionAdvancesForLocalDataReplacement` | PASS | 0.001 |
 | `CanadianHamTests.ProgressStoreTests.testAppSettingsModelTracksUnfinishedCourseWorkAcrossRegisteredWindows` | PASS | 0.001 |
-| `CanadianHamTests.ProgressStoreTests.testCorruptLegacyMorseCourseProgressJSONDoesNotBlockOpeningStore` | PASS | 0.027 |
-| `CanadianHamTests.ProgressStoreTests.testDecodesLegacyBasicExportWithoutBankIdFields` | PASS | 0.029 |
-| `CanadianHamTests.ProgressStoreTests.testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme` | PASS | 0.029 |
-| `CanadianHamTests.ProgressStoreTests.testDefaultLayoutResetDoesNotWriteGatedLegacyCopyMarker` | PASS | 0.017 |
-| `CanadianHamTests.ProgressStoreTests.testExportDeduplicatesSyncedDuplicatesAndBankScopedSubmittedAt` | PASS | 0.055 |
-| `CanadianHamTests.ProgressStoreTests.testFreshInstallDefaultsLanguageToSystem` | PASS | 0.009 |
-| `CanadianHamTests.ProgressStoreTests.testICloudAccountSignalsUseInitInjectedFactory` | PASS | 0.066 |
-| `CanadianHamTests.ProgressStoreTests.testICloudAccountTeardownUsesInjectedFactoryAndRestoresLocalSnapshot` | PASS | 0.027 |
-| `CanadianHamTests.ProgressStoreTests.testICloudDeleteCanDeleteLocalDataAfterZoneDelete` | PASS | 0.024 |
-| `CanadianHamTests.ProgressStoreTests.testICloudDeleteStopsSyncBeforeDeletingZoneAndKeepsLocalWithoutReupload` | PASS | 0.134 |
-| `CanadianHamTests.ProgressStoreTests.testICloudMergeFixtureIsPermutationIndependentAndIdempotent` | PASS | 0.003 |
+| `CanadianHamTests.ProgressStoreTests.testCorruptLegacyMorseCourseProgressJSONDoesNotBlockOpeningStore` | PASS | 0.026 |
+| `CanadianHamTests.ProgressStoreTests.testDecodesLegacyBasicExportWithoutBankIdFields` | PASS | 0.031 |
+| `CanadianHamTests.ProgressStoreTests.testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme` | PASS | 0.030 |
+| `CanadianHamTests.ProgressStoreTests.testDefaultLayoutResetDoesNotWriteGatedLegacyCopyMarker` | PASS | 0.022 |
+| `CanadianHamTests.ProgressStoreTests.testExportDeduplicatesSyncedDuplicatesAndBankScopedSubmittedAt` | PASS | 0.058 |
+| `CanadianHamTests.ProgressStoreTests.testFreshInstallDefaultsLanguageToSystem` | PASS | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testICloudAccountSignalsUseInitInjectedFactory` | PASS | 0.067 |
+| `CanadianHamTests.ProgressStoreTests.testICloudAccountTeardownUsesInjectedFactoryAndRestoresLocalSnapshot` | PASS | 0.028 |
+| `CanadianHamTests.ProgressStoreTests.testICloudDeleteCanDeleteLocalDataAfterZoneDelete` | PASS | 0.026 |
+| `CanadianHamTests.ProgressStoreTests.testICloudDeleteStopsSyncBeforeDeletingZoneAndKeepsLocalWithoutReupload` | PASS | 0.137 |
+| `CanadianHamTests.ProgressStoreTests.testICloudMergeFixtureIsPermutationIndependentAndIdempotent` | PASS | 0.002 |
 | `CanadianHamTests.ProgressStoreTests.testICloudSyncConfigurationPlanDefaultsOffAndKeepsPreferencesLocal` | PASS | 0.001 |
-| `CanadianHamTests.ProgressStoreTests.testICloudSyncToggleAndAccountSignalsPreserveLocalProgress` | PASS | 0.049 |
-| `CanadianHamTests.ProgressStoreTests.testImportFiltersSyncDeviceRowsFromOtherBanksInsteadOfFailing` | PASS | 0.035 |
+| `CanadianHamTests.ProgressStoreTests.testICloudSyncToggleAndAccountSignalsPreserveLocalProgress` | PASS | 0.048 |
+| `CanadianHamTests.ProgressStoreTests.testImportFiltersSyncDeviceRowsFromOtherBanksInsteadOfFailing` | PASS | 0.034 |
 | `CanadianHamTests.ProgressStoreTests.testImportIgnoresStaleSyncDeviceRowsWhenMergedRowsDoNotMatchTopLevelFields` | PASS | 0.035 |
-| `CanadianHamTests.ProgressStoreTests.testImportingExportWithDeviceRowsThenSyncingOriginalRowsDoesNotDoubleCount` | PASS | 0.044 |
-| `CanadianHamTests.ProgressStoreTests.testImportingTheSameExportTwiceRestoresIdenticalProgressAttemptsAndLessons` | PASS | 0.061 |
+| `CanadianHamTests.ProgressStoreTests.testImportingExportWithDeviceRowsThenSyncingOriginalRowsDoesNotDoubleCount` | PASS | 0.046 |
+| `CanadianHamTests.ProgressStoreTests.testImportingTheSameExportTwiceRestoresIdenticalProgressAttemptsAndLessons` | PASS | 0.064 |
 | `CanadianHamTests.ProgressStoreTests.testImportKeepsPersistedAppleLanguagesWhenLanguageDoesNotChange` | PASS | 0.033 |
-| `CanadianHamTests.ProgressStoreTests.testImportLeavesTask4610Version2LessonSplitRowsUnchanged` | PASS | 0.033 |
+| `CanadianHamTests.ProgressStoreTests.testImportLeavesTask4610Version2LessonSplitRowsUnchanged` | PASS | 0.034 |
 | `CanadianHamTests.ProgressStoreTests.testImportMigratesMixedTask4610SyncRowsByRowVersion` | PASS | 0.039 |
-| `CanadianHamTests.ProgressStoreTests.testImportMigratesTask4610LessonSplitProgressAndQuizAttempts` | PASS | 0.037 |
-| `CanadianHamTests.ProgressStoreTests.testImportOfOlderExportDoesNotRemoveExistingMorseProgress` | PASS | 0.031 |
-| `CanadianHamTests.ProgressStoreTests.testImportRejectsInvalidSyncDeviceRows` | PASS | 0.037 |
-| `CanadianHamTests.ProgressStoreTests.testImportRejectsUnsupportedLanguagePreferenceValues` | PASS | 0.036 |
+| `CanadianHamTests.ProgressStoreTests.testImportMigratesTask4610LessonSplitProgressAndQuizAttempts` | PASS | 0.039 |
+| `CanadianHamTests.ProgressStoreTests.testImportOfOlderExportDoesNotRemoveExistingMorseProgress` | PASS | 0.033 |
+| `CanadianHamTests.ProgressStoreTests.testImportRejectsInvalidSyncDeviceRows` | PASS | 0.039 |
+| `CanadianHamTests.ProgressStoreTests.testImportRejectsUnsupportedLanguagePreferenceValues` | PASS | 0.039 |
 | `CanadianHamTests.ProgressStoreTests.testImportRollbackAfterMorseWriteRestoresPopulatedStoreAcrossCourses` | PASS | 0.071 |
-| `CanadianHamTests.ProgressStoreTests.testImportRollbackKeepsExistingDataWhenReplacementFails` | PASS | 0.043 |
-| `CanadianHamTests.ProgressStoreTests.testImportRollbackPropagatesMorseProgressRemovalFailure` | PASS | 0.031 |
-| `CanadianHamTests.ProgressStoreTests.testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress` | PASS | 0.033 |
+| `CanadianHamTests.ProgressStoreTests.testImportRollbackKeepsExistingDataWhenReplacementFails` | PASS | 0.044 |
+| `CanadianHamTests.ProgressStoreTests.testImportRollbackPropagatesMorseProgressRemovalFailure` | PASS | 0.033 |
+| `CanadianHamTests.ProgressStoreTests.testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress` | PASS | 0.034 |
 | `CanadianHamTests.ProgressStoreTests.testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt` | PASS | 0.036 |
 | `CanadianHamTests.ProgressStoreTests.testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues` | PASS | 0.001 |
-| `CanadianHamTests.ProgressStoreTests.testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates` | PASS | 0.038 |
-| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsDuplicateMorseDailyActivityDates` | PASS | 0.038 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates` | PASS | 0.040 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsDuplicateMorseDailyActivityDates` | PASS | 0.037 |
 | `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsInvalidMorseCourseProgress` | PASS | 0.037 |
-| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsMismatchedScoreBankId` | PASS | 0.038 |
-| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt` | PASS | 0.035 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsMismatchedScoreBankId` | PASS | 0.037 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt` | PASS | 0.033 |
 | `CanadianHamTests.ProgressStoreTests.testImportWritesAppleLanguagesToInjectedDefaultsWhenLanguageChanges` | PASS | 0.032 |
-| `CanadianHamTests.ProgressStoreTests.testInMemoryLanguageOperationsDoNotMutateStandardLanguageDefaults` | PASS | 0.035 |
-| `CanadianHamTests.ProgressStoreTests.testLaunchAdoptsExternalAppleLanguagesSelectionIntoStoredPreference` | PASS | 0.009 |
+| `CanadianHamTests.ProgressStoreTests.testInMemoryLanguageOperationsDoNotMutateStandardLanguageDefaults` | PASS | 0.038 |
+| `CanadianHamTests.ProgressStoreTests.testLaunchAdoptsExternalAppleLanguagesSelectionIntoStoredPreference` | PASS | 0.010 |
 | `CanadianHamTests.ProgressStoreTests.testLaunchAdoptsRemovedAppleLanguagesKeyAsSystemDefault` | PASS | 0.013 |
 | `CanadianHamTests.ProgressStoreTests.testLaunchIgnoresRegisteredAppleLanguagesValue` | PASS | 0.010 |
-| `CanadianHamTests.ProgressStoreTests.testLaunchKeepsPreferenceWhenAppleLanguagesMatchesLastAppliedValue` | PASS | 0.008 |
-| `CanadianHamTests.ProgressStoreTests.testLegacyLanguageMigrationSaveFailureDoesNotBlockStartupAndRetries` | PASS | 0.011 |
-| `CanadianHamTests.ProgressStoreTests.testLegacyStoredEnglishLanguageMigratesToSystemOnceAndDoesNotRerun` | PASS | 0.013 |
-| `CanadianHamTests.ProgressStoreTests.testLegacyStoredFrenchAdoptsExistingPersistentAppleLanguagesInsteadOfOverwriting` | PASS | 0.010 |
-| `CanadianHamTests.ProgressStoreTests.testLegacyStoredFrenchLanguageStaysFrenchAndAppliesInterfaceLanguageOnce` | PASS | 0.008 |
-| `CanadianHamTests.ProgressStoreTests.testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure` | PASS | 0.028 |
-| `CanadianHamTests.ProgressStoreTests.testLessonQuizHelpFixtureValidationAndPayloadRoundTrips` | PASS | 0.134 |
-| `CanadianHamTests.ProgressStoreTests.testLessonQuizHelpValidationUsesOfficialMembershipAndKnownBankIdsNotBasicPrefix` | PASS | 0.029 |
+| `CanadianHamTests.ProgressStoreTests.testLaunchKeepsPreferenceWhenAppleLanguagesMatchesLastAppliedValue` | PASS | 0.009 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyLanguageMigrationSaveFailureDoesNotBlockStartupAndRetries` | PASS | 0.012 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredEnglishLanguageMigratesToSystemOnceAndDoesNotRerun` | PASS | 0.014 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredFrenchAdoptsExistingPersistentAppleLanguagesInsteadOfOverwriting` | PASS | 0.011 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredFrenchLanguageStaysFrenchAndAppliesInterfaceLanguageOnce` | PASS | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure` | PASS | 0.031 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizHelpFixtureValidationAndPayloadRoundTrips` | PASS | 0.136 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizHelpValidationUsesOfficialMembershipAndKnownBankIdsNotBasicPrefix` | PASS | 0.030 |
 | `CanadianHamTests.ProgressStoreTests.testLessonQuizHintVisibilityUsesHalfSecondAndFreezesHelpAtChoice` | PASS | 2.737 |
-| `CanadianHamTests.ProgressStoreTests.testLessonQuizSessionCachePreservesAnswersAndFrozenHelpAcrossNavigation` | PASS | 0.003 |
-| `CanadianHamTests.ProgressStoreTests.testLessonWriteAfterImportedAndSyncedDuplicateRowsAddsExactlyOneRead` | PASS | 0.050 |
-| `CanadianHamTests.ProgressStoreTests.testLocalLessonAndMorseWritesAfterDeviceRowImportAddOnlyOwnContribution` | PASS | 0.057 |
-| `CanadianHamTests.ProgressStoreTests.testLocalQuestionWritesAfterDeviceRowImportAddOnlyOwnContribution` | PASS | 0.032 |
-| `CanadianHamTests.ProgressStoreTests.testMigratesArchivedLessonProgressKeepsMaxOwnReadCount` | PASS | 0.011 |
-| `CanadianHamTests.ProgressStoreTests.testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist` | PASS | 0.035 |
-| `CanadianHamTests.ProgressStoreTests.testMigratesCommittedPreV2StoreFixtureWithAllDataIntact` | PASS | 0.406 |
-| `CanadianHamTests.ProgressStoreTests.testMigratesLegacyMorseCourseProgressJSONIntoSwiftDataEntity` | PASS | 0.021 |
-| `CanadianHamTests.ProgressStoreTests.testMigratesProgressStoreV1ToV2WithoutUniqueConstraints` | PASS | 0.073 |
-| `CanadianHamTests.ProgressStoreTests.testMigratesProgressStoreV3ToV4PadsAndPersistsAnsweredWithHelpFields` | PASS | 0.069 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizSessionCachePreservesAnswersAndFrozenHelpAcrossNavigation` | PASS | 0.002 |
+| `CanadianHamTests.ProgressStoreTests.testLessonWriteAfterImportedAndSyncedDuplicateRowsAddsExactlyOneRead` | PASS | 0.057 |
+| `CanadianHamTests.ProgressStoreTests.testLocalLessonAndMorseWritesAfterDeviceRowImportAddOnlyOwnContribution` | PASS | 0.050 |
+| `CanadianHamTests.ProgressStoreTests.testLocalQuestionWritesAfterDeviceRowImportAddOnlyOwnContribution` | PASS | 0.035 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesArchivedLessonProgressKeepsMaxOwnReadCount` | PASS | 0.012 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist` | PASS | 0.034 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesCommittedPreV2StoreFixtureWithAllDataIntact` | PASS | 0.475 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesLegacyMorseCourseProgressJSONIntoSwiftDataEntity` | PASS | 0.018 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesProgressStoreV1ToV2WithoutUniqueConstraints` | PASS | 0.069 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesProgressStoreV3ToV4PadsAndPersistsAnsweredWithHelpFields` | PASS | 0.079 |
 | `CanadianHamTests.ProgressStoreTests.testMockExamTimerRefreshPreservesFractionalRemainder` | PASS | 0.001 |
-| `CanadianHamTests.ProgressStoreTests.testMorseCourseProgressRoundTripsTwentyRecentCharacterResults` | PASS | 0.029 |
+| `CanadianHamTests.ProgressStoreTests.testMorseCourseProgressRoundTripsTwentyRecentCharacterResults` | PASS | 0.031 |
 | `CanadianHamTests.ProgressStoreTests.testMorseExportMapsHapticsToWebCompatibleAudio` | PASS | 0.001 |
-| `CanadianHamTests.ProgressStoreTests.testMorseImportDecodesMissingAndPartialMorsePreferences` | PASS | 0.052 |
+| `CanadianHamTests.ProgressStoreTests.testMorseImportDecodesMissingAndPartialMorsePreferences` | PASS | 0.055 |
 | `CanadianHamTests.ProgressStoreTests.testMorseImportRejectsExplicitNullMorseValues` | PASS | 0.001 |
 | `CanadianHamTests.ProgressStoreTests.testMorseImportRejectsUnsupportedMorsePreferenceEnums` | PASS | 0.038 |
-| `CanadianHamTests.ProgressStoreTests.testMountedLessonQuizRepopulatesAfterImportAndResetWithoutReshufflingOnRerender` | PASS | 0.946 |
-| `CanadianHamTests.ProgressStoreTests.testNativeSettingsAppearanceColorSchemeFollowsLiveThemePreference` | PASS | 0.012 |
-| `CanadianHamTests.ProgressStoreTests.testNativeSettingsGeneralBindingsUpdatePracticePreferences` | PASS | 0.012 |
-| `CanadianHamTests.ProgressStoreTests.testOldFormatImportWithMorseProgressReplacesAllExistingDeviceRows` | PASS | 0.038 |
-| `CanadianHamTests.ProgressStoreTests.testPickerChangeWritesAppleLanguagesButUnchangedPreferencesDoNotRewriteIt` | PASS | 0.013 |
-| `CanadianHamTests.ProgressStoreTests.testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences` | PASS | 0.042 |
+| `CanadianHamTests.ProgressStoreTests.testMountedLessonQuizRepopulatesAfterImportAndResetWithoutReshufflingOnRerender` | PASS | 0.966 |
+| `CanadianHamTests.ProgressStoreTests.testNativeSettingsAppearanceColorSchemeFollowsLiveThemePreference` | PASS | 0.013 |
+| `CanadianHamTests.ProgressStoreTests.testNativeSettingsGeneralBindingsUpdatePracticePreferences` | PASS | 0.011 |
+| `CanadianHamTests.ProgressStoreTests.testOldFormatImportWithMorseProgressReplacesAllExistingDeviceRows` | PASS | 0.039 |
+| `CanadianHamTests.ProgressStoreTests.testPickerChangeWritesAppleLanguagesButUnchangedPreferencesDoNotRewriteIt` | PASS | 0.011 |
+| `CanadianHamTests.ProgressStoreTests.testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences` | PASS | 0.043 |
 | `CanadianHamTests.ProgressStoreTests.testProgressImportDecodesOlderAnsweredWithHelpFieldsAsFalse` | PASS | 0.035 |
-| `CanadianHamTests.ProgressStoreTests.testProgressStoreDeduplicatesV2EntitiesWithoutUniqueConstraints` | PASS | 0.041 |
-| `CanadianHamTests.ProgressStoreTests.testProgressStoreRoundTripExportImportReset` | PASS | 0.064 |
+| `CanadianHamTests.ProgressStoreTests.testProgressStoreDeduplicatesV2EntitiesWithoutUniqueConstraints` | PASS | 0.046 |
+| `CanadianHamTests.ProgressStoreTests.testProgressStoreRoundTripExportImportReset` | PASS | 0.062 |
 | `CanadianHamTests.ProgressStoreTests.testResetAllDataTurnsICloudSyncOptInOff` | PASS | 0.014 |
-| `CanadianHamTests.ProgressStoreTests.testResetAllDataWithICloudSyncDeletesCloudZoneThenWipesLocalData` | PASS | 0.032 |
-| `CanadianHamTests.ProgressStoreTests.testResetAllDataWithICloudSyncKeepsLocalDataAndRetriesAfterCloudDeleteFailure` | PASS | 0.049 |
-| `CanadianHamTests.ProgressStoreTests.testResetClearsAppleLanguagesAndLanguagePreference` | PASS | 0.014 |
+| `CanadianHamTests.ProgressStoreTests.testResetAllDataWithICloudSyncDeletesCloudZoneThenWipesLocalData` | PASS | 0.029 |
+| `CanadianHamTests.ProgressStoreTests.testResetAllDataWithICloudSyncKeepsLocalDataAndRetriesAfterCloudDeleteFailure` | PASS | 0.048 |
+| `CanadianHamTests.ProgressStoreTests.testResetClearsAppleLanguagesAndLanguagePreference` | PASS | 0.013 |
 | `CanadianHamTests.ProgressStoreTests.testResetFailureKeepsPreviousAppleLanguagesAndPreference` | PASS | 0.015 |
-| `CanadianHamTests.ProgressStoreTests.testResetRollsBackWhenMorseProgressRemovalFails` | PASS | 0.017 |
-| `CanadianHamTests.ProgressStoreTests.testSavingLargeQuestionProgressBatchBuildsOneWriteContext` | PASS | 1.742 |
-| `CanadianHamTests.ProgressStoreTests.testSharedAppleSettingsModelAppliesLivePreferenceUpdates` | PASS | 0.012 |
-| `CanadianHamTests.ProgressStoreTests.testSharedICloudMergeFixtureCoversQuestionExamLessonAndMorseRules` | PASS | 0.001 |
-| `CanadianHamTests.ProgressStoreTests.testSplitStoreFailedLegacyPreferencesReadDoesNotCreateMarkerAndRetries` | PASS | 0.006 |
-| `CanadianHamTests.ProgressStoreTests.testSplitStoreFirstOpenCopiesLegacyPreferencesWithoutLosingProgress` | PASS | 0.090 |
-| `CanadianHamTests.ProgressStoreTests.testSplitStoreLegacyPreferencesRetryRunsEvenWhenPreferencesStoreExists` | PASS | 0.060 |
-| `CanadianHamTests.ProgressStoreTests.testStaleSameDeviceQuestionRowDoesNotLoseNextLocalWrite` | PASS | 0.034 |
-| `CanadianHamTests.ProgressStoreTests.testSwiftDataQuestionProgressEntityDefaultsHelpFieldsForLightweightMigration` | PASS | 0.009 |
+| `CanadianHamTests.ProgressStoreTests.testResetRollsBackWhenMorseProgressRemovalFails` | PASS | 0.014 |
+| `CanadianHamTests.ProgressStoreTests.testSavingLargeQuestionProgressBatchBuildsOneWriteContext` | PASS | 1.758 |
+| `CanadianHamTests.ProgressStoreTests.testSharedAppleSettingsModelAppliesLivePreferenceUpdates` | PASS | 0.013 |
+| `CanadianHamTests.ProgressStoreTests.testSharedICloudMergeFixtureCoversQuestionExamLessonAndMorseRules` | PASS | 0.002 |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreFailedLegacyPreferencesReadDoesNotCreateMarkerAndRetries` | PASS | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreFirstOpenCopiesLegacyPreferencesWithoutLosingProgress` | PASS | 0.098 |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreLegacyPreferencesRetryRunsEvenWhenPreferencesStoreExists` | PASS | 0.062 |
+| `CanadianHamTests.ProgressStoreTests.testStaleSameDeviceQuestionRowDoesNotLoseNextLocalWrite` | PASS | 0.031 |
+| `CanadianHamTests.ProgressStoreTests.testSwiftDataQuestionProgressEntityDefaultsHelpFieldsForLightweightMigration` | PASS | 0.010 |
 | `CanadianHamTests.ProgressStoreTests.testTask4610LaunchMigrationIsAtomicAndStableWithArchivedProgressAndMultipleDevices` | PASS | 0.044 |
-| `CanadianHamTests.ProgressStoreTests.testTask4610LessonMigrationIsIdempotentAcrossRepeatedImports` | PASS | 0.040 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610LessonMigrationIsIdempotentAcrossRepeatedImports` | PASS | 0.038 |
 | `CanadianHamTests.ProgressStoreTests.testTask4610RejectsInvalidLegacyQuizScoresBeforeMigration` | PASS | 0.029 |
-| `CanadianHamTests.ProgressStoreTests.testTask4610RejectsNullLessonIDVersionAtTopLevelAndOnBothDeviceRowKinds` | PASS | 0.032 |
-| `CanadianHamTests.ProgressStoreTests.testTask4610RequiresAllReadSourcesAndMergesEachDeviceBeforeAggregating` | PASS | 0.108 |
-| `CanadianHamTests.ProgressStoreTests.testTask4610SharedConceptMappingAndConceptInclusiveScores` | PASS | 0.238 |
-| `CanadianHamTests.ProgressStoreTests.testTask4610ValidatesHistoricalQuizMembershipBeforeMigratingTopLevelAndSyncRows` | PASS | 0.039 |
-| `CanadianHamTests.ProgressStoreTests.testTwoDevicesEachQuestionWriteAddsExactlyOneAfterSync` | PASS | 0.055 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610RejectsNullLessonIDVersionAtTopLevelAndOnBothDeviceRowKinds` | PASS | 0.028 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610RequiresAllReadSourcesAndMergesEachDeviceBeforeAggregating` | PASS | 0.103 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610SharedConceptMappingAndConceptInclusiveScores` | PASS | 0.235 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610ValidatesHistoricalQuizMembershipBeforeMigratingTopLevelAndSyncRows` | PASS | 0.040 |
+| `CanadianHamTests.ProgressStoreTests.testTwoDevicesEachQuestionWriteAddsExactlyOneAfterSync` | PASS | 0.054 |
 | `CanadianHamTests.QuestionBankTests.testAdvancedBundledJSONDecodesExpectedCountsAndVerifiedFrenchCategoryNames` | PASS | 0.012 |
 | `CanadianHamTests.QuestionBankTests.testAdvancedMockExamUsesFiftyQuestionsAndNoHonours` | PASS | 0.013 |
 | `CanadianHamTests.QuestionBankTests.testAppBundleContainsNoReadmeFiles` | PASS | 0.013 |
 | `CanadianHamTests.QuestionBankTests.testAppBundleContainsOnlyExpectedGeneratedBankDirectories` | PASS | 0.001 |
 | `CanadianHamTests.QuestionBankTests.testBundledJSONDecodesExpectedCounts` | PASS | 0.019 |
-| `CanadianHamTests.QuestionBankTests.testBundledLessonModelExposesPrerequisites` | PASS | 0.544 |
-| `CanadianHamTests.QuestionBankTests.testBundledLessonsAndExplanationsLoadThroughContentLibrary` | PASS | 0.700 |
-| `CanadianHamTests.QuestionBankTests.testEngineQuestionDrawKeepsQuestionInsideRequestedCategory` | PASS | 0.019 |
-| `CanadianHamTests.QuestionBankTests.testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion` | PASS | 0.076 |
+| `CanadianHamTests.QuestionBankTests.testBundledLessonModelExposesPrerequisites` | PASS | 0.560 |
+| `CanadianHamTests.QuestionBankTests.testBundledLessonsAndExplanationsLoadThroughContentLibrary` | PASS | 0.731 |
+| `CanadianHamTests.QuestionBankTests.testEngineQuestionDrawKeepsQuestionInsideRequestedCategory` | PASS | 0.020 |
+| `CanadianHamTests.QuestionBankTests.testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion` | PASS | 0.080 |
 | `CanadianHamTests.QuestionBankTests.testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes` | PASS | 0.001 |
-| `CanadianHamTests.QuestionBankTests.testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons` | PASS | 0.561 |
+| `CanadianHamTests.QuestionBankTests.testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons` | PASS | 0.582 |
 | `CanadianHamTests.ReadinessAndScoringTests.testAdvancedScoringAndReadinessSuppressHonours` | PASS | 0.001 |
 | `CanadianHamTests.ReadinessAndScoringTests.testExamScoringBoundaries` | PASS | 0.001 |
 | `CanadianHamTests.ReadinessAndScoringTests.testReadinessStates` | PASS | 0.001 |
-| `CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate` | PASS | 0.034 |
+| `CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate` | PASS | 0.036 |
 | `CanadianHamTests.RootNavigationMappingTests.testCompactHomeSessionAndSectionPushesUseVisibleDestination` | PASS | 0.001 |
 | `CanadianHamTests.RootNavigationMappingTests.testEmptyCompactPathMapsToHome` | PASS | 0.001 |
 | `CanadianHamTests.RootNavigationMappingTests.testEveryLearnRouteRoundTripsWithItsWholeStack` | PASS | 0.001 |
