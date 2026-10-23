@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:54'
+updated_date: '2026-10-23 13:59'
 labels:
   - accessibility
   - tests
@@ -94,6 +94,10 @@ Final iPhone17Pro/iOS27.0 targeted class29/29 PASSED,0 failures/skips, exit0, cl
 Guard self-test passed; main...b7448103 unapproved failed as expected(exit1), current PR-body approval passed(exit0), focused3478f40e...b7448103 passed with no guarded changes. Logs/tmp/task-71-components-test-guard-{self,unapproved,approved,fix}.log. git diff3478f40e --check passed. Independent review and CI still required. Dominant-background/5-bit/<2%-ratio heuristic limitations and 1-3px spatial speck exclusion remain documented.
 
 Reopened solely for the user-requested adversarial final hardening pass (review attacks1/6, reachability mutation proof, per-bin performance, remaining-limits docs); no app or audit scope changes.
+
+Final-hardening pre-fix proof on5da09a53: full31-test baseline29pass/2fail,22.662s,exit65. Exact partial overlap returned9.797721859358917; exact1.9%grey beside black returned19.84419971993603. Strengthened support test passed normally but failed at15.9942758247219 when backgroundConnectedBlend was temporarily replaced with true (single-test exit65); mutation restored. Logs/bundles /tmp/task-71-hardening-{before,reachability-mutant}.{log,xcresult}.
+
+DECISION UPDATE (supervisor final hardening): requested >=6px/<2% non-blend/<4.5 guard made all3 real screenshots nil. Reported full per-bin counts/RGB/ratio/bounds in /tmp/task-71-hardening-cluster-diagnostics.log. Dark6bins19–852px,light10bins42–686px,Try-it8bins27–647px,ratios1.012–4.3505. Supervisor explicitly DROPPED attack1 guard because rendering residue is indistinguishable under those tests; no blend-criteria diagnosis/loosening. Removed temporary guard and its failing proof from final source; preserve red proof/docs as an explicit known limit including gradients. Continue partial-overlap/reachability/per-bin optimization/docs only; narrow scope/logged ratios/token-test provenance are mitigations.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
