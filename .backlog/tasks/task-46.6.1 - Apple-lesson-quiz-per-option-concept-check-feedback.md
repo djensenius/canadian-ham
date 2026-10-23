@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 12:45'
+updated_date: '2026-10-23 12:48'
 labels:
   - apple
 dependencies:
@@ -109,10 +109,12 @@ Reproducible issue evidence: correct dark/light both flag the fully visible new 
 Evidence: /tmp/task-46.6.1-iphone-{final,correct-retry,remaining-retry}.{log,xcresult}; failure app/element screenshots, descriptions and manifests in matching -attachments directories. Readable copies: /tmp/task-46.6.1-final-{correct-dark,correct-light,french-dark,french-light,largest}-{app,element}.png. Frame/mapping derivation /tmp/task-46.6.1-iphone-final-failure-evidence.json.
 
 Per supervisor, controls are now running on the same iPhone 17 Pro simulator in detached /tmp/canadian-ham-task-46.6.1-main-control at origin/main ba5eb4f5c0ee0ff7477b708b73696474a143a303: existing testLessonQuizHintsLightAndFullAccessibilityAudits and testLessonQuizHintsDarkAndFullAccessibilityAudits. Ordered nohup runner /tmp/task-46.6.1-remaining-retry-and-control.sh; control log/bundle /tmp/task-46.6.1-main-control.{log,xcresult}.
+
+Main-control result: origin/main ba5eb4f5c0ee0ff7477b708b73696474a143a303 PASSED both closest existing lesson-quiz audit controls on the same iPhone 17 Pro: testLessonQuizHintsDarkAndFullAccessibilityAudits 166.384 s, testLessonQuizHintsLightAndFullAccessibilityAudits 143.205 s; /tmp/task-46.6.1-main-control.{log,xcresult}, xbuild exit 0. These controls do not reproduce a general main/environment regression and do not validate the new option-feedback status itself. STOPPED as directed after the three repeat failures outside the authorized header-only scope. No source edit, shared-helper edit, local exception or AGENTS change was made in this resume. AC3 deliberately remains unchecked and the task remains In Progress; no PR. Full iPad selection skipped because the requested iPhone gate failed. Previous macOS units/localization checks remain recorded above (untouched implementation); resumed text-source check, guard self-test, approved guard against origin/main, and git diff --check passed. All new Apple invocations used nohup xbuild, one destination, targeted methods, grep polling, and natural completion; no builds were killed and no full suites were run.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented source-indexed per-option concept-check feedback in the Apple lesson quiz, combined with localized explicit correctness in the focused status and retaining the existing explanation. EN/FR fallback and language metadata, legacy choices and no pre-answer disclosure are covered by three passing macOS unit methods; four new default-size light/dark UI methods and all seven existing quiz methods pass on both iPhone and iPad. Localization/text and approved test-guard checks pass. NOT complete: the new AX-XXXL full-audit method reproducibly reports contrast on unchanged Question 1 of 1 despite visibly high-contrast screenshots; 0.8-second settling does not resolve it. Per supervisor, AC3 remains unchecked and the task stays In Progress; evidence appended to TASK-65. No audits were weakened and no PR was opened.
+Implemented source-indexed per-option concept-check feedback with localized correctness, EN/FR fallback metadata, post-answer accessibility focus, and the retained explanation; mapping/legacy/no-disclosure units and normal-size/AX UI coverage are present. Resume 2026-10-23 merged/pushed origin/main including TASK-70 and left the aligned helper unchanged. Standalone AX-XXXL passed on iPhone and iPad. NOT complete: the final 12-method iPhone selection passed all seven existing methods but failed all five new audits; one unchanged retry per failure still failed correct light/dark feedback status contrast and French dark prompt contrast, while AX and French light passed. Failure app/element screenshots and approximate screenshot-derived frames are recorded in the notes; repeat element images are byte-identical. Detached current-main light/dark quiz audit controls both passed, so no general main/environment regression was established. Per coordinator stop rule, no source fixes/exceptions or full iPad run were attempted; AC3 remains unchecked/In Progress and no PR was opened.
 <!-- SECTION:FINAL_SUMMARY:END -->
