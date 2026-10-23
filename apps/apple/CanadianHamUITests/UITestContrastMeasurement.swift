@@ -86,7 +86,9 @@ func measuredTextContrast(in image: CGImage) -> Double? {
         let offset = clusters[key]!.color - background.color
         let line = clusters[coreKey]!.color - background.color
         let fraction = dot(offset, line) / dot(line, line)
-        guard fraction > 0, fraction < 1 else { return false }
+        // The core must be clearly further from the background than the blend, so two near-identical
+        // colours split across a bin boundary can never each be dropped as an edge of the other.
+        guard fraction > 0, fraction <= 0.9 else { return false }
         let residual = offset - fraction * line
         // Eight 8-bit RGB units allow quantization error, not arbitrary different text colours.
         guard dot(residual, residual) <= 8 * 8 else { return false }

@@ -82,6 +82,28 @@ final class UITestContrastMeasurementTests: XCTestCase {
         XCTAssertLessThan(ratio, 4.5)
     }
 
+    func testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText() throws {
+        let context = try bitmapContext()
+        context.setFillColor(CGColor(srgbRed: 1, green: 1, blue: 1, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 80, y: 10, width: 6, height: 50))
+        // Thin strokes of two near-identical greys on either side of a 5-bit bin boundary,
+        // mixed pixel by pixel; each is almost on the other's colour line toward white.
+        let greyA = CGColor(srgbRed: 151.0 / 255, green: 152.0 / 255, blue: 152.0 / 255, alpha: 1)
+        let greyB = CGColor(srgbRed: 152.0 / 255, green: 151.0 / 255, blue: 152.0 / 255, alpha: 1)
+        for row in stride(from: 10, to: 60, by: 4) {
+            for column in 10..<60 {
+                context.setFillColor(column.isMultiple(of: 2) ? greyA : greyB)
+                context.fill(CGRect(x: column, y: row, width: 1, height: 2))
+            }
+        }
+        let image = try XCTUnwrap(context.makeImage())
+        if let ratio = measuredTextContrast(in: image) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
     func testAntialiased15PointBoldMixedContrastLinesFailAt3x() throws {
         let image = try renderedLines([nearBlack, midGrey], bold: true)
         let ratio = try XCTUnwrap(measuredTextContrast(in: image))
