@@ -8,6 +8,13 @@
 > full-text/frame/height checks. Native navigation ellipses remain only under
 > the documented coordinator-approved exception below. No app code changed.
 > Independent branch review is still required before opening a PR.
+>
+> **Study navigation update — TASK-69, owner-delegated decision 2026-10-22:**
+> iOS/iPadOS module titles now use the native inline style, like practice.
+> Navigation text and full wrapped content headers are unchanged. The large-title
+> observations, images and measurements below are historical TASK-52 evidence;
+> see [the inline module update](#task-69-inline-study-module-validation) for
+> refreshed measurements and validation. Non-iOS navigation is unchanged.
 
 ## Baseline and navigation-title decision
 
@@ -111,13 +118,13 @@ custom viewer, toolbar, or navigation bar was added.
 
 ## Native Study navigation titles
 
-Study modules retain their existing native automatic/large-title style, rather
-than the inline style used in practice. For B-003 at AX-XXXL, that bar displays
+**Historical TASK-52 baseline, superseded by TASK-69 on iOS/iPadOS:** Study
+modules used native automatic/large titles. For B-003 at AX-XXXL, that bar displayed
 `Station Ass…` in a 346.3 × 71.7-point accessibility frame; its full accessibility
-label and complete wrapped content header both pass. [The same-screen evidence](native-study-fr-accessibility-xxxl-B-003.png)
-shows the distinction. The coordinator explicitly confirmed on 2026-10-20 that
-the exception also covers this existing native large-title style; no title or
-style change is included.
+label and complete wrapped content header both passed. [The historical same-screen evidence](native-study-fr-accessibility-xxxl-B-003.png)
+shows the distinction. The 2026-10-20 coordinator exception covered this large-title
+style. The owner-delegated 2026-10-22 decision instead makes module titles inline,
+without changing title text, header layout, or the full-label/header assertions.
 
 ## Visually truncated native titles (width-derived inventory)
 
@@ -143,9 +150,9 @@ uncapped short-title frames), so the 17-pt reference alone understates the width
 
 All other inline category titles fit at the indicated language/size.
 
-### Study module large titles
+### Historical Study module large titles (before TASK-69)
 
-**Nearly every Study module large title is visually cut even at default size, in
+**Nearly every Study module large title was visually cut even at default size, in
 both UI languages.** The titles remain English in the French UI. The default
 large-title font is about 34 pt, not the TSV's 17-pt reference: single-line widths
 are approximately twice that column. Seven titles exceed their approximately
@@ -164,9 +171,9 @@ available width instead of its full large-font width; all eight titles are cut.
 | B-008 Interference and Suppression | Yes | Yes |
 
 This is a width-derived exception inventory, not a claim of per-row OCR. The
-screenshots show representative inline and large-title ellipses and the complete
-wrapped content headers, so the owner can revisit the exception with its full
-scope visible.
+historical screenshots show representative inline and large-title ellipses and
+the complete wrapped content headers. The module inventory above is not the
+current inline-style inventory; see the TASK-69 measurements below.
 
 ## Default sidebar diagnosis
 

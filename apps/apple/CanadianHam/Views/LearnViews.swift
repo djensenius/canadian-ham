@@ -283,6 +283,9 @@ private struct ModuleLessonListView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(module.title.en))) // l10n: content(en)
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
     }
 }
 
