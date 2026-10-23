@@ -2478,17 +2478,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
             let element = issue.element
             let frame = element?.frame
-            var ratio: Double?
+            var measurement = ControlTextContrastMeasurement(fullImageRatio: nil, ratio: nil)
             if let element, let frame,
                isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
                let image = contrastMeasurementCGImage(from: element.screenshot()) {
-                ratio = measuredTextContrast(in: image)
+                measurement = controlTextContrastMeasurement(
+                    in: image, scale: CGFloat(image.width) / frame.width,
+                    isButton: element.elementType == .button
+                )
             }
-            let verified = ratio.map { $0 >= 4.5 } ?? false
+            let verified = measurement.ratio.map { $0 >= 4.5 } ?? false
             let activityName = verified ? "Verified contrast audit finding with measured WCAG contrast" : "Failed contrast audit finding"
             XCTContext.runActivity(named: activityName) { activity in
-                let measurement = ratio.map { "\($0):1" } ?? "unmeasurable"
-                let attachment = XCTAttachment(string: "label=\(element?.label ?? "<nil>") frame=\(frame.map { "\($0)" } ?? "<nil>") ratio=\(measurement)")
+                let attachment = XCTAttachment(string: "label=\(element?.label ?? "<nil>") frame=\(frame.map { "\($0)" } ?? "<nil>") \(measurement.logDescription)")
                 attachment.lifetime = .keepAlways
                 activity.add(attachment)
             }
