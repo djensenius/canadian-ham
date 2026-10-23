@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 03:00'
-updated_date: '2026-10-23 06:27'
+updated_date: '2026-10-23 07:57'
 labels: []
 dependencies: []
 priority: high
@@ -81,4 +81,6 @@ xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -parallel-t
 Figure-plan run is now waiting for the shared build lock; no builds interrupted.
 
 Long-running figure sweep progress at 2026-10-23 06:27 UTC: first 27/47 methods passed with no failures (modules 1–4 complete, module 5 in progress). Timings are 181–492 seconds per method so far. Existing xbuild run remains untouched; iPad batch still queued after it.
+
+Figure sweep encountered one infrastructure-style audit failure: CanadianHamLessonFiguresUITests.testModule7LessonFiguresLightPart1 failed after 436.543s with com.apple.xcode.xctest.accessibilityAudit Code=-56, Audit failed to complete in time (no contrast or other accessibility finding reported). The following three figure methods passed; remaining selections are still running. Will rerun only this failed method after the existing batches finish, per targeted fix-round policy; no test or source changes and no interruption of running builds.
 <!-- SECTION:NOTES:END -->
