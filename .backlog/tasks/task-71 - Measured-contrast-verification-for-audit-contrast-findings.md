@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:42'
+updated_date: '2026-10-23 13:45'
 labels:
   - accessibility
   - tests
@@ -47,6 +47,8 @@ Owner-delegated decision 2026-10-22 (owner: make the best decisions you can). XC
 Supervisor clarification for step9: validate retained-cluster BOUNDARY pixels (4-neighbour boundary, treating that cores excluded antialias blends as the same region), not every filled pixel. Require >=50% of boundary pixels near background within radius2; reject boundaries dominated by another retained foreground. This preserves all original thick synthetic blocks/icons without increasing radius or altering any fixtures.
 
 11. Copilot PRRT_kwDOUxZq_M6vn59C: add the exact inset-panel plus separate 16x40 #201C18 rectangle at (5,10) regression and prove it fails on 3478f40e using nohup/xbuild and grep polling. Label retained-core components with four-connectivity; assign each excluded blend pixel to its nearest supporting core component within the unchanged radius-two neighborhood (deterministic ties). Independently validate every component with at least four native pixels, preserving minimum-ratio semantics and existing thresholds. Run the full targeted class, especially screenshots and bold proofs; report any nil rather than loosen. Document, commit/push, reply to and resolve the thread via GraphQL.
+
+12. Supervisor-approved refinement after screenshot failures: keep four-connectivity and four-pixel component threshold; identify sub-2% boundary-support-only blends with the identical fraction<=0.9/RGB8/every-pixel radius2 core+background rules. Count support only through four-connected blend paths to background, and only for the validated retained core colour. Never alter minimum ratios. Add the thin dark strokes/subthreshold inset-panel AA-edge adversarial proof, rerun all29 tests, and retain diagnostic evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -80,6 +82,8 @@ Test guard self-test passed; main...e22a6405 unapproved failed as expected(exit1
 Reopened solely for the user-confirmed disconnected-region masking finding PRRT_kwDOUxZq_M6vn59C on PR #1007. Scope remains measurement/proof/docs only.
 
 Exact requested mixed-background fixture failed as expected before the fix: 9.797721859358917:1 (xbuild exit65), log/bundle /tmp/task-71-components-before.{log,xcresult}. First per-component run: all three real exported screenshots became nil while bold/AA proofs and adversarial regressions passed. Stopped and escalated rather than loosening. Supervisor authorized diagnostic analysis and principled 8-connectivity/background-connected blend interpretation under radius2, >=50% support, and all existing adversarial-test constraints; tiny-component exemption only beside a validated same-cluster component.
+
+Diagnostics isolated the nil screenshots to two-pixel-thick equal signs/hyphens: dark feedback two48px components, light feedback one48px, Try-it four32px; only4 boundary pixels each directly background-supported, no other-retained neighbours, all adjacent AA shades below2% and thus absent from blendCores. Full details /tmp/task-71-components-diagnostics.log. Supervisor explicitly approved subthreshold support-only blends using SAME strict blend tests plus 4-connected background reachability, with an additional thin-stroke inset-panel AA-edge regression. Host CGImage check with this refinement restores all3 original ratios unchanged; no radius/50%/blend tolerance changes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
