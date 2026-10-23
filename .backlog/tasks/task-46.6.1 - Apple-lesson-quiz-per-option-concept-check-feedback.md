@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 12:30'
+updated_date: '2026-10-23 12:45'
 labels:
   - apple
 dependencies:
@@ -84,6 +84,31 @@ Resumed 2026-10-23 under coordinator direction. Merged origin/main through ba5eb
 The unchanged aligned-helper AX-XXXL rerun also PASSED on iPad Pro 13-inch (M5): 54.424 s, /tmp/task-46.6.1-ipad-aligned.{log,xcresult}. Both result bundles report one pass, zero failures/skips. Conditional authorization for a fully visible Question N of M header exception was NOT used; shared helpers match origin/main, and AGENTS.md is unchanged by this task. Started the requested final 12-method lesson-quiz selection (seven existing plus five feedback methods), iPhone then iPad, via nohup /tmp/task-46.6.1-final-targeted.sh. Resumed Apple text-source and test-guard self-test checks pass; the diff against origin/main passes with the coordinator-provided Test-guard-approved: owner decision 2026-10-22 marker (only the existing task-added calls to the approved occluded helper are flagged without approval).
 
 Final iPhone 12-method run finished 7 PASS / 5 FAIL / 0 skipped (xbuild exit 65), /tmp/task-46.6.1-iphone-final.{log,xcresult}; set -e correctly prevented the iPad run. All seven existing methods passed. All five new methods reported Contrast at the unchanged shared helper. Correct dark/light issue screenshots identify the fully visible new lesson-quiz-feedback-status text, Correct 820 / 1 000 = 0.82 A, so only the display unit differs.; screenshot-derived approximate frame x56 y583.667 w286.667 h42 points (Scale=3; the original audit does not log XCUIElement.frame). Both assert full visibility before auditing, and app/element images show pale green on dark green (dark) / dark green on pale green (light), not a header/occlusion. French dark/light issue screenshots identify the fully visible unchanged English prompt (A parts list needs 0.82 A. A meter on the same accessory reads 820 mA. What should the learner conclude?), approximate screenshot-derived x40 y130.667 w312.667 h98.667 points. AX-XXXL again identifies Question 1 of 1, near-black on paper and fully visible at the bottom of the auto-scrolled app screenshot. Failure app/element exports and manifest: /tmp/task-46.6.1-iphone-final-attachments/; mapping and frame derivation: /tmp/task-46.6.1-iphone-final-failure-evidence.json. No exception has been added. Supervisor approved one unchanged retry of just correct dark/light after extracting evidence; launched via nohup /tmp/task-46.6.1-correct-retry.sh. AC3 remains unchecked/In Progress.
+
+2026-10-23 resumed validation (unchanged tests/shared helper; current task branch includes TASK-70):
+
+| Method | iPhone final selection | iPhone unchanged retry |
+|---|---|---|
+| testLessonQuizConceptCheckHasNoHintOrOtherTools | PASSED 23.327 s | not rerun; passed selection |
+| testLessonQuizConceptOptionCorrectDarkAndFullAccessibilityAudit | FAILED 66.157 s | FAILED 86.195 s |
+| testLessonQuizConceptOptionCorrectLightAndFullAccessibilityAudit | FAILED 71.965 s | FAILED 70.330 s |
+| testLessonQuizConceptOptionFeedbackLargestDynamicType | FAILED 189.848 s | PASSED 208.938 s |
+| testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit | FAILED 66.015 s | FAILED 68.058 s |
+| testLessonQuizConceptOptionIncorrectFrenchFallbackLightAndFullAccessibilityAudit | FAILED 65.409 s | PASSED 61.431 s |
+| testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip | PASSED 282.410 s | not rerun; passed selection |
+| testLessonQuizHintsDarkAndFullAccessibilityAudits | PASSED 162.586 s | not rerun; passed selection |
+| testLessonQuizHintsFrenchAndCurrentLessonRoundTrip | PASSED 169.698 s | not rerun; passed selection |
+| testLessonQuizHintsLightAndFullAccessibilityAudits | PASSED 156.592 s | not rerun; passed selection |
+| testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch | PASSED 107.478 s | not rerun; passed selection |
+| testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount | PASSED 115.981 s | not rerun; passed selection |
+
+Standalone unchanged AX-XXXL reruns before this final selection: iPhone PASS 210.917 s; iPad PASS 54.424 s. In the final selection, seven existing methods passed and all five new methods failed Contrast. The one approved unchanged retry per failed method reproduces correct dark/light (86.195 s / 70.330 s) and French dark prompt (68.058 s); AX-XXXL and French light pass on retry. No new source edits/exception; AC3 remains unchecked and task In Progress. Full iPad selection was not launched because iPhone did not pass.
+
+Reproducible issue evidence: correct dark/light both flag the fully visible new feedback status (approx screenshot-derived x56 y583.667 w286.667 h42 pt); French dark flags the fully visible existing English prompt (approx x40 y130.667 w312.667 h98.667 pt). Runtime XCUIElement.frame is not captured by the unchanged helper for unfiltered issues, so these are explicitly approximate frames located by text-mask matching inside the app screenshot, not claimed runtime frames. The element screenshots are byte-identical across original/retry (SHA-256 correct-dark 46f116ed81e0a348a66bc3f39bd65b3b1938779de5004937d25eb1057024bb5d; correct-light b8fc4a925a34004e5b5b0deb9016774c7e90dfe18be023d3097dc759cfff2d65; French-dark 34b38eaed0832a5cf2679d8fb2298a5192716c27b8f6d2cbcf04fe7f20dffe7c). Dominant foreground/background screenshot pixel WCAG calculations are respectively 11.41:1, 8.36:1, and 12.63:1; these document screenshot appearance only and are not a replacement for the full audit.
+
+Evidence: /tmp/task-46.6.1-iphone-{final,correct-retry,remaining-retry}.{log,xcresult}; failure app/element screenshots, descriptions and manifests in matching -attachments directories. Readable copies: /tmp/task-46.6.1-final-{correct-dark,correct-light,french-dark,french-light,largest}-{app,element}.png. Frame/mapping derivation /tmp/task-46.6.1-iphone-final-failure-evidence.json.
+
+Per supervisor, controls are now running on the same iPhone 17 Pro simulator in detached /tmp/canadian-ham-task-46.6.1-main-control at origin/main ba5eb4f5c0ee0ff7477b708b73696474a143a303: existing testLessonQuizHintsLightAndFullAccessibilityAudits and testLessonQuizHintsDarkAndFullAccessibilityAudits. Ordered nohup runner /tmp/task-46.6.1-remaining-retry-and-control.sh; control log/bundle /tmp/task-46.6.1-main-control.{log,xcresult}.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
