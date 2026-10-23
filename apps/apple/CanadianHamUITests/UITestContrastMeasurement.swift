@@ -3,7 +3,7 @@ import XCTest
 
 /// Measures an opaque text-element rendering, not a whole screen or a multi-background view.
 /// Reports the minimum significant foreground ratio; ambiguous backgrounds fail closed.
-/// Blends must border an already retained core and background; retained boundaries must face that background.
+/// Blends must border an already retained core and background; each core component must face that background.
 func measuredTextContrast(in image: CGImage) -> Double? {
     let width = image.width
     let height = image.height
@@ -128,40 +128,140 @@ func measuredTextContrast(in image: CGImage) -> Double? {
         }
     }
 
-    // A dominant colour need not be the text's LOCAL background (e.g. text inside an inset panel).
-    // Inspect boundaries, not filled interiors: thick text/solid blocks may legitimately be wide.
-    // An excluded edge belongs only to the retained core that actually supported its exclusion.
-    let regionKeys = pixelKeys.map { blendCores[$0] ?? $0 }
-    let retainedKeySet = Set(retainedKeys)
-    for key in retainedKeys {
+    // Subthreshold colours never affect the reported ratio, but may supply spatial edge evidence
+    // under the SAME strict blend tests. A support pixel must also be four-connected through
+    // validated blends to an actual background pixel; a panel's unrelated edge is not evidence.
+    var boundarySupportCores = blendCores
+    for key in keys where key != backgroundKey && Double(clusters[key]!.count) < pixelCount * 0.02 {
+        if let core = retainedKeys.first(where: { isAntialiasedEdge(key, toward: $0) }) {
+            boundarySupportCores[key] = core
+        }
+    }
+    var backgroundConnectedBlend = [Bool](repeating: false, count: pixelKeys.count)
+    var pendingBlends: [Int] = []
+    for index in pixelKeys.indices where boundarySupportCores[pixelKeys[index]] != nil {
+        let x = index % width
+        let y = index / width
+        for (column, row) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+            where column >= 0 && column < width && row >= 0 && row < height {
+            if pixelKeys[row * width + column] == backgroundKey {
+                backgroundConnectedBlend[index] = true
+                pendingBlends.append(index)
+                break
+            }
+        }
+    }
+    var blendCursor = 0
+    while blendCursor < pendingBlends.count {
+        let index = pendingBlends[blendCursor]
+        blendCursor += 1
+        let x = index % width
+        let y = index / width
+        for (column, row) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+            where column >= 0 && column < width && row >= 0 && row < height {
+            let neighbor = row * width + column
+            if !backgroundConnectedBlend[neighbor] && boundarySupportCores[pixelKeys[neighbor]] != nil {
+                backgroundConnectedBlend[neighbor] = true
+                pendingBlends.append(neighbor)
+            }
+        }
+    }
+
+    // Four-connected core components stay separate even when they share a colour. Otherwise a
+    // block on cream could lend its supported boundary to low-contrast text inside an inset panel.
+    struct Component {
+        let key: Int
+        var pixelCount = 0
         var boundaryCount = 0
         var backgroundSupportedCount = 0
         var foregroundBorderedCount = 0
-        for index in regionKeys.indices where regionKeys[index] == key {
+    }
+    let retainedKeySet = Set(retainedKeys)
+    var componentIDs = [Int](repeating: -1, count: pixelKeys.count)
+    var components: [Component] = []
+    for seed in pixelKeys.indices where componentIDs[seed] == -1 && retainedKeySet.contains(pixelKeys[seed]) {
+        let key = pixelKeys[seed]
+        let componentID = components.count
+        var pending = [seed]
+        componentIDs[seed] = componentID
+        var cursor = 0
+        while cursor < pending.count {
+            let index = pending[cursor]
+            cursor += 1
             let x = index % width
             let y = index / width
-            let neighbors = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-            var isBoundary = false
-            var bordersForeground = false
-            for (column, row) in neighbors where column >= 0 && column < width && row >= 0 && row < height {
-                let neighbor = regionKeys[row * width + column]
-                isBoundary = isBoundary || neighbor != key
-                bordersForeground = bordersForeground || (neighbor != key && retainedKeySet.contains(neighbor))
-            }
-            guard isBoundary else { continue }
-            boundaryCount += 1
-            if bordersForeground { foregroundBorderedCount += 1 }
-            var bordersBackground = false
-            for row in max(0, y - 2)...min(height - 1, y + 2) {
-                for column in max(0, x - 2)...min(width - 1, x + 2) {
-                    bordersBackground = bordersBackground || pixelKeys[row * width + column] == backgroundKey
+            for (column, row) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+                where column >= 0 && column < width && row >= 0 && row < height {
+                let neighbor = row * width + column
+                if componentIDs[neighbor] == -1 && pixelKeys[neighbor] == key {
+                    componentIDs[neighbor] = componentID
+                    pending.append(neighbor)
                 }
             }
-            if bordersBackground { backgroundSupportedCount += 1 }
         }
-        guard boundaryCount > 0,
-              backgroundSupportedCount * 2 >= boundaryCount,
-              foregroundBorderedCount * 2 <= boundaryCount else { return nil }
+        components.append(Component(key: key, pixelCount: pending.count))
+    }
+
+    // Attach each excluded blend pixel to its nearest supporting CORE component in the same
+    // radius-two neighbourhood used above. Squared-distance ties use the first row-major core
+    // pixel. Never use another blend as support or merge disconnected cores through their blends.
+    for index in pixelKeys.indices {
+        guard let coreKey = blendCores[pixelKeys[index]] else { continue }
+        let x = index % width
+        let y = index / width
+        var nearestComponentID: Int?
+        var nearestDistance = Int.max
+        for row in max(0, y - 2)...min(height - 1, y + 2) {
+            for column in max(0, x - 2)...min(width - 1, x + 2) {
+                let neighbor = row * width + column
+                let distance = (column - x) * (column - x) + (row - y) * (row - y)
+                if pixelKeys[neighbor] == coreKey && distance < nearestDistance {
+                    nearestComponentID = componentIDs[neighbor]
+                    nearestDistance = distance
+                }
+            }
+        }
+        guard let componentID = nearestComponentID else { return nil }
+        componentIDs[index] = componentID
+        components[componentID].pixelCount += 1
+    }
+
+    // A dominant colour need not be the text's LOCAL background. Inspect each component's
+    // boundary, not filled interiors: thick text/solid blocks may legitimately be wide.
+    let regionKeys = pixelKeys.map { blendCores[$0] ?? $0 }
+    for index in pixelKeys.indices where componentIDs[index] >= 0 {
+        let componentID = componentIDs[index]
+        let x = index % width
+        let y = index / width
+        var isBoundary = false
+        var bordersForeground = false
+        for (column, row) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+            where column >= 0 && column < width && row >= 0 && row < height {
+            let neighbor = row * width + column
+            isBoundary = isBoundary || componentIDs[neighbor] != componentID
+            bordersForeground = bordersForeground || (regionKeys[neighbor] != components[componentID].key && retainedKeySet.contains(regionKeys[neighbor]))
+        }
+        guard isBoundary else { continue }
+        components[componentID].boundaryCount += 1
+        if bordersForeground { components[componentID].foregroundBorderedCount += 1 }
+        var bordersBackground = false
+        for row in max(0, y - 2)...min(height - 1, y + 2) {
+            for column in max(0, x - 2)...min(width - 1, x + 2) {
+                let neighbor = row * width + column
+                let isSupportedBlend = backgroundConnectedBlend[neighbor]
+                    && boundarySupportCores[pixelKeys[neighbor]] == components[componentID].key
+                bordersBackground = bordersBackground || pixelKeys[neighbor] == backgroundKey || isSupportedBlend
+            }
+        }
+        if bordersBackground { components[componentID].backgroundSupportedCount += 1 }
+    }
+    // Four native pixels (including assigned blends) suffice, regardless of image area: small
+    // glyphs and dots must count. Only one-to-three-pixel specks skip spatial validation; all
+    // retained clusters still contribute to the minimum contrast ratio below.
+    for component in components where component.pixelCount >= 4 {
+        guard component.boundaryCount > 0,
+              component.backgroundSupportedCount * 2 >= component.boundaryCount,
+              component.foregroundBorderedCount * 2 <= component.boundaryCount else { return nil }
     }
     return retainedKeys.map { contrast(clusters[$0]!) }.min()
 }

@@ -50,17 +50,34 @@ The measurement is deliberately conservative:
    background and that retained core. A discarded middle tone cannot support a
    second exclusion. Colour alone cannot distinguish grey text from an edge
    blend; separate text/solid blocks are not discarded without spatial support.
-4. Validate the **local background at each retained region's boundary**. A
-   region includes only that core and the blends it actually supported. Boundary
-   pixels have an in-image **4-neighbour** outside the region. At least **50%**
-   of boundary pixels must have a background pixel within **two native pixels**
-   in each axis; if **more than 50%** directly border another retained foreground
-   region, return nil even if the background is nearby. A region with no
-   measurable boundary also returns nil. This rejects text inside a small inset
-   panel, rather than comparing it with the surrounding cream. The supervisor
-   approved boundary (not filled-interior) validation to keep thick text, solid
-   blocks and icons on a single background measurable, without increasing the
-   radius or altering existing fixtures.
+4. Validate the **local background at each retained core component's boundary**.
+   Label core pixels with **4-connectivity**, independently per retained colour
+   cluster. Attach each excluded blend pixel to the nearest supporting core
+   pixel's component within the unchanged **two-native-pixel** neighbourhood in
+   each axis; squared-distance ties use the first row-major core pixel. Blends
+   never support another blend assignment or merge disconnected cores.
+   Validate every component containing **at least four native pixels**, including
+   its assigned blends, independently of image area. This small absolute minimum
+   includes glyphs and dots even far below 0.5% coverage; only one-to-three-pixel
+   specks skip spatial validation (not the cluster's ratio calculation).
+   Boundary pixels have an in-image **4-neighbour** outside their component.
+   At least **50%** must have supported background within **two native pixels**
+   in each axis. Support is either an actual background pixel, or a blend toward
+   that component's retained core which is **4-connected**, possibly through
+   other validated blends, to actual background. Clusters below 2% may supply
+   this **spatial evidence only** after passing the **same** fraction ≤0.9,
+   RGB-residual ≤8, and **every-pixel radius-two core AND background** blend
+   checks. They never enter the reported ratio or merge core components. This
+   support is independent of which same-colour component owns an excluded blend
+   pixel, but not of its validated retained core colour. If **more than 50%** of
+   boundary pixels directly border another retained foreground colour region,
+   return nil even if supported background is nearby. A significant component
+   with no measurable boundary also returns nil.
+   A single failing component makes the entire image unmeasurable: a supported
+   block on cream cannot lend its boundary to same-colour inset text. The
+   supervisor approved boundary (not filled-interior) validation to keep thick
+   text, solid blocks and icons on a single background measurable, without
+   increasing the radius or altering existing fixtures.
 5. Compute the WCAG ratio for **every remaining significant foreground** against
    the background and report the **minimum ratio**, not the darkest tone or the
    largest luminance difference. Every remaining tone must therefore meet 4.5:1
@@ -68,8 +85,8 @@ The measurement is deliberately conservative:
    bands or bold headings cannot rescue lower-contrast text.
 
 Uniform images, missing meaningful foreground, ambiguous backgrounds and images
-containing transparent pixels return nil, not a passing ratio. Coverage below
-2% is still not measured; this is a dominant-background text-element heuristic,
+containing transparent pixels return nil, not a passing ratio. Clusters below
+2% still never enter the ratio; this is a dominant-background text-element heuristic,
 not semantic text recognition or a general multiple-local-background audit.
 Native screenshot scale is preserved. Bold 15 pt text at 3× and explicit
 significant edge-band fixtures test the colour/spatial tolerances; the original
@@ -262,7 +279,7 @@ the new handler/default audit at lines 128/136. The same check with
 so XcodeGen regeneration was unnecessary. No PR opened.
 
 
-### Copilot PR #1007 follow-up (2026-10-23, current algorithm)
+### Copilot PR #1007 inset/chained-blend follow-up (2026-10-23, before component fix)
 
 Addressed `PRRT_kwDOUxZq_M6vncjQ` (small inset panel) and
 `PRRT_kwDOUxZq_M6vncj3` (chained blend exclusions). Retained cores are now
@@ -364,3 +381,141 @@ Only the iOS UI-test target is changed; macOS/tvOS/visionOS and full Apple suite
 were skipped. No target membership changed, so XcodeGen was not needed.
 The pre-existing dominant-background, 5-bit clustering and <2% coverage
 limitations remain; this is not general semantic text recognition.
+
+
+### Copilot PR #1007 disconnected-component follow-up (2026-10-23, current)
+
+Addressed `PRRT_kwDOUxZq_M6vn59C`. Colour-wide counters allowed a separate
+correctly contrasted block to mask low-contrast inset text of the same colour.
+Core pixels now have **four-connected component IDs**, and every excluded blend
+pixel is assigned to its nearest supporting core component, not pooled by colour.
+Each component of **at least four native pixels** independently needs the same
+radius-two, **at least 50%** supported boundary and **at most 50%** other-retained
+foreground border. A failing component returns nil for the entire image.
+The minimum-ratio calculation and all existing thresholds/fixtures are unchanged.
+
+Added three regressions:
+
+- `testDisconnectedDarkBlockCannotRescueInsetLowContrastText`: **exactly** the
+  original 100×100 inset-panel fixture plus a **16×40 #201C18 rectangle at
+  (5,10)** on cream. Accepts only nil or <4.5. On the unchanged `3478f40e`
+  helper this **failed**, returning **9.797721859358917:1** despite the inset
+  text's ~1.6324:1 local contrast. Targeted pre-fix xbuild exit **65**, one failed
+  test, zero passed/skipped. Log/bundle: `/tmp/task-71-components-before.log`
+  and `/tmp/task-71-components-before.xcresult`; extracted summary:
+  `/tmp/task-71-components-before-summary.json`.
+- `testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary`: a 2×2 glyph
+  on the inset panel plus the separate cream-backed block must return nil.
+  The glyph is only **0.04%** of the image, proving the four-pixel component
+  minimum does not silently ignore small text when its colour is significant.
+- `testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes`: two
+  1×4 dark strokes on a 10×10 #404040 panel with a one-pixel cream/panel blend
+  border (**0.44%** coverage), plus the separate cream-backed block. Only nil
+  or <4.5 is accepted; the panel's subthreshold edge cannot rescue its text.
+
+#### Screenshot diagnostics and approved refinement
+
+The first four-connected implementation deliberately failed closed on all three
+real screenshots: **25 passed / 3 failed**, exit65, log/bundle
+`/tmp/task-71-components-tests.{log,xcresult}`. Bold and all adversarial proofs
+still passed. Work paused and this was reported rather than loosening rules.
+Native CGImage diagnostics isolated thin equals signs/hyphens, not tiny noise:
+
+| Resource | Core component pixels | Native-pixel bounding box (inclusive) | Boundary pixels | Direct-background support | Other retained / panel / excluded-blend neighbours |
+| --- | ---: | --- | ---: | ---: | --- |
+| feedback dark | 48 | (471,26)–(494,27) | 48 | 4 | 0 / 0 / 0 |
+| feedback dark | 48 | (471,40)–(494,41) | 48 | 4 | 0 / 0 / 0 |
+| feedback light | 48 | (471,40)–(494,41) | 48 | 4 | 0 / 0 / 0 |
+| Try-it light | 32 | (324,33)–(339,34) | 32 | 4 | 0 / 0 / 0 |
+| Try-it light | 32 | (422,33)–(437,34) | 32 | 4 | 0 / 0 / 0 |
+| Try-it light | 32 | (796,33)–(811,34) | 32 | 4 | 0 / 0 / 0 |
+| Try-it light | 32 | (894,33)–(909,34) | 32 | 4 | 0 / 0 / 0 |
+
+All neighbours outside those cores were **sub-2% antialias shades**, so none had
+been classified as excluded blends. `/tmp/task-71-components-diagnostics.log`
+logs every failing component and all adjacent cluster means, keys, counts and
+assigned-core values (none initially). Main adjacent shade pairs, rounded RGB:
+
+- Dark upper stroke: (85,105,86) and (217,238,211), 24 boundary pixels each;
+  dark lower stroke: (185,206,181) and (209,230,204), 24 each.
+- Light stroke: (51,85,53) and (76,107,77), 24 each.
+- Each Try-it hyphen: (50,45,38) and (123,117,107), 16 each.
+
+On escalation, the supervisor explicitly approved **support-only** classification
+of sub-2% clusters under the **identical** fraction≤0.9 / RGB-residual≤8 /
+every-pixel radius-two core-and-background blend rules, plus **four-connected
+reachability to actual background**. Such shades cannot change the minimum
+ratio, join components, or support a different retained colour. The extra
+subthreshold-panel-edge adversarial test above was required and added. No
+8-connectivity, larger radius, lower support share, tiny-component exemption,
+colour tolerance change, or fixture modification was needed.
+
+The refined host diagnostics in
+`/tmp/task-71-components-support-diagnostics.log` show **48/48** and **32/32**
+supported boundary pixels for all seven formerly failing components, with no
+other-retained borders. The three images were also visually inspected unchanged.
+
+#### Final targeted iPhone results
+
+```sh
+nohup bash /tmp/task-71-components-final.sh > /tmp/task-71-components-final.log 2>&1 < /dev/null &
+# Script exports DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer and runs:
+xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam \
+  -testPlan CanadianHamDefault \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -only-testing:CanadianHamUITests/UITestContrastMeasurementTests \
+  -resultBundlePath /tmp/task-71-components-final.xcresult \
+  test CODE_SIGNING_ALLOWED=NO
+```
+
+Polled with grep; no builds were killed. **29 passed, 0 failed, 0 skipped**,
+exit **0**, class elapsed **23.466 s**. All **26 previous test methods** are
+unchanged. Destination iPhone 17 Pro, iOS 27.0. Extracted summary:
+`/tmp/task-71-components-final-summary.json`; keepAlways attachments:
+`/tmp/task-71-components-proof-attachments/`.
+
+| Test (`UITestContrastMeasurementTests`) | Result | Seconds |
+| --- | --- | ---: |
+| `testAntialiased15PointBoldEdgeCoverageAt3x` | PASS | 0.876 |
+| `testAntialiased15PointBoldMixedContrastLinesFailAt3x` | PASS | 0.954 |
+| `testAntialiased15PointLowContrastTextStillFails` | PASS | 0.399 |
+| `testAntialiased15PointTextMeasuresExpectedContrast` | PASS | 3.427 |
+| `testBlackOffscreenBandDoesNotRescueMidGreyText` | PASS | 0.686 |
+| `testChainedBlendsCannotUseAnExcludedCore` | PASS | 2.365 |
+| `testContrastMeasurementRejectsInvisibleFrames` | PASS | 0.093 |
+| `testDarkIconDoesNotRescueMidGreyText` | PASS | 0.446 |
+| `testDisconnectedDarkBlockCannotRescueInsetLowContrastText` | PASS | 0.072 |
+| `testEqualLargeTonesAreUnmeasurable` | PASS | 0.074 |
+| `testExportedCorrectFeedbackDarkPasses` | PASS | 0.866 |
+| `testExportedCorrectFeedbackLightPasses` | PASS | 6.223 |
+| `testExportedTryItParagraphLightPasses` | PASS | 1.463 |
+| `testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary` | PASS | 0.076 |
+| `testInsetPanelCannotUseTheSurroundingCreamAsTextBackground` | PASS | 0.075 |
+| `testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText` | PASS | 0.078 |
+| `testMidGreyOnCreamFails` | PASS | 0.090 |
+| `testNearBlackOnCreamPasses` | PASS | 0.134 |
+| `testOnlyTinyForegroundIsUnmeasurable` | PASS | 0.080 |
+| `testPaleOnDarkGreenPasses` | PASS | 0.082 |
+| `testSignificantAntialiasedEdgeBandsMeasureCoreContrast` | PASS | 0.144 |
+| `testSignificantNearBackgroundNoiseIsUnmeasurable` | PASS | 1.158 |
+| `testSignificantNearBlackAndMidGreyBlocksDoNotPass` | PASS | 0.644 |
+| `testSolidBlendColourIsNotMistakenForAntialiasing` | PASS | 0.340 |
+| `testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes` | PASS | 0.296 |
+| `testTinyHighContrastTailDoesNotRescueLowContrastText` | PASS | 0.302 |
+| `testTransparentImageIsUnmeasurable` | PASS | 0.272 |
+| `testTwoTonePanelWithDarkTextIsUnmeasurable` | PASS | 0.620 |
+| `testUniformImageIsUnmeasurable` | PASS | 1.131 |
+
+Real screenshot measurements are again **non-nil and unchanged**:
+**8.344323837747055:1** (feedback light), **11.403364958858397:1** (feedback dark),
+and **16.336427704401043:1** (Try-it light). Actual bold 15pt 3× edge coverage
+remains **2.6667%**, ratio **15.9942758247219:1**. The significant synthetic AA
+bands, mixed bold lines, icon/text, inset panel, chained blends, mixed-background
+fixture, and all earlier adversarial proofs pass without changing assertions.
+
+No changed-source Swift warnings/errors; only the unrelated AppIntents metadata
+warning. No live app launch/audit integration was added. Full iOS suites and
+macOS/tvOS/visionOS were skipped because only the iOS UI-test target changed.
+No target membership changed, so XcodeGen was unnecessary. The dominant-background,
+5-bit-cluster and <2%-ratio-coverage heuristic limitations still apply; this is
+not semantic text recognition or proof of all possible local backgrounds.

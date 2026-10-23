@@ -137,6 +137,51 @@ final class UITestContrastMeasurementTests: XCTestCase {
         }
     }
 
+    func testDisconnectedDarkBlockCannotRescueInsetLowContrastText() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1)) // #404040.
+        context.fill(CGRect(x: 30, y: 30, width: 40, height: 40))
+        context.setFillColor(nearBlack) // #201C18, both inside the panel and separately on cream.
+        context.fill(CGRect(x: 42, y: 40, width: 16, height: 20))
+        context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        // The separate block's supported boundary cannot rescue the inset text's 1.63:1 contrast.
+        if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
+    func testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 30, y: 30, width: 40, height: 40))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 49, y: 49, width: 2, height: 2)) // Only 0.04% of the image, but significant.
+        context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        // A one-pixel cream/#404040 blend around a small inset panel: only 0.44% coverage.
+        context.setFillColor(CGColor(srgbRed: 159.5 / 255, green: 156.0 / 255, blue: 148.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 29, y: 29, width: 12, height: 12))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 30, y: 30, width: 10, height: 10))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 33, y: 33, width: 1, height: 4))
+        context.fill(CGRect(x: 36, y: 33, width: 1, height: 4))
+        context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
     func testAntialiased15PointBoldMixedContrastLinesFailAt3x() throws {
         let image = try renderedLines([nearBlack, midGrey], bold: true)
         let ratio = try XCTUnwrap(measuredTextContrast(in: image))
