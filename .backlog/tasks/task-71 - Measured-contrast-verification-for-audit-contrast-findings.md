@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:19'
+updated_date: '2026-10-23 13:20'
 labels:
   - accessibility
   - tests
@@ -43,6 +43,8 @@ Owner-delegated decision 2026-10-22 (owner: make the best decisions you can). XC
 8. Copilot PR #1007: add exact inset-panel (84% cream/12.8% #404040/3.2% #201C18) and chained-blend (#908A80/#58534C/#201C18, x/x+2/x+4, 3.2% each) regressions; run both against the previous implementation through nohup/xbuild with grep polling to prove failures.
 9. Select foreground cores in descending distance from background luminance; exclude blends only against already retained cores with fraction <=0.9. Require >=50% of each retained cluster to be within three native pixels of the background; reject foreground-dominated local neighborhoods as ambiguous. Keep all existing tests including real screenshots and bold edges.
 10. Run the complete targeted proof class on iPhone 17 Pro, inspect screenshot evidence, document results, commit/push, and reply to/resolve both Copilot threads via GraphQL.
+
+Supervisor clarification for step9: validate retained-cluster BOUNDARY pixels (4-neighbour boundary, treating that cores excluded antialias blends as the same region), not every filled pixel. Require >=50% of boundary pixels near background within radius2; reject boundaries dominated by another retained foreground. This preserves all original thick synthetic blocks/icons without increasing radius or altering any fixtures.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -65,6 +67,8 @@ Guard self-test passed; unapproved main...HEAD correctly failed(exit1) at handle
 Coordinator, after the re-review (approve with notes): closed the mutual-blend gap. A cluster is an antialiasing blend only toward a core with fraction <= 0.9, so two near-identical colours across a 5-bit bin boundary cannot each drop the other. New regression testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText fails with the old rule (exit 65) and passes with the fix. iPhone 17 Pro UITestContrastMeasurementTests 24/24 passed.
 
 Reopened only for the two user-confirmed Copilot findings PRRT_kwDOUxZq_M6vncjQ and PRRT_kwDOUxZq_M6vncj3; conservative spatial background validation and retained-core ordering, no scope widening.
+
+Pre-fix proof on original helper e2ea6e06: both exact new regressions FAILED as expected on iPhone17Pro (xbuild exit65). Chained blends returned15.9942758247219:1 instead of low3.24; inset panel returned9.797721859358917:1 although text/panel1.63. Log/tmp/task-71-copilot-regressions-before.log; bundle/tmp/task-71-copilot-regressions-before.xcresult. Used nohup and grep polling; no builds killed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
