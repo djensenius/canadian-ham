@@ -1,11 +1,11 @@
 ---
 id: TASK-46.5
 title: Try it answers hidden until revealed (retrieval practice)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 18:26'
+updated_date: '2026-10-23 19:08'
 labels:
   - content
   - web
@@ -26,7 +26,7 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 <!-- AC:BEGIN -->
 - [x] #1 Answers are hidden by default and revealed by an accessible control (keyboard, VoiceOver, screen readers; the state is announced)
 - [x] #2 All lessons converted; the content checker validates the format
-- [ ] #3 Full default accessibility audits pass in light and dark on every platform that renders lessons
+- [x] #3 Full default accessibility audits pass in light and dark on every platform that renders lessons
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -154,10 +154,304 @@ No PR. Prior macOS localization, tvOS/visionOS light/dark audits and web/content
 - content/lessons/m7-propagation/l-007-03-vhf-uhf-and-unusual-modes.md
 - content/lessons/m8-interference-suppression/l-008-01-receiver-device-interference-and-filters.md
 - content/lessons/m8-interference-suppression/l-008-02-transmitter-emissions-and-harmonics.md
+
+TASK-73 rounded-control resume FINAL GREEN (2026-10-23; supersedes prior paused/blocked handoffs):
+Merged/pushed origin/main1a183cfa (#1012) via ddb4030c; preserved both TASK-71/TASK-73 rounded-control guidance and the approved TASK-46.5 iPad light limitation in AGENTS. Preserved both independently added localization test methods; Backlog-only TASK-65 conflict kept branch version under repository merge policy. Local composite helper change5910491d uses exactly the same controlTextContrastMeasurement, native scale, elementType==.button gate and measurement.logDescription as auditVerifyingMeasuredContrast. Local occlusion branch is a verbatim shared-helper copy; all198 pre-branch Practice test/helper functions and shared measurement source are byte-identical to origin/main1a183cfa (scope proof /tmp/task-46.5-rounded-v1-source-scope.log). No production or shared-helper edits in this resume.
+All requested serial nohup xbuild commands passed, including two independent iPhone light runs. Exact commands: /tmp/task-46.5-rounded-v1-validation.sh; status /tmp/task-46.5-rounded-v1-status.log ends FINAL_EXIT=0. All UI result bundles preserved in /tmp and attachments exported to matching -attachments directories. No build/process was killed; ordinary lock waits respected. Per-test results:
+- iphone-light-1: CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityLight PASS 260.205s; log /tmp/task-46.5-rounded-v1-iphone-light-1.log; bundle /tmp/task-46.5-rounded-v1-iphone-light-1.xcresult
+- iphone-light-2: CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityLight PASS 260.877s; log /tmp/task-46.5-rounded-v1-iphone-light-2.log; bundle /tmp/task-46.5-rounded-v1-iphone-light-2.xcresult
+- iphone-dark: CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityDark PASS 239.976s; log /tmp/task-46.5-rounded-v1-iphone-dark.log; bundle /tmp/task-46.5-rounded-v1-iphone-dark.xcresult
+- iphone-french: CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealFrenchLabelsAndState PASS 170.975s; log /tmp/task-46.5-rounded-v1-iphone-french.log; bundle /tmp/task-46.5-rounded-v1-iphone-french.xcresult
+- ipad-light: CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityLight PASS 67.203s; log /tmp/task-46.5-rounded-v1-ipad-light.log; bundle /tmp/task-46.5-rounded-v1-ipad-light.xcresult
+- ipad-dark: CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityDark PASS 124.472s; log /tmp/task-46.5-rounded-v1-ipad-dark.log; bundle /tmp/task-46.5-rounded-v1-ipad-dark.xcresult
+- ipad-french: CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealFrenchLabelsAndState PASS 71.480s; log /tmp/task-46.5-rounded-v1-ipad-french.log; bundle /tmp/task-46.5-rounded-v1-ipad-french.xcresult
+English light on iPad keeps the already-approved TASK-73 no-audit path with every reveal/visibility/state assertion. English light twice on iPhone and largest-Dynamic-Type dark on both devices retain full default collapsed/expanded audits. The existing French method is reveal/labels/state coverage, not an audit; it is unchanged. No new skip, assertion change, positioning change, exception, or audit narrowing in this resume.
+Logged measured findings below include original full-image ratios, final measured ratios, crop-used flags and pixel insets. All keepAlways attachments; threshold remains >=4.5:1. iPhone Hide answer1:1.1993729121750754:1 ->13.620392055674973:1 with18px horizontal/6px vertical crop in both light runs. Show answer2:1.1993750921574988:1 ->13.620392186551232:1 with the same crop. Other iPhone light text16.336427557064553–16.336427704401043:1 without crop; iPad dark12.628944545731066–12.629133347776998:1 without crop. No failed/unmeasurable finding was ignored.
+- iphone-light-1: label=The second is 28.2 MHz, in HF; the third is 42.3 MHz, in VHF. frame=(24.166666666666657, 511.33333333333303, 354.3333435058594, 74.33333587646484) ratio=16.336427557064553:1 fullImageRatio=16.336427557064553:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/1EC0EDED-38B4-490C-9792-6DF4B860B150.txt
+- iphone-light-1: label=Hide answer 1 frame=(40.16666666666666, 465.0, 150.66666666666669, 50.33333333333303) ratio=13.620392055674973:1 fullImageRatio=1.1993729121750754:1 cropUsed=true cropInsetsPixels=horizontal=18.0 vertical=6.0; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/2190F952-47E0-4DB7-BA4C-76156A01D95A.txt
+- iphone-light-1: label=What rough power ratio matches a rise of about 7 dB? frame=(63.333333333333336, 581.5925925925922, 298.33333333333337, 42.33333333333303) ratio=16.336427704401043:1 fullImageRatio=16.336427704401043:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/5909ACC0-8CCB-41CD-9EA8-F81671EAD238.txt
+- iphone-light-1: label=Show answer 2 frame=(40.16666666666666, 636.0, 160.0, 50.33333333333303) ratio=13.620392186551232:1 fullImageRatio=1.1993750921574988:1 cropUsed=true cropInsetsPixels=horizontal=18.0 vertical=6.0; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/7C1FF33B-AF89-4DDD-953E-8BF56509CBC1.txt
+- iphone-light-1: label=Try these before reading the feedback below. frame=(40.0, 404.2592592592591, 219.33333333333326, 42.33333333333303) ratio=16.336427704401043:1 fullImageRatio=16.336427704401043:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/F04477EB-8B68-4805-B7C1-1F788CE24EAD.txt
+- iphone-light-2: label=What rough power ratio matches a rise of about 7 dB? frame=(63.333333333333336, 581.5925925925922, 298.33333333333337, 42.33333333333303) ratio=16.336427704401043:1 fullImageRatio=16.336427704401043:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/052350B3-039E-4431-AF92-05666FB93404.txt
+- iphone-light-2: label=Show answer 2 frame=(40.16666666666666, 636.0, 160.0, 50.33333333333303) ratio=13.620392186551232:1 fullImageRatio=1.1993750921574988:1 cropUsed=true cropInsetsPixels=horizontal=18.0 vertical=6.0; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/0EF149ED-832E-47D0-9CCC-15FB6915612F.txt
+- iphone-light-2: label=The second is 28.2 MHz, in HF; the third is 42.3 MHz, in VHF. frame=(24.166666666666657, 511.33333333333303, 354.3333435058594, 74.33333587646484) ratio=16.336427557064553:1 fullImageRatio=16.336427557064553:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/A93EF97C-60EF-418F-9D7A-41F48A25C2A8.txt
+- iphone-light-2: label=Try these before reading the feedback below. frame=(40.0, 404.2592592592591, 219.33333333333326, 42.33333333333303) ratio=16.336427704401043:1 fullImageRatio=16.336427704401043:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/C45C92E3-BCCF-4945-BEC2-C1C74FC7EB44.txt
+- iphone-light-2: label=Hide answer 1 frame=(40.16666666666666, 465.0, 150.66666666666669, 50.33333333333303) ratio=13.620392055674973:1 fullImageRatio=1.1993729121750754:1 cropUsed=true cropInsetsPixels=horizontal=18.0 vertical=6.0; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/FA6D8BD0-6FC8-4A9A-8F7F-967118BB8B5C.txt
+- ipad-dark: label=• frame=(76.0, 949.9055555555551, 23.5, 63.5) ratio=12.629111764231077:1 fullImageRatio=12.629111764231077:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/0BCF148E-D220-4DDA-9FDA-9D76AC92B771.txt
+- ipad-dark: label=Mistaken idea: phase and polarity are two names for the same thing. frame=(107.5, 816.4055555555551, 836.5, 125.5) ratio=12.629133347776998:1 fullImageRatio=12.629133347776998:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/3A850573-3FC0-4DE2-B32F-073FB50A6F06.txt
+- ipad-dark: label=Correction: phase is timing between AC waveforms. DC polarity is positive and negative direction. frame=(107.5, 949.9055555555551, 839.0, 187.5) ratio=12.629100476877243:1 fullImageRatio=12.629100476877243:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/464CB02E-6DC4-4B71-8065-5088CB38BC49.txt
+- ipad-dark: label=• frame=(76.0, 816.4055555555551, 23.5, 63.5) ratio=12.629111764231077:1 fullImageRatio=12.629111764231077:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/48054C27-34E3-4BAF-B0ED-2EDE216C8ED6.txt
+- ipad-dark: label=Decibels as power ratios frame=(76.0, 1120.405555555555, 645.0, 67.0) ratio=12.628944545731066:1 fullImageRatio=12.628944545731066:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/6362E6EE-E90C-4901-A707-6805E56E66E1.txt
+- ipad-dark: label=Mistaken idea: phase and polarity are two names for the same thing. frame=(107.5, 787.4055555555551, 836.5, 125.5) ratio=12.629133347776998:1 fullImageRatio=12.629133347776998:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/75620AE3-665E-47C6-9284-A4D6394571D8.txt
+- ipad-dark: label=• frame=(76.0, 787.4055555555551, 23.5, 63.5) ratio=12.629111764231077:1 fullImageRatio=12.629111764231077:1 cropUsed=false cropInsetsPixels=none; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/AA0F48FE-8AD1-4A34-8708-F7468EBDA79A.txt
+Approved original occlusion-rule findings (not measurement exceptions; ratio N/A), all keepAlways:
+- iphone-light-1: label=• frame=x: 40.0, y: 91.59259259259215, width: 8.0, height: 20.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/36EC1046-7F15-498E-B147-6D5D12660EC1.txt
+- iphone-light-1: label=• frame=x: 40.0, y: 93.92592592592518, width: 8.0, height: 20.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/710DA1F7-AEED-4731-8718-3C6AC71797B5.txt
+- iphone-light-1: label=Complete: new report = S9 plus (19 - ___) dB = S9 plus ___ dB. frame=x: 56.0, y: 91.59259259259215, width: 285.6666666666667, height: 42.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/80545887-06C6-4A32-9B84-32AB4FE57F46.txt
+- iphone-light-1: label=Sanity check: Is the report lower while still above S9? frame=x: 56.0, y: 93.92592592592518, width: 292.0, height: 42.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-light-1-attachments/ED19DBEC-FAF6-4AD6-B66C-FE2868CD83F4.txt
+- iphone-light-2: label=• frame=x: 40.0, y: 91.59259259259215, width: 8.0, height: 20.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/76ABB59C-D9F3-45BF-9CE5-533252878452.txt
+- iphone-light-2: label=• frame=x: 40.0, y: 93.92592592592518, width: 8.0, height: 20.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/8F484B59-B6C3-48C1-8F1D-161019A268F2.txt
+- iphone-light-2: label=Complete: new report = S9 plus (19 - ___) dB = S9 plus ___ dB. frame=x: 56.0, y: 91.59259259259215, width: 285.6666666666667, height: 42.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/C6D7F64F-6498-4029-AA7C-A9ACD4ACA9C9.txt
+- iphone-light-2: label=Sanity check: Is the report lower while still above S9? frame=x: 56.0, y: 93.92592592592518, width: 292.0, height: 42.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-light-2-attachments/CD6A7334-F824-4A2B-BA6D-8F7E91EBAD34.txt
+- iphone-dark: label=Try these before reading the feedback below. frame=x: 40.0, y: 32747.925925925916, width: 322.33333333333326, height: 249.3333333333394 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-dark-attachments/995333F8-DEF2-43BD-89C7-DF37027C0846.txt
+- iphone-dark: label=Which ranges contain the second and third harmonics of 14.1 MHz? frame=x: 85.0, y: 32961.259259259255, width: 273.0, height: 497.33333333333576 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-iphone-dark-attachments/E1609EE7-4BFB-469E-9E0B-05C025B823BC.txt
+- ipad-dark: label=Phase describes timing between waveforms. A pair of AC signals may have the same frequency but not start their cycles at the same instant; that timing difference is phase. frame=x: 76.0, y: -159.5944444444449, width: 856.0, height: 311.5 visibleScrollArea=x: 0.0, y: 86.0, width: 1032.0, height: 1290.0 scrollFrame=x: 0.0, y: 0.0, width: 1032.0, height: 1376.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/A969C161-DF64-4737-86A8-BDC7630147D6.txt
+- ipad-dark: label=Phase describes timing between waveforms. A pair of AC signals may have the same frequency but not start their cycles at the same instant; that timing difference is phase. frame=x: 76.0, y: -188.5944444444449, width: 856.0, height: 311.5 visibleScrollArea=x: 0.0, y: 86.0, width: 1032.0, height: 1290.0 scrollFrame=x: 0.0, y: 0.0, width: 1032.0, height: 1376.0 matchedScrollDescendant=true; attachment=/tmp/task-46.5-rounded-v1-ipad-dark-attachments/AD6C740A-BEA7-4EB0-95DB-532E1208749F.txt
+Documented macOS unit command PASS215/215,0 failures16.497s (16.573s outer test-suite duration); builds the UI-test target successfully. Log /tmp/task-46.5-rounded-v1-mac.log; bundle /tmp/task-46.5-rounded-v1-mac.xcresult. Full per-test results below.
+Independent checks PASS: pnpm check:apple-l10n (French export + generic tvOS/visionOS builds; catalogue unchanged); node scripts/check-apple-text-sources.ts; node scripts/check-test-guard.mjs --self-test; TEST_GUARD_PR_BODY="Test-guard-approved: owner decision 2026-10-22" node scripts/check-test-guard.mjs --base origin/main --head HEAD; git diff --check. Logs /tmp/task-46.5-rounded-v1-{l10n,text-sources,test-guard-self,test-guard,diff-check}.log. Known Node module-type and Xcode catalogue warnings remain nonfatal. PR will also cite task-73; no PR opened.
+AC3 now verified under the expressly approved TASK-73 iPad-light limitation and existing platform evidence: prior tvOS Try-it focus/select full light/dark audits PASS77.169s and visionOS collapsed/expanded full light/dark audits PASS86.354s; not rerun because only iOS UI-test-local logic changed this resume (l10n generic builds for both passed). Web/content/package results remain those recorded earlier; no changes in this resume. No full iOS suites, title sweeps or figure plan run; coordinator owns merge-batch suites and CanadianHamLessonFigures for all31 changed figure-directive lessons. Reconfirmed31 paths in /tmp/task-46.5-rounded-v1-figure-lessons.txt; copied below. Remove the English light iPad audit limitation once TASK-73 supports safe2x thin-stroke measurement. Independent review still required.
+Full macOS unit per-test results (PASS):
+- CanadianHamTests.DuoLayoutPolicyTests testCompactWidthIPhoneKeepsSheetPolicy: PASS 0.001s
+- CanadianHamTests.DuoLayoutPolicyTests testForcedRegularIPhoneLandscapeKeepsSheetPolicyWhenVerticalIsCompact: PASS 0.001s
+- CanadianHamTests.DuoLayoutPolicyTests testIPadInspectorRuleRemainsSizeClassDriven: PASS 0.000s
+- CanadianHamTests.DuoLayoutPolicyTests testMacAndOtherIdiomsNeverUseIPhonePolicy: PASS 0.000s
+- CanadianHamTests.DuoLayoutPolicyTests testNilVerticalSizeClassDoesNotBlockRegularWidthIPhonePolicy: PASS 0.000s
+- CanadianHamTests.DuoLayoutPolicyTests testRegularWidthIPhoneUsesUnfoldedInspectorPolicyWhenVerticalIsNotCompact: PASS 0.004s
+- CanadianHamTests.ExamCalculatorViewModelTests testCalculatorToolLayoutCanRepresentFittingContentWithAndWithoutHelp: PASS 0.001s
+- CanadianHamTests.ExamCalculatorViewModelTests testCalculatorToolLayoutFittingCandidatesPreferLargeKeysBeforeMinimumKeys: PASS 0.002s
+- CanadianHamTests.ExamCalculatorViewModelTests testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere: PASS 0.001s
+- CanadianHamTests.ExamCalculatorViewModelTests testCalculatorToolLayoutUsesExplicitScrollingModeWithoutHeightThresholds: PASS 0.000s
+- CanadianHamTests.ExamCalculatorViewModelTests testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes: PASS 0.001s
+- CanadianHamTests.ExamCalculatorViewModelTests testClearForNewExamResetsCurrentCalculationButKeepsRequestedLocale: PASS 0.002s
+- CanadianHamTests.ExamCalculatorViewModelTests testFrenchLocaleUsesFrenchDecimalDisplayAndSpokenString: PASS 0.001s
+- CanadianHamTests.ExamCalculatorViewModelTests testKeyHandlingProducesEngineDisplayAndSpokenResult: PASS 0.001s
+- CanadianHamTests.ExamCalculatorViewModelTests testOfficialReferenceSheetGateAndBundledPages: PASS 0.001s
+- CanadianHamTests.ExamCalculatorViewModelTests testQuestionCardFocusResetKeepsTextSelectionEnabled: PASS 0.004s
+- CanadianHamTests.ExamCalculatorViewModelTests testReferenceSheetLoaderReturnsNilWhenBundledFileIsMissingAndLoadsBasicSheet: PASS 0.001s
+- CanadianHamTests.ExamCalculatorViewModelTests testUpdateLocaleRefreshesDisplayAndSpokenStringImmediately: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testApplyPracticeAnswerSubmitsAnsweredWithHelpToEngine: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekEligibilityAllowsPracticeReviewLaterButNeverMockExamOrScoredImmediateAnswer: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekEndsWhenPhoneFullyOpensOrCloses: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekFastUnfoldThroughBandNeverPeeks: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekLeavingToleranceDoesNotResetDismissalSuppression: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekPresentationAppearanceAllowsCurrentResetToClearSuppression: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekPresentationClosesPeekOpenedHintOnQuestionChangeAndRequiresFreshDwell: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekPresentationDismissalSuppressesReopenUntilReset: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekPresentationImmediateAnswerEndsEligibility: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekPresentationKeepsButtonOpenedHintOpenOnReset: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekPresentationLifecycleKeepsDismissalSuppressionAcrossDisappear: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekPresentationStartsOnlyOnceUntilPostureReset: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekRecheckPeeksWithoutNewSamples: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekRequiresStableDwellInSlightOpenBand: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekSlowCloseThroughBandNeverPeeks: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekStartsOnlyInsideRealBandAndDoesNotUseEdgeJitterBeforePeek: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekToleratesSmallJitterOnlyAfterPeekStarts: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHingePeekUnavailableSampleDoesNotResetDismissalSuppression: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHintQualificationMarksUnansweredQuestionAsQualifiedOnly: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testHintVisibilityTimerCancelsShortPeekBeforeRecordingHelp: PASS 0.390s
+- CanadianHamTests.HintSessionStateTests testHintVisibilityTimerDoesNotQualifyShortPeekRoute: PASS 0.292s
+- CanadianHamTests.HintSessionStateTests testImmediateModeHintAfterScoredAnswerDoesNotRecordHelp: PASS 0.003s
+- CanadianHamTests.HintSessionStateTests testReferencePointerRuleShowsOnlyWhenReferenceSheetIsAvailable: PASS 0.003s
+- CanadianHamTests.HintSessionStateTests testReviewLaterHintAfterSelectionRecordsHelp: PASS 0.003s
+- CanadianHamTests.HintSessionStateTests testSelectingAfterQualifiedHintRecordsHelpForReviewLaterSubmission: PASS 0.001s
+- CanadianHamTests.HintSessionStateTests testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange: PASS 2.657s
+- CanadianHamTests.LocalizationCatalogTests testConceptCheckAnswerStatusFrenchAndFallbackLanguageMetadata: PASS 0.004s
+- CanadianHamTests.LocalizationCatalogTests testConceptCheckAnswerStatusLegacyChoiceAndNoDisclosureBeforeSelection: PASS 0.002s
+- CanadianHamTests.LocalizationCatalogTests testConceptCheckAnswerStatusMapsShuffledSourceChoices: PASS 0.002s
+- CanadianHamTests.LocalizationCatalogTests testConceptCheckFeedbackFocusRequestOnlyAfterChoosingNotPreviousOrNext: PASS 0.002s
+- CanadianHamTests.LocalizationCatalogTests testEveryCatalogKeyHasFrenchTranslations: PASS 0.014s
+- CanadianHamTests.LocalizationCatalogTests testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries: PASS 0.005s
+- CanadianHamTests.LocalizationCatalogTests testLanguagePreferenceResolvesSystemAndOverrides: PASS 0.001s
+- CanadianHamTests.LocalizationCatalogTests testLocalizedNullableTextAndLanguageFallsBackToEnglish: PASS 0.001s
+- CanadianHamTests.LocalizationCatalogTests testQuestionBankLoadErrorDescriptionUsesFrenchLocale: PASS 0.004s
+- CanadianHamTests.LocalizationCatalogTests testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testCompletedMorseCourseSessionIgnoresResubmittedAnswer: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testFixedTimingProfilesUseEngineValues: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testLessonBodyAndBulletContrastTokensMeetMinimumRatio: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseAudioDriverSendingRestartDetachesStoppedSourceAndBalancesSession: PASS 1.654s
+- CanadianHamTests.MorseTrainerTests testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseAudioSessionStaysActiveUntilLastPlayerReleases: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone: PASS 0.002s
+- CanadianHamTests.MorseTrainerTests testMorseCourseProgressIgnoresStoredProgressForAnotherCourse: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseExamGeneratorMeetsReceivingExamConstraints: PASS 0.003s
+- CanadianHamTests.MorseTrainerTests testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorsePressKeyButtonAccessibilityActionsTriggerConfiguredKeying: PASS 0.003s
+- CanadianHamTests.MorseTrainerTests testMorseSendingClassifiesTimingAndErrorSignal: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseSendingKeyerClassifiesPressWhenAudioFails: PASS 0.004s
+- CanadianHamTests.MorseTrainerTests testMorseSendingKeyerClassifiesRecordedEventsWhileAudioStartupIsSuspended: PASS 0.002s
+- CanadianHamTests.MorseTrainerTests testMorseSendingKeyerLeavingDuringFailedPreparationDoesNotReportStaleError: PASS 0.105s
+- CanadianHamTests.MorseTrainerTests testMorseSendingKeyerLeavingDuringPreparationDoesNotStartALateTone: PASS 0.005s
+- CanadianHamTests.MorseTrainerTests testMorseSendingKeyerReleaseCannotBeSupersededBySilence: PASS 0.004s
+- CanadianHamTests.MorseTrainerTests testMorseSendingKeyerReportsPreparationFailureAfterKeyUpAndClassifiesPress: PASS 0.004s
+- CanadianHamTests.MorseTrainerTests testMorseSendingKeyerSuccessfulPrepareDoesNotClearEarlierAudioError: PASS 0.109s
+- CanadianHamTests.MorseTrainerTests testMorseSendingPendingFinalizationHelperCancelsAndClears: PASS 0.002s
+- CanadianHamTests.MorseTrainerTests testMorseSendingRemainingExamSecondsUsesFixedDeadline: PASS 0.003s
+- CanadianHamTests.MorseTrainerTests testMorseSendingScoreCountsTimeoutOnlyThroughMissingCharacters: PASS 0.003s
+- CanadianHamTests.MorseTrainerTests testMorseSettingsClampAndPreset: PASS 0.002s
+- CanadianHamTests.MorseTrainerTests testMorseSettingsCodableRoundTripPreservesOutputMode: PASS 0.002s
+- CanadianHamTests.MorseTrainerTests testMorseSettingsDecodesLegacyPayloadWithIsEnabled: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast: PASS 0.008s
+- CanadianHamTests.MorseTrainerTests testMorseSettingsRoundTripThroughUserDefaults: PASS 0.004s
+- CanadianHamTests.MorseTrainerTests testMorseStopDelayDrainsFadeBeforeStoppingEngine: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess: PASS 0.056s
+- CanadianHamTests.MorseTrainerTests testReduceFlashingDecisionUsesInjectedFlags: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testReduceFlashingStopsOnlyRunningVisualBeacon: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testScheduleMorseVisualPlaybackInitialStateAndFallback: PASS 0.001s
+- CanadianHamTests.MorseTrainerTests testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess: PASS 0.037s
+- CanadianHamTests.ProgressStoreTests testAdvancedImportKeepsBasicProgressExamsAndLessonsThenBasicImportKeepsAdvancedProgress: PASS 0.072s
+- CanadianHamTests.ProgressStoreTests testAdvancedImportRejectsHonoursAttempts: PASS 0.022s
+- CanadianHamTests.ProgressStoreTests testAppleInterfaceLanguagePreferenceWritesAppleLanguagesForNextLaunch: PASS 0.003s
+- CanadianHamTests.ProgressStoreTests testAppSettingsModelPublishesMorseSettingsForRootViewSync: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testAppSettingsModelReplacementRevisionAdvancesForLocalDataReplacement: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testAppSettingsModelTracksUnfinishedCourseWorkAcrossRegisteredWindows: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testCorruptLegacyMorseCourseProgressJSONDoesNotBlockOpeningStore: PASS 0.027s
+- CanadianHamTests.ProgressStoreTests testDecodesLegacyBasicExportWithoutBankIdFields: PASS 0.029s
+- CanadianHamTests.ProgressStoreTests testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme: PASS 0.029s
+- CanadianHamTests.ProgressStoreTests testDefaultLayoutResetDoesNotWriteGatedLegacyCopyMarker: PASS 0.017s
+- CanadianHamTests.ProgressStoreTests testExportDeduplicatesSyncedDuplicatesAndBankScopedSubmittedAt: PASS 0.055s
+- CanadianHamTests.ProgressStoreTests testFreshInstallDefaultsLanguageToSystem: PASS 0.010s
+- CanadianHamTests.ProgressStoreTests testICloudAccountSignalsUseInitInjectedFactory: PASS 0.064s
+- CanadianHamTests.ProgressStoreTests testICloudAccountTeardownUsesInjectedFactoryAndRestoresLocalSnapshot: PASS 0.026s
+- CanadianHamTests.ProgressStoreTests testICloudDeleteCanDeleteLocalDataAfterZoneDelete: PASS 0.026s
+- CanadianHamTests.ProgressStoreTests testICloudDeleteStopsSyncBeforeDeletingZoneAndKeepsLocalWithoutReupload: PASS 0.135s
+- CanadianHamTests.ProgressStoreTests testICloudMergeFixtureIsPermutationIndependentAndIdempotent: PASS 0.004s
+- CanadianHamTests.ProgressStoreTests testICloudSyncConfigurationPlanDefaultsOffAndKeepsPreferencesLocal: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testICloudSyncToggleAndAccountSignalsPreserveLocalProgress: PASS 0.053s
+- CanadianHamTests.ProgressStoreTests testImportFiltersSyncDeviceRowsFromOtherBanksInsteadOfFailing: PASS 0.032s
+- CanadianHamTests.ProgressStoreTests testImportIgnoresStaleSyncDeviceRowsWhenMergedRowsDoNotMatchTopLevelFields: PASS 0.033s
+- CanadianHamTests.ProgressStoreTests testImportingExportWithDeviceRowsThenSyncingOriginalRowsDoesNotDoubleCount: PASS 0.044s
+- CanadianHamTests.ProgressStoreTests testImportingTheSameExportTwiceRestoresIdenticalProgressAttemptsAndLessons: PASS 0.066s
+- CanadianHamTests.ProgressStoreTests testImportKeepsPersistedAppleLanguagesWhenLanguageDoesNotChange: PASS 0.032s
+- CanadianHamTests.ProgressStoreTests testImportLeavesTask4610Version2LessonSplitRowsUnchanged: PASS 0.033s
+- CanadianHamTests.ProgressStoreTests testImportMigratesMixedTask4610SyncRowsByRowVersion: PASS 0.039s
+- CanadianHamTests.ProgressStoreTests testImportMigratesTask4610LessonSplitProgressAndQuizAttempts: PASS 0.037s
+- CanadianHamTests.ProgressStoreTests testImportOfOlderExportDoesNotRemoveExistingMorseProgress: PASS 0.030s
+- CanadianHamTests.ProgressStoreTests testImportRejectsInvalidSyncDeviceRows: PASS 0.037s
+- CanadianHamTests.ProgressStoreTests testImportRejectsUnsupportedLanguagePreferenceValues: PASS 0.037s
+- CanadianHamTests.ProgressStoreTests testImportRollbackAfterMorseWriteRestoresPopulatedStoreAcrossCourses: PASS 0.067s
+- CanadianHamTests.ProgressStoreTests testImportRollbackKeepsExistingDataWhenReplacementFails: PASS 0.042s
+- CanadianHamTests.ProgressStoreTests testImportRollbackPropagatesMorseProgressRemovalFailure: PASS 0.031s
+- CanadianHamTests.ProgressStoreTests testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress: PASS 0.030s
+- CanadianHamTests.ProgressStoreTests testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt: PASS 0.034s
+- CanadianHamTests.ProgressStoreTests testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates: PASS 0.037s
+- CanadianHamTests.ProgressStoreTests testImportValidationRejectsDuplicateMorseDailyActivityDates: PASS 0.037s
+- CanadianHamTests.ProgressStoreTests testImportValidationRejectsInvalidMorseCourseProgress: PASS 0.038s
+- CanadianHamTests.ProgressStoreTests testImportValidationRejectsMismatchedScoreBankId: PASS 0.039s
+- CanadianHamTests.ProgressStoreTests testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt: PASS 0.033s
+- CanadianHamTests.ProgressStoreTests testImportWritesAppleLanguagesToInjectedDefaultsWhenLanguageChanges: PASS 0.032s
+- CanadianHamTests.ProgressStoreTests testInMemoryLanguageOperationsDoNotMutateStandardLanguageDefaults: PASS 0.039s
+- CanadianHamTests.ProgressStoreTests testLaunchAdoptsExternalAppleLanguagesSelectionIntoStoredPreference: PASS 0.010s
+- CanadianHamTests.ProgressStoreTests testLaunchAdoptsRemovedAppleLanguagesKeyAsSystemDefault: PASS 0.014s
+- CanadianHamTests.ProgressStoreTests testLaunchIgnoresRegisteredAppleLanguagesValue: PASS 0.010s
+- CanadianHamTests.ProgressStoreTests testLaunchKeepsPreferenceWhenAppleLanguagesMatchesLastAppliedValue: PASS 0.009s
+- CanadianHamTests.ProgressStoreTests testLegacyLanguageMigrationSaveFailureDoesNotBlockStartupAndRetries: PASS 0.012s
+- CanadianHamTests.ProgressStoreTests testLegacyStoredEnglishLanguageMigratesToSystemOnceAndDoesNotRerun: PASS 0.013s
+- CanadianHamTests.ProgressStoreTests testLegacyStoredFrenchAdoptsExistingPersistentAppleLanguagesInsteadOfOverwriting: PASS 0.010s
+- CanadianHamTests.ProgressStoreTests testLegacyStoredFrenchLanguageStaysFrenchAndAppliesInterfaceLanguageOnce: PASS 0.009s
+- CanadianHamTests.ProgressStoreTests testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure: PASS 0.029s
+- CanadianHamTests.ProgressStoreTests testLessonQuizHelpFixtureValidationAndPayloadRoundTrips: PASS 0.134s
+- CanadianHamTests.ProgressStoreTests testLessonQuizHelpValidationUsesOfficialMembershipAndKnownBankIdsNotBasicPrefix: PASS 0.031s
+- CanadianHamTests.ProgressStoreTests testLessonQuizHintVisibilityUsesHalfSecondAndFreezesHelpAtChoice: PASS 2.638s
+- CanadianHamTests.ProgressStoreTests testLessonQuizSessionCachePreservesAnswersAndFrozenHelpAcrossNavigation: PASS 0.003s
+- CanadianHamTests.ProgressStoreTests testLessonWriteAfterImportedAndSyncedDuplicateRowsAddsExactlyOneRead: PASS 0.060s
+- CanadianHamTests.ProgressStoreTests testLocalLessonAndMorseWritesAfterDeviceRowImportAddOnlyOwnContribution: PASS 0.053s
+- CanadianHamTests.ProgressStoreTests testLocalQuestionWritesAfterDeviceRowImportAddOnlyOwnContribution: PASS 0.032s
+- CanadianHamTests.ProgressStoreTests testMigratesArchivedLessonProgressKeepsMaxOwnReadCount: PASS 0.010s
+- CanadianHamTests.ProgressStoreTests testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist: PASS 0.032s
+- CanadianHamTests.ProgressStoreTests testMigratesCommittedPreV2StoreFixtureWithAllDataIntact: PASS 0.381s
+- CanadianHamTests.ProgressStoreTests testMigratesLegacyMorseCourseProgressJSONIntoSwiftDataEntity: PASS 0.016s
+- CanadianHamTests.ProgressStoreTests testMigratesProgressStoreV1ToV2WithoutUniqueConstraints: PASS 0.066s
+- CanadianHamTests.ProgressStoreTests testMigratesProgressStoreV3ToV4PadsAndPersistsAnsweredWithHelpFields: PASS 0.072s
+- CanadianHamTests.ProgressStoreTests testMockExamTimerRefreshPreservesFractionalRemainder: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testMorseCourseProgressRoundTripsTwentyRecentCharacterResults: PASS 0.032s
+- CanadianHamTests.ProgressStoreTests testMorseExportMapsHapticsToWebCompatibleAudio: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testMorseImportDecodesMissingAndPartialMorsePreferences: PASS 0.052s
+- CanadianHamTests.ProgressStoreTests testMorseImportRejectsExplicitNullMorseValues: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testMorseImportRejectsUnsupportedMorsePreferenceEnums: PASS 0.041s
+- CanadianHamTests.ProgressStoreTests testMountedLessonQuizRepopulatesAfterImportAndResetWithoutReshufflingOnRerender: PASS 0.932s
+- CanadianHamTests.ProgressStoreTests testNativeSettingsAppearanceColorSchemeFollowsLiveThemePreference: PASS 0.012s
+- CanadianHamTests.ProgressStoreTests testNativeSettingsGeneralBindingsUpdatePracticePreferences: PASS 0.011s
+- CanadianHamTests.ProgressStoreTests testOldFormatImportWithMorseProgressReplacesAllExistingDeviceRows: PASS 0.037s
+- CanadianHamTests.ProgressStoreTests testPickerChangeWritesAppleLanguagesButUnchangedPreferencesDoNotRewriteIt: PASS 0.011s
+- CanadianHamTests.ProgressStoreTests testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences: PASS 0.040s
+- CanadianHamTests.ProgressStoreTests testProgressImportDecodesOlderAnsweredWithHelpFieldsAsFalse: PASS 0.033s
+- CanadianHamTests.ProgressStoreTests testProgressStoreDeduplicatesV2EntitiesWithoutUniqueConstraints: PASS 0.037s
+- CanadianHamTests.ProgressStoreTests testProgressStoreRoundTripExportImportReset: PASS 0.055s
+- CanadianHamTests.ProgressStoreTests testResetAllDataTurnsICloudSyncOptInOff: PASS 0.013s
+- CanadianHamTests.ProgressStoreTests testResetAllDataWithICloudSyncDeletesCloudZoneThenWipesLocalData: PASS 0.029s
+- CanadianHamTests.ProgressStoreTests testResetAllDataWithICloudSyncKeepsLocalDataAndRetriesAfterCloudDeleteFailure: PASS 0.046s
+- CanadianHamTests.ProgressStoreTests testResetClearsAppleLanguagesAndLanguagePreference: PASS 0.012s
+- CanadianHamTests.ProgressStoreTests testResetFailureKeepsPreviousAppleLanguagesAndPreference: PASS 0.014s
+- CanadianHamTests.ProgressStoreTests testResetRollsBackWhenMorseProgressRemovalFails: PASS 0.014s
+- CanadianHamTests.ProgressStoreTests testSavingLargeQuestionProgressBatchBuildsOneWriteContext: PASS 1.737s
+- CanadianHamTests.ProgressStoreTests testSharedAppleSettingsModelAppliesLivePreferenceUpdates: PASS 0.012s
+- CanadianHamTests.ProgressStoreTests testSharedICloudMergeFixtureCoversQuestionExamLessonAndMorseRules: PASS 0.001s
+- CanadianHamTests.ProgressStoreTests testSplitStoreFailedLegacyPreferencesReadDoesNotCreateMarkerAndRetries: PASS 0.010s
+- CanadianHamTests.ProgressStoreTests testSplitStoreFirstOpenCopiesLegacyPreferencesWithoutLosingProgress: PASS 0.102s
+- CanadianHamTests.ProgressStoreTests testSplitStoreLegacyPreferencesRetryRunsEvenWhenPreferencesStoreExists: PASS 0.064s
+- CanadianHamTests.ProgressStoreTests testStaleSameDeviceQuestionRowDoesNotLoseNextLocalWrite: PASS 0.031s
+- CanadianHamTests.ProgressStoreTests testSwiftDataQuestionProgressEntityDefaultsHelpFieldsForLightweightMigration: PASS 0.009s
+- CanadianHamTests.ProgressStoreTests testTask4610LaunchMigrationIsAtomicAndStableWithArchivedProgressAndMultipleDevices: PASS 0.042s
+- CanadianHamTests.ProgressStoreTests testTask4610LessonMigrationIsIdempotentAcrossRepeatedImports: PASS 0.038s
+- CanadianHamTests.ProgressStoreTests testTask4610RejectsInvalidLegacyQuizScoresBeforeMigration: PASS 0.028s
+- CanadianHamTests.ProgressStoreTests testTask4610RejectsNullLessonIDVersionAtTopLevelAndOnBothDeviceRowKinds: PASS 0.029s
+- CanadianHamTests.ProgressStoreTests testTask4610RequiresAllReadSourcesAndMergesEachDeviceBeforeAggregating: PASS 0.097s
+- CanadianHamTests.ProgressStoreTests testTask4610SharedConceptMappingAndConceptInclusiveScores: PASS 0.228s
+- CanadianHamTests.ProgressStoreTests testTask4610ValidatesHistoricalQuizMembershipBeforeMigratingTopLevelAndSyncRows: PASS 0.039s
+- CanadianHamTests.ProgressStoreTests testTwoDevicesEachQuestionWriteAddsExactlyOneAfterSync: PASS 0.054s
+- CanadianHamTests.QuestionBankTests testAdvancedBundledJSONDecodesExpectedCountsAndVerifiedFrenchCategoryNames: PASS 0.012s
+- CanadianHamTests.QuestionBankTests testAdvancedMockExamUsesFiftyQuestionsAndNoHonours: PASS 0.013s
+- CanadianHamTests.QuestionBankTests testAppBundleContainsNoReadmeFiles: PASS 0.013s
+- CanadianHamTests.QuestionBankTests testAppBundleContainsOnlyExpectedGeneratedBankDirectories: PASS 0.001s
+- CanadianHamTests.QuestionBankTests testBundledJSONDecodesExpectedCounts: PASS 0.018s
+- CanadianHamTests.QuestionBankTests testBundledLessonModelExposesPrerequisites: PASS 0.545s
+- CanadianHamTests.QuestionBankTests testBundledLessonsAndExplanationsLoadThroughContentLibrary: PASS 0.716s
+- CanadianHamTests.QuestionBankTests testEngineQuestionDrawKeepsQuestionInsideRequestedCategory: PASS 0.019s
+- CanadianHamTests.QuestionBankTests testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion: PASS 0.078s
+- CanadianHamTests.QuestionBankTests testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes: PASS 0.001s
+- CanadianHamTests.QuestionBankTests testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons: PASS 0.553s
+- CanadianHamTests.ReadinessAndScoringTests testAdvancedScoringAndReadinessSuppressHonours: PASS 0.001s
+- CanadianHamTests.ReadinessAndScoringTests testExamScoringBoundaries: PASS 0.001s
+- CanadianHamTests.ReadinessAndScoringTests testReadinessStates: PASS 0.001s
+- CanadianHamTests.ReadinessAndScoringTests testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate: PASS 0.036s
+- CanadianHamTests.RootNavigationMappingTests testCompactHomeSessionAndSectionPushesUseVisibleDestination: PASS 0.001s
+- CanadianHamTests.RootNavigationMappingTests testEmptyCompactPathMapsToHome: PASS 0.001s
+- CanadianHamTests.RootNavigationMappingTests testEveryLearnRouteRoundTripsWithItsWholeStack: PASS 0.001s
+- CanadianHamTests.RootNavigationMappingTests testEveryRootSelectionRoundTrips: PASS 0.001s
+- CanadianHamTests.RootNavigationMappingTests testLessonQuizCurrentAndOtherHintLessonStacksPreserveQuizAcrossLayouts: PASS 0.001s
+- CanadianHamTests.RootNavigationMappingTests testPracticeHintLessonStackKeepsSessionAsSplitSelection: PASS 0.001s
+All31 changed figure-directive lesson paths (README example excluded):
+- content/lessons/m2-operating-procedures/l-002-01-voice-repeater-and-simplex-procedure.md
+- content/lessons/m2-operating-procedures/l-002-02-morse-rst-and-q-signals.md
+- content/lessons/m2-operating-procedures/l-002-03-distress-urgency-and-safety-traffic.md
+- content/lessons/m2-operating-procedures/l-002-04-records-maps-and-locators.md
+- content/lessons/m3-station-practice-safety/l-003-01-station-filtering-and-radio-blocks.md
+- content/lessons/m3-station-practice-safety/l-003-02-cw-ssb-blocks-and-receivers.md
+- content/lessons/m3-station-practice-safety/l-003-03-digital-interfaces-and-power-supplies.md
+- content/lessons/m3-station-practice-safety/l-003-04-antennas-and-receiver-specs.md
+- content/lessons/m3-station-practice-safety/l-003-05-signal-quality-cw-ssb-fm.md
+- content/lessons/m3-station-practice-safety/l-003-06-controls-digital-voice-and-packet.md
+- content/lessons/m3-station-practice-safety/l-003-07-batteries-dc-supplies-and-ripple.md
+- content/lessons/m3-station-practice-safety/l-003-08-access-grounding-lightning-rf-safety.md
+- content/lessons/m4-circuit-components/l-004-01-amplifiers-and-diodes.md
+- content/lessons/m4-circuit-components/l-004-02-transistors-fets-and-tubes.md
+- content/lessons/m4-circuit-components/l-004-03-resistor-colour-codes.md
+- content/lessons/m5-basic-electronics/l-005-01-units-conductors-current.md
+- content/lessons/m5-basic-electronics/l-005-02-power-ohms-law.md
+- content/lessons/m5-basic-electronics/l-005-03-parallel-circuits-and-ratings.md
+- content/lessons/m5-basic-electronics/l-005-04-ac-and-decibels.md
+- content/lessons/m5-basic-electronics/l-005-05-reactance-and-resonance.md
+- content/lessons/m5-basic-electronics/l-005-06-transformers-and-meters.md
+- content/lessons/m6-feedlines-antennas/l-006-01-feedline-basics-and-types.md
+- content/lessons/m6-feedlines-antennas/l-006-02-loss-swr-and-matching.md
+- content/lessons/m6-feedlines-antennas/l-006-03-polarization-dipoles-wavelength.md
+- content/lessons/m6-feedlines-antennas/l-006-04-directivity-yagis-and-lengths.md
+- content/lessons/m6-feedlines-antennas/l-006-05-loops-quads-and-patterns.md
+- content/lessons/m7-propagation/l-007-01-paths-ionosphere-and-skip.md
+- content/lessons/m7-propagation/l-007-02-absorption-solar-cycle-and-muf.md
+- content/lessons/m7-propagation/l-007-03-vhf-uhf-and-unusual-modes.md
+- content/lessons/m8-interference-suppression/l-008-01-receiver-device-interference-and-filters.md
+- content/lessons/m8-interference-suppression/l-008-02-transmitter-emissions-and-harmonics.md
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented 141 hidden paired Try-it answers across31 M2–M8 lessons with accessible localized web/Apple reveal controls and content validation. This resume merged TASK-71/TASK-72, composed approved occluded OR measured-contrast verification locally only in new Try-it audits, and fixed new-test-only largest-text positioning without weakening assertions or shared helpers. Latest targeted results: iPhone light174.198s/dark235.735s/French183.936s PASS; iPad dark100.477s/French69.815s PASS; iPad light FAIL137.543s only on correctly rejected unmeasurable fully visible Given paragraph. All6 verified findings logged16.336427704401043:1;4 occlusion findings logged under original approved rule. L10n, text-source and dated-marker test guard pass. AC3 remains BLOCKED/unchecked and task In Progress by coordinator direction pending separate measurement follow-up and iPad-only rerun. No PR;31-lesson figure plan remains coordinator-owned; no background job remains.
+Implemented141 hidden paired Try-it answers across all31 M2–M8 lessons with accessible localized web/Apple reveal controls and strict content validation. Final TASK-73 resume merged/pushed main#1012 and made only the new Try-it composite measured branch match the shared rounded-button measurement/diagnostics path; occlusion branch and all198 existing Practice functions unchanged. Requested checks all green: iPhone light260.205s and260.877s, largest-text dark239.976s, French170.975s; iPad light67.203s (approved TASK-73 reveal-only/no-audit path), largest-text dark124.472s, French71.480s; documented macOS build and215/215 units, l10n/text sources/test-guard self/diff and diff check PASS. Hide answer1 full-image1.199372912:1 is safely verified13.620392056:1 by shared18px/6px button crop in both light runs; all17 measured findings and12 original occlusion findings logged keepAlways with fields/paths and full per-test results in notes. AC3 checked under approved iPad-light limitation and prior green tvOS/visionOS full light/dark audits. Done; no PR opened. Coordinator still owns31-lesson figure plan, merge-batch full suites and independent review; safe2x thin-stroke measurement remains TASK-73 follow-up.
 <!-- SECTION:FINAL_SUMMARY:END -->
