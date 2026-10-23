@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 12:31'
+updated_date: '2026-10-23 12:32'
 labels:
   - content
   - web
@@ -81,5 +81,5 @@ Resume checks/evidence: origin/main merged/pushed (merge1bbdab61); coordinator-a
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented141 hidden paired Try-it answers across31 M2–M8 lessons, with content validation and localized accessible web/Apple controls; M1 remains reference-only. Content/web/package validation and prior macOS localization, tvOS/visionOS full light/dark audits, and long-lesson iPhone/iPad French reveal behaviour checks pass. This resume merged/pushed TASK-70 from main, preserved the aligned shared helper byte-for-byte, and followed coordinator-approved direct-anchor then shortest-lesson audit retargeting. AC3 remains BLOCKED: even shortest L-005-04 iPhone light full audit flags fully visible high-contrast Try-it intro text (156.348s). No exception or audit suppression was added. Coordinator paused lane pending main/environment control; dark/iPad reruns and merged localization export remain pending. Task stays In Progress; failure screenshots recorded here and in TASK-65; no PR; coordinator figure plan remains required for all31 changed figure lessons.
+Implemented 141 hidden paired Try-it answers across 31 M2–M8 lessons, with content validation and localized accessible web/Apple controls; M1 remains reference-only. Content/web/package validation and prior macOS localization, tvOS/visionOS full light/dark audits, and long-lesson iPhone/iPad French reveal behaviour checks pass. This resume merged/pushed TASK-70 from main, preserved the aligned shared helper byte-for-byte, and followed coordinator-approved direct-anchor then shortest-lesson audit retargeting. AC #3 remains BLOCKED: even shortest L-005-04 iPhone light full audit flags fully visible high-contrast Try-it intro text (156.348 s). No exception or audit suppression was added. Coordinator paused lane pending main/environment control; dark/iPad reruns and merged localization export remain pending. Task stays In Progress; failure screenshots recorded here and in TASK-65; no PR; coordinator figure plan remains required for all 31 changed figure lessons.
 <!-- SECTION:FINAL_SUMMARY:END -->
