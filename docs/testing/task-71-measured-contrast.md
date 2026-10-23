@@ -22,6 +22,11 @@ non-contrast findings remain failures. There is no label whitelist.
 
 ## Measurement
 
+TASK-73's [2× iPad investigation](task-73-contrast-2x-blocked.md) is **blocked**:
+its thin `=` stroke is unmeasurable under this unchanged helper. A bounded
+support-only per-pixel prototype recovered the screenshot but false-passed
+adversarial panels, so it was not shipped. No threshold or audit scope changed.
+
 `measuredTextContrast(in:)` accepts a `CGImage` at its native pixel resolution
 (no point-scale conversion or resampling). It converts to opaque 8-bit sRGB,
 groups pixels into 5-bit-per-channel RGB clusters and chooses the largest
