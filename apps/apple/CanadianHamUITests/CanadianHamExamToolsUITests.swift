@@ -50,13 +50,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         waitBriefly(0.8)
         XCTAssertEqual(status.label, "Correct 820 / 1 000 = 0.82 A, so only the display unit differs.")
         XCTAssertTrue(isFullyVisible(status, in: app, requiresHittable: true), "Feedback must wrap without truncation at AX-XXXL")
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditIgnoringOccludedOrMeasuredContrast(app: app)
         let explanation = app.staticTexts["lesson-quiz-feedback-explanation"].firstMatch
         positionConceptFeedback([explanation], in: app)
         waitBriefly(0.8)
         XCTAssertEqual(explanation.label, "Compare values only after expressing them in the same unit.")
         XCTAssertTrue(isFullyVisible(explanation, in: app, requiresHittable: true), "Explanation must be fully visible after the audit's scroll changes. Frame: \(frameDescription(explanation.frame))")
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditIgnoringOccludedOrMeasuredContrast(app: app)
     }
 
     private func verifyConceptOptionFeedback(appearance: String, correct: Bool, french: Bool) throws {
@@ -72,7 +72,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["lesson-quiz-feedback-explanation"].exists)
         XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "so only the display unit differs.")).firstMatch.exists)
         scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 15)
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditIgnoringOccludedOrMeasuredContrast(app: app)
         answer.tap()
         let status = app.staticTexts["lesson-quiz-feedback-status"].firstMatch
         XCTAssertTrue(status.waitForExistence(timeout: 5))
@@ -86,8 +86,58 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         positionConceptFeedback([status, explanation], in: app)
         XCTAssertTrue(isFullyVisible(status, in: app, requiresHittable: true))
         XCTAssertTrue(isFullyVisible(explanation, in: app, requiresHittable: true))
-        // This is the full default audit, using only the unchanged approved occluded-contrast exception.
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        // Keep the full default audit with only the two owner-approved contrast rules.
+        try auditIgnoringOccludedOrMeasuredContrast(app: app)
+    }
+
+    // Owner decisions 2026-10-12 and 2026-10-22 (TASK-71); only the new concept-option audits.
+    private func auditIgnoringOccludedOrMeasuredContrast(app: XCUIApplication) throws {
+        let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
+        let windowFrame = app.windows.firstMatch.frame
+        let navigationBar = app.navigationBars.firstMatch
+        let statusBar = app.statusBars.firstMatch
+        let protectedMaxY = max(
+            navigationBar.exists ? navigationBar.frame.maxY : windowFrame.minY,
+            statusBar.exists ? statusBar.frame.maxY : windowFrame.minY
+        )
+        try app.performAccessibilityAudit { issue in
+            guard issue.auditType == .contrast else { return false }
+            let isOccluded = { () -> Bool in
+                guard let element = issue.element else { return false }
+                let frame = element.frame
+                guard frame.width > 0, frame.height > 0 else { return false }
+                guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
+                guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
+                guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
+
+                XCTContext.runActivity(named: "Ignored occluded lesson scroll-content contrast false positive") { activity in
+                    let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame)) matchedScrollDescendant=true"
+                    let attachment = XCTAttachment(string: note)
+                    attachment.lifetime = .keepAlways
+                    activity.add(attachment)
+                }
+                return true
+            }
+            if isOccluded() { return true }
+
+            let element = issue.element
+            let frame = element?.frame
+            var ratio: Double?
+            if let element, let frame,
+               isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
+               let image = element.screenshot().image.cgImage {
+                ratio = measuredTextContrast(in: image)
+            }
+            let verified = ratio.map { $0 >= 4.5 } ?? false
+            let activityName = verified ? "Verified contrast audit finding with measured WCAG contrast" : "Failed contrast audit finding"
+            XCTContext.runActivity(named: activityName) { activity in
+                let measurement = ratio.map { "\($0):1" } ?? "unmeasurable"
+                let attachment = XCTAttachment(string: "label=\(element?.label ?? "<nil>") frame=\(frame.map { "\($0)" } ?? "<nil>") ratio=\(measurement)")
+                attachment.lifetime = .keepAlways
+                activity.add(attachment)
+            }
+            return verified
+        }
     }
 
     private func positionConceptFeedback(_ elements: [XCUIElement], in app: XCUIApplication) {
