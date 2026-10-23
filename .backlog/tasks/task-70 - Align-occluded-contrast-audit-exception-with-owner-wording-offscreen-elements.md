@@ -3,11 +3,11 @@ id: TASK-70
 title: >-
   Align occluded-contrast audit exception with owner wording (offscreen
   elements)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-23 03:00'
-updated_date: '2026-10-23 07:57'
+updated_date: '2026-10-23 11:29'
 labels: []
 dependencies: []
 priority: high
@@ -23,11 +23,11 @@ Owner-delegated decision 2026-10-22 (owner: make the best decisions you can; coo
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every occluded-contrast helper copy removes only the scrollFrame.intersects(frame) prerequisite and retains contrast-only, non-nil/non-zero frame, navigation exclusion, scroll ancestry, visible containment, and logging; lesson copies remain byte-identical.
-- [ ] #2 AGENTS.md records the dated 2026-10-22 clarification including fully offscreen content and explicitly states that fully visible bullet and Question N of M exceptions are not yet granted.
-- [ ] #3 Document or unit-test frame classification for fully offscreen, partially visible, fully visible, non-contrast, and nil-element cases without a significant helper refactor.
-- [ ] #4 Discover all direct and transitive helper-calling UI tests and record per-test targeted iPhone 17 Pro results plus iPad reference-sheet helper caller results; failures remain visible and are escalated rather than widening exceptions.
-- [ ] #5 Run the test-guard self-test and diff check using Test-guard-approved: owner decision 2026-10-22; record commands and skipped-platform rationale.
+- [x] #1 Every occluded-contrast helper copy removes only the scrollFrame.intersects(frame) prerequisite and retains contrast-only, non-nil/non-zero frame, navigation exclusion, scroll ancestry, visible containment, and logging; lesson copies remain byte-identical.
+- [x] #2 AGENTS.md records the dated 2026-10-22 clarification including fully offscreen content and explicitly states that fully visible bullet and Question N of M exceptions are not yet granted.
+- [x] #3 Document or unit-test frame classification for fully offscreen, partially visible, fully visible, non-contrast, and nil-element cases without a significant helper refactor.
+- [x] #4 Discover all direct and transitive helper-calling UI tests and record per-test targeted iPhone 17 Pro results plus iPad reference-sheet helper caller results; failures remain visible and are escalated rather than widening exceptions.
+- [x] #5 Run the test-guard self-test and diff check using Test-guard-approved: owner decision 2026-10-22; record commands and skipped-platform rationale.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -83,4 +83,12 @@ Figure-plan run is now waiting for the shared build lock; no builds interrupted.
 Long-running figure sweep progress at 2026-10-23 06:27 UTC: first 27/47 methods passed with no failures (modules 1–4 complete, module 5 in progress). Timings are 181–492 seconds per method so far. Existing xbuild run remains untouched; iPad batch still queued after it.
 
 Figure sweep encountered one infrastructure-style audit failure: CanadianHamLessonFiguresUITests.testModule7LessonFiguresLightPart1 failed after 436.543s with com.apple.xcode.xctest.accessibilityAudit Code=-56, Audit failed to complete in time (no contrast or other accessibility finding reported). The following three figure methods passed; remaining selections are still running. Will rerun only this failed method after the existing batches finish, per targeted fix-round policy; no test or source changes and no interruption of running builds.
+
+Coordinator finished after the worker timeout. iPhone 17 Pro default-plan helper callers: 19 ran, 18 passed, 1 skipped (iPad-only inspector test), 0 failed. Figures plan (47 selected = 45 LessonFigures + 2 Ohm's law Practice): 46 passed; testModule7LessonFiguresLightPart1 failed with XCTest accessibilityAudit -56 'audit failed to complete in time' (TASK-65 class), and the isolated rerun on the same commit passed (301.7 s). iPad Pro 11-inch (M5): testOfficialReferenceSheetLightAndDarkEnglishAndFrench passed (198.8 s, exercises the reference-sheet copy), testRegularWidthInspectorAccessibilityAuditLightAndDark passed (87.4 s). Review note N1 checked: the default-plan run ignored only 4 findings, all partly under the navigation bar (QZ-L-005-01-A title y=-7.7, Due review scope note y=14, two quiz summary notes y=26.7; visible area starts at y=116); none were fully offscreen, a lone bullet or 'Question N of M'. The figures run ignored none. The internal review approved with notes.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Aligned all occluded-contrast helper copies with the owner's 2026-10-12 wording (fully offscreen elements included) by removing only the intersects requirement; recorded the owner-delegated decision in AGENTS.md; targeted iPhone, iPad and figure-plan audits pass.
+<!-- SECTION:FINAL_SUMMARY:END -->
