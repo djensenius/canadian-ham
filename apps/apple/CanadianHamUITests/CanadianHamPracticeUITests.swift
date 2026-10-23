@@ -2505,11 +2505,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func positionTryItPromptAndControlForAudit(_ prompt: XCUIElement, control: XCUIElement, in app: XCUIApplication) {
         let scroll = scrollView(containing: prompt, in: app)
-        for _ in 0..<10 {
+        for _ in 0..<12 {
             if isFullyVisible(prompt, in: app, requiresHittable: false)
                 && isFullyVisible(control, in: app, requiresHittable: true) { return }
             let visible = visibleFrameExcludingNavigationBar(in: app)
             let contentFrame = prompt.frame.union(control.frame)
+            guard contentFrame.height <= visible.height else {
+                recordTryItAuditGeometry(in: app, stage: "prompt/control union taller than visible area")
+                return
+            }
             if contentFrame.minY < visible.minY {
                 preciseScroll(scroll, contentDeltaY: visible.minY + 8 - contentFrame.minY)
             } else if contentFrame.maxY > visible.maxY {
