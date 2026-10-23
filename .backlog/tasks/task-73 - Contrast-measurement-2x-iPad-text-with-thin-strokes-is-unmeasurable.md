@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 16:51'
-updated_date: '2026-10-23 16:51'
+updated_date: '2026-10-23 16:53'
 labels:
   - accessibility
   - tests
@@ -35,4 +35,12 @@ Follow-up to TASK-71. On iPad Pro 13-inch (2x), auditVerifyingMeasuredContrast r
 2. Instrument a host-only diagnostic copy to identify rejecting colour bins/components, boundary support and blend classifications. Implement the smallest scale-aware conservative correction without changing 50% support or minimum-ratio semantics.
 3. Add 2x inset-panel, chained-blend, partial-overlap and mixed-bold/grey adversarial proofs, retaining all existing tests and 3x screenshots; stop/escalate if safety conflicts.
 4. Run targeted iPhone17Pro measurement class and documented macOS unit command through nohup/xbuild with grep polling. Document diagnostics, per-test evidence and residual limits; finalize ACs, commit and push (no PR).
+
+5. Supervisor-approved diagnostic refinement: sub-2% support uses individually valid pixels (unchanged fraction<=.9/RGB8/core+background distance), same-core 4-connected background reachability through valid pixels only. Significant-blend exclusions remain globally strict. Scale-derived radius is capped at2; keep4px spatial floor or tighten. Add a2x inset-panel proof with some qualifying edge support but <50% boundary support. Stop if any adversarial proof passes.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Pre-fix host diagnostics /tmp/task-73-diagnostics.log: only lower equals-sign component295 (16px at296,26...311,26) fails: boundary16,supported4,otherRetained0. Edge bin8422 count183 has1 pixel elsewhere without radius2 background; bin14796 count35 has1 elsewhere without radius2 core. Thus global bin veto, not label or low ratio. Supervisor approved per-pixel subthreshold support refinement under unchanged colour/distance/reachability/share/ratio constraints; invalid pixels cannot bridge. Red xbuild fixture proof queued with nohup; no source-helper edits until it completes.
+<!-- SECTION:NOTES:END -->
