@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 12:32'
+updated_date: '2026-10-23 14:21'
 labels:
   - content
   - web
@@ -42,6 +42,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 6. Coordinator-approved 2026-10-23 after the unchanged post-TASK-70 dark test passed its preceding-section audit but failed recovery positioning: open the new Try-it tests directly at the Try-it anchor again; remove only the preceding-section workaround audit; explicitly require prompt plus Show answer fully visible below the navigation bar. Preserve remaining assertions, full audits and aligned shared helpers. Rerun iPhone then iPad light/dark.
 
 7. Coordinator-approved 2026-10-23 after direct L-004-03 full audit flagged fully visible nonbullet worked-example text: retarget only the new Try-it full-audit tests to shortest authored Try-it lesson by Markdown-body character count, preserving direct anchor, full audits, prompt/control visibility assertions and unchanged aligned helper; retain existing long L-004-03 French reveal/state test without audit. Record both L-004-03 false positives in TASK-65 and stop on fully visible nonbullet findings in shortest-lesson audits.
+
+8. Resume with merged TASK-71: coordinator-approved local auditIgnoringOccludedOrMeasuredContrast helper composes verbatim approved occlusion guards/logging with shared measured-contrast predicates (>=4.5, keepAlways success/failure logging). Only new Try-it audits change. Preserve shortest L-005-04 direct anchor and visibility assertions; run only Try-it light/dark/French on iPhone and iPad using serial nohup xbuild, then l10n/text/test guard (owner decision 2026-10-22). Stop/report any other failure. Record ratios/per-test evidence; finalize AC3/Done only on green, push without PR; coordinator owns 31-lesson figure plan.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
