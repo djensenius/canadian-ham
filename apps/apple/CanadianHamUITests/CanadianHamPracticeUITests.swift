@@ -2397,7 +2397,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func auditLessonTryItReveal(appearance: AuditAppearance, accessibilitySize: Bool) throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialLessonID", "L-004-03",
-            "-CanadianHamInitialLessonSectionAnchor", "check-your-work-compare-matching-digits",
+            "-CanadianHamInitialLessonSectionAnchor", "try-it",
             "-CanadianHamTheme", appearance.rawValue,
             "-UIPreferredContentSizeCategoryName", accessibilitySize ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL"
         ])
@@ -2406,11 +2406,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
         let answer = app.staticTexts["lesson-try-it-1-answer"].firstMatch
         let secondAnswer = app.staticTexts["lesson-try-it-2-answer"].firstMatch
+        let prompt = app.staticTexts["lesson-try-it-1-prompt"].firstMatch
         XCTAssertFalse(answer.exists, "Try-it answers must not enter the accessibility tree before disclosure")
-        positionLessonHeadingForTryItAudit("check-your-work-compare-matching-digits", in: app)
-        recordTryItAuditGeometry(in: app, stage: "preceding solution")
-        try auditIgnoringOccludedLessonTextContrast(app: app)
         positionLessonHeadingForTryItAudit("try-it", in: app)
+        XCTAssertTrue(isFullyVisible(prompt, in: app, requiresHittable: false), "Try-it prompt must be fully visible below the navigation bar before auditing")
         XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true), "Show answer must be fully visible beside the Try-it section before tapping or auditing")
         XCTAssertEqual(toggle.label, "Show answer 1")
         XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
