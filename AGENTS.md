@@ -94,6 +94,12 @@ platform) and share one build lock, so don't run them by reflex.
   which platforms you skipped and why.
 
 ### Approved accessibility audit exceptions
+- Owner-delegated decision 2026-10-22, TASK-71: measured-contrast verification is approved only
+  for new TASK-46.5 and TASK-46.6.1 audits unless widened by a later decision. Run the full default
+  accessibility audit; ignore only contrast findings on non-nil elements whose element screenshot
+  yields a measured WCAG contrast ratio of at least 4.5:1, logging label, frame and ratio in a
+  keepAlways attachment. Non-contrast, nil-element, unmeasurable and lower-contrast findings fail.
+  Existing audit helpers and tests remain unchanged.
 - Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
   whose element frame is not fully contained in the visible scroll area below an opaque navigation
   bar. Owner decision 2026-10-14 adds practice and mock exam screens to this same occluded-content

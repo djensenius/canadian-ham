@@ -304,6 +304,11 @@ targets:
     supportedDestinations: [iOS]
     sources:
       - path: CanadianHamUITests
+        excludes:
+          - Resources
+      - path: CanadianHamUITests/Resources/ContrastMeasurement
+        type: folder
+        buildPhase: resources
       - path: ../../content/generated/basic-2025-07-15/questions.json
         type: file
         buildPhase: resources
