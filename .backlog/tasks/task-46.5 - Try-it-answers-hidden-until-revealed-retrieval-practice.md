@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 17:06'
+updated_date: '2026-10-23 18:26'
 labels:
   - content
   - web
@@ -52,6 +52,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 11. Coordinator-approved after12-pass dark positioning stalled with identical2pt residual clipping: only the new Try-it positioning helper now requests at least24pt whenever vertical overshoot remains, still clamped by unchanged preciseScroll to80pt and bounded to12 passes. Keep all containment assertions, union-height stop and exhaustion logs. Rerun dark then remaining iPhone/iPad and l10n checks.
 
 12. Coordinator-approved after iPad light failed only an unmeasurable fully visible high-contrast paragraph: leave shared/local measurement logic unchanged and AC3 unchecked; run independent iPad dark/French plus l10n/text/guard. Record all findings/screenshots and push paused handoff. Coordinator owns separate TASK-71 measurement follow-up; await explicit merge-main/iPad-only rerun instruction after it lands.
+
+13. Coordinator-approved TASK-73 rounded-button resume: merge/push origin/main, preserve both AGENTS exceptions, and update only the local composite measured branch to the shared measuredControlTextContrast path with element-type gate and full-image/crop/inset logging; preserve verbatim occlusion branch. Serial nohup xbuild: iPhone light twice, dark/French once; iPad light/dark/French once (approved light no-audit path); documented macOS units, l10n, text sources, dated-marker guard. Stop on any failure; only if all green, record per-test ratios, check AC3/Done, push; no PR; coordinator owns 31-lesson figure plan.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
