@@ -4,7 +4,7 @@ title: Investigate residual iOS heading-wait and single-figure audit flakes
 status: To Do
 assignee: []
 created_date: '2026-10-20 06:58'
-updated_date: '2026-10-20 12:13'
+updated_date: '2026-10-23 11:49'
 labels:
   - apple
   - testing
@@ -38,4 +38,6 @@ TASK-33 final evidence (all tests unchanged; no flake fix claimed):
 3. Single-figure M7 dark failed with Code=-56 in /tmp/task-33-figures.log (230.276 s); coordinator-run isolated /tmp/task-33-m7-dark-rerun.log passed257.999 s, outer wall402 s, exit0. It already has one lesson and one figure and cannot be range-split further.
 Full-run totals: default126 UI (superset of final124),3 existing skips,2 failures, UI elapsed11390.378 s/outer11533 s; figure47 UI,1 failure, elapsed11444.382 s/outer11520 s. Units190 passed. Complete per-test results and literal failure lines: docs/testing/task-33-ios-results.md; result bundles use corresponding /tmp log basenames.
 Host-load evidence at2026-10-20T10:39:35Z: load81.94/81.56/88.02, simulator testmanagerd99.9%CPU, two lockf84.9%/84.1%, host/simulator diagnosticd55.8%/50.2%, exactly one active xcodebuild observed. Coordinator confirmed FluxTerm builds shared the xbuild lock. No other lane process stopped; contention is context, not demonstrated causation. Supervisor approved TASK-33 acceptance with these documented unchanged failures plus passing isolated reruns; this follow-up remains To Do.
+
+TASK-46.5 follow-up evidence (coordinator requested 2026-10-23): after merging TASK-70, unchanged testLessonTryItRevealAndAccessibilityLight on iPhone 17 Pro failed its temporary preceding-section workaround audit (314.438 s) on fully visible paragraph 'Compare blue-red-brown and blue-red-orange value bands. Their first two bands match.' The audit auto-scrolled away from the recorded Check-your-work/Try-it position to Faded practice; element screenshot shows high-contrast dark ink on paper. No exception authorized or added for this paragraph. Source log: /tmp/task-46.5-aligned-iphone.log; result bundle path: /tmp/task-46.5-aligned-iphone-xcresult-path.txt; exported element screenshot: /tmp/task-46.5-aligned-iphone-attachments/326FDD52-FACC-4AB9-8299-C9F343F47B21.png; app screenshot: /tmp/task-46.5-aligned-iphone-attachments/D55ADC5C-56D4-4765-AB04-513C81901DA7.png; manifest and Complete Issue Description in same directory. Coordinator authorized removing only that obsolete preceding-section detour from the new Try-it tests now TASK-70 handles offscreen content; direct Try-it audits must still fail all fully visible nonbullet findings. No production or shared helper change made for this finding.
 <!-- SECTION:NOTES:END -->
