@@ -1,9 +1,11 @@
 ---
 id: TASK-71
 title: Measured-contrast verification for audit contrast findings
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-23 12:50'
+updated_date: '2026-10-23 12:51'
 labels:
   - accessibility
   - tests
@@ -25,3 +27,12 @@ Owner-delegated decision 2026-10-22 (owner: make the best decisions you can). XC
 - [ ] #3 AGENTS.md records the dated owner-delegated decision and its scope; existing helpers and existing tests are unchanged
 - [ ] #4 Targeted proof: the helper passes on the known false-positive screens and fails on a deliberately low-contrast DEBUG-only fixture or an equivalent synthetic proof
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect failure screenshots and existing UI-test audit/target conventions.
+2. Add a pure quantized WCAG contrast measurement helper, strict default-audit wrapper, synthetic proofs and three exported element-image resources; document the narrow approved scope.
+3. Regenerate XcodeGen twice and verify no second-run changes; run only the new pure UI-test class on iPhone 17 Pro through nohup/xbuild, polling its log. Verify the test guard flags the handler.
+4. Record evidence per AC, finalize TASK-71, commit and push the task branch (no PR).
+<!-- SECTION:PLAN:END -->
