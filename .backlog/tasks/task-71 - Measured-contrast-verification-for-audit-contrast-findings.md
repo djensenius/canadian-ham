@@ -1,11 +1,11 @@
 ---
 id: TASK-71
 title: Measured-contrast verification for audit contrast findings
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 14:10'
+updated_date: '2026-10-23 14:15'
 labels:
   - accessibility
   - tests
@@ -108,10 +108,46 @@ Final-hardening green validation: identical30-test class before pixel-index opti
 Final-hardening implementation d57d10ced6eb95b052aaf685023368dfd0bd7bd7; guard/evidence doc follow-up cdfbdc4f. Guard self-test passed;focused5da09a53...d57d10ce passed(no guardedchanges);main...HEAD unapproved failedasexpected(exit1),dated-marker approved passed(exit0),and actualPR1007 body approved passed. Logs /tmp/task-71-hardening-test-guard-{self,focused,unapproved,approved,pr-body}.log. gitdiff5da09a53--check passed,no staged files. No source edits after final30/30 run;later commits are docs/Backlog only. Done pending required independent re-review and PR CI; attack1 under2%/gradient false-pass risk explicitly accepted as remaining limit by supervisor,not silently fixed or hidden.
 
 Reopened solely for user-confirmed cross-core blend-reachability finding PRRT_kwDOUxZq_M6von_z on PR#1007. No changes to audit scope, app code, fixtures/resources or existing thresholds.
+
+Cross-core follow-up implementation 7d15f3c5f15be76da02fe9ba1a9171d03cc77f0e: flood-fill transitions require identical supporting retained-core key, keeping direct-background seeds and endpoint core validation unchanged. Exact second-core regression added alongside unchanged original support test: #002060 columns x28/38,y32...47 and10x30 block(70,10); #808CA4 columns x30/36,y32...47. On unchanged93f71274 helper the new fixture failed at14.426790204267782:1 (actual inset contrast1.6324:1), exit65,1failed/0passed/0skipped,test0.736s. Final fixture asserts nil and passed0.072s. Pre-fix log/bundle/summary /tmp/task-71-cross-core-before.{log,xcresult} and /tmp/task-71-cross-core-before-summary.json.
+Final full targeted class iPhone17Pro/iOS27.0:31pass/0fail/0skip,exit0,class13.365s; /tmp/task-71-cross-core-final.{log,xcresult}, /tmp/task-71-cross-core-final-{summary,tests}.json, keepAlways attachments /tmp/task-71-cross-core-proof-attachments/. All30 existing test methods, visibility gate and audit wrapper byte-identical to93f71274. Three real screenshots non-nil/unchanged8.344323837747055,11.403364958858397,16.336427704401043:1; boldedge2.6667% ratio15.9942758247219. Both xbuild runs via nohup/grep,one requested iPhone,no builds killed. No changed-source Swift warnings/errors; unrelated AppIntents warning only. Red run had post-test simctl cleanup warning; green run did not. No app launch/live audit integration. Other platforms/full iOS suites skipped: only iOS UI-test code changed,no target/resource changes or XcodeGen required. No thresholds, fixtures, blends or ratio calculation loosened; documented dominant-background/5-bit/sub2%/tiny-component limits unchanged.
+Guard self-test and focused93f71274...7d15f3c5 passed(no guardedchanges);main...7d15f3c5 unapproved failedasexpected(exit1),actualPR1007 body approved passed(exit0). Logs /tmp/task-71-cross-core-test-guard-{self,focused,unapproved,pr-body}.log. gitdiff93f71274--check passed. Detailed evidence and per-test table in docs/testing/task-71-measured-contrast.md. Independent reviewer gate and PR CI still required.
+Per-test final results:
+- testAntialiased15PointBoldEdgeCoverageAt3x: PASS (4.675s)
+- testAntialiased15PointBoldMixedContrastLinesFailAt3x: PASS (0.180s)
+- testAntialiased15PointLowContrastTextStillFails: PASS (0.165s)
+- testAntialiased15PointTextMeasuresExpectedContrast: PASS (0.156s)
+- testBlackOffscreenBandDoesNotRescueMidGreyText: PASS (0.075s)
+- testChainedBlendsCannotUseAnExcludedCore: PASS (0.082s)
+- testContrastMeasurementRejectsInvisibleFrames: PASS (0.065s)
+- testDarkIconDoesNotRescueMidGreyText: PASS (0.169s)
+- testDifferentCoreBlendsCannotBridgeInsetDarkStrokesToBackground: PASS (0.072s)
+- testDisconnectedDarkBlockCannotRescueInsetLowContrastText: PASS (0.072s)
+- testEqualLargeTonesAreUnmeasurable: PASS (0.069s)
+- testExportedCorrectFeedbackDarkPasses: PASS (0.222s)
+- testExportedCorrectFeedbackLightPasses: PASS (0.195s)
+- testExportedTryItParagraphLightPasses: PASS (4.660s)
+- testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary: PASS (0.351s)
+- testInsetPanelCannotUseTheSurroundingCreamAsTextBackground: PASS (1.040s)
+- testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText: PASS (0.079s)
+- testMidGreyOnCreamFails: PASS (0.077s)
+- testNearBlackOnCreamPasses: PASS (0.068s)
+- testOnlyTinyForegroundIsUnmeasurable: PASS (0.071s)
+- testPaleOnDarkGreenPasses: PASS (0.080s)
+- testPartiallyOverlappingStrokesCannotPassAgainstCream: PASS (0.068s)
+- testSignificantAntialiasedEdgeBandsMeasureCoreContrast: PASS (0.082s)
+- testSignificantNearBackgroundNoiseIsUnmeasurable: PASS (0.068s)
+- testSignificantNearBlackAndMidGreyBlocksDoNotPass: PASS (0.079s)
+- testSolidBlendColourIsNotMistakenForAntialiasing: PASS (0.073s)
+- testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes: PASS (0.071s)
+- testTinyHighContrastTailDoesNotRescueLowContrastText: PASS (0.084s)
+- testTransparentImageIsUnmeasurable: PASS (0.070s)
+- testTwoTonePanelWithDarkTextIsUnmeasurable: PASS (0.071s)
+- testUniformImageIsUnmeasurable: PASS (0.074s)
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Final hardening: reject ANY retained-colour boundary pair below4.5 (exact partial-overlap fixture red on5da09a53); strengthen reachability fixture, proven red at15.9943 when temporarily bypassed; precompute per-bin native pixel lists. Identical30-test class20.401s→9.328s,30/30pass,three real screenshot ratios unchanged. Requested attack1 guard made all3 screenshots nil; reported all clusters and supervisor explicitly dropped it, leaving documented <2%/gradient false-pass limit with narrow-scope/logging/token-test mitigations. Docs cover outline/halo perWCAG,tiny-component/quantization limits,exact red/mutation proofs and per-test results. Sourcecommit d57d10ced6eb95b052aaf685023368dfd0bd7bd7;guard self/focused/datedapproval/actualPRbody checks pass. No app/audit-scope/resource/membership changes. Await independent review and CI.
+Cross-core reachability fix: each flood-fill step stays within blends assigned to the same retained-core key; boundary endpoints still require their own core. Exact reviewer two-core fixture failed14.426790204267782:1 on93f71274 and now asserts nil. iPhone17Pro full targeted class31/31pass,0fail/skip,13.365s;all30 prior tests unchanged,all3 real screenshot ratios non-nil/unchanged. Source7d15f3c5f15be76da02fe9ba1a9171d03cc77f0e;guard self/focused/actualPRbody pass. nohup/grep used,no builds killed,no thresholds or audit scope loosened. Prior known heuristic limits remain. Await independent review and CI; push and assigned GraphQL thread reply/resolution follow.
 <!-- SECTION:FINAL_SUMMARY:END -->
