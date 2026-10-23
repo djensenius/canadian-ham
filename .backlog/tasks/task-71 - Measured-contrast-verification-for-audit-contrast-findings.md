@@ -1,11 +1,11 @@
 ---
 id: TASK-71
 title: Measured-contrast verification for audit contrast findings
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 14:04'
+updated_date: '2026-10-23 14:10'
 labels:
   - accessibility
   - tests
@@ -53,6 +53,8 @@ Supervisor clarification for step9: validate retained-cluster BOUNDARY pixels (4
 13. Final adversarial hardening: add exact partial-overlap and 1.9% grey fixtures and replace the weak subthreshold support test with a per-pixel-valid but background-disconnected blend fixture. Prove both attacks red on 5da09a53 and the strengthened test red with reachability temporarily bypassed; measure the baseline class runtime. Precompute per-bin pixel indices, reject retained low-contrast boundary pairs and >=6-pixel subthreshold non-blends below4.5, preserving all thresholds otherwise. Rerun all three screenshots, report any nil and cluster diagnostics without loosening. Document outline/tiny-component/quantization limits and full class before/after/per-test results; run targeted iPhone17Pro via nohup/xbuild and grep polling, guard/diff checks, commit/push.
 
 14. Supervisor decision supersedes step13 attack1 guard: omit the proposed >=6px subthreshold rejection and its failing test after all3 real screenshots became nil; document the confirmed false-pass risk and token-check mitigations. Preserve strict partial-overlap rejection, stronger reachability fixture/mutation proof, per-bin index optimization and all other thresholds. Compare identical30-test class before/after optimization, finalize targeted evidence and push for independent review.
+
+15. Copilot PRRT_kwDOUxZq_M6von_z: add the exact two-core extension of the subthreshold-panel reachability fixture (#002060 cores at x28/38 plus (70,10) 10x30 block; #808CA4 blends at x30/36). Prove the false 14.4268 ratio on 93f71274 through nohup/xbuild/grep, restrict every blend flood-fill edge to the same supporting retained-core key, and keep the endpoint core check. Run the complete iPhone17Pro measurement class including all three real screenshots; escalate any nil without loosening. Record per-test evidence, finalize, commit/push and reply to/resolve only the assigned GraphQL thread.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -104,6 +106,8 @@ DECISION UPDATE (supervisor final hardening): requested >=6px/<2% non-blend/<4.5
 Final-hardening green validation: identical30-test class before pixel-index optimization20.401s,after9.328s (54.3% lower/2.19x),both30pass/0fail/0skip,xbuildexit0. Before log/bundle /tmp/task-71-hardening-performance-before.{log,xcresult};final /tmp/task-71-hardening-final.{log,xcresult}, summary /tmp/task-71-hardening-final-summary.json,attachments /tmp/task-71-hardening-proof-attachments/. Final screenshot ratios unchanged8.344323837747055/11.403364958858397/16.336427704401043;boldedge2.6667% ratio15.9942758247219. All4xbuildruns via nohup/grep,singleiPhone17Pro/iOS27.0,no builds killed. Only unrelated AppIntents warning in final build.28old tests,wrapper,visibility gate byte-identical to5da09a53;stronger same-named support test plus1new partial-overlap test. Docs cover attack1 confirmed/deferred,outline/halo perWCAG,tinycomponent residual,quantization,and exact tests/diagnostics/per-test runtimes. Narrow audit scope/app/resources/project membership untouched;fullsuites/otherplatforms skipped. Test guard and independent re-review pending.
 
 Final-hardening implementation d57d10ced6eb95b052aaf685023368dfd0bd7bd7; guard/evidence doc follow-up cdfbdc4f. Guard self-test passed;focused5da09a53...d57d10ce passed(no guardedchanges);main...HEAD unapproved failedasexpected(exit1),dated-marker approved passed(exit0),and actualPR1007 body approved passed. Logs /tmp/task-71-hardening-test-guard-{self,focused,unapproved,approved,pr-body}.log. gitdiff5da09a53--check passed,no staged files. No source edits after final30/30 run;later commits are docs/Backlog only. Done pending required independent re-review and PR CI; attack1 under2%/gradient false-pass risk explicitly accepted as remaining limit by supervisor,not silently fixed or hidden.
+
+Reopened solely for user-confirmed cross-core blend-reachability finding PRRT_kwDOUxZq_M6von_z on PR#1007. No changes to audit scope, app code, fixtures/resources or existing thresholds.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
