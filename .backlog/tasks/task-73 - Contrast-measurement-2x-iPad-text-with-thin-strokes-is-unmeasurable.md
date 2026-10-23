@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 16:51'
-updated_date: '2026-10-23 18:15'
+updated_date: '2026-10-23 18:16'
 labels:
   - accessibility
   - tests
@@ -57,6 +57,8 @@ Rounded-control implementation0a617ef6 and per-test evidence ddcedc84 committed 
 Validation via nohup/xbuild with grep polling; no builds killed. Initial iPhone17Pro class /tmp/task-73-control-iphone.{log,xcresult}:37passed/2failed methods/0skipped (39total), exit65. Fixed raw negative CGRect dimension validation and exclusion proof nil expectation; targeted two-method rerun /tmp/task-73-control-iphone-fix.{log,xcresult}:2passed/0failed/0skipped,exit0. All39 methods now have green results across full+targeted fix runs, not a claimed single final full-class run. macOS documented unit command /tmp/task-73-control-macos.{log,xcresult}:210passed/0failed/0skipped,exit0; UI-test target compiled too. Added@MainActor to platform-safe screenshot bridge to eliminate isolation warning. No changed-source warnings in final commands; unrelated deprecation/plural/AppIntents warnings and expected corrupt-store diagnostics remain. tvOS/visionOS/full iOS suites skipped because only UI-test helper/proofs changed. Complete per-test tables and commands are in docs/testing/task-73-rounded-control-measurement.md. Test-guard self-test passed; focused57f7991a...0a617ef6 check passed with Test-guard-approved: owner decision 2026-10-22, reporting intended wrapper findings. git diff --check passed. Independent branch review remains required; no live audit integration claimed.
 
 Reopened for supervisor-requested review fixes, including explicitly approved discarded-strip hardening (option 5). PR marker will be Test-guard-approved: task-73; AGENTS TASK-71 entry will record the TASK-73 button crop refinement. No base-algorithm or audit-scope widening.
+
+Supervisor refinement during review fixes: literal full-image/strip dominant background endpoint rejects the real fixture because beige dominates full (57,365px), crop (51,226px), and discarded strips (6,139px); cream is 3,874 strip pixels. Explicitly approved selecting the most-covered NON-crop-background strip cluster as optional second endpoint, requiring WCAG contrast <=1.5 against crop background. Reject otherwise. Validate every discarded pixel as crop-background cluster, outside-background cluster, or RGB-line blend (residual <=8); without second cluster allow only crop-background pixels. Keep More-chevron nil and fixture13.62 requirements.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
