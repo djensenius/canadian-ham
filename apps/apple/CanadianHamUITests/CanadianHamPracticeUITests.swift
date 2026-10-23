@@ -2595,7 +2595,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let frame = element.frame
             guard frame.width > 0, frame.height > 0 else { return false }
             guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
-            guard auditGeometry.scrollFrame.intersects(frame) else { return false }
             guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
             guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
 
