@@ -2416,7 +2416,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertEqual(toggle.label, "Show answer 1")
         XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
         recordTryItAuditGeometry(in: app, stage: "collapsed answer")
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditIgnoringOccludedOrMeasuredContrast(app: app)
         toggle.tap()
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
         XCTAssertEqual(answer.label, "The second is 28.2 MHz, in HF; the third is 42.3 MHz, in VHF.")
@@ -2425,10 +2425,61 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(secondAnswer.exists, "Revealing one Try-it must not reveal another")
         positionTryItControlForAudit(toggle, in: app)
         recordTryItAuditGeometry(in: app, stage: "expanded answer")
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        try auditIgnoringOccludedOrMeasuredContrast(app: app)
         toggle.tap()
         XCTAssertFalse(answer.exists, "Collapsing must remove the answer from the accessibility tree")
         XCTAssertEqual(toggle.value as? String, "Collapsed")
+    }
+
+    // Owner decisions 2026-10-12 (occluded lesson content) and 2026-10-22 (TASK-71).
+    // Only new Try-it audits combine these rules; existing audit helpers stay unchanged.
+    private func auditIgnoringOccludedOrMeasuredContrast(app: XCUIApplication) throws {
+        let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
+        let windowFrame = app.windows.firstMatch.frame
+        let navigationBar = app.navigationBars.firstMatch
+        let statusBar = app.statusBars.firstMatch
+        let protectedMaxY = max(
+            navigationBar.exists ? navigationBar.frame.maxY : windowFrame.minY,
+            statusBar.exists ? statusBar.frame.maxY : windowFrame.minY
+        )
+        try app.performAccessibilityAudit { issue in
+            guard issue.auditType == .contrast else { return false }
+            let isOccluded = { () -> Bool in
+                guard let element = issue.element else { return false }
+                let frame = element.frame
+                guard frame.width > 0, frame.height > 0 else { return false }
+                guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
+                guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
+                guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
+
+                XCTContext.runActivity(named: "Ignored occluded lesson scroll-content contrast false positive") { activity in
+                    let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame)) matchedScrollDescendant=true"
+                    let attachment = XCTAttachment(string: note)
+                    attachment.lifetime = .keepAlways
+                    activity.add(attachment)
+                }
+                return true
+            }()
+            if isOccluded { return true }
+
+            let element = issue.element
+            let frame = element?.frame
+            var ratio: Double?
+            if let element, let frame,
+               isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
+               let image = element.screenshot().image.cgImage {
+                ratio = measuredTextContrast(in: image)
+            }
+            let verified = ratio.map { $0 >= 4.5 } ?? false
+            let activityName = verified ? "Verified contrast audit finding with measured WCAG contrast" : "Failed contrast audit finding"
+            XCTContext.runActivity(named: activityName) { activity in
+                let measurement = ratio.map { "\($0):1" } ?? "unmeasurable"
+                let attachment = XCTAttachment(string: "label=\(element?.label ?? "<nil>") frame=\(frame.map { "\($0)" } ?? "<nil>") ratio=\(measurement)")
+                attachment.lifetime = .keepAlways
+                activity.add(attachment)
+            }
+            return verified
+        }
     }
 
     private func positionLessonHeadingForTryItAudit(_ anchor: String, in app: XCUIApplication) {
