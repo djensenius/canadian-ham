@@ -22,6 +22,40 @@ non-contrast findings remain failures. There is no label whitelist.
 
 ## Measurement
 
+TASK-73 adds a [button crop fallback](task-73-rounded-control-measurement.md)
+without changing `measuredTextContrast(in:)` below. The gate is **any button**,
+not rounded-shape detection. The shared audit wrapper calls the detail variant
+`controlTextContrastMeasurement(in:scale:isButton:)` of
+`measuredControlTextContrast(in:scale:isButton:)`, passing `.button` element type
+and native screenshot pixels per frame point. Non-buttons keep the full-image
+result. Only a button with a nil or below-4.5 full-image result may retry a crop:
+horizontally `min(height / 2, 6 pt × scale)` and vertically `2 pt × scale`, rounded
+inward to whole pixels. The smallest passing tested horizontal cap was 6 pt.
+Rounded corners **remain inside the crop** and are tolerated only while each
+cluster stays below 2%; narrower capsules/larger Dynamic Type can still fail.
+
+Every discarded pixel must belong to the crop background, an outside background,
+or their RGB-line blends (projection 0…1, residual ≤8). The optional outside
+endpoint is the most-covered non-crop-background strip cluster and must have
+contrast ≤1.5:1 against the crop background, so a grey chevron cannot qualify.
+Without an outside endpoint only crop-background pixels are accepted. Unsafe
+strips return nil; all conservative base rules apply unchanged within valid
+crops. A nil crop measurement stays nil. See TASK-73 for the supervisor-approved
+endpoint refinement and end-stroke/More-chevron fail-closed regressions.
+
+Local composite audit helpers in TASK-46.5/TASK-46.6.1 must use the same measured
+path with real element type and screenshot scale, and its detail variant for
+logging. Integrations remain on those task branches; this adds no live call site
+or scope widening. The existing visibility gate, full default audit and
+non-contrast rejection remain in place. keepAlways evidence now also records the
+full-image ratio, `cropUsed`, and horizontal/vertical native-pixel insets. The
+wrapper modification uses `Test-guard-approved: task-73`, recorded in AGENTS.md.
+
+TASK-73's [2× iPad investigation](task-73-contrast-2x-blocked.md) is **blocked**:
+its thin `=` stroke is unmeasurable under the unchanged base algorithm. A bounded
+support-only per-pixel prototype recovered the screenshot but false-passed
+adversarial panels, so it was not shipped. No threshold or audit scope changed.
+
 `measuredTextContrast(in:)` accepts a `CGImage` at its native pixel resolution
 (no point-scale conversion or resampling). It converts to opaque 8-bit sRGB,
 groups pixels into 5-bit-per-channel RGB clusters and chooses the largest
