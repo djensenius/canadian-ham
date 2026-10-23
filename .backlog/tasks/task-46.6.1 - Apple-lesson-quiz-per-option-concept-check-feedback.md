@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 12:01'
+updated_date: '2026-10-23 12:05'
 labels:
   - apple
 dependencies:
@@ -37,6 +37,8 @@ TASK-46.6 adds optional localized feedback to each concept-check choice and disp
 4. Supervisor-directed bounded audit investigation: preserve full audits; when the settled targeted run still fails on the unchanged header, record TASK-65 evidence, leave AC3 unchecked/In Progress, write the handoff and push without opening a PR.
 
 5. Resume per coordinator authorization 2026-10-23: merge/push origin/main (TASK-70 aligned occluded contrast helper); rerun only new AX-XXXL method on iPhone/iPad unchanged. Only if the sole remaining issue is the fully visible Question N of M header, add a test-local contrast-only exact-label exception, logged with frame/screenshot and capped at one per audit, under owner-delegated decision 2026-10-22. Keep shared helpers unchanged. Then run all 12 targeted lesson-quiz methods on each device, verify AC3, finalize and push without a PR; stop on any other failure.
+
+6. Supervisor-directed final-run failure handling: if final normal-size correct light/dark audits fail, let the already-started xbuild finish and extract element labels/frames, app/element screenshots, and visibility evidence. Rerun only those two methods once unchanged; if both pass, record both runs and continue the iPad selection. If either fails again, stop and report with evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
