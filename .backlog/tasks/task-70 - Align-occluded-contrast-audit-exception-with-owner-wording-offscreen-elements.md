@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 03:00'
-updated_date: '2026-10-23 03:01'
+updated_date: '2026-10-23 04:00'
 labels: []
 dependencies: []
 priority: high
@@ -48,4 +48,35 @@ Classification kept inline: extracting audit type, optional XCUIElement/frame, n
 Validation setup: source/call-graph scan found 66 helper-calling methods (45 LessonFigures, 10 Practice, 11 ExamTools), including indirect wrapper/scenario calls. Run 1: CanadianHamDefault, 19 selected methods, iPhone 17 Pro. Run 2: CanadianHamLessonFigures, 47 selected methods, iPhone 17 Pro. Run 3: CanadianHamDefault, iPad Pro 11-inch (M5), iOS 27.0, official-reference-sheet four-way EN/FR/light/dark caller plus iPad-only regular-width inspector caller. All runs use xbuild -parallel-testing-enabled NO and individual -only-testing: selectors in two sequential nohup batches, never killing any builds. Manifests/commands: /tmp/task70-test-manifest.json, /tmp/task70-commands.json. Result bundles/logs: /tmp/task70-{iphone-default,iphone-figures,ipad}.{xcresult,log}; batch scripts/logs /tmp/task70-{iphone,ipad}-batch.{sh,log}. iPhone currently waiting on the shared build lock.
 Static proof passed: each Swift file is byte-identical to base 49b318df except the approved intersection-line removal; all four complete audit closures remain byte-identical to one another (reference-sheet setup remains unchanged). git diff --check passed. node scripts/check-test-guard.mjs --self-test passed. TEST_GUARD_PR_BODY="Test-guard-approved: owner decision 2026-10-22" node scripts/check-test-guard.mjs --base 49b318df --head HEAD passed with the expected approved helper/audit warnings. PR must carry that marker on its own line.
 No macOS/tvOS/visionOS suites: only iOS UI-test helpers and documentation changed, no app/package/other-platform target code. No full iOS suite or title sweep: selection is limited to actual callers, including all affected figure tests in their required figure plan.
+
+Targeted iPhone default-plan run PASS (rc=0): 19 executed, 18 passed, 1 pre-existing iPad-only skip, zero failures. iPad-only inspector caller is additionally queued on iPad. Per-test output:
+```text
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testAccessibilityAuditHintedAnswerResultLightAndDark]' passed (219.109 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testAccessibilityAuditHintToolLightAndDark]' passed (82.390 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testLargeDetentCalculatorRunsFullAccessibilityAuditLightAndDark]' passed (70.494 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testLargestDynamicTypeKeepsCalculatorGridReachableLightAndDark]' passed (75.135 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testLessonQuizHintsDarkAndFullAccessibilityAudits]' passed (299.761 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testLessonQuizHintsLightAndFullAccessibilityAudits]' passed (172.796 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testOfficialReferenceSheetLightAndDarkEnglishAndFrench]' passed (275.152 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testReferenceSheetLargestDynamicTypeKeepsControlsReachable]' passed (133.732 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testRegularWidthInspectorAccessibilityAuditLightAndDark]' skipped (11.827 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testSimulatedHingeStableSlightOpenPeeksHintOneInPractice]' passed (25.009 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testSizeClassRegularInspectorAccessibilityAuditLightAndDark]' passed (69.887 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditMockExamFlowDark]' passed (126.711 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditMockExamFlowLight]' passed (134.396 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditMorseCourseLessonAndSummaryDark]' passed (537.176 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditMorseCourseLessonAndSummaryLight]' passed (518.421 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditPracticeSessionDark]' passed (120.367 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditPracticeSessionLight]' passed (117.976 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamPracticeUITests testLessonPrerequisiteNavigationAndAccessibilityDark]' passed (51.673 seconds).
+Test Case '-[CanadianHamUITests.CanadianHamPracticeUITests testLessonPrerequisiteNavigationAndAccessibilityLight]' passed (60.493 seconds).
+	 Executed 19 tests, with 1 test skipped and 0 failures (0 unexpected) in 3102.505 (3102.885) seconds
+	 Executed 19 tests, with 1 test skipped and 0 failures (0 unexpected) in 3102.505 (3102.887) seconds
+** TEST SUCCEEDED **
+```
+Command (DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer):
+```sh
+xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -parallel-testing-enabled NO -testPlan CanadianHamDefault -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -resultBundlePath /tmp/task70-iphone-default.xcresult -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testAccessibilityAuditHintToolLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testAccessibilityAuditHintedAnswerResultLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testLargeDetentCalculatorRunsFullAccessibilityAuditLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testLargestDynamicTypeKeepsCalculatorGridReachableLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testLessonQuizHintsDarkAndFullAccessibilityAudits -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testLessonQuizHintsLightAndFullAccessibilityAudits -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testOfficialReferenceSheetLightAndDarkEnglishAndFrench -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testReferenceSheetLargestDynamicTypeKeepsControlsReachable -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testRegularWidthInspectorAccessibilityAuditLightAndDark -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testSimulatedHingeStableSlightOpenPeeksHintOneInPractice -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/testSizeClassRegularInspectorAccessibilityAuditLightAndDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowLight -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummaryDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummaryLight -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionLight -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testLessonPrerequisiteNavigationAndAccessibilityDark -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testLessonPrerequisiteNavigationAndAccessibilityLight test CODE_SIGNING_ALLOWED=NO
+```
+Figure-plan run is now waiting for the shared build lock; no builds interrupted.
 <!-- SECTION:NOTES:END -->
