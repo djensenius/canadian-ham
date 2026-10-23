@@ -238,3 +238,12 @@ feedback), **11.403364958858397:1** (dark feedback), and
 lines, icon/text and black-band/text tests assert the grey text's **2.6591:1**
 within 0.01/0.1; two-tone panels assert nil. Existing pre-TASK-71 UI-test sources
 remain unchanged.
+
+Review-fix test guard: `node scripts/check-test-guard.mjs --self-test` passed.
+Against `main...HEAD`, the unapproved check failed as expected (exit 1), flagging
+the new handler/default audit at lines 128/136. The same check with
+`TEST_GUARD_PR_BODY='Test-guard-approved: owner decision 2026-10-22'` passed
+(exit 0), still reporting the approved findings. Logs:
+`/tmp/task-71-review-test-guard-{self,unapproved,approved}.log`.
+`git diff --check` passed. No target membership/resources changed in this fix,
+so XcodeGen regeneration was unnecessary. No PR opened.
