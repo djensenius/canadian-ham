@@ -17,7 +17,7 @@ ordinal: 152000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Owner-delegated decision 2026-10-22, coordinator: narrowly extend TASK-71 measured contrast for button screenshots with rounded ends/corners. The unaltered iPhone 17 Pro 3× Hide answer 1 fixture measures 1.199:1 over the full image because cream page corners and the beige pill are different background tones. Only buttons whose full-image measurement is nil or below4.5 may retry an inner native-pixel crop, retaining all conservative background/minimum-ratio/blend rules. Supervisor refinement: sweep horizontal caps4/6/8/12/16pt (vertical2pt), choose the smallest passing cap, and document excluded end text as a known limit. Non-buttons and existing audit scope remain unchanged. The prior2× iPad thin-stroke investigation remains unresolved; preserve its diagnostics in docs/testing/task-73-contrast-2x-blocked.md rather than adopting its unsafe prototype.
+Owner-delegated decision 2026-10-22, coordinator, plus supervisor-approved review hardening: extend TASK-71 measured contrast only for any button whose full-image measurement is nil or below4.5. The unaltered iPhone17Pro3x Hide answer1 fixture measures1.199:1 full and13.620:1 with the smallest passing swept cap6pt horizontal/2pt vertical. Keep the conservative base algorithm unchanged. Validate every discarded strip pixel as crop-background cluster, optional page-like outside cluster (most-covered non-crop-background strip cluster, contrast<=1.5), or RGB-line blend (residual<=8); otherwise nil. This endpoint refinement is explicitly supervisor-approved because beige dominates both full/crop/strips and the real cream corners would otherwise fail. Record full/final ratios, crop-used flag and pixel insets. Non-buttons and audit scope stay unchanged. Retained corners are tolerated only below2%; narrow capsules/larger Dynamic Type may still fail. Earlier2x iPad thin-stroke investigation remains unresolved in docs/testing/task-73-contrast-2x-blocked.md; no unsafe prototype ships.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
@@ -25,7 +25,9 @@ Owner-delegated decision 2026-10-22, coordinator: narrowly extend TASK-71 measur
 - [x] #1 The unaltered 3× rounded-button fixture measures at least4.5 using the smallest passing horizontal cap from4/6/8/12/16pt and vertical2pt; crop and audit path apply only to buttons after a nil or below4.5 full-image measurement
 - [x] #2 Low-contrast #9A9A9A pill text and retained low-contrast text beside high-contrast text fail safe; add explicit end-inset exclusion proof and document the limit
 - [x] #3 All existing measurements/adversarial regressions remain unchanged for non-buttons; document fixture provenance, inset sweep and unresolved2× thin-stroke limitation without loosening the conservative algorithm
-- [x] #4 iPhone17Pro UITestContrastMeasurementTests and the documented macOS unit command pass via nohup/xbuild with grep polling; commit and push branch without a PR
+- [ ] #4 iPhone17Pro UITestContrastMeasurementTests and the documented macOS unit command pass via nohup/xbuild with grep polling; commit and push branch without a PR
+- [ ] #5 Discarded-strip hardening rejects the prior excluded-end false pass and More trailing-grey-chevron (2-3% coverage) while preserving the real fixture13.62039; full/final ratio, crop-used and pixel-inset metadata are logged keepAlways
+- [ ] #6 Meaningful nil non-button test has a measurable button counterpart; matched dark-text positive controls cover each synthetic low-contrast crop plus2x/3x fallback; a positive-size crop with no text returns nil; AGENTS records TASK-73 and docs state any-button and sub-2% retained-corner limits
 <!-- AC:END -->
 
 ## Implementation Plan
