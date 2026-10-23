@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 16:51'
-updated_date: '2026-10-23 18:16'
+updated_date: '2026-10-23 18:19'
 labels:
   - accessibility
   - tests
@@ -59,6 +59,8 @@ Validation via nohup/xbuild with grep polling; no builds killed. Initial iPhone1
 Reopened for supervisor-requested review fixes, including explicitly approved discarded-strip hardening (option 5). PR marker will be Test-guard-approved: task-73; AGENTS TASK-71 entry will record the TASK-73 button crop refinement. No base-algorithm or audit-scope widening.
 
 Supervisor refinement during review fixes: literal full-image/strip dominant background endpoint rejects the real fixture because beige dominates full (57,365px), crop (51,226px), and discarded strips (6,139px); cream is 3,874 strip pixels. Explicitly approved selecting the most-covered NON-crop-background strip cluster as optional second endpoint, requiring WCAG contrast <=1.5 against crop background. Reject otherwise. Validate every discarded pixel as crop-background cluster, outside-background cluster, or RGB-line blend (residual <=8); without second cluster allow only crop-background pixels. Keep More-chevron nil and fixture13.62 requirements.
+
+Implemented requested docs/comment corrections (any-button gate, retained sub-2% corners, narrow capsules/Dynamic Type may fail), full/final/crop-used/pixel-inset keepAlways logging, all requested test controls, and background-only discarded strips with the explicitly refined <=1.5 outside endpoint. AGENTS TASK-71 exception now includes TASK-73 and the PR marker is Test-guard-approved: task-73. Host fixture remains13.620392055674973, full1.1993729121750754. Diagnostic host class harness44methods HOST_FAILURES=0; final iPhone full class and macOS unit commands launched via nohup/xbuild and grep polling, currently waiting on shared build lock; no builds killed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
