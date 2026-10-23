@@ -302,7 +302,7 @@ func auditVerifyingMeasuredContrast(app: XCUIApplication) throws {
         var ratio: Double?
         if let element, let frame,
            isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
-           let image = element.screenshot().image.cgImage {
+           let image = contrastMeasurementCGImage(from: element.screenshot()) {
             ratio = measuredTextContrast(in: image)
         }
         let verified = ratio.map { $0 >= 4.5 } ?? false
@@ -315,4 +315,14 @@ func auditVerifyingMeasuredContrast(app: XCUIApplication) throws {
         }
         return verified
     }
+}
+
+/// XCUIScreenshot.image is UIImage on iOS and NSImage on macOS; the UI-test target also
+/// compiles in the documented macOS unit-test command, so bridge both.
+func contrastMeasurementCGImage(from screenshot: XCUIScreenshot) -> CGImage? {
+#if os(macOS)
+    screenshot.image.cgImage(forProposedRect: nil, context: nil, hints: nil)
+#else
+    screenshot.image.cgImage
+#endif
 }
