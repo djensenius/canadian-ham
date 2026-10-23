@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 16:51'
-updated_date: '2026-10-23 18:19'
+updated_date: '2026-10-23 18:22'
 labels:
   - accessibility
   - tests
@@ -26,21 +26,17 @@ Owner-delegated decision 2026-10-22, coordinator, plus supervisor-approved revie
 - [x] #2 Low-contrast #9A9A9A pill text and retained low-contrast text beside high-contrast text fail safe; add explicit end-inset exclusion proof and document the limit
 - [x] #3 All existing measurements/adversarial regressions remain unchanged for non-buttons; document fixture provenance, inset sweep and unresolved2× thin-stroke limitation without loosening the conservative algorithm
 - [ ] #4 iPhone17Pro UITestContrastMeasurementTests and the documented macOS unit command pass via nohup/xbuild with grep polling; commit and push branch without a PR
-- [ ] #5 Discarded-strip hardening rejects the prior excluded-end false pass and More trailing-grey-chevron (2-3% coverage) while preserving the real fixture13.62039; full/final ratio, crop-used and pixel-inset metadata are logged keepAlways
-- [ ] #6 Meaningful nil non-button test has a measurable button counterpart; matched dark-text positive controls cover each synthetic low-contrast crop plus2x/3x fallback; a positive-size crop with no text returns nil; AGENTS records TASK-73 and docs state any-button and sub-2% retained-corner limits
+- [x] #5 Discarded-strip hardening rejects the prior excluded-end false pass and More trailing-grey-chevron (2-3% coverage) while preserving the real fixture13.62039; full/final ratio, crop-used and pixel-inset metadata are logged keepAlways
+- [x] #6 Meaningful nil non-button test has a measurable button counterpart; matched dark-text positive controls cover each synthetic low-contrast crop plus2x/3x fallback; a positive-size crop with no text returns nil; AGENTS records TASK-73 and docs state any-button and sub-2% retained-corner limits
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Preserve2× diagnostic evidence and rescope Backlog to rounded controls. Sweep4/6/8/12/16pt horizontal caps at3× with vertical2pt; use the smallest passing cap (host sweep:6pt).
-2. Add a button-gated native-pixel crop fallback and wire the shared audit path with element type and screenshot/frame scale; keep the base algorithm byte-identical. Bundle the unaltered fixture.
-3. Add fixture, low-contrast, retained-near-end/middle, excluded-end, non-button, full-image-preservation and invalid-crop proofs; document all crop limits and future TASK-46.5/46.6.1 composite integration.
-4. Run the iPhone proof class and macOS unit command through nohup/xbuild and grep polling, plus diff/guard checks. Record per-test results, finalize criteria, commit and push; no PR.
-
-5. Address approved adversarial-review notes: preserve base algorithm; validate every discarded pixel against full/crop background clusters or their RGB-8 line blends; expose full/final/crop metadata in keepAlways audit logging.
-6. Replace excluded-content false-pass proof with fail-closed regressions (including More chevron), add meaningful non-button nil, matched dark-text controls at 2x/3x and no-text crop; correct corner/gate docs and AGENTS TASK-73 scope.
-7. Run the final full iPhone 17 Pro measurement class and documented macOS unit command via nohup/xbuild with grep polling, record all per-test evidence, commit and push without PR.
+1. Retain the prior blocked2x investigation unchanged; preserve the unaltered3x fixture and smallest-passing-cap sweep (6pt horizontal,2pt vertical).
+2. Preserve measuredTextContrast byte-for-byte and any-button/full-image gating; require every discarded pixel to be crop-background, the approved <=1.5 most-covered non-crop-background strip cluster, or their RGB-8 line blend before accepting a crop.
+3. Log full/final ratios, crop-used and pixel insets; add meaningful nil/non-button, matched dark-text controls,2x/3x positive, no-text crop and More-chevron/excluded-end rejection proofs. Correct docs and AGENTS TASK-73 exception/guard marker.
+4. Run the final full44-method iPhone17Pro measurement class and documented macOS210-test unit command through nohup/xbuild and grep polling; record every test, run source/diff/guard checks, commit and push without PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -63,6 +59,8 @@ Reopened for supervisor-requested review fixes, including explicitly approved di
 Supervisor refinement during review fixes: literal full-image/strip dominant background endpoint rejects the real fixture because beige dominates full (57,365px), crop (51,226px), and discarded strips (6,139px); cream is 3,874 strip pixels. Explicitly approved selecting the most-covered NON-crop-background strip cluster as optional second endpoint, requiring WCAG contrast <=1.5 against crop background. Reject otherwise. Validate every discarded pixel as crop-background cluster, outside-background cluster, or RGB-line blend (residual <=8); without second cluster allow only crop-background pixels. Keep More-chevron nil and fixture13.62 requirements.
 
 Implemented requested docs/comment corrections (any-button gate, retained sub-2% corners, narrow capsules/Dynamic Type may fail), full/final/crop-used/pixel-inset keepAlways logging, all requested test controls, and background-only discarded strips with the explicitly refined <=1.5 outside endpoint. AGENTS TASK-71 exception now includes TASK-73 and the PR marker is Test-guard-approved: task-73. Host fixture remains13.620392055674973, full1.1993729121750754. Diagnostic host class harness44methods HOST_FAILURES=0; final iPhone full class and macOS unit commands launched via nohup/xbuild and grep polling, currently waiting on shared build lock; no builds killed.
+
+Final post-review commands passed, no helper/test edits after launch: /tmp/task-73-review-iphone.{sh,log,xcresult}: single full44-method class44passed/0failed/0skipped,24.802s,exit0. /tmp/task-73-review-macos.{sh,log,xcresult}:210passed/0failed/0skipped,17.034s,exit0; both UI-test files compiled on macOS. Both waited for xbuild lock; grep polling, no builds killed. No changed-source warnings; AppIntents warning and expected macOS corrupt-store diagnostics only. Source comparison confirms base algorithm unchanged fromc7e7dc36 and all31 original methods unchanged from57f7991a; fixture SHA unchanged. Host44-method harness HOST_FAILURES=0; real fixture13.620392055674973,full1.1993729121750754. More-chevron and end-stroke raw crops pass but hardened result is nil; requested dark controls,2x positive, actual measurable-button/nil-nonbutton pair and valid-no-text nil all pass. tvOS/visionOS/full-iOS/figures/title/web skipped because no app/package/strings/live-audit integration changed. Final per-test tables follow and are also in docs/testing/task-73-rounded-control-measurement.md. Independent reviewer remains required before PR; marker Test-guard-approved: task-73.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
