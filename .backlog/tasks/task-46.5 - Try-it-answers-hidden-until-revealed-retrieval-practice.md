@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 14:41'
+updated_date: '2026-10-23 15:56'
 labels:
   - content
   - web
@@ -48,6 +48,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 9. Coordinator-approved after iPhone dark failed the unchanged prompt visibility assertion before auditing (111.527s): add only a new Try-it-local bounded positioning pass (max10 precise small scrolls in either direction), then keep identical visibility assertions and log frames on exhaustion. Wait for TASK-72 merge; merge main and use contrastMeasurementCGImage(from:) in local composed helper; rerun dark first then iPhone light/French, all iPad tests and l10n.
 
 10. Coordinator-approved after the bounded10-pass dark retry left Show answer2pt below visible area: retain union-based overshoot targeting with8pt margin and <=80pt precise scrolls; allow12 passes; explicitly log/return if prompt/control union is taller than visible area. Keep unchanged containment assertions and exhaustion logging; rerun dark-first then rest.
+
+11. Coordinator-approved after12-pass dark positioning stalled with identical2pt residual clipping: only the new Try-it positioning helper now requests at least24pt whenever vertical overshoot remains, still clamped by unchanged preciseScroll to80pt and bounded to12 passes. Keep all containment assertions, union-height stop and exhaustion logs. Rerun dark then remaining iPhone/iPad and l10n checks.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -86,6 +88,8 @@ Resume checks/evidence: origin/main merged/pushed (merge1bbdab61); coordinator-a
 TASK-71 resume: merged/pushed main d05ff6e8; local approved composed audit helper committed0911ea50; all198 pre-branch tests/helpers and shared measurement source byte-identical to origin/main. Text-source and guard self-test/diff with Test-guard-approved: owner decision2026-10-22 PASS. iPhone light full collapsed/expanded audit PASS173.535s; one measured finding label=The report is about S9 plus16dB... ratio16.336427704401043:1 (keepAlways attachment A1CF397D-DB56-41E3-B363-DA735007AEDC.txt under /tmp/task-46.5-measured-iphone-light-attachments). iPhone dark FAIL111.527s before audit: unchanged prompt-fully-visible assertion line2414. Script STOPPED as requested; French/iPad/l10n not run; no processes signalled. Coordinator authorized bounded local positioning fix and TASK-72 platform-image bridge merge before resuming dark-first. AC3 remains unchecked.
 
 TASK-72 merged/pushed (d71b76b0); local composite uses contrastMeasurementCGImage(from:). Dark retry FAIL201.431s before audit: prompt y195.259 height497.333 fully visible, control y704.667 height155.333 ends860 vs visible maxY858. Bounded10-pass positioning exhausted; unchanged control visibility assertion correctly failed. No contrast findings suppressed or tests skipped; script stopped before all remaining tests/l10n. Evidence /tmp/task-46.5-measured-v2-iphone-dark.log, -results.json, -xcresult-path.txt, -attachments/8B11344A-FF0D-438F-941B-FD75A1B520D4.txt (geometry). Coordinator approved union-targeted12-pass refinement with unchanged assertions.
+
+v3 dark FAIL253.514s before audit after roughly69min waiting on shared xbuild lock (never interrupted):12 union-targeted passes ended at exactly the same2pt-clipped control geometry as v2. Repeated residual10pt drags (2pt overshoot+8pt margin) did not move content, consistent with pan-recognition threshold. Evidence /tmp/task-46.5-measured-v3-iphone-dark.log, -results.json, -xcresult-path.txt and -attachments (geometry + video). Script stopped; remaining tests/l10n not started. Coordinator explicitly approved a new-test-local minimum24pt drag when overshoot remains; shared preciseScroll and all assertions unchanged. AC3 remains unchecked pending actual audits.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
