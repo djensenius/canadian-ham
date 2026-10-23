@@ -1,11 +1,11 @@
 ---
 id: TASK-71
 title: Measured-contrast verification for audit contrast findings
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 14:03'
+updated_date: '2026-10-23 14:04'
 labels:
   - accessibility
   - tests
@@ -102,10 +102,12 @@ Final-hardening pre-fix proof on5da09a53: full31-test baseline29pass/2fail,22.66
 DECISION UPDATE (supervisor final hardening): requested >=6px/<2% non-blend/<4.5 guard made all3 real screenshots nil. Reported full per-bin counts/RGB/ratio/bounds in /tmp/task-71-hardening-cluster-diagnostics.log. Dark6bins19–852px,light10bins42–686px,Try-it8bins27–647px,ratios1.012–4.3505. Supervisor explicitly DROPPED attack1 guard because rendering residue is indistinguishable under those tests; no blend-criteria diagnosis/loosening. Removed temporary guard and its failing proof from final source; preserve red proof/docs as an explicit known limit including gradients. Continue partial-overlap/reachability/per-bin optimization/docs only; narrow scope/logged ratios/token-test provenance are mitigations.
 
 Final-hardening green validation: identical30-test class before pixel-index optimization20.401s,after9.328s (54.3% lower/2.19x),both30pass/0fail/0skip,xbuildexit0. Before log/bundle /tmp/task-71-hardening-performance-before.{log,xcresult};final /tmp/task-71-hardening-final.{log,xcresult}, summary /tmp/task-71-hardening-final-summary.json,attachments /tmp/task-71-hardening-proof-attachments/. Final screenshot ratios unchanged8.344323837747055/11.403364958858397/16.336427704401043;boldedge2.6667% ratio15.9942758247219. All4xbuildruns via nohup/grep,singleiPhone17Pro/iOS27.0,no builds killed. Only unrelated AppIntents warning in final build.28old tests,wrapper,visibility gate byte-identical to5da09a53;stronger same-named support test plus1new partial-overlap test. Docs cover attack1 confirmed/deferred,outline/halo perWCAG,tinycomponent residual,quantization,and exact tests/diagnostics/per-test runtimes. Narrow audit scope/app/resources/project membership untouched;fullsuites/otherplatforms skipped. Test guard and independent re-review pending.
+
+Final-hardening implementation d57d10ced6eb95b052aaf685023368dfd0bd7bd7; guard/evidence doc follow-up cdfbdc4f. Guard self-test passed;focused5da09a53...d57d10ce passed(no guardedchanges);main...HEAD unapproved failedasexpected(exit1),dated-marker approved passed(exit0),and actualPR1007 body approved passed. Logs /tmp/task-71-hardening-test-guard-{self,focused,unapproved,approved,pr-body}.log. gitdiff5da09a53--check passed,no staged files. No source edits after final30/30 run;later commits are docs/Backlog only. Done pending required independent re-review and PR CI; attack1 under2%/gradient false-pass risk explicitly accepted as remaining limit by supervisor,not silently fixed or hidden.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Fixed valid Copilot disconnected-boundary finding PRRT_kwDOUxZq_M6vn59C: four-connected retained-core components and their assigned blends must independently satisfy unchanged radius2/50% boundary rules at >=4 native pixels. Exact mixed fixture fails on old helper; all29 final iPhone17Pro tests pass including3 new adversarial proofs, all26 unchanged previous methods, real screenshots at original ratios, and bold AA edges. Screenshot nils were reported first; supervisor-approved strict background-connected subthreshold blends provide spatial support only, never change minimum ratios. Implementation b7448103b29fe51ab9939e85385269552f8dd954. Guard self/focused/datestamp-approved checks pass. Per-test and diagnostic evidence in docs/testing/task-71-measured-contrast.md. Done pending required independent review/PR CI; original heuristic limits remain.
+Final hardening: reject ANY retained-colour boundary pair below4.5 (exact partial-overlap fixture red on5da09a53); strengthen reachability fixture, proven red at15.9943 when temporarily bypassed; precompute per-bin native pixel lists. Identical30-test class20.401s→9.328s,30/30pass,three real screenshot ratios unchanged. Requested attack1 guard made all3 screenshots nil; reported all clusters and supervisor explicitly dropped it, leaving documented <2%/gradient false-pass limit with narrow-scope/logging/token-test mitigations. Docs cover outline/halo perWCAG,tiny-component/quantization limits,exact red/mutation proofs and per-test results. Sourcecommit d57d10ced6eb95b052aaf685023368dfd0bd7bd7;guard self/focused/datedapproval/actualPRbody checks pass. No app/audit-scope/resource/membership changes. Await independent review and CI.
 <!-- SECTION:FINAL_SUMMARY:END -->
