@@ -64,6 +64,7 @@
 		52E2423AD8ECA065D5EE426A /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		534739C3352A8EB6282F3652 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		56971C911C417B59168BF071 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 007479A1ABED939E784D6108 /* CanadianHamMorseEngine */; };
+		58E45741A8EC2EF3FB861164 /* UITestContrastMeasurementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F385B407934FCAE56197498 /* UITestContrastMeasurementTests.swift */; };
 		597E9B1D4F1011D023EDE4F6 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 022D91A5693114D1A7D36F4D /* CanadianHamMorseEngine */; };
 		59EC5C3A19D8FF6609993C84 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
 		5A1CE4F99519795442DFAA39 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */; };
@@ -137,6 +138,7 @@
 		B5A4E99A1BF167623B4F46E7 /* subsection-titles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0CE325C0851B44E13EA76E8A /* subsection-titles.json */; };
 		B5AD43BEDB6E39F3768DC085 /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
+		B87E9FDD1B7BAEAD152F6047 /* ContrastMeasurement in Resources */ = {isa = PBXBuildFile; fileRef = 05B661EF9D8928EF24CB953C /* ContrastMeasurement */; };
 		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		BDA1A66DD8DC830BCFE19678 /* categories-advanced.json in Resources */ = {isa = PBXBuildFile; fileRef = 478E222D59BA4BFF3E6CBD54 /* categories-advanced.json */; };
 		C11811604AA55578350262B5 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
@@ -175,6 +177,7 @@
 		F29D97E65744F19D2C1D0D8E /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		F2BA47C11EB041C657F3E732 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 736AE7B0E0E83BF1142D58FD /* CanadianHamMorseEngine */; };
 		F38D65FBDA95BC1C08E31ECD /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
+		F69591257F164533A6AC2937 /* UITestContrastMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E30CE49D22434B000076B07 /* UITestContrastMeasurement.swift */; };
 		F8197E5A10D63432C1384166 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		FD369ABE0D4B147229E2166A /* ExamToolViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FDAFA896E1B85E902E8CA0 /* ExamToolViews.swift */; };
 		FD506BE95FA24A70BDDCA8A4 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
@@ -217,6 +220,7 @@
 		0390C2BF7D07DEAD8A246557 /* StudyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViews.swift; sourceTree = "<group>"; };
 		0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankTests.swift; sourceTree = "<group>"; };
 		053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		05B661EF9D8928EF24CB953C /* ContrastMeasurement */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ContrastMeasurement; path = CanadianHamUITests/Resources/ContrastMeasurement; sourceTree = SOURCE_ROOT; };
 		06CF703072758133CE78E6DC /* calculator-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "calculator-swift"; path = "../../packages/calculator-swift"; sourceTree = SOURCE_ROOT; };
 		073C44134E027E62BEC27FEC /* CanadianHamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CE325C0851B44E13EA76E8A /* subsection-titles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "subsection-titles.json"; sourceTree = "<group>"; };
@@ -251,6 +255,7 @@
 		5581AFE7785D06E74DC2FC46 /* ExamToolModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamToolModels.swift; sourceTree = "<group>"; };
 		5A86BCCABAA1B3403D777005 /* LessonFigureMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonFigureMetadata.swift; sourceTree = "<group>"; };
 		5B61FF08B59BD2425E771B49 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
+		5E30CE49D22434B000076B07 /* UITestContrastMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestContrastMeasurement.swift; sourceTree = "<group>"; };
 		5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSessionState.swift; sourceTree = "<group>"; };
 		5FB02018DEAAC19F488B3B0F /* CanadianHam.iOS.CloudKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.iOS.CloudKit.entitlements; sourceTree = "<group>"; };
 		5FC310E91D274D6ACA4BBA5F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
@@ -267,6 +272,7 @@
 		79F451DA18B5F91DD4DCA5BC /* course.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = course.json; sourceTree = "<group>"; };
 		7CD219C3080FCB9838E25140 /* CanadianHamTVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamTVTests.swift; sourceTree = "<group>"; };
 		7D22DC6BEB5258264EA424D3 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
+		7F385B407934FCAE56197498 /* UITestContrastMeasurementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestContrastMeasurementTests.swift; sourceTree = "<group>"; };
 		8190B2B9429493319576A943 /* DuoLayoutPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuoLayoutPolicyTests.swift; sourceTree = "<group>"; };
 		86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineShuffle.swift; sourceTree = "<group>"; };
 		86CBBDFF03A04BC20799F5E4 /* CanadianHamTV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -465,6 +471,9 @@
 				49EC771E2AC082EB0E486561 /* CanadianHamExamToolsUITests.swift */,
 				3BF67D7A994EF193C91BBA17 /* CanadianHamLessonFiguresUITests.swift */,
 				41444275857B5CF1758CE3B6 /* CanadianHamPracticeUITests.swift */,
+				5E30CE49D22434B000076B07 /* UITestContrastMeasurement.swift */,
+				7F385B407934FCAE56197498 /* UITestContrastMeasurementTests.swift */,
+				53B0F2E88154803AE8879D2D /* Resources */,
 			);
 			path = CanadianHamUITests;
 			sourceTree = "<group>";
@@ -502,6 +511,14 @@
 				7CD219C3080FCB9838E25140 /* CanadianHamTVTests.swift */,
 			);
 			path = CanadianHamTVTests;
+			sourceTree = "<group>";
+		};
+		53B0F2E88154803AE8879D2D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				05B661EF9D8928EF24CB953C /* ContrastMeasurement */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		547A0C994CB31901FAB1913A /* Services */ = {
@@ -1045,6 +1062,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B87E9FDD1B7BAEAD152F6047 /* ContrastMeasurement in Resources */,
 				BDA1A66DD8DC830BCFE19678 /* categories-advanced.json in Resources */,
 				0DD9162DBD0D0F0D028D0939 /* categories.json in Resources */,
 				4A3F7F0CD01A2A85311ACD13 /* questions.json in Resources */,
@@ -1495,6 +1513,8 @@
 				7982B192043B93C7CCF3A7AE /* CanadianHamExamToolsUITests.swift in Sources */,
 				3D0DE35C1330A11C2B6C73AB /* CanadianHamLessonFiguresUITests.swift in Sources */,
 				3D7E53A765016E133D5B3E7B /* CanadianHamPracticeUITests.swift in Sources */,
+				F69591257F164533A6AC2937 /* UITestContrastMeasurement.swift in Sources */,
+				58E45741A8EC2EF3FB861164 /* UITestContrastMeasurementTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
