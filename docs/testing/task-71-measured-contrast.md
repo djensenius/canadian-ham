@@ -73,13 +73,62 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
   -testPlan CanadianHamDefault \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
   -only-testing:CanadianHamUITests/UITestContrastMeasurementTests \
-  -resultBundlePath /tmp/task-71-contrast-tests.xcresult \
+  -resultBundlePath /tmp/task-71-contrast-tests-final.xcresult \
   test CODE_SIGNING_ALLOWED=NO
 ```
 
 The command is launched with nohup and its log polled with grep. No other build
 is stopped. No full suites are requested: only the iOS UI-test target changed;
 macOS, tvOS and visionOS do not compile these files.
+
+### Results (2026-10-23)
+
+Final log: `/tmp/task-71-contrast-tests-final.log`.
+Result bundle: `/tmp/task-71-contrast-tests-final.xcresult`.
+Summary: `/tmp/task-71-final-summary.json`; exported measurement attachments:
+`/tmp/task-71-final-proof-attachments/`.
+**12 passed, 0 failed, 0 skipped**, exit 0; XCTest class elapsed 2.372 s.
+No warnings/errors originate in either new Swift file in the final build.
+An initial run also passed all 12 tests; its new `XCTContext` actor-isolation
+warning was fixed by marking the proof class `@MainActor`, then rerunning only
+that class. No app is launched by the proof tests. The live audit handler is
+compiled but not invoked here; the exported-image tests are the requested proof
+against the known false-positive renders, not a claim of live screen integration.
+
+| Test (`UITestContrastMeasurementTests`) | Final result | Seconds |
+| --- | --- | ---: |
+| `testAntialiased15PointLowContrastTextStillFails` | PASS | 1.542 |
+| `testAntialiased15PointTextMeasuresExpectedContrast` | PASS | 0.094 |
+| `testExportedCorrectFeedbackDarkPasses` | PASS | 0.088 |
+| `testExportedCorrectFeedbackLightPasses` | PASS | 0.070 |
+| `testExportedTryItParagraphLightPasses` | PASS | 0.073 |
+| `testMidGreyOnCreamFails` | PASS | 0.070 |
+| `testNearBlackOnCreamPasses` | PASS | 0.073 |
+| `testOnlyTinyForegroundIsUnmeasurable` | PASS | 0.072 |
+| `testPaleOnDarkGreenPasses` | PASS | 0.070 |
+| `testTinyHighContrastTailDoesNotRescueLowContrastText` | PASS | 0.073 |
+| `testTransparentImageIsUnmeasurable` | PASS | 0.071 |
+| `testUniformImageIsUnmeasurable` | PASS | 0.077 |
+
+KeepAlways measurement attachments report:
+
+- Correct feedback light: **8.344323837747055:1**.
+- Correct feedback dark: **11.403364958858397:1**.
+- Try-it paragraph light: **16.336427704401043:1**.
+- The synthetic #9A9A9A/cream tests assert **2.6591:1** within 0.01
+  (two-colour panel) / 0.1 (15 pt anti-aliased text), both below 4.5.
+
+XcodeGen was run twice; `project.pbxproj` and the complete generated-project
+Git diff were byte-identical between runs. `git diff --check` passed.
+The three pre-existing UI-test source files have no diff against the baseline.
+
+`node scripts/check-test-guard.mjs --self-test` passed. Against `main...HEAD`,
+the unapproved guard **failed as expected** (exit 1) and flagged the new
+`auditVerifyingMeasuredContrast` function/default audit call in
+`UITestContrastMeasurement.swift:72–73`. With the approval marker it passed
+(exit 0), still reporting the approved findings. Logs:
+`/tmp/task-71-test-guard-unapproved.log` and
+`/tmp/task-71-test-guard-approved.log`.
 
 The PR must carry the standalone approval line:
 
