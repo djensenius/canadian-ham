@@ -519,3 +519,14 @@ macOS/tvOS/visionOS were skipped because only the iOS UI-test target changed.
 No target membership changed, so XcodeGen was unnecessary. The dominant-background,
 5-bit-cluster and <2%-ratio-coverage heuristic limitations still apply; this is
 not semantic text recognition or proof of all possible local backgrounds.
+
+Final guard checks: self-test passed. `main...b7448103` failed without approval
+as expected (exit1, new handler/default audit at lines275/283), and passed with
+PR #1007's existing dated approval marker (exit0). The focused
+`3478f40e...b7448103` guard check also passed with **no guarded changes**, without
+an approval marker. Logs: `/tmp/task-71-components-test-guard-{self,unapproved,approved,fix}.log`.
+`git diff 3478f40e --check` passed. All26 old test methods plus the visibility
+helper and audit wrapper are byte-identical to the starting commit. Implementation
+commit: `b7448103b29fe51ab9939e85385269552f8dd954`.
+Independent reviewer approval and PR CI remain required; these targeted proofs
+are not live-audit integration or universal contrast-verification claims.
