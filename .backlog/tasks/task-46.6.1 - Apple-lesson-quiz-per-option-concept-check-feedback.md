@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 14:35'
+updated_date: '2026-10-23 15:50'
 labels:
   - apple
 dependencies:
@@ -119,6 +119,78 @@ Merged/pushed origin/main including PR #1007/TASK-71 as f45a6aeb. Coordinator ap
 Blocked on main regression found during TASK-71 resume: first macOS mapping-unit xbuild failed before executing tests (exit 65), because unchanged UITestContrastMeasurement.swift:306 passes NSImage.cgImage method rather than CGImage on macOS. Evidence: /tmp/task-46.6.1-macos-measured.{log,xcresult}; /tmp/task-46.6.1-measured-runner.log. Ordered set -e runner stopped before iPhone/iPad/l10n. Coordinator is landing TASK-72 shared cross-platform contrastMeasurementCGImage(from:) fix; wait for merge notification, then merge origin/main, update only local composite screenshot conversion to that helper, and restart requested checks. AC3 remains unchecked/In Progress; no builds killed.
 
 TASK-72 merged on main 80ca2871; merged/pushed as 6e5ea282. Updated only the new local composite helper to use contrastMeasurementCGImage(from:) per coordinator direction. Shared helpers remain byte-identical to main. Restarting the entire ordered targeted runner at macOS mapping units; failed original artifacts retain -measured suffix and resumed artifacts use -measured-v2.
+
+Final TASK-71/TASK-72 resumed validation (all selected tests passed in one run per platform; no skips):
+
+| CanadianHamExamToolsUITests method | iPhone 17 Pro | iPad Pro 13-inch (M5) |
+|---|---|---|
+| testLessonQuizConceptCheckHasNoHintOrOtherTools | PASS 19.918 s | PASS 19.404 s |
+| testLessonQuizConceptOptionCorrectDarkAndFullAccessibilityAudit | PASS 72.272 s | PASS 39.739 s |
+| testLessonQuizConceptOptionCorrectLightAndFullAccessibilityAudit | PASS 62.113 s | PASS 48.174 s |
+| testLessonQuizConceptOptionFeedbackLargestDynamicType | PASS 191.792 s | PASS 45.286 s |
+| testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit | PASS 70.579 s | PASS 34.658 s |
+| testLessonQuizConceptOptionIncorrectFrenchFallbackLightAndFullAccessibilityAudit | PASS 69.047 s | PASS 34.918 s |
+| testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip | PASS 316.045 s | PASS 91.027 s |
+| testLessonQuizHintsDarkAndFullAccessibilityAudits | PASS 164.973 s | PASS 60.303 s |
+| testLessonQuizHintsFrenchAndCurrentLessonRoundTrip | PASS 189.316 s | PASS 57.521 s |
+| testLessonQuizHintsLightAndFullAccessibilityAudits | PASS 179.749 s | PASS 60.227 s |
+| testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch | PASS 115.703 s | PASS 41.479 s |
+| testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount | PASS 126.239 s | PASS 50.714 s |
+
+macOS LocalizationCatalogTests:
+- testConceptCheckAnswerStatusFrenchAndFallbackLanguageMetadata: PASS 0.002 s
+- testConceptCheckAnswerStatusLegacyChoiceAndNoDisclosureBeforeSelection: PASS 0.001 s
+- testConceptCheckAnswerStatusMapsShuffledSourceChoices: PASS 0.001 s
+
+Every ignored finding (verbatim keepAlways text attachment payloads; occlusion-only findings have no measured ratio by design):
+
+- iphone CanadianHamExamToolsUITests/testLessonQuizConceptOptionCorrectDarkAndFullAccessibilityAudit(): occluded rule.
+  label=A parts list needs 0.82 A. A meter on the same accessory reads 820 mA. What should the learner conclude? frame=x: 40.0, y: 92.63623046874994, width: 313.33333333333326, height: 98.99999999999997 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true
+  Attachment: /tmp/task-46.6.1-iphone-measured-v2-attachments/6B4FEAA2-D75C-48E6-A6E9-C6DA970E9C8C.txt
+
+- iphone CanadianHamExamToolsUITests/testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit(): measured rule.
+  label=A parts list needs 0.82 A. A meter on the same accessory reads 820 mA. What should the learner conclude? frame=(40.0, 130.60579427083337, 313.33333333333326, 99.0) ratio=12.628753100147408:1
+  Attachment: /tmp/task-46.6.1-iphone-measured-v2-attachments/20EDC6B6-B2B7-43B4-99A4-59DF084EA2EC.txt
+
+- iphone CanadianHamExamToolsUITests/testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit(): measured rule.
+  label=The readings differ by a factor of one hundred. frame=(110.0, 257.60579427083337, 233.66666666666669, 42.33333333333337) ratio=12.204207186018708:1
+  Attachment: /tmp/task-46.6.1-iphone-measured-v2-attachments/47DD313E-0088-4F1E-B79E-253FA5B4E6AC.txt
+
+- iphone CanadianHamExamToolsUITests/testLessonQuizHintsDarkAndFullAccessibilityAudits(): occluded rule.
+  label=QZ-L-005-01-A frame=x: 40.0, y: -7.666666666666785, width: 160.0, height: 26.33333333333333 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true
+  Attachment: /tmp/task-46.6.1-iphone-measured-v2-attachments/9BA2FB92-B5F0-47AD-9033-A162E85CEB06.txt
+
+- iphone CanadianHamExamToolsUITests/testLessonQuizHintsDarkAndFullAccessibilityAudits(): occluded rule.
+  label=1 questions: official bank questions update practice progress; concept checks do not. frame=x: 40.0, y: 26.666666666666544, width: 201.66666666666666, height: 86.33333333333334 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true
+  Attachment: /tmp/task-46.6.1-iphone-measured-v2-attachments/087E3D66-49D1-476B-8AAF-1435D5DF49D5.txt
+
+- iphone CanadianHamExamToolsUITests/testLessonQuizHintsLightAndFullAccessibilityAudits(): occluded rule.
+  label=1 questions: official bank questions update practice progress; concept checks do not. frame=x: 40.0, y: 26.666666666666544, width: 201.66666666666666, height: 86.33333333333334 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true
+  Attachment: /tmp/task-46.6.1-iphone-measured-v2-attachments/7B665009-98C5-4284-B190-E1A8343729BA.txt
+
+- ipad CanadianHamExamToolsUITests/testLessonQuizConceptOptionFeedbackLargestDynamicType(): measured rule.
+  label=Correct answer frame=(150.0, 1232.898681640625, 362.0, 51.5) ratio=8.360825174840722:1
+  Attachment: /tmp/task-46.6.1-ipad-measured-v2-attachments/49C6BCEB-F20F-44BC-8ECA-2868C0F337BE.txt
+
+- ipad CanadianHamExamToolsUITests/testLessonQuizConceptOptionFeedbackLargestDynamicType(): occluded rule.
+  label=C frame=x: 96.5, y: 1333.0, width: 33.0, height: 63.5 visibleScrollArea=x: 0.0, y: 86.0, width: 1032.0, height: 1290.0 scrollFrame=x: 0.0, y: 0.0, width: 1032.0, height: 1376.0 matchedScrollDescendant=true
+  Attachment: /tmp/task-46.6.1-ipad-measured-v2-attachments/ACCD2F14-1CEA-41CE-B600-9B872DAED3C8.txt
+
+- ipad CanadianHamExamToolsUITests/testLessonQuizConceptOptionFeedbackLargestDynamicType(): occluded rule.
+  label=The readings differ by a factor of ten. frame=x: 146.0, y: 1329.0, width: 674.0, height: 125.5 visibleScrollArea=x: 0.0, y: 86.0, width: 1032.0, height: 1290.0 scrollFrame=x: 0.0, y: 0.0, width: 1032.0, height: 1376.0 matchedScrollDescendant=true
+  Attachment: /tmp/task-46.6.1-ipad-measured-v2-attachments/56E60735-E5CE-4E04-B8C5-29CB19ACA258.txt
+
+- ipad CanadianHamExamToolsUITests/testLessonQuizConceptOptionFeedbackLargestDynamicType(): measured rule.
+  label=Correct answer frame=(150.0, 1232.898681640625, 362.0, 51.5) ratio=8.360825174840722:1
+  Attachment: /tmp/task-46.6.1-ipad-measured-v2-attachments/23FC8B4B-A18B-4C3B-96B3-9E3BD5F6961C.txt
+
+- ipad CanadianHamExamToolsUITests/testLessonQuizConceptOptionFeedbackLargestDynamicType(): occluded rule.
+  label=The readings differ by a factor of ten. frame=x: 146.0, y: 1329.0, width: 674.0, height: 125.5 visibleScrollArea=x: 0.0, y: 86.0, width: 1032.0, height: 1290.0 scrollFrame=x: 0.0, y: 0.0, width: 1032.0, height: 1376.0 matchedScrollDescendant=true
+  Attachment: /tmp/task-46.6.1-ipad-measured-v2-attachments/355E8371-00A3-40F8-A370-31268CD6BE5B.txt
+
+Raw tests and evidence: /tmp/task-46.6.1-{macos,iphone,ipad}-measured-v2.{log,xcresult}, matching -tests.json, and iPhone/iPad -attachments/manifest.json with every keepAlways text payload. Literal ordered commands are retained in /tmp/task-46.6.1-measured-v2-checks.sh; runner log /tmp/task-46.6.1-measured-v2-runner.log.
+
+Source preservation verification: a balanced-method-body comparison against origin/main confirms all 117 pre-existing methods/shared helpers in CanadianHamExamToolsUITests.swift are unchanged. The local composite occlusion branch is verbatim to the existing helper (ignoring indentation); its measured branch is verbatim to TASK-71/TASK-72 (ignoring indentation). Shared UITestContrastMeasurement.swift has no branch diff. Both UI selections and the 3 macOS mapping units passed without retry; only localization/text/guard checks remain running. All xbuild calls used nohup, one requested simulator destination at a time, grep polling, and natural completion; shared-lock waits were respected.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
