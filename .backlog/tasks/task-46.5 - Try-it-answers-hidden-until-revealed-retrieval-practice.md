@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 16:51'
+updated_date: '2026-10-23 17:06'
 labels:
   - content
   - web
@@ -94,10 +94,68 @@ TASK-72 merged/pushed (d71b76b0); local composite uses contrastMeasurementCGImag
 v3 dark FAIL253.514s before audit after roughly69min waiting on shared xbuild lock (never interrupted):12 union-targeted passes ended at exactly the same2pt-clipped control geometry as v2. Repeated residual10pt drags (2pt overshoot+8pt margin) did not move content, consistent with pan-recognition threshold. Evidence /tmp/task-46.5-measured-v3-iphone-dark.log, -results.json, -xcresult-path.txt and -attachments (geometry + video). Script stopped; remaining tests/l10n not started. Coordinator explicitly approved a new-test-local minimum24pt drag when overshoot remains; shared preciseScroll and all assertions unchanged. AC3 remains unchecked pending actual audits.
 
 Final v4 iPhone17Pro PASS: light174.198s; dark235.735s (largest Dynamic Type); French183.936s. Dark accepted3 findings by existing occluded-content rule only (S-meter learning outcome twice at negative y; frequency paragraph extends below visible scroll area); no measured findings. Light verified one finding at16.336427704401043:1 (The report is about S9 plus16dB...); keepAlways note3DB439B1-F27E-406F-BD74-216E7D32EF10.txt. iPad13-inchM5 light FAIL137.543s in expanded full audit: fully visible Given: initial report = S9 plus19dB; transmitter power falls from48W to24W. frame(92,259.09444444444443,597.5,20.5), ratio=unmeasurable; correctly NOT ignored. Five other iPad findings verified16.336427704401043:1 (four bullets plus Sanity check: Is the report lower while still above S9?). Full bundle /tmp/task-46.5-measured-v4-ipad-light.xcresult; all exported attachments/measurement notes under corresponding-attachments directory; summary /tmp/task-46.5-measured-results-summary.json. Serial script stopped; coordinator now authorizes independent dark/French/l10n checks only, with no measurement edits and AC3 unchecked pending separate follow-up. Later builds pruned original dark DerivedData bundle; its already-exported keepAlways attachments, console per-test result and summary remain; remaining bundles now preserved under/tmp immediately.
+
+Final measured-contrast resume handoff2026-10-23 (coordinator explicitly directs keeping AC3 unchecked/In Progress pending separate measurement follow-up):
+Merged/pushed main through80ca2871 (TASK-71 and TASK-72). Only new Try-it audit calls use local auditIgnoringOccludedOrMeasuredContrast; exact approved occlusion guards/logging OR shared measuredTextContrast/isFullyVisibleForContrastMeasurement with >=4.5 and keepAlways success/failure logging. Uses contrastMeasurementCGImage(from:). All198 pre-branch test/helper functions and shared measurement file are byte-identical to origin/main80ca2871. Preserved shortest L-005-04 direct anchor, long L-004-03 French test, all existing visibility/state assertions and full collapsed/expanded audits. Coordinator-approved new-test-only positioning uses prompt/control union, <=80pt corrections with24pt minimum, <=12 passes, union-too-tall stop and exhaustion geometry; shared preciseScroll unchanged.
+Latest per-test results (only-testing; no full suites):
+- measured-v4-iphone-dark: -[CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityDark] PASSED 235.735s.
+- measured-v4-iphone-light: -[CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityLight] PASSED 174.198s.
+- measured-v4-iphone-french: -[CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealFrenchLabelsAndState] PASSED 183.936s.
+- measured-v4-ipad-light: -[CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityLight] FAILED 137.543s.
+- measured-v5-ipad-dark: -[CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealAndAccessibilityDark] PASSED 100.477s.
+- measured-v5-ipad-french: -[CanadianHamUITests.CanadianHamPracticeUITests testLessonTryItRevealFrenchLabelsAndState] PASSED 69.815s.
+Logged measured findings (all notes are keepAlways; no label exception):
+- measured-v4-iphone-light: label=The report is about S9 plus 16 dB. This compares received levels; it is not a change in the report's readability part. frame=(40.0, 241.59259259259306, 299.0, 64.33333333333303) ratio=16.336427704401043:1 attachment=/tmp/task-46.5-measured-v4-iphone-light-attachments/3DB439B1-F27E-406F-BD74-216E7D32EF10.txt
+- measured-v4-ipad-light: label=• frame=(76.0, 259.09444444444443, 8.0, 20.5) ratio=16.336427704401043:1 attachment=/tmp/task-46.5-measured-v4-ipad-light-attachments/06CD6317-3C65-4085-B004-F5328E4598F1.txt
+- measured-v4-ipad-light: label=• frame=(76.0, 402.09444444444443, 8.0, 20.5) ratio=16.336427704401043:1 attachment=/tmp/task-46.5-measured-v4-ipad-light-attachments/32FB062D-16E9-416F-9934-F60ABA9A12FC.txt
+- measured-v4-ipad-light: label=• frame=(76.0, 373.59444444444443, 8.0, 20.5) ratio=16.336427704401043:1 attachment=/tmp/task-46.5-measured-v4-ipad-light-attachments/435CDCE4-80A2-4EA0-A314-CC56E0C086B3.txt
+- measured-v4-ipad-light: label=• frame=(76.0, 345.09444444444443, 8.0, 20.5) ratio=16.336427704401043:1 attachment=/tmp/task-46.5-measured-v4-ipad-light-attachments/D4F10A9A-FEF0-4AB2-B7BF-B2B063F1D994.txt
+- measured-v4-ipad-light: label=Given: initial report = S9 plus 19 dB; transmitter power falls from 48 W to 24 W. frame=(92.0, 259.09444444444443, 597.5, 20.5) ratio=unmeasurable attachment=/tmp/task-46.5-measured-v4-ipad-light-attachments/E3F8D148-A06D-4579-AA22-C7977A84BFB3.txt
+- measured-v4-ipad-light: label=Sanity check: Is the report lower while still above S9? frame=(92.0, 402.09444444444443, 401.5, 20.5) ratio=16.336427704401043:1 attachment=/tmp/task-46.5-measured-v4-ipad-light-attachments/FC3470CB-E2B9-462C-A4DC-790EAB96F29D.txt
+Logged approved occlusion findings (ratio N/A: accepted by verbatim original occluded-content rule, not the measurement rule):
+- measured-v4-iphone-dark: label=adjust an S-meter reading that is stated in decibels above S9. frame=x: 71.66666666666666, y: -88.25925925926458, width: 279.0, height: 373.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true attachment=/tmp/task-46.5-measured-v4-iphone-dark-attachments/240020CC-9300-4D8D-9096-FB72E37E3472.txt
+- measured-v4-iphone-dark: label=adjust an S-meter reading that is stated in decibels above S9. frame=x: 71.66666666666666, y: -136.25925925926458, width: 279.0, height: 373.33333333333303 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true attachment=/tmp/task-46.5-measured-v4-iphone-dark-attachments/FAE60F5B-3BD0-41B2-AF4C-D6F5CE65065F.txt
+- measured-v4-iphone-dark: label=Frequency is the number of complete cycles per second. The unit is hertz. A 400 Hz tone completes 400 cycles each second. frame=x: 40.0, y: 376.07407407406936, width: 322.33333333333326, height: 621.333333333333 visibleScrollArea=x: 0.0, y: 116.0, width: 402.0, height: 758.0 scrollFrame=x: 0.0, y: 0.0, width: 402.0, height: 874.0 matchedScrollDescendant=true attachment=/tmp/task-46.5-measured-v4-iphone-dark-attachments/FCCF9840-209C-4E47-B11F-C6F8722FA6EB.txt
+- measured-v5-ipad-dark: label=The report is about S9 plus 16 dB. This compares received levels; it is not a change in the report's readability part. frame=x: 76.0, y: 11498.094444444443, width: 871.5, height: 187.5 visibleScrollArea=x: 0.0, y: 86.0, width: 1032.0, height: 1290.0 scrollFrame=x: 0.0, y: 0.0, width: 1032.0, height: 1376.0 matchedScrollDescendant=true attachment=/tmp/task-46.5-measured-v5-ipad-dark-attachments/6813DA27-1E75-48DA-8911-67A114F9D062.txt
+BLOCKER: only iPad light failed: expanded full audit could not measure fully visible Given paragraph; correctly failed closed, not ignored. Element screenshot /tmp/task-46.5-measured-v4-ipad-light-attachments/F46D182E-2E71-4C4E-B108-103DFEA2C2E3.png (inspected: dark ink on light paper); app screenshot FC1DB962-2B0E-4AB7-8835-2FAA62B40437.png in same directory. Full bundle /tmp/task-46.5-measured-v4-ipad-light.xcresult. Coordinator owns separate TASK-71 follow-up; do not change helper, check AC3, set Done, or rerun green iPhone tests without direction. Once follow-up merges, coordinator will authorize merge-main and iPad-only rerun.
+Independent checks PASS: pnpm check:apple-l10n (French export + generic tvOS/visionOS builds; catalogue byte-unchanged), node scripts/check-apple-text-sources.ts, node scripts/check-test-guard.mjs --self-test, TEST_GUARD_PR_BODY="Test-guard-approved: owner decision 2026-10-22" node scripts/check-test-guard.mjs --base origin/main --head HEAD; git diff --check; source scope proof above. Logs /tmp/task-46.5-measured-v5-{l10n,text-sources,test-guard-self,test-guard}.log. Existing unrelated plural-substitution warnings remain warnings; exit0. No source fix, test narrowing, skip, or hidden accessibility element added.
+Evidence: per-test console logs /tmp/task-46.5-measured-v4-{iphone-dark,iphone-light,iphone-french,ipad-light}.log and /tmp/task-46.5-measured-v5-ipad-{dark,french}.log. Exact nohup commands in /tmp/task-46.5-measured-v4-audits.sh, /tmp/task-46.5-measured-v5-ipad-dark.sh, /tmp/task-46.5-measured-v5-remaining.sh. Summary /tmp/task-46.5-measured-results-summary.json and /tmp/task-46.5-measured-final-evidence.txt; all keepAlways attachments exported to corresponding -attachments directories. Later builds pruned the original dark DerivedData xcresult, but its already-exported attachments, console per-test result and summary remain. All other final bundles are preserved under /tmp/task-46.5-measured-v4-{iphone-light,iphone-french,ipad-light}.xcresult and /tmp/task-46.5-measured-v5-ipad-{dark,french}.xcresult. Earlier failed positioning attempts and approvals remain in prior notes. No background validation job remains; no build/process was signalled; xbuild lock waits included roughly69min for one attempt.
+No PR. Prior macOS localization, tvOS/visionOS light/dark audits and web/content/package results remain as recorded; not rerun for this iOS-test-only resume. Coordinator still owns CanadianHamLessonFigures and merge-batch full-platform suites; worker did not run either. All31 changed figure-directive lesson paths (README example excluded):
+- content/lessons/m2-operating-procedures/l-002-01-voice-repeater-and-simplex-procedure.md
+- content/lessons/m2-operating-procedures/l-002-02-morse-rst-and-q-signals.md
+- content/lessons/m2-operating-procedures/l-002-03-distress-urgency-and-safety-traffic.md
+- content/lessons/m2-operating-procedures/l-002-04-records-maps-and-locators.md
+- content/lessons/m3-station-practice-safety/l-003-01-station-filtering-and-radio-blocks.md
+- content/lessons/m3-station-practice-safety/l-003-02-cw-ssb-blocks-and-receivers.md
+- content/lessons/m3-station-practice-safety/l-003-03-digital-interfaces-and-power-supplies.md
+- content/lessons/m3-station-practice-safety/l-003-04-antennas-and-receiver-specs.md
+- content/lessons/m3-station-practice-safety/l-003-05-signal-quality-cw-ssb-fm.md
+- content/lessons/m3-station-practice-safety/l-003-06-controls-digital-voice-and-packet.md
+- content/lessons/m3-station-practice-safety/l-003-07-batteries-dc-supplies-and-ripple.md
+- content/lessons/m3-station-practice-safety/l-003-08-access-grounding-lightning-rf-safety.md
+- content/lessons/m4-circuit-components/l-004-01-amplifiers-and-diodes.md
+- content/lessons/m4-circuit-components/l-004-02-transistors-fets-and-tubes.md
+- content/lessons/m4-circuit-components/l-004-03-resistor-colour-codes.md
+- content/lessons/m5-basic-electronics/l-005-01-units-conductors-current.md
+- content/lessons/m5-basic-electronics/l-005-02-power-ohms-law.md
+- content/lessons/m5-basic-electronics/l-005-03-parallel-circuits-and-ratings.md
+- content/lessons/m5-basic-electronics/l-005-04-ac-and-decibels.md
+- content/lessons/m5-basic-electronics/l-005-05-reactance-and-resonance.md
+- content/lessons/m5-basic-electronics/l-005-06-transformers-and-meters.md
+- content/lessons/m6-feedlines-antennas/l-006-01-feedline-basics-and-types.md
+- content/lessons/m6-feedlines-antennas/l-006-02-loss-swr-and-matching.md
+- content/lessons/m6-feedlines-antennas/l-006-03-polarization-dipoles-wavelength.md
+- content/lessons/m6-feedlines-antennas/l-006-04-directivity-yagis-and-lengths.md
+- content/lessons/m6-feedlines-antennas/l-006-05-loops-quads-and-patterns.md
+- content/lessons/m7-propagation/l-007-01-paths-ionosphere-and-skip.md
+- content/lessons/m7-propagation/l-007-02-absorption-solar-cycle-and-muf.md
+- content/lessons/m7-propagation/l-007-03-vhf-uhf-and-unusual-modes.md
+- content/lessons/m8-interference-suppression/l-008-01-receiver-device-interference-and-filters.md
+- content/lessons/m8-interference-suppression/l-008-02-transmitter-emissions-and-harmonics.md
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented 141 hidden paired Try-it answers across 31 M2–M8 lessons, with content validation and localized accessible web/Apple controls; M1 remains reference-only. Content/web/package validation and prior macOS localization, tvOS/visionOS full light/dark audits, and long-lesson iPhone/iPad French reveal behaviour checks pass. This resume merged/pushed TASK-70 from main, preserved the aligned shared helper byte-for-byte, and followed coordinator-approved direct-anchor then shortest-lesson audit retargeting. AC #3 remains BLOCKED: even shortest L-005-04 iPhone light full audit flags fully visible high-contrast Try-it intro text (156.348 s). No exception or audit suppression was added. Coordinator paused lane pending main/environment control; dark/iPad reruns and merged localization export remain pending. Task stays In Progress; failure screenshots recorded here and in TASK-65; no PR; coordinator figure plan remains required for all 31 changed figure lessons.
+Implemented 141 hidden paired Try-it answers across31 M2–M8 lessons with accessible localized web/Apple reveal controls and content validation. This resume merged TASK-71/TASK-72, composed approved occluded OR measured-contrast verification locally only in new Try-it audits, and fixed new-test-only largest-text positioning without weakening assertions or shared helpers. Latest targeted results: iPhone light174.198s/dark235.735s/French183.936s PASS; iPad dark100.477s/French69.815s PASS; iPad light FAIL137.543s only on correctly rejected unmeasurable fully visible Given paragraph. All6 verified findings logged16.336427704401043:1;4 occlusion findings logged under original approved rule. L10n, text-source and dated-marker test guard pass. AC3 remains BLOCKED/unchecked and task In Progress by coordinator direction pending separate measurement follow-up and iPad-only rerun. No PR;31-lesson figure plan remains coordinator-owned; no background job remains.
 <!-- SECTION:FINAL_SUMMARY:END -->
