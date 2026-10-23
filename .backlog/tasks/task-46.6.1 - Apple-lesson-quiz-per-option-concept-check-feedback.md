@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 14:21'
+updated_date: '2026-10-23 14:32'
 labels:
   - apple
 dependencies:
@@ -115,6 +115,8 @@ Per supervisor, controls are now running on the same iPhone 17 Pro simulator in 
 Main-control result: origin/main ba5eb4f5c0ee0ff7477b708b73696474a143a303 PASSED both closest existing lesson-quiz audit controls on the same iPhone 17 Pro: testLessonQuizHintsDarkAndFullAccessibilityAudits 166.384 s, testLessonQuizHintsLightAndFullAccessibilityAudits 143.205 s; /tmp/task-46.6.1-main-control.{log,xcresult}, xbuild exit 0. These controls do not reproduce a general main/environment regression and do not validate the new option-feedback status itself. STOPPED as directed after the three repeat failures outside the authorized header-only scope. No source edit, shared-helper edit, local exception or AGENTS change was made in this resume. AC3 deliberately remains unchecked and the task remains In Progress; no PR. Full iPad selection skipped because the requested iPhone gate failed. Previous macOS units/localization checks remain recorded above (untouched implementation); resumed text-source check, guard self-test, approved guard against origin/main, and git diff --check passed. All new Apple invocations used nohup xbuild, one destination, targeted methods, grep polling, and natural completion; no builds were killed and no full suites were run.
 
 Merged/pushed origin/main including PR #1007/TASK-71 as f45a6aeb. Coordinator approved a bounded local composite audit helper because neither existing audit wrapper accepts an issue predicate. It will preserve the occlusion guards verbatim and reuse the exported measured visibility/contrast predicates; scope remains only the five new feedback tests.
+
+Blocked on main regression found during TASK-71 resume: first macOS mapping-unit xbuild failed before executing tests (exit 65), because unchanged UITestContrastMeasurement.swift:306 passes NSImage.cgImage method rather than CGImage on macOS. Evidence: /tmp/task-46.6.1-macos-measured.{log,xcresult}; /tmp/task-46.6.1-measured-runner.log. Ordered set -e runner stopped before iPhone/iPad/l10n. Coordinator is landing TASK-72 shared cross-platform contrastMeasurementCGImage(from:) fix; wait for merge notification, then merge origin/main, update only local composite screenshot conversion to that helper, and restart requested checks. AC3 remains unchecked/In Progress; no builds killed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
