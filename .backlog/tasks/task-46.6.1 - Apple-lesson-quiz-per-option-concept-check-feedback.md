@@ -1,11 +1,11 @@
 ---
 id: TASK-46.6.1
 title: Apple lesson-quiz per-option concept-check feedback
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 15:50'
+updated_date: '2026-10-23 16:51'
 labels:
   - apple
 dependencies:
@@ -24,7 +24,7 @@ TASK-46.6 adds optional localized feedback to each concept-check choice and disp
 <!-- AC:BEGIN -->
 - [x] #1 After answering a concept check, iOS/iPadOS/macOS lesson quizzes show the chosen option feedback plus the existing explanation; shuffled options map to the correct source feedback and legacy choices without feedback still work.
 - [x] #2 Feedback uses EN/FR fallback with correct language metadata, accessible focus/VoiceOver and Dynamic Type, and colour-independent correctness; no feedback is disclosed before answering.
-- [ ] #3 Targeted unit/UI tests include correct and incorrect choices, shuffled mapping, absent feedback, EN/FR and light/dark accessibility audits without weakening existing tests; Apple localization/text checks and affected platform checks pass.
+- [x] #3 Targeted unit/UI tests include correct and incorrect choices, shuffled mapping, absent feedback, EN/FR and light/dark accessibility audits without weakening existing tests; Apple localization/text checks and affected platform checks pass.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -191,10 +191,12 @@ Every ignored finding (verbatim keepAlways text attachment payloads; occlusion-o
 Raw tests and evidence: /tmp/task-46.6.1-{macos,iphone,ipad}-measured-v2.{log,xcresult}, matching -tests.json, and iPhone/iPad -attachments/manifest.json with every keepAlways text payload. Literal ordered commands are retained in /tmp/task-46.6.1-measured-v2-checks.sh; runner log /tmp/task-46.6.1-measured-v2-runner.log.
 
 Source preservation verification: a balanced-method-body comparison against origin/main confirms all 117 pre-existing methods/shared helpers in CanadianHamExamToolsUITests.swift are unchanged. The local composite occlusion branch is verbatim to the existing helper (ignoring indentation); its measured branch is verbatim to TASK-71/TASK-72 (ignoring indentation). Shared UITestContrastMeasurement.swift has no branch diff. Both UI selections and the 3 macOS mapping units passed without retry; only localization/text/guard checks remain running. All xbuild calls used nohup, one requested simulator destination at a time, grep polling, and natural completion; shared-lock waits were respected.
+
+Final ancillary validation after green targeted selections: pnpm check:apple-l10n PASS (French localization export plus generic tvOS/visionOS localization builds; catalogue unchanged), node scripts/check-apple-text-sources.ts PASS, node scripts/check-test-guard.mjs --self-test PASS, TEST_GUARD_PR_BODY="Test-guard-approved: owner decision 2026-10-22" node scripts/check-test-guard.mjs --base origin/main --head HEAD PASS with approved audit-composition findings, and git diff --check PASS. Logs: /tmp/task-46.6.1-{l10n,text,guard-self,guard}-measured-v2.log; ordered nohup runner exited 0. The guard also reports context/line-shift findings in unchanged existing methods; the independent balanced-method comparison confirms all 117 origin/main methods/shared helpers in this class are unchanged. Earlier compilation failure was a main TASK-71 macOS screenshot bridge regression and is resolved by merged TASK-72, not a skipped test. No retry was needed after that fix. No full Apple suites were run: merge-batch suites remain coordinator-owned; targeted iPhone/iPad UI and macOS mapping tests cover the affected iOS/macOS CanadianHam target. tvOS/visionOS suites skipped because LearnViews.swift is not in those app targets; only their localization builds run within the required check. Manual VoiceOver speech/focus was not exercised; existing AccessibilityFocusState behavior and attributed language metadata are covered by units/UI assertions and the full audits. AC3 is now verified; task complete without a PR.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented source-indexed per-option concept-check feedback with localized correctness, EN/FR fallback metadata, post-answer accessibility focus, and the retained explanation; mapping/legacy/no-disclosure units and normal-size/AX UI coverage are present. Resume 2026-10-23 merged/pushed origin/main including TASK-70 and left the aligned helper unchanged. Standalone AX-XXXL passed on iPhone and iPad. NOT complete: the final 12-method iPhone selection passed all seven existing methods but failed all five new audits; one unchanged retry per failure still failed correct light/dark feedback status contrast and French dark prompt contrast, while AX and French light passed. Failure app/element screenshots and approximate screenshot-derived frames are recorded in the notes; repeat element images are byte-identical. Detached current-main light/dark quiz audit controls both passed, so no general main/environment regression was established. Per coordinator stop rule, no source fixes/exceptions or full iPad run were attempted; AC3 remains unchecked/In Progress and no PR was opened.
+Implemented source-indexed per-option concept-check feedback with localized correctness, EN/FR fallback metadata, post-answer accessibility focus and the existing explanation retained. Merged/pushed main with TASK-71 and TASK-72; only the five new feedback audits use a bounded local composite full-audit helper, preserving the existing occlusion guards and adding unchanged measured-contrast predicates at >=4.5:1 with keepAlways label/frame/ratio logging. All pre-existing test/helper methods remain unchanged. Final validation passed in one run per platform: iPhone 12/12, iPad 12/12, macOS mapping units 3/3, localization/text checks, approved guard and diff checks. Four measured findings were verified (12.628753100147408:1; 12.204207186018708:1; 8.360825174840722:1 twice); seven approved occlusion-only findings are logged separately. Per-test timings and every attachment payload/path are in the notes. AC1-3 checked, no PR opened. Full suites remain for the coordinator merge batch; manual VoiceOver speech was not exercised.
 <!-- SECTION:FINAL_SUMMARY:END -->
