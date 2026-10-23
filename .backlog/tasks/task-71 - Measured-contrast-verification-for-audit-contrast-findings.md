@@ -1,11 +1,11 @@
 ---
 id: TASK-71
 title: Measured-contrast verification for audit contrast findings
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:34'
+updated_date: '2026-10-23 13:39'
 labels:
   - accessibility
   - tests
@@ -45,6 +45,8 @@ Owner-delegated decision 2026-10-22 (owner: make the best decisions you can). XC
 10. Run the complete targeted proof class on iPhone 17 Pro, inspect screenshot evidence, document results, commit/push, and reply to/resolve both Copilot threads via GraphQL.
 
 Supervisor clarification for step9: validate retained-cluster BOUNDARY pixels (4-neighbour boundary, treating that cores excluded antialias blends as the same region), not every filled pixel. Require >=50% of boundary pixels near background within radius2; reject boundaries dominated by another retained foreground. This preserves all original thick synthetic blocks/icons without increasing radius or altering any fixtures.
+
+11. Copilot PRRT_kwDOUxZq_M6vn59C: add the exact inset-panel plus separate 16x40 #201C18 rectangle at (5,10) regression and prove it fails on 3478f40e using nohup/xbuild and grep polling. Label retained-core components with four-connectivity; assign each excluded blend pixel to its nearest supporting core component within the unchanged radius-two neighborhood (deterministic ties). Independently validate every component with at least four native pixels, preserving minimum-ratio semantics and existing thresholds. Run the full targeted class, especially screenshots and bold proofs; report any nil rather than loosen. Document, commit/push, reply to and resolve the thread via GraphQL.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -74,6 +76,8 @@ Copilot PR#1007 fixes2026-10-23: implementation e22a6405403c6484f468dc2111befbcf
 Pre-fix proof: both exact regressions failed on previous helper(e2ea6e06), exit65,2failed/0passed/0skipped. Inset84%cream/12.8%#404040/3.2%#201C18 returned9.797721859358917; chained#908A80/#58534C/#201C18 x/x+2/x+4 each3.2% returned15.9942758247219. Log/tmp/task-71-copilot-regressions-before.log, bundle/tmp/task-71-copilot-regressions-before.xcresult, summary/tmp/task-71-copilot-before-summary.json.
 Post-fix complete targeted class iPhone17Pro/iOS27.0:26PASSED/0failed/0skipped, exit0, class4.886s. All24 existing tests unchanged and passing, including actual bold15pt3x edge2.6667% ratio15.9942758247219; synthetic6.4% edge bands; all3 real screenshot ratios non-nil/unchanged8.344323837747055,11.403364958858397,16.336427704401043. No screenshot ambiguity or loosening. Log/tmp/task-71-copilot-tests.log, bundle/tmp/task-71-copilot-tests.xcresult, summary/tmp/task-71-copilot-summary.json, keepAlways proofs/tmp/task-71-copilot-proof-attachments/. Per-test results and exact command in docs/testing/task-71-measured-contrast.md. Both xbuild runs launched via nohup with grep polling, single iPhone17Pro destination; no builds killed. No changed-source Swift warnings/errors; unrelated AppIntents metadata warning only.
 Test guard self-test passed; main...e22a6405 unapproved failed as expected(exit1), with existing PR-body dated approval marker passed(exit0), flags handler/default-audit lines175/183. Logs/tmp/task-71-copilot-test-guard-{self,unapproved,approved}.log. git diff --check passed. Full suites and macOS/tvOS/visionOS skipped because only iOS UI-test target changed. No XcodeGen required. Independent reviewer gate remains; measured contrast is still a dominant-background/<2% coverage heuristic, not semantic text recognition.
+
+Reopened solely for the user-confirmed disconnected-region masking finding PRRT_kwDOUxZq_M6vn59C on PR #1007. Scope remains measurement/proof/docs only.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
