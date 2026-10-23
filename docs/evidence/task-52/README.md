@@ -31,6 +31,8 @@ complete wrapped title in the content header on the same screen. The native
 navigation element's accessibility label remains the complete category name,
 without an ellipsis.
 
+**Owner-delegated decision 2026-10-22 (TASK-69):** the same exception (complete accessibility label plus the full wrapped content header on the same screen) now also applies to the inline Study module titles on iOS/iPadOS.
+
 **Coordinator decisions, 2026-10-20 (the owner may revisit):** retain the native
 category navigation titles chosen in TASK-55. The owner previously rejected a
 generic `Practice` title. Native navigation-bar visual ellipses are accepted at
@@ -225,9 +227,10 @@ Representative additional final-run screenshots:
 **92** session/module frames and complete accessibility labels from the four-case
 log. The 17-point width is a reference lower bound, not a claim that the native
 bar always renders at 17 points. `interfaceLanguage` is the UI language; Study
-module titles remain authored in English. French B-003's inline frame remains
-314 points wide versus a 342.7-point reference string, and its Study large title
-remains 346.3 × 71.7 points at AX-XXXL, under the documented exception.
+module titles remain authored in English. French B-003's inline session frame remains
+314 points wide versus a 342.7-point reference string. Study module rows in the TSV
+now hold the TASK-69 inline measurements; the historical 346.3 × 71.7-point B-003
+large-title frame is kept only in the historical section above.
 
 ## Review-fixed dedicated-plan validation
 
@@ -250,7 +253,7 @@ bundle, separately from the historical baseline JSON and images above.
 `CanadianHamTitleSweeps`. Each case again retained 77 screenshots. All 92 native
 navigation widths and full labels exactly match the retained baseline TSV;
 height values match within 1e-9 pt (only floating-point serialization differs).
-Thus the width-derived truncation inventory remains unchanged. The measured
+At that commit the width-derived truncation inventory was unchanged (historical; TASK-69 below updates the module rows). The measured
 two-line negative fixture runs in each sweep, and English now has hyphenation
 disabled; all strict full-text/height checks still pass. No app code changed.
 
@@ -333,3 +336,29 @@ Other baseline checks (review-fix checks are recorded below):
   screenshots remain explicitly tied to the baseline run; the new result
   bundle retains all 308 review-run screenshots. Independent review is still
   required; no PR was opened.
+
+## TASK-69 inline Study module validation
+
+Owner-delegated decision 2026-10-22: iOS/iPadOS Study module screens use the native inline navigation title (as practice sessions do since TASK-55). The title text and the full wrapped content header are unchanged; macOS, tvOS and visionOS are unaffected.
+
+**Refreshed module measurements** (the module rows in [native-title-measurements.tsv](native-title-measurements.tsv), from the TASK-69 `CanadianHamTitleSweeps` run): at default size every Study module title now fits (frame width equals the full 17-point reference width) in both interface languages, where previously almost every large title was cut. At AX-XXXL only B-003 "Station Assembly, Practice and Safety" reaches the 314-point inline limit and shows the native ellipsis (EN and FR UI); it keeps the complete accessibility label and the full wrapped header, under the exception above.
+
+| Visually truncated inline module titles | Default | AX-XXXL |
+| --- | --- | --- |
+| EN interface | none | B-003 |
+| FR interface | none | B-003 |
+
+**Per-test results (TASK-69, iPhone 17 Pro and iPad Pro 13-inch (M5), iOS 27.0):**
+
+| Test | iPhone 17 Pro | iPad Pro 13-inch (M5) |
+| --- | ---: | ---: |
+| `testCategoryTitlesEnglishDefaultSize` (TitleSweeps plan) | Passed, 799.4 s | not run (iPhone plan) |
+| `testCategoryTitlesEnglishLargestAccessibilitySize` | Passed, 1289.2 s | not run |
+| `testCategoryTitlesFrenchDefaultSize` | Passed, 666.2 s | not run |
+| `testCategoryTitlesFrenchLargestAccessibilitySize` | Passed, 1410.7 s | not run |
+| `testLearnOpensLessonAndShowsFirstHeading` | Passed, 11.2 s | Passed, 18.7 s |
+| `testLearnUserNavigationOpensLessonQuiz` | Passed, 157.7 s | Passed, 64.5 s |
+| `testAccessibilityAuditLearnFlowLight` | Passed, 43.9 s | Passed, 36.6 s |
+| `testAccessibilityAuditLearnFlowDark` | Passed, 70.5 s | Passed, 54.4 s |
+
+Skipped platforms: macOS, tvOS and visionOS suites were not run because the change is inside `#if os(iOS)`.
