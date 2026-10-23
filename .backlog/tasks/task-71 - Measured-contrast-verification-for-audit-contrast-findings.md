@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:39'
+updated_date: '2026-10-23 13:42'
 labels:
   - accessibility
   - tests
@@ -78,6 +78,8 @@ Post-fix complete targeted class iPhone17Pro/iOS27.0:26PASSED/0failed/0skipped, 
 Test guard self-test passed; main...e22a6405 unapproved failed as expected(exit1), with existing PR-body dated approval marker passed(exit0), flags handler/default-audit lines175/183. Logs/tmp/task-71-copilot-test-guard-{self,unapproved,approved}.log. git diff --check passed. Full suites and macOS/tvOS/visionOS skipped because only iOS UI-test target changed. No XcodeGen required. Independent reviewer gate remains; measured contrast is still a dominant-background/<2% coverage heuristic, not semantic text recognition.
 
 Reopened solely for the user-confirmed disconnected-region masking finding PRRT_kwDOUxZq_M6vn59C on PR #1007. Scope remains measurement/proof/docs only.
+
+Exact requested mixed-background fixture failed as expected before the fix: 9.797721859358917:1 (xbuild exit65), log/bundle /tmp/task-71-components-before.{log,xcresult}. First per-component run: all three real exported screenshots became nil while bold/AA proofs and adversarial regressions passed. Stopped and escalated rather than loosening. Supervisor authorized diagnostic analysis and principled 8-connectivity/background-connected blend interpretation under radius2, >=50% support, and all existing adversarial-test constraints; tiny-component exemption only beside a validated same-cluster component.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
