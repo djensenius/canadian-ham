@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 03:00'
-updated_date: '2026-10-23 03:00'
+updated_date: '2026-10-23 03:01'
 labels: []
 dependencies: []
 priority: high
@@ -44,4 +44,8 @@ Owner-delegated decision 2026-10-22 (owner: make the best decisions you can; coo
 <!-- SECTION:NOTES:BEGIN -->
 ID reconciliation: CLI allocated TASK-70 because the parallel Study-title lane reserved TASK-69. Coordinator approved keeping TASK-70 and renaming this branch to task-70-occluded-helper-align.
 Classification kept inline: extracting audit type, optional XCUIElement/frame, nav-frame matching, and ancestry into a shared pure predicate would significantly rewrite all four existing audit closures for a one-line-per-copy change. The permitted documentation fallback is used: contrast + non-nil positive frame + non-nav + scroll descendant is ignored iff visibleScrollArea does not contain its frame. Fully offscreen -> ignored; partially visible -> ignored; fully visible -> not ignored; non-contrast -> not ignored (first guard); nil element -> not ignored (second guard); zero-size/nav/non-descendant -> not ignored. No bullet/header exception added.
+
+Validation setup: source/call-graph scan found 66 helper-calling methods (45 LessonFigures, 10 Practice, 11 ExamTools), including indirect wrapper/scenario calls. Run 1: CanadianHamDefault, 19 selected methods, iPhone 17 Pro. Run 2: CanadianHamLessonFigures, 47 selected methods, iPhone 17 Pro. Run 3: CanadianHamDefault, iPad Pro 11-inch (M5), iOS 27.0, official-reference-sheet four-way EN/FR/light/dark caller plus iPad-only regular-width inspector caller. All runs use xbuild -parallel-testing-enabled NO and individual -only-testing: selectors in two sequential nohup batches, never killing any builds. Manifests/commands: /tmp/task70-test-manifest.json, /tmp/task70-commands.json. Result bundles/logs: /tmp/task70-{iphone-default,iphone-figures,ipad}.{xcresult,log}; batch scripts/logs /tmp/task70-{iphone,ipad}-batch.{sh,log}. iPhone currently waiting on the shared build lock.
+Static proof passed: each Swift file is byte-identical to base 49b318df except the approved intersection-line removal; all four complete audit closures remain byte-identical to one another (reference-sheet setup remains unchanged). git diff --check passed. node scripts/check-test-guard.mjs --self-test passed. TEST_GUARD_PR_BODY="Test-guard-approved: owner decision 2026-10-22" node scripts/check-test-guard.mjs --base 49b318df --head HEAD passed with the expected approved helper/audit warnings. PR must carry that marker on its own line.
+No macOS/tvOS/visionOS suites: only iOS UI-test helpers and documentation changed, no app/package/other-platform target code. No full iOS suite or title sweep: selection is limited to actual callers, including all affected figure tests in their required figure plan.
 <!-- SECTION:NOTES:END -->
