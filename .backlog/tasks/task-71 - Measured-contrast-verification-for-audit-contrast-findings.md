@@ -1,11 +1,11 @@
 ---
 id: TASK-71
 title: Measured-contrast verification for audit contrast findings
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:47'
+updated_date: '2026-10-23 13:54'
 labels:
   - accessibility
   - tests
@@ -49,6 +49,8 @@ Supervisor clarification for step9: validate retained-cluster BOUNDARY pixels (4
 11. Copilot PRRT_kwDOUxZq_M6vn59C: add the exact inset-panel plus separate 16x40 #201C18 rectangle at (5,10) regression and prove it fails on 3478f40e using nohup/xbuild and grep polling. Label retained-core components with four-connectivity; assign each excluded blend pixel to its nearest supporting core component within the unchanged radius-two neighborhood (deterministic ties). Independently validate every component with at least four native pixels, preserving minimum-ratio semantics and existing thresholds. Run the full targeted class, especially screenshots and bold proofs; report any nil rather than loosen. Document, commit/push, reply to and resolve the thread via GraphQL.
 
 12. Supervisor-approved refinement after screenshot failures: keep four-connectivity and four-pixel component threshold; identify sub-2% boundary-support-only blends with the identical fraction<=0.9/RGB8/every-pixel radius2 core+background rules. Count support only through four-connected blend paths to background, and only for the validated retained core colour. Never alter minimum ratios. Add the thin dark strokes/subthreshold inset-panel AA-edge adversarial proof, rerun all29 tests, and retain diagnostic evidence.
+
+13. Final adversarial hardening: add exact partial-overlap and 1.9% grey fixtures and replace the weak subthreshold support test with a per-pixel-valid but background-disconnected blend fixture. Prove both attacks red on 5da09a53 and the strengthened test red with reachability temporarily bypassed; measure the baseline class runtime. Precompute per-bin pixel indices, reject retained low-contrast boundary pairs and >=6-pixel subthreshold non-blends below4.5, preserving all thresholds otherwise. Rerun all three screenshots, report any nil and cluster diagnostics without loosening. Document outline/tiny-component/quantization limits and full class before/after/per-test results; run targeted iPhone17Pro via nohup/xbuild and grep polling, guard/diff checks, commit/push.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -90,6 +92,8 @@ PR#1007 disconnected-component fix implementation b7448103b29fe51ab9939e85385269
 Final iPhone17Pro/iOS27.0 targeted class29/29 PASSED,0 failures/skips, exit0, class23.466s. Log/tmp/task-71-components-final.log, bundle/tmp/task-71-components-final.xcresult, summary/tmp/task-71-components-final-summary.json, keepAlways proofs/tmp/task-71-components-proof-attachments/. Real ratios unchanged8.344323837747055/11.403364958858397/16.336427704401043; boldedge2.6667% ratio15.9942758247219. All26 prior methods, visibility helper and audit wrapper byte-identical to3478f40e. All3 xbuild runs via nohup/grep polling, single requested iPhone, no builds killed. No changed-source Swift warnings/errors; unrelated AppIntents metadata warning only. No app launch or live audit integration. Full iOS suites and macOS/tvOS/visionOS skipped: only iOS UI-test target changed, no membership changes/XcodeGen needed.
 
 Guard self-test passed; main...b7448103 unapproved failed as expected(exit1), current PR-body approval passed(exit0), focused3478f40e...b7448103 passed with no guarded changes. Logs/tmp/task-71-components-test-guard-{self,unapproved,approved,fix}.log. git diff3478f40e --check passed. Independent review and CI still required. Dominant-background/5-bit/<2%-ratio heuristic limitations and 1-3px spatial speck exclusion remain documented.
+
+Reopened solely for the user-requested adversarial final hardening pass (review attacks1/6, reachability mutation proof, per-bin performance, remaining-limits docs); no app or audit scope changes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
