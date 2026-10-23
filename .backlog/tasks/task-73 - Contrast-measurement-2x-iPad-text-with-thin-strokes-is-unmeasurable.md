@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 16:51'
-updated_date: '2026-10-23 16:53'
+updated_date: '2026-10-23 16:57'
 labels:
   - accessibility
   - tests
@@ -43,4 +43,6 @@ Follow-up to TASK-71. On iPad Pro 13-inch (2x), auditVerifyingMeasuredContrast r
 
 <!-- SECTION:NOTES:BEGIN -->
 Pre-fix host diagnostics /tmp/task-73-diagnostics.log: only lower equals-sign component295 (16px at296,26...311,26) fails: boundary16,supported4,otherRetained0. Edge bin8422 count183 has1 pixel elsewhere without radius2 background; bin14796 count35 has1 elsewhere without radius2 core. Thus global bin veto, not label or low ratio. Supervisor approved per-pixel subthreshold support refinement under unchanged colour/distance/reachability/share/ratio constraints; invalid pixels cannot bridge. Red xbuild fixture proof queued with nohup; no source-helper edits until it completes.
+
+Blocked after supervisor-authorized single bounded attempt. Real iPhone red fixture proof:1test failed at XCTUnwrap(nil),exit65,test0.978s,/tmp/task-73-before.log and .xcresult; no build killed. Per-pixel support prototype restores iPad16.336427704401043:1 but falsely passes existing subthreshold-panel15.9942758247219 and cross-core14.426790204267782 fixtures, plus new sparse-edge2x15.9942758247219. Supervisor permitted one final attempt banning ALL significant-bin support/bridge pixels. Full37-method host harness still has same3failures (34pass): offending panel bins are already sub2% (0.92%,0.60%,1.21% respectively), so restriction cannot address it. Bounded prototype /tmp/task-73-bounded-host-tests.swift SHA256 f59ceeb695320b8bed3d37d35f93fb202d83e4f844169ccb6f02d1dbc3ef9bf3; output /tmp/task-73-bounded-host-tests.log. Stopped as instructed. Removed temporary failing test and fixture from worktree; helper/app/tests/resources remain unchanged. No skipped/failing test pushed; evidence docs only. Remains In Progress with all ACs unchecked. Final iPhone class and macOS command not run because no safe implementation was retained.
 <!-- SECTION:NOTES:END -->
