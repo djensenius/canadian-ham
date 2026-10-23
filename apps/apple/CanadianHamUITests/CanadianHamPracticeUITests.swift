@@ -2395,8 +2395,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditLessonTryItReveal(appearance: AuditAppearance, accessibilitySize: Bool) throws {
+        // L-005-04 is the shortest Try-it lesson by Markdown body length; the long
+        // L-004-03 still has the separate French reveal/state behaviour test.
         let app = launchApp(arguments: [
-            "-CanadianHamInitialLessonID", "L-004-03",
+            "-CanadianHamInitialLessonID", "L-005-04",
             "-CanadianHamInitialLessonSectionAnchor", "try-it",
             "-CanadianHamTheme", appearance.rawValue,
             "-UIPreferredContentSizeCategoryName", accessibilitySize ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL"
@@ -2417,7 +2419,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try auditIgnoringOccludedLessonTextContrast(app: app)
         toggle.tap()
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
-        XCTAssertEqual(answer.label, "digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ± 5 % tolerance.")
+        XCTAssertEqual(answer.label, "The second is 28.2 MHz, in HF; the third is 42.3 MHz, in VHF.")
         XCTAssertEqual(toggle.label, "Hide answer 1")
         XCTAssertEqual(toggle.value as? String, "Expanded")
         XCTAssertFalse(secondAnswer.exists, "Revealing one Try-it must not reveal another")
@@ -2463,10 +2465,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func recordTryItAuditGeometry(in app: XCUIApplication, stage: String) {
-        let solution = app.staticTexts.matching(NSPredicate(format: "label == %@", "The values are 620 ohms and 62 000 ohms, or 62 kilohms. The ratio is 100. Changing the multiplier changes place value; the digit bands and tolerance need not change.")).firstMatch
         let heading = app.staticTexts["lesson-heading-try-it"].firstMatch
+        let prompt = app.staticTexts["lesson-try-it-1-prompt"].firstMatch
         let control = app.buttons["lesson-try-it-1-toggle"].firstMatch
-        let note = "stage=\(stage); visible=\(frameDescription(visibleFrameExcludingNavigationBar(in: app))); precedingSolution=\(frameDescription(solution.frame)); tryItHeading=\(frameDescription(heading.frame)); control=\(frameDescription(control.frame))"
+        let note = "stage=\(stage); visible=\(frameDescription(visibleFrameExcludingNavigationBar(in: app))); tryItHeading=\(frameDescription(heading.frame)); prompt=\(frameDescription(prompt.frame)); control=\(frameDescription(control.frame))"
         print("Try-it audit geometry: \(note)")
         XCTContext.runActivity(named: "Try-it audit geometry: \(stage)") { activity in
             let attachment = XCTAttachment(string: note)
