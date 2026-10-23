@@ -727,3 +727,12 @@ independently in their result bundles. Both green runs exited0 without that
 cleanup warning. No live app/audit integration is claimed. Full iOS suites and
 macOS/tvOS/visionOS were skipped: only iOS UI-test code changed; no XcodeGen
 regeneration was needed. Independent review and PR CI remain required.
+
+Final guard checks: self-test passed; focused `5da09a53...d57d10ce` passed
+with **no guarded changes** and no approval marker. The complete `main...HEAD`
+diff failed without approval as expected (exit1), and passed with the existing
+`Test-guard-approved: owner decision 2026-10-22` marker (exit0), flagging the
+original default-audit handler at lines289/297. Logs:
+`/tmp/task-71-hardening-test-guard-{self,focused,unapproved,approved}.log`.
+`git diff 5da09a53 --check` passed. Implementation commit:
+`d57d10ced6eb95b052aaf685023368dfd0bd7bd7`.
