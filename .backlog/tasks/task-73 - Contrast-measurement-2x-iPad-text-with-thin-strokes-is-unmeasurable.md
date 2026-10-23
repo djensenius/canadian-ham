@@ -1,9 +1,11 @@
 ---
 id: TASK-73
 title: 'Contrast measurement: 2x iPad text with thin strokes is unmeasurable'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-23 16:51'
+updated_date: '2026-10-23 16:51'
 labels:
   - accessibility
   - tests
@@ -25,3 +27,12 @@ Follow-up to TASK-71. On iPad Pro 13-inch (2x), auditVerifyingMeasuredContrast r
 - [ ] #3 Add 2x variants of at least the inset-panel, chained-blend, partial-overlap and mixed-contrast adversarial fixtures, all failing safe
 - [ ] #4 iPhone 17 Pro UITestContrastMeasurementTests pass and the documented macOS unit command builds and passes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Bundle the unaltered iPad 2x element fixture; add and run a >=4.5 regression against the unchanged helper.
+2. Instrument a host-only diagnostic copy to identify rejecting colour bins/components, boundary support and blend classifications. Implement the smallest scale-aware conservative correction without changing 50% support or minimum-ratio semantics.
+3. Add 2x inset-panel, chained-blend, partial-overlap and mixed-bold/grey adversarial proofs, retaining all existing tests and 3x screenshots; stop/escalate if safety conflicts.
+4. Run targeted iPhone17Pro measurement class and documented macOS unit command through nohup/xbuild with grep polling. Document diagnostics, per-test evidence and residual limits; finalize ACs, commit and push (no PR).
+<!-- SECTION:PLAN:END -->
