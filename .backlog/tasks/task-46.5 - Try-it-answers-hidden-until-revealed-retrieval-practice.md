@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 19:17'
+updated_date: '2026-10-23 20:15'
 labels:
   - content
   - web
@@ -450,6 +450,8 @@ All31 changed figure-directive lesson paths (README example excluded):
 - content/lessons/m7-propagation/l-007-03-vhf-uhf-and-unusual-modes.md
 - content/lessons/m8-interference-suppression/l-008-01-receiver-device-interference-and-filters.md
 - content/lessons/m8-interference-suppression/l-008-02-transmitter-emissions-and-harmonics.md
+
+Internal review fix round 2026-10-23: restored both TASK-46.6.1 TASK-65 paragraphs byte-for-byte from origin/main via CLI, retaining all three TASK-46.5 paragraphs (supersedes earlier branch-version conflict note). Corrected AGENTS/test-comment audit coverage and dated iPad-light limitation coordinator decision 2026-10-23 under owner delegation 2026-10-22: iPhone light default/dark largest audits, French reveal/state only, iPad dark audit. tvOS prompt (including item number) and revealed answer now independently combined/focusable; toggle remains focusable, and UI regression asserts prompt/answer staticTexts acquire actual remote focus. Recast M4 L-004-01 #5 as filtering after rectification, L-004-02 #3 as changing relay switching to linear microphone operation, L-004-03 #4 as wider-tolerance replacement effects on timing; original teaching facts/body unchanged. Capitalized five other lowercase answer starts; full 141-answer scan found none remaining. Web regression parses all37 real lessons, verifies31/141 prompt-answer pairs, numbering/nonempty content, no delimiter paragraphs. Initial run caught stale36 lesson assertion and implicit readdir Buffer typing, both fixed; final pnpm test PASS (web260/260; first run also had unrelated existing IndexedDB v6 migration5s timeout, unchanged full retry passes). Typecheck PASS after explicit UTF-8; coverage100/100, originality0 issues/stale0, links, hints984/984 complete, content-swift26/26, guard self/diff and diff-check PASS. Apple queue and l10n are running under nohup with grep polling, waiting behind coordinator figure-plan run; no other build killed. Targeted results pending.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
