@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 14:32'
+updated_date: '2026-10-23 14:41'
 labels:
   - content
   - web
@@ -46,6 +46,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 8. Resume with merged TASK-71: coordinator-approved local auditIgnoringOccludedOrMeasuredContrast helper composes verbatim approved occlusion guards/logging with shared measured-contrast predicates (>=4.5, keepAlways success/failure logging). Only new Try-it audits change. Preserve shortest L-005-04 direct anchor and visibility assertions; run only Try-it light/dark/French on iPhone and iPad using serial nohup xbuild, then l10n/text/test guard (owner decision 2026-10-22). Stop/report any other failure. Record ratios/per-test evidence; finalize AC3/Done only on green, push without PR; coordinator owns 31-lesson figure plan.
 
 9. Coordinator-approved after iPhone dark failed the unchanged prompt visibility assertion before auditing (111.527s): add only a new Try-it-local bounded positioning pass (max10 precise small scrolls in either direction), then keep identical visibility assertions and log frames on exhaustion. Wait for TASK-72 merge; merge main and use contrastMeasurementCGImage(from:) in local composed helper; rerun dark first then iPhone light/French, all iPad tests and l10n.
+
+10. Coordinator-approved after the bounded10-pass dark retry left Show answer2pt below visible area: retain union-based overshoot targeting with8pt margin and <=80pt precise scrolls; allow12 passes; explicitly log/return if prompt/control union is taller than visible area. Keep unchanged containment assertions and exhaustion logging; rerun dark-first then rest.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -82,6 +84,8 @@ PAUSED by coordinator 2026-10-23 after shortest-lesson retarget: iPhone testLess
 Resume checks/evidence: origin/main merged/pushed (merge1bbdab61); coordinator-approved direct-anchor change55ad569a and shortest-lesson retarget aabd495256d4f6ed16ba2199a10a83c17e33a9b9 committed/pushed. Shared aligned auditIgnoringOccludedLessonTextContrast verified byte-identical to origin/main. Merged pnpm typecheck PASS; pnpm test: content-tools244/244, Morse21/21, calculator127/127; web257/259 initially passed, two known unrelated timeout failures both passed unchanged targeted retry (2/2, 152 unselected tests) after Apple run. Coordinator explicitly approved that one retry. pnpm build:web, production URL/CSP audit, schemas58/58, imports including reference sheet, and Apple text-source checks PASS. Logs /tmp/task-46.5-merged-*.log and /tmp/task-46.5-merged-web-targeted-retry.log. Apple localization export was not refreshed after merge because native audit blocker paused the lane; prior export/mac/tvOS/visionOS and long French reveal results remain in earlier notes. No full suites or figure plan run. All31 changed figure-directive lesson paths reconfirmed in /tmp/task-46.5-changed-figure-lessons.txt; coordinator owns figure plan. Updated handoff is /tmp/task-46.5-handoff.md. No PR opened.
 
 TASK-71 resume: merged/pushed main d05ff6e8; local approved composed audit helper committed0911ea50; all198 pre-branch tests/helpers and shared measurement source byte-identical to origin/main. Text-source and guard self-test/diff with Test-guard-approved: owner decision2026-10-22 PASS. iPhone light full collapsed/expanded audit PASS173.535s; one measured finding label=The report is about S9 plus16dB... ratio16.336427704401043:1 (keepAlways attachment A1CF397D-DB56-41E3-B363-DA735007AEDC.txt under /tmp/task-46.5-measured-iphone-light-attachments). iPhone dark FAIL111.527s before audit: unchanged prompt-fully-visible assertion line2414. Script STOPPED as requested; French/iPad/l10n not run; no processes signalled. Coordinator authorized bounded local positioning fix and TASK-72 platform-image bridge merge before resuming dark-first. AC3 remains unchecked.
+
+TASK-72 merged/pushed (d71b76b0); local composite uses contrastMeasurementCGImage(from:). Dark retry FAIL201.431s before audit: prompt y195.259 height497.333 fully visible, control y704.667 height155.333 ends860 vs visible maxY858. Bounded10-pass positioning exhausted; unchanged control visibility assertion correctly failed. No contrast findings suppressed or tests skipped; script stopped before all remaining tests/l10n. Evidence /tmp/task-46.5-measured-v2-iphone-dark.log, -results.json, -xcresult-path.txt, -attachments/8B11344A-FF0D-438F-941B-FD75A1B520D4.txt (geometry). Coordinator approved union-targeted12-pass refinement with unchanged assertions.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
