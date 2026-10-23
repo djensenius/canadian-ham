@@ -7,6 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 03:00'
+updated_date: '2026-10-23 03:00'
 labels: []
 dependencies: []
 priority: high
@@ -37,3 +38,10 @@ Owner-delegated decision 2026-10-22 (owner: make the best decisions you can; coo
 3. Run all helper caller tests with targeted -only-testing selections through xbuild in two nohup batches (iPhone default/figure plans, iPad reference sheet), recording per-test outcomes. Run the guard self-test and approved diff guard.
 4. Record evidence, finalize the verified task, commit and push the branch without opening a PR.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+ID reconciliation: CLI allocated TASK-70 because the parallel Study-title lane reserved TASK-69. Coordinator approved keeping TASK-70 and renaming this branch to task-70-occluded-helper-align.
+Classification kept inline: extracting audit type, optional XCUIElement/frame, nav-frame matching, and ancestry into a shared pure predicate would significantly rewrite all four existing audit closures for a one-line-per-copy change. The permitted documentation fallback is used: contrast + non-nil positive frame + non-nav + scroll descendant is ignored iff visibleScrollArea does not contain its frame. Fully offscreen -> ignored; partially visible -> ignored; fully visible -> not ignored; non-contrast -> not ignored (first guard); nil element -> not ignored (second guard); zero-size/nav/non-descendant -> not ignored. No bullet/header exception added.
+<!-- SECTION:NOTES:END -->
