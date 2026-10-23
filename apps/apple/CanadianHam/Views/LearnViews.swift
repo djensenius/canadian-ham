@@ -1115,6 +1115,7 @@ private struct ConceptCheckQuestionView: View {
     let disabled: Bool
     let onChoose: (Int) -> Void
     @AccessibilityFocusState private var feedbackFocused: Bool
+    @State private var feedbackFocusRequest = ConceptCheckFeedbackFocusRequest()
 
     var body: some View {
         let prompt = check.prompt.textAndLanguage(for: language)
@@ -1128,6 +1129,7 @@ private struct ConceptCheckQuestionView: View {
             ForEach(Array(permutation.enumerated()), id: \.offset) { displayIndex, choiceIndex in
                 if let choice = check.choices[safe: choiceIndex] {
                     ConceptChoiceButton(choice: choice, displayIndex: displayIndex, sourceIndex: choiceIndex, language: language, selectedChoiceIndex: selectedChoiceIndex, showCorrectness: selectedChoiceIndex != nil, disabled: disabled) {
+                        feedbackFocusRequest.pendingCheckID = check.id
                         onChoose(choiceIndex)
                     }
                 }
@@ -1144,7 +1146,9 @@ private struct ConceptCheckQuestionView: View {
                             .accessibilityIdentifier("lesson-quiz-feedback-status")
                             .accessibilityFocused($feedbackFocused)
                             .task(id: selectedChoiceIndex) {
+                                guard feedbackFocusRequest.consume(for: check.id) else { return }
                                 await Task.yield()
+                                guard !Task.isCancelled else { return }
                                 feedbackFocused = true
                             }
                     }
@@ -1162,6 +1166,24 @@ private struct ConceptCheckQuestionView: View {
                 .accessibilityIdentifier("lesson-quiz-feedback")
             }
         }
+        .onChange(of: check.id) {
+            feedbackFocusRequest.pendingCheckID = nil
+            feedbackFocused = false
+        }
+        .onDisappear {
+            feedbackFocusRequest.pendingCheckID = nil
+            feedbackFocused = false
+        }
+    }
+}
+
+// A restored answer must not request focus; only a choice action arms this one-shot flag.
+struct ConceptCheckFeedbackFocusRequest {
+    var pendingCheckID: String?
+
+    mutating func consume(for checkID: String) -> Bool {
+        defer { pendingCheckID = nil }
+        return pendingCheckID == checkID
     }
 }
 
@@ -1384,7 +1406,7 @@ private func markedReadText(_ count: Int) -> String {
 // Quiz selections store source indices, never shuffled display positions.
 func conceptCheckAnswerStatus(check: ConceptCheck, selectedSourceIndex: Int?, language: BankLanguage) -> AttributedString? {
     guard let selectedSourceIndex, let choice = check.choices[safe: selectedSourceIndex] else { return nil }
-    var status = AttributedString(choice.isCorrect ? String(localized: "Correct") : String(localized: "Incorrect"))
+    var status = AttributedString(choice.isCorrect ? String(localized: "Correct.") : String(localized: "Incorrect."))
     status.inlinePresentationIntent = .stronglyEmphasized
     if let feedback = choice.feedback?.textAndLanguage(for: language) {
         status += AttributedString(" ")

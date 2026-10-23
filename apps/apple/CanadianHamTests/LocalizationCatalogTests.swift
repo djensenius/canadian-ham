@@ -3,13 +3,27 @@ import CanadianHamContent
 import XCTest
 
 final class LocalizationCatalogTests: XCTestCase {
+    func testConceptCheckFeedbackFocusRequestOnlyAfterChoosingNotPreviousOrNext() {
+        var request = ConceptCheckFeedbackFocusRequest()
+        XCTAssertFalse(request.consume(for: "answered-A"), "Restoring an answered check must not move focus")
+
+        request.pendingCheckID = "answered-A"
+        XCTAssertTrue(request.consume(for: "answered-A"), "Choosing an answer requests focus once")
+        XCTAssertFalse(request.consume(for: "answered-B"), "Next to an answered check must not move focus")
+        XCTAssertFalse(request.consume(for: "answered-A"), "Previous to an answered check must not move focus")
+
+        request.pendingCheckID = "answered-A"
+        XCTAssertFalse(request.consume(for: "answered-B"), "A pending request cannot focus a different check")
+        XCTAssertFalse(request.consume(for: "answered-A"), "A mismatched request must be discarded")
+    }
+
     @MainActor
     func testConceptCheckAnswerStatusMapsShuffledSourceChoices() throws {
         let quiz = try conceptFeedbackQuiz()
         let check = try XCTUnwrap(quiz.conceptChecks.first)
         let permutation = [2, 0, 3, 1]
         let item = LessonQuizRuntimeItem.concept(id: check.id, conceptCheck: check, choicePermutation: permutation)
-        let expected = ["Incorrect English fallback.", "Correct English correct.", "Incorrect", "Incorrect English incorrect."]
+        let expected = ["Incorrect. English fallback.", "Correct. English correct.", "Incorrect.", "Incorrect. English incorrect."]
         for (displayIndex, sourceIndex) in permutation.enumerated() {
             let state = LessonQuizSessionState()
             state.items = [item]
@@ -33,14 +47,14 @@ final class LocalizationCatalogTests: XCTestCase {
         }
         let english = try XCTUnwrap(conceptCheckAnswerStatus(check: check, selectedSourceIndex: 0, language: .english))
         XCTAssertEqual(english.runs.compactMap(\.languageIdentifier), ["en-CA"])
-        XCTAssertEqual(String(english.characters), "Correct English correct.")
+        XCTAssertEqual(String(english.characters), "Correct. English correct.")
     }
 
     func testConceptCheckAnswerStatusLegacyChoiceAndNoDisclosureBeforeSelection() throws {
         let check = try XCTUnwrap(conceptFeedbackQuiz().conceptChecks.first)
         XCTAssertNil(check.choices[3].feedback, "Legacy choices decode without feedback")
         let legacy = try XCTUnwrap(conceptCheckAnswerStatus(check: check, selectedSourceIndex: 3, language: .french))
-        XCTAssertEqual(String(legacy.characters), String(localized: "Incorrect"))
+        XCTAssertEqual(String(legacy.characters), String(localized: "Incorrect."))
         XCTAssertTrue(legacy.runs.allSatisfy { $0.languageIdentifier == nil })
         XCTAssertNil(conceptCheckAnswerStatus(check: check, selectedSourceIndex: nil, language: .english))
         XCTAssertNil(conceptCheckAnswerStatus(check: check, selectedSourceIndex: -1, language: .english))
@@ -129,6 +143,7 @@ final class LocalizationCatalogTests: XCTestCase {
             String(format: mockExamSubmittedFormat, locale: locale, passStatus, Int64(82), Int64(100)),
             "Examen simulé soumis. Réussite, 82 sur 100."
         )
+        XCTAssertEqual(frenchBundle.localizedString(forKey: "Incorrect.", value: nil, table: nil), "Mauvaise réponse.")
         XCTAssertEqual(frenchBundle.localizedString(forKey: "Next unanswered", value: nil, table: nil), "Question sans réponse suivante")
         XCTAssertEqual(frenchBundle.localizedString(forKey: "Next flagged", value: nil, table: nil), "Question marquée suivante")
 

@@ -48,7 +48,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let status = app.staticTexts["lesson-quiz-feedback-status"].firstMatch
         positionConceptFeedback([status], in: app)
         waitBriefly(0.8)
-        XCTAssertEqual(status.label, "Correct 820 / 1 000 = 0.82 A, so only the display unit differs.")
+        XCTAssertEqual(status.label, "Correct. 820 / 1 000 = 0.82 A, so only the display unit differs.")
         XCTAssertTrue(isFullyVisible(status, in: app, requiresHittable: true), "Feedback must wrap without truncation at AX-XXXL")
         try auditIgnoringOccludedOrMeasuredContrast(app: app)
         let explanation = app.staticTexts["lesson-quiz-feedback-explanation"].firstMatch
@@ -76,7 +76,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         answer.tap()
         let status = app.staticTexts["lesson-quiz-feedback-status"].firstMatch
         XCTAssertTrue(status.waitForExistence(timeout: 5))
-        let correctness = french ? "Mauvaise réponse" : "Correct"
+        let correctness = french ? "Mauvaise réponse." : "Correct."
         let optionFeedback = correct
             ? "820 / 1 000 = 0.82 A, so only the display unit differs."
             : "This treats milli as a tenfold step. It is a thousandth of an ampere."

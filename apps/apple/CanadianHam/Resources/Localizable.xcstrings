@@ -6046,6 +6046,22 @@
         }
       }
     },
+    "Incorrect." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mauvaise réponse."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mauvaise réponse."
+          }
+        }
+      }
+    },
     "Incorrect. Correct answer: " : {
       "localizations" : {
         "fr" : {
