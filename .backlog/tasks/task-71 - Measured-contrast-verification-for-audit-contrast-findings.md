@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:59'
+updated_date: '2026-10-23 14:03'
 labels:
   - accessibility
   - tests
@@ -51,6 +51,8 @@ Supervisor clarification for step9: validate retained-cluster BOUNDARY pixels (4
 12. Supervisor-approved refinement after screenshot failures: keep four-connectivity and four-pixel component threshold; identify sub-2% boundary-support-only blends with the identical fraction<=0.9/RGB8/every-pixel radius2 core+background rules. Count support only through four-connected blend paths to background, and only for the validated retained core colour. Never alter minimum ratios. Add the thin dark strokes/subthreshold inset-panel AA-edge adversarial proof, rerun all29 tests, and retain diagnostic evidence.
 
 13. Final adversarial hardening: add exact partial-overlap and 1.9% grey fixtures and replace the weak subthreshold support test with a per-pixel-valid but background-disconnected blend fixture. Prove both attacks red on 5da09a53 and the strengthened test red with reachability temporarily bypassed; measure the baseline class runtime. Precompute per-bin pixel indices, reject retained low-contrast boundary pairs and >=6-pixel subthreshold non-blends below4.5, preserving all thresholds otherwise. Rerun all three screenshots, report any nil and cluster diagnostics without loosening. Document outline/tiny-component/quantization limits and full class before/after/per-test results; run targeted iPhone17Pro via nohup/xbuild and grep polling, guard/diff checks, commit/push.
+
+14. Supervisor decision supersedes step13 attack1 guard: omit the proposed >=6px subthreshold rejection and its failing test after all3 real screenshots became nil; document the confirmed false-pass risk and token-check mitigations. Preserve strict partial-overlap rejection, stronger reachability fixture/mutation proof, per-bin index optimization and all other thresholds. Compare identical30-test class before/after optimization, finalize targeted evidence and push for independent review.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -98,6 +100,8 @@ Reopened solely for the user-requested adversarial final hardening pass (review 
 Final-hardening pre-fix proof on5da09a53: full31-test baseline29pass/2fail,22.662s,exit65. Exact partial overlap returned9.797721859358917; exact1.9%grey beside black returned19.84419971993603. Strengthened support test passed normally but failed at15.9942758247219 when backgroundConnectedBlend was temporarily replaced with true (single-test exit65); mutation restored. Logs/bundles /tmp/task-71-hardening-{before,reachability-mutant}.{log,xcresult}.
 
 DECISION UPDATE (supervisor final hardening): requested >=6px/<2% non-blend/<4.5 guard made all3 real screenshots nil. Reported full per-bin counts/RGB/ratio/bounds in /tmp/task-71-hardening-cluster-diagnostics.log. Dark6bins19–852px,light10bins42–686px,Try-it8bins27–647px,ratios1.012–4.3505. Supervisor explicitly DROPPED attack1 guard because rendering residue is indistinguishable under those tests; no blend-criteria diagnosis/loosening. Removed temporary guard and its failing proof from final source; preserve red proof/docs as an explicit known limit including gradients. Continue partial-overlap/reachability/per-bin optimization/docs only; narrow scope/logged ratios/token-test provenance are mitigations.
+
+Final-hardening green validation: identical30-test class before pixel-index optimization20.401s,after9.328s (54.3% lower/2.19x),both30pass/0fail/0skip,xbuildexit0. Before log/bundle /tmp/task-71-hardening-performance-before.{log,xcresult};final /tmp/task-71-hardening-final.{log,xcresult}, summary /tmp/task-71-hardening-final-summary.json,attachments /tmp/task-71-hardening-proof-attachments/. Final screenshot ratios unchanged8.344323837747055/11.403364958858397/16.336427704401043;boldedge2.6667% ratio15.9942758247219. All4xbuildruns via nohup/grep,singleiPhone17Pro/iOS27.0,no builds killed. Only unrelated AppIntents warning in final build.28old tests,wrapper,visibility gate byte-identical to5da09a53;stronger same-named support test plus1new partial-overlap test. Docs cover attack1 confirmed/deferred,outline/halo perWCAG,tinycomponent residual,quantization,and exact tests/diagnostics/per-test runtimes. Narrow audit scope/app/resources/project membership untouched;fullsuites/otherplatforms skipped. Test guard and independent re-review pending.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
