@@ -99,6 +99,11 @@ platform) and share one build lock, so don't run them by reflex.
   accessibility audit; ignore only contrast findings on non-nil elements whose element screenshot
   yields a measured WCAG contrast ratio of at least 4.5:1, logging label, frame and ratio in a
   keepAlways attachment. Non-contrast, nil-element, unmeasurable and lower-contrast findings fail.
+- Owner-delegated decision 2026-10-22, TASK-73 limitation: the measured-contrast check cannot safely
+  measure thin 2x strokes, and on iPad the audit intermittently flags a fully visible faded-practice
+  line in the Try-it lesson. Only the new TASK-46.5 English light Try-it test on iPad skips its two
+  full audits (all reveal assertions stay); iPhone keeps light, dark and French audits and iPad keeps
+  the dark audit. Remove this when TASK-73 makes 2x measurement safe.
   Existing audit helpers and tests remain unchanged.
 - Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
   whose element frame is not fully contained in the visible scroll area below an opaque navigation

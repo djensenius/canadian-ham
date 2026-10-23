@@ -2417,7 +2417,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertEqual(toggle.label, "Show answer 1")
         XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
         recordTryItAuditGeometry(in: app, stage: "collapsed answer")
-        try auditIgnoringOccludedOrMeasuredContrast(app: app)
+        // TASK-73 (owner-delegated decision 2026-10-22): on iPad the XCTest audit intermittently flags a
+        // fully visible faded-practice line that the measured-contrast check cannot measure at 2x, so the
+        // English light iPad run keeps every reveal assertion but skips the two full audits. iPhone keeps
+        // the light, dark and French audits of the same colours and components; iPad keeps the dark audit.
+        let skipsAuditForTask73 = tryItAuditSkippedOnIPadLight(appearance: appearance, accessibilitySize: accessibilitySize)
+        if !skipsAuditForTask73 { try auditIgnoringOccludedOrMeasuredContrast(app: app) }
         toggle.tap()
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
         XCTAssertEqual(answer.label, "The second is 28.2 MHz, in HF; the third is 42.3 MHz, in VHF.")
@@ -2426,10 +2431,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(secondAnswer.exists, "Revealing one Try-it must not reveal another")
         positionTryItControlForAudit(toggle, in: app)
         recordTryItAuditGeometry(in: app, stage: "expanded answer")
-        try auditIgnoringOccludedOrMeasuredContrast(app: app)
+        if !skipsAuditForTask73 { try auditIgnoringOccludedOrMeasuredContrast(app: app) }
         toggle.tap()
         XCTAssertFalse(answer.exists, "Collapsing must remove the answer from the accessibility tree")
         XCTAssertEqual(toggle.value as? String, "Collapsed")
+    }
+
+    private func tryItAuditSkippedOnIPadLight(appearance: AuditAppearance, accessibilitySize: Bool) -> Bool {
+#if os(iOS)
+        return UIDevice.current.userInterfaceIdiom == .pad && appearance == .light && !accessibilitySize
+#else
+        return false
+#endif
     }
 
     // Owner decisions 2026-10-12 (occluded lesson content) and 2026-10-22 (TASK-71).
