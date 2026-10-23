@@ -1,11 +1,17 @@
 # TASK-73: 2× iPad contrast investigation — blocked
 
-**No measurement change is shipped.** The requested iPad fixture remains
-unmeasurable. Two diagnostic prototypes recovered its expected ratio but
+**Historical blocked investigation; the 2× limitation remains unresolved.**
+TASK-73 was subsequently rescoped to
+[rounded-control measurement](task-73-rounded-control-measurement.md). That
+button-only crop fallback does not change the base algorithm described here or
+recover this non-button iPad fixture. No prototype from this investigation ships.
+The requested iPad fixture remains unmeasurable. Two diagnostic prototypes recovered its expected ratio but
 false-passed adversarial fixtures. Following the supervisor's explicit stopping
 rule, only this evidence and task notes are retained; the temporary failing
 regression and copied PNG were removed. No test was skipped or weakened.
-TASK-73 stays In Progress with all four acceptance criteria unchecked.
+At the end of this investigation TASK-73 stayed In Progress with the original
+four acceptance criteria unchecked. The later rounded-control scope replaces
+those criteria; completion of that scope does not resolve this thin-stroke issue.
 
 ## Input and baseline
 

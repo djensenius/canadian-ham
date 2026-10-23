@@ -281,6 +281,23 @@ func measuredTextContrast(in image: CGImage) -> Double? {
     return retainedKeys.map { contrast(clusters[$0]!) }.min()
 }
 
+/// Only buttons may retry a failing full-image measurement without their rounded ends/corners.
+/// The excluded 6 pt ends and 2 pt top/bottom are not measured; see TASK-73's documented limits.
+func measuredControlTextContrast(in image: CGImage, scale: CGFloat, isButton: Bool) -> Double? {
+    let fullImageRatio = measuredTextContrast(in: image)
+    guard isButton, !(fullImageRatio.map { $0 >= 4.5 } ?? false) else { return fullImageRatio }
+    guard scale.isFinite, scale > 0 else { return nil }
+    let horizontalInset = ceil(min(CGFloat(image.height) / 2, 6 * scale))
+    let verticalInset = ceil(2 * scale)
+    let cropWidth = CGFloat(image.width) - 2 * horizontalInset
+    let cropHeight = CGFloat(image.height) - 2 * verticalInset
+    // Check raw dimensions before CGRect standardizes a negative width or height.
+    guard cropWidth > 0, cropHeight > 0 else { return nil }
+    let cropRect = CGRect(x: horizontalInset, y: verticalInset, width: cropWidth, height: cropHeight)
+    guard let crop = image.cropping(to: cropRect) else { return nil }
+    return measuredTextContrast(in: crop)
+}
+
 func isFullyVisibleForContrastMeasurement(frame: CGRect, windowFrame: CGRect, protectedMaxY: CGFloat) -> Bool {
     !frame.isEmpty && !windowFrame.isEmpty && windowFrame.contains(frame) && frame.minY >= protectedMaxY
 }
@@ -303,7 +320,10 @@ func auditVerifyingMeasuredContrast(app: XCUIApplication) throws {
         if let element, let frame,
            isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
            let image = contrastMeasurementCGImage(from: element.screenshot()) {
-            ratio = measuredTextContrast(in: image)
+            ratio = measuredControlTextContrast(
+                in: image, scale: CGFloat(image.width) / frame.width,
+                isButton: element.elementType == .button
+            )
         }
         let verified = ratio.map { $0 >= 4.5 } ?? false
         let activityName = verified ? "Verified contrast audit finding with measured WCAG contrast" : "Failed contrast audit finding"
@@ -319,6 +339,7 @@ func auditVerifyingMeasuredContrast(app: XCUIApplication) throws {
 
 /// XCUIScreenshot.image is UIImage on iOS and NSImage on macOS; the UI-test target also
 /// compiles in the documented macOS unit-test command, so bridge both.
+@MainActor
 func contrastMeasurementCGImage(from screenshot: XCUIScreenshot) -> CGImage? {
 #if os(macOS)
     screenshot.image.cgImage(forProposedRect: nil, context: nil, hints: nil)

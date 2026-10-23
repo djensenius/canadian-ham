@@ -22,8 +22,28 @@ non-contrast findings remain failures. There is no label whitelist.
 
 ## Measurement
 
+TASK-73 adds a [rounded-button crop fallback](task-73-rounded-control-measurement.md)
+without changing `measuredTextContrast(in:)` below. The shared audit wrapper now
+calls `measuredControlTextContrast(in:scale:isButton:)`, passing `.button` element
+type and native screenshot pixels per frame point. Non-buttons use the original
+full-image measurement. Only a button with a nil or below-4.5 full-image result
+may retry a crop: horizontally `min(height / 2, 6 pt × scale)` and vertically
+`2 pt × scale`, rounded inward to whole pixels. The smallest passing tested
+horizontal cap was 6 pt, not the initially proposed 16 pt. All conservative rules
+below apply unchanged **within** that crop. A nil crop measurement stays nil;
+the earlier full-image ratio is not substituted. Text in the excluded strips is
+not measured, an explicit false-pass limit documented with a regression.
+
+Local composite audit helpers in TASK-46.5/TASK-46.6.1 must call the same
+`measuredControlTextContrast(in:scale:isButton:)` function in their measured path,
+with the real element type and screenshot scale. Those integrations remain on
+those task branches; this change adds no live audit call site or scope widening.
+The existing visibility gate, full default audit, non-contrast rejection and
+keepAlways label/frame/ratio logging remain in place. The wrapper modification
+uses `Test-guard-approved: owner decision 2026-10-22`.
+
 TASK-73's [2× iPad investigation](task-73-contrast-2x-blocked.md) is **blocked**:
-its thin `=` stroke is unmeasurable under this unchanged helper. A bounded
+its thin `=` stroke is unmeasurable under the unchanged base algorithm. A bounded
 support-only per-pixel prototype recovered the screenshot but false-passed
 adversarial panels, so it was not shipped. No threshold or audit scope changed.
 
