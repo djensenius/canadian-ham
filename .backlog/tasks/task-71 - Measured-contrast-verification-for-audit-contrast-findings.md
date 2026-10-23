@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:06'
+updated_date: '2026-10-23 13:13'
 labels:
   - accessibility
   - tests
@@ -57,6 +57,8 @@ AC2/B2/S3: all original 12 tests retained; 11 added for 3% high+low blocks, exac
 AC3: scope remains only new TASK-46.5/46.6.1 audits. Existing pre-TASK-71 UI-test files unchanged; app code, existing audit helpers/calls, project membership and resources untouched by fix. XcodeGen not needed.
 AC4: all23 targeted iPhone17Pro/iOS27.0 tests PASSED,0 failures/skips, class3.469s, xbuild exit0. Re-run real screenshot ratios remain8.344323837747055/11.403364958858397/16.336427704401043:1. Mixed grey tests assert2.6591 within0.01/0.1 or panel nil. Log/tmp/task-71-review-tests.log; bundle/tmp/task-71-review-tests.xcresult; summary/tmp/task-71-review-summary.json; exported keepAlways proofs/tmp/task-71-review-proof-attachments/. Run used nohup bash /tmp/task-71-review-tests.sh and grep polling; no other builds killed. Detailed per-test results in docs/testing/task-71-measured-contrast.md. No Swift errors/warnings in changed files (unrelated AppIntents metadata warning). No live app launch/audit integration claimed. Other platforms/full suites skipped because only iOS UI-test target changed.
 Guard self-test passed; unapproved main...HEAD correctly failed(exit1) at handler/default audit lines128/136; same diff with standalone Test-guard-approved: owner decision 2026-10-22 passed(exit0). Logs/tmp/task-71-review-test-guard-{self,unapproved,approved}.log. git diff --check passed. Implementation commit6b6af119c04597bcca616f71d75ed0fd7f9671fd. Independent re-review remains required; no PR opened.
+
+Coordinator, after the re-review (approve with notes): closed the mutual-blend gap. A cluster is an antialiasing blend only toward a core with fraction <= 0.9, so two near-identical colours across a 5-bit bin boundary cannot each drop the other. New regression testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText fails with the old rule (exit 65) and passes with the fix. iPhone 17 Pro UITestContrastMeasurementTests 24/24 passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
