@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 11:45'
+updated_date: '2026-10-23 12:01'
 labels:
   - content
   - web
@@ -40,6 +40,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 5. Resume 2026-10-23: merge and push origin/main (TASK-70 aligned helper), rerun only unchanged failing iPhone/iPad Try-it light/dark audits via nohup. If a fully visible lone bullet remains, export and inspect its screenshot before applying only the authorized local contrast label-exact/cap-1 exception and dated AGENTS entry. Stop for any other failure. Refresh only stale figure-free checks; record per-test evidence, finish AC3 and task, push without a PR; coordinator runs figure plan.
 
 6. Coordinator-approved 2026-10-23 after the unchanged post-TASK-70 dark test passed its preceding-section audit but failed recovery positioning: open the new Try-it tests directly at the Try-it anchor again; remove only the preceding-section workaround audit; explicitly require prompt plus Show answer fully visible below the navigation bar. Preserve remaining assertions, full audits and aligned shared helpers. Rerun iPhone then iPad light/dark.
+
+7. Coordinator-approved 2026-10-23 after direct L-004-03 full audit flagged fully visible nonbullet worked-example text: retarget only the new Try-it full-audit tests to shortest authored Try-it lesson by Markdown-body character count, preserving direct anchor, full audits, prompt/control visibility assertions and unchanged aligned helper; retain existing long L-004-03 French reveal/state test without audit. Record both L-004-03 false positives in TASK-65 and stop on fully visible nonbullet findings in shortest-lesson audits.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -68,6 +70,8 @@ Evidence: /tmp/task-46.5-iphone.log and /tmp/task-46.5-preceding-solution-attach
 Coordinator explicitly directs leaving this task In Progress for owner review of the fully offscreen-helper/contrast issue. ACs #1 and #2 are verified; #3 remains unchecked. Coordinator must still run the figure plan for all 31 changed figure lessons, as listed above. The existing helper is unchanged and still fails nil-element, fully-visible contrast, navigation-bar and all non-contrast findings. No PR was opened. No background validation job remains. Final web production build and URL/CSP audit rechecked successfully.
 
 Resume 2026-10-23: merged origin/main (TASK-70 helper alignment, merge 1bbdab61) and pushed. Unchanged iPhone dark preceding-section full audit passed its offscreen finding through the aligned helper, then failed Try-it heading positioning at y=24119.94 after 533.000 s; stopped for coordinator decision. Coordinator explicitly authorized returning to the direct Try-it anchor and removing only the preceding-section audit detour added for the pre-TASK-70 helper. No shared helper/filter changes authorized. Merged typecheck passes; web run had 257/259 passing with known unrelated loading-state/v6 migration timeouts; coordinator permits one unchanged targeted retry after Apple run finishes.
+
+Direct L-004-03 iPhone light collapsed audit failed on fully visible 'Answer: value = 4 700 ohms.' (332.957 s) after initial Try-it prompt/control visibility passed. No exception added; script stopped before dark/iPad. Both direct and preceding-detour false positives exported and recorded in TASK-65. Coordinator authorized shortest-lesson retargeting with identical audit/visibility requirements, not an issue filter change. Measured all 31 Try-it lessons by Markdown body character count (front matter excluded): L-005-04 AC and decibels shortest at 8,985 characters, Try-it starts at 6,951 (L-004-03:13,735/10,731); full table /tmp/task-46.5-try-it-lesson-lengths.tsv. Existing testLessonTryItRevealFrenchLabelsAndState stays on long L-004-03, with no audit. No shared helpers changed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
