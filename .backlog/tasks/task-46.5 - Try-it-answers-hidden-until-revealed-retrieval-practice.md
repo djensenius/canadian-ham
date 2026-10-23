@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 11:32'
+updated_date: '2026-10-23 11:45'
 labels:
   - content
   - web
@@ -38,6 +38,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 4. Run content/web/package checks; commit before serialized nohup xbuild targeted iPhone/iPad, macOS, tvOS, visionOS checks. Record per-test evidence and changed figure lessons for coordinator, finalize, commit and push without opening a PR.
 
 5. Resume 2026-10-23: merge and push origin/main (TASK-70 aligned helper), rerun only unchanged failing iPhone/iPad Try-it light/dark audits via nohup. If a fully visible lone bullet remains, export and inspect its screenshot before applying only the authorized local contrast label-exact/cap-1 exception and dated AGENTS entry. Stop for any other failure. Refresh only stale figure-free checks; record per-test evidence, finish AC3 and task, push without a PR; coordinator runs figure plan.
+
+6. Coordinator-approved 2026-10-23 after the unchanged post-TASK-70 dark test passed its preceding-section audit but failed recovery positioning: open the new Try-it tests directly at the Try-it anchor again; remove only the preceding-section workaround audit; explicitly require prompt plus Show answer fully visible below the navigation bar. Preserve remaining assertions, full audits and aligned shared helpers. Rerun iPhone then iPad light/dark.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -64,6 +66,8 @@ Final targeted Apple results (no full suites): iPhone testLessonTryItRevealFrenc
 AC #3 BLOCKED: iPhone light audit FAIL 189.631 s (standalone bullet in unchanged faded-practice list), dark FAIL 129.939 s (fully offscreen Fill the gaps before checking below; black element screenshot). These are the approved preceding-solution-start attempts; first Try-it-anchor attempts also failed on fully offscreen preceding solution text. iPad light FAIL 92.524 s (standalone bullet); final dark retry FAIL 78.247 s (offscreen lesson-heading-memory-trick-colour-order). An earlier iPad dark attempt first passed its preceding-solution audit but then lost position after audit-driven scrolling; the new local positioning helper was fixed with direction-aware coarse swipes plus precise alignment. No shared audit/positioning helper or issue filter was edited, and no audit was narrowed/skipped.
 Evidence: /tmp/task-46.5-iphone.log and /tmp/task-46.5-preceding-solution-attachments (latest iPhone full-audit failures); /tmp/task-46.5-ipad.log and /tmp/task-46.5-ipad-attachments (first iPad/light failure); /tmp/task-46.5-ipad-retry.log and /tmp/task-46.5-ipad-retry-attachments (final dark failure plus French pass); /tmp/task-46.5-apple-remaining.log (all independent check outcomes); /tmp/task-46.5-iphone-french.log, /tmp/task-46.5-mac.log, /tmp/task-46.5-tv.log, /tmp/task-46.5-vision.log, /tmp/task-46.5-l10n.log. Per-test xcresult paths are recorded in those logs and /tmp/task-46.5-*-xcresult-path.txt. MAIN reproduction is NOT established: no existing test reaches this same lesson position; read-only detached-worktree inspection report retained.
 Coordinator explicitly directs leaving this task In Progress for owner review of the fully offscreen-helper/contrast issue. ACs #1 and #2 are verified; #3 remains unchecked. Coordinator must still run the figure plan for all 31 changed figure lessons, as listed above. The existing helper is unchanged and still fails nil-element, fully-visible contrast, navigation-bar and all non-contrast findings. No PR was opened. No background validation job remains. Final web production build and URL/CSP audit rechecked successfully.
+
+Resume 2026-10-23: merged origin/main (TASK-70 helper alignment, merge 1bbdab61) and pushed. Unchanged iPhone dark preceding-section full audit passed its offscreen finding through the aligned helper, then failed Try-it heading positioning at y=24119.94 after 533.000 s; stopped for coordinator decision. Coordinator explicitly authorized returning to the direct Try-it anchor and removing only the preceding-section audit detour added for the pre-TASK-70 helper. No shared helper/filter changes authorized. Merged typecheck passes; web run had 257/259 passing with known unrelated loading-state/v6 migration timeouts; coordinator permits one unchanged targeted retry after Apple run finishes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
