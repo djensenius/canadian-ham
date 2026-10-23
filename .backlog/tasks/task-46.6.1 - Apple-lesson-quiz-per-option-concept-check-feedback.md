@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 12:05'
+updated_date: '2026-10-23 12:30'
 labels:
   - apple
 dependencies:
@@ -80,6 +80,8 @@ Blocked: passes except reproducible audit false positive on unchanged header. Th
 Resumed 2026-10-23 under coordinator direction. Merged origin/main through ba5eb4f5 (PR #1005/TASK-70) without conflicts and pushed merge 8ca78a41. The new AX-XXXL method PASSED unchanged on iPhone 17 Pro using the aligned auditIgnoringOccludedLessonTextContrast: 210.917 s, /tmp/task-46.6.1-iphone-aligned.{log,xcresult}. No local header exception, audit narrowing, shared helper edit, or AGENTS exception entry has been added. iPad unchanged rerun is queued via the same nohup runner, waiting normally on the shared xbuild lock.
 
 The unchanged aligned-helper AX-XXXL rerun also PASSED on iPad Pro 13-inch (M5): 54.424 s, /tmp/task-46.6.1-ipad-aligned.{log,xcresult}. Both result bundles report one pass, zero failures/skips. Conditional authorization for a fully visible Question N of M header exception was NOT used; shared helpers match origin/main, and AGENTS.md is unchanged by this task. Started the requested final 12-method lesson-quiz selection (seven existing plus five feedback methods), iPhone then iPad, via nohup /tmp/task-46.6.1-final-targeted.sh. Resumed Apple text-source and test-guard self-test checks pass; the diff against origin/main passes with the coordinator-provided Test-guard-approved: owner decision 2026-10-22 marker (only the existing task-added calls to the approved occluded helper are flagged without approval).
+
+Final iPhone 12-method run finished 7 PASS / 5 FAIL / 0 skipped (xbuild exit 65), /tmp/task-46.6.1-iphone-final.{log,xcresult}; set -e correctly prevented the iPad run. All seven existing methods passed. All five new methods reported Contrast at the unchanged shared helper. Correct dark/light issue screenshots identify the fully visible new lesson-quiz-feedback-status text, Correct 820 / 1 000 = 0.82 A, so only the display unit differs.; screenshot-derived approximate frame x56 y583.667 w286.667 h42 points (Scale=3; the original audit does not log XCUIElement.frame). Both assert full visibility before auditing, and app/element images show pale green on dark green (dark) / dark green on pale green (light), not a header/occlusion. French dark/light issue screenshots identify the fully visible unchanged English prompt (A parts list needs 0.82 A. A meter on the same accessory reads 820 mA. What should the learner conclude?), approximate screenshot-derived x40 y130.667 w312.667 h98.667 points. AX-XXXL again identifies Question 1 of 1, near-black on paper and fully visible at the bottom of the auto-scrolled app screenshot. Failure app/element exports and manifest: /tmp/task-46.6.1-iphone-final-attachments/; mapping and frame derivation: /tmp/task-46.6.1-iphone-final-failure-evidence.json. No exception has been added. Supervisor approved one unchanged retry of just correct dark/light after extracting evidence; launched via nohup /tmp/task-46.6.1-correct-retry.sh. AC3 remains unchecked/In Progress.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
