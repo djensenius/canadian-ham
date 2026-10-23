@@ -38,6 +38,7 @@ func measuredTextContrast(in image: CGImage) -> Double? {
     }
 
     var clusters: [Int: Cluster] = [:]
+    var pixelIndicesByKey: [Int: [Int]] = [:]
     var pixelKeys = [Int](repeating: 0, count: width * height)
     for row in 0..<height {
         for column in 0..<width {
@@ -48,7 +49,9 @@ func measuredTextContrast(in image: CGImage) -> Double? {
             let green = pixels[offset + 1]
             let blue = pixels[offset + 2]
             let key = (Int(red >> 3) << 10) | (Int(green >> 3) << 5) | Int(blue >> 3)
-            pixelKeys[row * width + column] = key
+            let index = row * width + column
+            pixelKeys[index] = key
+            pixelIndicesByKey[key, default: []].append(index)
             var cluster = clusters[key, default: Cluster()]
             cluster.count += 1
             cluster.red += Double(red)
@@ -69,10 +72,14 @@ func measuredTextContrast(in image: CGImage) -> Double? {
     guard !foregroundKeys.isEmpty,
           foregroundKeys.allSatisfy({ Double(clusters[$0]!.count) < pixelCount * 0.25 }) else { return nil }
 
+    func contrast(_ first: Cluster, _ second: Cluster) -> Double {
+        let firstLuminance = first.luminance
+        let secondLuminance = second.luminance
+        return (max(firstLuminance, secondLuminance) + 0.05) / (min(firstLuminance, secondLuminance) + 0.05)
+    }
+
     func contrast(_ cluster: Cluster) -> Double {
-        let first = background.luminance
-        let second = cluster.luminance
-        return (max(first, second) + 0.05) / (min(first, second) + 0.05)
+        contrast(background, cluster)
     }
 
     // Significant background noise/bin splits are ambiguous, not evidence of passing text.
@@ -94,7 +101,7 @@ func measuredTextContrast(in image: CGImage) -> Double? {
 
         // Colour alone cannot distinguish grey text from a black/cream blend. Every pixel must
         // also lie in a thin edge band beside BOTH that core and the background (native pixels).
-        for index in pixelKeys.indices where pixelKeys[index] == key {
+        for index in pixelIndicesByKey[key]! {
             let x = index % width
             let y = index / width
             var bordersCore = false
@@ -131,6 +138,7 @@ func measuredTextContrast(in image: CGImage) -> Double? {
     // Subthreshold colours never affect the reported ratio, but may supply spatial edge evidence
     // under the SAME strict blend tests. A support pixel must also be four-connected through
     // validated blends to an actual background pixel; a panel's unrelated edge is not evidence.
+    // Small low-contrast content remains a known limit: see docs/testing/task-71-measured-contrast.md.
     var boundarySupportCores = blendCores
     for key in keys where key != backgroundKey && Double(clusters[key]!.count) < pixelCount * 0.02 {
         if let core = retainedKeys.first(where: { isAntialiasedEdge(key, toward: $0) }) {
@@ -239,7 +247,13 @@ func measuredTextContrast(in image: CGImage) -> Double? {
             where column >= 0 && column < width && row >= 0 && row < height {
             let neighbor = row * width + column
             isBoundary = isBoundary || componentIDs[neighbor] != componentID
-            bordersForeground = bordersForeground || (regionKeys[neighbor] != components[componentID].key && retainedKeySet.contains(regionKeys[neighbor]))
+            let neighborKey = regionKeys[neighbor]
+            if neighborKey != components[componentID].key && retainedKeySet.contains(neighborKey) {
+                // Even a short low-contrast overlap can hide part of a glyph. The 50% boundary
+                // thresholds below cannot establish safety for two directly adjoining cores.
+                guard contrast(clusters[components[componentID].key]!, clusters[neighborKey]!) >= 4.5 else { return nil }
+                bordersForeground = true
+            }
         }
         guard isBoundary else { continue }
         components[componentID].boundaryCount += 1

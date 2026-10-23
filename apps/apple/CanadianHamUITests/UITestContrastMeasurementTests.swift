@@ -168,17 +168,32 @@ final class UITestContrastMeasurementTests: XCTestCase {
         let context = try bitmapContext()
         context.setFillColor(cream)
         context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
-        // A one-pixel cream/#404040 blend around a small inset panel: only 0.44% coverage.
-        context.setFillColor(CGColor(srgbRed: 159.5 / 255, green: 156.0 / 255, blue: 148.0 / 255, alpha: 1))
-        context.fill(CGRect(x: 29, y: 29, width: 12, height: 12))
         context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
-        context.fill(CGRect(x: 30, y: 30, width: 10, height: 10))
+        context.fill(CGRect(x: 30, y: 30, width: 7, height: 20)) // Subthreshold panel, never a retained core.
+        // Each on-line blend pixel is within two pixels of BOTH cream and the x=33 core,
+        // but a one-pixel panel moat prevents any four-connected path from blend to cream.
+        context.setFillColor(CGColor(srgbRed: 159.5 / 255, green: 156.0 / 255, blue: 148.0 / 255, alpha: 1))
+        for x in [31, 35] {
+            context.fill(CGRect(x: x, y: 32, width: 1, height: 16)) // Together only 0.32%.
+        }
         context.setFillColor(nearBlack)
-        context.fill(CGRect(x: 33, y: 33, width: 1, height: 4))
-        context.fill(CGRect(x: 36, y: 33, width: 1, height: 4))
+        context.fill(CGRect(x: 33, y: 32, width: 1, height: 16))
         context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testPartiallyOverlappingStrokesCannotPassAgainstCream() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 30, y: 50, width: 40, height: 20)) // x=30...69, y=50...69.
+        context.setFillColor(nearBlack)
+        for x in [34, 42, 50, 58] {
+            context.fill(CGRect(x: x, y: 40, width: 3, height: 20)) // Half on cream, half on panel.
+        }
         if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
-            XCTAssertLessThan(ratio, 4.5)
+            XCTAssertLessThan(ratio, 4.5, "The panel-backed half of each stroke is only 1.63:1")
         }
     }
 

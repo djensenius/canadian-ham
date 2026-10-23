@@ -69,10 +69,14 @@ The measurement is deliberately conservative:
    RGB-residual ≤8, and **every-pixel radius-two core AND background** blend
    checks. They never enter the reported ratio or merge core components. This
    support is independent of which same-colour component owns an excluded blend
-   pixel, but not of its validated retained core colour. If **more than 50%** of
-   boundary pixels directly border another retained foreground colour region,
-   return nil even if supported background is nearby. A significant component
-   with no measurable boundary also returns nil.
+   pixel, but not of its validated retained core colour. **Any** boundary contact
+   with another retained foreground colour whose pairwise WCAG contrast is
+   **below 4.5:1** returns nil, even for a one-pixel contact or a component below
+   four pixels. Partial overlap cannot borrow the rest of a glyph's cream-backed
+   boundary. The existing ambiguity rule also returns nil if **more than 50%** of
+   boundary pixels border another retained foreground region, regardless of its
+   pairwise ratio. A significant component with no measurable boundary also
+   returns nil.
    A single failing component makes the entire image unmeasurable: a supported
    block on cream cannot lend its boundary to same-colour inset text. The
    supervisor approved boundary (not filled-interior) validation to keep thick
@@ -90,7 +94,59 @@ containing transparent pixels return nil, not a passing ratio. Clusters below
 not semantic text recognition or a general multiple-local-background audit.
 Native screenshot scale is preserved. Bold 15 pt text at 3× and explicit
 significant edge-band fixtures test the colour/spatial tolerances; the original
-2% cutoff and 5-bit quantization were not loosened.
+2% cutoff and 5-bit quantization were not loosened. Pixel indices are collected
+once per colour bin so each blend check visits only that bin's pixels rather
+than scanning the entire image for every candidate.
+
+### Known limits and mitigation
+
+- **Attack 1: low-contrast content below 2%, including gradients.** A cream
+  100×100 image with a black 16×40 block at (5,10) and five 1×38 #9A9A9A
+  strokes at x=40/50/60/70/80, y=10…47 (1.9%, more than two pixels from
+  black) wrongly reports **19.84419971993603:1**, despite the grey's
+  **2.6591:1** contrast. A short secondary-colour word beside high-contrast text
+  can have this shape; gradient-filled text can distribute its coverage among
+  several sub-2% bins. This is an explicit **false-pass risk**, not proven safe.
+  A proposed fail-closed check for non-blend bins of at least six native pixels
+  below 4.5 made **all three real screenshots nil**: they contain many small
+  near-background or partial-blend rendering tones with ratios **1.012–4.3505**.
+  After receiving those diagnostics, the supervisor explicitly **dropped** that
+  check rather than changing blend tolerances or weakening screenshot tests.
+  No six-pixel floor or new subthreshold guard remains in the implementation.
+- **Attack 4: outlines/halos.** Pale thin strokes on the cream→dark-outline colour
+  line can be indistinguishable from antialiasing and be discarded in favour of
+  the outline's high ratio. WCAG's
+  [Understanding SC 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+  accepts a sufficiently contrasting outline/halo as providing contrast. This
+  heuristic cannot identify intended glyph interiors separately from those
+  pixel-identical edge blends; outline acceptance is deliberate, not semantic
+  text recognition.
+- **Attack 5: one-to-three-native-pixel components.** Such specks still skip the
+  per-component 50% spatial-support checks, but not their retained colour's
+  ratio or the new pairwise retained-colour contact check. Thus the reviewer's
+  exact dot-on-retained-panel attack is now rejected. A tiny dot on a
+  **subthreshold**, non-retained panel can still evade spatial validation when
+  a separate block makes the dot colour significant. These are contrived
+  native-pixel fixtures, not the four-connected text cores observed at 3× in
+  the three screenshots; no general safety claim is made for tiny components.
+- **5-bit quantization and background selection.** Multiple substantial
+  backgrounds fail closed, but a gradient contained within one bin (up to seven
+  channel levels) is represented by its mean. A ratio near 4.5 can be biased
+  against the actual local background. Text in the same bin as the dominant
+  background cannot be recognized as separate foreground.
+
+Mitigations are the **narrow approved scope** (only the new TASK-46.5 and
+TASK-46.6.1 audits), keepAlways **label/frame/ratio logging for review**, and
+independent token-level contrast tests. In
+`packages/design-tokens/test/contrast.test.ts`,
+`declared foreground/background contrast pairs meet WCAG 2.2 AA thresholds`
+checks the declared pairs in `packages/design-tokens/tokens.json`.
+`apps/apple/CanadianHamTests/MorseTrainerTests.swift` also has
+`testLessonBodyAndBulletContrastTokensMeetMinimumRatio`, checking Apple ink
+against paper/paperElevated in both themes. These mitigate errors in declared
+colours; they do **not** prove every rendered run, inline override, gradient,
+or feedback-panel pair. The helper is not a replacement for those checks or
+review of actual screens, and its scope must not be widened by inference.
 
 ## Exported screenshot provenance
 
@@ -383,7 +439,7 @@ The pre-existing dominant-background, 5-bit clustering and <2% coverage
 limitations remain; this is not general semantic text recognition.
 
 
-### Copilot PR #1007 disconnected-component follow-up (2026-10-23, current)
+### Copilot PR #1007 disconnected-component follow-up (2026-10-23, before final hardening)
 
 Addressed `PRRT_kwDOUxZq_M6vn59C`. Colour-wide counters allowed a separate
 correctly contrasted block to mask low-contrast inset text of the same colour.
@@ -530,3 +586,144 @@ helper and audit wrapper are byte-identical to the starting commit. Implementati
 commit: `b7448103b29fe51ab9939e85385269552f8dd954`.
 Independent reviewer approval and PR CI remain required; these targeted proofs
 are not live-audit integration or universal contrast-verification claims.
+
+
+### Final adversarial hardening (2026-10-23, current)
+
+User-requested follow-up to the adversarial re-review of `5da09a53`:
+
+1. **Partial overlap (attack 6):**
+   `testPartiallyOverlappingStrokesCannotPassAgainstCream` uses the reviewer's
+   exact 100×100 fixture: cream, a #404040 panel at x=30…69/y=50…69, and
+   four 3×20 #201C18 strokes at x=34/42/50/58 and y=40…59. On the original
+   helper it **failed**, returning **9.797721859358917:1** rather than nil or
+   <4.5; the strokes' lower halves have only **1.6324:1** local contrast.
+   The helper now returns nil on *any* boundary contact between retained
+   colours with pairwise contrast below 4.5, without relying on the 50% rules.
+2. **Reachability mutation proof:** strengthened
+   `testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes` with a
+   7×20 #404040 panel at (30,30), a 1×16 #201C18 core at (33,32), two
+   1×16 on-line blend columns at x=31/35, y=32…47, and the separate
+   16×40 #201C18 block at (5,10). Every blend pixel is within two native pixels
+   of **both** cream and that core, but a one-pixel panel moat prevents a
+   four-connected path to cream. Blend coverage is only **0.32%**; the panel is
+   also below 2%, so the new retained-colour pair check cannot mask the proof.
+   The strengthened test passes normally. Temporarily replacing
+   `backgroundConnectedBlend[neighbor]` with `true` in `isSupportedBlend`
+   makes it **fail**, returning **15.9942758247219:1** instead of nil.
+   The mutation was restored before all passing runs; no production
+   reachability or blend-colour check was relaxed.
+3. **Attack 1 was tested, then explicitly deferred by the supervisor.** The
+   exact 1.9% grey-stroke fixture described in Known limits failed on the
+   original helper, returning **19.84419971993603:1**. The requested temporary
+   non-blend guard (minimum six native pixels) made **all three** real images
+   nil. Work paused; the cluster data was reported before any change. The
+   supervisor instructed removing this guard, keeping the 2% semantics, and
+   documenting the risk rather than diagnosing or loosening blend criteria.
+   The temporary failing attack-1 test is not in the final passing class;
+   its red proof remains in the baseline result bundle and this explicit limit.
+
+The original-helper baseline ran **31 tests: 29 passed, 2 failed, 0 skipped**,
+exit **65**, class **22.662 s**. Both failures were the exact attacks 1 and 6;
+the strengthened reachability test already passed. Log/result/summary:
+`/tmp/task-71-hardening-before.{log,xcresult}` and
+`/tmp/task-71-hardening-before-summary.json`. The one-test reachability mutant
+failed as intended (exit **65**, **1 failed**, **1.185 s**):
+`/tmp/task-71-hardening-reachability-mutant.{log,xcresult}` and
+`/tmp/task-71-hardening-reachability-mutant-summary.json`.
+
+Unmodified-native-image host runs of the temporary six-pixel guard yielded:
+
+| Screenshot | Non-blend bins below 2% and 4.5 | Native pixels per bin | Ratio range |
+| --- | ---: | ---: | ---: |
+| feedback dark | 6 | 19…852 | 1.0345…3.8335 |
+| feedback light | 10 | 42…686 | 1.0299…4.3505 |
+| Try-it light | 8 | 27…647 | 1.0122…4.0664 |
+
+Full key/count/coverage/mean-RGB/ratio/bounds data:
+`/tmp/task-71-hardening-cluster-diagnostics.log`. Example bins are dark key4292,
+852 pixels, RGB(33.3920,53.4120,37.2512), ratio1.034525; light key11723,
+108 pixels, RGB(88.7963,117.8796,88.3889), ratio4.350469; Try-it key15854,
+34 pixels, RGB(127.0,121.2941,112.0), ratio4.066416. The diagnostic copy logs
+all would-be subthreshold rejections without stopping at the first; it is not
+app/test source. No proposed guard or pixel-floor rule remains in final code.
+
+#### Performance and final iPhone results
+
+For an **identical 30-test class**, including the partial-overlap rule and the
+strengthened reachability fixture, disabling only the per-bin pixel-index
+optimization yielded **30 passed**, class **20.401 s**, exit0. Restoring the
+optimization yielded **30 passed, 0 failed, 0 skipped**, class **9.328 s**,
+exit0: **54.3% less class time (2.19×)** in these runs. This is an observed
+single-run comparison, not a benchmark guarantee. Light feedback fell from
+5.447 s to 0.193 s; dark from 0.880 s to 0.265 s; Try-it from 1.456 s to
+0.294 s. Per-bin lists eliminate the repeated whole-image scan, at the cost of
+one additional native-pixel index per pixel; every blend predicate is unchanged.
+Unoptimized proof: `/tmp/task-71-hardening-performance-before.{log,xcresult}`,
+`/tmp/task-71-hardening-performance-before-summary.json`.
+
+All four xbuild runs used nohup and grep polling, one iPhone 17 Pro / iOS27.0
+destination; no other build was killed. Final command:
+
+```sh
+nohup bash /tmp/task-71-hardening-final.sh > /tmp/task-71-hardening-final.log 2>&1 < /dev/null &
+# Script exports DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer and runs:
+xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam \
+  -testPlan CanadianHamDefault \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -only-testing:CanadianHamUITests/UITestContrastMeasurementTests \
+  -resultBundlePath /tmp/task-71-hardening-final.xcresult \
+  test CODE_SIGNING_ALLOWED=NO
+```
+
+Final summary: `/tmp/task-71-hardening-final-summary.json`.
+Exported keepAlways attachments: `/tmp/task-71-hardening-proof-attachments/`.
+All three real images are **non-nil and unchanged**: feedback light
+**8.344323837747055:1**, feedback dark **11.403364958858397:1**, Try-it
+**16.336427704401043:1**. Actual bold15pt3× edge coverage is still
+**2.6667%**, ratio **15.9942758247219:1**. All 28 other pre-existing proof
+methods, the audit wrapper and visibility gate remain byte-identical to
+`5da09a53`. Only the weak support test was strengthened; one test was added.
+No PNG, app code, audit call site, target membership, coverage threshold,
+colour tolerance, reachability rule or ratio calculation was loosened.
+
+| Test (`UITestContrastMeasurementTests`) | Final result | Seconds |
+| --- | --- | ---: |
+| `testAntialiased15PointBoldEdgeCoverageAt3x` | PASS | 0.787 |
+| `testAntialiased15PointBoldMixedContrastLinesFailAt3x` | PASS | 0.183 |
+| `testAntialiased15PointLowContrastTextStillFails` | PASS | 0.160 |
+| `testAntialiased15PointTextMeasuresExpectedContrast` | PASS | 0.597 |
+| `testBlackOffscreenBandDoesNotRescueMidGreyText` | PASS | 0.075 |
+| `testChainedBlendsCannotUseAnExcludedCore` | PASS | 0.085 |
+| `testContrastMeasurementRejectsInvisibleFrames` | PASS | 0.110 |
+| `testDarkIconDoesNotRescueMidGreyText` | PASS | 0.167 |
+| `testDisconnectedDarkBlockCannotRescueInsetLowContrastText` | PASS | 0.080 |
+| `testEqualLargeTonesAreUnmeasurable` | PASS | 0.078 |
+| `testExportedCorrectFeedbackDarkPasses` | PASS | 0.265 |
+| `testExportedCorrectFeedbackLightPasses` | PASS | 0.193 |
+| `testExportedTryItParagraphLightPasses` | PASS | 0.294 |
+| `testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary` | PASS | 0.101 |
+| `testInsetPanelCannotUseTheSurroundingCreamAsTextBackground` | PASS | 0.091 |
+| `testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText` | PASS | 0.167 |
+| `testMidGreyOnCreamFails` | PASS | 1.394 |
+| `testNearBlackOnCreamPasses` | PASS | 3.587 |
+| `testOnlyTinyForegroundIsUnmeasurable` | PASS | 0.090 |
+| `testPaleOnDarkGreenPasses` | PASS | 0.071 |
+| `testPartiallyOverlappingStrokesCannotPassAgainstCream` | PASS | 0.076 |
+| `testSignificantAntialiasedEdgeBandsMeasureCoreContrast` | PASS | 0.077 |
+| `testSignificantNearBackgroundNoiseIsUnmeasurable` | PASS | 0.078 |
+| `testSignificantNearBlackAndMidGreyBlocksDoNotPass` | PASS | 0.075 |
+| `testSolidBlendColourIsNotMistakenForAntialiasing` | PASS | 0.072 |
+| `testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes` | PASS | 0.072 |
+| `testTinyHighContrastTailDoesNotRescueLowContrastText` | PASS | 0.074 |
+| `testTransparentImageIsUnmeasurable` | PASS | 0.076 |
+| `testTwoTonePanelWithDarkTextIsUnmeasurable` | PASS | 0.075 |
+| `testUniformImageIsUnmeasurable` | PASS | 0.074 |
+
+No changed-source warnings/errors; only the unrelated AppIntents metadata
+warning. The two deliberately red runs also printed an xbuild cleanup
+`simctl` lookup warning after tests, but the assertion failures were recorded
+independently in their result bundles. Both green runs exited0 without that
+cleanup warning. No live app/audit integration is claimed. Full iOS suites and
+macOS/tvOS/visionOS were skipped: only iOS UI-test code changed; no XcodeGen
+regeneration was needed. Independent review and PR CI remain required.
