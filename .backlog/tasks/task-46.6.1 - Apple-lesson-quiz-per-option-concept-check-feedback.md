@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 11:32'
+updated_date: '2026-10-23 11:54'
 labels:
   - apple
 dependencies:
@@ -74,6 +74,8 @@ Ancillary checks: pnpm check:apple-l10n PASS (French export plus its tvOS/vision
 Raw evidence: /tmp/task-46.6.1-{macos,iphone,iphone-smoke,iphone-fix,iphone-largest-fix,iphone-largest-retry,iphone-largest-settle,ipad}.log; same basenames with .xcresult. Ancillary logs: /tmp/task-46.6.1-{l10n,text,guard-self,guard}.log. Literal commands/ordered runners: /tmp/task-46.6.1-checks.sh, -checks-fix.sh, -checks-final.sh, -checks-remaining.sh and -settle-check.sh. All Apple runs used nohup xbuild; no full suites. tvOS/visionOS suites skipped because LearnViews.swift belongs only to the iOS/macOS CanadianHam target; their localization builds ran only because the requested localization script includes them.
 
 Blocked: passes except reproducible audit false positive on unchanged header. The settled iPhone run still reports Contrast on Question 1 of 1 (203.610 s) after all feedback text/full-visibility assertions pass. iPad AX-XXXL also fails Contrast (40.552 s). Per supervisor, stop investigation; do not merge a newly failing test, leave AC3 unchecked/task In Progress, push for owner review. Existing AX-XXXL hint/layout test has no audit; its passing result cannot validate this header contrast at that size. No filter, skip, helper change, narrowed audit or unrelated visual fix was added. The added settle is only 0.8 s before each full audit; it did not resolve the finding. Manual VoiceOver speech/focus was not exercised; implementation uses AccessibilityFocusState and language-tagged Text, covered by attributed-run unit checks and normal-size full audits.
+
+Resumed 2026-10-23 under coordinator direction. Merged origin/main through ba5eb4f5 (PR #1005/TASK-70) without conflicts and pushed merge 8ca78a41. The new AX-XXXL method PASSED unchanged on iPhone 17 Pro using the aligned auditIgnoringOccludedLessonTextContrast: 210.917 s, /tmp/task-46.6.1-iphone-aligned.{log,xcresult}. No local header exception, audit narrowing, shared helper edit, or AGENTS exception entry has been added. iPad unchanged rerun is queued via the same nohup runner, waiting normally on the shared xbuild lock.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
