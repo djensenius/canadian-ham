@@ -1,11 +1,11 @@
 ---
 id: TASK-73
 title: 'Contrast measurement: rounded-control measurement'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 16:51'
-updated_date: '2026-10-23 18:10'
+updated_date: '2026-10-23 18:15'
 labels:
   - accessibility
   - tests
@@ -35,6 +35,10 @@ Owner-delegated decision 2026-10-22, coordinator: narrowly extend TASK-71 measur
 2. Add a button-gated native-pixel crop fallback and wire the shared audit path with element type and screenshot/frame scale; keep the base algorithm byte-identical. Bundle the unaltered fixture.
 3. Add fixture, low-contrast, retained-near-end/middle, excluded-end, non-button, full-image-preservation and invalid-crop proofs; document all crop limits and future TASK-46.5/46.6.1 composite integration.
 4. Run the iPhone proof class and macOS unit command through nohup/xbuild and grep polling, plus diff/guard checks. Record per-test results, finalize criteria, commit and push; no PR.
+
+5. Address approved adversarial-review notes: preserve base algorithm; validate every discarded pixel against full/crop background clusters or their RGB-8 line blends; expose full/final/crop metadata in keepAlways audit logging.
+6. Replace excluded-content false-pass proof with fail-closed regressions (including More chevron), add meaningful non-button nil, matched dark-text controls at 2x/3x and no-text crop; correct corner/gate docs and AGENTS TASK-73 scope.
+7. Run the final full iPhone 17 Pro measurement class and documented macOS unit command via nohup/xbuild with grep polling, record all per-test evidence, commit and push without PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -51,6 +55,8 @@ New approved scope: rounded-control measurement only; previous2× notes remain h
 Rounded-control implementation0a617ef6 and per-test evidence ddcedc84 committed and pushed to origin/task-73-contrast-2x (no PR). Added measuredControlTextContrast(in:scale:isButton:) with6pt horizontal/2pt vertical native crop only for buttons after nil/below4.5 full measurement. Base measuredTextContrast and all31 old test methods byte-identical to57f7991a; no app/project membership changes. Actual452×151 fixture: full1.1993729121750754, selected6pt crop13.620392055674973. Eight new methods cover fixture/non-button equality, low contrast2×/3×, retained end/middle text, excluded-end false-pass, passing full-image preservation, invalid scale/empty crop and nil non-button. Excluded6pt ends/2pt top-bottom remain an explicit false-pass limit, not a full-control proof;2× thin-stroke limitation is still unresolved. Shared wrapper passes actual.button type and screenshot/frame scale; TASK-46.5/46.6.1 composites must call the same function in their own integration changes.
 
 Validation via nohup/xbuild with grep polling; no builds killed. Initial iPhone17Pro class /tmp/task-73-control-iphone.{log,xcresult}:37passed/2failed methods/0skipped (39total), exit65. Fixed raw negative CGRect dimension validation and exclusion proof nil expectation; targeted two-method rerun /tmp/task-73-control-iphone-fix.{log,xcresult}:2passed/0failed/0skipped,exit0. All39 methods now have green results across full+targeted fix runs, not a claimed single final full-class run. macOS documented unit command /tmp/task-73-control-macos.{log,xcresult}:210passed/0failed/0skipped,exit0; UI-test target compiled too. Added@MainActor to platform-safe screenshot bridge to eliminate isolation warning. No changed-source warnings in final commands; unrelated deprecation/plural/AppIntents warnings and expected corrupt-store diagnostics remain. tvOS/visionOS/full iOS suites skipped because only UI-test helper/proofs changed. Complete per-test tables and commands are in docs/testing/task-73-rounded-control-measurement.md. Test-guard self-test passed; focused57f7991a...0a617ef6 check passed with Test-guard-approved: owner decision 2026-10-22, reporting intended wrapper findings. git diff --check passed. Independent branch review remains required; no live audit integration claimed.
+
+Reopened for supervisor-requested review fixes, including explicitly approved discarded-strip hardening (option 5). PR marker will be Test-guard-approved: task-73; AGENTS TASK-71 entry will record the TASK-73 button crop refinement. No base-algorithm or audit-scope widening.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
