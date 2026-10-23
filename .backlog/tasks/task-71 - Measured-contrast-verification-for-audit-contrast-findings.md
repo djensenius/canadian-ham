@@ -1,11 +1,11 @@
 ---
 id: TASK-71
 title: Measured-contrast verification for audit contrast findings
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 13:45'
+updated_date: '2026-10-23 13:47'
 labels:
   - accessibility
   - tests
@@ -84,10 +84,16 @@ Reopened solely for the user-confirmed disconnected-region masking finding PRRT_
 Exact requested mixed-background fixture failed as expected before the fix: 9.797721859358917:1 (xbuild exit65), log/bundle /tmp/task-71-components-before.{log,xcresult}. First per-component run: all three real exported screenshots became nil while bold/AA proofs and adversarial regressions passed. Stopped and escalated rather than loosening. Supervisor authorized diagnostic analysis and principled 8-connectivity/background-connected blend interpretation under radius2, >=50% support, and all existing adversarial-test constraints; tiny-component exemption only beside a validated same-cluster component.
 
 Diagnostics isolated the nil screenshots to two-pixel-thick equal signs/hyphens: dark feedback two48px components, light feedback one48px, Try-it four32px; only4 boundary pixels each directly background-supported, no other-retained neighbours, all adjacent AA shades below2% and thus absent from blendCores. Full details /tmp/task-71-components-diagnostics.log. Supervisor explicitly approved subthreshold support-only blends using SAME strict blend tests plus 4-connected background reachability, with an additional thin-stroke inset-panel AA-edge regression. Host CGImage check with this refinement restores all3 original ratios unchanged; no radius/50%/blend tolerance changes.
+
+PR#1007 disconnected-component fix implementation b7448103b29fe51ab9939e85385269552f8dd954: four-connected retained cores, nearest supporting-core assignment of each excluded blend pixel (radius2, row-major squared-distance ties), independent >=4-native-pixel component boundary rules (>=50% supported, <=50% other-retained foreground); minimum ratio untouched. Exact requested mixed fixture proven red on 3478f40e; added four-pixel-glyph and supervisor-required subthreshold-panel-AA-edge adversarial tests. First screenshot nils were escalated; explicitly approved subthreshold support-only blends use SAME fraction<=.9/RGB8/every-pixel radius2 core+background checks, plus four-connected reachability to background, supporting only their validated core colour. Never alter ratio, merge components, enlarge radius or exempt tiny glyphs. Detailed diagnostics and all29 per-test results in docs/testing/task-71-measured-contrast.md.
+
+Final iPhone17Pro/iOS27.0 targeted class29/29 PASSED,0 failures/skips, exit0, class23.466s. Log/tmp/task-71-components-final.log, bundle/tmp/task-71-components-final.xcresult, summary/tmp/task-71-components-final-summary.json, keepAlways proofs/tmp/task-71-components-proof-attachments/. Real ratios unchanged8.344323837747055/11.403364958858397/16.336427704401043; boldedge2.6667% ratio15.9942758247219. All26 prior methods, visibility helper and audit wrapper byte-identical to3478f40e. All3 xbuild runs via nohup/grep polling, single requested iPhone, no builds killed. No changed-source Swift warnings/errors; unrelated AppIntents metadata warning only. No app launch or live audit integration. Full iOS suites and macOS/tvOS/visionOS skipped: only iOS UI-test target changed, no membership changes/XcodeGen needed.
+
+Guard self-test passed; main...b7448103 unapproved failed as expected(exit1), current PR-body approval passed(exit0), focused3478f40e...b7448103 passed with no guarded changes. Logs/tmp/task-71-components-test-guard-{self,unapproved,approved,fix}.log. git diff3478f40e --check passed. Independent review and CI still required. Dominant-background/5-bit/<2%-ratio heuristic limitations and 1-3px spatial speck exclusion remain documented.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Fixed both valid PR#1007 Copilot findings without changing existing fixtures: retained cores now cannot be removed or supplied by excluded blend chains, and supervisor-approved radius2 boundary validation rejects ambiguous inset/local foreground backgrounds. Added exact inset-panel and chained-blend regressions; both fail on previous helper and pass after fix. All26 targeted iPhone17Pro tests pass including all24 unchanged originals, three real screenshots at8.3443/11.4034/16.3364:1 and bold AA edges. No tolerance loosening or live audit changes. Full per-test evidence in docs/testing/task-71-measured-contrast.md; guard self-test and dated approval pass. Implementation e22a6405403c6484f468dc2111befbcf618a1c6a; Done pending required independent review and PR CI. Existing dominant-background/<2% coverage heuristic limitations remain.
+Fixed valid Copilot disconnected-boundary finding PRRT_kwDOUxZq_M6vn59C: four-connected retained-core components and their assigned blends must independently satisfy unchanged radius2/50% boundary rules at >=4 native pixels. Exact mixed fixture fails on old helper; all29 final iPhone17Pro tests pass including3 new adversarial proofs, all26 unchanged previous methods, real screenshots at original ratios, and bold AA edges. Screenshot nils were reported first; supervisor-approved strict background-connected subthreshold blends provide spatial support only, never change minimum ratios. Implementation b7448103b29fe51ab9939e85385269552f8dd954. Guard self/focused/datestamp-approved checks pass. Per-test and diagnostic evidence in docs/testing/task-71-measured-contrast.md. Done pending required independent review/PR CI; original heuristic limits remain.
 <!-- SECTION:FINAL_SUMMARY:END -->
