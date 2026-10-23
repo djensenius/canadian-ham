@@ -223,10 +223,10 @@ The diode can block a reversed battery, but it also drops some voltage during no
 That is a warning sign of non-linearity and distortion.
 :::
 
-5. A diode supply produces pulses all in one direction, but an accessory needs steadier DC. What should follow the diode circuit to reduce those pulses?
+5. A builder connects a sensitive audio accessory straight to a diode circuit with nothing after it. The accessory hums. What does the hum tell the builder about the supply?
 
 :::answer
-Add power-supply filtering after the diode circuit. The diode establishes current direction; filtering smooths the pulsating output.
+The supply still delivers one-direction pulses, not steady DC. A diode only sets the current direction; something after it must smooth those pulses before a sensitive load will run quietly.
 :::
 
 ## Radio connection
