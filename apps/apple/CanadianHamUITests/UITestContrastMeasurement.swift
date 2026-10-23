@@ -3,7 +3,7 @@ import XCTest
 
 /// Measures an opaque text-element rendering, not a whole screen or a multi-background view.
 /// Reports the minimum significant foreground ratio; ambiguous backgrounds fail closed.
-/// A colour-line blend is an antialiased edge only if its pixels also border the core and background.
+/// Blends must border an already retained core and background; retained boundaries must face that background.
 func measuredTextContrast(in image: CGImage) -> Double? {
     let width = image.width
     let height = image.height
@@ -86,8 +86,7 @@ func measuredTextContrast(in image: CGImage) -> Double? {
         let offset = clusters[key]!.color - background.color
         let line = clusters[coreKey]!.color - background.color
         let fraction = dot(offset, line) / dot(line, line)
-        // The core must be clearly further from the background than the blend, so two near-identical
-        // colours split across a bin boundary can never each be dropped as an edge of the other.
+        // The retained core must be clearly further from the background than the blend.
         guard fraction > 0, fraction <= 0.9 else { return false }
         let residual = offset - fraction * line
         // Eight 8-bit RGB units allow quantization error, not arbitrary different text colours.
@@ -112,13 +111,59 @@ func measuredTextContrast(in image: CGImage) -> Double? {
         return true
     }
 
-    let foregroundRatios = foregroundKeys.compactMap { key -> Double? in
-        if foregroundKeys.contains(where: { $0 != key && isAntialiasedEdge(key, toward: $0) }) {
-            return nil
-        }
-        return contrast(clusters[key]!)
+    // Never let an excluded blend support another exclusion. Cores are retained permanently,
+    // farthest from the background luminance first (with deterministic ties).
+    let orderedForegroundKeys = foregroundKeys.sorted {
+        let first = abs(clusters[$0]!.luminance - background.luminance)
+        let second = abs(clusters[$1]!.luminance - background.luminance)
+        return first == second ? $0 < $1 : first > second
     }
-    return foregroundRatios.min()
+    var retainedKeys: [Int] = []
+    var blendCores: [Int: Int] = [:]
+    for key in orderedForegroundKeys {
+        if let core = retainedKeys.first(where: { isAntialiasedEdge(key, toward: $0) }) {
+            blendCores[key] = core
+        } else {
+            retainedKeys.append(key)
+        }
+    }
+
+    // A dominant colour need not be the text's LOCAL background (e.g. text inside an inset panel).
+    // Inspect boundaries, not filled interiors: thick text/solid blocks may legitimately be wide.
+    // An excluded edge belongs only to the retained core that actually supported its exclusion.
+    let regionKeys = pixelKeys.map { blendCores[$0] ?? $0 }
+    let retainedKeySet = Set(retainedKeys)
+    for key in retainedKeys {
+        var boundaryCount = 0
+        var backgroundSupportedCount = 0
+        var foregroundBorderedCount = 0
+        for index in regionKeys.indices where regionKeys[index] == key {
+            let x = index % width
+            let y = index / width
+            let neighbors = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+            var isBoundary = false
+            var bordersForeground = false
+            for (column, row) in neighbors where column >= 0 && column < width && row >= 0 && row < height {
+                let neighbor = regionKeys[row * width + column]
+                isBoundary = isBoundary || neighbor != key
+                bordersForeground = bordersForeground || (neighbor != key && retainedKeySet.contains(neighbor))
+            }
+            guard isBoundary else { continue }
+            boundaryCount += 1
+            if bordersForeground { foregroundBorderedCount += 1 }
+            var bordersBackground = false
+            for row in max(0, y - 2)...min(height - 1, y + 2) {
+                for column in max(0, x - 2)...min(width - 1, x + 2) {
+                    bordersBackground = bordersBackground || pixelKeys[row * width + column] == backgroundKey
+                }
+            }
+            if bordersBackground { backgroundSupportedCount += 1 }
+        }
+        guard boundaryCount > 0,
+              backgroundSupportedCount * 2 >= boundaryCount,
+              foregroundBorderedCount * 2 <= boundaryCount else { return nil }
+    }
+    return retainedKeys.map { contrast(clusters[$0]!) }.min()
 }
 
 func isFullyVisibleForContrastMeasurement(frame: CGRect, windowFrame: CGRect, protectedMaxY: CGFloat) -> Bool {

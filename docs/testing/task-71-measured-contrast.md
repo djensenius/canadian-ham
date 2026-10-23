@@ -40,15 +40,28 @@ The measurement is deliberately conservative:
    returns nil: broad background noise or bin splits cannot establish a safe
    text/background assignment. This fails closed rather than merging away what
    could be very faint text.
-3. Discard only significant **antialiased edge blends**. A candidate must lie
-   strictly between the background and another significant cluster on their
-   sRGB colour line, with a perpendicular RGB distance of at most **8** (8-bit
-   channel units). In addition, **every** pixel in that cluster must be within
-   **two native pixels** in each axis of both the background and that core
-   cluster. Colour-line proximity alone is insufficient: separate grey text or
-   a solid grey block could have exactly the same colour as a black/cream blend.
-   The spatial check limits removal to thin edge bands; uncertain clusters stay.
-4. Compute the WCAG ratio for **every remaining significant foreground** against
+3. Select significant **retained cores first**, farthest from the background in
+   luminance first (deterministic ties). A cluster may be excluded as an
+   **antialiased edge blend only toward an already retained core**; that core is
+   never removed later. The blend's projection on the background/core sRGB colour
+   line must have fraction **greater than 0 and at most 0.9**, with perpendicular
+   RGB distance at most **8** (8-bit channel units). In addition, **every** pixel
+   in that cluster must be within **two native pixels** in each axis of both the
+   background and that retained core. A discarded middle tone cannot support a
+   second exclusion. Colour alone cannot distinguish grey text from an edge
+   blend; separate text/solid blocks are not discarded without spatial support.
+4. Validate the **local background at each retained region's boundary**. A
+   region includes only that core and the blends it actually supported. Boundary
+   pixels have an in-image **4-neighbour** outside the region. At least **50%**
+   of boundary pixels must have a background pixel within **two native pixels**
+   in each axis; if **more than 50%** directly border another retained foreground
+   region, return nil even if the background is nearby. A region with no
+   measurable boundary also returns nil. This rejects text inside a small inset
+   panel, rather than comparing it with the surrounding cream. The supervisor
+   approved boundary (not filled-interior) validation to keep thick text, solid
+   blocks and icons on a single background measurable, without increasing the
+   radius or altering existing fixtures.
+5. Compute the WCAG ratio for **every remaining significant foreground** against
    the background and report the **minimum ratio**, not the darkest tone or the
    largest luminance difference. Every remaining tone must therefore meet 4.5:1
    for the audit finding to be ignored. Dark icons, borders, offscreen black
@@ -178,7 +191,7 @@ The PR must carry the standalone approval line:
 Test-guard-approved: owner decision 2026-10-22
 ```
 
-### Review follow-up results (2026-10-23, current algorithm)
+### Internal review follow-up results (2026-10-23, prior algorithm)
 
 B1/B2: replaced the maximum-difference choice with the minimum WCAG ratio after
 conservative colour-line **and spatial** antialias filtering. Ambiguous large
@@ -247,3 +260,107 @@ the new handler/default audit at lines 128/136. The same check with
 `/tmp/task-71-review-test-guard-{self,unapproved,approved}.log`.
 `git diff --check` passed. No target membership/resources changed in this fix,
 so XcodeGen regeneration was unnecessary. No PR opened.
+
+
+### Copilot PR #1007 follow-up (2026-10-23, current algorithm)
+
+Addressed `PRRT_kwDOUxZq_M6vncjQ` (small inset panel) and
+`PRRT_kwDOUxZq_M6vncj3` (chained blend exclusions). Retained cores are now
+permanent and selected in descending distance from background luminance;
+excluded clusters never support later exclusions. Every retained region also
+needs a locally supported boundary, with foreground-dominated boundaries
+returning nil. The supervisor clarified boundary-pixel validation instead of
+filled-interior validation: a radius-three test on **all** pixels would reject
+existing solid 80×20 blocks and the 60×78 icon even on cream. The approved
+boundary interpretation uses radius **two**, not a larger radius. No existing
+fixture, assertion, coverage cutoff, blend tolerance or real screenshot changed.
+
+Added exactly two regressions:
+
+- `testInsetPanelCannotUseTheSurroundingCreamAsTextBackground`: 100×100,
+  **84% #FFF8E8**, **12.8% #404040** inset panel (40×40 before overdraw),
+  **3.2% #201C18** text (16×20 inside it). Accepts only nil or a ratio <4.5;
+  the real local text/panel ratio is ~1.63:1.
+- `testChainedBlendsCannotUseAnExcludedCore`: 100×100 #FFF8E8 with one-pixel
+  strokes of **#908A80, #58534C, #201C18** at **x, x+2, x+4**, for
+  x=10/30/50/70 and y=10…89. Each tone covers **3.2%**. Accepts only nil or
+  a ratio <4.5; a measurable result must equal the first tone's **3.2357:1**
+  within 0.01.
+
+**Pre-fix proof:** added both tests while leaving the previous helper unchanged
+(from `e2ea6e06`). Ran only those two methods through nohup/xbuild with grep
+polling on the same iPhone 17 Pro destination. Both failed as required:
+
+| New regression | Previous result | Expected | Outcome |
+| --- | ---: | --- | --- |
+| Inset panel | 9.797721859358917:1 | nil or <4.5 | FAIL |
+| Chained blends | 15.9942758247219:1 | nil or <4.5 | FAIL |
+
+Exit **65**; **2 failed, 0 passed, 0 skipped**. Log:
+`/tmp/task-71-copilot-regressions-before.log`; result bundle:
+`/tmp/task-71-copilot-regressions-before.xcresult`; extracted summary:
+`/tmp/task-71-copilot-before-summary.json`. The first run's extra ratio assertion
+used 3.2375 (also within 0.01 of 3.2357); the final test spells the rounded
+expected WCAG ratio 3.2357. Both runs enforce the identical <4.5 gate.
+
+**Post-fix proof:** ran the entire class, including all **24 unchanged existing
+tests** and both new regressions, via:
+
+```sh
+nohup bash /tmp/task-71-copilot-tests.sh > /tmp/task-71-copilot-tests.log 2>&1 < /dev/null &
+# Script runs:
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
+  -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam \
+  -testPlan CanadianHamDefault \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -only-testing:CanadianHamUITests/UITestContrastMeasurementTests \
+  -resultBundlePath /tmp/task-71-copilot-tests.xcresult \
+  test CODE_SIGNING_ALLOWED=NO
+```
+
+Polled with grep; no builds killed. **26 passed, 0 failed, 0 skipped**, exit **0**;
+class elapsed **4.886 s** (4.899 s including suite overhead). iPhone 17 Pro,
+iOS 27.0. Result summary: `/tmp/task-71-copilot-summary.json`; exported
+keepAlways attachments: `/tmp/task-71-copilot-proof-attachments/`.
+
+| Test (`UITestContrastMeasurementTests`) | Result | Seconds |
+| --- | --- | ---: |
+| `testAntialiased15PointBoldEdgeCoverageAt3x` | PASS | 0.908 |
+| `testAntialiased15PointBoldMixedContrastLinesFailAt3x` | PASS | 0.121 |
+| `testAntialiased15PointLowContrastTextStillFails` | PASS | 0.085 |
+| `testAntialiased15PointTextMeasuresExpectedContrast` | PASS | 0.087 |
+| `testBlackOffscreenBandDoesNotRescueMidGreyText` | PASS | 0.071 |
+| `testChainedBlendsCannotUseAnExcludedCore` | PASS | 0.070 |
+| `testContrastMeasurementRejectsInvisibleFrames` | PASS | 0.071 |
+| `testDarkIconDoesNotRescueMidGreyText` | PASS | 0.095 |
+| `testEqualLargeTonesAreUnmeasurable` | PASS | 0.071 |
+| `testExportedCorrectFeedbackDarkPasses` | PASS | 0.143 |
+| `testExportedCorrectFeedbackLightPasses` | PASS | 0.104 |
+| `testExportedTryItParagraphLightPasses` | PASS | 0.151 |
+| `testInsetPanelCannotUseTheSurroundingCreamAsTextBackground` | PASS | 0.077 |
+| `testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText` | PASS | 0.074 |
+| `testMidGreyOnCreamFails` | PASS | 0.069 |
+| `testNearBlackOnCreamPasses` | PASS | 0.071 |
+| `testOnlyTinyForegroundIsUnmeasurable` | PASS | 0.077 |
+| `testPaleOnDarkGreenPasses` | PASS | 0.089 |
+| `testSignificantAntialiasedEdgeBandsMeasureCoreContrast` | PASS | 0.078 |
+| `testSignificantNearBackgroundNoiseIsUnmeasurable` | PASS | 0.089 |
+| `testSignificantNearBlackAndMidGreyBlocksDoNotPass` | PASS | 0.119 |
+| `testSolidBlendColourIsNotMistakenForAntialiasing` | PASS | 0.219 |
+| `testTinyHighContrastTailDoesNotRescueLowContrastText` | PASS | 0.254 |
+| `testTransparentImageIsUnmeasurable` | PASS | 0.445 |
+| `testTwoTonePanelWithDarkTextIsUnmeasurable` | PASS | 0.908 |
+| `testUniformImageIsUnmeasurable` | PASS | 0.338 |
+
+All three real screenshot measurements remain **non-nil and unchanged**:
+**8.344323837747055:1** (feedback light), **11.403364958858397:1** (feedback dark),
+and **16.336427704401043:1** (Try-it paragraph). Actual bold 15 pt 3× edge coverage
+is still **2.6667%**, measuring **15.9942758247219:1**. Significant synthetic
+anti-aliased edge bands also pass unchanged. No loosening was needed.
+
+No Swift warnings/errors in either changed source; only the unrelated
+AppIntents metadata-skipped warning. No live app/audit integration was added.
+Only the iOS UI-test target is changed; macOS/tvOS/visionOS and full Apple suites
+were skipped. No target membership changed, so XcodeGen was not needed.
+The pre-existing dominant-background, 5-bit clustering and <2% coverage
+limitations remain; this is not general semantic text recognition.

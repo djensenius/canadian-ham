@@ -104,6 +104,39 @@ final class UITestContrastMeasurementTests: XCTestCase {
         }
     }
 
+    func testChainedBlendsCannotUseAnExcludedCore() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        let lightStroke = CGColor(srgbRed: 144.0 / 255, green: 138.0 / 255, blue: 128.0 / 255, alpha: 1) // #908A80.
+        let middleStroke = CGColor(srgbRed: 88.0 / 255, green: 83.0 / 255, blue: 76.0 / 255, alpha: 1) // #58534C.
+        for x in [10, 30, 50, 70] {
+            for (offset, color) in [lightStroke, middleStroke, nearBlack].enumerated() {
+                context.setFillColor(color)
+                context.fill(CGRect(x: x + offset * 2, y: 10, width: 1, height: 80))
+            }
+        }
+        // Each tone covers 3.2%. The first is 3.24:1 against cream, four pixels from the dark core.
+        if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
+            XCTAssertLessThan(ratio, 4.5)
+            XCTAssertEqual(ratio, 3.2357, accuracy: 0.01)
+        }
+    }
+
+    func testInsetPanelCannotUseTheSurroundingCreamAsTextBackground() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1)) // #404040.
+        context.fill(CGRect(x: 30, y: 30, width: 40, height: 40))
+        context.setFillColor(nearBlack) // #201C18.
+        context.fill(CGRect(x: 42, y: 40, width: 16, height: 20))
+        // 84% cream, 12.8% panel and 3.2% text. Text/panel is only 1.63:1, not 9.80:1.
+        if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
     func testAntialiased15PointBoldMixedContrastLinesFailAt3x() throws {
         let image = try renderedLines([nearBlack, midGrey], bold: true)
         let ratio = try XCTUnwrap(measuredTextContrast(in: image))
