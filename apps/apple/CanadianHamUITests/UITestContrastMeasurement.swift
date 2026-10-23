@@ -281,6 +281,125 @@ func measuredTextContrast(in image: CGImage) -> Double? {
     return retainedKeys.map { contrast(clusters[$0]!) }.min()
 }
 
+struct ControlTextContrastMeasurement {
+    let fullImageRatio: Double?
+    var ratio: Double?
+    var cropUsed = false
+    var cropInsetsInPixels: CGSize?
+
+    var logDescription: String {
+        let full = fullImageRatio.map { "\($0):1" } ?? "unmeasurable"
+        let final = ratio.map { "\($0):1" } ?? "unmeasurable"
+        let insets = cropInsetsInPixels.map { "horizontal=\($0.width) vertical=\($0.height)" } ?? "none"
+        return "ratio=\(final) fullImageRatio=\(full) cropUsed=\(cropUsed) cropInsetsPixels=\(insets)"
+    }
+}
+
+/// Any button may retry a failing full-image measurement with a 6 pt / 2 pt inset.
+/// Rounded corners can remain inside the crop; only their sub-2% share tolerates them.
+/// Narrower capsules/larger Dynamic Type can still fail. Discarded strips must be background-only.
+func measuredControlTextContrast(in image: CGImage, scale: CGFloat, isButton: Bool) -> Double? {
+    controlTextContrastMeasurement(in: image, scale: scale, isButton: isButton).ratio
+}
+
+func controlTextContrastMeasurement(in image: CGImage, scale: CGFloat, isButton: Bool) -> ControlTextContrastMeasurement {
+    let fullImageRatio = measuredTextContrast(in: image)
+    var result = ControlTextContrastMeasurement(fullImageRatio: fullImageRatio, ratio: fullImageRatio)
+    guard isButton, !(fullImageRatio.map { $0 >= 4.5 } ?? false) else { return result }
+    result.ratio = nil
+    guard scale.isFinite, scale > 0 else { return result }
+    let horizontalInset = ceil(min(CGFloat(image.height) / 2, 6 * scale))
+    let verticalInset = ceil(2 * scale)
+    result.cropInsetsInPixels = CGSize(width: horizontalInset, height: verticalInset)
+    let cropWidth = CGFloat(image.width) - 2 * horizontalInset
+    let cropHeight = CGFloat(image.height) - 2 * verticalInset
+    // Check raw dimensions before CGRect standardizes a negative width or height.
+    guard cropWidth > 0, cropHeight > 0 else { return result }
+    let cropRect = CGRect(x: horizontalInset, y: verticalInset, width: cropWidth, height: cropHeight)
+    guard let crop = image.cropping(to: cropRect),
+          discardedControlStripsContainOnlyBackground(in: image, cropRect: cropRect) else { return result }
+    result.cropUsed = true
+    result.ratio = measuredTextContrast(in: crop)
+    return result
+}
+
+/// TASK-73 refinement: the full image and strips may share the crop's dominant fill.
+/// Only a second, page-like strip tone (<=1.5:1) may supply the other blend endpoint.
+private func discardedControlStripsContainOnlyBackground(in image: CGImage, cropRect: CGRect) -> Bool {
+    let width = image.width
+    let height = image.height
+    guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+          let context = CGContext(
+            data: nil, width: width, height: height, bitsPerComponent: 8,
+            bytesPerRow: width * 4, space: colorSpace,
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
+          ) else { return false }
+    context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+    guard let data = context.data else { return false }
+    let pixels = data.assumingMemoryBound(to: UInt8.self)
+
+    struct Cluster {
+        var count = 0
+        var sum = SIMD3<Double>.zero
+        var color: SIMD3<Double> { sum / Double(count) }
+
+        var luminance: Double {
+            func linearized(_ value: Double) -> Double {
+                let component = value / 255
+                return component <= 0.04045 ? component / 12.92 : pow((component + 0.055) / 1.055, 2.4)
+            }
+            return 0.2126 * linearized(color.x) + 0.7152 * linearized(color.y) + 0.0722 * linearized(color.z)
+        }
+    }
+    var cropClusters: [Int: Cluster] = [:]
+    var stripClusters: [Int: Cluster] = [:]
+    var strips: [(key: Int, color: SIMD3<Double>)] = []
+    for row in 0..<height {
+        for column in 0..<width {
+            let offset = row * context.bytesPerRow + column * 4
+            guard pixels[offset + 3] == 255 else { return false }
+            let key = (Int(pixels[offset] >> 3) << 10) | (Int(pixels[offset + 1] >> 3) << 5) | Int(pixels[offset + 2] >> 3)
+            let color = SIMD3(Double(pixels[offset]), Double(pixels[offset + 1]), Double(pixels[offset + 2]))
+            let inside = column >= Int(cropRect.minX) && column < Int(cropRect.maxX)
+                && row >= Int(cropRect.minY) && row < Int(cropRect.maxY)
+            if inside {
+                cropClusters[key, default: Cluster()].count += 1
+                cropClusters[key, default: Cluster()].sum += color
+            } else {
+                stripClusters[key, default: Cluster()].count += 1
+                stripClusters[key, default: Cluster()].sum += color
+                strips.append((key, color))
+            }
+        }
+    }
+    // Match the base algorithm's deterministic 5-bit RGB bins and majority-background rule.
+    guard let backgroundKey = cropClusters.keys.sorted().max(by: { cropClusters[$0]!.count < cropClusters[$1]!.count }),
+          let background = cropClusters[backgroundKey],
+          Double(background.count) > cropRect.width * cropRect.height * 0.5 else { return false }
+    guard let outsideKey = stripClusters.keys.sorted().filter({ $0 != backgroundKey }).max(by: {
+        stripClusters[$0]!.count < stripClusters[$1]!.count
+    }), let outside = stripClusters[outsideKey] else {
+        return strips.allSatisfy { $0.key == backgroundKey }
+    }
+    let contrast = (max(background.luminance, outside.luminance) + 0.05)
+        / (min(background.luminance, outside.luminance) + 0.05)
+    guard contrast <= 1.5 else { return false }
+    func dot(_ first: SIMD3<Double>, _ second: SIMD3<Double>) -> Double {
+        first.x * second.x + first.y * second.y + first.z * second.z
+    }
+    let line = outside.color - background.color
+    let lengthSquared = dot(line, line)
+    return strips.allSatisfy { pixel in
+        if pixel.key == backgroundKey || pixel.key == outsideKey { return true }
+        guard lengthSquared > 0 else { return false }
+        let offset = pixel.color - background.color
+        let fraction = dot(offset, line) / lengthSquared
+        guard fraction >= 0, fraction <= 1 else { return false }
+        let residual = offset - fraction * line
+        return dot(residual, residual) <= 8 * 8
+    }
+}
+
 func isFullyVisibleForContrastMeasurement(frame: CGRect, windowFrame: CGRect, protectedMaxY: CGFloat) -> Bool {
     !frame.isEmpty && !windowFrame.isEmpty && windowFrame.contains(frame) && frame.minY >= protectedMaxY
 }
@@ -299,17 +418,19 @@ func auditVerifyingMeasuredContrast(app: XCUIApplication) throws {
         guard issue.auditType == .contrast else { return false }
         let element = issue.element
         let frame = element?.frame
-        var ratio: Double?
+        var measurement = ControlTextContrastMeasurement(fullImageRatio: nil, ratio: nil)
         if let element, let frame,
            isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
            let image = contrastMeasurementCGImage(from: element.screenshot()) {
-            ratio = measuredTextContrast(in: image)
+            measurement = controlTextContrastMeasurement(
+                in: image, scale: CGFloat(image.width) / frame.width,
+                isButton: element.elementType == .button
+            )
         }
-        let verified = ratio.map { $0 >= 4.5 } ?? false
+        let verified = measurement.ratio.map { $0 >= 4.5 } ?? false
         let activityName = verified ? "Verified contrast audit finding with measured WCAG contrast" : "Failed contrast audit finding"
         XCTContext.runActivity(named: activityName) { activity in
-            let measurement = ratio.map { "\($0):1" } ?? "unmeasurable"
-            let attachment = XCTAttachment(string: "label=\(element?.label ?? "<nil>") frame=\(frame.map { "\($0)" } ?? "<nil>") ratio=\(measurement)")
+            let attachment = XCTAttachment(string: "label=\(element?.label ?? "<nil>") frame=\(frame.map { "\($0)" } ?? "<nil>") \(measurement.logDescription)")
             attachment.lifetime = .keepAlways
             activity.add(attachment)
         }
@@ -319,6 +440,7 @@ func auditVerifyingMeasuredContrast(app: XCUIApplication) throws {
 
 /// XCUIScreenshot.image is UIImage on iOS and NSImage on macOS; the UI-test target also
 /// compiles in the documented macOS unit-test command, so bridge both.
+@MainActor
 func contrastMeasurementCGImage(from screenshot: XCUIScreenshot) -> CGImage? {
 #if os(macOS)
     screenshot.image.cgImage(forProposedRect: nil, context: nil, hints: nil)
