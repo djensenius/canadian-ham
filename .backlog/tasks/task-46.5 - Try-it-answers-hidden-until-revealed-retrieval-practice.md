@@ -1,11 +1,11 @@
 ---
 id: TASK-46.5
 title: Try it answers hidden until revealed (retrieval practice)
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-23 19:08'
+updated_date: '2026-10-23 19:17'
 labels:
   - content
   - web
@@ -54,6 +54,8 @@ Today every Try it shows its answer on the same line, so there is no retrieval p
 12. Coordinator-approved after iPad light failed only an unmeasurable fully visible high-contrast paragraph: leave shared/local measurement logic unchanged and AC3 unchecked; run independent iPad dark/French plus l10n/text/guard. Record all findings/screenshots and push paused handoff. Coordinator owns separate TASK-71 measurement follow-up; await explicit merge-main/iPad-only rerun instruction after it lands.
 
 13. Coordinator-approved TASK-73 rounded-button resume: merge/push origin/main, preserve both AGENTS exceptions, and update only the local composite measured branch to the shared measuredControlTextContrast path with element-type gate and full-image/crop/inset logging; preserve verbatim occlusion branch. Serial nohup xbuild: iPhone light twice, dark/French once; iPad light/dark/French once (approved light no-audit path); documented macOS units, l10n, text sources, dated-marker guard. Stop on any failure; only if all green, record per-test ratios, check AC3/Done, push; no PR; coordinator owns 31-lesson figure plan.
+
+Review-fix round (2026-10-23): restore TASK-65 cross-lane notes via CLI; correct audit exception record/date; make tvOS Try-it prompt/answer independently focusable and assert reachability; recast three M4 checks as transfer prompts and capitalize answer starts; add real-lesson web parsing regression; run requested targeted checks serially through xbuild (nohup/poll), record evidence and push without PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
