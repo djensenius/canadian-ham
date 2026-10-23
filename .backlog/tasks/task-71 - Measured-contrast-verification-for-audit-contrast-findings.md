@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-23 12:50'
-updated_date: '2026-10-23 14:15'
+updated_date: '2026-10-23 14:16'
 labels:
   - accessibility
   - tests
@@ -144,10 +144,12 @@ Per-test final results:
 - testTransparentImageIsUnmeasurable: PASS (0.070s)
 - testTwoTonePanelWithDarkTextIsUnmeasurable: PASS (0.071s)
 - testUniformImageIsUnmeasurable: PASS (0.074s)
+
+PR#1007 updated with latest command, all31 per-test results and red/green evidence. Source commit7d15f3c5f15be76da02fe9ba1a9171d03cc77f0e pushed successfully. Replied to assigned thread via GraphQL at https://github.com/djensenius/canadian-ham/pull/1007#discussion_r4360494374; resolveReviewThread returned isResolved:true for PRRT_kwDOUxZq_M6von_z. Only follow-up bookkeeping changed after green tests; independent review and CI remain required.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Cross-core reachability fix: each flood-fill step stays within blends assigned to the same retained-core key; boundary endpoints still require their own core. Exact reviewer two-core fixture failed14.426790204267782:1 on93f71274 and now asserts nil. iPhone17Pro full targeted class31/31pass,0fail/skip,13.365s;all30 prior tests unchanged,all3 real screenshot ratios non-nil/unchanged. Source7d15f3c5f15be76da02fe9ba1a9171d03cc77f0e;guard self/focused/actualPRbody pass. nohup/grep used,no builds killed,no thresholds or audit scope loosened. Prior known heuristic limits remain. Await independent review and CI; push and assigned GraphQL thread reply/resolution follow.
+Cross-core reachability fix: each flood-fill step stays within blends assigned to the same retained-core key; boundary endpoints still require their own core. Exact two-core fixture failed14.426790204267782:1 on93f71274 and now asserts nil. iPhone17Pro full class31/31pass,0fail/skip,13.365s;all30 prior tests unchanged,all3 real screenshot ratios non-nil/unchanged. Source7d15f3c5f15be76da02fe9ba1a9171d03cc77f0e pushed;guard self/focused/approved wholePR pass. nohup/grep used,no builds killed,no thresholds or audit scope loosened. PR1007 body has all31 per-test results; assigned Copilot thread replied/resolved via GraphQL. Existing heuristic limits unchanged. Await independent reviewer gate and CI.
 <!-- SECTION:FINAL_SUMMARY:END -->
