@@ -99,6 +99,12 @@ platform) and share one build lock, so don't run them by reflex.
   bar. Owner decision 2026-10-14 adds practice and mock exam screens to this same occluded-content
   rule. Nil-element findings, navigation-bar elements, fully visible contrast issues, and every
   non-contrast issue must still fail.
+- Task-70 clarification, owner-delegated decision 2026-10-22: the occluded-content rule includes
+  fully offscreen scroll-content descendants, not just frames intersecting the scroll view; the
+  audit renders offscreen content as black and cannot measure its contrast. Keep the contrast-only,
+  non-nil/non-zero frame, navigation-bar exclusion, scroll ancestry, not-fully-contained, and logging
+  checks. Fully visible lone-bullet (`•`) and `Question N of M` contrast exceptions are conditional
+  follow-up work and are not yet granted; rerun with the aligned helper first.
 - Task-42 Morse course home lower-content audit: owner decisions 2026-10-12 and 2026-10-14 also
   approve the fully visible Morse settings-card note false positives. Only the Morse home
   lower-content audit may ignore `.contrast` findings whose `issue.element` identifier exactly equals
