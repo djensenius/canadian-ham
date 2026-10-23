@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-23 02:59'
-updated_date: '2026-10-23 03:00'
+updated_date: '2026-10-23 03:16'
 labels:
   - apple
 dependencies: []
@@ -45,4 +45,6 @@ Owner-delegated decision 2026-10-22: Study module screens on iOS/iPadOS use inli
 
 <!-- SECTION:NOTES:BEGIN -->
 Coordinator confirmed IDs swapped across worktrees: this Study task is TASK-69 (audit lane is TASK-70). Renamed branch to task-69-study-module-inline-titles. ModuleLessonListView is shared by iOS/macOS only; tvOS/visionOS use their platform Learn views. Modifier will be #if os(iOS), so all non-iOS behaviour stays unchanged.
+
+Implementation commit 23dc551b adds only #if os(iOS) navigationBarTitleDisplayMode(.inline) after the unchanged module title. Module content header is unchanged. Existing title sweeps keep their full-text/frame/height header assertions and now explicitly require module navigation element existence and absence of ellipsis in its complete accessibility label, matching practice. README marks the former large-title evidence historical. Text-source check, test-guard self-test, test-guard origin/main...HEAD (merge-base 49b318df5fc0ad8ca9876141bd2ddaa3b0d26d6b), and git diff --check pass. Nohup UI driver /tmp/task-69/run-ui.sh queues all four title sweeps then testLearnOpensLessonAndShowsFirstHeading, testLearnUserNavigationOpensLessonQuiz, testAccessibilityAuditLearnFlowLight and Dark on iPhone 17 Pro and iPad Pro 13-inch (M5); l10n check separately queued. All wait for shared lock; no other builds touched. Initial foreground l10n attempt timed out waiting for lock (no build/test result); restarted with nohup. Logs under /tmp/task-69.
 <!-- SECTION:NOTES:END -->
