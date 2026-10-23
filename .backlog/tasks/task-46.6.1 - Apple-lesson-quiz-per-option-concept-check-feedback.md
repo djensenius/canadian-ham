@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-20 14:35'
-updated_date: '2026-10-23 14:32'
+updated_date: '2026-10-23 14:35'
 labels:
   - apple
 dependencies:
@@ -117,6 +117,8 @@ Main-control result: origin/main ba5eb4f5c0ee0ff7477b708b73696474a143a303 PASSED
 Merged/pushed origin/main including PR #1007/TASK-71 as f45a6aeb. Coordinator approved a bounded local composite audit helper because neither existing audit wrapper accepts an issue predicate. It will preserve the occlusion guards verbatim and reuse the exported measured visibility/contrast predicates; scope remains only the five new feedback tests.
 
 Blocked on main regression found during TASK-71 resume: first macOS mapping-unit xbuild failed before executing tests (exit 65), because unchanged UITestContrastMeasurement.swift:306 passes NSImage.cgImage method rather than CGImage on macOS. Evidence: /tmp/task-46.6.1-macos-measured.{log,xcresult}; /tmp/task-46.6.1-measured-runner.log. Ordered set -e runner stopped before iPhone/iPad/l10n. Coordinator is landing TASK-72 shared cross-platform contrastMeasurementCGImage(from:) fix; wait for merge notification, then merge origin/main, update only local composite screenshot conversion to that helper, and restart requested checks. AC3 remains unchecked/In Progress; no builds killed.
+
+TASK-72 merged on main 80ca2871; merged/pushed as 6e5ea282. Updated only the new local composite helper to use contrastMeasurementCGImage(from:) per coordinator direction. Shared helpers remain byte-identical to main. Restarting the entire ordered targeted runner at macOS mapping units; failed original artifacts retain -measured suffix and resumed artifacts use -measured-v2.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
