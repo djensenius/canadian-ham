@@ -40,8 +40,10 @@ settings:
     SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=iphone*27.0*]: $(inherited) NO_HINGE_API
     ENABLE_USER_SCRIPT_SANDBOXING: YES
   configs:
+    Debug:
+      OTHER_SWIFT_FLAGS: $(inherited) -DOFFICIAL_REFERENCE_SHEET
     DebugCloudKit:
-      OTHER_SWIFT_FLAGS: $(inherited) -DICLOUD_SYNC
+      OTHER_SWIFT_FLAGS: $(inherited) -DICLOUD_SYNC -DOFFICIAL_REFERENCE_SHEET
 targets:
   CanadianHam:
     type: application
@@ -92,6 +94,9 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
     postBuildScripts:
+      - name: Copy gated official exam reference sheet
+        basedOnDependencyAnalysis: false
+        script: bash "${SRCROOT}/../../scripts/copy-official-reference-sheet.sh"
       - name: Remove content authoring README files
         basedOnDependencyAnalysis: false
         script: |
@@ -225,6 +230,9 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
     postBuildScripts:
+      - name: Copy gated official exam reference sheet
+        basedOnDependencyAnalysis: false
+        script: bash "${SRCROOT}/../../scripts/copy-official-reference-sheet.sh"
       - name: Remove content authoring README files
         basedOnDependencyAnalysis: false
         script: |

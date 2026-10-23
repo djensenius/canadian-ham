@@ -144,3 +144,9 @@ Do not switch to `DebugCloudKit` or disable Release signing for uploads.
 ### Internal-only builds
 
 `fastlane/ExportOptions.plist` sets `testFlightInternalTestingOnly`, so App Store Connect only allows these builds for internal testing. Builds uploaded before that flag was added (2026-10-10, 13:06–13:16) aren't flagged; no external groups exist, so they stay internal. Remove the flag only as part of task-1.7.
+
+## Internal-only official reference sheet
+
+Owner decision 2026-10-12 (2A) permits the official English Basic exam reference sheet in **internal team-member TestFlight builds only**, pending ISED permission. All four `beta` lanes explicitly add `OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET` to their Release archive command. The iOS/iPadOS/macOS app copies the rendered pages and accessible text offline; tvOS/visionOS still have no reference-sheet tool and do not bundle these assets. No upload is needed to enable the study fallback.
+
+Default Release builds do not opt in. A future App Store/public lane **must not copy this override** until permission covers the sheet; check that `official-basic-exam/` is absent from the public app bundle. For private web previews only, `OFFICIAL_REFERENCE_SHEET=YES pnpm build:web` opts in; default production builds exclude it. Never publicly deploy the preview. See [content licensing](../content-licensing.md#official-sheet-implementation-gate-task-444) and the [release checklist](release-checklist.md#official-reference-sheet-build-gate-task-444).

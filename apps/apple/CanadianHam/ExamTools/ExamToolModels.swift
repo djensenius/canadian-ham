@@ -234,7 +234,7 @@ struct ReferenceSheetConfiguration: Equatable, Sendable {
     let subdirectory: String?
     let availableOnApple: Bool
 
-    static let defaultAvailableOnApple = false
+    static let defaultAvailableOnApple = true
 
     init(resourceName: String, resourceExtension: String, subdirectory: String?, availableOnApple: Bool = Self.defaultAvailableOnApple) {
         self.resourceName = resourceName
@@ -265,6 +265,32 @@ enum ReferenceSheetLoader {
             return nil
         }
         return ReferenceSheetDocument(markdown: try String(contentsOf: url, encoding: .utf8), sourceURL: url)
+    }
+}
+
+struct OfficialReferenceSheetDocument: Sendable {
+    let markdown: String
+    let pages: [URL]
+}
+
+enum OfficialReferenceSheetLoader {
+    static var isEnabled: Bool {
+#if OFFICIAL_REFERENCE_SHEET
+        true
+#else
+        false
+#endif
+    }
+
+    static func load(bundle: Bundle = .main) throws -> OfficialReferenceSheetDocument? {
+#if OFFICIAL_REFERENCE_SHEET
+        guard let transcript = bundle.url(forResource: "text-equivalent", withExtension: "md", subdirectory: "official-basic-exam") else { return nil }
+        let pages = (1...5).compactMap { bundle.url(forResource: "page-\($0)", withExtension: "png", subdirectory: "official-basic-exam") }
+        guard pages.count == 5 else { return nil }
+        return OfficialReferenceSheetDocument(markdown: try String(contentsOf: transcript, encoding: .utf8), pages: pages)
+#else
+        return nil
+#endif
     }
 }
 

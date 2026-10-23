@@ -76,6 +76,22 @@ final class ExamCalculatorViewModelTests: XCTestCase {
         XCTAssertTrue(sheet.markdown.contains("Ohm's law"))
     }
 
+    func testOfficialReferenceSheetGateAndBundledPages() throws {
+        XCTAssertTrue(ReferenceSheetConfiguration.basic.availableOnApple, "The study fallback is always available for Basic.")
+        let bundle = Bundle(for: Self.self)
+        if OfficialReferenceSheetLoader.isEnabled {
+            let sheet = try XCTUnwrap(try OfficialReferenceSheetLoader.load(bundle: bundle))
+            XCTAssertEqual(sheet.pages.count, 5)
+            XCTAssertTrue(sheet.markdown.contains("L = 142 / F"))
+            XCTAssertTrue(sheet.markdown.contains("L = 71 / F"))
+            XCTAssertTrue(sheet.markdown.contains("## Page 5"))
+            XCTAssertTrue(sheet.pages.allSatisfy { FileManager.default.fileExists(atPath: $0.path) })
+        } else {
+            XCTAssertNil(try OfficialReferenceSheetLoader.load(bundle: bundle))
+            XCTAssertNil(bundle.url(forResource: "page-1", withExtension: "png", subdirectory: "official-basic-exam"))
+        }
+    }
+
     func testCalculatorToolLayoutCanRepresentFittingContentWithAndWithoutHelp() {
         let withHelp = CalculatorToolLayout(dynamicTypeSize: .large, contentMode: .fitting(showsHelpText: true, keyHeight: CalculatorToolLayout.expandedKeyHeight))
         XCTAssertFalse(withHelp.usesScrolling)

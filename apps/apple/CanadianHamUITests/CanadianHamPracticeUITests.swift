@@ -1654,8 +1654,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
             attachScreenshot(named: "task-52-\(language)-\(size)-module-\(id)", from: app)
             assertFullyVisibleBelowNavigationBar(header, in: app, context: "\(language) \(size) module \(id)")
             assertCategoryTextIsUntruncated(header, title: title, font: titleFont, languageCode: "en-CA")
+            // Study uses native inline titles (TASK-69); the wrapped header above remains strict.
             let navigationTitle = app.navigationBars.staticTexts[title].firstMatch
+            XCTAssertTrue(navigationTitle.exists, "Native navigation must expose the full module name to VoiceOver")
             XCTAssertEqual(navigationTitle.label, title)
+            XCTAssertFalse(navigationTitle.label.contains("…"))
             let referenceWidth = (title as NSString).size(withAttributes: [.font: UIFont.systemFont(ofSize: 17, weight: .semibold)]).width
             print("TASK-52-NAV|\(language)|\(size)|module|\(id)|\(navigationTitle.frame.width)|\(navigationTitle.frame.height)|\(referenceWidth)|\(title)")
             tapCompactBack(in: app)
@@ -2703,7 +2706,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let frame = element.frame
             guard frame.width > 0, frame.height > 0 else { return false }
             guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
-            guard auditGeometry.scrollFrame.intersects(frame) else { return false }
             guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
             guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
 
