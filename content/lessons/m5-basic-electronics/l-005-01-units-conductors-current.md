@@ -183,18 +183,34 @@ Temperature can change the resistance of a conductor. In many metal conductors, 
 Try these before reading the feedback below.
 
 1. A trail radio beacon produces 750 mW. Express that in watts.
+
+:::answer
+750 / 1 000 = 0.75 W.
+:::
+
 2. Express 4.7 kilohms in ohms.
+
+:::answer
+4.7 x 1 000 = 4 700 ohms.
+:::
+
 3. Convert 21 375 kHz to megahertz.
+
+:::answer
+21 375 / 1 000 = 21.375 MHz.
+:::
+
 4. Express 0.18 A in milliamperes.
+
+:::answer
+0.18 x 1 000 = 180 mA.
+:::
+
 5. Express 13.8 V in millivolts.
 
-### Try-it feedback
-
-1. 750 / 1 000 = 0.75 W.
-2. 4.7 x 1 000 = 4 700 ohms.
-3. 21 375 / 1 000 = 21.375 MHz.
-4. 0.18 x 1 000 = 180 mA.
-5. 13.8 x 1 000 = 13 800 mV.
+:::answer
+13.8 x 1 000 = 13 800 mV.
+:::
 
 ## Radio connection
 

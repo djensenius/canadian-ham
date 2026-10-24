@@ -213,18 +213,34 @@ A pair covers about 8 000 km, so the simple plan needs at least two hops. Real i
 Try these before reading the feedback below.
 
 1. A VHF antenna moves from a low parking lot to a clear mast. The same radios now cover more of town. Explain the planning lesson.
+
+:::answer
+Height and a clearer path improve ordinary radio-horizon coverage; the radios did not make the ionosphere return VHF.
+:::
+
 2. An HF net needs regional coverage over rough terrain rather than an overseas contact. What antenna-angle tradeoff fits?
+
+:::answer
+Favour higher-angle radiation when frequency and ionospheric conditions support a closer regional return.
+:::
+
 3. A layer sketch shows a wave passing through D before bending back from a higher region. What concern belongs to D?
+
+:::answer
+Daylight absorption in D can weaken the wave before it reaches the useful refracting region.
+:::
+
 4. Reports are reliable close to a transmitter and far away, with few in the middle. What should net control plan?
+
+:::answer
+Arrange an alternate band, relay, or antenna angle rather than assuming more power fills the gap.
+:::
+
 5. A trainee draws sky wave as a sharp bounce from a shiny ceiling. How should the caption explain it instead?
 
-### Try-it feedback
-
-1. Height and a clearer path improve ordinary radio-horizon coverage; the radios did not make the ionosphere return VHF.
-2. Favour higher-angle radiation when frequency and ionospheric conditions support a closer regional return.
-3. Daylight absorption in D can weaken the wave before it reaches the useful refracting region.
-4. Arrange an alternate band, relay, or antenna angle rather than assuming more power fills the gap.
-5. Describe gradual refraction through an ionized region. Skip describes the return location, not a metal-like mirror.
+:::answer
+Describe gradual refraction through an ionized region. Skip describes the return location, not a metal-like mirror.
+:::
 
 ## Radio connection
 

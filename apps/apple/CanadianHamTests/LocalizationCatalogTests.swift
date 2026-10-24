@@ -3,6 +3,23 @@ import CanadianHamContent
 import XCTest
 
 final class LocalizationCatalogTests: XCTestCase {
+    func testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench() throws {
+        let frenchBundle = try frenchLocalizationBundle()
+        let locale = Locale(identifier: "fr")
+        for (key, expected) in [
+            ("Show answer %lld", "Afficher la réponse 2"),
+            ("Hide answer %lld", "Masquer la réponse 2"),
+            ("Answer %lld", "Réponse 2"),
+            ("Answer %lld shown.", "Réponse 2 affichée."),
+            ("Answer %lld hidden.", "Réponse 2 masquée.")
+        ] {
+            let format = frenchBundle.localizedString(forKey: key, value: nil, table: nil)
+            XCTAssertEqual(String(format: format, locale: locale, Int64(2)), expected)
+        }
+        XCTAssertEqual(frenchBundle.localizedString(forKey: "Expanded", value: nil, table: nil), "Développé")
+        XCTAssertEqual(frenchBundle.localizedString(forKey: "Collapsed", value: nil, table: nil), "Réduit")
+    }
+
     func testConceptCheckFeedbackFocusRequestOnlyAfterChoosingNotPreviousOrNext() {
         var request = ConceptCheckFeedbackFocusRequest()
         XCTAssertFalse(request.consume(for: "answered-A"), "Restoring an answered check must not move focus")

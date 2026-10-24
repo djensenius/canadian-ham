@@ -126,18 +126,34 @@ Start with the route, not a catalogue page.
 Try these before reading the feedback below.
 
 1. A fifty-ohm coax jumper is shortened from 9 m to 5 m. What happens to its characteristic impedance?
+
+:::answer
+It remains fifty ohms because geometry and dielectric did not change.
+:::
+
 2. A window-line run is draped along a steel railing. What should you change?
+
+:::answer
+Move it away from metal or choose coax for that section.
+:::
+
 3. A handheld antenna connector feels stiff. What is the safe next action?
+
+:::answer
+Stop and realign the SMA threads; do not force them.
+:::
+
 4. A dipole is fed with coax and the microphone tingles during transmit. What feed-point device might help?
+
+:::answer
+Investigate common-mode current and a suitable feed-point balun or choke. Stop using the unsafe setup while troubleshooting.
+:::
+
 5. Which feedline is practical for a wet garden route close to soil?
 
-### Try-it feedback
-
-1. It remains fifty ohms because geometry and dielectric did not change.
-2. Move it away from metal or choose coax for that section.
-3. Stop and realign the SMA threads; do not force them.
-4. Investigate common-mode current and a suitable feed-point balun or choke. Stop using the unsafe setup while troubleshooting.
-5. Coax is the practical choice for that route.
+:::answer
+Coax is the practical choice for that route.
+:::
 
 ## Radio connection
 

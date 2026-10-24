@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from "react";
+import { Fragment, useId, useMemo, useState, type ReactNode } from "react";
 
 import { t, type InterfaceLanguage } from "../lib/i18n";
 
@@ -23,6 +23,7 @@ interface MarkdownContentProps {
 type MarkdownBlock =
   | { readonly type: "heading"; readonly depth: number; readonly text: string }
   | { readonly type: "paragraph"; readonly text: string }
+  | { readonly type: "try-it"; readonly number: number; readonly prompt: string; readonly answer: string }
   | { readonly type: "unordered-list"; readonly items: readonly string[] }
   | { readonly type: "ordered-list"; readonly items: readonly string[] }
   | { readonly type: "table"; readonly headers: readonly string[]; readonly rows: readonly (readonly string[])[] }
@@ -35,7 +36,7 @@ export function MarkdownContent({ markdown, title, interfaceLanguage = "en", con
   let headingIndex = 0;
   const blocks = useMemo(() => parseMarkdownBlocks(markdown, title), [markdown, title]);
   const headingAnchors = useMemo(() => lessonHeadingAnchorEntries(blocks), [blocks]);
-  return <>{blocks.map((block, index) => {
+  return <Fragment key={markdown}>{blocks.map((block, index) => {
     if (block.type === "table") {
       tableIndex += 1;
       return renderBlock(block, index, interfaceLanguage, contentLanguage, `${tableLabel} ${tableIndex}`);
@@ -46,13 +47,16 @@ export function MarkdownContent({ markdown, title, interfaceLanguage = "en", con
       return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel, headingId);
     }
     return renderBlock(block, index, interfaceLanguage, contentLanguage, tableLabel);
-  })}</>;
+  })}</Fragment>;
 }
 
 function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, contentLanguage: "en" | "fr" | undefined, tableLabel: string, headingId?: string): ReactNode {
   if (block.type === "heading") {
     const Tag = `h${Math.min(block.depth + 1, 6)}` as "h2" | "h3" | "h4" | "h5" | "h6";
     return <Tag id={headingId} key={index} lang={contentLanguage} tabIndex={headingId === undefined ? undefined : -1}>{block.text}</Tag>;
+  }
+  if (block.type === "try-it") {
+    return <TryItAnswer key={`${block.number}-${block.prompt}-${block.answer}`} block={block} interfaceLanguage={interfaceLanguage} contentLanguage={contentLanguage} />;
   }
   if (block.type === "paragraph") {
     return <p key={index} lang={contentLanguage}>{block.text}</p>;
@@ -112,6 +116,25 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
     );
   }
   return null;
+}
+
+function TryItAnswer({ block, interfaceLanguage, contentLanguage }: {
+  readonly block: Extract<MarkdownBlock, { type: "try-it" }>;
+  readonly interfaceLanguage: InterfaceLanguage;
+  readonly contentLanguage: "en" | "fr" | undefined;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const answerId = useId();
+  return <div className="lesson-try-it">
+    <ol start={block.number} lang={contentLanguage}><li>{block.prompt}</li></ol>
+    <button type="button" lang={interfaceLanguage} aria-expanded={expanded} aria-controls={answerId} onClick={() => setExpanded(!expanded)}>
+      {`${t(interfaceLanguage, expanded ? "markdownHideAnswer" : "markdownShowAnswer")} ${block.number}`}
+    </button>
+    <div id={answerId} hidden={!expanded}>
+      {expanded ? <p lang={contentLanguage}>{block.answer}</p> : null}
+    </div>
+    <span className="sr-only" lang={interfaceLanguage} aria-live="polite" aria-atomic="true">{expanded ? t(interfaceLanguage, "markdownAnswerShown", block.number) : ""}</span>
+  </div>;
 }
 
 export function lessonHeadingAnchorSlug(headingText: string): string {
@@ -224,6 +247,13 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
       continue;
     }
 
+    const tryIt = parseTryIt(lines, index);
+    if (tryIt !== null) {
+      blocks.push(tryIt.block);
+      index = tryIt.nextIndex;
+      continue;
+    }
+
     if (/^\s*\d+\.\s+/.test(line)) {
       const items: string[] = [];
       while (index < lines.length && /^\s*\d+\.\s+/.test(lines[index] ?? "")) {
@@ -254,6 +284,19 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
   }
 
   return blocks;
+}
+
+function parseTryIt(lines: readonly string[], startIndex: number): { readonly block: MarkdownBlock; readonly nextIndex: number } | null {
+  const prompt = /^(\d+)\. (.+)$/.exec(lines[startIndex] ?? "");
+  if (prompt === null) return null;
+  let opening = startIndex + 1;
+  while (opening < lines.length && lines[opening]?.trim() === "") opening += 1;
+  const answer = lines[opening + 1];
+  if (lines[opening] !== ":::answer" || answer === undefined || answer.trim() === "" || lines[opening + 2] !== ":::") return null;
+  return {
+    block: { type: "try-it", number: Number(prompt[1]), prompt: stripInlineMarkdown(prompt[2]!), answer: stripInlineMarkdown(answer) },
+    nextIndex: opening + 3,
+  };
 }
 
 function parseFencedCode(lines: readonly string[], startIndex: number): { readonly block: MarkdownBlock; readonly nextIndex: number } | null {

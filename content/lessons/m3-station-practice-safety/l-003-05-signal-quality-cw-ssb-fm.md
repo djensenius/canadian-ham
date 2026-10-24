@@ -214,11 +214,35 @@ Check deviation, microphone gain, and microphone distance. If the next report sa
 
 ## Try it
 
-1. An AM bench exciter is limited to 2.8 kHz highest audio before it reaches the modulator. What occupied bandwidth should you plan for? Estimate 2 x 2.8 kHz = 5.6 kHz.
-2. Why does a clean AM voice signal need spectrum on both sides of the carrier? The changing envelope creates upper and lower sidebands, and both carry audio information.
-3. An upper-sideband exciter is set to 14 250 kHz and fed a 1.2 kHz tone. Where is the RF? USB RF = 14 250 kHz + 1.200 kHz = 14 251.200 kHz.
-4. A lower-sideband exciter is set to 3 925 kHz and fed a 600 Hz tone. Where is the RF tone? 600 Hz is 0.600 kHz, so LSB RF = 3 925 kHz - 0.600 kHz = 3 924.400 kHz.
-5. Before joining an FM net with a borrowed hand microphone, why make a short local audio check? A different microphone can change deviation and audio level even when the RF path is fine.
+1. An AM bench exciter is limited to 2.8 kHz highest audio before it reaches the modulator. What occupied bandwidth should you plan for?
+
+:::answer
+Estimate 2 x 2.8 kHz = 5.6 kHz.
+:::
+
+2. Why does a clean AM voice signal need spectrum on both sides of the carrier?
+
+:::answer
+The changing envelope creates upper and lower sidebands, and both carry audio information.
+:::
+
+3. An upper-sideband exciter is set to 14 250 kHz and fed a 1.2 kHz tone. Where is the RF?
+
+:::answer
+USB RF = 14 250 kHz + 1.200 kHz = 14 251.200 kHz.
+:::
+
+4. A lower-sideband exciter is set to 3 925 kHz and fed a 600 Hz tone. Where is the RF tone?
+
+:::answer
+600 Hz is 0.600 kHz, so LSB RF = 3 925 kHz - 0.600 kHz = 3 924.400 kHz.
+:::
+
+5. Before joining an FM net with a borrowed hand microphone, why make a short local audio check?
+
+:::answer
+A different microphone can change deviation and audio level even when the RF path is fine.
+:::
 
 ## Radio connection
 

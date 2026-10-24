@@ -211,14 +211,22 @@ On voice, use plain language when it is clearer. Abbreviations help only when bo
 Try these independently before reading the feedback.
 
 1. Under the calibrated, stable-path model, a transmitter drops from 48 W to 12 W. Predict the S-meter change and explain your reasoning.
+
+:::answer
+Power halves from 48 W to 24 W, then to 12 W. That is a quarter of the starting power, so expect roughly one S-unit downward. A changing path would make that prediction unreliable.
+:::
+
 2. You need slower Morse, then the signal fades before you copy the next word. Which group requests a slower pace, and which describes the fading?
+
+:::answer
+Use QRS for the pace and QSB for fading. One asks the operator to change something; the other describes reception.
+:::
+
 3. A relayed voice signal is very strong, but several words are lost in rough audio. Why should the report separate readability from strength?
 
-### Check your thinking
-
-1. Power halves from 48 W to 24 W, then to 12 W. That is a quarter of the starting power, so expect roughly one S-unit downward. A changing path would make that prediction unreliable.
-2. Use QRS for the pace and QSB for fading. One asks the operator to change something; the other describes reception.
-3. The repeater output can be strong while speech remains hard to understand. Report both observations; do not add a Morse-tone digit to a voice report.
+:::answer
+The repeater output can be strong while speech remains hard to understand. Report both observations; do not add a Morse-tone digit to a voice report.
+:::
 
 ## Radio connection
 

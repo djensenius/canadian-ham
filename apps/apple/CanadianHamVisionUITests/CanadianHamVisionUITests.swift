@@ -82,6 +82,37 @@ final class CanadianHamVisionUITests: XCTestCase {
         waitForElementToDisappear(feedback, timeout: 5, message: "Feedback should disappear after advancing to the next question")
     }
 
+    func testLessonTryItDisclosureAndAccessibilityLightAndDark() throws {
+        for appearance in ["light", "dark"] {
+            let app = configuredApp(screen: .practice, appearance: appearance, categoryID: "B-006", questionID: "B-006-001-001")
+            app.launch()
+            defer { app.terminate() }
+            XCTAssertTrue(app.descendants(matching: .any)["vision-practice-screen"].firstMatch.waitForExistence(timeout: 15))
+            tapHintLevel(1, in: app)
+            let review = app.buttons["hint-review-in-lesson-button"].firstMatch
+            XCTAssertTrue(review.waitForExistence(timeout: 5))
+            scrollUntilHittable(review, in: app, maxSwipes: 6)
+            review.tap()
+            XCTAssertTrue(app.descendants(matching: .any)["vision-lesson-screen"].firstMatch.waitForExistence(timeout: 10))
+            let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
+            let answer = app.staticTexts["lesson-try-it-1-answer"].firstMatch
+            XCTAssertFalse(answer.exists, "Answer must not enter the accessibility tree before disclosure")
+            scrollUntilHittable(toggle, in: app, maxSwipes: 50)
+            XCTAssertEqual(toggle.value as? String, "Collapsed")
+            try performAudit(on: app, context: "visionOS \(appearance) collapsed Try-it")
+            toggle.tap()
+            XCTAssertTrue(answer.waitForExistence(timeout: 5))
+            XCTAssertEqual(toggle.value as? String, "Expanded")
+            XCTAssertEqual(answer.label, "It remains fifty ohms because geometry and dielectric did not change.")
+            XCTAssertFalse(app.staticTexts["lesson-try-it-2-answer"].firstMatch.exists)
+            try performAudit(on: app, context: "visionOS \(appearance) expanded Try-it")
+            toggle.tap()
+            XCTAssertFalse(answer.exists)
+            XCTAssertEqual(toggle.value as? String, "Collapsed")
+            app.terminate()
+        }
+    }
+
     func testPracticeHintLadderLessonLinkAndAudit() throws {
         for appearance in ["light", "dark"] {
             let app = configuredApp(screen: .practice, appearance: appearance, categoryID: "B-006", questionID: "B-006-008-004", language: "fr", interfaceLanguage: "fr")

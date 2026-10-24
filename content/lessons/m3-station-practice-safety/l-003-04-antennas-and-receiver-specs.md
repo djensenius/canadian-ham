@@ -168,10 +168,29 @@ AM carries its own carrier for envelope detection, so modest tuning error is usu
 
 ## Try it
 
-1. A three-element Yagi is rebuilt on a nonconductive boom, but the element lengths and feed point stay the same. Why have the RF roles not moved to the boom? The radiating elements and feed point set the RF roles; the boom holds them in position.
-2. Match these receiver filters to likely uses: 400 Hz, 2.8 kHz, and 7 kHz. Use 400 Hz for narrow CW, 2.8 kHz for SSB voice, and 7 kHz for a wider signal.
-3. A receiver uses a 10.7 MHz IF and tunes a 52.0 MHz signal with the oscillator above the signal. What is the oscillator frequency? Add the IF: 52.0 MHz + 10.7 MHz = 62.7 MHz.
-4. With the same 52.0 MHz signal and 10.7 MHz IF, where is the high-side image? The image is signal + 2 x IF = 52.0 MHz + 21.4 MHz = 73.4 MHz.
+1. A three-element Yagi is rebuilt on a nonconductive boom, but the element lengths and feed point stay the same. Why have the RF roles not moved to the boom?
+
+:::answer
+The radiating elements and feed point set the RF roles; the boom holds them in position.
+:::
+
+2. Match these receiver filters to likely uses: 400 Hz, 2.8 kHz, and 7 kHz.
+
+:::answer
+Use 400 Hz for narrow CW, 2.8 kHz for SSB voice, and 7 kHz for a wider signal.
+:::
+
+3. A receiver uses a 10.7 MHz IF and tunes a 52.0 MHz signal with the oscillator above the signal. What is the oscillator frequency?
+
+:::answer
+Add the IF: 52.0 MHz + 10.7 MHz = 62.7 MHz.
+:::
+
+4. With the same 52.0 MHz signal and 10.7 MHz IF, where is the high-side image?
+
+:::answer
+The image is signal + 2 x IF = 52.0 MHz + 21.4 MHz = 73.4 MHz.
+:::
 
 ## Radio connection
 

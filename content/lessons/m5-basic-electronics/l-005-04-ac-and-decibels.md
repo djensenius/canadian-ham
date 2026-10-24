@@ -170,14 +170,22 @@ The report is about S9 plus 16 dB. This compares received levels; it is not a ch
 Try these before reading the feedback below.
 
 1. Which ranges contain the second and third harmonics of 14.1 MHz?
+
+:::answer
+The second is 28.2 MHz, in HF; the third is 42.3 MHz, in VHF.
+:::
+
 2. What rough power ratio matches a rise of about 7 dB?
+
+:::answer
+About five times: tenfold gain followed by a halving.
+:::
+
 3. What approximate dB change matches an eightfold power rise?
 
-### Try-it feedback
-
-1. The second is 28.2 MHz, in HF; the third is 42.3 MHz, in VHF.
-2. About five times: tenfold gain followed by a halving.
-3. About +9 dB, using three approximate doubling steps.
+:::answer
+About +9 dB, using three approximate doubling steps.
+:::
 
 ## Radio connection
 

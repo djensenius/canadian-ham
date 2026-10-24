@@ -50,6 +50,7 @@ public struct MarkdownFigure: Equatable, Sendable {
 public enum LessonBlock: Equatable, Sendable {
     case heading(level: Int, AttributedString)
     case paragraph(AttributedString)
+    case tryIt(number: Int, prompt: AttributedString, answer: AttributedString)
     case list(ordered: Bool, items: [AttributedString])
     case code(language: String?, text: String)
     case table(MarkdownTable)
@@ -108,6 +109,8 @@ public struct RenderedLessonMarkdown: Equatable, Sendable {
                     listText.append(item)
                 }
                 addition = listText
+            case let .tryIt(_, prompt, _):
+                addition = prompt // Hidden answers must not leak into the flattened lesson text.
             case let .code(_, text):
                 addition = AttributedString(text)
             case .table, .figure, .illustrationBrief:
@@ -207,6 +210,12 @@ public enum LessonMarkdownRenderer {
                 continue
             }
 
+            if let item = try parseTryIt(lines: lines, startIndex: index) {
+                blocks.append(item.block)
+                index = item.nextIndex
+                continue
+            }
+
             if let list = try parseList(lines: lines, startIndex: index) {
                 blocks.append(.list(ordered: list.ordered, items: list.items))
                 index = list.nextIndex
@@ -226,6 +235,24 @@ public enum LessonMarkdownRenderer {
         }
 
         return blocks
+    }
+
+    private static func parseTryIt(lines: [String], startIndex: Int) throws -> (block: LessonBlock, nextIndex: Int)? {
+        let line = lines[startIndex]
+        guard let range = line.range(of: #"^\d+\. "#, options: .regularExpression),
+              let number = Int(line[range].dropLast(2)) else { return nil }
+        let prompt = String(line[range.upperBound...])
+        var opening = startIndex + 1
+        while opening < lines.count, lines[opening].trimmingCharacters(in: .whitespaces).isEmpty {
+            opening += 1
+        }
+        guard opening + 2 < lines.count, lines[opening] == ":::answer",
+              !lines[opening + 1].trimmingCharacters(in: .whitespaces).isEmpty,
+              lines[opening + 2] == ":::" else { return nil }
+        return (
+            .tryIt(number: number, prompt: try inlineAttributedString(for: prompt), answer: try inlineAttributedString(for: lines[opening + 1])),
+            opening + 3
+        )
     }
 
     private static func inlineAttributedString(for markdown: String) throws -> AttributedString {

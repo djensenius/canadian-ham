@@ -278,18 +278,34 @@ A good approach is:
 Try these before reading the feedback below.
 
 1. An intercom is quiet when its 18 m button cable is unplugged. Why test a shorter cable or ferrite near the intercom?
+
+:::answer
+The long cable can pick up RF and deliver it to a non-linear input. Shortening or choking near the device tests that path.
+:::
+
 2. Weak signals disappear near a clean test transmitter at 100 W, but the symptom is much weaker at 10 W. What does that trend suggest?
+
+:::answer
+Smooth improvement as strong RF is reduced supports receiver overload or desensitization rather than proving a transmitter defect.
+:::
+
 3. Transmitters at 151.2 MHz and 153.8 MHz accompany a false scanner signal at 156.4 MHz. Find a possible product and a first test.
+
+:::answer
+2 x 153.8 - 151.2 = 156.4 MHz. Try suitable front-end filtering ahead of the scanner. Attenuation is a fallback because it also weakens wanted signals.
+:::
+
 4. A weak 10.140 MHz signal has a stable birdie 700 Hz away. Which filter width deserves consideration?
+
+:::answer
+A narrow notch may remove less nearby spectrum than a broad band-reject filter when only one narrow carrier is the problem.
+:::
+
 5. A choke at the station desk does nothing for an intercom lead, but moving it to the intercom end helps. Why?
 
-### Try-it feedback
-
-1. The long cable can pick up RF and deliver it to a non-linear input. Shortening or choking near the device tests that path.
-2. Smooth improvement as strong RF is reduced supports receiver overload or desensitization rather than proving a transmitter defect.
-3. 2 x 153.8 - 151.2 = 156.4 MHz. Try suitable front-end filtering ahead of the scanner. Attenuation is a fallback because it also weakens wanted signals.
-4. A narrow notch may remove less nearby spectrum than a broad band-reject filter when only one narrow carrier is the problem.
-5. The lead after a choke can still pick up RF, so location close to the affected input matters.
+:::answer
+The lead after a choke can still pick up RF, so location close to the affected input matters.
+:::
 
 ## Radio connection
 

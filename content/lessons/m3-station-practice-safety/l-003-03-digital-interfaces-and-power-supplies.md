@@ -158,10 +158,29 @@ The drop is 4.0 V and heat is 7.2 W. A larger input-output difference at the sam
 
 ## Try it
 
-1. A digital station keys the transmitter correctly, but the other station hears silence instead of tones. What separate path should be traced? Trace transmit audio from the software output through the interface to the radio data input.
-2. A digital-mode signal becomes wide after the computer playback slider is raised from 35% to 90%. What should you adjust first? Reduce playback or interface drive until the radio input is not overdriven.
-3. In a training model, the smoothing capacitor is disconnected from the rectifier output. What happens to the regulator input waveform? It rises and falls much more because the filter is no longer smoothing the pulses.
-4. A regulator input is 20 V, the output is 13.5 V, and load current is 1.2 A. Estimate heat in the regulator. The regulator drops 20 V - 13.5 V = 6.5 V. Heat is about 6.5 V x 1.2 A = 7.8 W.
+1. A digital station keys the transmitter correctly, but the other station hears silence instead of tones. What separate path should be traced?
+
+:::answer
+Trace transmit audio from the software output through the interface to the radio data input.
+:::
+
+2. A digital-mode signal becomes wide after the computer playback slider is raised from 35% to 90%. What should you adjust first?
+
+:::answer
+Reduce playback or interface drive until the radio input is not overdriven.
+:::
+
+3. In a training model, the smoothing capacitor is disconnected from the rectifier output. What happens to the regulator input waveform?
+
+:::answer
+It rises and falls much more because the filter is no longer smoothing the pulses.
+:::
+
+4. A regulator input is 20 V, the output is 13.5 V, and load current is 1.2 A. Estimate heat in the regulator.
+
+:::answer
+The regulator drops 20 V - 13.5 V = 6.5 V. Heat is about 6.5 V x 1.2 A = 7.8 W.
+:::
 
 ## Radio connection
 

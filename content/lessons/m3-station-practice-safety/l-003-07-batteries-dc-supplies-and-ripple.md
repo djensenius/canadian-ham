@@ -243,11 +243,35 @@ The round trip is 6.4 m. Total drop is 6.4 x 0.03 = 0.192 V, below 0.25 V. Count
 
 ## Try it
 
-1. A radio needs at least 11.8 V at its input during transmit. The field battery is 12.4 V under load. The round-trip lead resistance is 0.035 ohms, and transmit current is 8 A. Will the radio see enough voltage? The lead drop is 8 A x 0.035 ohms = 0.28 V, so the radio sees about 12.12 V.
-2. A four-cell AA holder changes from fresh alkaline cells to NiMH cells. What voltage change should you expect before checking the manual? Nominal voltage falls from about 6.0 V to about 4.8 V.
-3. Two matched 10.8 V, 7 Ah packs are placed in series for an approved equipment test. What is the result? Voltage adds to 21.6 V, while capacity remains 7 Ah.
-4. The same two packs are placed in parallel using a manufacturer-approved combiner. What is the result? Voltage remains 10.8 V, while capacity adds to 14 Ah.
-5. A 2.0 m one-way DC run uses cable data of 0.04 V per metre at the planned current. Is the round-trip drop below a 0.20 V target? Round-trip length is 4.0 m, so the drop is 0.16 V.
+1. A radio needs at least 11.8 V at its input during transmit. The field battery is 12.4 V under load. The round-trip lead resistance is 0.035 ohms, and transmit current is 8 A. Will the radio see enough voltage?
+
+:::answer
+The lead drop is 8 A x 0.035 ohms = 0.28 V, so the radio sees about 12.12 V.
+:::
+
+2. A four-cell AA holder changes from fresh alkaline cells to NiMH cells. What voltage change should you expect before checking the manual?
+
+:::answer
+Nominal voltage falls from about 6.0 V to about 4.8 V.
+:::
+
+3. Two matched 10.8 V, 7 Ah packs are placed in series for an approved equipment test. What is the result?
+
+:::answer
+Voltage adds to 21.6 V, while capacity remains 7 Ah.
+:::
+
+4. The same two packs are placed in parallel using a manufacturer-approved combiner. What is the result?
+
+:::answer
+Voltage remains 10.8 V, while capacity adds to 14 Ah.
+:::
+
+5. A 2.0 m one-way DC run uses cable data of 0.04 V per metre at the planned current. Is the round-trip drop below a 0.20 V target?
+
+:::answer
+Round-trip length is 4.0 m, so the drop is 0.16 V.
+:::
 
 ## Radio connection
 

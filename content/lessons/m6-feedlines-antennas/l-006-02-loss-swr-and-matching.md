@@ -197,18 +197,34 @@ Fill the gaps before checking below.
 Try these before reading the feedback below.
 
 1. What happens to dB loss when a 22 m feedline is replaced with 11 m of the same cable at the same frequency?
+
+:::answer
+It is roughly halved because dB loss accumulates with length.
+:::
+
 2. An SWR reading jumps when the feedline moves. What should you inspect first?
+
+:::answer
+Check connectors and conductor continuity before trimming the antenna.
+:::
+
 3. A desk tuner gives a comfortable transmitter load but the line is hot. Where might matching help more?
+
+:::answer
+Matching closer to the antenna can reduce high-SWR loss on the main feedline.
+:::
+
 4. Why can thin coax be fine for a short jumper but poor for a long roof run at VHF or UHF?
+
+:::answer
+Loss rises with length and usually with frequency, making a long run much more demanding.
+:::
+
 5. What evidence beyond low station-end SWR helps assess the system?
 
-### Try-it feedback
-
-1. It is roughly halved because dB loss accumulates with length.
-2. Check connectors and conductor continuity before trimming the antenna.
-3. Matching closer to the antenna can reduce high-SWR loss on the main feedline.
-4. Loss rises with length and usually with frequency, making a long run much more demanding.
-5. Consider cable type, length, heat, analyzer results, and on-air performance.
+:::answer
+Consider cable type, length, heat, analyzer results, and on-air performance.
+:::
 
 ## Radio connection
 

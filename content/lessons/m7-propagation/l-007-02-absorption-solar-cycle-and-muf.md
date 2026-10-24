@@ -153,18 +153,34 @@ Use evidence from the band you want to use. A beacon in that same amateur band a
 Try these before reading the feedback below.
 
 1. Microphone gain fails to improve a sunlit low-band path. Why would an RF planning change help more?
+
+:::answer
+Daylight lower-ionosphere absorption acts before audio controls matter. A suitable band or time addresses the path.
+:::
+
 2. A wide digital signal sounds distorted while a narrow signal remains copyable on the same path. What might help?
+
+:::answer
+Try a narrower mode or bandwidth. Multipath can affect different parts of a wide signal unequally.
+:::
+
 3. The path MUF falls below the planned band. Why is more transmitter power insufficient?
+
+:::answer
+More power does not raise the path frequency limit. Try a suitable lower band.
+:::
+
 4. With LUF 5.8 MHz and MUF 18.6 MHz, compare 20 metres and 17 metres as first attempts.
+
+:::answer
+Both are inside the window. Twenty metres is the more conservative first try near the OWF estimate; 17 metres is closer to the upper edge and may fail sooner if MUF falls.
+:::
+
 5. Higher HF bands become lively near a solar-cycle high. What changed physically?
 
-### Try-it feedback
-
-1. Daylight lower-ionosphere absorption acts before audio controls matter. A suitable band or time addresses the path.
-2. Try a narrower mode or bandwidth. Multipath can affect different parts of a wide signal unequally.
-3. More power does not raise the path frequency limit. Try a suitable lower band.
-4. Both are inside the window. Twenty metres is the more conservative first try near the OWF estimate; 17 metres is closer to the upper edge and may fail sooner if MUF falls.
-5. Greater solar activity increased ionization enough to support higher usable frequencies on some paths.
+:::answer
+Greater solar activity increased ionization enough to support higher usable frequencies on some paths.
+:::
 
 ## Radio connection
 

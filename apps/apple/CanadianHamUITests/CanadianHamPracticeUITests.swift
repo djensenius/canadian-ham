@@ -995,6 +995,32 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.exists)
     }
 
+    func testLessonTryItRevealAndAccessibilityLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditLessonTryItReveal(appearance: .light, accessibilitySize: false)
+    }
+
+    func testLessonTryItRevealAndAccessibilityDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditLessonTryItReveal(appearance: .dark, accessibilitySize: true)
+    }
+
+    func testLessonTryItRevealFrenchLabelsAndState() throws {
+        let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-004-03", "-CanadianHamInitialLessonSectionAnchor", "try-it", "-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"])
+        defer { app.terminate() }
+        let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 10))
+        positionLessonHeadingForTryItAudit("try-it", in: app)
+        XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true))
+        XCTAssertEqual(toggle.label, "Afficher la réponse 1")
+        XCTAssertEqual(toggle.value as? String, "Réduit")
+        XCTAssertFalse(app.staticTexts["lesson-try-it-1-answer"].firstMatch.exists)
+        toggle.tap()
+        XCTAssertTrue(app.staticTexts["lesson-try-it-1-answer"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(toggle.label, "Masquer la réponse 1")
+        XCTAssertEqual(toggle.value as? String, "Développé")
+    }
+
     func testLessonPrerequisiteNavigationAndAccessibilityLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditLessonPrerequisiteNavigation(appearance: .light)
@@ -2366,6 +2392,184 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollPracticeReviewFeedbackIntoView(in: reviewApp)
         try auditIgnoringOccludedExamTextContrast(app: reviewApp, context: "\(appearance.rawValue) practice review feedback")
         reviewApp.terminate()
+    }
+
+    private func auditLessonTryItReveal(appearance: AuditAppearance, accessibilitySize: Bool) throws {
+        // L-005-04 is the shortest Try-it lesson by Markdown body length; the long
+        // L-004-03 still has the separate French reveal/state behaviour test.
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialLessonID", "L-005-04",
+            "-CanadianHamInitialLessonSectionAnchor", "try-it",
+            "-CanadianHamTheme", appearance.rawValue,
+            "-UIPreferredContentSizeCategoryName", accessibilitySize ? "UICTContentSizeCategoryAccessibilityXXXL" : "UICTContentSizeCategoryL"
+        ])
+        defer { app.terminate() }
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
+        let answer = app.staticTexts["lesson-try-it-1-answer"].firstMatch
+        let secondAnswer = app.staticTexts["lesson-try-it-2-answer"].firstMatch
+        let prompt = app.staticTexts["lesson-try-it-1-prompt"].firstMatch
+        XCTAssertFalse(answer.exists, "Try-it answers must not enter the accessibility tree before disclosure")
+        positionLessonHeadingForTryItAudit("try-it", in: app)
+        positionTryItPromptAndControlForAudit(prompt, control: toggle, in: app)
+        XCTAssertTrue(isFullyVisible(prompt, in: app, requiresHittable: false), "Try-it prompt must be fully visible below the navigation bar before auditing")
+        XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true), "Show answer must be fully visible beside the Try-it section before tapping or auditing")
+        XCTAssertEqual(toggle.label, "Show answer 1")
+        XCTAssertEqual(toggle.value as? String, "Collapsed", "VoiceOver must expose the disclosure state")
+        recordTryItAuditGeometry(in: app, stage: "collapsed answer")
+        // TASK-73 (coordinator decision 2026-10-23 under the owner delegation of 2026-10-22): on iPad
+        // the XCTest audit intermittently flags a fully visible faded-practice line that the measured-contrast
+        // check cannot measure at 2x, so the English light iPad run keeps every reveal assertion but skips
+        // the two full audits. iPhone keeps the light (default size) and dark (largest Dynamic Type) Try-it
+        // audits; the French test is reveal/state only; iPad keeps the dark audit.
+        let skipsAuditForTask73 = tryItAuditSkippedOnIPadLight(appearance: appearance, accessibilitySize: accessibilitySize)
+        if !skipsAuditForTask73 { try auditIgnoringOccludedOrMeasuredContrast(app: app) }
+        toggle.tap()
+        XCTAssertTrue(answer.waitForExistence(timeout: 5))
+        XCTAssertEqual(answer.label, "The second is 28.2 MHz, in HF; the third is 42.3 MHz, in VHF.")
+        XCTAssertEqual(toggle.label, "Hide answer 1")
+        XCTAssertEqual(toggle.value as? String, "Expanded")
+        XCTAssertFalse(secondAnswer.exists, "Revealing one Try-it must not reveal another")
+        positionTryItControlForAudit(toggle, in: app)
+        recordTryItAuditGeometry(in: app, stage: "expanded answer")
+        if !skipsAuditForTask73 { try auditIgnoringOccludedOrMeasuredContrast(app: app) }
+        toggle.tap()
+        XCTAssertFalse(answer.exists, "Collapsing must remove the answer from the accessibility tree")
+        XCTAssertEqual(toggle.value as? String, "Collapsed")
+    }
+
+    private func tryItAuditSkippedOnIPadLight(appearance: AuditAppearance, accessibilitySize: Bool) -> Bool {
+#if os(iOS)
+        return UIDevice.current.userInterfaceIdiom == .pad && appearance == .light && !accessibilitySize
+#else
+        return false
+#endif
+    }
+
+    // Owner decisions 2026-10-12 (occluded lesson content) and 2026-10-22 (TASK-71).
+    // Only new Try-it audits combine these rules; existing audit helpers stay unchanged.
+    private func auditIgnoringOccludedOrMeasuredContrast(app: XCUIApplication) throws {
+        let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
+        let windowFrame = app.windows.firstMatch.frame
+        let navigationBar = app.navigationBars.firstMatch
+        let statusBar = app.statusBars.firstMatch
+        let protectedMaxY = max(
+            navigationBar.exists ? navigationBar.frame.maxY : windowFrame.minY,
+            statusBar.exists ? statusBar.frame.maxY : windowFrame.minY
+        )
+        try app.performAccessibilityAudit { issue in
+            guard issue.auditType == .contrast else { return false }
+            let isOccluded = { () -> Bool in
+                guard let element = issue.element else { return false }
+                let frame = element.frame
+                guard frame.width > 0, frame.height > 0 else { return false }
+                guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
+                guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
+                guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
+
+                XCTContext.runActivity(named: "Ignored occluded lesson scroll-content contrast false positive") { activity in
+                    let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame)) matchedScrollDescendant=true"
+                    let attachment = XCTAttachment(string: note)
+                    attachment.lifetime = .keepAlways
+                    activity.add(attachment)
+                }
+                return true
+            }()
+            if isOccluded { return true }
+
+            let element = issue.element
+            let frame = element?.frame
+            var measurement = ControlTextContrastMeasurement(fullImageRatio: nil, ratio: nil)
+            if let element, let frame,
+               isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
+               let image = contrastMeasurementCGImage(from: element.screenshot()) {
+                measurement = controlTextContrastMeasurement(
+                    in: image, scale: CGFloat(image.width) / frame.width,
+                    isButton: element.elementType == .button
+                )
+            }
+            let verified = measurement.ratio.map { $0 >= 4.5 } ?? false
+            let activityName = verified ? "Verified contrast audit finding with measured WCAG contrast" : "Failed contrast audit finding"
+            XCTContext.runActivity(named: activityName) { activity in
+                let attachment = XCTAttachment(string: "label=\(element?.label ?? "<nil>") frame=\(frame.map { "\($0)" } ?? "<nil>") \(measurement.logDescription)")
+                attachment.lifetime = .keepAlways
+                activity.add(attachment)
+            }
+            return verified
+        }
+    }
+
+    private func positionLessonHeadingForTryItAudit(_ anchor: String, in app: XCUIApplication) {
+        let heading = app.staticTexts["lesson-heading-\(anchor)"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10))
+        waitBriefly(0.5)
+        let scroll = scrollView(containing: heading, in: app)
+        for _ in 0..<40 where !isFullyVisible(heading, in: app, requiresHittable: false) {
+            let visible = visibleFrameExcludingNavigationBar(in: app)
+            let frame = heading.frame
+            if frame.minY > visible.maxY + visible.height * 0.25 {
+                scroll.swipeUp()
+            } else if frame.maxY < visible.minY - visible.height * 0.25 {
+                scroll.swipeDown()
+            } else {
+                preciseScroll(scroll, contentDeltaY: visible.minY + 16 - frame.minY)
+            }
+            waitBriefly()
+        }
+        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: false), "Lesson heading \(anchor) must be fully visible before the Try-it audit. Frame: \(frameDescription(heading.frame))")
+    }
+
+    private func positionTryItPromptAndControlForAudit(_ prompt: XCUIElement, control: XCUIElement, in app: XCUIApplication) {
+        let scroll = scrollView(containing: prompt, in: app)
+        for _ in 0..<12 {
+            if isFullyVisible(prompt, in: app, requiresHittable: false)
+                && isFullyVisible(control, in: app, requiresHittable: true) { return }
+            let visible = visibleFrameExcludingNavigationBar(in: app)
+            let contentFrame = prompt.frame.union(control.frame)
+            guard contentFrame.height <= visible.height else {
+                recordTryItAuditGeometry(in: app, stage: "prompt/control union taller than visible area")
+                return
+            }
+            // Residual corrections must still exceed the drag recognizer's threshold.
+            if contentFrame.minY < visible.minY {
+                preciseScroll(scroll, contentDeltaY: max(24, visible.minY + 8 - contentFrame.minY))
+            } else if contentFrame.maxY > visible.maxY {
+                preciseScroll(scroll, contentDeltaY: min(-24, visible.maxY - 8 - contentFrame.maxY))
+            } else {
+                break
+            }
+            waitBriefly()
+        }
+        if !isFullyVisible(prompt, in: app, requiresHittable: false)
+            || !isFullyVisible(control, in: app, requiresHittable: true) {
+            recordTryItAuditGeometry(in: app, stage: "prompt/control positioning exhausted")
+        }
+    }
+
+    private func positionTryItControlForAudit(_ control: XCUIElement, in app: XCUIApplication) {
+        let scroll = scrollView(containing: control, in: app)
+        for _ in 0..<12 {
+            let visible = visibleFrameExcludingNavigationBar(in: app)
+            let targetY = visible.minY + visible.height * 0.25
+            let delta = targetY - control.frame.minY
+            if abs(delta) < 24 { break }
+            preciseScroll(scroll, contentDeltaY: delta)
+            waitBriefly()
+        }
+        XCTAssertTrue(isFullyVisible(control, in: app, requiresHittable: true), "Try-it reveal control must remain fully visible for the expanded-state audit")
+    }
+
+    private func recordTryItAuditGeometry(in app: XCUIApplication, stage: String) {
+        let heading = app.staticTexts["lesson-heading-try-it"].firstMatch
+        let prompt = app.staticTexts["lesson-try-it-1-prompt"].firstMatch
+        let control = app.buttons["lesson-try-it-1-toggle"].firstMatch
+        let note = "stage=\(stage); visible=\(frameDescription(visibleFrameExcludingNavigationBar(in: app))); tryItHeading=\(frameDescription(heading.frame)); prompt=\(frameDescription(prompt.frame)); control=\(frameDescription(control.frame))"
+        print("Try-it audit geometry: \(note)")
+        XCTContext.runActivity(named: "Try-it audit geometry: \(stage)") { activity in
+            let attachment = XCTAttachment(string: note)
+            attachment.lifetime = .keepAlways
+            activity.add(attachment)
+        }
     }
 
     private func auditLessonPrerequisiteNavigation(appearance: AuditAppearance) throws {

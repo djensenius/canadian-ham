@@ -185,10 +185,29 @@ The selected sum is 14.297 MHz. The difference is 3.697 MHz and is rejected here
 
 ## Try it
 
-1. A filtered SSB signal at 9.000 MHz is mixed with a 5.000 MHz VFO, and the transmitter selects the difference product. What output should the next filter pass? It should pass 9.000 MHz - 5.000 MHz = 4.000 MHz and reject the sum product at 14.000 MHz.
-2. A receiver has 500 Hz and 2.4 kHz IF filters. Which one admits more nearby signals during a narrow CW contact? The 2.4 kHz filter admits more nearby spectrum.
-3. A CW operator moves the BFO 400 Hz higher while leaving the IF signal selected. What changes at the speaker? The recovered tone pitch shifts by about 400 Hz.
-4. A filtered voice sideband is centred at 9.001 MHz and mixed with a 12.500 MHz VFO using the sum output. What centre frequency leaves the mixer? The centre moves to 9.001 MHz + 12.500 MHz = 21.501 MHz.
+1. A filtered SSB signal at 9.000 MHz is mixed with a 5.000 MHz VFO, and the transmitter selects the difference product. What output should the next filter pass?
+
+:::answer
+It should pass 9.000 MHz - 5.000 MHz = 4.000 MHz and reject the sum product at 14.000 MHz.
+:::
+
+2. A receiver has 500 Hz and 2.4 kHz IF filters. Which one admits more nearby signals during a narrow CW contact?
+
+:::answer
+The 2.4 kHz filter admits more nearby spectrum.
+:::
+
+3. A CW operator moves the BFO 400 Hz higher while leaving the IF signal selected. What changes at the speaker?
+
+:::answer
+The recovered tone pitch shifts by about 400 Hz.
+:::
+
+4. A filtered voice sideband is centred at 9.001 MHz and mixed with a 12.500 MHz VFO using the sum output. What centre frequency leaves the mixer?
+
+:::answer
+The centre moves to 9.001 MHz + 12.500 MHz = 21.501 MHz.
+:::
 
 ## Radio connection
 

@@ -45,7 +45,7 @@ The web renderer and Apple Swift parser both support a small lesson-safe subset:
 - fenced code blocks with triple backticks; and
 - the existing `## Illustration brief` block with `Alt text:` and `Description:` lines.
 
-Do not add new syntax. Avoid raw HTML, LaTeX, footnotes, blockquotes (`>`), nested lists, task lists, definition lists, Mermaid diagrams, and images in lesson Markdown. Do not rely on bold, italics, or links to carry meaning because the renderers do not treat inline Markdown identically. Formulas must be selectable text.
+The only additional practice syntax is the paired `:::answer` block documented in [the lesson format](../content/lessons/README.md#hidden-try-it-answers); use it for every independent Try-it answer. Do not add other new syntax. Avoid raw HTML, LaTeX, footnotes, blockquotes (`>`), nested lists, task lists, definition lists, Mermaid diagrams, and images in lesson Markdown. Do not rely on bold, italics, or links to carry meaning because the renderers do not treat inline Markdown identically. Formulas must be selectable text.
 
 Renderer details to remember: the web parser joins consecutive paragraph lines with spaces, while the Swift parser preserves paragraph newlines. Use blank lines or list items for labelled callout lines. Swift tables require leading and trailing `|` and stop when a row has a different column count; the web table parser is looser, so write tables to the stricter Swift shape.
 
@@ -95,7 +95,7 @@ Not every lesson needs every optional `###` callout. Use only what helps the obj
 
 ### Reference-style rule modules
 
-Module 1 regulation lessons follow the reference style in `content/lessons/README.md`. Module 2 operating lessons use the explanatory format above (owner approval 2026-10-12, TASK-46.9). They include concept sections, worked examples, Try it, common mistakes, and original concept checks. Keep the official quiz mappings intact and separate practice prompts from their feedback so learners can try before reading the answer.
+Module 1 regulation lessons follow the reference style in `content/lessons/README.md`. Module 2 operating lessons use the explanatory format above (owner approval 2026-10-12, TASK-46.9). They include concept sections, worked examples, Try it, common mistakes, and original concept checks. Keep the official quiz mappings intact. Pair each independent Try-it prompt with its own `:::answer` block as documented in the lesson format, so learners can try before revealing the feedback. Do not use a separate feedback heading or answer list for Try-its. Faded practice still uses its separate `### Check your work: ...` solution heading.
 
 For M1 reference-style lessons:
 
