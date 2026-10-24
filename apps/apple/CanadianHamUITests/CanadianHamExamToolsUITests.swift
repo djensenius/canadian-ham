@@ -190,7 +190,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
                 positionConceptFeedback([previous], in: app)
                 previous.tap()
                 XCTAssertEqual(app.staticTexts["question-identifier"].firstMatch.label, ids[4])
-                XCTAssertFalse(app.buttons["answer-A-button"].firstMatch.isEnabled)
+                // AnswerChoiceButton freezes interaction via hit testing, not the enabled trait.
+                XCTAssertTrue(app.buttons["answer-A-button"].firstMatch.isSelected)
+                XCTAssertEqual(app.staticTexts["answer-feedback-title"].firstMatch.label, "Correct")
                 let next = app.buttons["Next"].firstMatch
                 positionConceptFeedback([next], in: app)
                 next.tap()
