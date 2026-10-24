@@ -127,13 +127,13 @@ function TryItAnswer({ block, interfaceLanguage, contentLanguage }: {
   const answerId = useId();
   return <div className="lesson-try-it">
     <ol start={block.number} lang={contentLanguage}><li>{block.prompt}</li></ol>
-    <button type="button" aria-expanded={expanded} aria-controls={answerId} onClick={() => setExpanded(!expanded)}>
+    <button type="button" lang={interfaceLanguage} aria-expanded={expanded} aria-controls={answerId} onClick={() => setExpanded(!expanded)}>
       {`${t(interfaceLanguage, expanded ? "markdownHideAnswer" : "markdownShowAnswer")} ${block.number}`}
     </button>
     <div id={answerId} hidden={!expanded}>
       {expanded ? <p lang={contentLanguage}>{block.answer}</p> : null}
     </div>
-    <span className="sr-only" aria-live="polite" aria-atomic="true">{expanded ? t(interfaceLanguage, "markdownAnswerShown", block.number) : ""}</span>
+    <span className="sr-only" lang={interfaceLanguage} aria-live="polite" aria-atomic="true">{expanded ? t(interfaceLanguage, "markdownAnswerShown", block.number) : ""}</span>
   </div>;
 }
 

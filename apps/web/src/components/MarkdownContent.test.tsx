@@ -63,6 +63,8 @@ for (const language of ["en", "fr"] as const) {
       const hide = language === "en" ? "Hide answer" : "Masquer la réponse";
       const toggle = screen.getByRole("button", { name: `${show} 1` });
       const second = screen.getByRole("button", { name: `${show} 2` });
+      assert.equal(toggle.lang, language, "Localized control text uses the interface language, not the lesson content language");
+      assert.equal(container.querySelector('[aria-live="polite"]')!.getAttribute("lang"), language);
       assert.equal(toggle.getAttribute("aria-expanded"), "false");
       assert.equal(screen.queryByText("The current is 3 A."), null);
       assert.equal(document.getElementById(toggle.getAttribute("aria-controls")!)?.hidden, true);
