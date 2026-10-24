@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-24 22:41'
+updated_date: '2026-10-24 22:46'
 labels:
   - web
   - apple
@@ -37,4 +37,6 @@ Lesson quizzes reuse no earlier material. Add 1-2 review items per lesson quiz d
 
 <!-- SECTION:NOTES:BEGIN -->
 Coordinator decisions 2026-10-24: pools are all active-bank official questions in earlier lessons taught subsections; exclude the entire current taught pool plus current quiz IDs. Prefer previous three lessons, then fallback. Incorrect/help ID fields accept officialQuestionIds union reviewQuestionIds. Non-empty review IDs require lessonIdVersion 2; legacy (missing/v1) attempts are rejected before 46.10 migration, while v2 records pass through unchanged. Existing TASK-71/73 composite authorized unchanged only for NEW TASK-46.7 review-item audits; AGENTS.md records dated scope, new test comment cites it; existing helpers/audits stay unchanged. Initial implementation committed as 84753a18; full macOS units and parity queued via nohup behind shared lock, no full Apple app suites requested.
+
+Web and static validation PASS on 3b97481b: pnpm test (content-tools 250/250, Morse 21/21, calculator 127/127, web 278/278); targeted App round/review coverage 12/12 including EN/FR light/dark axe; ProgressStore 43/43; quiz data 5/5; shared TS review fixtures 9/9. pnpm check:schemas 60/60 plus all targets; import:check; typecheck; build:web; Apple text-source gate; test-guard self-test and approved base diff; git diff --check all pass. Initial full web run exposed expected old M1 count assertions plus an unrelated load/upgrade timing flake under concurrent runners; updated M1 assertions now include all review answers (35/35), corrected new French-only test choice lookup, reran final full pnpm test cleanly without weakening existing assertions. Full macOS and requested iPhone/iPad 22 methods/device, parity and l10n checks remain queued behind another task shared xbuild lock.
 <!-- SECTION:NOTES:END -->
