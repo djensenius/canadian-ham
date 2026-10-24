@@ -3607,7 +3607,7 @@ describe("M1 lesson quiz rounds", { timeout: appFlowTestTimeoutMs }, () => {
         window.location.hash = "#/learn/M1/L-001-01";
         window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
         const store = createStore(`m1-round-axe-${language}-${theme}`);
-        await store.putPreferences({ ...defaultPreferences, language: language === "en" ? "fr" : "en", theme });
+        await store.putPreferences({ ...defaultPreferences, language, theme });
         const { container } = render(<App store={store} now={() => fixedNow} />);
         await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
         const section = getLessonQuizSection();

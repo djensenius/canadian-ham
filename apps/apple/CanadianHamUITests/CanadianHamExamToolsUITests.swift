@@ -117,7 +117,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let checkpoint = app.staticTexts["lesson-quiz-round-checkpoint"].firstMatch
         XCTAssertTrue(checkpoint.waitForExistence(timeout: 5))
         XCTAssertEqual(checkpoint.label, french ? "Bilan de la série 1 sur 4" : "Round 1 of 4 checkpoint")
-        XCTAssertTrue(app.staticTexts[french ? "L’autorité provient de sources désignées" : "Authority comes from named sources"].firstMatch.exists)
+        XCTAssertTrue(app.staticTexts[french ? "Faits de référence : L’autorité provient de sources désignées" : "Reference facts: Authority comes from named sources"].firstMatch.exists)
         positionConceptFeedback([checkpoint], in: app)
         XCTAssertTrue(isFullyVisible(checkpoint, in: app, requiresHittable: true))
         try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
