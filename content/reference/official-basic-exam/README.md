@@ -19,6 +19,9 @@ Page 4's lower diagram was checked directly against a 576 dpi PDFKit render: the
 Owner decision 2026-10-12 (2A) authorizes private development/internal TestFlight use under the interim risk policy, not public release. This reproduction is not an official version and Canadian Ham is not affiliated with or endorsed by the Government of Canada. See `docs/content-licensing.md`. Only the PNGs and transcript are copied by the opt-in build gate; neither this README nor the training PDF ships.
 
 ## SHA-256 of app assets
+
+This list is the source of truth for `scripts/check-official-reference-sheet-gate.mjs`: default web builds reject matching output bytes under any filename/extension, and matching decoded base64 image data URLs. The gate also checks filenames and distinctive transcript text; it does not detect re-encoded images or obfuscated/assembled data URLs.
+
 0389a8057e20080c51bcb36ddcedfd3bb703d684f145803b118331d57fb7055c  page-1.png
 397ca428126befa7938b8a522461a3190896a083b3b3712752dd53111c9d8f0e  page-2.png
 440fde861fcbb550fd33299fd3e41f44caebc8b888be4e5a84902cb3050134ae  page-3.png
