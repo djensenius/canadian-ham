@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-21 14:58'
-updated_date: '2026-10-24 19:06'
+updated_date: '2026-10-24 19:30'
 labels:
   - web
   - apple
@@ -45,4 +45,12 @@ Implemented explicit bilingual M1 rounds derived from hint section anchors, with
 Targeted macOS initial run PASS 4/4 (two new full-M1/order/boundary/session methods plus existing cache/help payload regressions); the normal documented macOS command built the entire UI-test target successfully. Host app logged the pre-existing local persistent-store unknown-model migration diagnostic; all regression stores are in-memory and passed, and no persistent data was reset/deleted. Intentional French xbuild export round trip PASS with catalogue byte-unchanged. Final-source macOS nine-test run and pnpm check:apple-l10n (including generic tvOS/visionOS builds) queued through nohup. New iPhone/iPad M1 tests and unchanged 12 quiz/feedback regression methods queued; no full suites. Additional partial-score web test PASS; import checks, web build/dist URL+CSP audit and links PASS. Pre-existing ExamTools tests/helpers are byte-identical to main. Guard self-test and approved diff PASS with Test-guard-approved: owner decision 2026-10-22.
 
 iPhone initial M1 UI run: English light/dark full audits PASS (206.048s / 221.520s). French AX light/dark header audits passed but the new test used web’s French Next label; fixed to native catalogue Suivant. The new persistence method reached Round 2, current-lesson return and Previous with its original question/feedback intact; it failed only an incorrect isEnabled assertion because the existing AnswerChoiceButton freezes through allowsHitTesting/accessibilityRespondsToUserInteraction, not .disabled. Replaced this new-test assumption with selected-answer and Correct-feedback assertions. No app/audit/old helper/test changes. The three failed new methods are queued alone on iPhone, then all five new methods on iPad plus the unchanged 12 regressions/device. Final-source macOS results correct prior estimate: 14/14 PASS, including all 10 LocalizationCatalogTests and 4 quiz/model methods.
+
+iPhone 17 Pro: all five distinct new M1 methods PASS across initial/failing-only recheck, on unchanged final production source.
+- testM1QuizRoundsLightAndFullAccessibilityAudits: PASS 206.048s (phone-new.log)
+- testM1QuizRoundsDarkAndFullAccessibilityAudits: PASS 221.520s (phone-new.log)
+- testM1QuizRoundsFrenchLargestTypeLightAndFullAccessibilityAudits: PASS 387.343s (phone-new-r2.log)
+- testM1QuizRoundsFrenchLargestTypeDarkAndFullAccessibilityAudits: PASS 402.486s (phone-new-r2.log)
+- testM1QuizRoundsKeepHelpAnswersResumeAndOneSavedAttempt: PASS 399.061s (phone-new-r2.log).
+The latter uses the existing DEBUG six-item prefix to cross a real five-item section, check checkpoint score, Previous and frozen selection, current-lesson hint return without reopening a dismissed checkpoint, final 6/6 scoring, one saved attempt and two help flags after relaunch. Full 199-item uniqueness/order/coverage is verified by model/content tests and full 33-item web scoring/persistence. iPad five new tests and twelve unchanged regressions on each device remain queued. Logs, commands and xcresults: /tmp/task-46.8.1-runs.
 <!-- SECTION:NOTES:END -->
