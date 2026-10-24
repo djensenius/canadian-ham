@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-22 02:16'
-updated_date: '2026-10-24 22:42'
+updated_date: '2026-10-24 22:57'
 labels:
   - apple
   - testing
@@ -45,4 +45,6 @@ TASK-44.4 internal review noted that the reference-sheet integration is exercise
 Added three UI tests in CanadianHamExamToolsUITests: Basic mock light/running and dark/paused sheet flows plus Advanced/no-sheet/no-hints negative coverage. Basic fixtures answer two questions and remain on question 2/3, then exercise all five pages/back navigation, zoom in/out, accessible formula text and Study fallback before verifying question/answer/exam seed/answered count and timer continuity. Full-default audits use raw calls for official image/text and iPhone fallback, the unchanged TASK-44.4 reference-scroll helper only for iPad fallback, and the unchanged occluded mock-screen helper before/after. No existing tests, shared helpers or app source changed. Targeted iPhone/iPad, documented macOS units, l10n/text/guard checks are running via nohup (/tmp/task445-checks.log), one destination at a time; no full simulator suites or killed builds.
 
 First targeted iPhone attempt reached Study fallback but failed a new over-strict heading assertion: LessonMarkdownView intentionally suppresses a level-1 heading matching its supplied title. Corrected the new test to assert the actual accessible Study introduction and Ohm\x27s law heading instead. Official transcript title/formula assertions passed. This is a test-fixture correction, not an app bug; existing tests/helpers remain unchanged. The ongoing runner is not interrupted; iPad will build the correction, and only the two affected iPhone mock methods will be rerun.
+
+Source commit ebeedb0c (full SHA recorded at finalization) adds one block only: removing it restores the baseline CanadianHamExamToolsUITests.swift byte-for-byte, so every existing test/helper is unchanged. First iPhone existing reference regression results PASS: matrix 224.881s, medium 110.354s (5/6 already-approved findings), AX-XXXL 132.575s, Basic-only availability 18.713s; Advanced mock negative PASS 38.332s. Only the two new mock methods failed the intentionally omitted Study title expectation and are rerunning with the corrected actual introduction/Ohm's law assertion. The approved branch-diff guard passes with Test-guard-approved: owner decision 2026-10-12 (intentional new default audits and existing occlusion-helper call sites); no new measured-contrast or medium-detent exception scope. Future reviewer/PR must verify this marker and exact unchanged helper scope. No app bug found so far.
 <!-- SECTION:NOTES:END -->
