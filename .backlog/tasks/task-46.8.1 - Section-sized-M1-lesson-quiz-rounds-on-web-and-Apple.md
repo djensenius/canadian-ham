@@ -1,11 +1,11 @@
 ---
 id: TASK-46.8.1
 title: Section-sized M1 lesson quiz rounds on web and Apple
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-21 14:58'
-updated_date: '2026-10-24 21:53'
+updated_date: '2026-10-24 22:08'
 labels:
   - web
   - apple
@@ -417,10 +417,12 @@ Result: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-brprdowgzbm
 - CanadianHamExamToolsUITests/testM1QuizRoundsLightAndFullAccessibilityAudits: PASS (86.329s)
 
 Commands and selectors are retained verbatim in /tmp/task-46.8.1-review/apple.sh (nohup driver, one destination per command; grep polling; no builds killed). Per-test machine-readable evidence: /tmp/task-46.8.1-review/per-test-results.json. No full iOS/tvOS/visionOS suites were run. Full four-platform suites remain deferred per owner decision 2026-10-17 for the eventual merge batch because Models.swift is shared by all targets. macOS full units were explicitly requested and completed here. Final localization validation is still running/queued; it will be recorded separately.
+
+Review-follow-up final validation complete (2026-10-24): pnpm check:apple-l10n exit 0, complete French localization export, catalogue byte-unchanged, generic CanadianHamTV and CanadianHamVision builds both BUILD SUCCEEDED (apple-l10n.log). Final web build/dist URL+CSP audit, guard self-test and approved merge-base-to-HEAD diff, and git diff --check all exit 0 (other-final.log). Guard used Test-guard-approved: owner decision 2026-10-24 for the recorded coordinator widening; every pre-existing ExamTools test/helper suffix remains byte-identical to merge base 2269db4a8867cd280b0bf386656e5fab198cd5d7. All requested checks now pass: full macOS units 218/218, iPhone 17/17, iPad 17/17, content-tools 250, Morse 21, calculator 127, web 270, schemas 59. Commands and grep-polled nohup logs retained in /tmp/task-46.8.1-review; no other builds killed, no full iOS/tvOS/visionOS suites. Full suites stay deferred per owner decision 2026-10-17 for the eventual four-platform merge batch. Automated focus-routing/full audit coverage is recorded, not manual VoiceOver or a manual macOS window session. No PR opened. Ready for required independent review of follow-up commits before coordinator opens a PR.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented 24 bilingual, teaching-section-sized rounds across all six M1 quizzes, preserving all 199 official items, one session/attempt and existing seeded relative order/choice permutations. Explicit round metadata is schema-checked and validated against lesson heading order, exact titles and hint teaching anchors. Web and iOS/iPadOS/macOS now show round/question progress, accessible between-round score checkpoints and Continue, cross-round Previous/Next, native/web focus, and unchanged final submit/scoring/help/persistence/lesson-link resume. Non-M1 quizzes remain unchanged; tvOS/visionOS quiz UI is N/A by approved scope, with both shared-content builds passing. Validation: pnpm test and targeted partial-score/focus/EN-FR light/dark axe tests; schemas 59; content-swift 27; macOS 14 targeted units; iPhone 17/17 and iPad 17/17 distinct UI methods, including all 12 unchanged quiz/feedback regressions per device and new full light/dark/AX audits. Localization export is complete and catalogue unchanged; web build/URL+CSP, imports, links, text-source and approved test-guard checks pass. Per-test results/xcresult paths and original test-only fixes are recorded above. No old audit/helper/test weakening, no full Apple suites, no PR. No manual VoiceOver/macOS window session; automated native focus/AX and model/build coverage used. Done and ready for independent branch review; PR marker owner decision 2026-10-22 required.
+Implemented 24 bilingual teaching-section rounds across six M1 quizzes while retaining all 199 official items, seeded relative order/choice permutations, one session/attempt, scoring/help/persistence and lesson-link round trips. Applied all eight coordinator-approved review notes: dated M1 measured/occluded audit widening, interface-language round/checkpoint titles with EN fallback, round-transition-only focus (not initial/within-round/retry), web group timeout, accurate seeded-fixture comment, safe ungrouped fallback for concept checks, monotonic anchor-order validation, and deferred full-suite merge-batch record. New focus/fallback/order regressions pass; native EN/FR audits verify mismatched bank/UI languages. Final checks: pnpm test (content-tools 250, Morse 21, calculator 127, web 270), schemas 59, full documented macOS unit target 218, iPhone 17 targeted UI methods, iPad 17 targeted UI methods, l10n export plus generic tvOS/visionOS builds, text-source, typecheck, web build/URL-CSP and approved guard. All 252 Apple per-test results and xcresult paths are recorded above. No original ExamTools tests/helpers/audits weakened. Full Apple suites deferred per owner decision 2026-10-17 to eventual four-platform merge batch; tvOS/visionOS quiz UI N/A per approved scope. No manual VoiceOver/macOS window session, no PR; independent follow-up review remains required. Production fix 791e41c526eeb586655be110cb17c97158fab748, test-fixture correction 7ec2f938036a1b7a93fb3a98394efd8d4c22f281.
 <!-- SECTION:FINAL_SUMMARY:END -->
