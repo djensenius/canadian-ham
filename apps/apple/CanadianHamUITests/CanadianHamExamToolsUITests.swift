@@ -626,7 +626,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     func testReferenceSheetLargestDynamicTypeKeepsControlsReachable() throws {
-        let app = launchPracticeQuestion(extraArguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL", "-CanadianHamExamToolInitialDetent", "large"])
+        let app = launchPracticeQuestion(extraArguments: ["-AppleLanguages", "(en)", "-AppleLocale", "en_CA", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL", "-CanadianHamExamToolInitialDetent", "large"])
         defer { app.terminate() }
         openTool(.referenceSheet, in: app)
         let version = app.buttons["reference-sheet-version"].firstMatch
