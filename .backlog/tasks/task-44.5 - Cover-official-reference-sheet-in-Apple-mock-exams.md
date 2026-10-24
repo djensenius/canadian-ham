@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-22 02:16'
-updated_date: '2026-10-24 23:10'
+updated_date: '2026-10-24 23:20'
 labels:
   - apple
   - testing
@@ -37,6 +37,8 @@ TASK-44.4 internal review noted that the reference-sheet integration is exercise
 2. Add Basic mock light/dark official-sheet coverage for pages, zoom, accessible text, Study fallback, question/answer/progress preservation and running/paused timer continuity; add Advanced/no-hints negative coverage. Fix only app bugs demonstrated by these tests.
 3. Run targeted new and existing reference tests on iPhone 17 Pro and iPad Pro 13-inch (M5), the documented macOS unit command, l10n/text-source/test-guard checks via nohup and grep polling; no full simulator suites.
 4. Record per-test evidence, finalize all four criteria, commit and push the task branch without a PR.
+
+5. Coordinator-approved 2026-10-24 fix: change only exam-code caption weight to medium, preserve colour/size/text selection and all audit scopes. Retain before/after screenshots; rerun new mock flows and six existing mock-seed regressions on both requested devices. Stop/report if the fully visible caption is still flagged.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
