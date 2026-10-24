@@ -1,0 +1,498 @@
+{
+  "cases": [
+    {
+      "id": "first",
+      "orderedPools": [
+        {
+          "lessonId": "L-0",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-1",
+          "questionIds": [
+            "B-005-001-002",
+            "B-005-002-002"
+          ]
+        },
+        {
+          "lessonId": "L-2",
+          "questionIds": [
+            "B-005-001-003",
+            "B-005-002-003"
+          ]
+        },
+        {
+          "lessonId": "L-3",
+          "questionIds": [
+            "B-005-001-004",
+            "B-005-002-004"
+          ]
+        },
+        {
+          "lessonId": "L-4",
+          "questionIds": [
+            "B-005-001-005",
+            "B-005-002-005"
+          ]
+        },
+        {
+          "lessonId": "L-5",
+          "questionIds": [
+            "B-005-001-006",
+            "B-005-002-006"
+          ]
+        }
+      ],
+      "lessonId": "L-0",
+      "excludedQuestionIds": [],
+      "seed": "a",
+      "expected": []
+    },
+    {
+      "id": "unknown",
+      "orderedPools": [
+        {
+          "lessonId": "L-0",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-1",
+          "questionIds": [
+            "B-005-001-002",
+            "B-005-002-002"
+          ]
+        },
+        {
+          "lessonId": "L-2",
+          "questionIds": [
+            "B-005-001-003",
+            "B-005-002-003"
+          ]
+        },
+        {
+          "lessonId": "L-3",
+          "questionIds": [
+            "B-005-001-004",
+            "B-005-002-004"
+          ]
+        },
+        {
+          "lessonId": "L-4",
+          "questionIds": [
+            "B-005-001-005",
+            "B-005-002-005"
+          ]
+        },
+        {
+          "lessonId": "L-5",
+          "questionIds": [
+            "B-005-001-006",
+            "B-005-002-006"
+          ]
+        }
+      ],
+      "lessonId": "missing",
+      "excludedQuestionIds": [],
+      "seed": "a",
+      "expected": []
+    },
+    {
+      "id": "recent",
+      "orderedPools": [
+        {
+          "lessonId": "L-0",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-1",
+          "questionIds": [
+            "B-005-001-002",
+            "B-005-002-002"
+          ]
+        },
+        {
+          "lessonId": "L-2",
+          "questionIds": [
+            "B-005-001-003",
+            "B-005-002-003"
+          ]
+        },
+        {
+          "lessonId": "L-3",
+          "questionIds": [
+            "B-005-001-004",
+            "B-005-002-004"
+          ]
+        },
+        {
+          "lessonId": "L-4",
+          "questionIds": [
+            "B-005-001-005",
+            "B-005-002-005"
+          ]
+        },
+        {
+          "lessonId": "L-5",
+          "questionIds": [
+            "B-005-001-006",
+            "B-005-002-006"
+          ]
+        }
+      ],
+      "lessonId": "L-5",
+      "excludedQuestionIds": [],
+      "seed": "a",
+      "expected": [
+        {
+          "lessonId": "L-4",
+          "questionId": "B-005-002-005"
+        },
+        {
+          "lessonId": "L-4",
+          "questionId": "B-005-001-005"
+        }
+      ]
+    },
+    {
+      "id": "other-seed",
+      "orderedPools": [
+        {
+          "lessonId": "L-0",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-1",
+          "questionIds": [
+            "B-005-001-002",
+            "B-005-002-002"
+          ]
+        },
+        {
+          "lessonId": "L-2",
+          "questionIds": [
+            "B-005-001-003",
+            "B-005-002-003"
+          ]
+        },
+        {
+          "lessonId": "L-3",
+          "questionIds": [
+            "B-005-001-004",
+            "B-005-002-004"
+          ]
+        },
+        {
+          "lessonId": "L-4",
+          "questionIds": [
+            "B-005-001-005",
+            "B-005-002-005"
+          ]
+        },
+        {
+          "lessonId": "L-5",
+          "questionIds": [
+            "B-005-001-006",
+            "B-005-002-006"
+          ]
+        }
+      ],
+      "lessonId": "L-5",
+      "excludedQuestionIds": [],
+      "seed": "b",
+      "expected": [
+        {
+          "lessonId": "L-2",
+          "questionId": "B-005-001-003"
+        },
+        {
+          "lessonId": "L-4",
+          "questionId": "B-005-001-005"
+        }
+      ]
+    },
+    {
+      "id": "fallback",
+      "orderedPools": [
+        {
+          "lessonId": "L-0",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-1",
+          "questionIds": [
+            "B-005-001-002",
+            "B-005-002-002"
+          ]
+        },
+        {
+          "lessonId": "L-2",
+          "questionIds": [
+            "B-005-001-003",
+            "B-005-002-003"
+          ]
+        },
+        {
+          "lessonId": "L-3",
+          "questionIds": [
+            "B-005-001-004",
+            "B-005-002-004"
+          ]
+        },
+        {
+          "lessonId": "L-4",
+          "questionIds": [
+            "B-005-001-005",
+            "B-005-002-005"
+          ]
+        },
+        {
+          "lessonId": "L-5",
+          "questionIds": [
+            "B-005-001-006",
+            "B-005-002-006"
+          ]
+        }
+      ],
+      "lessonId": "L-5",
+      "excludedQuestionIds": [
+        "B-005-001-003",
+        "B-005-002-003",
+        "B-005-001-004",
+        "B-005-002-004",
+        "B-005-001-005",
+        "B-005-002-005"
+      ],
+      "seed": "a",
+      "expected": [
+        {
+          "lessonId": "L-0",
+          "questionId": "B-005-001-001"
+        },
+        {
+          "lessonId": "L-1",
+          "questionId": "B-005-002-002"
+        }
+      ]
+    },
+    {
+      "id": "one",
+      "orderedPools": [
+        {
+          "lessonId": "one",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-001-001"
+          ]
+        },
+        {
+          "lessonId": "two",
+          "questionIds": []
+        }
+      ],
+      "lessonId": "two",
+      "excludedQuestionIds": [],
+      "seed": "a",
+      "expected": [
+        {
+          "lessonId": "one",
+          "questionId": "B-005-001-001"
+        }
+      ]
+    },
+    {
+      "id": "empty",
+      "orderedPools": [
+        {
+          "lessonId": "L-0",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-1",
+          "questionIds": [
+            "B-005-001-002",
+            "B-005-002-002"
+          ]
+        },
+        {
+          "lessonId": "L-2",
+          "questionIds": [
+            "B-005-001-003",
+            "B-005-002-003"
+          ]
+        },
+        {
+          "lessonId": "L-3",
+          "questionIds": [
+            "B-005-001-004",
+            "B-005-002-004"
+          ]
+        },
+        {
+          "lessonId": "L-4",
+          "questionIds": [
+            "B-005-001-005",
+            "B-005-002-005"
+          ]
+        },
+        {
+          "lessonId": "L-5",
+          "questionIds": [
+            "B-005-001-006",
+            "B-005-002-006"
+          ]
+        }
+      ],
+      "lessonId": "L-1",
+      "excludedQuestionIds": [
+        "B-005-001-001",
+        "B-005-002-001"
+      ],
+      "seed": "a",
+      "expected": []
+    },
+    {
+      "id": "duplicate-nearest",
+      "orderedPools": [
+        {
+          "lessonId": "L-0",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-1",
+          "questionIds": [
+            "B-005-001-002",
+            "B-005-002-002"
+          ]
+        },
+        {
+          "lessonId": "L-2",
+          "questionIds": [
+            "B-005-001-003",
+            "B-005-002-003"
+          ]
+        },
+        {
+          "lessonId": "L-3",
+          "questionIds": [
+            "B-005-001-004",
+            "B-005-002-004"
+          ]
+        },
+        {
+          "lessonId": "L-4",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-5",
+          "questionIds": [
+            "B-005-001-006",
+            "B-005-002-006"
+          ]
+        }
+      ],
+      "lessonId": "L-5",
+      "excludedQuestionIds": [],
+      "seed": "é",
+      "expected": [
+        {
+          "lessonId": "L-4",
+          "questionId": "B-005-002-001"
+        },
+        {
+          "lessonId": "L-3",
+          "questionId": "B-005-001-004"
+        }
+      ]
+    },
+    {
+      "id": "recent-plus-fallback",
+      "orderedPools": [
+        {
+          "lessonId": "L-0",
+          "questionIds": [
+            "B-005-001-001",
+            "B-005-002-001"
+          ]
+        },
+        {
+          "lessonId": "L-1",
+          "questionIds": [
+            "B-005-001-002",
+            "B-005-002-002"
+          ]
+        },
+        {
+          "lessonId": "L-2",
+          "questionIds": [
+            "B-005-001-003",
+            "B-005-002-003"
+          ]
+        },
+        {
+          "lessonId": "L-3",
+          "questionIds": [
+            "B-005-001-004",
+            "B-005-002-004"
+          ]
+        },
+        {
+          "lessonId": "L-4",
+          "questionIds": [
+            "B-005-001-005",
+            "B-005-002-005"
+          ]
+        },
+        {
+          "lessonId": "L-5",
+          "questionIds": [
+            "B-005-001-006",
+            "B-005-002-006"
+          ]
+        }
+      ],
+      "lessonId": "L-5",
+      "excludedQuestionIds": [
+        "B-005-002-003",
+        "B-005-001-004",
+        "B-005-002-004",
+        "B-005-001-005",
+        "B-005-002-005"
+      ],
+      "seed": "a",
+      "expected": [
+        {
+          "lessonId": "L-2",
+          "questionId": "B-005-001-003"
+        },
+        {
+          "lessonId": "L-0",
+          "questionId": "B-005-001-001"
+        }
+      ]
+    }
+  ]
+}

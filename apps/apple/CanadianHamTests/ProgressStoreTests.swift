@@ -12,6 +12,69 @@ import AppKit
 
 @MainActor
 final class ProgressStoreTests: XCTestCase {
+    func testReviewItemsUseEarlierTaughtPoolsAndFinalM1Round() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let ordered = library.orderedLessons()
+        for quiz in library.quizzesById.values {
+            let items = try buildLessonQuizItems(quiz: quiz, seed: "review-integration", library: library)
+            XCTAssertEqual(items, try buildLessonQuizItems(quiz: quiz, seed: "review-integration", library: library))
+            let reviews = items.filter { $0.reviewLessonId != nil }
+            XCTAssertEqual(reviews.count, quiz.lessonId == ordered.first?.id ? 0 : 2, quiz.id)
+            let index = try XCTUnwrap(ordered.firstIndex { $0.id == quiz.lessonId })
+            for review in reviews {
+                let sourceId = try XCTUnwrap(review.reviewLessonId)
+                XCTAssertLessThan(try XCTUnwrap(ordered.firstIndex { $0.id == sourceId }), index)
+                let questionId = try XCTUnwrap(review.questionID)
+                let question = try XCTUnwrap(library.questions.first { $0.id == questionId })
+                XCTAssertTrue(try XCTUnwrap(library.lessonsById[sourceId]).covers.contains(question.subsectionId))
+                XCTAssertFalse(try XCTUnwrap(library.lessonsById[quiz.lessonId]).covers.contains(question.subsectionId))
+                XCTAssertFalse(quiz.officialQuestionIds.contains(questionId))
+            }
+            if let rounds = quiz.rounds {
+                let round = try XCTUnwrap(lessonQuizRoundProgress(quiz: quiz, items: items, currentIndex: items.count - 1))
+                XCTAssertEqual(round.round.title.en, "Review")
+                XCTAssertEqual(round.round.title.fr, "Révision")
+                XCTAssertEqual(round.questionCount, 2)
+                XCTAssertEqual(round.roundCount, rounds.count + 1)
+            }
+        }
+    }
+
+    func testReviewAttemptPayloadImportSyncAndLegacyVersionRejection() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let attempt = LessonQuizAttempt(
+            id: "review-attempt", quizId: "QZ-L-005-02-A", lessonId: "L-005-02",
+            submittedAt: "2026-01-02T03:45:00.000Z", correct: 1, total: 2, percent: 50,
+            officialQuestionIds: ["B-005-004-001"], incorrectOfficialQuestionIds: ["B-005-001-001"],
+            incorrectConceptCheckIds: [], answeredWithHelpIds: ["B-005-001-001"], reviewQuestionIds: ["B-005-001-001"]
+        )
+        XCTAssertEqual(try JSONDecoder().decode(LessonQuizAttempt.self, from: JSONEncoder().encode(attempt)), attempt)
+        try store.saveLessonQuizAttempt(attempt, questionProgress: [])
+        XCTAssertEqual(try store.lessonQuizAttempts(), [attempt])
+        let exported = try store.exportData(bank: bank, exportedAt: "2026-01-04T00:00:00.000Z")
+        let target = try ProgressStoreService.inMemoryForTests()
+        try target.importData(exported, bank: bank)
+        XCTAssertEqual(try target.lessonQuizAttempts(), [attempt])
+        var json = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(exported)) as? [String: Any])
+        json.removeValue(forKey: "syncDeviceRows")
+        for version in [nil, 1, 2] as [Int?] {
+            json["lessonIdVersion"] = version
+            let imported = try JSONDecoder().decode(ProgressExportV1.self, from: JSONSerialization.data(withJSONObject: json))
+            XCTAssertEqual(store.validate(imported, bank: bank).isEmpty, version == 2)
+            if version != 2 { XCTAssertThrowsError(try target.importData(imported, bank: bank)) }
+        }
+        var payload = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(attempt)) as? [String: Any])
+        let invalidIds: [Any] = [["B-005-001-001", "B-005-001-001"], ["B-005-004-001"], ["QZ-L-005-01-A-C1"], NSNull()]
+        for ids in invalidIds {
+            payload["reviewQuestionIds"] = ids
+            XCTAssertThrowsError(try JSONDecoder().decode(LessonQuizAttempt.self, from: JSONSerialization.data(withJSONObject: payload)))
+        }
+        payload.removeValue(forKey: "reviewQuestionIds")
+        payload.removeValue(forKey: "answeredWithHelpIds")
+        XCTAssertNil(try JSONDecoder().decode(LessonQuizAttempt.self, from: JSONSerialization.data(withJSONObject: payload)).reviewQuestionIds)
+    }
+
     func testM1QuizRoundsRetainEveryItemAndSeededOrderWithinTeachingSections() throws {
         let library = try ContentLibrary.load(from: Bundle(for: Self.self))
         var total = 0

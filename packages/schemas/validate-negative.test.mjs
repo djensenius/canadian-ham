@@ -356,3 +356,21 @@ test("lesson-quiz help IDs are optional sorted unique official subsets in attemp
     }
   }
 });
+
+test("review IDs are optional sorted disjoint official IDs; union help is allowed only in version 2", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(projectRoot, "fixtures/lesson-quiz-help.json"), "utf8"));
+  const reviewId = "B-004-001-001";
+  const base = { ...fixture.attempt, reviewQuestionIds: [reviewId], answeredWithHelpIds: [reviewId], incorrectOfficialQuestionIds: [reviewId] };
+  for (const [reviewQuestionIds, valid] of [[[reviewId], true], [[], false], [[reviewId, reviewId], false], [[base.officialQuestionIds[0]], false], [["QZ-L-005-01-A-C1"], false], [null, false], [["B-005-001-999", reviewId], false]]) {
+    for (const version of [undefined, 1, 2]) {
+      const attempt = { ...base, reviewQuestionIds };
+      for (const sync of [false, true]) {
+        const data = { ...validProgressExport, lessonIdVersion: version, ...(sync
+          ? { syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: version, attempt }], morseCourseProgress: [] } }
+          : { lessonQuizAttempts: [attempt] }) };
+        const errors = validateDataAgainstSchema(data, "progress-export-v1.schema.json");
+        assert.equal(errors.length === 0, valid && version === 2, errors.join("\n"));
+      }
+    }
+  }
+});

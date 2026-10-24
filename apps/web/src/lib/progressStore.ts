@@ -74,6 +74,7 @@ export interface LessonQuizAttempt {
   readonly incorrectOfficialQuestionIds: readonly string[];
   readonly incorrectConceptCheckIds: readonly string[];
   readonly answeredWithHelpIds?: readonly string[];
+  readonly reviewQuestionIds?: readonly string[];
 }
 
 export interface DeviceQuestionProgressRecord {
@@ -1250,19 +1251,25 @@ function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData
     : legacyMembership.officialQuestionIds.includes(id))) {
     errors.push(`${prefix}.officialQuestionIds must belong to the lesson quiz.`);
   }
+  const reviewQuestionIds = isKnownQuestionIdArray(value.reviewQuestionIds, bank) ? value.reviewQuestionIds : [];
+  if (value.reviewQuestionIds !== undefined && (!isKnownQuestionIdArray(value.reviewQuestionIds, bank)
+    || !reviewQuestionIds.every((id, index, ids) => Array.isArray(value.officialQuestionIds) && !value.officialQuestionIds.includes(id) && (index === 0 || ids[index - 1]! < id))
+    || (legacyLessonIds && reviewQuestionIds.length > 0))) {
+    errors.push(`${prefix}.reviewQuestionIds must be sorted unique known official IDs outside officialQuestionIds, and require lessonIdVersion 2.`);
+  }
   if (!isKnownQuestionIdArray(value.incorrectOfficialQuestionIds, bank)) {
     errors.push(`${prefix}.incorrectOfficialQuestionIds must contain known question IDs.`);
   } else if (Array.isArray(value.officialQuestionIds) && value.officialQuestionIds.every((id) => typeof id === "string")) {
-    const officialQuestionIds = new Set(value.officialQuestionIds);
+    const officialQuestionIds = new Set([...value.officialQuestionIds, ...reviewQuestionIds]);
     if (!value.incorrectOfficialQuestionIds.every((id) => officialQuestionIds.has(id))) {
-      errors.push(`${prefix}.incorrectOfficialQuestionIds must be a subset of officialQuestionIds.`);
+      errors.push(`${prefix}.incorrectOfficialQuestionIds must be a subset of officialQuestionIds and reviewQuestionIds.`);
     }
   }
   if (value.answeredWithHelpIds !== undefined) {
     if (!isKnownQuestionIdArray(value.answeredWithHelpIds, bank)
       || !value.answeredWithHelpIds.every((id, index, ids) => Array.isArray(value.officialQuestionIds)
-        && value.officialQuestionIds.includes(id) && (index === 0 || ids[index - 1]! < id))) {
-      errors.push(`${prefix}.answeredWithHelpIds must be sorted, unique and a subset of officialQuestionIds.`);
+        && (value.officialQuestionIds.includes(id) || reviewQuestionIds.includes(id)) && (index === 0 || ids[index - 1]! < id))) {
+      errors.push(`${prefix}.answeredWithHelpIds must be sorted, unique and a subset of officialQuestionIds and reviewQuestionIds.`);
     }
   }
   if (!Array.isArray(value.incorrectConceptCheckIds) || !value.incorrectConceptCheckIds.every((id) => typeof id === "string" && (quiz === undefined || (legacyMembership === undefined

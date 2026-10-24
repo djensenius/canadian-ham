@@ -128,11 +128,11 @@ interface LessonQuizSession {
   readonly answeredWithHelpIds: ReadonlySet<string>;
 }
 
-function createLessonQuizSession(quiz: LessonQuiz, seed: string): LessonQuizSession {
+function createLessonQuizSession(quiz: LessonQuiz, seed: string, questions: readonly Question[]): LessonQuizSession {
   return {
     checkpointVisible: false,
     seed,
-    items: buildLessonQuizItems(quiz, seed),
+    items: buildLessonQuizItems(quiz, seed, questions),
     currentIndex: 0,
     selectedByItemId: new Map(),
     submittedAttemptId: null,
@@ -1238,7 +1238,7 @@ interface LessonQuizViewProps {
 }
 
 function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestionsById, progress, attempts, now, onQuizAttempt, session: storedSession, onSessionChange, onOpenHintLesson }: LessonQuizViewProps) {
-  const [initialSession] = useState(() => createLessonQuizSession(quiz, `${quiz.id}:${Date.now().toString(36)}`));
+  const [initialSession] = useState(() => createLessonQuizSession(quiz, `${quiz.id}:${Date.now().toString(36)}`, [...bankQuestionsById.values()]));
   const session = storedSession ?? initialSession;
   const { seed, items, currentIndex, selectedByItemId, submittedAttemptId } = session;
   const currentItem = items[currentIndex];
@@ -1274,7 +1274,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
 
   function restart(): void {
     const nextSeed = `${quiz.id}:${Date.now().toString(36)}:${attempts.length + 1}`;
-    onSessionChange(() => createLessonQuizSession(quiz, nextSeed));
+    onSessionChange(() => createLessonQuizSession(quiz, nextSeed, [...bankQuestionsById.values()]));
   }
 
   function selectCurrent(displayIndex: number): void {
@@ -1297,13 +1297,14 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
     let correct = 0;
     let nextProgress = progress;
     const officialQuestionIds: string[] = [];
+    const reviewQuestionIds: string[] = [];
     const incorrectOfficialQuestionIds: string[] = [];
     const incorrectConceptCheckIds: string[] = [];
     const submittedAt = now();
     for (const item of items) {
       const selected = selectedByItemId.get(item.id);
       if (item.type === "official") {
-        officialQuestionIds.push(item.questionId);
+        (item.reviewLessonId === undefined ? officialQuestionIds : reviewQuestionIds).push(item.questionId);
         if (selected === 0) {
           correct += 1;
         } else {
@@ -1330,6 +1331,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
       total: items.length,
       percent: items.length === 0 ? 0 : (correct / items.length) * 100,
       officialQuestionIds,
+      reviewQuestionIds: reviewQuestionIds.sort(),
       incorrectOfficialQuestionIds,
       incorrectConceptCheckIds,
       answeredWithHelpIds: [...session.answeredWithHelpIds].sort(),
@@ -1367,6 +1369,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
       ) : (
         <>
           {roundProgress === undefined ? null : <h4 ref={roundHeadingRef} tabIndex={-1}>{t(interfaceLanguage, "lessonQuizRound", roundProgress.roundIndex + 1, roundProgress.roundCount, roundProgress.round.title[interfaceLanguage] ?? roundProgress.round.title.en)}</h4>}
+          {currentItem.type === "official" && currentItem.reviewLessonId !== undefined ? <h4>{t(interfaceLanguage, "lessonQuizReviewFrom", lessonsById.get(currentItem.reviewLessonId)?.title[interfaceLanguage] ?? lessonsById.get(currentItem.reviewLessonId)?.title.en ?? currentItem.reviewLessonId)}</h4> : null}
           <p>{t(interfaceLanguage, "questionProgress", roundProgress === undefined ? currentIndex + 1 : currentIndex - roundProgress.startIndex + 1, roundProgress?.questionCount ?? items.length)}</p>
           <ExamTools
             context="lesson-quiz"

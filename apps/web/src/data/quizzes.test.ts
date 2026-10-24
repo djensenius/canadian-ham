@@ -66,3 +66,32 @@ describe("M1 teaching-section rounds", () => {
     assert.equal(lessonQuizRoundProgress(quiz, buildLessonQuizItems(quiz, "legacy"), 0), undefined);
   });
 });
+
+import { loadQuestions } from "./bank";
+import { orderedLessons, lessonsById } from "./lessons";
+
+it("adds two deterministic taught-pool reviews after the first lesson, excluding current taught questions", async () => {
+  const questions = await loadQuestions();
+  const ordered = orderedLessons();
+  for (const quiz of lessonQuizzes) {
+    const items = buildLessonQuizItems(quiz, "review-integration", questions);
+    const reviews = items.filter((item) => item.type === "official" && item.reviewLessonId !== undefined);
+    assert.equal(reviews.length, quiz.lessonId === ordered[0]!.id ? 0 : 2, quiz.id);
+    assert.deepEqual(items, buildLessonQuizItems(quiz, "review-integration", questions));
+    for (const item of reviews) {
+      assert.ok(item.type === "official" && item.reviewLessonId !== undefined);
+      assert.ok(ordered.findIndex((lesson) => lesson.id === item.reviewLessonId) < ordered.findIndex((lesson) => lesson.id === quiz.lessonId));
+      const question = questions.find((question) => question.id === item.questionId)!;
+      assert.ok(lessonsById.get(item.reviewLessonId)!.covers.includes(question.subsectionId));
+      assert.ok(!lessonsById.get(quiz.lessonId)!.covers.includes(question.subsectionId));
+      assert.ok(!quiz.officialQuestionIds.includes(item.questionId));
+    }
+    if (quiz.rounds) {
+      const round = lessonQuizRoundProgress(quiz, items, items.length - 1)!;
+      assert.equal(round.round.title.en, "Review");
+      assert.equal(round.round.title.fr, "Révision");
+      assert.equal(round.questionCount, 2);
+      assert.equal(round.roundCount, quiz.rounds.length + 1);
+    }
+  }
+});

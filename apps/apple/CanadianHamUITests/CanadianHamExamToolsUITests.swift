@@ -18,6 +18,131 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try super.tearDownWithError()
     }
 
+    func testReviewItemsEnglishLightAccessibility() throws {
+        try verifyReviewItemAccessibility(appearance: "light", french: false)
+    }
+
+    func testReviewItemsEnglishDarkAccessibility() throws {
+        try verifyReviewItemAccessibility(appearance: "dark", french: false)
+    }
+
+    func testReviewItemsFrenchLargestTypeLightAccessibility() throws {
+        try verifyReviewItemAccessibility(appearance: "light", french: true)
+    }
+
+    func testReviewItemsFrenchLargestTypeDarkAccessibility() throws {
+        try verifyReviewItemAccessibility(appearance: "dark", french: true)
+    }
+
+    private func launchReviewItems(appearance: String = "light", french: Bool = false) -> XCUIApplication {
+        var arguments = [
+            "-CanadianHamInitialLessonQuizID", "QZ-L-001-01-A",
+            "-CanadianHamLessonQuizCoreLimit", "1", "-CanadianHamLessonQuizSeed", "review-items",
+            "-CanadianHamExamToolInitialDetent", "large",
+            "-AppleLanguages", french ? "(fr)" : "(en)", "-AppleLocale", french ? "fr_CA" : "en_CA"
+        ]
+        if french { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
+        return launchApp(appearance: appearance, arguments: arguments)
+    }
+
+    private func enterReviewRound(in app: XCUIApplication, french: Bool = false) {
+        let next = app.buttons[french ? "Suivant" : "Next"].firstMatch
+        XCTAssertTrue(next.waitForExistence(timeout: 10))
+        positionConceptFeedback([next], in: app)
+        next.tap()
+        let checkpoint = app.staticTexts["lesson-quiz-round-checkpoint"].firstMatch
+        XCTAssertTrue(checkpoint.waitForExistence(timeout: 5))
+        let continueButton = app.buttons["lesson-quiz-round-continue"].firstMatch
+        positionConceptFeedback([continueButton], in: app)
+        continueButton.tap()
+        XCTAssertTrue(app.staticTexts["lesson-quiz-review-heading"].firstMatch.waitForExistence(timeout: 5))
+    }
+
+    private func verifyReviewItemAccessibility(appearance: String, french: Bool) throws {
+        let app = launchReviewItems(appearance: appearance, french: french)
+        defer { app.terminate() }
+        enterReviewRound(in: app, french: french)
+        let heading = app.staticTexts["lesson-quiz-review-heading"].firstMatch
+        XCTAssertTrue(heading.label.hasPrefix(french ? "Question de révision de " : "Review question from "))
+        let roundHeading = app.staticTexts["lesson-quiz-round-heading"].firstMatch
+        XCTAssertTrue(roundHeading.label.hasSuffix(french ? "Révision" : "Review"))
+        positionConceptFeedback([heading], in: app)
+        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: true))
+        // Coordinator decision 2026-10-24, AGENTS.md TASK-46.7, under owner delegation 2026-10-22.
+        // The existing TASK-71/73 occluded-or-measured composite and every existing audit stay unchanged.
+        try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
+        openTool(.hint, in: app)
+        let reveal = app.buttons["hint-show-level-1-button"].firstMatch
+        XCTAssertTrue(reveal.waitForExistence(timeout: 5))
+        reveal.tap()
+        waitBriefly(0.8)
+        try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
+        closeTool(in: app)
+        let answer = app.buttons["answer-A-button"].firstMatch
+        positionConceptFeedback([answer], in: app)
+        answer.tap()
+        XCTAssertTrue(app.staticTexts["lesson-quiz-with-help-marker"].firstMatch.waitForExistence(timeout: 5))
+        let feedback = app.staticTexts["answer-feedback-title"].firstMatch
+        positionConceptFeedback([feedback], in: app)
+        try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
+        XCTAssertFalse(app.buttons["submit-lesson-quiz-button"].firstMatch.isEnabled)
+    }
+
+    func testReviewItemsOwnLessonResumeScoreHelpAndPersistence() throws {
+        var app = launchReviewItems()
+        let coreAnswer = app.buttons["answer-A-button"].firstMatch
+        XCTAssertTrue(coreAnswer.waitForExistence(timeout: 10))
+        positionConceptFeedback([coreAnswer], in: app)
+        coreAnswer.tap()
+        enterReviewRound(in: app)
+        let id = app.staticTexts["question-identifier"].firstMatch.label
+        let heading = app.staticTexts["lesson-quiz-review-heading"].firstMatch.label
+        openTool(.hint, in: app)
+        let reveal = app.buttons["hint-show-level-1-button"].firstMatch
+        XCTAssertTrue(reveal.waitForExistence(timeout: 5))
+        reveal.tap()
+        waitBriefly(0.8)
+        let level2 = app.buttons["hint-show-level-2-button"].firstMatch
+        if level2.exists { scrollExamToolUntilHittable(level2, in: app, maxSwipes: 8); level2.tap() }
+        let link = app.buttons["hint-review-in-lesson-button"].firstMatch
+        scrollExamToolUntilHittable(link, in: app, maxSwipes: 12)
+        link.tap()
+        XCTAssertFalse(app.staticTexts["lesson-quiz-review-heading"].firstMatch.exists)
+        app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.staticTexts["lesson-quiz-review-heading"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-review-heading"].firstMatch.label, heading)
+        XCTAssertEqual(app.staticTexts["question-identifier"].firstMatch.label, id)
+        XCTAssertFalse(app.staticTexts["lesson-quiz-round-checkpoint"].exists)
+        let firstAnswer = app.buttons["answer-A-button"].firstMatch
+        positionConceptFeedback([firstAnswer], in: app)
+        firstAnswer.tap()
+        XCTAssertTrue(app.staticTexts["lesson-quiz-with-help-marker"].firstMatch.exists)
+        let next = app.buttons["Next"].firstMatch
+        positionConceptFeedback([next], in: app)
+        next.tap()
+        XCTAssertNotEqual(app.staticTexts["question-identifier"].firstMatch.label, id)
+        let secondAnswer = app.buttons["answer-A-button"].firstMatch
+        positionConceptFeedback([secondAnswer], in: app)
+        secondAnswer.tap()
+        let submit = app.buttons["submit-lesson-quiz-button"].firstMatch
+        positionConceptFeedback([submit], in: app)
+        XCTAssertTrue(submit.isEnabled)
+        submit.tap()
+        let latest = app.staticTexts["lesson-quiz-latest-score"].firstMatch
+        XCTAssertTrue(latest.waitForExistence(timeout: 10))
+        XCTAssertTrue(latest.label.contains("/ 3"))
+        XCTAssertTrue(latest.label.contains("Attempts saved: 1."))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
+        app.terminate()
+        app = XCUIApplication()
+        app.launchArguments = ["-CanadianHamInitialLessonQuizID", "QZ-L-001-01-A", "-AppleLanguages", "(en)"]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.label.contains("Attempts saved: 1."))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 1.")
+    }
+
     func testM1QuizRoundsLightAndFullAccessibilityAudits() throws {
         try verifyM1RoundAccessibility(appearance: "light", french: false, largestType: false)
     }

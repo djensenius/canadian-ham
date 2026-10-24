@@ -867,6 +867,13 @@ private struct LessonQuizView: View {
                         .accessibilityFocused($roundFocus, equals: .question)
                         .id("lesson-quiz-position")
                 }
+                if let reviewLessonId = item.reviewLessonId, let reviewLesson = library.lessonsById[reviewLessonId] {
+                    Text("Review question from \(reviewLesson.title.textAndLanguage(for: canadianHamUsesFrenchUI ? .french : .english).text)") // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("lesson-quiz-review-heading")
+                }
                 Text("Question \(currentIndex - (roundProgress?.startIndex ?? 0) + 1) of \(roundProgress?.questionCount ?? items.count)") // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.ink)
@@ -1035,7 +1042,7 @@ private struct LessonQuizView: View {
             seed = "lesson-quiz/\(quiz.id)/\(attempts.count + 1)/\(UUID().uuidString)"
         }
         do {
-            items = try buildLessonQuizItems(quiz: quiz, seed: seed)
+            items = try buildLessonQuizItems(quiz: quiz, seed: seed, library: library)
             currentIndex = 0
             state.checkpointVisible = false
             selectedByItemId = [:]
@@ -1056,6 +1063,7 @@ private struct LessonQuizView: View {
             let submittedAt = try AppleStudyEngine.canonicalNow()
             var correct = 0
             var officialQuestionIds: [String] = []
+            var reviewQuestionIds: [String] = []
             var incorrectOfficialQuestionIds: [String] = []
             var incorrectConceptCheckIds: [String] = []
             var progress = try progressStore.questionProgressRecords()
@@ -1063,8 +1071,8 @@ private struct LessonQuizView: View {
             for item in items {
                 guard let selected = selectedByItemId[item.id] else { continue }
                 switch item {
-                case .official(_, let questionId, _):
-                    officialQuestionIds.append(questionId)
+                case .official(_, let questionId, _, let reviewLessonId):
+                    if reviewLessonId == nil { officialQuestionIds.append(questionId) } else { reviewQuestionIds.append(questionId) }
                     if selected == 0 {
                         correct += 1
                     } else {
@@ -1093,7 +1101,8 @@ private struct LessonQuizView: View {
                 officialQuestionIds: officialQuestionIds,
                 incorrectOfficialQuestionIds: incorrectOfficialQuestionIds,
                 incorrectConceptCheckIds: incorrectConceptCheckIds,
-                answeredWithHelpIds: state.answeredWithHelpIds.sorted()
+                answeredWithHelpIds: state.answeredWithHelpIds.sorted(),
+                reviewQuestionIds: reviewQuestionIds.sorted()
             )
             try progressStore.saveLessonQuizAttempt(attempt, questionProgress: progress)
             submittedAttemptID = attempt.id
@@ -1106,17 +1115,22 @@ private struct LessonQuizView: View {
 }
 
 enum LessonQuizRuntimeItem: Identifiable, Equatable {
-    case official(id: String, questionId: String, choicePermutation: [Int])
+    case official(id: String, questionId: String, choicePermutation: [Int], reviewLessonId: String? = nil)
     case concept(id: String, conceptCheck: ConceptCheck, choicePermutation: [Int])
 
     var id: String {
         switch self {
-        case .official(let id, _, _), .concept(let id, _, _): id
+        case .official(let id, _, _, _), .concept(let id, _, _): id
         }
     }
 
+    var reviewLessonId: String? {
+        if case .official(_, _, _, let lessonId) = self { return lessonId }
+        return nil
+    }
+
     var questionID: String? {
-        if case .official(_, let questionID, _) = self { return questionID }
+        if case .official(_, let questionID, _, _) = self { return questionID }
         return nil
     }
 }
@@ -1144,8 +1158,12 @@ struct LessonQuizRoundProgress {
 }
 
 func lessonQuizRoundProgress(quiz: LessonQuiz, items: [LessonQuizRuntimeItem], currentIndex: Int) -> LessonQuizRoundProgress? {
-    guard quiz.conceptChecks.isEmpty, let id = items[safe: currentIndex]?.questionID, let rounds = quiz.rounds,
-          let roundIndex = rounds.firstIndex(where: { $0.officialQuestionIds.contains(id) }) else { return nil }
+    guard quiz.conceptChecks.isEmpty, let id = items[safe: currentIndex]?.questionID, var rounds = quiz.rounds else { return nil }
+    let reviewIds = items.filter { $0.reviewLessonId != nil }.compactMap(\.questionID)
+    if !reviewIds.isEmpty {
+        rounds.append(LessonQuizRound(sectionAnchor: "review", title: LocalizedNullableText(en: "Review", fr: "Révision"), officialQuestionIds: reviewIds))
+    }
+    guard let roundIndex = rounds.firstIndex(where: { $0.officialQuestionIds.contains(id) }) else { return nil }
     let round = rounds[roundIndex]
     let indices = items.indices.filter { index in
         items[index].questionID.map { round.officialQuestionIds.contains($0) } ?? false
@@ -1154,7 +1172,7 @@ func lessonQuizRoundProgress(quiz: LessonQuiz, items: [LessonQuizRuntimeItem], c
     return LessonQuizRoundProgress(round: round, roundIndex: roundIndex, roundCount: rounds.count, startIndex: startIndex, endIndex: endIndex)
 }
 
-func buildLessonQuizItems(quiz: LessonQuiz, seed: String) throws -> [LessonQuizRuntimeItem] {
+func buildLessonQuizItems(quiz: LessonQuiz, seed: String, library: ContentLibrary? = nil) throws -> [LessonQuizRuntimeItem] {
     let official = try quiz.officialQuestionIds.enumerated().map { index, questionId in
         var rng = Pcg32(seed: "\(seed):official:\(index):\(questionId)")
         return LessonQuizRuntimeItem.official(
@@ -1174,11 +1192,28 @@ func buildLessonQuizItems(quiz: LessonQuiz, seed: String) throws -> [LessonQuizR
     var rng = Pcg32(seed: "\(seed):items:\(quiz.id)")
     let seededItems = try CanadianHamEngine.shuffled(official + concepts, rng: &rng)
     // Group the existing seeded order without changing choice permutations.
-    let shuffled = (quiz.conceptChecks.isEmpty ? quiz.rounds : nil).map { rounds in
+    var shuffled = (quiz.conceptChecks.isEmpty ? quiz.rounds : nil).map { rounds in
         rounds.flatMap { round in seededItems.filter { item in
             item.questionID.map { round.officialQuestionIds.contains($0) } ?? false
         } }
     } ?? seededItems
+#if DEBUG
+    // Keep the existing total-prefix control unchanged; this control exercises the final review round.
+    if let value = AppLaunchArguments.value(after: "-CanadianHamLessonQuizCoreLimit"), let limit = Int(value), limit > 0 {
+        shuffled = Array(shuffled.prefix(limit))
+    }
+#endif
+    if let library {
+        let pools = library.orderedLessons().map { lesson in
+            LessonReviewPool(lessonId: lesson.id, questionIds: library.questions.filter { lesson.covers.contains($0.subsectionId) }.map(\.id))
+        }
+        let excluded = quiz.officialQuestionIds + library.questions.filter { library.lessonsById[quiz.lessonId]?.covers.contains($0.subsectionId) == true }.map(\.id)
+        let reviews = try selectLessonReviewItems(orderedPools: pools, lessonId: quiz.lessonId, excludedQuestionIds: excluded, seed: seed)
+        shuffled += try reviews.enumerated().map { index, review in
+            var rng = Pcg32(seed: "\(seed):review-choice:\(index):\(review.questionId)")
+            return .official(id: "\(quiz.id):review:\(review.questionId)", questionId: review.questionId, choicePermutation: try CanadianHamEngine.shuffled([0, 1, 2, 3], rng: &rng), reviewLessonId: review.lessonId)
+        }
+    }
 #if DEBUG
     if let value = AppLaunchArguments.value(after: "-CanadianHamLessonQuizLimit"), let limit = Int(value), limit > 0 {
         return Array(shuffled.prefix(limit))
@@ -1199,7 +1234,7 @@ private struct LessonQuizQuestionView: View {
 
     var body: some View {
         switch item {
-        case .official(_, let questionId, let permutation):
+        case .official(_, let questionId, let permutation, _):
             if let question = bank.question(id: questionId) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     QuestionCard(question: question, language: language)
