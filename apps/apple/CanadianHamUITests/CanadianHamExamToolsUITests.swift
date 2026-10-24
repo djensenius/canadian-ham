@@ -642,7 +642,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         positionReferenceSheetControl(text, in: app)
         XCTAssertEqual(app.switches.matching(identifier: "reference-sheet-text-equivalent").count, 1)
         XCTAssertEqual(text.label, "Text equivalent", "VoiceOver should announce the label exactly once")
-        XCTAssertEqual(app.staticTexts.matching(NSPredicate(format: "label == %@", "Text equivalent")).count, 0, "The visible label must not be a second accessible element")
+        let labelPredicate = NSPredicate(format: "label == %@", "Text equivalent")
+        // A native labelled switch can contain a StaticText child; only a label outside it is a duplicate focus stop.
+        XCTAssertEqual(app.staticTexts.matching(labelPredicate).count, text.staticTexts.matching(labelPredicate).count, "No Text equivalent label may exist outside the single native switch")
+        XCTContext.runActivity(named: "AX-XXXL native reference toggle accessibility hierarchy") { activity in
+            let attachment = XCTAttachment(string: text.debugDescription)
+            attachment.lifetime = .keepAlways
+            activity.add(attachment)
+        }
         XCTAssertGreaterThanOrEqual(text.frame.height, 44)
         XCTAssertEqual(text.value as? String, "0")
         // The label is at the top of the stacked row, away from the native switch thumb.
