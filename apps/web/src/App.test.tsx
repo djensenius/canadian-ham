@@ -3480,6 +3480,24 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
 });
 
 describe("M1 lesson quiz rounds", () => {
+  it("reports partial round scores without counting skipped or incorrect answers as correct", async () => {
+    window.location.hash = "#/learn/M1/L-001-01";
+    const store = createStore("m1-round-partial-score");
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
+    const section = getLessonQuizSection();
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    const correct = correctAnswerChoiceForCurrentQuestion();
+    fireEvent.click(within(section).getAllByTestId("answer-choice").find((choice) => choice !== correct)!);
+    for (let index = 0; index < 4; index++) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    assert.ok(within(section).getByText("Score so far: 1 / 5. Answered: 2 / 5."));
+    assert.equal((await store.getLessonQuizAttempts()).length, 0);
+    fireEvent.click(within(section).getByRole("button", { name: "Previous" }));
+    fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    assert.ok(within(section).getByText("Score so far: 1 / 5. Answered: 2 / 5."));
+  });
+
   it("keeps one complete scored attempt, frozen help and round position through section and lesson navigation", async () => {
     window.location.hash = "#/learn/M1/L-001-01";
     const store = createStore("m1-round-attempt");
