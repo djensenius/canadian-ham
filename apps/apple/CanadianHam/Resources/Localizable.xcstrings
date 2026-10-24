@@ -2876,6 +2876,22 @@
         }
       }
     },
+    "Continue to next round" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer à la série suivante"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer à la série suivante"
+          }
+        }
+      }
+    },
     "Expanded" : {
       "localizations" : {
         "en" : {
@@ -2916,6 +2932,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Masquer la réponse %lld"
+          }
+        }
+      }
+    },
+    "Round %lld of %lld checkpoint" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilan de la série %1$lld sur %2$lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilan de la série %1$lld sur %2$lld"
+          }
+        }
+      }
+    },
+    "Round %lld of %lld: %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série %1$lld sur %2$lld : %3$@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série %1$lld sur %2$lld : %3$@"
+          }
+        }
+      }
+    },
+    "Score so far: %lld / %lld. Answered: %lld / %lld." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score actuel : %1$lld / %2$lld. Réponses : %3$lld / %4$lld."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score actuel : %1$lld / %2$lld. Réponses : %3$lld / %4$lld."
           }
         }
       }

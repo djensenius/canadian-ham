@@ -35,3 +35,11 @@ test("lesson quiz schema rejects malformed or empty choice feedback", () => {
     assert.ok(errors.some((error) => error.includes("choices[1].feedback")), JSON.stringify({ feedback, errors }));
   }
 });
+
+test("lesson quiz schema validates optional section-sized rounds", () => {
+  const round = { sectionAnchor: "principle", title: { en: "Principle", fr: "Principe" }, officialQuestionIds: ["B-004-001-001"] };
+  assert.deepEqual(validateDataAgainstSchema({ ...legacyQuiz, rounds: [round] }, "lesson-quiz.schema.json"), []);
+  for (const rounds of [[], [null], [{ ...round, sectionAnchor: "" }], [{ ...round, title: { en: "Principle" } }], [{ ...round, officialQuestionIds: [] }], [{ ...round, officialQuestionIds: ["B-004-001-001", "B-004-001-001"] }], [{ ...round, extra: true }]]) {
+    assert.ok(validateDataAgainstSchema({ ...legacyQuiz, rounds }, "lesson-quiz.schema.json").some((error) => error.includes("rounds")));
+  }
+});

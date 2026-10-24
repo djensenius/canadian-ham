@@ -264,17 +264,31 @@ public struct ConceptCheck: Codable, Equatable, Sendable {
     }
 }
 
+public struct LessonQuizRound: Codable, Equatable, Sendable {
+    public let sectionAnchor: String
+    public let title: LocalizedNullableText
+    public let officialQuestionIds: [String]
+
+    public init(sectionAnchor: String, title: LocalizedNullableText, officialQuestionIds: [String]) {
+        self.sectionAnchor = sectionAnchor
+        self.title = title
+        self.officialQuestionIds = officialQuestionIds
+    }
+}
+
 public struct LessonQuiz: Codable, Equatable, Sendable {
     public let id: String
     public let lessonId: String
     public let officialQuestionIds: [String]
     public let conceptChecks: [ConceptCheck]
+    public let rounds: [LessonQuizRound]?
 
-    public init(id: String, lessonId: String, officialQuestionIds: [String], conceptChecks: [ConceptCheck]) {
+    public init(id: String, lessonId: String, officialQuestionIds: [String], conceptChecks: [ConceptCheck], rounds: [LessonQuizRound]? = nil) {
         self.id = id
         self.lessonId = lessonId
         self.officialQuestionIds = officialQuestionIds
         self.conceptChecks = conceptChecks
+        self.rounds = rounds
     }
 }
 

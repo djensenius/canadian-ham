@@ -28,5 +28,68 @@
     "B-001-021-008",
     "B-001-021-009"
   ],
-  "conceptChecks": []
+  "conceptChecks": [],
+  "rounds": [
+    {
+      "sectionAnchor": "reference-facts-location-decides-the-applicable-limits",
+      "title": {
+        "en": "Reference facts: Location decides the applicable limits",
+        "fr": "Faits de référence : Le lieu détermine les limites applicables"
+      },
+      "officialQuestionIds": [
+        "B-001-020-005",
+        "B-001-021-001",
+        "B-001-021-002",
+        "B-001-021-003",
+        "B-001-021-004",
+        "B-001-021-005"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-international-permission-includes-purpose",
+      "title": {
+        "en": "Reference facts: International permission includes purpose",
+        "fr": "Faits de référence : L’autorisation internationale tient compte du but"
+      },
+      "officialQuestionIds": [
+        "B-001-014-004",
+        "B-001-020-001",
+        "B-001-020-002",
+        "B-001-020-003",
+        "B-001-020-004"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-a-guest-speaks-under-supervision",
+      "title": {
+        "en": "Reference facts: A guest speaks under supervision",
+        "fr": "Faits de référence : Un invité parle sous supervision"
+      },
+      "officialQuestionIds": [
+        "B-001-014-001",
+        "B-001-014-003",
+        "B-001-014-006",
+        "B-001-014-007",
+        "B-001-014-008",
+        "B-001-014-011"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-visit-arrangements-pair-permission-with-identification",
+      "title": {
+        "en": "Reference facts: Visit arrangements pair permission with identification",
+        "fr": "Faits de référence : Les modalités de visite associent autorisation et identification"
+      },
+      "officialQuestionIds": [
+        "B-001-014-002",
+        "B-001-014-005",
+        "B-001-014-009",
+        "B-001-014-010",
+        "B-001-021-006",
+        "B-001-021-007",
+        "B-001-021-008",
+        "B-001-021-009"
+      ]
+    }
+  ]
 }

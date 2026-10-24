@@ -12,6 +12,70 @@ import AppKit
 
 @MainActor
 final class ProgressStoreTests: XCTestCase {
+    func testM1QuizRoundsRetainEveryItemAndSeededOrderWithinTeachingSections() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        var total = 0
+        for quiz in library.quizzesById.values where quiz.lessonId.hasPrefix("L-001-") {
+            let rounds = try XCTUnwrap(quiz.rounds)
+            let legacy = LessonQuiz(id: quiz.id, lessonId: quiz.lessonId, officialQuestionIds: quiz.officialQuestionIds, conceptChecks: quiz.conceptChecks)
+            let original = try buildLessonQuizItems(quiz: legacy, seed: "m1-rounds")
+            let items = try buildLessonQuizItems(quiz: quiz, seed: "m1-rounds")
+            XCTAssertEqual(items, try buildLessonQuizItems(quiz: quiz, seed: "m1-rounds"))
+            XCTAssertEqual(items.count, quiz.officialQuestionIds.count)
+            XCTAssertEqual(Set(items.compactMap(\.questionID)), Set(quiz.officialQuestionIds))
+            XCTAssertEqual(items, rounds.flatMap { round in original.filter { item in
+                item.questionID.map { round.officialQuestionIds.contains($0) } ?? false
+            } })
+            for index in items.indices {
+                let round = try XCTUnwrap(lessonQuizRoundProgress(quiz: quiz, items: items, currentIndex: index))
+                XCTAssertTrue(round.round.officialQuestionIds.contains(try XCTUnwrap(items[index].questionID)))
+                XCTAssertEqual(round.questionCount, round.round.officialQuestionIds.count)
+                XCTAssertTrue((round.startIndex...round.endIndex).contains(index))
+            }
+            total += items.count
+        }
+        XCTAssertEqual(total, 199)
+        let nonM1 = try XCTUnwrap(library.quizzesById["QZ-L-005-01-A"])
+        XCTAssertNil(nonM1.rounds)
+        XCTAssertNil(lessonQuizRoundProgress(quiz: nonM1, items: try buildLessonQuizItems(quiz: nonM1, seed: "unchanged"), currentIndex: 0))
+    }
+
+    func testM1QuizRoundBoundariesPreserveOneSessionAnswersHelpAndDismissedCheckpoint() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let quiz = try XCTUnwrap(library.quizzesById["QZ-L-001-01-A"])
+        let cache = LessonQuizSessionStateCache()
+        let state = cache.state(for: quiz.id)
+        state.items = try buildLessonQuizItems(quiz: quiz, seed: "m1-rounds")
+        let generation = state.generation
+        let first = try XCTUnwrap(state.items.first)
+        XCTAssertTrue(state.qualifyHint(for: first))
+        state.select(0, for: first)
+        let firstRound = try XCTUnwrap(lessonQuizRoundProgress(quiz: quiz, items: state.items, currentIndex: 0))
+        for _ in 0..<firstRound.endIndex { state.next(in: quiz) }
+        XCTAssertFalse(state.checkpointVisible)
+        state.next(in: quiz)
+        XCTAssertTrue(state.checkpointVisible)
+        XCTAssertEqual(state.currentIndex, firstRound.endIndex)
+        XCTAssertEqual(state.selectedByItemId.count, 1)
+        state.previous()
+        XCTAssertFalse(state.checkpointVisible)
+        XCTAssertEqual(state.currentIndex, firstRound.endIndex)
+        state.next(in: quiz)
+        state.continueRound()
+        XCTAssertEqual(state.currentIndex, firstRound.endIndex + 1)
+        XCTAssertFalse(state.checkpointVisible)
+        XCTAssertTrue(cache.state(for: quiz.id) === state)
+        XCTAssertEqual(state.generation, generation)
+        XCTAssertEqual(state.selectedByItemId[first.id], 0)
+        XCTAssertEqual(state.answeredWithHelpIds, [try XCTUnwrap(first.questionID)])
+        state.previous()
+        XCTAssertEqual(state.currentIndex, firstRound.endIndex)
+        state.currentIndex = state.items.count - 1
+        state.next(in: quiz)
+        XCTAssertEqual(state.currentIndex, state.items.count - 1)
+        XCTAssertFalse(state.checkpointVisible, "The final round keeps final Submit, not an extra checkpoint")
+    }
+
     func testLessonQuizHelpFixtureValidationAndPayloadRoundTrips() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let fixtureURL = URL(fileURLWithPath: #filePath)

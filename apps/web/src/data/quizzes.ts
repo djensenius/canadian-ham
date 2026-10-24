@@ -23,11 +23,18 @@ export interface ConceptCheck {
   readonly explanation: NullableLocalizedText;
 }
 
+export interface LessonQuizRound {
+  readonly sectionAnchor: string;
+  readonly title: NullableLocalizedText;
+  readonly officialQuestionIds: readonly string[];
+}
+
 export interface LessonQuiz {
   readonly id: string;
   readonly lessonId: string;
   readonly officialQuestionIds: readonly string[];
   readonly conceptChecks: readonly ConceptCheck[];
+  readonly rounds?: readonly LessonQuizRound[];
 }
 
 export type LessonQuizItem =
@@ -50,5 +57,17 @@ export function buildLessonQuizItems(quiz: LessonQuiz, seed: string): readonly L
     conceptCheck,
     choicePermutation: shuffled(conceptCheck.choices.map((_, choiceIndex) => choiceIndex), Pcg32.fromSeedString(`${seed}:concept:${index}:${conceptCheck.id}`)),
   }));
-  return shuffled([...officialItems, ...conceptItems], Pcg32.fromSeedString(`${seed}:items:${quiz.id}`));
+  const items = shuffled([...officialItems, ...conceptItems], Pcg32.fromSeedString(`${seed}:items:${quiz.id}`));
+  // Preserve each round's relative seeded order and every choice permutation.
+  return quiz.rounds === undefined ? items : quiz.rounds.flatMap((round) => items.filter((item) => item.type === "official" && round.officialQuestionIds.includes(item.questionId)));
+}
+
+export function lessonQuizRoundProgress(quiz: LessonQuiz, items: readonly LessonQuizItem[], currentIndex: number) {
+  const currentItem = items[currentIndex];
+  if (currentItem?.type !== "official" || quiz.rounds === undefined) return undefined;
+  const roundIndex = quiz.rounds.findIndex((round) => round.officialQuestionIds.includes(currentItem.questionId));
+  const round = quiz.rounds[roundIndex];
+  if (round === undefined) return undefined;
+  const indices = items.flatMap((item, index) => item.type === "official" && round.officialQuestionIds.includes(item.questionId) ? [index] : []);
+  return { round, roundIndex, roundCount: quiz.rounds.length, startIndex: indices[0]!, endIndex: indices[indices.length - 1]!, questionCount: indices.length };
 }
