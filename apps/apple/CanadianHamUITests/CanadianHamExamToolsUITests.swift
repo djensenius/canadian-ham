@@ -18,6 +18,205 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try super.tearDownWithError()
     }
 
+    func testM1QuizRoundsLightAndFullAccessibilityAudits() throws {
+        try verifyM1RoundAccessibility(appearance: "light", french: false, largestType: false)
+    }
+
+    func testM1QuizRoundsDarkAndFullAccessibilityAudits() throws {
+        try verifyM1RoundAccessibility(appearance: "dark", french: false, largestType: false)
+    }
+
+    func testM1QuizRoundsFrenchLargestTypeLightAndFullAccessibilityAudits() throws {
+        try verifyM1RoundAccessibility(appearance: "light", french: true, largestType: true)
+    }
+
+    func testM1QuizRoundsFrenchLargestTypeDarkAndFullAccessibilityAudits() throws {
+        try verifyM1RoundAccessibility(appearance: "dark", french: true, largestType: true)
+    }
+
+    // Owner decision 2026-10-22 (TASK-71/73), extended to new M1-round audits by the coordinator.
+    private func auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: XCUIApplication) throws {
+        let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
+        let windowFrame = app.windows.firstMatch.frame
+        let navigationBar = app.navigationBars.firstMatch
+        let statusBar = app.statusBars.firstMatch
+        let protectedMaxY = max(
+            navigationBar.exists ? navigationBar.frame.maxY : windowFrame.minY,
+            statusBar.exists ? statusBar.frame.maxY : windowFrame.minY
+        )
+        try app.performAccessibilityAudit { issue in
+            guard issue.auditType == .contrast else { return false }
+            let isOccluded = { () -> Bool in
+                guard let element = issue.element else { return false }
+                let frame = element.frame
+                guard frame.width > 0, frame.height > 0 else { return false }
+                guard !self.frame(frame, matchesAny: auditGeometry.navigationBarElementFrames) else { return false }
+                guard self.element(element, withFrame: frame, isDescendantOf: auditGeometry.scrollView) else { return false }
+                guard !auditGeometry.visibleScrollArea.contains(frame) else { return false }
+
+                XCTContext.runActivity(named: "Ignored occluded lesson scroll-content contrast false positive") { activity in
+                    let note = "label=\(element.label) frame=\(self.frameDescription(frame)) visibleScrollArea=\(self.frameDescription(auditGeometry.visibleScrollArea)) scrollFrame=\(self.frameDescription(auditGeometry.scrollFrame)) matchedScrollDescendant=true"
+                    let attachment = XCTAttachment(string: note)
+                    attachment.lifetime = .keepAlways
+                    activity.add(attachment)
+                }
+                return true
+            }()
+            if isOccluded { return true }
+
+            let element = issue.element
+            let frame = element?.frame
+            var measurement = ControlTextContrastMeasurement(fullImageRatio: nil, ratio: nil)
+            if let element, let frame,
+               isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: windowFrame, protectedMaxY: protectedMaxY),
+               let image = contrastMeasurementCGImage(from: element.screenshot()) {
+                measurement = controlTextContrastMeasurement(
+                    in: image, scale: CGFloat(image.width) / frame.width,
+                    isButton: element.elementType == .button
+                )
+            }
+            let verified = measurement.ratio.map { $0 >= 4.5 } ?? false
+            let activityName = verified ? "Verified contrast audit finding with measured WCAG contrast" : "Failed contrast audit finding"
+            XCTContext.runActivity(named: activityName) { activity in
+                let attachment = XCTAttachment(string: "label=\(element?.label ?? "<nil>") frame=\(frame.map { "\($0)" } ?? "<nil>") \(measurement.logDescription)")
+                attachment.lifetime = .keepAlways
+                activity.add(attachment)
+            }
+            return verified
+        }
+    }
+
+    private func launchM1Rounds(appearance: String = "light", extraArguments: [String] = []) -> XCUIApplication {
+        launchApp(appearance: appearance, arguments: [
+            "-CanadianHamInitialLessonQuizID", "QZ-L-001-01-A",
+            "-CanadianHamLessonQuizLimit", "6", "-CanadianHamLessonQuizSeed", "m1-rounds",
+            "-CanadianHamExamToolInitialDetent", "large"
+        ] + extraArguments)
+    }
+
+    private func verifyM1RoundAccessibility(appearance: String, french: Bool, largestType: Bool) throws {
+        var arguments = ["-AppleLanguages", french ? "(fr)" : "(en)", "-AppleLocale", french ? "fr_CA" : "en_CA"]
+        if largestType {
+            arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        }
+        let app = launchM1Rounds(appearance: appearance, extraArguments: arguments)
+        defer { app.terminate() }
+        let heading = app.staticTexts["lesson-quiz-round-heading"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10))
+        XCTAssertTrue(heading.label.hasPrefix(french ? "Série 1 sur 4" : "Round 1 of 4"))
+        XCTAssertTrue(heading.label.contains(french ? "L’autorité provient de sources désignées" : "Authority comes from named sources"))
+        positionConceptFeedback([heading], in: app)
+        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: true), "The full round title must wrap at the requested Dynamic Type size")
+        try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
+        let next = app.buttons[french ? "Suivante" : "Next"].firstMatch
+        for _ in 0..<5 {
+            positionConceptFeedback([next], in: app)
+            next.tap()
+        }
+        let checkpoint = app.staticTexts["lesson-quiz-round-checkpoint"].firstMatch
+        XCTAssertTrue(checkpoint.waitForExistence(timeout: 5))
+        XCTAssertEqual(checkpoint.label, french ? "Bilan de la série 1 sur 4" : "Round 1 of 4 checkpoint")
+        positionConceptFeedback([checkpoint], in: app)
+        XCTAssertTrue(isFullyVisible(checkpoint, in: app, requiresHittable: true))
+        try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
+        let score = app.staticTexts["lesson-quiz-round-score"].firstMatch
+        XCTAssertEqual(score.label, french ? "Score actuel : 0 / 5. Réponses : 0 / 5." : "Score so far: 0 / 5. Answered: 0 / 5.")
+        positionConceptFeedback([score], in: app)
+        XCTAssertTrue(isFullyVisible(score, in: app, requiresHittable: true))
+        let continueButton = app.buttons["lesson-quiz-round-continue"].firstMatch
+        XCTAssertEqual(continueButton.label, french ? "Continuer à la série suivante" : "Continue to next round")
+        positionConceptFeedback([continueButton], in: app)
+        continueButton.tap()
+        XCTAssertTrue(heading.waitForExistence(timeout: 5))
+        XCTAssertTrue(heading.label.hasPrefix(french ? "Série 2 sur 4" : "Round 2 of 4"))
+        XCTAssertFalse(checkpoint.exists)
+        positionConceptFeedback([heading], in: app)
+        try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
+        XCTAssertFalse(app.buttons["submit-lesson-quiz-button"].firstMatch.isEnabled, "Unanswered navigation must not submit or complete the quiz")
+    }
+
+    func testM1QuizRoundsKeepHelpAnswersResumeAndOneSavedAttempt() throws {
+        var app = launchM1Rounds(extraArguments: ["-AppleLanguages", "(en)"])
+        let heading = app.staticTexts["lesson-quiz-round-heading"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10))
+        openTool(.hint, in: app)
+        let reveal = app.buttons["hint-show-level-1-button"].firstMatch
+        scrollExamToolUntilHittable(reveal, in: app, maxSwipes: 8)
+        reveal.tap()
+        waitBriefly(0.8)
+        closeTool(in: app)
+        // The real shared seeded order for m1-rounds is checked by the model tests.
+        let ids = ["B-001-001-003", "B-001-001-004", "B-001-003-004", "B-001-001-002", "B-001-001-001", "B-001-022-004"]
+        let correctLetters = ["D", "B", "C", "C", "A", "D"]
+        for index in 0..<6 {
+            XCTAssertEqual(app.staticTexts["question-identifier"].firstMatch.label, ids[index])
+            let answer = app.buttons["answer-\(correctLetters[index])-button"].firstMatch
+            positionConceptFeedback([answer], in: app)
+            answer.tap()
+            XCTAssertTrue(app.staticTexts["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5))
+            XCTAssertEqual(app.staticTexts["answer-feedback-title"].firstMatch.label, "Correct")
+            if index == 0 {
+                XCTAssertTrue(app.staticTexts["lesson-quiz-with-help-marker"].firstMatch.exists)
+            }
+            if index < 5 {
+                let next = app.buttons["Next"].firstMatch
+                positionConceptFeedback([next], in: app)
+                next.tap()
+            }
+            if index == 4 {
+                XCTAssertEqual(app.staticTexts["lesson-quiz-round-score"].firstMatch.label, "Score so far: 5 / 5. Answered: 5 / 5.")
+                let continueButton = app.buttons["lesson-quiz-round-continue"].firstMatch
+                positionConceptFeedback([continueButton], in: app)
+                continueButton.tap()
+                XCTAssertTrue(heading.label.hasPrefix("Round 2 of 4"))
+                let question = app.staticTexts["question-stem"].firstMatch
+                let original = question.label
+                // A current-lesson hint link pushes the section, then returns to this same session.
+                openTool(.hint, in: app)
+                let reveal = app.buttons["hint-show-level-1-button"].firstMatch
+                scrollExamToolUntilHittable(reveal, in: app, maxSwipes: 8)
+                reveal.tap()
+                waitBriefly(0.8)
+                let link = app.buttons["hint-review-in-lesson-button"].firstMatch
+                scrollExamToolUntilHittable(link, in: app, maxSwipes: 12)
+                link.tap()
+                XCTAssertTrue(app.staticTexts["lesson-heading-reference-facts-qualifications-follow-a-learning-path"].firstMatch.waitForExistence(timeout: 10))
+                app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
+                XCTAssertTrue(heading.waitForExistence(timeout: 10))
+                XCTAssertTrue(heading.label.hasPrefix("Round 2 of 4"))
+                XCTAssertEqual(question.label, original)
+                XCTAssertFalse(app.staticTexts["lesson-quiz-round-checkpoint"].exists, "Resume must not reopen a dismissed checkpoint")
+                let previous = app.buttons["Previous"].firstMatch
+                positionConceptFeedback([previous], in: app)
+                previous.tap()
+                XCTAssertEqual(app.staticTexts["question-identifier"].firstMatch.label, ids[4])
+                XCTAssertFalse(app.buttons["answer-A-button"].firstMatch.isEnabled)
+                let next = app.buttons["Next"].firstMatch
+                positionConceptFeedback([next], in: app)
+                next.tap()
+                positionConceptFeedback([continueButton], in: app)
+                continueButton.tap()
+            }
+        }
+        // The second hint round trip occurred before the sixth choice, so both choices used help.
+        let submit = app.buttons["submit-lesson-quiz-button"].firstMatch
+        positionConceptFeedback([submit], in: app)
+        XCTAssertTrue(submit.isEnabled)
+        submit.tap()
+        XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10))
+        positionConceptFeedback([app.staticTexts["lesson-quiz-help-summary"].firstMatch], in: app)
+        XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.label.contains("6 / 6 (100%). Attempts saved: 1."))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 2.")
+        app.terminate()
+        app = XCUIApplication()
+        app.launchArguments = ["-CanadianHamInitialLessonQuizID", "QZ-L-001-01-A", "-AppleLanguages", "(en)"]
+        app.launch()
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["lesson-quiz-latest-score"].firstMatch.label.contains("6 / 6 (100%). Attempts saved: 1."))
+        XCTAssertEqual(app.staticTexts["lesson-quiz-help-summary"].firstMatch.label, "Answers with help: 2.")
+    }
+
     func testLessonQuizConceptOptionCorrectLightAndFullAccessibilityAudit() throws {
         try verifyConceptOptionFeedback(appearance: "light", correct: true, french: false)
     }

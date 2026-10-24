@@ -62,7 +62,16 @@ export function buildLessonQuizItems(quiz: LessonQuiz, seed: string): readonly L
   return quiz.rounds === undefined ? items : quiz.rounds.flatMap((round) => items.filter((item) => item.type === "official" && round.officialQuestionIds.includes(item.questionId)));
 }
 
-export function lessonQuizRoundProgress(quiz: LessonQuiz, items: readonly LessonQuizItem[], currentIndex: number) {
+export interface LessonQuizRoundProgress {
+  readonly round: LessonQuizRound;
+  readonly roundIndex: number;
+  readonly roundCount: number;
+  readonly startIndex: number;
+  readonly endIndex: number;
+  readonly questionCount: number;
+}
+
+export function lessonQuizRoundProgress(quiz: LessonQuiz, items: readonly LessonQuizItem[], currentIndex: number): LessonQuizRoundProgress | undefined {
   const currentItem = items[currentIndex];
   if (currentItem?.type !== "official" || quiz.rounds === undefined) return undefined;
   const roundIndex = quiz.rounds.findIndex((round) => round.officialQuestionIds.includes(currentItem.questionId));

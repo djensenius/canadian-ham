@@ -3,6 +3,22 @@ import XCTest
 @testable import CanadianHamContent
 
 final class ContentLibraryTests: XCTestCase {
+    func testM1QuizRoundsDecodeAndRoundTripWithoutChangingLegacyQuizzes() throws {
+        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
+        var total = 0
+        for quiz in library.quizzesById.values where quiz.lessonId.hasPrefix("L-001-") {
+            let rounds = try XCTUnwrap(quiz.rounds)
+            XCTAssertEqual(try JSONDecoder().decode(LessonQuiz.self, from: JSONEncoder().encode(quiz)), quiz)
+            let ids = rounds.flatMap(\.officialQuestionIds)
+            XCTAssertEqual(ids.count, quiz.officialQuestionIds.count)
+            XCTAssertEqual(Set(ids), Set(quiz.officialQuestionIds))
+            XCTAssertTrue(rounds.allSatisfy { !$0.sectionAnchor.isEmpty && !($0.title.fr ?? "").isEmpty })
+            total += ids.count
+        }
+        XCTAssertEqual(total, 199)
+        XCTAssertNil(try XCTUnwrap(library.quizzesById["QZ-L-005-01-A"]).rounds)
+    }
+
     func testTryItAnswersAreSeparateBlocksAndDoNotLeakIntoFlattenedLessonText() throws {
         let markdown = """
         ## Try it

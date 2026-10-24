@@ -3478,3 +3478,115 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
     await expectNoAxeViolations(container);
   });
 });
+
+describe("M1 lesson quiz rounds", () => {
+  it("keeps one complete scored attempt, frozen help and round position through section and lesson navigation", async () => {
+    window.location.hash = "#/learn/M1/L-001-01";
+    const store = createStore("m1-round-attempt");
+    const quiz = lessonQuizzesById.get("QZ-L-001-01-A")!;
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: quiz.id });
+    let section = getLessonQuizSection();
+    const firstId = currentPracticeQuestionId();
+    await user.click(within(section).getByRole("button", { name: "Hint" }));
+    await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+    await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help/));
+    if (hintForQuestion(firstId, bankId)!.hints.length === 2) await user.click(within(section).getByRole("button", { name: "Show Hint 2" }));
+    await user.click(within(section).getByRole("link", { name: "Review in lesson" }));
+    assert.equal(currentPracticeQuestionId(), firstId);
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+    const seen: string[] = [];
+    for (const [roundIndex, round] of quiz.rounds!.entries()) {
+      for (let position = 0; position < round.officialQuestionIds.length; position++) {
+        assert.ok(within(section).getByRole("heading", { name: t("en", "lessonQuizRound", roundIndex + 1, quiz.rounds!.length, round.title.en) }));
+        assert.ok(within(section).getByText(t("en", "questionProgress", position + 1, round.officialQuestionIds.length)));
+        const id = currentPracticeQuestionId();
+        assert.ok(round.officialQuestionIds.includes(id));
+        seen.push(id);
+        if (id !== firstId) fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+        if (position + 1 < round.officialQuestionIds.length || roundIndex + 1 < quiz.rounds!.length) {
+          fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+        }
+      }
+      if (roundIndex + 1 < quiz.rounds!.length) {
+        const checkpoint = within(section).getByRole("heading", { name: t("en", "lessonQuizRoundCheckpoint", roundIndex + 1, quiz.rounds!.length) });
+        assert.equal(document.activeElement, checkpoint);
+        assert.ok(within(section).getByText(t("en", "lessonQuizRoundScore", round.officialQuestionIds.length, round.officialQuestionIds.length, round.officialQuestionIds.length)));
+        assert.equal((await store.getLessonQuizAttempts()).length, 0, "A checkpoint is not a submitted attempt");
+        fireEvent.click(within(section).getByRole("button", { name: "Continue to next round" }));
+        assert.equal(document.activeElement, within(section).getByRole("heading", { name: /^Round/ }));
+        if (roundIndex === 0) {
+          const resumedId = currentPracticeQuestionId();
+          await setAppHash("#/learn/M1/L-001-02");
+          await screen.findByRole("heading", { name: "QZ-L-001-02-A" });
+          await setAppHash("#/learn/M1/L-001-01");
+          await screen.findByRole("heading", { name: quiz.id });
+          section = getLessonQuizSection();
+          assert.equal(currentPracticeQuestionId(), resumedId);
+          assert.equal(within(section).queryByRole("button", { name: "Continue to next round" }), null);
+          fireEvent.click(within(section).getByRole("button", { name: "Previous" }));
+          assert.equal(currentPracticeQuestionId(), seen[seen.length - 1]);
+          assert.ok(within(section).getAllByTestId("answer-choice").every((choice) => (choice as HTMLButtonElement).disabled));
+          fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+          fireEvent.click(within(section).getByRole("button", { name: "Continue to next round" }));
+          assert.equal(currentPracticeQuestionId(), resumedId);
+        }
+      }
+    }
+    assert.equal(new Set(seen).size, quiz.officialQuestionIds.length);
+    assert.deepEqual(new Set(seen), new Set(quiz.officialQuestionIds));
+    assert.equal(within(section).queryByRole("button", { name: "Continue to next round" }), null);
+    assert.equal((within(section).getByRole("button", { name: "Next" }) as HTMLButtonElement).disabled, true);
+    fireEvent.click(within(section).getByRole("button", { name: "Submit lesson quiz" }));
+    await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+    const attempt = (await store.getLessonQuizAttempts())[0]!;
+    assert.equal(attempt.correct, 33);
+    assert.equal(attempt.total, 33);
+    assert.equal(attempt.percent, 100);
+    assert.deepEqual(new Set(attempt.officialQuestionIds), new Set(quiz.officialQuestionIds));
+    assert.deepEqual(attempt.answeredWithHelpIds, [firstId]);
+    assert.equal((await store.getQuestionProgress()).length, 33);
+    cleanup();
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: quiz.id });
+    assert.ok(within(getLessonQuizSection()).getByText(/Latest score: 33 \/ 33/));
+    assert.ok(within(getLessonQuizSection()).getByText("Answers with help: 1."));
+  });
+
+  for (const language of ["en", "fr"] as const) {
+    for (const theme of ["light", "dark"] as const) {
+      it(`has accessible localized round headers, unanswered boundaries and checkpoints in ${language} ${theme}`, async () => {
+        window.location.hash = "#/learn/M1/L-001-01";
+        window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+        const store = createStore(`m1-round-axe-${language}-${theme}`);
+        await store.putPreferences({ ...defaultPreferences, language, theme });
+        const { container } = render(<App store={store} now={() => fixedNow} />);
+        await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
+        const section = getLessonQuizSection();
+        const quiz = lessonQuizzesById.get("QZ-L-001-01-A")!;
+        const round = quiz.rounds![0]!;
+        const headingName = t(language, "lessonQuizRound", 1, quiz.rounds!.length, round.title[language]!);
+        assert.ok(within(section).getByRole("heading", { name: headingName }));
+        await expectNoAxeViolations(container);
+        for (let index = 0; index < round.officialQuestionIds.length; index++) {
+          fireEvent.click(within(section).getByRole("button", { name: t(language, "next") }));
+        }
+        const checkpoint = within(section).getByRole("heading", { name: t(language, "lessonQuizRoundCheckpoint", 1, quiz.rounds!.length) });
+        assert.equal(document.activeElement, checkpoint);
+        assert.ok(within(section).getByText(t(language, "lessonQuizRoundScore", 0, round.officialQuestionIds.length, 0)));
+        assert.equal(within(section).queryByTestId("answer-choice"), null);
+        await expectNoAxeViolations(container);
+        fireEvent.click(within(section).getByRole("button", { name: t(language, "previous") }));
+        assert.ok(within(section).getByText(t(language, "questionProgress", 5, 5)));
+        fireEvent.click(within(section).getByRole("button", { name: t(language, "next") }));
+        fireEvent.click(within(section).getByRole("button", { name: t(language, "lessonQuizRoundContinue") }));
+        assert.equal(document.activeElement, within(section).getByRole("heading", { name: new RegExp(language === "fr" ? "^Série 2" : "^Round 2") }));
+        assert.ok(within(section).getByText(t(language, "questionProgress", 1, quiz.rounds![1]!.officialQuestionIds.length)));
+        assert.equal((within(section).getByRole("button", { name: t(language, "lessonQuizSubmit") }) as HTMLButtonElement).disabled, true);
+        await expectNoAxeViolations(container);
+      });
+    }
+  }
+});
