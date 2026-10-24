@@ -591,7 +591,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertGreaterThan(header.frame.minY, app.windows.firstMatch.frame.height * 0.25, "The exception is limited to the iPhone medium detent")
         XCTAssertEqual(header.frame.minY, mediumHeaderFrame.minY, accuracy: 6, "Scrolling the controls must not expand the medium sheet")
         var ignoredTextClippedIssues = 0
-        let maximumIgnoredTextClippedIssues = 8 // TASK-67: five observed findings plus three of bounded headroom.
+        let maximumIgnoredTextClippedIssues = 6 // TASK-67: five stable observed findings plus one of headroom; growth beyond that fails.
         // Owner decision 2026-10-12 permits larger-Dynamic-Type clipping inside medium-detent tool scroll content.
         // Keep the existing nil-element rule; named findings must match this explicit reference scroll view.
         try app.performAccessibilityAudit { issue in
