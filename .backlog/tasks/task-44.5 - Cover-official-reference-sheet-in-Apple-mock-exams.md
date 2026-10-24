@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-22 02:16'
-updated_date: '2026-10-24 22:36'
+updated_date: '2026-10-24 22:39'
 labels:
   - apple
   - testing
@@ -38,3 +38,9 @@ TASK-44.4 internal review noted that the reference-sheet integration is exercise
 3. Run targeted new and existing reference tests on iPhone 17 Pro and iPad Pro 13-inch (M5), the documented macOS unit command, l10n/text-source/test-guard checks via nohup and grep polling; no full simulator suites.
 4. Record per-test evidence, finalize all four criteria, commit and push the task branch without a PR.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Added three UI tests in CanadianHamExamToolsUITests: Basic mock light/running and dark/paused sheet flows plus Advanced/no-sheet/no-hints negative coverage. Basic fixtures answer two questions and remain on question 2/3, then exercise all five pages/back navigation, zoom in/out, accessible formula text and Study fallback before verifying question/answer/exam seed/answered count and timer continuity. Full-default audits use raw calls for official image/text and iPhone fallback, the unchanged TASK-44.4 reference-scroll helper only for iPad fallback, and the unchanged occluded mock-screen helper before/after. No existing tests, shared helpers or app source changed. Targeted iPhone/iPad, documented macOS units, l10n/text/guard checks are running via nohup (/tmp/task445-checks.log), one destination at a time; no full simulator suites or killed builds.
+<!-- SECTION:NOTES:END -->
