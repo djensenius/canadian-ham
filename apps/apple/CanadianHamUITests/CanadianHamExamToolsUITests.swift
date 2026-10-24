@@ -108,7 +108,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         positionConceptFeedback([heading], in: app)
         XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: true), "The full round title must wrap at the requested Dynamic Type size")
         try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
-        let next = app.buttons[french ? "Suivante" : "Next"].firstMatch
+        let next = app.buttons[french ? "Suivant" : "Next"].firstMatch
         for _ in 0..<5 {
             positionConceptFeedback([next], in: app)
             next.tap()
