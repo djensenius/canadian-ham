@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-22 03:34'
-updated_date: '2026-10-24 20:24'
+updated_date: '2026-10-24 20:25'
 labels:
   - accessibility
   - tests
@@ -33,3 +33,9 @@ TASK-44.4 review note: in the stacked accessibility-size layout VoiceOver reads 
 3. Inventory medium-detent ignored findings and reduce their cause or provide bounded headroom without widening exception eligibility.
 4. Run targeted iPhone/iPad reference-sheet tests, documented macOS unit command, localization, text-source and test-guard checks via nohup/polling. Record per-test evidence, complete ACs, commit and push without opening a PR.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented a native labelled Toggle with a custom accessibility-size style: stacked visible label/native switch, tappable label, one native accessibility representation. Default-size switch remains native. AX-XXXL now checks one switch, exact label/no duplicate static text, and taps the label on/off with state/content assertions. Medium audit eligibility is unchanged; bounded cap 5→8 adds three findings of headroom, and each accepted finding now records identifier, label and frame in a keepAlways attachment. Targeted iPhone/iPad, documented macOS unit command, l10n/text/guard runner started with nohup (/tmp/task67-checks.log); no full simulator suites.
+<!-- SECTION:NOTES:END -->
