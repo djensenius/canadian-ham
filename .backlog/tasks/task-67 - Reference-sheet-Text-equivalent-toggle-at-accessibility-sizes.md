@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-22 03:34'
-updated_date: '2026-10-24 22:04'
+updated_date: '2026-10-24 22:10'
 labels:
   - accessibility
   - tests
@@ -319,6 +319,8 @@ Final macOS relevant-unit / UI-test-source compile rerun — 12 individual PASS 
 - CanadianHamTests.ExamCalculatorViewModelTests.testQuestionCardFocusResetKeepsTextSelectionEnabled: PASS (0.004 seconds).
 - CanadianHamTests.ExamCalculatorViewModelTests.testReferenceSheetLoaderReturnsNilWhenBundledFileIsMissingAndLoadsBasicSheet: PASS (0.001 seconds).
 - CanadianHamTests.ExamCalculatorViewModelTests.testUpdateLocaleRefreshesDisplayAndSpokenStringImmediately: PASS (0.001 seconds).
+
+Coordinator, after the internal review (approve with notes): tightened the medium-detent cap from 8 to 6 (5 stable observed findings plus 1 headroom), since three of the five findings are element-less and can't be proven to be reference-scroll content. Ignore-eligibility rules unchanged. iPhone 17 Pro testOfficialReferenceSheetMediumDetentControlsAndShowFullSheet passed with cap 6 (136.4 s).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
