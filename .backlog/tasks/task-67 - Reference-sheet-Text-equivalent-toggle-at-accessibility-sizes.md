@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-22 03:34'
-updated_date: '2026-10-24 20:34'
+updated_date: '2026-10-24 21:38'
 labels:
   - accessibility
   - tests
@@ -40,4 +40,6 @@ TASK-44.4 review note: in the stacked accessibility-size layout VoiceOver reads 
 Implemented a native labelled Toggle with a custom accessibility-size style: stacked visible label/native switch, tappable label, one native accessibility representation. Default-size switch remains native. AX-XXXL now checks one switch, exact label/no duplicate static text, and taps the label on/off with state/content assertions. Medium audit eligibility is unchanged; bounded cap 5→8 adds three findings of headroom, and each accepted finding now records identifier, label and frame in a keepAlways attachment. Targeted iPhone/iPad, documented macOS unit command, l10n/text/guard runner started with nohup (/tmp/task67-checks.log); no full simulator suites.
 
 First iPhone pass: matrix PASS (259.739s), medium PASS (118.246s) with five findings and three findings of cap headroom. Inventory: reference-sheet-version-title / Official sheet; reference-sheet-page-number / Page 1 of 5; three nil-element findings (two generic element and one SwiftUI.AccessibilityNode, no identifiers supplied by XCTest). Named frames/labels and all nil descriptions are retained in keepAlways attachments and /tmp/task67-iphone.log. Initial AX test stopped at the over-strict zero-StaticText assertion: native labelled Toggles expose an internal StaticText child. Refined regression to require every matching label to be inside the one switch (no separate external label/focus stop), preserving exact-label, count, label-tap/state/content checks, and retaining the switch hierarchy attachment. Targeted AX-only reruns queued on both devices; iPad matrix/medium and macOS/l10n runner continue without interruption.
+
+After the shared build lock released, the documented macOS unit command passed 215/215 and built the UI-test target. The next iPhone AX-only attempt exposed simulator-language contamination from another task (Équivalent textuel rather than the expected English label); it stopped before label taps. Pinned this English AX regression to AppleLanguages=(en), AppleLocale=en_CA rather than relying on inherited simulator language. Final iPhone AX rerun plus macOS affected-unit/UI-test-compilation check queued; already-queued iPad AX will build the pinned-language source. No app code or audit eligibility changed in this setup fix.
 <!-- SECTION:NOTES:END -->
