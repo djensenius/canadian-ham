@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-21 14:58'
-updated_date: '2026-10-24 20:27'
+updated_date: '2026-10-24 20:35'
 labels:
   - web
   - apple
@@ -146,6 +146,8 @@ All Apple commands ran through nohup scripts with grep polling and one simulator
 - No PR opened. Independent reviewer approval is still required before the coordinator opens one.
 
 Review follow-up direction (coordinator 2026-10-24): local occluded-or-measured composite also covers new TASK-46.8.1 M1-round lesson-quiz audits under owner delegation 2026-10-22. Round chrome/title follows interface language with English fallback; focus moves only on crossing round boundaries, never initial entry or within-round navigation. Full Apple suites remain deferred per owner decision 2026-10-17 to the eventual merge batch (iOS, macOS, tvOS, visionOS due shared content package).
+
+Review follow-up implementation: recorded the dated 2026-10-24 audit widening in AGENTS.md and cited it in the new composite comment; Apple round/checkpoint titles now resolve interface language with existing EN fallback. Round focus is only requested at round changes/checkpoint entry, not initial loading, retry, or within-round Next/Previous. Web DOM focus and native production focus-routing regression assertions cover both directions and non-movement within rounds. Both readers retain the full legacy seeded order and suppress rounds if concept checks coexist; new TS/Swift tests verify no dropped checks. Unknown anchors/reversed sections cannot reset the checker high-water mark; regression added. New web group has appFlowTestTimeoutMs, seeded-ID comment corrected. Full Apple suites remain deferred per owner decision 2026-10-17 to the eventual four-platform merge batch. Production-source commit 791e41c5; test-fixture correction 7ec2f938. Requested full documented macOS unit command PASS 218/218 (mac-full.log). pnpm test final PASS: content-tools 250, Morse 21, calculator 127, web 270. Schemas 59/59, typecheck, Apple text-source self-test/check, web build/URL-CSP audit and guard self-test/approved diff PASS. Earlier full pnpm runs exposed unchanged practice hint-help timer and v6 IndexedDB-upgrade timeout flakes; final full pnpm run is green without editing those tests. New test-only fixture errors were corrected: web currently shares UI/bank preference; native checkpoint exact title includes Reference facts prefix. Apple 17-method/device runs and l10n remain queued under nohup in /tmp/task-46.8.1-review. Future PR guard approval must cite the dated widening (Test-guard-approved: owner decision 2026-10-24; retain 2026-10-22 marker where relevant). No old audit/helper or twelve existing quiz test bodies changed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
