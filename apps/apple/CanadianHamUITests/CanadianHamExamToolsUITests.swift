@@ -1231,6 +1231,14 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let initialSampleFinishedAt = Date()
         let initialSeconds = try mockExamElapsedSeconds(in: initialProgress, timerState: timerState)
         XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].exists, "Basic mock exams must not offer hints")
+        XCTContext.runActivity(named: "Mock exam code caption before reference-sheet use (\(appearance))") { activity in
+            let screen = XCTAttachment(screenshot: app.screenshot())
+            screen.lifetime = .keepAlways
+            activity.add(screen)
+            let caption = XCTAttachment(screenshot: seed.screenshot())
+            caption.lifetime = .keepAlways
+            activity.add(caption)
+        }
         try auditIgnoringOccludedLessonTextContrast(app: app)
 
         openTool(.referenceSheet, in: app)
