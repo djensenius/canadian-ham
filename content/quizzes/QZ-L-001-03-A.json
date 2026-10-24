@@ -38,5 +38,78 @@
     "B-001-013-010",
     "B-001-013-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [],
+  "rounds": [
+    {
+      "sectionAnchor": "reference-facts-share-spectrum-without-harm",
+      "title": {
+        "en": "Reference facts: Share spectrum without harm",
+        "fr": "Faits de référence : Partager le spectre sans nuire"
+      },
+      "officialQuestionIds": [
+        "B-001-010-001",
+        "B-001-010-002",
+        "B-001-010-003",
+        "B-001-010-004",
+        "B-001-010-005",
+        "B-001-010-006",
+        "B-001-010-007",
+        "B-001-010-008",
+        "B-001-010-009",
+        "B-001-010-010"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-life-safety-has-narrow-exceptions",
+      "title": {
+        "en": "Reference facts: Life safety has narrow exceptions",
+        "fr": "Faits de référence : La sécurité des personnes prévoit des exceptions limitées"
+      },
+      "officialQuestionIds": [
+        "B-001-011-001",
+        "B-001-011-002",
+        "B-001-011-003",
+        "B-001-011-004",
+        "B-001-011-005",
+        "B-001-011-006",
+        "B-001-011-007",
+        "B-001-011-008",
+        "B-001-011-009",
+        "B-001-011-010"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-message-handling-stays-unpaid",
+      "title": {
+        "en": "Reference facts: Message handling stays unpaid",
+        "fr": "Faits de référence : Le traitement des messages reste non rémunéré"
+      },
+      "officialQuestionIds": [
+        "B-001-012-001",
+        "B-001-012-002",
+        "B-001-012-003",
+        "B-001-012-004"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-make-the-station-traceable",
+      "title": {
+        "en": "Reference facts: Make the station traceable",
+        "fr": "Faits de référence : Rendre la station identifiable"
+      },
+      "officialQuestionIds": [
+        "B-001-013-001",
+        "B-001-013-002",
+        "B-001-013-003",
+        "B-001-013-004",
+        "B-001-013-005",
+        "B-001-013-006",
+        "B-001-013-007",
+        "B-001-013-008",
+        "B-001-013-009",
+        "B-001-013-010",
+        "B-001-013-011"
+      ]
+    }
+  ]
 }

@@ -45,5 +45,94 @@
     "B-001-019-005",
     "B-001-019-006"
   ],
-  "conceptChecks": []
+  "conceptChecks": [],
+  "rounds": [
+    {
+      "sectionAnchor": "reference-facts-qualification-by-privilege-matrix-for-access-and-power",
+      "title": {
+        "en": "Reference facts: Qualification-by-privilege matrix for access and power",
+        "fr": "Faits de référence : Matrice des qualifications et privilèges pour l’accès et la puissance"
+      },
+      "officialQuestionIds": [
+        "B-001-015-001",
+        "B-001-015-002",
+        "B-001-015-003",
+        "B-001-015-004",
+        "B-001-015-011",
+        "B-001-017-001",
+        "B-001-017-002",
+        "B-001-017-004",
+        "B-001-017-005",
+        "B-001-017-007",
+        "B-001-017-009",
+        "B-001-017-010",
+        "B-001-018-003",
+        "B-001-018-004"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-band-edges-contain-the-whole-signal",
+      "title": {
+        "en": "Reference facts: Band edges contain the whole signal",
+        "fr": "Faits de référence : Tout le signal doit rester dans les limites de la bande"
+      },
+      "officialQuestionIds": [
+        "B-001-015-005",
+        "B-001-015-006",
+        "B-001-015-007",
+        "B-001-015-008",
+        "B-001-015-009",
+        "B-001-015-010",
+        "B-001-016-008"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-mode-width-must-fit-the-band",
+      "title": {
+        "en": "Reference facts: Mode width must fit the band",
+        "fr": "Faits de référence : La largeur du mode doit convenir à la bande"
+      },
+      "officialQuestionIds": [
+        "B-001-016-001",
+        "B-001-016-002",
+        "B-001-016-003",
+        "B-001-016-004",
+        "B-001-016-005",
+        "B-001-016-006",
+        "B-001-016-007",
+        "B-001-016-009",
+        "B-001-016-010",
+        "B-001-016-011"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-power-needs-a-quantity-and-a-measurement-point",
+      "title": {
+        "en": "Reference facts: Power needs a quantity and a measurement point",
+        "fr": "Faits de référence : La puissance exige une grandeur et un point de mesure"
+      },
+      "officialQuestionIds": [
+        "B-001-017-003",
+        "B-001-017-006",
+        "B-001-017-008"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-automatic-signals-still-need-clean-control",
+      "title": {
+        "en": "Reference facts: Automatic signals still need clean control",
+        "fr": "Faits de référence : Les signaux automatiques exigent aussi un contrôle adéquat"
+      },
+      "officialQuestionIds": [
+        "B-001-018-001",
+        "B-001-018-002",
+        "B-001-019-001",
+        "B-001-019-002",
+        "B-001-019-003",
+        "B-001-019-004",
+        "B-001-019-005",
+        "B-001-019-006"
+      ]
+    }
+  ]
 }

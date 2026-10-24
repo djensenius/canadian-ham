@@ -92,6 +92,8 @@ Some modules are primarily made of rule facts already enumerated by the official
 - phrase objectives, tables, and explanations as positive rule statements and avoid restating wrong answer options; and
 - use lesson quiz JSON that includes all official question IDs for the covered subsections and `conceptChecks: []`.
 
+M1 quiz JSON also declares `rounds` in lesson `##` heading order. Each round has a `sectionAnchor`, an EN/FR `title`, and `officialQuestionIds`; every official quiz item belongs to exactly one round matching its hint's teaching-section anchor. The quiz checker validates the mapping and heading titles. Web and iOS/iPadOS/macOS group each quiz's seeded order by these sections, show a checkpoint between rounds, and save one final attempt. Other modules retain their existing ungrouped quizzes; tvOS and visionOS do not have lesson-quiz screens.
+
 The format lets the app teach the official rules without creating near-duplicate concept checks for a rule bank that is already exhaustive. M1 keeps this reference-only policy under TASK-46.8. Its companion qualification-by-privilege matrices in L-001-02 and L-001-04 separate station work from frequency access and power. The M1 numbers board in L-001-01 pairs each value with its job and unit. A cover-and-recall study cue may accompany a table; it is not a new practice item.
 
 ## Quiz check

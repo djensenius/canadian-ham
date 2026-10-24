@@ -36,5 +36,76 @@
     "B-001-022-004",
     "B-001-022-005"
   ],
-  "conceptChecks": []
+  "conceptChecks": [],
+  "rounds": [
+    {
+      "sectionAnchor": "reference-facts-authority-comes-from-named-sources",
+      "title": {
+        "en": "Reference facts: Authority comes from named sources",
+        "fr": "Faits de référence : L’autorité provient de sources désignées"
+      },
+      "officialQuestionIds": [
+        "B-001-001-001",
+        "B-001-001-002",
+        "B-001-001-003",
+        "B-001-001-004",
+        "B-001-003-004"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-qualifications-follow-a-learning-path",
+      "title": {
+        "en": "Reference facts: Qualifications follow a learning path",
+        "fr": "Faits de référence : Les qualifications suivent un parcours d’apprentissage"
+      },
+      "officialQuestionIds": [
+        "B-001-004-001",
+        "B-001-004-002",
+        "B-001-004-003",
+        "B-001-004-004",
+        "B-001-004-005",
+        "B-001-004-006",
+        "B-001-004-007",
+        "B-001-022-001",
+        "B-001-022-002",
+        "B-001-022-003",
+        "B-001-022-004",
+        "B-001-022-005"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-a-lifetime-certificate-needs-current-records",
+      "title": {
+        "en": "Reference facts: A lifetime certificate needs current records",
+        "fr": "Faits de référence : Un certificat à vie exige des dossiers à jour"
+      },
+      "officialQuestionIds": [
+        "B-001-002-001",
+        "B-001-002-002",
+        "B-001-002-003",
+        "B-001-002-004",
+        "B-001-002-005",
+        "B-001-002-006",
+        "B-001-002-007",
+        "B-001-002-008",
+        "B-001-002-009"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-trust-needs-honest-signals-and-fair-process",
+      "title": {
+        "en": "Reference facts: Trust needs honest signals and fair process",
+        "fr": "Faits de référence : La confiance exige des signaux honnêtes et une procédure équitable"
+      },
+      "officialQuestionIds": [
+        "B-001-003-001",
+        "B-001-003-002",
+        "B-001-003-003",
+        "B-001-003-005",
+        "B-001-003-006",
+        "B-001-003-007",
+        "B-001-003-008"
+      ]
+    }
+  ]
 }

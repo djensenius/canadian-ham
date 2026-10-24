@@ -12,6 +12,36 @@
       "uniqueItems": true,
       "items": { "$ref": "common.schema.json#/$defs/questionId" }
     },
+    "rounds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "sectionAnchor",
+          "title",
+          "officialQuestionIds"
+        ],
+        "properties": {
+          "sectionAnchor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/nullableLocalizedText"
+          },
+          "officialQuestionIds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "common.schema.json#/$defs/questionId"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
     "conceptChecks": {
       "type": "array",
       "items": {

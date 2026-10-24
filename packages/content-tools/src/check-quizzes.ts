@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { ACTIVE_GENERATED_DIR } from "./active-bank.ts";
 import { isMainModule } from "./cli.ts";
+import { quizRoundIssues } from "./quiz-rounds.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
@@ -173,6 +174,7 @@ export type QuizCheckOptions = {
   lessonRoot?: string;
   questionsPath?: string;
   quizRoot?: string;
+  hintsRoot?: string;
 };
 
 export type QuizCheckReport = {
@@ -644,6 +646,23 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
       issues.push(`${filePath}: quiz id ${quiz.id} is not referenced by any lesson front matter`);
     } else if (!expectedLessonIds.includes(quiz.lessonId)) {
       issues.push(`${filePath}: quiz id ${quiz.id} is referenced by ${[...new Set(expectedLessonIds)].join(", ")}, not ${quiz.lessonId}`);
+    }
+
+    if (lesson?.moduleId === "M1") {
+      const hintLinks = new Map<string, { lessonId: string; sectionAnchor?: string }>();
+      for (const id of quiz.officialQuestionIds) {
+        const hintPath = path.join(options.hintsRoot ?? path.join(REPO_ROOT, "content/hints"), id.slice(0, 5).toLowerCase(), `${id.toLowerCase()}.json`);
+        try {
+          const hint = JSON.parse(await readFile(hintPath, "utf8"));
+          hintLinks.set(id, hint.lessonLink);
+        } catch {
+          issues.push(`${filePath}: missing or invalid hint for round item ${id}`);
+        }
+      }
+      const roundIssues = quizRoundIssues(isRecord(rawQuiz) ? rawQuiz.rounds : undefined, quiz.lessonId, quiz.officialQuestionIds, quiz.conceptChecks.length, await readFile(lesson.filePath, "utf8"), hintLinks);
+      issues.push(...roundIssues.map((issue) => `${filePath}: ${issue}`));
+    } else if (isRecord(rawQuiz) && rawQuiz.rounds !== undefined) {
+      issues.push(`${filePath}: rounds are only supported for M1 quizzes`);
     }
 
     const uniqueOfficialQuestionIds = [...new Set(quiz.officialQuestionIds)];

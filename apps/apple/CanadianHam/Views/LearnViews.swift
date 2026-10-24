@@ -607,12 +607,36 @@ final class LessonQuizSessionState: ObservableObject {
     @Published var seed: String
     @Published var items: [LessonQuizRuntimeItem] = []
     @Published var currentIndex = 0
+    @Published var checkpointVisible = false
     @Published var selectedByItemId: [String: Int] = [:]
     @Published var submittedAttemptID: String?
     @Published var errorMessage: String?
     @Published var hintLevelsByQuestionId: [String: Int] = [:]
     @Published var hintQualifiedQuestionIds: Set<String> = []
     @Published var answeredWithHelpIds: Set<String> = []
+
+    func next(in quiz: LessonQuiz) {
+        if let round = lessonQuizRoundProgress(quiz: quiz, items: items, currentIndex: currentIndex),
+           currentIndex == round.endIndex, currentIndex + 1 < items.count {
+            checkpointVisible = true
+        } else {
+            currentIndex = min(items.count - 1, currentIndex + 1)
+        }
+    }
+
+    func continueRound() {
+        guard checkpointVisible, currentIndex + 1 < items.count else { return }
+        checkpointVisible = false
+        currentIndex += 1
+    }
+
+    func previous() {
+        if checkpointVisible {
+            checkpointVisible = false
+        } else {
+            currentIndex = max(0, currentIndex - 1)
+        }
+    }
 
     func select(_ sourceOrChoiceIndex: Int, for item: LessonQuizRuntimeItem) {
         guard selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return }
@@ -750,6 +774,16 @@ private struct LessonQuizView: View {
     // The shared tool presenter requires a calculator model; this quiz exposes only .hint.
     @StateObject private var presentationCalculator = ExamCalculatorViewModel()
     @State private var calculatorFocused = false
+    @AccessibilityFocusState private var roundFocus: LessonQuizRoundFocus?
+    @State private var previousRoundPosition: LessonQuizRoundPosition?
+
+    private var roundPosition: LessonQuizRoundPosition {
+        LessonQuizRoundPosition(roundIndex: roundProgress?.roundIndex, checkpointVisible: state.checkpointVisible)
+    }
+
+    private var roundProgress: LessonQuizRoundProgress? {
+        lessonQuizRoundProgress(quiz: quiz, items: items, currentIndex: currentIndex)
+    }
 
     private var seed: String {
         get { state.seed }
@@ -777,26 +811,40 @@ private struct LessonQuizView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if let loadErrorMessage {
-                    MessagePanel(title: "Lesson quiz unavailable", message: loadErrorMessage, kind: .warning)
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    if let loadErrorMessage {
+                        MessagePanel(title: "Lesson quiz unavailable", message: loadErrorMessage, kind: .warning)
+                    }
+                    quizCard
                 }
-                quizCard
+                .pagePadding()
             }
-            .pagePadding()
+            .background(DesignTokens.Colors.paper)
+            .navigationTitle("Lesson quiz")
+            .task(id: state.generation) { if items.isEmpty { restart(keepSeed: true) } }
+            .examToolPresentation(
+                selectedTool: $selectedTool,
+                calculator: presentationCalculator,
+                calculatorFocused: $calculatorFocused,
+                hintContext: hintToolContext
+            )
+            .onChange(of: currentIndex) { _, _ in selectedTool = nil }
+            .task(id: roundPosition) {
+                let position = roundPosition
+                let target = position.focusTarget(from: previousRoundPosition)
+                previousRoundPosition = position
+                guard let target else { return }
+                selectedTool = nil
+                roundFocus = nil
+                await Task.yield()
+                guard !Task.isCancelled else { return }
+                proxy.scrollTo("lesson-quiz-position", anchor: .top)
+                roundFocus = target
+            }
+            .onDisappear { selectedTool = nil }
         }
-        .background(DesignTokens.Colors.paper)
-        .navigationTitle("Lesson quiz")
-        .task(id: state.generation) { if items.isEmpty { restart(keepSeed: true) } }
-        .examToolPresentation(
-            selectedTool: $selectedTool,
-            calculator: presentationCalculator,
-            calculatorFocused: $calculatorFocused,
-            hintContext: hintToolContext
-        )
-        .onChange(of: currentIndex) { _, _ in selectedTool = nil }
-        .onDisappear { selectedTool = nil }
     }
 
     private var quizCard: some View {
@@ -807,8 +855,19 @@ private struct LessonQuizView: View {
                 MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
             }
 
-            if let item = items[safe: currentIndex] {
-                Text("Question \(currentIndex + 1) of \(items.count)")
+            if state.checkpointVisible, let round = roundProgress {
+                roundCheckpoint(round)
+            } else if let item = items[safe: currentIndex] {
+                if let round = roundProgress {
+                    Text("Round \(round.roundIndex + 1) of \(round.roundCount): \(round.round.title.textAndLanguage(for: canadianHamUsesFrenchUI ? .french : .english).text)") // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("lesson-quiz-round-heading")
+                        .accessibilityFocused($roundFocus, equals: .question)
+                        .id("lesson-quiz-position")
+                }
+                Text("Question \(currentIndex - (roundProgress?.startIndex ?? 0) + 1) of \(roundProgress?.questionCount ?? items.count)") // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                 if hintToolContext != nil {
@@ -840,6 +899,33 @@ private struct LessonQuizView: View {
         .paperCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("lesson-quiz-card")
+    }
+
+    private func roundCheckpoint(_ round: LessonQuizRoundProgress) -> some View {
+        let roundItems = Array(items[round.startIndex...round.endIndex])
+        let correct = roundItems.filter { selectedByItemId[$0.id] == 0 }.count
+        let answered = roundItems.filter { selectedByItemId[$0.id] != nil }.count
+        return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            Text("Round \(round.roundIndex + 1) of \(round.roundCount) checkpoint") // l10n: localized
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("lesson-quiz-round-checkpoint")
+                .accessibilityFocused($roundFocus, equals: .checkpoint)
+                .id("lesson-quiz-position")
+            Text(round.round.title.textAndLanguage(for: canadianHamUsesFrenchUI ? .french : .english).text) // l10n: verbatim
+                .font(DesignTokens.FontScale.body)
+            Text("Score so far: \(correct) / \(round.questionCount). Answered: \(answered) / \(round.questionCount).") // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .accessibilityIdentifier("lesson-quiz-round-score")
+            Button { state.previous() } label: {
+                AccessibleSecondaryButtonLabel(title: "Previous")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+            Button("Continue to next round") { state.continueRound() }
+                .buttonStyle(AccessiblePrimaryButtonStyle())
+                .accessibilityIdentifier("lesson-quiz-round-continue")
+        }
+        .foregroundStyle(DesignTokens.Colors.ink)
     }
 
     private var quizHeaderControls: some View {
@@ -922,12 +1008,12 @@ private struct LessonQuizView: View {
 
     @ViewBuilder
     private var navigationButtons: some View {
-        Button { currentIndex = max(0, currentIndex - 1) } label: {
+        Button { state.previous() } label: {
             AccessibleSecondaryButtonLabel(title: "Previous")
         }
         .disabled(currentIndex == 0)
         .buttonStyle(AccessibleSecondaryButtonStyle())
-        Button { currentIndex = min(items.count - 1, currentIndex + 1) } label: {
+        Button { state.next(in: quiz) } label: {
             AccessibleSecondaryButtonLabel(title: "Next")
         }
         .disabled(currentIndex + 1 >= items.count)
@@ -943,12 +1029,15 @@ private struct LessonQuizView: View {
     }
 
     private func restart(keepSeed: Bool = false) {
+        previousRoundPosition = nil
+        roundFocus = nil
         if !keepSeed {
             seed = "lesson-quiz/\(quiz.id)/\(attempts.count + 1)/\(UUID().uuidString)"
         }
         do {
             items = try buildLessonQuizItems(quiz: quiz, seed: seed)
             currentIndex = 0
+            state.checkpointVisible = false
             selectedByItemId = [:]
             state.hintLevelsByQuestionId = [:]
             state.hintQualifiedQuestionIds = []
@@ -960,33 +1049,6 @@ private struct LessonQuizView: View {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             items = []
         }
-    }
-
-    private func buildLessonQuizItems(quiz: LessonQuiz, seed: String) throws -> [LessonQuizRuntimeItem] {
-        let official = try quiz.officialQuestionIds.enumerated().map { index, questionId in
-            var rng = Pcg32(seed: "\(seed):official:\(index):\(questionId)")
-            return LessonQuizRuntimeItem.official(
-                id: "\(quiz.id):official:\(questionId)",
-                questionId: questionId,
-                choicePermutation: try CanadianHamEngine.shuffled([0, 1, 2, 3], rng: &rng)
-            )
-        }
-        let concepts = try quiz.conceptChecks.enumerated().map { index, check in
-            var rng = Pcg32(seed: "\(seed):concept:\(index):\(check.id)")
-            return LessonQuizRuntimeItem.concept(
-                id: "\(quiz.id):concept:\(check.id)",
-                conceptCheck: check,
-                choicePermutation: try CanadianHamEngine.shuffled(Array(check.choices.indices), rng: &rng)
-            )
-        }
-        var rng = Pcg32(seed: "\(seed):items:\(quiz.id)")
-        let shuffled = try CanadianHamEngine.shuffled(official + concepts, rng: &rng)
-#if DEBUG
-        if let value = AppLaunchArguments.value(after: "-CanadianHamLessonQuizLimit"), let limit = Int(value), limit > 0 {
-            return Array(shuffled.prefix(limit))
-        }
-#endif
-        return shuffled
     }
 
     private func submit() {
@@ -1057,6 +1119,72 @@ enum LessonQuizRuntimeItem: Identifiable, Equatable {
         if case .official(_, let questionID, _) = self { return questionID }
         return nil
     }
+}
+
+enum LessonQuizRoundFocus: Hashable { case question, checkpoint }
+
+struct LessonQuizRoundPosition: Equatable {
+    let roundIndex: Int?
+    let checkpointVisible: Bool
+
+    func focusTarget(from previous: Self?) -> LessonQuizRoundFocus? {
+        guard let roundIndex, let previous, previous.roundIndex != nil else { return nil }
+        if checkpointVisible && !previous.checkpointVisible { return .checkpoint }
+        return roundIndex != previous.roundIndex ? .question : nil
+    }
+}
+
+struct LessonQuizRoundProgress {
+    let round: LessonQuizRound
+    let roundIndex: Int
+    let roundCount: Int
+    let startIndex: Int
+    let endIndex: Int
+    var questionCount: Int { endIndex - startIndex + 1 }
+}
+
+func lessonQuizRoundProgress(quiz: LessonQuiz, items: [LessonQuizRuntimeItem], currentIndex: Int) -> LessonQuizRoundProgress? {
+    guard quiz.conceptChecks.isEmpty, let id = items[safe: currentIndex]?.questionID, let rounds = quiz.rounds,
+          let roundIndex = rounds.firstIndex(where: { $0.officialQuestionIds.contains(id) }) else { return nil }
+    let round = rounds[roundIndex]
+    let indices = items.indices.filter { index in
+        items[index].questionID.map { round.officialQuestionIds.contains($0) } ?? false
+    }
+    guard let startIndex = indices.first, let endIndex = indices.last else { return nil }
+    return LessonQuizRoundProgress(round: round, roundIndex: roundIndex, roundCount: rounds.count, startIndex: startIndex, endIndex: endIndex)
+}
+
+func buildLessonQuizItems(quiz: LessonQuiz, seed: String) throws -> [LessonQuizRuntimeItem] {
+    let official = try quiz.officialQuestionIds.enumerated().map { index, questionId in
+        var rng = Pcg32(seed: "\(seed):official:\(index):\(questionId)")
+        return LessonQuizRuntimeItem.official(
+            id: "\(quiz.id):official:\(questionId)",
+            questionId: questionId,
+            choicePermutation: try CanadianHamEngine.shuffled([0, 1, 2, 3], rng: &rng)
+        )
+    }
+    let concepts = try quiz.conceptChecks.enumerated().map { index, check in
+        var rng = Pcg32(seed: "\(seed):concept:\(index):\(check.id)")
+        return LessonQuizRuntimeItem.concept(
+            id: "\(quiz.id):concept:\(check.id)",
+            conceptCheck: check,
+            choicePermutation: try CanadianHamEngine.shuffled(Array(check.choices.indices), rng: &rng)
+        )
+    }
+    var rng = Pcg32(seed: "\(seed):items:\(quiz.id)")
+    let seededItems = try CanadianHamEngine.shuffled(official + concepts, rng: &rng)
+    // Group the existing seeded order without changing choice permutations.
+    let shuffled = (quiz.conceptChecks.isEmpty ? quiz.rounds : nil).map { rounds in
+        rounds.flatMap { round in seededItems.filter { item in
+            item.questionID.map { round.officialQuestionIds.contains($0) } ?? false
+        } }
+    } ?? seededItems
+#if DEBUG
+    if let value = AppLaunchArguments.value(after: "-CanadianHamLessonQuizLimit"), let limit = Int(value), limit > 0 {
+        return Array(shuffled.prefix(limit))
+    }
+#endif
+    return shuffled
 }
 
 private struct LessonQuizQuestionView: View {

@@ -36,7 +36,7 @@ import {
 import { explanationForQuestion, mainExplanationText, parseChoiceNotes, type Explanation } from "./data/explanations";
 import { hintForQuestion, type QuestionHint } from "./data/hints";
 import { lessonNeighbors, lessonsById, lessonsByModuleId, modules, modulesById, type LessonMeta } from "./data/lessons";
-import { buildLessonQuizItems, lessonQuizzesById, type ConceptCheck, type LessonQuiz, type LessonQuizItem } from "./data/quizzes";
+import { buildLessonQuizItems, lessonQuizRoundProgress, lessonQuizzesById, type ConceptCheck, type LessonQuiz, type LessonQuizItem } from "./data/quizzes";
 import { ReferenceSheetTool } from "./components/ReferenceSheetTool";
 import {
   defaultPreferences,
@@ -117,6 +117,7 @@ interface MockExamSession {
 }
 
 interface LessonQuizSession {
+  readonly checkpointVisible: boolean;
   readonly seed: string;
   readonly items: readonly LessonQuizItem[];
   readonly currentIndex: number;
@@ -129,6 +130,7 @@ interface LessonQuizSession {
 
 function createLessonQuizSession(quiz: LessonQuiz, seed: string): LessonQuizSession {
   return {
+    checkpointVisible: false,
     seed,
     items: buildLessonQuizItems(quiz, seed),
     currentIndex: 0,
@@ -1242,6 +1244,28 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
   const currentItem = items[currentIndex];
   const allAnswered = items.every((item) => selectedByItemId.has(item.id));
   const latestAttempt = attempts[attempts.length - 1];
+  const roundProgress = lessonQuizRoundProgress(quiz, items, currentIndex);
+  const roundHeadingRef = useRef<HTMLHeadingElement>(null);
+  const checkpointHeadingRef = useRef<HTMLHeadingElement>(null);
+  const questionNextButtonRef = useRef<HTMLButtonElement>(null);
+  const previousRoundPosition = useRef({ seed, roundIndex: roundProgress?.roundIndex, checkpointVisible: session.checkpointVisible });
+  useEffect(() => {
+    const previous = previousRoundPosition.current;
+    previousRoundPosition.current = { seed, roundIndex: roundProgress?.roundIndex, checkpointVisible: session.checkpointVisible };
+    if (roundProgress === undefined || previous.seed !== seed) return;
+    if (session.checkpointVisible && !previous.checkpointVisible) {
+      checkpointHeadingRef.current?.focus();
+    } else if (previous.checkpointVisible && !session.checkpointVisible && previous.roundIndex === roundProgress.roundIndex) {
+      // Previous on a checkpoint returns to the same round's last question: put focus back on the
+      // Next button the learner pressed, not on the round heading.
+      questionNextButtonRef.current?.focus();
+    } else if (previous.roundIndex !== undefined && previous.roundIndex !== roundProgress.roundIndex) {
+      roundHeadingRef.current?.focus();
+    }
+  }, [seed, session.checkpointVisible, roundProgress]);
+  const roundItems = roundProgress === undefined ? [] : items.slice(roundProgress.startIndex, roundProgress.endIndex + 1);
+  const roundCorrect = roundItems.filter((item) => selectedByItemId.get(item.id) === 0).length;
+  const roundAnswered = roundItems.filter((item) => selectedByItemId.has(item.id)).length;
 
   // Build every update from the latest stored session so a hint timer and a click in the same batch can't overwrite each other.
   function updateSession(update: (current: LessonQuizSession) => LessonQuizSession): void {
@@ -1330,9 +1354,20 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
         </div>
         <button type="button" className="secondary-button" onClick={restart}>{t(interfaceLanguage, "lessonQuizRetry")}</button>
       </div>
-      {currentItem === undefined ? <p>{t(interfaceLanguage, "lessonQuizNoItems")}</p> : (
+      {currentItem === undefined ? <p>{t(interfaceLanguage, "lessonQuizNoItems")}</p> : session.checkpointVisible && roundProgress !== undefined ? (
+        <div className="lesson-quiz__checkpoint">
+          <h4 ref={checkpointHeadingRef} tabIndex={-1}>{t(interfaceLanguage, "lessonQuizRoundCheckpoint", roundProgress.roundIndex + 1, roundProgress.roundCount)}</h4>
+          <p>{roundProgress.round.title[interfaceLanguage] ?? roundProgress.round.title.en}</p>
+          <p>{t(interfaceLanguage, "lessonQuizRoundScore", roundCorrect, roundProgress.questionCount, roundAnswered)}</p>
+          <div className="action-row">
+            <button type="button" onClick={() => updateSession((current) => ({ ...current, checkpointVisible: false }))}>{t(interfaceLanguage, "previous")}</button>
+            <button type="button" className="primary-button" onClick={() => updateSession((current) => current.checkpointVisible ? { ...current, checkpointVisible: false, currentIndex: current.currentIndex + 1 } : current)}>{t(interfaceLanguage, "lessonQuizRoundContinue")}</button>
+          </div>
+        </div>
+      ) : (
         <>
-          <p>{t(interfaceLanguage, "questionProgress", currentIndex + 1, items.length)}</p>
+          {roundProgress === undefined ? null : <h4 ref={roundHeadingRef} tabIndex={-1}>{t(interfaceLanguage, "lessonQuizRound", roundProgress.roundIndex + 1, roundProgress.roundCount, roundProgress.round.title[interfaceLanguage] ?? roundProgress.round.title.en)}</h4>}
+          <p>{t(interfaceLanguage, "questionProgress", roundProgress === undefined ? currentIndex + 1 : currentIndex - roundProgress.startIndex + 1, roundProgress?.questionCount ?? items.length)}</p>
           <ExamTools
             context="lesson-quiz"
             interfaceLanguage={interfaceLanguage}
@@ -1356,7 +1391,9 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
           </ExamTools>
           <div className="action-row">
             <button type="button" disabled={currentIndex === 0} onClick={() => updateSession((current) => ({ ...current, currentIndex: Math.max(0, current.currentIndex - 1) }))}>{t(interfaceLanguage, "previous")}</button>
-            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => updateSession((current) => ({ ...current, currentIndex: Math.min(current.items.length - 1, current.currentIndex + 1) }))}>{t(interfaceLanguage, "next")}</button>
+            <button type="button" ref={questionNextButtonRef} disabled={currentIndex >= items.length - 1} onClick={() => updateSession((current) => roundProgress !== undefined && current.currentIndex === roundProgress.endIndex && roundProgress.roundIndex + 1 < roundProgress.roundCount
+              ? { ...current, checkpointVisible: true }
+              : { ...current, currentIndex: Math.min(current.items.length - 1, current.currentIndex + 1) })}>{t(interfaceLanguage, "next")}</button>
             <button type="button" className="primary-button" disabled={!allAnswered || submittedAttemptId !== null} onClick={submitQuiz}>{t(interfaceLanguage, "lessonQuizSubmit")}</button>
           </div>
         </>

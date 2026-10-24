@@ -27,5 +27,58 @@
     "B-001-025-003",
     "B-001-025-004"
   ],
-  "conceptChecks": []
+  "conceptChecks": [],
+  "rounds": [
+    {
+      "sectionAnchor": "reference-facts-follow-the-applicable-consultation-process",
+      "title": {
+        "en": "Reference facts: Follow the applicable consultation process",
+        "fr": "Faits de référence : Suivre le processus de consultation applicable"
+      },
+      "officialQuestionIds": [
+        "B-001-023-001",
+        "B-001-023-002",
+        "B-001-023-003",
+        "B-001-023-004",
+        "B-001-023-005",
+        "B-001-023-006",
+        "B-001-023-007",
+        "B-001-023-008",
+        "B-001-023-009",
+        "B-001-023-010"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-protect-people-by-assessing-exposure",
+      "title": {
+        "en": "Reference facts: Protect people by assessing exposure",
+        "fr": "Faits de référence : Protéger les personnes en évaluant l’exposition"
+      },
+      "officialQuestionIds": [
+        "B-001-024-001",
+        "B-001-024-002",
+        "B-001-024-003",
+        "B-001-024-004",
+        "B-001-024-005",
+        "B-001-024-006",
+        "B-001-024-007",
+        "B-001-024-008",
+        "B-001-024-009",
+        "B-001-024-010"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-investigate-interference-at-the-affected-equipment",
+      "title": {
+        "en": "Reference facts: Investigate interference at the affected equipment",
+        "fr": "Faits de référence : Rechercher les brouillages à l’équipement touché"
+      },
+      "officialQuestionIds": [
+        "B-001-025-001",
+        "B-001-025-002",
+        "B-001-025-003",
+        "B-001-025-004"
+      ]
+    }
+  ]
 }
