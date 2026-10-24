@@ -1062,6 +1062,32 @@ private extension CalculatorToolLayout {
     var keyFont: Font { (usesAccessibilityMetrics ? DesignTokens.FontScale.body : DesignTokens.FontScale.caption).weight(.semibold) }
 }
 
+private struct ReferenceSheetTextEquivalentToggleStyle: ToggleStyle {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    func makeBody(configuration: Configuration) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                configuration.label
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+                    .onTapGesture { configuration.isOn.toggle() }
+                Toggle(isOn: configuration.$isOn) { configuration.label }
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+            }
+            // Preserve native switch semantics for the entire stacked, tappable row.
+            .accessibilityRepresentation {
+                Toggle(isOn: configuration.$isOn) { configuration.label }
+                    .toggleStyle(.switch)
+            }
+        } else {
+            Toggle(isOn: configuration.$isOn) { configuration.label }
+                .toggleStyle(.automatic)
+        }
+    }
+}
+
 struct ReferenceSheetToolView: View {
     let configuration: ReferenceSheetConfiguration
     var showsFullSheetButton = false
@@ -1136,23 +1162,13 @@ struct ReferenceSheetToolView: View {
 
     @ViewBuilder
     private func officialSheet(_ document: OfficialReferenceSheetDocument, width: CGFloat) -> some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text("Text equivalent") // l10n: localized
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-                Toggle("Text equivalent", isOn: $showsTextEquivalent) // l10n: localized
-                    .labelsHidden()
-                    .accessibilityIdentifier("reference-sheet-text-equivalent")
-            }
-        } else {
-            Toggle(isOn: $showsTextEquivalent) {
-                Text("Text equivalent") // l10n: localized
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .accessibilityIdentifier("reference-sheet-text-equivalent")
+        Toggle(isOn: $showsTextEquivalent) {
+            Text("Text equivalent") // l10n: localized
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
         }
+        .toggleStyle(ReferenceSheetTextEquivalentToggleStyle())
+        .accessibilityIdentifier("reference-sheet-text-equivalent")
         if showsTextEquivalent {
             LessonMarkdownView(markdown: document.markdown, title: "")
                 .accessibilityIdentifier("reference-sheet-official-text")
