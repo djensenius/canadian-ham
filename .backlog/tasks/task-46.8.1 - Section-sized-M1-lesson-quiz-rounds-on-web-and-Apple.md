@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-21 14:58'
-updated_date: '2026-10-24 18:44'
+updated_date: '2026-10-24 18:48'
 labels:
   - web
   - apple
@@ -41,4 +41,6 @@ Owner approved section-sized quiz rounds as part of TASK-46.8 on 2026-10-12. The
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented explicit bilingual M1 rounds derived from hint section anchors, with schema + checker validation for unique complete coverage, heading order, titles/translations and hint agreement. There are 24 rounds across six quizzes, retaining all 199 official items. Both readers group the original seeded order without changing choice permutations; non-M1 quizzes remain ungrouped. One cached session and one final attempt remain in use. Coordinator confirmed checkpoints only between rounds, correct/total and answered count, unrestricted unanswered navigation, and no reopening a dismissed checkpoint on resume. New web round/help/persistence/resume and EN/FR light/dark axe tests pass. pnpm test PASS: content-tools 249, Morse 21, calculator 127, web 267; schemas 59/59, typecheck and content-swift 27/27 PASS. First macOS targeted run waiting on shared xbuild lock. tvOS/visionOS quiz UI N/A by approved scope; shared content decoding will be build-checked by localization validation.
+
+Targeted macOS initial run PASS 4/4 (two new full-M1/order/boundary/session methods plus existing cache/help payload regressions); the normal documented macOS command built the entire UI-test target successfully. Host app logged the pre-existing local persistent-store unknown-model migration diagnostic; all regression stores are in-memory and passed, and no persistent data was reset/deleted. Intentional French xbuild export round trip PASS with catalogue byte-unchanged. Final-source macOS nine-test run and pnpm check:apple-l10n (including generic tvOS/visionOS builds) queued through nohup. New iPhone/iPad M1 tests and unchanged 12 quiz/feedback regression methods queued; no full suites. Additional partial-score web test PASS; import checks, web build/dist URL+CSP audit and links PASS. Pre-existing ExamTools tests/helpers are byte-identical to main. Guard self-test and approved diff PASS with Test-guard-approved: owner decision 2026-10-22.
 <!-- SECTION:NOTES:END -->
