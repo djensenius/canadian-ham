@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve, join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -61,8 +61,9 @@ function checkWebDist(directory) {
   const transcript = readFileSync(join(officialDirectory, "text-equivalent.md"), "utf8");
   const transcriptMarkers = [transcript.trim(), "Diagram descriptions (project accessibility text, not ISED labels)", "The diagrams on pages 2–5 have no written labels."];
   for (const entry of readdirSync(directory, { recursive: true, withFileTypes: true })) {
-    if (!entry.isFile()) continue;
     const path = join(entry.parentPath, entry.name);
+    // Follow symlinks: a deploy would serve the linked file.
+    if (!entry.isFile() && !(entry.isSymbolicLink() && statSync(path).isFile())) continue;
     assert.doesNotMatch(entry.name, /^page-\d+(?:-[^.]+)?\.png$/i, `default web build contains an official page: ${path}`);
     assert.doesNotMatch(entry.name, /^text-equivalent(?:-[^.]+)?\.(?:md|txt)$/i, `default web build contains the transcript: ${path}`);
     const bytes = readFileSync(path);
@@ -72,8 +73,9 @@ function checkWebDist(directory) {
     for (const marker of transcriptMarkers) {
       assert.ok(!content.includes(marker), `default web build contains official transcript text: ${path}`);
     }
-    // Scan every extension: bundlers can inline images in JS, CSS, HTML or other assets.
-    for (const [, base64] of content.matchAll(/data:image\/[a-z0-9.+-]+(?:;[^,\s"'()<>]*)?;base64,([a-z0-9+/]+={0,2})/gi)) {
+    // Scan every extension and every base64 data URL type: bundlers can inline any asset
+    // (e.g. Vite ?inline gives application/octet-stream or text/markdown for non-images).
+    for (const [, base64] of content.matchAll(/data:[a-z0-9.+-]*\/?[a-z0-9.+-]*(?:;[^,\s"'()<>]*)?;base64,([a-z0-9+/]+={0,2})/gi)) {
       const inlineAsset = officialAssetsByHash.get(sha256(Buffer.from(base64, "base64")));
       assert.ok(!inlineAsset, `default web build contains inline official asset by SHA-256 (${inlineAsset}): ${path}`);
     }
@@ -120,6 +122,7 @@ function selfTest(temporary, project, generatedProject) {
       ["inline.js", `export default "data:image/png;base64,${bytes.toString("base64")}";`],
       ["inline.css", `body { background: url('data:image/png;base64,${bytes.toString("base64")}'); }`],
       ["inline.bin", `<img src="DATA:IMAGE/PNG;charset=utf-8;BASE64,${bytes.toString("base64")}">`],
+      ["inline-octet.js", `export default "data:application/octet-stream;base64,${bytes.toString("base64")}";`],
     ]) {
       writeFileSync(join(dist, inlinedName), content);
       assert.throws(() => checkWebDist(join(temporary, "dist")), /inline official asset by SHA-256/,
@@ -138,6 +141,15 @@ function selfTest(temporary, project, generatedProject) {
     assert.throws(() => checkWebDist(join(temporary, "dist")), /default web build contains/);
     rmSync(join(dist, name));
   }
+  const transcriptBytes = readFileSync(join(officialDirectory, "text-equivalent.md"));
+  writeFileSync(join(dist, "inline-transcript.js"), `export default "data:text/markdown;base64,${transcriptBytes.toString("base64")}";`);
+  assert.throws(() => checkWebDist(join(temporary, "dist")), /inline official asset by SHA-256/, "must reject the transcript inlined as a text/markdown data URL");
+  rmSync(join(dist, "inline-transcript.js"));
+  const outsideCopy = join(temporary, "outside-page-1.png");
+  writeFileSync(outsideCopy, readFileSync(join(officialDirectory, "page-1.png")));
+  symlinkSync(outsideCopy, join(dist, "linked-asset"));
+  assert.throws(() => checkWebDist(join(temporary, "dist")), /official asset by SHA-256/, "must reject a symlink to an official page");
+  rmSync(join(dist, "linked-asset"));
   checkWebDist(join(temporary, "dist"));
   console.log(`Official reference sheet gate self-test: YAML scopes, all ${releases.length} generated Release configurations, renamed assets (all extensions), inline JS/CSS image data URLs, transcript content and clean study-sheet fixtures passed.`);
 }
