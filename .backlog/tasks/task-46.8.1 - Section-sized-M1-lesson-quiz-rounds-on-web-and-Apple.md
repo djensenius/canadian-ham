@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-21 14:58'
-updated_date: '2026-10-24 19:30'
+updated_date: '2026-10-24 20:11'
 labels:
   - web
   - apple
@@ -53,4 +53,6 @@ iPhone 17 Pro: all five distinct new M1 methods PASS across initial/failing-only
 - testM1QuizRoundsFrenchLargestTypeDarkAndFullAccessibilityAudits: PASS 402.486s (phone-new-r2.log)
 - testM1QuizRoundsKeepHelpAnswersResumeAndOneSavedAttempt: PASS 399.061s (phone-new-r2.log).
 The latter uses the existing DEBUG six-item prefix to cross a real five-item section, check checkpoint score, Previous and frozen selection, current-lesson hint return without reopening a dismissed checkpoint, final 6/6 scoring, one saved attempt and two help flags after relaunch. Full 199-item uniqueness/order/coverage is verified by model/content tests and full 33-item web scoring/persistence. iPad five new tests and twelve unchanged regressions on each device remain queued. Logs, commands and xcresults: /tmp/task-46.8.1-runs.
+
+pnpm check:apple-l10n PASS (apple-l10n.log, exit 0): complete French export, catalogue byte-unchanged, generic CanadianHamTV and CanadianHamVision BUILD SUCCEEDED. tvOS/visionOS have no quiz screens and their quiz AC/UI-test coverage is N/A per approved scope; shared metadata/catalogue compiled successfully. No full Apple suites. iPhone unchanged 12-method quiz/feedback regression run PASS 12/12, exit 0 (phone-regression.log); combined with five new M1 methods, all 17 distinct iPhone UI methods are green. iPad new M1 run PASS 5/5: dark 91.620s, French AX dark 106.300s, French AX light 104.079s, help/resume/saved attempt 178.333s, light 86.736s (pad-new.log). iPad unchanged 12-method run is the last remaining check and is running. Final typecheck, web build/URL+CSP audit, Apple text-source check, approved test guard and diff checks PASS; original ExamTools suffix still byte-identical to main.
 <!-- SECTION:NOTES:END -->
