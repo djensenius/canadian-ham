@@ -1353,7 +1353,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
           <p>{t(interfaceLanguage, "lessonQuizRoundScore", roundCorrect, roundProgress.questionCount, roundAnswered)}</p>
           <div className="action-row">
             <button type="button" onClick={() => updateSession((current) => ({ ...current, checkpointVisible: false }))}>{t(interfaceLanguage, "previous")}</button>
-            <button type="button" className="primary-button" onClick={() => updateSession((current) => ({ ...current, checkpointVisible: false, currentIndex: current.currentIndex + 1 }))}>{t(interfaceLanguage, "lessonQuizRoundContinue")}</button>
+            <button type="button" className="primary-button" onClick={() => updateSession((current) => current.checkpointVisible ? { ...current, checkpointVisible: false, currentIndex: current.currentIndex + 1 } : current)}>{t(interfaceLanguage, "lessonQuizRoundContinue")}</button>
           </div>
         </div>
       ) : (

@@ -863,6 +863,11 @@ private struct LessonQuizView: View {
                         .accessibilityIdentifier("lesson-quiz-round-heading")
                         .accessibilityFocused($roundFocus, equals: .question)
                         .id("lesson-quiz-position")
+                        .task(id: currentIndex) {
+                            await Task.yield()
+                            guard !Task.isCancelled else { return }
+                            roundFocus = .question
+                        }
                 }
                 Text("Question \(currentIndex - (roundProgress?.startIndex ?? 0) + 1) of \(roundProgress?.questionCount ?? items.count)") // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
@@ -909,6 +914,11 @@ private struct LessonQuizView: View {
                 .accessibilityIdentifier("lesson-quiz-round-checkpoint")
                 .accessibilityFocused($roundFocus, equals: .checkpoint)
                 .id("lesson-quiz-position")
+                .task {
+                    await Task.yield()
+                    guard !Task.isCancelled else { return }
+                    roundFocus = .checkpoint
+                }
             Text(round.round.title.textAndLanguage(for: language).text) // l10n: verbatim
                 .font(DesignTokens.FontScale.body)
             Text("Score so far: \(correct) / \(round.questionCount). Answered: \(answered) / \(round.questionCount).") // l10n: localized
