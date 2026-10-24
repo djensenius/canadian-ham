@@ -1101,3 +1101,42 @@ describe("lesson-quiz answeredWithHelpIds", () => {
     assert.deepEqual(migrateLessonQuizAttempts([fixture.attempt]), [fixture.attempt]);
   });
 });
+
+describe("lesson quiz reviewQuestionIds", () => {
+  const reviewAttempt: LessonQuizAttempt = {
+    ...lessonQuizAttempt, quizId: "QZ-L-005-02-A", lessonId: "L-005-02", total: 2, correct: 1, percent: 50,
+    officialQuestionIds: ["B-005-004-001"], reviewQuestionIds: ["B-005-001-001"],
+    incorrectOfficialQuestionIds: ["B-005-001-001"], incorrectConceptCheckIds: [], answeredWithHelpIds: ["B-005-001-001"],
+  };
+  it("round-trips review IDs and union help/incorrect IDs through persistence, export, import and sync rows", async () => {
+    const store = new ProgressStore("review-roundtrip");
+    const target = new ProgressStore("review-roundtrip-target");
+    try {
+      await store.putLessonQuizAttemptWithQuestionProgress(reviewAttempt, []);
+      assert.deepEqual(await store.getLessonQuizAttempts(), [reviewAttempt]);
+      const exported = await store.exportData("2026-01-04T00:00:00.000Z");
+      const syncExport = { ...exported, syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: 2 as const, attempt: reviewAttempt }], morseCourseProgress: [] } };
+      await store.importData(syncExport);
+      assert.deepEqual((await store.exportData(exported.exportedAt)).syncDeviceRows?.lessonQuizAttempts.map((row) => row.attempt), [reviewAttempt]);
+      assert.equal(validateProgressImport(exported).ok, true);
+      await target.importData(exported);
+      assert.deepEqual(await target.getLessonQuizAttempts(), [reviewAttempt]);
+      const topLevel = validExport({ lessonQuizAttempts: [reviewAttempt] });
+      assert.deepEqual(validateProgressImport(topLevel).data?.lessonQuizAttempts, [reviewAttempt], "v2 lesson IDs pass through unchanged");
+    } finally { await store.deleteDatabase(); await target.deleteDatabase(); }
+  });
+  it("rejects invalid review IDs and legacy versions at top level and in device rows", () => {
+    for (const ids of [["B-005-001-001", "B-005-001-001"], ["B-005-004-001"], ["B-999-999-999"], ["QZ-L-005-01-A-C1"], ["B-005-002-001", "B-005-001-001"], null]) {
+      const bad = { ...reviewAttempt, reviewQuestionIds: ids } as unknown as LessonQuizAttempt;
+      for (const sync of [false, true]) {
+        const data = sync ? validExport({ syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: 2, attempt: bad }], morseCourseProgress: [] } }) : validExport({ lessonQuizAttempts: [bad] });
+        assert.equal(validateProgressImport(data).ok, false);
+      }
+    }
+    for (const version of [undefined, 1] as const) {
+      assert.equal(validateProgressImport(validExport({ lessonIdVersion: version, lessonQuizAttempts: [reviewAttempt] })).ok, false);
+      assert.equal(validateProgressImport(validExport({ syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: version, attempt: reviewAttempt }], morseCourseProgress: [] } })).ok, false);
+    }
+    assert.equal(validateProgressImport(validExport()).ok, true, "older attempts without review IDs remain valid");
+  });
+});

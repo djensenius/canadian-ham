@@ -64,6 +64,16 @@ final class ProgressStoreTests: XCTestCase {
             XCTAssertEqual(store.validate(imported, bank: bank).isEmpty, version == 2)
             if version != 2 { XCTAssertThrowsError(try target.importData(imported, bank: bank)) }
         }
+        let rowAttempt = try JSONSerialization.jsonObject(with: JSONEncoder().encode(attempt))
+        for version in [nil, 1, 2] as [Int?] {
+            var row: [String: Any] = ["deviceId": "web", "attempt": rowAttempt]
+            row["lessonIdVersion"] = version
+            json["lessonIdVersion"] = 2
+            json["syncDeviceRows"] = ["questionProgress": [], "examAttempts": [], "lessonProgress": [], "lessonQuizAttempts": [row], "morseCourseProgress": []]
+            let imported = try JSONDecoder().decode(ProgressExportV1.self, from: JSONSerialization.data(withJSONObject: json))
+            XCTAssertEqual(store.validate(imported, bank: bank).isEmpty, version == 2, "Sync row review version")
+            if version != 2 { XCTAssertThrowsError(try target.importData(imported, bank: bank)) }
+        }
         var payload = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(attempt)) as? [String: Any])
         let invalidIds: [Any] = [["B-005-001-001", "B-005-001-001"], ["B-005-004-001"], ["QZ-L-005-01-A-C1"], NSNull()]
         for ids in invalidIds {
