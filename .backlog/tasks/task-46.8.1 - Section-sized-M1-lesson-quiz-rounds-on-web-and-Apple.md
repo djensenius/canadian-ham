@@ -1,11 +1,11 @@
 ---
 id: TASK-46.8.1
 title: Section-sized M1 lesson quiz rounds on web and Apple
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-21 14:58'
-updated_date: '2026-10-24 20:22'
+updated_date: '2026-10-24 20:27'
 labels:
   - web
   - apple
@@ -35,6 +35,8 @@ Owner approved section-sized quiz rounds as part of TASK-46.8 on 2026-10-12. The
 2. Add section-grouped presentation/navigation/checkpoints to web and Apple while retaining one attempt/session, seeded ordering, hints and existing non-M1 behavior.
 3. Add content, web and macOS model tests plus targeted iPhone/iPad round navigation, EN/FR and full light/dark audit coverage; keep existing helpers/tests unchanged.
 4. Commit before nohup targeted validation, poll logs, run required schema/workspace/localization/guard checks, then record AC evidence, finalize, commit and push (no PR). tvOS/visionOS lesson quizzes N/A per coordinator/TASK-50.14.2.
+
+5. Apply coordinator-approved review notes 1–8: record audit scope, align round title/interface language, limit focus to round transitions, harden concept fallback/anchor checking and tests; run complete requested targeted checks with nohup/grep polling, record per-test evidence, commit and push without PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -142,6 +144,8 @@ All Apple commands ran through nohup scripts with grep polling and one simulator
 - No shared engine modules changed, so engine parity reruns/fixtures are N/A. No figure/title/card-layout change; separate figure/title sweeps N/A. Full Apple suites intentionally skipped by targeted-only direction.
 - No manual VoiceOver or native macOS window session was performed; native accessibility semantics/focus bindings, automated full audits, localization and macOS compile/model tests are the evidence. The macOS host logged its existing local persistent-store unknown-model diagnostic; all regression stores are in-memory and passed, and no persistent data was deleted/reset by the worker.
 - No PR opened. Independent reviewer approval is still required before the coordinator opens one.
+
+Review follow-up direction (coordinator 2026-10-24): local occluded-or-measured composite also covers new TASK-46.8.1 M1-round lesson-quiz audits under owner delegation 2026-10-22. Round chrome/title follows interface language with English fallback; focus moves only on crossing round boundaries, never initial entry or within-round navigation. Full Apple suites remain deferred per owner decision 2026-10-17 to the eventual merge batch (iOS, macOS, tvOS, visionOS due shared content package).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
