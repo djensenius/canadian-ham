@@ -1226,9 +1226,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let timerState = pauseTimer ? "Timer paused, " : "Timer running, "
         let progress = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Answered 2 of 3. \(timerState)")).firstMatch
         XCTAssertTrue(progress.waitForExistence(timeout: 5))
+        let initialSampleStartedAt = Date()
         let initialProgress = progress.label
+        let initialSampleFinishedAt = Date()
         let initialSeconds = try mockExamElapsedSeconds(in: initialProgress, timerState: timerState)
-        let openedAt = Date()
         XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].exists, "Basic mock exams must not offer hints")
         try auditIgnoringOccludedLessonTextContrast(app: app)
 
@@ -1309,9 +1310,22 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             XCTAssertEqual(progress.label, initialProgress, "The paused timer must not advance or reset while using the sheet")
             XCTAssertTrue(app.buttons["Resume timer"].firstMatch.exists)
         } else {
-            let finalSeconds = try mockExamElapsedSeconds(in: progress.label, timerState: timerState)
+            let finalSampleStartedAt = Date()
+            let finalProgress = progress.label
+            let finalSampleFinishedAt = Date()
+            let finalSeconds = try mockExamElapsedSeconds(in: finalProgress, timerState: timerState)
             XCTAssertGreaterThan(finalSeconds, initialSeconds, "The running timer must keep advancing while using the sheet")
-            XCTAssertEqual(Double(finalSeconds - initialSeconds), Date().timeIntervalSince(openedAt), accuracy: 3, "Sheet use must neither reset nor pause the elapsed timer")
+            // XCUI snapshot reads can take seconds. Bracket both reads rather than counting their latency as a timer error.
+            let minimumElapsed = finalSampleStartedAt.timeIntervalSince(initialSampleFinishedAt) - 2
+            let maximumElapsed = finalSampleFinishedAt.timeIntervalSince(initialSampleStartedAt) + 2
+            let elapsed = Double(finalSeconds - initialSeconds)
+            XCTContext.runActivity(named: "Mock timer continuity across reference-sheet use") { activity in
+                let attachment = XCTAttachment(string: "before=\(initialProgress) after=\(finalProgress) elapsed=\(elapsed) expectedRange=\(minimumElapsed)...\(maximumElapsed) (snapshot-read bounds plus two seconds for whole-second ticks)")
+                attachment.lifetime = .keepAlways
+                activity.add(attachment)
+            }
+            XCTAssertGreaterThanOrEqual(elapsed, minimumElapsed, "Sheet use must not pause the elapsed timer")
+            XCTAssertLessThanOrEqual(elapsed, maximumElapsed, "Sheet use must not advance the elapsed timer beyond wall time")
             XCTAssertTrue(app.buttons["Pause timer"].firstMatch.exists)
         }
         XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].exists)
