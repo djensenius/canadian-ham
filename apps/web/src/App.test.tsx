@@ -3626,6 +3626,7 @@ describe("M1 lesson quiz rounds", { timeout: appFlowTestTimeoutMs }, () => {
         await expectNoAxeViolations(container);
         fireEvent.click(within(section).getByRole("button", { name: t(language, "previous") }));
         assert.ok(within(section).getByText(t(language, "questionProgress", 5, 5)));
+        assert.equal(document.activeElement, within(section).getByRole("button", { name: t(language, "next") }), "Dismissing a checkpoint with Previous keeps keyboard focus on the question's Next button");
         fireEvent.click(within(section).getByRole("button", { name: t(language, "next") }));
         fireEvent.click(within(section).getByRole("button", { name: t(language, "lessonQuizRoundContinue") }));
         assert.equal(document.activeElement, within(section).getByRole("heading", { name: new RegExp(language === "fr" ? "^Série 2" : "^Round 2") }));

@@ -1247,6 +1247,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
   const roundProgress = lessonQuizRoundProgress(quiz, items, currentIndex);
   const roundHeadingRef = useRef<HTMLHeadingElement>(null);
   const checkpointHeadingRef = useRef<HTMLHeadingElement>(null);
+  const questionNextButtonRef = useRef<HTMLButtonElement>(null);
   const previousRoundPosition = useRef({ seed, roundIndex: roundProgress?.roundIndex, checkpointVisible: session.checkpointVisible });
   useEffect(() => {
     const previous = previousRoundPosition.current;
@@ -1254,6 +1255,10 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
     if (roundProgress === undefined || previous.seed !== seed) return;
     if (session.checkpointVisible && !previous.checkpointVisible) {
       checkpointHeadingRef.current?.focus();
+    } else if (previous.checkpointVisible && !session.checkpointVisible && previous.roundIndex === roundProgress.roundIndex) {
+      // Previous on a checkpoint returns to the same round's last question: put focus back on the
+      // Next button the learner pressed, not on the round heading.
+      questionNextButtonRef.current?.focus();
     } else if (previous.roundIndex !== undefined && previous.roundIndex !== roundProgress.roundIndex) {
       roundHeadingRef.current?.focus();
     }
@@ -1386,7 +1391,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
           </ExamTools>
           <div className="action-row">
             <button type="button" disabled={currentIndex === 0} onClick={() => updateSession((current) => ({ ...current, currentIndex: Math.max(0, current.currentIndex - 1) }))}>{t(interfaceLanguage, "previous")}</button>
-            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => updateSession((current) => roundProgress !== undefined && current.currentIndex === roundProgress.endIndex && roundProgress.roundIndex + 1 < roundProgress.roundCount
+            <button type="button" ref={questionNextButtonRef} disabled={currentIndex >= items.length - 1} onClick={() => updateSession((current) => roundProgress !== undefined && current.currentIndex === roundProgress.endIndex && roundProgress.roundIndex + 1 < roundProgress.roundCount
               ? { ...current, checkpointVisible: true }
               : { ...current, currentIndex: Math.min(current.items.length - 1, current.currentIndex + 1) })}>{t(interfaceLanguage, "next")}</button>
             <button type="button" className="primary-button" disabled={!allAnswered || submittedAttemptId !== null} onClick={submitQuiz}>{t(interfaceLanguage, "lessonQuizSubmit")}</button>
