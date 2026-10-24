@@ -3,11 +3,11 @@ id: TASK-46.8
 title: >-
   Restructure M1 around principles (privilege matrix, Why column, numbers board,
   quiz rounds)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-21 15:22'
+updated_date: '2026-10-24 22:36'
 labels:
   - content
 dependencies: []
@@ -26,7 +26,7 @@ Owner approved 2026-10-12: organize M1 around generating principles, companion q
 <!-- AC:BEGIN -->
 - [x] #1 Owner decision recorded
 - [x] #2 M1 lessons are organised around stated principles with the privilege matrix, Why column and numbers board; every covered question remains taught (taught-facts check)
-- [ ] #3 Lesson quizzes are delivered in section-sized rounds on web and Apple
+- [x] #3 Lesson quizzes are delivered in section-sized rounds on web and Apple
 - [x] #4 Lesson coverage, originality, quiz and link checks pass, and a taught-facts comparison shows no fact was lost
 <!-- AC:END -->
 
@@ -55,10 +55,12 @@ Evidence: docs/lesson-review/m1-principles-taught-facts.md extracts all 202 base
 Checks passed: coverage 100/100, originality all 0 issues/0 stale (15 active allowlist blocks, M1 down from 18 to 7), explanations 984/2 952 notes, quizzes 37/521 official refs/92 concepts, links, figures 53 fixtures/39 SVGs, hints 984/984 complete, schemas 2 071 targets/58 tests, Basic+Advanced import and 34 reference-sheet entries, pnpm typecheck, pnpm test (content-tools 226, Morse 21, calculator 127, web 245 all passed), content-swift swift test 24/24. Initial missing workspace vitest/tsc failures were resolved by pnpm install --frozen-lockfile; no tracked dependency change.
 
 ISED live RBR-4/RIC-3 pages returned HTTP 503 on canonical/www hosts; preserved repository-verified regulatory facts and cross-checked against the active bank instead of adding new legal claims. All six changed lessons contain unchanged figure directives: L-001-01 authority-records-exams, L-001-02 station-control-decision-tree, L-001-03 communications-flowchart, L-001-04 privileges-station-checklist, L-001-05 international-location-checklist, L-001-06 antenna-rf-emc-checklists. Coordinator runs the separate iOS lesson-figure plan. No Apple app suite run; no Apple source, renderer or assets changed. Parent remains In Progress; AC #3 is deliberately open for TASK-46.8.1, which depends on TASK-50.14.2. No PR opened.
+
+Housekeeping 2026-10-24: PR #1016 (TASK-46.8.1) delivered section-sized quiz rounds on web and Apple. Its recorded targeted iPhone/iPad, macOS, web, persistence and accessibility results satisfy the remaining AC #3.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Content portion complete: six principles-led reference lessons, companion privilege matrices, Why columns and M1 numbers board. All 199 covered questions remain taught; all 199 hint anchors retargeted. IDs, coverage, figures and quizzes unchanged; content checks, workspace tests/typecheck and 24 content-swift tests pass. Parent stays In Progress pending section-sized web/Apple quiz rounds in TASK-46.8.1 and coordinator figure audit; live ISED page refresh was unavailable (HTTP 503), so existing verified regulatory facts were retained.
+Completed principles-led M1 content and section-sized web/Apple quiz rounds. Content rewrite preserved all 199 taught bank facts; PR #1016 / TASK-46.8.1 delivered rounds with scoring, hints, persistence and accessible localized navigation, verified by targeted web and Apple tests recorded in the child task.
 <!-- SECTION:FINAL_SUMMARY:END -->
