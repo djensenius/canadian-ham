@@ -34,7 +34,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         try verifyM1RoundAccessibility(appearance: "dark", french: true, largestType: true)
     }
 
-    // Owner decision 2026-10-22 (TASK-71/73), extended to new M1-round audits by the coordinator.
+    // Coordinator decision 2026-10-24 under owner delegation 2026-10-22 (AGENTS.md TASK-71/73).
     private func auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: XCUIApplication) throws {
         let auditGeometry = lessonAuditGeometryBelowOpaqueNavigationBar(in: app)
         let windowFrame = app.windows.firstMatch.frame
@@ -95,7 +95,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func verifyM1RoundAccessibility(appearance: String, french: Bool, largestType: Bool) throws {
-        var arguments = ["-AppleLanguages", french ? "(fr)" : "(en)", "-AppleLocale", french ? "fr_CA" : "en_CA"]
+        // Deliberately mismatch bank and interface languages: round chrome and title follow the interface.
+        var arguments = ["-AppleLanguages", french ? "(fr)" : "(en)", "-AppleLocale", french ? "fr_CA" : "en_CA", "-CanadianHamLanguage", french ? "en" : "fr"]
         if largestType {
             arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         }
@@ -116,6 +117,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let checkpoint = app.staticTexts["lesson-quiz-round-checkpoint"].firstMatch
         XCTAssertTrue(checkpoint.waitForExistence(timeout: 5))
         XCTAssertEqual(checkpoint.label, french ? "Bilan de la série 1 sur 4" : "Round 1 of 4 checkpoint")
+        XCTAssertTrue(app.staticTexts[french ? "L’autorité provient de sources désignées" : "Authority comes from named sources"].firstMatch.exists)
         positionConceptFeedback([checkpoint], in: app)
         XCTAssertTrue(isFullyVisible(checkpoint, in: app, requiresHittable: true))
         try auditM1RoundsIgnoringOccludedOrMeasuredContrast(app: app)
@@ -145,7 +147,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         reveal.tap()
         waitBriefly(0.8)
         closeTool(in: app)
-        // The real shared seeded order for m1-rounds is checked by the model tests.
+        // Fixed IDs and answer letters pin this UI fixture to the m1-rounds seed; a seed change fails loudly.
         let ids = ["B-001-001-003", "B-001-001-004", "B-001-003-004", "B-001-001-002", "B-001-001-001", "B-001-022-004"]
         let correctLetters = ["D", "B", "C", "C", "A", "D"]
         for index in 0..<6 {

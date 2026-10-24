@@ -59,7 +59,7 @@ export function buildLessonQuizItems(quiz: LessonQuiz, seed: string): readonly L
   }));
   const items = shuffled([...officialItems, ...conceptItems], Pcg32.fromSeedString(`${seed}:items:${quiz.id}`));
   // Preserve each round's relative seeded order and every choice permutation.
-  return quiz.rounds === undefined ? items : quiz.rounds.flatMap((round) => items.filter((item) => item.type === "official" && round.officialQuestionIds.includes(item.questionId)));
+  return quiz.rounds === undefined || quiz.conceptChecks.length > 0 ? items : quiz.rounds.flatMap((round) => items.filter((item) => item.type === "official" && round.officialQuestionIds.includes(item.questionId)));
 }
 
 export interface LessonQuizRoundProgress {
@@ -73,7 +73,7 @@ export interface LessonQuizRoundProgress {
 
 export function lessonQuizRoundProgress(quiz: LessonQuiz, items: readonly LessonQuizItem[], currentIndex: number): LessonQuizRoundProgress | undefined {
   const currentItem = items[currentIndex];
-  if (currentItem?.type !== "official" || quiz.rounds === undefined) return undefined;
+  if (currentItem?.type !== "official" || quiz.rounds === undefined || quiz.conceptChecks.length > 0) return undefined;
   const roundIndex = quiz.rounds.findIndex((round) => round.officialQuestionIds.includes(currentItem.questionId));
   const round = quiz.rounds[roundIndex];
   if (round === undefined) return undefined;

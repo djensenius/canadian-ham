@@ -40,35 +40,77 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertNil(lessonQuizRoundProgress(quiz: nonM1, items: try buildLessonQuizItems(quiz: nonM1, seed: "unchanged"), currentIndex: 0))
     }
 
+    func testQuizRoundsWithConceptChecksKeepTheCompleteUngroupedOrder() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let legacy = try XCTUnwrap(library.quizzesById["QZ-L-005-01-A"])
+        XCTAssertFalse(legacy.conceptChecks.isEmpty)
+        let mixed = LessonQuiz(
+            id: legacy.id, lessonId: legacy.lessonId, officialQuestionIds: legacy.officialQuestionIds,
+            conceptChecks: legacy.conceptChecks,
+            rounds: [LessonQuizRound(sectionAnchor: "invalid-mixed-round", title: LocalizedNullableText(en: "Mixed", fr: nil), officialQuestionIds: legacy.officialQuestionIds)]
+        )
+        let items = try buildLessonQuizItems(quiz: mixed, seed: "mixed-rounds")
+        XCTAssertEqual(items, try buildLessonQuizItems(quiz: legacy, seed: "mixed-rounds"))
+        XCTAssertEqual(items.count, legacy.officialQuestionIds.count + legacy.conceptChecks.count)
+        for index in items.indices {
+            XCTAssertNil(lessonQuizRoundProgress(quiz: mixed, items: items, currentIndex: index))
+        }
+    }
+
     func testM1QuizRoundBoundariesPreserveOneSessionAnswersHelpAndDismissedCheckpoint() throws {
         let library = try ContentLibrary.load(from: Bundle(for: Self.self))
         let quiz = try XCTUnwrap(library.quizzesById["QZ-L-001-01-A"])
         let cache = LessonQuizSessionStateCache()
         let state = cache.state(for: quiz.id)
         state.items = try buildLessonQuizItems(quiz: quiz, seed: "m1-rounds")
+        func position() -> LessonQuizRoundPosition {
+            LessonQuizRoundPosition(
+                roundIndex: lessonQuizRoundProgress(quiz: quiz, items: state.items, currentIndex: state.currentIndex)?.roundIndex,
+                checkpointVisible: state.checkpointVisible
+            )
+        }
+        let initialPosition = position()
+        XCTAssertNil(initialPosition.focusTarget(from: nil), "Opening a quiz must not request round focus")
+        XCTAssertNil(initialPosition.focusTarget(from: LessonQuizRoundPosition(roundIndex: nil, checkpointVisible: false)), "Loading items must not request round focus")
         let generation = state.generation
         let first = try XCTUnwrap(state.items.first)
         XCTAssertTrue(state.qualifyHint(for: first))
         state.select(0, for: first)
         let firstRound = try XCTUnwrap(lessonQuizRoundProgress(quiz: quiz, items: state.items, currentIndex: 0))
-        for _ in 0..<firstRound.endIndex { state.next(in: quiz) }
-        XCTAssertFalse(state.checkpointVisible)
+        for _ in 0..<firstRound.endIndex {
+            let previous = position()
+            state.next(in: quiz)
+            XCTAssertNil(position().focusTarget(from: previous), "Next within a round keeps normal focus")
+        }
+        let beforePrevious = position()
+        state.previous()
+        XCTAssertNil(position().focusTarget(from: beforePrevious), "Previous within a round keeps normal focus")
         state.next(in: quiz)
+        XCTAssertFalse(state.checkpointVisible)
+        let beforeCheckpoint = position()
+        state.next(in: quiz)
+        XCTAssertEqual(position().focusTarget(from: beforeCheckpoint), .checkpoint)
         XCTAssertTrue(state.checkpointVisible)
         XCTAssertEqual(state.currentIndex, firstRound.endIndex)
         XCTAssertEqual(state.selectedByItemId.count, 1)
+        let checkpointPosition = position()
         state.previous()
+        XCTAssertNil(position().focusTarget(from: checkpointPosition), "Dismissing a checkpoint stays in the same round")
         XCTAssertFalse(state.checkpointVisible)
         XCTAssertEqual(state.currentIndex, firstRound.endIndex)
         state.next(in: quiz)
+        let beforeContinue = position()
         state.continueRound()
+        XCTAssertEqual(position().focusTarget(from: beforeContinue), .question, "Continue focuses the new round heading")
         XCTAssertEqual(state.currentIndex, firstRound.endIndex + 1)
         XCTAssertFalse(state.checkpointVisible)
         XCTAssertTrue(cache.state(for: quiz.id) === state)
         XCTAssertEqual(state.generation, generation)
         XCTAssertEqual(state.selectedByItemId[first.id], 0)
         XCTAssertEqual(state.answeredWithHelpIds, [try XCTUnwrap(first.questionID)])
+        let beforeCrossingBack = position()
         state.previous()
+        XCTAssertEqual(position().focusTarget(from: beforeCrossingBack), .question, "Previous across a round boundary focuses its heading")
         XCTAssertEqual(state.currentIndex, firstRound.endIndex)
         state.currentIndex = state.items.count - 1
         state.next(in: quiz)

@@ -100,6 +100,7 @@ platform) and share one build lock, so don't run them by reflex.
   yields a measured WCAG contrast ratio of at least 4.5:1, logging label, frame and ratio in a
   keepAlways attachment. Non-contrast, nil-element, unmeasurable and lower-contrast findings fail.
   Existing audit helpers and tests remain unchanged except for the TASK-73 refinement below.
+  - Coordinator decision 2026-10-24 under the owner delegation of 2026-10-22: the local occluded-or-measured composite also covers the new TASK-46.8.1 M1-round lesson-quiz audits.
   - TASK-73: the measured paths may retry any button's nil/below-4.5 full-image result with a
     6 pt horizontal / 2 pt vertical native-pixel crop. Discarded strips must contain only the
     crop background, a page-like outside background (most-covered non-crop-background strip

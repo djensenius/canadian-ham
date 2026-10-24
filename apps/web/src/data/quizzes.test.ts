@@ -50,6 +50,16 @@ describe("M1 teaching-section rounds", () => {
     assert.equal(total, 199);
   });
 
+  it("falls back to the complete ungrouped order when rounds coexist with concept checks", () => {
+    const legacy = lessonQuizzes.find((quiz) => quiz.lessonId === "L-005-01")!;
+    assert.ok(legacy.conceptChecks.length > 0);
+    const quiz: LessonQuiz = { ...legacy, rounds: [{ sectionAnchor: "invalid-mixed-round", title: { en: "Mixed", fr: null }, officialQuestionIds: legacy.officialQuestionIds }] };
+    const items = buildLessonQuizItems(quiz, "mixed-rounds");
+    assert.deepEqual(items, buildLessonQuizItems(legacy, "mixed-rounds"));
+    assert.equal(items.length, legacy.officialQuestionIds.length + legacy.conceptChecks.length);
+    for (const index of items.keys()) assert.equal(lessonQuizRoundProgress(quiz, items, index), undefined);
+  });
+
   it("does not group non-M1 quizzes", () => {
     const quiz = lessonQuizzes.find((quiz) => quiz.lessonId === "L-005-01")!;
     assert.equal(quiz.rounds, undefined);

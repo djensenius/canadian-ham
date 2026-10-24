@@ -774,8 +774,12 @@ private struct LessonQuizView: View {
     // The shared tool presenter requires a calculator model; this quiz exposes only .hint.
     @StateObject private var presentationCalculator = ExamCalculatorViewModel()
     @State private var calculatorFocused = false
-    private enum RoundFocus: Hashable { case question, checkpoint }
-    @AccessibilityFocusState private var roundFocus: RoundFocus?
+    @AccessibilityFocusState private var roundFocus: LessonQuizRoundFocus?
+    @State private var previousRoundPosition: LessonQuizRoundPosition?
+
+    private var roundPosition: LessonQuizRoundPosition {
+        LessonQuizRoundPosition(roundIndex: roundProgress?.roundIndex, checkpointVisible: state.checkpointVisible)
+    }
 
     private var roundProgress: LessonQuizRoundProgress? {
         lessonQuizRoundProgress(quiz: quiz, items: items, currentIndex: currentIndex)
@@ -826,19 +830,18 @@ private struct LessonQuizView: View {
                 calculatorFocused: $calculatorFocused,
                 hintContext: hintToolContext
             )
-            .onChange(of: currentIndex) { _, _ in
+            .onChange(of: currentIndex) { _, _ in selectedTool = nil }
+            .task(id: roundPosition) {
+                let position = roundPosition
+                let target = position.focusTarget(from: previousRoundPosition)
+                previousRoundPosition = position
+                guard let target else { return }
                 selectedTool = nil
-                if roundProgress != nil {
-                    proxy.scrollTo("lesson-quiz-position", anchor: .top)
-                    roundFocus = .question
-                }
-            }
-            .onChange(of: state.checkpointVisible) { _, checkpoint in
-                if roundProgress != nil {
-                    selectedTool = nil
-                    proxy.scrollTo("lesson-quiz-position", anchor: .top)
-                    roundFocus = checkpoint ? .checkpoint : .question
-                }
+                roundFocus = nil
+                await Task.yield()
+                guard !Task.isCancelled else { return }
+                proxy.scrollTo("lesson-quiz-position", anchor: .top)
+                roundFocus = target
             }
             .onDisappear { selectedTool = nil }
         }
@@ -856,18 +859,13 @@ private struct LessonQuizView: View {
                 roundCheckpoint(round)
             } else if let item = items[safe: currentIndex] {
                 if let round = roundProgress {
-                    Text("Round \(round.roundIndex + 1) of \(round.roundCount): \(round.round.title.textAndLanguage(for: language).text)") // l10n: localized
+                    Text("Round \(round.roundIndex + 1) of \(round.roundCount): \(round.round.title.textAndLanguage(for: canadianHamUsesFrenchUI ? .french : .english).text)") // l10n: localized
                         .font(DesignTokens.FontScale.body.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("lesson-quiz-round-heading")
                         .accessibilityFocused($roundFocus, equals: .question)
                         .id("lesson-quiz-position")
-                        .task(id: currentIndex) {
-                            await Task.yield()
-                            guard !Task.isCancelled else { return }
-                            roundFocus = .question
-                        }
                 }
                 Text("Question \(currentIndex - (roundProgress?.startIndex ?? 0) + 1) of \(roundProgress?.questionCount ?? items.count)") // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
@@ -914,12 +912,7 @@ private struct LessonQuizView: View {
                 .accessibilityIdentifier("lesson-quiz-round-checkpoint")
                 .accessibilityFocused($roundFocus, equals: .checkpoint)
                 .id("lesson-quiz-position")
-                .task {
-                    await Task.yield()
-                    guard !Task.isCancelled else { return }
-                    roundFocus = .checkpoint
-                }
-            Text(round.round.title.textAndLanguage(for: language).text) // l10n: verbatim
+            Text(round.round.title.textAndLanguage(for: canadianHamUsesFrenchUI ? .french : .english).text) // l10n: verbatim
                 .font(DesignTokens.FontScale.body)
             Text("Score so far: \(correct) / \(round.questionCount). Answered: \(answered) / \(round.questionCount).") // l10n: localized
                 .font(DesignTokens.FontScale.body)
@@ -1036,6 +1029,8 @@ private struct LessonQuizView: View {
     }
 
     private func restart(keepSeed: Bool = false) {
+        previousRoundPosition = nil
+        roundFocus = nil
         if !keepSeed {
             seed = "lesson-quiz/\(quiz.id)/\(attempts.count + 1)/\(UUID().uuidString)"
         }
@@ -1126,6 +1121,19 @@ enum LessonQuizRuntimeItem: Identifiable, Equatable {
     }
 }
 
+enum LessonQuizRoundFocus: Hashable { case question, checkpoint }
+
+struct LessonQuizRoundPosition: Equatable {
+    let roundIndex: Int?
+    let checkpointVisible: Bool
+
+    func focusTarget(from previous: Self?) -> LessonQuizRoundFocus? {
+        guard let roundIndex, let previous, previous.roundIndex != nil else { return nil }
+        if checkpointVisible && !previous.checkpointVisible { return .checkpoint }
+        return roundIndex != previous.roundIndex ? .question : nil
+    }
+}
+
 struct LessonQuizRoundProgress {
     let round: LessonQuizRound
     let roundIndex: Int
@@ -1136,7 +1144,7 @@ struct LessonQuizRoundProgress {
 }
 
 func lessonQuizRoundProgress(quiz: LessonQuiz, items: [LessonQuizRuntimeItem], currentIndex: Int) -> LessonQuizRoundProgress? {
-    guard let id = items[safe: currentIndex]?.questionID, let rounds = quiz.rounds,
+    guard quiz.conceptChecks.isEmpty, let id = items[safe: currentIndex]?.questionID, let rounds = quiz.rounds,
           let roundIndex = rounds.firstIndex(where: { $0.officialQuestionIds.contains(id) }) else { return nil }
     let round = rounds[roundIndex]
     let indices = items.indices.filter { index in
@@ -1166,7 +1174,7 @@ func buildLessonQuizItems(quiz: LessonQuiz, seed: String) throws -> [LessonQuizR
     var rng = Pcg32(seed: "\(seed):items:\(quiz.id)")
     let seededItems = try CanadianHamEngine.shuffled(official + concepts, rng: &rng)
     // Group the existing seeded order without changing choice permutations.
-    let shuffled = quiz.rounds.map { rounds in
+    let shuffled = (quiz.conceptChecks.isEmpty ? quiz.rounds : nil).map { rounds in
         rounds.flatMap { round in seededItems.filter { item in
             item.questionID.map { round.officialQuestionIds.contains($0) } ?? false
         } }

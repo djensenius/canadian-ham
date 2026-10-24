@@ -25,7 +25,7 @@ export function quizRoundIssues(
     }
     const headingIndex = headings.findIndex((heading) => heading.anchor === round.sectionAnchor);
     if (headingIndex === -1 || headingIndex <= previousHeadingIndex) issues.push(`${prefix} must name a unique teaching section in lesson heading order`);
-    previousHeadingIndex = headingIndex;
+    previousHeadingIndex = Math.max(previousHeadingIndex, headingIndex);
     const heading = headings[headingIndex];
     if (round.title?.en !== heading?.title || typeof round.title?.fr !== "string" || !round.title.fr.trim()) {
       issues.push(`${prefix} title must match its lesson heading and have a French translation`);

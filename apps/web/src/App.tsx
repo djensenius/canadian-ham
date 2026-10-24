@@ -1247,14 +1247,17 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
   const roundProgress = lessonQuizRoundProgress(quiz, items, currentIndex);
   const roundHeadingRef = useRef<HTMLHeadingElement>(null);
   const checkpointHeadingRef = useRef<HTMLHeadingElement>(null);
-  const previousRoundPosition = useRef({ currentIndex, checkpointVisible: session.checkpointVisible });
+  const previousRoundPosition = useRef({ seed, roundIndex: roundProgress?.roundIndex, checkpointVisible: session.checkpointVisible });
   useEffect(() => {
     const previous = previousRoundPosition.current;
-    previousRoundPosition.current = { currentIndex, checkpointVisible: session.checkpointVisible };
-    if (roundProgress !== undefined && (previous.currentIndex !== currentIndex || previous.checkpointVisible !== session.checkpointVisible)) {
-      (session.checkpointVisible ? checkpointHeadingRef : roundHeadingRef).current?.focus();
+    previousRoundPosition.current = { seed, roundIndex: roundProgress?.roundIndex, checkpointVisible: session.checkpointVisible };
+    if (roundProgress === undefined || previous.seed !== seed) return;
+    if (session.checkpointVisible && !previous.checkpointVisible) {
+      checkpointHeadingRef.current?.focus();
+    } else if (previous.roundIndex !== undefined && previous.roundIndex !== roundProgress.roundIndex) {
+      roundHeadingRef.current?.focus();
     }
-  }, [currentIndex, session.checkpointVisible, roundProgress]);
+  }, [seed, session.checkpointVisible, roundProgress]);
   const roundItems = roundProgress === undefined ? [] : items.slice(roundProgress.startIndex, roundProgress.endIndex + 1);
   const roundCorrect = roundItems.filter((item) => selectedByItemId.get(item.id) === 0).length;
   const roundAnswered = roundItems.filter((item) => selectedByItemId.has(item.id)).length;

@@ -3479,7 +3479,35 @@ describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () =>
   });
 });
 
-describe("M1 lesson quiz rounds", () => {
+describe("M1 lesson quiz rounds", { timeout: appFlowTestTimeoutMs }, () => {
+  it("focuses round headings only when crossing a round boundary, not on entry or within-round Next/Previous", async () => {
+    window.location.hash = "#/learn/M1/L-001-01";
+    const user = userEvent.setup();
+    render(<App store={createStore("m1-round-focus")} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
+    const section = getLessonQuizSection();
+    const roundHeading = () => within(section).getByRole("heading", { name: /^Round/ });
+    assert.notEqual(document.activeElement, roundHeading(), "Opening the quiz does not focus the round heading");
+    const next = within(section).getByRole("button", { name: "Next" });
+    const previous = within(section).getByRole("button", { name: "Previous" });
+    await user.click(next);
+    assert.equal(document.activeElement, next, "Next within a round retains normal navigation focus");
+    await user.click(previous);
+    assert.equal(document.activeElement, previous, "Previous within a round retains normal navigation focus");
+    for (let index = 0; index < 5; index++) fireEvent.click(next);
+    assert.equal(document.activeElement, roundHeading(), "A checkpoint receives focus");
+    await user.click(within(section).getByRole("button", { name: "Continue to next round" }));
+    assert.equal(document.activeElement, roundHeading(), "Continue focuses the new round heading");
+    const nextRoundNext = within(section).getByRole("button", { name: "Next" });
+    const nextRoundPrevious = within(section).getByRole("button", { name: "Previous" });
+    await user.click(nextRoundNext);
+    assert.equal(document.activeElement, nextRoundNext);
+    await user.click(nextRoundPrevious);
+    assert.equal(document.activeElement, nextRoundPrevious);
+    await user.click(nextRoundPrevious);
+    assert.equal(document.activeElement, roundHeading(), "Previous crossing into the prior round focuses its heading");
+    assert.match(roundHeading().textContent ?? "", /^Round 1/);
+  });
   it("reports partial round scores without counting skipped or incorrect answers as correct", async () => {
     window.location.hash = "#/learn/M1/L-001-01";
     const store = createStore("m1-round-partial-score");
@@ -3579,7 +3607,7 @@ describe("M1 lesson quiz rounds", () => {
         window.location.hash = "#/learn/M1/L-001-01";
         window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
         const store = createStore(`m1-round-axe-${language}-${theme}`);
-        await store.putPreferences({ ...defaultPreferences, language, theme });
+        await store.putPreferences({ ...defaultPreferences, language: language === "en" ? "fr" : "en", theme });
         const { container } = render(<App store={store} now={() => fixedNow} />);
         await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
         const section = getLessonQuizSection();

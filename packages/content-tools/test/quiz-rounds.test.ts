@@ -25,6 +25,11 @@ test("M1 round checker rejects reversed, repeated and unknown headings or wrong 
   assert.ok(issues(rounds, "## First").some((issue) => issue.includes("heading order")));
   assert.ok(issues([{ ...rounds[0], officialQuestionIds: [ids[1]] }, { ...rounds[1], officialQuestionIds: [ids[0]] }]).some((issue) => issue.includes("hint teaching section")));
 });
+test("an unknown or reversed section does not reset the highest heading index for later rounds", () => {
+  const orderIssues = issues([rounds[1], { ...rounds[0], sectionAnchor: "unknown" }, rounds[0], rounds[1]])
+    .filter((issue) => issue.includes("heading order"));
+  assert.deepEqual(orderIssues.map((issue) => issue.split(" ")[0]), ["rounds[1]", "rounds[2]", "rounds[3]"]);
+});
 test("M1 round checker requires localized heading titles and keeps concept checks out", () => {
   for (const title of [{ en: "Wrong", fr: "Faux" }, { en: "First", fr: null }, { en: "First", fr: "" }]) {
     assert.ok(issues([{ ...rounds[0], title }, rounds[1]]).some((issue) => issue.includes("title")));
