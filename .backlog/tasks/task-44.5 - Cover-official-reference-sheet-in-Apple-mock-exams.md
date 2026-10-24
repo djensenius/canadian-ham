@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-22 02:16'
-updated_date: '2026-10-24 23:20'
+updated_date: '2026-10-24 23:36'
 labels:
   - apple
   - testing
@@ -54,4 +54,6 @@ Corrected-Study iPhone rerun: dark/paused PASS (216.464s); light/running reached
 
 BLOCKER/FIX DECISION — iPad first run: both new mock methods failed the pre-sheet full-default audit on fully visible mock-exam-seed (light contrast failed, dark nearly passed). The unchanged occlusion helper correctly refused the findings. Before evidence: Test-CanadianHam-2026.10.24_19-02-02--0400.xcresult; light app/element PNGs exported under /tmp/task445-ipad-light-attachments (27C34C1F-C330-422B-9D5B-862B679E9418.png / B2933CAE-5FDC-4DA0-9FE6-AFF090645C02.png). Element crop includes regular-weight monospaced seed text plus card-border/next-heading edges.
 Coordinator decision 2026-10-24 under owner delegation 2026-10-22: do NOT extend any exception; apply only .weight(.medium) to the existing exam-code caption, same ink/size and textSelection enabled. Implemented that one-line legibility fix. New tests retain app/seed keepAlways screenshots before the full audit for after evidence. Rerun all new mock flows plus the existing tests found via mock-exam-seed on iPhone/iPad, keeping every existing test/helper unchanged. Stop/report without further changes if the fully visible caption is still flagged. Existing iPad matrix PASS 182.702s, AX PASS 56.543s, availability PASS 16.065s, Advanced negative PASS 17.025s; medium SKIPPED by unchanged iPhone-only guard (6.216s). No build killed; queued running-timer-only tests will compile the approved caption fix.
+
+Validation currently queued on the shared xbuild lock (2026-10-24 ~19:36 local); no builds interrupted. Persistent nohup runners: /tmp/task445-checks.sh -> /tmp/task445-checks.log (original targeted reference runs complete; documented macOS units/l10n/text/self-test pending), /tmp/task445-running-final.sh -> /tmp/task445-running-final.log (latest-source light/running on iPhone then iPad), and /tmp/task445-caption-regressions.sh -> /tmp/task445-caption-regressions.log (waits for both running-flow passes, then dark/Advanced and six unchanged existing mock-seed tests on each requested device; stops on failed command). After screenshot evidence is keepAlways in the new tests. No completion criteria checked yet.
 <!-- SECTION:NOTES:END -->
