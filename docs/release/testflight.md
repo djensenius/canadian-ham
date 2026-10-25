@@ -92,6 +92,20 @@ fastlane xros beta      # CanadianHamVision, generic/platform=visionOS, exports 
 
 Do not call `gym`, `build_app`, or `xcodebuild` directly for these uploads. The Fastfile uses only `xbuild` for archive/export.
 
+### Archive/export without uploading
+
+Pass `export_only:true` to any beta lane to retain its signed `.ipa`/`.pkg` and
+print the artifact path without calling TestFlight:
+
+```sh
+fastlane ios beta export_only:true # includes Watch/CanadianHamWatch.app
+fastlane mac beta export_only:true # no watch payload
+```
+
+This uses the same Release signing, dedicated keychain, API key and internal-only
+export options as a normal beta run. Omitting the option keeps upload behaviour
+unchanged.
+
 ### Re-upload an existing export
 
 If archive and export succeeded but the upload step failed, upload the exported artifact without rebuilding:

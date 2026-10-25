@@ -216,6 +216,15 @@ cat > "$background_root/apps/apple/Info.plist" <<'PLIST'
 <plist version="1.0"><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array></dict></plist>
 PLIST
 assert_fails_with_labels "background-modes-plist" "$background_root" "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key"
+watch_background_root=$(make_fixture watch-background-modes-plist)
+cat > "$watch_background_root/apps/apple/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict><key>WKBackgroundModes</key><array><string>workout-processing</string></array></dict></plist>
+PLIST
+assert_fails_with_labels "watch-background-modes-plist" "$watch_background_root" "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key"
+watch_background_config_root=$(make_fixture watch-background-modes-config)
+printf '%s\n' 'INFOPLIST_KEY_WKBackgroundModes: workout-processing' > "$watch_background_config_root/apps/apple/project.yml"
+assert_fails_with_labels "watch-background-modes-config" "$watch_background_config_root" "forbidden network/iCloud entitlement or Info.plist key in default Apple project configuration"
 gated_plist_root=$(make_fixture gated-info-plist-extra-key)
 mkdir -p "$gated_plist_root/apps/apple/CanadianHam/Resources"
 cat > "$gated_plist_root/apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist" <<'PLIST'

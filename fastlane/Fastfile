@@ -228,6 +228,7 @@ end
 
 # Pass artifact_path:<exported .ipa/.pkg> to upload an existing export
 # without re-archiving (for example, after an upload-only failure).
+# Pass export_only:true to inspect a signed export without uploading it.
 def upload_beta(platform_key, options = {})
   result =
     if options[:artifact_path]
@@ -238,6 +239,11 @@ def upload_beta(platform_key, options = {})
     else
       archive_and_export(platform_key, official_reference_sheet: true)
     end
+  if options[:export_only].to_s == "true"
+    UI.success("Export only; skipping TestFlight upload: #{result[:artifact_path]}")
+    return result
+  end
+
   upload_args = {
     app_identifier: PRIMARY_BUNDLE_ID,
     app_platform: result[:app_platform],

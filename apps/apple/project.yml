@@ -354,6 +354,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.davidjensenius.CanadianHam.watchkitapp
         PRODUCT_NAME: CanadianHamWatch
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Canadian Ham
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO

@@ -12,7 +12,7 @@ function fail(message) {
   failures += 1;
 }
 
-function basePbxproj({ projectDebug = '', appDebug = '', tvDebug = '', tvCloudKit = '', macEntitlement = 'CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements', resourceLeak = '', watchCloudKit } = {}) {
+function basePbxproj({ projectDebug = '', appDebug = '', tvDebug = '', tvCloudKit = '', macEntitlement = 'CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements', resourceLeak = '', watchCloudKit = '\t\t\tCODE_SIGN_ENTITLEMENTS = "";\n\t\t\tOTHER_SWIFT_FLAGS = "";\n' } = {}) {
   return `// !$*UTF8*$!
 /* Begin PBXBuildFile section */
 ${resourceLeak}/* End PBXBuildFile section */
@@ -86,15 +86,16 @@ ${tvCloudKit}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;
 		};
 		name = DebugCloudKit;
 	};
-` : ''}${watchCloudKit !== undefined ? `	DDDD0003 /* DebugCloudKit */ = {
+` : ''}${['', '.tests', '.uitests'].map((suffix, targetIndex) =>
+  ['Debug', 'Release', 'DebugCloudKit'].map((config, configIndex) => `	DDDD00${targetIndex}${configIndex} /* ${config} */ = {
 		isa = XCBuildConfiguration;
 		buildSettings = {
-${watchCloudKit}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam.watchkitapp;
-			PRODUCT_NAME = CanadianHamWatch;
+${config === 'DebugCloudKit' && suffix === '' ? watchCloudKit : '\t\t\tCODE_SIGN_ENTITLEMENTS = "";\n\t\t\tOTHER_SWIFT_FLAGS = "";\n'}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam.watchkitapp${suffix};
+			PRODUCT_NAME = CanadianHamWatch${suffix};
 		};
-		name = DebugCloudKit;
+		name = ${config};
 	};
-` : ''}/* End XCBuildConfiguration section */
+`).join('')).join('')}/* End XCBuildConfiguration section */
 `;
 }
 
@@ -169,6 +170,10 @@ assertPass('watch excludes project CloudKit gate', { watchCloudKit: cleanWatchCl
 assertFail('watch inherits project CloudKit flags', { watchCloudKit: '\t\t\tCODE_SIGN_ENTITLEMENTS = "";\n' }, 'Watch DebugCloudKit must override inherited OTHER_SWIFT_FLAGS');
 assertFail('watch enables cloud compilation', { watchCloudKit: cleanWatchCloudKit.replace('OTHER_SWIFT_FLAGS = ""', 'OTHER_SWIFT_FLAGS = "$(inherited) -DICLOUD_SYNC"') }, 'Watch DebugCloudKit build settings unexpectedly match');
 assertFail('watch enables push background mode', { watchCloudKit: cleanWatchCloudKit + '\t\t\tINFOPLIST_KEY_UIBackgroundModes = "remote-notification";\n' }, 'Watch DebugCloudKit build settings unexpectedly match');
+assertFail('watch enables extended background mode', { watchCloudKit: cleanWatchCloudKit + '\t\t\tINFOPLIST_KEY_WKBackgroundModes = workout-processing;\n' }, 'Watch DebugCloudKit build settings unexpectedly match');
+assertFail('watch bundle ID renamed', { pbxproj: basePbxproj().replaceAll('org.davidjensenius.CanadianHam.watchkitapp', 'org.davidjensenius.CanadianHam.renamed') }, 'Expected 9 watch build-configuration blocks, found 0');
+assertFail('watch configuration missing', { pbxproj: basePbxproj().replace(/\tDDDD0000 \/\* Debug \*\/ = \{[\s\S]*?name = Debug;\n\t\};\n/, '') }, 'Expected 9 watch build-configuration blocks, found 8');
+assertFail('watch configuration duplicated', { pbxproj: basePbxproj() + basePbxproj().match(/\tDDDD0000 \/\* Debug \*\/ = \{[\s\S]*?name = Debug;\n\t\};\n/)[0] }, 'Expected 9 watch build-configuration blocks, found 10');
 assertFail('watch non-empty entitlement path', { watchCloudKit: cleanWatchCloudKit.replace('CODE_SIGN_ENTITLEMENTS = ""', 'CODE_SIGN_ENTITLEMENTS = watch.entitlements') }, 'Watch DebugCloudKit must have empty CODE_SIGN_ENTITLEMENTS');
 
 assertFail('project Debug ICLOUD_SYNC leak', { projectDebug: '\t\t\tOTHER_SWIFT_FLAGS = "$(inherited) -DICLOUD_SYNC";\n' }, 'Debug build settings unexpectedly match gated iCloud token');

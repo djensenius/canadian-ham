@@ -25,7 +25,7 @@ const fail = (message) => errors.push(message);
 const forbiddenDefaultPatterns = [
   /com\.apple\.developer\.icloud/,
   /aps-environment/,
-  /UIBackgroundModes/,
+  /(?:UI|WK)BackgroundModes/,
   /remote-notification/,
   /\bICLOUD_SYNC\b/,
   /-DICLOUD_SYNC\b/,
@@ -180,6 +180,10 @@ for (const { configName, buildSettings } of defaultBlocks) {
 // Watch app and test targets must override the project gate in every configuration.
 const watchBlocks = [...defaultBlocks, ...cloudKitBlocks].filter(({ buildSettings }) =>
   /PRODUCT_BUNDLE_IDENTIFIER = org\.davidjensenius\.CanadianHam\.watchkitapp(?:[.;])/.test(buildSettings));
+// Three watch targets (app, unit tests, UI tests), each in three configurations.
+if (watchBlocks.length !== 9) {
+  fail(`Expected 9 watch build-configuration blocks, found ${watchBlocks.length}.`);
+}
 for (const { configName, buildSettings } of watchBlocks) {
   for (const pattern of forbiddenDefaultPatterns) {
     if (pattern.test(buildSettings)) {

@@ -1,7 +1,9 @@
 # TASK-14.1 watchOS skeleton validation
 
-2026-10-25. Final implementation commit: `5ec2f699d37e41cef40044911158d1781e33bdee` (subsequent task/evidence-only
-commits do not change tested app code). All Apple commands used `xbuild`, never a
+2026-10-25. Original implementation commit: `5ec2f699d37e41cef40044911158d1781e33bdee`.
+The original runs below did **not** all use this commit; see the run provenance
+section. Review-fix runs and signed exports are recorded separately below.
+All Apple commands used `xbuild`, never a
 direct build-tool invocation. Checks were launched using `nohup` and polled with
 `grep`; all shared-lock waits were respected, including TASK-29's tvOS lane.
 
@@ -63,6 +65,25 @@ cleanup trap). Its export command was `xbuild -exportLocalizations -project
 <worktree>/apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -derivedDataPath
 <temporary>/DerivedData -localizationPath <temporary>/Localization -exportLanguage fr`.
 
+## Original run provenance
+
+- Original package tests (22 engine / 27 content / 4 Morse) and full macOS unit
+  run (223) used `632fcda59adf58541efbf0af6d3b4abea902b10b` (17:15–17:17 UTC),
+  before the three later watch-localization changes. Package tests ran on the
+  macOS host; on watchOS, packages were compiled and exercised by
+  `testSharedPackagesOnWatch`, not by a standalone watch package test suite.
+- Final watch smoke, iOS build-for-testing, localization (including tvOS,
+  visionOS and watch builds), final network/iCloud guards and final test guard
+  used `5ec2f699d37e41cef40044911158d1781e33bdee` (17:28–17:33 UTC).
+- The initial watch run started at `541b0b64f9ca781e509a6021803ade7de9bf13ab`;
+  only task notes and the localization-check script changed while it ran.
+  The resolved watch DebugCloudKit inspection started at `632fcda5` and completed
+  after `b672e100249a4e170d14e1bc469e3709a9bf7b96` (watch metadata-only changes).
+  Those original iteration runs were not immutable-checkout runs.
+- Original text-source check used `632fcda5`; final regeneration used `5ec2f699`.
+  The original self-test invocations were not pinned/logged by commit; the review
+  round reruns them all on a committed, unchanged implementation instead.
+
 ## Built bundle verification
 
 The final iOS-container watch payload's Info.plist and manifest were decoded with
@@ -102,11 +123,13 @@ bundled data. No storage, networking, CloudKit, push or background session was a
 - Existing shared-catalogue plural-inference warnings, existing Morse audio API
   deprecation warnings and AppIntents extraction-without-dependency warnings remain
   non-fatal; these sources/keys were not changed by this task.
-- No iOS/tvOS/visionOS full test suite, figure/title plan, web/TypeScript content-tools suite,
-  physical-watch VoiceOver/haptic test, signing archive, TestFlight upload or release
-  validation was performed. These are not skeleton acceptance gates. The watch
-  icon and distribution/signing checks remain TASK-14.6; feature, haptic hardware
-  and accessibility work remains TASK-14.2–14.5.
+- Original validation did not include iOS/tvOS/visionOS full test suites,
+  figure/title plans, web/TypeScript content-tools suites, physical-watch
+  VoiceOver/haptic checks, signing archives, TestFlight upload or release validation.
+  The review round below adds a real existing-family watch icon and signed
+  archive/export checks without uploading. TASK-14.6 retains icon refinement,
+  final release validation and hardware install; feature, haptic hardware and
+  accessibility work remains TASK-14.2–14.5.
 - Affected merge-batch platforms: **iOS, macOS, tvOS, visionOS and watchOS**, because
   the three local packages are linked by all of them. Coordinator owns full-suite
   timing; this task does not replace those merge-batch gates.

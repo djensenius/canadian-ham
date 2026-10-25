@@ -26,6 +26,7 @@ final class CanadianHamWatchTests: XCTestCase {
         XCTAssertEqual(bundle.object(forInfoDictionaryKey: "WKApplication") as? Bool, true)
         XCTAssertEqual(bundle.object(forInfoDictionaryKey: "WKRunsIndependentlyOfCompanionApp") as? Bool, true)
         XCTAssertNil(bundle.object(forInfoDictionaryKey: "UIBackgroundModes"))
+        XCTAssertNil(bundle.object(forInfoDictionaryKey: "WKBackgroundModes"))
         let url = try XCTUnwrap(bundle.url(forResource: "PrivacyInfo", withExtension: "xcprivacy"))
         let privacy = try XCTUnwrap(PropertyListSerialization.propertyList(from: Data(contentsOf: url), format: nil) as? [String: Any])
         XCTAssertEqual(privacy["NSPrivacyTracking"] as? Bool, false)

@@ -124,6 +124,7 @@
 		9DD26BBE2A0EFA8F53C536CF /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 68B2019B8C107CCE6C8C9198 /* quizzes */; };
 		9F71B8904D489DC8A2E29170 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		A041F7F72D19CE86C37290E7 /* MorseAudioDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */; };
+		A0C64905E82662326AF6422A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FBB9FEBD26D644D366BCC08 /* Assets.xcassets */; };
 		A2FE6F8DF1FDB87F9C1D28B8 /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
 		A3412920220CB205D93C5DF5 /* subsection-titles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0CE325C0851B44E13EA76E8A /* subsection-titles.json */; };
 		A492D8B7740A60671214ADA8 /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = E6CAE1D99E45212A9775493F /* CanadianHamContent */; };
@@ -273,6 +274,7 @@
 		06CF703072758133CE78E6DC /* calculator-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "calculator-swift"; path = "../../packages/calculator-swift"; sourceTree = SOURCE_ROOT; };
 		073C44134E027E62BEC27FEC /* CanadianHamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CE325C0851B44E13EA76E8A /* subsection-titles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "subsection-titles.json"; sourceTree = "<group>"; };
+		0FBB9FEBD26D644D366BCC08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		119AECAEDB885D3C3A535950 /* CanadianHamVision.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1384BDF3C806AC3EEC29FB6C /* CanadianHam.macOS.CloudKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.CloudKit.entitlements; sourceTree = "<group>"; };
@@ -598,6 +600,7 @@
 		4EED116B5E1E6FA9C75FF13E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0FBB9FEBD26D644D366BCC08 /* Assets.xcassets */,
 				F70BB142F905F7599CEB42C1 /* InfoPlist.xcstrings */,
 				F48A9D700377610355ABDAB5 /* PrivacyInfo.xcprivacy */,
 			);
@@ -1332,6 +1335,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0C64905E82662326AF6422A /* Assets.xcassets in Resources */,
 				34E69672DB56FF43F4113780 /* InfoPlist.xcstrings in Resources */,
 				43C5FC1C3AF5BF0A99814174 /* Localizable.xcstrings in Resources */,
 				32900841E36F7C998DB6960F /* PrivacyInfo.xcprivacy in Resources */,

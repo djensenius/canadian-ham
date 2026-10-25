@@ -23,8 +23,8 @@ final class CanadianHamWatchUITests: XCTestCase {
 
         for (section, title) in [("practice", practiceTitle), ("morse", "Morse"), ("alphabet", "Alphabet")] {
             let link = app.buttons["watch-section-\(section)"]
-            if !link.isHittable { app.swipeUp() }
             XCTAssertTrue(link.waitForExistence(timeout: 10), section)
+            if !link.isHittable { app.swipeUp() }
             XCTAssertEqual(link.label, title)
             link.tap()
             XCTAssertTrue(app.staticTexts["watch-placeholder-\(section)"].waitForExistence(timeout: 5))
