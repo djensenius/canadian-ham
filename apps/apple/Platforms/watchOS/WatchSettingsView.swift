@@ -33,6 +33,7 @@ enum WatchLanguage: String, CaseIterable, Identifiable {
 
 struct WatchSettingsView: View {
     @Binding var language: WatchLanguage
+    @Environment(\.locale) private var locale
 
     var body: some View {
         List {
@@ -58,6 +59,8 @@ struct WatchSettingsView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("watch-language-session-note")
         }
-        .navigationTitle("Settings")
+        // watchOS can cache a localized-key navigation title when revisiting
+        // this destination. Resolve it explicitly so live overrides update it too.
+        .navigationTitle(Text(verbatim: String(localized: "Settings", bundle: WatchLanguage.bundle(for: locale), locale: locale))) // l10n: localized
     }
 }

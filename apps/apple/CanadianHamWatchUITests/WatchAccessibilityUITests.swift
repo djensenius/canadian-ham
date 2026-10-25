@@ -59,7 +59,7 @@ final class WatchAccessibilityUITests: XCTestCase {
         back(app)
         enter("settings", in: app)
         tap(app.buttons["watch-language-english"], in: app)
-        XCTAssertTrue(app.navigationBars["Settings"].exists)
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
         tap(app.buttons["watch-language-system"], in: app)
         XCTAssertTrue(app.buttons["watch-language-system"].isSelected)
         tap(app.buttons["watch-language-french"], in: app)
@@ -212,8 +212,12 @@ final class WatchAccessibilityUITests: XCTestCase {
     private func reveal(_ target: XCUIElement, in app: XCUIApplication) {
         for _ in 0..<80 {
             let top = app.navigationBars.firstMatch.exists ? app.navigationBars.firstMatch.frame.maxY : 28
-            if target.exists && target.isHittable && target.frame.minY >= top && target.frame.minY < app.frame.maxY {
-                return
+            if target.exists && target.isHittable && target.frame.minY >= top {
+                let availableHeight = app.frame.maxY - top - 4
+                // A partly visible watch button can be hittable while its centre is
+                // outside the safe tap area. Require the whole control when it fits;
+                // long official prose instead needs its start reachable for reading.
+                if target.frame.maxY <= app.frame.maxY - 4 || target.frame.height > availableHeight { return }
             }
             let backwards = target.exists && target.frame.minY < top
             let lower = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
