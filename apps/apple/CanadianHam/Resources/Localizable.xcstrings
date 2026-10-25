@@ -12916,6 +12916,22 @@
           }
         }
       }
+    },
+    "Replay" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rejouer"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rejouer"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
