@@ -20,14 +20,19 @@ struct WatchHomeView: View {
     var body: some View {
         NavigationStack {
             List(WatchSection.allCases) { section in
-                NavigationLink {
-                    WatchSectionPlaceholder(section: section)
-                } label: {
+                NavigationLink(value: section) {
                     Text(section.title) // l10n: localized
                 }
                 .accessibilityIdentifier("watch-section-\(section.id)")
             }
             .navigationTitle("Canadian Ham")
+            .navigationDestination(for: WatchSection.self) { section in
+                if section == .practice {
+                    WatchPracticeView()
+                } else {
+                    WatchSectionPlaceholder(section: section)
+                }
+            }
         }
     }
 }

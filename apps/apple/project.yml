@@ -340,9 +340,23 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: Platforms/watchOS
+      - path: ../../content/generated/basic-2025-07-15
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/explanations
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
       - path: CanadianHam/Resources/Localizable.xcstrings
         type: file
         buildPhase: resources
+    postBuildScripts:
+      - name: Remove explanation authoring README
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          find "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/explanations" -type f -iname README.md -delete
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
@@ -367,6 +381,7 @@ targets:
         OTHER_SWIFT_FLAGS: ""
         SWIFT_EMIT_LOC_STRINGS: YES
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
   CanadianHamWatchTests:
     type: bundle.unit-test
     platform: watchOS

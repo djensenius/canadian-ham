@@ -1,0 +1,138 @@
+import XCTest
+
+final class WatchPracticeUITests: XCTestCase {
+    override func setUpWithError() throws { continueAfterFailure = false }
+
+    @MainActor
+    func testTapFeedbackNextAndRelaunchDoesNotRestoreAnswer() {
+        let app = launchPractice(language: "en")
+        let question = app.staticTexts["watch-question"].label
+        XCTAssertEqual(question, "Power is expressed in:")
+        let answer = app.buttons["watch-answer-0"]
+        reveal(answer, in: app)
+        let chosenText = answer.label
+        answer.tap()
+        let feedback = app.staticTexts["watch-feedback"]
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5))
+        XCTAssertEqual(chosenText, "ohms")
+        XCTAssertEqual(feedback.label, "Incorrect")
+        XCTAssertFalse(app.buttons["watch-answer-0"].exists)
+        let correct = app.staticTexts["watch-correct-answer"]
+        reveal(correct, in: app)
+        XCTAssertEqual(correct.label, "watts")
+        XCTAssertNotEqual(correct.label, chosenText)
+        let explanation = app.staticTexts["watch-explanation"]
+        reveal(explanation, in: app)
+        XCTAssertTrue(explanation.label.hasPrefix("Power is expressed in watts."))
+        XCTAssertTrue(explanation.label.contains("\"volts\": Volts express voltage."))
+        XCTAssertFalse(explanation.label.contains("sourceIndex"))
+        XCTAssertFalse(explanation.label.contains("Question B-"))
+        XCTAssertFalse(app.buttons["Hint"].exists)
+        let next = app.buttons["watch-next"]
+        reveal(next, in: app)
+        next.tap()
+        XCTAssertTrue(app.staticTexts["watch-question"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["watch-question"].label, "What is the maximum authorized bandwidth on the 6-metre and 2-metre bands?")
+        XCTAssertFalse(feedback.exists)
+        let nextAnswer = app.buttons["watch-answer-0"]
+        reveal(nextAnswer, in: app)
+        nextAnswer.tap()
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5))
+        app.terminate()
+        app.launch()
+        app.buttons["watch-section-practice"].tap()
+        XCTAssertTrue(app.staticTexts["watch-question"].waitForExistence(timeout: 5))
+        XCTAssertFalse(feedback.exists)
+        reveal(app.buttons["watch-answer-0"], in: app)
+        XCTAssertEqual(app.staticTexts["watch-question"].label, question, "A new session restarts the known sequence")
+        XCTAssertEqual(app.buttons["watch-answer-0"].label, chosenText)
+        app.buttons["watch-answer-0"].tap()
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5), "The fresh answer is actionable, not a restored submission")
+        XCTAssertEqual(feedback.label, "Incorrect")
+    }
+
+    @MainActor
+    func testCrownSelectionRequiresConfirmAndFrenchFeedbackLabelsEnglishFallback() {
+        let app = launchPractice(language: "fr")
+        XCTAssertEqual(app.staticTexts["watch-question"].label, "La puissance s'exprime en:")
+        let open = app.buttons["watch-crown-open"]
+        reveal(open, in: app)
+        // Crown scrolling on the question must not submit.
+        XCUIDevice.shared.rotateDigitalCrown(delta: 0.5)
+        XCTAssertFalse(app.staticTexts["watch-feedback"].exists)
+        reveal(open, in: app)
+        open.tap()
+        let picker = app.descendants(matching: .any)["watch-crown-selection"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 5))
+        var seenAnswers: Set<String> = [picker.label]
+        // Exercise actual Crown events on the focusable, adjustable answer control.
+        for step in 0..<12 {
+            XCUIDevice.shared.rotateDigitalCrown(delta: step < 6 ? 0.25 : -0.25)
+            seenAnswers.insert(picker.label)
+            print("Crown selected answers: \(seenAnswers.count); current: \(picker.label)")
+            XCTAssertTrue(app.buttons["watch-confirm"].exists)
+            XCTAssertFalse(app.staticTexts["watch-feedback"].exists)
+            if seenAnswers.count == 4 { break }
+        }
+        XCTAssertEqual(seenAnswers.count, 4, "The Crown can select every answer without submitting")
+        let selected = picker.label
+        // Touch-scroll long choices: the Crown intentionally remains assigned to selection here.
+        let confirm = app.buttons["watch-confirm"]
+        for _ in 0..<12 {
+            if confirm.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(confirm.isHittable)
+        XCTAssertEqual(picker.label, selected, "Reading the choice must not change the Crown selection")
+        confirm.tap()
+        let feedback = app.staticTexts["watch-feedback"]
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5))
+        XCTAssertTrue(["Bonne réponse", "Mauvaise réponse"].contains(feedback.label))
+        XCTAssertTrue(app.staticTexts[selected].exists)
+        let fallback = app.staticTexts["watch-english-fallback"]
+        reveal(fallback, in: app)
+        XCTAssertEqual(fallback.label, "Explication en anglais")
+        reveal(app.staticTexts["watch-explanation"], in: app)
+        XCTAssertTrue(app.staticTexts["watch-explanation"].label.hasPrefix("Power is expressed in watts."))
+        XCTAssertTrue(app.staticTexts["watch-explanation"].label.contains("\"amperes\": Amperes express current."))
+        XCTAssertFalse(app.staticTexts["watch-explanation"].label.contains("sourceIndex"))
+        XCTAssertFalse(app.staticTexts["watch-explanation"].label.contains("Question B-"))
+        reveal(app.buttons["watch-next"], in: app)
+        XCTAssertEqual(app.buttons["watch-next"].label, "Suivant")
+        app.buttons["watch-next"].tap()
+        XCTAssertTrue(app.staticTexts["watch-question"].waitForExistence(timeout: 5))
+        XCTAssertFalse(feedback.exists)
+    }
+
+    @MainActor
+    private func launchPractice(language: String) -> XCUIApplication {
+        let app = XCUIApplication()
+        // Seed 3121 draws the short power-units question, then B-001-016-001 (unit-tested).
+        app.launchArguments = ["-AppleLanguages", "(\(language))", "-AppleLocale", language == "fr" ? "fr_CA" : "en_CA",
+                               "-watchPracticeSeed", "3121"]
+        app.launch()
+        XCTAssertTrue(app.buttons["watch-section-practice"].waitForExistence(timeout: 10))
+        app.buttons["watch-section-practice"].tap()
+        XCTAssertTrue(app.staticTexts["watch-question"].waitForExistence(timeout: 10))
+        return app
+    }
+
+    @MainActor
+    private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
+        XCTAssertTrue(element.waitForExistence(timeout: 5))
+        for _ in 0..<12 {
+            if element.isHittable { return }
+            if element.frame.maxY <= 56 {
+                XCUIDevice.shared.rotateDigitalCrown(delta: -0.5)
+            } else if element.frame.minY > app.frame.maxY + 100 {
+                app.swipeUp()
+            } else {
+                XCUIDevice.shared.rotateDigitalCrown(delta: 0.5)
+            }
+        }
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        XCTFail("Could not reveal \(element.identifier), frame=\(element.frame)")
+    }
+}
