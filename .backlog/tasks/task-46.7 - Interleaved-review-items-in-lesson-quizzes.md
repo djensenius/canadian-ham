@@ -1,11 +1,11 @@
 ---
 id: TASK-46.7
 title: Interleaved review items in lesson quizzes
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: 2026-10-12 14:57
-updated_date: '2026-10-25T01:26:00Z'
+updated_date: '2026-10-25T03:34:00Z'
 labels:
   - web
   - apple
@@ -365,10 +365,351 @@ All required validation complete. pnpm check:apple-l10n PASS (no catalogue rewri
 Internal review fixes in progress: web review IDs now derive synchronously from Basic subsections, independent of bank text loading; delayed versus undelayed seeded render passes. Added English language runs in French headings, Apple card count including reviews, Basic-only review-ID validation, canonical hint-anchor overlap documentation tests and legacy empty-review import tests (top-level/sync, missing/v1) on web, Apple and schema. Targeted web 15/15 PASS. First full pnpm test hit unchanged v6 upgrade 5-second timeout during concurrent runners; rerunning full suite alone without test weakening. Schema test initially modeled missing version as own undefined JS field; corrected to actually omit it, matching JSON. Other initial checks PASS: import, typecheck, web build/URL audit, text sources and guard self-test. Full macOS queued on shared xbuild lock; chained 25-method/device iPhone/iPad, parity and l10n runners use nohup and grep polling.
 
 Review-fix source commits: 798095c7 (pool race, metadata, count and regression coverage), 5ac4ef35 (compose localized prefix separately from English title), d949ddd9 (assert non-English prefix, allowing Foundation’s correct French language run). Final full pnpm test PASS: content-tools250/250, Morse21/21, calculator127/127, web281/281. Schemas61/61 PASS; import/typecheck/build/URL audit and final text/guard PASS. Full macOS 223 methods: 222 passed; the new heading method exposed attributed interpolation applying English to the entire phrase. Prefix/title composition fixed; failing-only method now PASS on final source (macos-heading-r3.log, 0.006s); all223 distinct methods pass across full run and targeted recheck. Second targeted iteration corrected the test’s overly strict nil-only prefix expectation: Foundation correctly marks the localized prefix French. No existing tests/audits/helpers weakened. iPhone/iPad25 methods each, parity and l10n now running sequentially via /tmp/task-46.7-review-apple-r3.sh.
+
+## Internal review follow-up: final validation evidence
+
+Source fixes: 798095c7, 5ac4ef35 and d949ddd9. Web pools use synchronous Basic subsection IDs; no question-text load timing can remove reviews. English titles have language metadata in French headings. Apple cards count reviews and accept only Basic review IDs. Missing/v1 empty-review arrays import on web, Apple and schema. Canonical hint anchors intentionally remain authored targets even if synthetic overlapping pools credit a nearer lesson; web/Apple tests document why redirecting would lose the anchor.
+
+All builds/tests used nohup with grep polling and xbuild; no builds were killed. Exact runners: /tmp/task-46.7-review-mac.sh, /tmp/task-46.7-review-mac-r2.sh, /tmp/task-46.7-review-apple-r3.sh, /tmp/task-46.7-review-static-r2.sh. Logs: /tmp/task-46.7-review-runs/.
+
+Final Apple runner PASS: phone_EXIT=0 (25/25), pad_EXIT=0 (25/25), PARITY_EXIT=0 (TS32/32, Swift22/22), L10N_EXIT=0 (French localization export, generic tvOS/visionOS simulator builds, unchanged catalogue SHA256 fbce70ce3a6379189b0132df0ad3437b0cfd1fc8d6cc97923c1de4a9f41bc34d).
+
+Web/static final results: pnpm test PASS (content-tools250/250, Morse21/21, calculator127/127, web281/281); schemas61/61 and2071 targets PASS; import:check, typecheck, build:web, URL/CSP audit, Apple text sources, guard self-test and approved base diff PASS. The first full web run hit the existing v6 upgrade5000ms timeout under concurrent runners; unchanged rerun passed. The first schema-test setup used an own undefined property rather than omitting missing version; fixed the test to model JSON correctly.
+
+macOS full documented unit command ran223 tests:222 passed; only the NEW heading language-run test failed. It caught Foundation applying interpolated English attributes to the prefix; prefix/title composition fixed. First targeted recheck passed the English-title-only check but the prefix check expected nil rather than Foundation’s correct French language run. That expectation was corrected to assert the entire French prefix is non-English. Final failing-only recheck PASS1/1. Aggregate223/223 distinct methods passing; no full suite rerun after the single-method fix (testing policy). UI-test target compiled in both commands.
+
+### Full macOS unit run (macos.log)
+
+| Test | Result | Seconds |
+| --- | --- | --- |
+| `CanadianHamTests.DuoLayoutPolicyTests.testCompactWidthIPhoneKeepsSheetPolicy` | PASSED | 0.001 |
+| `CanadianHamTests.DuoLayoutPolicyTests.testForcedRegularIPhoneLandscapeKeepsSheetPolicyWhenVerticalIsCompact` | PASSED | 0.001 |
+| `CanadianHamTests.DuoLayoutPolicyTests.testIPadInspectorRuleRemainsSizeClassDriven` | PASSED | 0.001 |
+| `CanadianHamTests.DuoLayoutPolicyTests.testMacAndOtherIdiomsNeverUseIPhonePolicy` | PASSED | 0.001 |
+| `CanadianHamTests.DuoLayoutPolicyTests.testNilVerticalSizeClassDoesNotBlockRegularWidthIPhonePolicy` | PASSED | 0.001 |
+| `CanadianHamTests.DuoLayoutPolicyTests.testRegularWidthIPhoneUsesUnfoldedInspectorPolicyWhenVerticalIsNotCompact` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutCanRepresentFittingContentWithAndWithoutHelp` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutFittingCandidatesPreferLargeKeysBeforeMinimumKeys` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutKeepsKeyHeightAtLeast44Everywhere` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutUsesExplicitScrollingModeWithoutHeightThresholds` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testCalculatorToolLayoutUsesLargeMetricsOnlyForAccessibilitySizes` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testClearForNewExamResetsCurrentCalculationButKeepsRequestedLocale` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testFrenchLocaleUsesFrenchDecimalDisplayAndSpokenString` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testKeyHandlingProducesEngineDisplayAndSpokenResult` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testOfficialReferenceSheetGateAndBundledPages` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testQuestionCardFocusResetKeepsTextSelectionEnabled` | PASSED | 0.004 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testReferenceSheetLoaderReturnsNilWhenBundledFileIsMissingAndLoadsBasicSheet` | PASSED | 0.001 |
+| `CanadianHamTests.ExamCalculatorViewModelTests.testUpdateLocaleRefreshesDisplayAndSpokenStringImmediately` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testApplyPracticeAnswerSubmitsAnsweredWithHelpToEngine` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekEligibilityAllowsPracticeReviewLaterButNeverMockExamOrScoredImmediateAnswer` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekEndsWhenPhoneFullyOpensOrCloses` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekFastUnfoldThroughBandNeverPeeks` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekLeavingToleranceDoesNotResetDismissalSuppression` | PASSED | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationAppearanceAllowsCurrentResetToClearSuppression` | PASSED | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationClosesPeekOpenedHintOnQuestionChangeAndRequiresFreshDwell` | PASSED | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationDismissalSuppressesReopenUntilReset` | PASSED | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationImmediateAnswerEndsEligibility` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationKeepsButtonOpenedHintOpenOnReset` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationLifecycleKeepsDismissalSuppressionAcrossDisappear` | PASSED | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekPresentationStartsOnlyOnceUntilPostureReset` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekRecheckPeeksWithoutNewSamples` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekRequiresStableDwellInSlightOpenBand` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekSlowCloseThroughBandNeverPeeks` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekStartsOnlyInsideRealBandAndDoesNotUseEdgeJitterBeforePeek` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekToleratesSmallJitterOnlyAfterPeekStarts` | PASSED | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHingePeekUnavailableSampleDoesNotResetDismissalSuppression` | PASSED | 0.001 |
+| `CanadianHamTests.HintSessionStateTests.testHintQualificationMarksUnansweredQuestionAsQualifiedOnly` | PASSED | 0.000 |
+| `CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerCancelsShortPeekBeforeRecordingHelp` | PASSED | 0.392 |
+| `CanadianHamTests.HintSessionStateTests.testHintVisibilityTimerDoesNotQualifyShortPeekRoute` | PASSED | 0.296 |
+| `CanadianHamTests.HintSessionStateTests.testImmediateModeHintAfterScoredAnswerDoesNotRecordHelp` | PASSED | 0.002 |
+| `CanadianHamTests.HintSessionStateTests.testReferencePointerRuleShowsOnlyWhenReferenceSheetIsAvailable` | PASSED | 0.002 |
+| `CanadianHamTests.HintSessionStateTests.testReviewLaterHintAfterSelectionRecordsHelp` | PASSED | 0.002 |
+| `CanadianHamTests.HintSessionStateTests.testSelectingAfterQualifiedHintRecordsHelpForReviewLaterSubmission` | PASSED | 0.002 |
+| `CanadianHamTests.HintSessionStateTests.testVisibilityTimerDoesNotRestartForSameQuestionAndCancelsOnQuestionChange` | PASSED | 2.577 |
+| `CanadianHamTests.LocalizationCatalogTests.testConceptCheckAnswerStatusFrenchAndFallbackLanguageMetadata` | PASSED | 0.003 |
+| `CanadianHamTests.LocalizationCatalogTests.testConceptCheckAnswerStatusLegacyChoiceAndNoDisclosureBeforeSelection` | PASSED | 0.005 |
+| `CanadianHamTests.LocalizationCatalogTests.testConceptCheckAnswerStatusMapsShuffledSourceChoices` | PASSED | 0.004 |
+| `CanadianHamTests.LocalizationCatalogTests.testConceptCheckFeedbackFocusRequestOnlyAfterChoosingNotPreviousOrNext` | PASSED | 0.001 |
+| `CanadianHamTests.LocalizationCatalogTests.testEveryCatalogKeyHasFrenchTranslations` | PASSED | 0.007 |
+| `CanadianHamTests.LocalizationCatalogTests.testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries` | PASSED | 0.005 |
+| `CanadianHamTests.LocalizationCatalogTests.testLanguagePreferenceResolvesSystemAndOverrides` | PASSED | 0.001 |
+| `CanadianHamTests.LocalizationCatalogTests.testLocalizedNullableTextAndLanguageFallsBackToEnglish` | PASSED | 0.001 |
+| `CanadianHamTests.LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale` | PASSED | 0.004 |
+| `CanadianHamTests.LocalizationCatalogTests.testReviewHeadingMarksEnglishFallbackTitleInsideFrenchText` | FAILED | 0.186 |
+| `CanadianHamTests.LocalizationCatalogTests.testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testCompletedMorseCourseSessionIgnoresResubmittedAnswer` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testFixedTimingProfilesUseEngineValues` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testLessonBodyAndBulletContrastTokensMeetMinimumRatio` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseAudioDriverSendingRestartDetachesStoppedSourceAndBalancesSession` | PASSED | 1.711 |
+| `CanadianHamTests.MorseTrainerTests.testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp` | PASSED | 0.002 |
+| `CanadianHamTests.MorseTrainerTests.testMorseAudioSessionStaysActiveUntilLastPlayerReleases` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseBeaconSafetyNoteUsesSquarePointsAndGroupedAreas` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone` | PASSED | 0.002 |
+| `CanadianHamTests.MorseTrainerTests.testMorseCourseProgressIgnoresStoredProgressForAnotherCourse` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseExamGeneratorMeetsReceivingExamConstraints` | PASSED | 0.003 |
+| `CanadianHamTests.MorseTrainerTests.testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorsePressKeyButtonAccessibilityActionsTriggerConfiguredKeying` | PASSED | 0.107 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingClassifiesTimingAndErrorSignal` | PASSED | 0.002 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerClassifiesPressWhenAudioFails` | PASSED | 0.008 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerClassifiesRecordedEventsWhileAudioStartupIsSuspended` | PASSED | 0.002 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerLeavingDuringFailedPreparationDoesNotReportStaleError` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerLeavingDuringPreparationDoesNotStartALateTone` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerReleaseCannotBeSupersededBySilence` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerReportsPreparationFailureAfterKeyUpAndClassifiesPress` | PASSED | 0.106 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingKeyerSuccessfulPrepareDoesNotClearEarlierAudioError` | PASSED | 0.112 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingPendingFinalizationHelperCancelsAndClears` | PASSED | 0.002 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingRemainingExamSecondsUsesFixedDeadline` | PASSED | 0.003 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSendingScoreCountsTimeoutOnlyThroughMissingCharacters` | PASSED | 0.004 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsClampAndPreset` | PASSED | 0.004 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsCodableRoundTripPreservesOutputMode` | PASSED | 0.004 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsDecodesLegacyPayloadWithIsEnabled` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsNotesInkOnBackgroundsMeetWCAGContrast` | PASSED | 0.006 |
+| `CanadianHamTests.MorseTrainerTests.testMorseSettingsRoundTripThroughUserDefaults` | PASSED | 0.004 |
+| `CanadianHamTests.MorseTrainerTests.testMorseStopDelayDrainsFadeBeforeStoppingEngine` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testNativeSettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess` | PASSED | 0.048 |
+| `CanadianHamTests.MorseTrainerTests.testReduceFlashingDecisionUsesInjectedFlags` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testReduceFlashingStopsOnlyRunningVisualBeacon` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testScheduleMorseVisualPlaybackInitialStateAndFallback` | PASSED | 0.001 |
+| `CanadianHamTests.MorseTrainerTests.testStudySettingsImportUpdatesLiveAndPersistedMorseSettingsOnlyAfterSuccess` | PASSED | 0.041 |
+| `CanadianHamTests.ProgressStoreTests.testAdvancedImportKeepsBasicProgressExamsAndLessonsThenBasicImportKeepsAdvancedProgress` | PASSED | 0.078 |
+| `CanadianHamTests.ProgressStoreTests.testAdvancedImportRejectsHonoursAttempts` | PASSED | 0.025 |
+| `CanadianHamTests.ProgressStoreTests.testAppleInterfaceLanguagePreferenceWritesAppleLanguagesForNextLaunch` | PASSED | 0.004 |
+| `CanadianHamTests.ProgressStoreTests.testAppSettingsModelPublishesMorseSettingsForRootViewSync` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testAppSettingsModelReplacementRevisionAdvancesForLocalDataReplacement` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testAppSettingsModelTracksUnfinishedCourseWorkAcrossRegisteredWindows` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testCorruptLegacyMorseCourseProgressJSONDoesNotBlockOpeningStore` | PASSED | 0.022 |
+| `CanadianHamTests.ProgressStoreTests.testDecodesLegacyBasicExportWithoutBankIdFields` | PASSED | 0.035 |
+| `CanadianHamTests.ProgressStoreTests.testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme` | PASSED | 0.029 |
+| `CanadianHamTests.ProgressStoreTests.testDefaultLayoutResetDoesNotWriteGatedLegacyCopyMarker` | PASSED | 0.020 |
+| `CanadianHamTests.ProgressStoreTests.testExportDeduplicatesSyncedDuplicatesAndBankScopedSubmittedAt` | PASSED | 0.058 |
+| `CanadianHamTests.ProgressStoreTests.testFreshInstallDefaultsLanguageToSystem` | PASSED | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testICloudAccountSignalsUseInitInjectedFactory` | PASSED | 0.100 |
+| `CanadianHamTests.ProgressStoreTests.testICloudAccountTeardownUsesInjectedFactoryAndRestoresLocalSnapshot` | PASSED | 0.034 |
+| `CanadianHamTests.ProgressStoreTests.testICloudDeleteCanDeleteLocalDataAfterZoneDelete` | PASSED | 0.028 |
+| `CanadianHamTests.ProgressStoreTests.testICloudDeleteStopsSyncBeforeDeletingZoneAndKeepsLocalWithoutReupload` | PASSED | 0.139 |
+| `CanadianHamTests.ProgressStoreTests.testICloudMergeFixtureIsPermutationIndependentAndIdempotent` | PASSED | 0.002 |
+| `CanadianHamTests.ProgressStoreTests.testICloudSyncConfigurationPlanDefaultsOffAndKeepsPreferencesLocal` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testICloudSyncToggleAndAccountSignalsPreserveLocalProgress` | PASSED | 0.051 |
+| `CanadianHamTests.ProgressStoreTests.testImportFiltersSyncDeviceRowsFromOtherBanksInsteadOfFailing` | PASSED | 0.038 |
+| `CanadianHamTests.ProgressStoreTests.testImportIgnoresStaleSyncDeviceRowsWhenMergedRowsDoNotMatchTopLevelFields` | PASSED | 0.039 |
+| `CanadianHamTests.ProgressStoreTests.testImportingExportWithDeviceRowsThenSyncingOriginalRowsDoesNotDoubleCount` | PASSED | 0.049 |
+| `CanadianHamTests.ProgressStoreTests.testImportingTheSameExportTwiceRestoresIdenticalProgressAttemptsAndLessons` | PASSED | 0.069 |
+| `CanadianHamTests.ProgressStoreTests.testImportKeepsPersistedAppleLanguagesWhenLanguageDoesNotChange` | PASSED | 0.033 |
+| `CanadianHamTests.ProgressStoreTests.testImportLeavesTask4610Version2LessonSplitRowsUnchanged` | PASSED | 0.038 |
+| `CanadianHamTests.ProgressStoreTests.testImportMigratesMixedTask4610SyncRowsByRowVersion` | PASSED | 0.040 |
+| `CanadianHamTests.ProgressStoreTests.testImportMigratesTask4610LessonSplitProgressAndQuizAttempts` | PASSED | 0.042 |
+| `CanadianHamTests.ProgressStoreTests.testImportOfOlderExportDoesNotRemoveExistingMorseProgress` | PASSED | 0.037 |
+| `CanadianHamTests.ProgressStoreTests.testImportRejectsInvalidSyncDeviceRows` | PASSED | 0.046 |
+| `CanadianHamTests.ProgressStoreTests.testImportRejectsUnsupportedLanguagePreferenceValues` | PASSED | 0.041 |
+| `CanadianHamTests.ProgressStoreTests.testImportRollbackAfterMorseWriteRestoresPopulatedStoreAcrossCourses` | PASSED | 0.077 |
+| `CanadianHamTests.ProgressStoreTests.testImportRollbackKeepsExistingDataWhenReplacementFails` | PASSED | 0.044 |
+| `CanadianHamTests.ProgressStoreTests.testImportRollbackPropagatesMorseProgressRemovalFailure` | PASSED | 0.038 |
+| `CanadianHamTests.ProgressStoreTests.testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress` | PASSED | 0.032 |
+| `CanadianHamTests.ProgressStoreTests.testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt` | PASSED | 0.035 |
+| `CanadianHamTests.ProgressStoreTests.testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates` | PASSED | 0.044 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsDuplicateMorseDailyActivityDates` | PASSED | 0.041 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsInvalidMorseCourseProgress` | PASSED | 0.043 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsMismatchedScoreBankId` | PASSED | 0.042 |
+| `CanadianHamTests.ProgressStoreTests.testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt` | PASSED | 0.037 |
+| `CanadianHamTests.ProgressStoreTests.testImportWritesAppleLanguagesToInjectedDefaultsWhenLanguageChanges` | PASSED | 0.038 |
+| `CanadianHamTests.ProgressStoreTests.testInMemoryLanguageOperationsDoNotMutateStandardLanguageDefaults` | PASSED | 0.039 |
+| `CanadianHamTests.ProgressStoreTests.testLaunchAdoptsExternalAppleLanguagesSelectionIntoStoredPreference` | PASSED | 0.012 |
+| `CanadianHamTests.ProgressStoreTests.testLaunchAdoptsRemovedAppleLanguagesKeyAsSystemDefault` | PASSED | 0.016 |
+| `CanadianHamTests.ProgressStoreTests.testLaunchIgnoresRegisteredAppleLanguagesValue` | PASSED | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testLaunchKeepsPreferenceWhenAppleLanguagesMatchesLastAppliedValue` | PASSED | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyEmptyReviewQuestionIdsImportAtTopLevelAndInSyncRows` | PASSED | 0.102 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyLanguageMigrationSaveFailureDoesNotBlockStartupAndRetries` | PASSED | 0.012 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredEnglishLanguageMigratesToSystemOnceAndDoesNotRerun` | PASSED | 0.014 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredFrenchAdoptsExistingPersistentAppleLanguagesInsteadOfOverwriting` | PASSED | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testLegacyStoredFrenchLanguageStaysFrenchAndAppliesInterfaceLanguageOnce` | PASSED | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure` | PASSED | 0.035 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizHelpFixtureValidationAndPayloadRoundTrips` | PASSED | 0.148 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizHelpValidationUsesOfficialMembershipAndKnownBankIdsNotBasicPrefix` | PASSED | 0.029 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizHintVisibilityUsesHalfSecondAndFreezesHelpAtChoice` | PASSED | 2.754 |
+| `CanadianHamTests.ProgressStoreTests.testLessonQuizSessionCachePreservesAnswersAndFrozenHelpAcrossNavigation` | PASSED | 0.002 |
+| `CanadianHamTests.ProgressStoreTests.testLessonWriteAfterImportedAndSyncedDuplicateRowsAddsExactlyOneRead` | PASSED | 0.059 |
+| `CanadianHamTests.ProgressStoreTests.testLocalLessonAndMorseWritesAfterDeviceRowImportAddOnlyOwnContribution` | PASSED | 0.060 |
+| `CanadianHamTests.ProgressStoreTests.testLocalQuestionWritesAfterDeviceRowImportAddOnlyOwnContribution` | PASSED | 0.035 |
+| `CanadianHamTests.ProgressStoreTests.testM1QuizRoundBoundariesPreserveOneSessionAnswersHelpAndDismissedCheckpoint` | PASSED | 0.586 |
+| `CanadianHamTests.ProgressStoreTests.testM1QuizRoundsRetainEveryItemAndSeededOrderWithinTeachingSections` | PASSED | 0.568 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesArchivedLessonProgressKeepsMaxOwnReadCount` | PASSED | 0.012 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist` | PASSED | 0.037 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesCommittedPreV2StoreFixtureWithAllDataIntact` | PASSED | 0.433 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesLegacyMorseCourseProgressJSONIntoSwiftDataEntity` | PASSED | 0.020 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesProgressStoreV1ToV2WithoutUniqueConstraints` | PASSED | 0.079 |
+| `CanadianHamTests.ProgressStoreTests.testMigratesProgressStoreV3ToV4PadsAndPersistsAnsweredWithHelpFields` | PASSED | 0.081 |
+| `CanadianHamTests.ProgressStoreTests.testMockExamTimerRefreshPreservesFractionalRemainder` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testMorseCourseProgressRoundTripsTwentyRecentCharacterResults` | PASSED | 0.030 |
+| `CanadianHamTests.ProgressStoreTests.testMorseExportMapsHapticsToWebCompatibleAudio` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testMorseImportDecodesMissingAndPartialMorsePreferences` | PASSED | 0.056 |
+| `CanadianHamTests.ProgressStoreTests.testMorseImportRejectsExplicitNullMorseValues` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testMorseImportRejectsUnsupportedMorsePreferenceEnums` | PASSED | 0.039 |
+| `CanadianHamTests.ProgressStoreTests.testMountedLessonQuizRepopulatesAfterImportAndResetWithoutReshufflingOnRerender` | PASSED | 0.975 |
+| `CanadianHamTests.ProgressStoreTests.testNativeSettingsAppearanceColorSchemeFollowsLiveThemePreference` | PASSED | 0.012 |
+| `CanadianHamTests.ProgressStoreTests.testNativeSettingsGeneralBindingsUpdatePracticePreferences` | PASSED | 0.012 |
+| `CanadianHamTests.ProgressStoreTests.testOldFormatImportWithMorseProgressReplacesAllExistingDeviceRows` | PASSED | 0.044 |
+| `CanadianHamTests.ProgressStoreTests.testPickerChangeWritesAppleLanguagesButUnchangedPreferencesDoNotRewriteIt` | PASSED | 0.011 |
+| `CanadianHamTests.ProgressStoreTests.testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences` | PASSED | 0.041 |
+| `CanadianHamTests.ProgressStoreTests.testProgressImportDecodesOlderAnsweredWithHelpFieldsAsFalse` | PASSED | 0.036 |
+| `CanadianHamTests.ProgressStoreTests.testProgressStoreDeduplicatesV2EntitiesWithoutUniqueConstraints` | PASSED | 0.038 |
+| `CanadianHamTests.ProgressStoreTests.testProgressStoreRoundTripExportImportReset` | PASSED | 0.061 |
+| `CanadianHamTests.ProgressStoreTests.testQuizRoundsWithConceptChecksKeepTheCompleteUngroupedOrder` | PASSED | 0.541 |
+| `CanadianHamTests.ProgressStoreTests.testResetAllDataTurnsICloudSyncOptInOff` | PASSED | 0.017 |
+| `CanadianHamTests.ProgressStoreTests.testResetAllDataWithICloudSyncDeletesCloudZoneThenWipesLocalData` | PASSED | 0.029 |
+| `CanadianHamTests.ProgressStoreTests.testResetAllDataWithICloudSyncKeepsLocalDataAndRetriesAfterCloudDeleteFailure` | PASSED | 0.047 |
+| `CanadianHamTests.ProgressStoreTests.testResetClearsAppleLanguagesAndLanguagePreference` | PASSED | 0.015 |
+| `CanadianHamTests.ProgressStoreTests.testResetFailureKeepsPreviousAppleLanguagesAndPreference` | PASSED | 0.016 |
+| `CanadianHamTests.ProgressStoreTests.testResetRollsBackWhenMorseProgressRemovalFails` | PASSED | 0.016 |
+| `CanadianHamTests.ProgressStoreTests.testReviewAttemptPayloadImportSyncAndLegacyVersionRejection` | PASSED | 0.055 |
+| `CanadianHamTests.ProgressStoreTests.testReviewItemsUseEarlierTaughtPoolsAndFinalM1Round` | PASSED | 1.668 |
+| `CanadianHamTests.ProgressStoreTests.testReviewSourceMayDifferFromCanonicalHintLessonWithAuthoredSectionAnchor` | PASSED | 0.566 |
+| `CanadianHamTests.ProgressStoreTests.testSavingLargeQuestionProgressBatchBuildsOneWriteContext` | PASSED | 1.742 |
+| `CanadianHamTests.ProgressStoreTests.testSharedAppleSettingsModelAppliesLivePreferenceUpdates` | PASSED | 0.012 |
+| `CanadianHamTests.ProgressStoreTests.testSharedICloudMergeFixtureCoversQuestionExamLessonAndMorseRules` | PASSED | 0.001 |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreFailedLegacyPreferencesReadDoesNotCreateMarkerAndRetries` | PASSED | 0.007 |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreFirstOpenCopiesLegacyPreferencesWithoutLosingProgress` | PASSED | 0.095 |
+| `CanadianHamTests.ProgressStoreTests.testSplitStoreLegacyPreferencesRetryRunsEvenWhenPreferencesStoreExists` | PASSED | 0.065 |
+| `CanadianHamTests.ProgressStoreTests.testStaleSameDeviceQuestionRowDoesNotLoseNextLocalWrite` | PASSED | 0.031 |
+| `CanadianHamTests.ProgressStoreTests.testSwiftDataQuestionProgressEntityDefaultsHelpFieldsForLightweightMigration` | PASSED | 0.010 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610LaunchMigrationIsAtomicAndStableWithArchivedProgressAndMultipleDevices` | PASSED | 0.042 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610LessonMigrationIsIdempotentAcrossRepeatedImports` | PASSED | 0.038 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610RejectsInvalidLegacyQuizScoresBeforeMigration` | PASSED | 0.029 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610RejectsNullLessonIDVersionAtTopLevelAndOnBothDeviceRowKinds` | PASSED | 0.029 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610RequiresAllReadSourcesAndMergesEachDeviceBeforeAggregating` | PASSED | 0.098 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610SharedConceptMappingAndConceptInclusiveScores` | PASSED | 0.234 |
+| `CanadianHamTests.ProgressStoreTests.testTask4610ValidatesHistoricalQuizMembershipBeforeMigratingTopLevelAndSyncRows` | PASSED | 0.041 |
+| `CanadianHamTests.ProgressStoreTests.testTwoDevicesEachQuestionWriteAddsExactlyOneAfterSync` | PASSED | 0.058 |
+| `CanadianHamTests.QuestionBankTests.testAdvancedBundledJSONDecodesExpectedCountsAndVerifiedFrenchCategoryNames` | PASSED | 0.013 |
+| `CanadianHamTests.QuestionBankTests.testAdvancedMockExamUsesFiftyQuestionsAndNoHonours` | PASSED | 0.014 |
+| `CanadianHamTests.QuestionBankTests.testAppBundleContainsNoReadmeFiles` | PASSED | 0.014 |
+| `CanadianHamTests.QuestionBankTests.testAppBundleContainsOnlyExpectedGeneratedBankDirectories` | PASSED | 0.001 |
+| `CanadianHamTests.QuestionBankTests.testBundledJSONDecodesExpectedCounts` | PASSED | 0.019 |
+| `CanadianHamTests.QuestionBankTests.testBundledLessonModelExposesPrerequisites` | PASSED | 0.568 |
+| `CanadianHamTests.QuestionBankTests.testBundledLessonsAndExplanationsLoadThroughContentLibrary` | PASSED | 0.752 |
+| `CanadianHamTests.QuestionBankTests.testEngineQuestionDrawKeepsQuestionInsideRequestedCategory` | PASSED | 0.020 |
+| `CanadianHamTests.QuestionBankTests.testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion` | PASSED | 0.080 |
+| `CanadianHamTests.QuestionBankTests.testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes` | PASSED | 0.001 |
+| `CanadianHamTests.QuestionBankTests.testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons` | PASSED | 0.564 |
+| `CanadianHamTests.ReadinessAndScoringTests.testAdvancedScoringAndReadinessSuppressHonours` | PASSED | 0.001 |
+| `CanadianHamTests.ReadinessAndScoringTests.testExamScoringBoundaries` | PASSED | 0.001 |
+| `CanadianHamTests.ReadinessAndScoringTests.testReadinessStates` | PASSED | 0.001 |
+| `CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate` | PASSED | 0.035 |
+| `CanadianHamTests.RootNavigationMappingTests.testCompactHomeSessionAndSectionPushesUseVisibleDestination` | PASSED | 0.001 |
+| `CanadianHamTests.RootNavigationMappingTests.testEmptyCompactPathMapsToHome` | PASSED | 0.001 |
+| `CanadianHamTests.RootNavigationMappingTests.testEveryLearnRouteRoundTripsWithItsWholeStack` | PASSED | 0.001 |
+| `CanadianHamTests.RootNavigationMappingTests.testEveryRootSelectionRoundTrips` | PASSED | 0.001 |
+| `CanadianHamTests.RootNavigationMappingTests.testLessonQuizCurrentAndOtherHintLessonStacksPreserveQuizAcrossLayouts` | PASSED | 0.001 |
+| `CanadianHamTests.RootNavigationMappingTests.testPracticeHintLessonStackKeepsSessionAsSplitSelection` | PASSED | 0.001 |
+
+### First failing-only language recheck (macos-heading-r2.log)
+
+| Test | Result | Seconds |
+| --- | --- | --- |
+| `CanadianHamTests.LocalizationCatalogTests.testReviewHeadingMarksEnglishFallbackTitleInsideFrenchText` | FAILED | 1.261 |
+
+### Final failing-only language recheck (macos-heading-r3.log)
+
+| Test | Result | Seconds |
+| --- | --- | --- |
+| `CanadianHamTests.LocalizationCatalogTests.testReviewHeadingMarksEnglishFallbackTitleInsideFrenchText` | PASSED | 0.006 |
+
+### iPhone 17 Pro targeted UI (phone.log)
+
+| Test | Result | Seconds |
+| --- | --- | --- |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptCheckHasNoHintOrOtherTools` | PASSED | 41.807 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionCorrectDarkAndFullAccessibilityAudit` | PASSED | 87.619 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionCorrectLightAndFullAccessibilityAudit` | PASSED | 109.531 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionFeedbackLargestDynamicType` | PASSED | 225.380 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit` | PASSED | 85.477 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionIncorrectFrenchFallbackLightAndFullAccessibilityAudit` | PASSED | 55.403 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip` | PASSED | 333.292 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsDarkAndFullAccessibilityAudits` | PASSED | 185.329 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsFrenchAndCurrentLessonRoundTrip` | PASSED | 174.059 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsLightAndFullAccessibilityAudits` | PASSED | 183.195 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch` | PASSED | 120.038 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount` | PASSED | 120.995 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsDarkAndFullAccessibilityAudits` | PASSED | 187.040 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsFrenchLargestTypeDarkAndFullAccessibilityAudits` | PASSED | 346.890 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsFrenchLargestTypeLightAndFullAccessibilityAudits` | PASSED | 289.195 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsKeepHelpAnswersResumeAndOneSavedAttempt` | PASSED | 407.438 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsLightAndFullAccessibilityAudits` | PASSED | 203.470 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsEnglishDarkAccessibility` | PASSED | 150.804 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsEnglishLightAccessibility` | PASSED | 149.553 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsFrenchLargestTypeDarkAccessibility` | PASSED | 233.891 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsFrenchLargestTypeLightAccessibility` | PASSED | 246.582 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsOwnLessonResumeScoreHelpAndPersistence` | PASSED | 201.072 |
+| `CanadianHamUITests.CanadianHamPracticeUITests.testLearnUserNavigationOpensLessonQuiz` | PASSED | 194.504 |
+| `CanadianHamUITests.CanadianHamPracticeUITests.testLessonQuizCardCountIncludesReviewItems` | PASSED | 121.433 |
+| `CanadianHamUITests.CanadianHamPracticeUITests.testLessonQuizResultPersistsAfterRelaunch` | PASSED | 39.034 |
+
+### iPad Pro 13-inch (M5) targeted UI (pad.log)
+
+| Test | Result | Seconds |
+| --- | --- | --- |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptCheckHasNoHintOrOtherTools` | PASSED | 88.790 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionCorrectDarkAndFullAccessibilityAudit` | PASSED | 36.988 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionCorrectLightAndFullAccessibilityAudit` | PASSED | 34.946 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionFeedbackLargestDynamicType` | PASSED | 51.117 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit` | PASSED | 37.099 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionIncorrectFrenchFallbackLightAndFullAccessibilityAudit` | PASSED | 34.494 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip` | PASSED | 92.511 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsDarkAndFullAccessibilityAudits` | PASSED | 61.592 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsFrenchAndCurrentLessonRoundTrip` | PASSED | 60.596 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsLightAndFullAccessibilityAudits` | PASSED | 64.539 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch` | PASSED | 41.699 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount` | PASSED | 52.656 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsDarkAndFullAccessibilityAudits` | PASSED | 91.061 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsFrenchLargestTypeDarkAndFullAccessibilityAudits` | PASSED | 102.440 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsFrenchLargestTypeLightAndFullAccessibilityAudits` | PASSED | 99.104 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsKeepHelpAnswersResumeAndOneSavedAttempt` | PASSED | 183.402 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsLightAndFullAccessibilityAudits` | PASSED | 89.213 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsEnglishDarkAccessibility` | PASSED | 68.720 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsEnglishLightAccessibility` | PASSED | 69.168 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsFrenchLargestTypeDarkAccessibility` | PASSED | 84.490 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsFrenchLargestTypeLightAccessibility` | PASSED | 82.291 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsOwnLessonResumeScoreHelpAndPersistence` | PASSED | 87.274 |
+| `CanadianHamUITests.CanadianHamPracticeUITests.testLearnUserNavigationOpensLessonQuiz` | PASSED | 64.789 |
+| `CanadianHamUITests.CanadianHamPracticeUITests.testLessonQuizCardCountIncludesReviewItems` | PASSED | 46.231 |
+| `CanadianHamUITests.CanadianHamPracticeUITests.testLessonQuizResultPersistsAfterRelaunch` | PASSED | 21.340 |
+
+### Swift engine parity (parity.log)
+
+| Test | Result | Seconds |
+| --- | --- | --- |
+| `CanadianHamEngineTests.FixtureTests.testEveryEngineFixtureMatchesSwiftEngine` | PASSED | 0.026 |
+| `CanadianHamEngineTests.FixtureTests.testJSONComparatorRejectsExtraExpectedOutputKey` | PASSED | 0.001 |
+| `CanadianHamEngineTests.LessonReviewTests.testSharedLessonReviewFixtures` | PASSED | 0.002 |
+| `CanadianHamEngineTests.PCG32Tests.testPCG32SrandomDemoMatchesPublishedCOutputs` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testAdvancedReadinessDoesNotCountExamsBelowSeventyPercent` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testAdvancedReadinessTreatsSeventyPercentPassThresholdAsInclusive` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testApplyAnswerRejectsOutOfRangeLeitnerBoxes` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testBankRulesAcceptFutureSchemaValidBasicIds` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testBankRulesAcceptOnlySchemaValidBasicAndAdvancedIds` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testEngineTimestampInputsRequireCanonicalMillisecondUTCFormat` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testExamGenerationRequiresCanonicalAnswerSourceIndexes` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testFullMockExamGenerationUsesActiveBankSubsectionCount` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testHintedCorrectPreservesAccuracyWithoutMasteryCredit` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testOlderProgressJsonDecodesHelpFieldsAsFalse` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testPracticeExamGenerationDoesNotRequireKnownBankRulesUnlessFullMockIsRequested` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testReadinessRejectsDuplicateSubmittedAtTimestamps` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testScoreExamRejectsUnsupportedBankIds` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testSharedBankRulesFixtureAgreesWithSwiftEngine` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testTimestampAdditionCrossesMonthAndYearBoundaries` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testTimestampFormattingRejectsYearsOutsideCanonicalRange` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testTimestampParserAcceptsLeapDayInLeapYears` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testTimestampParserRejectsImpossibleDatesAndNonAsciiDigits` | PASSED | 0.001 |
+
+Full iOS/tvOS/visionOS suites are deferred to the merge batch; this follow-up ran targeted quiz/card UI only on the two requested devices. Figure/title-sweep plans skipped because figure/title/category-card rendering is unchanged. l10n check includes export plus generic tvOS/visionOS builds. No existing audit/helper was edited and no skips/exception widening were added. Guard markers retained: Test-guard-approved: owner decision 2026-10-22 and Test-guard-approved: task-46.7. No PR opened; independent re-review required before a PR.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented deterministic 1–2 earlier-lesson official review items in both engines and on web/iOS/iPadOS/macOS, with taught-pool preference/fallback, accessible EN/FR source labels, final M1 Review/Révision rounds, existing hint/help scoring and question-progress behavior. Added optional disjoint reviewQuestionIds persistence and import/sync validation, legacy-version rejection and v2 migration pass-through. Shared fixtures and regression tests cover selection, scoring, source-lesson resume, help and compatibility. Validation PASS: TS engine32/32, Swift engine22/22, macOS220/220 plus final-source1/1, iPhone22/22 distinct and iPad22/22, full pnpm test (content-tools250/Morse21/calculator127/web278), schemas60/60 across2071 targets, import, typecheck, web build/URL-CSP, unchanged-catalogue Apple localization plus TV/vision builds, text sources, test guard and diff checks. One new UI-only async navigation assertion was corrected and rerun alone successfully. Existing audits/helpers and mock exams unchanged. tvOS/visionOS quiz UI N/A; no full iOS/tvOS/visionOS suites or PR. Per-test Apple/engine results are recorded in notes; independent review remains required.
+Addressed every internal-review finding. Web review pools now use synchronous Basic subsection IDs, with a delayed-bank lesson render proving two reviews and identical seeded IDs to an undelayed render. French review headings preserve English title language on web and Apple; Apple cards include reviews and validation accepts only Basic review IDs. Canonical authored hint anchors remain intentional and covered by synthetic-overlap tests. Added missing/v1 explicit-empty-review import coverage at top level and in sync rows on web, Apple and schema; tidied quiz-test imports. Validation PASS: full pnpm test (web281, content-tools250, Morse21, calculator127), schemas61/61, import/typecheck/web build/URL-CSP, TS32/Swift22 parity, iPhone25/25, iPad25/25, macOS223 distinct methods (222 from full run plus corrected new heading method rechecked alone), l10n export and TV/vision builds with unchanged catalogue, text sources, guard and diff checks. Initial existing web timeout passed unchanged rerun; new language regression caught and fixed Foundation attribute propagation, then its overly strict nil-only prefix expectation was corrected to accept a French run. Per-test results and logs recorded. No existing audits/helpers weakened, full platform suites deferred to merge batch, no PR; independent re-review required.
 <!-- SECTION:FINAL_SUMMARY:END -->
