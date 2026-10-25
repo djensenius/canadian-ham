@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T18:45:00Z'
+updated_date: '2026-10-25T18:54:00Z'
 labels:
   - apple
   - watchos
@@ -56,6 +56,8 @@ Milestone 2: all 10 watch unit tests now pass, tap/feedback/Next/relaunch UI pas
 All 6 ACs verified; evidence: docs/testing/task-14.2-watch-practice.md. Installed watch bundle has exactly 988 original JSON resources (byte-for-byte source matches), 2,360,969 raw bytes, no excluded content; Debug installed logical/allocated bytes 16,773,998/19,832,832 including injected test PlugIns (app excluding them: 10,025,821/13,062,144). Final cold load 0.218668292 s, retained-bank resident delta 8,159,232 bytes. The paired iPhone simulator had no CanadianHam counterpart installed. 10 unit and 4 UI tests passed across targeted watch runs; final unchanged-source 640ddb3e run passed cold load plus both practice UI methods. Full macOS unit target 223/223; iOS embedded build-for-testing; localization/export/generic builds; text, network/iCloud + fixtures, test guard/self-test and XcodeGen twice with empty determinism diff all passed. Initial UI failures were fixed and rerun only at affected class/method scope. No accessibility exceptions or audit weakening. Hardware/VoiceOver listening/full audits remain existing TASK-14.5/14.6 gates. No PR or TestFlight upload opened.
 
 Reopened for internal review fixes: eager main-thread loads and raw authoring explanation text are blockers; addressing test determinism and low accessibility/catalogue notes in the same narrow review round.
+
+Review-fix implementation committed at d8790e996a55aa497e84d77fc733b0210957fb05 (catalogue cleanup abdf6079). Practice has optional session + labelled loading ProgressView, navigation-value destinations and a shared actor caching a detached off-main load. All 984 EN/FR rendered explanation paths now parse authoring text, quote distractor choices and tag English fallback runs en-CA. DEBUG/UI-test seed 3121 fixes the first two draws; no hard-coded answer-state assertion. Headers and localized submit announcements added. Full watch run: 14/15 passed, with one overly strict new assertion rejecting the existing AppIcon Assets.car; fixed to real SVG/PNG resource checks and independent assetutil metadata (only AppIcon). Targeted cold/bundle/tap rerun passed 3/3. Initial localization export correctly exposed newly-unused Not selected, now removed via ordered Python round-trip; retry and final catalogue-based measurement are queued. iOS/macOS gates still running/queued.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
