@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T19:51:00Z'
+updated_date: '2026-10-25T20:02:00Z'
 labels:
   - apple
   - watchos
@@ -89,6 +89,8 @@ Complete review-follow-up per-test results (all PASS):
 - CanadianHamWatchUITests.WatchMorseUITests.testPlayReplayAnswerNextAndNoEarlyReveal: PASS (49.423s)
 - CanadianHamWatchUITests.WatchPracticeUITests.testCrownSelectionRequiresConfirmAndFrenchFeedbackLabelsEnglishFallback: PASS (53.887s)
 - CanadianHamWatchUITests.WatchPracticeUITests.testTapFeedbackNextAndRelaunchDoesNotRestoreAnswer: PASS (32.606s)
+
+Copilot (PR #1033): the 1.2 s haptic spacing reset when the Morse screen was re-entered, because each visit builds a new playback controller. It now lives in a shared WatchMorseHapticCooldown (per process); tests inject their own. New test testHapticSpacingSurvivesLeavingAndReenteringMorse. Watch scheme 30/30.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
