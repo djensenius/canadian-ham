@@ -121,10 +121,11 @@ final class WatchPracticeTests: XCTestCase {
         let elapsed = start.duration(to: .now)
         let after = residentBytes()
         let root = try XCTUnwrap(Bundle.main.resourceURL)
-        let files = try XCTUnwrap(FileManager.default.enumerator(at: root, includingPropertiesForKeys: [.fileSizeKey]))
+        let files = try XCTUnwrap(FileManager.default.enumerator(at: root, includingPropertiesForKeys: [.fileSizeKey, .isRegularFileKey]))
             .compactMap { $0 as? URL }
         let logicalBytes = try files.reduce(0) { total, url in
-            total + (try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0)
+            let values = try url.resourceValues(forKeys: [.fileSizeKey, .isRegularFileKey])
+            return total + (values.isRegularFile == true ? (values.fileSize ?? 0) : 0)
         }
         let report = "WatchSimulator practice: questions=\(bank.questions.count), explanations=\(bank.explanations.count), load=\(elapsed), residentBefore=\(before), residentAfter=\(after), residentDelta=\(Int64(after) - Int64(before)), bundleLogicalBytes=\(logicalBytes)"
         print(report)
