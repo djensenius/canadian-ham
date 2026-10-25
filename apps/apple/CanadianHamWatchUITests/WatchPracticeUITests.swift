@@ -57,8 +57,8 @@ final class WatchPracticeUITests: XCTestCase {
         picker.tap()
         var seenAnswers: Set<String> = [app.staticTexts["watch-crown-selection"].label]
         // Native watchOS XCUIAutomation exposes Crown rotation (but not adjust(toPickerWheelValue:)).
-        for _ in 0..<16 {
-            XCUIDevice.shared.rotateDigitalCrown(delta: 0.05)
+        for _ in 0..<12 {
+            XCUIDevice.shared.rotateDigitalCrown(delta: 0.25)
             seenAnswers.insert(app.staticTexts["watch-crown-selection"].label)
             print("Crown selected answers: \(seenAnswers.count); current: \(app.staticTexts["watch-crown-selection"].label)")
             XCTAssertTrue(app.buttons["watch-confirm"].exists)
@@ -102,9 +102,9 @@ final class WatchPracticeUITests: XCTestCase {
         for _ in 0..<24 {
             if element.isHittable { return }
             if element.frame.maxY <= 56 {
-                XCUIDevice.shared.rotateDigitalCrown(delta: -0.15)
+                XCUIDevice.shared.rotateDigitalCrown(delta: -0.5)
             } else {
-                XCUIDevice.shared.rotateDigitalCrown(delta: 0.15)
+                XCUIDevice.shared.rotateDigitalCrown(delta: 0.5)
             }
         }
         let hierarchy = XCTAttachment(string: app.debugDescription)
