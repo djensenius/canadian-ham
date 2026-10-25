@@ -1176,7 +1176,10 @@ func lessonQuizReviewHeading(title: LocalizedNullableText, language: BankLanguag
     let localizedTitle = title.textAndLanguage(for: language)
     var attributedTitle = AttributedString(localizedTitle.text)
     attributedTitle.languageIdentifier = localizedTitle.language == .english ? "en" : "fr"
-    return AttributedString(localized: "Review question from \(attributedTitle)", bundle: bundle)
+    // Interpolating an attributed title propagates its language onto the localized prefix.
+    var heading = AttributedString(localized: "Review question from \("")", bundle: bundle)
+    heading += attributedTitle
+    return heading
 }
 
 func buildLessonQuizItems(quiz: LessonQuiz, seed: String, library: ContentLibrary? = nil) throws -> [LessonQuizRuntimeItem] {
