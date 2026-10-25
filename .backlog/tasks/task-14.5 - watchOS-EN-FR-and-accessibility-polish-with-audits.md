@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T21:08:00Z'
+updated_date: '2026-10-25T21:11:00Z'
 labels:
   - apple
   - watchos
@@ -50,4 +50,6 @@ From the TASK-14.2 review: (1) check in the VoiceOver listening pass that the Cr
 From TASK-14.3 approved review findings 6/7: add full performAccessibilityAudit runs on the Practice and Morse screens/states (not only structural checks); give bare-letter answer buttons localized labels such as "Letter A" without early answer disclosure; announce when answer choices appear after playback; check VoiceOver Play/Replay announcements versus the first tone and resolve audible overlap. These remain TASK-14.5 work; no audit exceptions approved.
 
 From the TASK-14.4 review: (1) Alphabet spoken patterns join with spaces ('Dot Dash'), but Morse uses ', '; make both use ', ' so VoiceOver pauses between elements. (2) French dah terminology: the 'Dash' key gives 'Tiret', but the 14.3 haptic-style strings say 'trait'; pick one. 'Trait' is the usual French Morse term, so consider changing 'Dash' to 'Trait' everywhere, checking the iOS Morse trainer first. (3) WatchAlphabetReferenceTests' en/fr/fr-CA loop hard-codes the words and only tests joining; rename it or check real localization. (4) Add a --self-test to scripts/check-watch-alphabet-reference.mjs. (5) Smallest-watch layout: only Series 12 42mm was tested; the smallest supported watch is still part of AC2 here.
+
+Implemented session-only Settings locale + explicit lproj lookup (phone persists AppleLanguages and requires restart, so that persistence is deliberately not reused); retained app-wide French Tiret and aligned three watch haptic descriptions. Added Letter labels, comma-separated spoken patterns, choices announcement, 1.5 s VoiceOver output lead-in and Crown feedback after dismissal. Default home accessibility audit succeeded on watchOS 27 / Series 12 42mm at largest text; no exception handler. Created (not booted yet) SE 3 40mm simulator 596608F4-525A-4BED-8642-151C0E69842D for targeted smallest-layout run. Cold probes now use independent caches and assert construction does not warm shared cache; reference guard self-test passes.
 <!-- SECTION:NOTES:END -->
