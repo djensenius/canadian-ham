@@ -1401,11 +1401,11 @@ private struct TVAboutView: View {
                         String(localized: "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.")
                     ])
                     // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Permission remains pending: requested 2026-10-02; granted pending.
-                    TVPaperSection(title: "Attribution", accessibilityIdentifier: "tv-about-attribution-section", bodyLanguage: "en", paragraphs: [
+                    TVPaperSection(title: "Attribution", accessibilityIdentifier: "tv-about-attribution-section", bodyLanguage: BankLanguage.english.accessibilityLanguageCode, paragraphs: [
                         String(localized: "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."),
                         String(localized: "Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.")
                     ])
-                    TVPaperSection(title: "Disclaimer", accessibilityIdentifier: "tv-about-disclaimer-section", bodyLanguage: "en", paragraphs: [
+                    TVPaperSection(title: "Disclaimer", accessibilityIdentifier: "tv-about-disclaimer-section", bodyLanguage: BankLanguage.english.accessibilityLanguageCode, paragraphs: [
                         String(localized: "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.")
                     ])
                     TVPaperSection(title: "Privacy", accessibilityIdentifier: "tv-about-privacy-section", paragraphs: [

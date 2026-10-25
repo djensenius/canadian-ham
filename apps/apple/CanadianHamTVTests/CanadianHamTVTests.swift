@@ -25,7 +25,7 @@ final class CanadianHamTVTests: XCTestCase {
             title: "Avis de non-responsabilité",
             paragraphs: ["canadian-ham is an independent study tool.", "It is not affiliated with ISED."],
             interfaceLanguage: "fr-CA",
-            bodyLanguage: "en"
+            bodyLanguage: "en-CA"
         )
         let label = text.accessibilityLabel
         XCTAssertEqual(String(label.characters), "Avis de non-responsabilité\n\ncanadian-ham is an independent study tool.\n\nIt is not affiliated with ISED.")
@@ -37,7 +37,7 @@ final class CanadianHamTVTests: XCTestCase {
             XCTAssertNil(run.accessibilityHeadingLevel, "Neither body text nor separators may inherit the heading")
             let characters = String(label[run.range].characters)
             if !characters.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                XCTAssertEqual(run.languageIdentifier, "en", "Every legal-body run must retain its English voice tag")
+                XCTAssertEqual(run.languageIdentifier, "en-CA", "Every legal-body run must retain its English voice tag")
             }
         }
         XCTAssertNil(text.title.accessibilityHeadingLevel, "The heading run belongs only to the accessibility label, with no visual styling change")

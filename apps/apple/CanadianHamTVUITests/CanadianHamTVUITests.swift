@@ -351,6 +351,8 @@ final class CanadianHamTVUITests: XCTestCase {
             for paragraph in card.body {
                 XCTAssertTrue(element.label.contains(paragraph), "\(identifier) must include body text: \(paragraph)", file: file, line: line)
             }
+            // Evidence only, not a regression guard: the baseline debugDescription also showed no Header, so this
+            // check passes on old and new code alike. Unit tests in CanadianHamTVTests guard the label structure.
             let description = element.debugDescription
             let elementAttributes = description.components(separatedBy: "Element subtree:").first ?? description
             let reportsHeader = elementAttributes.range(of: "\\bHeader\\b", options: .regularExpression) != nil

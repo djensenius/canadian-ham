@@ -100,10 +100,21 @@ Validation: the targeted About/attributed-run `xbuild` run passed 7/7, and the f
 
 ### Owner listening check (tvOS VoiceOver)
 
-1. On Apple TV (or its simulator), open **Settings → Accessibility → VoiceOver** and turn VoiceOver **On**. Use an English system/interface language first; launch Canadian Ham and open **About** from the category screen.
-2. Move Down through **Bank → Sources → Attribution → Disclaimer → Privacy**, letting each card finish. Expect one focus stop per card, its title as a heading, then its entire body as ordinary text, without duplicate reading or the whole paragraph announced as a heading. Bank reads version/date/counts; Sources reads both source citations and the PDF note; Attribution reads the draft warning *before* the attribution; Disclaimer reads the non-endorsement; Privacy reads offline/no-data and temporary-session copy.
-3. Change **Settings → General → Apple TV Languages** to French (Canada), then relaunch Canadian Ham and open **À propos**. Confirm the French interface (for example **Avis de non-responsabilité** and **Confidentialité**). Repeat all cards. Expect French titles and French Bank/Sources/Privacy bodies; **Attribution** and **Avis de non-responsabilité** must switch to an **English voice for every legal-body paragraph**, then back to French on the next French title. Ensure English and French voices are available in VoiceOver settings.
-4. Record device/simulator, tvOS version, voice settings, date, and each card's heading/body/language result here and in TASK-29. Leave AC1/AC2 unchecked until the owner confirms the expected speech; if inline headings or voice switching fail, record the failing card rather than treating structural tests as listening evidence.
+VoiceOver isn't available in the tvOS Simulator, so this check needs a physical Apple TV running the internal TestFlight build.
+
+1. On the Apple TV, open **Settings → Accessibility → VoiceOver** and turn VoiceOver **On**. For a quick toggle, set **Settings → Accessibility → Accessibility Shortcut → VoiceOver**; triple-clicking the Back button (Menu on older remotes) then switches VoiceOver on or off. Start with the Apple TV language set to English, launch Canadian Ham, and open **About** from the category screen.
+2. Move Down through **Bank → Sources → Attribution → Disclaimer → Privacy**, letting each card finish. Each card should be exactly one focus stop. Expected speech in English (wording approximate; VoiceOver's heading announcement may vary):
+   - Bank: "Bank, heading" (or just "Bank"), then the version, date and question counts.
+   - Sources: "Sources", then both source citations and the reference-PDF note.
+   - Attribution: "Attribution", then the draft warning, then the attribution paragraph.
+   - Disclaimer: "Disclaimer", then the non-endorsement paragraph.
+   - Privacy: "Privacy", then the offline/no-data and temporary-session text.
+3. Change **Settings → General → Language → Apple TV Language** to Français (Canada), relaunch Canadian Ham and open **À propos**. Repeat all cards. Titles and the Bank, Sources and Privacy bodies should be spoken in French. In **Attribution** and **Avis de non-responsabilité**, every legal paragraph should be spoken with an **English voice**, then switch back to French at the next card's title. English and French voices must both be installed.
+4. What each outcome means:
+   - "heading" spoken after the title only: ideal; inline heading metadata is honoured.
+   - No "heading" anywhere: acceptable; the card reads as one paragraph. Record it, and the coordinator decides whether to add a separate heading element.
+   - The whole card announced as a heading, a card split into several stops, duplicated reading, or the legal text spoken with a French voice: failure. Record which card.
+5. Record the device, tvOS version, voice settings, date and each card's heading/body/language result here and in TASK-29. AC1/AC2 stay unchecked until the owner confirms the speech; structural tests are not listening evidence.
 
 ## Language and bilingual text
 
