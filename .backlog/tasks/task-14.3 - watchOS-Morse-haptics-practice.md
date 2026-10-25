@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T19:39:00Z'
+updated_date: '2026-10-25T19:51:00Z'
 labels:
   - apple
   - watchos
@@ -50,10 +50,49 @@ Implementation milestone: A–Z drill, session-only output settings, fixed click
 Watch scheme run: 24/26 tests initially passed. Corrected practice-bundle validation to exclude the injected unit-test fixture bundle, native watch switch/picker/lazy Form automation, and a real Swift 6 audio-render callback isolation crash. Added a real tone-render/restart regression test. Targeted reruns now pass the failed practice-content test, all 9 Morse unit tests and the complete output-settings/text/tone UI test. Other five watch UI tests passed in the scheme run. Apple tool diagnostics report simctl collection noise after runs, but targeted final run is TEST SUCCEEDED. No hardware fidelity claim.
 
 Acceptance evidence: AC1 seeded watch play/replay/answer/Next UI and 100 seeded grading/choice unit cases passed. AC3 independent haptic/tone matrix, real AVAudioSourceNode render/restart regression, tone-only UI and static requested text/no-output message UI passed. AC4 overlap guard, stale callback invalidation, cancellation before/mid-sequence, Next cooldown, delayed-scheduler safety and pre-answer UI non-reveal assertions passed; exit/scene/interruption/media-reset hooks all call the same tested cancel path. AC5 21 watch unit + 6 UI tests have passing evidence across the scheme run and targeted fix reruns; per-test rows are in docs/testing/task-14.3-watch-morse.md. pnpm check:apple-l10n (final export unchanged), text-source gate/self-test, network/iCloud guards/self-tests, test guard/self-test, deterministic XcodeGen, iOS build-for-testing and macOS 223/223 unit tests passed. macOS per-test rows: docs/testing/task-14.3-macos-unit-results.md. No shared Swift/package changes, so morse-swift swift test was not required. No full iOS/tvOS/visionOS suites: only additive watch strings outside watch targets; localization builds cover them, merge-batch suites remain coordinator-owned. Blocked: owner hardware check. AC2 stays unchecked and TASK-14.3 stays In Progress. No physical haptic fidelity, VoiceOver listening, TestFlight upload or PR claimed.
+
+Approved internal-review follow-up implemented in 00aaae43: session-only Haptic style picker with three EN/FR candidates in one mapping table (Style 1 click/directionUp unchanged default; Style 2 click/start; Style 3 retry/start); unit coverage for every pair and selected-style forwarding. Settings now has a visible NavigationStack title; UI test switches both alternatives, preserves the style across navigation and resets to Style 1 on relaunch. Real-tone test now proves actual off-main rendering with a relaxed atomic render counter on two fresh starts; if category/session activation is unavailable it asserts the controller failure state and full resource cleanup, logs the error and does not skip. Both starts actually rendered off-main on this host. Only interruption .began cancels; a new test covers .ended, invalid/missing values and pending-output cancellation.
+
+Owner hardware doc now compares all three styles in one session, requests tone-off preset-sound observations with Silent Mode off/on, explains candidate rationale without claiming single taps, and permits a direct Debug install from Xcode onto the owner's paired watch (not distribution) with the DEBUG -watchMorseSeed workflow. TASK-14.5 notes now explicitly cover full Practice/Morse audits, Letter A labels, choices-available announcement and VoiceOver/tone overlap.
+
+Requested validation PASS: complete CanadianHamWatch scheme on Apple Watch Series 12 (42mm), watchOS 27.0: 23 unit + 6 UI tests = 29/29, no failures/skips. pnpm check:apple-l10n (French export plus tvOS/visionOS/watchOS builds, no catalogue mutation); text-source gate/self-test; network and iCloud guards/self-tests; test guard/self-test (origin/main...HEAD, no guarded changes); iOS CanadianHam build-for-testing on iPhone 17 Pro; git diff --check. Catalogue verification confirms exactly seven new fr/fr-CA keys with prior order/values preserved. Logs and 29 per-test rows in docs/testing/task-14.3-watch-morse.md. No shared Swift/package or target membership changes; no Swift-package tests, full iOS/tvOS/visionOS suites, repeated macOS units or figure/title sweeps in this watch-only fix round. Earlier macOS 223/223 results remain linked from the evidence doc. Tool warnings: legacy interruption API and connect deprecations, synchronous audio-session activation, pre-existing plural formatting and post-test simctl diagnostics; TEST SUCCEEDED.
+
+Blocked: owner hardware check. AC2 remains unchecked and TASK-14.3 remains In Progress. No haptic fidelity, physical-watch run, VoiceOver listening, distribution, upload or PR claimed. Only the coordinator may later change the default from Style 1 after owner observations.
+
+Complete review-follow-up per-test results (all PASS):
+- CanadianHamWatchTests.CanadianHamWatchTests.testIndependentOfflineBundle: PASS (0.004s)
+- CanadianHamWatchTests.CanadianHamWatchTests.testPlannedSections: PASS (0.001s)
+- CanadianHamWatchTests.CanadianHamWatchTests.testSharedPackagesOnWatch: PASS (0.002s)
+- CanadianHamWatchTests.WatchMorseTests.testCancelBeforeStartAndMidSequenceInvalidatesEvenStaleCallbacks: PASS (0.005s)
+- CanadianHamWatchTests.WatchMorseTests.testDelayedSchedulerDoesNotCollapsePresets: PASS (0.001s)
+- CanadianHamWatchTests.WatchMorseTests.testFourDistinctSeededChoicesGradingAndNextReset: PASS (0.006s)
+- CanadianHamWatchTests.WatchMorseTests.testHapticStylesMapEveryPairAndReachOutput: PASS (0.002s)
+- CanadianHamWatchTests.WatchMorseTests.testLocalToneDriverRendersOffMainActorAndRestartsAfterStop: PASS (0.368s)
+- CanadianHamWatchTests.WatchMorseTests.testNextCancelsAndPreservesPresetCooldown: PASS (0.001s)
+- CanadianHamWatchTests.WatchMorseTests.testOnlyBeganAudioInterruptionCancelsPlayback: PASS (0.001s)
+- CanadianHamWatchTests.WatchMorseTests.testOutputsAreIndependentOffDoesNotStartAndToneFailureStops: PASS (0.004s)
+- CanadianHamWatchTests.WatchMorseTests.testReplayCannotOverlapAndCompletedReplayUsesSameSequence: PASS (0.001s)
+- CanadianHamWatchTests.WatchMorseTests.testSpeedClampsAndAllLettersRespectCadenceFloor: PASS (0.002s)
+- CanadianHamWatchTests.WatchMorseTests.testTimingFixturesMapToWatchPresetsAndToneSegments: PASS (0.005s)
+- CanadianHamWatchTests.WatchPracticeTests.testAColdBundledPracticeLoadMeasurements: PASS (0.361s)
+- CanadianHamWatchTests.WatchPracticeTests.testDistractorNotesFollowDisplayedOrderWithOfficialChoiceText: PASS (0.297s)
+- CanadianHamWatchTests.WatchPracticeTests.testEmptyLoadErrorAndMissingResourcesFailSafely: PASS (0.002s)
+- CanadianHamWatchTests.WatchPracticeTests.testFrenchExplanationFallbackHasEnglishAccessibilityLanguage: PASS (0.292s)
+- CanadianHamWatchTests.WatchPracticeTests.testMeasureBundledPracticeLoad: PASS (0.008s)
+- CanadianHamWatchTests.WatchPracticeTests.testNewSessionRestoresNeitherAnswerNorQuestionSequence: PASS (0.137s)
+- CanadianHamWatchTests.WatchPracticeTests.testRenderedExplanationsNeverExposeAuthoringLabels: PASS (0.411s)
+- CanadianHamWatchTests.WatchPracticeTests.testSeededShuffleGradesSourceIndexNotDisplayPositionAndLocksSubmission: PASS (0.157s)
+- CanadianHamWatchTests.WatchPracticeTests.testWatchBundleContainsCompleteBasicBankAndOnlyPracticeContent: PASS (0.148s)
+- CanadianHamWatchUITests.CanadianHamWatchUITests.testLaunchAndNavigateEnglish: PASS (18.108s)
+- CanadianHamWatchUITests.CanadianHamWatchUITests.testLaunchAndNavigateFrench: PASS (14.750s)
+- CanadianHamWatchUITests.WatchMorseUITests.testIndependentOutputsTextAlternativeAndSessionOnlySettings: PASS (136.414s)
+- CanadianHamWatchUITests.WatchMorseUITests.testPlayReplayAnswerNextAndNoEarlyReveal: PASS (49.423s)
+- CanadianHamWatchUITests.WatchPracticeUITests.testCrownSelectionRequiresConfirmAndFrenchFeedbackLabelsEnglishFallback: PASS (53.887s)
+- CanadianHamWatchUITests.WatchPracticeUITests.testTapFeedbackNextAndRelaunchDoesNotRestoreAnswer: PASS (32.606s)
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented offline A–Z watch Morse practice with four choices, feedback, Replay/Next, cancellable WatchKit presets and independent local tones, session-only settings and accessible static text fallback. Candidate mapping click/directionUp and conservative 1–2 WPM/1.2-second onset floor are documented for owner hardware validation. Automated evidence passes (27 distinct watch tests across scheme/targeted runs, 223 macOS units, iOS test build, localization and guards). AC1/3/4/5 checked; AC2 remains blocked for the physical-watch observations documented in docs/testing/task-14.3-watch-morse.md. Task intentionally remains In Progress.
+Implemented offline A–Z watch Morse practice with four choices, feedback, Replay/Next, cancellable WatchKit output and independent local tones, session-only settings and static text fallback. Approved-review follow-up adds three localized haptic styles (default click/directionUp unchanged, alternatives click/start and retry/start), one mapping table, a visible settings title, measured off-main render-callback assertions and began-only interruption handling. All 29 watch tests, iOS test build, localization/text/guards pass in the follow-up; earlier 223 macOS unit passes remain recorded. Owner hardware documentation covers same-session comparison of all styles, tone-off preset sounds/Silent Mode and direct paired-watch Debug installation/seeded rounds. TASK-14.5 holds audit/VoiceOver polish findings. AC1/3/4/5 remain checked; AC2 stays blocked for physical-watch observations, task intentionally In Progress. No default change, hardware fidelity, upload or PR claimed.
 <!-- SECTION:FINAL_SUMMARY:END -->
