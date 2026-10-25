@@ -97,6 +97,7 @@ private struct WatchCrownAnswerView: View {
     let submit: (Int) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var selection = 0
+    @FocusState private var crownFocused: Bool
 
     var body: some View {
         ScrollView {
@@ -109,6 +110,7 @@ private struct WatchCrownAnswerView: View {
                 }
             }
             .pickerStyle(.wheel)
+            .focused($crownFocused)
             .frame(height: 70)
             .accessibilityIdentifier("watch-crown-picker")
             Text(answerText(selection)) // l10n: content(question)
@@ -124,6 +126,7 @@ private struct WatchCrownAnswerView: View {
             }
             .padding(.horizontal)
         }
+        .defaultFocus($crownFocused, true)
     }
 
     private func answerText(_ index: Int) -> String {

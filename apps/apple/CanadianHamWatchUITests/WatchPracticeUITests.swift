@@ -54,7 +54,6 @@ final class WatchPracticeUITests: XCTestCase {
         open.tap()
         let picker = app.otherElements["watch-crown-picker"]
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
-        picker.tap()
         var seenAnswers: Set<String> = [app.staticTexts["watch-crown-selection"].label]
         // Native watchOS XCUIAutomation exposes Crown rotation (but not adjust(toPickerWheelValue:)).
         for _ in 0..<12 {
