@@ -1,10 +1,11 @@
 ---
 id: TASK-14.6
 title: watchOS internal TestFlight lane and icon
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T19:06:00Z'
+updated_date: '2026-10-25T22:32:00Z'
 labels:
   - apple
   - watchos
@@ -35,6 +36,15 @@ The watch app needs a release-quality icon and a reproducible internal delivery 
 - [ ] #4 After review/merge approval, an internal-team-only TestFlight upload is processed and installation on a physical watch verifies quick practice, Morse, reference and EN/FR without the phone app or network. Results and build IDs are recorded; no external group, public link or App Store submission is created before TASK-1.7/licensing approval.
 - [ ] #5 docs/release/testflight.md, privacy-label evidence and the release checklist cover the watch payload, Data Not Collected, signing/install steps and manual hardware checks; the simulator build/test command and targeted per-test results are recorded before upload.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Review existing watch icon under circular masks at 1024/196/88/48 px; refine only if needed and retain before/after evidence.
+2. Document the existing iOS-container beta path, signing/install/physical-watch gates and Data Not Collected evidence.
+3. Run immutable-source signed iOS/macOS export-only lanes through xbuild and the full Series 12 42mm watch scheme; inspect the exported watch bundle, assets, privacy, entitlements, frameworks and exact offline resources; run network/iCloud guards and fastlane safety tests.
+4. Record commands, per-test results and limitations; check AC1/2/3/5 only when proven, leave AC4 and task In Progress for post-merge owner upload/install, commit and push without uploading or opening a PR.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
