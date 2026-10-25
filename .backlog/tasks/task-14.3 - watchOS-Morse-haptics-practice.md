@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T19:15:00Z'
+updated_date: '2026-10-25T19:27:00Z'
 labels:
   - apple
   - watchos
@@ -44,4 +44,6 @@ One-character listening/feeling drills make Morse useful on the wrist without br
 
 <!-- SECTION:NOTES:BEGIN -->
 Implementation milestone: A–Z drill, session-only output settings, fixed click/directionUp mapping, clamped 1–2 WPM cadence and cancellable WatchKit/local synthesized tones implemented. Eight WatchMorseTests passed on Series 12 (42mm), watchOS 27.0; fixture-to-event/tone mapping, grading, replay, stale callback cancellation and spacing covered. Blocked: owner hardware check; AC2 remains unchecked. See docs/testing/task-14.3-watch-morse.md. Targeted watch UI tests and broader requested checks next.
+
+Watch scheme run: 24/26 tests initially passed. Corrected practice-bundle validation to exclude the injected unit-test fixture bundle, native watch switch/picker/lazy Form automation, and a real Swift 6 audio-render callback isolation crash. Added a real tone-render/restart regression test. Targeted reruns now pass the failed practice-content test, all 9 Morse unit tests and the complete output-settings/text/tone UI test. Other five watch UI tests passed in the scheme run. Apple tool diagnostics report simctl collection noise after runs, but targeted final run is TEST SUCCEEDED. No hardware fidelity claim.
 <!-- SECTION:NOTES:END -->
