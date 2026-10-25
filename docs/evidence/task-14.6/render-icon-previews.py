@@ -12,7 +12,7 @@ SOURCES = {
 SIZES = (1024, 196, 88, 48)
 
 
-def run(*args: str) -> None:
+def run(*args: str | Path) -> None:
     subprocess.run(["magick", *map(str, args)], check=True)
 
 

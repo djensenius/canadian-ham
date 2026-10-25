@@ -9,8 +9,8 @@ App Store Connect processing and owner's physical-watch installation/offline pas
 
 All runtime code, assets, project membership and Fastfile are unchanged from
 `e69bfca9caed91b454dbb5223e33a51bb256efdd` (the initial task-plan commit on main
-`b5090fe03c3c8559770b261a68f726151751e969`). Only docs/evidence were edited during
-validation; no app/package/project/signing configuration changed. The existing
+`b5090fe03c3c8559770b261a68f726151751e969`). Only docs/evidence and Backlog metadata
+were edited during validation; no app/package/project/signing configuration changed. The existing
 icon and `ios beta` embedding path already satisfy the implementation boundary;
 this task validates and documents them rather than adding a second upload lane.
 
@@ -157,6 +157,32 @@ just a forbidden-name grep:
 Resource digest: SHA-256 of sorted lines `relativePath + ' ' + SHA256(file) + '\n'`
 for all 988 JSON files is
 `9122182849a193f888a9979c58af8dca601b4466c83507fd914b9d655cc1f32b`.
+The resource path/byte comparison can be independently repeated from the repo
+root after expansion (the inspection also checks the 16 non-study files):
+
+```sh
+python3 - "$HOME/.cache/canadian-ham-task-14.6/ipa/Payload/CanadianHam.app/Watch/CanadianHamWatch.app" <<'PY'
+from pathlib import Path
+import hashlib, sys
+watch = Path(sys.argv[1])
+expected = {
+    'basic-2025-07-15/' + file.name: file
+    for file in Path('content/generated/basic-2025-07-15').glob('*.json')
+}
+expected.update({
+    'explanations/' + str(file.relative_to('content/explanations')): file
+    for file in Path('content/explanations').rglob('*.json')
+})
+actual = {str(file.relative_to(watch)) for file in watch.rglob('*.json')}
+assert actual == set(expected) and len(actual) == 988
+for relative, source in expected.items():
+    assert (watch / relative).read_bytes() == source.read_bytes(), relative
+lines = ''.join(relative + ' ' + hashlib.sha256((watch / relative).read_bytes()).hexdigest() + '\n'
+                for relative in sorted(actual))
+assert hashlib.sha256(lines.encode()).hexdigest() == '9122182849a193f888a9979c58af8dca601b4466c83507fd914b9d655cc1f32b'
+print('PASS: 988 exact paths and byte-identical Basic/explanation JSONs')
+PY
+```
 
 ### Inspection commands
 
@@ -215,6 +241,157 @@ exports and complete watch scheme cover the release-validation scope. No
 figure/title-sweep, web/content/package or localization suite was needed for
 docs/evidence-only changes. Merge-batch/release-candidate suites remain the
 coordinator's gate, not replaced by these exports.
+
+## Commands, outcomes and retained logs (AC1–3, AC5)
+
+All commands below passed. Export runs were 22:33:20–22:35:21 UTC (iOS) and
+22:35:21–22:36:30 UTC (macOS); the single full watch invocation was
+22:36:30–22:52:01 UTC, including build/setup/diagnostics. No tests were changed,
+excluded, retried or skipped. **56/56 pass: 29 unit + 27 UI**, including all **16
+full default EN/FR accessibility audits**, largest-text flows and session-language
+reset. This is one complete all-green scheme run on the final main feature code,
+not a combination of fix runs. Hardware gates remain pending.
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CHECK=1 fastlane ios beta export_only:true
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CHECK=1 fastlane mac beta export_only:true
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
+  -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamWatch \
+  -destination 'platform=watchOS Simulator,name=Apple Watch Series 12 (42mm),OS=27.0' \
+  -resultBundlePath "$HOME/.cache/canadian-ham-task-14.6/watch-full.xcresult" \
+  test CODE_SIGNING_ALLOWED=NO
+```
+
+| Check | Result |
+| --- | --- |
+| iOS signed archive/export | **ARCHIVE SUCCEEDED / EXPORT SUCCEEDED**; upload explicitly skipped; watch embedding/signing validated |
+| macOS signed archive/export | **ARCHIVE SUCCEEDED / EXPORT SUCCEEDED**; upload explicitly skipped; no embedded watch |
+| Full watch scheme | **TEST SUCCEEDED**, 56 passed / 0 failed / 0 skipped on Series 12 42mm, watchOS 27.0 (24R362) |
+| `pnpm check:apple-network` | Passed: **98 Swift files, 6 plist/privacy files, 2 project config files** |
+| `pnpm test:apple-network` | Passed self-test fixtures |
+| `pnpm check:apple-icloud-gate` | Passed default Debug/Release gates; watch overrides inherited cloud flags and has no entitlements |
+| `pnpm test:apple-icloud-gate` | Passed self-test fixtures |
+| `pnpm test:fastlane` | **4 tests / 53 assertions**, 0 failures/errors/skips (export-only fail-safe behavior) |
+| `ruby -c fastlane/Fastfile` | Syntax OK |
+| IPA inspection, byte/path comparison, assetutil, entitlements/frameworks, codesign | Passed; committed inspection JSON and reproducible resource comparison above |
+| macOS pkg signature, full expansion and app signature | Passed; committed macOS JSON |
+| Icon preview regeneration | Passed; second render is byte-identical to committed previews |
+| `pnpm check:links` | Markdown relative links verified |
+| `node scripts/check-test-guard.mjs --base main --head HEAD` | Passed: no guarded changes (docs/metadata only) |
+| `git diff --check` | Passed |
+
+[Result-bundle summary](../evidence/task-14.6/watch-test-summary.json) is exported
+using `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun xcresulttool
+get test-results summary --path "$HOME/.cache/canadian-ham-task-14.6/watch-full.xcresult"`.
+The result summary's `deviceName` says **iPhone Air**, a tool metadata mismatch;
+its platform is watchOS Simulator, model is Apple Watch Series 12, and UUID is
+`02C40D35-B5AD-40AF-B434-C63C5F294C27`. A post-run
+`DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun simctl list devices -j`
+confirms that exact UUID is **Apple Watch Series 12 (42mm)**, device type
+`com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-12-42mm`, watchOS 27.0,
+now Shutdown. No iPhone UI test destination was used or extra simulator booted.
+The raw summary is retained unchanged rather than silently correcting its name.
+
+Local retained evidence root: **`~/.cache/canadian-ham-task-14.6/`**. This holds
+`runner.log`, `ios-export.log`, `mac-export.log`, `watch-full.log`, `guards.log`,
+`watch-full.xcresult`, expanded `ipa/` and `mac-pkg/`, raw `watch-assets.json`,
+`{ios,watch}-entitlements.plist`, `watch-frameworks.txt`, profile/metadata/signature
+inspection outputs and the local assertion helper. Signed archives and exports
+remain in the gitignored fastlane paths above, not in the repository evidence.
+
+### Asset warnings and nonfatal toolchain diagnostics
+
+After the completed runs, the following asset diagnostic search returned **no
+matches** (grep exit 1); all warning lines were also reviewed. No missing icon,
+unassigned child, missing variant, signing or actool warning/error appeared in
+the iOS/watch archive or simulator build. The macOS archive also had none.
+
+```sh
+grep -nEi 'com\.apple\.actool\.(warnings|errors)|actool.*warning:|warning:.*(actool|\.xcassets|app.?icon|iconset)' \
+  "$HOME/.cache/canadian-ham-task-14.6/ios-export.log" \
+  "$HOME/.cache/canadian-ham-task-14.6/mac-export.log" \
+  "$HOME/.cache/canadian-ham-task-14.6/watch-full.log"
+```
+
+Existing nonfatal warnings remain: catalogue plural argument inference, watch/phone
+AVAudioEngine and watch interruption API deprecations, unused resignFirstResponder
+result, and AppIntents extraction without a framework dependency. The result
+summary also records the existing synchronous main-thread AVAudioSession activation
+warning (including the real-tone test); physical responsiveness/audio behavior
+remains part of the owner check, not a simulator performance guarantee. Simulator
+metadata/debugger logs report `invalidDigitCount(94232)` / no debugger version;
+post-test diagnostics report `xcrun: unable to find utility "simctl"` (error 72).
+The result bundle and tests were collected successfully, with **0 failures**;
+none of those messages was hidden, skipped or made into an audit exception.
+
+Current fresh-loader simulator probe: **0.327082084 s**, resident delta
+**6,520,832 bytes** (237,043,712 → 243,564,544). The already-loaded second probe was
+0.000101375 s with delta 0. Its **19,440,920** debug bundle logical bytes include
+test/build overhead and are not the signed 4,228,159-byte export above. These are
+simulator observations, not hardware launch/memory guarantees.
+
+### Per-test results: single full watch run (56)
+
+Every row below is from `watch-full.log` and the same result bundle; no exclusions.
+
+| Test | Result | Seconds |
+| --- | --- | ---: |
+| `CanadianHamWatchTests.CanadianHamWatchTests.testIndependentOfflineBundle` | PASS | 0.005 |
+| `CanadianHamWatchTests.CanadianHamWatchTests.testPlannedSections` | PASS | 0.001 |
+| `CanadianHamWatchTests.CanadianHamWatchTests.testSessionLanguageUsesRealBundlesForLabelsFeedbackAndErrors` | PASS | 0.003 |
+| `CanadianHamWatchTests.CanadianHamWatchTests.testSharedPackagesOnWatch` | PASS | 0.003 |
+| `CanadianHamWatchTests.WatchAlphabetReferenceTests.testAllDigitsMatchSharedMorseTableWithoutPhonetics` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchAlphabetReferenceTests.testAllLettersMatchL00201PhoneticsAndSharedMorseTable` | PASS | 0.002 |
+| `CanadianHamWatchTests.WatchAlphabetReferenceTests.testSpokenPatternsUseLocalizedWordsAndKeepInternationalPhonetics` | PASS | 0.002 |
+| `CanadianHamWatchTests.WatchMorseTests.testCancelBeforeStartAndMidSequenceInvalidatesEvenStaleCallbacks` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchMorseTests.testDelayedSchedulerDoesNotCollapsePresets` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchMorseTests.testFourDistinctSeededChoicesGradingAndNextReset` | PASS | 0.007 |
+| `CanadianHamWatchTests.WatchMorseTests.testHapticSpacingSurvivesLeavingAndReenteringMorse` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchMorseTests.testHapticStylesMapEveryPairAndReachOutput` | PASS | 0.014 |
+| `CanadianHamWatchTests.WatchMorseTests.testLocalToneDriverRendersOffMainActorAndRestartsAfterStop` | PASS | 0.489 |
+| `CanadianHamWatchTests.WatchMorseTests.testNextCancelsAndPreservesPresetCooldown` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchMorseTests.testOnlyBeganAudioInterruptionCancelsPlayback` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchMorseTests.testOutputsAreIndependentOffDoesNotStartAndToneFailureStops` | PASS | 0.005 |
+| `CanadianHamWatchTests.WatchMorseTests.testReplayCannotOverlapAndCompletedReplayUsesSameSequence` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchMorseTests.testSpeedClampsAndAllLettersRespectCadenceFloor` | PASS | 0.002 |
+| `CanadianHamWatchTests.WatchMorseTests.testTimingFixturesMapToWatchPresetsAndToneSegments` | PASS | 0.005 |
+| `CanadianHamWatchTests.WatchMorseTests.testVoiceOverStartDelayAppliesToBothOutputsAndCanBeCancelled` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchPracticeTests.testAColdBundledPracticeLoadMeasurements` | PASS | 0.338 |
+| `CanadianHamWatchTests.WatchPracticeTests.testDistractorNotesFollowDisplayedOrderWithOfficialChoiceText` | PASS | 0.307 |
+| `CanadianHamWatchTests.WatchPracticeTests.testEmptyLoadErrorAndMissingResourcesFailSafely` | PASS | 0.001 |
+| `CanadianHamWatchTests.WatchPracticeTests.testFrenchExplanationFallbackHasEnglishAccessibilityLanguage` | PASS | 0.307 |
+| `CanadianHamWatchTests.WatchPracticeTests.testMeasureBundledPracticeLoad` | PASS | 0.151 |
+| `CanadianHamWatchTests.WatchPracticeTests.testNewSessionRestoresNeitherAnswerNorQuestionSequence` | PASS | 0.146 |
+| `CanadianHamWatchTests.WatchPracticeTests.testRenderedExplanationsNeverExposeAuthoringLabels` | PASS | 0.416 |
+| `CanadianHamWatchTests.WatchPracticeTests.testSeededShuffleGradesSourceIndexNotDisplayPositionAndLocksSubmission` | PASS | 0.183 |
+| `CanadianHamWatchTests.WatchPracticeTests.testWatchBundleContainsCompleteBasicBankAndOnlyPracticeContent` | PASS | 0.165 |
+| `CanadianHamWatchUITests.CanadianHamWatchUITests.testLaunchAndNavigateEnglish` | PASS | 18.109 |
+| `CanadianHamWatchUITests.CanadianHamWatchUITests.testLaunchAndNavigateFrench` | PASS | 15.427 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishHomeAudit` | PASS | 5.301 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishLargestTextControlsAndLongQuestion` | PASS | 89.835 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishMorseAfterAnswerAudit` | PASS | 15.324 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishMorseBeforeAnswerAudit` | PASS | 12.550 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishMorseSettingsAudit` | PASS | 11.801 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishPracticeFeedbackAudit` | PASS | 9.657 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishPracticeQuestionAudit` | PASS | 6.958 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishReferenceAudit` | PASS | 7.181 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testEnglishSettingsAudit` | PASS | 8.221 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchHomeAudit` | PASS | 5.122 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchLargestTextControlsAndLongQuestion` | PASS | 79.838 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchMorseAfterAnswerAudit` | PASS | 15.277 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchMorseBeforeAnswerAudit` | PASS | 12.356 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchMorseSettingsAudit` | PASS | 11.456 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchPracticeFeedbackAudit` | PASS | 9.566 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchPracticeQuestionAudit` | PASS | 6.975 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchReferenceAudit` | PASS | 7.043 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testFrenchSettingsAudit` | PASS | 8.178 |
+| `CanadianHamWatchUITests.WatchAccessibilityUITests.testSessionLanguageOverrideUpdatesSwiftUIAndBundleLookupsAndResets` | PASS | 110.657 |
+| `CanadianHamWatchUITests.WatchAlphabetUITests.testEnglishReferenceScrollsToNineAndBack` | PASS | 54.521 |
+| `CanadianHamWatchUITests.WatchAlphabetUITests.testFrenchReferenceAtLargeDynamicTypeScrollsToNineAndBack` | PASS | 78.346 |
+| `CanadianHamWatchUITests.WatchMorseUITests.testIndependentOutputsTextAlternativeAndSessionOnlySettings` | PASS | 135.232 |
+| `CanadianHamWatchUITests.WatchMorseUITests.testPlayReplayAnswerNextAndNoEarlyReveal` | PASS | 49.547 |
+| `CanadianHamWatchUITests.WatchPracticeUITests.testCrownSelectionRequiresConfirmAndFrenchFeedbackLabelsEnglishFallback` | PASS | 53.901 |
+| `CanadianHamWatchUITests.WatchPracticeUITests.testTapFeedbackNextAndRelaunchDoesNotRestoreAnswer` | PASS | 32.297 |
 
 ## Owner upload and physical-watch results (pending)
 

@@ -2,7 +2,7 @@
 
 Use this checklist on the release-candidate commit. It consolidates the release gates and manual checks that remain documented in [content licensing](../content-licensing.md), [privacy](../privacy.md), [accessibility](../accessibility.md), [Apple offline smoke test](../apple-offline-smoke-test.md), [App Store privacy-label evidence](privacy-label-evidence.md), and the source/content verification steps in [content update process](../content-update-process.md).
 
-Record the commit SHA, date, tester, and pass/fail notes for every checked item. Do not make the repository public, deploy the web app publicly, submit to TestFlight/App Store, or otherwise distribute artifacts until every blocking gate below is satisfied.
+Record the commit SHA, date, tester, and pass/fail notes for every checked item. Do not make the repository public, deploy the web app publicly, submit to external TestFlight/App Store, or otherwise distribute artifacts until every blocking gate below is satisfied. The existing TASK-1.10 exception permits only internal App Store Connect team-member TestFlight after review/merge approval, following the [TestFlight runbook](testflight.md); it does not permit external groups or public links.
 
 ## Gates
 
@@ -44,7 +44,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 ## Accessibility
 
 - [ ] Follow the [`docs/accessibility.md` manual release checklist](../accessibility.md#manual-release-checklist): keyboard-only web, macOS Full Keyboard Access, VoiceOver iOS/iPadOS/macOS, mock-exam results VoiceOver, tvOS focus, visionOS readability, 200% zoom/320 px reflow, largest Dynamic Type, Reduced Motion, colour independence, and privacy/network regression review.
-- [ ] Run the automated accessibility suites on the release candidate: `pnpm --filter @canadian-ham/web test` (axe coverage) and the iOS, macOS, tvOS, visionOS and watchOS test commands in [`AGENTS.md`](../../AGENTS.md#apple-builds) (through `xbuild` only; the iOS, tvOS and visionOS UI suites include the accessibility audits).
+- [ ] Run the automated accessibility suites on the release candidate: `pnpm --filter @canadian-ham/web test` (axe coverage) and the iOS, macOS, tvOS, visionOS and watchOS test commands in [`AGENTS.md`](../../AGENTS.md#apple-builds) (through `xbuild` only; the iOS, tvOS, visionOS and watchOS UI suites include the accessibility audits).
 - [ ] Complete and record `task-29` tvOS VoiceOver checks in [`docs/accessibility.md`](../accessibility.md): each focusable About card title/body reads correctly and English legal text in the French UI is spoken with an English voice.
 - [ ] Confirm no UI change introduced remote fonts, remote assets, telemetry, analytics, or third-party runtime SDKs while satisfying accessibility requirements.
 
@@ -87,7 +87,6 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 - [ ] Public Apple Release build has no `OFFICIAL_REFERENCE_SHEET` compilation condition / `-DOFFICIAL_REFERENCE_SHEET` flag and no `official-basic-exam/` in its resources. Internal fastlane `beta` lanes opt in under decision 2A; do **not** reuse that override in a public/App Store lane.
 - [ ] Public web build runs `pnpm build:web` without `OFFICIAL_REFERENCE_SHEET=YES` and passes its automatic output exclusion check: every file is compared with the official page/transcript SHA-256 values in `content/reference/official-basic-exam/README.md`, including renamed assets and decoded base64 image data URLs. Filename and distinctive transcript-text checks also apply. Inspect the service-worker precache for official-sheet references; the original study sheet remains available. See the [gate limitations](../content-licensing.md#official-sheet-implementation-gate-task-444) for re-encoded images and obfuscated/assembled data URLs.
 - [ ] `pnpm test:official-reference-sheet` passes, including renamed/inline web leak fixtures, clean original-study-sheet output, and stale-resource removal on an off Apple build. See [internal TestFlight](testflight.md) for the internal-only exception.
-
 
 ## Independent watch payload (TASK-14.6)
 
