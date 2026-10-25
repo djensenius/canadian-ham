@@ -1,11 +1,11 @@
 ---
 id: TASK-14.1
 title: watchOS target and shared-package support skeleton
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T17:35:00Z'
+updated_date: '2026-10-25T17:40:00Z'
 labels:
   - apple
   - watchos
@@ -40,6 +40,8 @@ Owner approved the watch companion on 2026-10-25. Before feature work, prove the
 2. Add explicit watchOS package support, an independent embedded SwiftUI placeholder app, localized watch resources and unit/UI smoke targets. Extend guard coverage and regenerate the project twice.
 3. Commit the implementation, then run targeted watch smoke, package tests, iOS container build-for-testing, full macOS unit target, tvOS/visionOS builds and localization/privacy/test-guard checks with logged destinations/results.
 4. Record acceptance evidence, mark Done, commit and push the task branch without opening a PR.
+
+5. Address approved review notes: add existing-family opaque watch AppIcon, export-only beta safety path, watch background-mode/count regression checks, UI wait ordering and concise build policy. Regenerate twice; commit fixes before running watch smoke, full macOS unit, iOS build-for-testing, l10n/platform builds and guards. Archive/export iOS and macOS without upload using the dedicated keychain; inspect artifact payloads/signatures and record run-specific commit evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
