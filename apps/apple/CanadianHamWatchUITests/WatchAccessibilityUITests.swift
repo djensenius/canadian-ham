@@ -32,6 +32,7 @@ final class WatchAccessibilityUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Réglages"].exists)
         XCTAssertTrue(app.buttons["watch-language-french"].isSelected)
         back(app)
+        reveal(app.buttons["watch-section-practice"], in: app)
         XCTAssertEqual(app.buttons["watch-section-practice"].label, "S’exercer")
         enter("alphabet", in: app)
         XCTAssertEqual(app.staticTexts["watch-alphabet-row-A"].label, "A, Alfa, Point, Tiret")
@@ -210,7 +211,7 @@ final class WatchAccessibilityUITests: XCTestCase {
 
     @MainActor
     private func reveal(_ target: XCUIElement, in app: XCUIApplication) {
-        for _ in 0..<80 {
+        for attempt in 0..<80 {
             let top = app.navigationBars.firstMatch.exists ? app.navigationBars.firstMatch.frame.maxY : 28
             if target.exists && target.isHittable && target.frame.minY >= top {
                 let availableHeight = app.frame.maxY - top - 4
@@ -219,7 +220,9 @@ final class WatchAccessibilityUITests: XCTestCase {
                 // long official prose instead needs its start reachable for reading.
                 if target.frame.maxY <= app.frame.maxY - 4 || target.frame.height > availableHeight { return }
             }
-            let backwards = target.exists && target.frame.minY < top
+            // A lazy list keeps its scroll position on Back, so a target above the viewport may not
+            // be in the hierarchy at all. After 40 forward swipes without finding it, scroll back up.
+            let backwards = (target.exists && target.frame.minY < top) || (!target.exists && attempt >= 40)
             let lower = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
             let upper = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             (backwards ? upper : lower).press(forDuration: 0.05, thenDragTo: backwards ? lower : upper,

@@ -354,3 +354,17 @@ Full = Series 12 `watch-full` at ff25c9fe. Follow-up = the latest passing target
 | `LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale` | PASSED | 0.004 |
 | `LocalizationCatalogTests.testReviewHeadingMarksEnglishFallbackTitleInsideFrenchText` | PASSED | 0.002 |
 | `LocalizationCatalogTests.testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench` | PASSED | 0.001 |
+
+## Final rerun at the PR head (coordinator, after internal review)
+
+The review found that the stricter shared `reveal()` helper (commit 0117281) had only been rerun for 3 tests, and that the Series 12 and SE 3 passes came from different commits. The whole `WatchAccessibilityUITests` class was rerun at the final source on both watches:
+
+- The first Series 12 run failed only `testSessionLanguageOverrideUpdatesSwiftUIAndBundleLookupsAndResets`. After Back, the lazy home list kept its scroll position, so the Practice row was not in the hierarchy and the test read its label without revealing it. Fix (test-only): the test now reveals the row before reading it, and `reveal()` scrolls back up when the target is still absent after 40 forward swipes. No assertion was removed or relaxed.
+- **Apple Watch SE 3 (40mm), watchOS 27.0** (`id=596608F4-525A-4BED-8642-151C0E69842D`): 19/19 passed (16 full default audits, 2 largest-text walks, the language override).
+- **Apple Watch Series 12 (42mm), watchOS 27.0**: 19/19 passed (the same set).
+
+### Additional owner listening points (from the review)
+
+- Selected rows (practice answers, Settings language) carry both a "Selected" value or child and the selected trait. Note whether VoiceOver says "Selected" twice.
+- After switching the language in Settings and back to English, revisit Practice, Morse, Alphabet and Output settings. Check that every navigation title shows in the current language (only the Settings title was fixed for watchOS's cached-title behaviour).
+- One iOS Morse string still says "points et traits" (Meet %@… dits and dahs), while the watch uses "tiret", matching the app's Dash key. That iOS wording is unchanged here; it is filed as a follow-up.
