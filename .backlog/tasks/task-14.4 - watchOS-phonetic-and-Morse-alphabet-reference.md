@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T20:06:00Z'
+updated_date: '2026-10-25T21:01:00Z'
 labels:
   - apple
   - watchos
@@ -40,3 +40,11 @@ A glanceable reference is useful between drills without the long lesson-reader n
 2. Add all-entry unit coverage, a pnpm-test source parity check against the lesson (not bundled on watch), and EN/FR watch navigation/last-row UI tests including large Dynamic Type.
 3. Regenerate/check the Xcode project if file discovery requires it; run targeted watch tests, iOS build-for-testing, localization/text/network/iCloud/test guards and repository tests. Record evidence, complete ACs, commit and push without a PR.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented a semantic-font List with A–Z ITU words (Alfa/Juliett unchanged in French), digits 0–9, shared morseCodeTable lookups, visual dots/dashes and combined spoken-word VoiceOver labels. Added 3 all-entry unit tests, 2 EN/FR reference UI tests, updated both existing navigation smoke tests, and a pnpm-test parity checker that reads L-002-01 without bundling it. The checker also rejected injected wrong spelling, duplicate/missing letter and missing-Z fixtures.
+Targeted Series 12 42mm watch results now green: all 3 reference unit tests; 2 EN/FR navigation smoke tests; 2 reference UI tests, including largest Dynamic Type (confirmed by row-height comparison), full Juliett/9 row reachability, screenshots and back navigation. Fixed test setup (locale formats strings but does not select bundle language) by passing localized Dot/Dash words into the row formatter; UI tests verify actual EN/FR translations. Replaced flaky Crown-snapping test positioning with precise touch drags; production list remains native Crown/touch scrollable.
+iOS build-for-testing passed; pnpm test, typecheck, apple-l10n export/builds, text-source self-test/check, network and iCloud guards passed. XcodeGen output identical over two generations; original xcstrings keys/values/order preserved with only Letters/Digits added. No lesson/figure/quiz/hint assets in the embedded watch bundle. Test guard against the implementation commit and final task evidence still to finish.
+<!-- SECTION:NOTES:END -->
