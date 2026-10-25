@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-12 14:57
-updated_date: '2026-10-25T00:53:00Z'
+updated_date: '2026-10-25T01:00:00Z'
 labels:
   - web
   - apple
@@ -299,4 +299,64 @@ Five new review methods, five unchanged M1-round methods and twelve unchanged le
 | `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsOwnLessonResumeScoreHelpAndPersistence` | PASSED | 90.578 |
 
 Final-source macOS build-check + targeted review pool/round method PASS 1/1 after the new UI-test async assertion fix. Full macOS 220/220 remains valid for unchanged production code. All four new iPad review audits and the own-lesson/resume/score/help/persistence method pass; unchanged 17 regression methods also pass. Localization generic visionOS build and failing-only iPhone persistence rerun are the final pending checks.
+
+## iPhone 17 Pro: final targeted validation PASS 22/22 distinct methods
+
+Initial run passed 21/22; only the new async-navigation assertion was corrected. Failing-only persistence recheck PASS 205.448 seconds, with no production/audit/helper change. Every initial passing method remains valid. Commands: /tmp/task-46.7-ui.sh and /tmp/task-46.7-phone-r2.sh, using one named iPhone destination and explicit -only-testing filters. Logs: /tmp/task-46.7-runs/phone.log and phone-r2.log. No full iOS suite.
+
+| Test | Result | Seconds | Log |
+| --- | --- | --- | --- |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptCheckHasNoHintOrOtherTools` | PASSED | 24.329 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionCorrectDarkAndFullAccessibilityAudit` | PASSED | 82.427 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionCorrectLightAndFullAccessibilityAudit` | PASSED | 74.081 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionFeedbackLargestDynamicType` | PASSED | 200.057 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit` | PASSED | 77.826 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionIncorrectFrenchFallbackLightAndFullAccessibilityAudit` | PASSED | 80.381 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip` | PASSED | 306.583 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsDarkAndFullAccessibilityAudits` | PASSED | 176.550 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsFrenchAndCurrentLessonRoundTrip` | PASSED | 178.112 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsLightAndFullAccessibilityAudits` | PASSED | 170.854 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch` | PASSED | 115.133 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount` | PASSED | 128.083 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsDarkAndFullAccessibilityAudits` | PASSED | 190.507 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsFrenchLargestTypeDarkAndFullAccessibilityAudits` | PASSED | 271.876 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsFrenchLargestTypeLightAndFullAccessibilityAudits` | PASSED | 285.001 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsKeepHelpAnswersResumeAndOneSavedAttempt` | PASSED | 415.599 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsLightAndFullAccessibilityAudits` | PASSED | 190.865 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsEnglishDarkAccessibility` | PASSED | 145.772 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsEnglishLightAccessibility` | PASSED | 137.975 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsFrenchLargestTypeDarkAccessibility` | PASSED | 238.098 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsFrenchLargestTypeLightAccessibility` | PASSED | 232.633 | phone.log |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsOwnLessonResumeScoreHelpAndPersistence` | PASSED | 205.448 | phone-r2.log |
+
+## Swift engine parity suite: PASS 22/22
+
+Run by bash scripts/check-engine-parity.sh (TS 32/32 and Swift 22/22). The new LessonReviewTests method reads the same nine fixtures as TS: first, unknown lesson, recent pool, seed variation, fallback, one candidate, no candidates, nearest duplicate attribution, and recent-plus-fallback.
+
+| Test | Result | Seconds |
+| --- | --- | --- |
+| `CanadianHamEngineTests.FixtureTests.testEveryEngineFixtureMatchesSwiftEngine` | PASSED | 0.027 |
+| `CanadianHamEngineTests.FixtureTests.testJSONComparatorRejectsExtraExpectedOutputKey` | PASSED | 0.001 |
+| `CanadianHamEngineTests.LessonReviewTests.testSharedLessonReviewFixtures` | PASSED | 0.001 |
+| `CanadianHamEngineTests.PCG32Tests.testPCG32SrandomDemoMatchesPublishedCOutputs` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testAdvancedReadinessDoesNotCountExamsBelowSeventyPercent` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testAdvancedReadinessTreatsSeventyPercentPassThresholdAsInclusive` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testApplyAnswerRejectsOutOfRangeLeitnerBoxes` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testBankRulesAcceptFutureSchemaValidBasicIds` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testBankRulesAcceptOnlySchemaValidBasicAndAdvancedIds` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testEngineTimestampInputsRequireCanonicalMillisecondUTCFormat` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testExamGenerationRequiresCanonicalAnswerSourceIndexes` | PASSED | 0.000 |
+| `CanadianHamEngineTests.ValidationTests.testFullMockExamGenerationUsesActiveBankSubsectionCount` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testHintedCorrectPreservesAccuracyWithoutMasteryCredit` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testOlderProgressJsonDecodesHelpFieldsAsFalse` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testPracticeExamGenerationDoesNotRequireKnownBankRulesUnlessFullMockIsRequested` | PASSED | 0.000 |
+| `CanadianHamEngineTests.ValidationTests.testReadinessRejectsDuplicateSubmittedAtTimestamps` | PASSED | 0.000 |
+| `CanadianHamEngineTests.ValidationTests.testScoreExamRejectsUnsupportedBankIds` | PASSED | 0.000 |
+| `CanadianHamEngineTests.ValidationTests.testSharedBankRulesFixtureAgreesWithSwiftEngine` | PASSED | 0.002 |
+| `CanadianHamEngineTests.ValidationTests.testTimestampAdditionCrossesMonthAndYearBoundaries` | PASSED | 0.001 |
+| `CanadianHamEngineTests.ValidationTests.testTimestampFormattingRejectsYearsOutsideCanonicalRange` | PASSED | 0.000 |
+| `CanadianHamEngineTests.ValidationTests.testTimestampParserAcceptsLeapDayInLeapYears` | PASSED | 0.000 |
+| `CanadianHamEngineTests.ValidationTests.testTimestampParserRejectsImpossibleDatesAndNonAsciiDigits` | PASSED | 0.000 |
+
+All required validation complete. pnpm check:apple-l10n PASS (no catalogue rewrite, SHA256 fbce70ce3a6379189b0132df0ad3437b0cfd1fc8d6cc97923c1de4a9f41bc34d), complete French localization export and generic CanadianHamTV/CanadianHamVision simulator builds PASS. tvOS/visionOS lesson quiz UI is N/A by approved scope; no new surfaces were added. Full iOS/tvOS/visionOS suites, title sweeps and lesson-figure plans were intentionally skipped: assignment requires targeted quiz methods only; category/card/sidebar and lesson/figure rendering are unchanged. New audits alone use the unchanged coordinator-approved TASK-71/73 composite; all original tests/helpers remain byte-identical. Source last changed in 33e5b247; subsequent commits record evidence only. No PR opened; independent review remains required.
 <!-- SECTION:NOTES:END -->
