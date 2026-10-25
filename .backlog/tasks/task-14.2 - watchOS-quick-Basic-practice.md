@@ -1,9 +1,11 @@
 ---
 id: TASK-14.2
 title: watchOS quick Basic practice
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-25T17:01:00Z'
+updated_date: '2026-10-25T18:02:00Z'
 labels:
   - apple
   - watchos
@@ -32,3 +34,12 @@ Short wrist-sized practice should work without a phone, history or study setup. 
 - [ ] #5 Session/answers/scores and settings are in memory only: no progress store, files, UserDefaults, App Groups or transfer. A relaunch test proves that answers are not restored, and offline operation is verified without a phone counterpart.
 - [ ] #6 Relevant watch unit and UI tests pass via xbuild with per-test evidence. Official EN/FR text remains verbatim; missing French explanation bodies use a clearly labelled English fallback with the correct accessibility language rather than a new translation.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add a watch-only Basic/explanations loader and in-memory seeded practice model, with bundle and grading/error tests.
+2. Implement semantic, scrollable tap/Crown-confirm practice and labelled English explanation fallback; add EN/FR watch UI coverage including relaunch.
+3. Regenerate XcodeGen twice; run watch tests, localization/text/privacy/test guards, embedded iOS build and macOS units; record size/decode/memory and per-test evidence.
+4. Commit/push milestones, verify acceptance evidence and finalize the task without opening a PR.
+<!-- SECTION:PLAN:END -->
