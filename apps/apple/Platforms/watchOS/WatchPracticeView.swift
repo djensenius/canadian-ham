@@ -5,6 +5,7 @@ struct WatchPracticeView: View {
     @Environment(\.locale) private var locale
     @State private var session: WatchPracticeSession?
     @State private var showingCrown = false
+    @State private var pendingCrownAnnouncement: String?
 
     private var french: Bool { locale.language.languageCode?.identifier == "fr" }
 
@@ -32,6 +33,7 @@ struct WatchPracticeView: View {
                                     } label: {
                                         Text(questionText(answer.text)) // l10n: content(question)
                                             .frame(maxWidth: .infinity, alignment: .leading)
+                                            .fixedSize(horizontal: false, vertical: true)
                                     }
                                     .accessibilityIdentifier("watch-answer-\(index)")
                                 }
@@ -49,7 +51,7 @@ struct WatchPracticeView: View {
             .onChange(of: session?.question?.id) { _, _ in proxy.scrollTo("top", anchor: .top) }
         }
         .navigationTitle("Practice")
-        .sheet(isPresented: $showingCrown) {
+        .sheet(isPresented: $showingCrown, onDismiss: announceCrownFeedback) {
             WatchCrownAnswerView(choices: session?.choices ?? [], french: french, submit: submit)
         }
         .task {
@@ -79,7 +81,18 @@ struct WatchPracticeView: View {
         guard session?.submittedSourceIndex == nil else { return }
         session?.submit(sourceIndex: sourceIndex)
         guard let session, session.submittedSourceIndex != nil else { return }
-        let announcement = session.isCorrect ? String(localized: "Correct", locale: locale) : String(localized: "Incorrect", locale: locale)
+        let announcement = session.isCorrect ? String(localized: "Correct", bundle: WatchLanguage.bundle(for: locale), locale: locale) : String(localized: "Incorrect", bundle: WatchLanguage.bundle(for: locale), locale: locale)
+        if showingCrown {
+            pendingCrownAnnouncement = announcement
+        } else {
+            AccessibilityNotification.Announcement(announcement).post()
+        }
+    }
+
+    private func announceCrownFeedback() {
+        // A sheet transition can interrupt speech posted by Confirm's action.
+        guard let announcement = pendingCrownAnnouncement else { return }
+        pendingCrownAnnouncement = nil
         AccessibilityNotification.Announcement(announcement).post()
     }
 
@@ -95,6 +108,8 @@ struct WatchPracticeView: View {
                 .accessibilityAddTraits(.isHeader)
             Text(questionText(selected.text)) // l10n: content(question)
                 .accessibilityValue("Selected")
+                .accessibilityAddTraits(.isSelected)
+                .accessibilityIdentifier("watch-selected-answer")
         }
         Text("Correct answer")
             .font(.headline)
@@ -119,8 +134,10 @@ struct WatchPracticeView: View {
             .accessibilityIdentifier("watch-next")
     }
 
-    private func questionText(_ text: CanadianHamContent.LocalizedText) -> String {
-        french ? text.fr : text.en
+    private func questionText(_ text: CanadianHamContent.LocalizedText) -> AttributedString {
+        var value = AttributedString(french ? text.fr : text.en)
+        value.languageIdentifier = french ? "fr-CA" : "en-CA"
+        return value
     }
 }
 
@@ -145,6 +162,7 @@ private struct WatchCrownAnswerView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityLabel(Text(answerText(selection))) // l10n: content(question)
                     .accessibilityValue("Selected")
+                    .accessibilityAddTraits(.isSelected)
                     .accessibilityAdjustableAction { direction in
                         switch direction {
                         case .increment: crownPosition = Double(min(3, selection + 1))
@@ -171,8 +189,10 @@ private struct WatchCrownAnswerView: View {
         .onAppear { crownFocused = true }
     }
 
-    private func answerText(_ index: Int) -> String {
-        guard choices.indices.contains(index) else { return "" }
-        return french ? choices[index].text.fr : choices[index].text.en
+    private func answerText(_ index: Int) -> AttributedString {
+        guard choices.indices.contains(index) else { return AttributedString() }
+        var value = AttributedString(french ? choices[index].text.fr : choices[index].text.en)
+        value.languageIdentifier = french ? "fr-CA" : "en-CA"
+        return value
     }
 }

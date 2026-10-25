@@ -13002,13 +13002,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point léger, trait ascendant"
+            "value" : "Point léger, tiret ascendant"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point léger, trait ascendant"
+            "value" : "Point léger, tiret ascendant"
           }
         }
       }
@@ -13018,13 +13018,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point léger, trait ferme"
+            "value" : "Point léger, tiret ferme"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point léger, trait ferme"
+            "value" : "Point léger, tiret ferme"
           }
         }
       }
@@ -13034,13 +13034,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point plus fort, trait ferme"
+            "value" : "Point plus fort, tiret ferme"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point plus fort, trait ferme"
+            "value" : "Point plus fort, tiret ferme"
           }
         }
       }
@@ -13073,6 +13073,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chiffres"
+          }
+        }
+      }
+    },
+    "English" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English"
+          }
+        }
+      }
+    },
+    "Français" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Français"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Français"
+          }
+        }
+      }
+    },
+    "Language changes last until the app closes." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le choix de langue est conservé jusqu’à la fermeture de l’app."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le choix de langue est conservé jusqu’à la fermeture de l’app."
+          }
+        }
+      }
+    },
+    "Letter %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lettre %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lettre %@"
+          }
+        }
+      }
+    },
+    "Answer choices available." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choix de réponse disponibles."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choix de réponse disponibles."
           }
         }
       }

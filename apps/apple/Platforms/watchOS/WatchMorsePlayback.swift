@@ -76,7 +76,7 @@ final class WatchMorsePlayback {
         self.cooldown = cooldown
     }
 
-    func play(letter: String, settings: WatchMorseSettings) {
+    func play(letter: String, settings: WatchMorseSettings, initialDelay: Double = 0) {
         // Replay is disabled in the UI too; programmatic replay cannot overlap.
         guard !isPlaying, settings.hasOutput else { return }
         cancel()
@@ -87,7 +87,8 @@ final class WatchMorsePlayback {
         }
         isPlaying = true
         let current = generation
-        let delay = lastHapticAt.map { max(0, $0 + WatchMorseSettings.minimumHapticSpacing - scheduler.now) } ?? 0
+        let cooldownDelay = lastHapticAt.map { max(0, $0 + WatchMorseSettings.minimumHapticSpacing - scheduler.now) } ?? 0
+        let delay = max(initialDelay, cooldownDelay)
         enqueue(after: delay, generation: current) { player in
             do {
                 if settings.tone { try player.output.startTone(sequence: sequence) }

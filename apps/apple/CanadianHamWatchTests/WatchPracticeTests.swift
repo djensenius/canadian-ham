@@ -172,34 +172,39 @@ final class WatchPracticeTests: XCTestCase {
         XCTAssertEqual(checked, 984)
     }
 
-    // Sort first. The assertion fails rather than calling an already-warmed host a cold load.
+    // A fresh cache isolates this probe from randomized test order.
     @MainActor
     func testAColdBundledPracticeLoadMeasurements() async throws {
+        let loader = WatchPracticeBankLoader()
+        let sharedCountBeforeConstruction = await WatchPracticeBankLoader.shared.loadCount
         _ = WatchHomeView()
         _ = WatchPracticeView()
-        let count = await WatchPracticeBankLoader.shared.loadCount
+        let sharedCountAfterConstruction = await WatchPracticeBankLoader.shared.loadCount
+        XCTAssertEqual(sharedCountAfterConstruction, sharedCountBeforeConstruction, "View construction must not warm the shared cache")
+        let count = await loader.loadCount
         XCTAssertEqual(count, 0, "Home/view construction must not decode practice resources")
-        try await measureBundledPracticeLoad()
-        let loadedCount = await WatchPracticeBankLoader.shared.loadCount
+        try await measureBundledPracticeLoad(loader: loader)
+        let loadedCount = await loader.loadCount
         XCTAssertEqual(loadedCount, 1)
     }
 
     @MainActor
     func testMeasureBundledPracticeLoad() async throws {
-        async let first = WatchPracticeBankLoader.shared.load()
-        async let second = WatchPracticeBankLoader.shared.load()
+        let loader = WatchPracticeBankLoader()
+        async let first = loader.load()
+        async let second = loader.load()
         let banks = try await (first, second)
         XCTAssertEqual(banks.0.questions, banks.1.questions)
-        let count = await WatchPracticeBankLoader.shared.loadCount
+        let count = await loader.loadCount
         XCTAssertEqual(count, 1, "Concurrent and subsequent visits share the same decode task")
-        try await measureBundledPracticeLoad()
+        try await measureBundledPracticeLoad(loader: loader)
     }
 
     @MainActor
-    private func measureBundledPracticeLoad() async throws {
+    private func measureBundledPracticeLoad(loader: WatchPracticeBankLoader) async throws {
         let before = residentBytes()
         let start = ContinuousClock.now
-        let bank = try await WatchPracticeBankLoader.shared.load()
+        let bank = try await loader.load()
         let elapsed = start.duration(to: .now)
         let after = residentBytes()
         let root = try XCTUnwrap(Bundle.main.resourceURL)

@@ -12,7 +12,7 @@ struct WatchAlphabetEntry: Identifiable {
     }
 
     func accessibilityLabel(dot: String, dash: String) -> String {
-        let spokenPattern = pattern.map { $0 == "." ? dot : dash }.joined(separator: " ")
+        let spokenPattern = pattern.map { $0 == "." ? dot : dash }.joined(separator: ", ")
         return [character, phoneticWord, spokenPattern].compactMap { $0 }.joined(separator: ", ")
     }
 }

@@ -49,6 +49,6 @@ private struct WatchAlphabetRow: View {
     }
 
     private var spokenLabel: String {
-        entry.accessibilityLabel(dot: String(localized: "Dot", locale: locale), dash: String(localized: "Dash", locale: locale)) // l10n: localized
+        entry.accessibilityLabel(dot: String(localized: "Dot", bundle: WatchLanguage.bundle(for: locale), locale: locale), dash: String(localized: "Dash", bundle: WatchLanguage.bundle(for: locale), locale: locale)) // l10n: localized
     }
 }
