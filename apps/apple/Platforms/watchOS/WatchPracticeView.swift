@@ -107,7 +107,7 @@ struct WatchPracticeView: View {
             .font(.headline)
             .accessibilityAddTraits(.isHeader)
         if let explanation = session.explanation,
-           let content = try? WatchExplanationText(explanation: explanation, french: french) {
+           let content = try? WatchExplanationText(explanation: explanation, french: french, choices: session.choices) {
             if content.isEnglishFallback {
                 Text("Explanation in English")
                     .accessibilityIdentifier("watch-english-fallback")

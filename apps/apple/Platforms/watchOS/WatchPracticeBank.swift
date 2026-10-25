@@ -128,13 +128,32 @@ struct WatchExplanationText {
     let languageIdentifier: String
     let isEnglishFallback: Bool
 
-    init(explanation: Explanation, french: Bool) throws {
+    /// With `choices` (the on-screen shuffled answers), distractor notes follow the displayed order and are
+    /// labelled with the official answer text in the body's language. Notes without a matching wrong choice
+    /// keep their authoring order after those. Without `choices`, notes keep authoring order and the
+    /// explanation's own quoted choice text.
+    init(explanation: Explanation, french: Bool, choices: [Answer] = []) throws {
         isEnglishFallback = french && explanation.body.fr == nil
+        let bodyIsFrench = french && !isEnglishFallback
         let parsed = try ExplanationBodyParser.parse(explanation, language: french ? .fr : .en)
-        body = ([parsed.correctAnswerParagraph] + parsed.distractorNotes.map {
-            "\"\($0.quotedChoice)\": \($0.note)"
-        }).joined(separator: "\n\n")
-        languageIdentifier = french && !isEnglishFallback ? "fr-CA" : "en-CA"
+        var notes: [String] = []
+        if choices.isEmpty {
+            notes = parsed.distractorNotes.map { "\"\($0.quotedChoice)\": \($0.note)" }
+        } else {
+            let bySourceIndex = parsed.distractorNotesBySourceIndex
+            var used = Set<Int>()
+            for choice in choices where !choice.isCorrect {
+                guard let note = bySourceIndex[choice.sourceIndex] else { continue }
+                used.insert(choice.sourceIndex)
+                let label = bodyIsFrench ? choice.text.fr : choice.text.en
+                notes.append("\"\(label)\": \(note.note)")
+            }
+            notes += parsed.distractorNotes
+                .filter { !used.contains($0.sourceIndex) }
+                .map { "\"\($0.quotedChoice)\": \($0.note)" }
+        }
+        body = ([parsed.correctAnswerParagraph] + notes).joined(separator: "\n\n")
+        languageIdentifier = bodyIsFrench ? "fr-CA" : "en-CA"
     }
 
     var attributedBody: AttributedString {

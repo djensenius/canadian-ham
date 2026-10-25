@@ -144,6 +144,31 @@ final class WatchPracticeTests: XCTestCase {
         }
     }
 
+    func testDistractorNotesFollowDisplayedOrderWithOfficialChoiceText() throws {
+        let bank = try WatchPracticeBank.load()
+        var checked = 0
+        for question in bank.questions {
+            guard let explanation = bank.explanations[question.id] else { continue }
+            let parsed = try ExplanationBodyParser.parse(explanation)
+            let bySourceIndex = parsed.distractorNotesBySourceIndex
+            let displayed = Array(question.answers.reversed())
+            let rendered = try WatchExplanationText(explanation: explanation, french: false, choices: displayed)
+            let paragraphs = rendered.body.components(separatedBy: "\n\n")
+            XCTAssertEqual(paragraphs.first, parsed.correctAnswerParagraph, question.id)
+            let expected = displayed.filter { !$0.isCorrect }.compactMap { choice in
+                bySourceIndex[choice.sourceIndex].map { "\"\(choice.text.en)\": \($0.note)" }
+            }
+            XCTAssertEqual(Array(paragraphs.dropFirst().prefix(expected.count)), expected, question.id)
+            XCTAssertEqual(paragraphs.count, 1 + parsed.distractorNotes.count, question.id)
+            let fallback = try WatchExplanationText(explanation: explanation, french: true, choices: displayed)
+            if fallback.isEnglishFallback {
+                XCTAssertEqual(fallback.body, rendered.body, "An English fallback keeps English official labels: \(question.id)")
+            }
+            checked += 1
+        }
+        XCTAssertEqual(checked, 984)
+    }
+
     // Sort first. The assertion fails rather than calling an already-warmed host a cold load.
     @MainActor
     func testAColdBundledPracticeLoadMeasurements() async throws {
