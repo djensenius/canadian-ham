@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T18:07:00Z'
+updated_date: '2026-10-25T18:36:00Z'
 labels:
   - apple
   - watchos
@@ -48,4 +48,6 @@ Short wrist-sized practice should work without a phone, history or study setup. 
 
 <!-- SECTION:NOTES:BEGIN -->
 Milestone 1 pushed: watch-only Basic/explanation resource membership, narrow content-swift loader, seeded engine-swift shuffle/grading and in-memory session, scrollable tap/feedback/Next and native Crown-picker/explicit-confirm sheet. Added six practice unit tests and two practice UI tests; skeleton navigation checks now recognize practice. Initial compile fixes qualify CanadianHamContent.Category and avoid the watch-unavailable picker adjust API; native XCUIDevice.rotateDigitalCrown(delta:) compiles. Watch xbuild is queued behind the shared build lock; no other build was killed. Text/network/iCloud guards and their fixtures, test-guard self-test, and project double-generation determinism passed.
+
+Milestone 2: all 10 watch unit tests now pass, tap/feedback/Next/relaunch UI passes, and the French Crown UI passes using actual XCUIDevice.shared.rotateDigitalCrown(delta:) events: it visited all four answer texts before explicit Confirm, then verified French feedback, labelled English fallback and Next. The Crown handler must be attached to the focusable scroll container, not a nested native Picker or Text (the latter routed input to scrolling). Final implementation also exposes the answer as an accessibility-adjustable control. Localization export plus tvOS/visionOS/watch generic builds and embedded iOS build-for-testing passed. Full macOS units are running; final targeted rerun will verify robust long-choice touch scrolling. No tests/audits skipped or weakened.
 <!-- SECTION:NOTES:END -->
