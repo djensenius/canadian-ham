@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T17:07:00Z'
+updated_date: '2026-10-25T17:10:00Z'
 labels:
   - apple
   - watchos
@@ -41,3 +41,10 @@ Owner approved the watch companion on 2026-10-25. Before feature work, prove the
 3. Commit the implementation, then run targeted watch smoke, package tests, iOS container build-for-testing, full macOS unit target, tvOS/visionOS builds and localization/privacy/test-guard checks with logged destinations/results.
 4. Record acceptance evidence, mark Done, commit and push the task branch without opening a PR.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implementation committed as 541b0b64. XcodeGen generated an iOS-filtered PBXTargetDependency and Embed Watch Content build phase automatically; macOS membership is filtered out. All three shared packages contain only Foundation/os code, so no source platform guards were necessary; the iOS Core Haptics driver is not in watch target membership. Shared Localizable.xcstrings reuses EN/FR translations, adding only Alphabet. Watch privacy is explicit in its own manifest. Initial guard checks and regression fixtures pass; XcodeGen second-run PBX/scheme SHA-1 hashes are identical.
+Validation runner: /tmp/task-14.1-checks.sh, summary /tmp/task-14.1-checks.log and per-command /tmp/task-14.1-<name>.log. Watch targeted smoke is queued behind the shared xbuild lock (TASK-29 lane); no competing build was interrupted. Full suites are not requested/run, except the explicitly required full macOS unit target. Affected merge-batch platforms: iOS/macOS/tvOS/visionOS (shared package support) and new watchOS.
+<!-- SECTION:NOTES:END -->
