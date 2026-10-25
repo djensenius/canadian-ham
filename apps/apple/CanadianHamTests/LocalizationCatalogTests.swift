@@ -3,6 +3,16 @@ import CanadianHamContent
 import XCTest
 
 final class LocalizationCatalogTests: XCTestCase {
+    func testReviewHeadingMarksEnglishFallbackTitleInsideFrenchText() throws {
+        let title = LocalizedNullableText(en: "Units, conductors, and current", fr: nil)
+        let heading = lessonQuizReviewHeading(title: title, language: .french, bundle: try frenchLocalizationBundle())
+        XCTAssertEqual(String(heading.characters), "Question de révision de Units, conductors, and current")
+        let englishRuns = heading.runs.filter { $0.languageIdentifier == "en" }
+        XCTAssertEqual(englishRuns.map { String(heading[$0.range].characters) }.joined(), title.en)
+        let prefixRuns = heading.runs.filter { $0.languageIdentifier != "en" }
+        XCTAssertEqual(prefixRuns.map { String(heading[$0.range].characters) }.joined(), "Question de révision de ", "The French prefix must not be marked as English")
+    }
+
     func testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench() throws {
         let frenchBundle = try frenchLocalizationBundle()
         let locale = Locale(identifier: "fr")

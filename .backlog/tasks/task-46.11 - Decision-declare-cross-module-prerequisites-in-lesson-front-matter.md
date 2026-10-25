@@ -1,11 +1,11 @@
 ---
 id: TASK-46.11
 title: 'Decision: declare cross-module prerequisites in lesson front matter'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:58'
-updated_date: '2026-10-14 07:51'
+updated_date: '2026-10-24 22:36'
 labels:
   - content
 dependencies: []
@@ -23,7 +23,7 @@ Needs an owner decision; see docs/lesson-review/README.md. Once decided, add the
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Owner decision recorded
-- [ ] #2 Every lesson lists its real cross-module prerequisites; the apps show them; a checker validates they exist
+- [x] #2 Every lesson lists its real cross-module prerequisites; the apps show them; a checker validates they exist
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -53,4 +53,12 @@ Review follow-up applied: L-001-02 now depends on L-001-01, L-002-01 repeaters, 
 Copilot follow-up PRRT_kwDOUxZq_M6rpOpj addressed: checker now tracks prerequisite IDs per lesson and reports repeated IDs once per repeated prerequisite; added fixture test for duplicate lesson prerequisite IDs. Validation passed: pnpm --dir packages/content-tools check:coverage; pnpm --filter @canadian-ham/content-tools test -- check-lesson-coverage.test.ts; pnpm --filter @canadian-ham/content-tools typecheck.
 
 Apple reader implementation committed and PR opened: https://github.com/djensenius/canadian-ham/pull/237. Added LessonReaderView Before this lesson prerequisite links, Localizable.xcstrings French heading, Apple unit test for lesson.prerequisites, and iOS UI tests for prerequisite navigation with light/dark occluded-contrast audits. Validation passed: node --no-warnings scripts/check-apple-text-sources.ts; targeted iOS xbuild selected tests (QuestionBankTests/testBundledLessonModelExposesPrerequisites plus CanadianHamPracticeUITests/testLessonPrerequisiteNavigationAndAccessibilityLight/Dark); macOS unit xbuild (130 tests); pnpm check:apple-l10n in nohup chain. Copilot finding about English language tagging was fixed in commit 2a47311e and the review thread was resolved. Full-suite nohup chain is still running behind the shared xbuild lock; logs: /tmp/t4611-chain.log, /tmp/t4611-check-apple-l10n.log, /tmp/t4611-full-ios.log, /tmp/t4611-full-macos.log, /tmp/t4611-full-tvos.log, /tmp/t4611-full-visionos.log. AC #2 is not checked and task remains In Progress until the coordinator collects full-suite results.
+
+Housekeeping 2026-10-24: content prerequisite metadata and web links shipped in PR #210; Apple prerequisite links shipped in PR #237. Existing lesson coverage checker validates prerequisite identities/order. Fresh pnpm --dir packages/content-tools check:coverage passed (100/100 coverage; prerequisite validation included).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Cross-module prerequisites are declared in lesson front matter, displayed as navigable links on web (#210) and Apple (#237), and validated by the lesson coverage checker. Existing recorded targeted navigation/accessibility and model tests plus a fresh coverage check establish AC #2.
+<!-- SECTION:FINAL_SUMMARY:END -->

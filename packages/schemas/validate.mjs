@@ -49,6 +49,8 @@ const supportedSchemaKeywords = new Set([
   "pattern",
   "canonicalUtcTimestamp",
   "sortedSubset",
+  "sortedDisjoint",
+  "lessonReviewVersion",
 ]);
 
 const canonicalUtcTimestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u;
@@ -322,10 +324,24 @@ function validateAgainstSchema(schema, data, context) {
   if (isObject(data)) {
     // Cross-property ID-array contract used by lesson-quiz help metadata.
     for (const [key, parentKey] of Object.entries(schema.sortedSubset ?? {})) {
-      if (data[key] !== undefined && (!Array.isArray(data[key]) || !Array.isArray(data[parentKey])
-        || !data[key].every((id, index, ids) => typeof id === "string" && data[parentKey].includes(id)
+      const parents = (Array.isArray(parentKey) ? parentKey : [parentKey]).flatMap((key) => Array.isArray(data[key]) ? data[key] : []);
+      if (data[key] !== undefined && (!Array.isArray(data[key])
+        || !data[key].every((id, index, ids) => typeof id === "string" && parents.includes(id)
           && (index === 0 || ids[index - 1] < id)))) {
         errors.push(`${context.path}.${key}: expected sorted unique subset of ${parentKey}`);
+      }
+    }
+    for (const [key, otherKey] of Object.entries(schema.sortedDisjoint ?? {})) {
+      if (data[key] !== undefined && (!Array.isArray(data[key]) || !Array.isArray(data[otherKey])
+        || !data[key].every((id, index, ids) => typeof id === "string" && !data[otherKey].includes(id) && (index === 0 || ids[index - 1] < id)))) {
+        errors.push(`${context.path}.${key}: expected sorted unique IDs disjoint from ${otherKey}`);
+      }
+    }
+    if (schema.lessonReviewVersion && data.lessonIdVersion !== 2) {
+      const value = data[schema.lessonReviewVersion];
+      const attempts = Array.isArray(value) ? value : [value];
+      if (attempts.some((attempt) => isObject(attempt) && Array.isArray(attempt.reviewQuestionIds) && attempt.reviewQuestionIds.length > 0)) {
+        errors.push(`${context.path}: reviewQuestionIds require lessonIdVersion 2`);
       }
     }
     const properties = isObject(schema.properties) ? schema.properties : {};

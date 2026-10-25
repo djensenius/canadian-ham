@@ -759,7 +759,8 @@
     "lessonQuizAttempt": {
       "type": "object",
       "required": ["id", "quizId", "lessonId", "submittedAt", "correct", "total", "percent", "officialQuestionIds", "incorrectOfficialQuestionIds", "incorrectConceptCheckIds"],
-      "sortedSubset": { "answeredWithHelpIds": "officialQuestionIds" },
+      "sortedSubset": { "answeredWithHelpIds": ["officialQuestionIds", "reviewQuestionIds"] },
+      "sortedDisjoint": { "reviewQuestionIds": "officialQuestionIds" },
       "properties": {
         "id": { "$ref": "#/$defs/nonEmptyString" },
         "quizId": { "$ref": "#/$defs/quizId" },
@@ -785,6 +786,11 @@
         "incorrectOfficialQuestionIds": {
           "type": "array",
           "items": { "$ref": "#/$defs/questionId" }
+        },
+        "reviewQuestionIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/basicQuestionId" }
         },
         "answeredWithHelpIds": {
           "type": "array",

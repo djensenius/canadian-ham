@@ -215,6 +215,7 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
     let incorrectOfficialQuestionIds: [String]
     let incorrectConceptCheckIds: [String]
     let answeredWithHelpIds: [String]?
+    let reviewQuestionIds: [String]?
 
     init(
         id: String,
@@ -227,7 +228,8 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
         officialQuestionIds: [String],
         incorrectOfficialQuestionIds: [String],
         incorrectConceptCheckIds: [String],
-        answeredWithHelpIds: [String]? = nil
+        answeredWithHelpIds: [String]? = nil,
+        reviewQuestionIds: [String]? = nil
     ) {
         self.id = id
         self.quizId = quizId
@@ -240,6 +242,7 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
         self.incorrectOfficialQuestionIds = incorrectOfficialQuestionIds
         self.incorrectConceptCheckIds = incorrectConceptCheckIds
         self.answeredWithHelpIds = answeredWithHelpIds
+        self.reviewQuestionIds = reviewQuestionIds
     }
 
     init(from decoder: Decoder) throws {
@@ -254,14 +257,29 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
         officialQuestionIds = try container.decode([String].self, forKey: .officialQuestionIds)
         incorrectOfficialQuestionIds = try container.decode([String].self, forKey: .incorrectOfficialQuestionIds)
         incorrectConceptCheckIds = try container.decode([String].self, forKey: .incorrectConceptCheckIds)
+        if container.contains(.reviewQuestionIds) {
+            let ids = try container.decode([String].self, forKey: .reviewQuestionIds)
+            guard Self.validReviewQuestionIds(ids, officialQuestionIds: officialQuestionIds) else {
+                throw DecodingError.dataCorruptedError(forKey: .reviewQuestionIds, in: container, debugDescription: "Review IDs must be sorted unique official IDs outside the core quiz.")
+            }
+            reviewQuestionIds = ids
+        } else {
+            reviewQuestionIds = nil
+        }
         if container.contains(.answeredWithHelpIds) {
             let ids = try container.decode([String].self, forKey: .answeredWithHelpIds)
-            guard Self.validAnsweredWithHelpIds(ids, officialQuestionIds: officialQuestionIds) else {
+            guard Self.validAnsweredWithHelpIds(ids, officialQuestionIds: officialQuestionIds + (reviewQuestionIds ?? [])) else {
                 throw DecodingError.dataCorruptedError(forKey: .answeredWithHelpIds, in: container, debugDescription: "Help IDs must be sorted unique official IDs from this attempt.")
             }
             answeredWithHelpIds = ids
         } else {
             answeredWithHelpIds = nil
+        }
+    }
+
+    static func validReviewQuestionIds(_ ids: [String], officialQuestionIds: [String]) -> Bool {
+        ids == ids.sorted() && Set(ids).count == ids.count && ids.allSatisfy { id in
+            id.range(of: #"^B-[0-9]{3}-[0-9]{3}-[0-9]{3}$"#, options: .regularExpression) != nil && !officialQuestionIds.contains(id)
         }
     }
 
@@ -2782,7 +2800,7 @@ private func validateLessonQuizAttempts(
                 if !incorrectOfficialQuestionIds.allSatisfy(knownQuestionIds.contains) {
                     errors.append(String(localized: "\(prefix).incorrectOfficialQuestionIds must contain known question IDs."))
                 } else {
-                    let officialSet = Set(officialQuestionIds)
+                    let officialSet = Set(officialQuestionIds + (stringArray(attempt.storage["reviewQuestionIds"]) ?? []))
                     if !incorrectOfficialQuestionIds.allSatisfy(officialSet.contains) {
                         errors.append(String(localized: "\(prefix).incorrectOfficialQuestionIds must be a subset of officialQuestionIds."))
                     }
@@ -2797,8 +2815,19 @@ private func validateLessonQuizAttempts(
             }
         }
 
+        if let value = attempt.storage["reviewQuestionIds"] {
+            let valid = stringArray(value).map { reviewIds in
+                LessonQuizAttempt.validReviewQuestionIds(reviewIds, officialQuestionIds: stringArray(attempt.storage["officialQuestionIds"]) ?? [])
+                    && reviewIds.allSatisfy(knownQuestionIds.contains)
+                    && (reviewIds.isEmpty || lessonIdVersion == LessonIDContentVersion.current)
+            } ?? false
+            if !valid {
+                errors.append(String(localized: "\(prefix).reviewQuestionIds must be sorted unique official IDs outside the core quiz and require lessonIdVersion 2."))
+            }
+        }
+
         if let value = attempt.storage["answeredWithHelpIds"] {
-            let official = stringArray(attempt.storage["officialQuestionIds"]) ?? []
+            let official = (stringArray(attempt.storage["officialQuestionIds"]) ?? []) + (stringArray(attempt.storage["reviewQuestionIds"]) ?? [])
             let valid = stringArray(value).map { ids in
                 LessonQuizAttempt.validAnsweredWithHelpIds(ids, officialQuestionIds: official) && ids.allSatisfy(knownQuestionIds.contains)
             } ?? false

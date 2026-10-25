@@ -56,3 +56,4 @@ export {
   type ReadinessResult,
   type ReadinessState,
 } from "./readiness.ts";
+export { selectLessonReviewItems, type LessonReviewPool, type LessonReviewItem } from "./lesson-review.ts";
