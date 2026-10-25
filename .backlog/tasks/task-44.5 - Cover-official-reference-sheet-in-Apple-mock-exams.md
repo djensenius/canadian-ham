@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-22 02:16
-updated_date: '2026-10-25T01:00:00Z'
+updated_date: '2026-10-25T01:25:00Z'
 labels:
   - apple
   - testing
@@ -41,6 +41,8 @@ TASK-44.4 internal review noted that the reference-sheet integration is exercise
 5. Coordinator-approved 2026-10-24 fix: change only exam-code caption weight to medium, preserve colour/size/text selection and all audit scopes. Retain before/after screenshots; rerun new mock flows and six existing mock-seed regressions on both requested devices. Stop/report if the fully visible caption is still flagged.
 
 6. Coordinator-approved 2026-10-24 audit-state alignment: match the existing practice image audit at 150%, retaining real 100% zoom-out assertions; investigate the unaudited iPad 100% nil textClipped state separately in TASK-74. Disclose this limit and follow-up in task notes/eventual PR. Rerun all new mock flows and required caption regressions on both devices.
+
+7. Superseding coordinator decision 2026-10-24 under owner delegation 2026-10-22: revert the ineffective medium caption; leave app visuals unchanged. Only new iPad mock tests keep every behaviour assertion without full audits, while iPhone keeps all full audits. Record dated AGENTS limitation and merge the 100% follow-up into TASK-74 iPad mock exam accessibility audits. Rerun iPad new tests, iPhone nine-method regression, documented macOS command and final guard.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -64,4 +66,10 @@ Latest-source results: documented macOS command PASS 218/218 units, including co
 Coordinator-approved audit-state alignment (2026-10-24): the medium caption resolves the iPad fully visible seed contrast finding. The next raw image audit at page 4 / 100% zoom fails one nil-element textClipped issue (no identifier or element screenshot), recorded in /tmp/task445-ipad-running-final.log and Test-CanadianHam-2026.10.24_20-50-46--0400.xcresult. This was not ignored or treated as an approved exception. Search-first follow-up TASK-74 was created on this branch to investigate the 100% state on BOTH practice and mock paths in light/dark; existing practice matrix also audits only at 150%. Coordinator explicitly approved aligning the new mock image audit to the same 150% state, while keeping the real 100% zoom-out tap/assertion. Audits/types/helpers otherwise unchanged. Eventual PR must name TASK-74 and disclose this state alignment / un-audited 100% state; no new iPad textClipped exception.
 Before/after caption evidence: original iPad light seed crop /tmp/task445-ipad-light-attachments/B2933CAE-5FDC-4DA0-9FE6-AFF090645C02.png; after-medium crop /tmp/task445-ipad-light-after/25369C27-932F-43EC-97D0-E1F1FF6BB19F.png and app /tmp/task445-ipad-light-after/044E8782-0C03-4A17-A9F3-4D78C7BD3F61.png. Old dark crop /tmp/task445-ipad-dark-before/BDD80782-FBED-42E0-94BE-6596F7BB3132.png. All originals remain in their cited xcresults.
 The original gated caption runner correctly did not start after the failed 100% audit. A replacement targeted runner will now run all three new mock tests and all six unchanged mock-seed regressions per device, followed by macOS relevant units/UI-test-source compile. Earlier existing reference checks remain green and unchanged; no full suites or interrupted builds.
+
+SUPERSEDING DECISION — coordinator 2026-10-24 under owner delegation 2026-10-22:
+The 150% alignment did NOT resolve iPad nil textClipped (new dark FAIL 56.335s / light FAIL 58.934s at raw image audit). The unchanged legacy light audit also flags the medium-weight exam-code caption for ui-a11y-mock-exam-timer. Existing legacy dark and AX-XXXL mock tests assume the compact Questions button and fail on the real iPad regular layout. Stop rule was honored: no further presentation or exception experiments.
+Per explicit coordinator direction, reverted the medium caption, so StudyViews.swift and app visuals are byte-for-byte baseline again. Added only an iPad idiom condition to the NEW mock helper: every behaviour assertion remains, but all five full audits are iPhone-only; macOS compilation keeps the condition true under #if os(iOS) guarding UIKit. Existing tests and shared helpers stay unchanged. AGENTS.md records the dated iPad limitation, distinct from TASK-71/73 measured contrast; no new finding filter.
+Search-first merged the earlier 100% follow-up into TASK-74, now titled iPad mock exam accessibility audits, covering thin-caption contrast, nil textClipped at 100% AND 150% on practice/mock paths, and legacy compact-Questions assumptions. Evidence: /tmp/task445-ipad-final.log; Test-CanadianHam-2026.10.24_21-16-19--0400.xcresult; /tmp/task445-ipad-150-{light,dark}; /tmp/task445-ipad-legacy-light/ECD64D0A-4E39-49F8-A543-5D3273666E85.png. Pre-existing iPad-incompatible legacy tests are not regressions and were not edited.
+AC3 completion is explicitly defined by this decision as iPhone full-default audits plus iPad behaviour coverage under the documented temporary limitation. Eventual PR must disclose this scope, TASK-74 and the superseded 100%/150% experiments, and carry Test-guard-approved: owner decision 2026-10-24 on its own line for reviewer verification. L10n/text-source/test-guard self-test completed PASS at 21:24 local; catalogue unchanged. Final source reruns will confirm iPhone nine-method batch after the caption revert, iPad three new behaviour tests and documented macOS unit/UI-test-source build.
 <!-- SECTION:NOTES:END -->
