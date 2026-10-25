@@ -12708,6 +12708,342 @@
           }
         }
       }
+    },
+    "Identify the Morse letter" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifiez la lettre en morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifiez la lettre en morse"
+          }
+        }
+      }
+    },
+    "Morse output unavailable. Try haptics or turn both outputs off to use the text pattern." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie morse indisponible. Essayez les vibrations ou désactivez les deux sorties pour utiliser le motif textuel."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie morse indisponible. Essayez les vibrations ou désactivez les deux sorties pour utiliser le motif textuel."
+          }
+        }
+      }
+    },
+    "Haptics and tone are off. Request the text pattern to practise." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les vibrations et le son sont désactivés. Affichez le motif textuel pour vous exercer."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les vibrations et le son sont désactivés. Affichez le motif textuel pour vous exercer."
+          }
+        }
+      }
+    },
+    "Playing Morse" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture du morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture du morse"
+          }
+        }
+      }
+    },
+    "Play Morse" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer le morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer le morse"
+          }
+        }
+      }
+    },
+    "Show Morse pattern" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher le motif morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher le motif morse"
+          }
+        }
+      }
+    },
+    "Morse pattern" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motif morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motif morse"
+          }
+        }
+      }
+    },
+    "Output settings" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages de sortie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages de sortie"
+          }
+        }
+      }
+    },
+    "Speed" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitesse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitesse"
+          }
+        }
+      }
+    },
+    "1 WPM" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 MPM"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 MPM"
+          }
+        }
+      }
+    },
+    "1.5 WPM" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1,5 MPM"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1,5 MPM"
+          }
+        }
+      }
+    },
+    "2 WPM" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 MPM"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 MPM"
+          }
+        }
+      }
+    },
+    "Slow preset cadence; not exam timing." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadence lente de vibrations prédéfinies; pas une cadence d’examen."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cadence lente de vibrations prédéfinies; pas une cadence d’examen."
+          }
+        }
+      }
+    },
+    "Replay" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rejouer"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rejouer"
+          }
+        }
+      }
+    },
+    "Haptic style" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style de vibrations"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style de vibrations"
+          }
+        }
+      }
+    },
+    "Style 1" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 1"
+          }
+        }
+      }
+    },
+    "Style 2" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 2"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 2"
+          }
+        }
+      }
+    },
+    "Style 3" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 3"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 3"
+          }
+        }
+      }
+    },
+    "Light dot, rising dash" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point léger, trait ascendant"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point léger, trait ascendant"
+          }
+        }
+      }
+    },
+    "Light dot, firm dash" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point léger, trait ferme"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point léger, trait ferme"
+          }
+        }
+      }
+    },
+    "Stronger dot, firm dash" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point plus fort, trait ferme"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point plus fort, trait ferme"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

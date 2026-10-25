@@ -17,6 +17,8 @@ enum WatchSection: String, CaseIterable, Identifiable {
 }
 
 struct WatchHomeView: View {
+    @State private var morseSettings = WatchMorseSettings()
+
     var body: some View {
         NavigationStack {
             List(WatchSection.allCases) { section in
@@ -29,6 +31,8 @@ struct WatchHomeView: View {
             .navigationDestination(for: WatchSection.self) { section in
                 if section == .practice {
                     WatchPracticeView()
+                } else if section == .morse {
+                    WatchMorseView(settings: $morseSettings)
                 } else {
                     WatchSectionPlaceholder(section: section)
                 }

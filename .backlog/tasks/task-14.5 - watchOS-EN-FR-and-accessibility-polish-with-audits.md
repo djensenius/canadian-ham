@@ -4,7 +4,7 @@ title: watchOS EN-FR and accessibility polish with audits
 status: To Do
 assignee: []
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T19:06:00Z'
+updated_date: '2026-10-25T19:39:00Z'
 labels:
   - apple
   - watchos
@@ -39,4 +39,6 @@ After the practice, Morse and reference flows exist, polish the complete watch e
 
 <!-- SECTION:NOTES:BEGIN -->
 From the TASK-14.2 review: (1) check in the VoiceOver listening pass that the Crown sheet's Correct/Incorrect announcement isn't cut off by the sheet dismissing (WatchPracticeView submit, then dismiss); if it is, post the announcement after dismissal. (2) The cold-load unit test relies on alphabetical order and a shared loader; keep test-order randomisation off for the watch plan, or isolate it.
+
+From TASK-14.3 approved review findings 6/7: add full performAccessibilityAudit runs on the Practice and Morse screens/states (not only structural checks); give bare-letter answer buttons localized labels such as "Letter A" without early answer disclosure; announce when answer choices appear after playback; check VoiceOver Play/Replay announcements versus the first tone and resolve audible overlap. These remain TASK-14.5 work; no audit exceptions approved.
 <!-- SECTION:NOTES:END -->
