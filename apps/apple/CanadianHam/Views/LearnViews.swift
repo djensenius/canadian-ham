@@ -1176,8 +1176,10 @@ func lessonQuizReviewHeading(title: LocalizedNullableText, language: BankLanguag
     let localizedTitle = title.textAndLanguage(for: language)
     var attributedTitle = AttributedString(localizedTitle.text)
     attributedTitle.languageIdentifier = localizedTitle.language == .english ? "en" : "fr"
-    // Interpolating an attributed title propagates its language onto the localized prefix.
-    var heading = AttributedString(localized: "Review question from \("")", bundle: bundle)
+    // Build the localized prefix as plain text and tag it explicitly with the interface language, so the
+    // English title's language can never spread onto it (AttributedString(localized:) inherited it in some runs).
+    var heading = AttributedString(String(localized: "Review question from \("")", bundle: bundle)) // l10n: localized
+    heading.languageIdentifier = language == .french ? "fr" : "en"
     heading += attributedTitle
     return heading
 }
