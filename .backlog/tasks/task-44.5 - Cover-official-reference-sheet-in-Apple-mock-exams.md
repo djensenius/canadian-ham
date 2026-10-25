@@ -4,8 +4,8 @@ title: Cover official reference sheet in Apple mock exams
 status: In Progress
 assignee:
   - '@worker'
-created_date: '2026-10-22 02:16'
-updated_date: '2026-10-25 00:36'
+created_date: 2026-10-22 02:16
+updated_date: '2026-10-25T00:57:00Z'
 labels:
   - apple
   - testing
@@ -58,4 +58,8 @@ Coordinator decision 2026-10-24 under owner delegation 2026-10-22: do NOT extend
 Validation currently queued on the shared xbuild lock (2026-10-24 ~19:36 local); no builds interrupted. Persistent nohup runners: /tmp/task445-checks.sh -> /tmp/task445-checks.log (original targeted reference runs complete; documented macOS units/l10n/text/self-test pending), /tmp/task445-running-final.sh -> /tmp/task445-running-final.log (latest-source light/running on iPhone then iPad), and /tmp/task445-caption-regressions.sh -> /tmp/task445-caption-regressions.log (waits for both running-flow passes, then dark/Advanced and six unchanged existing mock-seed tests on each requested device; stops on failed command). After screenshot evidence is keepAlways in the new tests. No completion criteria checked yet.
 
 Latest-source results: documented macOS command PASS 218/218 units, including compilation of CanadianHamUITests and the guarded iOS-only idiom check (20:14 local). Final iPhone light/running mock flow PASS 245.891s, including all five full-default audits and bounded running-timer continuity. Its medium-weight caption app/element screenshots and timer-range keepAlways attachment are retained in Test-CanadianHam-2026.10.24_20-15-29--0400.xcresult; exported to /tmp/task445-iphone-light-after. Final approved guard, exact existing-test/helper byte-for-byte proof and baseline diff whitespace check PASS (/tmp/task445-guard-final.log). iPad light/running and caption regressions still await the shared lock; current owner is the TASK-46.7 targeted iPad run, no builds interrupted.
+
+Coordinator-approved audit-state alignment (2026-10-24): the medium caption resolves the iPad fully visible seed contrast finding. The next raw image audit at page 4 / 100% zoom fails one nil-element textClipped issue (no identifier or element screenshot), recorded in /tmp/task445-ipad-running-final.log and Test-CanadianHam-2026.10.24_20-50-46--0400.xcresult. This was not ignored or treated as an approved exception. Search-first follow-up TASK-74 was created on this branch to investigate the 100% state on BOTH practice and mock paths in light/dark; existing practice matrix also audits only at 150%. Coordinator explicitly approved aligning the new mock image audit to the same 150% state, while keeping the real 100% zoom-out tap/assertion. Audits/types/helpers otherwise unchanged. Eventual PR must name TASK-74 and disclose this state alignment / un-audited 100% state; no new iPad textClipped exception.
+Before/after caption evidence: original iPad light seed crop /tmp/task445-ipad-light-attachments/B2933CAE-5FDC-4DA0-9FE6-AFF090645C02.png; after-medium crop /tmp/task445-ipad-light-after/25369C27-932F-43EC-97D0-E1F1FF6BB19F.png and app /tmp/task445-ipad-light-after/044E8782-0C03-4A17-A9F3-4D78C7BD3F61.png. Old dark crop /tmp/task445-ipad-dark-before/BDD80782-FBED-42E0-94BE-6596F7BB3132.png. All originals remain in their cited xcresults.
+The original gated caption runner correctly did not start after the failed 100% audit. A replacement targeted runner will now run all three new mock tests and all six unchanged mock-seed regressions per device, followed by macOS relevant units/UI-test-source compile. Earlier existing reference checks remain green and unchanged; no full suites or interrupted builds.
 <!-- SECTION:NOTES:END -->
