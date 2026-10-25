@@ -34,21 +34,9 @@ struct WatchHomeView: View {
                 } else if section == .morse {
                     WatchMorseView(settings: $morseSettings)
                 } else {
-                    WatchSectionPlaceholder(section: section)
+                    WatchAlphabetView()
                 }
             }
         }
-    }
-}
-
-private struct WatchSectionPlaceholder: View {
-    let section: WatchSection
-
-    var body: some View {
-        ScrollView {
-            Text("Coming soon")
-                .accessibilityIdentifier("watch-placeholder-\(section.id)")
-        }
-        .navigationTitle(section.title) // l10n: localized
     }
 }
