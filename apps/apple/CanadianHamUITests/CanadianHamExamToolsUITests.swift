@@ -96,6 +96,7 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         coreAnswer.tap()
         enterReviewRound(in: app)
         let id = app.staticTexts["question-identifier"].firstMatch.label
+        XCTAssertEqual(id, "B-002-007-003", "Pin the review source and hint destination to the shared review-items seed")
         let heading = app.staticTexts["lesson-quiz-review-heading"].firstMatch.label
         openTool(.hint, in: app)
         let reveal = app.buttons["hint-show-level-1-button"].firstMatch
@@ -107,7 +108,8 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         let link = app.buttons["hint-review-in-lesson-button"].firstMatch
         scrollExamToolUntilHittable(link, in: app, maxSwipes: 12)
         link.tap()
-        XCTAssertFalse(app.staticTexts["lesson-quiz-review-heading"].firstMatch.exists)
+        // Hint dismissal pushes asynchronously; wait for the actual earlier lesson, not the old view's disappearance.
+        XCTAssertTrue(app.staticTexts["lesson-heading-choose-q-signals-by-the-task"].firstMatch.waitForExistence(timeout: 10))
         app.navigationBars.firstMatch.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(app.staticTexts["lesson-quiz-review-heading"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["lesson-quiz-review-heading"].firstMatch.label, heading)
