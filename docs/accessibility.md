@@ -76,6 +76,46 @@ Practice-header layout evidence (crops of the practice screen showing the title,
 - Mock exam progress should be available as text, e.g. “Question 18 of 100, answered”.
 - Results must identify score, pass/honours status, and category breakdown in text.
 
+### tvOS About cards — TASK-29 structural verification (2026-10-25)
+
+**AC1/AC2: structural verification done; listening check pending owner.** No agent listening result is claimed.
+
+The EN and FR UI tests focus Bank, Sources, Attribution, Disclaimer, and Privacy in order with one Down press per card. Each card is a single combined, remote-focusable `StaticText` element, not a button. Its label starts with the localized title and includes the body (including the complete English legal paragraphs in FR). Each test records the label and full `debugDescription` in a keepAlways `tvos-about-<en|fr>-<card>-accessibility` attachment. [Committed label/Attributes excerpts](evidence/tvos-about-card-accessibility.txt) record all ten focused captures from the Apple TV 4K (3rd generation), tvOS 27.0 simulator.
+
+| Card | EN title | FR title | Body in the combined label |
+| --- | --- | --- | --- |
+| Bank | Bank | Banque | Active Basic bank/version/date and question/category/subsection counts |
+| Sources | Sources | Sources | Bank/date, question-bank source URL, RBR-4 title/URL, reference-PDF note |
+| Attribution | Attribution | Attribution | English draft/pending-permission warning, then English ISED attribution |
+| Disclaimer | Disclaimer | Avis de non-responsabilité | English independent-study-tool/non-endorsement disclaimer |
+| Privacy | Privacy | Confidentialité | Localized offline/no-data copy, including in-memory-only practice sessions |
+
+Before the fix, all ten focused debug descriptions reported `StaticText`/`Focused`, with no literal `Header` reported; that snapshot format does **not** expose all UIKit traits or attributed speech runs, so this is not proof of correct spoken heading treatment. The title child had `.isHeader`, and separate legal child labels used `AttributedString.languageIdentifier` (`en-CA`), not a locale environment or `.accessibilityTextContentType`. Implicit `.combine` supplied the resulting label, without an explicit single attributed value to retain those language runs.
+
+`TVAboutCardText` now builds one attributed label from the same title/paragraphs used visually. Only the title run has `accessibilityHeadingLevel = .h2`; body runs have no heading metadata. Title and non-legal body runs use the interface language (`en-CA`/`fr-CA`), while attribution/disclaimer body runs explicitly use `en`. `TVPaperSection` retains `.combine` and removes `.isHeader` from the aggregate card, so the entire legal paragraph is not marked as a heading. No guarded `.ignore` modifier, visual restyling, new translation, or audit exception is introduced.
+
+The final focused captures also report no `Header` and preserve the full labels. Unit tests separately verify title-only heading metadata, English tags on both legal-body paragraphs in a French label, and interface-language tags on other bodies. XCUITest cannot verify the chosen voice or whether VoiceOver honours inline heading metadata; the listening check below remains required.
+
+Validation: the targeted About/attributed-run `xbuild` run passed 7/7, and the full `CanadianHamTV` suite passed 26/26 (8 unit, 18 UI), including the existing About/category/practice/Morse and lesson accessibility audits. Localization export, SwiftUI text-source, and no-network checks passed. iOS/macOS/visionOS suites were not run: the changed source belongs only to the tvOS app/test targets.
+
+### Owner listening check (tvOS VoiceOver)
+
+VoiceOver isn't available in the tvOS Simulator, so this check needs a physical Apple TV running the internal TestFlight build.
+
+1. On the Apple TV, open **Settings → Accessibility → VoiceOver** and turn VoiceOver **On**. For a quick toggle, set **Settings → Accessibility → Accessibility Shortcut → VoiceOver**; triple-clicking the Back button (Menu on older remotes) then switches VoiceOver on or off. Start with the Apple TV language set to English, launch Canadian Ham, and open **About** from the category screen.
+2. Move Down through **Bank → Sources → Attribution → Disclaimer → Privacy**, letting each card finish. Each card should be exactly one focus stop. Expected speech in English (wording approximate; VoiceOver's heading announcement may vary):
+   - Bank: "Bank, heading" (or just "Bank"), then the version, date and question counts.
+   - Sources: "Sources", then both source citations and the reference-PDF note.
+   - Attribution: "Attribution", then the draft warning, then the attribution paragraph.
+   - Disclaimer: "Disclaimer", then the non-endorsement paragraph.
+   - Privacy: "Privacy", then the offline/no-data and temporary-session text.
+3. Change **Settings → General → Language → Apple TV Language** to Français (Canada), relaunch Canadian Ham and open **À propos**. Repeat all cards. Titles and the Bank, Sources and Privacy bodies should be spoken in French. In **Attribution** and **Avis de non-responsabilité**, every legal paragraph should be spoken with an **English voice**, then switch back to French at the next card's title. English and French voices must both be installed.
+4. What each outcome means:
+   - "heading" spoken after the title only: ideal; inline heading metadata is honoured.
+   - No "heading" anywhere: acceptable; the card reads as one paragraph. Record it, and the coordinator decides whether to add a separate heading element.
+   - The whole card announced as a heading, a card split into several stops, duplicated reading, or the legal text spoken with a French voice: failure. Record which card.
+5. Record the device, tvOS version, voice settings, date and each card's heading/body/language result here and in TASK-29. AC1/AC2 stay unchecked until the owner confirms the speech; structural tests are not listening evidence.
+
 ## Language and bilingual text
 
 - Web content that displays French official text uses `lang="fr-CA"`; English content uses `lang="en-CA"`.
