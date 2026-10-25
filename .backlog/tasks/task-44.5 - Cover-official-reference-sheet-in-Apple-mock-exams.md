@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-22 02:16
-updated_date: '2026-10-25T00:57:00Z'
+updated_date: '2026-10-25T01:00:00Z'
 labels:
   - apple
   - testing
@@ -39,6 +39,8 @@ TASK-44.4 internal review noted that the reference-sheet integration is exercise
 4. Record per-test evidence, finalize all four criteria, commit and push the task branch without a PR.
 
 5. Coordinator-approved 2026-10-24 fix: change only exam-code caption weight to medium, preserve colour/size/text selection and all audit scopes. Retain before/after screenshots; rerun new mock flows and six existing mock-seed regressions on both requested devices. Stop/report if the fully visible caption is still flagged.
+
+6. Coordinator-approved 2026-10-24 audit-state alignment: match the existing practice image audit at 150%, retaining real 100% zoom-out assertions; investigate the unaudited iPad 100% nil textClipped state separately in TASK-74. Disclose this limit and follow-up in task notes/eventual PR. Rerun all new mock flows and required caption regressions on both devices.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
