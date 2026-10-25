@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-22 02:16
-updated_date: '2026-10-25T01:25:00Z'
+updated_date: '2026-10-25T02:03:00Z'
 labels:
   - apple
   - testing
@@ -72,4 +72,6 @@ The 150% alignment did NOT resolve iPad nil textClipped (new dark FAIL 56.335s /
 Per explicit coordinator direction, reverted the medium caption, so StudyViews.swift and app visuals are byte-for-byte baseline again. Added only an iPad idiom condition to the NEW mock helper: every behaviour assertion remains, but all five full audits are iPhone-only; macOS compilation keeps the condition true under #if os(iOS) guarding UIKit. Existing tests and shared helpers stay unchanged. AGENTS.md records the dated iPad limitation, distinct from TASK-71/73 measured contrast; no new finding filter.
 Search-first merged the earlier 100% follow-up into TASK-74, now titled iPad mock exam accessibility audits, covering thin-caption contrast, nil textClipped at 100% AND 150% on practice/mock paths, and legacy compact-Questions assumptions. Evidence: /tmp/task445-ipad-final.log; Test-CanadianHam-2026.10.24_21-16-19--0400.xcresult; /tmp/task445-ipad-150-{light,dark}; /tmp/task445-ipad-legacy-light/ECD64D0A-4E39-49F8-A543-5D3273666E85.png. Pre-existing iPad-incompatible legacy tests are not regressions and were not edited.
 AC3 completion is explicitly defined by this decision as iPhone full-default audits plus iPad behaviour coverage under the documented temporary limitation. Eventual PR must disclose this scope, TASK-74 and the superseded 100%/150% experiments, and carry Test-guard-approved: owner decision 2026-10-24 on its own line for reviewer verification. L10n/text-source/test-guard self-test completed PASS at 21:24 local; catalogue unchanged. Final source reruns will confirm iPhone nine-method batch after the caption revert, iPad three new behaviour tests and documented macOS unit/UI-test-source build.
+
+Final approved-source runner for resumption: /tmp/task445-approved-final.sh -> /tmp/task445-approved-final.log, per-command /tmp/task445-{iphone-approved,ipad-approved,macos-approved,guard-approved,unchanged-source}.log. It runs iPhone nine selected methods after the app revert, iPad three new behaviour methods under the explicit limitation, the exact documented macOS unit command, the branch guard with owner-decision-2026-10-24 marker and byte-for-byte unchanged existing-test/helper/app-source proof. Currently waiting on the shared xbuild lock (~22:03 local); no builds interrupted. Original /tmp/task445-checks.log completed l10n, text source and guard self-test with exit 0. ACs remain unchecked pending this final approved-source validation.
 <!-- SECTION:NOTES:END -->
