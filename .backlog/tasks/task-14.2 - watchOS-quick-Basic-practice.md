@@ -1,11 +1,11 @@
 ---
 id: TASK-14.2
 title: watchOS quick Basic practice
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T18:40:00Z'
+updated_date: '2026-10-25T18:45:00Z'
 labels:
   - apple
   - watchos
@@ -42,6 +42,8 @@ Short wrist-sized practice should work without a phone, history or study setup. 
 2. Implement semantic, scrollable tap/Crown-confirm practice and labelled English explanation fallback; add EN/FR watch UI coverage including relaunch.
 3. Regenerate XcodeGen twice; run watch tests, localization/text/privacy/test guards, embedded iOS build and macOS units; record size/decode/memory and per-test evidence.
 4. Commit/push milestones, verify acceptance evidence and finalize the task without opening a PR.
+
+5. Review fixes: lazy off-main cached bank with loading UI; parsed choice-labelled explanations; deterministic UI seeds and meaningful bundle/session checks; headers and submit announcement. Re-measure a first-touch load, rerun watch/localization/guards/iOS and shared-catalogue macOS checks, update evidence, commit and push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -52,6 +54,8 @@ Milestone 1 pushed: watch-only Basic/explanation resource membership, narrow con
 Milestone 2: all 10 watch unit tests now pass, tap/feedback/Next/relaunch UI passes, and the French Crown UI passes using actual XCUIDevice.shared.rotateDigitalCrown(delta:) events: it visited all four answer texts before explicit Confirm, then verified French feedback, labelled English fallback and Next. The Crown handler must be attached to the focusable scroll container, not a nested native Picker or Text (the latter routed input to scrolling). Final implementation also exposes the answer as an accessibility-adjustable control. Localization export plus tvOS/visionOS/watch generic builds and embedded iOS build-for-testing passed. Full macOS units are running; final targeted rerun will verify robust long-choice touch scrolling. No tests/audits skipped or weakened.
 
 All 6 ACs verified; evidence: docs/testing/task-14.2-watch-practice.md. Installed watch bundle has exactly 988 original JSON resources (byte-for-byte source matches), 2,360,969 raw bytes, no excluded content; Debug installed logical/allocated bytes 16,773,998/19,832,832 including injected test PlugIns (app excluding them: 10,025,821/13,062,144). Final cold load 0.218668292 s, retained-bank resident delta 8,159,232 bytes. The paired iPhone simulator had no CanadianHam counterpart installed. 10 unit and 4 UI tests passed across targeted watch runs; final unchanged-source 640ddb3e run passed cold load plus both practice UI methods. Full macOS unit target 223/223; iOS embedded build-for-testing; localization/export/generic builds; text, network/iCloud + fixtures, test guard/self-test and XcodeGen twice with empty determinism diff all passed. Initial UI failures were fixed and rerun only at affected class/method scope. No accessibility exceptions or audit weakening. Hardware/VoiceOver listening/full audits remain existing TASK-14.5/14.6 gates. No PR or TestFlight upload opened.
+
+Reopened for internal review fixes: eager main-thread loads and raw authoring explanation text are blockers; addressing test determinism and low accessibility/catalogue notes in the same narrow review round.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
