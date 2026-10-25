@@ -162,8 +162,10 @@ WatchConnectivity, remote packages or SDKs. App Privacy remains **Data Not Colle
 
 The watch reuses `CanadianHam/Resources/Localizable.xcstrings` so existing Practice,
 Morse, Coming soon and app-name translations have one source of truth; Alphabet
-adds one EN/FR catalogue key. No phone source membership is implied by sharing
-that resource. The watch has its own privacy manifest to keep membership explicit.
+adds one EN/FR catalogue key. Watch bundle metadata has its own EN/fr/fr-CA
+`InfoPlist.xcstrings`; the localization check verifies both catalogues remain
+unchanged. No phone source membership is implied by sharing the UI resource.
+The watch has its own privacy manifest to keep membership explicit.
 
 `check-apple-no-network.sh` recursively scans all watch app/test sources and privacy
 resources as well as package sources. Watch paths never receive the optional
