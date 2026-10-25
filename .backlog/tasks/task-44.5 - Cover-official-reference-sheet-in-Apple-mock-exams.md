@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-22 02:16'
-updated_date: '2026-10-24 23:36'
+updated_date: '2026-10-25 00:36'
 labels:
   - apple
   - testing
@@ -56,4 +56,6 @@ BLOCKER/FIX DECISION — iPad first run: both new mock methods failed the pre-sh
 Coordinator decision 2026-10-24 under owner delegation 2026-10-22: do NOT extend any exception; apply only .weight(.medium) to the existing exam-code caption, same ink/size and textSelection enabled. Implemented that one-line legibility fix. New tests retain app/seed keepAlways screenshots before the full audit for after evidence. Rerun all new mock flows plus the existing tests found via mock-exam-seed on iPhone/iPad, keeping every existing test/helper unchanged. Stop/report without further changes if the fully visible caption is still flagged. Existing iPad matrix PASS 182.702s, AX PASS 56.543s, availability PASS 16.065s, Advanced negative PASS 17.025s; medium SKIPPED by unchanged iPhone-only guard (6.216s). No build killed; queued running-timer-only tests will compile the approved caption fix.
 
 Validation currently queued on the shared xbuild lock (2026-10-24 ~19:36 local); no builds interrupted. Persistent nohup runners: /tmp/task445-checks.sh -> /tmp/task445-checks.log (original targeted reference runs complete; documented macOS units/l10n/text/self-test pending), /tmp/task445-running-final.sh -> /tmp/task445-running-final.log (latest-source light/running on iPhone then iPad), and /tmp/task445-caption-regressions.sh -> /tmp/task445-caption-regressions.log (waits for both running-flow passes, then dark/Advanced and six unchanged existing mock-seed tests on each requested device; stops on failed command). After screenshot evidence is keepAlways in the new tests. No completion criteria checked yet.
+
+Latest-source results: documented macOS command PASS 218/218 units, including compilation of CanadianHamUITests and the guarded iOS-only idiom check (20:14 local). Final iPhone light/running mock flow PASS 245.891s, including all five full-default audits and bounded running-timer continuity. Its medium-weight caption app/element screenshots and timer-range keepAlways attachment are retained in Test-CanadianHam-2026.10.24_20-15-29--0400.xcresult; exported to /tmp/task445-iphone-light-after. Final approved guard, exact existing-test/helper byte-for-byte proof and baseline diff whitespace check PASS (/tmp/task445-guard-final.log). iPad light/running and caption regressions still await the shared lock; current owner is the TASK-46.7 targeted iPad run, no builds interrupted.
 <!-- SECTION:NOTES:END -->
