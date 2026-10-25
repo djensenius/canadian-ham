@@ -19,7 +19,6 @@ struct WatchPracticeView: View {
                     } else if let question = session.question {
                         if session.submittedSourceIndex != nil {
                             feedback
-                                .id("top")
                         } else {
                             Text(questionText(question.text)) // l10n: content(question)
                                 .id("top")
@@ -56,6 +55,7 @@ struct WatchPracticeView: View {
     @ViewBuilder
     private var feedback: some View {
         Text(session.isCorrect ? "Correct" : "Incorrect") // l10n: localized
+            .id("top")
             .font(.headline)
             .accessibilityIdentifier("watch-feedback")
         if let selected = session.choices.first(where: { $0.sourceIndex == session.submittedSourceIndex }) {
@@ -99,8 +99,9 @@ private struct WatchCrownAnswerView: View {
     @State private var selection = 0
 
     var body: some View {
-        VStack(spacing: 8) {
-            Picker("Answer", selection: $selection) {
+        ScrollView {
+            VStack(spacing: 16) {
+                Picker("Answer", selection: $selection) {
                 ForEach(choices.indices, id: \.self) { index in
                     Text("Answer \(index + 1)")
                         .accessibilityLabel(Text(answerText(index))) // l10n: content(question)
@@ -110,20 +111,19 @@ private struct WatchCrownAnswerView: View {
             .pickerStyle(.wheel)
             .frame(height: 70)
             .accessibilityIdentifier("watch-crown-picker")
-            ScrollView {
-                Text(answerText(selection)) // l10n: content(question)
-                    .font(.body)
-                    .accessibilityValue("Selected")
-                    .accessibilityIdentifier("watch-crown-selection")
-            }
+            Text(answerText(selection)) // l10n: content(question)
+                .font(.body)
+                .accessibilityValue("Selected")
+                .accessibilityIdentifier("watch-crown-selection")
             Button("Confirm answer") {
                 guard choices.indices.contains(selection) else { return }
                 submit(choices[selection].sourceIndex)
                 dismiss()
             }
             .accessibilityIdentifier("watch-confirm")
+            }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
     }
 
     private func answerText(_ index: Int) -> String {

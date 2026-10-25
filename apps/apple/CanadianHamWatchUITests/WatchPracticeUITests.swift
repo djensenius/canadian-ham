@@ -50,10 +50,11 @@ final class WatchPracticeUITests: XCTestCase {
         // Crown scrolling on the question must not submit.
         XCUIDevice.shared.rotateDigitalCrown(delta: -0.5)
         XCTAssertFalse(app.staticTexts["watch-feedback"].exists)
-        reveal(open, in: app, downFirst: true)
+        reveal(open, in: app)
         open.tap()
-        let picker = app.pickerWheels.firstMatch
+        let picker = app.otherElements["watch-crown-picker"]
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
+        picker.tap()
         var seenAnswers: Set<String> = [app.staticTexts["watch-crown-selection"].label]
         // Native watchOS XCUIAutomation exposes Crown rotation (but not adjust(toPickerWheelValue:)).
         for _ in 0..<24 {
@@ -65,6 +66,7 @@ final class WatchPracticeUITests: XCTestCase {
         }
         XCTAssertEqual(seenAnswers.count, 4, "The Crown can select every answer without submitting")
         let selected = app.staticTexts["watch-crown-selection"].label
+        reveal(app.buttons["watch-confirm"], in: app)
         app.buttons["watch-confirm"].tap()
         let feedback = app.staticTexts["watch-feedback"]
         XCTAssertTrue(feedback.waitForExistence(timeout: 5))
@@ -94,12 +96,19 @@ final class WatchPracticeUITests: XCTestCase {
     }
 
     @MainActor
-    private func reveal(_ element: XCUIElement, in app: XCUIApplication, downFirst: Bool = false) {
+    private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
         XCTAssertTrue(element.waitForExistence(timeout: 5))
-        for _ in 0..<18 {
+        for _ in 0..<24 {
             if element.isHittable { return }
-            if downFirst { app.swipeDown() } else { app.swipeUp() }
+            if element.frame.maxY <= 56 {
+                app.swipeDown(velocity: .slow)
+            } else {
+                app.swipeUp(velocity: .slow)
+            }
         }
-        XCTFail("Could not reveal \(element.identifier)")
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        XCTFail("Could not reveal \(element.identifier), frame=\(element.frame)")
     }
 }

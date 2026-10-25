@@ -105,7 +105,16 @@ final class WatchPracticeTests: XCTestCase {
         XCTAssertFalse(french.isEnglishFallback)
     }
 
+    // Sort first so the allocator has not already held a decoded bank in this process.
+    func testAColdBundledPracticeLoadMeasurements() throws {
+        try measureBundledPracticeLoad()
+    }
+
     func testMeasureBundledPracticeLoad() throws {
+        try measureBundledPracticeLoad()
+    }
+
+    private func measureBundledPracticeLoad() throws {
         let before = residentBytes()
         let start = ContinuousClock.now
         let bank = try WatchPracticeBank.load()
