@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:57'
-updated_date: '2026-10-24 22:55'
+updated_date: '2026-10-25 00:15'
 labels:
   - web
   - apple
@@ -266,4 +266,6 @@ Documented full command PASS, 220 tests / 0 failures. Command: DEVELOPER_DIR=/Ap
 | `CanadianHamTests.RootNavigationMappingTests.testEveryRootSelectionRoundTrips` | PASSED | 0.001 |
 | `CanadianHamTests.RootNavigationMappingTests.testLessonQuizCurrentAndOtherHintLessonStacksPreserveQuizAcrossLayouts` | PASSED | 0.001 |
 | `CanadianHamTests.RootNavigationMappingTests.testPracticeHintLessonStackKeepsSessionAsSplitSelection` | PASSED | 0.001 |
+
+Engine parity PASS: bash scripts/check-engine-parity.sh ran TypeScript 32/32 and Swift 22/22, including all nine shared review selection cases. iPhone initial run: 21/22 PASS, including all 12 unchanged lesson-quiz methods, all five unchanged M1 methods and four new EN/FR light/dark full review audits. New persistence test failed an immediate disappearance assertion after asynchronous hint-sheet dismissal; corrected only the new test to wait for the exact earlier-lesson heading and assert seeded review ID B-002-007-003 (33e5b247). Production, existing audits and helpers unchanged. Failing-only iPhone rerun, full requested iPad selection and one final-source macOS build-check/unit method are queued. UI test suffix from original first M1 test to EOF is byte-identical to base (SHA256 c0e7bd13eb4a8e90a298aa5103e73dab86f958e2685b9376e0187edd8de02f16).
 <!-- SECTION:NOTES:END -->
