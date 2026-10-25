@@ -56,8 +56,8 @@ final class WatchPracticeUITests: XCTestCase {
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
         var seenAnswers: Set<String> = [picker.label]
         // Exercise actual Crown events on the focusable, adjustable answer control.
-        for _ in 0..<12 {
-            XCUIDevice.shared.rotateDigitalCrown(delta: 0.25)
+        for step in 0..<12 {
+            XCUIDevice.shared.rotateDigitalCrown(delta: step < 6 ? 0.25 : -0.25)
             seenAnswers.insert(picker.label)
             print("Crown selected answers: \(seenAnswers.count); current: \(picker.label)")
             XCTAssertTrue(app.buttons["watch-confirm"].exists)
