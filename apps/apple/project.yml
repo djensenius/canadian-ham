@@ -388,6 +388,10 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: CanadianHamWatchTests
+      - path: ../../fixtures/morse/timing.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
     dependencies:
       - target: CanadianHamWatch
       - package: CanadianHamEngine

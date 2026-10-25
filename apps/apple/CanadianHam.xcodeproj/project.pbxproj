@@ -12,12 +12,14 @@
 		018B9FABEC72D0DC5202DBC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5F42909CFD2242DE9CFD019 /* Assets.xcassets */; };
 		02283C1536875FBD9F5CE6E4 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
 		02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
+		057A5B5A96798E2255C60B74 /* WatchMorseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AEC4916A05D25E72A2121F /* WatchMorseUITests.swift */; };
 		06F98767DA87C95EB04ABFEF /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 94C45D93BD1BF4DF19826B39 /* CanadianHamEngine */; };
 		08BF73A02D5B4B5A42259B7E /* LocalizationCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */; };
 		0AC69A16CC0A913D051094F7 /* PlatformHintPanelSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2CDF7ED2401878EECB285 /* PlatformHintPanelSupport.swift */; };
 		0B481C38251FAE9490A00C29 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		0CC2A80AA55592C499041495 /* PlatformLessonMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDB66EC2C530873730DEE2A /* PlatformLessonMarkdownView.swift */; };
 		0DD9162DBD0D0F0D028D0939 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 14A9B5491781DCE16B2A7EA4 /* categories.json */; };
+		0F140DABD69206DABF065114 /* WatchMorseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8F40A3C70B502FC9BC7F71 /* WatchMorseTests.swift */; };
 		10FA036510A648A0BD33F258 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CEF53E707EFDB7074F0A99 /* Assets.xcassets */; };
 		15DF729E9580619EDE8400FF /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		1A532FBCB03EEDAB5AD727F0 /* StudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0390C2BF7D07DEAD8A246557 /* StudyViews.swift */; };
@@ -26,6 +28,7 @@
 		1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */; };
 		1D775C1F120B008380B810EA /* WatchPracticeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D864AEEA6B53009070C13A97 /* WatchPracticeTests.swift */; };
 		1FF3020AFEB16FFA1BA640B3 /* PlatformLessonMarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDB66EC2C530873730DEE2A /* PlatformLessonMarkdownView.swift */; };
+		233086CF86AB6CE152315940 /* timing.json in Resources */ = {isa = PBXBuildFile; fileRef = D602E9738D65DBB8CAD02871 /* timing.json */; };
 		2337449B05AE3AF97A66A776 /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		23D42DA3EBF7A595CD9A845B /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		2411648A6CFFBBE0F93DF147 /* CanadianHamTVUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB9DE0DC8D961680058B71B /* CanadianHamTVUITests.swift */; };
@@ -49,6 +52,7 @@
 		35962F994D0BFD7B79907E2B /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		3611785543C180B0E9D40510 /* ExamToolModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5581AFE7785D06E74DC2FC46 /* ExamToolModels.swift */; };
 		361493881B2CC61302617533 /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
+		3867BE60F278EBB19FAB2B94 /* WatchMorseOutputDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6493E79FF99139B3F8006BCD /* WatchMorseOutputDriver.swift */; };
 		3997D8ED66D192D9373FD5F5 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 152905B827825A7ACF7591F2 /* CanadianHamMorseEngine */; };
 		3BD841E056F7CDC54828C327 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		3C1B7F75096DB44648DDD167 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
@@ -71,6 +75,7 @@
 		4E38473222269C9E2D330A8C /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = 7940DA847C278497ABEBF199 /* CanadianHamContent */; };
 		52E2423AD8ECA065D5EE426A /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		534739C3352A8EB6282F3652 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
+		55B8B8CA65E9446A609C88C4 /* WatchMorseDrill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6F01E621744F3EACB869B6 /* WatchMorseDrill.swift */; };
 		56971C911C417B59168BF071 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 007479A1ABED939E784D6108 /* CanadianHamMorseEngine */; };
 		58E45741A8EC2EF3FB861164 /* UITestContrastMeasurementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F385B407934FCAE56197498 /* UITestContrastMeasurementTests.swift */; };
 		597E9B1D4F1011D023EDE4F6 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 022D91A5693114D1A7D36F4D /* CanadianHamMorseEngine */; };
@@ -95,6 +100,7 @@
 		6EFADA5EE0B61414AA83A09D /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = A4E736FDA05FB857B049D1C5 /* CanadianHamContent */; };
 		6F0E7D31B3B2DD3B7C2F540C /* CanadianHamVisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28A9D49438EBAC030569D6E /* CanadianHamVisionTests.swift */; };
 		6F8C692E4E3D7AFA91619BA3 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
+		6FE539CF70BCC526237A04AE /* WatchMorseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11BE46A6BFD3432DCA473DC /* WatchMorseView.swift */; };
 		70BBC9801C24E0B8B879ABAA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		71824E1D425D494043EA0781 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 		71C1049741A681C96AED8C32 /* DuoLayoutPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8190B2B9429493319576A943 /* DuoLayoutPolicyTests.swift */; };
@@ -192,6 +198,7 @@
 		E2CA2253AC48BD779D64187C /* TVAboutCardText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBDB141A88B08724263724B /* TVAboutCardText.swift */; };
 		E33986F2CB9C9B22FF210F23 /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
 		E4193FF2F1A1DE441EFA3160 /* course.json in Resources */ = {isa = PBXBuildFile; fileRef = 79F451DA18B5F91DD4DCA5BC /* course.json */; };
+		E502C5BF15513BFFD1CA614C /* WatchMorsePlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5E7D5DE99BF10121B844B2 /* WatchMorsePlayback.swift */; };
 		E5B8F95402DD487BCC28516E /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 1F3F655DC0021680B5931CD5 /* CanadianHamEngine */; };
 		E996A2002C10F58E41385C21 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		EA651611EAE395366553C319 /* LearnViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E31A65DF43C45C6F15475C7 /* LearnViews.swift */; };
@@ -324,6 +331,7 @@
 		5FC310E91D274D6ACA4BBA5F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		62D7A86407A650CCC12DE3EA /* morse-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "morse-swift"; path = "../../packages/morse-swift"; sourceTree = SOURCE_ROOT; };
 		641771DDA6C72AE924365999 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
+		6493E79FF99139B3F8006BCD /* WatchMorseOutputDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMorseOutputDriver.swift; sourceTree = "<group>"; };
 		658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibleSecondaryButtonStyle.swift; sourceTree = "<group>"; };
 		68B2019B8C107CCE6C8C9198 /* quizzes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = quizzes; path = ../../content/quizzes; sourceTree = SOURCE_ROOT; };
 		6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseAudioDriver.swift; sourceTree = "<group>"; };
@@ -348,17 +356,21 @@
 		8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.entitlements; sourceTree = "<group>"; };
 		8DDA76D15062E1F8BA06B694 /* hints */ = {isa = PBXFileReference; lastKnownFileType = folder; name = hints; path = ../../content/hints; sourceTree = SOURCE_ROOT; };
 		909B643DBB51DDC79E2D1DA1 /* MorseCopyExamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseCopyExamView.swift; sourceTree = "<group>"; };
+		A11BE46A6BFD3432DCA473DC /* WatchMorseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMorseView.swift; sourceTree = "<group>"; };
 		A235069367EFC3776ADEE826 /* questions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questions.json; sourceTree = "<group>"; };
+		A2AEC4916A05D25E72A2121F /* WatchMorseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMorseUITests.swift; sourceTree = "<group>"; };
 		A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStoreTests.swift; sourceTree = "<group>"; };
 		A3977F0B295B686B5AC6303B /* WatchHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHomeView.swift; sourceTree = "<group>"; };
 		A4688DE61A3DD68E4FD52D69 /* DuoPostureProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuoPostureProvider.swift; sourceTree = "<group>"; };
 		A6371F966C8468DA937092E2 /* NativeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSettingsView.swift; sourceTree = "<group>"; };
 		A95CB0755CA0A698D6A006B9 /* content-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "content-swift"; path = "../../packages/content-swift"; sourceTree = SOURCE_ROOT; };
 		AE3801936961090D211F5292 /* CanadianHamVisionUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamVisionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE8F40A3C70B502FC9BC7F71 /* WatchMorseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMorseTests.swift; sourceTree = "<group>"; };
 		B1D63C824E4C00165C3F4961 /* CanadianHam-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHam-InfoPlist.strings"; path = "fr-CA.lproj/CanadianHam-InfoPlist.strings"; sourceTree = "<group>"; };
 		B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsModel.swift; sourceTree = "<group>"; };
 		BA2654658DFD1D2481E7193B /* MorseSendingPracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseSendingPracticeView.swift; sourceTree = "<group>"; };
 		BB023709CD1B8683292D109F /* ProgressModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressModels.swift; sourceTree = "<group>"; };
+		BB6F01E621744F3EACB869B6 /* WatchMorseDrill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMorseDrill.swift; sourceTree = "<group>"; };
 		BD44BDE3AE8019C65CBB1C42 /* ICloudSyncCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudSyncCopy.swift; sourceTree = "<group>"; };
 		C0FDAFA896E1B85E902E8CA0 /* ExamToolViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamToolViews.swift; sourceTree = "<group>"; };
 		C2338E46BF80BDD2CD44116E /* CanadianHamWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamWatchApp.swift; sourceTree = "<group>"; };
@@ -371,6 +383,7 @@
 		D2CB38B6F805FE75CFAC65C2 /* CanadianHamVision-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamVision-InfoPlist.strings"; path = "fr-CA.lproj/CanadianHamVision-InfoPlist.strings"; sourceTree = "<group>"; };
 		D2D3A3A58596F0B71F478108 /* CanadianHamTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamTVApp.swift; sourceTree = "<group>"; };
 		D3A7620D77ADECDE1CB8E7A0 /* CanadianHamVisionTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamVisionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D602E9738D65DBB8CAD02871 /* timing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = timing.json; sourceTree = "<group>"; };
 		D643377D8721C6388B6A088E /* CanadianHamWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CanadianHamWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D864AEEA6B53009070C13A97 /* WatchPracticeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPracticeTests.swift; sourceTree = "<group>"; };
 		DCAE5A136902875D58354C00 /* LaunchArguments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchArguments.swift; sourceTree = "<group>"; };
@@ -379,6 +392,7 @@
 		EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankModels.swift; sourceTree = "<group>"; };
 		EA4B30848CBC96A261D9B678 /* CanadianHamTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBB9DE0DC8D961680058B71B /* CanadianHamTVUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamTVUITests.swift; sourceTree = "<group>"; };
+		ED5E7D5DE99BF10121B844B2 /* WatchMorsePlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMorsePlayback.swift; sourceTree = "<group>"; };
 		EF0A093E186AB771F904629B /* lessons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lessons; path = ../../content/lessons; sourceTree = SOURCE_ROOT; };
 		F48A9D700377610355ABDAB5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		F70BB142F905F7599CEB42C1 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
@@ -716,6 +730,7 @@
 			isa = PBXGroup;
 			children = (
 				88E9A31F308BCB338B1FFC9D /* CanadianHamWatchUITests.swift */,
+				A2AEC4916A05D25E72A2121F /* WatchMorseUITests.swift */,
 				73DFE4D26EAF1F50754FA4CB /* WatchPracticeUITests.swift */,
 			);
 			path = CanadianHamWatchUITests;
@@ -768,6 +783,7 @@
 			isa = PBXGroup;
 			children = (
 				79F451DA18B5F91DD4DCA5BC /* course.json */,
+				D602E9738D65DBB8CAD02871 /* timing.json */,
 			);
 			name = morse;
 			path = ../../fixtures/morse;
@@ -777,6 +793,7 @@
 			isa = PBXGroup;
 			children = (
 				5A84925344002EA89C873CF1 /* CanadianHamWatchTests.swift */,
+				AE8F40A3C70B502FC9BC7F71 /* WatchMorseTests.swift */,
 				D864AEEA6B53009070C13A97 /* WatchPracticeTests.swift */,
 			);
 			path = CanadianHamWatchTests;
@@ -873,6 +890,10 @@
 			children = (
 				C2338E46BF80BDD2CD44116E /* CanadianHamWatchApp.swift */,
 				A3977F0B295B686B5AC6303B /* WatchHomeView.swift */,
+				BB6F01E621744F3EACB869B6 /* WatchMorseDrill.swift */,
+				6493E79FF99139B3F8006BCD /* WatchMorseOutputDriver.swift */,
+				ED5E7D5DE99BF10121B844B2 /* WatchMorsePlayback.swift */,
+				A11BE46A6BFD3432DCA473DC /* WatchMorseView.swift */,
 				386D7076641F9709A4056881 /* WatchPracticeBank.swift */,
 				E1D7C9DA1C64412C0716B7EA /* WatchPracticeView.swift */,
 				4EED116B5E1E6FA9C75FF13E /* Resources */,
@@ -997,6 +1018,7 @@
 			buildConfigurationList = 0151B2647B590FECD00BF2C6 /* Build configuration list for PBXNativeTarget "CanadianHamWatchTests" */;
 			buildPhases = (
 				0A7BDACB14F1D6A7CCE369DD /* Sources */,
+				B15FBF16E8E3D3BBDDD6E108 /* Resources */,
 				E607434140976A67C6BE889B /* Frameworks */,
 			);
 			buildRules = (
@@ -1341,6 +1363,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B15FBF16E8E3D3BBDDD6E108 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				233086CF86AB6CE152315940 /* timing.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CBDB70B304C968C2B9820105 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1633,6 +1663,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B20F2A73AB3D9BB2CFF8B0D2 /* CanadianHamWatchTests.swift in Sources */,
+				0F140DABD69206DABF065114 /* WatchMorseTests.swift in Sources */,
 				1D775C1F120B008380B810EA /* WatchPracticeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1694,6 +1725,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1E17594DB9ED792E4D3E68E /* CanadianHamWatchUITests.swift in Sources */,
+				057A5B5A96798E2255C60B74 /* WatchMorseUITests.swift in Sources */,
 				5E5FC543C66C1DE78A14C13C /* WatchPracticeUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1704,6 +1736,10 @@
 			files = (
 				5C9F98DF25AA805B89C285B2 /* CanadianHamWatchApp.swift in Sources */,
 				7CF3BE5731CF3338B4057681 /* WatchHomeView.swift in Sources */,
+				55B8B8CA65E9446A609C88C4 /* WatchMorseDrill.swift in Sources */,
+				3867BE60F278EBB19FAB2B94 /* WatchMorseOutputDriver.swift in Sources */,
+				E502C5BF15513BFFD1CA614C /* WatchMorsePlayback.swift in Sources */,
+				6FE539CF70BCC526237A04AE /* WatchMorseView.swift in Sources */,
 				94F89350ACB8A0C0A3087129 /* WatchPracticeBank.swift in Sources */,
 				7EC63C0E34B07FB043F17041 /* WatchPracticeView.swift in Sources */,
 			);
