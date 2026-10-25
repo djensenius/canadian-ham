@@ -109,6 +109,7 @@ struct WatchPracticeView: View {
             Text(questionText(selected.text)) // l10n: content(question)
                 .accessibilityValue("Selected")
                 .accessibilityAddTraits(.isSelected)
+                .accessibilityIdentifier("watch-selected-answer")
         }
         Text("Correct answer")
             .font(.headline)
@@ -133,8 +134,10 @@ struct WatchPracticeView: View {
             .accessibilityIdentifier("watch-next")
     }
 
-    private func questionText(_ text: CanadianHamContent.LocalizedText) -> String {
-        french ? text.fr : text.en
+    private func questionText(_ text: CanadianHamContent.LocalizedText) -> AttributedString {
+        var value = AttributedString(french ? text.fr : text.en)
+        value.languageIdentifier = french ? "fr-CA" : "en-CA"
+        return value
     }
 }
 
@@ -159,7 +162,7 @@ private struct WatchCrownAnswerView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityLabel(Text(answerText(selection))) // l10n: content(question)
                     .accessibilityValue("Selected")
-                .accessibilityAddTraits(.isSelected)
+                    .accessibilityAddTraits(.isSelected)
                     .accessibilityAdjustableAction { direction in
                         switch direction {
                         case .increment: crownPosition = Double(min(3, selection + 1))
@@ -186,8 +189,10 @@ private struct WatchCrownAnswerView: View {
         .onAppear { crownFocused = true }
     }
 
-    private func answerText(_ index: Int) -> String {
-        guard choices.indices.contains(index) else { return "" }
-        return french ? choices[index].text.fr : choices[index].text.en
+    private func answerText(_ index: Int) -> AttributedString {
+        guard choices.indices.contains(index) else { return AttributedString() }
+        var value = AttributedString(french ? choices[index].text.fr : choices[index].text.en)
+        value.languageIdentifier = french ? "fr-CA" : "en-CA"
+        return value
     }
 }

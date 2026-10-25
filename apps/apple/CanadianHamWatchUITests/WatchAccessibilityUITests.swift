@@ -46,7 +46,7 @@ final class WatchAccessibilityUITests: XCTestCase {
         back(app)
         enter("morse", in: app)
         openOutputSettings(app)
-        XCTAssertEqual(app.switches["watch-morse-haptics"].label, "Haptique")
+        XCTAssertEqual(app.switches["watch-morse-haptics"].label, "Vibrations")
         reveal(app.staticTexts["Point léger, tiret ascendant"], in: app)
         tap(app.buttons["watch-morse-settings-done"], in: app)
         tap(app.buttons["watch-morse-play"], in: app)
@@ -120,6 +120,8 @@ final class WatchAccessibilityUITests: XCTestCase {
             XCTAssertFalse(answer.label.isEmpty)
         }
         tap(app.buttons["watch-answer-0"], in: app)
+        reveal(app.staticTexts["watch-selected-answer"], in: app)
+        XCTAssertTrue(app.staticTexts["watch-selected-answer"].isSelected)
         reveal(app.staticTexts["watch-correct-answer"], in: app)
         reveal(app.staticTexts["watch-explanation"], in: app)
         tap(app.buttons["watch-next"], in: app)
@@ -128,6 +130,7 @@ final class WatchAccessibilityUITests: XCTestCase {
         XCTAssertEqual(question.label, language == "fr"
             ? "Quelle est la largeur de bande autorisée dans les bandes de 6 mètres et 2 mètres?"
             : "What is the maximum authorized bandwidth on the 6-metre and 2-metre bands?")
+        keepScreenshot("\(language)-long-official-question-largest", app: app)
         tap(app.buttons["watch-crown-open"], in: app)
         XCTAssertTrue(app.descendants(matching: .any)["watch-crown-selection"].waitForExistence(timeout: 5))
         // The Crown selects; touch scroll keeps the confirm button reachable for long choices.
@@ -138,6 +141,7 @@ final class WatchAccessibilityUITests: XCTestCase {
             app.swipeUp()
         }
         XCTAssertTrue(confirm.isHittable)
+        keepScreenshot("\(language)-crown-confirm-largest", app: app)
         confirm.tap()
         XCTAssertTrue(app.staticTexts["watch-feedback"].waitForExistence(timeout: 5))
         back(app)
@@ -155,6 +159,8 @@ final class WatchAccessibilityUITests: XCTestCase {
         XCTAssertTrue(app.buttons["watch-morse-answer-0"].waitForExistence(timeout: 20))
         for index in 0..<4 { reveal(app.buttons["watch-morse-answer-\(index)"], in: app) }
         tap(app.buttons["watch-morse-answer-0"], in: app)
+        reveal(app.staticTexts["watch-morse-selected-answer"], in: app)
+        XCTAssertTrue(app.staticTexts["watch-morse-selected-answer"].isSelected)
         reveal(app.staticTexts["watch-morse-correct-answer"], in: app)
         tap(app.buttons["watch-morse-next"], in: app)
         back(app)
@@ -163,6 +169,14 @@ final class WatchAccessibilityUITests: XCTestCase {
             reveal(app.buttons["watch-language-\(language)"], in: app)
         }
         reveal(app.staticTexts["watch-language-session-note"], in: app)
+    }
+
+    @MainActor
+    private func keepScreenshot(_ name: String, app: XCUIApplication) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     @MainActor

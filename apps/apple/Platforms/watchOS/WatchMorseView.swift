@@ -58,6 +58,7 @@ struct WatchMorseView: View {
                                 .accessibilityLabel(Text("Letter \(drill.selected ?? "")")) // l10n: localized
                                 .accessibilityValue("Selected")
                                 .accessibilityAddTraits(.isSelected)
+                                .accessibilityIdentifier("watch-morse-selected-answer")
                             Text("Correct answer")
                                 .font(.headline)
                                 .accessibilityAddTraits(.isHeader)

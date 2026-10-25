@@ -9,6 +9,24 @@ final class CanadianHamWatchTests: XCTestCase {
         XCTAssertEqual(WatchSection.allCases.map(\.id), ["practice", "morse", "alphabet", "settings"])
     }
 
+    func testSessionLanguageUsesRealBundlesForLabelsFeedbackAndErrors() {
+        XCTAssertEqual(WatchLanguage.system.locale().language.languageCode, Locale(identifier: Bundle.main.preferredLocalizations.first ?? "en").language.languageCode)
+        XCTAssertEqual(WatchLanguage.english.locale().language.languageCode?.identifier, "en")
+        XCTAssertEqual(WatchLanguage.french.locale().language.languageCode?.identifier, "fr")
+        let french = WatchLanguage.bundle(for: WatchLanguage.french.locale())
+        let english = WatchLanguage.bundle(for: WatchLanguage.english.locale())
+        for (key, translation) in [
+            ("Correct", "Bonne réponse"), ("Incorrect", "Mauvaise réponse"),
+            ("Selected", "Sélectionnée"), ("Dot", "Point"), ("Dash", "Tiret"),
+            ("Answer choices available.", "Choix de réponse disponibles."),
+            ("Practice unavailable", "Exercices indisponibles"),
+            ("Light dot, rising dash", "Point léger, tiret ascendant")
+        ] {
+            XCTAssertEqual(french.localizedString(forKey: key, value: nil, table: nil), translation, key)
+            XCTAssertEqual(english.localizedString(forKey: key, value: nil, table: nil), key, key)
+        }
+    }
+
     func testSharedPackagesOnWatch() throws {
         var firstRng = Pcg32(seed: "watch-smoke")
         var secondRng = Pcg32(seed: "watch-smoke")
