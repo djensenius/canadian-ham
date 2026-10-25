@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-12 14:57
-updated_date: '2026-10-25T01:12:00Z'
+updated_date: '2026-10-25T01:26:00Z'
 labels:
   - web
   - apple
@@ -363,6 +363,8 @@ Run by bash scripts/check-engine-parity.sh (TS 32/32 and Swift 22/22). The new L
 All required validation complete. pnpm check:apple-l10n PASS (no catalogue rewrite, SHA256 fbce70ce3a6379189b0132df0ad3437b0cfd1fc8d6cc97923c1de4a9f41bc34d), complete French localization export and generic CanadianHamTV/CanadianHamVision simulator builds PASS. tvOS/visionOS lesson quiz UI is N/A by approved scope; no new surfaces were added. Full iOS/tvOS/visionOS suites, title sweeps and lesson-figure plans were intentionally skipped: assignment requires targeted quiz methods only; category/card/sidebar and lesson/figure rendering are unchanged. New audits alone use the unchanged coordinator-approved TASK-71/73 composite; all original tests/helpers remain byte-identical. Source last changed in 33e5b247; subsequent commits record evidence only. No PR opened; independent review remains required.
 
 Internal review fixes in progress: web review IDs now derive synchronously from Basic subsections, independent of bank text loading; delayed versus undelayed seeded render passes. Added English language runs in French headings, Apple card count including reviews, Basic-only review-ID validation, canonical hint-anchor overlap documentation tests and legacy empty-review import tests (top-level/sync, missing/v1) on web, Apple and schema. Targeted web 15/15 PASS. First full pnpm test hit unchanged v6 upgrade 5-second timeout during concurrent runners; rerunning full suite alone without test weakening. Schema test initially modeled missing version as own undefined JS field; corrected to actually omit it, matching JSON. Other initial checks PASS: import, typecheck, web build/URL audit, text sources and guard self-test. Full macOS queued on shared xbuild lock; chained 25-method/device iPhone/iPad, parity and l10n runners use nohup and grep polling.
+
+Review-fix source commits: 798095c7 (pool race, metadata, count and regression coverage), 5ac4ef35 (compose localized prefix separately from English title), d949ddd9 (assert non-English prefix, allowing Foundation’s correct French language run). Final full pnpm test PASS: content-tools250/250, Morse21/21, calculator127/127, web281/281. Schemas61/61 PASS; import/typecheck/build/URL audit and final text/guard PASS. Full macOS 223 methods: 222 passed; the new heading method exposed attributed interpolation applying English to the entire phrase. Prefix/title composition fixed; failing-only method now PASS on final source (macos-heading-r3.log, 0.006s); all223 distinct methods pass across full run and targeted recheck. Second targeted iteration corrected the test’s overly strict nil-only prefix expectation: Foundation correctly marks the localized prefix French. No existing tests/audits/helpers weakened. iPhone/iPad25 methods each, parity and l10n now running sequentially via /tmp/task-46.7-review-apple-r3.sh.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
