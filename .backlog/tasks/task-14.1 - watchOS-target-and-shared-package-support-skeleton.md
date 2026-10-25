@@ -1,9 +1,11 @@
 ---
 id: TASK-14.1
 title: watchOS target and shared-package support skeleton
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-25T17:01:00Z'
+updated_date: '2026-10-25T17:07:00Z'
 labels:
   - apple
   - watchos
@@ -30,3 +32,12 @@ Owner approved the watch companion on 2026-10-25. Before feature work, prove the
 - [ ] #4 The watch bundle identifier org.davidjensenius.CanadianHam.watchkitapp and independent-operation embedding are validated in an iOS-container build; no phone-app setup, application pairing or WatchConnectivity is needed for watch launch.
 - [ ] #5 Default Debug/Release and the watch target in DebugCloudKit contain no cloud/push capability, network code, third-party SDKs or background networking; the watch privacy manifest declares no tracking/collected data, and network/iCloud guards pass with watch membership covered.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect package platform boundaries, XcodeGen target patterns and privacy guards.
+2. Add explicit watchOS package support, an independent embedded SwiftUI placeholder app, localized watch resources and unit/UI smoke targets. Extend guard coverage and regenerate the project twice.
+3. Commit the implementation, then run targeted watch smoke, package tests, iOS container build-for-testing, full macOS unit target, tvOS/visionOS builds and localization/privacy/test-guard checks with logged destinations/results.
+4. Record acceptance evidence, mark Done, commit and push the task branch without opening a PR.
+<!-- SECTION:PLAN:END -->
