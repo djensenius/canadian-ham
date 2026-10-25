@@ -97,7 +97,7 @@ final class WatchMorseTests: XCTestCase {
             XCTAssertEqual(style.haptic(for: .dash), dash)
             let clock = FakeMorseScheduler()
             let output = FakeMorseOutput(clock: clock)
-            let player = WatchMorsePlayback(output: output, scheduler: clock)
+            let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
             var settings = WatchMorseSettings()
             settings.hapticStyle = style
             player.play(letter: "A", settings: settings)
@@ -112,7 +112,7 @@ final class WatchMorseTests: XCTestCase {
         let output = RecordingMorseToneOutput()
         defer { output.stop() }
         let clock = FakeMorseScheduler()
-        let player = WatchMorsePlayback(output: output, scheduler: clock)
+        let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
         var settings = WatchMorseSettings()
         settings.haptics = false
         settings.tone = true
@@ -145,10 +145,38 @@ final class WatchMorseTests: XCTestCase {
     }
 
     @MainActor
+    func testHapticSpacingSurvivesLeavingAndReenteringMorse() {
+        // Each visit to the Morse screen builds a new playback controller. A started WatchKit preset can't be
+        // cancelled, so the 1.2 s spacing must carry over through the shared cooldown.
+        let clock = FakeMorseScheduler()
+        let output = FakeMorseOutput(clock: clock)
+        let cooldown = WatchMorseHapticCooldown()
+        let firstVisit = WatchMorsePlayback(output: output, scheduler: clock, cooldown: cooldown)
+        firstVisit.play(letter: "E", settings: WatchMorseSettings())
+        clock.advance(by: 0)
+        XCTAssertEqual(output.pulses.map(\.time), [0])
+        firstVisit.cancel() // Back: onDisappear cancels pending work.
+
+        clock.advance(by: 0.3) // Quickly reopen Morse and press Play.
+        let secondVisit = WatchMorsePlayback(output: output, scheduler: clock, cooldown: cooldown)
+        secondVisit.play(letter: "E", settings: WatchMorseSettings())
+        clock.advance(by: 0)
+        XCTAssertEqual(output.pulses.count, 1, "The new controller must wait out the previous preset's spacing")
+        clock.advance(by: 1.0)
+        XCTAssertEqual(output.pulses.count, 2)
+        XCTAssertEqual(output.pulses[1].time - output.pulses[0].time, WatchMorseSettings.minimumHapticSpacing, accuracy: 0.0001)
+
+        // A controller with its own cooldown (as before the fix) would have fired immediately.
+        let unshared = WatchMorseHapticCooldown()
+        XCTAssertNil(unshared.lastHapticAt)
+        XCTAssertNotNil(cooldown.lastHapticAt)
+    }
+
+    @MainActor
     func testOnlyBeganAudioInterruptionCancelsPlayback() {
         let clock = FakeMorseScheduler()
         let output = FakeMorseOutput(clock: clock)
-        let player = WatchMorsePlayback(output: output, scheduler: clock)
+        let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
         player.play(letter: "H", settings: WatchMorseSettings())
         clock.advance(by: 0)
         for userInfo: [AnyHashable: Any] in [
@@ -172,7 +200,7 @@ final class WatchMorseTests: XCTestCase {
     func testReplayCannotOverlapAndCompletedReplayUsesSameSequence() {
         let clock = FakeMorseScheduler()
         let output = FakeMorseOutput(clock: clock)
-        let player = WatchMorsePlayback(output: output, scheduler: clock)
+        let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
         player.play(letter: "A", settings: WatchMorseSettings())
         player.play(letter: "T", settings: WatchMorseSettings())
         XCTAssertTrue(player.isPlaying)
@@ -191,7 +219,7 @@ final class WatchMorseTests: XCTestCase {
         for beforeStart in [true, false] {
             let clock = FakeMorseScheduler()
             let output = FakeMorseOutput(clock: clock)
-            let player = WatchMorsePlayback(output: output, scheduler: clock)
+            let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
             player.play(letter: "H", settings: WatchMorseSettings())
             if !beforeStart { clock.advance(by: 0) }
             let stale = clock.work
@@ -210,7 +238,7 @@ final class WatchMorseTests: XCTestCase {
     func testNextCancelsAndPreservesPresetCooldown() {
         let clock = FakeMorseScheduler()
         let output = FakeMorseOutput(clock: clock)
-        let player = WatchMorsePlayback(output: output, scheduler: clock)
+        let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
         player.play(letter: "H", settings: WatchMorseSettings())
         clock.advance(by: 0)
         XCTAssertEqual(output.pulses.count, 1)
@@ -231,7 +259,7 @@ final class WatchMorseTests: XCTestCase {
     func testDelayedSchedulerDoesNotCollapsePresets() {
         let clock = FakeMorseScheduler()
         let output = FakeMorseOutput(clock: clock)
-        let player = WatchMorsePlayback(output: output, scheduler: clock)
+        let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
         player.play(letter: "H", settings: WatchMorseSettings())
         clock.advance(by: 0)
         clock.stall(by: 5)
@@ -248,7 +276,7 @@ final class WatchMorseTests: XCTestCase {
             for tone in [false, true] {
                 let clock = FakeMorseScheduler()
                 let output = FakeMorseOutput(clock: clock)
-                let player = WatchMorsePlayback(output: output, scheduler: clock)
+                let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
                 var settings = WatchMorseSettings()
                 settings.haptics = haptics
                 settings.tone = tone
@@ -262,7 +290,7 @@ final class WatchMorseTests: XCTestCase {
         let clock = FakeMorseScheduler()
         let output = FakeMorseOutput(clock: clock)
         output.failTone = true
-        let player = WatchMorsePlayback(output: output, scheduler: clock)
+        let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
         var settings = WatchMorseSettings()
         settings.tone = true
         player.play(letter: "C", settings: settings)

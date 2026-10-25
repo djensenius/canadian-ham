@@ -44,6 +44,15 @@ protocol WatchMorseOutput: AnyObject {
     func stop()
 }
 
+/// The last time any Morse playback issued a WatchKit haptic preset. A started preset can't be
+/// cancelled, so the minimum spacing has to survive leaving and re-entering the Morse screen
+/// (each visit builds a new `WatchMorsePlayback`). Shared per process; tests inject their own.
+@MainActor
+final class WatchMorseHapticCooldown {
+    static let device = WatchMorseHapticCooldown()
+    var lastHapticAt: Double?
+}
+
 @MainActor
 @Observable
 final class WatchMorsePlayback {
@@ -51,14 +60,20 @@ final class WatchMorsePlayback {
     private let scheduler: any WatchMorseScheduler
     private var pending: [any WatchMorseScheduledWork] = []
     private var generation = 0
-    private var lastHapticAt: Double?
+    private let cooldown: WatchMorseHapticCooldown
+    private var lastHapticAt: Double? {
+        get { cooldown.lastHapticAt }
+        set { cooldown.lastHapticAt = newValue }
+    }
     private(set) var isPlaying = false
     private(set) var hasCompleted = false
     private(set) var outputFailed = false
 
-    init(output: any WatchMorseOutput, scheduler: any WatchMorseScheduler = WatchMorseLiveScheduler()) {
+    init(output: any WatchMorseOutput, scheduler: any WatchMorseScheduler = WatchMorseLiveScheduler(),
+         cooldown: WatchMorseHapticCooldown = .device) {
         self.output = output
         self.scheduler = scheduler
+        self.cooldown = cooldown
     }
 
     func play(letter: String, settings: WatchMorseSettings) {
