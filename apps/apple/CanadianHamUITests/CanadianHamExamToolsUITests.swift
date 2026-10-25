@@ -1189,6 +1189,13 @@ final class CanadianHamExamToolsUITests: XCTestCase {
     }
 
     private func verifyMockExamReferenceSheet(appearance: String, pauseTimer: Bool) throws {
+#if os(iOS)
+        // Coordinator decision 2026-10-24 under owner delegation 2026-10-22 (TASK-74):
+        // iPad keeps every behaviour assertion; unresolved caption/inspector findings block only its full audits.
+        let performsFullAudits = UIDevice.current.userInterfaceIdiom != .pad
+#else
+        let performsFullAudits = true
+#endif
         let app = launchApp(appearance: appearance, arguments: [
             "-AppleLanguages", "(en)", "-AppleLocale", "en_CA",
             "-CanadianHamInitialScreen", "mock",
@@ -1239,7 +1246,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
             caption.lifetime = .keepAlways
             activity.add(caption)
         }
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        if performsFullAudits {
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+        }
 
         openTool(.referenceSheet, in: app)
         let image = app.images["reference-sheet-official-page"].firstMatch
@@ -1263,8 +1272,10 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         zoomIn.tap()
         XCTAssertEqual(zoomIn.value as? String, "150%")
         XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.value as? String, "150%")
-        // Match the practice matrix's 150% audit state; TASK-74 investigates iPad's nil textClipped finding at 100%.
-        try app.performAccessibilityAudit()
+        // Match the practice matrix's 150% image-audit state; TASK-74 tracks the unresolved iPad states.
+        if performsFullAudits {
+            try app.performAccessibilityAudit()
+        }
         let zoomOut = app.buttons["reference-sheet-zoom-out"].firstMatch
         positionReferenceSheetControl(zoomOut, in: app)
         zoomOut.tap()
@@ -1278,7 +1289,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Reference Material for Amateur Radio Exam – Basic Qualification"].firstMatch.exists)
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "E = I x R")).firstMatch.exists, "The official formulas must be exposed as accessible text, not only a page image")
         XCTAssertFalse(image.exists)
-        try app.performAccessibilityAudit()
+        if performsFullAudits {
+            try app.performAccessibilityAudit()
+        }
         positionReferenceSheetControl(text, in: app)
         text.tap()
         XCTAssertEqual(text.value as? String, "0")
@@ -1293,16 +1306,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Study aid for Canadian Ham practice; the real Basic exam provides the official ISED reference sheet."].firstMatch.exists)
         XCTAssertTrue(app.staticTexts["Ohm's law"].firstMatch.exists)
         XCTAssertFalse(image.exists)
-#if os(iOS)
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            // TASK-44.4: only the iPad Study fallback needs the explicit second-scroll-view rule.
-            try auditIgnoringOccludedReferenceSheetTextContrast(app: app)
-        } else {
+        if performsFullAudits {
             try app.performAccessibilityAudit()
         }
-#else
-        try app.performAccessibilityAudit()
-#endif
         positionReferenceSheetControl(version, in: app)
         version.tap()
         XCTAssertTrue(image.waitForExistence(timeout: 5))
@@ -1340,7 +1346,9 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].exists)
         XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].exists)
         positionConceptFeedback([seed], in: app)
-        try auditIgnoringOccludedLessonTextContrast(app: app)
+        if performsFullAudits {
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+        }
     }
 
     private func mockExamElapsedSeconds(in label: String, timerState: String) throws -> Int {

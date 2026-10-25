@@ -1255,7 +1255,7 @@ struct MockExamView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Text("Exam code: \(state.seed)")
-                    .font(DesignTokens.FontScale.caption.monospaced().weight(.medium))
+                    .font(DesignTokens.FontScale.caption.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
                     .accessibilityIdentifier("mock-exam-seed")
