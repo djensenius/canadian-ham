@@ -1289,6 +1289,200 @@ final class CanadianHamExamToolsUITests: XCTestCase {
         XCTAssertEqual(app.descendants(matching: .any)["calculator-result"].firstMatch.value as? String, "0")
     }
 
+    func testMockExamOfficialReferenceSheetLightPreservesRunningExam() throws {
+        try verifyMockExamReferenceSheet(appearance: "light", pauseTimer: false)
+    }
+
+    func testMockExamOfficialReferenceSheetDarkPreservesPausedExam() throws {
+        try verifyMockExamReferenceSheet(appearance: "dark", pauseTimer: true)
+    }
+
+    func testAdvancedMockExamHasNoBasicReferenceSheetOrHints() throws {
+        let app = launchApp(arguments: [
+            "-AppleLanguages", "(en)", "-AppleLocale", "en_CA",
+            "-CanadianHamCourseBankId", "advanced-2025-02-04",
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-mock-reference-advanced",
+            "-CanadianHamMockExamQuestionID", "A-001-001-001",
+            "-CanadianHamMockExamLimit", "3"
+        ])
+        defer { app.terminate() }
+        tapStartMockExam(in: app)
+        XCTAssertTrue(app.staticTexts["question-identifier"].firstMatch.label.hasPrefix("A-"))
+        XCTAssertTrue(app.buttons[Tool.calculator.buttonIdentifier].firstMatch.exists)
+        XCTAssertFalse(app.buttons[Tool.referenceSheet.buttonIdentifier].exists, "Advanced mock exams must not offer the Basic sheet")
+        XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].exists, "Advanced mock exams must not offer hints")
+        XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].exists)
+    }
+
+    private func verifyMockExamReferenceSheet(appearance: String, pauseTimer: Bool) throws {
+#if os(iOS)
+        // Coordinator decision 2026-10-24 under owner delegation 2026-10-22 (TASK-74):
+        // iPad keeps every behaviour assertion; unresolved caption/inspector findings block only its full audits.
+        let performsFullAudits = UIDevice.current.userInterfaceIdiom != .pad
+#else
+        let performsFullAudits = true
+#endif
+        let app = launchApp(appearance: appearance, arguments: [
+            "-AppleLanguages", "(en)", "-AppleLocale", "en_CA",
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-mock-reference-sheet",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "3",
+            "-CanadianHamExamTimerEnabled", "true",
+            "-CanadianHamExamToolInitialDetent", "large"
+        ])
+        defer { app.terminate() }
+        tapStartMockExam(in: app)
+        let firstAnswer = app.buttons["answer-A-button"].firstMatch
+        scrollBackgroundUntilHittable(firstAnswer, in: app, maxSwipes: 12)
+        firstAnswer.tap()
+        let nextQuestion = app.buttons["mock-next-button"].firstMatch
+        scrollBackgroundUntilHittable(nextQuestion, in: app, maxSwipes: 12)
+        nextQuestion.tap()
+        let answer = app.buttons["answer-B-button"].firstMatch
+        scrollBackgroundUntilHittable(answer, in: app, maxSwipes: 12)
+        answer.tap()
+        XCTAssertTrue(answer.isSelected)
+        let selectedAnswerLabel = answer.label
+        let questionID = app.staticTexts["question-identifier"].firstMatch.label
+        let questionText = app.staticTexts["question-stem"].firstMatch.label
+        let seed = app.staticTexts["mock-exam-seed"].firstMatch
+        let initialSeed = seed.label
+        positionConceptFeedback([seed], in: app)
+        XCTAssertTrue(app.staticTexts["Question 2 of 3"].firstMatch.exists)
+        let timerButton = app.buttons["Pause timer"].firstMatch
+        XCTAssertTrue(timerButton.exists)
+        if pauseTimer {
+            scrollBackgroundUntilHittable(timerButton, in: app, maxSwipes: 12)
+            timerButton.tap()
+        }
+        let timerState = pauseTimer ? "Timer paused, " : "Timer running, "
+        let progress = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Answered 2 of 3. \(timerState)")).firstMatch
+        XCTAssertTrue(progress.waitForExistence(timeout: 5))
+        let initialSampleStartedAt = Date()
+        let initialProgress = progress.label
+        let initialSampleFinishedAt = Date()
+        let initialSeconds = try mockExamElapsedSeconds(in: initialProgress, timerState: timerState)
+        XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].exists, "Basic mock exams must not offer hints")
+        XCTContext.runActivity(named: "Mock exam code caption before reference-sheet use (\(appearance))") { activity in
+            let screen = XCTAttachment(screenshot: app.screenshot())
+            screen.lifetime = .keepAlways
+            activity.add(screen)
+            let caption = XCTAttachment(screenshot: seed.screenshot())
+            caption.lifetime = .keepAlways
+            activity.add(caption)
+        }
+        if performsFullAudits {
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+        }
+
+        openTool(.referenceSheet, in: app)
+        let image = app.images["reference-sheet-official-page"].firstMatch
+        XCTAssertTrue(image.waitForExistence(timeout: 5))
+        XCTAssertTrue(image.label.contains("page 1 of 5"))
+        let previous = app.buttons["reference-sheet-page-previous"].firstMatch
+        let next = app.buttons["reference-sheet-page-next"].firstMatch
+        XCTAssertFalse(previous.isEnabled)
+        for page in 2...5 {
+            positionReferenceSheetControl(next, in: app)
+            next.tap()
+            XCTAssertTrue(image.label.contains("page \(page) of 5"))
+            XCTAssertEqual(app.staticTexts["reference-sheet-page-number"].firstMatch.label, "Page \(page) of 5")
+        }
+        XCTAssertFalse(next.isEnabled)
+        positionReferenceSheetControl(previous, in: app)
+        previous.tap()
+        XCTAssertTrue(image.label.contains("page 4 of 5"))
+        let zoomIn = app.buttons["reference-sheet-zoom-in"].firstMatch
+        positionReferenceSheetControl(zoomIn, in: app)
+        zoomIn.tap()
+        XCTAssertEqual(zoomIn.value as? String, "150%")
+        XCTAssertEqual(app.staticTexts["reference-sheet-zoom-level"].firstMatch.value as? String, "150%")
+        // Match the practice matrix's 150% image-audit state; TASK-74 tracks the unresolved iPad states.
+        if performsFullAudits {
+            try app.performAccessibilityAudit()
+        }
+        let zoomOut = app.buttons["reference-sheet-zoom-out"].firstMatch
+        positionReferenceSheetControl(zoomOut, in: app)
+        zoomOut.tap()
+        XCTAssertEqual(zoomOut.value as? String, "100%")
+
+        let text = app.switches["reference-sheet-text-equivalent"].firstMatch
+        positionReferenceSheetControl(text, in: app)
+        text.tap()
+        XCTAssertEqual(text.value as? String, "1")
+        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-official-text"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Reference Material for Amateur Radio Exam – Basic Qualification"].firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "E = I x R")).firstMatch.exists, "The official formulas must be exposed as accessible text, not only a page image")
+        XCTAssertFalse(image.exists)
+        if performsFullAudits {
+            try app.performAccessibilityAudit()
+        }
+        positionReferenceSheetControl(text, in: app)
+        text.tap()
+        XCTAssertEqual(text.value as? String, "0")
+        XCTAssertTrue(image.waitForExistence(timeout: 5))
+        XCTAssertTrue(image.label.contains("page 4 of 5"), "Text equivalent must not reset the current official page")
+        let version = app.buttons["reference-sheet-version"].firstMatch
+        positionReferenceSheetControl(version, in: app)
+        XCTAssertEqual(version.label, "Study sheet")
+        version.tap()
+        XCTAssertEqual(app.staticTexts["reference-sheet-version-title"].firstMatch.label, "Study sheet")
+        XCTAssertTrue(app.descendants(matching: .any)["reference-sheet-study-text"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Study aid for Canadian Ham practice; the real Basic exam provides the official ISED reference sheet."].firstMatch.exists)
+        XCTAssertTrue(app.staticTexts["Ohm's law"].firstMatch.exists)
+        XCTAssertFalse(image.exists)
+        if performsFullAudits {
+            try app.performAccessibilityAudit()
+        }
+        positionReferenceSheetControl(version, in: app)
+        version.tap()
+        XCTAssertTrue(image.waitForExistence(timeout: 5))
+        closeTool(in: app)
+        XCTAssertTrue(app.buttons["exam-tool-close-button"].firstMatch.waitForNonExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["question-identifier"].firstMatch.label, questionID)
+        XCTAssertEqual(app.staticTexts["question-stem"].firstMatch.label, questionText)
+        XCTAssertEqual(answer.label, selectedAnswerLabel)
+        XCTAssertTrue(answer.isSelected, "Closing the sheet must preserve the selected mock answer")
+        XCTAssertEqual(seed.label, initialSeed, "Using the sheet must not generate a new exam")
+        XCTAssertTrue(app.staticTexts["Question 2 of 3"].firstMatch.exists)
+        XCTAssertTrue(progress.exists, "Answered count and timer running/paused state must be preserved")
+        if pauseTimer {
+            XCTAssertEqual(progress.label, initialProgress, "The paused timer must not advance or reset while using the sheet")
+            XCTAssertTrue(app.buttons["Resume timer"].firstMatch.exists)
+        } else {
+            let finalSampleStartedAt = Date()
+            let finalProgress = progress.label
+            let finalSampleFinishedAt = Date()
+            let finalSeconds = try mockExamElapsedSeconds(in: finalProgress, timerState: timerState)
+            XCTAssertGreaterThan(finalSeconds, initialSeconds, "The running timer must keep advancing while using the sheet")
+            // XCUI snapshot reads can take seconds. Bracket both reads rather than counting their latency as a timer error.
+            let minimumElapsed = finalSampleStartedAt.timeIntervalSince(initialSampleFinishedAt) - 2
+            let maximumElapsed = finalSampleFinishedAt.timeIntervalSince(initialSampleStartedAt) + 2
+            let elapsed = Double(finalSeconds - initialSeconds)
+            XCTContext.runActivity(named: "Mock timer continuity across reference-sheet use") { activity in
+                let attachment = XCTAttachment(string: "before=\(initialProgress) after=\(finalProgress) elapsed=\(elapsed) expectedRange=\(minimumElapsed)...\(maximumElapsed) (snapshot-read bounds plus two seconds for whole-second ticks)")
+                attachment.lifetime = .keepAlways
+                activity.add(attachment)
+            }
+            XCTAssertGreaterThanOrEqual(elapsed, minimumElapsed, "Sheet use must not pause the elapsed timer")
+            XCTAssertLessThanOrEqual(elapsed, maximumElapsed, "Sheet use must not advance the elapsed timer beyond wall time")
+            XCTAssertTrue(app.buttons["Pause timer"].firstMatch.exists)
+        }
+        XCTAssertFalse(app.buttons[Tool.hint.buttonIdentifier].exists)
+        XCTAssertFalse(app.descendants(matching: .any)[Tool.hint.panelIdentifier].exists)
+        positionConceptFeedback([seed], in: app)
+        if performsFullAudits {
+            try auditIgnoringOccludedLessonTextContrast(app: app)
+        }
+    }
+
+    private func mockExamElapsedSeconds(in label: String, timerState: String) throws -> Int {
+        let suffix = try XCTUnwrap(label.range(of: timerState)).upperBound
+        return try XCTUnwrap(Int(label[suffix...].prefix(while: { $0.isNumber })), "Expected elapsed seconds in \(label)")
+    }
+
     func testMockExamDoesNotExposeHints() throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
