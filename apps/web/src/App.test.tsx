@@ -15,6 +15,7 @@ import { MORSE_BEACON_AREA_CSS_PIXELS, MORSE_LIGHT_ACCENT_RGB, MORSE_LIGHT_PAPER
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
 import { answerMorseCourseSession, morseCourseSummaryMessage, type SessionState } from "./morse/course/MorseCoursePanel";
+import * as bankData from "./data/bank";
 import { ADVANCED_BANK_ID, advancedBank, bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
 import { lessonHeadingAnchors, parseMarkdownBlocks } from "./components/MarkdownContent";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
@@ -3664,6 +3665,42 @@ describe("lesson quiz review items", { timeout: appFlowTestTimeoutMs }, () => {
     assert.ok(within(section).getByRole("heading", { name: t(language, "lessonQuizRound", 2, 2, language === "fr" ? "Révision" : "Review") }));
     return section;
   }
+  it("keeps two stable review IDs when lesson progress loads before the delayed bank", async () => {
+    const original = shortM1Quiz();
+    const timestamp = 1_800_000_000_000;
+    vi.spyOn(Date, "now").mockReturnValue(timestamp);
+    let releaseBank!: (questions: readonly Question[]) => void;
+    const delayedBank = new Promise<readonly Question[]>((resolve) => { releaseBank = resolve; });
+    const loadBank = vi.spyOn(bankData, "loadQuestions").mockReturnValue(delayedBank);
+    try {
+      window.location.hash = "#/learn/M1/L-001-01";
+      render(<App store={createStore("delayed-review-bank")} now={() => fixedNow} />);
+      let section = await enterReview("en");
+      const quiz = lessonQuizzesById.get(original.id)!;
+      const expectedIds = buildLessonQuizItems(quiz, `${quiz.id}:${timestamp.toString(36)}`)
+        .flatMap((item) => item.type === "official" && item.reviewLessonId !== undefined ? [item.questionId] : []);
+      assert.equal(expectedIds.length, 2);
+      assert.ok(within(section).getByText(t("en", "lessonQuizSummary", 3)));
+      assert.ok(within(section).getByText(t("en", "officialQuestionLoading", expectedIds[0]!)));
+      assert.equal(within(section).queryByTestId("answer-choice"), null);
+      await act(async () => { releaseBank(testQuestions); });
+      await within(section).findAllByTestId("answer-choice");
+      const delayedIds = [currentPracticeQuestionId()];
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      delayedIds.push(currentPracticeQuestionId());
+      assert.equal((within(section).getByRole("button", { name: "Next" }) as HTMLButtonElement).disabled, true);
+      assert.deepEqual(delayedIds, expectedIds);
+      cleanup();
+      loadBank.mockResolvedValue(testQuestions);
+      render(<App store={createStore("undelayed-review-bank")} now={() => fixedNow} />);
+      section = await enterReview("en");
+      await within(section).findAllByTestId("answer-choice");
+      const undelayedIds = [currentPracticeQuestionId()];
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      undelayedIds.push(currentPracticeQuestionId());
+      assert.deepEqual(delayedIds, undelayedIds);
+    } finally { lessonQuizzesById.set(original.id, original); }
+  });
   for (const language of ["en", "fr"] as const) for (const theme of ["light", "dark"] as const) {
     it(`labels review source, final round, hints and scored feedback accessibly in ${language} ${theme}`, async () => {
       const original = shortM1Quiz();
@@ -3674,7 +3711,8 @@ describe("lesson quiz review items", { timeout: appFlowTestTimeoutMs }, () => {
         await store.putPreferences({ ...defaultPreferences, language, theme });
         const { container } = render(<App store={store} now={() => fixedNow} />);
         const section = await enterReview(language);
-        assert.ok(within(section).getByRole("heading", { name: language === "fr" ? /^Question de révision de / : /^Review question from / }));
+        const reviewHeading = within(section).getByRole("heading", { name: language === "fr" ? /^Question de révision de / : /^Review question from / });
+        assert.equal(reviewHeading.querySelector("span")?.getAttribute("lang"), "en", "English-only source titles keep their pronunciation in French headings");
         const reviewId = currentPracticeQuestionId();
         assert.ok(!original.officialQuestionIds.includes(reviewId));
         await expectNoAxeViolations(container);

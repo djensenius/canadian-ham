@@ -461,7 +461,7 @@ private struct LessonReaderView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("\(quiz.officialQuestionIds.count + quiz.conceptChecks.count) questions: official bank questions update practice progress; concept checks do not.") // l10n: localized
+                Text("\((try? buildLessonQuizItems(quiz: quiz, seed: "summary", library: library).count) ?? 0) questions: official bank questions update practice progress; concept checks do not.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 if let latest = quizAttempts.filter({ $0.quizId == quiz.id }).last {
@@ -868,7 +868,7 @@ private struct LessonQuizView: View {
                         .id("lesson-quiz-position")
                 }
                 if let reviewLessonId = item.reviewLessonId, let reviewLesson = library.lessonsById[reviewLessonId] {
-                    Text("Review question from \(reviewLesson.title.textAndLanguage(for: canadianHamUsesFrenchUI ? .french : .english).text)") // l10n: localized
+                    Text(lessonQuizReviewHeading(title: reviewLesson.title, language: canadianHamUsesFrenchUI ? .french : .english)) // l10n: localized
                         .font(DesignTokens.FontScale.body.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
@@ -1170,6 +1170,13 @@ func lessonQuizRoundProgress(quiz: LessonQuiz, items: [LessonQuizRuntimeItem], c
     }
     guard let startIndex = indices.first, let endIndex = indices.last else { return nil }
     return LessonQuizRoundProgress(round: round, roundIndex: roundIndex, roundCount: rounds.count, startIndex: startIndex, endIndex: endIndex)
+}
+
+func lessonQuizReviewHeading(title: LocalizedNullableText, language: BankLanguage, bundle: Bundle = .main) -> AttributedString {
+    let localizedTitle = title.textAndLanguage(for: language)
+    var attributedTitle = AttributedString(localizedTitle.text)
+    attributedTitle.languageIdentifier = localizedTitle.language == .english ? "en" : "fr"
+    return AttributedString(localized: "Review question from \(attributedTitle)", bundle: bundle)
 }
 
 func buildLessonQuizItems(quiz: LessonQuiz, seed: String, library: ContentLibrary? = nil) throws -> [LessonQuizRuntimeItem] {

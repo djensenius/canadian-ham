@@ -40,6 +40,26 @@ final class ProgressStoreTests: XCTestCase {
         }
     }
 
+    func testReviewSourceMayDifferFromCanonicalHintLessonWithAuthoredSectionAnchor() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let questionID = "B-002-007-003"
+        // Simulate overlapping taught pools: attribution follows proximity, hints keep authored anchors.
+        let reviews = try selectLessonReviewItems(orderedPools: [
+            LessonReviewPool(lessonId: "L-002-02", questionIds: [questionID]),
+            LessonReviewPool(lessonId: "L-002-03", questionIds: [questionID]),
+            LessonReviewPool(lessonId: "L-001-01", questionIds: [])
+        ], lessonId: "L-001-01", excludedQuestionIds: [], seed: "shared-hint-target")
+        let review = try XCTUnwrap(reviews.first)
+        XCTAssertEqual(review.lessonId, "L-002-03")
+        let hint = try XCTUnwrap(library.questionHintsByQuestionId[questionID])
+        XCTAssertEqual(hint.lessonLink.lessonId, "L-002-02")
+        let target = try XCTUnwrap(library.lessonsById[hint.lessonLink.lessonId])
+        let source = try XCTUnwrap(library.lessonsById[review.lessonId])
+        let anchor = try XCTUnwrap(hint.lessonLink.sectionAnchor)
+        XCTAssertTrue(try LessonHeadingAnchors.anchors(for: target.bodyMarkdown, title: target.title.en).contains(anchor))
+        XCTAssertFalse(try LessonHeadingAnchors.anchors(for: source.bodyMarkdown, title: source.title.en).contains(anchor))
+    }
+
     func testReviewAttemptPayloadImportSyncAndLegacyVersionRejection() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
@@ -75,7 +95,8 @@ final class ProgressStoreTests: XCTestCase {
             if version != 2 { XCTAssertThrowsError(try target.importData(imported, bank: bank)) }
         }
         var payload = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(attempt)) as? [String: Any])
-        let invalidIds: [Any] = [["B-005-001-001", "B-005-001-001"], ["B-005-004-001"], ["QZ-L-005-01-A-C1"], NSNull()]
+        XCTAssertFalse(LessonQuizAttempt.validReviewQuestionIds(["A-001-001-001"], officialQuestionIds: []))
+        let invalidIds: [Any] = [["A-001-001-001"], ["B-005-001-001", "B-005-001-001"], ["B-005-004-001"], ["QZ-L-005-01-A-C1"], NSNull()]
         for ids in invalidIds {
             payload["reviewQuestionIds"] = ids
             XCTAssertThrowsError(try JSONDecoder().decode(LessonQuizAttempt.self, from: JSONSerialization.data(withJSONObject: payload)))
@@ -83,6 +104,38 @@ final class ProgressStoreTests: XCTestCase {
         payload.removeValue(forKey: "reviewQuestionIds")
         payload.removeValue(forKey: "answeredWithHelpIds")
         XCTAssertNil(try JSONDecoder().decode(LessonQuizAttempt.self, from: JSONSerialization.data(withJSONObject: payload)).reviewQuestionIds)
+    }
+
+    func testLegacyEmptyReviewQuestionIdsImportAtTopLevelAndInSyncRows() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let attempt = LessonQuizAttempt(
+            id: "legacy-empty-reviews", quizId: "QZ-L-005-01-A", lessonId: "L-005-01",
+            submittedAt: "2026-01-02T03:45:00.000Z", correct: 1, total: 1, percent: 100,
+            officialQuestionIds: ["B-005-001-001"], incorrectOfficialQuestionIds: [],
+            incorrectConceptCheckIds: [], reviewQuestionIds: []
+        )
+        try store.saveLessonQuizAttempt(attempt, questionProgress: [])
+        let exported = try store.exportData(bank: bank, exportedAt: "2026-01-04T00:00:00.000Z")
+        let encoded = try JSONEncoder().encode(exported)
+        let rowAttempt = try JSONSerialization.jsonObject(with: JSONEncoder().encode(attempt))
+        for version in [nil, 1] as [Int?] {
+            for sync in [false, true] {
+                var json = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+                json["lessonIdVersion"] = version
+                json.removeValue(forKey: "syncDeviceRows")
+                if sync {
+                    var row: [String: Any] = ["deviceId": "web", "attempt": rowAttempt]
+                    row["lessonIdVersion"] = version
+                    json["syncDeviceRows"] = ["questionProgress": [], "examAttempts": [], "lessonProgress": [], "lessonQuizAttempts": [row], "morseCourseProgress": []]
+                }
+                let imported = try JSONDecoder().decode(ProgressExportV1.self, from: JSONSerialization.data(withJSONObject: json))
+                XCTAssertTrue(store.validate(imported, bank: bank).isEmpty)
+                let target = try ProgressStoreService.inMemoryForTests()
+                try target.importData(imported, bank: bank)
+                XCTAssertEqual(try target.lessonQuizAttempts().first?.reviewQuestionIds, [])
+            }
+        }
     }
 
     func testM1QuizRoundsRetainEveryItemAndSeededOrderWithinTeachingSections() throws {

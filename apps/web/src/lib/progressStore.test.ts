@@ -1125,6 +1125,23 @@ describe("lesson quiz reviewQuestionIds", () => {
       assert.deepEqual(validateProgressImport(topLevel).data?.lessonQuizAttempts, [reviewAttempt], "v2 lesson IDs pass through unchanged");
     } finally { await store.deleteDatabase(); await target.deleteDatabase(); }
   });
+  it("imports legacy missing/v1 attempts with explicitly empty review IDs at top level and in sync rows", async () => {
+    const legacyAttempt = { ...lessonQuizAttempt, reviewQuestionIds: [] };
+    const target = new ProgressStore("legacy-empty-reviews");
+    try {
+      for (const version of [undefined, 1] as const) for (const sync of [false, true]) {
+        const data = validExport({ lessonIdVersion: version, lessonQuizAttempts: [legacyAttempt], ...(sync ? {
+          syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: version, attempt: legacyAttempt }], morseCourseProgress: [] },
+        } : {}) });
+        const validation = validateProgressImport(data);
+        assert.equal(validation.ok, true, JSON.stringify(validation.errors));
+        await target.importData(data);
+        const imported = await target.getLessonQuizAttempts();
+        assert.equal(imported.length, 1);
+        assert.deepEqual(imported[0]!.reviewQuestionIds, []);
+      }
+    } finally { await target.deleteDatabase(); }
+  });
   it("rejects invalid review IDs and legacy versions at top level and in device rows", () => {
     for (const ids of [["B-005-001-001", "B-005-001-001"], ["B-005-004-001"], ["B-999-999-999"], ["QZ-L-005-01-A-C1"], ["B-005-002-001", "B-005-001-001"], null]) {
       const bad = { ...reviewAttempt, reviewQuestionIds: ids } as unknown as LessonQuizAttempt;

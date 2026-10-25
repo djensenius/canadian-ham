@@ -279,7 +279,7 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
 
     static func validReviewQuestionIds(_ ids: [String], officialQuestionIds: [String]) -> Bool {
         ids == ids.sorted() && Set(ids).count == ids.count && ids.allSatisfy { id in
-            id.range(of: #"^[BA]-[0-9]{3}-[0-9]{3}-[0-9]{3}$"#, options: .regularExpression) != nil && !officialQuestionIds.contains(id)
+            id.range(of: #"^B-[0-9]{3}-[0-9]{3}-[0-9]{3}$"#, options: .regularExpression) != nil && !officialQuestionIds.contains(id)
         }
     }
 

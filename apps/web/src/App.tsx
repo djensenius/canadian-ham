@@ -128,11 +128,11 @@ interface LessonQuizSession {
   readonly answeredWithHelpIds: ReadonlySet<string>;
 }
 
-function createLessonQuizSession(quiz: LessonQuiz, seed: string, questions: readonly Question[]): LessonQuizSession {
+function createLessonQuizSession(quiz: LessonQuiz, seed: string): LessonQuizSession {
   return {
     checkpointVisible: false,
     seed,
-    items: buildLessonQuizItems(quiz, seed, questions),
+    items: buildLessonQuizItems(quiz, seed),
     currentIndex: 0,
     selectedByItemId: new Map(),
     submittedAttemptId: null,
@@ -1238,7 +1238,7 @@ interface LessonQuizViewProps {
 }
 
 function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestionsById, progress, attempts, now, onQuizAttempt, session: storedSession, onSessionChange, onOpenHintLesson }: LessonQuizViewProps) {
-  const [initialSession] = useState(() => createLessonQuizSession(quiz, `${quiz.id}:${Date.now().toString(36)}`, [...bankQuestionsById.values()]));
+  const [initialSession] = useState(() => createLessonQuizSession(quiz, `${quiz.id}:${Date.now().toString(36)}`));
   const session = storedSession ?? initialSession;
   const { seed, items, currentIndex, selectedByItemId, submittedAttemptId } = session;
   const currentItem = items[currentIndex];
@@ -1274,7 +1274,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
 
   function restart(): void {
     const nextSeed = `${quiz.id}:${Date.now().toString(36)}:${attempts.length + 1}`;
-    onSessionChange(() => createLessonQuizSession(quiz, nextSeed, [...bankQuestionsById.values()]));
+    onSessionChange(() => createLessonQuizSession(quiz, nextSeed));
   }
 
   function selectCurrent(displayIndex: number): void {
@@ -1342,6 +1342,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
 
   const hint = currentItem?.type === "official" ? hintForQuestion(currentItem.questionId, BASIC_BANK_ID) : null;
   const hintLesson = hint === null ? undefined : lessonsById.get(hint.lessonLink.lessonId);
+  const reviewLesson = currentItem?.type === "official" && currentItem.reviewLessonId !== undefined ? lessonsById.get(currentItem.reviewLessonId) : undefined;
   return (
     <section className="lesson-quiz" aria-labelledby={`${quiz.id}-title`}>
       <div className="lesson-quiz__header">
@@ -1369,7 +1370,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
       ) : (
         <>
           {roundProgress === undefined ? null : <h4 ref={roundHeadingRef} tabIndex={-1}>{t(interfaceLanguage, "lessonQuizRound", roundProgress.roundIndex + 1, roundProgress.roundCount, roundProgress.round.title[interfaceLanguage] ?? roundProgress.round.title.en)}</h4>}
-          {currentItem.type === "official" && currentItem.reviewLessonId !== undefined ? <h4>{t(interfaceLanguage, "lessonQuizReviewFrom", lessonsById.get(currentItem.reviewLessonId)?.title[interfaceLanguage] ?? lessonsById.get(currentItem.reviewLessonId)?.title.en ?? currentItem.reviewLessonId)}</h4> : null}
+          {currentItem.type === "official" && currentItem.reviewLessonId !== undefined ? <h4>{t(interfaceLanguage, "lessonQuizReviewFrom", "")}<span lang={reviewLesson?.title[interfaceLanguage] == null ? "en" : interfaceLanguage}>{reviewLesson?.title[interfaceLanguage] ?? reviewLesson?.title.en ?? currentItem.reviewLessonId}</span></h4> : null}
           <p>{t(interfaceLanguage, "questionProgress", roundProgress === undefined ? currentIndex + 1 : currentIndex - roundProgress.startIndex + 1, roundProgress?.questionCount ?? items.length)}</p>
           <ExamTools
             context="lesson-quiz"

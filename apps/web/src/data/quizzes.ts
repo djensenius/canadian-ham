@@ -1,7 +1,7 @@
 import { Pcg32, shuffled, selectLessonReviewItems } from "@canadian-ham/engine-ts";
 
 import { orderedLessons } from "./lessons";
-import type { Question } from "./bank";
+import { subsections } from "./bank";
 
 const rawQuizModules = import.meta.glob("../../../../content/quizzes/*.json", {
   eager: true,
@@ -47,7 +47,7 @@ export type LessonQuizItem =
 export const lessonQuizzes = Object.values(rawQuizModules).sort((a, b) => a.id.localeCompare(b.id));
 export const lessonQuizzesById = new Map(lessonQuizzes.map((quiz) => [quiz.id, quiz]));
 
-export function buildLessonQuizItems(quiz: LessonQuiz, seed: string, questions: readonly Question[] = []): readonly LessonQuizItem[] {
+export function buildLessonQuizItems(quiz: LessonQuiz, seed: string): readonly LessonQuizItem[] {
   const officialItems: LessonQuizItem[] = quiz.officialQuestionIds.map((questionId, index) => ({
     type: "official",
     id: `${quiz.id}:official:${questionId}`,
@@ -61,9 +61,10 @@ export function buildLessonQuizItems(quiz: LessonQuiz, seed: string, questions: 
     choicePermutation: shuffled(conceptCheck.choices.map((_, choiceIndex) => choiceIndex), Pcg32.fromSeedString(`${seed}:concept:${index}:${conceptCheck.id}`)),
   }));
   const items = shuffled([...officialItems, ...conceptItems], Pcg32.fromSeedString(`${seed}:items:${quiz.id}`));
-  const pools = orderedLessons().map((lesson) => ({ lessonId: lesson.id, questionIds: questions.filter((question) => lesson.covers.includes(question.subsectionId)).map((question) => question.id) }));
+  // Use synchronous Basic IDs: loading question text must not change a quiz session.
+  const pools = orderedLessons().map((lesson) => ({ lessonId: lesson.id, questionIds: subsections.filter((subsection) => lesson.covers.includes(subsection.id)).flatMap((subsection) => subsection.questionIds) }));
   const currentLesson = orderedLessons().find((lesson) => lesson.id === quiz.lessonId);
-  const excluded = [...quiz.officialQuestionIds, ...questions.filter((question) => currentLesson?.covers.includes(question.subsectionId)).map((question) => question.id)];
+  const excluded = [...quiz.officialQuestionIds, ...subsections.filter((subsection) => currentLesson?.covers.includes(subsection.id)).flatMap((subsection) => subsection.questionIds)];
   const reviewItems: LessonQuizItem[] = selectLessonReviewItems(pools, quiz.lessonId, excluded, seed).map((review, index) => ({
     type: "official", id: `${quiz.id}:review:${review.questionId}`, questionId: review.questionId, reviewLessonId: review.lessonId,
     choicePermutation: shuffled([0, 1, 2, 3], Pcg32.fromSeedString(`${seed}:review-choice:${index}:${review.questionId}`)),

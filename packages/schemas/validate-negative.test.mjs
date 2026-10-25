@@ -374,3 +374,19 @@ test("review IDs are optional sorted disjoint official IDs; union help is allowe
     }
   }
 });
+
+
+test("legacy missing/v1 attempts allow explicit empty review IDs at top level and in sync rows", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(projectRoot, "fixtures/lesson-quiz-help.json"), "utf8"));
+  const attempt = { ...fixture.attempt, reviewQuestionIds: [] };
+  for (const version of [undefined, 1]) for (const sync of [false, true]) {
+    const data = { ...validProgressExport, lessonIdVersion: version, lessonQuizAttempts: [attempt], ...(sync
+      ? { syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: version, attempt }], morseCourseProgress: [] } }
+      : {}) };
+    if (version === undefined) {
+      delete data.lessonIdVersion;
+      if (sync) delete data.syncDeviceRows.lessonQuizAttempts[0].lessonIdVersion;
+    }
+    assert.deepEqual(validateDataAgainstSchema(data, "progress-export-v1.schema.json"), []);
+  }
+});
