@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T21:28:00Z'
+updated_date: '2026-10-25T21:44:00Z'
 labels:
   - apple
   - watchos
@@ -54,4 +54,6 @@ From the TASK-14.4 review: (1) Alphabet spoken patterns join with spaces ('Dot D
 Implemented session-only Settings locale + explicit lproj lookup (phone persists AppleLanguages and requires restart, so that persistence is deliberately not reused); retained app-wide French Tiret and aligned three watch haptic descriptions. Added Letter labels, comma-separated spoken patterns, choices announcement, 1.5 s VoiceOver output lead-in and Crown feedback after dismissal. Default home accessibility audit succeeded on watchOS 27 / Series 12 42mm at largest text; no exception handler. Created (not booted yet) SE 3 40mm simulator 596608F4-525A-4BED-8642-151C0E69842D for targeted smallest-layout run. Cold probes now use independent caches and assert construction does not warm shared cache; reference guard self-test passes.
 
 Milestone ff25c9fe pushed. Full Series 12 42mm watch scheme: all 28 units passed and 24/27 UI passed; all 16 EN/FR largest-text full default audits passed with no exception handlers. Three test expectation typos (Vibrations and comma separators) fixed; targeted Series 12 rerun passed session override + both reference tests (54.682/54.664/83.197 s). Added selected-trait assertions and explicit official-text speech language metadata; now validating these with smallest-watch AX UI runs. No audit/runtime limitation encountered.
+
+Smallest SE 3 40mm / watchOS 27 targeted run: 1 new localization unit, both reference UI tests, both practice UI tests, EN/FR AX control/long-question walks and all 16 default audits passed. Session-override test exposed a real watchOS navigation-title cache issue on revisiting Settings: content switched to English but title stayed French. Fixed by explicitly resolving the title via the selected bundle. Smallest targeted rerun passed EN Settings audit (9.359s), FR Settings audit (8.288s), full override/reset regression (68.787s). No audit handler/skip/filter added. Manual listening/hardware remains owner-pending.
 <!-- SECTION:NOTES:END -->
