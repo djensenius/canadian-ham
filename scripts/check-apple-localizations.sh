@@ -4,29 +4,37 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT="$ROOT_DIR/apps/apple/CanadianHam.xcodeproj"
 CATALOG="$ROOT_DIR/apps/apple/CanadianHam/Resources/Localizable.xcstrings"
+CATALOGS=("$CATALOG" "$ROOT_DIR/apps/apple/Platforms/watchOS/Resources/InfoPlist.xcstrings")
 TMP_DIR="$(mktemp -d)"
-CATALOG_HASH_BEFORE="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
+CATALOG_HASHES_BEFORE=()
+for catalog in "${CATALOGS[@]}"; do
+  CATALOG_HASHES_BEFORE+=("$(shasum -a 256 "$catalog" | awk '{print $1}')")
+done
 
 assert_catalog_unchanged() {
   local phase="$1"
-  local current_hash
-  current_hash="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
-  if [[ "$CATALOG_HASH_BEFORE" != "$current_hash" ]]; then
-    echo "$phase modified $CATALOG; run the export intentionally and commit the catalogue changes." >&2
-    exit 1
-  fi
+  local index current_hash
+  for index in "${!CATALOGS[@]}"; do
+    current_hash="$(shasum -a 256 "${CATALOGS[$index]}" | awk '{print $1}')"
+    if [[ "${CATALOG_HASHES_BEFORE[$index]}" != "$current_hash" ]]; then
+      echo "$phase modified ${CATALOGS[$index]}; run the export intentionally and commit the catalogue changes." >&2
+      exit 1
+    fi
+  done
 }
 
 cleanup() {
   local status=$?
-  if [[ -f "$CATALOG" ]]; then
-    local current_hash
-    current_hash="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
-    if [[ "$CATALOG_HASH_BEFORE" != "$current_hash" ]]; then
-      echo "Apple localization check modified $CATALOG; run the export intentionally and commit the catalogue changes." >&2
-      status=1
+  local index current_hash
+  for index in "${!CATALOGS[@]}"; do
+    if [[ -f "${CATALOGS[$index]}" ]]; then
+      current_hash="$(shasum -a 256 "${CATALOGS[$index]}" | awk '{print $1}')"
+      if [[ "${CATALOG_HASHES_BEFORE[$index]}" != "$current_hash" ]]; then
+        echo "Apple localization check modified ${CATALOGS[$index]}; run the export intentionally and commit the catalogue changes." >&2
+        status=1
+      fi
     fi
-  fi
+  done
   rm -rf "$TMP_DIR"
   exit "$status"
 }
