@@ -12661,22 +12661,6 @@
         }
       }
     },
-    "Not selected" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Non sélectionnée"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Non sélectionnée"
-          }
-        }
-      }
-    },
     "Explanation in English" : {
       "localizations" : {
         "fr" : {
