@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T19:34:00Z'
+updated_date: '2026-10-25T19:39:00Z'
 labels:
   - apple
   - watchos
@@ -38,6 +38,8 @@ One-character listening/feeling drills make Morse useful on the wrist without br
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Inspect the watch practice patterns, Morse timing and local tone drivers. 2. Implement session-only Morse settings, deterministic drill and cancellable WatchKit/tone playback with injectable scheduling. 3. Add focused unit/UI tests, localized strings and hardware-check documentation. 4. Run watch tests, localization/text/guard checks and iOS build-for-testing; record evidence, leave AC2 blocked for owner hardware check, commit and push.
+
+5. Apply approved internal-review follow-up: add three session-only localized haptic presets in one mapping table with tests, prove off-main tone rendering/failure handling, restrict interruptions to began, and title the settings sheet. 6. Extend owner hardware-check steps for all presets, sound/Silent Mode and direct Debug install; record deferred audit/VoiceOver findings on TASK-14.5. 7. Run requested watch scheme, localization/text/guards and iOS build-for-testing; update evidence and task notes while AC2 stays blocked, commit and push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
