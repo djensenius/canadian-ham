@@ -101,7 +101,7 @@ struct WatchMorseView: View {
             playback?.cancel()
             if settings.hasOutput { textRequested = false }
         }
-        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in playback?.cancel() }
+        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { playback?.handleAudioInterruption($0) }
         .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.mediaServicesWereResetNotification)) { _ in playback?.cancel() }
     }
 
@@ -145,21 +145,30 @@ private struct WatchMorseSettingsView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        Form {
-            Toggle("Haptics", isOn: $settings.haptics)
-                .accessibilityIdentifier("watch-morse-haptics")
-            Toggle("Tone", isOn: $settings.tone)
-                .accessibilityIdentifier("watch-morse-tone")
-            Picker("Speed", selection: $settings.wordsPerMinute) {
-                Text("1 WPM").tag(1.0)
-                Text("1.5 WPM").tag(1.5)
-                Text("2 WPM").tag(2.0)
+        NavigationStack {
+            Form {
+                Toggle("Haptics", isOn: $settings.haptics)
+                    .accessibilityIdentifier("watch-morse-haptics")
+                Toggle("Tone", isOn: $settings.tone)
+                    .accessibilityIdentifier("watch-morse-tone")
+                Picker("Haptic style", selection: $settings.hapticStyle) {
+                    ForEach(WatchMorseHapticStyle.allCases, id: \.self) { style in
+                        Text(style.preset.title).tag(style) // l10n: localized
+                    }
+                }
+                .accessibilityIdentifier("watch-morse-haptic-style")
+                Text(settings.hapticStyle.preset.description) // l10n: localized
+                Picker("Speed", selection: $settings.wordsPerMinute) {
+                    Text("1 WPM").tag(1.0)
+                    Text("1.5 WPM").tag(1.5)
+                    Text("2 WPM").tag(2.0)
+                }
+                .accessibilityIdentifier("watch-morse-speed")
+                Text("Slow preset cadence; not exam timing.")
+                Button("Done") { dismiss() }
+                    .accessibilityIdentifier("watch-morse-settings-done")
             }
-            .accessibilityIdentifier("watch-morse-speed")
-            Text("Slow preset cadence; not exam timing.")
-            Button("Done") { dismiss() }
-                .accessibilityIdentifier("watch-morse-settings-done")
+            .navigationTitle("Output settings")
         }
-        .navigationTitle("Output settings")
     }
 }

@@ -1,6 +1,7 @@
 import AVFoundation
 import CanadianHamMorseEngine
 import XCTest
+import WatchKit
 @testable import CanadianHamWatch
 
 final class WatchMorseTests: XCTestCase {
@@ -85,16 +86,86 @@ final class WatchMorseTests: XCTestCase {
     }
 
     @MainActor
-    func testLocalToneDriverRendersOffMainActorAndRestartsAfterStop() async throws {
-        let output = WatchMorseOutputDriver()
-        defer { output.stop() }
-        for _ in 0..<2 {
-            try output.startTone(sequence: WatchMorseSettings().sequence(for: "A"))
-            // A real render callback must run while the main actor is suspended;
-            // constructing the callback on the main actor traps on Swift 6.
-            try await Task.sleep(for: .milliseconds(150))
-            output.stop()
+    func testHapticStylesMapEveryPairAndReachOutput() {
+        let expected: [(WatchMorseHapticStyle, WKHapticType, WKHapticType)] = [
+            (.lightRising, .click, .directionUp), (.lightFirm, .click, .start), (.strongFirm, .retry, .start)
+        ]
+        XCTAssertEqual(Set(expected.map(\.0)), Set(WatchMorseHapticStyle.allCases))
+        XCTAssertEqual(WatchMorseSettings().hapticStyle, .lightRising)
+        for (style, dot, dash) in expected {
+            XCTAssertEqual(style.haptic(for: .dot), dot)
+            XCTAssertEqual(style.haptic(for: .dash), dash)
+            let clock = FakeMorseScheduler()
+            let output = FakeMorseOutput(clock: clock)
+            let player = WatchMorsePlayback(output: output, scheduler: clock)
+            var settings = WatchMorseSettings()
+            settings.hapticStyle = style
+            player.play(letter: "A", settings: settings)
+            clock.advance(by: 10)
+            XCTAssertEqual(output.pulses.map(\.pulse), [.dot, .dash])
+            XCTAssertEqual(output.pulses.map(\.style), [style, style])
         }
+    }
+
+    @MainActor
+    func testLocalToneDriverRendersOffMainActorAndRestartsAfterStop() async throws {
+        let output = RecordingMorseToneOutput()
+        defer { output.stop() }
+        let clock = FakeMorseScheduler()
+        let player = WatchMorsePlayback(output: output, scheduler: clock)
+        var settings = WatchMorseSettings()
+        settings.haptics = false
+        settings.tone = true
+        for _ in 0..<2 {
+            player.play(letter: "A", settings: settings)
+            clock.advance(by: 0)
+            if let error = output.toneError {
+                // Headless hosts may have no activatable audio session. That is
+                // an asserted unavailable-output path, not a silent pass/skip.
+                guard case WatchMorseToneError.audioSessionUnavailable(let underlying) = error else { throw error }
+                XCTAssertFalse(underlying.localizedDescription.isEmpty)
+                XCTAssertTrue(player.outputFailed)
+                XCTAssertFalse(player.isPlaying)
+                XCTAssertFalse(player.hasCompleted)
+                XCTAssertFalse(output.driver.hasActiveTone)
+                print("Watch tone session unavailable; cleanup and playback failure asserted: \(underlying)")
+            } else {
+                let deadline = ContinuousClock.now + .seconds(3)
+                while output.driver.offMainRenderCount == 0 && ContinuousClock.now < deadline {
+                    try await Task.sleep(for: .milliseconds(20))
+                }
+                XCTAssertGreaterThan(output.driver.offMainRenderCount, 0, "A real audio callback must render off the main actor")
+                XCTAssertTrue(output.driver.hasActiveTone)
+                XCTAssertFalse(player.outputFailed)
+                player.cancel()
+                XCTAssertFalse(output.driver.hasActiveTone)
+                XCTAssertEqual(output.driver.offMainRenderCount, 0, "Restart must observe a new renderer, not an old count")
+            }
+        }
+    }
+
+    @MainActor
+    func testOnlyBeganAudioInterruptionCancelsPlayback() {
+        let clock = FakeMorseScheduler()
+        let output = FakeMorseOutput(clock: clock)
+        let player = WatchMorsePlayback(output: output, scheduler: clock)
+        player.play(letter: "H", settings: WatchMorseSettings())
+        clock.advance(by: 0)
+        for userInfo: [AnyHashable: Any] in [
+            [:], [AVAudioSessionInterruptionTypeKey: 99],
+            [AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.ended.rawValue]
+        ] {
+            player.handleAudioInterruption(Notification(name: AVAudioSession.interruptionNotification, userInfo: userInfo))
+            XCTAssertTrue(player.isPlaying)
+        }
+        clock.advance(by: 1.2)
+        XCTAssertEqual(output.pulses.count, 2)
+        player.handleAudioInterruption(Notification(name: AVAudioSession.interruptionNotification,
+                                                    userInfo: [AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.began.rawValue]))
+        XCTAssertFalse(player.isPlaying)
+        XCTAssertFalse(player.hasCompleted)
+        clock.advance(by: 10)
+        XCTAssertEqual(output.pulses.count, 2)
     }
 
     @MainActor
@@ -234,7 +305,7 @@ private final class FakeMorseScheduler: WatchMorseScheduler {
 @MainActor
 private final class FakeMorseOutput: WatchMorseOutput {
     let clock: FakeMorseScheduler
-    var pulses: [(pulse: WatchMorsePulse, time: Double)] = []
+    var pulses: [(pulse: WatchMorsePulse, style: WatchMorseHapticStyle, time: Double)] = []
     var toneInputs: [String] = []
     var stops = 0
     var failTone = false
@@ -243,8 +314,25 @@ private final class FakeMorseOutput: WatchMorseOutput {
         if failTone { throw NSError(domain: "fake-tone", code: 1) }
         toneInputs.append(sequence.normalizedText)
     }
-    func haptic(_ pulse: WatchMorsePulse) { pulses.append((pulse, clock.now)) }
+    func haptic(_ pulse: WatchMorsePulse, style: WatchMorseHapticStyle) { pulses.append((pulse, style, clock.now)) }
     func stop() { stops += 1 }
+}
+
+@MainActor
+private final class RecordingMorseToneOutput: WatchMorseOutput {
+    let driver = WatchMorseOutputDriver()
+    private(set) var toneError: (any Error)?
+
+    func startTone(sequence: TimedMorseSequence) throws {
+        toneError = nil
+        do { try driver.startTone(sequence: sequence) }
+        catch {
+            toneError = error
+            throw error
+        }
+    }
+    func haptic(_ pulse: WatchMorsePulse, style: WatchMorseHapticStyle) { driver.haptic(pulse, style: style) }
+    func stop() { driver.stop() }
 }
 
 private struct TimingFixture: Decodable {

@@ -73,9 +73,21 @@ final class WatchMorseUITests: XCTestCase {
         XCTAssertEqual(haptics.value as? String, "1")
         XCTAssertEqual(tone.value as? String, "0")
         haptics.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5)).tap()
+        reveal(tone, in: app)
         tone.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5)).tap()
         XCTAssertEqual(haptics.value as? String, "0")
         XCTAssertEqual(tone.value as? String, "1")
+        let defaultStyle = app.staticTexts["Light dot, rising dash"]
+        reveal(defaultStyle, in: app)
+        for (name, description) in [("Style 2", "Light dot, firm dash"), ("Style 3", "Stronger dot, firm dash")] {
+            let style = app.buttons["watch-morse-haptic-style"]
+            reveal(style, in: app)
+            style.tap()
+            let option = app.buttons[name]
+            XCTAssertTrue(option.waitForExistence(timeout: 5))
+            option.tap()
+            reveal(app.staticTexts[description], in: app)
+        }
         let speed = app.buttons["watch-morse-speed"]
         reveal(speed, in: app)
         XCTAssertTrue(speed.exists)
@@ -94,6 +106,7 @@ final class WatchMorseUITests: XCTestCase {
         openSettings(app)
         XCTAssertEqual(haptics.value as? String, "0")
         XCTAssertEqual(tone.value as? String, "1")
+        reveal(tone, in: app)
         tone.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5)).tap()
         closeSettings(app)
         let unavailable = app.staticTexts["watch-morse-no-output"]
@@ -118,6 +131,7 @@ final class WatchMorseUITests: XCTestCase {
         openSettings(app)
         XCTAssertEqual(haptics.value as? String, "0")
         XCTAssertEqual(tone.value as? String, "0")
+        reveal(app.staticTexts["Stronger dot, firm dash"], in: app)
         closeSettings(app)
         app.terminate()
         app.launch()
@@ -125,6 +139,7 @@ final class WatchMorseUITests: XCTestCase {
         openSettings(app)
         XCTAssertEqual(haptics.value as? String, "1")
         XCTAssertEqual(tone.value as? String, "0")
+        reveal(defaultStyle, in: app)
     }
 
     @MainActor
@@ -144,6 +159,7 @@ final class WatchMorseUITests: XCTestCase {
         reveal(settings, in: app)
         settings.tap()
         XCTAssertTrue(app.switches["watch-morse-haptics"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["Output settings"].exists)
     }
 
     @MainActor

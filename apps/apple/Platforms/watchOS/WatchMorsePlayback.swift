@@ -1,3 +1,4 @@
+import AVFoundation
 import CanadianHamMorseEngine
 import Foundation
 import Observation
@@ -39,7 +40,7 @@ struct WatchMorseLiveScheduler: WatchMorseScheduler {
 @MainActor
 protocol WatchMorseOutput: AnyObject {
     func startTone(sequence: TimedMorseSequence) throws
-    func haptic(_ pulse: WatchMorsePulse)
+    func haptic(_ pulse: WatchMorsePulse, style: WatchMorseHapticStyle)
     func stop()
 }
 
@@ -82,7 +83,7 @@ final class WatchMorsePlayback {
             }
             if settings.haptics {
                 player.scheduleHaptic(sequence: sequence, events: WatchMorseEvent.events(for: sequence),
-                                      index: 0, origin: player.scheduler.now, generation: current)
+                                      style: settings.hapticStyle, index: 0, origin: player.scheduler.now, generation: current)
             } else {
                 player.finish(after: Self.signalEnd(sequence), generation: current)
             }
@@ -99,6 +100,12 @@ final class WatchMorsePlayback {
         // cancellation so a new round/replay still observes the spacing floor.
     }
 
+    func handleAudioInterruption(_ notification: Notification) {
+        guard let rawType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+              AVAudioSession.InterruptionType(rawValue: rawType) == .began else { return }
+        cancel()
+    }
+
     func next() {
         cancel()
         hasCompleted = false
@@ -111,7 +118,7 @@ final class WatchMorsePlayback {
             .map { $0.startSeconds + $0.durationSeconds }.max() ?? 0
     }
 
-    private func scheduleHaptic(sequence: TimedMorseSequence, events: [WatchMorseEvent], index: Int,
+    private func scheduleHaptic(sequence: TimedMorseSequence, events: [WatchMorseEvent], style: WatchMorseHapticStyle, index: Int,
                                 origin: Double, generation current: Int) {
         guard events.indices.contains(index) else {
             finish(after: 0, generation: current)
@@ -120,12 +127,12 @@ final class WatchMorsePlayback {
         let event = events[index]
         let earliest = max(origin + event.atSeconds, lastHapticAt.map { $0 + WatchMorseSettings.minimumHapticSpacing } ?? 0)
         enqueue(after: max(0, earliest - scheduler.now), generation: current) { player in
-            player.output.haptic(event.pulse)
+            player.output.haptic(event.pulse, style: style)
             player.lastHapticAt = player.scheduler.now
             if index + 1 < events.count {
                 // Schedule the next only after this onset; a delayed main actor
                 // must not dump overdue presets into WatchKit in a burst.
-                player.scheduleHaptic(sequence: sequence, events: events, index: index + 1,
+                player.scheduleHaptic(sequence: sequence, events: events, style: style, index: index + 1,
                                       origin: origin, generation: current)
             } else {
                 player.finish(after: Self.signalEnd(sequence) - event.atSeconds, generation: current)

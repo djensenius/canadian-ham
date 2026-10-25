@@ -1,7 +1,34 @@
 import AVFoundation
 import CanadianHamMorseEngine
 import Foundation
+import Synchronization
 import WatchKit
+
+enum WatchMorseHapticStyle: Int, CaseIterable {
+    case lightRising, lightFirm, strongFirm
+
+    struct Preset {
+        let title: LocalizedStringResource
+        let description: LocalizedStringResource
+        let dot: WKHapticType
+        let dash: WKHapticType
+    }
+
+    // Candidate sensations, not hardware-verified durations. Keep every pair in
+    // this table so the owner can compare them without changing the build.
+    static let presets: [Self: Preset] = [
+        .lightRising: Preset(title: "Style 1", description: "Light dot, rising dash", dot: .click, dash: .directionUp),
+        .lightFirm: Preset(title: "Style 2", description: "Light dot, firm dash", dot: .click, dash: .start),
+        .strongFirm: Preset(title: "Style 3", description: "Stronger dot, firm dash", dot: .retry, dash: .start)
+    ]
+
+    var preset: Preset { Self.presets[self]! }
+    func haptic(for pulse: WatchMorsePulse) -> WKHapticType { pulse == .dot ? preset.dot : preset.dash }
+}
+
+enum WatchMorseToneError: Error {
+    case audioSessionUnavailable(any Error)
+}
 
 struct WatchMorseToneSchedule {
     let sampleRate: Double
@@ -31,6 +58,9 @@ struct WatchMorseToneSchedule {
 private final class WatchMorseToneRenderer: @unchecked Sendable {
     let schedule: WatchMorseToneSchedule
     private var frame: Int64 = 0
+    // Relaxed atomics let tests observe real audio-thread work without a lock in
+    // the render callback. The cursor itself remains audio-thread-only.
+    let offMainRenderCount = Atomic<Int>(0)
 
     init(schedule: WatchMorseToneSchedule) { self.schedule = schedule }
 
@@ -51,6 +81,7 @@ private final class WatchMorseToneRenderer: @unchecked Sendable {
             }
         }
         frame += Int64(count)
+        if !Thread.isMainThread { offMainRenderCount.wrappingAdd(1, ordering: .relaxed) }
         return noErr
     }
 }
@@ -60,24 +91,33 @@ final class WatchMorseOutputDriver: WatchMorseOutput {
     private var engine: AVAudioEngine?
     private var source: AVAudioSourceNode?
     private var ownsAudioSession = false
+    private var renderer: WatchMorseToneRenderer?
 
-    func haptic(_ pulse: WatchMorsePulse) {
+    var offMainRenderCount: Int { renderer?.offMainRenderCount.load(ordering: .relaxed) ?? 0 }
+    var hasActiveTone: Bool { engine != nil || source != nil || ownsAudioSession }
+
+    func haptic(_ pulse: WatchMorsePulse, style: WatchMorseHapticStyle) {
         // Fixed presets, NOT arbitrary-duration Morse pulses. See hardware gate.
-        WKInterfaceDevice.current().play(pulse == .dot ? .click : .directionUp)
+        WKInterfaceDevice.current().play(style.haptic(for: pulse))
     }
 
     func startTone(sequence: TimedMorseSequence) throws {
         stop()
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .default, options: [])
-            try session.setActive(true)
-            ownsAudioSession = true
+            do {
+                try session.setCategory(.playback, mode: .default, options: [])
+                try session.setActive(true)
+                ownsAudioSession = true
+            } catch {
+                throw WatchMorseToneError.audioSessionUnavailable(error)
+            }
             let engine = AVAudioEngine()
             self.engine = engine
             let outputFormat = engine.outputNode.outputFormat(forBus: 0)
             let rate = outputFormat.sampleRate > 0 ? outputFormat.sampleRate : 48_000
             let renderer = WatchMorseToneRenderer(schedule: WatchMorseToneSchedule(sequence: sequence, sampleRate: rate))
+            self.renderer = renderer
             let source = renderer.makeSourceNode()
             self.source = source
             engine.attach(source)
@@ -94,6 +134,7 @@ final class WatchMorseOutputDriver: WatchMorseOutput {
         if let source { engine?.detach(source) }
         source = nil
         engine = nil
+        renderer = nil
         if ownsAudioSession {
             ownsAudioSession = false
             try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])

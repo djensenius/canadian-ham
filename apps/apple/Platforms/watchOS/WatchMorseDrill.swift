@@ -4,6 +4,7 @@ import Foundation
 
 struct WatchMorseSettings: Equatable {
     var haptics = true
+    var hapticStyle: WatchMorseHapticStyle = .lightRising
     var tone = false
     var wordsPerMinute = 2.0
 

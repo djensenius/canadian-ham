@@ -12932,6 +12932,118 @@
           }
         }
       }
+    },
+    "Haptic style" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style de vibrations"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style de vibrations"
+          }
+        }
+      }
+    },
+    "Style 1" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 1"
+          }
+        }
+      }
+    },
+    "Style 2" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 2"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 2"
+          }
+        }
+      }
+    },
+    "Style 3" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 3"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style 3"
+          }
+        }
+      }
+    },
+    "Light dot, rising dash" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point léger, trait ascendant"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point léger, trait ascendant"
+          }
+        }
+      }
+    },
+    "Light dot, firm dash" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point léger, trait ferme"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point léger, trait ferme"
+          }
+        }
+      }
+    },
+    "Stronger dot, firm dash" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point plus fort, trait ferme"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point plus fort, trait ferme"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
