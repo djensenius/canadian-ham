@@ -1,10 +1,11 @@
 ---
 id: TASK-14.5
 title: watchOS EN-FR and accessibility polish with audits
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T21:05:00Z'
+updated_date: '2026-10-25T21:08:00Z'
 labels:
   - apple
   - watchos
@@ -34,6 +35,12 @@ After the practice, Morse and reference flows exist, polish the complete watch e
 - [ ] #5 Targeted EN/FR watch UI tests and full performAccessibilityAudit calls on supported home/practice/feedback/Morse/reference/settings states pass via xbuild. Actual unsupported audit/runtime behaviour is documented and escalated with a manual audit record, not silently skipped or covered by new exception handlers.
 - [ ] #6 pnpm check:apple-l10n and node scripts/check-apple-text-sources.ts pass with watch source/catalogue membership covered; targeted watch unit/UI per-test results are recorded and no existing platform audit is weakened.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect watch flows, app localization and carried-over review items. 2. Implement in-memory session language Settings, localized bundle lookup and accessible wrapping/VoiceOver playback and feedback. 3. Add EN/FR largest-size UI coverage and unfiltered default audits, isolate cold-load test and add reference guard self-tests. 4. Run full watch scheme, smallest-watch targeted UI, localization/text/network/iCloud/test guards, iOS build and localization units, and macOS units; document exact per-test results and owner-only checks. 5. Commit and push milestones; leave manual/hardware-dependent criteria blocked rather than claiming completion.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
