@@ -52,20 +52,20 @@ final class WatchPracticeUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["watch-feedback"].exists)
         reveal(open, in: app)
         open.tap()
-        let picker = app.otherElements["watch-crown-picker"]
+        let picker = app.descendants(matching: .any)["watch-crown-selection"]
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
-        var seenAnswers: Set<String> = [app.staticTexts["watch-crown-selection"].label]
-        // Native watchOS XCUIAutomation exposes Crown rotation (but not adjust(toPickerWheelValue:)).
+        var seenAnswers: Set<String> = [picker.label]
+        // Exercise actual Crown events on the focusable, adjustable answer control.
         for _ in 0..<12 {
-            XCUIDevice.shared.rotateDigitalCrown(delta: 0.25)
-            seenAnswers.insert(app.staticTexts["watch-crown-selection"].label)
-            print("Crown selected answers: \(seenAnswers.count); current: \(app.staticTexts["watch-crown-selection"].label)")
+            XCUIDevice.shared.rotateDigitalCrown(delta: 0.1)
+            seenAnswers.insert(picker.label)
+            print("Crown selected answers: \(seenAnswers.count); current: \(picker.label)")
             XCTAssertTrue(app.buttons["watch-confirm"].exists)
             XCTAssertFalse(app.staticTexts["watch-feedback"].exists)
             if seenAnswers.count == 4 { break }
         }
         XCTAssertEqual(seenAnswers.count, 4, "The Crown can select every answer without submitting")
-        let selected = app.staticTexts["watch-crown-selection"].label
+        let selected = picker.label
         reveal(app.buttons["watch-confirm"], in: app)
         app.buttons["watch-confirm"].tap()
         let feedback = app.staticTexts["watch-feedback"]

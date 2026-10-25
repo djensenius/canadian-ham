@@ -90,43 +90,51 @@ struct WatchPracticeView: View {
     }
 }
 
-/// A separate native wheel owns Crown focus; ordinary question/feedback scrolling never submits.
+/// Crown focus is explicit and separate from scrolling; changing a choice never submits it.
 private struct WatchCrownAnswerView: View {
     let choices: [Answer]
     let french: Bool
     let submit: (Int) -> Void
     @Environment(\.dismiss) private var dismiss
-    @State private var selection = 0
+    @State private var crownPosition = 0.0
     @FocusState private var crownFocused: Bool
+
+    private var selection: Int { min(3, max(0, Int(crownPosition.rounded()))) }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                Picker("Answer", selection: $selection) {
-                ForEach(choices.indices, id: \.self) { index in
-                    Text("Answer \(index + 1)")
-                        .accessibilityLabel(Text(answerText(index))) // l10n: content(question)
-                        .tag(index)
+                Text("Answer \(selection + 1)")
+                    .font(.headline)
+                Text(answerText(selection)) // l10n: content(question)
+                    .font(.body)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .focusable()
+                    .focused($crownFocused)
+                    .digitalCrownRotation($crownPosition, from: 0, through: 3, by: 1,
+                                          sensitivity: .low, isContinuous: false,
+                                          isHapticFeedbackEnabled: true)
+                    .accessibilityLabel(Text(answerText(selection))) // l10n: content(question)
+                    .accessibilityValue("Selected")
+                    .accessibilityAdjustableAction { direction in
+                        switch direction {
+                        case .increment: crownPosition = Double(min(3, selection + 1))
+                        case .decrement: crownPosition = Double(max(0, selection - 1))
+                        @unknown default: break
+                        }
+                    }
+                    .accessibilityIdentifier("watch-crown-selection")
+                Button("Confirm answer") {
+                    guard choices.indices.contains(selection) else { return }
+                    submit(choices[selection].sourceIndex)
+                    dismiss()
                 }
-            }
-            .pickerStyle(.wheel)
-            .focused($crownFocused)
-            .frame(height: 70)
-            .accessibilityIdentifier("watch-crown-picker")
-            Text(answerText(selection)) // l10n: content(question)
-                .font(.body)
-                .accessibilityValue("Selected")
-                .accessibilityIdentifier("watch-crown-selection")
-            Button("Confirm answer") {
-                guard choices.indices.contains(selection) else { return }
-                submit(choices[selection].sourceIndex)
-                dismiss()
-            }
-            .accessibilityIdentifier("watch-confirm")
+                .accessibilityIdentifier("watch-confirm")
             }
             .padding(.horizontal)
         }
         .defaultFocus($crownFocused, true)
+        .onAppear { crownFocused = true }
     }
 
     private func answerText(_ index: Int) -> String {
