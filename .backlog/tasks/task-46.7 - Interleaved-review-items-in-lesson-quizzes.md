@@ -4,8 +4,8 @@ title: Interleaved review items in lesson quizzes
 status: In Progress
 assignee:
   - '@worker'
-created_date: '2026-10-12 14:57'
-updated_date: '2026-10-25 00:15'
+created_date: 2026-10-12 14:57
+updated_date: '2026-10-25T00:53:00Z'
 labels:
   - web
   - apple
@@ -268,4 +268,35 @@ Documented full command PASS, 220 tests / 0 failures. Command: DEVELOPER_DIR=/Ap
 | `CanadianHamTests.RootNavigationMappingTests.testPracticeHintLessonStackKeepsSessionAsSplitSelection` | PASSED | 0.001 |
 
 Engine parity PASS: bash scripts/check-engine-parity.sh ran TypeScript 32/32 and Swift 22/22, including all nine shared review selection cases. iPhone initial run: 21/22 PASS, including all 12 unchanged lesson-quiz methods, all five unchanged M1 methods and four new EN/FR light/dark full review audits. New persistence test failed an immediate disappearance assertion after asynchronous hint-sheet dismissal; corrected only the new test to wait for the exact earlier-lesson heading and assert seeded review ID B-002-007-003 (33e5b247). Production, existing audits and helpers unchanged. Failing-only iPhone rerun, full requested iPad selection and one final-source macOS build-check/unit method are queued. UI test suffix from original first M1 test to EOF is byte-identical to base (SHA256 c0e7bd13eb4a8e90a298aa5103e73dab86f958e2685b9376e0187edd8de02f16).
+
+## iPad Pro 13-inch (M5): targeted validation PASS 22/22
+
+Five new review methods, five unchanged M1-round methods and twelve unchanged lesson-quiz methods. Ran xbuild on one iPad destination, with explicit -only-testing:CanadianHamUITests/CanadianHamExamToolsUITests/<method> for every method below. No full app suite. Log: /tmp/task-46.7-runs/pad.log; exact runner: /tmp/task-46.7-ui.sh. Source includes test-only async destination fix 33e5b247.
+
+| Test | Result | Seconds |
+| --- | --- | --- |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptCheckHasNoHintOrOtherTools` | PASSED | 17.875 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionCorrectDarkAndFullAccessibilityAudit` | PASSED | 37.305 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionCorrectLightAndFullAccessibilityAudit` | PASSED | 56.021 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionFeedbackLargestDynamicType` | PASSED | 45.086 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionIncorrectFrenchFallbackDarkAndFullAccessibilityAudit` | PASSED | 35.946 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizConceptOptionIncorrectFrenchFallbackLightAndFullAccessibilityAudit` | PASSED | 35.714 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintLargestDynamicTypeAndLayoutRoundTrip` | PASSED | 91.928 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsDarkAndFullAccessibilityAudits` | PASSED | 59.487 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsFrenchAndCurrentLessonRoundTrip` | PASSED | 60.667 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizHintsLightAndFullAccessibilityAudits` | PASSED | 64.235 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizOneLevelHintAndHelpCountPersistsAfterRelaunch` | PASSED | 40.898 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testLessonQuizPostChoiceHintsDoNotChangeSavedHelpAndRelaunchKeepsHelpCount` | PASSED | 48.962 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsDarkAndFullAccessibilityAudits` | PASSED | 90.619 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsFrenchLargestTypeDarkAndFullAccessibilityAudits` | PASSED | 104.202 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsFrenchLargestTypeLightAndFullAccessibilityAudits` | PASSED | 99.997 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsKeepHelpAnswersResumeAndOneSavedAttempt` | PASSED | 226.462 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testM1QuizRoundsLightAndFullAccessibilityAudits` | PASSED | 94.631 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsEnglishDarkAccessibility` | PASSED | 69.496 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsEnglishLightAccessibility` | PASSED | 106.303 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsFrenchLargestTypeDarkAccessibility` | PASSED | 109.439 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsFrenchLargestTypeLightAccessibility` | PASSED | 89.377 |
+| `CanadianHamUITests.CanadianHamExamToolsUITests.testReviewItemsOwnLessonResumeScoreHelpAndPersistence` | PASSED | 90.578 |
+
+Final-source macOS build-check + targeted review pool/round method PASS 1/1 after the new UI-test async assertion fix. Full macOS 220/220 remains valid for unchanged production code. All four new iPad review audits and the own-lesson/resume/score/help/persistence method pass; unchanged 17 regression methods also pass. Localization generic visionOS build and failing-only iPhone persistence rerun are the final pending checks.
 <!-- SECTION:NOTES:END -->
