@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T18:02:00Z'
+updated_date: '2026-10-25T18:07:00Z'
 labels:
   - apple
   - watchos
@@ -43,3 +43,9 @@ Short wrist-sized practice should work without a phone, history or study setup. 
 3. Regenerate XcodeGen twice; run watch tests, localization/text/privacy/test guards, embedded iOS build and macOS units; record size/decode/memory and per-test evidence.
 4. Commit/push milestones, verify acceptance evidence and finalize the task without opening a PR.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Milestone 1 pushed: watch-only Basic/explanation resource membership, narrow content-swift loader, seeded engine-swift shuffle/grading and in-memory session, scrollable tap/feedback/Next and native Crown-picker/explicit-confirm sheet. Added six practice unit tests and two practice UI tests; skeleton navigation checks now recognize practice. Initial compile fixes qualify CanadianHamContent.Category and avoid the watch-unavailable picker adjust API; native XCUIDevice.rotateDigitalCrown(delta:) compiles. Watch xbuild is queued behind the shared build lock; no other build was killed. Text/network/iCloud guards and their fixtures, test-guard self-test, and project double-generation determinism passed.
+<!-- SECTION:NOTES:END -->
