@@ -6,11 +6,11 @@ For release-day execution, use the consolidated [release checklist](release-chec
 
 ## Scope
 
-- Apple application targets under `apps/apple`: `CanadianHam` (iOS/iPadOS/macOS), `CanadianHamTV`, and `CanadianHamVision`.
+- Apple application targets under `apps/apple`: `CanadianHam` (iOS/iPadOS/macOS), `CanadianHamTV`, `CanadianHamVision`, and the embedded independent `CanadianHamWatch` (watchOS).
 - Web privacy summary shown in `apps/web` Settings.
 - Evidence sources required by `task-1.2`: `apps/apple/CanadianHam/Resources/PrivacyInfo.xcprivacy`, `pnpm check:apple-network`, `pnpm test:apple-network`, `pnpm build:web`, `pnpm --filter @canadian-ham/web audit:urls`, and [`docs/privacy.md`](../privacy.md).
 
-Test bundles are not App Store-distributed application targets. The privacy manifest membership evidence below is therefore for the three App Store-delivered application targets.
+Test bundles are not App Store-distributed application targets. The original snapshot below covers three application targets; the TASK-14.6 addendum covers the fourth, `CanadianHamWatch`, and its separate watch privacy manifest.
 
 ## Apple wording sources and wording status
 
@@ -63,9 +63,9 @@ The wording in this table is a working checklist of the current App Store Connec
 
 ### Data collection gate and data type questions
 
-Recommended answer: **Data Not Collected**.
+Recommended answer: **Data Not Collected**, including the independent watchOS payload.
 
-Supporting rationale from [`docs/privacy.md`](../privacy.md): the Apple app has no accounts, no telemetry, no advertising, no third-party tracking, no automatic crash or diagnostic upload, no remote progress sync, no iCloud sync in v1, no networking code, and no third-party SDKs. On iOS, iPadOS and macOS, local study progress remains in local app storage unless the user explicitly exports it. On tvOS and visionOS, practice sessions are kept only while the app is open; nothing is saved or sent.
+Supporting rationale from [`docs/privacy.md`](../privacy.md): the Apple app has no accounts, no telemetry, no advertising, no third-party tracking, no automatic crash or diagnostic upload, no remote progress sync, no iCloud sync in v1, no networking code, and no third-party SDKs. On iOS, iPadOS and macOS, local study progress remains in local app storage unless the user explicitly exports it. On tvOS and visionOS, practice sessions are kept only while the app is open; nothing is saved or sent. On watchOS, practice, Morse and language/output settings are session-only in memory; no scores/preferences, identifiers, recordings or progress are stored or transmitted. The watch uses no HealthKit, microphone, WatchConnectivity, push, iCloud or background network session.
 
 | App Privacy data category / type | Answer | Supporting evidence |
 |---|---|---|
@@ -105,7 +105,7 @@ Because the answer is **Data Not Collected**, no App Store privacy label purpose
 
 | Area | Answer | Supporting evidence |
 |---|---|---|
-| Privacy manifest included | Yes, one shared manifest is bundled in each App Store-delivered application target | `PrivacyInfo.xcprivacy` exists at `apps/apple/CanadianHam/Resources/PrivacyInfo.xcprivacy`; target membership is documented above for `CanadianHam`, `CanadianHamTV`, and `CanadianHamVision`. |
+| Privacy manifest included | Yes, a manifest is bundled in every application target | `apps/apple/CanadianHam/Resources/PrivacyInfo.xcprivacy` is shared by `CanadianHam`, `CanadianHamTV` and `CanadianHamVision`. `CanadianHamWatch` has its own equivalent `apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy`; see the TASK-14.6 export inspection below. |
 | Tracking domains in privacy manifest | None | `NSPrivacyTrackingDomains = []`. |
 | Collected data types in privacy manifest | None | `NSPrivacyCollectedDataTypes = []`. |
 | Required-reason API categories in privacy manifest | None declared currently | `NSPrivacyAccessedAPITypes = []`. Confirm against the current Apple required-reason API list during release; this snapshot found no `@AppStorage`/`UserDefaults` use in Apple Swift sources, and the no-network check passed. |
@@ -150,7 +150,10 @@ pnpm --filter @canadian-ham/web audit:urls
 
 Also confirm the exact App Store Connect wording and any changes to Apple's privacy manifest / required-reason API requirements before submitting the privacy label.
 
-## TASK-14.1 watchOS skeleton addendum (2026-10-25)
+## TASK-14.1 watchOS skeleton addendum (2026-10-25, historical)
+
+This records the skeleton stage; the completed feature payload and signed-export
+evidence are covered by TASK-14.6 below.
 
 `CanadianHamWatch` is an independently usable watchOS 27 app embedded in the iOS
 container only. Its watch-specific source tree is `apps/apple/Platforms/watchOS`;
@@ -177,3 +180,43 @@ therefore does not inherit the project's optional `ICLOUD_SYNC` gate. Regression
 fixtures cover inherited flags, cloud flags, push background modes and non-empty
 entitlement paths. No release signing, upload or distribution is performed here;
 TASK-14.6 owns that validation and the final icon.
+
+## TASK-14.6 watchOS release payload (2026-10-25)
+
+**App Privacy: Data Not Collected; no tracking.** The independently usable watch
+app is delivered inside the existing iOS TestFlight container, not as a new ASC
+platform. Quick Basic practice, local Morse haptic/optional generated-tone output,
+alphabet reference and EN/FR session Settings are offline. Practice and settings
+state lives only in memory; relaunch resets it. No phone session, account,
+WatchConnectivity, network request, sync, microphone/recording, HealthKit,
+analytics/diagnostic uploader, external runtime SDK, push or App Groups is used.
+Apple's own TestFlight delivery/diagnostics are not app-authored data collection.
+
+`apps/apple/project.yml` includes the watch-specific source/resource tree and
+its own `Platforms/watchOS/Resources/PrivacyInfo.xcprivacy`. The **exported signed
+watch bundle** includes that manifest with:
+
+```text
+NSPrivacyTracking = false
+NSPrivacyTrackingDomains = []
+NSPrivacyCollectedDataTypes = []
+NSPrivacyAccessedAPITypes = []
+```
+
+The [TASK-14.6 inspection and per-test evidence](../testing/task-14.6-watch-release.md)
+records the actual IPA path/build, manifest, entitlements, linked frameworks,
+Basic-only resource inventory and network/iCloud guard outputs. The manifest is
+also hash-compared with its source; the signed watch has no iCloud, push,
+`aps-environment` or App Groups entitlement. Only the Basic bank plus original
+explanations are included as study data (no lessons/hints/Advanced/figures or
+official exam sheet). Locally generating a tone uses audio output only, not audio
+capture or transmission.
+
+The same App Privacy answers above apply to the watch, including **Not collected**
+for Health/Fitness, Identifiers, User Content/audio, Usage Data and Diagnostics.
+This is signed local export evidence, not a claim of ASC processing, a submitted
+privacy-label update or a physical-watch test. The owner must confirm the current
+App Privacy wording when the approved internal build is processed and run the
+[physical offline/VoiceOver/haptic checks](testflight.md#owner-physical-watch-checklist-required-not-replaced-by-simulator-tests).
+TASK-14.6 AC4 remains unchecked until that post-merge gate is recorded; external
+testing/public links/App Store submission remain forbidden before TASK-1.7.

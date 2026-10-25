@@ -2,7 +2,7 @@
 
 Use this checklist on the release-candidate commit. It consolidates the release gates and manual checks that remain documented in [content licensing](../content-licensing.md), [privacy](../privacy.md), [accessibility](../accessibility.md), [Apple offline smoke test](../apple-offline-smoke-test.md), [App Store privacy-label evidence](privacy-label-evidence.md), and the source/content verification steps in [content update process](../content-update-process.md).
 
-Record the commit SHA, date, tester, and pass/fail notes for every checked item. Do not make the repository public, deploy the web app publicly, submit to TestFlight/App Store, or otherwise distribute artifacts until every blocking gate below is satisfied.
+Record the commit SHA, date, tester, and pass/fail notes for every checked item. Do not make the repository public, deploy the web app publicly, submit to external TestFlight/App Store, or otherwise distribute artifacts until every blocking gate below is satisfied. The existing TASK-1.10 exception permits only internal App Store Connect team-member TestFlight after review/merge approval, following the [TestFlight runbook](testflight.md); it does not permit external groups or public links.
 
 ## Gates
 
@@ -44,13 +44,13 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 ## Accessibility
 
 - [ ] Follow the [`docs/accessibility.md` manual release checklist](../accessibility.md#manual-release-checklist): keyboard-only web, macOS Full Keyboard Access, VoiceOver iOS/iPadOS/macOS, mock-exam results VoiceOver, tvOS focus, visionOS readability, 200% zoom/320 px reflow, largest Dynamic Type, Reduced Motion, colour independence, and privacy/network regression review.
-- [ ] Run the automated accessibility suites on the release candidate: `pnpm --filter @canadian-ham/web test` (axe coverage) and the iOS, macOS, tvOS and visionOS test commands in [`AGENTS.md`](../../AGENTS.md#apple-builds) (through `xbuild` only; the iOS, tvOS and visionOS UI suites include the accessibility audits).
+- [ ] Run the automated accessibility suites on the release candidate: `pnpm --filter @canadian-ham/web test` (axe coverage) and the iOS, macOS, tvOS, visionOS and watchOS test commands in [`AGENTS.md`](../../AGENTS.md#apple-builds) (through `xbuild` only; the iOS, tvOS, visionOS and watchOS UI suites include the accessibility audits).
 - [ ] Complete and record `task-29` tvOS VoiceOver checks in [`docs/accessibility.md`](../accessibility.md): each focusable About card title/body reads correctly and English legal text in the French UI is spoken with an English voice.
 - [ ] Confirm no UI change introduced remote fonts, remote assets, telemetry, analytics, or third-party runtime SDKs while satisfying accessibility requirements.
 
 ## Offline Apple
 
-- [ ] Run the platform `xbuild` commands from [`AGENTS.md`](../../AGENTS.md) for iOS, macOS, tvOS, and visionOS on the release-candidate commit; never call `xcodebuild` directly.
+- [ ] Run the platform `xbuild` commands from [`AGENTS.md`](../../AGENTS.md) for iOS, macOS, tvOS, visionOS and watchOS on the release-candidate commit; never call `xcodebuild` directly.
 - [ ] Run [`docs/apple-offline-smoke-test.md`](../apple-offline-smoke-test.md) after the relevant `xbuild` command and after `pnpm check:apple-network` passes.
 - [ ] For each Apple platform under test (iPhone, iPad, Mac, Apple TV, Apple Vision Pro), record device/runtime, build commit, network-off method, launch baseline, practice, mock exam, Learn, lesson quiz, export/import, reset, and any unexpected prompts or missing features.
 - [ ] On macOS, manually verify the native Settings Data tab can export progress to a user-selected file and import it back while running under the app sandbox.
@@ -69,7 +69,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 
 - [ ] Do not submit to TestFlight external testing or App Store until [`docs/content-licensing.md` public-release gate](../content-licensing.md#public-release-gate), `task-1.1`, `task-1.2`, `task-1.4`, and `task-1.6` are complete.
 - [ ] Use [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md) to fill App Store Connect privacy answers and confirm **Data Not Collected** is still accurate on the release commit.
-- [ ] Confirm Apple application targets include the shared `PrivacyInfo.xcprivacy` and no target links third-party runtime SDKs, using the `plutil -p` and `git grep` checks in [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md).
+- [ ] Confirm Apple application targets include `PrivacyInfo.xcprivacy` (shared by the original targets; watch-specific for `CanadianHamWatch`) and no target links third-party runtime SDKs, using the `plutil -p` and `git grep` checks in [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md).
 - [ ] Confirm app metadata, screenshots, About/settings text, release notes, attribution, and disclaimer match the recorded ISED permission scope and do not claim affiliation, sponsorship, or endorsement.
 - [ ] Archive the completed Apple offline smoke-test notes and `xbuild` command results with the release evidence before submission.
 
@@ -87,3 +87,46 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 - [ ] Public Apple Release build has no `OFFICIAL_REFERENCE_SHEET` compilation condition / `-DOFFICIAL_REFERENCE_SHEET` flag and no `official-basic-exam/` in its resources. Internal fastlane `beta` lanes opt in under decision 2A; do **not** reuse that override in a public/App Store lane.
 - [ ] Public web build runs `pnpm build:web` without `OFFICIAL_REFERENCE_SHEET=YES` and passes its automatic output exclusion check: every file is compared with the official page/transcript SHA-256 values in `content/reference/official-basic-exam/README.md`, including renamed assets and decoded base64 image data URLs. Filename and distinctive transcript-text checks also apply. Inspect the service-worker precache for official-sheet references; the original study sheet remains available. See the [gate limitations](../content-licensing.md#official-sheet-implementation-gate-task-444) for re-encoded images and obfuscated/assembled data URLs.
 - [ ] `pnpm test:official-reference-sheet` passes, including renamed/inline web leak fixtures, clean original-study-sheet output, and stale-resource removal on an off Apple build. See [internal TestFlight](testflight.md) for the internal-only exception.
+
+## Independent watch payload (TASK-14.6)
+
+Internal team-member TestFlight is the only approved delivery exception before
+TASK-1.7; this checklist does not authorize an upload, external group, public link
+or App Store submission. See the [watch beta/install runbook](testflight.md#watchos-beta-entry-path-and-installation)
+and [TASK-14.6 evidence](../testing/task-14.6-watch-release.md). Record processed
+build/commit/device/tester and failures, not just checkmarks.
+
+- [ ] After review/merge approval, archive/export via **`fastlane ios beta`**
+  through xbuild and the dedicated build keychain, never a separate watch ASC
+  platform or login keychain. Use `export_only:true` for inspection without upload;
+  never wrap fastlane in `lockf`. Verify `testFlightInternalTestingOnly` remains on.
+- [ ] Inspect `Payload/CanadianHam.app/Watch/CanadianHamWatch.app`: child bundle ID
+  `org.davidjensenius.CanadianHam.watchkitapp`, companion ID matching the iOS
+  container, independent-operation flag, matching timestamp `CFBundleVersion` and
+  marketing version, valid distribution signatures/profiles, and AppIcon in
+  `Assets.car` without missing-icon/actool warnings. Review circular small sizes.
+- [ ] Confirm the watch privacy manifest declares no collection/tracking and App
+  Privacy remains **Data Not Collected**. Inspect signed entitlements/frameworks
+  for no iCloud/push/aps-environment/App Groups, WatchConnectivity, network or
+  telemetry SDKs; run network/iCloud guards and their fixtures.
+- [ ] Compare bundled watch study resources against the full Basic bank plus 984
+  explanations; no lessons, quizzes, hints, Advanced, figures or official exam
+  reference sheet (even in an opted-in internal iOS beta). The watch alphabet
+  reference is local app content, not the official sheet. macOS export has no
+  embedded watch payload.
+- [ ] Run the full `CanadianHamWatch` scheme on Series 12 42mm/watchOS 27 via the
+  [runbook command](testflight.md#watchos-beta-entry-path-and-installation), record
+  per-test results and full EN/FR accessibility audits; retain smallest-watch
+  evidence and manual listening gates from TASK-14.5.
+- [ ] Record the approved **processed internal** iOS/watch TestFlight build and
+  physical install from TestFlight on iPhone or Watch → Available Apps. With the
+  phone app not running and phone out of range, disable watch radios/enable
+  Airplane Mode and verify practice, Morse, alphabet reference and EN/FR. No
+  account/network/pairing-in-app prompt is allowed.
+- [ ] Complete the [owner physical-watch checklist](testflight.md#owner-physical-watch-checklist-required-not-replaced-by-simulator-tests):
+  long French text/large text/VoiceOver and English fallback, live language and
+  relaunch reset, memory/first-touch/launch feel (resident decoded bank; failed
+  loads cache until relaunch), output cancellation and all three TASK-14.3 haptic
+  styles at 1/1.5/2 WPM, including touch-only recognition and Silent Mode sounds.
+  Simulator passes cannot establish tactile fidelity or heard VoiceOver. Keep
+  TASK-14.6 AC4, TASK-14.3 AC2 and TASK-14.5's owner gate unchecked until recorded.
