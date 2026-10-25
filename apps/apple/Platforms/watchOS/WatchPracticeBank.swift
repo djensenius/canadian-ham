@@ -3,7 +3,7 @@ import CanadianHamContent
 import CanadianHamEngine
 
 /// The watch deliberately decodes bank data without ContentLibrary's lesson dependencies.
-struct WatchPracticeBank {
+struct WatchPracticeBank: Sendable {
     let questions: [Question]
     let explanations: [String: Explanation]
 
@@ -45,9 +45,31 @@ struct WatchPracticeBank {
                 throw WatchPracticeError.unavailable
             }
             _ = try ExplanationBodyParser.parse(explanation)
+            if explanation.body.fr != nil {
+                _ = try ExplanationBodyParser.parse(explanation, language: .fr)
+            }
             explanations[question.id] = explanation
         }
         return WatchPracticeBank(questions: questions, explanations: explanations)
+    }
+}
+
+/// Only a visible practice view requests this cache. Concurrent/repeated visits share one off-main decode.
+actor WatchPracticeBankLoader {
+    static let shared = WatchPracticeBankLoader()
+    private var task: Task<WatchPracticeBank, Error>?
+    // Allows the cold-load probe to verify no screen or earlier test has warmed the cache.
+    private(set) var loadCount = 0
+
+    func load() async throws -> WatchPracticeBank {
+        if task == nil {
+            loadCount += 1
+            task = Task.detached(priority: .userInitiated) {
+                assert(!Thread.isMainThread)
+                return try WatchPracticeBank.load()
+            }
+        }
+        return try await task!.value
     }
 }
 
@@ -65,7 +87,7 @@ struct WatchPracticeSession {
     private(set) var submittedSourceIndex: Int?
     private(set) var failed = false
 
-    init(load: () throws -> WatchPracticeBank = { try WatchPracticeBank.load() }, seed: String = UUID().uuidString) {
+    init(load: () throws -> WatchPracticeBank, seed: String = UUID().uuidString) {
         rng = Pcg32(seed: seed)
         do {
             bank = try load()
@@ -106,9 +128,12 @@ struct WatchExplanationText {
     let languageIdentifier: String
     let isEnglishFallback: Bool
 
-    init(explanation: Explanation, french: Bool) {
+    init(explanation: Explanation, french: Bool) throws {
         isEnglishFallback = french && explanation.body.fr == nil
-        body = french ? (explanation.body.fr ?? explanation.body.en) : explanation.body.en
+        let parsed = try ExplanationBodyParser.parse(explanation, language: french ? .fr : .en)
+        body = ([parsed.correctAnswerParagraph] + parsed.distractorNotes.map {
+            "\"\($0.quotedChoice)\": \($0.note)"
+        }).joined(separator: "\n\n")
         languageIdentifier = french && !isEnglishFallback ? "fr-CA" : "en-CA"
     }
 

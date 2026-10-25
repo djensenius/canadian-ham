@@ -12709,22 +12709,6 @@
         }
       }
     },
-    "Answer" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réponse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réponse"
-          }
-        }
-      }
-    },
     "Your answer" : {
       "localizations" : {
         "fr" : {

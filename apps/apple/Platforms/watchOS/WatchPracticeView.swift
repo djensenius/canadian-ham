@@ -3,7 +3,7 @@ import CanadianHamContent
 
 struct WatchPracticeView: View {
     @Environment(\.locale) private var locale
-    @State private var session = WatchPracticeSession()
+    @State private var session: WatchPracticeSession?
     @State private var showingCrown = false
 
     private var french: Bool { locale.language.languageCode?.identifier == "fr" }
@@ -12,48 +12,79 @@ struct WatchPracticeView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if session.failed {
-                        Text("Practice unavailable")
-                            .accessibilityIdentifier("watch-practice-error")
-                        Text("The bundled questions could not be loaded.")
-                    } else if let question = session.question {
-                        if session.submittedSourceIndex != nil {
-                            feedback
-                        } else {
-                            Text(questionText(question.text)) // l10n: content(question)
-                                .id("top")
-                                .accessibilityIdentifier("watch-question")
-                            Button("Select with Crown") { showingCrown = true }
-                                .accessibilityIdentifier("watch-crown-open")
-                            ForEach(Array(session.choices.enumerated()), id: \.element.sourceIndex) { index, answer in
-                                Button {
-                                    session.submit(sourceIndex: answer.sourceIndex)
-                                } label: {
-                                    Text(questionText(answer.text)) // l10n: content(question)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if let session {
+                        if session.failed {
+                            Text("Practice unavailable")
+                                .accessibilityIdentifier("watch-practice-error")
+                            Text("The bundled questions could not be loaded.")
+                        } else if let question = session.question {
+                            if session.submittedSourceIndex != nil {
+                                feedback(for: session)
+                            } else {
+                                Text(questionText(question.text)) // l10n: content(question)
+                                    .id("top")
+                                    .accessibilityIdentifier("watch-question")
+                                Button("Select with Crown") { showingCrown = true }
+                                    .accessibilityIdentifier("watch-crown-open")
+                                ForEach(Array(session.choices.enumerated()), id: \.element.sourceIndex) { index, answer in
+                                    Button {
+                                        submit(sourceIndex: answer.sourceIndex)
+                                    } label: {
+                                        Text(questionText(answer.text)) // l10n: content(question)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    .accessibilityIdentifier("watch-answer-\(index)")
                                 }
-                                .accessibilityIdentifier("watch-answer-\(index)")
-                                .accessibilityValue("Not selected")
                             }
                         }
+                    } else {
+                        ProgressView("Loading question bank")
+                            .accessibilityIdentifier("watch-practice-loading")
                     }
                 }
                 .font(.body)
                 .padding(.horizontal)
             }
-            .onChange(of: session.submittedSourceIndex) { _, _ in proxy.scrollTo("top", anchor: .top) }
-            .onChange(of: session.question?.id) { _, _ in proxy.scrollTo("top", anchor: .top) }
+            .onChange(of: session?.submittedSourceIndex) { _, _ in proxy.scrollTo("top", anchor: .top) }
+            .onChange(of: session?.question?.id) { _, _ in proxy.scrollTo("top", anchor: .top) }
         }
         .navigationTitle("Practice")
         .sheet(isPresented: $showingCrown) {
-            WatchCrownAnswerView(choices: session.choices, french: french) { sourceIndex in
-                session.submit(sourceIndex: sourceIndex)
+            WatchCrownAnswerView(choices: session?.choices ?? [], french: french, submit: submit)
+        }
+        .task {
+            guard session == nil else { return }
+            do {
+                let bank = try await WatchPracticeBankLoader.shared.load()
+                guard !Task.isCancelled else { return }
+                session = WatchPracticeSession(load: { bank }, seed: practiceSeed)
+            } catch {
+                guard !Task.isCancelled else { return }
+                session = WatchPracticeSession(load: { throw error })
             }
         }
     }
 
+    private var practiceSeed: String {
+        #if DEBUG
+        let arguments = ProcessInfo.processInfo.arguments
+        if let index = arguments.firstIndex(of: "-watchPracticeSeed"), arguments.indices.contains(index + 1) {
+            return arguments[index + 1]
+        }
+        #endif
+        return UUID().uuidString
+    }
+
+    private func submit(sourceIndex: Int) {
+        guard session?.submittedSourceIndex == nil else { return }
+        session?.submit(sourceIndex: sourceIndex)
+        guard let session, session.submittedSourceIndex != nil else { return }
+        let announcement = session.isCorrect ? String(localized: "Correct", locale: locale) : String(localized: "Incorrect", locale: locale)
+        AccessibilityNotification.Announcement(announcement).post()
+    }
+
     @ViewBuilder
-    private var feedback: some View {
+    private func feedback(for session: WatchPracticeSession) -> some View {
         Text(session.isCorrect ? "Correct" : "Incorrect") // l10n: localized
             .id("top")
             .font(.headline)
@@ -61,19 +92,22 @@ struct WatchPracticeView: View {
         if let selected = session.choices.first(where: { $0.sourceIndex == session.submittedSourceIndex }) {
             Text("Your answer")
                 .font(.headline)
+                .accessibilityAddTraits(.isHeader)
             Text(questionText(selected.text)) // l10n: content(question)
                 .accessibilityValue("Selected")
         }
         Text("Correct answer")
             .font(.headline)
+            .accessibilityAddTraits(.isHeader)
         if let correct = session.choices.first(where: \.isCorrect) {
             Text(questionText(correct.text)) // l10n: content(question)
                 .accessibilityIdentifier("watch-correct-answer")
         }
         Text("Explanation")
             .font(.headline)
-        if let explanation = session.explanation {
-            let content = WatchExplanationText(explanation: explanation, french: french)
+            .accessibilityAddTraits(.isHeader)
+        if let explanation = session.explanation,
+           let content = try? WatchExplanationText(explanation: explanation, french: french) {
             if content.isEnglishFallback {
                 Text("Explanation in English")
                     .accessibilityIdentifier("watch-english-fallback")
@@ -81,7 +115,7 @@ struct WatchPracticeView: View {
             Text(content.attributedBody) // l10n: content(question)
                 .accessibilityIdentifier("watch-explanation")
         }
-        Button("Next") { session.next() }
+        Button("Next") { self.session?.next() }
             .accessibilityIdentifier("watch-next")
     }
 
