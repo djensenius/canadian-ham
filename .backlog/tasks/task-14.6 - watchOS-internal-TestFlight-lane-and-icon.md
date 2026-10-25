@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T22:32:00Z'
+updated_date: '2026-10-25T22:38:00Z'
 labels:
   - apple
   - watchos
@@ -52,4 +52,6 @@ The watch app needs a release-quality icon and a reproducible internal delivery 
 Coordinator decision 2026-10-25 after TASK-14.1 internal review: TASK-14.1 now adds a real opaque 1024px watch AppIcon derived from existing app art and proves iOS-container/macOS archive+export without uploading. TASK-14.6 may refine the circular/small-size icon and retains physical-watch, final feature payload, release documentation and internal-only TestFlight processing/install gates.
 
 From the TASK-14.2 review: the decoded Basic bank stays resident for the app's lifetime (about 7.9 MiB retained on the simulator; first-touch load 0.365 s) and a failed load is cached until relaunch. Include both in the physical-watch memory and launch budget check.
+
+2026-10-25: retained existing opaque 1024px cream/hex watch icon after circular native-size review at 1024/196/88/48 px; before/after evidence committed with release docs. Signed iOS export-only build 202610251833 and macOS export-only build 202610251835 succeeded; upload explicitly skipped. IPA inspection verifies matching phone/watch timestamps, IDs/independent flag, compiled icon, empty collection manifest, distribution signatures, no cloud/push/App Groups/WatchConnectivity/network/third-party direct links, and all 988 Basic/explanation JSON files byte-identical to source, with an exact full-bundle file allowlist. macOS pkg has no watch payload. Network/iCloud guards + fixtures and fastlane safety tests (4/53) pass. Full Series 12 42mm watch scheme is running; no upload/PR. AC4 reserved for post-merge processed internal upload and owner physical install/offline/haptics/listening checks; task stays In Progress.
 <!-- SECTION:NOTES:END -->
