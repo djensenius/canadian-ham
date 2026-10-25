@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T18:59:00Z'
+updated_date: '2026-10-25T19:06:00Z'
 labels:
   - apple
   - watchos
@@ -60,6 +60,8 @@ Reopened for internal review fixes: eager main-thread loads and raw authoring ex
 Review-fix implementation committed at d8790e996a55aa497e84d77fc733b0210957fb05 (catalogue cleanup abdf6079). Practice has optional session + labelled loading ProgressView, navigation-value destinations and a shared actor caching a detached off-main load. All 984 EN/FR rendered explanation paths now parse authoring text, quote distractor choices and tag English fallback runs en-CA. DEBUG/UI-test seed 3121 fixes the first two draws; no hard-coded answer-state assertion. Headers and localized submit announcements added. Full watch run: 14/15 passed, with one overly strict new assertion rejecting the existing AppIcon Assets.car; fixed to real SVG/PNG resource checks and independent assetutil metadata (only AppIcon). Targeted cold/bundle/tap rerun passed 3/3. Initial localization export correctly exposed newly-unused Not selected, now removed via ordered Python round-trip; retry and final catalogue-based measurement are queued. iOS/macOS gates still running/queued.
 
 Review fixes validated; evidence was rewritten in docs/testing/task-14.2-watch-practice.md. IMPORTANT: supersedes the original eager-load 0.218668292-second cold claim and memory delta, which were not cold. Final fresh-process first-touch probe (only cold/bundle tests selected) asserts loader count 0 before and 1 after, and measures the actual detached actor-cache load: 0.3650345 s, resident 213,499,904 -> 221,757,440 bytes (delta 8,257,536). Installed logical/allocated bytes: 17,064,210 / 20,119,552 including injected test PlugIns, 10,162,513 / 13,197,312 excluding them. Independent inspection: 988 exact source-byte matches, no loose SVG/PNG, compiled Assets.car contains only AppIcon, and both unused catalogue keys absent from all compiled language tables. Paired phone has no CanadianHam counterpart. All 15 distinct watch tests now passed across scoped runs; final corrected cold/bundle/tap rerun 3/3, final catalogue-stable cold/bundle rerun 2/2; macOS full unit target 223/223. Localization repeat, text sources/self-test, network/iCloud guards+fixtures, test guard/self-test and embedded iOS build-for-testing all pass. Full watch initial failure (overstrict Assets.car check) and initial stale-key localization discovery are explicitly documented with final successful reruns. No audits weakened/skipped, no guarded changes or PR approval marker needed. Hardware/VoiceOver listening/full accessibility gates remain TASK-14.5/14.6. Internal re-review remains required before any PR.
+
+Coordinator, after the re-review (approve with notes): distractor notes now follow the on-screen shuffled order and use the official answer text in the body's language (English labels for the English fallback). New bank-wide unit test testDistractorNotesFollowDisplayedOrderWithOfficialChoiceText checks 984/984. Watch suite 16/16 on Apple Watch Series 12 (42mm), watchOS 27.0. Remaining review notes are filed on TASK-14.5 (announcement on sheet dismissal, test order) and TASK-14.6 (resident memory, cached load failure).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
