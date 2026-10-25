@@ -1,11 +1,11 @@
 ---
 id: TASK-46.7
 title: Interleaved review items in lesson quizzes
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-12 14:57
-updated_date: '2026-10-25T01:00:00Z'
+updated_date: '2026-10-25T01:07:00Z'
 labels:
   - web
   - apple
@@ -31,6 +31,8 @@ Lesson quizzes reuse no earlier material. Add 1-2 review items per lesson quiz d
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Use Learn recommended lesson order and all active-bank questions in each lesson taught subsections; exclude the current taught pool and quiz IDs. Select up to two seeded reviews from the previous three lessons, then earlier fallback, in pure TS/Swift functions with shared fixtures. 2. Preserve disjoint sorted reviewQuestionIds in web/Apple attempts, schemas, payloads and import/sync; validate incorrect/help IDs against the union. Reject non-empty review IDs on missing/v1 lesson-ID versions before existing 46.10 migration; current v2 attempts pass through unchanged. 3. Append accessible EN/FR source-lesson review headers, existing hint/progress semantics and final M1 Review/Révision round without changing mock exams. 4. Add shared engine, schema, web model/axe/round/resume and Apple unit/UI tests; use the unchanged coordinator-approved composite only for new review audits, leaving all existing helpers/tests unchanged. 5. Commit before nohup validation and poll grep logs: full macOS units plus final-source targeted compile check, TS/Swift parity, 22 distinct UI methods on each requested device, workspace tests/typecheck, schemas/import, web build/URL-CSP, l10n/text and test guard. Record per-test results, finalize verified ACs, push without PR.
+
+Review fixes: 1. Derive web pools from synchronous Basic subsections and regress delayed bank rendering/deterministic IDs. 2. Mark English titles in French review headings, align hint attribution/card count/Basic validation and add legacy empty-review coverage on all platforms. 3. Run requested nohup validation, record per-test results, commit and push without PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
