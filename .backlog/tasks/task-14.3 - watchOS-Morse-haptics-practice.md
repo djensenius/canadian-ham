@@ -1,9 +1,11 @@
 ---
 id: TASK-14.3
 title: watchOS Morse haptics practice
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-25T17:01:00Z'
+updated_date: '2026-10-25T19:09:00Z'
 labels:
   - apple
   - watchos
@@ -31,3 +33,9 @@ One-character listening/feeling drills make Morse useful on the wrist without br
 - [ ] #4 Replay does not overlap output or reveal/speak the answer prematurely; leaving the screen, inactivity, interruption and advancing cancel pending playback. No workout/location/extended background session is used.
 - [ ] #5 Unit tests verify sequence-to-output mapping, correct/wrong pick grading, replay and cancellation using existing timing fixtures; targeted watch UI tests verify play/replay/answer/Next and output settings via xbuild, with per-test results recorded.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect the watch practice patterns, Morse timing and local tone drivers. 2. Implement session-only Morse settings, deterministic drill and cancellable WatchKit/tone playback with injectable scheduling. 3. Add focused unit/UI tests, localized strings and hardware-check documentation. 4. Run watch tests, localization/text/guard checks and iOS build-for-testing; record evidence, leave AC2 blocked for owner hardware check, commit and push.
+<!-- SECTION:PLAN:END -->
