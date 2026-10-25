@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: 2026-10-02 08:06
-updated_date: '2026-10-25T17:14:00Z'
+updated_date: '2026-10-25T17:19:00Z'
 labels:
   - apple
   - tvos
@@ -26,7 +26,7 @@ Why: task-1.4 made each tvOS About card (attribution, disclaimer, privacy, sourc
 <!-- AC:BEGIN -->
 - [ ] #1 With VoiceOver on tvOS, each About card reads its title as a heading and its body as normal text, verified and recorded in docs/accessibility.md
 - [ ] #2 In the French UI, the English legal text in the attribution and disclaimer cards is spoken with an English voice
-- [x] #3 If either fails, the header trait or language tag is moved to the right element and the tvOS suite, including accessibility audits, passes via xbuild
+- [ ] #3 If either fails, the header trait or language tag is moved to the right element and the tvOS suite, including accessibility audits, passes via xbuild
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -84,6 +84,8 @@ pnpm check:apple-l10n PASS (catalogue unchanged); node scripts/check-apple-text-
 Skipped iOS/macOS/visionOS test suites because changed app/helper source and tests compile only in the tvOS targets (project.yml verified). No web/package changes, so no unrelated pnpm typecheck/test suites. No visual restyling, official text changes, catalogue edits, audit exceptions or new networking.
 
 AC1/AC2 remain unchecked: structural verification done; listening check pending owner. Follow the exact EN/FR tvOS VoiceOver steps in docs/accessibility.md; verify title-only heading speech and an English voice for every attribution/disclaimer legal paragraph before checking those criteria. TASK-29 intentionally remains In Progress pending that human verification and review.
+
+Review notes applied (coordinator): legal paragraphs tagged en-CA via BankLanguage.english.accessibilityLanguageCode (matches the project's convention); the UI Header check is commented as evidence only (the baseline showed no Header either); listening steps now say a physical Apple TV is required (VoiceOver isn't in the tvOS Simulator), add the Back triple-click shortcut and the correct Language menu path, and give the expected speech plus what each outcome means. AC3 is unticked: the change was made pre-emptively (tvOS suite 26/26); whether VoiceOver honours the inline heading level is an untested bet that the owner's listening check settles. If no heading is spoken anywhere, the coordinator decides whether to add a separate heading element.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
