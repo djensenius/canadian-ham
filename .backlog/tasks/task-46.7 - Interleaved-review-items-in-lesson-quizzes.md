@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-12 14:57
-updated_date: '2026-10-25T01:07:00Z'
+updated_date: '2026-10-25T01:12:00Z'
 labels:
   - web
   - apple
@@ -361,6 +361,8 @@ Run by bash scripts/check-engine-parity.sh (TS 32/32 and Swift 22/22). The new L
 | `CanadianHamEngineTests.ValidationTests.testTimestampParserRejectsImpossibleDatesAndNonAsciiDigits` | PASSED | 0.000 |
 
 All required validation complete. pnpm check:apple-l10n PASS (no catalogue rewrite, SHA256 fbce70ce3a6379189b0132df0ad3437b0cfd1fc8d6cc97923c1de4a9f41bc34d), complete French localization export and generic CanadianHamTV/CanadianHamVision simulator builds PASS. tvOS/visionOS lesson quiz UI is N/A by approved scope; no new surfaces were added. Full iOS/tvOS/visionOS suites, title sweeps and lesson-figure plans were intentionally skipped: assignment requires targeted quiz methods only; category/card/sidebar and lesson/figure rendering are unchanged. New audits alone use the unchanged coordinator-approved TASK-71/73 composite; all original tests/helpers remain byte-identical. Source last changed in 33e5b247; subsequent commits record evidence only. No PR opened; independent review remains required.
+
+Internal review fixes in progress: web review IDs now derive synchronously from Basic subsections, independent of bank text loading; delayed versus undelayed seeded render passes. Added English language runs in French headings, Apple card count including reviews, Basic-only review-ID validation, canonical hint-anchor overlap documentation tests and legacy empty-review import tests (top-level/sync, missing/v1) on web, Apple and schema. Targeted web 15/15 PASS. First full pnpm test hit unchanged v6 upgrade 5-second timeout during concurrent runners; rerunning full suite alone without test weakening. Schema test initially modeled missing version as own undefined JS field; corrected to actually omit it, matching JSON. Other initial checks PASS: import, typecheck, web build/URL audit, text sources and guard self-test. Full macOS queued on shared xbuild lock; chained 25-method/device iPhone/iPad, parity and l10n runners use nohup and grep polling.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
