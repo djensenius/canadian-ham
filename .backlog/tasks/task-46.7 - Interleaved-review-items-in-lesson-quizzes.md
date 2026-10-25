@@ -1,7 +1,7 @@
 ---
 id: TASK-46.7
 title: Interleaved review items in lesson quizzes
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: 2026-10-12 14:57
@@ -23,14 +23,14 @@ Lesson quizzes reuse no earlier material. Add 1-2 review items per lesson quiz d
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Each lesson quiz after the first includes 1-2 review items from earlier lessons, deterministic per attempt seed
-- [ ] #2 TS and Swift engines agree on shared fixtures; the UI marks review items accessibly
+- [x] #1 Each lesson quiz after the first includes 1-2 review items from earlier lessons, deterministic per attempt seed
+- [x] #2 TS and Swift engines agree on shared fixtures; the UI marks review items accessibly
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect recommended order, quiz session/rounds and attempt import/sync/migration seams; preserve mock exams and existing audit helpers. 2. Implement pure deterministic earlier-lesson review selection in TS/Swift with shared parity fixtures. 3. Add optional validated reviewQuestionIds to web/Apple attempts, schema, sync/import and lesson-ID migration with backward compatibility. 4. Integrate accessible EN/FR review headers, source-lesson hints, scoring/progress and final M1 Review round on web and Apple. 5. Add engine, schema, web axe/round/resume and targeted Apple unit/UI regression coverage; obtain audit composite scope approval before new calls. 6. Commit before nohup checks; poll grep logs for requested iPhone/iPad targeted tests, full macOS units, parity, web/schema/import/localization/text/test guard checks; record evidence and finalize/push without PR.
+1. Use Learn recommended lesson order and all active-bank questions in each lesson taught subsections; exclude the current taught pool and quiz IDs. Select up to two seeded reviews from the previous three lessons, then earlier fallback, in pure TS/Swift functions with shared fixtures. 2. Preserve disjoint sorted reviewQuestionIds in web/Apple attempts, schemas, payloads and import/sync; validate incorrect/help IDs against the union. Reject non-empty review IDs on missing/v1 lesson-ID versions before existing 46.10 migration; current v2 attempts pass through unchanged. 3. Append accessible EN/FR source-lesson review headers, existing hint/progress semantics and final M1 Review/Révision round without changing mock exams. 4. Add shared engine, schema, web model/axe/round/resume and Apple unit/UI tests; use the unchanged coordinator-approved composite only for new review audits, leaving all existing helpers/tests unchanged. 5. Commit before nohup validation and poll grep logs: full macOS units plus final-source targeted compile check, TS/Swift parity, 22 distinct UI methods on each requested device, workspace tests/typecheck, schemas/import, web build/URL-CSP, l10n/text and test guard. Record per-test results, finalize verified ACs, push without PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -360,3 +360,9 @@ Run by bash scripts/check-engine-parity.sh (TS 32/32 and Swift 22/22). The new L
 
 All required validation complete. pnpm check:apple-l10n PASS (no catalogue rewrite, SHA256 fbce70ce3a6379189b0132df0ad3437b0cfd1fc8d6cc97923c1de4a9f41bc34d), complete French localization export and generic CanadianHamTV/CanadianHamVision simulator builds PASS. tvOS/visionOS lesson quiz UI is N/A by approved scope; no new surfaces were added. Full iOS/tvOS/visionOS suites, title sweeps and lesson-figure plans were intentionally skipped: assignment requires targeted quiz methods only; category/card/sidebar and lesson/figure rendering are unchanged. New audits alone use the unchanged coordinator-approved TASK-71/73 composite; all original tests/helpers remain byte-identical. Source last changed in 33e5b247; subsequent commits record evidence only. No PR opened; independent review remains required.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented deterministic 1–2 earlier-lesson official review items in both engines and on web/iOS/iPadOS/macOS, with taught-pool preference/fallback, accessible EN/FR source labels, final M1 Review/Révision rounds, existing hint/help scoring and question-progress behavior. Added optional disjoint reviewQuestionIds persistence and import/sync validation, legacy-version rejection and v2 migration pass-through. Shared fixtures and regression tests cover selection, scoring, source-lesson resume, help and compatibility. Validation PASS: TS engine32/32, Swift engine22/22, macOS220/220 plus final-source1/1, iPhone22/22 distinct and iPad22/22, full pnpm test (content-tools250/Morse21/calculator127/web278), schemas60/60 across2071 targets, import, typecheck, web build/URL-CSP, unchanged-catalogue Apple localization plus TV/vision builds, text sources, test guard and diff checks. One new UI-only async navigation assertion was corrected and rerun alone successfully. Existing audits/helpers and mock exams unchanged. tvOS/visionOS quiz UI N/A; no full iOS/tvOS/visionOS suites or PR. Per-test Apple/engine results are recorded in notes; independent review remains required.
+<!-- SECTION:FINAL_SUMMARY:END -->
