@@ -64,7 +64,9 @@ platform) and share one build lock, so don't run them by reflex.
     the suite of every platform whose target compiles a changed file or links a changed Swift
     package. iOS and macOS share the `CanadianHam` target; tvOS and visionOS also compile some
     files from `apps/apple/CanadianHam/` and link `packages/engine-swift` and
-    `packages/morse-swift`, so changes there usually need their suites too. Code only under
+    `packages/morse-swift`, so changes there usually need their suites too. watchOS changes
+    include the `CanadianHamWatch` app/test targets and any shared packages they link
+    (`content-swift`, `engine-swift`, `morse-swift`); run the watch suite for those changes. Code only under
     `apps/apple/Platforms/<platform>/` or a platform's test target needs only that platform.
   - Swift package: `swift test` in the package (or its `xbuild` scheme), plus the suites of
     every app target that links it.
@@ -177,6 +179,7 @@ platform) and share one build lock, so don't run them by reflex.
 - Scheme: `CanadianHam`.
 - Always run Apple builds/tests through `xbuild`, never direct `xcodebuild`.
 - `xcode-select` points at CommandLineTools on this machine, so prefix Apple build/test commands with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
+- iOS builds/tests also compile the embedded watch app; build hosts need the watchOS SDK (and watchOS Simulator SDK for simulator runs).
 - iOS simulator test command, using the single requested simulator destination and running both unit and UI tests:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
 - macOS test command (unit tests only; UI tests are iOS-only, and SDK/platform overrides keep the auto platform target on macOS while signing locally):
@@ -185,6 +188,8 @@ platform) and share one build lock, so don't run them by reflex.
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' test CODE_SIGNING_ALLOWED=NO`
 - visionOS simulator test command:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'platform=visionOS Simulator,name=Apple Vision Pro' test CODE_SIGNING_ALLOWED=NO`
+- watchOS simulator test command (unit and UI smoke tests):
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamWatch -destination 'platform=watchOS Simulator,name=Apple Watch Series 12 (42mm),OS=27.0' test CODE_SIGNING_ALLOWED=NO`
 - visionOS generic simulator build fallback if the named simulator runtime is unavailable:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'generic/platform=visionOS Simulator' build CODE_SIGNING_ALLOWED=NO`
 - Regenerate the Apple project after editing `apps/apple/project.yml` or target membership:

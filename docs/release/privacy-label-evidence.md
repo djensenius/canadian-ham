@@ -149,3 +149,31 @@ pnpm --filter @canadian-ham/web audit:urls
 ```
 
 Also confirm the exact App Store Connect wording and any changes to Apple's privacy manifest / required-reason API requirements before submitting the privacy label.
+
+## TASK-14.1 watchOS skeleton addendum (2026-10-25)
+
+`CanadianHamWatch` is an independently usable watchOS 27 app embedded in the iOS
+container only. Its watch-specific source tree is `apps/apple/Platforms/watchOS`;
+its own `Resources/PrivacyInfo.xcprivacy` declares no tracking, tracking domains,
+collected data types or required-reason API types. The skeleton contains only
+three navigable placeholders, no stored state or bundled question bank yet.
+It links the three local engine/content/Morse packages, not phone app services,
+WatchConnectivity, remote packages or SDKs. App Privacy remains **Data Not Collected**.
+
+The watch reuses `CanadianHam/Resources/Localizable.xcstrings` so existing Practice,
+Morse, Coming soon and app-name translations have one source of truth; Alphabet
+adds one EN/FR catalogue key. Watch bundle metadata has its own EN/fr/fr-CA
+`InfoPlist.xcstrings`; the localization check verifies both catalogues remain
+unchanged. No phone source membership is implied by sharing the UI resource.
+The watch has its own privacy manifest to keep membership explicit.
+
+`check-apple-no-network.sh` recursively scans all watch app/test sources and privacy
+resources as well as package sources. Watch paths never receive the optional
+CloudKit symbol exemption. Its fixtures prove gated watch CloudKit and
+WatchConnectivity are rejected. `check-apple-icloud-gate.mjs` checks watch app/test
+build settings in **all** configurations, including DebugCloudKit, requiring empty
+entitlements and a non-inherited empty `OTHER_SWIFT_FLAGS` override. The watch
+therefore does not inherit the project's optional `ICLOUD_SYNC` gate. Regression
+fixtures cover inherited flags, cloud flags, push background modes and non-empty
+entitlement paths. No release signing, upload or distribution is performed here;
+TASK-14.6 owns that validation and the final icon.

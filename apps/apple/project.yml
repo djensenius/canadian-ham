@@ -6,6 +6,7 @@ options:
     macOS: "27.0"
     tvOS: "27.0"
     visionOS: "27.0"
+    watchOS: "27.0"
   developmentLanguage: en
   knownRegions: [en, fr, fr-CA]
   createIntermediateGroups: true
@@ -143,6 +144,9 @@ targets:
           cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/categories.json" "${advanced_destination}/categories.json"
           cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/manifest.json" "${advanced_destination}/manifest.json"
     dependencies:
+      - target: CanadianHamWatch
+        embed: true
+        destinationFilters: [iOS]
       - package: CanadianHamEngine
         product: CanadianHamEngine
       - package: CanadianHamContent
@@ -330,6 +334,77 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+  CanadianHamWatch:
+    type: application
+    platform: watchOS
+    deploymentTarget: "27.0"
+    sources:
+      - path: Platforms/watchOS
+      - path: CanadianHam/Resources/Localizable.xcstrings
+        type: file
+        buildPhase: resources
+    dependencies:
+      - package: CanadianHamEngine
+        product: CanadianHamEngine
+      - package: CanadianHamContent
+        product: CanadianHamContent
+      - package: CanadianHamMorseEngine
+        product: CanadianHamMorseEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.davidjensenius.CanadianHam.watchkitapp
+        PRODUCT_NAME: CanadianHamWatch
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Canadian Ham
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        INFOPLIST_KEY_WKApplication: YES
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: org.davidjensenius.CanadianHam
+        INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp: YES
+        TARGETED_DEVICE_FAMILY: "4"
+        CODE_SIGN_ENTITLEMENTS: ""
+        # Override project DebugCloudKit flags: the watch never compiles iCloud code.
+        OTHER_SWIFT_FLAGS: ""
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+  CanadianHamWatchTests:
+    type: bundle.unit-test
+    platform: watchOS
+    deploymentTarget: "27.0"
+    sources:
+      - path: CanadianHamWatchTests
+    dependencies:
+      - target: CanadianHamWatch
+      - package: CanadianHamEngine
+        product: CanadianHamEngine
+      - package: CanadianHamContent
+        product: CanadianHamContent
+      - package: CanadianHamMorseEngine
+        product: CanadianHamMorseEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.davidjensenius.CanadianHam.watchkitapp.tests
+        PRODUCT_NAME: CanadianHamWatchTests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "4"
+        CODE_SIGN_ENTITLEMENTS: ""
+        OTHER_SWIFT_FLAGS: ""
+  CanadianHamWatchUITests:
+    type: bundle.ui-testing
+    platform: watchOS
+    deploymentTarget: "27.0"
+    sources:
+      - path: CanadianHamWatchUITests
+    dependencies:
+      - target: CanadianHamWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.davidjensenius.CanadianHam.watchkitapp.uitests
+        PRODUCT_NAME: CanadianHamWatchUITests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "4"
+        CODE_SIGN_ENTITLEMENTS: ""
+        OTHER_SWIFT_FLAGS: ""
   CanadianHamTV:
     type: application
     platform: tvOS
@@ -674,3 +749,14 @@ schemes:
       targets:
         - CanadianHamVisionTests
         - CanadianHamVisionUITests
+  CanadianHamWatch:
+    build:
+      targets:
+        CanadianHamWatch: all
+        CanadianHamWatchTests: [test]
+        CanadianHamWatchUITests: [test]
+    test:
+      gatherCoverageData: false
+      targets:
+        - CanadianHamWatchTests
+        - CanadianHamWatchUITests

@@ -25,7 +25,7 @@ const fail = (message) => errors.push(message);
 const forbiddenDefaultPatterns = [
   /com\.apple\.developer\.icloud/,
   /aps-environment/,
-  /UIBackgroundModes/,
+  /(?:UI|WK)BackgroundModes/,
   /remote-notification/,
   /\bICLOUD_SYNC\b/,
   /-DICLOUD_SYNC\b/,
@@ -177,6 +177,27 @@ for (const { configName, buildSettings } of defaultBlocks) {
   }
 }
 
+// Watch app and test targets must override the project gate in every configuration.
+const watchBlocks = [...defaultBlocks, ...cloudKitBlocks].filter(({ buildSettings }) =>
+  /PRODUCT_BUNDLE_IDENTIFIER = org\.davidjensenius\.CanadianHam\.watchkitapp(?:[.;])/.test(buildSettings));
+// Three watch targets (app, unit tests, UI tests), each in three configurations.
+if (watchBlocks.length !== 9) {
+  fail(`Expected 9 watch build-configuration blocks, found ${watchBlocks.length}.`);
+}
+for (const { configName, buildSettings } of watchBlocks) {
+  for (const pattern of forbiddenDefaultPatterns) {
+    if (pattern.test(buildSettings)) {
+      fail(`Watch ${configName} build settings unexpectedly match gated iCloud token: ${pattern}`);
+    }
+  }
+  if (!/OTHER_SWIFT_FLAGS = "";/.test(buildSettings)) {
+    fail(`Watch ${configName} must override inherited OTHER_SWIFT_FLAGS to exclude ICLOUD_SYNC.`);
+  }
+  if (!/CODE_SIGN_ENTITLEMENTS = "";/.test(buildSettings)) {
+    fail(`Watch ${configName} must have empty CODE_SIGN_ENTITLEMENTS.`);
+  }
+}
+
 const isPrimaryCanadianHamAppBlock = (buildSettings) =>
   buildSettings.includes('PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;')
   && buildSettings.includes('PRODUCT_NAME = CanadianHam;');
@@ -213,4 +234,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log('iCloud gate check passed: default Debug/Release settings across project and targets stay free of iCloud, Push, remote-notification, and ICLOUD_SYNC; DebugCloudKit carries the gated app capability settings.');
+console.log('iCloud gate check passed: default Debug/Release settings across project and targets stay free of iCloud, Push, remote-notification, and ICLOUD_SYNC; DebugCloudKit carries only the gated primary-app capability settings; watch targets override inherited cloud flags and have no entitlements.');

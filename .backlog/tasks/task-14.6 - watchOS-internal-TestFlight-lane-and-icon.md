@@ -4,6 +4,7 @@ title: watchOS internal TestFlight lane and icon
 status: To Do
 assignee: []
 created_date: '2026-10-25T17:02:00Z'
+updated_date: '2026-10-25T17:40:00Z'
 labels:
   - apple
   - watchos
@@ -34,3 +35,9 @@ The watch app needs a release-quality icon and a reproducible internal delivery 
 - [ ] #4 After review/merge approval, an internal-team-only TestFlight upload is processed and installation on a physical watch verifies quick practice, Morse, reference and EN/FR without the phone app or network. Results and build IDs are recorded; no external group, public link or App Store submission is created before TASK-1.7/licensing approval.
 - [ ] #5 docs/release/testflight.md, privacy-label evidence and the release checklist cover the watch payload, Data Not Collected, signing/install steps and manual hardware checks; the simulator build/test command and targeted per-test results are recorded before upload.
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Coordinator decision 2026-10-25 after TASK-14.1 internal review: TASK-14.1 now adds a real opaque 1024px watch AppIcon derived from existing app art and proves iOS-container/macOS archive+export without uploading. TASK-14.6 may refine the circular/small-size icon and retains physical-watch, final feature payload, release documentation and internal-only TestFlight processing/install gates.
+<!-- SECTION:NOTES:END -->
