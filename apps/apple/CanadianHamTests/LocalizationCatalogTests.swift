@@ -9,7 +9,8 @@ final class LocalizationCatalogTests: XCTestCase {
         XCTAssertEqual(String(heading.characters), "Question de révision de Units, conductors, and current")
         let englishRuns = heading.runs.filter { $0.languageIdentifier == "en" }
         XCTAssertEqual(englishRuns.map { String(heading[$0.range].characters) }.joined(), title.en)
-        XCTAssertTrue(heading.runs.contains { $0.languageIdentifier == nil }, "The French prefix must not be marked as English")
+        let prefixRuns = heading.runs.filter { $0.languageIdentifier != "en" }
+        XCTAssertEqual(prefixRuns.map { String(heading[$0.range].characters) }.joined(), "Question de révision de ", "The French prefix must not be marked as English")
     }
 
     func testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench() throws {
