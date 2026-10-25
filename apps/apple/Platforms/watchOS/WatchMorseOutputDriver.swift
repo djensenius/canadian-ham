@@ -34,6 +34,14 @@ private final class WatchMorseToneRenderer: @unchecked Sendable {
 
     init(schedule: WatchMorseToneSchedule) { self.schedule = schedule }
 
+    // Construct outside the main-actor driver so Swift does not infer main-actor
+    // isolation for a callback AVFoundation runs on its real-time audio thread.
+    func makeSourceNode() -> AVAudioSourceNode {
+        AVAudioSourceNode { [self] _, _, count, buffers in
+            render(count: count, buffers: buffers)
+        }
+    }
+
     func render(count: AVAudioFrameCount, buffers: UnsafeMutablePointer<AudioBufferList>) -> OSStatus {
         let list = UnsafeMutableAudioBufferListPointer(buffers)
         for offset in 0..<Int(count) {
@@ -70,9 +78,7 @@ final class WatchMorseOutputDriver: WatchMorseOutput {
             let outputFormat = engine.outputNode.outputFormat(forBus: 0)
             let rate = outputFormat.sampleRate > 0 ? outputFormat.sampleRate : 48_000
             let renderer = WatchMorseToneRenderer(schedule: WatchMorseToneSchedule(sequence: sequence, sampleRate: rate))
-            let source = AVAudioSourceNode { _, _, count, buffers in
-                renderer.render(count: count, buffers: buffers)
-            }
+            let source = renderer.makeSourceNode()
             self.source = source
             engine.attach(source)
             engine.connect(source, to: engine.mainMixerNode, format: AVAudioFormat(standardFormatWithSampleRate: rate, channels: 1))

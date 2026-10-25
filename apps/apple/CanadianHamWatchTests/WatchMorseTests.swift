@@ -85,6 +85,19 @@ final class WatchMorseTests: XCTestCase {
     }
 
     @MainActor
+    func testLocalToneDriverRendersOffMainActorAndRestartsAfterStop() async throws {
+        let output = WatchMorseOutputDriver()
+        defer { output.stop() }
+        for _ in 0..<2 {
+            try output.startTone(sequence: WatchMorseSettings().sequence(for: "A"))
+            // A real render callback must run while the main actor is suspended;
+            // constructing the callback on the main actor traps on Swift 6.
+            try await Task.sleep(for: .milliseconds(150))
+            output.stop()
+        }
+    }
+
+    @MainActor
     func testReplayCannotOverlapAndCompletedReplayUsesSameSequence() {
         let clock = FakeMorseScheduler()
         let output = FakeMorseOutput(clock: clock)

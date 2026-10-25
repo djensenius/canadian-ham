@@ -72,11 +72,11 @@ final class WatchMorseUITests: XCTestCase {
         let tone = app.switches["watch-morse-tone"]
         XCTAssertEqual(haptics.value as? String, "1")
         XCTAssertEqual(tone.value as? String, "0")
-        haptics.tap()
-        tone.tap()
+        haptics.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5)).tap()
+        tone.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5)).tap()
         XCTAssertEqual(haptics.value as? String, "0")
         XCTAssertEqual(tone.value as? String, "1")
-        let speed = app.pickers["watch-morse-speed"]
+        let speed = app.buttons["watch-morse-speed"]
         reveal(speed, in: app)
         XCTAssertTrue(speed.exists)
         speed.tap()
@@ -94,7 +94,7 @@ final class WatchMorseUITests: XCTestCase {
         openSettings(app)
         XCTAssertEqual(haptics.value as? String, "0")
         XCTAssertEqual(tone.value as? String, "1")
-        tone.tap()
+        tone.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5)).tap()
         closeSettings(app)
         let unavailable = app.staticTexts["watch-morse-no-output"]
         XCTAssertTrue(unavailable.waitForExistence(timeout: 5))
@@ -156,10 +156,11 @@ final class WatchMorseUITests: XCTestCase {
 
     @MainActor
     private func reveal(_ target: XCUIElement, in app: XCUIApplication) {
-        XCTAssertTrue(target.waitForExistence(timeout: 5))
+        // Form rows are lazy on watchOS; scroll before requiring existence.
         for _ in 0..<16 {
-            if target.isHittable { return }
-            XCUIDevice.shared.rotateDigitalCrown(delta: target.frame.maxY <= 56 ? -0.5 : 0.5)
+            if target.exists && target.isHittable { return }
+            let above = target.exists && target.frame.maxY <= 56
+            XCUIDevice.shared.rotateDigitalCrown(delta: above ? -0.5 : 0.5)
         }
         let hierarchy = XCTAttachment(string: app.debugDescription)
         hierarchy.lifetime = .keepAlways

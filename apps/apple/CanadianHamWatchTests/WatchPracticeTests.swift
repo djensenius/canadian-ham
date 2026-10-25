@@ -13,7 +13,10 @@ final class WatchPracticeTests: XCTestCase {
         XCTAssertEqual(Set(bank.explanations.keys), Set(bank.questions.map(\.id)))
         let files = try XCTUnwrap(FileManager.default.enumerator(at: root, includingPropertiesForKeys: nil))
             .compactMap { $0 as? URL }
-        let jsonPaths = files.filter { $0.pathExtension == "json" }.map { String($0.path.dropFirst(root.path.count + 1)) }
+        // Unit-test fixtures live in the injected test plug-in, not app content.
+        let testBundlePath = Bundle(for: Self.self).bundleURL.path + "/"
+        let jsonPaths = files.filter { $0.pathExtension == "json" && !$0.path.hasPrefix(testBundlePath) }
+            .map { String($0.path.dropFirst(root.path.count + 1)) }
         let expected = Set(["questions", "categories", "subsections", "manifest"].map { "\(basicBankId)/\($0).json" } + bank.questions.map {
             "explanations/\($0.categoryId.lowercased())/\($0.id.lowercased()).json"
         })
