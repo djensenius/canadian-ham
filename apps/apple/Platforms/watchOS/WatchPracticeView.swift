@@ -109,11 +109,6 @@ private struct WatchCrownAnswerView: View {
                 Text(answerText(selection)) // l10n: content(question)
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
-                    .focusable()
-                    .focused($crownFocused)
-                    .digitalCrownRotation($crownPosition, from: 0, through: 3, by: 1,
-                                          sensitivity: .low, isContinuous: false,
-                                          isHapticFeedbackEnabled: true)
                     .accessibilityLabel(Text(answerText(selection))) // l10n: content(question)
                     .accessibilityValue("Selected")
                     .accessibilityAdjustableAction { direction in
@@ -133,6 +128,11 @@ private struct WatchCrownAnswerView: View {
             }
             .padding(.horizontal)
         }
+        .focusable()
+        .focused($crownFocused)
+        .digitalCrownRotation($crownPosition, from: 0, through: 3, by: 1,
+                              sensitivity: .low, isContinuous: false,
+                              isHapticFeedbackEnabled: true)
         .defaultFocus($crownFocused, true)
         .onAppear { crownFocused = true }
     }
