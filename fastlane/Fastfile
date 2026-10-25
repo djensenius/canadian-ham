@@ -229,7 +229,24 @@ end
 # Pass artifact_path:<exported .ipa/.pkg> to upload an existing export
 # without re-archiving (for example, after an upload-only failure).
 # Pass export_only:true to inspect a signed export without uploading it.
+BETA_OPTION_KEYS = %i[artifact_path export_only].freeze
+
+# A "don't upload" switch must fail safe: reject unknown option names and
+# unrecognised values instead of falling through to a real upload.
+def beta_export_only?(options)
+  unknown = options.keys.map(&:to_sym) - BETA_OPTION_KEYS
+  UI.user_error!("Unknown beta option(s): #{unknown.join(', ')}; allowed: #{BETA_OPTION_KEYS.join(', ')}") unless unknown.empty?
+  value = options[:export_only]
+  return false if value.nil?
+  case value.to_s.strip.downcase
+  when "true", "yes", "1" then true
+  when "false", "no", "0" then false
+  else UI.user_error!("export_only must be true/false (yes/no, 1/0), got #{value.inspect}")
+  end
+end
+
 def upload_beta(platform_key, options = {})
+  export_only = beta_export_only?(options)
   result =
     if options[:artifact_path]
       config = BETA_PLATFORMS.fetch(platform_key)
@@ -239,7 +256,7 @@ def upload_beta(platform_key, options = {})
     else
       archive_and_export(platform_key, official_reference_sheet: true)
     end
-  if options[:export_only].to_s == "true"
+  if export_only
     UI.success("Export only; skipping TestFlight upload: #{result[:artifact_path]}")
     return result
   end

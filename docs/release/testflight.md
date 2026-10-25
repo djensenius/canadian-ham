@@ -102,6 +102,8 @@ fastlane ios beta export_only:true # includes Watch/CanadianHamWatch.app
 fastlane mac beta export_only:true # no watch payload
 ```
 
+`export_only` accepts true/false (also yes/no, 1/0, any case). Any other value or an unknown option name stops the lane before archiving, so a typo never turns into an upload. `pnpm test:fastlane` runs the lane safety tests (`scripts/test-fastlane-export-only.rb`); it needs Ruby 3.0 or later (the mise Ruby fastlane uses), not macOS system Ruby 2.6.
+
 This uses the same Release signing, dedicated keychain, API key and internal-only
 export options as a normal beta run. Omitting the option keeps upload behaviour
 unchanged.

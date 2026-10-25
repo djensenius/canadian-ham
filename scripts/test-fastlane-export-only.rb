@@ -63,6 +63,20 @@ class FastlaneExportOnlyTests < Minitest::Test
     end
   end
 
+  def test_unrecognised_values_and_option_names_fail_before_archive_or_upload
+    [{ export_only: "TRUE" }, { export_only: 1 }, { export_only: "yes" }].each do |options|
+      lane = BetaLaneHarness.new
+      lane.upload_beta(:ios, options)
+      assert_empty lane.uploads, "#{options.inspect} must mean export only"
+    end
+    [{ export_only: "maybe" }, { export_only: "ture" }, { exportonly: true }, { export: "true" }].each do |options|
+      lane = BetaLaneHarness.new
+      assert_raises(RuntimeError) { lane.upload_beta(:ios, options) }
+      assert_empty lane.archives, "#{options.inspect} must fail before archiving"
+      assert_empty lane.uploads, "#{options.inspect} must never upload"
+    end
+  end
+
   def test_existing_artifact_can_be_inspected_without_upload
     lane = BetaLaneHarness.new
     result = lane.upload_beta(:ios, artifact_path: __FILE__, export_only: "true")
