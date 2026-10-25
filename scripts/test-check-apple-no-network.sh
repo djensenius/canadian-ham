@@ -189,6 +189,14 @@ assert_fails_with_labels "nested Swift source traversal" "$nested_source_root" \
 
 assert_swift_sample_fails_with_label "import-network" "import Network" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-cloudkit" "import CloudKit" "$source_symbol_label"
+assert_swift_sample_fails_with_label "import-watch-connectivity" "import WatchConnectivity" "$source_symbol_label"
+assert_swift_sample_fails_with_label "watch-connectivity-session" "let session = WCSession.default" "$source_symbol_label"
+
+watch_root=$(make_fixture watch-source)
+mkdir -p "$watch_root/apps/apple/Platforms/watchOS"
+printf '%s\n' '#if ICLOUD_SYNC' 'import CloudKit' '#endif' > "$watch_root/apps/apple/Platforms/watchOS/Watch.swift"
+assert_fails_with_labels "watch CloudKit stays forbidden even behind gate" "$watch_root" "$source_symbol_label"
+
 assert_swift_sample_fails_with_label "import-webkit" "import WebKit" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-safariservices" "import SafariServices" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-cfnetwork" "import CFNetwork" "$source_symbol_label"

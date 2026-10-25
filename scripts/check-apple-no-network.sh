@@ -163,6 +163,11 @@ if [[ ${#swift_files[@]} -gt 0 ]]; then
   trap 'rm -rf "$sanitized_swift_dir"; [[ -n "$gated_plist_dir" ]] && rm -rf "$gated_plist_dir"' EXIT
   network_swift_files=()
   for file in "${swift_files[@]}"; do
+    # The watch is offline even in DebugCloudKit: never exempt its CloudKit symbols.
+    if [[ "$file" == apps/apple/Platforms/watchOS/* || "$file" == apps/apple/CanadianHamWatch*/* ]]; then
+      network_swift_files+=("$file")
+      continue
+    fi
     sanitized_file="$sanitized_swift_dir/$file"
     mkdir -p "$(dirname "$sanitized_file")"
     awk '
@@ -188,8 +193,8 @@ if [[ ${#swift_files[@]} -gt 0 ]]; then
 fi
 
 if [[ ${#network_swift_files[@]} -gt 0 ]]; then
-  source_identifier_pattern='(^|[^[:alnum:]_])(NSUbiquitous[[:alnum:]_]*|URLSession[[:alnum:]_]*|NSURLSession[[:alnum:]_]*|NSURLConnection[[:alnum:]_]*|URLRequest[[:alnum:]_]*|NSURLRequest[[:alnum:]_]*|NW[A-Z][[:alnum:]_]*|CK[A-Z][[:alnum:]_]*|CFSocket[[:alnum:]_]*|CFStream[[:alnum:]_]*|CFHTTP[[:alnum:]_]*|CFNetwork[[:alnum:]_]*|WKWebView[[:alnum:]_]*|SFSafariViewController[[:alnum:]_]*|ASWebAuthenticationSession[[:alnum:]_]*|CloudKit[[:alnum:]_]*|NSPersistentCloudKitContainer[[:alnum:]_]*|Firebase[[:alnum:]_]*|FirebaseAnalytics[[:alnum:]_]*|Crashlytics[[:alnum:]_]*|GoogleAnalytics[[:alnum:]_]*|GoogleTagManager[[:alnum:]_]*|Sentry[[:alnum:]_]*|Segment[[:alnum:]_]*|Mixpanel[[:alnum:]_]*|Amplitude[[:alnum:]_]*|PostHog[[:alnum:]_]*|Datadog[[:alnum:]_]*|AppCenter[[:alnum:]_]*|AdMob[[:alnum:]_]*|AppsFlyer[[:alnum:]_]*|Adjust[[:alnum:]_]*|Braze[[:alnum:]_]*|Snowplow[[:alnum:]_]*|TelemetryDeck[[:alnum:]_]*|Bugsnag[[:alnum:]_]*|NewRelic[[:alnum:]_]*|[[:alnum:]_]*(WebSocket|Socket)[[:alnum:]_]*)([^[:alnum:]_]|$)'
-  source_import_pattern='^[[:space:]]*(@[A-Za-z_][A-Za-z0-9_]*(\([^)]*\))?[[:space:]]+)*import[[:space:]]+((struct|class|enum|protocol|typealias|func|var|let)[[:space:]]+)?(Network|CloudKit|WebKit|SafariServices|CFNetwork|AuthenticationServices|Firebase[[:alnum:]_]*|[[:alnum:]_]*Analytics[[:alnum:]_]*)(\.|[^[:alnum:]_]|$)'
+  source_identifier_pattern='(^|[^[:alnum:]_])(NSUbiquitous[[:alnum:]_]*|URLSession[[:alnum:]_]*|NSURLSession[[:alnum:]_]*|NSURLConnection[[:alnum:]_]*|URLRequest[[:alnum:]_]*|NSURLRequest[[:alnum:]_]*|NW[A-Z][[:alnum:]_]*|WCSession[[:alnum:]_]*|CK[A-Z][[:alnum:]_]*|CFSocket[[:alnum:]_]*|CFStream[[:alnum:]_]*|CFHTTP[[:alnum:]_]*|CFNetwork[[:alnum:]_]*|WKWebView[[:alnum:]_]*|SFSafariViewController[[:alnum:]_]*|ASWebAuthenticationSession[[:alnum:]_]*|CloudKit[[:alnum:]_]*|NSPersistentCloudKitContainer[[:alnum:]_]*|Firebase[[:alnum:]_]*|FirebaseAnalytics[[:alnum:]_]*|Crashlytics[[:alnum:]_]*|GoogleAnalytics[[:alnum:]_]*|GoogleTagManager[[:alnum:]_]*|Sentry[[:alnum:]_]*|Segment[[:alnum:]_]*|Mixpanel[[:alnum:]_]*|Amplitude[[:alnum:]_]*|PostHog[[:alnum:]_]*|Datadog[[:alnum:]_]*|AppCenter[[:alnum:]_]*|AdMob[[:alnum:]_]*|AppsFlyer[[:alnum:]_]*|Adjust[[:alnum:]_]*|Braze[[:alnum:]_]*|Snowplow[[:alnum:]_]*|TelemetryDeck[[:alnum:]_]*|Bugsnag[[:alnum:]_]*|NewRelic[[:alnum:]_]*|[[:alnum:]_]*(WebSocket|Socket)[[:alnum:]_]*)([^[:alnum:]_]|$)'
+  source_import_pattern='^[[:space:]]*(@[A-Za-z_][A-Za-z0-9_]*(\([^)]*\))?[[:space:]]+)*import[[:space:]]+((struct|class|enum|protocol|typealias|func|var|let)[[:space:]]+)?(Network|CloudKit|WatchConnectivity|WebKit|SafariServices|CFNetwork|AuthenticationServices|Firebase[[:alnum:]_]*|[[:alnum:]_]*Analytics[[:alnum:]_]*)(\.|[^[:alnum:]_]|$)'
   lowercase_socket_pattern='(^|[^[:alnum:]_])socket[[:space:]]*\('
   source_api_pattern="$source_import_pattern|$source_identifier_pattern|$lowercase_socket_pattern"
   print_grep_matches "forbidden networking, browser, iCloud, socket, or analytics SDK symbol in Swift source" "$source_api_pattern" "${network_swift_files[@]}"

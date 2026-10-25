@@ -12,7 +12,7 @@ function fail(message) {
   failures += 1;
 }
 
-function basePbxproj({ projectDebug = '', appDebug = '', tvDebug = '', tvCloudKit = '', macEntitlement = 'CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements', resourceLeak = '' } = {}) {
+function basePbxproj({ projectDebug = '', appDebug = '', tvDebug = '', tvCloudKit = '', macEntitlement = 'CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements', resourceLeak = '', watchCloudKit } = {}) {
   return `// !$*UTF8*$!
 /* Begin PBXBuildFile section */
 ${resourceLeak}/* End PBXBuildFile section */
@@ -86,6 +86,14 @@ ${tvCloudKit}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;
 		};
 		name = DebugCloudKit;
 	};
+` : ''}${watchCloudKit !== undefined ? `	DDDD0003 /* DebugCloudKit */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+${watchCloudKit}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam.watchkitapp;
+			PRODUCT_NAME = CanadianHamWatch;
+		};
+		name = DebugCloudKit;
+	};
 ` : ''}/* End XCBuildConfiguration section */
 `;
 }
@@ -156,6 +164,13 @@ function assertFail(name, options, expected) {
 }
 
 assertPass('clean fixture');
+const cleanWatchCloudKit = '\t\t\tCODE_SIGN_ENTITLEMENTS = "";\n\t\t\tOTHER_SWIFT_FLAGS = "";\n';
+assertPass('watch excludes project CloudKit gate', { watchCloudKit: cleanWatchCloudKit });
+assertFail('watch inherits project CloudKit flags', { watchCloudKit: '\t\t\tCODE_SIGN_ENTITLEMENTS = "";\n' }, 'Watch DebugCloudKit must override inherited OTHER_SWIFT_FLAGS');
+assertFail('watch enables cloud compilation', { watchCloudKit: cleanWatchCloudKit.replace('OTHER_SWIFT_FLAGS = ""', 'OTHER_SWIFT_FLAGS = "$(inherited) -DICLOUD_SYNC"') }, 'Watch DebugCloudKit build settings unexpectedly match');
+assertFail('watch enables push background mode', { watchCloudKit: cleanWatchCloudKit + '\t\t\tINFOPLIST_KEY_UIBackgroundModes = "remote-notification";\n' }, 'Watch DebugCloudKit build settings unexpectedly match');
+assertFail('watch non-empty entitlement path', { watchCloudKit: cleanWatchCloudKit.replace('CODE_SIGN_ENTITLEMENTS = ""', 'CODE_SIGN_ENTITLEMENTS = watch.entitlements') }, 'Watch DebugCloudKit must have empty CODE_SIGN_ENTITLEMENTS');
+
 assertFail('project Debug ICLOUD_SYNC leak', { projectDebug: '\t\t\tOTHER_SWIFT_FLAGS = "$(inherited) -DICLOUD_SYNC";\n' }, 'Debug build settings unexpectedly match gated iCloud token');
 assertFail('app Debug CloudKit entitlements leak', { appDebug: '\t\t\t"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements;\n' }, 'Debug build settings unexpectedly match gated iCloud token');
 assertFail('app Debug CloudKit Info plist leak', { appDebug: '\t\t\tINFOPLIST_FILE = CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist;\n' }, 'Debug build settings unexpectedly match gated iCloud token');
