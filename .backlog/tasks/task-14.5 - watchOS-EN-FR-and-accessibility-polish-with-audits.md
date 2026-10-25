@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T21:11:00Z'
+updated_date: '2026-10-25T21:28:00Z'
 labels:
   - apple
   - watchos
@@ -52,4 +52,6 @@ From TASK-14.3 approved review findings 6/7: add full performAccessibilityAudit 
 From the TASK-14.4 review: (1) Alphabet spoken patterns join with spaces ('Dot Dash'), but Morse uses ', '; make both use ', ' so VoiceOver pauses between elements. (2) French dah terminology: the 'Dash' key gives 'Tiret', but the 14.3 haptic-style strings say 'trait'; pick one. 'Trait' is the usual French Morse term, so consider changing 'Dash' to 'Trait' everywhere, checking the iOS Morse trainer first. (3) WatchAlphabetReferenceTests' en/fr/fr-CA loop hard-codes the words and only tests joining; rename it or check real localization. (4) Add a --self-test to scripts/check-watch-alphabet-reference.mjs. (5) Smallest-watch layout: only Series 12 42mm was tested; the smallest supported watch is still part of AC2 here.
 
 Implemented session-only Settings locale + explicit lproj lookup (phone persists AppleLanguages and requires restart, so that persistence is deliberately not reused); retained app-wide French Tiret and aligned three watch haptic descriptions. Added Letter labels, comma-separated spoken patterns, choices announcement, 1.5 s VoiceOver output lead-in and Crown feedback after dismissal. Default home accessibility audit succeeded on watchOS 27 / Series 12 42mm at largest text; no exception handler. Created (not booted yet) SE 3 40mm simulator 596608F4-525A-4BED-8642-151C0E69842D for targeted smallest-layout run. Cold probes now use independent caches and assert construction does not warm shared cache; reference guard self-test passes.
+
+Milestone ff25c9fe pushed. Full Series 12 42mm watch scheme: all 28 units passed and 24/27 UI passed; all 16 EN/FR largest-text full default audits passed with no exception handlers. Three test expectation typos (Vibrations and comma separators) fixed; targeted Series 12 rerun passed session override + both reference tests (54.682/54.664/83.197 s). Added selected-trait assertions and explicit official-text speech language metadata; now validating these with smallest-watch AX UI runs. No audit/runtime limitation encountered.
 <!-- SECTION:NOTES:END -->
