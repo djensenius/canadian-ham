@@ -8,8 +8,9 @@ Status: internal TestFlight setup for Backlog `task-1.10`. Do not invite externa
 - SKU: `canadian-ham`.
 - Primary language: `en-CA`.
 - Team: `9JALHNGRBQ`.
-- Universal purchase bundle ID for every app target: `org.davidjensenius.CanadianHam`.
-- Test bundle IDs use sub-identifiers such as `org.davidjensenius.CanadianHam.tests`, `.uitests`, `.tv.tests`, `.tv.uitests`, `.vision.tests`, and `.vision.uitests`.
+- Universal purchase bundle ID for the iOS/iPadOS/macOS, tvOS and visionOS containers: `org.davidjensenius.CanadianHam`.
+- Embedded independent watch app: `org.davidjensenius.CanadianHam.watchkitapp` (watchOS 27 or later), with `WKCompanionAppBundleIdentifier=org.davidjensenius.CanadianHam` and `WKRunsIndependentlyOfCompanionApp=true`.
+- Test bundle IDs use sub-identifiers such as `org.davidjensenius.CanadianHam.tests`, `.uitests`, `.tv.tests`, `.tv.uitests`, `.vision.tests`, `.vision.uitests`, `.watchkitapp.tests`, and `.watchkitapp.uitests`.
 - Gated post-v1 iCloud container: `iCloud.org.davidjensenius.CanadianHam`.
 
 ## One-time local setup
@@ -84,13 +85,13 @@ Each beta lane archives and exports a **Release** build through `xbuild` with `D
 Run only after review/merge approval and only for internal TestFlight until `task-1.7` explicitly permits wider distribution:
 
 ```sh
-fastlane ios beta       # CanadianHam, generic/platform=iOS, exports .ipa
+fastlane ios beta       # CanadianHam, generic/platform=iOS, .ipa includes CanadianHamWatch
 fastlane mac beta       # CanadianHam, generic/platform=macOS, exports .pkg
 fastlane appletvos beta # CanadianHamTV, generic/platform=tvOS, exports .ipa
 fastlane xros beta      # CanadianHamVision, generic/platform=visionOS, exports .ipa
 ```
 
-Do not call `gym`, `build_app`, or `xcodebuild` directly for these uploads. The Fastfile uses only `xbuild` for archive/export.
+Do not call `gym`, `build_app`, or `xcodebuild` directly for these uploads. The Fastfile uses only `xbuild` for archive/export. Never wrap fastlane in `lockf`: each inner `xbuild` invocation owns the shared build lock; an outer lock can deadlock it. If another build owns the lock, wait; do not kill it.
 
 ### Archive/export without uploading
 
@@ -98,8 +99,8 @@ Pass `export_only:true` to any beta lane to retain its signed `.ipa`/`.pkg` and
 print the artifact path without calling TestFlight:
 
 ```sh
-fastlane ios beta export_only:true # includes Watch/CanadianHamWatch.app
-fastlane mac beta export_only:true # no watch payload
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CHECK=1 fastlane ios beta export_only:true # includes Watch/CanadianHamWatch.app
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CHECK=1 fastlane mac beta export_only:true # no watch payload
 ```
 
 `export_only` accepts true/false (also yes/no, 1/0, any case). Any other value or an unknown option name stops the lane before archiving, so a typo never turns into an upload. `pnpm test:fastlane` runs the lane safety tests (`scripts/test-fastlane-export-only.rb`); it needs Ruby 3.0 or later (the mise Ruby fastlane uses), not macOS system Ruby 2.6.
@@ -107,6 +108,102 @@ fastlane mac beta export_only:true # no watch payload
 This uses the same Release signing, dedicated keychain, API key and internal-only
 export options as a normal beta run. Omitting the option keeps upload behaviour
 unchanged.
+
+### watchOS beta entry path and installation
+
+**Use `fastlane ios beta` for the watch**, after review/merge approval. There is no
+separate watchOS App Store Connect platform/lane. The iOS archive embeds
+`Payload/CanadianHam.app/Watch/CanadianHamWatch.app` in the exported IPA; the
+macOS, tvOS and visionOS paths remain separate and do not embed it. Use
+`CanadianHamWatch` only for watch builds/tests, not as a separate upload scheme.
+The host needs the watchOS SDK in addition to iOS. Automatic signing provisions
+the watch's child bundle ID using the same API-key arguments, team and dedicated
+build keychain as the container; never use the login keychain or its password.
+
+The shipped watch payload contains the complete Basic 2025-07-15 bilingual bank
+and 984 original explanations, local Morse haptic/optional-tone practice, the
+phonetic/Morse alphabet and digits reference, and session-only EN/FR Settings.
+There are no lessons, hints, Advanced bank, figures, quizzes or official exam
+reference sheet. The alphabet reference is **not** the official sheet. It needs
+no phone app session, WatchConnectivity, account, data transfer or network after
+installation. Scores, language and output settings are in memory only, and reset
+on relaunch. Its separate privacy manifest declares **Data Not Collected**.
+
+Before an upload, follow [TASK-14.6 artifact inspection](../testing/task-14.6-watch-release.md):
+match phone/watch `CFBundleVersion` timestamps, verify the child/companion IDs,
+icon in `Assets.car`, privacy manifest, signatures/entitlements, linked frameworks
+and exact Basic-only resources, and pass the network/iCloud guards. Export-only
+checks do not establish App Store Connect processing or physical installation.
+
+After an approved **internal-team-only** iOS upload has processed:
+
+1. The owner records the processed iOS/watch version/build and commit, then opens
+   TestFlight on the paired iPhone using an App Store Connect team-member account
+   and installs/updates Canadian Ham. Let the watch app install automatically.
+2. If it does not appear, open the iPhone's **Watch → My Watch → Available Apps →
+   Canadian Ham → Install** (ensure compatible watchOS and enough storage).
+   Confirm Canadian Ham appears in the watch app list and launches on the watch.
+3. Do not create external groups, public invitation links, external testing or an
+   App Store submission. `testFlightInternalTestingOnly` remains enabled. Record
+   processing/install failures rather than changing capabilities or widening
+   distribution to work around them.
+
+#### Owner physical-watch checklist (required; not replaced by simulator tests)
+
+Record date, tester, commit, processed build, installation method, watch
+model/size/watchOS, free storage, language, Dynamic Type, VoiceOver voice/rate,
+haptic strength/strap fit, Silent Mode and audio route. Keep failures and exact
+reproduction notes in [TASK-14.6 hardware results](../testing/task-14.6-watch-release.md#owner-upload-and-physical-watch-results-pending).
+
+- [ ] Launch from the watch app list with the iPhone app not running. Then leave
+  the phone out of range, enable watch Airplane Mode and explicitly disable
+  Wi-Fi, Bluetooth and cellular (Airplane Mode can preserve radio settings).
+  Relaunch and repeat practice, Morse and reference with no phone/network. No
+  account, pairing-in-app, download, permission or sync prompt should appear.
+- [ ] Quick practice: read long EN/FR questions and all four answers; test tap and
+  Crown selection plus explicit Confirm, correctness, correct answer, English
+  explanation fallback in French, Next and in-memory reset on relaunch. Crown
+  scrolling alone must not submit. No saved scores are promised.
+- [ ] Morse: run the **complete same-session three-style comparison** in
+  [TASK-14.3's hardware check](../testing/task-14.3-watch-morse.md#owner-hardware-check)
+  at 1, 1.5 and 2 WPM: Style 1 `.click`/`.directionUp`, Style 2 `.click`/`.start`,
+  Style 3 `.retry`/`.start`. Record ordered touch-only recognition for short,
+  long and mixed letters, three known replays plus randomized recognition,
+  overlap/confusions, and preset sounds with tone off in Silent Mode off/on.
+  Check tone separately and together, Replay/Next/exit/inactivity/interruption
+  cancellation and the static text alternative. Fixed presets do **not** prove
+  3:1 pulse duration or exam fidelity; leave TASK-14.3 AC2 blocked if unreliable,
+  escalate results, and do not silently change the default style.
+- [ ] Alphabet reference: reach A–Z and 0–9, verify phonetic/Morse labels and
+  dot/dash speech in EN/FR. No lesson navigation or official sheet should appear.
+- [ ] Language/accessibility: test system EN/FR and live session overrides,
+  Settings title on revisit, reset on relaunch, long French text, largest text,
+  VoiceOver order/selected states and English fallback pronunciation. Listen for
+  Play/Replay speaking no answer and for speech not masking the first output.
+  Complete [TASK-14.5's manual checks](../testing/task-14.5-watch-a11y.md#owner-manual-checks--pending-do-not-mark-ac4-complete),
+  including Reduce Motion and smallest available physical watch.
+- [ ] Memory/launch feel: record cold launch, first Practice opening and repeated
+  navigation on hardware, perceived responsiveness and any termination/reload;
+  attach device measurements if available. TASK-14.2's simulator baseline was
+  about **7.9 MiB retained** after decode and **0.365 s** first touch, not a device
+  budget guarantee. The decoded bank stays resident until exit; a failed load is
+  cached until relaunch. Check the recovery text/relaunch path if a real failure
+  occurs; do not corrupt the signed payload to force it. Report memory pressure
+  or poor launch feel rather than inventing a pass threshold.
+
+Simulator command (full watch scheme, unit and UI/audit tests; one destination):
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
+  -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamWatch \
+  -destination 'platform=watchOS Simulator,name=Apple Watch Series 12 (42mm),OS=27.0' \
+  test CODE_SIGNING_ALLOWED=NO
+```
+
+[TASK-14.6](../testing/task-14.6-watch-release.md) records export inspection and
+per-test results. **AC4 stays unchecked / task In Progress** until the post-merge
+processed internal upload and owner physical installation/offline checks are
+recorded. TASK-14.3's haptics and TASK-14.5's listening gates also remain explicit.
 
 ### Re-upload an existing export
 
@@ -122,7 +219,7 @@ The Fastfile points fastlane's own Xcode lookup at `/Applications/Xcode.app` bec
 ## Versioning and build numbers
 
 - `apps/apple/project.yml` sets `MARKETING_VERSION` to `1.0.0` and generated Info.plists read `CFBundleShortVersionString` from `$(MARKETING_VERSION)` and `CFBundleVersion` from `$(CURRENT_PROJECT_VERSION)`.
-- The beta lanes override `CURRENT_PROJECT_VERSION` at archive time with a timestamp build number in `%Y%m%d%H%M` format, matching the Telephone Booth convention.
+- The beta lanes override `CURRENT_PROJECT_VERSION` at archive time with a timestamp build number in `%Y%m%d%H%M` format, matching the Telephone Booth convention. The override applies to the embedded watch too: its `CFBundleVersion` must equal the iOS container's in the exported IPA; marketing versions must match as well.
 - For a version change, update `MARKETING_VERSION` in `apps/apple/project.yml`, regenerate the Xcode project twice with XcodeGen, and verify the generated project is stable before archiving.
 
 ## Keeping DebugCloudKit out of uploads
@@ -163,6 +260,6 @@ Do not switch to `DebugCloudKit` or disable Release signing for uploads.
 
 ## Internal-only official reference sheet
 
-Owner decision 2026-10-12 (2A) permits the official English Basic exam reference sheet in **internal team-member TestFlight builds only**, pending ISED permission. All four `beta` lanes explicitly add `OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET` to their Release archive command. The iOS/iPadOS/macOS app copies the rendered pages and accessible text offline; tvOS/visionOS still have no reference-sheet tool and do not bundle these assets. No upload is needed to enable the study fallback.
+Owner decision 2026-10-12 (2A) permits the official English Basic exam reference sheet in **internal team-member TestFlight builds only**, pending ISED permission. All four `beta` lanes explicitly add `OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET` to their Release archive command. The iOS/iPadOS/macOS app copies the rendered pages and accessible text offline; tvOS/visionOS/watchOS have no official reference-sheet tool and do not bundle these assets. The watch target has separate Basic-bank/explanations-only study-resource membership even when the container's beta archive opts in; inspect the exported payload to confirm it stays that way. No upload is needed to enable the study fallback.
 
 Default Release builds do not opt in. A future App Store/public lane **must not copy this override** until permission covers the sheet; check that `official-basic-exam/` is absent from the public app bundle. For private web previews only, `OFFICIAL_REFERENCE_SHEET=YES pnpm build:web` opts in; default production builds exclude it. Never publicly deploy the preview. See [content licensing](../content-licensing.md#official-sheet-implementation-gate-task-444) and the [release checklist](release-checklist.md#official-reference-sheet-build-gate-task-444).
