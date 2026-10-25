@@ -506,6 +506,7 @@ targets:
     deploymentTarget: "27.0"
     sources:
       - path: CanadianHamTVTests
+      - path: Platforms/tvOS/TVAboutCardText.swift
       - path: Platforms/Shared/ApplePreferences.swift
       - path: Platforms/Shared/PlatformHintPanelSupport.swift
       - path: CanadianHam/Models/QuestionBankModels.swift
