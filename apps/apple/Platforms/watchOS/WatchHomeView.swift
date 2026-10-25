@@ -21,7 +21,11 @@ struct WatchHomeView: View {
         NavigationStack {
             List(WatchSection.allCases) { section in
                 NavigationLink {
-                    WatchSectionPlaceholder(section: section)
+                    if section == .practice {
+                        WatchPracticeView()
+                    } else {
+                        WatchSectionPlaceholder(section: section)
+                    }
                 } label: {
                     Text(section.title) // l10n: localized
                 }

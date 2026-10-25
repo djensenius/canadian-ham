@@ -27,7 +27,8 @@ final class CanadianHamWatchUITests: XCTestCase {
             if !link.isHittable { app.swipeUp() }
             XCTAssertEqual(link.label, title)
             link.tap()
-            XCTAssertTrue(app.staticTexts["watch-placeholder-\(section)"].waitForExistence(timeout: 5))
+            let destinationID = section == "practice" ? "watch-question" : "watch-placeholder-\(section)"
+            XCTAssertTrue(app.staticTexts[destinationID].waitForExistence(timeout: 5))
             app.navigationBars.buttons.firstMatch.tap()
         }
     }
