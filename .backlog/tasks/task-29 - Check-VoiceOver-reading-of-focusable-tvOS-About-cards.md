@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: 2026-10-02 08:06
-updated_date: '2026-10-25T16:59:00Z'
+updated_date: '2026-10-25T17:05:00Z'
 labels:
   - apple
   - tvos
@@ -37,3 +37,11 @@ Why: task-1.4 made each tvOS About card (attribution, disclaimer, privacy, sourc
 3. Run targeted About tests and the existing tvOS UI/full suite through nohup xbuild with grep polling on Apple TV 4K (3rd generation); run localization/text-source checks.
 4. Document structural evidence and exact owner VoiceOver listening steps; leave AC1/AC2 pending and TASK-29 In Progress, check AC3 only on passing suite, commit and push (no PR).
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Structural verification complete in EN/FR on Apple TV 4K (3rd generation), tvOS 27.0: baseline and final focused debugDescription captures report StaticText/Focused and no literal Header for all five cards (Bank included). The snapshot format does not expose every UIKit trait or attributed language run; no listening claim is made. Before: title child .isHeader plus implicit .combine and separate en-CA legal child labels. After: one explicit attributed label from the visible strings, title-only h2 run, normal body runs, en legal bodies/fr-CA French titles, aggregate .isHeader removed, .combine retained (no guarded .ignore or audit exceptions).
+Added EN/FR UI assertions for single combined label, remote focus order, title/body/full legal paragraphs, StaticText and no reported Header; keepAlways full debugDescription attachments. Added TVAboutCardText unit tests for per-run headings/languages. Targeted xbuild About+metadata run passed 7/7 including existing light/dark About audits; pnpm check:apple-l10n and node scripts/check-apple-text-sources.ts passed. Full tvOS suite running via nohup/xbuild.
+AC1/AC2 evidence: structural verification done; listening check pending owner. Exact owner EN/FR VoiceOver steps and structural limitations are documented in docs/accessibility.md; label/Attributes excerpts are in docs/evidence/tvos-about-card-accessibility.txt. TASK-29 remains In Progress.
+<!-- SECTION:NOTES:END -->
