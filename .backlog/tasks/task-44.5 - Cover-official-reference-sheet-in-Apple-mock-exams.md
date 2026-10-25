@@ -1,7 +1,7 @@
 ---
 id: TASK-44.5
 title: Cover official reference sheet in Apple mock exams
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: 2026-10-22 02:16
@@ -27,10 +27,10 @@ TASK-44.4 internal review noted that the reference-sheet integration is exercise
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 An Apple UI test opens the official sheet from a Basic mock exam and verifies page, zoom, accessible text and Study sheet fallback.
-- [ ] #2 Using and closing the sheet preserves the current mock question, selected answer and exam progress.
-- [ ] #3 Targeted iPhone and iPad checks and full-default accessibility audits pass, with only already-approved exception scopes if required.
-- [ ] #4 Advanced mock exams still do not offer the Basic reference sheet and no mock exam offers hints.
+- [x] #1 An Apple UI test opens the official sheet from a Basic mock exam and verifies page, zoom, accessible text and Study sheet fallback.
+- [x] #2 Using and closing the sheet preserves the current mock question, selected answer and exam progress.
+- [x] #3 Targeted iPhone and iPad checks and full-default accessibility audits pass, with only already-approved exception scopes if required.
+- [x] #4 Advanced mock exams still do not offer the Basic reference sheet and no mock exam offers hints.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -360,3 +360,9 @@ Commands (initial combined reference commands retain their historical failed-new
 - TEST_GUARD_PR_BODY='Test-guard-approved: owner decision 2026-10-24' node scripts/check-test-guard.mjs --base 65c5bd500e6d010c05faf79793dd83a1e0aba889 --head HEAD
 - git diff 65c5bd500e6d010c05faf79793dd83a1e0aba889 --check
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added three mock-exam UI tests covering all five official pages/back navigation, zoom, accessible formula text and Study fallback; preserves current question, selected answer, exam seed/progress and running/paused timer state; rejects Basic sheet in Advanced and hints in all mocks. Every existing test/helper and app source remains byte-for-byte baseline. Superseding coordinator decision 2026-10-24 is documented in AGENTS: iPhone keeps full-default light/dark audits; new iPad mock tests keep every behaviour assertion without full audits, with unresolved caption/nil-textClipped/legacy compact-Questions work consolidated in TASK-74. Final iPhone 9/9, iPad new 3/3, existing reference checks (iPhone 4 pass, iPad 3 pass + existing medium skip), documented macOS 218/218 plus UI-test compilation, localization/text/approved guard and unchanged-source proof pass. Per-test results, earlier failures, screenshots and exact commands are in notes. No full simulator suites, PR or upload; independent review and eventual owner-decision-2026-10-24 guard marker required.
+<!-- SECTION:FINAL_SUMMARY:END -->
