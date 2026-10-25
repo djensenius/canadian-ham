@@ -19,7 +19,7 @@ struct WatchPracticeBank {
             try decoder.decode(type, from: Data(contentsOf: bankRoot.appendingPathComponent(name + ".json")))
         }
         let questions = try decode("questions", as: [Question].self)
-        let categories = try decode("categories", as: [Category].self)
+        let categories = try decode("categories", as: [CanadianHamContent.Category].self)
         let subsections = try decode("subsections", as: [Subsection].self)
         let manifest = try decode("manifest", as: BankManifest.self)
         guard manifest.bankId == basicBankId, manifest.counts.questions == 984,
