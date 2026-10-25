@@ -65,6 +65,14 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   build CODE_SIGNING_ALLOWED=NO
 assert_catalog_unchanged "CanadianHamVision localization build"
 
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+  xbuild -project "$PROJECT" \
+  -scheme CanadianHamWatch \
+  -destination 'generic/platform=watchOS Simulator' \
+  -derivedDataPath "$DERIVED_DATA" \
+  build CODE_SIGNING_ALLOWED=NO
+assert_catalog_unchanged "CanadianHamWatch localization build"
+
 XLIFF="$LOCALIZATION_DIR/fr.xcloc/Localized Contents/fr.xliff"
 
 python3 - "$XLIFF" "$CATALOG" "$ROOT_DIR" "$DERIVED_DATA" <<'PY'
