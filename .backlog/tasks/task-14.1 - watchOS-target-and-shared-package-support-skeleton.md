@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:01:00Z'
-updated_date: '2026-10-25T17:10:00Z'
+updated_date: '2026-10-25T17:20:00Z'
 labels:
   - apple
   - watchos
@@ -47,4 +47,6 @@ Owner approved the watch companion on 2026-10-25. Before feature work, prove the
 <!-- SECTION:NOTES:BEGIN -->
 Implementation committed as 541b0b64. XcodeGen generated an iOS-filtered PBXTargetDependency and Embed Watch Content build phase automatically; macOS membership is filtered out. All three shared packages contain only Foundation/os code, so no source platform guards were necessary; the iOS Core Haptics driver is not in watch target membership. Shared Localizable.xcstrings reuses EN/FR translations, adding only Alphabet. Watch privacy is explicit in its own manifest. Initial guard checks and regression fixtures pass; XcodeGen second-run PBX/scheme SHA-1 hashes are identical.
 Validation runner: /tmp/task-14.1-checks.sh, summary /tmp/task-14.1-checks.log and per-command /tmp/task-14.1-<name>.log. Watch targeted smoke is queued behind the shared xbuild lock (TASK-29 lane); no competing build was interrupted. Full suites are not requested/run, except the explicitly required full macOS unit target. Affected merge-batch platforms: iOS/macOS/tvOS/visionOS (shared package support) and new watchOS.
+
+Watch smoke (3 unit + 2 EN/FR UI) and all 53 package tests passed; iOS container build-for-testing validated the embedded watch bundle with ValidateEmbeddedBinary; full macOS unit target passed 223 tests, zero failures. Localization export and all generic tvOS/visionOS/watch builds compiled, but the final XLIFF check found two new untranslated generated watch bundle metadata keys. Added French/fr-CA metadata resources following existing platform patterns, regenerated twice with identical hashes, and committed the fix. Re-running only localization and watch smoke for this resource-membership fix; no unchanged full suite repeats.
 <!-- SECTION:NOTES:END -->
