@@ -4,7 +4,7 @@ title: watchOS internal TestFlight lane and icon
 status: To Do
 assignee: []
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T17:40:00Z'
+updated_date: '2026-10-25T19:06:00Z'
 labels:
   - apple
   - watchos
@@ -40,4 +40,6 @@ The watch app needs a release-quality icon and a reproducible internal delivery 
 
 <!-- SECTION:NOTES:BEGIN -->
 Coordinator decision 2026-10-25 after TASK-14.1 internal review: TASK-14.1 now adds a real opaque 1024px watch AppIcon derived from existing app art and proves iOS-container/macOS archive+export without uploading. TASK-14.6 may refine the circular/small-size icon and retains physical-watch, final feature payload, release documentation and internal-only TestFlight processing/install gates.
+
+From the TASK-14.2 review: the decoded Basic bank stays resident for the app's lifetime (about 7.9 MiB retained on the simulator; first-touch load 0.365 s) and a failed load is cached until relaunch. Include both in the physical-watch memory and launch budget check.
 <!-- SECTION:NOTES:END -->
