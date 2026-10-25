@@ -41,19 +41,15 @@ export and “after” is the shipped watch icon, with no refinement needed. Bot
 Only the review previews have transparent circular corners; the shipped icon
 remains opaque and square, letting watchOS apply its own mask.
 
-| Before (196 / 88 / 48 px) | After (retained, same sizes) |
-| --- | --- |
-| ![Before circular review](../evidence/task-14.6/icon-before-small.png) | ![After circular review](../evidence/task-14.6/icon-after-small.png) |
+The icon was retained unchanged, so one set of previews serves as both "before" and "after".
+
+![Circular review at 196, 88 and 48 px](../evidence/task-14.6/icon-small.png)
 
 Individual circular files:
-[before 1024](../evidence/task-14.6/icon-before-circle-1024.png),
-[196](../evidence/task-14.6/icon-before-circle-196.png),
-[88](../evidence/task-14.6/icon-before-circle-88.png),
-[48](../evidence/task-14.6/icon-before-circle-48.png);
-[after 1024](../evidence/task-14.6/icon-after-circle-1024.png),
-[196](../evidence/task-14.6/icon-after-circle-196.png),
-[88](../evidence/task-14.6/icon-after-circle-88.png),
-[48](../evidence/task-14.6/icon-after-circle-48.png).
+[1024](../evidence/task-14.6/icon-circle-1024.png),
+[196](../evidence/task-14.6/icon-circle-196.png),
+[88](../evidence/task-14.6/icon-circle-88.png),
+[48](../evidence/task-14.6/icon-circle-48.png).
 
 Reproduce from the repository root with ImageMagick 7:
 
