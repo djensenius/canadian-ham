@@ -1390,30 +1390,27 @@ private struct TVAboutView: View {
                     .accessibilityAddTraits(.isHeader)
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                    TVPaperSection(title: "Bank", accessibilityIdentifier: "tv-about-bank-section") {
-                        Text("Active bank: \(bank.manifest.bankId), effective \(bank.manifest.effectiveDate).")
-                        Text("Questions: \(bank.questions.count); categories: \(bank.categories.count); subsections: \(bank.subsections.count).") // l10n: localized
-                    }
-                    TVPaperSection(title: "Sources", accessibilityIdentifier: "tv-about-sources-section") {
-                        Text("ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective \(bank.manifest.effectiveDate).")
-                        Text("Question bank source URL: \(verbatimTVText(bank.manifest.source.url))")
-                        Text("RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(verbatimTVText(tvAboutRBR4CitationURL))")
-                        Text("ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.")
-                    }
-                    TVPaperSection(title: "Attribution", accessibilityIdentifier: "tv-about-attribution-section") {
-                        // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Permission remains pending: requested 2026-10-02; granted pending.
-                        Text("Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release.")
-                            .accessibilityLabel(Text(english("Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."))) // l10n: content(en)
-                        Text("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.")
-                            .accessibilityLabel(Text(english("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page."))) // l10n: content(en)
-                    }
-                    TVPaperSection(title: "Disclaimer", accessibilityIdentifier: "tv-about-disclaimer-section") {
-                        Text("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.")
-                            .accessibilityLabel(Text(english("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."))) // l10n: content(en)
-                    }
-                    TVPaperSection(title: "Privacy", accessibilityIdentifier: "tv-about-privacy-section") {
-                        Text("Canadian Ham works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.")
-                    }
+                    TVPaperSection(title: "Bank", accessibilityIdentifier: "tv-about-bank-section", paragraphs: [
+                        String(localized: "Active bank: \(bank.manifest.bankId), effective \(bank.manifest.effectiveDate)."),
+                        String(localized: "Questions: \(bank.questions.count); categories: \(bank.categories.count); subsections: \(bank.subsections.count).")
+                    ])
+                    TVPaperSection(title: "Sources", accessibilityIdentifier: "tv-about-sources-section", paragraphs: [
+                        String(localized: "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective \(bank.manifest.effectiveDate)."),
+                        String(localized: "Question bank source URL: \(bank.manifest.source.url)"),
+                        String(localized: "RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(tvAboutRBR4CitationURL)"),
+                        String(localized: "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.")
+                    ])
+                    // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Permission remains pending: requested 2026-10-02; granted pending.
+                    TVPaperSection(title: "Attribution", accessibilityIdentifier: "tv-about-attribution-section", bodyLanguage: "en", paragraphs: [
+                        String(localized: "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."),
+                        String(localized: "Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.")
+                    ])
+                    TVPaperSection(title: "Disclaimer", accessibilityIdentifier: "tv-about-disclaimer-section", bodyLanguage: "en", paragraphs: [
+                        String(localized: "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.")
+                    ])
+                    TVPaperSection(title: "Privacy", accessibilityIdentifier: "tv-about-privacy-section", paragraphs: [
+                        String(localized: "Canadian Ham works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.")
+                    ])
                 }
             }
             .padding(TVFocusIndicator.scaledEdgeClearance)
@@ -1424,22 +1421,33 @@ private struct TVAboutView: View {
     }
 }
 
-private struct TVPaperSection<Content: View>: View {
-    let title: LocalizedStringKey
+private struct TVPaperSection: View {
     let accessibilityIdentifier: String
-    @ViewBuilder let content: () -> Content
+    let text: TVAboutCardText
 
     @FocusState private var isFocused: Bool
 
+    init(title: LocalizedStringResource, accessibilityIdentifier: String, bodyLanguage: String? = nil, paragraphs: [String]) {
+        self.accessibilityIdentifier = accessibilityIdentifier
+        text = TVAboutCardText(
+            title: String(localized: title),
+            paragraphs: paragraphs,
+            interfaceLanguage: tvUsesFrenchInterface ? "fr-CA" : "en-CA",
+            bodyLanguage: bodyLanguage
+        )
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(title) // l10n: localized
+            Text(text.title) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            content()
-                .font(DesignTokens.FontScale.body)
-                .foregroundStyle(DesignTokens.Colors.ink)
+            ForEach(text.paragraphs.indices, id: \.self) { index in
+                Text(text.paragraphs[index]) // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+            }
         }
         .padding(DesignTokens.Spacing.xl)
         .frame(maxWidth: .infinity, minHeight: 290, alignment: .topLeading)
@@ -1451,6 +1459,8 @@ private struct TVPaperSection<Content: View>: View {
             unfocusedLineWidth: 2
         )
         .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(text.accessibilityLabel)) // l10n: localized
+        .accessibilityRemoveTraits(.isHeader)
         .accessibilityIdentifier(accessibilityIdentifier)
         .focusable(true)
         .focused($isFocused)
@@ -1539,10 +1549,6 @@ private func localized(_ string: String, language: BankLanguage) -> AttributedSt
     var attributedString = AttributedString(string)
     attributedString.languageIdentifier = language.accessibilityLanguageCode
     return attributedString
-}
-
-private func verbatimTVText(_ string: String) -> Text {
-    Text(verbatim: string) // l10n: verbatim
 }
 
 private var tvUsesFrenchInterface: Bool {

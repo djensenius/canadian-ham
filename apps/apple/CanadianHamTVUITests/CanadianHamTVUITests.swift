@@ -64,6 +64,14 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(anyLabel(in: app, contains: "has not yet been granted"), "Expected pending permission status on tvOS About")
     }
 
+    func testAboutCardsExposeCombinedLabelsInEnglish() throws {
+        assertAboutCardLabels(interfaceLanguage: "en")
+    }
+
+    func testAboutCardsExposeCombinedLabelsInFrench() throws {
+        assertAboutCardLabels(interfaceLanguage: "fr")
+    }
+
     func testAboutLowerSectionsReachableWithRemote() throws {
         let app = configuredApp(screen: .about, appearance: "light")
         app.launch()
@@ -301,6 +309,59 @@ final class CanadianHamTVUITests: XCTestCase {
                 "Menu should return \(screen.rawValue) to the category grid"
             )
             app.terminate()
+        }
+    }
+
+    private func assertAboutCardLabels(interfaceLanguage: String, file: StaticString = #filePath, line: UInt = #line) {
+        let app = configuredApp(screen: .about, appearance: "light", interfaceLanguage: interfaceLanguage)
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["tv-about-screen"].firstMatch.waitForExistence(timeout: 15), file: file, line: line)
+        let isFrench = interfaceLanguage == "fr"
+        let cards: [(id: String, title: String, body: [String])] = [
+            ("bank", isFrench ? "Banque" : "Bank", ["basic-2025-07-15", "2025-07-15", "984", "100"]),
+            ("sources", "Sources", [
+                isFrench ? "Banque de questions d’ISDE" : "ISED Amateur Radio Operator Certificate Basic Qualification question bank",
+                "2025-07-15", "amat_basic_quest.zip#amat_basic_quest_delim.txt",
+                "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service",
+                isFrench ? "les PDF de référence sont des sources et ne sont pas inclus dans les applications." : "the reference PDFs are source artifacts and are not shipped in the apps."
+            ]),
+            ("attribution", "Attribution", [
+                "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release.",
+                "Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page."
+            ]),
+            ("disclaimer", isFrench ? "Avis de non-responsabilité" : "Disclaimer", [
+                "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
+            ]),
+            ("privacy", isFrench ? "Confidentialité" : "Privacy", [
+                isFrench ? "Canadian Ham fonctionne entièrement hors ligne" : "Canadian Ham works fully offline",
+                isFrench ? "Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé." : "Practice sessions are kept only while the app is open; nothing is saved or sent."
+            ])
+        ]
+
+        for card in cards {
+            let identifier = "tv-about-\(card.id)-section"
+            let matches = app.descendants(matching: .any).matching(identifier: identifier)
+            XCTAssertEqual(matches.count, 1, "Each About card must expose one combined element", file: file, line: line)
+            let element = matches.firstMatch
+            pressDownUntilFocused(element, remote: .shared, maxPresses: 1, file: file, line: line)
+            XCTAssertTrue(element.hasFocus, "\(identifier) must be remote-focusable", file: file, line: line)
+            XCTAssertTrue(element.label.hasPrefix(card.title), "\(identifier) must start with its localized title: \(element.label)", file: file, line: line)
+            for paragraph in card.body {
+                XCTAssertTrue(element.label.contains(paragraph), "\(identifier) must include body text: \(paragraph)", file: file, line: line)
+            }
+            let description = element.debugDescription
+            let elementAttributes = description.components(separatedBy: "Element subtree:").first ?? description
+            let reportsHeader = elementAttributes.range(of: "\\bHeader\\b", options: .regularExpression) != nil
+            XCTAssertFalse(reportsHeader, "The combined card must not be exposed as a whole-card Header: \(description)", file: file, line: line)
+            XCTAssertEqual(element.elementType, .staticText, "An informational card must remain text, not a button", file: file, line: line)
+            let evidence = "Focused: \(element.hasFocus)\nHeader reported: \(reportsHeader)\nLabel: \(element.label)\n\(description)"
+            print("TASK-29 \(interfaceLanguage) \(identifier): \(evidence)")
+            let attachment = XCTAttachment(string: evidence)
+            attachment.name = "tvos-about-\(interfaceLanguage)-\(card.id)-accessibility"
+            attachment.lifetime = .keepAlways
+            add(attachment)
         }
     }
 

@@ -76,6 +76,35 @@ Practice-header layout evidence (crops of the practice screen showing the title,
 - Mock exam progress should be available as text, e.g. “Question 18 of 100, answered”.
 - Results must identify score, pass/honours status, and category breakdown in text.
 
+### tvOS About cards — TASK-29 structural verification (2026-10-25)
+
+**AC1/AC2: structural verification done; listening check pending owner.** No agent listening result is claimed.
+
+The EN and FR UI tests focus Bank, Sources, Attribution, Disclaimer, and Privacy in order with one Down press per card. Each card is a single combined, remote-focusable `StaticText` element, not a button. Its label starts with the localized title and includes the body (including the complete English legal paragraphs in FR). Each test records the label and full `debugDescription` in a keepAlways `tvos-about-<en|fr>-<card>-accessibility` attachment. [Committed label/Attributes excerpts](evidence/tvos-about-card-accessibility.txt) record all ten focused captures from the Apple TV 4K (3rd generation), tvOS 27.0 simulator.
+
+| Card | EN title | FR title | Body in the combined label |
+| --- | --- | --- | --- |
+| Bank | Bank | Banque | Active Basic bank/version/date and question/category/subsection counts |
+| Sources | Sources | Sources | Bank/date, question-bank source URL, RBR-4 title/URL, reference-PDF note |
+| Attribution | Attribution | Attribution | English draft/pending-permission warning, then English ISED attribution |
+| Disclaimer | Disclaimer | Avis de non-responsabilité | English independent-study-tool/non-endorsement disclaimer |
+| Privacy | Privacy | Confidentialité | Localized offline/no-data copy, including in-memory-only practice sessions |
+
+Before the fix, all ten focused debug descriptions reported `StaticText`/`Focused`, with no literal `Header` reported; that snapshot format does **not** expose all UIKit traits or attributed speech runs, so this is not proof of correct spoken heading treatment. The title child had `.isHeader`, and separate legal child labels used `AttributedString.languageIdentifier` (`en-CA`), not a locale environment or `.accessibilityTextContentType`. Implicit `.combine` supplied the resulting label, without an explicit single attributed value to retain those language runs.
+
+`TVAboutCardText` now builds one attributed label from the same title/paragraphs used visually. Only the title run has `accessibilityHeadingLevel = .h2`; body runs have no heading metadata. Title and non-legal body runs use the interface language (`en-CA`/`fr-CA`), while attribution/disclaimer body runs explicitly use `en`. `TVPaperSection` retains `.combine` and removes `.isHeader` from the aggregate card, so the entire legal paragraph is not marked as a heading. No guarded `.ignore` modifier, visual restyling, new translation, or audit exception is introduced.
+
+The final focused captures also report no `Header` and preserve the full labels. Unit tests separately verify title-only heading metadata, English tags on both legal-body paragraphs in a French label, and interface-language tags on other bodies. XCUITest cannot verify the chosen voice or whether VoiceOver honours inline heading metadata; the listening check below remains required.
+
+Validation: the targeted About/attributed-run `xbuild` run passed 7/7, and the full `CanadianHamTV` suite passed 26/26 (8 unit, 18 UI), including the existing About/category/practice/Morse and lesson accessibility audits. Localization export, SwiftUI text-source, and no-network checks passed. iOS/macOS/visionOS suites were not run: the changed source belongs only to the tvOS app/test targets.
+
+### Owner listening check (tvOS VoiceOver)
+
+1. On Apple TV (or its simulator), open **Settings → Accessibility → VoiceOver** and turn VoiceOver **On**. Use an English system/interface language first; launch Canadian Ham and open **About** from the category screen.
+2. Move Down through **Bank → Sources → Attribution → Disclaimer → Privacy**, letting each card finish. Expect one focus stop per card, its title as a heading, then its entire body as ordinary text, without duplicate reading or the whole paragraph announced as a heading. Bank reads version/date/counts; Sources reads both source citations and the PDF note; Attribution reads the draft warning *before* the attribution; Disclaimer reads the non-endorsement; Privacy reads offline/no-data and temporary-session copy.
+3. Change **Settings → General → Apple TV Languages** to French (Canada), then relaunch Canadian Ham and open **À propos**. Confirm the French interface (for example **Avis de non-responsabilité** and **Confidentialité**). Repeat all cards. Expect French titles and French Bank/Sources/Privacy bodies; **Attribution** and **Avis de non-responsabilité** must switch to an **English voice for every legal-body paragraph**, then back to French on the next French title. Ensure English and French voices are available in VoiceOver settings.
+4. Record device/simulator, tvOS version, voice settings, date, and each card's heading/body/language result here and in TASK-29. Leave AC1/AC2 unchecked until the owner confirms the expected speech; if inline headings or voice switching fail, record the failing card rather than treating structural tests as listening evidence.
+
 ## Language and bilingual text
 
 - Web content that displays French official text uses `lang="fr-CA"`; English content uses `lang="en-CA"`.

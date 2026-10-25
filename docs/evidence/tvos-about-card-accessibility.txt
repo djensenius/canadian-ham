@@ -1,0 +1,137 @@
+TASK-29 tvOS About focused-card structural evidence
+Captured 2026-10-25, Apple TV 4K (3rd generation) simulator, tvOS 27.0.
+Source: testAboutCardsExposeCombinedLabelsInEnglish / testAboutCardsExposeCombinedLabelsInFrench.
+Each block contains the focused element label and the Attributes excerpt of its XCUITest debugDescription.
+The full debugDescription is retained by each keepAlways tvos-about-<en|fr>-<card>-accessibility xcresult attachment.
+These snapshots do not expose attributed language/heading runs and are not a VoiceOver listening result.
+Attributed runs are separately checked by the TVAboutCardText unit tests; AC1/AC2 remain owner-pending.
+
+TASK-29 en tv-about-bank-section: Focused: true
+Header reported: false
+Label: Bank
+
+Active bank: basic-2025-07-15, effective 2025-07-15.
+
+Questions: 984; categories: 8; subsections: 100.
+Attributes: StaticText, 0x125111370, {{202.0, 337.0}, {1516.0, 302.0}}, identifier: 'tv-about-bank-section', label: 'Bank
+
+Active bank: basic-2025-07-15, effective 2025-07-15.
+
+Questions: 984; categories: 8; subsections: 100.', Focused
+
+TASK-29 en tv-about-sources-section: Focused: true
+Header reported: false
+Label: Sources
+
+ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective 2025-07-15.
+
+Question bank source URL: https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt
+
+RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service
+
+ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.
+Attributes: StaticText, 0x12511dce0, {{202.0, 393.5}, {1516.0, 424.5}}, identifier: 'tv-about-sources-section', label: 'Sources
+
+ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective 2025-07-15.
+
+Question bank source URL: https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt
+
+RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service
+
+ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.', Focused
+
+TASK-29 en tv-about-attribution-section: Focused: true
+Header reported: false
+Label: Attribution
+
+Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release.
+
+Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.
+Attributes: StaticText, 0x107234970, {{202.0, 491.0}, {1516.0, 330.5}}, identifier: 'tv-about-attribution-section', label: 'Attribution
+
+Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release.
+
+Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.', Focused
+
+TASK-29 en tv-about-disclaimer-section: Focused: true
+Header reported: false
+Label: Disclaimer
+
+canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.
+Attributes: StaticText, 0x1047b0ee0, {{202.0, 335.5}, {1516.0, 302.0}}, identifier: 'tv-about-disclaimer-section', label: 'Disclaimer
+
+canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.', Focused
+
+TASK-29 en tv-about-privacy-section: Focused: true
+Header reported: false
+Label: Privacy
+
+Canadian Ham works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.
+Attributes: StaticText, 0x125706070, {{202.0, 628.0}, {1516.0, 302.0}}, identifier: 'tv-about-privacy-section', label: 'Privacy
+
+Canadian Ham works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.', Focused
+
+TASK-29 fr tv-about-bank-section: Focused: true
+Header reported: false
+Label: Banque
+
+Banque active : basic-2025-07-15, en vigueur le 2025-07-15.
+
+Questions : 984; catégories : 8; sous-sections : 100.
+Attributes: StaticText, 0x107610560, {{202.0, 337.0}, {1516.0, 302.0}}, identifier: 'tv-about-bank-section', label: 'Banque
+
+Banque active : basic-2025-07-15, en vigueur le 2025-07-15.
+
+Questions : 984; catégories : 8; sous-sections : 100.', Focused
+
+TASK-29 fr tv-about-sources-section: Focused: true
+Header reported: false
+Label: Sources
+
+Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le 2025-07-15.
+
+URL source de la banque de questions : https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt
+
+RBR-4, Normes relatives à l’exploitation des stations radio du service de radioamateur : https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service
+
+ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications.
+Attributes: StaticText, 0x107628d20, {{202.0, 322.5}, {1516.0, 496.5}}, identifier: 'tv-about-sources-section', label: 'Sources
+
+Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le 2025-07-15.
+
+URL source de la banque de questions : https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt
+
+RBR-4, Normes relatives à l’exploitation des stations radio du service de radioamateur : https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service
+
+ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications.', Focused
+
+TASK-29 fr tv-about-attribution-section: Focused: true
+Header reported: false
+Label: Attribution
+
+Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release.
+
+Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.
+Attributes: StaticText, 0x10476ddc0, {{202.0, 491.0}, {1516.0, 330.5}}, identifier: 'tv-about-attribution-section', label: 'Attribution
+
+Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release.
+
+Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.', Focused
+
+TASK-29 fr tv-about-disclaimer-section: Focused: true
+Header reported: false
+Label: Avis de non-responsabilité
+
+canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.
+Attributes: StaticText, 0x10456d370, {{202.0, 335.5}, {1516.0, 302.0}}, identifier: 'tv-about-disclaimer-section', label: 'Avis de non-responsabilité
+
+canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.', Focused
+
+TASK-29 fr tv-about-privacy-section: Focused: true
+Header reported: false
+Label: Confidentialité
+
+Canadian Ham fonctionne entièrement hors ligne avec du contenu intégré et ne comporte aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé.
+Attributes: StaticText, 0x125138150, {{202.0, 628.0}, {1516.0, 302.0}}, identifier: 'tv-about-privacy-section', label: 'Confidentialité
+
+Canadian Ham fonctionne entièrement hors ligne avec du contenu intégré et ne comporte aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé.', Focused

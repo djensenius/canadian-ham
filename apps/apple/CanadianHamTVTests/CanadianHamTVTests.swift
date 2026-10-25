@@ -1,3 +1,4 @@
+import Accessibility
 import CanadianHamContent
 import CanadianHamEngine
 import XCTest
@@ -17,6 +18,42 @@ final class CanadianHamTVTests: XCTestCase {
         let library = try ContentLibrary.load(from: appBundle)
         XCTAssertEqual(library.questionHints.count, 984)
         XCTAssertNotNil(library.questionHintsByQuestionId["B-001-002-002"])
+    }
+
+    func testTVAboutCardTextKeepsHeadingOnTitleAndEnglishOnLegalBodyRuns() throws {
+        let text = TVAboutCardText(
+            title: "Avis de non-responsabilité",
+            paragraphs: ["canadian-ham is an independent study tool.", "It is not affiliated with ISED."],
+            interfaceLanguage: "fr-CA",
+            bodyLanguage: "en"
+        )
+        let label = text.accessibilityLabel
+        XCTAssertEqual(String(label.characters), "Avis de non-responsabilité\n\ncanadian-ham is an independent study tool.\n\nIt is not affiliated with ISED.")
+        let titleRun = try XCTUnwrap(label.runs.first)
+        XCTAssertEqual(String(label[titleRun.range].characters), "Avis de non-responsabilité")
+        XCTAssertEqual(titleRun.accessibilityHeadingLevel, .h2)
+        XCTAssertEqual(titleRun.languageIdentifier, "fr-CA")
+        for run in label.runs.dropFirst() {
+            XCTAssertNil(run.accessibilityHeadingLevel, "Neither body text nor separators may inherit the heading")
+            let characters = String(label[run.range].characters)
+            if !characters.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                XCTAssertEqual(run.languageIdentifier, "en", "Every legal-body run must retain its English voice tag")
+            }
+        }
+        XCTAssertNil(text.title.accessibilityHeadingLevel, "The heading run belongs only to the accessibility label, with no visual styling change")
+    }
+
+    func testTVAboutCardTextUsesInterfaceLanguageForNonLegalBody() {
+        for language in ["en-CA", "fr-CA"] {
+            let text = TVAboutCardText(title: "Sources", paragraphs: ["Source 1", "Source 2"], interfaceLanguage: language)
+            XCTAssertEqual(text.title.languageIdentifier, language)
+            XCTAssertTrue(text.paragraphs.allSatisfy { $0.languageIdentifier == language })
+            let bodyRuns = text.accessibilityLabel.runs.dropFirst().filter {
+                !String(text.accessibilityLabel[$0.range].characters).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            }
+            XCTAssertEqual(bodyRuns.count, 2)
+            XCTAssertTrue(bodyRuns.allSatisfy { $0.languageIdentifier == language && $0.accessibilityHeadingLevel == nil })
+        }
     }
 
     func testBundledQuestionBankLoadsForTVApp() throws {
