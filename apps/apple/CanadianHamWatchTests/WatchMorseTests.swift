@@ -197,6 +197,30 @@ final class WatchMorseTests: XCTestCase {
     }
 
     @MainActor
+    func testVoiceOverStartDelayAppliesToBothOutputsAndCanBeCancelled() {
+        let clock = FakeMorseScheduler()
+        let output = FakeMorseOutput(clock: clock)
+        let player = WatchMorsePlayback(output: output, scheduler: clock, cooldown: WatchMorseHapticCooldown())
+        var settings = WatchMorseSettings()
+        settings.tone = true
+        player.play(letter: "A", settings: settings, initialDelay: 1.5)
+        clock.advance(by: 1.49)
+        XCTAssertTrue(player.isPlaying)
+        XCTAssertTrue(output.toneInputs.isEmpty)
+        XCTAssertTrue(output.pulses.isEmpty)
+        clock.advance(by: 0.01)
+        XCTAssertEqual(output.toneInputs, ["A"])
+        XCTAssertEqual(output.pulses.map(\.time), [1.5])
+        player.cancel()
+        let count = output.pulses.count
+        player.play(letter: "T", settings: settings, initialDelay: 1.5)
+        player.cancel()
+        clock.advance(by: 20)
+        XCTAssertEqual(output.pulses.count, count)
+        XCTAssertEqual(output.toneInputs, ["A"], "Cancellation during the speech delay must not start tone")
+    }
+
+    @MainActor
     func testReplayCannotOverlapAndCompletedReplayUsesSameSequence() {
         let clock = FakeMorseScheduler()
         let output = FakeMorseOutput(clock: clock)

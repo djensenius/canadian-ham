@@ -97,6 +97,7 @@
 		687FDC6E7F12542E2BEF8A8A /* HintSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E92136C66B4700BBCDBEF70 /* HintSessionState.swift */; };
 		6BEBAF49D6330C4DA12195D3 /* CanadianHamVisionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A5D1876F7D063DF4DF7F31 /* CanadianHamVisionApp.swift */; };
 		6C11B3F5053B13833830A44A /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
+		6C2925C6FC65776A11157A3A /* WatchSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F0E8B53C156E8CA60076B9 /* WatchSettingsView.swift */; };
 		6C7049017ADA7EB711391F79 /* DuoPostureProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4688DE61A3DD68E4FD52D69 /* DuoPostureProvider.swift */; };
 		6CEC753352A58DF16AA8C291 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		6E7E125EE6D780BBAA63BFDE /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = BBBB876F68281EF321E21568 /* CanadianHamMorseEngine */; };
@@ -163,6 +164,7 @@
 		B1D73B5C5972B72A5B59CBED /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = A9EEDAA05AD705E57A6948B6 /* CanadianHamContent */; };
 		B1E17594DB9ED792E4D3E68E /* CanadianHamWatchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E9A31F308BCB338B1FFC9D /* CanadianHamWatchUITests.swift */; };
 		B20F2A73AB3D9BB2CFF8B0D2 /* CanadianHamWatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A84925344002EA89C873CF1 /* CanadianHamWatchTests.swift */; };
+		B2415EC771F73F2C77B2D8E9 /* WatchAccessibilityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37889AA6934317229255ACC4 /* WatchAccessibilityUITests.swift */; };
 		B5683127D3712559E856B623 /* hints in Resources */ = {isa = PBXBuildFile; fileRef = 8DDA76D15062E1F8BA06B694 /* hints */; };
 		B5A4E99A1BF167623B4F46E7 /* subsection-titles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0CE325C0851B44E13EA76E8A /* subsection-titles.json */; };
 		B5AD43BEDB6E39F3768DC085 /* ApplePreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */; };
@@ -288,6 +290,7 @@
 		01A1DC12A04BAE8E96CF156F /* ApplePreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePreferences.swift; sourceTree = "<group>"; };
 		02FD09ACC6D3F5472A098191 /* CanadianHam-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHam-InfoPlist.strings"; path = "fr.lproj/CanadianHam-InfoPlist.strings"; sourceTree = "<group>"; };
 		0390C2BF7D07DEAD8A246557 /* StudyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViews.swift; sourceTree = "<group>"; };
+		03F0E8B53C156E8CA60076B9 /* WatchSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSettingsView.swift; sourceTree = "<group>"; };
 		0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankTests.swift; sourceTree = "<group>"; };
 		053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		05B661EF9D8928EF24CB953C /* ContrastMeasurement */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ContrastMeasurement; path = CanadianHamUITests/Resources/ContrastMeasurement; sourceTree = SOURCE_ROOT; };
@@ -312,6 +315,7 @@
 		30A5D1876F7D063DF4DF7F31 /* CanadianHamVisionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamVisionApp.swift; sourceTree = "<group>"; };
 		31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankStore.swift; sourceTree = "<group>"; };
 		3681EA0DFB736744332D3ED5 /* RootNavigationMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationMappingTests.swift; sourceTree = "<group>"; };
+		37889AA6934317229255ACC4 /* WatchAccessibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccessibilityUITests.swift; sourceTree = "<group>"; };
 		386D7076641F9709A4056881 /* WatchPracticeBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPracticeBank.swift; sourceTree = "<group>"; };
 		3BF67D7A994EF193C91BBA17 /* CanadianHamLessonFiguresUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamLessonFiguresUITests.swift; sourceTree = "<group>"; };
 		3D86FB3E02E2AC2B774A8B43 /* ExamCalculatorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamCalculatorViewModelTests.swift; sourceTree = "<group>"; };
@@ -738,6 +742,7 @@
 			isa = PBXGroup;
 			children = (
 				88E9A31F308BCB338B1FFC9D /* CanadianHamWatchUITests.swift */,
+				37889AA6934317229255ACC4 /* WatchAccessibilityUITests.swift */,
 				FFCCD0B06B569711CDA3269E /* WatchAlphabetUITests.swift */,
 				A2AEC4916A05D25E72A2121F /* WatchMorseUITests.swift */,
 				73DFE4D26EAF1F50754FA4CB /* WatchPracticeUITests.swift */,
@@ -908,6 +913,7 @@
 				A11BE46A6BFD3432DCA473DC /* WatchMorseView.swift */,
 				386D7076641F9709A4056881 /* WatchPracticeBank.swift */,
 				E1D7C9DA1C64412C0716B7EA /* WatchPracticeView.swift */,
+				03F0E8B53C156E8CA60076B9 /* WatchSettingsView.swift */,
 				4EED116B5E1E6FA9C75FF13E /* Resources */,
 			);
 			path = watchOS;
@@ -1738,6 +1744,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1E17594DB9ED792E4D3E68E /* CanadianHamWatchUITests.swift in Sources */,
+				B2415EC771F73F2C77B2D8E9 /* WatchAccessibilityUITests.swift in Sources */,
 				46164C7A447D59FA348811E4 /* WatchAlphabetUITests.swift in Sources */,
 				057A5B5A96798E2255C60B74 /* WatchMorseUITests.swift in Sources */,
 				5E5FC543C66C1DE78A14C13C /* WatchPracticeUITests.swift in Sources */,
@@ -1758,6 +1765,7 @@
 				6FE539CF70BCC526237A04AE /* WatchMorseView.swift in Sources */,
 				94F89350ACB8A0C0A3087129 /* WatchPracticeBank.swift in Sources */,
 				7EC63C0E34B07FB043F17041 /* WatchPracticeView.swift in Sources */,
+				6C2925C6FC65776A11157A3A /* WatchSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

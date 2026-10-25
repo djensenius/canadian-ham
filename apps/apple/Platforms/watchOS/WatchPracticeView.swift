@@ -5,6 +5,7 @@ struct WatchPracticeView: View {
     @Environment(\.locale) private var locale
     @State private var session: WatchPracticeSession?
     @State private var showingCrown = false
+    @State private var pendingCrownAnnouncement: String?
 
     private var french: Bool { locale.language.languageCode?.identifier == "fr" }
 
@@ -32,6 +33,7 @@ struct WatchPracticeView: View {
                                     } label: {
                                         Text(questionText(answer.text)) // l10n: content(question)
                                             .frame(maxWidth: .infinity, alignment: .leading)
+                                            .fixedSize(horizontal: false, vertical: true)
                                     }
                                     .accessibilityIdentifier("watch-answer-\(index)")
                                 }
@@ -49,7 +51,7 @@ struct WatchPracticeView: View {
             .onChange(of: session?.question?.id) { _, _ in proxy.scrollTo("top", anchor: .top) }
         }
         .navigationTitle("Practice")
-        .sheet(isPresented: $showingCrown) {
+        .sheet(isPresented: $showingCrown, onDismiss: announceCrownFeedback) {
             WatchCrownAnswerView(choices: session?.choices ?? [], french: french, submit: submit)
         }
         .task {
@@ -79,7 +81,18 @@ struct WatchPracticeView: View {
         guard session?.submittedSourceIndex == nil else { return }
         session?.submit(sourceIndex: sourceIndex)
         guard let session, session.submittedSourceIndex != nil else { return }
-        let announcement = session.isCorrect ? String(localized: "Correct", locale: locale) : String(localized: "Incorrect", locale: locale)
+        let announcement = session.isCorrect ? String(localized: "Correct", bundle: WatchLanguage.bundle(for: locale), locale: locale) : String(localized: "Incorrect", bundle: WatchLanguage.bundle(for: locale), locale: locale)
+        if showingCrown {
+            pendingCrownAnnouncement = announcement
+        } else {
+            AccessibilityNotification.Announcement(announcement).post()
+        }
+    }
+
+    private func announceCrownFeedback() {
+        // A sheet transition can interrupt speech posted by Confirm's action.
+        guard let announcement = pendingCrownAnnouncement else { return }
+        pendingCrownAnnouncement = nil
         AccessibilityNotification.Announcement(announcement).post()
     }
 
@@ -95,6 +108,7 @@ struct WatchPracticeView: View {
                 .accessibilityAddTraits(.isHeader)
             Text(questionText(selected.text)) // l10n: content(question)
                 .accessibilityValue("Selected")
+                .accessibilityAddTraits(.isSelected)
         }
         Text("Correct answer")
             .font(.headline)
@@ -145,6 +159,7 @@ private struct WatchCrownAnswerView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityLabel(Text(answerText(selection))) // l10n: content(question)
                     .accessibilityValue("Selected")
+                .accessibilityAddTraits(.isSelected)
                     .accessibilityAdjustableAction { direction in
                         switch direction {
                         case .increment: crownPosition = Double(min(3, selection + 1))

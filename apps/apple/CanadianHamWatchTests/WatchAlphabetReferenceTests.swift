@@ -27,10 +27,15 @@ final class WatchAlphabetReferenceTests: XCTestCase {
 
     func testSpokenPatternsUseLocalizedWordsAndKeepInternationalPhonetics() throws {
         for language in ["en", "fr", "fr-CA"] {
-            let dot = language == "en" ? "Dot" : "Point"
-            let dash = language == "en" ? "Dash" : "Tiret"
+            let locale = Locale(identifier: language)
+            let bundle = WatchLanguage.bundle(for: locale)
+            XCTAssertNotEqual(bundle.bundleURL, Bundle.main.bundleURL, "The test must use compiled localization resources")
+            let dot = String(localized: "Dot", bundle: bundle, locale: locale)
+            let dash = String(localized: "Dash", bundle: bundle, locale: locale)
+            XCTAssertEqual(dot, language == "en" ? "Dot" : "Point")
+            XCTAssertEqual(dash, language == "en" ? "Dash" : "Tiret")
             for entry in WatchAlphabetReference.letters + WatchAlphabetReference.digits {
-                let spoken = entry.pattern.map { $0 == "." ? dot : dash }.joined(separator: " ")
+                let spoken = entry.pattern.map { $0 == "." ? dot : dash }.joined(separator: ", ")
                 let expected = [entry.character, entry.phoneticWord, spoken].compactMap { $0 }.joined(separator: ", ")
                 XCTAssertEqual(entry.accessibilityLabel(dot: dot, dash: dash), expected, "\(language): \(entry.character)")
                 XCTAssertFalse(entry.accessibilityLabel(dot: dot, dash: dash).contains("."))
@@ -39,8 +44,8 @@ final class WatchAlphabetReferenceTests: XCTestCase {
         }
         let a = try XCTUnwrap(WatchAlphabetReference.letters.first)
         XCTAssertEqual(a.visualPattern, "• —")
-        XCTAssertEqual(a.accessibilityLabel(dot: "Dot", dash: "Dash"), "A, Alfa, Dot Dash")
-        XCTAssertEqual(a.accessibilityLabel(dot: "Point", dash: "Tiret"), "A, Alfa, Point Tiret")
+        XCTAssertEqual(a.accessibilityLabel(dot: "Dot", dash: "Dash"), "A, Alfa, Dot, Dash")
+        XCTAssertEqual(a.accessibilityLabel(dot: "Point", dash: "Tiret"), "A, Alfa, Point, Tiret")
     }
 
     private func assertSharedMorseAndUniqueIDs(_ entries: [WatchAlphabetEntry], expectedCount: Int) {

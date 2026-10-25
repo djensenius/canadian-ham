@@ -6,7 +6,7 @@ import CanadianHamMorseEngine
 
 final class CanadianHamWatchTests: XCTestCase {
     func testPlannedSections() {
-        XCTAssertEqual(WatchSection.allCases.map(\.id), ["practice", "morse", "alphabet"])
+        XCTAssertEqual(WatchSection.allCases.map(\.id), ["practice", "morse", "alphabet", "settings"])
     }
 
     func testSharedPackagesOnWatch() throws {

@@ -4,6 +4,7 @@ enum WatchSection: String, CaseIterable, Identifiable {
     case practice
     case morse
     case alphabet
+    case settings
 
     var id: String { rawValue }
 
@@ -12,11 +13,13 @@ enum WatchSection: String, CaseIterable, Identifiable {
         case .practice: "Practice"
         case .morse: "Morse"
         case .alphabet: "Alphabet"
+        case .settings: "Settings"
         }
     }
 }
 
 struct WatchHomeView: View {
+    @State private var language = WatchLanguage.system
     @State private var morseSettings = WatchMorseSettings()
 
     var body: some View {
@@ -24,6 +27,7 @@ struct WatchHomeView: View {
             List(WatchSection.allCases) { section in
                 NavigationLink(value: section) {
                     Text(section.title) // l10n: localized
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .accessibilityIdentifier("watch-section-\(section.id)")
             }
@@ -33,10 +37,13 @@ struct WatchHomeView: View {
                     WatchPracticeView()
                 } else if section == .morse {
                     WatchMorseView(settings: $morseSettings)
-                } else {
+                } else if section == .alphabet {
                     WatchAlphabetView()
+                } else {
+                    WatchSettingsView(language: $language)
                 }
             }
         }
+        .environment(\.locale, language.locale())
     }
 }

@@ -31,6 +31,7 @@ final class WatchMorseUITests: XCTestCase {
         let answer = app.buttons["watch-morse-answer-0"]
         reveal(answer, in: app)
         let chosen = answer.label
+        XCTAssertTrue(chosen.hasPrefix("Letter "))
         answer.tap()
         let feedback = app.staticTexts["watch-morse-feedback"]
         XCTAssertTrue(feedback.waitForExistence(timeout: 5))
@@ -61,7 +62,7 @@ final class WatchMorseUITests: XCTestCase {
         XCTAssertTrue(feedback.waitForExistence(timeout: 5))
         reveal(correct, in: app)
         XCTAssertTrue(choices.contains(firstLetter))
-        XCTAssertEqual(correct.label.count, 1)
+        XCTAssertEqual(correct.label.count, "Letter A".count)
     }
 
     @MainActor

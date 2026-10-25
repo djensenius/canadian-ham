@@ -30,11 +30,11 @@ final class WatchAlphabetUITests: XCTestCase {
         XCTAssertEqual(letters.label, lettersTitle)
         let a = app.staticTexts["watch-alphabet-row-A"]
         XCTAssertTrue(a.waitForExistence(timeout: 5))
-        XCTAssertEqual(a.label, "A, Alfa, \(dot) \(dash)")
+        XCTAssertEqual(a.label, "A, Alfa, \(dot), \(dash)")
         let aHeight = a.frame.height
         let juliett = app.staticTexts["watch-alphabet-row-J"]
         scrollTo(juliett, in: app)
-        XCTAssertEqual(juliett.label, "J, Juliett, \(dot) \(dash) \(dash) \(dash)")
+        XCTAssertEqual(juliett.label, "J, Juliett, \(dot), \(dash), \(dash) \(dash)")
         XCTAssertLessThanOrEqual(juliett.frame.maxY, app.frame.maxY, "The phonetic word and pattern are fully reachable")
         let letterScreenshot = XCTAttachment(screenshot: app.screenshot())
         letterScreenshot.name = "\(language)-alphabet-Juliett-\(largeText ? "large" : "default")"
@@ -45,7 +45,7 @@ final class WatchAlphabetUITests: XCTestCase {
         XCTAssertEqual(digits.label, digitsTitle)
         let nine = app.staticTexts["watch-alphabet-row-9"]
         scrollTo(nine, in: app)
-        XCTAssertEqual(nine.label, "9, \(dash) \(dash) \(dash) \(dash) \(dot)")
+        XCTAssertEqual(nine.label, "9, \(dash), \(dash) \(dash), \(dash), \(dot)")
         XCTAssertGreaterThan(nine.frame.height, 0)
         XCTAssertGreaterThanOrEqual(nine.frame.minY, app.navigationBars.firstMatch.frame.maxY)
         XCTAssertLessThanOrEqual(nine.frame.maxY, app.frame.maxY, "The last row is fully reachable")
