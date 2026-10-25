@@ -1,9 +1,10 @@
 ---
 id: TASK-74
-title: iPad official sheet at 100 % zoom reports a nil-element textClipped finding
+title: iPad mock exam accessibility audits
 status: To Do
 assignee: []
 created_date: '2026-10-25T00:56:00Z'
+updated_date: '2026-10-25T01:25:00Z'
 labels:
   - apple
   - accessibility
@@ -11,6 +12,7 @@ labels:
 dependencies: []
 references:
   - apps/apple/CanadianHamUITests/CanadianHamExamToolsUITests.swift
+  - apps/apple/CanadianHamUITests/CanadianHamPracticeUITests.swift
 priority: medium
 type: bug
 ordinal: 153000
@@ -19,15 +21,20 @@ ordinal: 153000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Follow-up authorized by the coordinator on 2026-10-24 during TASK-44.5. On iPad Pro 13-inch (M5), iOS 27.0, the Basic mock official reference sheet at page 4 / 100% zoom reports one nil-element .textClipped finding from the full-default audit: "Text of this element may be clipped at larger Dynamic Type sizes." No identifier or element screenshot is supplied. The earlier fully visible mock-exam-seed contrast finding is resolved by the separately approved medium-weight caption; this is a different, non-contrast issue.
+Coordinator-authorized follow-up from TASK-44.5 (2026-10-24 under owner delegation 2026-10-22), incorporating the earlier TASK-74 100% official-sheet investigation rather than creating a duplicate.
 
-Evidence: /tmp/task445-ipad-running-final.log; /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-dipnadmjyqgfukfpgamjtsdvyhpd/Logs/Test/Test-CanadianHam-2026.10.24_20-50-46--0400.xcresult; exported failure app screenshot /tmp/task445-ipad-light-after/BEA27278-CB27-4450-B8FE-EF25DE94E570.png and description /tmp/task445-ipad-light-after/CD215185-0B83-42FD-84B2-9C5587360FEB.txt. In CanadianHamExamToolsUITests the existing practice matrix audits the official image only at 150%, with Zoom out enabled; it does not audit the 100% state. TASK-44.5 is explicitly approved to align its new mock audit to that same 150% state while retaining real 100% zoom-out assertions, not to ignore this finding.
+Unresolved iPad Pro 13-inch (M5), iOS 27.0 findings:
+1. Fully visible thin monospaced mock-exam-seed contrast findings in light/dark. A .weight(.medium) experiment did not resolve the legacy seed ui-a11y-mock-exam-timer; it was reverted, preserving the app presentation. Original evidence: Test-CanadianHam-2026.10.24_19-02-02--0400.xcresult; /tmp/task445-ipad-light-attachments/B2933CAE-5FDC-4DA0-9FE6-AFF090645C02.png and /tmp/task445-ipad-dark-before/BDD80782-FBED-42E0-94BE-6596F7BB3132.png. Medium experiment: /tmp/task445-ipad-legacy-light/ECD64D0A-4E39-49F8-A543-5D3273666E85.png in Test-CanadianHam-2026.10.24_21-16-19--0400.xcresult.
+2. Official sheet full-default audits report one nil-element .textClipped finding, with no element screenshot/identifier, at BOTH 100% and 150% zoom in mock exams. 100%: /tmp/task445-ipad-running-final.log, Test-CanadianHam-2026.10.24_20-50-46--0400.xcresult, /tmp/task445-ipad-light-after/BEA27278-CB27-4450-B8FE-EF25DE94E570.png and CD215185-0B83-42FD-84B2-9C5587360FEB.txt. 150%: /tmp/task445-ipad-final.log, Test-CanadianHam-2026.10.24_21-16-19--0400.xcresult, /tmp/task445-ipad-150-light/{3C5764C2-40A0-47C5-86D8-AAFFB53CDA58.png,6C64B812-0105-4693-8C9A-D3818AC5A6D1.txt} and /tmp/task445-ipad-150-dark/{D736305E-EA71-46CB-B867-6B1B5B095B0F.png,09C7FCF6-EC65-4076-B5AC-35C6CFFE8AFB.txt}. The practice matrix audits official images only at 150%; investigate 100% and 150% on BOTH practice and mock paths in light/dark.
+3. Pre-existing CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowDark and testMockExamHeaderControlsSupportLargestAccessibilityTextSize assume a compact Questions button that does not exist in real iPad regular layout. The light flow can also fail on the caption. Existing tests/helpers were not changed by TASK-44.5. Evidence: /tmp/task445-ipad-final.log and the same 21-16-19 xcresult.
 
-Investigate the 100% state on BOTH practice and mock paths, in light and dark. There is no approved iPad nil-element textClipped exception; do not extend the iPhone medium-detent rule or TASK-71/73 measured-contrast scope. Any new exception needs separate owner/coordinator approval.
+All xcresults are under /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-dipnadmjyqgfukfpgamjtsdvyhpd/Logs/Test/.
+
+Coordinator decision for TASK-44.5 only: its new iPad mock tests retain EVERY behaviour assertion (pages/zoom/text/fallback, question/answer/progress/timer continuity, Advanced/no-hints negatives) without their full audits; iPhone keeps every full-default audit. AGENTS.md records this temporary limitation. No generic iPad nil-element or measured-contrast exception is granted; do not extend the iPhone medium rule or TASK-71/73 scopes. Investigation/remediation and restoration of iPad audits remain this follow-up, with separate approval for any new exception.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The iPad 100% official-sheet state is investigated on both practice and Basic mock paths in light and dark with full-default audits, recording reproducibility and screenshot/xcresult evidence.
-- [ ] #2 Findings document the affected element/layout or framework limitation and a scoped remediation or required owner decision, explicitly preserving existing audit/exception scopes unless separately approved.
+- [ ] #1 The iPad exam-code contrast, official-sheet 100%/150% nil textClipped findings (practice and mock, light/dark), and legacy compact-Questions assumptions are investigated with reproducible screenshot/xcresult evidence.
+- [ ] #2 Findings document affected elements/layouts or framework limitations and scoped remediation/restoration of iPad audits or required owner decisions; existing audit/exception scopes are preserved unless separately approved.
 <!-- AC:END -->
