@@ -54,16 +54,16 @@ final class WatchPracticeUITests: XCTestCase {
         open.tap()
         let picker = app.pickerWheels.firstMatch
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
-        let initial = app.staticTexts["watch-crown-selection"].label
-        // Native watchOS XCUIAutomation exposes Crown rotation; use the hardware path.
-        XCUIDevice.shared.rotateDigitalCrown(delta: -0.3)
-        XCTAssertTrue(app.buttons["watch-confirm"].exists)
-        XCTAssertFalse(app.staticTexts["watch-feedback"].exists)
-        XCTAssertNotEqual(app.staticTexts["watch-crown-selection"].label, initial)
-        for value in ["Réponse 1", "Réponse 2", "Réponse 3", "Réponse 4"] {
-            picker.adjust(toPickerWheelValue: value)
+        var seenAnswers: Set<String> = [app.staticTexts["watch-crown-selection"].label]
+        // Native watchOS XCUIAutomation exposes Crown rotation (but not adjust(toPickerWheelValue:)).
+        for _ in 0..<24 {
+            XCUIDevice.shared.rotateDigitalCrown(delta: -0.05)
+            seenAnswers.insert(app.staticTexts["watch-crown-selection"].label)
+            XCTAssertTrue(app.buttons["watch-confirm"].exists)
             XCTAssertFalse(app.staticTexts["watch-feedback"].exists)
+            if seenAnswers.count == 4 { break }
         }
+        XCTAssertEqual(seenAnswers.count, 4, "The Crown can select every answer without submitting")
         let selected = app.staticTexts["watch-crown-selection"].label
         app.buttons["watch-confirm"].tap()
         let feedback = app.staticTexts["watch-feedback"]
