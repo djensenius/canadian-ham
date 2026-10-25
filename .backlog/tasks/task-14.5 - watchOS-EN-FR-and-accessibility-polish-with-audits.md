@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T21:53:00Z'
+updated_date: '2026-10-25T22:27:00Z'
 labels:
   - apple
   - watchos
@@ -58,6 +58,8 @@ Milestone ff25c9fe pushed. Full Series 12 42mm watch scheme: all 28 units passed
 Smallest SE 3 40mm / watchOS 27 targeted run: 1 new localization unit, both reference UI tests, both practice UI tests, EN/FR AX control/long-question walks and all 16 default audits passed. Session-override test exposed a real watchOS navigation-title cache issue on revisiting Settings: content switched to English but title stayed French. Fixed by explicitly resolving the title via the selected bundle. Smallest targeted rerun passed EN Settings audit (9.359s), FR Settings audit (8.288s), full override/reset regression (68.787s). No audit handler/skip/filter added. Manual listening/hardware remains owner-pending.
 
 Automated implementation complete; evidence docs/testing/task-14.5-watch-a11y.md contains all watch full/fix per-test results, iOS localization 11/11, exact commands, smallest-watch screenshots and owner walkthrough; docs/testing/task-14.5-macos-unit-results.md records macOS 223/223. All 29 watch units and 27 UI tests have passing task evidence across full and targeted runs; all 16 EN/FR AX full default audits passed on Series 12 42mm and SE 3 40mm with no handler or skip. Final iOS build-for-testing, localization export/platform builds, text/network/iCloud checks, pnpm test/typecheck, alphabet self-test/parity and generated-project determinism passed. Initial pnpm test under concurrent Apple load had two unrelated web timing failures; unchanged idle rerun passed all tests. Test guard reports the new audit helper enclosing function: exits 0 with owner-authorized Test-guard-approved: task-14 marker; retain that line in eventual PR body. Blocked: owner manual check (AC4). Physical VoiceOver listening, Reduce Motion observations and tactile output/device OS record remain unperformed; AC4 stays unchecked and status In Progress. No PR or upload.
+
+Coordinator rerun at the final source: WatchAccessibilityUITests 19/19 on the SE 3 40mm and 19/19 on the Series 12 42mm, after a test-only reveal fix (lazy home list scrolled on Back). The review's listening points (double 'Selected', the title revisit after a language switch) are added to the owner walkthrough. AC4 is still pending the owner.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
