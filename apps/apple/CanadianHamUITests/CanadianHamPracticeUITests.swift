@@ -1031,6 +1031,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try auditLessonPrerequisiteNavigation(appearance: .dark)
     }
 
+    func testLessonQuizCardCountIncludesReviewItems() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-001-01"])
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        let card = app.descendants(matching: .any)["lesson-quiz-summary-QZ-L-001-01-A"].firstMatch
+        let start = card.buttons["Start quiz"].firstMatch
+        scrollUntilHittable(start, in: app, maxSwipes: 30)
+        XCTAssertTrue(start.isHittable)
+        let summary = card.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "35 questions:")).firstMatch
+        XCTAssertTrue(summary.exists, "The card includes 33 core questions plus two reviews")
+        start.tap()
+        waitForLessonQuizScreen(in: app)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "35 questions:")).firstMatch.exists, "The quiz header agrees with its lesson card")
+    }
+
     func testLessonQuizResultPersistsAfterRelaunch() throws {
         XCUIDevice.shared.appearance = .light
         var app = launchApp(arguments: [

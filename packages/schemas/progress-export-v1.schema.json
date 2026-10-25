@@ -3,6 +3,7 @@
   "$id": "progress-export-v1.schema.json",
   "title": "Canadian Ham progress export v1",
   "type": "object",
+  "lessonReviewVersion": "lessonQuizAttempts",
   "required": ["schema", "version", "exportedAt", "questionProgress", "examAttempts", "preferences"],
   "properties": {
     "schema": { "const": "canadian-ham.progress-export" },
@@ -75,6 +76,7 @@
     },
     "deviceLessonQuizAttempt": {
       "type": "object",
+      "lessonReviewVersion": "attempt",
       "required": ["deviceId", "attempt"],
       "properties": {
         "deviceId": { "$ref": "#/$defs/deviceId" },

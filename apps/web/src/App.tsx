@@ -1297,13 +1297,14 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
     let correct = 0;
     let nextProgress = progress;
     const officialQuestionIds: string[] = [];
+    const reviewQuestionIds: string[] = [];
     const incorrectOfficialQuestionIds: string[] = [];
     const incorrectConceptCheckIds: string[] = [];
     const submittedAt = now();
     for (const item of items) {
       const selected = selectedByItemId.get(item.id);
       if (item.type === "official") {
-        officialQuestionIds.push(item.questionId);
+        (item.reviewLessonId === undefined ? officialQuestionIds : reviewQuestionIds).push(item.questionId);
         if (selected === 0) {
           correct += 1;
         } else {
@@ -1330,6 +1331,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
       total: items.length,
       percent: items.length === 0 ? 0 : (correct / items.length) * 100,
       officialQuestionIds,
+      reviewQuestionIds: reviewQuestionIds.sort(),
       incorrectOfficialQuestionIds,
       incorrectConceptCheckIds,
       answeredWithHelpIds: [...session.answeredWithHelpIds].sort(),
@@ -1340,6 +1342,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
 
   const hint = currentItem?.type === "official" ? hintForQuestion(currentItem.questionId, BASIC_BANK_ID) : null;
   const hintLesson = hint === null ? undefined : lessonsById.get(hint.lessonLink.lessonId);
+  const reviewLesson = currentItem?.type === "official" && currentItem.reviewLessonId !== undefined ? lessonsById.get(currentItem.reviewLessonId) : undefined;
   return (
     <section className="lesson-quiz" aria-labelledby={`${quiz.id}-title`}>
       <div className="lesson-quiz__header">
@@ -1367,6 +1370,7 @@ function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestio
       ) : (
         <>
           {roundProgress === undefined ? null : <h4 ref={roundHeadingRef} tabIndex={-1}>{t(interfaceLanguage, "lessonQuizRound", roundProgress.roundIndex + 1, roundProgress.roundCount, roundProgress.round.title[interfaceLanguage] ?? roundProgress.round.title.en)}</h4>}
+          {currentItem.type === "official" && currentItem.reviewLessonId !== undefined ? <h4>{t(interfaceLanguage, "lessonQuizReviewFrom", "")}<span lang={reviewLesson?.title[interfaceLanguage] == null ? "en" : interfaceLanguage}>{reviewLesson?.title[interfaceLanguage] ?? reviewLesson?.title.en ?? currentItem.reviewLessonId}</span></h4> : null}
           <p>{t(interfaceLanguage, "questionProgress", roundProgress === undefined ? currentIndex + 1 : currentIndex - roundProgress.startIndex + 1, roundProgress?.questionCount ?? items.length)}</p>
           <ExamTools
             context="lesson-quiz"
