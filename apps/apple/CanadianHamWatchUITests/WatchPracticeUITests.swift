@@ -66,8 +66,15 @@ final class WatchPracticeUITests: XCTestCase {
         }
         XCTAssertEqual(seenAnswers.count, 4, "The Crown can select every answer without submitting")
         let selected = picker.label
-        reveal(app.buttons["watch-confirm"], in: app)
-        app.buttons["watch-confirm"].tap()
+        // Touch-scroll long choices: the Crown intentionally remains assigned to selection here.
+        let confirm = app.buttons["watch-confirm"]
+        for _ in 0..<12 {
+            if confirm.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(confirm.isHittable)
+        XCTAssertEqual(picker.label, selected, "Reading the choice must not change the Crown selection")
+        confirm.tap()
         let feedback = app.staticTexts["watch-feedback"]
         XCTAssertTrue(feedback.waitForExistence(timeout: 5))
         XCTAssertTrue(["Bonne réponse", "Mauvaise réponse"].contains(feedback.label))
@@ -102,6 +109,8 @@ final class WatchPracticeUITests: XCTestCase {
             if element.isHittable { return }
             if element.frame.maxY <= 56 {
                 XCUIDevice.shared.rotateDigitalCrown(delta: -0.5)
+            } else if element.frame.minY > app.frame.maxY + 100 {
+                app.swipeUp()
             } else {
                 XCUIDevice.shared.rotateDigitalCrown(delta: 0.5)
             }
