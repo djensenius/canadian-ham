@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T22:27:00Z'
-updated_date: '2026-10-26T13:48:00Z'
+updated_date: '2026-10-26T13:50:00Z'
 labels:
   - l10n
 dependencies: []
@@ -70,4 +70,21 @@ xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamWatch \
   -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchMorseSettingsAudit \
   -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchReferenceAudit \
   test CODE_SIGNING_ALLOWED=NO
+
+macOS targeted LocalizationCatalogTests PASSED: 12 tests, zero failures, exit 0. The new French Morse test exercises all 16 point/trait labels/instructions in compiled fr and fr-CA bundles. Per-test results:
+- CanadianHamTests.LocalizationCatalogTests/testConceptCheckAnswerStatusFrenchAndFallbackLanguageMetadata: PASS (0.002 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testConceptCheckAnswerStatusLegacyChoiceAndNoDisclosureBeforeSelection: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testConceptCheckAnswerStatusMapsShuffledSourceChoices: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testConceptCheckFeedbackFocusRequestOnlyAfterChoosingNotPreviousOrNext: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testEveryCatalogKeyHasFrenchTranslations: PASS (0.007 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testFrenchMorseCopyUsesPointsAndTraitsInBothLocales: PASS (0.006 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries: PASS (0.002 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testLanguagePreferenceResolvesSystemAndOverrides: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testLocalizedNullableTextAndLanguageFallsBackToEnglish: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testQuestionBankLoadErrorDescriptionUsesFrenchLocale: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testReviewHeadingMarksEnglishFallbackTitleInsideFrenchText: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench: PASS (0.001 seconds).
+Command: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -only-testing:CanadianHamTests/LocalizationCatalogTests test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
+The macOS host logged an existing local Progress.store unknown-model-version migration error during startup, but all selected tests passed; no store files were manually removed or edited.
+Skipped targeted iOS UI: inventory/grep found no existing French Morse text assertions. Shared iOS/macOS l10n coverage ran on macOS as requested. No full platform suites during implementation per testing policy; tvOS/visionOS/watchOS compile validation was included in localization gate, while full multi-platform suites remain for the coordinator merge batch. No figures/category-title changes, so no figure/title-sweep plans. Test-guard self-test and git diff --check passed.
 <!-- SECTION:NOTES:END -->
