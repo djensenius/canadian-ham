@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T00:56:00Z'
-updated_date: '2026-10-26T13:37:00Z'
+updated_date: '2026-10-26T13:46:00Z'
 labels:
   - apple
   - accessibility
@@ -53,4 +53,6 @@ Coordinator decision for TASK-44.5 only: its new iPad mock tests retain EVERY be
 
 <!-- SECTION:NOTES:BEGIN -->
 2026-10-26 baseline investigation: fresh native iPad PNGs and full hierarchies persisted under docs/evidence/task-74; docs/testing/task-74-ipad-mock-audits.md records reproduction and exact ratios. Caption glyph-core contrast is 16.3364:1 light / 12.6297:1 dark, while current full audit reports contrast failed/nearly passed. No styling change or measured-contrast extension: needs an owner decision. Scratch page-4 clipping matrix: practice passes light/dark at 100%/150%; mock fails one nil-element textClipped in all four states (baseline xcresult /tmp/task74-baseline.xcresult, 2 diagnostic tests/6 expected issues). Omitting only inline mock navigator does NOT remove the two mock-light clipping failures, so next scratch bisection isolates the mock header. All scratch handlers return false; no audit exception is added. Legacy layout-aware test edits pending validation; shared helpers untouched.
+
+Coordinator decision received 2026-10-26 under owner delegation 2026-10-22 (record requested as coordinator 2026-10-25 in AGENTS): caption appearance must stay unchanged. Existing local auditIgnoringOccludedOrMeasuredContrast composite is now approved for TASK-44.5 iPad mock tests and iPad legacy mock tests hitting the same caption. Keep all non-contrast issues, unmeasurable/below-4.5 contrast failing; keep existing button-crop rules, algorithms, thresholds and shared helpers byte-identical; no new handler or nil-element rule. Eventual PR marker: Test-guard-approved: owner decision 2026-10-22. Clipping bisection continues independently; omit-header scratch cleared both 100%/150%, while omitting caption alone did not. Header-controls bisection queued on shared lock.
 <!-- SECTION:NOTES:END -->
