@@ -1,11 +1,11 @@
 ---
 id: TASK-50
 title: Question hints
-status: In Progress
+status: Done
 assignee:
   - '@worker'
-created_date: '2026-10-16 07:57'
-updated_date: '2026-10-16 12:06'
+created_date: 2026-10-16 07:57
+updated_date: '2026-10-26T13:26:00Z'
 labels: []
 dependencies: []
 documentation:
@@ -24,8 +24,8 @@ Owner-approved feature (2026-10-15): add per-question hints for the active ISED 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The Basic bank has tracked subtasks for schema/checking, pilot content, category content batches, web UI, Apple UI, tvOS/visionOS follow-up, and lesson-quiz follow-up.
-- [ ] #2 Implementation order and owner decisions from 2026-10-15 are recorded so future workers do not add hints to mock exams or lesson quizzes without approval.
+- [x] #1 The Basic bank has tracked subtasks for schema/checking, pilot content, category content batches, web UI, Apple UI, tvOS/visionOS follow-up, and lesson-quiz follow-up.
+- [x] #2 Implementation order and owner decisions from 2026-10-15 are recorded so future workers do not add hints to mock exams or lesson quizzes without approval.
 <!-- AC:END -->
 
 ## Implementation Notes
@@ -36,4 +36,12 @@ Review follow-up hint style rules (owner rule: Hint 2 never gives the answer): h
 Owner recall-ladder ruling applied (2026-10-16): default A+C means Hint 2 teaches distinctions among the involved concepts and links to the lesson section, while not connecting the asked-for function to this question's option. The old subsection rule is relaxed to "never directly state another question's answer"; shared distinctions are allowed. B is allowed when a recall question cannot have a useful non-giveaway Hint 2: the file may contain only Hint 1, and must include singleLevelReason plus lessonLink.
 
 Review follow-up (task-50 hints): lessonLink is required on every hint file by schema and checker, including calculation batches such as TASK-50.7 and TASK-50.8. Reference-sheet availability affects only referenceSheetSection pointer labels, not lessonLink metadata.
+
+All 17 subtasks Done: schema/checker 50.1, pilot 50.2, content batches B-001..B-008 (50.3-50.10), web 50.11, Apple 50.12, tvOS/visionOS 50.13, lesson-quiz decision and implementation 50.14/50.14.1/50.14.2, answered-with-help 50.15. Owner decisions (2026-10-15; 50.14 yes 2026-10-20) are recorded in the subtasks and AGENTS-era notes: no hints in mock exams; lesson quizzes give hints for bank items only, not concept checks.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Question hints are complete: every Basic question has a two-level hint ladder with lesson links. They appear in practice on all platforms and in lesson quizzes (bank items only), never in mock exams. Help is tracked as 'answered with help'.
+<!-- SECTION:FINAL_SUMMARY:END -->
