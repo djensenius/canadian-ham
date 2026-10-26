@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T00:56:00Z'
-updated_date: '2026-10-26T14:04:00Z'
+updated_date: '2026-10-26T14:09:00Z'
 labels:
   - apple
   - accessibility
@@ -49,6 +49,8 @@ Coordinator decision for TASK-44.5 only: its new iPad mock tests retain EVERY be
 4. Commit and push milestones; record exact unresolved owner decisions and keep In Progress unless all findings are resolved.
 
 5. Coordinator-approved caption follow-up (2026-10-26): unchanged composite failed the oversized whole-element crop (4.104 light / 3.554 dark). Investigate a structural accessibility-frame correction preserving text selection and pixel-identical card appearance on iPad/iPhone light/dark; prefer plain audits, or use the approved unchanged composite only if it measures successfully. No non-button crop/algorithm/threshold changes.
+
+6. Coordinator direction 2026-10-26 under owner 2026-10-18 single-tree adaptive-layout rule: replace only the outer mock-header ViewThatFits with a small fitting Layout following LessonQuizControlLayout. Choose horizontal from measured ideal width vs proposed width, else identical leading VStack; force vertical at accessibility sizes. No point thresholds, no new handlers. Prove narrow/wide/portrait/AX rendering parity, restore all TASK-44.5 iPad full audits, and rerun targeted coverage.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
