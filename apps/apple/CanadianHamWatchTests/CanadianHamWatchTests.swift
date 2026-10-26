@@ -17,10 +17,10 @@ final class CanadianHamWatchTests: XCTestCase {
         let english = WatchLanguage.bundle(for: WatchLanguage.english.locale())
         for (key, translation) in [
             ("Correct", "Bonne réponse"), ("Incorrect", "Mauvaise réponse"),
-            ("Selected", "Sélectionnée"), ("Dot", "Point"), ("Dash", "Tiret"),
+            ("Selected", "Sélectionnée"), ("Dot", "Point"), ("Dash", "Trait"),
             ("Answer choices available.", "Choix de réponse disponibles."),
             ("Practice unavailable", "Exercices indisponibles"),
-            ("Light dot, rising dash", "Point léger, tiret ascendant")
+            ("Light dot, rising dash", "Point léger, trait ascendant")
         ] {
             XCTAssertEqual(french.localizedString(forKey: key, value: nil, table: nil), translation, key)
             XCTAssertEqual(english.localizedString(forKey: key, value: nil, table: nil), key, key)
