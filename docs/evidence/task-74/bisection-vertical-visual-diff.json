@@ -1,0 +1,11 @@
+{
+  "beforeFile": "baseline-mock-light-100.png",
+  "scratchAfterFile": "bisect-header-vertical.png",
+  "nativeComparisonBoxXYXY": [
+    0,
+    172,
+    2064,
+    2700
+  ],
+  "differentPixels": 0
+}

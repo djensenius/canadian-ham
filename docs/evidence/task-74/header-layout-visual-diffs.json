@@ -1,0 +1,266 @@
+[
+  {
+    "device": "ipad",
+    "case": "portrait-AXXXL-dark",
+    "beforeFile": "header-before-ipad-portrait-AXXXL-dark.png",
+    "afterFile": "header-after-ipad-portrait-AXXXL-dark.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "50fa4c381c830d4099fbbac4e583aa7bde951a4ce035ec050fecd38d3836ef05",
+    "afterSHA256": "db26f5b574cb31ca8cabc330e83e4a5e34e06873f2b403b31508a3aad27197ab",
+    "beforeResultBundle": "/tmp/task74-appearance-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task74-ipad-final.xcresult"
+  },
+  {
+    "device": "ipad",
+    "case": "portrait-AXXXL-light",
+    "beforeFile": "header-before-ipad-portrait-AXXXL-light.png",
+    "afterFile": "header-after-ipad-portrait-AXXXL-light.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "f96d613b5b5ffab17433b66c10fdb5595627001039d6d28340c3849a8a0388ca",
+    "afterSHA256": "4955f25695b54e4d718a132eeb902d83d3284623d7e4e19971f7167c692e919a",
+    "beforeResultBundle": "/tmp/task74-appearance-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task74-ipad-final.xcresult"
+  },
+  {
+    "device": "ipad",
+    "case": "portrait-default-dark-inspector",
+    "beforeFile": "header-before-ipad-portrait-default-dark-inspector.png",
+    "afterFile": "header-after-ipad-portrait-default-dark-inspector.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "645e6083bb47ca72211800bb2f8ae4924b001a710179841159d8fbef225cfd15",
+    "afterSHA256": "40d49e045daf1cabf981e3c232fd7f432dba05f2ad5a63b54d315301844f5510",
+    "beforeResultBundle": "/tmp/task74-appearance-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task74-ipad-final.xcresult"
+  },
+  {
+    "device": "ipad",
+    "case": "portrait-default-dark",
+    "beforeFile": "header-before-ipad-portrait-default-dark.png",
+    "afterFile": "header-after-ipad-portrait-default-dark.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "c039f0400ff2f1d518002dcbace578098efd544be7ecb2ddb037eba0ee59b330",
+    "afterSHA256": "a747143de254420104efb4e716c914cf3acfbd228acb8e687e9316b4b080e9e5",
+    "beforeResultBundle": "/tmp/task74-appearance-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task74-ipad-final.xcresult"
+  },
+  {
+    "device": "ipad",
+    "case": "portrait-default-light-inspector",
+    "beforeFile": "header-before-ipad-portrait-default-light-inspector.png",
+    "afterFile": "header-after-ipad-portrait-default-light-inspector.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "92aaaf989e9b90a00fb62d387ce79b77bd60dea0a071c0f452c4bb1b59ac6050",
+    "afterSHA256": "7c73ecf914feee6beb18277d40916c020e4334bf2b4f401f826f0e21eb38846e",
+    "beforeResultBundle": "/tmp/task74-appearance-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task74-ipad-settled.xcresult"
+  },
+  {
+    "device": "ipad",
+    "case": "portrait-default-light",
+    "beforeFile": "header-before-ipad-portrait-default-light.png",
+    "afterFile": "header-after-ipad-portrait-default-light.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "41fc2e89441c9d992b622493c23ca17e53b795d25e0c31406584ac8c34890302",
+    "afterSHA256": "4b6155710c4eaac47544677c85e158bcbb58b0cf1ee12253918225d75b1f57cd",
+    "beforeResultBundle": "/tmp/task74-appearance-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task74-ipad-final.xcresult"
+  },
+  {
+    "device": "iphone",
+    "case": "landscape-default-dark",
+    "beforeFile": "header-before-iphone-landscape-default-dark.png",
+    "afterFile": "header-after-iphone-landscape-default-dark.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "d7ab1ba18abdfb59f8cdc51e8b2bc201036b697deae4a70af2a90533c401b708",
+    "afterSHA256": "d7ab1ba18abdfb59f8cdc51e8b2bc201036b697deae4a70af2a90533c401b708",
+    "beforeResultBundle": "/tmp/task74-appearance-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task74-iphone-final.xcresult"
+  },
+  {
+    "device": "iphone",
+    "case": "landscape-default-light",
+    "beforeFile": "header-before-iphone-landscape-default-light.png",
+    "afterFile": "header-after-iphone-landscape-default-light.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "cfff308b6c82ecf89041bd722a218dbb412033087e4bd3a23ec3c6868acd3ee9",
+    "afterSHA256": "cfff308b6c82ecf89041bd722a218dbb412033087e4bd3a23ec3c6868acd3ee9",
+    "beforeResultBundle": "/tmp/task74-appearance-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task74-iphone-final.xcresult"
+  },
+  {
+    "device": "iphone",
+    "case": "portrait-AXXXL-dark",
+    "beforeFile": "header-before-iphone-portrait-AXXXL-dark.png",
+    "afterFile": "header-after-iphone-portrait-AXXXL-dark.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      567,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "e3f554572f96574daa45ab669d39c9e3153823a83f924793745ada2eb1e54976",
+    "afterSHA256": "e26c77f86ee6be963f98268c4923d0ebf35eed70600bb98eb487f16307f0f845",
+    "beforeResultBundle": "/tmp/task74-appearance-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task74-iphone-final.xcresult"
+  },
+  {
+    "device": "iphone",
+    "case": "portrait-AXXXL-light",
+    "beforeFile": "header-before-iphone-portrait-AXXXL-light.png",
+    "afterFile": "header-after-iphone-portrait-AXXXL-light.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      567,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "4b5e93c1f4413d480bd69cd70fc3df870a2360916012e6a7239a680b4877c6ce",
+    "afterSHA256": "923a4754eb811fad22ad93a61b23067e4f5615082bf2027e0e6566956fa638f1",
+    "beforeResultBundle": "/tmp/task74-appearance-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task74-iphone-settled.xcresult"
+  },
+  {
+    "device": "iphone",
+    "case": "portrait-default-dark",
+    "beforeFile": "header-before-iphone-portrait-default-dark.png",
+    "afterFile": "header-after-iphone-portrait-default-dark.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      504,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "ce4d96e7723b5e1b9fcad41062f24d4aa5ca11d014cf64c135f857641e95b3e4",
+    "afterSHA256": "fbdceeb169d26a7fdaa3a44350a9e5a7c4daa255458cdc15c0287e21fab50b7e",
+    "beforeResultBundle": "/tmp/task74-appearance-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task74-iphone-final.xcresult"
+  },
+  {
+    "device": "iphone",
+    "case": "portrait-default-light",
+    "beforeFile": "header-before-iphone-portrait-default-light.png",
+    "afterFile": "header-after-iphone-portrait-default-light.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeBodyBoxXYXY": [
+      0,
+      504,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "14a3b0703c7fd0dc75a498077b6bd769b673c178e716c96467eaea17a9076258",
+    "afterSHA256": "ec2fd9d4ac179bee2ce380feff03e896530ee2d81f9aae96591f014d1bf732d8",
+    "beforeResultBundle": "/tmp/task74-appearance-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task74-iphone-final.xcresult"
+  }
+]

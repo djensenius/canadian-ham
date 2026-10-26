@@ -1,0 +1,64 @@
+/tmp/task74-no-navigator.log:    t =    36.79s TASK74-mock-light-100
+/tmp/task74-no-navigator.log:2026-10-26 09:36:26.640604-0400 CanadianHamUITests-Runner[1891:392136861] TASK74 TASK74-mock-light-100: <XCUIAccessibilityAuditIssue: 0x10f4e4180>AuditType:"131072" CompactDescription:"Text clipped" DetailedDescription:"Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes." Element:(null) element=nil
+/tmp/task74-no-navigator.log:/Users/david/Developer/canadian-ham-task-74/apps/apple/CanadianHamUITests/CanadianHamExamToolsUITests.swift:45: error: -[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping] : Text clipped
+/tmp/task74-no-navigator.log:    t =    49.40s TASK74-mock-light-150
+/tmp/task74-no-navigator.log:2026-10-26 09:36:39.072813-0400 CanadianHamUITests-Runner[1891:392136861] TASK74 TASK74-mock-light-150: <XCUIAccessibilityAuditIssue: 0x110d44120>AuditType:"131072" CompactDescription:"Text clipped" DetailedDescription:"Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes." Element:(null) element=nil
+/tmp/task74-no-navigator.log:/Users/david/Developer/canadian-ham-task-74/apps/apple/CanadianHamUITests/CanadianHamExamToolsUITests.swift:45: error: -[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping] : Text clipped
+/tmp/task74-no-navigator.log:Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping]' failed (60.453 seconds).
+/tmp/task74-no-navigator.log:	 Executed 1 test, with 2 failures (0 unexpected) in 60.453 (60.457) seconds
+/tmp/task74-no-navigator.log:	 Executed 1 test, with 2 failures (0 unexpected) in 60.453 (60.458) seconds
+/tmp/task74-no-navigator.log:	 Executed 1 test, with 2 failures (0 unexpected) in 60.453 (60.459) seconds
+/tmp/task74-no-navigator.log: xcrun: error: unable to find utility "simctl", not a developer tool or in PATH
+/tmp/task74-no-navigator.log:EXIT:65
+/tmp/task74-no-header.log:    t =    38.17s TASK74-mock-light-100
+/tmp/task74-no-header.log:    t =    44.46s TASK74-mock-light-150
+/tmp/task74-no-header.log:Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping]' passed (49.020 seconds).
+/tmp/task74-no-header.log:	 Executed 1 test, with 0 failures (0 unexpected) in 49.020 (49.023) seconds
+/tmp/task74-no-header.log:	 Executed 1 test, with 0 failures (0 unexpected) in 49.020 (49.024) seconds
+/tmp/task74-no-header.log:	 Executed 1 test, with 0 failures (0 unexpected) in 49.020 (49.024) seconds
+/tmp/task74-no-header.log:EXIT:0
+/tmp/task74-no-caption.log:    t =    33.70s TASK74-mock-light-100
+/tmp/task74-no-caption.log:2026-10-26 09:40:59.254100-0400 CanadianHamUITests-Runner[17144:392181765] TASK74 TASK74-mock-light-100: <XCUIAccessibilityAuditIssue: 0x11394c180>AuditType:"131072" CompactDescription:"Text clipped" DetailedDescription:"Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes." Element:(null) element=nil
+/tmp/task74-no-caption.log:/Users/david/Developer/canadian-ham-task-74/apps/apple/CanadianHamUITests/CanadianHamExamToolsUITests.swift:45: error: -[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping] : Text clipped
+/tmp/task74-no-caption.log:    t =    47.06s TASK74-mock-light-150
+/tmp/task74-no-caption.log:2026-10-26 09:41:12.648135-0400 CanadianHamUITests-Runner[17144:392181765] TASK74 TASK74-mock-light-150: <XCUIAccessibilityAuditIssue: 0x114988180>AuditType:"131072" CompactDescription:"Text clipped" DetailedDescription:"Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes." Element:(null) element=nil
+/tmp/task74-no-caption.log:/Users/david/Developer/canadian-ham-task-74/apps/apple/CanadianHamUITests/CanadianHamExamToolsUITests.swift:45: error: -[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping] : Text clipped
+/tmp/task74-no-caption.log:Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping]' failed (58.309 seconds).
+/tmp/task74-no-caption.log:	 Executed 1 test, with 2 failures (0 unexpected) in 58.309 (58.313) seconds
+/tmp/task74-no-caption.log:	 Executed 1 test, with 2 failures (0 unexpected) in 58.309 (58.314) seconds
+/tmp/task74-no-caption.log:	 Executed 1 test, with 2 failures (0 unexpected) in 58.309 (58.316) seconds
+/tmp/task74-no-caption.log: xcrun: error: unable to find utility "simctl", not a developer tool or in PATH
+/tmp/task74-no-caption.log:EXIT:65
+/tmp/task74-no-controls.log:    t =    38.03s TASK74-mock-light-100
+/tmp/task74-no-controls.log:    t =    43.71s TASK74-mock-light-150
+/tmp/task74-no-controls.log:Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping]' passed (48.389 seconds).
+/tmp/task74-no-controls.log:	 Executed 1 test, with 0 failures (0 unexpected) in 48.389 (48.392) seconds
+/tmp/task74-no-controls.log:	 Executed 1 test, with 0 failures (0 unexpected) in 48.389 (48.393) seconds
+/tmp/task74-no-controls.log:	 Executed 1 test, with 0 failures (0 unexpected) in 48.389 (48.393) seconds
+/tmp/task74-no-controls.log:EXIT:0
+/tmp/task74-no-timer.log:    t =    36.18s TASK74-mock-light-100
+/tmp/task74-no-timer.log:    t =    42.00s TASK74-mock-light-150
+/tmp/task74-no-timer.log:Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping]' passed (56.683 seconds).
+/tmp/task74-no-timer.log:	 Executed 1 test, with 0 failures (0 unexpected) in 56.683 (56.686) seconds
+/tmp/task74-no-timer.log:	 Executed 1 test, with 0 failures (0 unexpected) in 56.683 (56.687) seconds
+/tmp/task74-no-timer.log:	 Executed 1 test, with 0 failures (0 unexpected) in 56.683 (56.688) seconds
+/tmp/task74-no-timer.log:EXIT:0
+/tmp/task74-header-ideal.log:    t =    35.23s TASK74-mock-light-100
+/tmp/task74-header-ideal.log:2026-10-26 09:58:47.777851-0400 CanadianHamUITests-Runner[76479:392358704] TASK74 TASK74-mock-light-100: <XCUIAccessibilityAuditIssue: 0x10f920180>AuditType:"131072" CompactDescription:"Text clipped" DetailedDescription:"Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes." Element:(null) element=nil
+/tmp/task74-header-ideal.log:/Users/david/Developer/canadian-ham-task-74/apps/apple/CanadianHamUITests/CanadianHamExamToolsUITests.swift:45: error: -[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping] : Text clipped
+/tmp/task74-header-ideal.log:    t =    47.60s TASK74-mock-light-150
+/tmp/task74-header-ideal.log:2026-10-26 09:59:00.135062-0400 CanadianHamUITests-Runner[76479:392358704] TASK74 TASK74-mock-light-150: <XCUIAccessibilityAuditIssue: 0x110804210>AuditType:"131072" CompactDescription:"Text clipped" DetailedDescription:"Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes." Element:(null) element=nil
+/tmp/task74-header-ideal.log:/Users/david/Developer/canadian-ham-task-74/apps/apple/CanadianHamUITests/CanadianHamExamToolsUITests.swift:45: error: -[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping] : Text clipped
+/tmp/task74-header-ideal.log:Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping]' failed (58.703 seconds).
+/tmp/task74-header-ideal.log:	 Executed 1 test, with 2 failures (0 unexpected) in 58.703 (58.705) seconds
+/tmp/task74-header-ideal.log:	 Executed 1 test, with 2 failures (0 unexpected) in 58.703 (58.706) seconds
+/tmp/task74-header-ideal.log:	 Executed 1 test, with 2 failures (0 unexpected) in 58.703 (58.706) seconds
+/tmp/task74-header-ideal.log: xcrun: error: unable to find utility "simctl", not a developer tool or in PATH
+/tmp/task74-header-ideal.log:EXIT:65
+/tmp/task74-header-vertical.log:    t =    39.00s TASK74-mock-light-100
+/tmp/task74-header-vertical.log:    t =    45.59s TASK74-mock-light-150
+/tmp/task74-header-vertical.log:Test Case '-[CanadianHamUITests.CanadianHamExamToolsUITests testTask74ScratchSheetClipping]' passed (50.318 seconds).
+/tmp/task74-header-vertical.log:	 Executed 1 test, with 0 failures (0 unexpected) in 50.318 (50.320) seconds
+/tmp/task74-header-vertical.log:	 Executed 1 test, with 0 failures (0 unexpected) in 50.318 (50.321) seconds
+/tmp/task74-header-vertical.log:	 Executed 1 test, with 0 failures (0 unexpected) in 50.318 (50.322) seconds
+/tmp/task74-header-vertical.log:EXIT:0
