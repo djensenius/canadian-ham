@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T22:27:00Z'
-updated_date: '2026-10-26T13:35:00Z'
+updated_date: '2026-10-26T13:48:00Z'
 labels:
   - l10n
 dependencies: []
@@ -43,4 +43,31 @@ Content: Morse operating-procedure lesson and Koch-course metadata have no autho
 
 Implemented 12 catalogue key changes in both fr and fr-CA (24 values), nine French web messages and watch label assertions. Added testFrenchMorseCopyUsesPointsAndTraitsInBothLocales for all 16 authored point/trait keys against compiled fr and fr-CA bundles, and a French web Morse terminology regression. Python JSON round-trip is byte-stable except the 24 intended value changes; main catalogue key order, non-French values, InfoPlist and official content verified unchanged. Additional authored French hints mention Morse but contain no dah/dit terms needing edits.
 Checks passed: node scripts/check-apple-text-sources.ts; pnpm test (content-tools 250, morse-engine 21, calculator 127, web 282/18 files; plus watch-alphabet parity, official-reference and release-permission checks); pnpm typecheck; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls (URL/CSP pass). Known non-failing output: jsdom canvas not implemented; Vite large-chunk warning. Apple localization export completed without catalogue rewrite; gate continues through platform builds, sharing xbuild lock with TASK-74.
+
+Apple localization gate: pnpm check:apple-l10n PASSED (exit 0), including export and tvOS/visionOS/watchOS generic builds; both catalogues unchanged by check.
+Watch targeted run PASSED (exit 0): Apple Watch Series 12 (42mm), OS 27.0, 4 unit + 7 UI tests, zero failures. Per-test results:
+- CanadianHamWatchTests.CanadianHamWatchTests/testSessionLanguageUsesRealBundlesForLabelsFeedbackAndErrors: PASS (0.004 seconds).
+- CanadianHamWatchTests.WatchAlphabetReferenceTests/testAllDigitsMatchSharedMorseTableWithoutPhonetics: PASS (0.001 seconds).
+- CanadianHamWatchTests.WatchAlphabetReferenceTests/testAllLettersMatchL00201PhoneticsAndSharedMorseTable: PASS (0.006 seconds).
+- CanadianHamWatchTests.WatchAlphabetReferenceTests/testSpokenPatternsUseLocalizedWordsAndKeepInternationalPhonetics: PASS (0.002 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testFrenchMorseAfterAnswerAudit: PASS (17.364 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testFrenchMorseBeforeAnswerAudit: PASS (12.653 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testFrenchMorseSettingsAudit: PASS (13.161 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testFrenchReferenceAudit: PASS (7.295 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testSessionLanguageOverrideUpdatesSwiftUIAndBundleLookupsAndResets: PASS (114.555 seconds).
+- CanadianHamWatchUITests.WatchAlphabetUITests/testEnglishReferenceScrollsToNineAndBack: PASS (55.696 seconds).
+- CanadianHamWatchUITests.WatchAlphabetUITests/testFrenchReferenceAtLargeDynamicTypeScrollsToNineAndBack: PASS (78.358 seconds).
+Watch command (prefix DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer):
+xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamWatch \
+  -destination 'platform=watchOS Simulator,name=Apple Watch Series 12 (42mm),OS=27.0' \
+  -parallel-testing-enabled NO \
+  -only-testing:CanadianHamWatchTests/CanadianHamWatchTests/testSessionLanguageUsesRealBundlesForLabelsFeedbackAndErrors \
+  -only-testing:CanadianHamWatchTests/WatchAlphabetReferenceTests \
+  -only-testing:CanadianHamWatchUITests/WatchAlphabetUITests \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testSessionLanguageOverrideUpdatesSwiftUIAndBundleLookupsAndResets \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchMorseBeforeAnswerAudit \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchMorseAfterAnswerAudit \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchMorseSettingsAudit \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchReferenceAudit \
+  test CODE_SIGNING_ALLOWED=NO
 <!-- SECTION:NOTES:END -->
