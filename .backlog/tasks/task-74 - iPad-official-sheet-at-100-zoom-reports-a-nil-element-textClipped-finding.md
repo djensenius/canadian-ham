@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T00:56:00Z'
-updated_date: '2026-10-26T13:27:00Z'
+updated_date: '2026-10-26T13:37:00Z'
 labels:
   - apple
   - accessibility
@@ -48,3 +48,9 @@ Coordinator decision for TASK-44.5 only: its new iPad mock tests retain EVERY be
 3. Restore TASK-44.5 iPad audits where resolved; run targeted iPad/iPhone tests, macOS compilation, text/l10n/test-guard checks; document per-test outcomes and before/after evidence.
 4. Commit and push milestones; record exact unresolved owner decisions and keep In Progress unless all findings are resolved.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+2026-10-26 baseline investigation: fresh native iPad PNGs and full hierarchies persisted under docs/evidence/task-74; docs/testing/task-74-ipad-mock-audits.md records reproduction and exact ratios. Caption glyph-core contrast is 16.3364:1 light / 12.6297:1 dark, while current full audit reports contrast failed/nearly passed. No styling change or measured-contrast extension: needs an owner decision. Scratch page-4 clipping matrix: practice passes light/dark at 100%/150%; mock fails one nil-element textClipped in all four states (baseline xcresult /tmp/task74-baseline.xcresult, 2 diagnostic tests/6 expected issues). Omitting only inline mock navigator does NOT remove the two mock-light clipping failures, so next scratch bisection isolates the mock header. All scratch handlers return false; no audit exception is added. Legacy layout-aware test edits pending validation; shared helpers untouched.
+<!-- SECTION:NOTES:END -->
