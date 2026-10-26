@@ -56,8 +56,8 @@ retains issue descriptions, identifiers/nil elements and per-test outcomes.
 
 | Path | Light 100% | Light 150% | Dark 100% | Dark 150% |
 | --- | --- | --- | --- | --- |
-| Practice | [PNG](../evidence/task-74/baseline-practice-light-100.png) | [PNG](../evidence/task-74/baseline-practice-light-150.png) | [PNG](../evidence/task-74/baseline-practice-dark-100.png) | [PNG](../evidence/task-74/baseline-practice-dark-150.png) |
-| Mock | [PNG](../evidence/task-74/baseline-mock-light-100.png) | [PNG](../evidence/task-74/baseline-mock-light-150.png) | [PNG](../evidence/task-74/baseline-mock-dark-100.png) | [PNG](../evidence/task-74/baseline-mock-dark-150.png) |
+| Practice | `baseline-practice-light-100.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | `baseline-practice-light-150.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | `baseline-practice-dark-100.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | `baseline-practice-dark-150.png` (not kept in the repo; its SHA-256 is in the evidence JSON) |
+| Mock | `baseline-mock-light-100.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | `baseline-mock-light-150.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | `baseline-mock-dark-100.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | `baseline-mock-dark-150.png` (not kept in the repo; its SHA-256 is in the evidence JSON) |
 
 Each PNG has a same-stem `-hierarchy.txt` file. The nil finding says:
 `Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.`
@@ -280,18 +280,18 @@ allowance. Each record contains exact native rectangles and both PNG SHA-256s.
 
 | Device / header case | Before | After | Different pixels |
 | --- | --- | --- | --- |
-| ipad `portrait-AXXXL-dark` | [PNG](../evidence/task-74/header-before-ipad-portrait-AXXXL-dark.png) | [PNG](../evidence/task-74/header-after-ipad-portrait-AXXXL-dark.png) | 0 |
-| ipad `portrait-AXXXL-light` | [PNG](../evidence/task-74/header-before-ipad-portrait-AXXXL-light.png) | [PNG](../evidence/task-74/header-after-ipad-portrait-AXXXL-light.png) | 0 |
-| ipad `portrait-default-dark-inspector` | [PNG](../evidence/task-74/header-before-ipad-portrait-default-dark-inspector.png) | [PNG](../evidence/task-74/header-after-ipad-portrait-default-dark-inspector.png) | 0 |
-| ipad `portrait-default-dark` | [PNG](../evidence/task-74/header-before-ipad-portrait-default-dark.png) | [PNG](../evidence/task-74/header-after-ipad-portrait-default-dark.png) | 0 |
-| ipad `portrait-default-light-inspector` | [PNG](../evidence/task-74/header-before-ipad-portrait-default-light-inspector.png) | [PNG](../evidence/task-74/header-after-ipad-portrait-default-light-inspector.png) | 0 |
-| ipad `portrait-default-light` | [PNG](../evidence/task-74/header-before-ipad-portrait-default-light.png) | [PNG](../evidence/task-74/header-after-ipad-portrait-default-light.png) | 0 |
-| iphone `landscape-default-dark` | [PNG](../evidence/task-74/header-before-iphone-landscape-default-dark.png) | [PNG](../evidence/task-74/header-after-iphone-landscape-default-dark.png) | 0 |
-| iphone `landscape-default-light` | [PNG](../evidence/task-74/header-before-iphone-landscape-default-light.png) | [PNG](../evidence/task-74/header-after-iphone-landscape-default-light.png) | 0 |
-| iphone `portrait-AXXXL-dark` | [PNG](../evidence/task-74/header-before-iphone-portrait-AXXXL-dark.png) | [PNG](../evidence/task-74/header-after-iphone-portrait-AXXXL-dark.png) | 0 |
-| iphone `portrait-AXXXL-light` | [PNG](../evidence/task-74/header-before-iphone-portrait-AXXXL-light.png) | [PNG](../evidence/task-74/header-after-iphone-portrait-AXXXL-light.png) | 0 |
-| iphone `portrait-default-dark` | [PNG](../evidence/task-74/header-before-iphone-portrait-default-dark.png) | [PNG](../evidence/task-74/header-after-iphone-portrait-default-dark.png) | 0 |
-| iphone `portrait-default-light` | [PNG](../evidence/task-74/header-before-iphone-portrait-default-light.png) | [PNG](../evidence/task-74/header-after-iphone-portrait-default-light.png) | 0 |
+| ipad `portrait-AXXXL-dark` | `header-before-ipad-portrait-AXXXL-dark.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-ipad-portrait-AXXXL-dark.png) | 0 |
+| ipad `portrait-AXXXL-light` | `header-before-ipad-portrait-AXXXL-light.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-ipad-portrait-AXXXL-light.png) | 0 |
+| ipad `portrait-default-dark-inspector` | `header-before-ipad-portrait-default-dark-inspector.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-ipad-portrait-default-dark-inspector.png) | 0 |
+| ipad `portrait-default-dark` | `header-before-ipad-portrait-default-dark.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-ipad-portrait-default-dark.png) | 0 |
+| ipad `portrait-default-light-inspector` | `header-before-ipad-portrait-default-light-inspector.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-ipad-portrait-default-light-inspector.png) | 0 |
+| ipad `portrait-default-light` | `header-before-ipad-portrait-default-light.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-ipad-portrait-default-light.png) | 0 |
+| iphone `landscape-default-dark` | `header-before-iphone-landscape-default-dark.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-iphone-landscape-default-dark.png) | 0 |
+| iphone `landscape-default-light` | `header-before-iphone-landscape-default-light.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-iphone-landscape-default-light.png) | 0 |
+| iphone `portrait-AXXXL-dark` | `header-before-iphone-portrait-AXXXL-dark.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-iphone-portrait-AXXXL-dark.png) | 0 |
+| iphone `portrait-AXXXL-light` | `header-before-iphone-portrait-AXXXL-light.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-iphone-portrait-AXXXL-light.png) | 0 |
+| iphone `portrait-default-dark` | `header-before-iphone-portrait-default-dark.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-iphone-portrait-default-dark.png) | 0 |
+| iphone `portrait-default-light` | `header-before-iphone-portrait-default-light.png` (not kept in the repo; its SHA-256 is in the evidence JSON) | [PNG](../evidence/task-74/header-after-iphone-portrait-default-light.png) | 0 |
 
 Two initial AFTER captures were not settled: the first iPad light inspector was
 sampled during its slide-in animation, and the first iPhone light AX capture

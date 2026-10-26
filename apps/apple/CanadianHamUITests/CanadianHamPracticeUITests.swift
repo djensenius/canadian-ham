@@ -1832,7 +1832,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(flagButton.waitForExistence(timeout: 5), "Flag control should exist at the largest accessibility text size")
         scrollUntilHittable(flagButton, in: app, maxSwipes: 8)
         XCTAssertTrue(flagButton.isHittable, "Flag control should remain reachable at the largest accessibility text size")
-        if questionsButton.exists {
+        if mockExamUsesQuestionsSheet {
+            XCTAssertTrue(questionsButton.waitForExistence(timeout: 5), "Questions control should exist on iPhone at the largest accessibility text size")
             scrollUntilHittable(questionsButton, in: app, maxSwipes: 8)
             XCTAssertTrue(questionsButton.isHittable, "Questions control should remain reachable at the largest accessibility text size")
         }
@@ -2703,9 +2704,22 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
+    /// iPhone presents the mock-exam question navigator as a sheet behind a Questions button; iPad (regular
+    /// width) embeds it inline below the answers. Decide by device, not by whether the button happens to exist,
+    /// so a missing iPhone button fails instead of silently taking the inline path.
+    private var mockExamUsesQuestionsSheet: Bool {
+#if os(iOS)
+        return UIDevice.current.userInterfaceIdiom == .phone
+#else
+        return false
+#endif
+    }
+
     private func showMockExamQuestionNavigator(in app: XCUIApplication) {
         let questions = app.buttons["mock-questions-button"].firstMatch
-        if questions.exists {
+        let usesSheet = mockExamUsesQuestionsSheet
+        if usesSheet {
+            XCTAssertTrue(questions.waitForExistence(timeout: 5), "The compact Questions control must exist on iPhone")
             scrollUntilHittable(questions, in: app, maxSwipes: 8)
             XCTAssertTrue(questions.isHittable, "The compact Questions control must be reachable")
             questions.tap()
@@ -2714,13 +2728,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         // Regular width embeds the same navigator below the answers instead of presenting a sheet.
         let heading = app.staticTexts["Question navigator"].firstMatch
         XCTAssertTrue(heading.waitForExistence(timeout: 5), "Both layouts must expose the question navigator")
-        if !questions.exists {
+        if !usesSheet {
             scrollUntilHittable(heading, in: app, maxSwipes: 30)
         }
-        attachScreenshot(named: "task74-mock-navigator-\(questions.exists ? "sheet" : "inline")", from: app)
+        attachScreenshot(named: "task74-mock-navigator-\(usesSheet ? "sheet" : "inline")", from: app)
         // The compact sheet covers the root navigation bar, but not the status bar.
         var visibleArea = visibleFrameExcludingNavigationBar(in: app)
-        if questions.exists {
+        if usesSheet {
             let window = app.windows.firstMatch.frame
             let statusBar = app.statusBars.firstMatch
             let top = statusBar.exists ? max(window.minY, statusBar.frame.maxY) : window.minY
@@ -2774,7 +2788,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) mock exam answered flagged question")
         showMockExamQuestionNavigator(in: app)
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
-        if app.buttons["mock-questions-button"].firstMatch.exists {
+        if mockExamUsesQuestionsSheet {
             tap("Done", in: app)
         } else {
             scrollToTop(in: app)
