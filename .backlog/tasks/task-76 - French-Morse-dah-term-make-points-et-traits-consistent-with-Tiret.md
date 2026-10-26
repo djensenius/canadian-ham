@@ -1,9 +1,11 @@
 ---
 id: TASK-76
 title: 'French Morse dah term: make ''points et traits'' consistent with ''Tiret'''
-status: To Do
-assignee: []
+status: Done
+assignee:
+  - '@worker'
 created_date: '2026-10-25T22:27:00Z'
+updated_date: '2026-10-26T13:51:00Z'
 labels:
   - l10n
 dependencies: []
@@ -19,6 +21,78 @@ The app's Dash key translates to 'Tiret', and the watch uses 'tiret'. One iOS Mo
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 One French dah term is used in every Apple string-catalogue entry and the web French copy where Morse appears
-- [ ] #2 pnpm check:apple-l10n and the affected Apple l10n tests pass
+- [x] #1 One French dah term is used in every Apple string-catalogue entry and the web French copy where Morse appears
+- [x] #2 pnpm check:apple-l10n and the affected Apple l10n tests pass
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inventory French Morse terminology across Apple catalogues, web, content and engines, preserving official ISED wording.
+2. Normalize authored dah labels to trait and dit labels to point; update label assertions and regression coverage without changing English or catalogue key order.
+3. Run localization/text checks, web checks, targeted watch tests and macOS localization tests through xbuild; inspect iOS UI assertions and run affected French Morse tests if present. Record per-test evidence.
+4. Commit and push the implementation, verify acceptance criteria and finalize TASK-76 without opening a PR.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Inventory (2026-10-26, before edits): Localizable.xcstrings fr and fr-CA have the same 12 entries using tiret(s): Dash; Dash paddle; Send dash; dot/dash feedback format; no-feedback instruction; insufficient-dots-and-dashes feedback; notation warning; straight-key accessibility hint; sending-practice instructions; and all three watch haptic-style descriptions. Contrary to the handoff parenthetical, all three style descriptions still used tiret, so these are included. Point(s) already appears correctly in Dot, Send dot, Dot paddle and those shared instructions/formats. Meet %@ already uses points et traits and stays unchanged. No ti/ta labels. Audited every key mentioning dash/dah/dit/dot/Morse and every French value with these terms in both locales.
+Other catalogue: watch InfoPlist.xcstrings contains only bundle display/name translations, no Morse terms. Web: apps/web/src/lib/i18n.ts contains nine Morse entries with tiret(s): notation warning, sending intro, keyboard help, straight-key hint, dash paddle/title hint, no-feedback copy, feedback summary, unavailable ratio. Point(s) and course Meet points et traits already correct; keyboard trait d’union denotes the physical hyphen key and stays unchanged. No ti/ta. No other French Morse UI labels in packages/morse-engine or packages/morse-swift; engines use language-neutral dot/dash identifiers. Alphabet parity script checks only ITU spellings, not translated labels.
+Content: Morse operating-procedure lesson and Koch-course metadata have no authored French Morse terminology requiring edits. Official ISED Basic B-002-005-009, B-003-011-001 and B-003-014-002 already use point(s)/trait(s) in source/generated French answers; no official tiret occurrence found. All content/generated and content/sources preserved verbatim. iOS UI grep found Morse tests only in English and no existing French Morse text assertion; new LocalizationCatalogTests coverage exercises both compiled French bundles.
+
+Implemented 12 catalogue key changes in both fr and fr-CA (24 values), nine French web messages and watch label assertions. Added testFrenchMorseCopyUsesPointsAndTraitsInBothLocales for all 16 authored point/trait keys against compiled fr and fr-CA bundles, and a French web Morse terminology regression. Python JSON round-trip is byte-stable except the 24 intended value changes; main catalogue key order, non-French values, InfoPlist and official content verified unchanged. Additional authored French hints mention Morse but contain no dah/dit terms needing edits.
+Checks passed: node scripts/check-apple-text-sources.ts; pnpm test (content-tools 250, morse-engine 21, calculator 127, web 282/18 files; plus watch-alphabet parity, official-reference and release-permission checks); pnpm typecheck; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls (URL/CSP pass). Known non-failing output: jsdom canvas not implemented; Vite large-chunk warning. Apple localization export completed without catalogue rewrite; gate continues through platform builds, sharing xbuild lock with TASK-74.
+
+Apple localization gate: pnpm check:apple-l10n PASSED (exit 0), including export and tvOS/visionOS/watchOS generic builds; both catalogues unchanged by check.
+Watch targeted run PASSED (exit 0): Apple Watch Series 12 (42mm), OS 27.0, 4 unit + 7 UI tests, zero failures. Per-test results:
+- CanadianHamWatchTests.CanadianHamWatchTests/testSessionLanguageUsesRealBundlesForLabelsFeedbackAndErrors: PASS (0.004 seconds).
+- CanadianHamWatchTests.WatchAlphabetReferenceTests/testAllDigitsMatchSharedMorseTableWithoutPhonetics: PASS (0.001 seconds).
+- CanadianHamWatchTests.WatchAlphabetReferenceTests/testAllLettersMatchL00201PhoneticsAndSharedMorseTable: PASS (0.006 seconds).
+- CanadianHamWatchTests.WatchAlphabetReferenceTests/testSpokenPatternsUseLocalizedWordsAndKeepInternationalPhonetics: PASS (0.002 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testFrenchMorseAfterAnswerAudit: PASS (17.364 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testFrenchMorseBeforeAnswerAudit: PASS (12.653 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testFrenchMorseSettingsAudit: PASS (13.161 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testFrenchReferenceAudit: PASS (7.295 seconds).
+- CanadianHamWatchUITests.WatchAccessibilityUITests/testSessionLanguageOverrideUpdatesSwiftUIAndBundleLookupsAndResets: PASS (114.555 seconds).
+- CanadianHamWatchUITests.WatchAlphabetUITests/testEnglishReferenceScrollsToNineAndBack: PASS (55.696 seconds).
+- CanadianHamWatchUITests.WatchAlphabetUITests/testFrenchReferenceAtLargeDynamicTypeScrollsToNineAndBack: PASS (78.358 seconds).
+Watch command (prefix DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer):
+xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamWatch \
+  -destination 'platform=watchOS Simulator,name=Apple Watch Series 12 (42mm),OS=27.0' \
+  -parallel-testing-enabled NO \
+  -only-testing:CanadianHamWatchTests/CanadianHamWatchTests/testSessionLanguageUsesRealBundlesForLabelsFeedbackAndErrors \
+  -only-testing:CanadianHamWatchTests/WatchAlphabetReferenceTests \
+  -only-testing:CanadianHamWatchUITests/WatchAlphabetUITests \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testSessionLanguageOverrideUpdatesSwiftUIAndBundleLookupsAndResets \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchMorseBeforeAnswerAudit \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchMorseAfterAnswerAudit \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchMorseSettingsAudit \
+  -only-testing:CanadianHamWatchUITests/WatchAccessibilityUITests/testFrenchReferenceAudit \
+  test CODE_SIGNING_ALLOWED=NO
+
+macOS targeted LocalizationCatalogTests PASSED: 12 tests, zero failures, exit 0. The new French Morse test exercises all 16 point/trait labels/instructions in compiled fr and fr-CA bundles. Per-test results:
+- CanadianHamTests.LocalizationCatalogTests/testConceptCheckAnswerStatusFrenchAndFallbackLanguageMetadata: PASS (0.002 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testConceptCheckAnswerStatusLegacyChoiceAndNoDisclosureBeforeSelection: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testConceptCheckAnswerStatusMapsShuffledSourceChoices: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testConceptCheckFeedbackFocusRequestOnlyAfterChoosingNotPreviousOrNext: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testEveryCatalogKeyHasFrenchTranslations: PASS (0.007 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testFrenchMorseCopyUsesPointsAndTraitsInBothLocales: PASS (0.006 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries: PASS (0.002 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testLanguagePreferenceResolvesSystemAndOverrides: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testLocalizedNullableTextAndLanguageFallsBackToEnglish: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testQuestionBankLoadErrorDescriptionUsesFrenchLocale: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testReviewHeadingMarksEnglishFallbackTitleInsideFrenchText: PASS (0.001 seconds).
+- CanadianHamTests.LocalizationCatalogTests/testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench: PASS (0.001 seconds).
+Command: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -only-testing:CanadianHamTests/LocalizationCatalogTests test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
+The macOS host logged an existing local Progress.store unknown-model-version migration error during startup, but all selected tests passed; no store files were manually removed or edited.
+Skipped targeted iOS UI: inventory/grep found no existing French Morse text assertions. Shared iOS/macOS l10n coverage ran on macOS as requested. No full platform suites during implementation per testing policy; tvOS/visionOS/watchOS compile validation was included in localization gate, while full multi-platform suites remain for the coordinator merge batch. No figures/category-title changes, so no figure/title-sweep plans. Test-guard self-test and git diff --check passed.
+
+Acceptance evidence: AC1 verified by runtime fr/fr-CA catalogue regressions, watch French alphabet/Morse pattern/language override tests and web terminology regression; source inventory confirms every authored Morse dah label now uses trait(s), with point(s) unchanged. AC2 verified by pnpm check:apple-l10n (exit 0, no catalogue rewrite), 11 targeted watch tests and 12 macOS LocalizationCatalogTests, all passing. Implementation commit: e98160b0de92fa458e5f4da3b3501ae353ce6ebd. Test guard against main...HEAD passed with no guarded changes; no approval marker needed. All tests passed on the first run. Exact-byte comparison confirms main catalogue order/formatting/metadata with only 24 approved French substitutions; English web block and official ISED files unchanged. Full logs are in /tmp/task-76-logs (watch-targeted.log, macos-l10n.log, apple-l10n.log, web.log, test-guard.log).
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Standardized French Morse UI terminology on trait (dah) and point (dit): 24 French Apple catalogue values across fr/fr-CA and nine French web messages, including watch spoken alphabet/pattern labels and all haptic-style descriptions. Preserved English, official ISED content, catalogue ordering and formatting. Updated watch assertions and added compiled-bundle and web terminology regressions. Localization gate, text-source checks, 23 targeted Apple tests, 680 package/web tests, typecheck, web build, URL/CSP audit and test guard all passed. No iOS UI French Morse assertions existed to rerun; full Apple suites deferred to coordinator merge-batch policy. No PR opened; ready for independent branch review.
+<!-- SECTION:FINAL_SUMMARY:END -->

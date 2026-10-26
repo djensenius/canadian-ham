@@ -10,7 +10,7 @@ final class WatchAlphabetUITests: XCTestCase {
 
     @MainActor
     func testFrenchReferenceAtLargeDynamicTypeScrollsToNineAndBack() {
-        assertReference(language: "fr", lettersTitle: "Lettres", digitsTitle: "Chiffres", dot: "Point", dash: "Tiret", largeText: true)
+        assertReference(language: "fr", lettersTitle: "Lettres", digitsTitle: "Chiffres", dot: "Point", dash: "Trait", largeText: true)
     }
 
     @MainActor

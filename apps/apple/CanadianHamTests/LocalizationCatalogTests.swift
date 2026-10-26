@@ -187,6 +187,33 @@ final class LocalizationCatalogTests: XCTestCase {
         XCTAssertEqual(localizedAnsweredOutOfTotal(answered: 3, total: 100), "Answered 3 of 100")
     }
 
+    func testFrenchMorseCopyUsesPointsAndTraitsInBothLocales() throws {
+        let translations = [
+            ("Dot", "Point"),
+            ("Dash", "Trait"),
+            ("Send dot", "Envoyer un point"),
+            ("Send dash", "Envoyer un trait"),
+            ("Dot paddle. Hold for repeated dots.", "Palette de points. Maintenez pour répéter les points."),
+            ("Dash paddle. Hold for repeated dashes.", "Palette de traits. Maintenez pour répéter les traits."),
+            ("Enter the characters you heard, not dot and dash notation.", "Entrez les caractères entendus, et non la notation en points et traits."),
+            ("Meet %@. Listen, then notice its dits and dahs.", "Découvrez %@. Écoutez, puis observez ses points et traits."),
+            ("not enough dots and dashes", "pas assez de points et de traits"),
+            ("Send a character to see dot/dash ratio and timing consistency.", "Envoyez un caractère pour voir le ratio point/trait et la constance du minutage."),
+            ("%@, dot/dash ratio %@, timing consistency %lld%%.", "%@, ratio point/trait %@, constance du minutage %lld\u{00A0}%%."),
+            ("Straight key. Hold to send tone, release to classify dot or dash.", "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le trait."),
+            ("Practise tap timing with a straight key or iambic-style paddles. With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets. Aim for steady dot/dash ratio and timing consistency.", "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les traits. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/traits et un minutage constants."),
+            ("Light dot, rising dash", "Point léger, trait ascendant"),
+            ("Light dot, firm dash", "Point léger, trait ferme"),
+            ("Stronger dot, firm dash", "Point plus fort, trait ferme")
+        ]
+        for localeIdentifier in ["fr", "fr-CA"] {
+            let bundle = try localizationBundle(for: localeIdentifier)
+            for (key, expected) in translations {
+                XCTAssertEqual(bundle.localizedString(forKey: key, value: nil, table: nil), expected, "\(localeIdentifier): \(key)")
+            }
+        }
+    }
+
     func testQuestionBankLoadErrorDescriptionUsesFrenchLocale() throws {
         let error = QuestionBankLoadError.missingResource("manifest")
         XCTAssertEqual(error.errorDescription, error.localizedMessage(bundle: .main))
