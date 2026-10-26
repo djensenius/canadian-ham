@@ -1,10 +1,11 @@
 ---
 id: TASK-74
 title: iPad mock exam accessibility audits
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-25T00:56:00Z'
-updated_date: '2026-10-25T01:25:00Z'
+updated_date: '2026-10-26T13:27:00Z'
 labels:
   - apple
   - accessibility
@@ -38,3 +39,12 @@ Coordinator decision for TASK-44.5 only: its new iPad mock tests retain EVERY be
 - [ ] #1 The iPad exam-code contrast, official-sheet 100%/150% nil textClipped findings (practice and mock, light/dark), and legacy compact-Questions assumptions are investigated with reproducible screenshot/xcresult evidence.
 - [ ] #2 Findings document affected elements/layouts or framework limitations and scoped remediation/restoration of iPad audits or required owner decisions; existing audit/exception scopes are preserved unless separately approved.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Reproduce the iPad caption, official-sheet clipping and legacy navigation findings with screenshot, hierarchy and xcresult evidence; measure caption pixels and bisect nil-element clipping with temporary scratch probes.
+2. Apply only proven minimal semantic-colour/weight or layout fixes; make legacy Questions navigation layout-aware without reducing assertions/audits; preserve shared helpers and exception scopes.
+3. Restore TASK-44.5 iPad audits where resolved; run targeted iPad/iPhone tests, macOS compilation, text/l10n/test-guard checks; document per-test outcomes and before/after evidence.
+4. Commit and push milestones; record exact unresolved owner decisions and keep In Progress unless all findings are resolved.
+<!-- SECTION:PLAN:END -->
