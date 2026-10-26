@@ -1226,14 +1226,14 @@ struct MockExamView: View {
             onDismiss: presentPendingNavigatorSheetIfNeeded
         )
         .sheet(isPresented: $showingNavigator) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                navigator
-                Button { showingNavigator = false } label: {
-                    AccessibleSecondaryButtonLabel(title: "Done")
+            Group {
+                // Keep default placement; accessibility text must scroll rather than compress.
+                if dynamicTypeSize.isAccessibilitySize {
+                    ScrollView { navigatorSheetContent }
+                } else {
+                    navigatorSheetContent
                 }
-                .buttonStyle(AccessibleSecondaryButtonStyle())
             }
-            .pagePadding()
             .background(DesignTokens.Colors.paper)
         }
         .onAppear {
@@ -1258,6 +1258,17 @@ struct MockExamView: View {
         } message: {
             Text("Discard this in-progress mock exam and return to the start screen.")
         }
+    }
+
+    private var navigatorSheetContent: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            navigator
+            Button { showingNavigator = false } label: {
+                AccessibleSecondaryButtonLabel(title: "Done")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+        }
+        .pagePadding()
     }
 
     private var startCard: some View {

@@ -2709,13 +2709,24 @@ final class CanadianHamPracticeUITests: XCTestCase {
             scrollUntilHittable(questions, in: app, maxSwipes: 8)
             XCTAssertTrue(questions.isHittable, "The compact Questions control must be reachable")
             questions.tap()
+            waitBriefly(0.8)
         }
         // Regular width embeds the same navigator below the answers instead of presenting a sheet.
         let heading = app.staticTexts["Question navigator"].firstMatch
         XCTAssertTrue(heading.waitForExistence(timeout: 5), "Both layouts must expose the question navigator")
-        scrollUntilHittable(heading, in: app, maxSwipes: 30)
-        XCTAssertTrue(isFullyVisible(heading, in: app, requiresHittable: true), "The navigator heading must be fully visible before auditing or using its question list")
+        if !questions.exists {
+            scrollUntilHittable(heading, in: app, maxSwipes: 30)
+        }
         attachScreenshot(named: "task74-mock-navigator-\(questions.exists ? "sheet" : "inline")", from: app)
+        // The compact sheet covers the root navigation bar, but not the status bar.
+        var visibleArea = visibleFrameExcludingNavigationBar(in: app)
+        if questions.exists {
+            let window = app.windows.firstMatch.frame
+            let statusBar = app.statusBars.firstMatch
+            let top = statusBar.exists ? max(window.minY, statusBar.frame.maxY) : window.minY
+            visibleArea = CGRect(x: window.minX, y: top, width: window.width, height: max(0, window.maxY - top))
+        }
+        XCTAssertTrue(visibleArea.contains(heading.frame) && heading.isHittable, "The navigator heading must be fully visible and hittable before auditing or using its question list")
     }
 
     private func auditMockExamFlow(appearance: AuditAppearance) throws {
