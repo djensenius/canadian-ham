@@ -1124,6 +1124,33 @@ final class MockExamState: ObservableObject {
     }
 }
 
+// A single child tree preserves accessibility-node provenance when the header changes orientation.
+private struct MockExamHeaderControlLayout: Layout {
+    let forceVertical: Bool
+
+    private func fittingLayout(proposal: ProposedViewSize, subviews: Subviews) -> AnyLayout {
+        let horizontal = AnyLayout(HStackLayout(alignment: .center, spacing: DesignTokens.Spacing.sm))
+        var cache = horizontal.makeCache(subviews: subviews)
+        let ideal = horizontal.sizeThatFits(proposal: .unspecified, subviews: subviews, cache: &cache)
+        if !forceVertical && ideal.width <= (proposal.width ?? .infinity) {
+            return horizontal
+        }
+        return AnyLayout(VStackLayout(alignment: .leading, spacing: DesignTokens.Spacing.sm))
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let layout = fittingLayout(proposal: proposal, subviews: subviews)
+        var layoutCache = layout.makeCache(subviews: subviews)
+        return layout.sizeThatFits(proposal: proposal, subviews: subviews, cache: &layoutCache)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let layout = fittingLayout(proposal: proposal, subviews: subviews)
+        var layoutCache = layout.makeCache(subviews: subviews)
+        layout.placeSubviews(in: bounds, proposal: proposal, subviews: subviews, cache: &layoutCache)
+    }
+}
+
 struct MockExamView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
@@ -1199,14 +1226,14 @@ struct MockExamView: View {
             onDismiss: presentPendingNavigatorSheetIfNeeded
         )
         .sheet(isPresented: $showingNavigator) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                navigator
-                Button { showingNavigator = false } label: {
-                    AccessibleSecondaryButtonLabel(title: "Done")
+            Group {
+                // Keep default placement; accessibility text must scroll rather than compress.
+                if dynamicTypeSize.isAccessibilitySize {
+                    ScrollView { navigatorSheetContent }
+                } else {
+                    navigatorSheetContent
                 }
-                .buttonStyle(AccessibleSecondaryButtonStyle())
             }
-            .pagePadding()
             .background(DesignTokens.Colors.paper)
         }
         .onAppear {
@@ -1231,6 +1258,17 @@ struct MockExamView: View {
         } message: {
             Text("Discard this in-progress mock exam and return to the start screen.")
         }
+    }
+
+    private var navigatorSheetContent: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            navigator
+            Button { showingNavigator = false } label: {
+                AccessibleSecondaryButtonLabel(title: "Done")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+        }
+        .pagePadding()
     }
 
     private var startCard: some View {
@@ -1258,6 +1296,8 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.caption.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
+                    // Keep the selectable caption's accessibility bounds inside its own line box.
+                    .contentShape(.accessibility, Rectangle())
                     .accessibilityIdentifier("mock-exam-seed")
                 Text("Question \(state.currentIndex + 1) of \(state.generatedItems.count)")
                     .font(DesignTokens.FontScale.title.weight(.bold))
@@ -1376,24 +1416,10 @@ struct MockExamView: View {
         appleReferenceSheetConfigurationFromLaunchArguments()
     }
 
-    @ViewBuilder
     private func examHeaderControls(questionID: String) -> some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                flagAndNavigatorControls(questionID: questionID)
-                timerControls
-            }
-        } else {
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
-                    flagAndNavigatorControls(questionID: questionID)
-                    timerControls
-                }
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    flagAndNavigatorControls(questionID: questionID)
-                    timerControls
-                }
-            }
+        MockExamHeaderControlLayout(forceVertical: dynamicTypeSize.isAccessibilitySize) {
+            flagAndNavigatorControls(questionID: questionID)
+            timerControls
         }
     }
 

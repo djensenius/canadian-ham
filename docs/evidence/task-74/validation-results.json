@@ -1,0 +1,106 @@
+{
+  "baseCommit": "f3394899eef12e5eda6f65f8403ea84d545bb9b9",
+  "sourceCommit": "3eec51d47383425631c4847f33e985704da0c535",
+  "ipadUI": {
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testAdvancedMockExamHasNoBasicReferenceSheetOrHints": {
+      "status": "passed",
+      "seconds": 17.885,
+      "run": "ipad-compact"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testMockExamCodeCaptionAccessibilityBoundsLightAndDark": {
+      "status": "passed",
+      "seconds": 30.748,
+      "run": "ipad-compact"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testMockExamOfficialReferenceSheetDarkPreservesPausedExam": {
+      "status": "passed",
+      "seconds": 102.097,
+      "run": "ipad-compact"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testMockExamOfficialReferenceSheetLightPreservesRunningExam": {
+      "status": "passed",
+      "seconds": 101.353,
+      "run": "ipad-compact"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testOfficialReferenceSheetLightAndDarkEnglishAndFrench": {
+      "status": "passed",
+      "seconds": 208.247,
+      "run": "ipad-compact"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testReferenceSheetLargestDynamicTypeKeepsControlsReachable": {
+      "status": "passed",
+      "seconds": 38.385,
+      "run": "ipad-compact"
+    },
+    "CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowDark": {
+      "status": "passed",
+      "seconds": 100.294,
+      "run": "ipad-compact"
+    },
+    "CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowLight": {
+      "status": "passed",
+      "seconds": 97.46,
+      "run": "ipad-compact"
+    },
+    "CanadianHamUITests.CanadianHamPracticeUITests.testMockExamHeaderControlsSupportLargestAccessibilityTextSize": {
+      "status": "passed",
+      "seconds": 51.171,
+      "run": "ipad-compact"
+    }
+  },
+  "iphoneUI": {
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testAdvancedMockExamHasNoBasicReferenceSheetOrHints": {
+      "status": "passed",
+      "seconds": 38.965,
+      "run": "iphone-final"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testMockExamCodeCaptionAccessibilityBoundsLightAndDark": {
+      "status": "passed",
+      "seconds": 51.305,
+      "run": "iphone-final"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testMockExamOfficialReferenceSheetDarkPreservesPausedExam": {
+      "status": "passed",
+      "seconds": 203.124,
+      "run": "iphone-final"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testMockExamOfficialReferenceSheetLightPreservesRunningExam": {
+      "status": "passed",
+      "seconds": 210.034,
+      "run": "iphone-final"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testOfficialReferenceSheetLightAndDarkEnglishAndFrench": {
+      "status": "passed",
+      "seconds": 261.846,
+      "run": "iphone-final"
+    },
+    "CanadianHamUITests.CanadianHamExamToolsUITests.testReferenceSheetLargestDynamicTypeKeepsControlsReachable": {
+      "status": "passed",
+      "seconds": 135.597,
+      "run": "iphone-final"
+    },
+    "CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowDark": {
+      "status": "passed",
+      "seconds": 156.702,
+      "run": "iphone-compact"
+    },
+    "CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowLight": {
+      "status": "passed",
+      "seconds": 130.148,
+      "run": "iphone-compact"
+    },
+    "CanadianHamUITests.CanadianHamPracticeUITests.testMockExamHeaderControlsSupportLargestAccessibilityTextSize": {
+      "status": "passed",
+      "seconds": 76.546,
+      "run": "iphone-compact"
+    }
+  },
+  "macOSUnitCount": 223,
+  "macOSUnitsPassed": 223,
+  "macOSLatestBuild": "/tmp/task74-macos-build.log: TEST BUILD SUCCEEDED, exit 0",
+  "localization": "/tmp/task74-l10n.log: exit 0",
+  "guard": "/tmp/task74-guard.log: exit 0 with owner decision 2026-10-22 marker",
+  "sharedHelpers": "28 named definitions and full UITestContrastMeasurement.swift byte-identical",
+  "visualParityComparisons": 20,
+  "visualParityDifferentPixels": 0
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "appearance": "light",
+    "fixture": "timer",
+    "beforeFile": "navigator-before-light-timer.png",
+    "afterFile": "navigator-after-light-timer.png",
+    "nativeComparisonBoxXYXY": [
+      0,
+      186,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "576bb39176d83db8b7987f085cebd198acca86e430188939dfcca0cc9d9acdd5",
+    "afterSHA256": "64b75b2a00e7c003baafd38f83c2d4c4cc053c49bff5d144563325b0295188d2"
+  },
+  {
+    "appearance": "light",
+    "fixture": "answered-flagged",
+    "beforeFile": "navigator-before-light-answered-flagged.png",
+    "afterFile": "navigator-after-light-answered-flagged.png",
+    "nativeComparisonBoxXYXY": [
+      0,
+      186,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "4552bed9495c6b84c106e7bf4b5fe49bf4a4d48889eebe849b484bb213bc2f02",
+    "afterSHA256": "63c8167bd6abee45b743daed483a128debd21a84a7f88a5274059eb884eed10d"
+  },
+  {
+    "appearance": "dark",
+    "fixture": "timer",
+    "beforeFile": "navigator-before-dark-timer.png",
+    "afterFile": "navigator-after-dark-timer.png",
+    "nativeComparisonBoxXYXY": [
+      0,
+      186,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "9263d503551820e9b80e79daead161041c2c6f250e279cb40a35d52b73b7dbc2",
+    "afterSHA256": "2b21beb83fc4ebcff0e469f7248d0ae4f9800d032c159f716688e31495358f62"
+  },
+  {
+    "appearance": "dark",
+    "fixture": "answered-flagged",
+    "beforeFile": "navigator-before-dark-answered-flagged.png",
+    "afterFile": "navigator-after-dark-answered-flagged.png",
+    "nativeComparisonBoxXYXY": [
+      0,
+      186,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "b14bb711608a9c70aa70ccef291dc95b420dd05e04afbfefd12febd4bb547adc",
+    "afterSHA256": "7a198ba96b8f1cebb1eb2486ee45b7982063f5bd609e6b8df18757a43144f129"
+  }
+]

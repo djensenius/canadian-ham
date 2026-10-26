@@ -1832,15 +1832,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(flagButton.waitForExistence(timeout: 5), "Flag control should exist at the largest accessibility text size")
         scrollUntilHittable(flagButton, in: app, maxSwipes: 8)
         XCTAssertTrue(flagButton.isHittable, "Flag control should remain reachable at the largest accessibility text size")
-        XCTAssertTrue(questionsButton.waitForExistence(timeout: 5), "Questions control should exist at the largest accessibility text size")
-        scrollUntilHittable(questionsButton, in: app, maxSwipes: 8)
-        XCTAssertTrue(questionsButton.isHittable, "Questions control should remain reachable at the largest accessibility text size")
+        if mockExamUsesQuestionsSheet {
+            XCTAssertTrue(questionsButton.waitForExistence(timeout: 5), "Questions control should exist on iPhone at the largest accessibility text size")
+            scrollUntilHittable(questionsButton, in: app, maxSwipes: 8)
+            XCTAssertTrue(questionsButton.isHittable, "Questions control should remain reachable at the largest accessibility text size")
+        }
 
         flagButton.tap()
         XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Flag control should remain usable after wrapping")
-        scrollUntilHittable(questionsButton, in: app, maxSwipes: 8)
-        questionsButton.tap()
-        XCTAssertTrue(app.staticTexts["Question navigator"].waitForExistence(timeout: 5), "Questions control should remain usable after wrapping")
+        showMockExamQuestionNavigator(in: app)
+        let currentQuestion = app.buttons["Question 1, unanswered, flagged, current"].firstMatch
+        scrollUntilExists(currentQuestion, in: app, maxSwipes: 30)
+        XCTAssertTrue(currentQuestion.waitForExistence(timeout: 5), "The navigator must preserve the flagged current question at the largest accessibility text size")
+        scrollUntilHittable(currentQuestion, in: app, maxSwipes: 30)
+        XCTAssertTrue(currentQuestion.isHittable, "The question list must remain usable after wrapping in either layout")
+        attachScreenshot(named: "task74-largest-type-mock-current-question", from: app)
+        currentQuestion.tap()
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.exists)
     }
 
     func testLongestAnswerWrapsAtLargestAccessibilityTextSize() throws {
@@ -2696,6 +2704,45 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try auditIgnoringOccludedLessonTextContrast(app: app)
     }
 
+    /// iPhone presents the mock-exam question navigator as a sheet behind a Questions button; iPad (regular
+    /// width) embeds it inline below the answers. Decide by device, not by whether the button happens to exist,
+    /// so a missing iPhone button fails instead of silently taking the inline path.
+    private var mockExamUsesQuestionsSheet: Bool {
+#if os(iOS)
+        return UIDevice.current.userInterfaceIdiom == .phone
+#else
+        return false
+#endif
+    }
+
+    private func showMockExamQuestionNavigator(in app: XCUIApplication) {
+        let questions = app.buttons["mock-questions-button"].firstMatch
+        let usesSheet = mockExamUsesQuestionsSheet
+        if usesSheet {
+            XCTAssertTrue(questions.waitForExistence(timeout: 5), "The compact Questions control must exist on iPhone")
+            scrollUntilHittable(questions, in: app, maxSwipes: 8)
+            XCTAssertTrue(questions.isHittable, "The compact Questions control must be reachable")
+            questions.tap()
+            waitBriefly(0.8)
+        }
+        // Regular width embeds the same navigator below the answers instead of presenting a sheet.
+        let heading = app.staticTexts["Question navigator"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 5), "Both layouts must expose the question navigator")
+        if !usesSheet {
+            scrollUntilHittable(heading, in: app, maxSwipes: 30)
+        }
+        attachScreenshot(named: "task74-mock-navigator-\(usesSheet ? "sheet" : "inline")", from: app)
+        // The compact sheet covers the root navigation bar, but not the status bar.
+        var visibleArea = visibleFrameExcludingNavigationBar(in: app)
+        if usesSheet {
+            let window = app.windows.firstMatch.frame
+            let statusBar = app.statusBars.firstMatch
+            let top = statusBar.exists ? max(window.minY, statusBar.frame.maxY) : window.minY
+            visibleArea = CGRect(x: window.minX, y: top, width: window.width, height: max(0, window.maxY - top))
+        }
+        XCTAssertTrue(visibleArea.contains(heading.frame) && heading.isHittable, "The navigator heading must be fully visible and hittable before auditing or using its question list")
+    }
+
     private func auditMockExamFlow(appearance: AuditAppearance) throws {
         let timerApp = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
@@ -2716,8 +2763,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(timerPrevious.isEnabled, "Previous should be disabled on a one-question mock exam")
         XCTAssertFalse(timerNext.isEnabled, "Next should be disabled on a one-question mock exam")
         try auditIgnoringOccludedExamTextContrast(app: timerApp, context: "\(appearance.rawValue) mock exam question timer")
-        tap("Questions", in: timerApp)
-        XCTAssertTrue(timerApp.staticTexts["Question navigator"].waitForExistence(timeout: 5))
+        showMockExamQuestionNavigator(in: timerApp)
         try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")
         timerApp.terminate()
 
@@ -2740,10 +2786,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(topAnswer.label.localizedCaseInsensitiveContains("Selected"), "Selected top answer should expose the Selected state before auditing")
         XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the flagged state before auditing")
         try auditIgnoringOccludedExamTextContrast(app: app, context: "\(appearance.rawValue) mock exam answered flagged question")
-        tap("Questions", in: app)
-        XCTAssertTrue(app.staticTexts["Question navigator"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the navigator sheet before auditing")
+        showMockExamQuestionNavigator(in: app)
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
-        tap("Done", in: app)
+        if mockExamUsesQuestionsSheet {
+            tap("Done", in: app)
+        } else {
+            scrollToTop(in: app)
+        }
         let next = app.buttons["mock-next-button"].firstMatch
         XCTAssertTrue(next.isEnabled, "Answered-flagged audit fixture should keep mock Next enabled")
         next.tap()

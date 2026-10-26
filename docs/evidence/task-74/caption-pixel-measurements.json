@@ -1,0 +1,60 @@
+[
+  {
+    "appearance": "light",
+    "file": "baseline-light-caption.png",
+    "sha256": "2d83cfa7e52b0fce251d2d6a35b19f6b70cbadb5aa4b2415dc0a2125bdbc35ef",
+    "nativeImageSize": [
+      568,
+      92
+    ],
+    "textOnlyCropXYXY": [
+      30,
+      30,
+      540,
+      61
+    ],
+    "backgroundRGB": [
+      255,
+      248,
+      234
+    ],
+    "backgroundPixels": 12883,
+    "inkRGB": [
+      31,
+      26,
+      20
+    ],
+    "inkPixels": 727,
+    "contrastRatio": 16.336427704401043,
+    "pixelsAtOrAbove4point5": 1661
+  },
+  {
+    "appearance": "dark",
+    "file": "baseline-dark-caption.png",
+    "sha256": "6751202b88f82e943dc81acb2c2635898bb1a233435adc1bc935034ead97e678",
+    "nativeImageSize": [
+      568,
+      92
+    ],
+    "textOnlyCropXYXY": [
+      30,
+      30,
+      540,
+      61
+    ],
+    "backgroundRGB": [
+      42,
+      36,
+      29
+    ],
+    "backgroundPixels": 12883,
+    "inkRGB": [
+      243,
+      232,
+      210
+    ],
+    "inkPixels": 727,
+    "contrastRatio": 12.629668854322405,
+    "pixelsAtOrAbove4point5": 1847
+  }
+]
