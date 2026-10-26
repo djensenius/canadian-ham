@@ -1,11 +1,11 @@
 ---
 id: TASK-76
 title: 'French Morse dah term: make ''points et traits'' consistent with ''Tiret'''
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-25T22:27:00Z'
-updated_date: '2026-10-26T13:50:00Z'
+updated_date: '2026-10-26T13:51:00Z'
 labels:
   - l10n
 dependencies: []
@@ -21,8 +21,8 @@ The app's Dash key translates to 'Tiret', and the watch uses 'tiret'. One iOS Mo
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 One French dah term is used in every Apple string-catalogue entry and the web French copy where Morse appears
-- [ ] #2 pnpm check:apple-l10n and the affected Apple l10n tests pass
+- [x] #1 One French dah term is used in every Apple string-catalogue entry and the web French copy where Morse appears
+- [x] #2 pnpm check:apple-l10n and the affected Apple l10n tests pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -30,7 +30,7 @@ The app's Dash key translates to 'Tiret', and the watch uses 'tiret'. One iOS Mo
 <!-- SECTION:PLAN:BEGIN -->
 1. Inventory French Morse terminology across Apple catalogues, web, content and engines, preserving official ISED wording.
 2. Normalize authored dah labels to trait and dit labels to point; update label assertions and regression coverage without changing English or catalogue key order.
-3. Run localization/text checks, web checks and targeted watch/macOS/iOS tests through xbuild; record per-test evidence.
+3. Run localization/text checks, web checks, targeted watch tests and macOS localization tests through xbuild; inspect iOS UI assertions and run affected French Morse tests if present. Record per-test evidence.
 4. Commit and push the implementation, verify acceptance criteria and finalize TASK-76 without opening a PR.
 <!-- SECTION:PLAN:END -->
 
@@ -87,4 +87,12 @@ macOS targeted LocalizationCatalogTests PASSED: 12 tests, zero failures, exit 0.
 Command: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -only-testing:CanadianHamTests/LocalizationCatalogTests test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
 The macOS host logged an existing local Progress.store unknown-model-version migration error during startup, but all selected tests passed; no store files were manually removed or edited.
 Skipped targeted iOS UI: inventory/grep found no existing French Morse text assertions. Shared iOS/macOS l10n coverage ran on macOS as requested. No full platform suites during implementation per testing policy; tvOS/visionOS/watchOS compile validation was included in localization gate, while full multi-platform suites remain for the coordinator merge batch. No figures/category-title changes, so no figure/title-sweep plans. Test-guard self-test and git diff --check passed.
+
+Acceptance evidence: AC1 verified by runtime fr/fr-CA catalogue regressions, watch French alphabet/Morse pattern/language override tests and web terminology regression; source inventory confirms every authored Morse dah label now uses trait(s), with point(s) unchanged. AC2 verified by pnpm check:apple-l10n (exit 0, no catalogue rewrite), 11 targeted watch tests and 12 macOS LocalizationCatalogTests, all passing. Implementation commit: e98160b0de92fa458e5f4da3b3501ae353ce6ebd. Test guard against main...HEAD passed with no guarded changes; no approval marker needed. All tests passed on the first run. Exact-byte comparison confirms main catalogue order/formatting/metadata with only 24 approved French substitutions; English web block and official ISED files unchanged. Full logs are in /tmp/task-76-logs (watch-targeted.log, macos-l10n.log, apple-l10n.log, web.log, test-guard.log).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Standardized French Morse UI terminology on trait (dah) and point (dit): 24 French Apple catalogue values across fr/fr-CA and nine French web messages, including watch spoken alphabet/pattern labels and all haptic-style descriptions. Preserved English, official ISED content, catalogue ordering and formatting. Updated watch assertions and added compiled-bundle and web terminology regressions. Localization gate, text-source checks, 23 targeted Apple tests, 680 package/web tests, typecheck, web build, URL/CSP audit and test guard all passed. No iOS UI French Morse assertions existed to rerun; full Apple suites deferred to coordinator merge-batch policy. No PR opened; ready for independent branch review.
+<!-- SECTION:FINAL_SUMMARY:END -->
