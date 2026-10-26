@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-25T00:56:00Z'
-updated_date: '2026-10-26T15:49:00Z'
+updated_date: '2026-10-26T16:14:00Z'
 labels:
   - apple
   - accessibility
@@ -71,6 +71,8 @@ First final-layout iPad command completed with 8/9 product UI methods passing pl
 iPhone first full run passed 8/9 product methods and header appearance probe; largest-header failed our new heading-hittability assertion. Extracted recording frame shows actual pre-existing AX-XXXL compact navigator overlap (Next unanswered over heading) in the unchanged non-scroll sheet. Coordinator explicitly approved fixing this here with a small container-only change. Implemented shared sheet-content extraction plus a ScrollView only for accessibility sizes; default VStack remains unchanged, navigator logic untouched (22 additions/8 deletions relative to source milestone). Test visibility now uses the modal window below the status bar, not the covered root navigation bar; inline path keeps original protected-bar geometry. Strict heading/current-item assertions remain on both paths. Retests and default-size PNG comparison pending.
 
 Final evidence: docs/testing/task-74-ipad-mock-audits.md (all 18 product UI per-test results, all 223 macOS unit per-test results, command ledger, diagnosed failures, approvals, screenshots and exact pixel comparison recipes); docs/evidence/task-74/evidence-manifest.json enumerates 113 artifacts with SHA-256. Final iPad set: 9/9 PASS, 747.641 s, /tmp/task74-ipad-compact.xcresult. iPhone final coverage: 9/9 PASS via six unaffected exam-tool/caption methods in /tmp/task74-iphone-final.xcresult plus all three affected practice methods in /tmp/task74-iphone-compact.xcresult. All TASK-44.5 iPad audits restored, plus 100% raw image audits; AGENTS limitation removed. macOS 223/223 PASS and latest container revision build-for-testing PASS; l10n export and generic TV/vision/watch builds PASS; text-source check, guard self-test and approved diff guard PASS. 28 shared audit/positioning/wrapper definitions and full measurement file byte-identical. 20/20 native appearance comparisons have zero different pixels (4 caption, 12 fitting-header, 4 default navigator). No scratch methods, new exceptions, threshold/algorithm changes, hard-coded colours, hidden visible text, minimumScaleFactor or official bank-text changes. The compact AX fix is only 17 additions/6 deletions in the app (23 changed lines), no shared navigator logic change, explicitly approved by coordinator. Source commits 4c7a437c / 3eec51d4; evidence commit f45eb1ad. No unresolved owner question, PR or distribution build. Independent review/CI and coordinator merge-batch checks remain.
+
+Coordinator, after the review (approve with notes): the navigator helper and the largest-header test now decide sheet vs inline by device (iPhone requires the Questions button via waitForExistence), not by whether the button exists. Reruns: iPhone 17 Pro and iPad Pro 13-inch (M5), testMockExamHeaderControlsSupportLargestAccessibilityTextSize plus testAccessibilityAuditMockExamFlowLight/Dark, 3/3 each; the macOS build-for-testing passed. Evidence trimmed from 18 MB to 5.7 MB: before/after pairs are pixel-identical and their SHA-256s are in the visual-diff JSON, so only the after images are kept. Follow-up TASK-77: the inner ViewThatFits and the default-size navigator sheet scrolling.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
