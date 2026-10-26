@@ -224,13 +224,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@, ratio point/tiret %@, constance du minutage %lld %%."
+            "value" : "%@, ratio point/trait %@, constance du minutage %lld %%."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@, ratio point/tiret %@, constance du minutage %lld %%."
+            "value" : "%@, ratio point/trait %@, constance du minutage %lld %%."
           }
         }
       }
@@ -4373,13 +4373,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tiret"
+            "value" : "Trait"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tiret"
+            "value" : "Trait"
           }
         }
       }
@@ -4389,13 +4389,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Palette de tirets. Maintenez pour répéter les tirets."
+            "value" : "Palette de traits. Maintenez pour répéter les traits."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Palette de tirets. Maintenez pour répéter les tirets."
+            "value" : "Palette de traits. Maintenez pour répéter les traits."
           }
         }
       }
@@ -5121,13 +5121,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Entrez les caractères entendus, et non la notation en points et tirets."
+            "value" : "Entrez les caractères entendus, et non la notation en points et traits."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Entrez les caractères entendus, et non la notation en points et tirets."
+            "value" : "Entrez les caractères entendus, et non la notation en points et traits."
           }
         }
       }
@@ -8143,13 +8143,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "pas assez de points et de tirets"
+            "value" : "pas assez de points et de traits"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "pas assez de points et de tirets"
+            "value" : "pas assez de points et de traits"
           }
         }
       }
@@ -9951,13 +9951,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Envoyez un caractère pour voir le ratio point/tiret et la constance du minutage."
+            "value" : "Envoyez un caractère pour voir le ratio point/trait et la constance du minutage."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Envoyez un caractère pour voir le ratio point/tiret et la constance du minutage."
+            "value" : "Envoyez un caractère pour voir le ratio point/trait et la constance du minutage."
           }
         }
       }
@@ -9967,13 +9967,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Envoyer un tiret"
+            "value" : "Envoyer un trait"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Envoyer un tiret"
+            "value" : "Envoyer un trait"
           }
         }
       }
@@ -10817,13 +10817,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le tiret."
+            "value" : "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le trait."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le tiret."
+            "value" : "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le trait."
           }
         }
       }
@@ -12119,13 +12119,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/tirets et un minutage constants."
+            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les traits. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/traits et un minutage constants."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les tirets. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/tirets et un minutage constants."
+            "value" : "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les traits. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/traits et un minutage constants."
           }
         }
       }
@@ -13002,13 +13002,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point léger, tiret ascendant"
+            "value" : "Point léger, trait ascendant"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point léger, tiret ascendant"
+            "value" : "Point léger, trait ascendant"
           }
         }
       }
@@ -13018,13 +13018,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point léger, tiret ferme"
+            "value" : "Point léger, trait ferme"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point léger, tiret ferme"
+            "value" : "Point léger, trait ferme"
           }
         }
       }
@@ -13034,13 +13034,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point plus fort, tiret ferme"
+            "value" : "Point plus fort, trait ferme"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Point plus fort, tiret ferme"
+            "value" : "Point plus fort, trait ferme"
           }
         }
       }
