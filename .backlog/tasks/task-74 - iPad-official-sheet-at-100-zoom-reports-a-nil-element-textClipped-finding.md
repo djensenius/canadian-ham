@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T00:56:00Z'
-updated_date: '2026-10-26T13:46:00Z'
+updated_date: '2026-10-26T13:51:00Z'
 labels:
   - apple
   - accessibility
@@ -47,6 +47,8 @@ Coordinator decision for TASK-44.5 only: its new iPad mock tests retain EVERY be
 2. Apply only proven minimal semantic-colour/weight or layout fixes; make legacy Questions navigation layout-aware without reducing assertions/audits; preserve shared helpers and exception scopes.
 3. Restore TASK-44.5 iPad audits where resolved; run targeted iPad/iPhone tests, macOS compilation, text/l10n/test-guard checks; document per-test outcomes and before/after evidence.
 4. Commit and push milestones; record exact unresolved owner decisions and keep In Progress unless all findings are resolved.
+
+5. Coordinator-approved caption follow-up (2026-10-26): unchanged composite failed the oversized whole-element crop (4.104 light / 3.554 dark). Investigate a structural accessibility-frame correction preserving text selection and pixel-identical card appearance on iPad/iPhone light/dark; prefer plain audits, or use the approved unchanged composite only if it measures successfully. No non-button crop/algorithm/threshold changes.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
