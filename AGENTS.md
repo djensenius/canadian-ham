@@ -116,11 +116,6 @@ platform) and share one build lock, so don't run them by reflex.
   iPhone keeps the light (default size) and dark (largest Dynamic Type) Try-it audits; the French
   test is reveal/state only; iPad keeps the dark audit. Remove this when TASK-73 makes 2x measurement safe.
   Existing audit helpers and tests remain unchanged.
-- Coordinator decision 2026-10-24 under owner delegation 2026-10-22: iPad mock exam audits:
-  the exam-code caption (thin monospaced) and the official sheet's nil-element textClipped
-  findings are unresolved; the new TASK-44.5 iPad mock tests keep behaviour assertions without
-  full audits; existing iPad-incompatible legacy mock tests are pre-existing, not regressions;
-  see TASK-74.
 - Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
   whose element frame is not fully contained in the visible scroll area below an opaque navigation
   bar. Owner decision 2026-10-14 adds practice and mock exam screens to this same occluded-content
