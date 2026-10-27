@@ -237,6 +237,7 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
             XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
             for figureID in lesson.figureIDs {
                 XCTAssertEqual(app.buttons.matching(identifier: "lesson-figure-\(figureID)").count, 1, "Each figure should expose one image button in \(lesson.lessonID)")
+                XCTAssertEqual(app.buttons.matching(identifier: "lesson-figure-\(figureID)-enlarge").count, 1, "Each figure should expose one explicit enlarge button in \(lesson.lessonID)")
             }
             let figure = app.buttons["lesson-figure-\(lesson.textFigureID)"].firstMatch
             scrollUntilPartiallyVisible(figure, in: app, maxSwipes: 80)
