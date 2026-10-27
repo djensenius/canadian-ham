@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-20 06:58
-updated_date: '2026-10-27T16:56:00Z'
+updated_date: '2026-10-27T20:00:00Z'
 labels:
   - apple
   - testing
@@ -40,6 +40,8 @@ TASK-33 required iPhone 17 Pro runs exposed three unchanged test flakes. (1) tes
 5. Check evidenced ACs, retain In Progress if unresolved, commit and push task-65-flakes without a PR.
 
 Supervisor approved 2026-10-27: fix only the two sending Grade preparation sites that scroll down to Debug Fill then use the forward-only scrollUntilHittable for the earlier Grade button. Use unchanged bidirectional/positioning helpers plus visibility/hittability assertions; retain the 5-second results-state wait and every audit. Run 5 light/dark repetitions after.
+
+Coordinator bounded completion decision after stopping the figure baseline at 12 completed iterations: no further figure repetitions. First sending-preparation attempt (generic middle-band audit positioning) failed because its expensive whole-screen scans outlast the 120s exam deadline. Supervisor approved stopping only TASK-65 after driver, replacing only the new middle-band call with existing fully-visible assertion after bidirectional scrolling, and a final bounded 3x light/3x dark + navigation once, structural test once, macOS build-for-testing once. If final sending fails, restore sending source to main and record unresolved. Leave task In Progress pending figure owner decision.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -65,4 +67,6 @@ TASK-46.5 shortest-lesson control evidence 2026-10-23 (coordinator paused lane p
 Source investigation: gradeExam synchronously ends/finalizes the current key, cancels countdown, scores and sets presentedResult. MorseSendingKeyer queues actor audio operations without waiting; results focus is scheduled 150 ms after heading onAppear. Baseline logs show Grade is above Debug Fill but scrollUntilHittable issues eight upward swipes, forcing XCTest to scroll during Grade.tap. Supervisor approved local Grade preparation fix and the identical second caller; shared helpers remain untouched. Baseline initial load 14.61/7.27/4.56 (10 logical CPUs); samples rose over 490 during execution. This is measured contention, not proven audit causality.
 
 Current bounded evidence: sending baseline light5/5 + dark5/5; all10 visits issued eight wrong-direction Grade swipes and XCTest auto-scrolled during tap. Local fix and one structural test committed/pushed (637f5611 + evidence70733f4f). Source comparison proves all original figure tests/shared helpers/audit calls+handlers/heading assertions byte-identical; only two approved Grade prep blocks differ. M7 baseline finished4/5: pass314.139, FAIL295.085 Code=-56, pass318.549,328.430,308.442s. Failed audit begins after geometryt277.65 and throws before teardownt293.67 (~16s), not a295s audit; most method time is scrolling/positioning. Supervisor decision2026-10-27: finish exactly5 per figure method plus structural counts and5x sending light/dark; no more figure runs, no retry/helper change; leave In Progress with owner options for full-audit timeout-only shared retry or follow-up lazy lessons. Ohms dark first3 repetitions pass1887.641/1783.377/1864.703s; remainder running. No app change, no audit suppression, no skipped tests or full suites.
+
+Coordinator stopped figure baseline early after 12 completed tests (4.5h holding lock): M7 4/5, Ohms dark5/5, Ohms light2/2; light3 interrupted,4-5 not run. Do not label cancellation a pass. First post-fix sending attempt rejected: dark0/4 (188.408,163.525,167.180,169.576s), fifth interrupted with supervisor approval; light unrun. Generic positionElementInMiddleVisibleBand scans caused deadline auto-grading before tap: iteration1 Startt61.93; Grade preparationt79-183; snapshot then contains only sending-results-start-another-button. All shared helper source unchanged. Only owned driver6108/xbuild6174,6180/xcode68226 terminated after explicit supervisor approval; no other lane touched. Final 3x+3x bounded sending validation and one navigation/tree/macOS check now queued in /tmp/task-65-final.sh; raw rejected attempt log preserved /tmp/task-65-after-sending.log.
 <!-- SECTION:NOTES:END -->
