@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-27T13:24:00Z'
-updated_date: '2026-10-27T13:25:00Z'
+updated_date: '2026-10-27T13:29:00Z'
 labels:
   - ci
 dependencies: []
@@ -34,4 +34,12 @@ The Swift packages (content-swift, engine-swift, morse-swift, calculator-swift) 
 2. Add minimal conditional imports/logging and a path-classified Linux Swift CI job covering all portable packages and engine fixture parity; update local-only documentation.
 3. Run Linux and macOS package tests, macOS app unit tests, iOS build-for-testing, pnpm test, and focused workflow/test-guard checks.
 4. Commit/push a temporary failing test to a draft verification PR, capture the failing job, revert the assertion and capture the passing run; record evidence, finalize task, commit and push.
+
+5. Approved coordinator refinement: keep content-swift in Linux CI by conditionally compiling its Apple-Foundation Markdown renderer and heading anchors; move only the 10 renderer-dependent tests into one Darwin-only file. Keep all 17 loader/model/validation/front-matter/explanation tests in Linux CI and preserve all 27 tests on macOS.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Docker available via OrbStack. Official swift:6.4 and swift:6.4.1 manifests exist; swift:6.4 currently supplies Swift 6.4.1. Initial Linux run: morse-swift and calculator-swift pass unchanged; engine fixture comparator needs explicit CoreFoundation import. content-swift needs both os logging guards and an Apple-only renderer split because Linux Foundation has no AttributedString(markdown:options:) or MarkdownParsingOptions. Coordinator approved preserving Linux content coverage via a minimal Darwin-only source/test split; no fake Markdown renderer, skips or new dependencies. Before split: macOS content-swift 27/27 tests pass. No package is excluded; only the 10 renderer/heading-anchor tests stay Darwin-only.
+<!-- SECTION:NOTES:END -->
