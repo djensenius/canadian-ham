@@ -1,9 +1,11 @@
 ---
 id: TASK-78
 title: Run the Swift package tests in GitHub CI
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-27T13:24:00Z'
+updated_date: '2026-10-27T13:25:00Z'
 labels:
   - ci
 dependencies: []
@@ -24,3 +26,12 @@ The Swift packages (content-swift, engine-swift, morse-swift, calculator-swift) 
 - [ ] #3 Source guards are minimal (canImport), the Apple-platform behaviour is unchanged, and local swift test plus the macOS app unit command still pass
 - [ ] #4 The job passes on the PR, and a deliberately broken test was shown to fail it (recorded in the notes, then reverted)
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect Linux portability and fixture/content inputs for all four Swift packages; verify an official Swift image and Docker availability.
+2. Add minimal conditional imports/logging and a path-classified Linux Swift CI job covering all portable packages and engine fixture parity; update local-only documentation.
+3. Run Linux and macOS package tests, macOS app unit tests, iOS build-for-testing, pnpm test, and focused workflow/test-guard checks.
+4. Commit/push a temporary failing test to a draft verification PR, capture the failing job, revert the assertion and capture the passing run; record evidence, finalize task, commit and push.
+<!-- SECTION:PLAN:END -->
