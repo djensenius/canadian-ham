@@ -68,6 +68,10 @@ platform) and share one build lock, so don't run them by reflex.
     include the `CanadianHamWatch` app/test targets and any shared packages they link
     (`content-swift`, `engine-swift`, `morse-swift`); run the watch suite for those changes. Code only under
     `apps/apple/Platforms/<platform>/` or a platform's test target needs only that platform.
+  - Lesson Markdown, hint or figure-directive changes: also run `swift test` in
+    `packages/content-swift` on macOS. GitHub CI runs that package on Linux, but its Darwin-only
+    renderer tests (`MarkdownLessonContentTests`: Try-it counts, hint anchors, figure directives) run
+    only locally.
   - Swift package: `swift test` in the package (or its `xbuild` scheme), plus the suites of
     every app target that links it.
   - String catalogue or SwiftUI text: `pnpm check:apple-l10n` and

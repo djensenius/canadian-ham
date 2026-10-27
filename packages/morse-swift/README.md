@@ -20,7 +20,7 @@ The Swift and TypeScript Morse packages both load the shared JSON fixtures under
 
 ## Tests and CI note
 
-The current GitHub CI workflow has no macOS or SwiftPM job; `packages/engine-swift` tests are local-only. Run this package's tests locally from this directory through the serialized `xbuild` wrapper (as `scripts/check-engine-parity.sh` does for `packages/engine-swift`), never `xcodebuild` directly:
+GitHub CI runs this package's `swift test` on Linux (the "Swift package tests" job). Locally, run this package's tests locally from this directory through the serialized `xbuild` wrapper (as `scripts/check-engine-parity.sh` does for `packages/engine-swift`), never `xcodebuild` directly:
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -scheme CanadianHamMorseEngine -destination 'platform=macOS' test

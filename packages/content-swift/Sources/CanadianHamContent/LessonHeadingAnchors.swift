@@ -1,5 +1,8 @@
 import Foundation
 
+#if canImport(Darwin)
+// AttributedString Markdown parsing is only available in Apple Foundation.
+
 public enum LessonHeadingAnchors {
     public static func slug(for headingText: String) -> String {
         let stripped = stripInlineMarkdown(headingText)
@@ -77,3 +80,4 @@ public enum LessonHeadingAnchors {
         return expression.stringByReplacingMatches(in: value, range: range, withTemplate: template)
     }
 }
+#endif

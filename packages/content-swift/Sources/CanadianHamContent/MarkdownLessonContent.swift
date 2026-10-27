@@ -1,5 +1,8 @@
 import Foundation
 
+#if canImport(Darwin)
+// AttributedString Markdown parsing is only available in Apple Foundation.
+
 public enum MarkdownTableColumnAlignment: String, Equatable, Sendable {
     case none
     case left
@@ -693,3 +696,4 @@ public enum LessonMarkdownRenderer {
         return true
     }
 }
+#endif
