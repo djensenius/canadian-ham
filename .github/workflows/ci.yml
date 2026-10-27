@@ -85,7 +85,7 @@ jobs:
     timeout-minutes: 15
     needs: changes
     if: needs.changes.outputs.swift_packages == 'true'
-    container: swift:6.4
+    container: swift:6.4.1
 
     steps:
       # actions/checkout v7.0.1
