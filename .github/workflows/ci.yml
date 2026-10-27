@@ -21,6 +21,7 @@ jobs:
     outputs:
       full_checks: ${{ steps.classify.outputs.full_checks }}
       backlog_only: ${{ steps.classify.outputs.backlog_only }}
+      swift_packages: ${{ steps.classify.outputs.swift_packages }}
 
     steps:
       # actions/checkout v7.0.1
@@ -41,28 +42,32 @@ jobs:
           set -euo pipefail
 
           if [[ "${EVENT_NAME}" != "pull_request" ]]; then
-            echo "full_checks=true" >> "${GITHUB_OUTPUT}"
-            echo "backlog_only=false" >> "${GITHUB_OUTPUT}"
+            printf '%s\n' 'full_checks=true' 'backlog_only=false' 'swift_packages=true' >> "${GITHUB_OUTPUT}"
             echo "Non-PR event: running full checks."
             exit 0
           fi
 
           changed_files="$(git diff --name-only --no-renames "${BASE_SHA}...${HEAD_SHA}")"
           if [[ -z "${changed_files}" ]]; then
-            echo "full_checks=true" >> "${GITHUB_OUTPUT}"
-            echo "backlog_only=false" >> "${GITHUB_OUTPUT}"
+            printf '%s\n' 'full_checks=true' 'backlog_only=false' 'swift_packages=true' >> "${GITHUB_OUTPUT}"
             echo "No changed files detected: running full checks."
             exit 0
           fi
 
           full_checks=false
+          swift_packages=false
           while IFS= read -r changed_file; do
             [[ -z "${changed_file}" ]] && continue
             if [[ "${changed_file}" != .backlog/* ]]; then
               full_checks=true
-              break
             fi
+            case "${changed_file}" in
+              packages/*-swift/*|fixtures/*|content/*|scripts/check-engine-parity.sh|.github/workflows/ci.yml)
+                swift_packages=true
+                ;;
+            esac
           done <<< "${changed_files}"
+          echo "swift_packages=${swift_packages}" >> "${GITHUB_OUTPUT}"
 
           if [[ "${full_checks}" == "true" ]]; then
             echo "full_checks=true" >> "${GITHUB_OUTPUT}"
@@ -73,6 +78,35 @@ jobs:
             echo "backlog_only=true" >> "${GITHUB_OUTPUT}"
             echo "Only .backlog/ files changed: full checks are not required."
           fi
+
+  swift-packages:
+    name: Swift package tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: changes
+    if: needs.changes.outputs.swift_packages == 'true'
+    container: swift:6.4
+
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Test content-swift
+        run: swift test --package-path packages/content-swift
+
+      # This includes FixtureTests.testEveryEngineFixtureMatchesSwiftEngine,
+      # the Swift half of scripts/check-engine-parity.sh; no xbuild is needed.
+      - name: Test engine-swift and engine fixture parity
+        run: swift test --package-path packages/engine-swift
+
+      - name: Test morse-swift
+        run: swift test --package-path packages/morse-swift
+
+      - name: Test calculator-swift
+        run: swift test --package-path packages/calculator-swift
 
   ci:
     name: Node and content checks
@@ -213,11 +247,12 @@ jobs:
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:apple-icloud-gate
 
-      # Local-only checks not run in GitHub CI: the Swift engine half of
-      # scripts/check-engine-parity.sh, packages/morse-swift, and
-      # packages/calculator-swift stay local-only because they require
-      # xbuild/Xcode or Swift toolchains; Apple suites via xbuild stay
-      # local-only because they require Xcode simulators and AGENTS.md keeps
-      # Apple builds/tests local;
-      # scripts/check-apple-localizations.sh stays local-only because it
-      # requires Xcode localization tooling.
+      # All four Swift packages, including the Swift engine-parity fixtures,
+      # run in the Linux swift-packages job above. content-swift's loader,
+      # models, validation, front-matter and explanation tests run there; its
+      # Markdown renderer/heading-anchor tests stay Darwin-only because Linux
+      # Foundation lacks AttributedString(markdown:options:). All content tests
+      # still run locally on macOS. Hardware audio/haptics are in the Apple
+      # apps, not morse-swift. Apple app builds/suites via xbuild stay local
+      # per AGENTS.md because they require Xcode and simulators, as does
+      # scripts/check-apple-localizations.sh for Xcode localization tooling.
