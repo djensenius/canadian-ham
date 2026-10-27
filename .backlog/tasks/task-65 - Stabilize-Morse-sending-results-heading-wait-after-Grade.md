@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-20 06:58
-updated_date: '2026-10-27T13:25:00Z'
+updated_date: '2026-10-27T13:43:00Z'
 labels:
   - apple
   - testing
@@ -38,6 +38,8 @@ TASK-33 required iPhone 17 Pro runs exposed three unchanged test flakes. (1) tes
 3. Apply only evidence-backed app fixes or a state-based sending-results wait; never alter shared helpers, assertions, audit calls or handlers. Escalate if a shared retry is needed.
 4. Repeat affected tests after changes, run text-source/localization/test-guard checks and macOS build-for-testing if tests change; record per-test results and residual risks in durable docs.
 5. Check evidenced ACs, retain In Progress if unresolved, commit and push task-65-flakes without a PR.
+
+Supervisor approved 2026-10-27: fix only the two sending Grade preparation sites that scroll down to Debug Fill then use the forward-only scrollUntilHittable for the earlier Grade button. Use unchanged bidirectional/positioning helpers plus visibility/hittability assertions; retain the 5-second results-state wait and every audit. Run 5 light/dark repetitions after.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -59,4 +61,6 @@ TASK-46.5 follow-up evidence (coordinator requested 2026-10-23): after merging T
 TASK-46.5 direct-anchor reproduction 2026-10-23: after removing the preceding-section workaround, testLessonTryItRevealAndAccessibilityLight on iPhone 17 Pro still failed a full collapsed Try-it audit (332.957 s). It first asserted Try-it heading, prompt and Show answer fully visible below navigation; recorded heading y123.06 and control y193.67. The audit auto-scrolled upward and flagged fully visible nonbullet 'Answer: value = 4 700 ohms.' in preceding unchanged worked-example list. Element screenshot is high-contrast dark ink on paper. Log /tmp/task-46.5-direct-iphone-light.log; result path /tmp/task-46.5-direct-iphone-light-xcresult-path.txt; exported element /tmp/task-46.5-direct-iphone-light-attachments/0112CD4E-9436-4E51-BC5D-D112E6AE723A.png; app /tmp/task-46.5-direct-iphone-light-attachments/FE79754A-86F7-45DA-B38C-6D5F56966BA4.png; manifest in same directory. Alongside prior 'Compare blue-red-brown...' evidence above, this is residual contrast-audit auto-scroll evidence, not a claimed product contrast regression or an approved exception. Coordinator instructed no additional exception and authorized using the shortest Try-it lesson for new reveal full audits, retaining a no-audit long-lesson reveal behaviour test. Shared aligned helper remains unchanged; original failures preserved.
 
 TASK-46.5 shortest-lesson control evidence 2026-10-23 (coordinator paused lane pending main/environment investigation): retargeted only new full Try-it audits to shortest authored Try-it lesson L-005-04 AC and decibels (8,985 Markdown body chars; Try-it starts at6,951, vs L-004-03 13,735/10,731). On iPhone17 Pro, unchanged full default collapsed-state audit with byte-identical aligned shared helper FAIL156.348s on fully visible nonbullet 'Try these before reading the feedback below.' Initial heading/prompt/Show answer visibility assertions passed. Element screenshot high-contrast dark ink on paper; app screenshot fully visible paragraph plus prompt/buttons. Exported element /tmp/task-46.5-short-iphone-light-attachments/BBEAFF9A-A75C-44FD-AFEF-AF3DF818B0E0.png; app /tmp/task-46.5-short-iphone-light-attachments/2D4A4655-2EE1-466D-B30D-D958EFFABA12.png; log /tmp/task-46.5-short-iphone-light.log; result path /tmp/task-46.5-short-iphone-light-xcresult-path.txt. No exception/audit suppression added; serial script stopped before remaining methods. Coordinator reports both lanes see fully visible high-contrast false positives, suspects simulator/environment or main, and TASK-46.6.1 lane is running a main control. This is evidence, not a demonstrated cause or resolved flake.
+
+Source investigation: gradeExam synchronously ends/finalizes the current key, cancels countdown, scores and sets presentedResult. MorseSendingKeyer queues actor audio operations without waiting; results focus is scheduled 150 ms after heading onAppear. Baseline logs show Grade is above Debug Fill but scrollUntilHittable issues eight upward swipes, forcing XCTest to scroll during Grade.tap. Supervisor approved local Grade preparation fix and the identical second caller; shared helpers remain untouched. Baseline initial load 14.61/7.27/4.56 (10 logical CPUs); samples rose over 490 during execution. This is measured contention, not proven audit causality.
 <!-- SECTION:NOTES:END -->
