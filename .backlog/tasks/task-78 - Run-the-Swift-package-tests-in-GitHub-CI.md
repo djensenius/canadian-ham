@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-27T13:24:00Z'
-updated_date: '2026-10-27T13:29:00Z'
+updated_date: '2026-10-27T13:32:00Z'
 labels:
   - ci
 dependencies: []
@@ -42,4 +42,6 @@ The Swift packages (content-swift, engine-swift, morse-swift, calculator-swift) 
 
 <!-- SECTION:NOTES:BEGIN -->
 Docker available via OrbStack. Official swift:6.4 and swift:6.4.1 manifests exist; swift:6.4 currently supplies Swift 6.4.1. Initial Linux run: morse-swift and calculator-swift pass unchanged; engine fixture comparator needs explicit CoreFoundation import. content-swift needs both os logging guards and an Apple-only renderer split because Linux Foundation has no AttributedString(markdown:options:) or MarkdownParsingOptions. Coordinator approved preserving Linux content coverage via a minimal Darwin-only source/test split; no fake Markdown renderer, skips or new dependencies. Before split: macOS content-swift 27/27 tests pass. No package is excluded; only the 10 renderer/heading-anchor tests stay Darwin-only.
+
+Validation so far: all four packages pass in OrbStack Linux swift:6.4 (Swift 6.4.1): content 17/17, engine 22/22 including every engine-parity fixture, morse 4/4, calculator 4/4. Local macOS Swift 6.4: content 27/27 before and after the renderer split (17 loader etc + 10 renderer tests); engine 22/22, morse 4/4, calculator 4/4. A byte-for-byte method comparison confirms all 27 original content test bodies were preserved. pnpm test passes. actionlint 1.7.12 passes; 16 isolated-git classification cases pass (all packages, fixtures, content, workflow/parity script, mixed paths, backlog-only, unrelated web/docs, push and empty-diff fallback). No cache added: all packages have no external dependencies and cold Linux compilation/tests finish in about a minute. macOS app unit and iOS build-for-testing commands are queued through xbuild and waiting safely on the shared lock.
 <!-- SECTION:NOTES:END -->
