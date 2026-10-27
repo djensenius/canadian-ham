@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-26T16:14:00Z'
-updated_date: '2026-10-27T13:57:00Z'
+updated_date: '2026-10-27T16:09:00Z'
 labels:
   - accessibility
   - layout
@@ -42,4 +42,6 @@ Found in the TASK-74 review. The mock header still has two inner ViewThatFits (f
 
 <!-- SECTION:NOTES:BEGIN -->
 Milestones pushed: bf03db03 adds the full 100-question portrait/landscape regression; 343bbf49 reuses MockExamHeaderControlLayout for both inner control groups and makes the compact sheet always scrollable. Baseline native appearance capture passes on iPad (106.539 s) and iPhone (272.889 s); final appearance/new-test and nine-method TASK-74 runs are queued via xbuild with one destination/worker each. No audit/assertion/helper changes or exceptions.
+
+The first complete requested product matrix passed: 10/10 methods on iPad and 10/10 on iPhone, including 100-question portrait/landscape selection. Header visual comparisons are 20/20 exact native RGB matches so far. Fitting-sheet comparison caught full-height paper-background/subpixel-centering differences introduced by the initial ScrollView container; changed only that container to measured available-height centering with the paper background retained on the original content. Its affected iPhone flow/navigation rerun is waiting on the shared xbuild lock. Additional AX captures explicitly position early controls; the first temporary positioning probe exposed coarse-scroll oscillation (diagnostic-only failure), so its local probe now uses the unchanged existing precise-scroll helper. No product assertion/audit or shared helper changed.
 <!-- SECTION:NOTES:END -->
