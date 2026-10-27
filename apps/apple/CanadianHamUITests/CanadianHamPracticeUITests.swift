@@ -1842,7 +1842,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTAssertTrue(lastQuestion.exists, "Question 100 must materialize in \(name)")
             XCTAssertTrue(lastQuestion.isHittable, "Question 100 must be tappable in \(name)")
             XCTAssertTrue(scroll.frame.contains(lastQuestion.frame), "Question 100 must be fully inside the scroll viewport in \(name)")
-            attachScreenshot(named: "task77-full-navigator-\(name)-question-100", from: app)
+            let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+            screenshot.name = "task77-full-navigator-\(name)-question-100"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
             lastQuestion.tap()
             XCTAssertTrue(app.buttons["Question 100, unanswered, current"].firstMatch.waitForExistence(timeout: 5), "Tapping the final grid item must change the current question")
             if mockExamUsesQuestionsSheet {
