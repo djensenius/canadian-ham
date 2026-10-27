@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-26T16:14:00Z'
-updated_date: '2026-10-27T16:09:00Z'
+updated_date: '2026-10-27T21:03:00Z'
 labels:
   - accessibility
   - layout
@@ -44,4 +44,6 @@ Found in the TASK-74 review. The mock header still has two inner ViewThatFits (f
 Milestones pushed: bf03db03 adds the full 100-question portrait/landscape regression; 343bbf49 reuses MockExamHeaderControlLayout for both inner control groups and makes the compact sheet always scrollable. Baseline native appearance capture passes on iPad (106.539 s) and iPhone (272.889 s); final appearance/new-test and nine-method TASK-74 runs are queued via xbuild with one destination/worker each. No audit/assertion/helper changes or exceptions.
 
 The first complete requested product matrix passed: 10/10 methods on iPad and 10/10 on iPhone, including 100-question portrait/landscape selection. Header visual comparisons are 20/20 exact native RGB matches so far. Fitting-sheet comparison caught full-height paper-background/subpixel-centering differences introduced by the initial ScrollView container; changed only that container to measured available-height centering with the paper background retained on the original content. Its affected iPhone flow/navigation rerun is waiting on the shared xbuild lock. Additional AX captures explicitly position early controls; the first temporary positioning probe exposed coarse-scroll oscillation (diagnostic-only failure), so its local probe now uses the unchanged existing precise-scroll helper. No product assertion/audit or shared helper changed.
+
+Resumed after the long shared-lock wait. The final fitting-sheet container passes both exact full-modal comparisons (0 differing pixels light/dark), all four affected iPhone product methods pass, fixed AX baseline/after probes pass (506.544/504.434 s), and final macOS build-for-testing passes with scratch source removed. Evidence inspection then found XCUIApplication.screenshot() truncates landscape PNGs (1416-column full-height black strip), so numeric landscape matches did not prove whole-screen parity. Coordinator approved replacing only landscape evidence with one XCUIScreen.main.screenshot() baseline/after pair, a local attachment-only change in the new full-grid test plus one iPhone rerun, and a one-line TASK-74 doc correction. Full-screen baseline passes (423.610 s): all 12 landscape captures orient to 2622x1206 and have zero all-black rows/columns. Matching after/new-test run is queued behind other xbuild work; no build interrupted.
 <!-- SECTION:NOTES:END -->
