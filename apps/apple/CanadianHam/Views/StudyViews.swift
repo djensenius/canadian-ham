@@ -1226,11 +1226,16 @@ struct MockExamView: View {
             onDismiss: presentPendingNavigatorSheetIfNeeded
         )
         .sheet(isPresented: $showingNavigator) {
-            ScrollView { navigatorSheetContent }
-                // Preserve the centered default-size sheet when its content fits; overflow starts at the top.
-                .defaultScrollAnchor(dynamicTypeSize.isAccessibilitySize ? .top : .center, for: .alignment)
+            GeometryReader { geometry in
+                ScrollView {
+                    navigatorSheetContent
+                        .background(DesignTokens.Colors.paper)
+                        // Match the original centered sheet when it fits; taller content scrolls from the top.
+                        .frame(minHeight: dynamicTypeSize.isAccessibilitySize ? 0 : geometry.size.height)
+                }
                 .accessibilityIdentifier("mock-question-navigator-scroll")
-                .background(DesignTokens.Colors.paper)
+                .background(dynamicTypeSize.isAccessibilitySize ? DesignTokens.Colors.paper : .clear)
+            }
         }
         .onAppear {
             calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
