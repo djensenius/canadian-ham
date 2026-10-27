@@ -5,13 +5,14 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-20 06:58
-updated_date: '2026-10-27T20:43:00Z'
+updated_date: '2026-10-27T21:43:00Z'
 labels:
   - apple
   - testing
 dependencies: []
 references:
   - docs/testing/task-33-ios-results.md
+  - docs/testing/task-65-flakes.md
 priority: low
 type: bug
 ordinal: 140000
@@ -25,23 +26,19 @@ TASK-33 required iPhone 17 Pro runs exposed three unchanged test flakes. (1) tes
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The causes of the intermittent post-Grade missing heading and residual single-figure XCTest audit timeouts are investigated with failure evidence, targeted reproduction, and host-load observations.
-- [ ] #2 Relevant light/dark sending-results and Ohms-law/M7 figure tests retain every existing assertion and accessibility audit without skips, narrowed audit types, or relaxed exception handlers.
-- [ ] #3 Targeted iPhone 17 Pro results for the affected methods and any residual flakiness are recorded; do not repeat full suites solely for this follow-up.
+- [x] #1 The causes of the intermittent post-Grade missing heading and residual single-figure XCTest audit timeouts are investigated with failure evidence, targeted reproduction, and host-load observations.
+- [x] #2 Relevant light/dark sending-results and Ohms-law/M7 figure tests retain every existing assertion and accessibility audit without skips, narrowed audit types, or relaxed exception handlers.
+- [x] #3 Targeted iPhone 17 Pro results for the affected methods and any residual flakiness are recorded; do not repeat full suites solely for this follow-up.
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect Grade/navigation, audio teardown, figure accessibility exposure and unchanged shared audit helpers; preserve historical failures.
-2. Record uptime/process observations and run the five affected light/dark/M7 methods repeatedly (5 iterations baseline) on iPhone 17 Pro using only their correct test plans.
-3. Apply only evidence-backed app fixes or a state-based sending-results wait; never alter shared helpers, assertions, audit calls or handlers. Escalate if a shared retry is needed.
-4. Repeat affected tests after changes, run text-source/localization/test-guard checks and macOS build-for-testing if tests change; record per-test results and residual risks in durable docs.
-5. Check evidenced ACs, retain In Progress if unresolved, commit and push task-65-flakes without a PR.
-
-Supervisor approved 2026-10-27: fix only the two sending Grade preparation sites that scroll down to Debug Fill then use the forward-only scrollUntilHittable for the earlier Grade button. Use unchanged bidirectional/positioning helpers plus visibility/hittability assertions; retain the 5-second results-state wait and every audit. Run 5 light/dark repetitions after.
-
-Coordinator bounded completion decision after stopping the figure baseline at 12 completed iterations: no further figure repetitions. First sending-preparation attempt (generic middle-band audit positioning) failed because its expensive whole-screen scans outlast the 120s exam deadline. Supervisor approved stopping only TASK-65 after driver, replacing only the new middle-band call with existing fully-visible assertion after bidirectional scrolling, and a final bounded 3x light/3x dark + navigation once, structural test once, macOS build-for-testing once. If final sending fails, restore sending source to main and record unresolved. Leave task In Progress pending figure owner decision.
+1. Inspect Grade/audio/navigation and figure accessibility exposure; preserve original failure evidence and every original test/helper/audit.
+2. Record per-minute host load; run sending baseline5x light/dark and partial figure baseline (M7x5, Ohms darkx5/lightx2; coordinator stopped remaining light repetitions after4.5h on lock).
+3. Validate two approved Grade-preparation attempts, reject their new failures and restore the entire sending test file byte-for-byte to main. No sending fix claimed.
+4. Add the approved one-launch-per-lesson structural regression; after first invocation is killed before startup, run the single approved identical rerun; record retained tree/count attachments. Run macOS build-for-testing and text-source/test-guard checks.
+5. Record results and owner options in docs/testing/task-65-flakes.md; check investigation/coverage evidence, leave In Progress because both flakes remain unresolved; commit/push without a PR.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -71,4 +68,16 @@ Current bounded evidence: sending baseline light5/5 + dark5/5; all10 visits issu
 Coordinator stopped figure baseline early after 12 completed tests (4.5h holding lock): M7 4/5, Ohms dark5/5, Ohms light2/2; light3 interrupted,4-5 not run. Do not label cancellation a pass. First post-fix sending attempt rejected: dark0/4 (188.408,163.525,167.180,169.576s), fifth interrupted with supervisor approval; light unrun. Generic positionElementInMiddleVisibleBand scans caused deadline auto-grading before tap: iteration1 Startt61.93; Grade preparationt79-183; snapshot then contains only sending-results-start-another-button. All shared helper source unchanged. Only owned driver6108/xbuild6174,6180/xcode68226 terminated after explicit supervisor approval; no other lane touched. Final 3x+3x bounded sending validation and one navigation/tree/macOS check now queued in /tmp/task-65-final.sh; raw rejected attempt log preserved /tmp/task-65-after-sending.log.
 
 Final minimal sending attempt failed0/3 light (56.867,61.231,61.134s) and0/3 dark (78.857,55.531,61.085s), all before tap/audit at new full-visibility assertion: Grade framey59-125.33, visible areay117-858. Coarse bidirectional scrolling exposed only bottom8.33pt. Per supervisor fallback BOTH sending prep changes fully reverted: entire CanadianHamPracticeUITests.swift byte-identical to main3872dc54 (commit7764e6e9). Sending flake NOT FIXED. Navigation test then passed once on restored source. Owner question also applies to sending: is120s auto-grade fixture too short for loaded UI tests? Structural method first invocation exited137 before test start (xcodebuild21730 killed9; unexplained, no counts/test assertions). Supervisor approved exactly one identical-method rerun with fresh bundle/load sampling after pending macOS build; no third attempt if killed/fails to start. Original+figure shared helpers and audits all remain byte-identical to main.
+
+Final bounded evidence is in docs/testing/task-65-flakes.md. Sending NOT FIXED: baseline light5/5 + dark5/5 full audits; all10 had eight wrong-direction Grade swipes and XCTest auto-scroll during tap. Rejected middle-band approach dark0/4 (fifth interrupted with approval, light unrun) because whole-screen scanning hit120s auto-grade; rejected minimal approach0/3 light +0/3 dark because Grade at y59-125.33 remained mostly behind navbar (visible top117). BOTH changes reverted; CanadianHamPracticeUITests.swift exactly equals main3872dc54. Navigation after reversion PASS119.757s, exit0.
+Figure baseline coordinator-stopped early: M7 4/5 (Code=-56 at295.085s), Ohms dark5/5 (1887.641,1783.377,1864.703,1920.290,1852.743s), light2/2 (1808.428,1832.218s); light3 interrupted,4-5 not run. Active figure one-minute load49.93-524.86, median73.45; contention observed, no causality proven. All full audits/helpers remain unchanged, no retry/filtering/skips.
+Structural test first invocation SIGKILL before startup, exit137; sole approved identical rerun PASS552.210s (outer614s), exit0, no skips. L-005-02 collapsed331 descendants/285 texts/18 buttons/2 scrollviews/0 equivalent rows; expanded343/297/18/2/12. L-007-01 collapsed286/235/15/4/0; expanded291/240/15/4/5. Every image and explicit Enlarge button once; rows absent collapsed/exactly once expanded. Eight keepAlways tree/count attachments exported under /tmp/task-65-figure-tree-rerun-attachments. No app-side duplication found. Whole eager lesson tree plausibly contributes cost; not a demonstrated timeout cause.
+macOS build-for-testing PASS exit0 (outer3451s incl lock wait). Text-source check/self-test and test-guard/self-test PASS. Source identity proves all pre-existing tests/helpers/audits untouched. No full runtime suites or non-iPhone simulator runs; final code change only the iOS structural test.
+AC1-3 evidence covers investigation, unchanged coverage and honest targeted results, NOT resolution. Keep In Progress. Owner options: (a) approve timeout-only Code=-56 one FULL-audit retry in shared helper, failing any real finding; (b) separately evaluate lazy long lessons given331/286 descendants. Additional open sending question (not a third option): is120s auto-grade fixture too short for loaded UI tests? No further mitigation implemented.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added a passing, bounded figure accessibility-tree regression and durable per-test/load evidence. Both sending-preparation attempts failed and were fully reverted; no sending fix is claimed. M7 Code=-56 reproduced in1/5; Ohms dark5/5/light2/2 passed before coordinator stopped baseline early. Structural tree counts331/286 collapsed, no duplicated controls/rows; macOS build-for-testing and text-source/test-guard checks pass. All original assertions, full audits and shared helpers byte-identical to main. TASK-65 remains In Progress pending owner decisions for both sending and figure flakes.
+<!-- SECTION:FINAL_SUMMARY:END -->
