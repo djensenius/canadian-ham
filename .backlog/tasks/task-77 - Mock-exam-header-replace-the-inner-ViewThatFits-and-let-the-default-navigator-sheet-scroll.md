@@ -7,7 +7,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-26T16:14:00Z'
-updated_date: '2026-10-27T21:33:00Z'
+updated_date: '2026-10-27T21:46:00Z'
 labels:
   - accessibility
   - layout
@@ -67,6 +67,8 @@ Per-test product results (iPad / iPhone; seconds); complete logs/bundles and com
 | `CanadianHamPracticeUITests/testHundredQuestionMockExamNavigatorReachesLastQuestionInPortraitAndLandscape` | PASS 92.446 s | PASS 119.842 s |
 
 TV, vision and watch suites skipped because StudyViews.swift is not in their target membership; no package/catalogue changes. Full iOS merge-batch suites and independent branch review remain coordinator responsibilities. All Apple commands used xbuild, one destination/worker, and waited for the shared lock; no builds were interrupted by this worker.
+
+Coordinator, after the review (approve with notes): ran the missed affected test CanadianHamExamToolsUITests/testMockExamQuestionsNavigatorPresentsAfterCalculatorSheet on iPhone 17 Pro, which passed (56.855 s). The new 100-question test now asserts that the window really is landscape in the landscape pass, and its Done check has a failure message; it passed again (109.590 s). The doc now says 6 'lower' records repeat their base case, so there are 28 distinct exact comparisons.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
