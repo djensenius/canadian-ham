@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-26T16:14:00Z'
-updated_date: '2026-10-27T13:25:00Z'
+updated_date: '2026-10-27T13:57:00Z'
 labels:
   - accessibility
   - layout
@@ -37,3 +37,9 @@ Found in the TASK-74 review. The mock header still has two inner ViewThatFits (f
 3. Capture matching after states and record exact native RGB diffs/SHA-256s with a small representative evidence set.
 4. Run the TASK-74 nine-method set plus the new test on iPhone/iPad through xbuild, macOS build-for-testing, text-source and guard checks; commit/push milestones, record per-test results, and finalize criteria.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Milestones pushed: bf03db03 adds the full 100-question portrait/landscape regression; 343bbf49 reuses MockExamHeaderControlLayout for both inner control groups and makes the compact sheet always scrollable. Baseline native appearance capture passes on iPad (106.539 s) and iPhone (272.889 s); final appearance/new-test and nine-method TASK-74 runs are queued via xbuild with one destination/worker each. No audit/assertion/helper changes or exceptions.
+<!-- SECTION:NOTES:END -->
