@@ -1,11 +1,11 @@
 ---
 id: TASK-78
 title: Run the Swift package tests in GitHub CI
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-27T13:24:00Z'
-updated_date: '2026-10-27T13:45:00Z'
+updated_date: '2026-10-27T13:50:00Z'
 labels:
   - ci
 dependencies: []
@@ -21,10 +21,10 @@ The Swift packages (content-swift, engine-swift, morse-swift, calculator-swift) 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A CI job runs swift test for every Swift package that can build on Linux, plus the Swift half of the engine-parity check if feasible, triggered when those packages, their fixtures or the content they read change
-- [ ] #2 Any package that can't run on Linux is documented with the reason, and the ci.yml local-only comment is updated
-- [ ] #3 Source guards are minimal (canImport), the Apple-platform behaviour is unchanged, and local swift test plus the macOS app unit command still pass
-- [ ] #4 The job passes on the PR, and a deliberately broken test was shown to fail it (recorded in the notes, then reverted)
+- [x] #1 A CI job runs swift test for every Swift package that can build on Linux, plus the Swift half of the engine-parity check if feasible, triggered when those packages, their fixtures or the content they read change
+- [x] #2 Any package that can't run on Linux is documented with the reason, and the ci.yml local-only comment is updated
+- [x] #3 Source guards are minimal (canImport), the Apple-platform behaviour is unchanged, and local swift test plus the macOS app unit command still pass
+- [x] #4 The job passes on the PR, and a deliberately broken test was shown to fail it (recorded in the notes, then reverted)
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -280,4 +280,18 @@ Per-test results (all PASS):
 - PASS `RootNavigationMappingTests.testEveryRootSelectionRoundTrips` (0.001 seconds)
 - PASS `RootNavigationMappingTests.testLessonQuizCurrentAndOtherHintLessonStacksPreserveQuizAcrossLayouts` (0.001 seconds)
 - PASS `RootNavigationMappingTests.testPracticeHintLessonStackKeepsSessionAsSplitSelection` (0.001 seconds)
+
+All requested local validation is now complete. iOS build-for-testing succeeded on the single iPhone 17 Pro destination (also compiles the embedded watch app):
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build-for-testing CODE_SIGNING_ALLOWED=NO
+```
+
+Both xbuild commands exited 0 after safely waiting for the shared lock. macOS unit results are recorded per-test above (224/224). No iOS UI/runtime suite or tvOS/visionOS/watchOS full suites ran in this implementation pass: approved task verification is macOS unit + iOS build-for-testing, and full linked-platform suites are deferred to the coordinator's Apple merge batch. No lesson figure or title-sweep audits are relevant: no figure/lesson content, reader implementation, titles, layouts or audit helpers changed. pnpm test passed (content-tools 250, Morse 21, calculator 127, web 282 tests plus script checks); pnpm typecheck passed. Final actionlint, git diff --check and test-guard self-test/diff checks passed. All Apple-platform code paths retain their original implementations; only unavailable Linux logging is compiled out, and unavailable Linux Markdown rendering/heading APIs and their 10 tests are compiled only on Darwin. The intentional CI failure was fully reverted; no disabled tests, XCTSkip, dependencies, networking or Apple CI builds were introduced. Draft PR #1042 remains for independent review and coordinator completion.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+All four Swift packages now run in an official Swift 6.4 Linux CI job when Swift package, fixture, content, parity script or workflow inputs change. The engine step includes all Swift parity fixtures. Minimal guards preserve Apple implementations; content loader/model/validation tests run on Linux, while only the Apple-Foundation Markdown renderer and 10 tests remain Darwin-only. All 27 original content test bodies were preserved; macOS content test count remains 27. Local Linux 17/22/4/4 package tests, macOS 27/22/4/4 package tests, macOS app 224/224 unit tests, iOS iPhone 17 Pro build-for-testing, pnpm test/typecheck, actionlint, 16 classification cases and test guard pass. Draft PR #1042 proves failure with an intentional stale lesson count in run 40513031309 and success after its revert in run 40513662713; no deliberate failure remains. All acceptance criteria verified. Full Apple linked-platform runtime suites remain for the coordinator merge batch and independent review is still required.
+<!-- SECTION:FINAL_SUMMARY:END -->
