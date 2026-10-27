@@ -56,7 +56,7 @@ wait and every original audit remain unchanged. Baseline sending passes ran the
 full audits; the rejected attempts did not reach them.
 
 The original navigation method was also run once after restoration to main’s
-source; it passed. This is not validation of either rejected fix.
+source; it passed (119.757 s). This is not validation of either rejected fix.
 
 ## Figure baseline: 12 completed iterations, coordinator stopped early
 
@@ -132,3 +132,70 @@ Logs/result bundles use `/tmp/task-65-<run>.log` / `.xcresult`, with runs
 `figure-tree`. Load files are `/tmp/task-65-<run>-load.log`. The two deliberately
 interrupted runs do not have successful completion summaries. Driver commands
 are retained in `/tmp/task-65-baseline.sh` and `/tmp/task-65-final.sh`.
+
+## Structural regression and accessibility-tree counts
+
+`testLessonFigureTextEquivalentsStartCollapsedAndExposeEachRowOnce` adds one launch
+per lesson, no audits, and `keepAlways` debug-description/count attachments.
+Existing plan membership includes its class only in `CanadianHamLessonFigures`,
+not the default plan. It asserts each image button **and** explicit Enlarge
+button occurs once, no collapsed text-equivalent rows, and exactly one of each
+row after expansion.
+
+First invocation exited 137: `xcodebuild` received SIGKILL before test execution;
+no counts were produced and the cause is unknown. The supervisor approved one
+identical-method rerun, not a changed test or timeout retry. It **passed 552.210 s**,
+exit 0, no skips; outer wall 614 s. Log/bundle:
+`/tmp/task-65-figure-tree-rerun.log` / `.xcresult`. All eight retained text
+attachments were exported to `/tmp/task-65-figure-tree-rerun-attachments/`
+(`manifest.json` maps tree/count names to files). Eleven command-wide load samples
+ranged 110.09–337.82 (one-minute average).
+
+| Lesson/state | All descendants | Static texts | Buttons | Scroll views | Text-equivalent rows |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| L-005-02 collapsed | 331 | 285 | 18 | 2 | 0 |
+| L-005-02 expanded | 343 | 297 | 18 | 2 | 12 |
+| L-007-01 collapsed | 286 | 235 | 15 | 4 | 0 |
+| L-007-01 expanded | 291 | 240 | 15 | 4 | 5 |
+
+These are XCTest query counts for the **whole application tree** at the figure,
+not counts of visible/focusable elements. Expansion adds exactly the authored
+12/5 rows; no duplicated figure controls or text-equivalent rows were found.
+`PlatformLessonMarkdownView.swift` eagerly renders the entire lesson in a
+`VStack`, so an inline-figure audit sees hundreds of elements, including offscreen
+lesson text. This is a plausible cost contributor, not demonstrated timeout
+causality. Figures are asset-catalog images, not live SVG-path accessibility
+subtrees. No app-side duplication fix, lazy conversion or audit change was made.
+
+## Checks and owner decision
+
+- macOS `xbuild ... -destination 'platform=macOS,arch=arm64' build-for-testing
+  SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=-
+  CODE_SIGNING_ALLOWED=YES`: **TEST BUILD SUCCEEDED**, exit 0. Outer wall 3451 s
+  includes the shared-lock wait; `/tmp/task-65-macos-build-for-testing.log`.
+- Text-source check/self-test and test-guard/self-test pass. A source comparison
+  proves PracticeUITests and all pre-existing figure tests/helpers/audits are
+  byte-identical to main; only the new structural method differs.
+- No iPad, tvOS, visionOS, watchOS or full macOS runtime suites were run: final
+  source changes are confined to the iOS figure-test target. No app text/catalogue
+  changed. An optional full localization-export check was interrupted while
+  waiting for the lock; its independent text-source gates passed.
+
+**Owner decision required; TASK-65 remains In Progress:**
+
+1. **Timeout-only shared-helper retry:** M7 timed out once in five full audits;
+   the other four passed, as did all seven completed Ohm’s-law visits. Approve at
+   most one rerun of the **full default audit**, only for `Code=-56`; any real
+   finding must still fail. This changes a shared helper and needs owner approval.
+   No such retry exists or was added here.
+2. **Lazy long-lessons follow-up:** evaluate reducing eager exposure of 331/286
+   descendants (285/235 static texts while equivalents are collapsed). A
+   `LazyVStack` may reduce tree/snapshot cost but changes every lesson’s scrolling
+   and audit behaviour; it requires separate scope and validation, not a local
+   figure-test workaround.
+
+**Sending open question, not a third option:** is the fixture’s 120 s auto-grade
+too short for UI tests under heavy host load? Attempt 1 hit that deadline during
+preparation; attempt 2 instead exposed a partially occluded Grade button. Neither
+validated a fix. Both changes were reverted, and the original sending flake is
+still unresolved.
