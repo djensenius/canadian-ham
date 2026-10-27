@@ -226,6 +226,56 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
         try verifyLessons([Self.module8Lessons[0].sampledFirstFigure], appearance: .dark, evidenceModuleID: "m8")
     }
 
+    func testLessonFigureTextEquivalentsStartCollapsedAndExposeEachRowOnce() throws {
+        let lessons = [
+            (lessonID: "L-005-02", figureIDs: ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"], textFigureID: "ohms-law-power-wheel", rowCount: 12),
+            (lessonID: "L-007-01", figureIDs: ["propagation-paths-skip-zone"], textFigureID: "propagation-paths-skip-zone", rowCount: 5)
+        ]
+        for lesson in lessons {
+            let app = launchLesson(lesson.lessonID, appearance: .light)
+            defer { app.terminate() }
+            XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+            for figureID in lesson.figureIDs {
+                XCTAssertEqual(app.buttons.matching(identifier: "lesson-figure-\(figureID)").count, 1, "Each figure should expose one image button in \(lesson.lessonID)")
+            }
+            let figure = app.buttons["lesson-figure-\(lesson.textFigureID)"].firstMatch
+            scrollUntilPartiallyVisible(figure, in: app, maxSwipes: 80)
+            positionLessonFigureForOpaqueNavigationBarAudit(figure, in: app, context: "\(lesson.lessonID) structural tree evidence")
+            let rowPrefix = "lesson-figure-\(lesson.textFigureID)-text-equivalent-row-"
+            let rows = app.staticTexts.matching(NSPredicate(format: "identifier BEGINSWITH %@", rowPrefix))
+            func attachTree(phase: String) {
+                XCTContext.runActivity(named: "\(lesson.lessonID) figure accessibility tree \(phase)") { activity in
+                    let tree = XCTAttachment(string: app.debugDescription)
+                    tree.name = "task65-\(lesson.lessonID)-\(phase)-tree"
+                    tree.lifetime = .keepAlways
+                    activity.add(tree)
+                    let counts = "lesson=\(lesson.lessonID) phase=\(phase) descendants=\(app.descendants(matching: .any).count) staticTexts=\(app.staticTexts.count) buttons=\(app.buttons.count) scrollViews=\(app.scrollViews.count) textEquivalentRows=\(rows.count) figureFrame=\(figure.frame)"
+                    print(counts)
+                    let countAttachment = XCTAttachment(string: counts)
+                    countAttachment.name = "task65-\(lesson.lessonID)-\(phase)-counts"
+                    countAttachment.lifetime = .keepAlways
+                    activity.add(countAttachment)
+                }
+            }
+            attachTree(phase: "collapsed")
+            XCTAssertEqual(rows.count, 0, "Collapsed text equivalents should not expose hidden rows")
+            for index in 0..<lesson.rowCount {
+                XCTAssertEqual(app.staticTexts.matching(identifier: "\(rowPrefix)\(index)").count, 0)
+            }
+            let disclosure = app.buttons["Figure text equivalent"].firstMatch
+            scrollUntilPartiallyVisible(disclosure, in: app, maxSwipes: 12)
+            XCTAssertTrue(disclosure.isHittable)
+            disclosure.tap()
+            let firstRow = app.staticTexts["\(rowPrefix)0"].firstMatch
+            XCTAssertTrue(firstRow.waitForExistence(timeout: 5))
+            attachTree(phase: "expanded")
+            XCTAssertEqual(rows.count, lesson.rowCount, "Expanded text equivalents should expose only their authored rows")
+            for index in 0..<lesson.rowCount {
+                XCTAssertEqual(app.staticTexts.matching(identifier: "\(rowPrefix)\(index)").count, 1, "Each expanded text-equivalent row should appear exactly once")
+            }
+        }
+    }
+
     private func verifyLessonRange(
         _ lessons: [LessonSpec],
         _ range: Range<Int>,
