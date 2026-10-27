@@ -1,10 +1,11 @@
 ---
 id: TASK-65
 title: Investigate residual iOS heading-wait and single-figure audit flakes
-status: To Do
-assignee: []
-created_date: '2026-10-20 06:58'
-updated_date: '2026-10-23 19:17'
+status: In Progress
+assignee:
+  - '@worker'
+created_date: 2026-10-20 06:58
+updated_date: '2026-10-27T13:25:00Z'
 labels:
   - apple
   - testing
@@ -28,6 +29,16 @@ TASK-33 required iPhone 17 Pro runs exposed three unchanged test flakes. (1) tes
 - [ ] #2 Relevant light/dark sending-results and Ohms-law/M7 figure tests retain every existing assertion and accessibility audit without skips, narrowed audit types, or relaxed exception handlers.
 - [ ] #3 Targeted iPhone 17 Pro results for the affected methods and any residual flakiness are recorded; do not repeat full suites solely for this follow-up.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect Grade/navigation, audio teardown, figure accessibility exposure and unchanged shared audit helpers; preserve historical failures.
+2. Record uptime/process observations and run the five affected light/dark/M7 methods repeatedly (5 iterations baseline) on iPhone 17 Pro using only their correct test plans.
+3. Apply only evidence-backed app fixes or a state-based sending-results wait; never alter shared helpers, assertions, audit calls or handlers. Escalate if a shared retry is needed.
+4. Repeat affected tests after changes, run text-source/localization/test-guard checks and macOS build-for-testing if tests change; record per-test results and residual risks in durable docs.
+5. Check evidenced ACs, retain In Progress if unresolved, commit and push task-65-flakes without a PR.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
