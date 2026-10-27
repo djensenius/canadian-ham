@@ -1226,15 +1226,11 @@ struct MockExamView: View {
             onDismiss: presentPendingNavigatorSheetIfNeeded
         )
         .sheet(isPresented: $showingNavigator) {
-            Group {
-                // Keep default placement; accessibility text must scroll rather than compress.
-                if dynamicTypeSize.isAccessibilitySize {
-                    ScrollView { navigatorSheetContent }
-                } else {
-                    navigatorSheetContent
-                }
-            }
-            .background(DesignTokens.Colors.paper)
+            ScrollView { navigatorSheetContent }
+                // Preserve the centered default-size sheet when its content fits; overflow starts at the top.
+                .defaultScrollAnchor(dynamicTypeSize.isAccessibilitySize ? .top : .center, for: .alignment)
+                .accessibilityIdentifier("mock-question-navigator-scroll")
+                .background(DesignTokens.Colors.paper)
         }
         .onAppear {
             calculatorViewModel.updateLocale(canadianHamInterfaceCalculatorLocale())
@@ -1423,27 +1419,11 @@ struct MockExamView: View {
         }
     }
 
-    @ViewBuilder
     private func flagAndNavigatorControls(questionID: String) -> some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                flagButton(questionID: questionID)
-                questionsButton
-                quickJumpControls
-            }
-        } else {
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: DesignTokens.Spacing.sm) {
-                    flagButton(questionID: questionID)
-                    questionsButton
-                    quickJumpControls
-                }
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    flagButton(questionID: questionID)
-                    questionsButton
-                    quickJumpControls
-                }
-            }
+        MockExamHeaderControlLayout(forceVertical: dynamicTypeSize.isAccessibilitySize) {
+            flagButton(questionID: questionID)
+            questionsButton
+            quickJumpControls
         }
     }
 
@@ -1485,24 +1465,10 @@ struct MockExamView: View {
         showingNavigator = true
     }
 
-    @ViewBuilder
     private var quickJumpControls: some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                nextUnansweredButton
-                nextFlaggedButton
-            }
-        } else {
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: DesignTokens.Spacing.sm) {
-                    nextUnansweredButton
-                    nextFlaggedButton
-                }
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    nextUnansweredButton
-                    nextFlaggedButton
-                }
-            }
+        MockExamHeaderControlLayout(forceVertical: dynamicTypeSize.isAccessibilitySize) {
+            nextUnansweredButton
+            nextFlaggedButton
         }
     }
 
