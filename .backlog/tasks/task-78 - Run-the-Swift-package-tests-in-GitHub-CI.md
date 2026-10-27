@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-27T13:24:00Z'
-updated_date: '2026-10-27T13:50:00Z'
+updated_date: '2026-10-27T13:58:00Z'
 labels:
   - ci
 dependencies: []
@@ -288,6 +288,8 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/ap
 ```
 
 Both xbuild commands exited 0 after safely waiting for the shared lock. macOS unit results are recorded per-test above (224/224). No iOS UI/runtime suite or tvOS/visionOS/watchOS full suites ran in this implementation pass: approved task verification is macOS unit + iOS build-for-testing, and full linked-platform suites are deferred to the coordinator's Apple merge batch. No lesson figure or title-sweep audits are relevant: no figure/lesson content, reader implementation, titles, layouts or audit helpers changed. pnpm test passed (content-tools 250, Morse 21, calculator 127, web 282 tests plus script checks); pnpm typecheck passed. Final actionlint, git diff --check and test-guard self-test/diff checks passed. All Apple-platform code paths retain their original implementations; only unavailable Linux logging is compiled out, and unavailable Linux Markdown rendering/heading APIs and their 10 tests are compiled only on Darwin. The intentional CI failure was fully reverted; no disabled tests, XCTSkip, dependencies, networking or Apple CI builds were introduced. Draft PR #1042 remains for independent review and coordinator completion.
+
+Coordinator, after the review (approve with notes): pinned container swift:6.4.1; README, morse-swift README, teaching guide and AGENTS.md now say what Linux CI covers and that lesson, hint and figure-directive changes still need a local macOS swift test for the Darwin-only renderer tests (MarkdownLessonContentTests). The deliberate-failure commit 5ef95554 and its revert 89c2af81 were dropped from the branch history (the final tree is identical); the CI proof stays recorded by run ID (red 40513031309, green 40513662713).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
