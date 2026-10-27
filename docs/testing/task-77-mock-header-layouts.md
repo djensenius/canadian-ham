@@ -79,6 +79,13 @@ correct native geometry and **0 all-black columns / 0 all-black rows**. The 12
 positioned AX comparisons additionally record that the target is fully inside
 the visible body in both versions.
 
+Six "-lower" records (iPad AX-XXXL, iPhone landscape AX-XXXL and iPhone portrait
+AX-XXXL, each in light and dark) repeat their base case: the captures weren't
+taken at a different scroll position, so their hashes and control frames match
+the base records. That leaves **28 distinct exact comparisons**. The early
+controls are still covered by the positioned `-flag`, `-questions` and
+`-unanswered` AX captures.
+
 | Header selection | Cases that prove it |
 | --- | --- |
 | Horizontal flag group, horizontal quick jumps | iPad default (inspector closed/open), iPhone landscape default; light/dark |

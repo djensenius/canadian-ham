@@ -1825,6 +1825,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 "-CanadianHamMockExamSeed", "ui-mock-navigator-full-grid",
                 "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
             ])
+            // Prove the rotation took effect, so the landscape pass can't silently test portrait twice.
+            let window = app.windows.firstMatch.frame
+            XCTAssertEqual(window.width > window.height, orientation.isLandscape, "The app window must be \(name) (\(window.width)×\(window.height))")
             // No question limit: exercise the real 100-question Basic exam, not a short fixture.
             openMockExamStart(in: app)
             XCTAssertTrue(app.staticTexts["Question 1 of 100"].firstMatch.waitForExistence(timeout: 10))
@@ -1851,7 +1854,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             if mockExamUsesQuestionsSheet {
                 let done = app.buttons["Done"].firstMatch
                 for _ in 0..<5 where !done.isHittable { scroll.swipeUp(); waitBriefly() }
-                XCTAssertTrue(done.isHittable)
+                XCTAssertTrue(done.isHittable, "The navigator sheet's Done button must be reachable in \(name)")
                 done.tap()
             }
             scrollToTop(in: app)
