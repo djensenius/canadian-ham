@@ -396,7 +396,7 @@ Use this checklist for tasks 39.2 through 39.5.
     - `pnpm test`
     - `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift` (run from the repository root; `xcode-select` on the build host points at the Command Line Tools)
 14. If a task changes TypeScript or renderer behaviour, also run `pnpm typecheck`. Lesson-text-only changes usually do not require Apple app builds, but they still need the Swift package test above because it parses real lesson Markdown.
-15. Watch pinned lesson tests: web tests assert content from `L-005-01` and `L-006-03`, while Swift `ContentLibraryTests` assert block order, table data, and illustration-brief parsing for real lessons including `L-005-01` and every lesson file.
+15. Watch pinned lesson tests: web tests assert content from `L-005-01` and `L-006-03`, while Swift `MarkdownLessonContentTests` (Darwin-only: it needs the Apple Markdown renderer, so GitHub's Linux CI does not run it) assert block order, table data, Try-it answer counts and illustration-brief parsing for real lessons including `L-005-01` and every lesson file. Always run the local macOS `swift test` above for lesson changes.
 16. Record in Backlog notes which regulatory and numeric claims were checked and which were dropped.
 
 ## 10. Sources used for this guide
