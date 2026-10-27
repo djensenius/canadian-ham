@@ -431,10 +431,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         debugFill.tap()
         let grade = app.buttons["morse-sending-grade-exam-button"].firstMatch
         XCTAssertTrue(grade.waitForExistence(timeout: 5))
-        // Grade is above Debug Fill; a forward-only swipe moves it farther offscreen.
-        scrollUntilPartiallyVisible(grade, in: app, maxSwipes: 8)
-        positionElementInMiddleVisibleBand(grade, in: app, context: "Sending Grade button before grading")
-        XCTAssertTrue(grade.isHittable, "Grade should be hittable before pushing sending results")
+        scrollUntilHittable(grade, in: app, maxSwipes: 8)
         grade.tap()
 
         let heading = app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch
@@ -2057,10 +2054,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         debugFill.tap()
         let grade = app.buttons["morse-sending-grade-exam-button"].firstMatch
         XCTAssertTrue(grade.waitForExistence(timeout: 5))
-        // Grade is above Debug Fill; a forward-only swipe moves it farther offscreen.
-        scrollUntilPartiallyVisible(grade, in: app, maxSwipes: 8)
-        positionElementInMiddleVisibleBand(grade, in: app, context: "Sending Grade button before grading")
-        XCTAssertTrue(grade.isHittable, "Grade should be hittable before pushing sending results")
+        scrollUntilHittable(grade, in: app, maxSwipes: 8)
         grade.tap()
         XCTAssertTrue(app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch.waitForExistence(timeout: 5))
         try performAudit(on: app, context: "Morse sending results \(appearance)")
