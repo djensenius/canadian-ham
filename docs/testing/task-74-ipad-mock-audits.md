@@ -264,6 +264,8 @@ are retained as native PNGs. No follow-up or exception is needed.
 
 ## Appearance parity and evidence integrity
 
+**TASK-77 correction (2026-10-27):** `XCUIApplication.screenshot()` landscape captures were truncated, so TASK-74’s landscape parity claim rested on partial images; [TASK-77’s full-screen recapture](task-77-mock-header-layouts.md) supersedes it.
+
 The caption-only structural change is measured independently in four light/dark
 comparisons above. The header replacement is isolated separately: BEFORE uses
 the original outer `ViewThatFits` with the caption fix retained; AFTER uses the

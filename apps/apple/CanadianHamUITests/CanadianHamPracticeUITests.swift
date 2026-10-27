@@ -1813,6 +1813,57 @@ final class CanadianHamPracticeUITests: XCTestCase {
         waitForElementToDisappear(feedback, timeout: 5, message: "Answer feedback should disappear after advancing at the largest accessibility text size")
     }
 
+    func testHundredQuestionMockExamNavigatorReachesLastQuestionInPortraitAndLandscape() throws {
+#if os(iOS)
+        defer { XCUIDevice.shared.orientation = .portrait }
+        for (orientation, name) in [(UIDeviceOrientation.portrait, "portrait"), (.landscapeLeft, "landscape")] {
+            XCUIDevice.shared.orientation = orientation
+            waitBriefly(0.8)
+            let app = launchApp(arguments: [
+                "-AppleLanguages", "(en)", "-AppleLocale", "en_CA",
+                "-CanadianHamInitialScreen", "mock",
+                "-CanadianHamMockExamSeed", "ui-mock-navigator-full-grid",
+                "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
+            ])
+            // Prove the rotation took effect, so the landscape pass can't silently test portrait twice.
+            let window = app.windows.firstMatch.frame
+            XCTAssertEqual(window.width > window.height, orientation.isLandscape, "The app window must be \(name) (\(window.width)×\(window.height))")
+            // No question limit: exercise the real 100-question Basic exam, not a short fixture.
+            openMockExamStart(in: app)
+            XCTAssertTrue(app.staticTexts["Question 1 of 100"].firstMatch.waitForExistence(timeout: 10))
+            showMockExamQuestionNavigator(in: app)
+            let scroll = mockExamUsesQuestionsSheet
+                ? app.scrollViews["mock-question-navigator-scroll"].firstMatch
+                : app.scrollViews.firstMatch
+            XCTAssertTrue(scroll.waitForExistence(timeout: 5), "The full navigator must scroll in \(name)")
+            let lastQuestion = app.buttons["Question 100, unanswered"].firstMatch
+            for _ in 0..<30 {
+                if lastQuestion.exists && lastQuestion.isHittable && scroll.frame.contains(lastQuestion.frame) { break }
+                scroll.swipeUp()
+                waitBriefly()
+            }
+            XCTAssertTrue(lastQuestion.exists, "Question 100 must materialize in \(name)")
+            XCTAssertTrue(lastQuestion.isHittable, "Question 100 must be tappable in \(name)")
+            XCTAssertTrue(scroll.frame.contains(lastQuestion.frame), "Question 100 must be fully inside the scroll viewport in \(name)")
+            let screenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+            screenshot.name = "task77-full-navigator-\(name)-question-100"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+            lastQuestion.tap()
+            XCTAssertTrue(app.buttons["Question 100, unanswered, current"].firstMatch.waitForExistence(timeout: 5), "Tapping the final grid item must change the current question")
+            if mockExamUsesQuestionsSheet {
+                let done = app.buttons["Done"].firstMatch
+                for _ in 0..<5 where !done.isHittable { scroll.swipeUp(); waitBriefly() }
+                XCTAssertTrue(done.isHittable, "The navigator sheet's Done button must be reachable in \(name)")
+                done.tap()
+            }
+            scrollToTop(in: app)
+            XCTAssertTrue(app.staticTexts["Question 100 of 100"].firstMatch.waitForExistence(timeout: 5), "The exam must display the selected final question in \(name)")
+            app.terminate()
+        }
+#endif
+    }
+
     func testMockExamHeaderControlsSupportLargestAccessibilityTextSize() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
