@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-27T13:24:00Z'
-updated_date: '2026-10-27T13:37:00Z'
+updated_date: '2026-10-27T13:41:00Z'
 labels:
   - ci
 dependencies: []
@@ -46,4 +46,6 @@ Docker available via OrbStack. Official swift:6.4 and swift:6.4.1 manifests exis
 Validation so far: all four packages pass in OrbStack Linux swift:6.4 (Swift 6.4.1): content 17/17, engine 22/22 including every engine-parity fixture, morse 4/4, calculator 4/4. Local macOS Swift 6.4: content 27/27 before and after the renderer split (17 loader etc + 10 renderer tests); engine 22/22, morse 4/4, calculator 4/4. A byte-for-byte method comparison confirms all 27 original content test bodies were preserved. pnpm test passes. actionlint 1.7.12 passes; 16 isolated-git classification cases pass (all packages, fixtures, content, workflow/parity script, mixed paths, backlog-only, unrelated web/docs, push and empty-diff fallback). No cache added: all packages have no external dependencies and cold Linux compilation/tests finish in about a minute. macOS app unit and iOS build-for-testing commands are queued through xbuild and waiting safely on the shared lock.
 
 Required red proof: draft PR https://github.com/djensenius/canadian-ham/pull/1042 (workflow only triggers pushes to main or pull requests). Temporary failure commit 5ef95554795cfdfd3d6e882a40cdd7149b2e3618 deliberately expected -1 lessons in ContentLibraryTests.testLoadsRealRepositoryContent. CI run 40513031309, Swift package tests job 122219519485, conclusively failed at Test content-swift: XCTAssertEqual failed (37 is not equal to -1), 17 tests / 1 failure. Job ran 2026-10-27 13:33:35–13:34:31 UTC (~56 seconds). Verified via gh run view plus downloaded job logs. Reverted the assertion using git revert; no deliberate failure remains. Green rerun follows.
+
+Required green proof after revert: CI run 40513662713 at aa296b7f619c211bfc87aa339de0b0d72a6dde2a passed (all three jobs green; Swift package tests job 122221910336). Test guard run 40513662300 also passed. Official swift:6.4 Linux x86_64 tests pass: content 17, engine 22 including every engine fixture, morse 4, calculator 4. Failure run 40513031309 is completed with conclusion failure (Node/content job passed, only the deliberately broken Swift content test failed). Source returned to the already locally validated state. pnpm typecheck also passes. Awaiting Apple xbuild lock, with no build interruptions.
 <!-- SECTION:NOTES:END -->
