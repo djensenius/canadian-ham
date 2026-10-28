@@ -325,9 +325,7 @@ private struct DisplayLessonBlock: Identifiable {
 #if os(iOS) || os(macOS)
 private struct LessonFigureView: View {
     let figure: MarkdownFigure
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var showingEnlargedFigure = false
-    @State private var textEquivalentExpanded = false
 
     private var aspectRatio: CGFloat {
         LessonFigureMetadata.aspectRatio(for: figure.id)
@@ -356,7 +354,7 @@ private struct LessonFigureView: View {
             .accessibilityIdentifier("lesson-figure-\(figure.id)")
 
             if !figure.textEquivalent.isEmpty {
-                DisclosureGroup(isExpanded: $textEquivalentExpanded) {
+                DisclosureGroup {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         ForEach(Array(figure.textEquivalent.enumerated()), id: \.offset) { index, item in
                             Text(lessonEnglish(item)) // l10n: content(en)
@@ -372,7 +370,6 @@ private struct LessonFigureView: View {
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                 }
-                .id(dynamicTypeSize)
             }
         }
         .padding(DesignTokens.Spacing.md)
