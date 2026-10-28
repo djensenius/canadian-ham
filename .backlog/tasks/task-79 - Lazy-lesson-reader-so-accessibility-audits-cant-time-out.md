@@ -1,6 +1,6 @@
 ---
 id: TASK-79
-title: Lazy lesson reader so accessibility audits can't time out
+title: Run figure audits on a quiet build host so Code=-56 timeouts can't happen
 status: In Progress
 assignee:
   - '@worker'
@@ -17,15 +17,14 @@ ordinal: 164000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Owner 2026-10-27, on TASK-65: 'Fix it so timeout isn't really possible' and lazy long lessons approved. The lesson reader builds every block eagerly: a collapsed L-005-02 exposes 331 descendants and 285 static texts, L-007-01 286/235. Figure audits intermittently fail with XCTest Code=-56 'Audit failed to complete in time' under load (M7 1/5). Make the reader lazy (LazyVStack or equivalent) so the accessibility tree, and the audit, cover roughly what's on screen. No retry wrapper.
+Owner 2026-10-28 chose option 2, after the lazy reader was closed (#1049): Code=-56 'Audit failed to complete in time' only occurred at host load averages of about 150-1000 (two Apple lanes plus other projects sharing the machine). Make figure-plan runs happen on a quiet host: a runner script waits for low load, runs the figure plan through xbuild and records load samples; AGENTS.md forbids parallel Apple lanes while it runs. No app change, retry, filter or exception.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The lesson reader (iOS/iPadOS/macOS, and other platforms that share it) builds blocks lazily. VoiceOver reading order, headings/rotor navigation, Try-it and hint anchors, figure focus and scroll-to-anchor still work, and a test proves each
-- [ ] #2 Before/after descendant counts and full-audit durations are recorded for L-005-02 and L-007-01 (and the longest lesson). The audit time drops enough that Code=-56 doesn't occur in 10 consecutive runs of the M7 and Ohm's-law figure tests under normal machine load
-- [ ] #3 Every existing lesson, figure and title test and audit passes unchanged: the full CanadianHamLessonFigures plan plus the targeted lesson-reader tests, with no new exceptions, skips or helper weakening
-- [ ] #4 Appearance is unchanged: before/after screenshots of representative lessons (top, middle, bottom; light and dark; default and AX sizes) are pixel-identical, or any difference is explained and approved
+- [ ] #1 scripts/run-figure-plan-quiet.sh waits until the 5-minute load average is at most 1.5x the core count (configurable), then runs the CanadianHamLessonFigures plan (or -only-testing selections passed through) via xbuild with one iPhone 17 Pro destination, samples load every 60 s into a log, and reports the max and median load next to the xcodebuild exit code
+- [ ] #2 AGENTS.md documents the rule: run the figure plan only through this script, and the coordinator launches no other Apple lanes while it runs. The figure-plan command in AGENTS.md points to the script
+- [ ] #3 Under the script, testModule7LessonFigureDarkSample passes 5/5 and testOhmsLawLessonFiguresAndAccessibilityLight/Dark pass 3/3 each, with no Code=-56. Per-run durations and load are recorded in docs/testing/task-79-quiet-figure-runs.md
 <!-- AC:END -->
 
 ## Implementation Plan
