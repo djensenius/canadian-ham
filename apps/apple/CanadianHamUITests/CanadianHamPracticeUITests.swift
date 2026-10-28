@@ -3407,7 +3407,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         for _ in 0..<maxSwipes where !isPartiallyVisibleBelowNavigationBar(element, in: app) {
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            if element.frame.maxY <= visibleFrame.minY {
+            if element.exists, element.frame.maxY <= visibleFrame.minY {
                 scrollView.swipeDown()
             } else {
                 scrollView.swipeUp()

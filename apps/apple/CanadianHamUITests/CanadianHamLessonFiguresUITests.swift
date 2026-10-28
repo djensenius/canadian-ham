@@ -235,7 +235,11 @@ final class CanadianHamLessonFiguresUITests: XCTestCase {
             let app = launchLesson(lesson.lessonID, appearance: .light)
             defer { app.terminate() }
             XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+            if lesson.lessonID == "L-005-02" {
+                XCTAssertFalse(app.buttons["lesson-figure-ohms-law-power-wheel"].firstMatch.exists, "A distant figure must not be instantiated at lesson launch")
+            }
             for figureID in lesson.figureIDs {
+                scrollUntilPartiallyVisible(app.buttons["lesson-figure-\(figureID)"].firstMatch, in: app, maxSwipes: 80)
                 XCTAssertEqual(app.buttons.matching(identifier: "lesson-figure-\(figureID)").count, 1, "Each figure should expose one image button in \(lesson.lessonID)")
                 XCTAssertEqual(app.buttons.matching(identifier: "lesson-figure-\(figureID)-enlarge").count, 1, "Each figure should expose one explicit enlarge button in \(lesson.lessonID)")
             }
