@@ -78,7 +78,7 @@ while :; do
   elapsed=$((SECONDS - wait_started))
   printf '%s wait=%ss load(1/5/15m)=%s/%s/%s threshold(5m)=%s\n' \
     "$(date -u +%FT%TZ)" "$elapsed" "$load1" "$load5" "$load15" "$threshold"
-  if awk -v load="$load5" -v threshold="$threshold" 'BEGIN { exit !(load <= threshold) }'; then
+  if awk -v current="$load5" -v threshold="$threshold" 'BEGIN { exit !(current <= threshold) }'; then
     break
   fi
   ((elapsed < wait_timeout)) || fail "timed out after ${elapsed}s waiting for a quiet host; xbuild was NOT run"
