@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T01:53:00Z'
+updated_date: '2026-10-28T02:16:00Z'
 labels:
   - accessibility
   - performance
@@ -45,4 +45,6 @@ Milestones pushed: e0e3ed7634f04bfae54039ced91b36f284bd4e89 adds baseline captur
 Coordinator approval 2026-10-27: Practice scrollUntilPartiallyVisible now checks element.exists before reading its frame, matching the existing figure-class helper. Existing-element behavior and every assertion/audit unchanged. This is required because lazy offscreen targets do not exist yet; smoke failure at the old unguarded .frame is preserved in /tmp/task-79-after.xcresult (3/4 passed; offscreen-heading test failed). Coordinator also approved scrolling to each figure before TASK-65 structural uniqueness assertions, which are unchanged, plus a new assertion that the distant Ohms wheel is absent at launch. No other pre-existing helper or audit changed. After top counts: 59/27, 56/26, 58/25 descendants/static texts for L-005-02/L-007-01/L-008-01; figure sheet-return test passed 33.458 s; appearance capture passed 141.269 s.
 
 AC4 coordinator approval 2026-10-27: all six AXXXXL lesson-content samples pixel-identical; default top/middle text +/-1 native pixel, bottom summary exact; footer +1 px light / +3 px dark (1 pt), registered residuals <=3/255; system clock/glass-back chrome and subpixel figure/table rasterization differ. No growing text drift, text/wrapping/spacing tokens/colour/size/style change. Exact raw/registered deltas and hashes in docs/testing/task-79-evidence.json; four after-images total 1,112,236 bytes, originals local. Approved differences accurately include corrected 3-px dark footer case.
+
+The single targeted rerun after the approved existence guard passed: testLessonReaderOffscreenHeadingsAndTryItStateSurviveScrolling 566.029 s, /tmp/task-79-navigation-fix.xcresult, exit 0. This verifies beyond-first-screen headings in authored order and Try-it expansion retained after scrolling down to Summary and back, then collapse. Full figure-plan driver is now waiting on the shared xbuild lock. No test/audit skipped or filtered beyond the explicitly selected targeted test invocation.
 <!-- SECTION:NOTES:END -->
