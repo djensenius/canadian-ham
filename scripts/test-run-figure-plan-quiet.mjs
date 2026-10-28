@@ -31,17 +31,25 @@ printf '%s\\n' "$line"`);
     executable(path.join(bin, "xbuild"), `
 printf '%s\\n' "$@" > "$FAKE_DIR/args"
 printf '%s\\n' "$DEVELOPER_DIR" > "$FAKE_DIR/developer-dir"
-/bin/sleep 0.18
+# Finish only after the runner's background sampler has written a periodic sample
+# (header + launch sample + at least one periodic sample), so the test doesn't depend
+# on relative sleep timings on a slow host. Give up after about 20 s.
+for _ in $(seq 1 2000); do
+  [[ -f "$FAKE_OUT/load.log" && $(wc -l < "$FAKE_OUT/load.log") -ge 3 ]] && break
+  /bin/sleep 0.01
+done
 printf "Test Case '-[CanadianHamUITests Example]' passed (0.123 seconds).\\n"
 printf "Test case 'Example.other()' failed on 'iPhone 17 Pro' (0.456 seconds).\\n"
 exit "$FAKE_EXIT"`);
     const out = path.join(dir, "artifacts with spaces");
     const result = spawnSync("/bin/bash", [runner, "--out", out, ...args], {
-      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, FAKE_DIR: dir,
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, FAKE_DIR: dir, FAKE_OUT: out,
         FAKE_EXIT: String(code), FIGURE_QUIET_LOAD_SOURCE: path.join(bin, "load") },
-      encoding: "utf8", timeout: 10000,
+      encoding: "utf8", timeout: 60000,
     });
-    assert.ifError(result.error);
+    if (result.error) {
+      assert.fail(`runner did not finish (${result.error.message}); output so far:\n${result.stdout ?? ""}${result.stderr ?? ""}`);
+    }
     return { ...result, dir, out, output: result.stdout + result.stderr };
   }
 
