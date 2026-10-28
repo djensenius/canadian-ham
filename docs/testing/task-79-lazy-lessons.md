@@ -61,7 +61,7 @@ AX-XXXL samples are exactly pixel-identical**. Default-size differences are:
 Unregistered content channel deltas reach 224/255 where a high-contrast edge
 moves; this is not a colour/style change. There is **no growing text drift**:
 maximum sampled text registration magnitude remains 1 pixel from top to middle,
-and is zero at the bottom summary. The footer's separate 1/3-pixel boundary
+and is zero at the bottom summary. The footer's separate 1- or 3-pixel boundary
 shift is reported rather than hidden. There is no text, wrapping, spacing-token,
 colour, size or style change.
 
