@@ -1,0 +1,560 @@
+{
+  "baselineCommit": "e0e3ed7634f04bfae54039ced91b36f284bd4e89",
+  "afterCommit": "183c68701cd16290970a2ebc57076ca062df790b",
+  "device": "iPhone 17 Pro, iOS 27.0",
+  "screenshotAPI": "XCUIScreen.main.screenshot()",
+  "screenshots": [
+    {
+      "name": "task79-L-005-02-dark-AXXXL-bottom",
+      "beforePngSHA256": "90b02c96706ffdc496ea2b0734716301f938063711ec22ada0b5f85b04002d46",
+      "afterPngSHA256": "69a5860f18064960f16961d4a48b9d9c2c33f414f34171d229e7fcc11f2a803f",
+      "beforePixelSHA256": "3ef82e5389b861ef083cd657c7e9b319942f571d0106792c6937cf2697cb9d57",
+      "afterPixelSHA256": "a5a2bff9ca1002593b96a7766f572e7695e0fc842e99c3ac4622a1818d118db1",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        227,
+        77,
+        291,
+        117
+      ],
+      "maxChannelDelta": 233,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": true,
+      "lessonContentMaxChannelDelta": 0,
+      "lessonContentBeforePixelSHA256": "b4da3251be76ada66fcadc2aca667761d36e18440579031040df3026c719ceac",
+      "lessonContentAfterPixelSHA256": "b4da3251be76ada66fcadc2aca667761d36e18440579031040df3026c719ceac"
+    },
+    {
+      "name": "task79-L-005-02-dark-AXXXL-middle",
+      "beforePngSHA256": "395da91ebaeb401160f7f2b41cec12ffbff497522330b3da51cdaef93639767e",
+      "afterPngSHA256": "eb98d6d4bb414e00847cd3c3f9de5b577d7421ed1f8a741ad74fc3509fe6a73f",
+      "beforePixelSHA256": "3792928f9977324c3d3d65f3bdd97542005a7fb43e1576b4e3c4499585ff6352",
+      "afterPixelSHA256": "ffd1e29cbb83b198bd77a92773534281c8a4870144acc0765fbf6d138d22cd40",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        227,
+        77,
+        291,
+        117
+      ],
+      "maxChannelDelta": 233,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": true,
+      "lessonContentMaxChannelDelta": 0,
+      "lessonContentBeforePixelSHA256": "9b47fe824f1d1bc28ea1bb2a8b1e56e688d80e534c9ae36ee4d30e9092bff386",
+      "lessonContentAfterPixelSHA256": "9b47fe824f1d1bc28ea1bb2a8b1e56e688d80e534c9ae36ee4d30e9092bff386",
+      "committedAfterImage": "docs/testing/task-79/task79-L-005-02-dark-AXXXL-middle.png"
+    },
+    {
+      "name": "task79-L-005-02-dark-AXXXL-top",
+      "beforePngSHA256": "f4e2b82df2a3d8929fd7773874676340a3d8dd08e1490f48c8ba863255751838",
+      "afterPngSHA256": "9f7b69abec283106a7a46c6897558f2033581007a3c32489b1f14fe4bf70a48a",
+      "beforePixelSHA256": "f747fe39a8f0170f3dbc2ca8339c0d1df8ef17d7b0512299d41992b02eed9e1f",
+      "afterPixelSHA256": "7bcc396c4f614e9058628c71e40a7477ddbc1adcfbf98d14aa5b78aaece8462b",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        47,
+        77,
+        291,
+        316
+      ],
+      "maxChannelDelta": 233,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": true,
+      "lessonContentMaxChannelDelta": 0,
+      "lessonContentBeforePixelSHA256": "d5abd3a8ac5b1fb92312f28fe558a29bcf4ac3fa74d4bce44b22e4456ee0b838",
+      "lessonContentAfterPixelSHA256": "d5abd3a8ac5b1fb92312f28fe558a29bcf4ac3fa74d4bce44b22e4456ee0b838"
+    },
+    {
+      "name": "task79-L-005-02-dark-default-bottom",
+      "beforePngSHA256": "2eae42c29bebafadad7936c0dcec293c82df711e946753e7f62c81c40903e22a",
+      "afterPngSHA256": "a70a356fb4cd99bfc3cfe3167629846c0a2efd1b72a0c425bb449bbdf00bca8c",
+      "beforePixelSHA256": "e719b25a1acd6b2a3ca2ceaabfbf45cc30a7946e5149865ba83d586cf7ea0d8f",
+      "afterPixelSHA256": "04051c0080886031c7ade574d70d127f7cf7ebbbab19b8362dfa8ea879fe7b48",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        72,
+        77,
+        1134,
+        2622
+      ],
+      "maxChannelDelta": 233,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": false,
+      "lessonContentMaxChannelDelta": 223,
+      "lessonContentBeforePixelSHA256": "d6fb7c20dd6e9c4dc02f71dab8e7145a7b1cb967804ea7c09256295950fee41f",
+      "lessonContentAfterPixelSHA256": "88c8965b0a112a1ce12e0dbeb074519e0eb8881b29d7af54b1920ee1f9347f21",
+      "registeredRegions": [
+        {
+          "region": "summary-text",
+          "beforeBoundsPixels": [
+            72,
+            350,
+            1134,
+            1500
+          ],
+          "afterYOffsetPixels": 0,
+          "maxChannelDeltaAfterRegistration": 0,
+          "pixelIdenticalAfterRegistration": true
+        },
+        {
+          "region": "footer-controls",
+          "beforeBoundsPixels": [
+            72,
+            1650,
+            1134,
+            2610
+          ],
+          "afterYOffsetPixels": 3,
+          "maxChannelDeltaAfterRegistration": 3,
+          "pixelIdenticalAfterRegistration": false
+        }
+      ]
+    },
+    {
+      "name": "task79-L-005-02-dark-default-middle",
+      "beforePngSHA256": "2d0b391dbe1d952f2402f12315b6fd1030584e7add28031bb04103039f41acfd",
+      "afterPngSHA256": "25b69068bf656f85471c201827c0f1ce0d4d50ee74280dac6bf5b0106eae46a0",
+      "beforePixelSHA256": "57cd2ed8d815a931acc76c8aee955842b9948925c7550fd2610f462d58fb170b",
+      "afterPixelSHA256": "111054a6fd2c2b0a0969470283b5f1b92c5b805042322aa836de1b7e18e1810f",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        48,
+        77,
+        1086,
+        1867
+      ],
+      "maxChannelDelta": 233,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": false,
+      "lessonContentMaxChannelDelta": 219,
+      "lessonContentBeforePixelSHA256": "464d437a8dc8e443be6f2a96b80f68ab27b657c8b8586849e3366dd901fa7231",
+      "lessonContentAfterPixelSHA256": "3c3c5d95a2ecea6e4acab56257e90bfc30382330ccff731b85463f2a1227df74",
+      "registeredRegions": [
+        {
+          "region": "heading",
+          "beforeBoundsPixels": [
+            120,
+            350,
+            800,
+            420
+          ],
+          "afterYOffsetPixels": -1,
+          "maxChannelDeltaAfterRegistration": 0,
+          "pixelIdenticalAfterRegistration": true
+        },
+        {
+          "region": "table",
+          "beforeBoundsPixels": [
+            120,
+            695,
+            1086,
+            1035
+          ],
+          "afterYOffsetPixels": -1,
+          "maxChannelDeltaAfterRegistration": 1,
+          "pixelIdenticalAfterRegistration": false
+        }
+      ],
+      "committedAfterImage": "docs/testing/task-79/task79-L-005-02-dark-default-middle.png"
+    },
+    {
+      "name": "task79-L-005-02-dark-default-top",
+      "beforePngSHA256": "4a1aa3b833a6c9d0e9646cd4c019d54b89294abd37cb25dc9846e2db5e478759",
+      "afterPngSHA256": "36794c7ee6e765c939db8232e5ed58e9d71f63d6337e4321e234d052094c59ee",
+      "beforePixelSHA256": "e9bbfd6b107a3382e6c69d7cef3669c325d5f21e98f51053afd833325416ac09",
+      "afterPixelSHA256": "1563d1de87302c4d0d8f751226caa730199d51ed922feda41d8868b8db8ecf48",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        47,
+        77,
+        883,
+        985
+      ],
+      "maxChannelDelta": 233,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": false,
+      "lessonContentMaxChannelDelta": 219,
+      "lessonContentBeforePixelSHA256": "81ea84d385d2b51234e080ae60404b8bfb7b2896af9db06519794f001413bc48",
+      "lessonContentAfterPixelSHA256": "158a1369bf1caf53d67322fd36c4b9bd3f93b3c414f3c6b0c8933e4b4289dae9",
+      "registeredRegions": [
+        {
+          "region": "prerequisite-link-label",
+          "beforeBoundsPixels": [
+            150,
+            928,
+            900,
+            995
+          ],
+          "afterYOffsetPixels": -1,
+          "maxChannelDeltaAfterRegistration": 0,
+          "pixelIdenticalAfterRegistration": true
+        }
+      ]
+    },
+    {
+      "name": "task79-L-005-02-light-AXXXL-bottom",
+      "beforePngSHA256": "5bafec98ff5125a66439d81ee893d2bddc9785aa9acfbe97d15c3755c9675f29",
+      "afterPngSHA256": "8b96ed9f729d0a629e762bf689c1027a24c0dd7873aebfa337033d3a309f9147",
+      "beforePixelSHA256": "3a9a0962b30dbdab2ec506eb8a76e9fe9b113f7fb00c067ec3e1a690c0660ff5",
+      "afterPixelSHA256": "033afdf5d9df2b424536c0feda2b151493360962f857449f2f78b1c6c75ef04a",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        154,
+        77,
+        290,
+        117
+      ],
+      "maxChannelDelta": 246,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": true,
+      "lessonContentMaxChannelDelta": 0,
+      "lessonContentBeforePixelSHA256": "4aea3ebb83b23e403b9955f51a1b368f641361b8a7cc69cd0b2ac5bb3e0d2907",
+      "lessonContentAfterPixelSHA256": "4aea3ebb83b23e403b9955f51a1b368f641361b8a7cc69cd0b2ac5bb3e0d2907"
+    },
+    {
+      "name": "task79-L-005-02-light-AXXXL-middle",
+      "beforePngSHA256": "d5dcd0f521596b4997df8e509a266efa5c82858c037a22b4f1a90169836ece9f",
+      "afterPngSHA256": "295e975634658810b1b1bd812aa0cfd685eea4fe19d20fb64c1338de68e2ce7e",
+      "beforePixelSHA256": "fe27f5be8e90191067479c4fcfc205de67586d9ab3c8f1b2833d37d5f0dc57cb",
+      "afterPixelSHA256": "be8f88cdfec327f448433211f12280e4fe9c57911b634fafd22282cd32cb46b7",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        154,
+        77,
+        290,
+        117
+      ],
+      "maxChannelDelta": 246,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": true,
+      "lessonContentMaxChannelDelta": 0,
+      "lessonContentBeforePixelSHA256": "c88510c77d58314973c9d79837186bd5aa5dfae5b9231e16c29fa2fad619e562",
+      "lessonContentAfterPixelSHA256": "c88510c77d58314973c9d79837186bd5aa5dfae5b9231e16c29fa2fad619e562"
+    },
+    {
+      "name": "task79-L-005-02-light-AXXXL-top",
+      "beforePngSHA256": "9e7052d65b1fc0e40cef582fe8b3a81eb709e0766962b7017884bf3750824826",
+      "afterPngSHA256": "51b0ad9b48ce86e5d691227223b95d225226489871d13388045caa4c6db1a3db",
+      "beforePixelSHA256": "f79eda93ad6b48126e0ceb8702ddc8889eb06b2ecafdda09dd2cbed433eb3df7",
+      "afterPixelSHA256": "6d1283e0ed767384d9be59f39e0ec73fd49229bd012c7ce37ff862bd971ca970",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        46,
+        77,
+        289,
+        319
+      ],
+      "maxChannelDelta": 246,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": true,
+      "lessonContentMaxChannelDelta": 0,
+      "lessonContentBeforePixelSHA256": "070b29f6f231652eb7fc2c3b8bfaf3ab706c62efa2d33d00fe803fb479f5dc73",
+      "lessonContentAfterPixelSHA256": "070b29f6f231652eb7fc2c3b8bfaf3ab706c62efa2d33d00fe803fb479f5dc73"
+    },
+    {
+      "name": "task79-L-005-02-light-default-bottom",
+      "beforePngSHA256": "aaece255a6094c371853273a74087af6e42bd54a98ea7760da0994ef09d3d939",
+      "afterPngSHA256": "a65f1ad3c40244d6e93ec800671d4df3cd0acf4ca3969557cdf17ae7fd01824e",
+      "beforePixelSHA256": "1460be5566afd5c7521114b56f4f1685ae4407dac2182f7f67f8abbd2ff07c79",
+      "afterPixelSHA256": "262d9a63059d7732b2c1054da85e891c6e171b242c9e4fb14e8cbb4fdad59d01",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        72,
+        77,
+        1134,
+        2622
+      ],
+      "maxChannelDelta": 246,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": false,
+      "lessonContentMaxChannelDelta": 223,
+      "lessonContentBeforePixelSHA256": "7f1b00d2c3ca29570d06f49c3cf27ce6ced7bba58feb912f8155d8e33303dd8a",
+      "lessonContentAfterPixelSHA256": "732a9d8b3253e5189c997a79af3628a7e814ae33698833bdee62bc2c0603d905",
+      "registeredRegions": [
+        {
+          "region": "summary-text",
+          "beforeBoundsPixels": [
+            72,
+            350,
+            1134,
+            1500
+          ],
+          "afterYOffsetPixels": 0,
+          "maxChannelDeltaAfterRegistration": 0,
+          "pixelIdenticalAfterRegistration": true
+        },
+        {
+          "region": "footer-controls",
+          "beforeBoundsPixels": [
+            72,
+            1650,
+            1134,
+            2610
+          ],
+          "afterYOffsetPixels": 1,
+          "maxChannelDeltaAfterRegistration": 2,
+          "pixelIdenticalAfterRegistration": false
+        }
+      ],
+      "committedAfterImage": "docs/testing/task-79/task79-L-005-02-light-default-bottom.png"
+    },
+    {
+      "name": "task79-L-005-02-light-default-middle",
+      "beforePngSHA256": "a8e4d0f7734f2ffe07f5d7ab50863a9a080c2f65acbd93ed372f3e3b853ac1bb",
+      "afterPngSHA256": "f3c9d05596f55fc04bc366b168a7d498297a6733ed829bf366f5800e3972a34c",
+      "beforePixelSHA256": "d45b2751515e082c9c0e6f25590a50f76c5af7299fe8c9bc2e0b9497a0a57c27",
+      "afterPixelSHA256": "cf04ea5615a1f7a34a5c1e13255be7f86a366ae6270db09b9edbbfa99ce8797a",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        49,
+        77,
+        1086,
+        1867
+      ],
+      "maxChannelDelta": 246,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": false,
+      "lessonContentMaxChannelDelta": 224,
+      "lessonContentBeforePixelSHA256": "f2cfde68551f17389be5f3df81d27c2c10ab8aaca9a1ed03494be68dc1fcd934",
+      "lessonContentAfterPixelSHA256": "a1c40df9b229de22cd4fc7e0cf5a0f890b5a7d99213e248837c4e52104e3f300",
+      "registeredRegions": [
+        {
+          "region": "heading",
+          "beforeBoundsPixels": [
+            120,
+            350,
+            800,
+            420
+          ],
+          "afterYOffsetPixels": -1,
+          "maxChannelDeltaAfterRegistration": 1,
+          "pixelIdenticalAfterRegistration": false
+        },
+        {
+          "region": "table",
+          "beforeBoundsPixels": [
+            120,
+            695,
+            1086,
+            1035
+          ],
+          "afterYOffsetPixels": -1,
+          "maxChannelDeltaAfterRegistration": 2,
+          "pixelIdenticalAfterRegistration": false
+        }
+      ]
+    },
+    {
+      "name": "task79-L-005-02-light-default-top",
+      "beforePngSHA256": "bae8a99a261948536d9102bf7a1e1a31addc5b5051abd1e45fe27f7f50b9333c",
+      "afterPngSHA256": "f56f16e5c3623a71b42e29b76d28575b644e9b35244eb1690935db0efabd783f",
+      "beforePixelSHA256": "1ffe19eee39c6a29b4bd8e37bbf5d542ae69a75d17a8853bbf70fcdedc24d4da",
+      "afterPixelSHA256": "6c8e7dbd6a8a9c03a005f2e0d4333e7a83c951d273b38f38d795ba790d9a4ea1",
+      "size": [
+        1206,
+        2622
+      ],
+      "pixelIdentical": false,
+      "differenceBounds": [
+        46,
+        77,
+        883,
+        985
+      ],
+      "maxChannelDelta": 246,
+      "lessonContentRegionPixels": [
+        0,
+        350,
+        1206,
+        2622
+      ],
+      "lessonContentPixelIdentical": false,
+      "lessonContentMaxChannelDelta": 208,
+      "lessonContentBeforePixelSHA256": "70514c2799a2cd7d5a520c95373cbbd9ac60e9ab7112550ce60cbce4156e8f2b",
+      "lessonContentAfterPixelSHA256": "43711696f95ad87eea1f9e74258ad22269e50fa29929c4249b1da54506f75e43",
+      "registeredRegions": [
+        {
+          "region": "prerequisite-link-label",
+          "beforeBoundsPixels": [
+            150,
+            928,
+            900,
+            995
+          ],
+          "afterYOffsetPixels": -1,
+          "maxChannelDeltaAfterRegistration": 0,
+          "pixelIdenticalAfterRegistration": true
+        }
+      ],
+      "committedAfterImage": "docs/testing/task-79/task79-L-005-02-light-default-top.png"
+    }
+  ],
+  "counts": [
+    {
+      "before": {
+        "buttons": 18,
+        "descendants": 330,
+        "lessonID": "L-005-02",
+        "position": "top",
+        "staticTexts": 285
+      },
+      "after": {
+        "buttons": 9,
+        "descendants": 59,
+        "lessonID": "L-005-02",
+        "position": "top",
+        "staticTexts": 27
+      }
+    },
+    {
+      "before": {
+        "buttons": 15,
+        "descendants": 285,
+        "lessonID": "L-007-01",
+        "position": "top",
+        "staticTexts": 235
+      },
+      "after": {
+        "buttons": 7,
+        "descendants": 56,
+        "lessonID": "L-007-01",
+        "position": "top",
+        "staticTexts": 26
+      }
+    },
+    {
+      "before": {
+        "buttons": 18,
+        "descendants": 316,
+        "lessonID": "L-008-01",
+        "position": "top",
+        "staticTexts": 267
+      },
+      "after": {
+        "buttons": 10,
+        "descendants": 58,
+        "lessonID": "L-008-01",
+        "position": "top",
+        "staticTexts": 25
+      }
+    }
+  ],
+  "approval": {
+    "date": "2026-10-27",
+    "authority": "Coordinator approval in TASK-79 implementation session",
+    "approvedDifferences": [
+      "Default-size text registration +/-1 native pixel (1/3 pt); footer +1 px light, +3 px dark (1 pt) from lazy total-height rounding",
+      "Subpixel rasterization of figure/table edges",
+      "System status-bar clock and glass-back-button rasterization"
+    ],
+    "unchanged": [
+      "text",
+      "wrapping",
+      "spacing tokens",
+      "colour",
+      "size",
+      "style"
+    ],
+    "cumulativeShift": "No growing text drift: bottom summary is exactly registered (0 px); footer offsets are +1 px light / +3 px dark at the lazy stack boundary."
+  }
+}
