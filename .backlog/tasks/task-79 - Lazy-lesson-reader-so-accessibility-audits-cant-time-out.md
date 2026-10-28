@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T15:12:00Z'
+updated_date: '2026-10-28T15:36:00Z'
 labels:
   - accessibility
   - performance
@@ -58,4 +58,6 @@ FINAL containment experiment completed under coordinator direction and FAILED al
 Coordinator outcome 2026-10-28: the lazy approach is closed. The LazyVStack reader (branch task-79-lazy-lessons, head a08ac313) cut top-of-lesson AX trees about 5x but caused genuine full-audit regressions in the M1 light figure tests (Dynamic Type and contrast), because XCTest's audit self-scroll meets changing lazy height estimates (5951→5743 pt). The same test passes on eager main. Three bounded fixes failed and were reverted. Evidence: docs/testing/task-79-* (PR #1049). Owner 2026-10-28 then chose option 2: quiet-host figure runs.
 
 Quiet-host implementation milestone: scripts/run-figure-plan-quiet.sh waits on 5-minute load (default 1.5 x logical CPUs, 7200s timeout), invokes unchanged serial figure-plan xbuild, logs runtime 1/5/15-minute loads every 60s plus endpoints, preserves xbuild exit and reports max/median/test lines. AGENTS requires the script and no concurrent coordinator Apple lanes including the wait. Six fake-command integration scenarios run via pnpm test without Xcode, including macOS Bash 3.2 empty passthrough. bash -n, shellcheck, integration tests, Apple text-source check/self-test, guard self-test/branch diff and pnpm test passed. No app, UI tests, audits, plans, shared helpers or shared xbuild edits. Runtime M7/Ohms repetitions are next, not yet claimed passed.
+
+M7 milestone: quiet-start runner passed testModule7LessonFigureDarkSample 5/5, whole-method seconds 234.184,217.936,203.028,211.930,222.692; exit0, no Code=-56, finalized /var/tmp/canadian-ham-task-79-quiet-20261028/m7/figures.xcresult. Wait0s; start load1/5/15=3.20/4.84/6.43; wall1167s. Runtime load1 max202.83 median62.08 (21 samples), maxima1/5/15=202.83/109.40/63.39. Simulator startup/poster extensions drove a load spike despite only one Apple lane; this is quiet-start, NOT low-runtime-load evidence or proof that timeouts cannot recur. Documented honestly in docs/testing/task-79-quiet-figure-runs.md. Ohms light/dark x3 is now waiting for load5 <=15 through the script; no retry or extra run launched.
 <!-- SECTION:NOTES:END -->
