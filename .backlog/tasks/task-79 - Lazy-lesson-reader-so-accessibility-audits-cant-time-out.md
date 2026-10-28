@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T03:19:00Z'
+updated_date: '2026-10-28T03:22:00Z'
 labels:
   - accessibility
   - performance
@@ -37,6 +37,8 @@ Owner 2026-10-27, on TASK-65: 'Fix it so timeout isn't really possible' and lazy
 4. Commit/push milestones, record exact results and unresolved evidence, and hand off at five hours if validation is incomplete.
 
 5. STOPPED under coordinator decision after the one Dynamic Type identity experiment failed; preserve the lazy prototype/evidence and hand off before any containment/grouping or partial-laziness architecture change. Remaining runtime validation is blocked, not waived.
+
+6. Coordinator-authorized FINAL app-side experiment: wrap each direct lazy child in an accessibility contain container, retaining the existing block identity and heading anchor. Run M1 light Part1, NextLesson and Part2 once each serially on iPhone 17 Pro. If any fails, restore the exact reader, record issue types/elements/frames and load, update handoff, push and stop. If all pass, rerun new navigation/state/figure-return/count tests only, then push and hand off remaining long/platform validation.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -53,4 +55,6 @@ The single targeted rerun after the approved existence guard passed: testLessonR
 Coordinator-approved early stop of first full figure plan after failures: /tmp/task-79-figures.xcresult finalized (exit75 following SIGINT, not timeout); structural test PASS 684.430 s; M1 dark PASS 201.552 s; M1 LightPart1 FAIL 156.861 s and NextLesson FAIL 155.781 s (Dynamic Type unsupported on Figure text equivalent); M1 LightPart2 FAIL 153.659 s (contrast on visible ordinary paragraph); Part3 cancelled, all later methods not run. No Code=-56. Complete issues/element screenshots exported to /tmp/task-79-figures-failure-attachments; originals retained. First failing M1 light method then PASS on detached origin/main 6a449802614303741ee5aa07f973803c46f535b7: 388.729 s, /tmp/task-79-main-comparison.xcresult, exit0. Reader SHA256 byte-identical to original main; detached comparison worktree removed. This establishes a lazy-reader regression, not a passing full plan. Investigating app-side control font/layout; audits/handlers untouched.
 
 Blocked; stopping per coordinator explicit failure branch, not marking Done. Required eager main baseline was completed ONCE and PASS (388.729 s, origin/main 6a449802, result bundle main-comparison). Temporary diagnostic never committed and removed: dynamicType raw65536, Figure text equivalent StaticText frame before (52,872,298,28.333), at issue (52,199,298,28.333); scroll/content geometry changed during audit. No conclusive proof of node reuse. Semantic-font/intrinsic-height attempt failed all3 and reverted 2a83b14f. Coordinator-approved disclosure id(dynamicTypeSize) experiment also FAILED first method 206.499 s (/tmp/task-79-dynamic-type-id.xcresult, exit65), reverted 5a932cc7. Source is exactly the first lazy prototype again; no rejected fixes/grouping remain. Shared audit handlers untouched; approved existence guard and structural navigation/assertion are the only old-test adaptations. Full results/issues/remaining checks are committed in docs/testing/task-79-{lazy-lessons.md,results.json,evidence.json}. Full figure completion, repeated M7/Ohm, targeted old reader/iPad/title tests, macOS, tvOS/visionOS builds and full l10n export outstanding; individual audit-duration comparisons outstanding. Source/text/guard self-tests and parity checks pass; no skips/exceptions/retry wrapper. All ACs remain unchecked. Handoff /tmp/task-79-handoff.md; no PR.
+
+Resumed under coordinator's bounded containment experiment direction. Fully read /tmp/task-79-handoff.md and AGENTS.md; previous attempts remain reverted and all ACs unchecked. No full plan, repeated iterations, audit changes, exception/filter/skip/retry/ignore or hidden content authorized.
 <!-- SECTION:NOTES:END -->
