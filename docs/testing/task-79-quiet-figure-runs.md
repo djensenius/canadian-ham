@@ -16,7 +16,7 @@ those settings. Other arguments are passed unchanged to `xbuild`.
 
 It runs the `CanadianHamLessonFigures` plan on one iPhone 17 Pro simulator,
 serial testing, through the unchanged shared `xbuild` wrapper and its build lock.
-Each output directory contains `command.txt`, `xbuild.log`, `xbuild.exit`,
+Each completed test output directory contains `command.txt`, `xbuild.log`, `xbuild.exit`,
 `figures.xcresult`, `load.log` and `summary.txt`. Runtime samples contain UTC and
 1/5/15-minute loads every 60 seconds, plus launch/completion samples. Max/median
 use the **one-minute** samples; separate maxima retain all three load windows.
@@ -34,10 +34,11 @@ The runner is exercised with `/bin/bash` (macOS Bash 3.2 here).
 
 ## Recorded runs — 2026-10-28
 
-Implementation: `d91f7210d621bfd610231b9e8bf781c54f762bf0` (no app or test
+Implementation: `d91f7210d621bfd610231b9e8bf781c54f762bf0` (no app or Apple test
 source changes). The requested M7 5/5 and Ohm's-law dark/light 3/3 each
-have passed, with no `Code=-56`. A coordinator-authorized separate light visit
-is waiting for the host to settle after external contention (details below).
+have passed, with no `Code=-56`. A coordinator-authorized separate quiet-start
+light visit also passed 1/1 after external contention ended (details below).
+All twelve executed test visits passed; none was skipped.
 Artifacts are retained locally under
 `/var/tmp/canadian-ham-task-79-quiet-20261028/`; sibling `*-console.log` files also
 retain the quiet-host wait and final report. No full Apple suites or other
@@ -114,14 +115,49 @@ invocation, labelling the original light results **contended**, and then making
 was stopped or modified. Passing with this contention is useful robustness
 evidence; it is **not quiet-runtime evidence** or a causal comparison.
 
+### Separate quiet-start light control — one visit
+
+```sh
+scripts/run-figure-plan-quiet.sh \
+  --out /var/tmp/canadian-ham-task-79-quiet-20261028/ohms-light-quiet-one-default \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testOhmsLawLessonFiguresAndAccessibilityLight
+```
+
+- Quiet-host wait: **0 seconds**, launch load **2.84 / 10.68 / 50.73**.
+- xbuild interval: **18:01:35–18:22:13 UTC**, **1238 seconds**, exit **0**.
+- **1/1 passed, 1193.450 seconds**, no skips or `Code=-56`; finalized bundle
+  `ohms-light-quiet-one-default/figures.xcresult`. The independent `xcresulttool`
+  summary reports one passed, zero failed, zero skipped.
+- Runtime one-minute load: **max 172.72, median 38.86**, 22 samples.
+- Runtime maxima (1/5/15m): **172.72 / 71.27 / 70.00**.
+- The 18:04:55 UTC snapshot showed only this xcodebuild (PID 98484), with CPU
+  dominated by simulator poster extensions, not another build; the completion
+  snapshot showed no xcodebuild/lockf. Files in this run's output directory:
+  `host-snapshot-first-check.txt` and `host-snapshot-completion.txt`.
+  These point-in-time checks are not a continuous process census. This is a
+  gate-qualified **quiet-start control**, not a claim of low runtime load.
+
+**Preflight error retained, not counted as a test visit:** the first attempt at
+this extra control explicitly passed `-test-iterations 1`. Xcode rejects that
+option unless the count is greater than one: exit **64**, **one-second** xbuild
+wall time, **zero tests/audits executed**, no result bundle. It had waited
+**300 seconds** (17:54:39–17:59:39 UTC), then launched at **3.43 / 14.61 / 57.75**;
+the two endpoint samples gave one-minute max/median **3.43 / 3.43** (maxima
+1/5/15m **3.43 / 14.61 / 57.75**). All artifacts remain in
+`/var/tmp/canadian-ham-task-79-quiet-20261028/ohms-light-quiet-one/` and its sibling
+console log. Omitting that option correctly executes one default visit, as in
+the command above. This CLI correction did not retry a failed audit: no audit
+ran in the rejected invocation, and only one additional light visit executed.
+
 ### Important runtime-load limitation
 
-M7 and the original Ohm's-law invocation had **quiet starts, not low-load executions**. Within two minutes of
-M7 launch, one-minute load reached 202.83. At 15:15 UTC the process snapshot showed
-only this task's xcodebuild, no waiting `lockf`, and CPU dominated by `launchd_sim`
+All three test invocations had **quiet starts, not low-load executions**.
+Within two minutes of M7 launch, one-minute load reached 202.83. At 15:15 UTC
+the process snapshot showed only this task's xcodebuild, no waiting `lockf`, and
+CPU dominated by `launchd_sim`
 and iOS 27 simulator wallpaper/poster extensions (several near 100% CPU).
-No other lane's processes were stopped or changed. Load declined later, but the
-last one-minute sample was still 39.83. These observations cannot establish that
+No other lane's processes were stopped or changed. M7 load declined later, but
+its last one-minute sample was still 39.83. These observations cannot establish that
 host contention caused the historical timeout, nor guarantee that quiet-start
 runs can never time out. The runner exposes post-launch load rather than hiding
 it or retrying failed audits. The gate is not an in-run load cap or an atomic
