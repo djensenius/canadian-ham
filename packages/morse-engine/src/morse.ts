@@ -163,6 +163,8 @@ export interface MorseSendingScore {
   readonly markPercent: number;
 }
 
+/** RIC-1 §8.2 / RIC-3 §5.2: three consecutive minutes for the sending test. */
+export const MORSE_SENDING_EXAM_DURATION_SECONDS = 180;
 export const MORSE_ERROR_SIGNAL_DOTS = 8;
 export const MORSE_FLASH_REFERENCE_WIDTH_CSS_PIXELS = 341;
 export const MORSE_FLASH_REFERENCE_HEIGHT_CSS_PIXELS = 256;

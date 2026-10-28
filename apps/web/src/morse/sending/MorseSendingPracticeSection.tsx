@@ -1,4 +1,5 @@
 import {
+  MORSE_SENDING_EXAM_DURATION_SECONDS,
   applyMorseDecodedCharacter,
   classifyMorseKeyDown,
   generateMorseExamText,
@@ -39,7 +40,6 @@ interface KeyDownState {
 }
 
 const defaultExamSeedFactory = (profileName: MorseProfileName) => `web-sending-${profileName}-${Date.now().toString(36)}`;
-const defaultExamDurationSeconds = 180;
 const paddleKeyboardMap: Readonly<Record<string, MorseKeyElement>> = Object.freeze({
   j: ".",
   ".": ".",
@@ -52,7 +52,7 @@ const noopPlaybackCoordinator: MorsePlaybackCoordinator = {
   claim: () => {},
 };
 
-export function MorseSendingPracticeSection({ interfaceLanguage, preferences, playbackCoordinator = noopPlaybackCoordinator, examSeedFactory = defaultExamSeedFactory, examTextFactory, examDurationSeconds = defaultExamDurationSeconds, nowMilliseconds = () => performance.now() }: MorseSendingPracticeSectionProps) {
+export function MorseSendingPracticeSection({ interfaceLanguage, preferences, playbackCoordinator = noopPlaybackCoordinator, examSeedFactory = defaultExamSeedFactory, examTextFactory, examDurationSeconds = MORSE_SENDING_EXAM_DURATION_SECONDS, nowMilliseconds = () => performance.now() }: MorseSendingPracticeSectionProps) {
   const keyboardHelpId = useId();
   const playerRef = useRef<WebMorsePlayer | null>(null);
   const toneGenerationRef = useRef(0);

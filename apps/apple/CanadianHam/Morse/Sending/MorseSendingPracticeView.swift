@@ -28,7 +28,7 @@ struct MorseSendingPracticeView: View {
     @State private var nextIambicElement: MorseKeyElement = .dot
     @State private var lastPaddleElement: MorseKeyElement?
     @State private var examText = ""
-    @State private var examRemaining = 180
+    @State private var examRemaining = morseSendingExamDurationSeconds
     @State private var examDeadline: Date?
     @State private var examRunning = false
     @State private var examTimerTask: Task<Void, Never>?
@@ -457,8 +457,8 @@ struct MorseSendingPracticeView: View {
         do {
             let generated = try generateMorseExamText(seed: "apple-sending-\(Date().timeIntervalSince1970)", profile: profileForName(.isedParis), minDurationSeconds: 0)
             examText = debugExamTextOverride ?? generated.text
-            examRemaining = debugExamDurationSeconds
-            examDeadline = Date().addingTimeInterval(TimeInterval(debugExamDurationSeconds))
+            examRemaining = sendingExamDurationSeconds
+            examDeadline = Date().addingTimeInterval(TimeInterval(sendingExamDurationSeconds))
             examRunning = true
             statusMessage = String(localized: "Sending check started. Send the displayed passage within 3:00.")
             keyboardFocusRequest = UUID()
@@ -505,7 +505,7 @@ struct MorseSendingPracticeView: View {
         if clearExam {
             examText = ""
         }
-        examRemaining = debugExamDurationSeconds
+        examRemaining = sendingExamDurationSeconds
         examDeadline = nil
         examRunning = false
     }
@@ -983,13 +983,14 @@ private func sendingTimerLabel(_ seconds: Int) -> String {
     return String(format: "%d:%02d", minutes, remainingSeconds)
 }
 
-private var debugExamDurationSeconds: Int {
+// Short overrides exercise deadline/cancellation mechanics; results audits use the real duration.
+private var sendingExamDurationSeconds: Int {
 #if DEBUG
     if let value = AppLaunchArguments.value(after: "-CanadianHamMorseSendingExamSeconds"), let seconds = Int(value), seconds > 0 {
         return seconds
     }
 #endif
-    return 180
+    return morseSendingExamDurationSeconds
 }
 
 private var debugExamTextOverride: String? {

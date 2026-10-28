@@ -9,6 +9,7 @@ import {
   MORSE_DARK_ACCENT_RGB,
   MORSE_DARK_PAPER_INSET_RGB,
   MORSE_CODE_TABLE,
+  MORSE_SENDING_EXAM_DURATION_SECONDS,
   MORSE_FLASH_MAX_AREA_CSS_PIXELS,
   MORSE_LIGHT_ACCENT_RGB,
   MORSE_LIGHT_PAPER_INSET_RGB,
@@ -50,6 +51,25 @@ const course = parseMorseCourseFixture(JSON.parse(await readFile(join(fixturesRo
 describe("public tables", () => {
   it("freezes the Morse code table so consumers can't change mappings at runtime", () => {
     expect(Object.isFrozen(MORSE_CODE_TABLE)).toBe(true);
+  });
+});
+
+describe("RIC-1 section 8.2 / RIC-3 section 5.2 sending standard", () => {
+  it("uses three minutes and the 12/5 PARIS-calibrated profile", () => {
+    expect(MORSE_SENDING_EXAM_DURATION_SECONDS).toBe(3 * 60);
+    const profile = profileForName("isedParis");
+    expect(profile.characterWpm).toBe(12);
+    expect(profile.effectiveWpm).toBe(5);
+    expect(textToTimedMorse("PARIS PARIS PARIS PARIS PARIS", profile).totalDurationSeconds).toBeCloseTo(60, 9);
+  });
+
+  it("generates at least 75 weighted sending characters without imposing receiving playback duration", () => {
+    for (let seed = 0; seed < 32; seed += 1) {
+      // Candidate character speed is immaterial: sending uses a deadline, not audio length.
+      const generated = generateMorseExamText({ seed: `sending-standard-${seed}`, profile: profileForName("isedParis"), minDurationSeconds: 0 });
+      expect(generated.weightedCharacters).toBeGreaterThanOrEqual(75);
+      expect(validateMorseText(generated.text).valid).toBe(true);
+    }
   });
 });
 
