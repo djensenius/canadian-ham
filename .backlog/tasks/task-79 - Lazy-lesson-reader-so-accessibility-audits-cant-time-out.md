@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T17:03:00Z'
+updated_date: '2026-10-28T17:55:00Z'
 labels:
   - accessibility
   - performance
@@ -64,4 +64,6 @@ Quiet-host implementation milestone: scripts/run-figure-plan-quiet.sh waits on 5
 M7 milestone: quiet-start runner passed testModule7LessonFigureDarkSample 5/5, whole-method seconds 234.184,217.936,203.028,211.930,222.692; exit0, no Code=-56, finalized /var/tmp/canadian-ham-task-79-quiet-20261028/m7/figures.xcresult. Wait0s; start load1/5/15=3.20/4.84/6.43; wall1167s. Runtime load1 max202.83 median62.08 (21 samples), maxima1/5/15=202.83/109.40/63.39. Simulator startup/poster extensions drove a load spike despite only one Apple lane; this is quiet-start, NOT low-runtime-load evidence or proof that timeouts cannot recur. Documented honestly in docs/testing/task-79-quiet-figure-runs.md. Ohms light/dark x3 is now waiting for load5 <=15 through the script; no retry or extra run launched.
 
 Unexpected discovery 17:02Z: load385.06/238.43/164.99, external FluxKlang xcodebuild PID12927 running directly (second simulator, bypassing shared xbuild lock), while Ohms light1 executes. Snapshot /var/tmp/canadian-ham-task-79-quiet-20261028/ohms/host-snapshot-1702.txt. Did not touch other lane. Coordinator explicitly directed continuing original fixed iterations, label light contended, retain exact evidence; add bypass limitation to AGENTS; ONE separate gated light visit afterward if time/load permits, otherwise record gate timeout. M7/dark remain quiet-START results, not claimed low-runtime-load (startup spikes were logged before external lane appeared).
+
+Original Ohms milestone passed all6 fixed visits: dark1311.638/1318.751/1323.950s; light1422.550/1411.309/1227.882s. Exit0, TEST SUCCEEDED, no Code=-56, finalized xcresult device summary6 passed/0failed/0skipped. Gate wait240s, start3.09/13.76/33.23; wall8061s; runtime load1 max439.77 median58.00 (136samples), max1/5/15=439.77/285.96/198.88. Light invocation labelled CONTENDED: external direct FluxKlang xcodebuild PID12927 observed17:02Z load385.06/238.43/164.99; another PID81955 observed17:29Z load264.28/199.92/168.54. Both snapshots retained; no external process touched. AGENTS bypass/max-load caveat added and evidence committed. Per coordinator, exactly ONE separate light iteration via the same gate is now waiting (/var/tmp/canadian-ham-task-79-quiet-20261028/ohms-light-quiet-one); no failed audit is being retried.
 <!-- SECTION:NOTES:END -->
