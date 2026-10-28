@@ -369,9 +369,7 @@ private struct LessonFigureView: View {
                     Text("Figure text equivalent")
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
-                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .font(DesignTokens.FontScale.body)
             }
         }
         .padding(DesignTokens.Spacing.md)
