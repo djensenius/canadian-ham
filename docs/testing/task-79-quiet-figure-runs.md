@@ -35,7 +35,9 @@ The runner is exercised with `/bin/bash` (macOS Bash 3.2 here).
 ## Recorded runs — 2026-10-28
 
 Implementation: `d91f7210d621bfd610231b9e8bf781c54f762bf0` (no app or test
-source changes). M7 is complete; Ohm's-law validation is in progress.
+source changes). The requested M7 5/5 and Ohm's-law dark/light 3/3 each
+have passed, with no `Code=-56`. A coordinator-authorized separate light visit
+is waiting for the host to settle after external contention (details below).
 Artifacts are retained locally under
 `/var/tmp/canadian-ham-task-79-quiet-20261028/`; sibling `*-console.log` files also
 retain the quiet-host wait and final report. No full Apple suites or other
@@ -66,17 +68,65 @@ scripts/run-figure-plan-quiet.sh \
 | 4 | Pass | 211.930 |
 | 5 | Pass | 222.692 |
 
+### Ohm's-law dark/light — original fixed three visits each
+
+```sh
+scripts/run-figure-plan-quiet.sh \
+  --out /var/tmp/canadian-ham-task-79-quiet-20261028/ohms \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testOhmsLawLessonFiguresAndAccessibilityLight \
+  -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testOhmsLawLessonFiguresAndAccessibilityDark \
+  -test-iterations 3
+```
+
+- Quiet-host wait: **240 seconds** (15:35:25–15:39:25 UTC). The script
+  correctly held off at five-minute loads 27.01, 22.46, 19.07 and 16.13.
+- Launch load (1/5/15m): **3.09 / 13.76 / 33.23**.
+- xbuild interval: **15:39:25–17:53:46 UTC**, **8061 seconds**, exit **0**;
+  finalized result bundle `ohms/figures.xcresult`, `TEST SUCCEEDED`.
+- Runtime one-minute load: **max 439.77, median 58.00**, 136 samples.
+- Runtime maxima (1/5/15m): **439.77 / 285.96 / 198.88**.
+- **Dark 3/3, light 3/3 passed**, no skips, no `Code=-56` in the console log.
+  The finalized `xcresulttool` device summary independently reports six passed
+  runs, zero failures and zero skips (two unique methods).
+
+| Method | Iteration | Result | Whole-method seconds |
+| --- | --- | --- | ---: |
+| Dark | 1 | Pass | 1311.638 |
+| Dark | 2 | Pass | 1318.751 |
+| Dark | 3 | Pass | 1323.950 |
+| Light — contended invocation | 1 | Pass | 1422.550 |
+| Light — contended invocation | 2 | Pass | 1411.309 |
+| Light — contended invocation | 3 | Pass | 1227.882 |
+
+**External contention during the light visits:** at **17:02:13 UTC**, load was
+**385.06 / 238.43 / 164.99**. An external **FluxKlang xcodebuild PID 12927**
+was running directly, bypassing the shared `xbuild` lock, on another simulator
+(`7F7F138F-5D28-45B2-886E-294B8BEEB17A`). Our xcodebuild PID was 58010.
+Snapshot: `/var/tmp/canadian-ham-task-79-quiet-20261028/ohms/host-snapshot-1702.txt`.
+At **17:29:05 UTC**, another direct FluxKlang invocation (**PID 81955**) was
+present, load **264.28 / 199.92 / 168.54**; snapshot in the same directory,
+`host-snapshot-1729.txt`. These are observations at those instants, not proof
+that either external PID ran throughout every light iteration.
+
+The coordinator explicitly directed continuing the unchanged fixed-iteration
+invocation, labelling the original light results **contended**, and then making
+**one separate gated light visit** if time/load permitted. No external process
+was stopped or modified. Passing with this contention is useful robustness
+evidence; it is **not quiet-runtime evidence** or a causal comparison.
+
 ### Important runtime-load limitation
 
-This was a **quiet start, not a low-load execution**. Within two minutes of
-launch, one-minute load reached 202.83. At 15:15 UTC the process snapshot showed
+M7 and the original Ohm's-law invocation had **quiet starts, not low-load executions**. Within two minutes of
+M7 launch, one-minute load reached 202.83. At 15:15 UTC the process snapshot showed
 only this task's xcodebuild, no waiting `lockf`, and CPU dominated by `launchd_sim`
 and iOS 27 simulator wallpaper/poster extensions (several near 100% CPU).
 No other lane's processes were stopped or changed. Load declined later, but the
 last one-minute sample was still 39.83. These observations cannot establish that
 host contention caused the historical timeout, nor guarantee that quiet-start
 runs can never time out. The runner exposes post-launch load rather than hiding
-it or retrying failed audits.
+it or retrying failed audits. The gate is not an in-run load cap or an atomic
+reservation of the build lock: other projects can bypass the shared wrapper or
+start later. AGENTS.md now calls out this limitation and the max-load report.
 
 ## Non-Apple checks
 

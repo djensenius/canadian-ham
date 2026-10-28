@@ -89,6 +89,7 @@ platform) and share one build lock, so don't run them by reflex.
   `CanadianHamDefault` plan excludes those tests. Run the figure plan **only** through
   `scripts/run-figure-plan-quiet.sh` (TASK-79; waits for low host load and records load/results).
   The coordinator starts no other Apple lanes while it runs, including its quiet-host wait.
+  The gate cannot stop other projects that bypass `xbuild`; its max-load report reveals contention.
   Pass targeted selections/iterations as script arguments; use `--help` for load/timeout/output options.
 - **Category-title sweeps:** the four `CanadianHamPracticeUITests.testCategoryTitles…` tests
   run in their own `CanadianHamTitleSweeps` plan, not `CanadianHamDefault`. Run this plan
