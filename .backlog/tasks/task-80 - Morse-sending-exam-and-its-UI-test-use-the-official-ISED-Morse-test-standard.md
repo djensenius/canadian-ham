@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T01:33:00Z'
+updated_date: '2026-10-28T01:36:00Z'
 labels:
   - morse
   - accuracy
@@ -35,3 +35,9 @@ Owner 2026-10-27, on TASK-65: 'use the official standard for the test'. The Mors
 3. Remove arbitrary UI-test duration override while preserving assertions/audits; fix local Grade navigation only if needed.
 4. Run bounded package/parity, three sending tests (three iterations), macOS unit, text-source and guard checks; record evidence, commit/push milestones, and finalize.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Research milestone: fetched RIC-1/CIR-1 §8, RIC-3/CIR-3 §5.2, RBR-4/IPR-4 Schedule I and official bilingual Basic bank B-001-004-005 on 2026-10-27 local / 2026-10-28 UTC. Bank TXT SHA unchanged. Recorded EN/FR quotations and CIR-3 French five-error discrepancy in docs/exam-facts.md. Production sending already uses 180 s, ≥75 weighted-character plain-language text and ≤5-error grading. Named the sourced duration in TS/Swift; target sending-results tests now use production duration with new 3:00 assertion, no old assertion/audit removed. Short timer lifecycle overrides remain. Paired engine tests + shared sending generation/exact five-six error fixtures added; no generator/grading behavior changed. Initial targeted TS engine 23/23 and web sending 14/14 pass. Apple/package/parity and bounded 3×3 sending validation pending.
+<!-- SECTION:NOTES:END -->
