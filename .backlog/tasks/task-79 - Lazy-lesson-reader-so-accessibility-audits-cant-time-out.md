@@ -1,11 +1,11 @@
 ---
 id: TASK-79
 title: Run figure audits on a quiet build host so Code=-56 timeouts can't happen
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T17:55:00Z'
+updated_date: '2026-10-28T18:24:00Z'
 labels:
   - accessibility
   - performance
@@ -22,9 +22,9 @@ Owner 2026-10-28 chose option 2, after the lazy reader was closed (#1049): Code=
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 scripts/run-figure-plan-quiet.sh waits until the 5-minute load average is at most 1.5x the core count (configurable), then runs the CanadianHamLessonFigures plan (or -only-testing selections passed through) via xbuild with one iPhone 17 Pro destination, samples load every 60 s into a log, and reports the max and median load next to the xcodebuild exit code
-- [ ] #2 AGENTS.md documents the rule: run the figure plan only through this script, and the coordinator launches no other Apple lanes while it runs. The figure-plan command in AGENTS.md points to the script
-- [ ] #3 Under the script, testModule7LessonFigureDarkSample passes 5/5 and testOhmsLawLessonFiguresAndAccessibilityLight/Dark pass 3/3 each, with no Code=-56. Per-run durations and load are recorded in docs/testing/task-79-quiet-figure-runs.md
+- [x] #1 scripts/run-figure-plan-quiet.sh waits until the 5-minute load average is at most 1.5x the core count (configurable), then runs the CanadianHamLessonFigures plan (or -only-testing selections passed through) via xbuild with one iPhone 17 Pro destination, samples load every 60 s into a log, and reports the max and median load next to the xcodebuild exit code
+- [x] #2 AGENTS.md documents the rule: run the figure plan only through this script, and the coordinator launches no other Apple lanes while it runs. The figure-plan command in AGENTS.md points to the script
+- [x] #3 Under the script, testModule7LessonFigureDarkSample passes 5/5 and testOhmsLawLessonFiguresAndAccessibilityLight/Dark pass 3/3 each, with no Code=-56. Per-run durations and load are recorded in docs/testing/task-79-quiet-figure-runs.md
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -66,4 +66,12 @@ M7 milestone: quiet-start runner passed testModule7LessonFigureDarkSample 5/5, w
 Unexpected discovery 17:02Z: load385.06/238.43/164.99, external FluxKlang xcodebuild PID12927 running directly (second simulator, bypassing shared xbuild lock), while Ohms light1 executes. Snapshot /var/tmp/canadian-ham-task-79-quiet-20261028/ohms/host-snapshot-1702.txt. Did not touch other lane. Coordinator explicitly directed continuing original fixed iterations, label light contended, retain exact evidence; add bypass limitation to AGENTS; ONE separate gated light visit afterward if time/load permits, otherwise record gate timeout. M7/dark remain quiet-START results, not claimed low-runtime-load (startup spikes were logged before external lane appeared).
 
 Original Ohms milestone passed all6 fixed visits: dark1311.638/1318.751/1323.950s; light1422.550/1411.309/1227.882s. Exit0, TEST SUCCEEDED, no Code=-56, finalized xcresult device summary6 passed/0failed/0skipped. Gate wait240s, start3.09/13.76/33.23; wall8061s; runtime load1 max439.77 median58.00 (136samples), max1/5/15=439.77/285.96/198.88. Light invocation labelled CONTENDED: external direct FluxKlang xcodebuild PID12927 observed17:02Z load385.06/238.43/164.99; another PID81955 observed17:29Z load264.28/199.92/168.54. Both snapshots retained; no external process touched. AGENTS bypass/max-load caveat added and evidence committed. Per coordinator, exactly ONE separate light iteration via the same gate is now waiting (/var/tmp/canadian-ham-task-79-quiet-20261028/ohms-light-quiet-one); no failed audit is being retried.
+
+Final current-scope evidence: all three reworked ACs verified. AC1: real 0s/240s gated runs, unchanged one-destination serial xbuild, 60s load logs/reports; six fast fake-command scenarios cover waiting/threshold/exact passthrough/exit65/timeout-without-launch/configuration/invalid data and run in pnpm test. AC2: AGENTS figure-only command uses script, coordinator forbids other Apple lanes through wait/run, bypass/max-load limitation documented. AC3: M7 5/5, Ohms dark3/3/light3/3 all PASS with no Code=-56/skips; exact method durations and load in docs/testing/task-79-quiet-figure-runs.md. Additional coordinator-authorized single light visit PASS1193.450s, wall1238s, exit0; start2.84/10.68/50.73; load1 max172.72 median38.86(22samples), maxima172.72/71.27/70.00; finalized xcresult confirms1pass/0fail/0skip. Its preflight attempt with explicit -test-iterations1 was rejected by Xcode(exit64,1s,0tests/audits; wait300s, load3.43/14.61/57.75); corrected by omitting the invalid option, not retrying any audit. All artifacts retained, including rejected invocation. Independent raw-log/load/xcresult checks confirm12 executed visits all passed and reported medians/maxima agree. bash syntax/shellcheck/text-source+self-test/test-guard+self-test/branch diff/pnpm test pass. App/Apple tests/packages/shared xbuild unchanged; no full suites or other platforms needed/run. All are quiet-START results, not low-runtime-load evidence or proof future Code=-56 is impossible; simulator startup/external direct FluxKlang builds can still raise load. Original light invocation labelled contended with snapshots. No external processes touched; no PR.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented the owner-approved quiet-start figure runner, fast pnpm integration coverage and concise coordinator rules, without app/audit/test/helper/xbuild changes. Required M7 5/5 and Ohms light/dark 3/3 each passed with no Code=-56; one additionally authorized single light control also passed. Per-run durations, max/median loads, finalized xcresult evidence, external direct-build contention and the zero-test CLI preflight error are documented honestly in docs/testing/task-79-quiet-figure-runs.md. All three ACs checked, validation gates passed. The start gate records but cannot prevent later simulator or cross-project load; no causal/no-future-timeout guarantee is claimed.
+<!-- SECTION:FINAL_SUMMARY:END -->
