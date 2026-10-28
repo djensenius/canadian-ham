@@ -1,5 +1,5 @@
 {
-  "status": "Blocked: lazy-reader Dynamic Type and contrast audit regressions; no acceptance claimed",
+  "status": "Blocked: final coordinator-authorized containment experiment failed all three M1 light methods and was exactly reverted; no acceptance claimed",
   "timings": "All seconds below are whole XCTest method durations, not individual audit durations.",
   "runs": [
     {
@@ -171,6 +171,198 @@
         }
       ],
       "interrupted": false
+    },
+    {
+      "run": "contain-part1",
+      "sourceCommit": "e7a03cf5d64f4613c10e3cd72eb7189f0e175dc7",
+      "resultBundle": "/tmp/task-79-contain-part1.xcresult",
+      "exitCode": 65,
+      "tests": [
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1()",
+          "result": "Failure",
+          "seconds": 179.41213607788086
+        }
+      ],
+      "testRuns": 1,
+      "interrupted": false,
+      "oneMinuteLoad": {
+        "samples": 4,
+        "minimum": 72.84,
+        "maximum": 434.12,
+        "includesBuildAndLockWait": true
+      },
+      "issues": [
+        {
+          "type": "dynamicType",
+          "message": "Dynamic Type font sizes are partially unsupported",
+          "detailedDescription": "User will not be able to change the font size of this SwiftUI.AccessibilityNode",
+          "elementType": "StaticText",
+          "label": "Figure text equivalent",
+          "screenshotDerivedFrameNativePixels": [
+            156,
+            597,
+            894,
+            84
+          ],
+          "screenshotDerivedFramePoints": [
+            52.0,
+            199.0,
+            298.0,
+            28.0
+          ],
+          "frameProvenance": "The unchanged shared handler does not log the AX frame. Bounds below are reconstructed from the failure app/element screenshots at scale3, not exact AX-frame measurements.",
+          "screenshotMatching": {
+            "method": "Unique exact full-element RGB crop match in failure app screenshot",
+            "meanAbsoluteChannelDelta": 0,
+            "maximumChannelDelta": 0
+          },
+          "attachments": [
+            {
+              "path": "/tmp/task-79-contain-part1-attachments/B61E9340-43BF-409D-BE43-B21E9C0A013B.txt",
+              "sha256": "a46bf5609acb47026ed5f42a158e3775f8090fb7c7754ccf8d0d63a955f9f2e7"
+            },
+            {
+              "path": "/tmp/task-79-contain-part1-attachments/9D5A1EB0-2C6C-44D5-A584-B37485827DBC.png",
+              "sha256": "43c40db169f40ee708762098e4bc6173c7cd5d3d23d8fc99a8454ae25cc5586e"
+            },
+            {
+              "path": "/tmp/task-79-contain-part1-attachments/2AB7C1B2-32DF-4043-AB4C-64B3D16D8894.png",
+              "sha256": "5a033d178a4d429894bbd617db1055029511d39f430584d123b6b34143ba717e"
+            }
+          ]
+        }
+      ],
+      "diagnosticCollectionWarning": "After the completed audit failure XCTest reported error72 collecting simulator diagnostics: simctl lookup failed. The bundle, app/element issue screenshots and one-run test result finalized successfully.",
+      "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamLessonFigures -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -parallel-testing-enabled NO -only-testing:CanadianHamUITests/CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1 -resultBundlePath /tmp/task-79-contain-part1.xcresult test CODE_SIGNING_ALLOWED=NO"
+    },
+    {
+      "run": "contain-next-lesson",
+      "sourceCommit": "e7a03cf5d64f4613c10e3cd72eb7189f0e175dc7",
+      "resultBundle": "/tmp/task-79-contain-next-lesson.xcresult",
+      "exitCode": 65,
+      "tests": [
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1NextLesson()",
+          "result": "Failure",
+          "seconds": 204.91109800338745
+        }
+      ],
+      "testRuns": 1,
+      "interrupted": false,
+      "oneMinuteLoad": {
+        "samples": 5,
+        "minimum": 395.32,
+        "maximum": 466.08,
+        "includesBuildAndLockWait": true
+      },
+      "issues": [
+        {
+          "type": "dynamicType",
+          "message": "Dynamic Type font sizes are partially unsupported",
+          "detailedDescription": "User will not be able to change the font size of this SwiftUI.AccessibilityNode",
+          "elementType": "StaticText",
+          "label": "Club-net plans",
+          "screenshotDerivedFrameNativePixels": [
+            156,
+            579,
+            251,
+            43
+          ],
+          "screenshotDerivedFramePoints": [
+            52.0,
+            193.0,
+            83.66666666666667,
+            14.333333333333334
+          ],
+          "frameProvenance": "The unchanged shared handler does not log the AX frame. Bounds below are reconstructed from the failure app/element screenshots at scale3, not exact AX-frame measurements.",
+          "screenshotMatching": {
+            "method": "Unique exact full-element RGB crop match in failure app screenshot",
+            "meanAbsoluteChannelDelta": 0,
+            "maximumChannelDelta": 0
+          },
+          "attachments": [
+            {
+              "path": "/tmp/task-79-contain-next-lesson-attachments/B33D4F70-914B-4E27-A35A-716AFE5E1CFB.txt",
+              "sha256": "a46bf5609acb47026ed5f42a158e3775f8090fb7c7754ccf8d0d63a955f9f2e7"
+            },
+            {
+              "path": "/tmp/task-79-contain-next-lesson-attachments/DCCFA473-544A-4EBF-ABC4-CCFBD49CD25C.png",
+              "sha256": "7cc4eadcd3c73e3fabfa9ed421e8a548adaaefba2d62e487fa5e6e06871efd91"
+            },
+            {
+              "path": "/tmp/task-79-contain-next-lesson-attachments/65B7ECF6-F640-48C4-A3A4-C37F3D7AE302.png",
+              "sha256": "7df59f957acc4a05b66ded4b47f20964be492520ae3d544e19ae4c4d4fd1efa4"
+            }
+          ]
+        }
+      ],
+      "diagnosticCollectionWarning": "After the completed audit failure XCTest reported error72 collecting simulator diagnostics: simctl lookup failed. The bundle, app/element issue screenshots and one-run test result finalized successfully.",
+      "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamLessonFigures -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -parallel-testing-enabled NO -only-testing:CanadianHamUITests/CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1NextLesson -resultBundlePath /tmp/task-79-contain-next-lesson.xcresult test CODE_SIGNING_ALLOWED=NO"
+    },
+    {
+      "run": "contain-part2",
+      "sourceCommit": "e7a03cf5d64f4613c10e3cd72eb7189f0e175dc7",
+      "resultBundle": "/tmp/task-79-contain-part2.xcresult",
+      "exitCode": 65,
+      "tests": [
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart2()",
+          "result": "Failure",
+          "seconds": 174.8771380186081
+        }
+      ],
+      "testRuns": 1,
+      "interrupted": false,
+      "oneMinuteLoad": {
+        "samples": 4,
+        "minimum": 343.21,
+        "maximum": 430.49,
+        "includesBuildAndLockWait": true
+      },
+      "issues": [
+        {
+          "type": "dynamicType",
+          "message": "Dynamic Type font sizes are partially unsupported",
+          "detailedDescription": "User will not be able to change the font size of this SwiftUI.AccessibilityNode",
+          "elementType": "StaticText",
+          "label": "Identify the station, not just the person speaking. Every station in a contact sends its own call sign. Starting, ending and interval identification are separate duties.",
+          "screenshotDerivedFrameNativePixels": [
+            120,
+            574,
+            966,
+            258
+          ],
+          "screenshotDerivedFramePoints": [
+            40.0,
+            191.33333333333334,
+            322.0,
+            86.0
+          ],
+          "frameProvenance": "The unchanged shared handler does not log the AX frame. Bounds below are reconstructed from the failure app/element screenshots at scale3, not exact AX-frame measurements.",
+          "screenshotMatching": {
+            "method": "Approximate best RGB crop match around the visible paragraph (x118...122, y565...595 native pixels); subpixel text rasterization differs between screenshots",
+            "meanAbsoluteChannelDelta": 3.6206993863717827,
+            "maximumChannelDelta": 100
+          },
+          "attachments": [
+            {
+              "path": "/tmp/task-79-contain-part2-attachments/108C227B-9C81-49A6-9149-BB37296F6AC5.txt",
+              "sha256": "a46bf5609acb47026ed5f42a158e3775f8090fb7c7754ccf8d0d63a955f9f2e7"
+            },
+            {
+              "path": "/tmp/task-79-contain-part2-attachments/52B0E42A-83CC-4651-AD71-D627BB91F949.png",
+              "sha256": "f41d7d980f7ac0acb5a109c93d45a546c51fc2a29992afa58280cf88d07c84ba"
+            },
+            {
+              "path": "/tmp/task-79-contain-part2-attachments/277A2AFB-1BE8-4EC8-B5A6-E104847BD257.png",
+              "sha256": "43d19e8a388a386aa5aa78f4c94e3282614147f1bdf911d08c8ff81501e5d0bb"
+            }
+          ]
+        }
+      ],
+      "diagnosticCollectionWarning": "After the completed audit failure XCTest reported error72 collecting simulator diagnostics: simctl lookup failed. The bundle, app/element issue screenshots and one-run test result finalized successfully.",
+      "command": "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamLessonFigures -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -parallel-testing-enabled NO -only-testing:CanadianHamUITests/CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart2 -resultBundlePath /tmp/task-79-contain-part2.xcresult test CODE_SIGNING_ALLOWED=NO"
     }
   ],
   "mainBaseline": {
@@ -219,6 +411,13 @@
       "revertCommit": "5a932cc713ef55ffb96a9af3cc20761e0eed4c1e",
       "change": "Disclosure identity keyed by Dynamic Type, with expansion state external to identity",
       "result": "First M1 light method still fails Dynamic Type"
+    },
+    {
+      "attemptCommit": "e7a03cf5d64f4613c10e3cd72eb7189f0e175dc7",
+      "revertCommit": "a08980ac89535a838bfb7cc0076c81c4e74645fe",
+      "change": "Single-child zero-spacing VStack per direct lazy block with accessibilityElement(children: .contain); existing ForEach block IDs and heading-anchor/fallback IDs retained",
+      "result": "All three M1 light methods failed Dynamic Type in one serial visit each; no test/handler changes",
+      "restoredReaderSHA256": "372ea91b3d528f9298e2c1b0ecc5e29a8dcc9fd51ee1df6eb3f9bffdfe6d3c93"
     }
   ],
   "notRun": [
@@ -234,5 +433,6 @@
   "remainingMeasurementGaps": [
     "Individual full-audit durations for L-005-02, L-007-01 and the longest lesson",
     "Consecutive M7/Ohm success evidence; current runtime environment is not normal-load"
-  ]
+  ],
+  "finalExperimentDecision": "Failure branch executed: restore exact prior app source, preserve all issue/element/screenshot-derived-frame/load evidence, push and stop. No full plan, repeated runs, navigation/count reruns or new app-side experiment authorized in this run."
 }

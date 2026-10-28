@@ -2,9 +2,11 @@
 
 **Status: blocked, not complete.** The lazy prototype substantially reduces the
 accessibility tree but introduces Dynamic Type and contrast audit regressions.
-Two bounded app-side attempts failed and were reverted. The coordinator directed
-stopping after the final failed experiment; TASK-79 remains In Progress, with no
-acceptance criteria checked.
+Three bounded app-side attempts failed and were reverted, including the final
+coordinator-authorized per-block accessibility-container experiment. TASK-79
+remains In Progress, with no acceptance criteria checked. The required failure
+branch is complete: preserve evidence, push and stop; the coordinator will close
+the lazy approach.
 
 `Platforms/Shared/PlatformLessonMarkdownView.swift` now renders its blocks in a
 `LazyVStack`, with each heading anchor on the direct lazy child rather than inside
@@ -160,8 +162,8 @@ not a known pre-existing main failure.
    expansion state outside that identity to avoid resetting it during re-layout:
    first M1 light method still failed Dynamic Type (206.499 s). Attempt
    `df489404`, reverted `5a932cc7`. Neither identity nor extra state remains.
-   The coordinator's explicit failure branch requires stopping here, not another
-   retry or unapproved experiment.
+   The coordinator's explicit failure branch required stopping there. A later
+   direction authorized only the final containment experiment documented below.
 
 The diagnostic finding is `.dynamicType` raw value 65536, `StaticText` with label
 `Figure text equivalent`, at `(52,199,298,28.333)` points. The before-audit tree had
@@ -186,14 +188,72 @@ full-audit timings. The required per-audit duration comparison for L-005-02,
 L-007-01 and the longest lesson remains uncollected; no performance/acceptance
 claim substitutes method durations for it.
 
+## Final per-block containment experiment — failed and exactly reverted
+
+The coordinator authorized **one final app-side experiment**: give each direct
+lazy child a `VStack(alignment: .leading, spacing: 0)` container with
+`.accessibilityElement(children: .contain)`. The existing stable `ForEach`
+`DisplayLessonBlock.id` and direct-child heading-anchor/fallback IDs were retained.
+No child, label, heading trait or control was removed/combined/hidden. Test guard
+self-test and the actual branch diff passed with `.contain` present; the guard
+matches `.ignore` and bare `.accessibilityElement()`, not `.contain`.
+
+Attempt: `e7a03cf5d64f4613c10e3cd72eb7189f0e175dc7`. Each requested method ran
+**once**, in its own serial `xbuild` invocation on iPhone 17 Pro, in the
+`CanadianHamLessonFigures` plan with exactly one `-only-testing` method selected.
+The finalized bundles each report `Test case with 1 run`. All three failed:
+
+| M1 light method | Whole-method seconds | Issue / StaticText label | Screenshot-derived frame (points) | One-minute load min–max (samples) |
+| --- | ---: | --- | --- | --- |
+| Part1 | 179.412 | Dynamic Type / `Figure text equivalent` | `(52, 199, 298, 28)` | 72.84–434.12 (4) |
+| Part1NextLesson | 204.911 | Dynamic Type / `Club-net plans` | `(52, 193, 83.667, 14.333)` | 395.32–466.08 (5) |
+| Part2 | 174.877 | Dynamic Type / `Identify the station, not just the person speaking. Every station in a contact sends its own call sign. Starting, ending and interval identification are separate duties.` | approximately `(40, 191.333, 322, 86)` | 343.21–430.49 (4) |
+
+All three finalized issue descriptions say `Dynamic Type font sizes are partially
+unsupported` / `User will not be able to change the font size of this
+SwiftUI.AccessibilityNode`. Part2 is **Dynamic Type in this experiment**, unlike
+the original lazy-plan contrast failure. All invocations exited 65; none was
+interrupted, retried or skipped. No Code=-56 occurred, but these were not the
+required consecutive M7/Ohm runs or normal-load measurements.
+
+**Frame provenance:** the immutable shared handler does not log the AX frame.
+The frames above are reconstructed from the failure app/element screenshots at
+3 native pixels per point, **not claimed as exact AX-frame measurements**. Part1
+and NextLesson each have a unique, exact whole-element RGB crop match at native
+pixel bounds `[156,597,894,84]` and `[156,579,251,43]`. Part2 has subpixel text
+rasterization differences; its best RGB crop near the visible paragraph is
+`[120,574,966,258]`, mean absolute channel delta 3.621/255, maximum 100/255. Its
+position is approximate. Screenshot paths/hashes, matching details, full labels,
+commands, source commit, per-method results and load ranges are in the results
+JSON; every original failure screenshot is preserved locally.
+
+Artifacts: `/tmp/task-79-contain-{part1,next-lesson,part2}.{log,xcresult,exit}`,
+`-load.log`, `-details.json`, and `-attachments/manifest.json`; driver
+`/tmp/task-79-contain.sh`. The unchanged XCTest runner also logged a **post-failure**
+error72 collecting simulator diagnostics (`simctl` lookup failed). The audit
+failures, issue screenshots and one-run test results all finalized successfully;
+this warning is not the reason the tests failed.
+
+The experiment was exactly reverted in
+`a08980ac89535a838bfb7cc0076c81c4e74645fe`. The reader is byte-identical to both
+resumed HEAD `dde54540f5113e9a87746dbfffcf87697cef7dee` and the original lazy
+prototype, SHA-256
+`372ea91b3d528f9298e2c1b0ecc5e29a8dcc9fd51ee1df6eb3f9bffdfe6d3c93`.
+Both UI test files are byte-identical to resumed HEAD, including all shared
+handlers. No containment code remains. Per the explicit failure branch, no
+navigation/state/figure-return/count reruns, full figure plan or repetitions were
+launched after these failures. No further app-side experiment is authorized.
+
 ## Remaining checks and handoff
 
 The complete figure plan/restart, existing targeted reader tests, five-iteration
 M7/Ohm run, targeted iPad tests, title sweeps, macOS unit/build-for-testing,
-tvOS/visionOS builds and full localization export were **not run/completed**
-because the coordinator stopped further work after the failed bounded
-experiment. Both tvOS and visionOS compile the shared reader per `project.yml`;
-those required builds are still outstanding. watchOS does not compile it.
+tvOS/visionOS builds and full localization export were **not run/completed**.
+The new navigation/state/figure-return tests and top descendant counts were not
+rerun with containment because the required all-three-pass gate failed. The
+coordinator's failure branch stops further work; these checks are not waived.
+Both tvOS and visionOS compile the shared reader per `project.yml`; watchOS does
+not compile it.
 
 Text-source checker/self-test, test-guard/self-test, diff whitespace and source
 identity checks pass. No retry wrapper, audit narrowing, new exception, skip,
@@ -201,6 +261,7 @@ identity checks pass. No retry wrapper, audit narrowing, new exception, skip,
 pre-existing helper change is the expressly approved existence guard; the
 structural assertions remain intact with the approved navigation/lazy assertion.
 
-Next architecture choice is reserved to the coordinator: stable `.contain`
-block groups versus limiting which blocks are lazy. **Neither has been applied.**
-The task is not claimed complete based on tree/appearance evidence alone.
+The final stable `.contain` direction failed and is reverted. The coordinator
+will close the lazy approach; no further architecture change or validation run
+is authorized here. The task is not claimed complete based on tree/appearance
+evidence alone. Updated handoff: `/tmp/task-79-handoff.md`.
