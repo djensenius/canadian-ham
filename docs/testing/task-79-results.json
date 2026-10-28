@@ -1,0 +1,123 @@
+{
+  "runs": [
+    {
+      "run": "baseline",
+      "resultBundle": "/tmp/task-79-baseline.xcresult",
+      "tests": [
+        {
+          "test": "CanadianHamPracticeUITests/testLessonReaderAppearanceAtTopMiddleAndBottom()",
+          "result": "Success",
+          "seconds": 183.8926659822464,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamPracticeUITests/testLessonReaderTreeCountsAtTop()",
+          "result": "Success",
+          "seconds": 41.41798996925354,
+          "audits": []
+        }
+      ],
+      "interrupted": false
+    },
+    {
+      "run": "after",
+      "resultBundle": "/tmp/task-79-after.xcresult",
+      "tests": [
+        {
+          "test": "CanadianHamPracticeUITests/testLessonReaderAppearanceAtTopMiddleAndBottom()",
+          "result": "Success",
+          "seconds": 141.26897609233856,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamPracticeUITests/testLessonReaderFigureSheetReturnsToInlineControl()",
+          "result": "Success",
+          "seconds": 33.457815051078796,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamPracticeUITests/testLessonReaderOffscreenHeadingsAndTryItStateSurviveScrolling()",
+          "result": "Failure",
+          "seconds": 172.75828194618225,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamPracticeUITests/testLessonReaderTreeCountsAtTop()",
+          "result": "Success",
+          "seconds": 41.22778296470642,
+          "audits": []
+        }
+      ],
+      "interrupted": false
+    },
+    {
+      "run": "navigation-fix",
+      "resultBundle": "/tmp/task-79-navigation-fix.xcresult",
+      "tests": [
+        {
+          "test": "CanadianHamPracticeUITests/testLessonReaderOffscreenHeadingsAndTryItStateSurviveScrolling()",
+          "result": "Success",
+          "seconds": 566.0292290449142,
+          "audits": []
+        }
+      ],
+      "interrupted": false
+    },
+    {
+      "run": "figures",
+      "resultBundle": "/tmp/task-79-figures.xcresult",
+      "tests": [
+        {
+          "test": "CanadianHamLessonFiguresUITests/testLessonFigureTextEquivalentsStartCollapsedAndExposeEachRowOnce()",
+          "result": "Success",
+          "seconds": 684.4304280281067,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFigureDarkSample()",
+          "result": "Success",
+          "seconds": 201.55166506767273,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1()",
+          "result": "Failure",
+          "seconds": 156.86069798469543,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1NextLesson()",
+          "result": "Failure",
+          "seconds": 155.78055202960968,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart2()",
+          "result": "Failure",
+          "seconds": 153.65894091129303,
+          "audits": []
+        },
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart3()",
+          "result": "Failure",
+          "seconds": 0.0,
+          "audits": []
+        }
+      ],
+      "interrupted": true
+    },
+    {
+      "run": "main-comparison",
+      "resultBundle": "/tmp/task-79-main-comparison.xcresult",
+      "tests": [
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1()",
+          "result": "Success",
+          "seconds": 388.7294590473175,
+          "audits": []
+        }
+      ],
+      "interrupted": false
+    }
+  ]
+}
