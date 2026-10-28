@@ -27,9 +27,11 @@ struct LessonMarkdownView: View {
     var body: some View {
         let rendered = renderedMarkdown()
         let blocks = displayBlocks(rendered)
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        LazyVStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             ForEach(blocks) { displayBlock in
                 displayBlockView(displayBlock)
+                    // The lazy stack must know an anchor before its heading is instantiated.
+                    .id(displayBlock.headingAnchor ?? displayBlock.fallbackID)
             }
         }
         .id(markdown)
@@ -41,13 +43,13 @@ struct LessonMarkdownView: View {
     private func displayBlockView(_ displayBlock: DisplayLessonBlock) -> some View {
 #if os(tvOS)
         if case .tryIt = displayBlock.block {
-            blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
+            blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor)
                 .padding(DesignTokens.Spacing.lg)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         } else {
             Group {
-                blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
+                blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor)
             }
             .padding(DesignTokens.Spacing.lg)
             .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
@@ -64,16 +66,16 @@ struct LessonMarkdownView: View {
             .focusEffectDisabled()
         }
 #else
-        blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor, fallbackID: displayBlock.fallbackID)
+        blockView(displayBlock.block, headingAnchor: displayBlock.headingAnchor)
 #endif
     }
 
     @ViewBuilder
-    private func blockView(_ block: LessonBlock, headingAnchor: String?, fallbackID: String) -> some View {
+    private func blockView(_ block: LessonBlock, headingAnchor: String?) -> some View {
         switch block {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
-                headingView(level: level, text: text, headingAnchor: headingAnchor, fallbackID: fallbackID)
+                headingView(level: level, text: text, headingAnchor: headingAnchor)
             }
         case .paragraph(let text):
             Text(lessonEnglish(strippingLinks(from: text))) // l10n: content(en)
@@ -187,12 +189,11 @@ struct LessonMarkdownView: View {
     }
 
     @ViewBuilder
-    private func headingView(level: Int, text: AttributedString, headingAnchor: String?, fallbackID: String) -> some View {
+    private func headingView(level: Int, text: AttributedString, headingAnchor: String?) -> some View {
         let heading = Text(lessonEnglish(strippingLinks(from: text))) // l10n: content(en)
             .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
             .foregroundStyle(DesignTokens.Colors.ink)
             .accessibilityAddTraits(.isHeader)
-            .id(headingAnchor ?? fallbackID)
         if let headingAnchor {
             heading
                 .accessibilityIdentifier("lesson-heading-\(headingAnchor)")

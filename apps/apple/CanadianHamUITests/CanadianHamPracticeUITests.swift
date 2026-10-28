@@ -1045,6 +1045,59 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
     }
 
+    func testLessonReaderOffscreenHeadingsAndTryItStateSurviveScrolling() throws {
+        let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-005-04"])
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        let tryItHeading = app.staticTexts["lesson-heading-try-it"].firstMatch
+        XCTAssertFalse(isPartiallyVisibleBelowNavigationBar(tryItHeading, in: app), "Try it must start beyond the first screen")
+        for anchor in ["ac-basics", "decibels-as-power-ratios", "try-it"] {
+            let heading = app.staticTexts["lesson-heading-\(anchor)"].firstMatch
+            scrollUntilPartiallyVisible(heading, in: app, maxSwipes: 80)
+            XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(heading, in: app), "Offscreen heading \(anchor) must remain reachable in reading order")
+        }
+        let toggle = app.buttons["lesson-try-it-1-toggle"].firstMatch
+        scrollUntilHittable(toggle, in: app, maxSwipes: 12)
+        XCTAssertTrue(toggle.isHittable)
+        toggle.tap()
+        XCTAssertTrue(app.staticTexts["lesson-try-it-1-answer"].firstMatch.waitForExistence(timeout: 5))
+        let summary = app.staticTexts["lesson-heading-summary"].firstMatch
+        scrollUntilPartiallyVisible(summary, in: app, maxSwipes: 30)
+        XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(summary, in: app))
+        let scrollView = app.scrollViews.firstMatch
+        for _ in 0..<30 where !isFullyVisible(toggle, in: app, requiresHittable: true) {
+            scrollView.swipeDown()
+            waitBriefly()
+        }
+        XCTAssertTrue(isFullyVisible(toggle, in: app, requiresHittable: true))
+        XCTAssertEqual(toggle.value as? String, "Expanded", "Lazy block recycling must preserve an answer disclosure")
+        XCTAssertTrue(app.staticTexts["lesson-try-it-1-answer"].firstMatch.exists)
+        toggle.tap()
+        XCTAssertEqual(toggle.value as? String, "Collapsed")
+        XCTAssertFalse(app.staticTexts["lesson-try-it-1-answer"].firstMatch.exists)
+    }
+
+    func testLessonReaderFigureSheetReturnsToInlineControl() throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialLessonID", "L-005-02",
+            "-CanadianHamInitialLessonSectionAnchor", "ohms-law"
+        ])
+        defer { app.terminate() }
+        let heading = app.staticTexts["lesson-heading-ohms-law"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10))
+        XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(heading, in: app), "A deep anchor must materialize its lazy block")
+        let enlarge = app.buttons["lesson-figure-ohms-law-triangle-enlarge"].firstMatch
+        scrollUntilPartiallyVisible(enlarge, in: app, maxSwipes: 20)
+        XCTAssertTrue(enlarge.isHittable)
+        let originalFrame = enlarge.frame
+        enlarge.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-ohms-law-triangle-enlarged"].firstMatch.waitForExistence(timeout: 5))
+        app.buttons["Done"].firstMatch.tap()
+        XCTAssertFalse(app.descendants(matching: .any)["lesson-figure-ohms-law-triangle-enlarged"].firstMatch.waitForExistence(timeout: 2))
+        XCTAssertTrue(enlarge.isHittable, "The inline control must remain reachable after the sheet returns focus")
+        XCTAssertEqual(enlarge.frame.minY, originalFrame.minY, accuracy: 1, "Dismissing the figure must not jump the lesson scroll position")
+    }
+
     func testLessonTryItRevealAndAccessibilityLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditLessonTryItReveal(appearance: .light, accessibilitySize: false)
