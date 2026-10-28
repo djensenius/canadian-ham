@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T15:36:00Z'
+updated_date: '2026-10-28T17:03:00Z'
 labels:
   - accessibility
   - performance
@@ -34,6 +34,8 @@ Owner 2026-10-28 chose option 2, after the lazy reader was closed (#1049): Code=
 2. Validate shell syntax/style, the runner integration tests, pnpm test, Apple text sources and the test guard; commit and push the implementation milestone.
 3. Run only M7 dark five iterations, then Ohms light/dark three iterations each, serially through the runner; record exact durations, results, max/median load and artifacts. Stop on any low-load Code=-56.
 4. Commit/push the evidence milestone, verify each AC with evidence, and finalize TASK-79 only if all three pass.
+
+5. Coordinator direction after external contention discovery: complete the original fixed light visits and label them contended, retain FluxKlang direct-xcodebuild PID12927/load/process snapshot evidence, add the cross-project bypass limitation to AGENTS. Then run ONE separate light iteration via the unchanged gate after load drops (7200s wait timeout remains); no other app/audit/test changes or other-lane intervention.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -60,4 +62,6 @@ Coordinator outcome 2026-10-28: the lazy approach is closed. The LazyVStack read
 Quiet-host implementation milestone: scripts/run-figure-plan-quiet.sh waits on 5-minute load (default 1.5 x logical CPUs, 7200s timeout), invokes unchanged serial figure-plan xbuild, logs runtime 1/5/15-minute loads every 60s plus endpoints, preserves xbuild exit and reports max/median/test lines. AGENTS requires the script and no concurrent coordinator Apple lanes including the wait. Six fake-command integration scenarios run via pnpm test without Xcode, including macOS Bash 3.2 empty passthrough. bash -n, shellcheck, integration tests, Apple text-source check/self-test, guard self-test/branch diff and pnpm test passed. No app, UI tests, audits, plans, shared helpers or shared xbuild edits. Runtime M7/Ohms repetitions are next, not yet claimed passed.
 
 M7 milestone: quiet-start runner passed testModule7LessonFigureDarkSample 5/5, whole-method seconds 234.184,217.936,203.028,211.930,222.692; exit0, no Code=-56, finalized /var/tmp/canadian-ham-task-79-quiet-20261028/m7/figures.xcresult. Wait0s; start load1/5/15=3.20/4.84/6.43; wall1167s. Runtime load1 max202.83 median62.08 (21 samples), maxima1/5/15=202.83/109.40/63.39. Simulator startup/poster extensions drove a load spike despite only one Apple lane; this is quiet-start, NOT low-runtime-load evidence or proof that timeouts cannot recur. Documented honestly in docs/testing/task-79-quiet-figure-runs.md. Ohms light/dark x3 is now waiting for load5 <=15 through the script; no retry or extra run launched.
+
+Unexpected discovery 17:02Z: load385.06/238.43/164.99, external FluxKlang xcodebuild PID12927 running directly (second simulator, bypassing shared xbuild lock), while Ohms light1 executes. Snapshot /var/tmp/canadian-ham-task-79-quiet-20261028/ohms/host-snapshot-1702.txt. Did not touch other lane. Coordinator explicitly directed continuing original fixed iterations, label light contended, retain exact evidence; add bypass limitation to AGENTS; ONE separate gated light visit afterward if time/load permits, otherwise record gate timeout. M7/dark remain quiet-START results, not claimed low-runtime-load (startup spikes were logged before external lane appeared).
 <!-- SECTION:NOTES:END -->
