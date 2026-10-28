@@ -1,9 +1,11 @@
 ---
 id: TASK-79
 title: Lazy lesson reader so accessibility audits can't time out
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-28T01:32:00Z'
+updated_date: '2026-10-28T01:33:00Z'
 labels:
   - accessibility
   - performance
@@ -25,3 +27,12 @@ Owner 2026-10-27, on TASK-65: 'Fix it so timeout isn't really possible' and lazy
 - [ ] #3 Every existing lesson, figure and title test and audit passes unchanged: the full CanadianHamLessonFigures plan plus the targeted lesson-reader tests, with no new exceptions, skips or helper weakening
 - [ ] #4 Appearance is unchanged: before/after screenshots of representative lessons (top, middle, bottom; light and dark; default and AX sizes) are pixel-identical, or any difference is explained and approved
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect reader, block identity, anchors, figure focus and existing immutable audit helpers; add bounded baseline count/screenshot coverage before the lazy change.
+2. Convert shared reader block layout to lazy rendering without appearance or audit changes; add focused navigation/heading/state tests.
+3. Capture after counts and screenshot hashes, run the figure plan once and targeted reader/iPad/macOS/platform checks, then five M7/Ohms repetitions within the five-hour budget.
+4. Commit/push milestones, record exact results and unresolved evidence, and hand off at five hours if validation is incomplete.
+<!-- SECTION:PLAN:END -->
