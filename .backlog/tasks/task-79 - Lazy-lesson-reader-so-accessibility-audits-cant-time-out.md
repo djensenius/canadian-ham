@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T02:16:00Z'
+updated_date: '2026-10-28T02:53:00Z'
 labels:
   - accessibility
   - performance
@@ -47,4 +47,6 @@ Coordinator approval 2026-10-27: Practice scrollUntilPartiallyVisible now checks
 AC4 coordinator approval 2026-10-27: all six AXXXXL lesson-content samples pixel-identical; default top/middle text +/-1 native pixel, bottom summary exact; footer +1 px light / +3 px dark (1 pt), registered residuals <=3/255; system clock/glass-back chrome and subpixel figure/table rasterization differ. No growing text drift, text/wrapping/spacing tokens/colour/size/style change. Exact raw/registered deltas and hashes in docs/testing/task-79-evidence.json; four after-images total 1,112,236 bytes, originals local. Approved differences accurately include corrected 3-px dark footer case.
 
 The single targeted rerun after the approved existence guard passed: testLessonReaderOffscreenHeadingsAndTryItStateSurviveScrolling 566.029 s, /tmp/task-79-navigation-fix.xcresult, exit 0. This verifies beyond-first-screen headings in authored order and Try-it expansion retained after scrolling down to Summary and back, then collapse. Full figure-plan driver is now waiting on the shared xbuild lock. No test/audit skipped or filtered beyond the explicitly selected targeted test invocation.
+
+Coordinator-approved early stop of first full figure plan after failures: /tmp/task-79-figures.xcresult finalized (exit75 following SIGINT, not timeout); structural test PASS 684.430 s; M1 dark PASS 201.552 s; M1 LightPart1 FAIL 156.861 s and NextLesson FAIL 155.781 s (Dynamic Type unsupported on Figure text equivalent); M1 LightPart2 FAIL 153.659 s (contrast on visible ordinary paragraph); Part3 cancelled, all later methods not run. No Code=-56. Complete issues/element screenshots exported to /tmp/task-79-figures-failure-attachments; originals retained. First failing M1 light method then PASS on detached origin/main 6a449802614303741ee5aa07f973803c46f535b7: 388.729 s, /tmp/task-79-main-comparison.xcresult, exit0. Reader SHA256 byte-identical to original main; detached comparison worktree removed. This establishes a lazy-reader regression, not a passing full plan. Investigating app-side control font/layout; audits/handlers untouched.
 <!-- SECTION:NOTES:END -->
