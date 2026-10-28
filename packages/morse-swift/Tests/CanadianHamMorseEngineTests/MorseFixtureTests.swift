@@ -143,6 +143,24 @@ final class MorseFixtureTests: XCTestCase {
         }
     }
 
+    func testRIC1Section82AndRIC3Section52SendingDurationAndProfile() throws {
+        XCTAssertEqual(morseSendingExamDurationSeconds, 3 * 60)
+        let profile = profileForName(.isedParis)
+        XCTAssertEqual(profile.characterWpm, 12)
+        XCTAssertEqual(profile.effectiveWpm, 5)
+        let paris = try textToTimedMorse("PARIS PARIS PARIS PARIS PARIS", profile: profile)
+        XCTAssertEqual(paris.totalDurationSeconds, 60, accuracy: 1e-9)
+    }
+
+    func testRIC1Section82SendingTextMeetsWeightedLengthAndCharacterSet() throws {
+        for seed in 0 ..< 32 {
+            // Candidate character speed is immaterial: sending uses a deadline, not audio length.
+            let generated = try generateMorseExamText(seed: "sending-standard-\(seed)", profile: profileForName(.isedParis), minDurationSeconds: 0)
+            XCTAssertGreaterThanOrEqual(generated.weightedCharacters, 75)
+            XCTAssertTrue(validateMorseText(generated.text).valid)
+        }
+    }
+
     func testVisualTapeAndHapticOutputMapping() throws {
         let sequence = try textToTimedMorse("ET", profile: profileForName(.isedParis))
         let signalEvents = morseSignalEvents(sequence: sequence)

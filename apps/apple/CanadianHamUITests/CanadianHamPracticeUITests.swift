@@ -415,8 +415,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
-            "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "120"
+            "-CanadianHamMorseSendingDebugHook"
         ])
         defer { app.terminate() }
 
@@ -424,6 +423,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         openSendingExamStyleCheck(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["morse-sending-timer"].firstMatch.label, "Time remaining: 3:00", "Sending results must use the official three-minute exam, not a debug duration")
         start.tap()
         let debugFill = app.buttons["morse-sending-debug-fill-button"].firstMatch
         XCTAssertTrue(debugFill.waitForExistence(timeout: 5), "DEBUG-only deterministic sending hook should be present in UI tests")
@@ -2090,14 +2090,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func auditMorseSendingResults(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
-            "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "120"
+            "-CanadianHamMorseSendingDebugHook"
         ])
         defer { app.terminate() }
         openSendingPractice(in: app)
         openSendingExamStyleCheck(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["morse-sending-timer"].firstMatch.label, "Time remaining: 3:00", "Sending results must use the official three-minute exam, not a debug duration")
         start.tap()
         let debugFill = app.buttons["morse-sending-debug-fill-button"].firstMatch
         XCTAssertTrue(debugFill.waitForExistence(timeout: 5))

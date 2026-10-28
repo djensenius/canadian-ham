@@ -260,6 +260,8 @@ public struct MorseSendingScore: Codable, Equatable, Sendable {
     public let markPercent: Int
 }
 
+/// RIC-1 §8.2 / RIC-3 §5.2: three consecutive minutes for the sending test.
+public let morseSendingExamDurationSeconds = 180
 public let morseErrorSignalDots = 8
 public let morseFlashReferenceWidthCssPixels = 341.0
 public let morseFlashReferenceHeightCssPixels = 256.0

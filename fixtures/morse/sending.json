@@ -138,6 +138,32 @@
         "passed": false,
         "markPercent": 99
       }
+    },
+    {
+      "id": "sending-exactly-five-missing-figures-and-punctuation-pass",
+      "input": {
+        "expected": "AB1.,?",
+        "sent": "A",
+        "completedWithinTime": false
+      },
+      "expectedOutput": {
+        "errors": 5,
+        "passed": true,
+        "markPercent": 100
+      }
+    },
+    {
+      "id": "sending-six-missing-figures-and-punctuation-fail",
+      "input": {
+        "expected": "AB1.,?",
+        "sent": "",
+        "completedWithinTime": false
+      },
+      "expectedOutput": {
+        "errors": 6,
+        "passed": false,
+        "markPercent": 99
+      }
     }
   ]
 }

@@ -37,6 +37,26 @@
         "unweightedCharacters": 130,
         "durationSeconds": 202.19999999999865
       }
+    },
+    {
+      "id": "ised-paris-sending-text-no-receiving-audio-minimum",
+      "input": {
+        "seed": "shared-ised-paris-sending-exam",
+        "profile": {
+          "name": "isedParis"
+        },
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 0
+      },
+      "expectedOutput": {
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 0,
+        "text": "QSJ 1962 WAS LOGGED AFTER THE CONTACT. MOBILE UNIT CHECKS IN FROM ROAD 17. QSL THE TEST MESSAGE BEFORE NOON.",
+        "normalizedText": "QSJ 1962 WAS LOGGED AFTER THE CONTACT. MOBILE UNIT CHECKS IN FROM ROAD 17. QSL THE TEST MESSAGE BEFORE NOON.",
+        "weightedCharacters": 98,
+        "unweightedCharacters": 89,
+        "durationSeconds": 227.4421052631574
+      }
     }
   ]
 }
