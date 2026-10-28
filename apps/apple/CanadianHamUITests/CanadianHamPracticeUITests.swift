@@ -995,6 +995,56 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.exists)
     }
 
+    func testLessonReaderTreeCountsAtTop() throws {
+        // L-008-01 is the longest bundled lesson by UTF-8 byte count.
+        for lessonID in ["L-005-02", "L-007-01", "L-008-01"] {
+            let app = launchApp(arguments: ["-CanadianHamInitialLessonID", lessonID])
+            XCTAssertTrue(app.staticTexts["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+            waitBriefly(1)
+            let counts: [String: Any] = [
+                "lessonID": lessonID,
+                "position": "top",
+                "descendants": app.descendants(matching: .any).count,
+                "staticTexts": app.staticTexts.count,
+                "buttons": app.buttons.count
+            ]
+            let data = try JSONSerialization.data(withJSONObject: counts, options: [.sortedKeys])
+            let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+            attachment.name = "task79-\(lessonID)-top-counts"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+            print("TASK79_COUNTS \(String(decoding: data, as: UTF8.self))")
+            app.terminate()
+        }
+    }
+
+    func testLessonReaderAppearanceAtTopMiddleAndBottom() throws {
+        for appearance in ["light", "dark"] {
+            XCUIDevice.shared.appearance = appearance == "light" ? .light : .dark
+            for accessibilitySize in [false, true] {
+                for (position, anchor) in [("top", ""), ("middle", "ohms-law"), ("bottom", "summary")] {
+                    var arguments = ["-CanadianHamInitialLessonID", "L-005-02", "-CanadianHamTheme", appearance]
+                    if !anchor.isEmpty {
+                        arguments += ["-CanadianHamInitialLessonSectionAnchor", anchor]
+                    }
+                    if accessibilitySize {
+                        arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+                    }
+                    let app = launchApp(arguments: arguments)
+                    let target = app.staticTexts[anchor.isEmpty ? "lesson-reader-title" : "lesson-heading-\(anchor)"].firstMatch
+                    XCTAssertTrue(target.waitForExistence(timeout: 10))
+                    waitBriefly(1)
+                    XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(target, in: app), "Expected \(position) content at its anchor")
+                    let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+                    attachment.name = "task79-L-005-02-\(appearance)-\(accessibilitySize ? "AXXXL" : "default")-\(position)"
+                    attachment.lifetime = .keepAlways
+                    add(attachment)
+                    app.terminate()
+                }
+            }
+        }
+    }
+
     func testLessonTryItRevealAndAccessibilityLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditLessonTryItReveal(appearance: .light, accessibilitySize: false)
