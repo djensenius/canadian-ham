@@ -29,9 +29,12 @@ struct LessonMarkdownView: View {
         let blocks = displayBlocks(rendered)
         LazyVStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             ForEach(blocks) { displayBlock in
-                displayBlockView(displayBlock)
-                    // The lazy stack must know an anchor before its heading is instantiated.
-                    .id(displayBlock.headingAnchor ?? displayBlock.fallbackID)
+                VStack(alignment: .leading, spacing: 0) {
+                    displayBlockView(displayBlock)
+                }
+                .accessibilityElement(children: .contain)
+                // The lazy stack must know an anchor before its heading is instantiated.
+                .id(displayBlock.headingAnchor ?? displayBlock.fallbackID)
             }
         }
         .id(markdown)
