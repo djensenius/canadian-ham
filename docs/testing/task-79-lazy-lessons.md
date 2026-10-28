@@ -1,6 +1,10 @@
 # TASK-79: lazy lesson reader
 
-**Status: implementation in progress; full validation not yet complete.**
+**Status: blocked, not complete.** The lazy prototype substantially reduces the
+accessibility tree but introduces Dynamic Type and contrast audit regressions.
+Two bounded app-side attempts failed and were reverted. The coordinator directed
+stopping after the final failed experiment; TASK-79 remains In Progress, with no
+acceptance criteria checked.
 
 `Platforms/Shared/PlatformLessonMarkdownView.swift` now renders its blocks in a
 `LazyVStack`, with each heading anchor on the direct lazy child rather than inside
@@ -103,10 +107,100 @@ load exceeded 600 during both runs, so these are **not normal-load** measurement
   counts 41.418 s. Export: `/tmp/task-79-baseline-attachments/manifest.json`.
 - `/tmp/task-79-after.{sh,log,xcresult}`: first lazy smoke, 3/4 passed as above.
   Export: `/tmp/task-79-after-attachments/manifest.json`.
-- `/tmp/task-79-navigation-fix.{sh,log,xcresult}`: targeted fix validation.
-- `/tmp/task-79-figures.{sh,log,xcresult}`: full `CanadianHamLessonFigures` plan.
+- `/tmp/task-79-navigation-fix.{sh,log,xcresult}`: targeted fix validation **passed**,
+  offscreen headings/Try-it persistence 566.029 s.
+- `/tmp/task-79-figures.{sh,log,xcresult}`: interrupted first full
+  `CanadianHamLessonFigures` plan; not a passing full run.
 - `/tmp/task-79-{baseline,after,figures}-load.log`: command-wide UTC/load samples.
 
-The complete requested figure, targeted reader/iPad, macOS, repeated M7/Ohm,
-platform-build and localization results will be recorded after they finish.
-The task is not claimed complete based on smoke/count evidence alone.
+## Blocking figure-audit regression
+
+The first full figure plan was stopped with coordinator approval, by sending
+SIGINT **only** to this task's figure-plan `xcodebuild` process. The bundle
+finalized, exit 75 (`TEST INTERRUPTED`):
+
+| Method | Result | Whole-method seconds |
+| --- | --- | ---: |
+| Structural collapsed/expanded uniqueness and lazy-launch regression | Pass | 684.430 |
+| M1 dark sample | Pass | 201.552 |
+| M1 light Part1 | Fail: Dynamic Type unsupported | 156.861 |
+| M1 light Part1NextLesson | Fail: Dynamic Type unsupported | 155.781 |
+| M1 light Part2 | Fail: contrast on visible paragraph | 153.659 |
+| M1 light Part3 | Cancelled, not a completed failure | — |
+
+Later methods were not run. The summary's four failed entries include that one
+cancelled method; there are **three real completed failures**, not four. The
+console mislabeled Part2's error; its finalized issue and screenshot establish
+that it is contrast, not a third Dynamic Type finding. No Code=-56 occurred in
+these completed visits, which is not consecutive M7/Ohm evidence.
+
+### Once-only eager main comparison
+
+The unchanged first failing M1 light method **passed 388.729 s** in a detached
+worktree at `origin/main` commit
+`6a449802614303741ee5aa07f973803c46f535b7` (TASK-80 merge). The reader is byte-identical
+to the original task base, SHA-256
+`0afefb2d2a8ca18c9f522db979ed61a1f05738ef9d5aac6cdc660213c648f7fb`.
+Command/bundle: `/tmp/task-79-main-comparison.{sh,log,xcresult}`, exit 0. The
+comparison ran **once**, before the app-side attempts/diagnostic below, and the
+detached worktree was removed afterwards. Thus this is a lazy-reader regression,
+not a known pre-existing main failure.
+
+### Bounded attempts and scratch diagnostic
+
+1. Explicit semantic `.body` on the disclosure control plus intrinsic vertical
+   label sizing: all three M1 light methods still failed (239.186, 114.566,
+   207.636 s). Attempt `16bd8b01`, reverted `2a83b14f`; no such lines remain.
+2. A coordinator-approved, **temporary uncommitted** scratch method ran the full
+   default audit with a local closure that only logged and returned `false` for
+   every finding. It never filtered/ignored anything and deliberately failed
+   (177.090 s). The scratch method was deleted immediately after export and
+   **was never committed**. The shared audit handler was never edited.
+3. Coordinator-approved disclosure `.id(dynamicTypeSize)` experiment, with
+   expansion state outside that identity to avoid resetting it during re-layout:
+   first M1 light method still failed Dynamic Type (206.499 s). Attempt
+   `df489404`, reverted `5a932cc7`. Neither identity nor extra state remains.
+   The coordinator's explicit failure branch requires stopping here, not another
+   retry or unapproved experiment.
+
+The diagnostic finding is `.dynamicType` raw value 65536, `StaticText` with label
+`Figure text equivalent`, at `(52,199,298,28.333)` points. The before-audit tree had
+the same label at `(52,872,298,28.333)`, partly below the 874-point viewport. During
+the audit, content height changed from 5951.3 to 5743.3 points, scroll-content
+minimum Y from -2759 to -2958, and the label was brought to Y=199 without a height
+change. This suggests lazy re-layout/AX lifecycle interaction, **not proof of
+node reuse**. The semantic font was already correct; adding a font or forcing
+vertical intrinsic size did not resolve it.
+
+Full element description/path:
+`/tmp/task-79-diagnostic-attachments/AEA1D142-DD45-4417-AC3D-7A12CAC168F4.txt`.
+Before tree:
+`/tmp/task-79-diagnostic-attachments/A14DF995-2BEF-4440-8E68-71A76E6B888F.txt`.
+The issue description and screenshots for the original failures are exported in
+`/tmp/task-79-figures-failure-attachments/manifest.json`.
+
+[Per-test results JSON](task-79-results.json) preserves every completed run,
+including failures, the cancelled method, diagnostic status, exact source SHAs
+and sampled load ranges. Those timings are **whole methods**, not individual
+full-audit timings. The required per-audit duration comparison for L-005-02,
+L-007-01 and the longest lesson remains uncollected; no performance/acceptance
+claim substitutes method durations for it.
+
+## Remaining checks and handoff
+
+The complete figure plan/restart, existing targeted reader tests, five-iteration
+M7/Ohm run, targeted iPad tests, title sweeps, macOS unit/build-for-testing,
+tvOS/visionOS builds and full localization export were **not run/completed**
+because the coordinator stopped further work after the failed bounded
+experiment. Both tvOS and visionOS compile the shared reader per `project.yml`;
+those required builds are still outstanding. watchOS does not compile it.
+
+Text-source checker/self-test, test-guard/self-test, diff whitespace and source
+identity checks pass. No retry wrapper, audit narrowing, new exception, skip,
+`.ignore`/hidden accessibility content, or weakened assertion exists. The only
+pre-existing helper change is the expressly approved existence guard; the
+structural assertions remain intact with the approved navigation/lazy assertion.
+
+Next architecture choice is reserved to the coordinator: stable `.contain`
+block groups versus limiting which blocks are lazy. **Neither has been applied.**
+The task is not claimed complete based on tree/appearance evidence alone.

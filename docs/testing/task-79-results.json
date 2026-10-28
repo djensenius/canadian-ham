@@ -1,4 +1,6 @@
 {
+  "status": "Blocked: lazy-reader Dynamic Type and contrast audit regressions; no acceptance claimed",
+  "timings": "All seconds below are whole XCTest method durations, not individual audit durations.",
   "runs": [
     {
       "run": "baseline",
@@ -7,17 +9,21 @@
         {
           "test": "CanadianHamPracticeUITests/testLessonReaderAppearanceAtTopMiddleAndBottom()",
           "result": "Success",
-          "seconds": 183.8926659822464,
-          "audits": []
+          "seconds": 183.8926659822464
         },
         {
           "test": "CanadianHamPracticeUITests/testLessonReaderTreeCountsAtTop()",
           "result": "Success",
-          "seconds": 41.41798996925354,
-          "audits": []
+          "seconds": 41.41798996925354
         }
       ],
-      "interrupted": false
+      "interrupted": false,
+      "oneMinuteLoad": {
+        "samples": 6,
+        "minimum": 28.91,
+        "maximum": 699.25,
+        "includesLockWait": true
+      }
     },
     {
       "run": "after",
@@ -26,29 +32,31 @@
         {
           "test": "CanadianHamPracticeUITests/testLessonReaderAppearanceAtTopMiddleAndBottom()",
           "result": "Success",
-          "seconds": 141.26897609233856,
-          "audits": []
+          "seconds": 141.26897609233856
         },
         {
           "test": "CanadianHamPracticeUITests/testLessonReaderFigureSheetReturnsToInlineControl()",
           "result": "Success",
-          "seconds": 33.457815051078796,
-          "audits": []
+          "seconds": 33.457815051078796
         },
         {
           "test": "CanadianHamPracticeUITests/testLessonReaderOffscreenHeadingsAndTryItStateSurviveScrolling()",
           "result": "Failure",
-          "seconds": 172.75828194618225,
-          "audits": []
+          "seconds": 172.75828194618225
         },
         {
           "test": "CanadianHamPracticeUITests/testLessonReaderTreeCountsAtTop()",
           "result": "Success",
-          "seconds": 41.22778296470642,
-          "audits": []
+          "seconds": 41.22778296470642
         }
       ],
-      "interrupted": false
+      "interrupted": false,
+      "oneMinuteLoad": {
+        "samples": 8,
+        "minimum": 353.12,
+        "maximum": 433.59,
+        "includesLockWait": true
+      }
     },
     {
       "run": "navigation-fix",
@@ -57,8 +65,7 @@
         {
           "test": "CanadianHamPracticeUITests/testLessonReaderOffscreenHeadingsAndTryItStateSurviveScrolling()",
           "result": "Success",
-          "seconds": 566.0292290449142,
-          "audits": []
+          "seconds": 566.0292290449142
         }
       ],
       "interrupted": false
@@ -70,41 +77,41 @@
         {
           "test": "CanadianHamLessonFiguresUITests/testLessonFigureTextEquivalentsStartCollapsedAndExposeEachRowOnce()",
           "result": "Success",
-          "seconds": 684.4304280281067,
-          "audits": []
+          "seconds": 684.4304280281067
         },
         {
           "test": "CanadianHamLessonFiguresUITests/testModule1LessonFigureDarkSample()",
           "result": "Success",
-          "seconds": 201.55166506767273,
-          "audits": []
+          "seconds": 201.55166506767273
         },
         {
           "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1()",
           "result": "Failure",
-          "seconds": 156.86069798469543,
-          "audits": []
+          "seconds": 156.86069798469543
         },
         {
           "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1NextLesson()",
           "result": "Failure",
-          "seconds": 155.78055202960968,
-          "audits": []
+          "seconds": 155.78055202960968
         },
         {
           "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart2()",
           "result": "Failure",
-          "seconds": 153.65894091129303,
-          "audits": []
+          "seconds": 153.65894091129303
         },
         {
           "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart3()",
-          "result": "Failure",
-          "seconds": 0.0,
-          "audits": []
+          "result": "Cancelled",
+          "seconds": 0.0
         }
       ],
-      "interrupted": true
+      "interrupted": true,
+      "oneMinuteLoad": {
+        "samples": 26,
+        "minimum": 494.43,
+        "maximum": 1002.48,
+        "includesLockWait": true
+      }
     },
     {
       "run": "main-comparison",
@@ -113,11 +120,119 @@
         {
           "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1()",
           "result": "Success",
-          "seconds": 388.7294590473175,
-          "audits": []
+          "seconds": 388.7294590473175
+        }
+      ],
+      "interrupted": false
+    },
+    {
+      "run": "font-fix",
+      "resultBundle": "/tmp/task-79-font-fix.xcresult",
+      "tests": [
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1()",
+          "result": "Failure",
+          "seconds": 239.18634605407715
+        },
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1NextLesson()",
+          "result": "Failure",
+          "seconds": 114.56614804267883
+        },
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart2()",
+          "result": "Failure",
+          "seconds": 207.63620901107788
+        }
+      ],
+      "interrupted": false
+    },
+    {
+      "run": "diagnostic",
+      "resultBundle": "/tmp/task-79-diagnostic.xcresult",
+      "tests": [
+        {
+          "test": "CanadianHamLessonFiguresUITests/testTask79ScratchLessonAuditDiagnostics()",
+          "result": "Failure",
+          "seconds": 177.08984398841858
+        }
+      ],
+      "interrupted": false,
+      "purpose": "Expected-failing scratch diagnostic, never committed; not acceptance validation"
+    },
+    {
+      "run": "dynamic-type-id",
+      "resultBundle": "/tmp/task-79-dynamic-type-id.xcresult",
+      "tests": [
+        {
+          "test": "CanadianHamLessonFiguresUITests/testModule1LessonFiguresLightPart1()",
+          "result": "Failure",
+          "seconds": 206.49890899658203
         }
       ],
       "interrupted": false
     }
+  ],
+  "mainBaseline": {
+    "commit": "6a449802614303741ee5aa07f973803c46f535b7",
+    "readerSHA256": "0afefb2d2a8ca18c9f522db979ed61a1f05738ef9d5aac6cdc660213c648f7fb",
+    "runs": 1,
+    "result": "Success",
+    "temporaryWorktreeRemoved": true
+  },
+  "diagnosticIssue": {
+    "typeRawValue": 65536,
+    "type": "dynamicType",
+    "compactDescription": "Dynamic Type font sizes are partially unsupported",
+    "detailedDescription": "User will not be able to change the font size of this SwiftUI.AccessibilityNode",
+    "elementType": "StaticText",
+    "label": "Figure text equivalent",
+    "frameAtIssuePoints": [
+      52,
+      199,
+      298,
+      28.333333333333485
+    ],
+    "frameBeforeAuditPoints": [
+      52,
+      872,
+      298,
+      28.333333333333485
+    ],
+    "contentHeightBeforePoints": 5951.3,
+    "contentHeightDuringIssuePoints": 5743.3,
+    "scrollContentMinYBeforePoints": -2759,
+    "scrollContentMinYDuringIssuePoints": -2958,
+    "elementDescriptionFile": "/tmp/task-79-diagnostic-attachments/AEA1D142-DD45-4417-AC3D-7A12CAC168F4.txt",
+    "beforeTreeFile": "/tmp/task-79-diagnostic-attachments/A14DF995-2BEF-4440-8E68-71A76E6B888F.txt",
+    "nodeReuseProven": false
+  },
+  "revertedAttempts": [
+    {
+      "attemptCommit": "16bd8b01927a86b8873e7752845ac466a7a216da",
+      "revertCommit": "2a83b14f3746d053a17800f434c1ac33fc1cb64e",
+      "change": "Explicit semantic control font and intrinsic vertical label height",
+      "result": "Same failures in all three M1 light methods"
+    },
+    {
+      "attemptCommit": "df489404514442788a2985ad5fe3a827862ffbb9",
+      "revertCommit": "5a932cc713ef55ffb96a9af3cc20761e0eed4c1e",
+      "change": "Disclosure identity keyed by Dynamic Type, with expansion state external to identity",
+      "result": "First M1 light method still fails Dynamic Type"
+    }
+  ],
+  "notRun": [
+    "Full figure-plan completion/restart",
+    "Five-iteration M7 and Ohm light/dark run",
+    "Existing targeted default-plan lesson-reader tests",
+    "Targeted iPad lesson tests",
+    "Title sweeps",
+    "macOS unit tests and build-for-testing",
+    "tvOS and visionOS builds",
+    "pnpm check:apple-l10n"
+  ],
+  "remainingMeasurementGaps": [
+    "Individual full-audit durations for L-005-02, L-007-01 and the longest lesson",
+    "Consecutive M7/Ohm success evidence; current runtime environment is not normal-load"
   ]
 }
