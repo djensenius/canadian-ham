@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T01:33:00Z'
+updated_date: '2026-10-28T01:42:00Z'
 labels:
   - accessibility
   - performance
@@ -36,3 +36,9 @@ Owner 2026-10-27, on TASK-65: 'Fix it so timeout isn't really possible' and lazy
 3. Capture after counts and screenshot hashes, run the figure plan once and targeted reader/iPad/macOS/platform checks, then five M7/Ohms repetitions within the five-hour budget.
 4. Commit/push milestones, record exact results and unresolved evidence, and hand off at five hours if validation is incomplete.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Milestones pushed: e0e3ed7634f04bfae54039ced91b36f284bd4e89 adds baseline capture tests; 183c6870 converts shared LessonMarkdownView to LazyVStack with IDs on direct children and adds offscreen heading/Try-it-state and figure-return tests. Existing Practice/figure tests and all shared helpers/audits verified byte-identical to main (strip only new methods and compare entire files). Baseline /tmp/task-79-baseline.xcresult passed 2/2: appearance 183.893 s, top counts 41.418 s. At top: L-005-02 330 descendants / 285 static texts; L-007-01 285 / 235; longest UTF-8 lesson L-008-01 316 / 267. Twelve full-screen before-images exported to /tmp/task-79-baseline-attachments; after smoke and full figure plan queued. Load sampled each minute; one-minute average exceeded 600 during baseline; no other processes modified.
+<!-- SECTION:NOTES:END -->
