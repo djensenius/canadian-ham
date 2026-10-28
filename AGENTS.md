@@ -86,8 +86,10 @@ platform) and share one build lock, so don't run them by reflex.
   directives, the lesson reader, or the figure tests and their lesson audit/positioning helpers
   change (owner decision 2026-10-14 for the figure class; coordinator decision 2026-10-20 in
   task-33 added the two Ohm's law figure integration audits after audit timeouts). The default
-  `CanadianHamDefault` plan excludes those tests. Run the figure-only plan with:
-  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamLessonFigures -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
+  `CanadianHamDefault` plan excludes those tests. Run the figure plan **only** through
+  `scripts/run-figure-plan-quiet.sh` (TASK-79; waits for low host load and records load/results).
+  The coordinator starts no other Apple lanes while it runs, including its quiet-host wait.
+  Pass targeted selections/iterations as script arguments; use `--help` for load/timeout/output options.
 - **Category-title sweeps:** the four `CanadianHamPracticeUITests.testCategoryTitles…` tests
   run in their own `CanadianHamTitleSweeps` plan, not `CanadianHamDefault`. Run this plan
   when category titles, category or module names in the string catalogue, or the layout of
