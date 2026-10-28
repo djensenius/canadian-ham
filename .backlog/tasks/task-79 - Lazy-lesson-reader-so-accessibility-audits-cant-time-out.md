@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-28T01:32:00Z'
-updated_date: '2026-10-28T15:07:00Z'
+updated_date: '2026-10-28T15:09:00Z'
 labels:
   - accessibility
   - performance
@@ -30,14 +30,10 @@ Owner 2026-10-28 chose option 2, after the lazy reader was closed (#1049): Code=
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect reader, block identity, anchors, figure focus and existing immutable audit helpers; add bounded baseline count/screenshot coverage before the lazy change.
-2. Convert shared reader block layout to lazy rendering without appearance or audit changes; add focused navigation/heading/state tests.
-3. Capture after counts and screenshot hashes, run the figure plan once and targeted reader/iPad/macOS/platform checks, then five M7/Ohms repetitions within the five-hour budget.
-4. Commit/push milestones, record exact results and unresolved evidence, and hand off at five hours if validation is incomplete.
-
-5. STOPPED under coordinator decision after the one Dynamic Type identity experiment failed; preserve the lazy prototype/evidence and hand off before any containment/grouping or partial-laziness architecture change. Remaining runtime validation is blocked, not waived.
-
-6. Coordinator-authorized FINAL app-side experiment: wrap each direct lazy child in an accessibility contain container, retaining the existing block identity and heading anchor. Run M1 light Part1, NextLesson and Part2 once each serially on iPhone 17 Pro. If any fails, restore the exact reader, record issue types/elements/frames and load, update handoff, push and stop. If all pass, rerun new navigation/state/figure-return/count tests only, then push and hand off remaining long/platform validation.
+1. Replace the closed lazy-reader plan with the owner-approved quiet-host runner, fast fake-command integration tests, and concise figure-plan-only coordination rules. Do not modify app/tests/audits or the shared xbuild wrapper.
+2. Validate shell syntax/style, the runner integration tests, pnpm test, Apple text sources and the test guard; commit and push the implementation milestone.
+3. Run only M7 dark five iterations, then Ohms light/dark three iterations each, serially through the runner; record exact durations, results, max/median load and artifacts. Stop on any low-load Code=-56.
+4. Commit/push the evidence milestone, verify each AC with evidence, and finalize TASK-79 only if all three pass.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
