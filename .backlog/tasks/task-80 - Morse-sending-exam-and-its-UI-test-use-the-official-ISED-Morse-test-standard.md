@@ -1,9 +1,11 @@
 ---
 id: TASK-80
 title: Morse sending exam and its UI test use the official ISED Morse test standard
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-28T01:32:00Z'
+updated_date: '2026-10-28T01:33:00Z'
 labels:
   - morse
   - accuracy
@@ -24,3 +26,12 @@ Owner 2026-10-27, on TASK-65: 'use the official standard for the test'. The Mors
 - [ ] #2 The app's Morse sending exam (iOS/iPadOS/macOS, web if it has one) matches the official standard, or any deliberate practice-mode difference is labelled. Morse engine/profile tests cover it
 - [ ] #3 The sending UI tests use the official exam duration (no arbitrary debug length); the light and dark sending audit tests pass 3/3 each with every assertion and the full audit unchanged
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Fetch current ISED EN/FR primary sources and document sectioned Morse timing, format and grading facts.
+2. Compare shared TS/Swift engines and Apple/web sending configuration; implement only verified standard corrections and parity tests.
+3. Remove arbitrary UI-test duration override while preserving assertions/audits; fix local Grade navigation only if needed.
+4. Run bounded package/parity, three sending tests (three iterations), macOS unit, text-source and guard checks; record evidence, commit/push milestones, and finalize.
+<!-- SECTION:PLAN:END -->
