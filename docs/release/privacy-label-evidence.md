@@ -220,3 +220,92 @@ App Privacy wording when the approved internal build is processed and run the
 [physical offline/VoiceOver/haptic checks](testflight.md#owner-physical-watch-checklist-required-not-replaced-by-simulator-tests).
 TASK-14.6 AC4 remains unchecked until that post-merge gate is recorded; external
 testing/public links/App Store submission remain forbidden before TASK-1.7.
+
+## Current preference and manifest inventory (2026-10-28)
+
+Audited source revision: **`a69c27400b88302c9f8ce393ea98ae01b73cfd25`**.
+This TASK-81 source/configuration review supplements, rather than replaces, the
+historical snapshots above. In particular, the original statement that no
+`@AppStorage` / `UserDefaults` use was found is not current evidence: there is
+now explicit `UserDefaults` use. No release build, signed-artifact inspection,
+network guard, web build/URL audit or device test was rerun for this docs-only
+addendum. TASK-1.2's release-commit validation remains required; TASK-1.5's
+checklist is not release approval.
+
+### Preference sources reviewed
+
+A recursive source search across `apps/apple` and `packages` for `UserDefaults`,
+`NSUserDefaults`, `standardUserDefaults`, `CFPreferences`, `@AppStorage` and
+`@SceneStorage` found direct preference-API references in
+`MorseTrainerSettings.swift`, `ProgressStore.swift`, `NativeSettingsView.swift`,
+`StudyViews.swift`, and the corresponding `ProgressStoreTests.swift` /
+`MorseTrainerTests.swift`. No matches for the other searched API spellings were
+found. The following inventory also checks their call sites, shared
+`ApplePreferences.swift`, the SwiftData preference models, and platform root
+state. This is a bounded preference-source/configuration inventory, **not** a
+comprehensive audit of all Apple required-reason API categories, transitive
+framework behavior or final shipped artifacts.
+
+| Source | Current local preference behavior | Application coverage at this revision |
+|---|---|---|
+| `CanadianHam/Morse/MorseTrainerSettings.swift` (lines 161–176) | `load(defaults: .standard)` reads JSON data under `canadian-ham.morse-trainer-settings.v1`, decodes/normalizes it or returns defaults; `save` encodes normalized settings and writes data; `reset` removes the key. Stored fields are tone Hz, character/effective WPM, timing profile, volume and output mode. | Compiled by `CanadianHam` (iOS/iPadOS/macOS), `CanadianHamTV` and `CanadianHamVision`, not the watch. |
+| Morse call sites: `MorseTrainerView.swift`, `AppSettingsModel.swift`, `RootView.swift`, `NativeSettingsView.swift`, `StudyViews.swift` | The iOS/macOS app loads settings, the trainer saves normalized changes, import saves imported Morse preferences, and reset removes them. The two Settings view files' explicit `UserDefaults` parameters feed that same Morse save path. | `CanadianHam` only. |
+| `Platforms/tvOS/CanadianHamTVApp.swift`, `Platforms/visionOS/CanadianHamVisionApp.swift` | Both initialize in-memory Morse state with `MorseTrainerSettings.load()`, thus reading defaults. No Morse save/reset call was found in these platform sources; settings edits and practice remain session state. Read access still belongs in the required-reason review. | `CanadianHamTV`, `CanadianHamVision`, respectively. |
+| `CanadianHam/Services/ProgressStore.swift`: language and bank selection | Reads/writes/removes `AppleLanguages`, records `CanadianHam.preferences.appleLanguagesLastApplied`, reads/writes `CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete`, and reads/writes/removes `CanadianHam.activeBankId` for load/update/import/reset/rollback and launch reset. Language-domain reads use `persistentDomain(forName:)`; language application is conditioned on iOS/macOS. | `CanadianHam` (iOS/iPadOS/macOS); ProgressStore is not in the TV, Vision or Watch app targets. |
+| `ProgressStore.swift`: `ICloudSyncSettings` helpers and service initialization/reset | Defaults helpers read/write/remove `CanadianHam.iCloudSyncOptIn`, create/read a local UUID under `CanadianHam.iCloudSyncLocalDeviceIdentifier`, and read/set/remove `CanadianHam.iCloudSyncPendingProgressZoneDeletion`. These helper definitions are not wholly inside `#if ICLOUD_SYNC`; normal service initialization reads opt-in and obtains the local device identifier, and local reset clears opt-in. Do not omit these local accesses merely because remote sync is gated. | `CanadianHam`. CloudKit import/monitoring and remote database selection are gated by `ICLOUD_SYNC`, enabled only in the non-default `DebugCloudKit` configuration, not v1 Debug/Release. This is not authorization for v1 sync. |
+| `Platforms/Shared/ApplePreferences.swift`, `CanadianHam/Models/ProgressModels.swift`, `ProgressStore.swift` | `ApplePreferences` is a Codable value, not a defaults wrapper. Practice mode, exam timer, language and theme are persisted through local SwiftData `PreferencesEntity` rows; active-bank selection uses defaults as above. The lesson-split migration marker `CanadianHam.progress.task46_10LessonSplitMigrationComplete` is a keyed SwiftData preferences row, **not** a defaults key. | Shared preference value compiled by `CanadianHam`, TV and Vision; SwiftData models/store belong to `CanadianHam`. |
+| `Platforms/watchOS/WatchHomeView.swift`, `WatchSettingsView.swift`, `WatchMorseDrill.swift` (`WatchMorseSettings`), `WatchMorseView.swift` | Watch language and Morse/output preferences are in-memory state, reset by relaunch. The watch does not compile the phone's Morse settings/defaults or ProgressStore sources. | `CanadianHamWatch`; its linked local package sources had no matches in the preference-API search above. |
+| `CanadianHamTests/ProgressStoreTests.swift`, `MorseTrainerTests.swift` | Defaults suites and round-trip/import/reset assertions support tests, not evidence that shipped manifests are sufficient. | Test bundles are not distributed application targets; no tests were executed for this addendum. |
+
+### Observed manifests and target membership
+
+Both source manifests parsed with `plutil -p` and currently declare:
+
+```text
+NSPrivacyTracking = false
+NSPrivacyTrackingDomains = []
+NSPrivacyCollectedDataTypes = []
+NSPrivacyAccessedAPITypes = []
+```
+
+`apps/apple/project.yml` and the generated
+`apps/apple/CanadianHam.xcodeproj/project.pbxproj` agree on these application
+resource memberships and preference-source memberships:
+
+| Application target | Manifest source and generated Resources entry | Preference source coverage |
+|---|---|---|
+| `CanadianHam` (iOS/iPadOS/macOS) | `CanadianHam/Resources/PrivacyInfo.xcprivacy`, included through the `CanadianHam` tree; `DA8494DE030F9968C7D5505E` in Resources phase `70820DEF5BA3FD3C91F0105E` | Morse settings, ProgressStore, SwiftData models and Settings import/reset views |
+| `CanadianHamTV` | Same shared manifest, explicitly listed; `7A69A327192A249A5B2FF3AD` in `970FB2C9E711726AD828A219` | Shared Morse settings and platform load call, no ProgressStore |
+| `CanadianHamVision` | Same shared manifest, explicitly listed; `71824E1D425D494043EA0781` in `43D39217D2081D1C20A0889C` | Shared Morse settings and platform load call, no ProgressStore |
+| `CanadianHamWatch` | `Platforms/watchOS/Resources/PrivacyInfo.xcprivacy`, through the watch tree; `32900841E36F7C998DB6960F` in `E9EC76AE96F86E7F7A62BF9C` | Watch-specific in-memory settings, not shared Morse settings/ProgressStore |
+
+These are source/project observations, not a fresh inspection of bundled or
+signed release manifests. The older watch export evidence remains historical.
+
+### Required-reason review: OPEN
+
+**Applicability, approved reasons and shipped-target coverage are unresolved.**
+The observed empty `NSPrivacyAccessedAPITypes` arrays alongside current defaults
+access require review against Apple's current required-reason API documentation
+(linked above). This inventory neither proves a violation nor grants compliance
+clearance. It supplies no invented Apple reason codes. **Data Not Collected** and
+no-network results address different questions; neither establishes that a
+required-reason declaration is unnecessary or sufficient.
+
+Before submission, the release owner must:
+
+- Review all applicable required-reason API categories on the actual release
+  revision, not just the preference spellings searched here, including linked
+  packages/framework use and each shipped platform.
+- Determine the applicable categories and Apple's currently approved reasons
+  from actual behavior (including reads and ungated local helper calls), record
+  the rationale, and reconcile that decision with shared versus watch-specific
+  manifest coverage. No reason has been selected or approved by this addendum.
+- If that review calls for code/manifest changes, track and implement a separate
+  remediation with validation; **none are made by TASK-81**. Inspect the final
+  bundled manifests for each shipped target and retain release-commit evidence
+  before closing this review.
+
+The existing ISED permission, device/offline/accessibility, privacy wording and
+release-candidate gates remain in force. This addendum does not complete
+TASK-1.2, reopen or re-complete TASK-1.5, or authorize distribution.
