@@ -1,11 +1,11 @@
 ---
 id: TASK-82
 title: Refresh the matched React patch dependency pair
-status: In Progress
+status: Done
 assignee:
   - '@copilot-worker'
 created_date: '2026-10-29T00:21:00Z'
-updated_date: '2026-10-29T00:24:00Z'
+updated_date: '2026-10-29T00:33:00Z'
 labels:
   - dependencies
   - web
@@ -26,7 +26,7 @@ Fleet dependency assessment found React and React DOM 19.3.1 available and exist
 <!-- AC:BEGIN -->
 - [x] #1 Only the matched React and React DOM 19.3.1 direct dependency declarations and resulting pnpm lockfile changes are included, besides this CLI-managed task record; current CI/root scripts and release/privacy gates remain unchanged.
 - [x] #2 Frozen installation with existing strict peers, typecheck, web/package tests, web build and built URL/CSP audit pass on the refreshed branch.
-- [ ] #3 Internal review, Copilot PR review and required CI pass before merge; record exact checks and no Apple suites for this web-only update.
+- [x] #3 Internal review, Copilot PR review and required CI pass before merge; record exact checks and no Apple suites for this web-only update.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -51,4 +51,12 @@ Validation (requested commands all exit 0, first attempts):
 - git diff --check: no output, exit 0.
 - Extra ad-hoc Node scope assertion initially failed because its normalization incorrectly matched @types/react substrings, not because dependencies changed; corrected token boundary and reran successfully: Scope check passed: only TASK-82, web manifest and lockfile changed; first lockfile document and all non-pair package versions preserved. No repository check or test changed.
 No Apple suites (iOS/macOS/tvOS/visionOS/watchOS) run: web-only patch. Internal dependency pre-review APPROVE WITH NOTES supplied by coordinator; implementation review, Copilot PR review and required CI remain future gates. AC3 deliberately unchecked and task remains In Progress. No GitHub interactions, push, PR, merge, amend or rebase performed.
+
+Internal reviewer APPROVE on ea264efd4e2f731ea72c72f9a0454295850b1003. PR #1054 Copilot review recommends approval with no open issues and no review threads; required Change classification, Test guard and Node/content checks passed; Swift skipped as web-only. Final task-metadata push will receive a fresh Copilot request and required CI before merge. No Apple platforms run because no Apple code, content, shared Swift packages or target membership changed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Refreshed React and React DOM together to 19.3.1 with only matched lockfile peer changes, preserving current main scripts/CI. Frozen installation, typecheck, content-tools 250, Morse 23, calculator 127, web 283, engine-ts 32 tests, web build, URL/CSP audit and whitespace checks passed. Internal reviewer approved; Copilot found no issues and required CI passed on the implementation head. Broader development-tool updates remain deferred.
+<!-- SECTION:FINAL_SUMMARY:END -->
