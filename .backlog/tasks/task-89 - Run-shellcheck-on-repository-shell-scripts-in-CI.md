@@ -1,9 +1,11 @@
 ---
 id: TASK-89
 title: Run shellcheck on repository shell scripts in CI
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-11-03T04:10:00Z'
+updated_date: '2026-11-03T04:17:00Z'
 labels:
   - ci
   - release
@@ -26,3 +28,14 @@ TASK-86 added Xcode Cloud ci_scripts (apps/apple/ci_scripts/*.sh) and a shell te
 - [ ] #2 Existing shellcheck findings are fixed, or suppressed with a narrow inline directive and a reason, without changing script behaviour
 - [ ] #3 Docs that list release-tooling checks state which harnesses run in GitHub CI and which stay local because they need macOS, and that a macOS runner is an owner decision
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add scripts/check-shell-scripts.sh (pnpm check:shell): enumerate tracked *.sh under scripts/ and apps/apple/ci_scripts/ with git ls-files, run bash -n and shellcheck -x on each, fail closed if shellcheck is missing, no files are found, or any file fails.
+2. Fix the existing SC1007 findings (CDPATH= -> CDPATH='') in scripts/check-apple-no-network.sh and scripts/test-check-apple-no-network.sh; same behaviour, matches test-xcode-cloud-ci-scripts.sh.
+3. Verify the new check passes with ShellCheck 0.9.0 (ubuntu-24.04 image), 0.10.0 and 0.11.0 (local and ubuntu-26.04 image) so no version pin is required.
+4. Update docs/release/distribution.md (and testflight.md where it lists test:fastlane) to say which release-tooling harnesses run in GitHub CI and which stay local on macOS, and that a macOS runner is an owner decision.
+5. Hand the coordinator the ci.yml step for the Node and content checks job; do not edit workflows.
+6. Run pnpm check:shell, test:apple-network, typecheck, test, check:links, git diff --check and the test guard.
+<!-- SECTION:PLAN:END -->
