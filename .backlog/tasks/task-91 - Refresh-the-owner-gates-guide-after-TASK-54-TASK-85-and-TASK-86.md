@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@copilot'
 created_date: '2026-11-03T04:10:00Z'
-updated_date: '2026-11-03T05:31:00Z'
+updated_date: '2026-11-03T09:16:00Z'
 labels:
   - docs
   - release
@@ -54,6 +54,8 @@ AC4: pnpm check:links -> 'Markdown relative links verified.'; git diff --check c
 Not changed (out of scope): distribution.md step 2 still says the repo stays private until TASK-1.7, but the repo is already public (TASK-1.7 notes). AGENTS.md/distribution.md say the coordinator uploads internal Fastlane builds; owner-gates.md uses neutral wording (builds come from the Fastlane fallback) to avoid contradicting either.
 
 Review follow-up (APPROVE WITH NOTES), commit 5d1c95d5: CFBundleVersion override now matches distribution.md (unverified, not recommended, only with an owner decision and a test); Duo BackButton described as under the Toolbar element, not inside the NavigationBar element in the accessibility tree; Sitting 6 step 4 asks the owner to confirm the macOS SDK on the first Xcode Cloud macOS archive (links distribution.md#differences-from-fastlane). The #why-these-reasons anchor is deferred until PR #1064 merges. pnpm check:links -> 'Markdown relative links verified.'; git diff --check clean.
+
+Post-#1064 follow-up, commit 87190868 (after merging origin/main b86870de): the CA92.1 sign-off now links privacy-label-evidence.md#why-these-reasons and the release checklist; TASK-85 described as Done with the merged manifests (User defaults CA92.1 for CanadianHam, TV, Vision; System boot time 35F9.1 for CanadianHam and Watch), the GitHub CI check and TASK-90 for Xcode Cloud; Sitting 6 distribution workflow now waits only on TASK-1.7. Checks: pnpm check:links -> 'Markdown relative links verified.'; git diff --check clean; node scripts/check-test-guard.mjs --base origin/main --head HEAD -> 'Test guard passed: no guarded changes found'.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
