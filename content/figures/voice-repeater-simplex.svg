@@ -1,0 +1,17 @@
+<svg id="voice-repeater-simplex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Repeater input output and simplex paths</title>
+  <desc>Portable stations use an input path with CTCSS and offset to a hilltop repeater, then a direct simplex path.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 338 C220 320 276 286 300 260 C314 242 326 242 340 260 C374 286 424 320 490 338" stroke-width="8"/>
+    <rect x="276" y="144" width="88" height="54" rx="12" ry="12" stroke-width="6"/><line x1="320" y1="64" x2="320" y2="144" stroke-width="7"/><path d="M282 96 C306 72 334 72 358 96" stroke-width="5"/>
+    <rect x="76" y="250" width="58" height="92" rx="12" ry="12" stroke-width="6"/><line x1="105" y1="250" x2="105" y2="216" stroke-width="5"/><circle cx="105" cy="296" r="12" stroke-width="4"/>
+    <rect x="506" y="250" width="58" height="92" rx="12" ry="12" stroke-width="6"/><line x1="535" y1="250" x2="535" y2="216" stroke-width="5"/><circle cx="535" cy="296" r="12" stroke-width="4"/>
+    <path d="M134 244 C188 178 244 118 286 96" stroke-width="6"/><polygon points="286,96 264,98 276,117" fill="currentColor" stroke="none"/>
+    <path d="M354 96 C420 132 478 188 506 244" stroke-width="6"/><polygon points="506,244 502,222 484,236" fill="currentColor" stroke="none"/>
+    <path d="M150 390 C260 424 386 424 492 390" stroke-width="6"/><polygon points="492,390 470,382 476,405" fill="currentColor" stroke="none"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="320" y="224" font-size="24" font-weight="700">repeater</text><text x="188" y="132" font-size="24">input</text><text x="468" y="74" font-size="24">output</text>
+    <text x="176" y="84" font-size="24">CTCSS + offset</text><text x="104" y="454" font-size="24">portable A</text><text x="536" y="454" font-size="24">portable B</text><text x="320" y="454" font-size="24">simplex</text>
+  </g>
+</svg>

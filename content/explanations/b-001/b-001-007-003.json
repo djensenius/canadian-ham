@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-007-003.\n\nWhy the correct answer is right: The NOT-correct statement is that occasional business may be conducted on the air; business traffic is outside amateur purpose.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A considerate amateur radio operator does not transmit unnecessary signals\": Avoiding unnecessary transmissions is correct conduct, not the prohibited-business exception.\n- sourceIndex 2: \"A courteous amateur radio operator refrains from using offensive language\": Refraining from offensive language is correct amateur conduct.\n- sourceIndex 3: \"An amateur radio operator does not obscure the meaning of their transmissions\": Not hiding meaning is a correct rule, so it is not the false statement.",
+    "en": "Question B-001-007-003.\n\nWhy the correct answer is right: The false statement is that occasional business may be conducted on the air. Business traffic is outside the amateur purpose.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A considerate amateur radio operator does not transmit unnecessary signals\": Avoiding unnecessary transmissions is correct conduct, not the prohibited-business exception.\n- sourceIndex 2: \"A courteous amateur radio operator refrains from using offensive language\": Refraining from offensive language is correct amateur conduct.\n- sourceIndex 3: \"An amateur radio operator does not obscure the meaning of their transmissions\": Not hiding meaning is a correct rule, so it is not the false statement.",
     "fr": null
   },
   "citations": [

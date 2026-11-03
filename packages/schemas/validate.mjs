@@ -17,7 +17,9 @@ const schemaFiles = [
   "subsection-titles.schema.json",
   "lesson-module-front-matter.schema.json",
   "lesson-front-matter.schema.json",
+  "lesson-quiz.schema.json",
   "explanation.schema.json",
+  "hint.schema.json",
   "progress-export-v1.schema.json",
   "engine-fixture.schema.json",
 ];
@@ -46,6 +48,9 @@ const supportedSchemaKeywords = new Set([
   "maxLength",
   "pattern",
   "canonicalUtcTimestamp",
+  "sortedSubset",
+  "sortedDisjoint",
+  "lessonReviewVersion",
 ]);
 
 const canonicalUtcTimestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u;
@@ -87,8 +92,16 @@ for (const file of walk(path.join(projectRoot, "content/lessons"), ".md")) {
   }
 }
 
+for (const file of walk(path.join(projectRoot, "content/quizzes"), ".json")) {
+  validateJsonFile(path.relative(projectRoot, file), "lesson-quiz.schema.json");
+}
+
 for (const file of walk(path.join(projectRoot, "content/explanations"), ".json")) {
   validateJsonFile(path.relative(projectRoot, file), "explanation.schema.json");
+}
+
+for (const file of walk(path.join(projectRoot, "content/hints"), ".json")) {
+  validateJsonFile(path.relative(projectRoot, file), "hint.schema.json");
 }
 
 for (const file of walk(path.join(projectRoot, "fixtures/engine"), ".json")) {
@@ -111,7 +124,7 @@ if (failures.length > 0) {
 }
 
 console.log(`Schema validation passed: ${validationCount} validation target(s).`);
-console.log("Validated generated bank JSON, subsection titles, lesson front matter, explanations, engine fixtures, and progress export samples.");
+console.log("Validated generated bank JSON, subsection titles, lesson front matter, lesson quizzes, explanations, hints, engine fixtures, and progress export samples.");
 
 function validateJsonFile(relativePath, schemaFile) {
   const absolutePath = path.join(projectRoot, relativePath);
@@ -309,6 +322,28 @@ function validateAgainstSchema(schema, data, context) {
   }
 
   if (isObject(data)) {
+    // Cross-property ID-array contract used by lesson-quiz help metadata.
+    for (const [key, parentKey] of Object.entries(schema.sortedSubset ?? {})) {
+      const parents = (Array.isArray(parentKey) ? parentKey : [parentKey]).flatMap((key) => Array.isArray(data[key]) ? data[key] : []);
+      if (data[key] !== undefined && (!Array.isArray(data[key])
+        || !data[key].every((id, index, ids) => typeof id === "string" && parents.includes(id)
+          && (index === 0 || ids[index - 1] < id)))) {
+        errors.push(`${context.path}.${key}: expected sorted unique subset of ${parentKey}`);
+      }
+    }
+    for (const [key, otherKey] of Object.entries(schema.sortedDisjoint ?? {})) {
+      if (data[key] !== undefined && (!Array.isArray(data[key]) || !Array.isArray(data[otherKey])
+        || !data[key].every((id, index, ids) => typeof id === "string" && !data[otherKey].includes(id) && (index === 0 || ids[index - 1] < id)))) {
+        errors.push(`${context.path}.${key}: expected sorted unique IDs disjoint from ${otherKey}`);
+      }
+    }
+    if (schema.lessonReviewVersion && data.lessonIdVersion !== 2) {
+      const value = data[schema.lessonReviewVersion];
+      const attempts = Array.isArray(value) ? value : [value];
+      if (attempts.some((attempt) => isObject(attempt) && Array.isArray(attempt.reviewQuestionIds) && attempt.reviewQuestionIds.length > 0)) {
+        errors.push(`${context.path}: reviewQuestionIds require lessonIdVersion 2`);
+      }
+    }
     const properties = isObject(schema.properties) ? schema.properties : {};
     if (Array.isArray(schema.required)) {
       for (const key of schema.required) {

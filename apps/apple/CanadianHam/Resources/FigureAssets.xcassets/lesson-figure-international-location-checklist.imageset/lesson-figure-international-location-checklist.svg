@@ -1,0 +1,22 @@
+<svg id="international-location-checklist" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>International operation checklist and ITU regions</title>
+  <desc>Travel checklist branches to US and CEPT cards beside a divided ITU region map with Region 2 in the west.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="46" y="62" width="176" height="70" rx="14" ry="14" stroke-width="6"/>
+    <rect x="58" y="184" width="180" height="142" rx="16" ry="16" stroke-width="6"/>
+    <line x1="82" y1="226" x2="214" y2="226" stroke-width="4"/><line x1="82" y1="270" x2="214" y2="270" stroke-width="4"/>
+    <circle cx="448" cy="156" r="104" stroke-width="7"/>
+    <path d="M408 60 C382 112 382 200 408 252" stroke-width="5"/>
+    <path d="M488 60 C514 112 514 200 488 252" stroke-width="5"/>
+    <rect x="328" y="352" width="106" height="62" rx="14" ry="14" stroke-width="6"/>
+    <rect x="494" y="352" width="106" height="62" rx="14" ry="14" stroke-width="6"/>
+    <line x1="238" y1="314" x2="328" y2="382" stroke-width="5"/><polygon points="328,382 306,373 326,360" fill="currentColor" stroke="none"/>
+    <path d="M238 326 C340 330 468 336 548 352" stroke-width="5"/><polygon points="548,352 526,346 542,332" fill="currentColor" stroke="none"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="134" y="40" font-size="24" font-weight="700">travel desk</text><text x="134" y="106" font-size="24">radio pass</text>
+    <text x="148" y="364" font-size="24">message</text><text x="148" y="402" font-size="24">location</text><text x="148" y="440" font-size="24">ID format</text>
+    <text x="448" y="38" font-size="24" font-weight="700">ITU map</text><text x="360" y="310" font-size="24">R2 west</text><text x="448" y="310" font-size="24">R1</text><text x="536" y="310" font-size="24">R3</text>
+    <text x="381" y="392" font-size="24">US</text><text x="547" y="392" font-size="24">CEPT</text>
+  </g>
+</svg>

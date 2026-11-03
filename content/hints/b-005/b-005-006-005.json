@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-006-005",
+  "questionId": "B-005-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Equal resistors in parallel can share heat, so their wattage ratings add when current sharing is even.",
+      "fr": "Des résistances égales en parallèle peuvent partager la chaleur; leurs puissances nominales s'additionnent si le courant se partage également."
+    },
+    {
+      "level": 2,
+      "en": "Use the count of resistor bodies times the rating of one body, assuming the equal branches share current properly.",
+      "fr": "Multipliez le nombre de boîtiers par la puissance nominale d'un seul, en supposant que les branches égales partagent bien le courant."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "power-ratings-and-heat"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

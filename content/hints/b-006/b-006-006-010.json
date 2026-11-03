@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-006-010",
+  "questionId": "B-006-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why modern transceivers use antenna tuners.",
+      "fr": "Revoyez pourquoi les émetteurs-récepteurs modernes utilisent des blocs d'accord."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "matching-networks-and-tuners"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

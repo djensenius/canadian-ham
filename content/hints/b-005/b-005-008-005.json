@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-008-005",
+  "questionId": "B-005-008-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For S-meter amounts over S9, convert the power change to dB and adjust only the number above S9.",
+      "fr": "Pour une lecture au-dessus de S9, convertissez le changement de puissance en dB et ajustez seulement le nombre au-dessus de S9."
+    },
+    {
+      "level": 2,
+      "en": "Compare 150 W with 15 W: that is one tenfold power drop, so subtract the tenfold-loss amount from the original over-S9 amount.",
+      "fr": "Comparez 150 W à 15 W : c'est une baisse de puissance d'un facteur dix; soustrayez donc la perte correspondante de l'écart initial au-dessus de S9."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original"
+}

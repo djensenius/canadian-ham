@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-003-001",
+  "questionId": "B-007-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the coverage-gap discussion after the band-reference tables.",
+      "fr": "Revoyez l’explication des trous de couverture entre l’onde de sol et l’onde de ciel après les tableaux de référence des bandes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "skip-distance-and-skip-zone"
+  },
+  "singleLevelReason": "Term recall: a second hint would name or define the requested coverage gap; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

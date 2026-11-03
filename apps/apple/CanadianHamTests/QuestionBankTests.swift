@@ -3,6 +3,17 @@ import Foundation
 import XCTest
 
 final class QuestionBankTests: XCTestCase {
+    func testAppBundleContainsOnlyExpectedGeneratedBankDirectories() throws {
+        XCTAssertEqual(
+            try bundledGeneratedBankIDs(in: Bundle.main),
+            Set(["basic-2025-07-15", "advanced-2025-02-04"])
+        )
+    }
+
+    func testAppBundleContainsNoReadmeFiles() throws {
+        XCTAssertEqual(try bundledReadmePaths(in: Bundle.main), [], "App bundle must not contain README.md files")
+    }
+
     func testBundledJSONDecodesExpectedCounts() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
 
@@ -14,15 +25,16 @@ final class QuestionBankTests: XCTestCase {
         XCTAssertEqual(bank.manifest.counts.categories, 8)
     }
 
-    func testAdvancedBundledJSONDecodesExpectedCountsAndEnglishCategoryFallbacks() throws {
+    func testAdvancedBundledJSONDecodesExpectedCountsAndVerifiedFrenchCategoryNames() throws {
         let bank = try QuestionBankStore.load(bankId: .advanced, from: Bundle(for: Self.self))
 
         XCTAssertEqual(bank.manifest.bankId, CourseBankID.advanced.rawValue)
         XCTAssertEqual(bank.questions.count, 549)
         XCTAssertEqual(bank.subsections.count, 50)
         XCTAssertEqual(bank.categories.count, 7)
-        XCTAssertTrue(bank.categories.allSatisfy { $0.name.fr == nil })
-        XCTAssertEqual(bank.categories.first?.name.resolvedLanguage(for: .french), .english)
+        XCTAssertTrue(bank.categories.allSatisfy { $0.frenchNameStatus == "verified" })
+        XCTAssertEqual(bank.categories.first?.name.fr, "Théorie avancée")
+        XCTAssertEqual(bank.categories.first?.name.resolvedLanguage(for: .french), .french)
     }
 
     func testAdvancedMockExamUsesFiftyQuestionsAndNoHonours() throws {
@@ -123,12 +135,57 @@ final class QuestionBankTests: XCTestCase {
         XCTAssertEqual(library.lessons.count, library.orderedLessons().count)
         XCTAssertFalse(library.lessons.isEmpty)
         XCTAssertEqual(library.explanations.count, library.questions.count)
+        XCTAssertEqual(library.questionHints.count, library.questions.count)
+        XCTAssertNotNil(library.questionHintsByQuestionId["B-001-002-002"])
         for lesson in library.lessons {
             XCTAssertNoThrow(try LessonMarkdownRenderer.render(lesson.bodyMarkdown), "Lesson \(lesson.id) should render")
         }
         for explanation in library.explanations {
             XCTAssertNoThrow(try ExplanationBodyParser.parse(explanation), "Explanation \(explanation.id) should parse")
         }
+    }
+
+    func testBundledLessonModelExposesPrerequisites() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let lesson = try XCTUnwrap(library.lessonsById["L-006-03"])
+        let prerequisite = try XCTUnwrap(library.lessonsById["L-006-02"])
+        let missingPrerequisites = library.lessons.flatMap { lesson in
+            lesson.prerequisites.compactMap { prerequisiteID in
+                library.lessonsById[prerequisiteID] == nil ? "\(lesson.id) -> \(prerequisiteID)" : nil
+            }
+        }
+
+        XCTAssertEqual(lesson.prerequisites, ["L-006-02"])
+        XCTAssertEqual(prerequisite.title.en, "Loss, SWR, and matching")
+        XCTAssertEqual(missingPrerequisites, [], "Bundled lesson prerequisites should reference bundled lessons")
+    }
+
+    private func bundledReadmePaths(in bundle: Bundle) throws -> [String] {
+        let resourceURL = try XCTUnwrap(bundle.resourceURL)
+        let urls = FileManager.default.enumerator(
+            at: resourceURL,
+            includingPropertiesForKeys: [.isRegularFileKey]
+        )?.compactMap { $0 as? URL } ?? []
+
+        return try urls.compactMap { url in
+            let values = try url.resourceValues(forKeys: [.isRegularFileKey])
+            guard values.isRegularFile == true, url.lastPathComponent.caseInsensitiveCompare("README.md") == .orderedSame else {
+                return nil
+            }
+            return url.path.replacingOccurrences(of: resourceURL.path + "/", with: "")
+        }
+        .sorted()
+    }
+
+    private func bundledGeneratedBankIDs(in bundle: Bundle) throws -> Set<String> {
+        let generatedURL = try XCTUnwrap(bundle.resourceURL?.appendingPathComponent("generated", isDirectory: true))
+        let resourceValues = try generatedURL.resourceValues(forKeys: [.isDirectoryKey])
+        XCTAssertEqual(resourceValues.isDirectory, true, "Expected generated resources directory in \(bundle.bundleURL.path)")
+        let urls = try FileManager.default.contentsOfDirectory(at: generatedURL, includingPropertiesForKeys: [.isDirectoryKey])
+        return Set(try urls.compactMap { url in
+            let values = try url.resourceValues(forKeys: [.isDirectoryKey])
+            return values.isDirectory == true ? url.lastPathComponent : nil
+        })
     }
 
     func testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes() {

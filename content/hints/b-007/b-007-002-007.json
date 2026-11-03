@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-002-007",
+  "questionId": "B-007-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the daily ionization pattern in the layer-order section.",
+      "fr": "Revoyez le rythme quotidien de l’ionisation dans la section sur l’ordre des couches."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "the-ionosphere-in-layers"
+  },
+  "singleLevelReason": "Time recall: a second hint would identify or eliminate a time of day; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

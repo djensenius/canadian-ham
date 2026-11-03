@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-002-009",
+  "questionId": "B-004-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the diode behaviour that makes a series input part useful when DC leads are swapped.",
+      "fr": "Revoyez le comportement de la diode qui rend utile une pièce d’entrée en série lorsque les fils CC sont inversés."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "in-the-real-world-reverse-polarity-protection"
+  },
+  "singleLevelReason": "Property recall: a second hint would paraphrase the correct property.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,34 @@
+{
+  "configurations": [
+    {
+      "id": "0B06169B-F78D-4962-A3A7-8846D772845A",
+      "name": "Default",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "codeCoverage": false,
+    "targetForVariableExpansion": {
+      "containerPath": "container:CanadianHam.xcodeproj",
+      "identifier": "D4598F650553ED607A0E311B",
+      "name": "CanadianHam"
+    }
+  },
+  "version": 1,
+  "testTargets": [
+    {
+      "target": {
+        "containerPath": "container:CanadianHam.xcodeproj",
+        "identifier": "CDDB75A6A5E6A9C073EF59E5",
+        "name": "CanadianHamUITests"
+      },
+      "parallelizable": false,
+      "selectedTests": [
+        "CanadianHamPracticeUITests/testCategoryTitlesEnglishDefaultSize()",
+        "CanadianHamPracticeUITests/testCategoryTitlesEnglishLargestAccessibilitySize()",
+        "CanadianHamPracticeUITests/testCategoryTitlesFrenchDefaultSize()",
+        "CanadianHamPracticeUITests/testCategoryTitlesFrenchLargestAccessibilitySize()"
+      ]
+    }
+  ]
+}

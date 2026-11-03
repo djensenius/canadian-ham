@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-002-003",
+  "questionId": "B-002-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the fixed voice spelling word assigned to the letter A.",
+      "fr": "Revoyez le mot d’épellation en phonie attribué à la lettre A."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "make-the-call-sign-easy-to-copy"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

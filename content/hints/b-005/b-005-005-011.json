@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-005-011",
+  "questionId": "B-005-005-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "In a parallel network, the source current splits among the separate paths and rejoins after them.",
+      "fr": "Dans un réseau en parallèle, le courant de source se divise entre les trajets séparés et se rejoint après eux."
+    },
+    {
+      "level": 2,
+      "en": "Apply I = E / R to each branch on its own, then follow those currents back to the source lead.",
+      "fr": "Appliquez I = E / R à chaque branche séparément, puis suivez ces courants jusqu'au fil de la source."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "parallel-resistors-make-more-paths"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}

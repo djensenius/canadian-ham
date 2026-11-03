@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-011",
+  "questionId": "B-004-003-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what the lesson says about saturation and cut-off.",
+      "fr": "Revoyez ce que la leçon dit de la saturation et du blocage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "transistor-switching"
+  },
+  "singleLevelReason": "Application recall: a second hint would name the behaviour directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

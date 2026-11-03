@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-008",
+  "questionId": "B-005-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the current-flow terms that are paired as reciprocal ideas.",
+      "fr": "Revoyez les termes liés au passage du courant qui forment une paire réciproque."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "current-resistance-and-conductance"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name the reciprocal property and identify the answer.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

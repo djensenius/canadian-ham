@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-019-002",
+  "questionId": "B-003-019-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why grounding electrodes are bonded together during fault or lightning events.",
+      "fr": "Revoyez pourquoi les électrodes de terre sont reliées entre elles lors de défauts ou d’événements de foudre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "grounding-and-bonding"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

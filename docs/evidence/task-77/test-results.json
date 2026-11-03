@@ -1,0 +1,184 @@
+{
+  "devices": {
+    "ipad": {
+      "destination": "platform=iOS Simulator,name=iPad Pro 13-inch (M5)",
+      "tests": [
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testAdvancedMockExamHasNoBasicReferenceSheetOrHints",
+          "result": "passed",
+          "seconds": 19.377,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testMockExamCodeCaptionAccessibilityBoundsLightAndDark",
+          "result": "passed",
+          "seconds": 31.675,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testMockExamOfficialReferenceSheetDarkPreservesPausedExam",
+          "result": "passed",
+          "seconds": 106.693,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testMockExamOfficialReferenceSheetLightPreservesRunningExam",
+          "result": "passed",
+          "seconds": 140.035,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testOfficialReferenceSheetLightAndDarkEnglishAndFrench",
+          "result": "passed",
+          "seconds": 186.827,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testReferenceSheetLargestDynamicTypeKeepsControlsReachable",
+          "result": "passed",
+          "seconds": 38.33,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowDark",
+          "result": "passed",
+          "seconds": 96.489,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowLight",
+          "result": "passed",
+          "seconds": 98.13,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamPracticeUITests/testMockExamHeaderControlsSupportLargestAccessibilityTextSize",
+          "result": "passed",
+          "seconds": 51.386,
+          "resultBundle": "/tmp/task77-final-ipad.xcresult",
+          "log": "/tmp/task77-final-ipad.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamPracticeUITests/testHundredQuestionMockExamNavigatorReachesLastQuestionInPortraitAndLandscape",
+          "result": "passed",
+          "seconds": 92.446,
+          "resultBundle": "/tmp/task77-after-ipad.xcresult",
+          "log": "/tmp/task77-after-ipad.log"
+        }
+      ]
+    },
+    "iphone": {
+      "destination": "platform=iOS Simulator,name=iPhone 17 Pro",
+      "tests": [
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testAdvancedMockExamHasNoBasicReferenceSheetOrHints",
+          "result": "passed",
+          "seconds": 38.657,
+          "resultBundle": "/tmp/task77-final-iphone.xcresult",
+          "log": "/tmp/task77-final-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testMockExamCodeCaptionAccessibilityBoundsLightAndDark",
+          "result": "passed",
+          "seconds": 48.094,
+          "resultBundle": "/tmp/task77-final-iphone.xcresult",
+          "log": "/tmp/task77-final-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testMockExamOfficialReferenceSheetDarkPreservesPausedExam",
+          "result": "passed",
+          "seconds": 209.385,
+          "resultBundle": "/tmp/task77-final-iphone.xcresult",
+          "log": "/tmp/task77-final-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testMockExamOfficialReferenceSheetLightPreservesRunningExam",
+          "result": "passed",
+          "seconds": 202.793,
+          "resultBundle": "/tmp/task77-final-iphone.xcresult",
+          "log": "/tmp/task77-final-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testOfficialReferenceSheetLightAndDarkEnglishAndFrench",
+          "result": "passed",
+          "seconds": 260.981,
+          "resultBundle": "/tmp/task77-final-iphone.xcresult",
+          "log": "/tmp/task77-final-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamExamToolsUITests/testReferenceSheetLargestDynamicTypeKeepsControlsReachable",
+          "result": "passed",
+          "seconds": 128.545,
+          "resultBundle": "/tmp/task77-final-iphone.xcresult",
+          "log": "/tmp/task77-final-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowDark",
+          "result": "passed",
+          "seconds": 142.542,
+          "resultBundle": "/tmp/task77-sheet-fix-iphone.xcresult",
+          "log": "/tmp/task77-sheet-fix-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowLight",
+          "result": "passed",
+          "seconds": 144.142,
+          "resultBundle": "/tmp/task77-sheet-fix-iphone.xcresult",
+          "log": "/tmp/task77-sheet-fix-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamPracticeUITests/testMockExamHeaderControlsSupportLargestAccessibilityTextSize",
+          "result": "passed",
+          "seconds": 85.549,
+          "resultBundle": "/tmp/task77-sheet-fix-iphone.xcresult",
+          "log": "/tmp/task77-sheet-fix-iphone.log"
+        },
+        {
+          "test": "CanadianHamUITests/CanadianHamPracticeUITests/testHundredQuestionMockExamNavigatorReachesLastQuestionInPortraitAndLandscape",
+          "result": "passed",
+          "seconds": 119.842,
+          "resultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+          "log": "/tmp/task77-after-landscape-screen.log"
+        }
+      ]
+    }
+  },
+  "scopeNotes": [
+    "The six iPhone ExamTools methods do not open the question navigator; their green header/reference-sheet results carry forward unchanged through the final sheet-only container refinement.",
+    "iPad uses the unchanged inline navigator; its ten green product methods carry forward through the compact sheet-only refinement.",
+    "All four affected iPhone Practice methods passed again on the final fitting-container implementation.",
+    "Every pre-existing assertion, audit, audit handler and shared positioning helper is retained."
+  ],
+  "macOSBuildForTesting": {
+    "result": "passed",
+    "log": "/tmp/task77-macos-final-build.log",
+    "appSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "scratchProbesRemovedBeforeBuild": true,
+    "note": "The later local screenshot attachment change is entirely inside the new UI method\u2019s #if os(iOS) body; no macOS-visible source changed."
+  },
+  "landscapeNavigatorScreenshot": {
+    "file": "after-iphone-navigator-landscape-question-100.png",
+    "resultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "rawPixelSize": [
+      1206,
+      2622
+    ],
+    "exifOrientation": 8,
+    "nativeOrientedPixelSize": [
+      2622,
+      1206
+    ],
+    "fullHeightBlackColumns": 0,
+    "fullWidthBlackRows": 0,
+    "sha256": "8ab38c1ccc5d52c6114f583ed5d01c8b356b9e5f07018e5160eb881857276de4"
+  }
+}

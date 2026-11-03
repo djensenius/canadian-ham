@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-005-002",
+  "questionId": "B-004-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the output-current path inside the three-element tube.",
+      "fr": "Revoyez le trajet du courant de sortie dans le tube à trois électrodes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "triode-vacuum-tubes"
+  },
+  "singleLevelReason": "Name-pair recall: a second hint would list or eliminate the electrode pairs.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

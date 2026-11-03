@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-010-005",
+  "questionId": "B-003-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review tuning accuracy by emission mode.",
+      "fr": "Revoyez la précision de syntonisation selon le mode d'émission."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-04",
+    "sectionAnchor": "tuning-accuracy-for-narrow-modes"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-015-002.\n\nWhy the correct answer is right: Digital data represents information with discrete, agreed symbols or values rather than a continuously varying quantity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Digital data represents information as a continuously variable quantity\": That is the definition of analog representation, not digital representation.\n- sourceIndex 2: \"Digital data easily translates into digital signals\": Digital data can be sent by digital signals, but this does not state the fundamental analog-versus-digital difference.\n- sourceIndex 3: \"Digital data requires complex waveforms for transmission\": Some digital modes are complex and some are simple; waveform complexity is not the defining difference.",
+    "en": "Question B-003-015-002.\n\nWhy the correct answer is right: Digital data represents information with discrete, agreed symbols or values rather than a continuously varying quantity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Digital data represents information as a continuously variable quantity\": That is the definition of analog representation, not digital representation.\n- sourceIndex 2: \"Digital data easily translates into digital signals\": Digital data can be sent by digital signals, but this does not state the fundamental analog-versus-digital difference.\n- sourceIndex 3: \"Digital data requires complex waveforms for transmission\": Some digital modes are complex and some are simple. Waveform complexity is not the defining difference.",
     "fr": null
   },
   "citations": [

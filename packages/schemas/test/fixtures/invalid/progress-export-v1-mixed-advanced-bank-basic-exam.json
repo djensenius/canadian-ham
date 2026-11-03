@@ -1,0 +1,43 @@
+{
+  "schema": "canadian-ham.progress-export",
+  "version": 1,
+  "exportedAt": "2026-01-02T03:04:05.000Z",
+  "bankId": "advanced-2025-02-04",
+  "questionProgress": [],
+  "examAttempts": [
+    {
+      "id": "attempt-2026-01-02T03:10:00.000Z-local-mixed-fixture",
+      "bankId": "advanced-2025-02-04",
+      "mode": "mock-exam",
+      "seed": "mixed-fixture",
+      "startedAt": "2026-01-02T03:00:00.000Z",
+      "submittedAt": "2026-01-02T03:10:00.000Z",
+      "timer": { "enabled": false, "secondsAllowed": null, "secondsElapsed": 600 },
+      "items": [
+        {
+          "position": 1,
+          "questionId": "B-001-001-001",
+          "subsectionId": "B-001-001",
+          "categoryId": "B-001",
+          "choicePermutation": [0, 1, 2, 3],
+          "selectedSourceIndex": 0,
+          "isCorrect": true,
+          "flagged": false
+        }
+      ],
+      "score": {
+        "bankId": "advanced-2025-02-04",
+        "correct": 1,
+        "total": 1,
+        "percent": 100,
+        "passed": true,
+        "honours": false,
+        "categoryBreakdown": [
+          { "categoryId": "B-001", "correct": 1, "total": 1, "percent": 100 }
+        ],
+        "weakSubsectionIds": ["B-001-001"]
+      }
+    }
+  ],
+  "preferences": { "practiceMode": "immediate", "examTimerEnabled": false }
+}

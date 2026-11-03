@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-007-003.\n\nWhy the correct answer is right: A temperature inversion places warmer air over cooler air, creating a refractive boundary that can trap or guide VHF and UHF energy. That guided path is tropospheric ducting.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lightning between the transmitting and receiving stations\": Lightning can create noise and static crashes, but it does not form a refractive duct.\n- sourceIndex 2: \"An aurora to the north\": Aurora is an ionospheric high-latitude phenomenon, not a lower-atmosphere duct.\n- sourceIndex 3: \"A very low-pressure area\": Pressure systems may accompany weather changes, but low pressure alone does not describe the inversion layer that makes a duct.",
+    "en": "Question B-007-007-003.\n\nWhy the correct answer is right: A temperature inversion places warmer air over cooler air. That creates a refractive boundary that can trap or guide very high frequency (VHF) and ultra high frequency (UHF) energy. That guided path is tropospheric ducting.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lightning between the transmitting and receiving stations\": Lightning can create noise and static crashes, but it does not form a refractive duct.\n- sourceIndex 2: \"An aurora to the north\": Aurora is an ionospheric high-latitude phenomenon, not a lower-atmosphere duct.\n- sourceIndex 3: \"A very low-pressure area\": Pressure systems may accompany weather changes, but low pressure alone does not describe the inversion layer that makes a duct.",
     "fr": null
   },
   "citations": [

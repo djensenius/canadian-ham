@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-010-007.\n\nWhy the correct answer is right: If the receiver bandwidth is too narrow for a modulated signal, part of the modulation is cut off and information is lost.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Loss of dynamic range\": Dynamic range is about handling strong and weak signals together, not the immediate result of trimming away modulation bandwidth.\n- sourceIndex 2: \"Lower signal strength\": The S-meter reading may not be the main issue; the problem is that the passband no longer contains all needed information.\n- sourceIndex 3: \"Lower signal-to-noise ratio\": A narrower bandwidth can reduce noise, but if it is too narrow it removes wanted information rather than primarily lowering signal-to-noise ratio.",
+    "en": "Question B-003-010-007.\n\nWhy the correct answer is right: If the receiver bandwidth is too narrow for a modulated signal, part of the modulation is cut off and information is lost.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Loss of dynamic range\": Dynamic range is about handling strong and weak signals together, not the immediate result of trimming away modulation bandwidth.\n- sourceIndex 2: \"Lower signal strength\": The S-meter reading may not be the main issue. The problem is that the passband no longer contains all needed information.\n- sourceIndex 3: \"Lower signal-to-noise ratio\": A narrower bandwidth can reduce noise, but if it is too narrow it removes wanted information rather than primarily lowering signal-to-noise ratio.",
     "fr": null
   },
   "citations": [

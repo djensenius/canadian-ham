@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-005-006.\n\nWhy the correct answer is right: Series resistance adds directly. Five resistors of 10 ohms each give 10 + 10 + 10 + 10 + 10 = 50 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 ohms\": This divides 10 ohms by two, but there are five resistors in series and series values add.\n- sourceIndex 2: \"10 ohms\": This is the value of one resistor only; the other four series resistors are being ignored.\n- sourceIndex 3: \"2 ohms\": This is what five equal 10-ohm resistors would make in parallel, not in series.",
+    "en": "Question B-005-005-006.\n\nWhy the correct answer is right: Series resistance adds directly. Five resistors of 10 ohms each give 10 + 10 + 10 + 10 + 10 = 50 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 ohms\": This divides 10 ohms by two. There are five resistors in series, and series values add.\n- sourceIndex 2: \"10 ohms\": This is the value of one resistor only; the other four series resistors are being ignored.\n- sourceIndex 3: \"2 ohms\": This is what five equal 10-ohm resistors would make in parallel, not in series.",
     "fr": null
   },
   "citations": [

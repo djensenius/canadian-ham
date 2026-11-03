@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-002-002",
+  "questionId": "B-004-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the diode job used after a received signal has carried information.",
+      "fr": "Revoyez le rôle d’une diode après la réception d’un signal qui transporte de l’information."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "rectifiers-detectors-and-protectors"
+  },
+  "singleLevelReason": "Term recall: a second hint would name the receiver function directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

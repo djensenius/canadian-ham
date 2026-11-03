@@ -1,0 +1,16 @@
+{
+  "schema": "canadian-ham.progress-export",
+  "version": 1,
+  "lessonIdVersion": 3,
+  "exportedAt": "2026-01-02T03:04:05.000Z",
+  "bankId": "basic-2025-07-15",
+  "questionProgress": [],
+  "examAttempts": [],
+  "lessonProgress": [],
+  "lessonQuizAttempts": [],
+  "preferences": {
+    "practiceMode": "immediate",
+    "examTimerEnabled": false,
+    "theme": "system"
+  }
+}

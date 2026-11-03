@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-005-001",
+  "questionId": "B-002-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the Morse CQ calling pattern.",
+      "fr": "Revoyez le modèle d’appel CQ en Morse."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "build-a-contact-from-small-pieces"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
+}

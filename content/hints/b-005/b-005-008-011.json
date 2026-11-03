@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-008-011",
+  "questionId": "B-005-008-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "To move from above S9 down to S9, reduce power by the full dB amount shown above S9.",
+      "fr": "Pour passer d'une lecture au-dessus de S9 à S9, réduisez la puissance de toute la valeur en dB affichée au-dessus de S9."
+    },
+    {
+      "level": 2,
+      "en": "Treat the required drop as three tenfold-loss steps; start with 100 W and divide by ten three times.",
+      "fr": "Traitez la baisse requise comme trois étapes de perte par dix; partez de 100 W et divisez par dix trois fois."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original"
+}

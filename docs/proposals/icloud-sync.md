@@ -40,7 +40,7 @@
 | 27 | The v1 requirement quote comes from `docs/requirements.md` / `docs/privacy.md` | **Corrected**: the exact wording is in `AGENTS.md`; the same rule appears in DEC-APPLE-003, REQ-APPLE-003 and `privacy.md` | repo |
 | 28 | Export/import exists as `REQ-PROGRESS-001`, T-506 | **Corrected**: no REQ-PROGRESS-001 exists; it is REQ-QUIZ-005 (and REQ-APPLE-003). T-506 **Unverified** | `docs/requirements.md` |
 | 29 | Add rows to `tasks/PLAN.md` | **Corrected**: PLAN.md is now only a pointer; T-705 maps to Backlog **task-13** | `tasks/PLAN.md` |
-| 30 | Container `iCloud.ca.canadianham.app` | **Corrected**: bundle IDs use the `com.djensenius` prefix (`com.djensenius.CanadianHam`, `.TV`, `.Vision`) | `apps/apple/project.yml` |
+| 30 | Container `iCloud.ca.canadianham.app` | **Corrected again**: app targets share the universal-purchase bundle ID `org.davidjensenius.CanadianHam`; the gated container is `iCloud.org.davidjensenius.CanadianHam`. | `apps/apple/project.yml` |
 | 31 | RIC-3 URL (ISED) | **Verified**: resolves to Issue 5, March 2022 | ised-isde.canada.ca RIC-3 |
 | 32 | ISED Basic bank PDF URL (2025-07-15) | **Unverified**: PDF fetch failed. The project's authority is the delimited TXT (SHA-256 `34c7cd79…284f`) | — |
 | 33 | WWDC22 "Evolve your Core Data schema" (10120) | **Verified** | developer.apple.com/videos/play/wwdc2022/10120/ |
@@ -134,7 +134,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 - `CKDatabase`: iOS/iPadOS **8.0**, macOS **10.10**, Mac Catalyst 13.1, tvOS (available, no version listed), visionOS 1.0. The original's 10.0 / 10.12 / 10.0 figures were wrong.
 - All are far below the project's 27.0 minimums (DEC-APPLE-004).
 
-**Project parity (Corrected):** `apps/apple/project.yml` adds `ProgressModels.swift` and `ProgressStore.swift` only to `CanadianHam` (iOS + macOS) and its tests. The `CanadianHamTV` and `CanadianHamVision` targets are separate apps (`com.djensenius.CanadianHam.TV`, `.Vision`) with no SwiftData progress store. Syncing on tvOS or visionOS first needs those targets to get progress storage (REQ-APPLE-005/006 "later parity"). All three apps would need the same iCloud container in their entitlements. Configuring iCloud services: "You can also use containers to share files and data between multiple apps belonging to the same developer."
+**Project parity (Corrected again):** `apps/apple/project.yml` adds `ProgressModels.swift` and `ProgressStore.swift` only to `CanadianHam` (iOS + macOS) and its tests. The `CanadianHamTV` and `CanadianHamVision` targets are separate universal-purchase apps that now share the `org.davidjensenius.CanadianHam` bundle ID and have no SwiftData progress store. Syncing on tvOS or visionOS first needs those targets to get progress storage (REQ-APPLE-005/006 "later parity"). Gated sync uses the shared `iCloud.org.davidjensenius.CanadianHam` container. Configuring iCloud services: "You can also use containers to share files and data between multiple apps belonging to the same developer."
 
 **Capabilities (Verified):**
 - SwiftData article: "SwiftData requires two separate capabilities … the iCloud capability … and the Background Modes capability, which lets your app receive remote notifications from CloudKit."
@@ -175,10 +175,10 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 - **Merge semantics are an open design question, not settled here.** Review of this brief found that a field-picking merge is not enough, so the implementation subtask must design and test a convergent merge that meets these requirements:
   - **Cumulative counters:** `attempts` and `correctAttempts` (`docs/architecture.md`, question progress) can't be taken from either device (that loses the other device's attempts) or summed (not idempotent across repeated syncs). They need a convergent representation, for example stable per-attempt events or per-device counters.
   - **Scheduling state:** `box`, `dueAt`, `lastResult` and `recentResults` follow from the merged attempt history; ties at equal `lastAttemptedAt` need a stable, documented tie-breaker so every device converges on the same result.
-  - **Exam attempts:** union by `id` while keeping the existing invariant that `submittedAt` values are unique (the readiness contract in `docs/architecture.md` and both importers reject duplicates); define how a collision on either `id` or `submittedAt` resolves.
+  - **Exam attempts:** union by `id` while keeping the existing invariant that `submittedAt` values are unique (the readiness contract in `docs/architecture.md` and both importers reject duplicates); define how a collision on either `id` or `submittedAt` resolves. The current Apple sync merge treats `submittedAt` within a bank as canonical, so two devices that submit attempts in the same millisecond collapse to one deterministic attempt.
   - **Fixtures:** shared TypeScript/Swift fixture tests for every collision case before sync ships.
-- **Keep sync merge separate from JSON import.** Today's import is replace-all after user confirmation (the Apple store deletes all entities first, the web store clears every object store). Reusing the sync merge for import would silently keep records the user chose to replace, so import stays replace-all unless its semantics, UI and tests are deliberately redesigned.
-- **Repo note:** `lastAttemptedAt`, `dueAt`, `startedAt` and `submittedAt` are stored as `String`. Max/compare logic must use a normalized, sortable timestamp format (inference).
+- **Keep sync merge separate from JSON import.** Today's import is replace-all after user confirmation (the Apple store deletes all entities first, the web store clears every object store). Reusing the sync merge for import would silently keep records the user chose to replace, so import stays replace-all unless its semantics, UI and tests are deliberately redesigned. To avoid double-counting manual export/import before iCloud is enabled, Apple exports may include optional per-device sync rows beside the collapsed v1 fields; older readers ignore them. If progress is edited on the web after importing such a file, the web store drops that origin detail for the changed local data and the collapsed values become the source for future sync. The current random per-install device ID is local app state; a full-device backup restore can clone it, and legacy empty-device rows adopted during migration are attributed to the current install, so both cases should be considered before relying on multi-device sync outside development builds.
+- **Repo note:** `lastAttemptedAt`, `dueAt`, `startedAt` and `submittedAt` are stored as `String`. Max/compare logic must use a normalized, sortable timestamp format (inference). After the split-store migration, legacy preference rows may remain in `Progress.store` for compatibility/history; gated builds copy learning-progress archives into syncable rows and mark the copy complete, while default builds do not write the gated marker.
 - The web export/import schema is in `docs/architecture.md`, which was not re-audited here.
 
 ### 7. Zero-network testability
@@ -247,18 +247,18 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 
 ---
 
-## Recommendation: LATER (after v1) — unchanged
+## Recommendation: gated sync later; local schema migration before v1 ships
 
-### Verdict: **DO NOT IMPLEMENT IN V1; SCHEDULE FOR AFTER V1 (P7), BEHIND A PRIVACY REVIEW**
+### Verdict: **KEEP ICLOUD OFF IN V1 RELEASE BUILDS; LAND LOCAL-ONLY SCHEMA V2 BEFORE V1; SCHEDULE GATED ICLOUD SYNC FOR AFTER V1**
 
 **Rationale (adjusted):**
-1. **Keep v1 simple and network-free.** v1 policy forbids iCloud sync: `AGENTS.md` says "Apple app must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1". The same rule is in DEC-APPLE-003, REQ-APPLE-003 and `docs/privacy.md`. Sync would also bring in the Push Notifications capability and remote-notification background mode, which `privacy.md` currently disallows. *Corrected:* the original's "guarantees an effortless App Store approval" was an unsupported claim and has been removed.
-2. **Schema change.** CloudKit needs `@Attribute(.unique)` removed from all three entities **and** declaration-level defaults (or optionals) for every non-optional property. Uniqueness then has to be enforced in `ProgressStore`. *Adjusted:* the repo stays private until T-009, so there is no public install base yet. "Migrating existing stores" before v1 would affect only development and TestFlight data. The main cost of doing it now is rewriting upsert/dedup logic in v1, not migrating users (see Decision 1).
+1. **Keep v1 release builds simple and network-free.** v1 policy forbids iCloud sync in release builds: `AGENTS.md` says Apple v1 release builds must work fully offline and collect no data, with no networking code, third-party SDKs, analytics, or iCloud sync. The same rule is in DEC-APPLE-003, REQ-APPLE-003 and `docs/privacy.md`. Sync also brings in the Push Notifications capability and remote-notification background mode, so those capabilities are allowed only when an off-by-default post-v1 iCloud build gate is explicitly enabled. *Corrected:* the original's "guarantees an effortless App Store approval" was an unsupported claim and has been removed.
+2. **Schema change.** CloudKit needs `@Attribute(.unique)` removed from all three entities **and** declaration-level defaults (or optionals) for every non-optional property. Uniqueness then has to be enforced in `ProgressStore`. *Updated owner decision:* because v1 has not shipped and is waiting on ISED permission, migrate the local schema before v1 ships instead of after v1. That keeps only one progress schema in the field. This schema V2 work stays local-only, continues to use `cloudKitDatabase: .none`, and adds no iCloud or push entitlements.
 3. **Users can already move their data.** Export and import of progress JSON is **REQ-QUIZ-005** (with REQ-APPLE-003 and REQ-OFFLINE-001), not "REQ-PROGRESS-001" as the brief said. T-506 not verified.
 
 ---
 
-## Phased Implementation Plan (after v1 / P7) — adjusted
+## Phased Implementation Plan — adjusted for pre-v1 schema migration
 
 ### Phase 0: Privacy review (new; required by DEC-APPLE-003)
 - Change `docs/privacy.md` and REQ-APPLE-003/004 to allow, **only when the user opts in**: iCloud (CloudKit) entitlements, the Push Notifications capability, and the remote-notification background mode.
@@ -266,15 +266,16 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 - Adopt a **no-export/no-retention policy for CloudKit Console logs and telemetry**.
 - Re-run the App Store Connect questionnaire.
 
-### Phase 1: Schema refactor and removing uniqueness (estimate ~1–2 days, unverified)
+### Phase 1: Schema refactor and removing uniqueness before v1 ships (estimate ~1–2 days, unverified)
 - Add `CanadianHamProgressSchemaV2` with a `SchemaMigrationPlan` stage. Remove `@Attribute(.unique)` from all three entities. Give every non-optional property a **declaration-level** default.
 - Add query-before-insert and duplicate resolution in `ProgressStore`, keyed by `questionId`, exam `id`, and preferences `key`.
 - Keep timestamps in a normalized, sortable format.
 - Tests: V1→V2 migration, deduplication, in-memory `cloudKitDatabase: .none`.
+- This phase is local-only and may ship in v1 because v1 has not shipped yet; no iCloud, Push Notifications, or remote-notification entitlements are added.
 
 ### Phase 2: Opt-in CloudKit configuration (estimate ~2–3 days, unverified)
 - Add the iCloud (CloudKit) capability, Push Notifications (Xcode adds it automatically) and Background Modes → Remote notifications in `apps/apple/project.yml`. Regenerate with XcodeGen.
-- Use an explicit container. **Corrected:** not `iCloud.ca.canadianham.app`; for example `iCloud.com.djensenius.CanadianHam`, to be confirmed by the owner. Use the same container for any tvOS/visionOS app that later gets progress storage.
+- Use the owner-confirmed explicit container: `iCloud.org.davidjensenius.CanadianHam` (not `iCloud.ca.canadianham.app`). Use the same container for any tvOS/visionOS app that later gets progress storage.
 - Settings → **"iCloud Sync"**, **OFF by default**:
   - OFF: `ModelConfiguration(cloudKitDatabase: .none)`. This must be explicit, because entitlements trigger auto-discovery.
   - ON: `.private("<container-id>")` (explicit, rather than `.automatic`).
@@ -298,13 +299,11 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 
 ## Decisions for the Owner (kept; adjusted where facts changed)
 
-1. **Schema strategy (now vs later).** Remove `@Attribute(.unique)` *and* add declaration-level defaults now in v1 (keeping `cloudKitDatabase: .none` and no entitlements), or keep the v1 schema and migrate after v1?
-   *Recommendation (kept):* keep v1 as is and migrate later through `SchemaMigrationPlan`.
-   *Adjusted note:* there is no public install base before T-009, so changing it now costs less in migration than the original brief said. The trade-off is mostly about adding dedup logic to v1 now.
+1. **Schema strategy (now vs later).** Earlier research recommended keeping the v1 schema and migrating after v1. The owner decision is now to remove `@Attribute(.unique)` and add declaration-level defaults before v1 ships, while keeping `cloudKitDatabase: .none` and adding no entitlements. Because v1 has not shipped, there will be only one schema in the field; development/TestFlight stores migrate through `SchemaMigrationPlan`.
 2. **Sync scope.** Should preferences sync, or only learning progress?
    *Recommendation (kept, reinforced):* sync learning progress only. Keep `PreferencesEntity` local in a separate `.none` configuration. As a synced singleton it would duplicate across devices without uniqueness.
 3. **Default state.** Confirm sync stays strictly **opt-in** (OFF until the user turns it on).
-4. **(New) Container ID and platform scope.** Confirm the container ID (for example `iCloud.com.djensenius.CanadianHam`) and whether tvOS/visionOS get progress storage, and therefore sync, in the same phase.
+4. **(Updated) Container ID and platform scope.** Container ID is confirmed as `iCloud.org.davidjensenius.CanadianHam`; confirm whether tvOS/visionOS get progress storage, and therefore sync, in the same phase.
 5. **(New) Privacy-doc changes.** Approve the scoped exception in `docs/privacy.md` for CloudKit, Push Notifications and the remote-notification background mode, and the CloudKit Console log no-retention policy.
 
 ---

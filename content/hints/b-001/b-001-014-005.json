@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-014-005",
+  "questionId": "B-001-014-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review privileges granted to qualifying CEPT visitors in Canada.",
+      "fr": "Revoyez les privilèges accordés aux visiteurs CEPT admissibles au Canada."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-05",
+    "sectionAnchor": "reference-facts-visit-arrangements-pair-permission-with-identification"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

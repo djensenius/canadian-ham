@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-009-010.\n\nWhy the correct answer is right: UTC minus 6 means local time is six hours behind UTC; 19:00 UTC minus six hours is 13:00, or 1 PM.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1 AM (tomorrow)\": 1 AM tomorrow goes the wrong direction for a UTC-minus-six conversion.\n- sourceIndex 2: \"7 PM\": 7 PM would be the UTC time left unconverted.\n- sourceIndex 3: \"7 AM (tomorrow)\": 7 AM tomorrow does not follow subtracting six hours from 19:00 UTC.",
+    "en": "Question B-002-009-010.\n\nWhy the correct answer is right: Coordinated Universal Time (UTC) minus 6 means local time is six hours behind UTC. 19:00 UTC minus six hours is 13:00, or 1 PM.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1 AM (tomorrow)\": 1 AM tomorrow goes the wrong direction for a UTC-minus-six conversion.\n- sourceIndex 2: \"7 PM\": 7 PM would be the UTC time left unconverted.\n- sourceIndex 3: \"7 AM (tomorrow)\": 7 AM tomorrow does not follow subtracting six hours from 19:00 UTC.",
     "fr": null
   },
   "citations": [

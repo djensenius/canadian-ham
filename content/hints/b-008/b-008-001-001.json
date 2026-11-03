@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-001",
+  "questionId": "B-008-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review receiver overload and desensitization.",
+      "fr": "Revoyez la surcharge et la désensibilisation des récepteurs."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "receiver-overload-and-desensitization"
+  },
+  "singleLevelReason": "Concept recall: a second hint would state the cause or eliminate the transmitter-fault choices.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

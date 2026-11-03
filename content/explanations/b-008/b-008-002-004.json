@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-002-004.\n\nWhy the correct answer is right: A CW carrier is turned on and off by keying, so accidental rectification in a PA system is heard as on-and-off hum, buzz, or clicks rather than voice.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Audible, possibly distorted speech\": Audible speech is associated with voice modes such as SSB, not a keyed continuous-wave carrier.\n- sourceIndex 2: \"Muffled, severely distorted speech\": Muffled speech still implies voice modulation; CW contains keyed carrier timing, not spoken audio.\n- sourceIndex 3: \"A steady whistling\": A steady whistle would not follow the make-and-break pattern of a keyed CW transmission.",
+    "en": "Question B-008-002-004.\n\nWhy the correct answer is right: A continuous wave (CW) Morse carrier is turned on and off by keying. Accidental rectification in a public-address (PA) system is heard as on-and-off hum, buzz, or clicks rather than voice.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Audible, possibly distorted speech\": Audible speech is associated with voice modes such as single sideband (SSB), not a keyed continuous-wave carrier.\n- sourceIndex 2: \"Muffled, severely distorted speech\": Muffled speech still implies voice modulation; CW contains keyed carrier timing, not spoken audio.\n- sourceIndex 3: \"A steady whistling\": A steady whistle would not follow the make-and-break pattern of a keyed CW transmission.",
     "fr": null
   },
   "citations": [

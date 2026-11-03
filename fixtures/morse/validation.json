@@ -53,6 +53,26 @@
       }
     },
     {
+      "id": "byte-order-mark-is-shared-morse-whitespace",
+      "input": {
+        "text": "A\ufeffB"
+      },
+      "expectedOutput": {
+        "valid": true,
+        "invalidCharacters": []
+      }
+    },
+    {
+      "id": "next-line-is-shared-morse-whitespace",
+      "input": {
+        "text": "A\u0085B"
+      },
+      "expectedOutput": {
+        "valid": true,
+        "invalidCharacters": []
+      }
+    },
+    {
       "id": "non-ascii-characters-are-rejected-before-uppercasing",
       "input": {
         "text": "ı ſ"

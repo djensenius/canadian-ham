@@ -3,6 +3,112 @@ import CanadianHamContent
 import XCTest
 
 final class LocalizationCatalogTests: XCTestCase {
+    func testReviewHeadingMarksEnglishFallbackTitleInsideFrenchText() throws {
+        let title = LocalizedNullableText(en: "Units, conductors, and current", fr: nil)
+        let heading = lessonQuizReviewHeading(title: title, language: .french, bundle: try frenchLocalizationBundle())
+        XCTAssertEqual(String(heading.characters), "Question de révision de Units, conductors, and current")
+        let englishRuns = heading.runs.filter { $0.languageIdentifier == "en" }
+        XCTAssertEqual(englishRuns.map { String(heading[$0.range].characters) }.joined(), title.en)
+        let prefixRuns = heading.runs.filter { $0.languageIdentifier != "en" }
+        XCTAssertEqual(prefixRuns.map { String(heading[$0.range].characters) }.joined(), "Question de révision de ", "The French prefix must not be marked as English")
+    }
+
+    func testTryItDisclosureLabelsStatesAndAnnouncementsLocalizeToFrench() throws {
+        let frenchBundle = try frenchLocalizationBundle()
+        let locale = Locale(identifier: "fr")
+        for (key, expected) in [
+            ("Show answer %lld", "Afficher la réponse 2"),
+            ("Hide answer %lld", "Masquer la réponse 2"),
+            ("Answer %lld", "Réponse 2"),
+            ("Answer %lld shown.", "Réponse 2 affichée."),
+            ("Answer %lld hidden.", "Réponse 2 masquée.")
+        ] {
+            let format = frenchBundle.localizedString(forKey: key, value: nil, table: nil)
+            XCTAssertEqual(String(format: format, locale: locale, Int64(2)), expected)
+        }
+        XCTAssertEqual(frenchBundle.localizedString(forKey: "Expanded", value: nil, table: nil), "Développé")
+        XCTAssertEqual(frenchBundle.localizedString(forKey: "Collapsed", value: nil, table: nil), "Réduit")
+    }
+
+    func testConceptCheckFeedbackFocusRequestOnlyAfterChoosingNotPreviousOrNext() {
+        var request = ConceptCheckFeedbackFocusRequest()
+        XCTAssertFalse(request.consume(for: "answered-A"), "Restoring an answered check must not move focus")
+
+        request.pendingCheckID = "answered-A"
+        XCTAssertTrue(request.consume(for: "answered-A"), "Choosing an answer requests focus once")
+        XCTAssertFalse(request.consume(for: "answered-B"), "Next to an answered check must not move focus")
+        XCTAssertFalse(request.consume(for: "answered-A"), "Previous to an answered check must not move focus")
+
+        request.pendingCheckID = "answered-A"
+        XCTAssertFalse(request.consume(for: "answered-B"), "A pending request cannot focus a different check")
+        XCTAssertFalse(request.consume(for: "answered-A"), "A mismatched request must be discarded")
+    }
+
+    @MainActor
+    func testConceptCheckAnswerStatusMapsShuffledSourceChoices() throws {
+        let quiz = try conceptFeedbackQuiz()
+        let check = try XCTUnwrap(quiz.conceptChecks.first)
+        let permutation = [2, 0, 3, 1]
+        let item = LessonQuizRuntimeItem.concept(id: check.id, conceptCheck: check, choicePermutation: permutation)
+        let expected = ["Incorrect. English fallback.", "Correct. English correct.", "Incorrect.", "Incorrect. English incorrect."]
+        for (displayIndex, sourceIndex) in permutation.enumerated() {
+            let state = LessonQuizSessionState()
+            state.items = [item]
+            state.select(sourceIndex, for: item)
+            let status = try XCTUnwrap(conceptCheckAnswerStatus(check: check, selectedSourceIndex: state.selectedByItemId[item.id], language: .english))
+            XCTAssertEqual(String(status.characters), expected[displayIndex])
+        }
+    }
+
+    func testConceptCheckAnswerStatusFrenchAndFallbackLanguageMetadata() throws {
+        let check = try XCTUnwrap(conceptFeedbackQuiz().conceptChecks.first)
+        for (sourceIndex, expectedText, expectedLanguage) in [
+            (0, "Rétroaction correcte.", "fr-CA"),
+            (1, "Rétroaction incorrecte.", "fr-CA"),
+            (2, "English fallback.", "en-CA")
+        ] {
+            let status = try XCTUnwrap(conceptCheckAnswerStatus(check: check, selectedSourceIndex: sourceIndex, language: .french))
+            let feedbackRuns = status.runs.filter { $0.languageIdentifier != nil }
+            XCTAssertEqual(feedbackRuns.map { String(status[$0.range].characters) }.joined(), expectedText)
+            XCTAssertEqual(Set(feedbackRuns.compactMap(\.languageIdentifier)), [expectedLanguage])
+        }
+        let english = try XCTUnwrap(conceptCheckAnswerStatus(check: check, selectedSourceIndex: 0, language: .english))
+        XCTAssertEqual(english.runs.compactMap(\.languageIdentifier), ["en-CA"])
+        XCTAssertEqual(String(english.characters), "Correct. English correct.")
+    }
+
+    func testConceptCheckAnswerStatusLegacyChoiceAndNoDisclosureBeforeSelection() throws {
+        let check = try XCTUnwrap(conceptFeedbackQuiz().conceptChecks.first)
+        XCTAssertNil(check.choices[3].feedback, "Legacy choices decode without feedback")
+        let legacy = try XCTUnwrap(conceptCheckAnswerStatus(check: check, selectedSourceIndex: 3, language: .french))
+        XCTAssertEqual(String(legacy.characters), String(localized: "Incorrect."))
+        XCTAssertTrue(legacy.runs.allSatisfy { $0.languageIdentifier == nil })
+        XCTAssertNil(conceptCheckAnswerStatus(check: check, selectedSourceIndex: nil, language: .english))
+        XCTAssertNil(conceptCheckAnswerStatus(check: check, selectedSourceIndex: -1, language: .english))
+        XCTAssertNil(conceptCheckAnswerStatus(check: check, selectedSourceIndex: 4, language: .english))
+    }
+
+    private func conceptFeedbackQuiz() throws -> LessonQuiz {
+        try JSONDecoder().decode(LessonQuiz.self, from: Data(#"""
+        {
+          "id": "feedback-quiz", "lessonId": "feedback-lesson", "officialQuestionIds": [],
+          "conceptChecks": [{
+            "id": "feedback-check", "prompt": {"en": "Choose.", "fr": null},
+            "choices": [
+              {"text": {"en": "Correct", "fr": null}, "isCorrect": true,
+               "feedback": {"en": "English correct.", "fr": "Rétroaction correcte."}},
+              {"text": {"en": "Incorrect", "fr": null}, "isCorrect": false,
+               "feedback": {"en": "English incorrect.", "fr": "Rétroaction incorrecte."}},
+              {"text": {"en": "Fallback", "fr": null}, "isCorrect": false,
+               "feedback": {"en": "English fallback.", "fr": null}},
+              {"text": {"en": "Legacy", "fr": null}, "isCorrect": false}
+            ],
+            "explanation": {"en": "General explanation.", "fr": null}
+          }]
+        }
+        """#.utf8))
+    }
+
     func testEveryCatalogKeyHasFrenchTranslations() throws {
         let catalogURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
@@ -52,12 +158,19 @@ final class LocalizationCatalogTests: XCTestCase {
         XCTAssertEqual(String(format: sendingPassFormat, locale: locale, Int64(1)), "RÉUSSITE, 100\u{00A0}%, avec 1 erreur.")
         XCTAssertEqual(String(format: sendingPassFormat, locale: locale, Int64(2)), "RÉUSSITE, 100\u{00A0}%, avec 2 erreurs.")
 
+        let sendingDiffFormat = frenchBundle.localizedString(forKey: "%lld total errors: %lld wrong, %lld missing, %lld inserted.", value: nil, table: nil)
+        XCTAssertEqual(
+            String(format: sendingDiffFormat, locale: locale, Int64(2), Int64(1), Int64(0), Int64(1)),
+            "Total des erreurs\u{00A0}: 2; caractères erronés\u{00A0}: 1; caractères manquants\u{00A0}: 0; caractères ajoutés\u{00A0}: 1."
+        )
+
         let mockExamSubmittedFormat = frenchBundle.localizedString(forKey: "Mock exam submitted. %@, %lld of %lld.", value: nil, table: nil)
         let passStatus = frenchBundle.localizedString(forKey: "Pass", value: nil, table: nil)
         XCTAssertEqual(
             String(format: mockExamSubmittedFormat, locale: locale, passStatus, Int64(82), Int64(100)),
             "Examen simulé soumis. Réussite, 82 sur 100."
         )
+        XCTAssertEqual(frenchBundle.localizedString(forKey: "Incorrect.", value: nil, table: nil), "Mauvaise réponse.")
         XCTAssertEqual(frenchBundle.localizedString(forKey: "Next unanswered", value: nil, table: nil), "Question sans réponse suivante")
         XCTAssertEqual(frenchBundle.localizedString(forKey: "Next flagged", value: nil, table: nil), "Question marquée suivante")
 
@@ -74,6 +187,33 @@ final class LocalizationCatalogTests: XCTestCase {
         XCTAssertEqual(localizedAnsweredOutOfTotal(answered: 3, total: 100), "Answered 3 of 100")
     }
 
+    func testFrenchMorseCopyUsesPointsAndTraitsInBothLocales() throws {
+        let translations = [
+            ("Dot", "Point"),
+            ("Dash", "Trait"),
+            ("Send dot", "Envoyer un point"),
+            ("Send dash", "Envoyer un trait"),
+            ("Dot paddle. Hold for repeated dots.", "Palette de points. Maintenez pour répéter les points."),
+            ("Dash paddle. Hold for repeated dashes.", "Palette de traits. Maintenez pour répéter les traits."),
+            ("Enter the characters you heard, not dot and dash notation.", "Entrez les caractères entendus, et non la notation en points et traits."),
+            ("Meet %@. Listen, then notice its dits and dahs.", "Découvrez %@. Écoutez, puis observez ses points et traits."),
+            ("not enough dots and dashes", "pas assez de points et de traits"),
+            ("Send a character to see dot/dash ratio and timing consistency.", "Envoyez un caractère pour voir le ratio point/trait et la constance du minutage."),
+            ("%@, dot/dash ratio %@, timing consistency %lld%%.", "%@, ratio point/trait %@, constance du minutage %lld\u{00A0}%%."),
+            ("Straight key. Hold to send tone, release to classify dot or dash.", "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le trait."),
+            ("Practise tap timing with a straight key or iambic-style paddles. With a hardware keyboard, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. Otherwise, use the large touch targets. Aim for steady dot/dash ratio and timing consistency.", "Exercez le rythme d’envoi avec une clé droite ou des palettes de type iambique. Avec un clavier physique, placez d’abord le foyer sur cet écran, puis maintenez la barre d’espacement pour la clé droite; utilisez J pour les points et K pour les traits. Sinon, utilisez les grandes cibles tactiles. Visez un rapport points/traits et un minutage constants."),
+            ("Light dot, rising dash", "Point léger, trait ascendant"),
+            ("Light dot, firm dash", "Point léger, trait ferme"),
+            ("Stronger dot, firm dash", "Point plus fort, trait ferme")
+        ]
+        for localeIdentifier in ["fr", "fr-CA"] {
+            let bundle = try localizationBundle(for: localeIdentifier)
+            for (key, expected) in translations {
+                XCTAssertEqual(bundle.localizedString(forKey: key, value: nil, table: nil), expected, "\(localeIdentifier): \(key)")
+            }
+        }
+    }
+
     func testQuestionBankLoadErrorDescriptionUsesFrenchLocale() throws {
         let error = QuestionBankLoadError.missingResource("manifest")
         XCTAssertEqual(error.errorDescription, error.localizedMessage(bundle: .main))
@@ -86,6 +226,15 @@ final class LocalizationCatalogTests: XCTestCase {
                 "QuestionBankLoadError should use the French runtime localization for \(localeIdentifier)."
             )
         }
+    }
+
+    func testLanguagePreferenceResolvesSystemAndOverrides() {
+        XCTAssertEqual(ApplePreferences.LanguagePreference.system.resolvedLanguage(preferredLanguages: ["fr-CA", "en-CA"]), .french)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.system.resolvedLanguage(preferredLanguages: ["en-CA", "fr-CA"]), .english)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.system.resolvedLanguage(preferredLanguages: ["de-DE", "fr-CA"]), .french)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.system.resolvedLanguage(preferredLanguages: ["de-DE"]), .english)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.english.resolvedLanguage(preferredLanguages: ["fr-CA"]), .english)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.french.resolvedLanguage(preferredLanguages: ["en-CA"]), .french)
     }
 
     func testLocalizedNullableTextAndLanguageFallsBackToEnglish() {

@@ -1,0 +1,19 @@
+{
+  "name": "@canadian-ham/calculator-engine",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "generate-fuzz-fixture": "node src/generate-fuzz-fixture.ts",
+    "generate-fuzz-fixture:check": "node src/generate-fuzz-fixture.ts --check",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "typescript": "^7.0.2"
+  }
+}

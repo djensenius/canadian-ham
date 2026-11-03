@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-010",
+  "questionId": "B-004-003-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the control terminal used in the electronic-switch example.",
+      "fr": "Revoyez la borne de commande utilisée dans l’exemple d’interrupteur électronique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "transistor-switching"
+  },
+  "singleLevelReason": "Terminal-role recall: a second hint would name the switch-control electrode.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

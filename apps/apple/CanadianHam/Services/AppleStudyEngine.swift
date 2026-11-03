@@ -91,14 +91,16 @@ enum AppleStudyEngine {
         progress: [QuestionProgressRecord],
         question: BankQuestion,
         selectedSourceIndex: Int,
-        now: String
+        now: String,
+        answeredWithHelp: Bool = false
     ) throws -> [QuestionProgressRecord] {
         let existing = progress.first { $0.questionId == question.id }
         let updated = try applyAnswer(existing: existing, update: AnswerUpdate(
             questionId: question.id,
             bankId: question.bankId,
             isCorrect: selectedSourceIndex == 0,
-            now: now
+            now: now,
+            answeredWithHelp: answeredWithHelp
         ))
         return (progress.filter { $0.questionId != question.id } + [updated]).sorted { $0.questionId < $1.questionId }
     }

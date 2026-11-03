@@ -48,10 +48,18 @@ test("shared bank-rule fixture agrees with content-tools and engine-ts", async (
   }
 });
 
-test("content-tools bank rules accept only schema-valid Advanced ids", () => {
+test("content-tools bank rules accept future schema-valid Basic ids", () => {
+  const rules = contentRulesForBankId("basic-2026-09-30");
+  assert.equal(rules.bankId, "basic-2026-09-30");
+  assert.equal(rules.effectiveDate, "2026-09-30");
+  assert.equal(rules.examQuestionCount, 100);
+  assert.equal(rules.hasHonours, true);
+});
+
+test("content-tools bank rules accept only schema-valid Basic and Advanced ids", () => {
   assert.equal(contentRulesForBankId(ADVANCED_BANK_ID).bankId, ADVANCED_BANK_ID);
   assert.equal(contentRulesForBankId("advanced-2026-01-15").bankId, "advanced-2026-01-15");
-  for (const bankId of ["advanced-", "advanced-X", "advanced-2026_01"]) {
+  for (const bankId of ["basic-", "basic-2026-1-15", "basic-2026_01_15", "basic-2026-01-15-extra", "advanced-", "advanced-X", "advanced-2026_01"]) {
     assert.throws(() => contentRulesForBankId(bankId), new RegExp(`unsupported bankId ${bankId}`));
   }
 });

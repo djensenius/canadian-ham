@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-009-010",
+  "questionId": "B-002-009-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A UTC-minus zone is behind UTC by the stated number of hours.",
+      "fr": "Un fuseau UTC moins est en retard sur l’UTC du nombre d’heures indiqué."
+    },
+    {
+      "level": 2,
+      "en": "Subtract the offset from the UTC schedule, then convert the 24-hour result to local clock form.",
+      "fr": "Soustrayez le décalage de l'heure UTC prévue, puis vérifiez si le résultat change la date locale."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-04",
+    "sectionAnchor": "worked-example-a-schedule-in-local-evening-time"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

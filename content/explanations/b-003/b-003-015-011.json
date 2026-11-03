@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-015-011.\n\nWhy the correct answer is right: Excessive sound-card audio overdrives the transmitter, creating splatter or emissions outside the intended digital-mode channel.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Higher signal-to-noise ratio\": More audio drive after the clean limit does not improve received SNR; it distorts the transmitted signal.\n- sourceIndex 2: \"Lower error rate\": Overdrive usually makes decodes less reliable for others and increases interference, not fewer errors.\n- sourceIndex 3: \"Power amplifier overheating\": Heat can be a separate duty-cycle issue, but the immediate result of excessive audio drive is spectral splatter or out-of-channel emissions.",
+    "en": "Question B-003-015-011.\n\nWhy the correct answer is right: Excessive sound-card audio overdrives the transmitter, creating splatter or emissions outside the intended digital-mode channel.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Higher signal-to-noise ratio\": More audio drive after the clean limit does not improve received signal-to-noise ratio (SNR). It distorts the transmitted signal.\n- sourceIndex 2: \"Lower error rate\": Overdrive usually makes decodes less reliable for others and increases interference, not fewer errors.\n- sourceIndex 3: \"Power amplifier overheating\": Heat can be a separate duty-cycle issue, but the immediate result of excessive audio drive is spectral splatter or out-of-channel emissions.",
     "fr": null
   },
   "citations": [

@@ -16,6 +16,7 @@ objectives:
   - "Interpret common receiver specifications and waterfall displays."
 prerequisites:
   - L-003-03
+  - L-006-04
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-04-A
@@ -23,7 +24,9 @@ status: draft
 ---
 # Yagi parts and receiver specifications
 
-A station is not only boxes and cables. The antenna decides where RF energy is received or sent, and the receiver specifications decide how well weak and crowded signals can be used. This lesson links a simple Yagi's physical parts with practical receiver terms: bandwidth, sensitivity, selectivity, dynamic range, AGC, IF frequency, filters, and waterfall displays.
+A station is more than boxes and cables. The antenna decides where RF energy is sent or received. The receiver decides how well weak and crowded signals can be used.
+
+This lesson links a simple Yagi's physical parts with receiver terms. You will use bandwidth, sensitivity, selectivity, dynamic range, automatic gain control, IF frequency, filters, and waterfall displays.
 
 ## Learning objectives
 
@@ -37,18 +40,28 @@ By the end of this lesson, you can:
 
 ## The basic Yagi
 
-A basic Yagi has one support member and a set of radiating elements arranged along it:
+A basic Yagi has radiating elements mounted along a support boom:
 
 ```text
 reflector ---- driven element ---- director
         all mounted along the boom
 ```
 
-The boom is the mechanical support. It is not the radiating element named by the feedline. The driven element is the place where the feedline attaches. The reflector is the longer radiating element behind the driven element. The director is the shorter radiating element toward the main forward direction.
+The boom is the mechanical support. The driven element is where the feedline attaches. The reflector is the longer radiating element behind the driven element. The director is the shorter radiating element toward the main forward direction.
 
-This matches the antenna ideas from Module 6: the parasitic elements are not directly fed, but their length and placement shape the pattern.
+The parasitic elements are not directly fed. Their length and placement shape the pattern.
 
-### Worked example: identifying parts from a sketch
+::figure yagi-receiver-specs
+Alt text: A labelled Yagi antenna appears beside a receiver display with wide, medium, and narrow passband choices, plus an image-frequency marker.
+Text equivalent:
+- Yagi labels are reflector, driven, director, boom, and feedline from the driven element.
+- The receiver display shows three passband shapes labelled wide, med, and narrow under their own curves.
+- The frequency line labels desired, LO, image, and two IF spacings.
+::
+
+
+
+### In the real world: identifying parts from a sketch
 
 A sketch shows three horizontal rods on a boom. The centre rod has the coax attached. The rear rod is 5.4 m long, the centre rod is 5.1 m long, and the forward rod is 4.8 m long.
 
@@ -59,27 +72,50 @@ A sketch shows three horizontal rods on a boom. The centre rod has the coax atta
 
 ## Bandwidth and emission width
 
-Bandwidth means occupied frequency range. As a practical comparison for these lessons, CW is narrowest, SSB voice is wider, and FM voice is wider still. Wider signals are not automatically bad, but they occupy more spectrum and need appropriate receiver bandwidth.
+Bandwidth means occupied frequency range. For these lessons, CW is narrowest, SSB voice is wider, and FM voice is wider still. Wider signals are not automatically bad, but they use more spectrum and need a matching receiver bandwidth.
 
-A receiver bandwidth that is too narrow can remove part of the information you are trying to hear. A bandwidth that is much wider than needed lets in extra noise and nearby interference.
+A receiver bandwidth that is too narrow can remove part of the information you want. A bandwidth that is too wide lets in extra noise and nearby interference.
 
 ## Receiver performance terms
 
-Sensitivity describes how small an RF input signal can be while still producing a specified signal-to-noise result. It is a weak-signal performance measurement for the RF input path, usually stated against a signal-to-noise target.
+Sensitivity describes how small an RF input signal can be while still producing a specified signal-to-noise result. It is a weak-signal measurement for the receiver input.
 
-Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For example, a few-kilohertz filter is a common SSB voice choice, while a few-hundred-hertz filter can help CW during interference.
+Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For CW, a narrow audio band-pass filter about 100 Hz wide, centred on your tone, works well. With an 800 Hz tone, 100 Hz total width means about 50 Hz below and 50 Hz above the tone, so the passband is roughly 750 Hz to 850 Hz.
 
-Dynamic range describes how well the receiver handles strong and weak signals at the same time without overload, blocking, or unwanted mixing products. It is the third major performance idea to keep beside sensitivity and selectivity.
+Dynamic range describes how well the receiver handles strong and weak signals at the same time. A receiver with poor dynamic range may overload, block, or make unwanted mixing products.
 
-Automatic gain control, or AGC, reduces the change in audio volume when signal strength changes a lot. It does not replace filtering, and it does not make the receiver infinitely sensitive.
+Automatic gain control, or AGC, reduces audio volume swings when signal strength changes. It does not replace filtering, and it does not make the receiver infinitely sensitive.
 
-A waterfall display, or spectrogram, lets the operator see where signals sit across the tuned spectrum and how strong they appear by brightness or colour as time scrolls.
+A waterfall display, or spectrogram, shows signals across the tuned spectrum as time scrolls. Brightness or colour shows amplitude, or relative signal strength.
 
-### Worked example: filter choice
+### In the real world: filter choice on a busy display
 
-A receiver has 300 Hz, 600 Hz, 2.7 kHz, and 8 kHz filters. For SSB voice, 2.7 kHz is the best match in this group because it is wide enough for speech but not as open as the 8 kHz filter.
+A receiver has 300 Hz, 600 Hz, 2.7 kHz, and 8 kHz filters. The waterfall shows a CW signal with another signal 500 Hz away.
 
-For crowded CW, the 300 Hz filter is the better choice because it narrows the passband around the tone and rejects nearby signals. If the operator wants easier tuning, the 600 Hz filter may be more comfortable, but the narrowest choice gives the strongest interference rejection in this set.
+- Given: wanted mode = CW; nearby spacing = 500 Hz; available filters = 300 Hz, 600 Hz, 2.7 kHz, 8 kHz.
+- Find: the best first filter choice for rejecting the nearby signal.
+- Rule of thumb: choose the narrowest filter that still passes the wanted signal comfortably.
+- Compare: 300 Hz gives stronger rejection; 600 Hz may tune more comfortably but has wider skirts. Filter skirts are the sloped edges where rejection increases outside the passband.
+- Answer: try the 300 Hz filter first.
+- Sanity check: the nearby signal may still leak through real filter skirts, but the narrower filter is the better first test.
+
+For SSB voice, 2.7 kHz is the better match in this filter set.
+
+### Faded practice: find audio filter edges
+
+A CW audio filter is centred at 700 Hz and has 80 Hz total width.
+
+- Given: centre = 700 Hz; total width = 80 Hz.
+- Find: lower and upper edges for this symmetric filter.
+- Formula: half-width = total width / 2; edges = centre minus and plus half-width.
+- Complete: half-width = ___ Hz; lower edge = 700 - ___ = ___ Hz; upper edge = 700 + ___ = ___ Hz.
+- Sanity check: subtract the lower edge from the upper edge. Is the full width 80 Hz?
+
+Fill the gaps before checking below.
+
+### Check your work: find audio filter edges
+
+Half-width is 40 Hz. The edges are 660 Hz and 740 Hz. Using 80 Hz on each side would accidentally double the intended width.
 
 ## Local oscillator and image basics
 
@@ -89,7 +125,7 @@ A superheterodyne receiver converts the desired signal to an intermediate freque
 local oscillator frequency = signal frequency + IF
 ```
 
-An image is another frequency that can also mix with the same local oscillator to produce the same IF. With high-side injection, the image is above the local oscillator by the IF, so it is above the desired signal by twice the IF.
+An image is another frequency that can mix with the same local oscillator to produce the same IF. With high-side injection, the image is above the desired signal by twice the IF.
 
 ```text
 image frequency = signal frequency + 2 x IF
@@ -97,41 +133,68 @@ image frequency = signal frequency + 2 x IF
 
 ### Worked example: local oscillator and image
 
-A receiver is tuned to 7.120 MHz, uses a 455 kHz IF, and runs the local oscillator above the signal.
+A receiver is tuned to 7.120 MHz. It uses a 455 kHz IF and runs the local oscillator above the signal.
 
-```text
-IF = 455 kHz = 0.455 MHz
-local oscillator = 7.120 MHz + 0.455 MHz = 7.575 MHz
-image = 7.120 MHz + 2 x 0.455 MHz = 8.030 MHz
-```
+- Given: signal = 7.120 MHz; IF = 455 kHz = 0.455 MHz; high-side injection.
+- Find: local oscillator and image frequencies.
+- Formula: oscillator = signal + IF; image = signal + 2 x IF.
+- Substitute: oscillator = 7.120 + 0.455; image = 7.120 + 2 x 0.455.
+- Answer: oscillator = 7.575 MHz; image = 8.030 MHz.
+- Sanity check: the desired signal and image each lie one IF from the oscillator.
 
 The image is not the station you intended to hear. Front-end filtering helps reject it before the mixer.
 
+### Faded practice: separate oscillator and image
+
+A training receiver tunes 7.240 MHz with a 455 kHz IF and high-side injection.
+
+- Given: signal = 7.240 MHz; IF = 455 kHz = ___ MHz.
+- Find: local oscillator and image frequencies.
+- Formula: oscillator = signal + IF; image = signal + 2 x IF.
+- Complete: oscillator = 7.240 + 0.455 = ___ MHz; image = 7.240 + ___ = ___ MHz.
+- Sanity check: is the image one IF or two IFs above the desired signal?
+
+Fill the gaps before checking below.
+
+### Check your work: separate oscillator and image
+
+455 kHz = 0.455 MHz. The oscillator is 7.695 MHz. Twice the IF is 0.910 MHz, so the image is 8.150 MHz. The image is two IFs above the desired signal.
+
 ## Tuning accuracy for narrow modes
 
-SSB needs accurate tuning because there is no full carrier for the receiver to lock onto in the simple voice-recovery sense. A small tuning error shifts the recovered speech frequencies, so voices become high, low, or distorted instead of merely louder or softer. AM carries its own carrier for envelope detection, so modest receiver tuning error is usually less critical than with SSB voice. FM receivers recover audio from frequency deviation inside the receiver passband, so a small offset is not the same voice-spectrum shift problem. CW also uses narrow filters and careful tuning, but a small tuning offset mainly changes the pitch of the received tone; the operator can often retune for a comfortable note.
+SSB needs accurate tuning because the receiver must recreate audio from a signal with no full carrier. A small tuning error shifts the recovered speech frequencies. Voices become high, low, or distorted.
+
+AM carries its own carrier for envelope detection, so modest tuning error is usually less critical than with SSB voice. FM receivers recover audio from frequency deviation inside the receiver passband. CW also needs careful tuning, but a small tuning offset mainly changes the pitch of the received tone.
 
 ## Try it
 
-Question: A three-element Yagi is rebuilt on a nonconductive boom, but the element lengths and feedpoint stay the same. Explain why the main RF roles have not moved to the boom.
+1. A three-element Yagi is rebuilt on a nonconductive boom, but the element lengths and feed point stay the same. Why have the RF roles not moved to the boom?
 
-Worked answer: The radiating elements and feedpoint set the RF roles. The boom holds them in position; changing the support material does not make it the fed radiating element.
+:::answer
+The radiating elements and feed point set the RF roles; the boom holds them in position.
+:::
 
-Question: Put these receiver filters with likely uses: 400 Hz, 2.8 kHz, and 7 kHz.
+2. Match these receiver filters to likely uses: 400 Hz, 2.8 kHz, and 7 kHz.
 
-Worked answer: 400 Hz fits narrow CW work, 2.8 kHz fits SSB voice, and 7 kHz is wider than needed for those two examples.
+:::answer
+Use 400 Hz for narrow CW, 2.8 kHz for SSB voice, and 7 kHz for a wider signal.
+:::
 
-Question: A receiver uses a 10.7 MHz IF and tunes a 52.0 MHz signal with the oscillator above the signal. What is the oscillator frequency?
+3. A receiver uses a 10.7 MHz IF and tunes a 52.0 MHz signal with the oscillator above the signal. What is the oscillator frequency?
 
-Worked answer: Add the IF: 52.0 MHz + 10.7 MHz = 62.7 MHz.
+:::answer
+Add the IF: 52.0 MHz + 10.7 MHz = 62.7 MHz.
+:::
 
-Question: With the same 52.0 MHz signal and 10.7 MHz IF, where is the high-side image?
+4. With the same 52.0 MHz signal and 10.7 MHz IF, where is the high-side image?
 
-Worked answer: The image is signal + 2 x IF = 52.0 MHz + 21.4 MHz = 73.4 MHz.
+:::answer
+The image is signal + 2 x IF = 52.0 MHz + 21.4 MHz = 73.4 MHz.
+:::
 
 ## Radio connection
 
-When you turn a Yagi, you change the direction where the antenna is most sensitive. When you narrow a receiver filter, you change which part of the spectrum reaches the detector and audio chain. Both are selectivity tools: one works in space, and the other works in frequency.
+Turning a Yagi changes the direction where the antenna is most sensitive. Narrowing a receiver filter changes which part of the spectrum reaches the detector and audio chain. Both choices improve selectivity, but one works in space and the other works in frequency.
 
 ## Common mistakes
 
@@ -139,7 +202,7 @@ When you turn a Yagi, you change the direction where the antenna is most sensiti
 - Swapping director and reflector lengths. The reflector is longer; the director is shorter.
 - Treating sensitivity, selectivity, and dynamic range as the same specification.
 - Choosing the widest receiver filter because it sounds louder; wider also admits more noise and adjacent signals.
-- Forgetting to convert 455 kHz to 0.455 MHz before adding it to an MHz operating frequency.
+- Forgetting to convert 455 kHz to 0.455 MHz before adding it to an MHz frequency.
 
 ## Illustration brief
 
@@ -151,7 +214,7 @@ Description: Draw a three-element Yagi from above. Label the boom, longer reflec
 
 - In a three-element Yagi, the boom supports, the driven element connects to the feedline, the reflector is longer, and the director is shorter.
 - CW is narrower than SSB voice, and SSB voice is narrower than FM voice.
-- Sensitivity is about weak-signal input for a stated signal-to-noise result; selectivity is about rejecting nearby signals; dynamic range is about handling very different signal strengths.
+- Sensitivity is about weak signals; selectivity is about rejecting nearby signals; dynamic range is about handling very different signal strengths.
 - AGC reduces volume swings caused by signal-strength changes.
 - With high-side injection, local oscillator frequency equals signal frequency plus IF, and the image is two IFs above the desired signal.
-- Filter width should match the mode: narrow for CW interference, a few kilohertz for SSB voice.
+- Filter width should match the mode and the interference problem.

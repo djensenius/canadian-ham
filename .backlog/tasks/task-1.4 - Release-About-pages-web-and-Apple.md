@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 08:24'
+updated_date: '2026-10-16 08:04'
 labels:
   - release
   - web
@@ -55,4 +55,6 @@ Fix round: relabelled the draft ISED attribution as not in effect with request s
 Full validation at tip 8f64831 (code commit 2893289): pnpm typecheck; pnpm test (content-tools 95/95, web 83/83); pnpm build:web; web dist URL audit; pnpm check:links; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts; pnpm check:apple-network; xbuild iOS 49/49 (incl. testFrenchAboutKeepsLegalTextInEnglish, testAboutShowsReleaseAttributionDisclaimerAndBankVersion and accessibility audits), macOS 21/21, tvOS 12/12 (incl. testAboutLowerSectionsReachableWithRemote, testAboutAccessibilityAuditLightAndDark), visionOS 9/9. All passed. Follow-up: task-29 (VoiceOver reading of combined tvOS About cards).
 
 Fix round for PR #98: corrected tvOS and visionOS About privacy copy to state in-memory-only practice sessions with French/fr-CA catalogue entries; updated privacy docs and web About test source URL non-link assertions. Validation passed: pnpm test, pnpm check:links, pnpm check:apple-l10n, node scripts/check-apple-text-sources.ts, pnpm check:apple-network, and DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild tvOS/visionOS suites.
+
+Blocked (2026-10-16): the remaining criteria run on the release commit or need the recorded ISED permission (task-1.1). Nothing to do until permission arrives.
 <!-- SECTION:NOTES:END -->

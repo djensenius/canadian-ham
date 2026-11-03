@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-007-003",
+  "questionId": "B-006-007-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the polarization examples for straight Yagi elements.",
+      "fr": "Revoyez les exemples de polarisation pour les éléments droits d’une antenne Yagi."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "polarization"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

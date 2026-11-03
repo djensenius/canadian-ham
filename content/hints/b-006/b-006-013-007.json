@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-013-007",
+  "questionId": "B-006-013-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the beginner feed-point placement rule for a triangular loop with a horizontal bottom side.",
+      "fr": "Revoyez la règle de base de position du point d’alimentation pour une boucle triangulaire dont le côté inférieur est horizontal."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "delta-loops-and-polarization"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

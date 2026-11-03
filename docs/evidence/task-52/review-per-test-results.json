@@ -1,0 +1,40 @@
+{
+  "implementationCommit": "cdd2b25e618b0af59194d82d40f2d752a2ee367e",
+  "testPlan": "CanadianHamTitleSweeps",
+  "resultBundle": "/tmp/task-52/title-sweeps-review.xcresult",
+  "log": "/tmp/task-52/title-sweeps-review.log",
+  "tests": [
+    {
+      "test": "CanadianHamPracticeUITests/testCategoryTitlesEnglishDefaultSize()",
+      "result": "Passed",
+      "durationInSeconds": 673.6401480436325
+    },
+    {
+      "test": "CanadianHamPracticeUITests/testCategoryTitlesEnglishLargestAccessibilitySize()",
+      "result": "Passed",
+      "durationInSeconds": 1243.6845799684525
+    },
+    {
+      "test": "CanadianHamPracticeUITests/testCategoryTitlesFrenchDefaultSize()",
+      "result": "Passed",
+      "durationInSeconds": 689.231901049614
+    },
+    {
+      "test": "CanadianHamPracticeUITests/testCategoryTitlesFrenchLargestAccessibilitySize()",
+      "result": "Passed",
+      "durationInSeconds": 1357.6413249969482
+    }
+  ],
+  "categoryCounts": {
+    "basic": 8,
+    "advanced": 7
+  },
+  "nativeTitleMeasurementCount": 92,
+  "baselineNativeMeasurementsMatchWithinPt": 1e-09,
+  "screenshotsByTest": {
+    "CanadianHamPracticeUITests/testCategoryTitlesEnglishDefaultSize()": 77,
+    "CanadianHamPracticeUITests/testCategoryTitlesEnglishLargestAccessibilitySize()": 77,
+    "CanadianHamPracticeUITests/testCategoryTitlesFrenchDefaultSize()": 77,
+    "CanadianHamPracticeUITests/testCategoryTitlesFrenchLargestAccessibilitySize()": 77
+  }
+}

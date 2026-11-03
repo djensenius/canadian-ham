@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-010-003.\n\nWhy the correct answer is right: A waterfall presents signal strength versus frequency over time; the user reads amplitude by brightness or colour and frequency by horizontal position.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency and phase\": Phase is not one of the usual user-facing waterfall display parameters.\n- sourceIndex 2: \"Phase and bandwidth\": This pair omits amplitude and adds phase, which is not what the spectrogram is primarily showing.\n- sourceIndex 3: \"Bandwidth and digital mode\": Digital mode is an interpretation of a signal, not a direct display axis paired with bandwidth.",
+    "en": "Question B-003-010-003.\n\nWhy the correct answer is right: A waterfall presents signal strength versus frequency over time. The user reads amplitude by brightness or colour and frequency by horizontal position.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency and phase\": Phase is not one of the usual user-facing waterfall display parameters.\n- sourceIndex 2: \"Phase and bandwidth\": This pair omits amplitude and adds phase, which is not what the spectrogram is primarily showing.\n- sourceIndex 3: \"Bandwidth and digital mode\": Digital mode is an interpretation of a signal, not a direct display axis paired with bandwidth.",
     "fr": null
   },
   "citations": [

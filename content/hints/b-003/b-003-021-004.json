@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-021-004",
+  "questionId": "B-003-021-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why handheld transmitting antennas should be kept away from the operator.",
+      "fr": "Revoyez pourquoi les antennes d’émetteurs portatifs doivent être tenues éloignées de l’opérateur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "rf-exposure-and-nearby-people"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

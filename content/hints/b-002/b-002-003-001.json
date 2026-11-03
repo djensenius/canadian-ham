@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-003-001",
+  "questionId": "B-002-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the voice CQ calling pattern.",
+      "fr": "Revoyez le modèle d’appel CQ en phonie."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "tell-listeners-who-you-want"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Procedure/courtesy recall: a principle hint would restate the answer components or eliminate options; topic pointer and lesson link only."
+}

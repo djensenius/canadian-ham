@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-005-002.\n\nWhy the correct answer is right: The RF amplifier improves receiver sensitivity by boosting weak incoming RF before conversion while ideally adding little noise.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Provide sufficient drive for the automatic gain control circuit (AGC)\": AGC may sample signal levels later, but providing AGC drive is not the main purpose of the RF amplifier.\n- sourceIndex 2: \"Increase the local oscillator signal to drive the mixer\": The local oscillator is a separate source for the mixer; the RF amplifier does not boost the oscillator.\n- sourceIndex 3: \"Provide sufficient gain to activate the limiter circuit\": Limiters are associated with FM reception, not SSB/CW RF-amplifier gain.",
+    "en": "Question B-003-005-002.\n\nWhy the correct answer is right: The radio-frequency (RF) amplifier improves receiver sensitivity by boosting weak incoming RF before conversion while ideally adding little noise.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Provide sufficient drive for the automatic gain control circuit (AGC)\": Automatic gain control (AGC) may sample signal levels later, but providing AGC drive is not the main purpose of the RF amplifier.\n- sourceIndex 2: \"Increase the local oscillator signal to drive the mixer\": The local oscillator is a separate source for the mixer. The RF amplifier does not boost the oscillator.\n- sourceIndex 3: \"Provide sufficient gain to activate the limiter circuit\": Limiters are associated with frequency-modulation (FM) reception, not with RF amplifier gain for single-sideband (SSB) or continuous-wave (CW) signals.",
     "fr": null
   },
   "citations": [

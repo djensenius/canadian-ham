@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-008-003",
+  "questionId": "B-007-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the density and water-vapour discussion in the VHF lesson.",
+      "fr": "Revoyez l’explication sur la densité et la vapeur d’eau dans la leçon VHF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "tropospheric-bending-ducting-and-scatter"
+  },
+  "singleLevelReason": "Mode recall: a second hint would identify or eliminate the propagation mode; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

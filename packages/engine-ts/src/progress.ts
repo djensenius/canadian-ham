@@ -23,7 +23,9 @@ export interface QuestionProgressRecord {
   readonly correctAttempts: number;
   readonly lastAttemptedAt: string;
   readonly lastResult: "correct" | "incorrect";
+  readonly lastAnsweredWithHelp: boolean;
   readonly recentResults: readonly boolean[];
+  readonly recentAnsweredWithHelp: readonly boolean[];
   readonly leitner: LeitnerState;
   readonly notes?: string | null;
 }
@@ -33,6 +35,7 @@ export interface AnswerUpdate {
   readonly bankId: string;
   readonly isCorrect: boolean;
   readonly now: string;
+  readonly answeredWithHelp?: boolean;
 }
 
 export interface LatestExamResultItem {
@@ -47,8 +50,10 @@ export function applyAnswer(
 ): QuestionProgressRecord {
   requireCanonicalUtcTimestamp(update.now, "update.now");
   const previousBox = existing?.leitner.box ?? 0;
-  const nextBox = update.isCorrect ? Math.min(previousBox + 1, 5) : 0;
-  const dueAt = update.isCorrect ? addUtcSeconds(update.now, LEITNER_INTERVALS_BY_BOX[nextBox]) : normalizeIso(update.now);
+  const answeredWithHelp = update.answeredWithHelp ?? false;
+  const givesMasteryCredit = update.isCorrect && !answeredWithHelp;
+  const nextBox = givesMasteryCredit ? Math.min(previousBox + 1, 5) : update.isCorrect ? previousBox : 0;
+  const dueAt = givesMasteryCredit ? addUtcSeconds(update.now, LEITNER_INTERVALS_BY_BOX[nextBox]) : normalizeIso(update.now);
   return {
     questionId: update.questionId,
     bankId: update.bankId,
@@ -56,7 +61,9 @@ export function applyAnswer(
     correctAttempts: (existing?.correctAttempts ?? 0) + (update.isCorrect ? 1 : 0),
     lastAttemptedAt: normalizeIso(update.now),
     lastResult: update.isCorrect ? "correct" : "incorrect",
+    lastAnsweredWithHelp: answeredWithHelp,
     recentResults: appendRecentResult(existing?.recentResults ?? [], update.isCorrect),
+    recentAnsweredWithHelp: appendRecentResult(alignedRecentAnsweredWithHelp(existing), answeredWithHelp),
     leitner: {
       box: nextBox,
       dueAt,
@@ -80,6 +87,12 @@ export function appendRecentResult(existing: readonly boolean[], newest: boolean
   return [...existing, newest].slice(-5);
 }
 
+function alignedRecentAnsweredWithHelp(existing: QuestionProgressRecord | null | undefined): boolean[] {
+  const recentResults = existing?.recentResults ?? [];
+  const source = existing?.recentAnsweredWithHelp ?? [];
+  return recentResults.map((_, index) => source[index] === true);
+}
+
 export function isDue(record: Pick<QuestionProgressRecord, "leitner">, now: string): boolean {
   return parseCanonicalUtcTimestamp(record.leitner.dueAt, "record.leitner.dueAt") <= parseCanonicalUtcTimestamp(now, "now");
 }
@@ -96,16 +109,20 @@ export function dueCount(records: readonly QuestionProgressRecord[], now: string
 }
 
 export function weakSubsectionIds(
-  records: readonly Pick<QuestionProgressRecord, "questionId" | "recentResults">[],
+  records: readonly (Pick<QuestionProgressRecord, "questionId" | "recentResults"> & { readonly recentAnsweredWithHelp?: readonly boolean[] })[],
   latestExamItems: readonly LatestExamResultItem[] = [],
 ): string[] {
   const subsectionAttempts = new Map<string, { correct: number; total: number }>();
   for (const record of records) {
     const subsectionId = subsectionIdFromQuestionId(record.questionId);
     const current = subsectionAttempts.get(subsectionId) ?? { correct: 0, total: 0 };
-    for (const result of record.recentResults) {
+    const recentAnsweredWithHelp = record.recentAnsweredWithHelp ?? [];
+    for (const [index, result] of record.recentResults.entries()) {
+      // A helped correct answer counts as an attempt without proficiency credit, so it can
+      // never clear a weak area, even when it rolls an older failure out of the window.
+      const wasHelped = recentAnsweredWithHelp[index] === true;
       current.total += 1;
-      if (result) {
+      if (result && !wasHelped) {
         current.correct += 1;
       }
     }

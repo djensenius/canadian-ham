@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-008",
+  "questionId": "B-008-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the names of the main interference types.",
+      "fr": "Revoyez les noms des principaux types de brouillage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "receiver-overload-and-desensitization"
+  },
+  "singleLevelReason": "Definition recall: a second hint would restate the term asked for.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

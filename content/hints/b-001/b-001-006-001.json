@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-006-001",
+  "questionId": "B-001-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the rules treat low-power amateur stations.",
+      "fr": "Revoyez comment les règles traitent les stations de radioamateur de faible puissance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-both-sides-need-authority"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

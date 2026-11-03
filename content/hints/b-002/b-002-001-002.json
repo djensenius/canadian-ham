@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-002-001-002",
+  "questionId": "B-002-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the role repeaters play in VHF and UHF operating.",
+      "fr": "Revoyez le rôle des répéteurs dans l’exploitation VHF et UHF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-01",
+    "sectionAnchor": "choose-a-relay-or-a-direct-path"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the definition or eliminate options; topic pointer and lesson link only."
+}

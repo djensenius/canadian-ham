@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-010-004.\n\nWhy the correct answer is right: AGC reduces large audio-volume changes by adjusting receiver gain as received signal strength varies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Remove high-amplitude short-duration noise pulses\": Removing short impulse noise is a noise blanker function, not AGC.\n- sourceIndex 2: \"Improve the signal-to-distortion ratio of the detector\": Detector distortion is not the main target; AGC is about gain and level variation.\n- sourceIndex 3: \"Maximize overall gain for greater sensitivity\": AGC does not simply maximize gain; it often reduces gain on strong signals to keep level manageable.",
+    "en": "Question B-003-010-004.\n\nWhy the correct answer is right: Automatic gain control (AGC) reduces large audio-volume changes by adjusting receiver gain as received signal strength varies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Remove high-amplitude short-duration noise pulses\": Removing short impulse noise is a noise blanker function, not AGC.\n- sourceIndex 2: \"Improve the signal-to-distortion ratio of the detector\": Detector distortion is not the main target. AGC is about gain and level variation.\n- sourceIndex 3: \"Maximize overall gain for greater sensitivity\": AGC does not simply maximize gain. It often reduces gain on strong signals to keep level manageable.",
     "fr": null
   },
   "citations": [

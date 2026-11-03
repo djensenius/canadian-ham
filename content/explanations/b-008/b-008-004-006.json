@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-004-006.\n\nWhy the correct answer is right: Splatter is caused by overmodulation or overdrive, which makes the transmitted signal wider than it should be.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Keying a transmitter too fast\": Fast keying can contribute to key-click problems, but splatter is associated with overmodulated voice or non-linear transmitted audio.\n- sourceIndex 2: \"Unwanted feedback in an amplifier stage\": Unwanted feedback can produce oscillation or instability, which is a different mechanism from modulation splatter.\n- sourceIndex 3: \"The transmitting antenna is non-resonant\": A non-resonant antenna can create matching problems, but it is not the direct cause of splatter from the transmitter.",
+    "en": "Question B-008-004-006.\n\nWhy the correct answer is right: Splatter is caused by overmodulation or overdrive. The transmitted signal becomes wider than it should be, so it spills into nearby frequencies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Keying a transmitter too fast\": Fast keying can contribute to key-click problems, but splatter is associated with overmodulated voice or non-linear transmitted audio.\n- sourceIndex 2: \"Unwanted feedback in an amplifier stage\": Unwanted feedback can produce oscillation or instability, which is a different mechanism from modulation splatter.\n- sourceIndex 3: \"The transmitting antenna is non-resonant\": A non-resonant antenna can create matching problems, but it is not the direct cause of splatter from the transmitter.",
     "fr": null
   },
   "citations": [

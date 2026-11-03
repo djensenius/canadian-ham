@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-012-001",
+  "questionId": "B-001-012-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review payment rules for third-party message handling.",
+      "fr": "Revoyez les règles de paiement pour le traitement des messages de tiers."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-message-handling-stays-unpaid"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

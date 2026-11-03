@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-016-011.\n\nWhy the correct answer is right: A lithium-ion battery can deliver very high fault current into a short circuit, causing overheating, fire, venting, or cell damage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"recharged\": Lithium-ion batteries are designed to be recharged, but only with the charger and protection specified for the pack.\n- sourceIndex 2: \"left disconnected\": Leaving a pack disconnected is not the prohibited action; storage guidance concerns state of charge, temperature, and protection from shorts.\n- sourceIndex 3: \"left overnight at room temperature\": Room-temperature storage by itself is not the key hazard named here; short-circuiting is the immediate dangerous condition.",
+    "en": "Question B-003-016-011.\n\nWhy the correct answer is right: A lithium-ion battery can deliver very high fault current into a short circuit, causing overheating, fire, venting, or cell damage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"recharged\": Lithium-ion batteries are designed to be recharged, but only with the charger and protection specified for the pack.\n- sourceIndex 2: \"left disconnected\": Leaving a pack disconnected is not the prohibited action. Storage guidance concerns state of charge, temperature, and protection from shorts.\n- sourceIndex 3: \"left overnight at room temperature\": Room-temperature storage by itself is not the key hazard named here. Short-circuiting is the immediate dangerous condition.",
     "fr": null
   },
   "citations": [

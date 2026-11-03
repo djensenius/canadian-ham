@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-004-009",
+  "questionId": "B-005-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Convert milliamperes to amperes before using E = I x R.",
+      "fr": "Convertissez les milliampères en ampères avant d'utiliser E = I x R."
+    },
+    {
+      "level": 2,
+      "en": "Set the current as 0.200 A, then use E = 0.200 A x 25 ohms.",
+      "fr": "Écrivez le courant comme 0,200 A, puis utilisez E = 0,200 A x 25 ohms."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "ohms-law"
+  },
+  "referenceSheetSection": "ohms-law",
+  "licenseClass": "original"
+}

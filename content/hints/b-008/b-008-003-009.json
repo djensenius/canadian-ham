@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-009",
+  "questionId": "B-008-003-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the vocabulary for unwanted oscillations in transmitter stages.",
+      "fr": "Revoyez le vocabulaire des oscillations indésirables dans les étages d'émetteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "parasitic-oscillation"
+  },
+  "singleLevelReason": "Definition recall: a second hint would name the term directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

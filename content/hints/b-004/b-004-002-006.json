@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-002-006",
+  "questionId": "B-004-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what a single diode does to an AC waveform.",
+      "fr": "Revoyez ce qu'une seule diode fait à une forme d'onde alternative."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "rectifiers-detectors-and-protectors"
+  },
+  "singleLevelReason": "Waveform recall: a second hint would state the output-current form or eliminate the other forms.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-020-004.\n\nWhy the correct answer is right: Approved fall-arrest equipment is designed and rated to reduce injury if a person working on a tower falls.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A reflective vest\": A reflective vest improves visibility on the ground, but it does not arrest a fall from a tower.\n- sourceIndex 2: \"A pair of insulating gloves\": Insulating gloves address electrical contact hazards in specific work; they do not protect a climber from falling.\n- sourceIndex 3: \"A positioning waist belt\": A positioning belt can hold working position, but by itself it is not the approved fall-arrest equipment required for tower work.",
+    "en": "Question B-003-020-004.\n\nWhy the correct answer is right: Approved fall-arrest equipment is designed and rated to reduce injury if a person working on a tower falls.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A reflective vest\": A reflective vest improves visibility on the ground, but it does not arrest a fall from a tower.\n- sourceIndex 2: \"A pair of insulating gloves\": Insulating gloves address electrical contact hazards in specific work. They do not protect a climber from falling.\n- sourceIndex 3: \"A positioning waist belt\": A positioning belt can hold working position, but by itself it is not the approved fall-arrest equipment required for tower work.",
     "fr": null
   },
   "citations": [

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-005",
+  "questionId": "B-005-002-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how materials are named by how easily charge can pass through them.",
+      "fr": "Revoyez comment on nomme les matériaux selon la facilité avec laquelle les charges peuvent les traverser."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "conductors-insulators-and-semiconductors"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name or closely define the correct material type.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

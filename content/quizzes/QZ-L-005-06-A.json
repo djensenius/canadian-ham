@@ -1,0 +1,188 @@
+{
+  "id": "QZ-L-005-06-A",
+  "lessonId": "L-005-06",
+  "officialQuestionIds": [
+    "B-005-011-001",
+    "B-005-011-002",
+    "B-005-011-004",
+    "B-005-011-008",
+    "B-005-013-001",
+    "B-005-013-005",
+    "B-005-013-006",
+    "B-005-013-007",
+    "B-005-013-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-005-06-A-C1",
+      "prompt": {
+        "en": "An ideal calculation predicts 24 W of input for a transformer delivering 24 W to a load. A real transformer takes more input power and its core warms. Which explanation fits?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "The extra input is probably reactive loading rather than energy lost as heat.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Reactive loading can affect VA and current, but the observations here include extra real power in watts and a warm core. Heat loss contributes to that real input.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Equal ideal power means a warm core can be ignored in real sizing.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The ideal model neglects losses. Real heat requires extra input energy.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Some input power becomes heat, so the lossless model underestimates real input.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The output still needs 24 W, and transformer losses require additional input power.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A meter offset is the better explanation because equal-power calculations apply beyond the ideal model.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The calculation assumes away losses. Extending that assumption to a warm real transformer is not a reason to dismiss the heat loss as a meter offset.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "Ideal transformer calculations are a useful baseline, not a guarantee of real efficiency.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-005-06-A-C2",
+      "prompt": {
+        "en": "In a low-energy, current-limited bench demonstration, a transformer primary is switched to steady DC instead of AC. The secondary shows a brief pulse, then no sustained voltage. Why?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "The field changes during switching, but the steady field does not sustain an induced secondary voltage.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Induction depends on a changing magnetic field. The connection transient changes the field; steady DC does not keep repeating that change.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The field needs more settling time before a continuous secondary voltage develops.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Once primary current is steady, waiting longer does not provide the changing field needed for sustained induction.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The secondary needs more turns to maintain output from the steady field.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "More secondary turns can change the voltage during a field change. They cannot make a steady field keep inducing voltage.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Reversing the DC leads would turn the brief pulse into a continuous output.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Reversing the leads changes the direction of the switching transient. It does not make the eventual DC field vary continuously.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "A transformer needs continuing magnetic-field changes for sustained induction. A one-time change can produce a pulse without providing continuous secondary output.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-005-06-A-C3",
+      "prompt": {
+        "en": "A meter displays tiny voltage steps but gives scattered readings around a stable reference. What has its fine display established?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Good accuracy, because adding digits improves the whole measurement.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Extra digits do not correct calibration errors or unstable readings.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Good precision, because every displayed number is detailed.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Precision concerns repeated agreement. Scattered readings show poor repeatability.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Both accuracy and precision, because the reference is stable.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A stable reference does not make the meter's scattered readings accurate or repeatable.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Fine resolution, while accuracy and precision still need checking.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Small display steps establish resolution. The scattered readings and unverified calibration are separate concerns.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "Resolution, precision, and accuracy describe different measurement qualities.",
+        "fr": null
+      }
+    }
+  ]
+}

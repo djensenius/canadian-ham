@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-009-005",
+  "questionId": "B-006-009-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the antenna property that describes usable response across frequencies.",
+      "fr": "Revoyez la propriété d’une antenne qui décrit sa réponse utile sur une gamme de fréquences."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "directivity-and-gain"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

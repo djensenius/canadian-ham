@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-016-010.\n\nWhy the correct answer is right: In series, matched battery voltages add while the ampere-hour capacity stays that of one string. Two 12 V, 20 Ah batteries in series make 24 V at 20 Ah.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"24 volts, 40 ampere-hours\": The voltage is the series value, but the capacity has been incorrectly added as if the batteries were in parallel.\n- sourceIndex 2: \"12 volts, 40 ampere-hours\": This is the parallel result, where voltage stays at 12 V and ampere-hours add.\n- sourceIndex 3: \"6 volts, 80 ampere-hours\": Series connection does not halve voltage or multiply capacity by four; both parts of this result use the wrong relationship.",
+    "en": "Question B-003-016-010.\n\nWhy the correct answer is right: In series, matched battery voltages add while the ampere-hour capacity stays that of one string. Think of cells end to end in a flashlight: two 12 V, 20 Ah batteries in series make 24 V at 20 Ah.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"24 volts, 40 ampere-hours\": The voltage is the series value, but the capacity has been incorrectly added as if the batteries were in parallel.\n- sourceIndex 2: \"12 volts, 40 ampere-hours\": This is the parallel result, where voltage stays at 12 V and ampere-hours add.\n- sourceIndex 3: \"6 volts, 80 ampere-hours\": Series connection does not halve voltage or multiply capacity by four. Both parts of this result use the wrong relationship.",
     "fr": null
   },
   "citations": [

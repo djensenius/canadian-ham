@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-004-002",
+  "questionId": "B-008-004-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the lesson defines harmonic emissions.",
+      "fr": "Revoyez comment la leçon définit le rayonnement harmonique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "harmonics"
+  },
+  "singleLevelReason": "Definition recall: a second hint would restate the definition of the correct term.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

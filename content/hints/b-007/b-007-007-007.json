@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-007-007",
+  "questionId": "B-007-007-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the antenna-aiming clue in the unusual-modes section.",
+      "fr": "Revoyez l’indice d’orientation d’antenne dans la section sur les modes inhabituels."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "aurora-meteor-scatter-and-distorted-signals"
+  },
+  "singleLevelReason": "Direction recall: a second hint would identify or eliminate a compass direction; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

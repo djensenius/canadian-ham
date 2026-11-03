@@ -1,0 +1,16 @@
+{
+  "attempt": {
+    "id": "lesson-quiz-help",
+    "quizId": "QZ-L-005-01-A",
+    "lessonId": "L-005-01",
+    "submittedAt": "2026-01-02T03:45:00.000Z",
+    "correct": 1,
+    "total": 2,
+    "percent": 50,
+    "officialQuestionIds": ["B-005-001-001", "B-005-001-007"],
+    "incorrectOfficialQuestionIds": ["B-005-001-007"],
+    "incorrectConceptCheckIds": []
+  },
+  "validHelpIds": [[], ["B-005-001-001"], ["B-005-001-001", "B-005-001-007"]],
+  "invalidHelpIds": [["B-005-001-001", "B-005-001-001"], ["B-005-001-007", "B-005-001-001"], ["B-005-001-002"], ["QZ-L-005-01-A-C1"], ["A-001-001-001"], ["B-999-999-999"], [true], null]
+}

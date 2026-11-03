@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-015-007",
+  "questionId": "B-001-015-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A band’s name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m).",
+      "fr": "Le nom d’une bande correspond approximativement à sa longueur d’onde. Convertissez avec f (MHz) ≈ 300 / λ (m)."
+    },
+    {
+      "level": 2,
+      "en": "Work out 300 ÷ 40. Band names are rounded, and the real 40 m band’s wavelength is a bit longer than 40 m, so the band sits a little below your result. Look for the range just under it.",
+      "fr": "Calculez 300 ÷ 40. Les noms de bande sont arrondis et la longueur d’onde réelle de la bande de 40 m est un peu plus longue que 40 m; la bande se situe donc un peu sous votre résultat. Cherchez la plage juste en dessous."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-band-edges-contain-the-whole-signal"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -7,9 +7,9 @@ title:
   en: "Circuit Components"
   fr: null
 lessonIds:
+  - L-004-03
   - L-004-01
   - L-004-02
-  - L-004-03
 status: draft
 ---
 # Circuit Components
@@ -18,6 +18,6 @@ Introduce the parts used in transmitters, receivers, power supplies, and filters
 
 ## Lessons
 
+- L-004-03 — Resistor colour codes
 - L-004-01 — Amplifiers and diodes
 - L-004-02 — Transistors, FETs, and tubes
-- L-004-03 — Resistor colour codes

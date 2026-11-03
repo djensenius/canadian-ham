@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-014-004",
+  "questionId": "B-001-014-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review international permission limits for Canadian stations.",
+      "fr": "Revoyez les limites de permission internationale pour les stations canadiennes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-05",
+    "sectionAnchor": "reference-facts-international-permission-includes-purpose"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

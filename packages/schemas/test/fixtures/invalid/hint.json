@@ -1,0 +1,15 @@
+{
+  "id": "HINT-B-001-001-001",
+  "questionId": "B-001-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 2,
+      "en": "Missing the first ladder level.",
+      "fr": "Il manque le premier niveau."
+    }
+  ],
+  "referenceSheetSection": "unknown-section",
+  "licenseClass": "copied"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-013-004",
+  "questionId": "B-001-013-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review identification at the start of a contact.",
+      "fr": "Revoyez l’identification au début d’un contact."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-03",
+    "sectionAnchor": "reference-facts-make-the-station-traceable"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

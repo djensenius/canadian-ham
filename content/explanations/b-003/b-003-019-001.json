@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-019-001.\n\nWhy the correct answer is right: Grounding all station equipment helps keep exposed chassis at the same safe reference and reduces shock voltage between items a person can touch.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The transmission line\": The feed line is only one path in the station; grounding it alone leaves power supplies, tuners, and other chassis unbonded.\n- sourceIndex 2: \"The AC power line\": The hot and neutral conductors of the AC line are not what you bond as station equipment; protective grounding is applied to exposed metal parts.\n- sourceIndex 3: \"The power supply primary\": The primary is a hazardous mains circuit inside the supply, not the station-wide exposed equipment that should be grounded for shock protection.",
+    "en": "Question B-003-019-001.\n\nWhy the correct answer is right: Grounding all station equipment helps keep exposed chassis at the same safe reference and reduces shock voltage between items a person can touch.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The transmission line\": The feed line is only one path in the station. Grounding it alone leaves power supplies, tuners, and other chassis unbonded.\n- sourceIndex 2: \"The AC power line\": The hot and neutral conductors of the alternating-current (AC) line are not what you bond as station equipment. Protective grounding is applied to exposed metal parts.\n- sourceIndex 3: \"The power supply primary\": The primary is a hazardous mains circuit inside the supply, not the station-wide exposed equipment that should be grounded for shock protection.",
     "fr": null
   },
   "citations": [

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-008-009",
+  "questionId": "B-006-008-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review antenna resonance.",
+      "fr": "Revoyez la résonance des antennes."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "dipole-length-and-resonance"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

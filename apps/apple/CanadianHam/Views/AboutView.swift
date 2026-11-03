@@ -26,7 +26,7 @@ struct AboutView: View {
                     Text("RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(verbatimText(aboutRBR4CitationURL))")
                         .font(DesignTokens.FontScale.caption)
                         .textSelection(.enabled)
-                    Text(bank.courseBankID == .advanced ? "There is no ISED-approved Advanced exam reference sheet; the Basic reference sheet must not be presented as exam-allowed for Advanced." : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.") // l10n: localized
+                    Text(bank.courseBankID == .advanced ? "There is no ISED-approved Advanced exam reference sheet; the Basic reference sheet must not be presented as exam-allowed for Advanced." : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam. Internal builds may include its English exam sheet; public builds use the original study sheet until permission covers the official sheet.") // l10n: localized
                 }
 
                 paperSection("Attribution") {
@@ -43,7 +43,11 @@ struct AboutView: View {
                 }
 
                 paperSection("Privacy") {
-                    Text("This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it.")
+#if ICLOUD_SYNC
+                    Text(ICloudSyncCopy.aboutPrivacySummary) // l10n: localized
+#else
+                    Text("Canadian Ham works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it.")
+#endif
                 }
             }
             .padding(DesignTokens.Spacing.xl)

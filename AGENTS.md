@@ -30,6 +30,11 @@
   suites only if the merge combined Apple changes from more than one branch) before starting any
   dependent worker, then remove the task worktree with `git worktree remove`.
 
+## Internal TestFlight builds
+- After a feature merges to main, the coordinator uploads internal TestFlight builds from the main checkout for all four platforms (`fastlane ios beta`, `mac beta`, `appletvos beta`, `xros beta`). Run the post-merge iOS/macOS checks first. Build numbers are timestamps.
+- Signing uses the dedicated build keychain described in `docs/release/testflight.md`; never ask for or handle the login keychain password.
+- Internal testers only until task-1.7: no external groups, public links or App Store submission.
+
 ## Build and test rules (all agents)
 - Never call `xcodebuild` directly. Always use `xbuild` with the same arguments;
   it serializes builds across all agents and cleans up simulators.
@@ -41,7 +46,17 @@ Test what changed, once, at the right level. Full Apple suites are slow (20-40 m
 platform) and share one build lock, so don't run them by reflex.
 - **While iterating:** run only what you touched: the relevant web/package tests, Apple unit
   tests, and the specific UI test classes or methods with `-only-testing:` (one platform).
-- **Once per PR, before review:** run the full suite only for each platform whose code changed:
+- **During review (internal reviewer and Copilot):** keep running only the relevant tests: the
+  affected web/package tests and the specific Apple test classes or methods with
+  `-only-testing:` for what each fix touches. No full suites during review rounds.
+- **Once per merge batch, just before merge (owner decision 2026-10-14):** Apple PRs that are
+  approved (internal review approved, all Copilot feedback addressed, targeted tests green) wait
+  in a merge batch. The coordinator merges them, in order, onto a short-lived `train-<date>`
+  branch from main and runs the full suite once for each platform any of them changed. If it
+  passes, the PRs merge to main in the same order with no further suite runs. If it fails, the
+  coordinator finds the responsible PR with targeted tests, takes it out of the batch, and reruns
+  only the failed platform's full suite. Web-only and content-only PRs don't wait for a batch.
+  Which platforms count as changed:
   - web or TS package changes: `pnpm typecheck`, `pnpm test`, plus the checks for what changed
     (`pnpm build:web` and the URL/CSP audit for web; `pnpm check:schemas` and `pnpm import:check`
     for content and schemas).
@@ -49,35 +64,124 @@ platform) and share one build lock, so don't run them by reflex.
     the suite of every platform whose target compiles a changed file or links a changed Swift
     package. iOS and macOS share the `CanadianHam` target; tvOS and visionOS also compile some
     files from `apps/apple/CanadianHam/` and link `packages/engine-swift` and
-    `packages/morse-swift`, so changes there usually need their suites too. Code only under
+    `packages/morse-swift`, so changes there usually need their suites too. watchOS changes
+    include the `CanadianHamWatch` app/test targets and any shared packages they link
+    (`content-swift`, `engine-swift`, `morse-swift`); run the watch suite for those changes. Code only under
     `apps/apple/Platforms/<platform>/` or a platform's test target needs only that platform.
+  - Lesson Markdown, hint or figure-directive changes: also run `swift test` in
+    `packages/content-swift` on macOS. GitHub CI runs that package on Linux, but its Darwin-only
+    renderer tests (`MarkdownLessonContentTests`: Try-it counts, hint anchors, figure directives) run
+    only locally.
   - Swift package: `swift test` in the package (or its `xbuild` scheme), plus the suites of
     every app target that links it.
   - String catalogue or SwiftUI text: `pnpm check:apple-l10n` and
     `node scripts/check-apple-text-sources.ts`, plus the affected platforms.
 - **No Apple suites** for web-only, docs-only or Backlog-only changes, and never rerun suites
   after a commit that only changes `.backlog/` or docs.
-- **Fix rounds:** rerun the failing or changed tests with `-only-testing:`, then one final full
-  run of the affected platforms only.
-- **Release candidate (task-1.6):** the full four-platform run with every accessibility audit,
+- **Fix rounds:** rerun only the failing or changed tests with `-only-testing:`; the single full
+  run happens in the merge batch (above).
+- **Lesson figure audits:** the per-lesson figure audits (`CanadianHamLessonFiguresUITests`
+  and `CanadianHamPracticeUITests.testOhmsLawLessonFiguresAndAccessibilityLight`/`Dark`) run
+  in their own test plan, only when figures, `content/figures/`, lesson Markdown with figure
+  directives, the lesson reader, or the figure tests and their lesson audit/positioning helpers
+  change (owner decision 2026-10-14 for the figure class; coordinator decision 2026-10-20 in
+  task-33 added the two Ohm's law figure integration audits after audit timeouts). The default
+  `CanadianHamDefault` plan excludes those tests. Run the figure plan **only** through
+  `scripts/run-figure-plan-quiet.sh` (TASK-79; waits for low host load and records load/results).
+  The coordinator starts no other Apple lanes while it runs, including its quiet-host wait.
+  The gate cannot stop other projects that bypass `xbuild`; its max-load report reveals contention.
+  Pass targeted selections/iterations as script arguments; use `--help` for load/timeout/output options.
+- **Category-title sweeps:** the four `CanadianHamPracticeUITests.testCategoryTitles…` tests
+  run in their own `CanadianHamTitleSweeps` plan, not `CanadianHamDefault`. Run this plan
+  when category titles, category or module names in the string catalogue, or the layout of
+  category cards, lists, headers or the sidebar change (TASK-52). Run the title-only plan with:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -testPlan CanadianHamTitleSweeps -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
+- **Release candidate (task-1.6):** the full four-platform run with every accessibility audit
+  (including the `CanadianHamLessonFigures` plan) and the `CanadianHamTitleSweeps` plan,
   plus the manual checks in `docs/release/release-checklist.md`.
 - Record per-test results for the full runs you did in the task notes and PR body, and say
   which platforms you skipped and why.
+
+### Approved accessibility audit exceptions
+- Owner-delegated decision 2026-10-22, TASK-71: measured-contrast verification is approved only
+  for new TASK-46.5 and TASK-46.6.1 audits unless widened by a later decision. Run the full default
+  accessibility audit; ignore only contrast findings on non-nil elements whose element screenshot
+  yields a measured WCAG contrast ratio of at least 4.5:1, logging label, frame and ratio in a
+  keepAlways attachment. Non-contrast, nil-element, unmeasurable and lower-contrast findings fail.
+  Existing audit helpers and tests remain unchanged except for the TASK-73 refinement below.
+  - Coordinator decision 2026-10-24 under the owner delegation of 2026-10-22: the local occluded-or-measured composite also covers the new TASK-46.8.1 M1-round lesson-quiz audits.
+  - Coordinator decision 2026-10-24 under the owner delegation of 2026-10-22: also covers the new TASK-46.7 review-item lesson-quiz audits.
+  - TASK-73: the measured paths may retry any button's nil/below-4.5 full-image result with a
+    6 pt horizontal / 2 pt vertical native-pixel crop. Discarded strips must contain only the
+    crop background, a page-like outside background (most-covered non-crop-background strip
+    cluster, contrast <= 1.5:1 against the crop background), or RGB-line blends (residual <= 8).
+    Log the full-image ratio, whether the crop was used, and pixel insets in the keepAlways attachment.
+- Coordinator decision 2026-10-23 under the owner delegation of 2026-10-22, TASK-73 limitation:
+  the measured-contrast check cannot safely measure thin 2x strokes, and on iPad the audit
+  intermittently flags a fully visible faded-practice line in the Try-it lesson. Only the new
+  TASK-46.5 English light Try-it test on iPad skips its two full audits (all reveal assertions stay);
+  iPhone keeps the light (default size) and dark (largest Dynamic Type) Try-it audits; the French
+  test is reveal/state only; iPad keeps the dark audit. Remove this when TASK-73 makes 2x measurement safe.
+  Existing audit helpers and tests remain unchanged.
+- Lesson and Morse screens: owner decision 2026-10-12 approves ignoring only contrast audit issues
+  whose element frame is not fully contained in the visible scroll area below an opaque navigation
+  bar. Owner decision 2026-10-14 adds practice and mock exam screens to this same occluded-content
+  rule. Nil-element findings, navigation-bar elements, fully visible contrast issues, and every
+  non-contrast issue must still fail.
+- Task-70 clarification, owner-delegated decision 2026-10-22: the occluded-content rule includes
+  fully offscreen scroll-content descendants, not just frames intersecting the scroll view; the
+  audit renders offscreen content as black and cannot measure its contrast. Keep the contrast-only,
+  non-nil/non-zero frame, navigation-bar exclusion, scroll ancestry, not-fully-contained, and logging
+  checks. Fully visible lone-bullet (`•`) and `Question N of M` contrast exceptions are conditional
+  follow-up work and are not yet granted; rerun with the aligned helper first.
+- Task-42 Morse course home lower-content audit: owner decisions 2026-10-12 and 2026-10-14 also
+  approve the fully visible Morse settings-card note false positives. Only the Morse home
+  lower-content audit may ignore `.contrast` findings whose `issue.element` identifier exactly equals
+  `morse-settings-description` or `morse-settings-fixed-timing-description`; every other issue still
+  fails.
+- Task-44.3 exam tool: owner decision 2026-10-12 approves the medium-detent rule that text inside
+  the exam tool panel's scroll content may be clipped at larger Dynamic Type sizes; task-44.3
+  implements that exception.
+
+## CI test guard
+- The separate `Test guard` pull-request workflow runs the base branch copy of
+  `scripts/check-test-guard.mjs` when it exists (falling back to the PR copy only while bootstrapping
+  the checker), first with `--self-test` and then against the PR merge-base...head diff. The
+  `Test guard` status check should be required in branch protection (coordinator configures this on
+  GitHub).
+- The guard fails when Apple diffs add, remove or narrow `performAccessibilityAudit` calls or handler
+  code, change the named shared audit/positioning helpers listed in `SHARED_HELPERS`, call the approved
+  exception helpers, add `.accessibilityHidden(true)`, add `.accessibilityElement(children: .ignore)` or
+  `.accessibilityElement()`, add `XCTSkip`/`XCTSkipIf`/`XCTSkipUnless`, add `.minimumScaleFactor(` in app
+  views, delete Swift `func test...` methods, or change the guard checker/workflow itself.
+- A PR body line exactly matching `Test-guard-approved: task-<number>` or
+  `Test-guard-approved: owner decision YYYY-MM-DD` approves intentional findings. The marker must start
+  at the beginning of its own line with no bullet or indentation; markers inside fenced code blocks or
+  HTML comments are ignored. Reviewers verify that the referenced task or owner decision actually
+  approves the guarded change before accepting the marker.
+- The workflow listens for PR body edits, so adding or fixing an approval marker starts a new
+  `Test guard` run without pushing another commit. If GitHub does not start that edited-event run,
+  re-trigger the separate `Test guard` workflow/check after saving the PR body rather than re-running
+  an older failed run with its stale event payload or re-running all CI.
+- The guard is a heuristic backstop, not a substitute for review; reviewers remain responsible for
+  spotting test or audit weakening that does not match its patterns.
 
 ## Project notes
 - Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.
 - Active app question bank remains ISED Basic 2025-07-15; delimited TXT SHA-256 `34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f`.
 - Advanced exception: verbatim Advanced question-bank source files may be vendored under `content/sources/ised/advanced-<title-page-date>/` only under the interim private-development policy in `docs/content-licensing.md`; no Advanced bank is active in the apps yet.
 - Preserve ISED EN/FR question text verbatim; original lessons/explanations stay separate from official data.
-- The repo stays private until T-009, which requires T-007 permission records and T-607 release checks; never make it public, deploy, or distribute builds before then; see `docs/content-licensing.md`.
+- The repo stays private until T-009, which requires T-007 permission records and T-607 release checks; never make it public, deploy, or distribute builds before then, except internal TestFlight builds to App Store Connect team members (task-1.10; no external testers, public links, or App Store submission until task-1.7); see `docs/content-licensing.md` and `docs/release/testflight.md`.
 - Apple app targets iOS/iPadOS 27.0, macOS 27.0, tvOS 27.0, and visionOS 27.0 minimums.
-- Apple app must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1.
+- Apple app release builds for v1 must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1.
+- Optional CloudKit sync work may land on main only behind an off-by-default build gate for after v1: CloudKit, Push Notifications, and the remote-notification background mode are allowed only in the non-default `DebugCloudKit` Apple build configuration, which defines `ICLOUD_SYNC`. The gated container ID is `iCloud.org.davidjensenius.CanadianHam`. Default `Debug`/`Release`, CI, and the test commands below must have no iCloud or push capability, no remote-notification background mode, and no Settings iCloud toggle. v1 release builds must have no iCloud or push capability.
 - Use `xbuild` for Apple builds/tests; never call `xcodebuild` directly.
 
 ## Apple builds
 - Scheme: `CanadianHam`.
 - Always run Apple builds/tests through `xbuild`, never direct `xcodebuild`.
 - `xcode-select` points at CommandLineTools on this machine, so prefix Apple build/test commands with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
+- iOS builds/tests also compile the embedded watch app; build hosts need the watchOS SDK (and watchOS Simulator SDK for simulator runs).
 - iOS simulator test command, using the single requested simulator destination and running both unit and UI tests:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
 - macOS test command (unit tests only; UI tests are iOS-only, and SDK/platform overrides keep the auto platform target on macOS while signing locally):
@@ -86,6 +190,8 @@ platform) and share one build lock, so don't run them by reflex.
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' test CODE_SIGNING_ALLOWED=NO`
 - visionOS simulator test command:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'platform=visionOS Simulator,name=Apple Vision Pro' test CODE_SIGNING_ALLOWED=NO`
+- watchOS simulator test command (unit and UI smoke tests):
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamWatch -destination 'platform=watchOS Simulator,name=Apple Watch Series 12 (42mm),OS=27.0' test CODE_SIGNING_ALLOWED=NO`
 - visionOS generic simulator build fallback if the named simulator runtime is unavailable:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'generic/platform=visionOS Simulator' build CODE_SIGNING_ALLOWED=NO`
 - Regenerate the Apple project after editing `apps/apple/project.yml` or target membership:

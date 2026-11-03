@@ -1,0 +1,66 @@
+[
+  {
+    "device": "ipad",
+    "appearance": "light",
+    "beforeFile": "baseline-light-screen.png",
+    "afterFile": "caption-shape-ipad-light-screen.png",
+    "nativeComparisonBoxXYXY": [
+      118,
+      218,
+      1946,
+      568
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "e04a8c449d5025d82dd3eada0b8ad3e221803d4f796068db90d873e48b78026a",
+    "afterSHA256": "83985a64f14c330b0b493de12bc2a4f3ba05a9cc92553cd3086612597fd6de97"
+  },
+  {
+    "device": "ipad",
+    "appearance": "dark",
+    "beforeFile": "baseline-dark-screen.png",
+    "afterFile": "caption-shape-ipad-dark-screen.png",
+    "nativeComparisonBoxXYXY": [
+      118,
+      218,
+      1946,
+      568
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "e0f9edea9f2af7a1e60779f66582507d5dedc00f22e485a3713a0346c0399e37",
+    "afterSHA256": "53b32f3b360c896d02debec2a62ad578a7699cb4cf5869571c80a3f503561788"
+  },
+  {
+    "device": "iphone",
+    "appearance": "light",
+    "beforeFile": "caption-iphone-before-light-screen.png",
+    "afterFile": "caption-iphone-after-light-screen.png",
+    "nativeComparisonBoxXYXY": [
+      0,
+      390,
+      1206,
+      2382
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "da2107a65c545631952098420013752b924c9ac23d935c42539ef523374c321b",
+    "afterSHA256": "fc71a7b6bd790a3a2e07376138dee26fe953c34619befc4496ed2ef0a2202feb"
+  },
+  {
+    "device": "iphone",
+    "appearance": "dark",
+    "beforeFile": "caption-iphone-before-dark-screen.png",
+    "afterFile": "caption-iphone-after-dark-screen.png",
+    "nativeComparisonBoxXYXY": [
+      0,
+      390,
+      1206,
+      2382
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "9d12465480e9649809cdbd5f45d62336ba81851484ffd8619e7d2866d28f80c3",
+    "afterSHA256": "1e6a8cfa39c7169cbb86afc00e9f2aac2a53dd80155f218d9be4d66364e68b47"
+  }
+]

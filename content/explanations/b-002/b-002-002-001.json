@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-002-001.\n\nWhy the correct answer is right: The ITU phonetic alphabet gives standard words for letters, making a call sign easier to copy through noise or accents.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use any words which start with the same letters as your call sign for each letter of your call\": Any random word may share the first letter, but listeners should not have to decode a private alphabet.\n- sourceIndex 2: \"Talk louder and faster\": Louder and faster speech often makes copy worse; clarity comes from standard spelling and good audio.\n- sourceIndex 3: \"Turn up your microphone gain\": More microphone gain can overdrive audio and still will not identify ambiguous letters.",
+    "en": "Question B-002-002-001.\n\nWhy the correct answer is right: The International Telecommunication Union (ITU) phonetic alphabet gives standard words for letters. That makes a call sign easier to copy through noise or accents.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use any words which start with the same letters as your call sign for each letter of your call\": Any random word may share the first letter, but listeners should not have to decode a private alphabet.\n- sourceIndex 2: \"Talk louder and faster\": Louder and faster speech often makes copy worse; clarity comes from standard spelling and good audio.\n- sourceIndex 3: \"Turn up your microphone gain\": More microphone gain can overdrive audio and still will not identify ambiguous letters.",
     "fr": null
   },
   "citations": [

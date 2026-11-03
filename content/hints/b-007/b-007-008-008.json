@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-008-008",
+  "questionId": "B-007-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the beyond-horizon VHF/UHF discussion in the VHF lesson.",
+      "fr": "Revoyez l’explication des communications VHF/UHF au-delà de l’horizon dans la leçon VHF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "tropospheric-bending-ducting-and-scatter"
+  },
+  "singleLevelReason": "Cause recall: a second hint would identify or eliminate the lower-atmosphere mechanism; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

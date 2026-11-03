@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-004-005",
+  "questionId": "B-001-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review Morse qualification requirements.",
+      "fr": "Revoyez les exigences relatives à la compétence en code Morse."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-01",
+    "sectionAnchor": "reference-facts-qualifications-follow-a-learning-path"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-006",
+  "questionId": "B-005-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the properties that describe how a material behaves in a circuit.",
+      "fr": "Revoyez les propriétés qui décrivent le comportement d'un matériau dans un circuit."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "current-resistance-and-conductance"
+  },
+  "singleLevelReason": "Pure property recall: a second hint would directly identify the property level that makes conduction easy.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

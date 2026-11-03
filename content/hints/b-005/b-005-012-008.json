@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-008",
+  "questionId": "B-005-012-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Recall which values set the resonant frequency of an ideal LC circuit.",
+      "fr": "Rappelez-vous quelles valeurs fixent la fréquence de résonance d’un circuit LC idéal."
+    },
+    {
+      "level": 2,
+      "en": "For each change, ask whether it alters L, alters C, or neither.",
+      "fr": "Pour chaque changement, demandez-vous s’il modifie L, modifie C, ou ni l’un ni l’autre."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

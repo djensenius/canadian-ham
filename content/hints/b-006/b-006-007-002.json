@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-007-002",
+  "questionId": "B-006-007-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the vocabulary used to name radio-wave polarization.",
+      "fr": "Revoyez le vocabulaire utilisé pour nommer la polarisation d’une onde radio."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "polarization"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

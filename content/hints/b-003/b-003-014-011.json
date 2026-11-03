@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-014-011",
+  "questionId": "B-003-014-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the microphone types by the physical parts inside them.",
+      "fr": "Revoyez les types de microphones selon les pièces physiques qu’ils contiennent."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-06",
+    "sectionAnchor": "keyers-microphones-and-vox"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

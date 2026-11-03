@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-005-004",
+  "questionId": "B-006-005-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the troubleshooting section for very high standing-wave readings.",
+      "fr": "Revoyez la section de dépannage pour les lectures d’ondes stationnaires très élevées."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "faults-that-change-readings"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

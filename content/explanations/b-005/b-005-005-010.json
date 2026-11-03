@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-005-010.\n\nWhy the correct answer is right: Parallel resistors have the same voltage across them. Since I = E / R, the branch with twice the current must have half the resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the voltage across \\\"B\\\" is twice that across \\\"A\\\"\": Parallel branches share the same voltage, so a two-to-one current difference cannot be explained by branch voltage.\n- sourceIndex 2: \"the voltage across \\\"A\\\" is twice that across \\\"B\\\"\": This also breaks the parallel-circuit rule that both resistors are connected across the same voltage.\n- sourceIndex 3: \"\\\"B\\\" has half the resistance of \\\"A\\\"\": If B had half A's resistance, B would carry twice A's current. The question states the opposite current relationship.",
+    "en": "Question B-005-005-010.\n\nWhy the correct answer is right: Parallel resistors have the same voltage across them. Since I = E / R, the branch with twice the current has half the resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the voltage across \\\"B\\\" is twice that across \\\"A\\\"\": Parallel branches share the same voltage. A two-to-one current difference must come from resistance, not branch voltage.\n- sourceIndex 2: \"the voltage across \\\"A\\\" is twice that across \\\"B\\\"\": This also breaks the parallel-circuit rule that both resistors are connected across the same voltage.\n- sourceIndex 3: \"\\\"B\\\" has half the resistance of \\\"A\\\"\": If B had half A's resistance, B would carry twice A's current. The question states the opposite current relationship.",
     "fr": null
   },
   "citations": [

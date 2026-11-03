@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-003-005",
+  "questionId": "B-003-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review where adjacent-channel rejection is provided in the receiver chain.",
+      "fr": "Revoyez où la réjection des canaux adjacents est assurée dans la chaîne de réception."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "superheterodyne-receiver-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

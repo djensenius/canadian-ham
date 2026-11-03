@@ -3,6 +3,22 @@ import XCTest
 @testable import CanadianHamContent
 
 final class ContentLibraryTests: XCTestCase {
+    func testM1QuizRoundsDecodeAndRoundTripWithoutChangingLegacyQuizzes() throws {
+        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
+        var total = 0
+        for quiz in library.quizzesById.values where quiz.lessonId.hasPrefix("L-001-") {
+            let rounds = try XCTUnwrap(quiz.rounds)
+            XCTAssertEqual(try JSONDecoder().decode(LessonQuiz.self, from: JSONEncoder().encode(quiz)), quiz)
+            let ids = rounds.flatMap(\.officialQuestionIds)
+            XCTAssertEqual(ids.count, quiz.officialQuestionIds.count)
+            XCTAssertEqual(Set(ids), Set(quiz.officialQuestionIds))
+            XCTAssertTrue(rounds.allSatisfy { !$0.sectionAnchor.isEmpty && !($0.title.fr ?? "").isEmpty })
+            total += ids.count
+        }
+        XCTAssertEqual(total, 199)
+        XCTAssertNil(try XCTUnwrap(library.quizzesById["QZ-L-005-01-A"]).rounds)
+    }
+
     func testLoadsRealRepositoryContent() throws {
         let library = try ContentLibrary.load(fromDirectory: repoRootURL())
 
@@ -12,10 +28,11 @@ final class ContentLibraryTests: XCTestCase {
         XCTAssertEqual(library.subsectionTitles.count, 100)
         XCTAssertEqual(library.modules.count, 8)
         XCTAssertEqual(library.modules.map(\.order), Array(1...8))
-        XCTAssertEqual(library.lessons.count, 36)
-        XCTAssertEqual(library.orderedLessons().count, 36)
-        XCTAssertEqual(library.quizzes.count, 36)
+        XCTAssertEqual(library.lessons.count, 37)
+        XCTAssertEqual(library.orderedLessons().count, 37)
+        XCTAssertEqual(library.quizzes.count, 37)
         XCTAssertEqual(library.explanations.count, 984)
+        XCTAssertEqual(library.questionHints.count, 984)
         XCTAssertEqual(library.manifest.counts.questions, 984)
         XCTAssertEqual(library.manifest.counts.subsections, 100)
         XCTAssertEqual(library.manifest.counts.categories, 8)
@@ -23,6 +40,23 @@ final class ContentLibraryTests: XCTestCase {
         let emptyConceptCheckQuizzes = library.quizzes.filter { $0.conceptChecks.isEmpty }
         XCTAssertFalse(emptyConceptCheckQuizzes.isEmpty)
         XCTAssertEqual(Set(library.quizzes.map(\.id)), try quizIdsOnDisk())
+    }
+
+    func testConceptCheckChoiceDecodesOptionalFeedbackAndRoundTrips() throws {
+        let decoder = JSONDecoder()
+        let legacy = Data(#"{"text":{"en":"Detection","fr":null},"isCorrect":false}"#.utf8)
+        XCTAssertNil(try decoder.decode(ConceptCheckChoice.self, from: legacy).feedback)
+        XCTAssertNil(ConceptCheckChoice(text: LocalizedNullableText(en: "Detection", fr: nil), isCorrect: false).feedback)
+
+        for french in ["null", #""La détection récupère l’audio.""#] {
+            let json = Data("""
+            {"text":{"en":"Detection","fr":null},"isCorrect":false,"feedback":{"en":"Detection recovers audio.","fr":\(french)}}
+            """.utf8)
+            let choice = try decoder.decode(ConceptCheckChoice.self, from: json)
+            XCTAssertEqual(choice.feedback?.en, "Detection recovers audio.")
+            XCTAssertEqual(choice.feedback?.fr, french == "null" ? nil : "La détection récupère l’audio.")
+            XCTAssertEqual(try decoder.decode(ConceptCheckChoice.self, from: JSONEncoder().encode(choice)), choice)
+        }
     }
 
     func testExplanationNoteParsingForSampleInEachCategory() throws {
@@ -87,77 +121,18 @@ final class ContentLibraryTests: XCTestCase {
         }
     }
 
-    func testTableIllustrationBriefAndBlockOrderForL00501() throws {
-        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
-        let lesson = try XCTUnwrap(library.lessonsById["L-005-01"])
-        let rendered = try LessonMarkdownRenderer.render(lesson.bodyMarkdown)
+    func testBadHintFileDropsHintsWithoutDroppingLessonContent() throws {
+        try withTemporaryContentFixture { root in
+            let hintsDirectory = root.appendingPathComponent("content/hints/b-001", isDirectory: true)
+            try FileManager.default.createDirectory(at: hintsDirectory, withIntermediateDirectories: true)
+            try "{".write(to: hintsDirectory.appendingPathComponent("bad-hint.json"), atomically: true, encoding: .utf8)
 
-        XCTAssertGreaterThan(rendered.blocks.count, 40)
-        XCTAssertBlock(rendered.blocks[0], isHeadingLevel: 1, text: "Units, conductors, and current")
-        XCTAssertBlock(rendered.blocks[1], isParagraphContaining: "Radio starts with a few simple measurements")
-        XCTAssertBlock(rendered.blocks[2], isParagraphContaining: "Do not try to memorize")
-        XCTAssertBlock(rendered.blocks[3], isHeadingLevel: 2, text: "Learning objectives")
-        XCTAssertBlock(rendered.blocks[4], isParagraphContaining: "By the end of this lesson")
-        XCTAssertBlock(rendered.blocks[5], isListOrdered: false, itemCount: 5)
-        XCTAssertBlock(rendered.blocks[6], isHeadingLevel: 2, text: "The metric prefix ladder")
-        XCTAssertBlock(rendered.blocks[7], isParagraphContaining: "A prefix tells you")
+            let library = try ContentLibrary.load(fromDirectory: root)
 
-        guard case let .table(firstTable) = rendered.blocks[8] else {
-            return XCTFail("expected first table at block 8, got \(rendered.blocks[8])")
+            XCTAssertEqual(library.questionHints.count, 0)
+            XCTAssertEqual(library.lessons.count, 8)
+            XCTAssertEqual(library.questions.count, 1)
         }
-        XCTAssertEqual(firstTable.headers.map(stringValue), ["Prefix", "Symbol", "Meaning", "Example"])
-        XCTAssertEqual(firstTable.alignment, [.none, .right, .right, .none])
-        XCTAssertEqual(firstTable.rows.first?.map(stringValue), ["giga", "G", "1 000 000 000 times the base unit", "4 GHz = 4 000 MHz"])
-
-        let illustration = try XCTUnwrap(rendered.illustrationBriefs.first)
-        XCTAssertTrue(illustration.altText.contains("metric-prefix ladder"))
-        XCTAssertTrue(illustration.description.contains("Draw a simple ink-brush ladder"))
-    }
-
-    func testMarkdownRendererParsesEveryRealLesson() throws {
-        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
-        for lesson in library.lessons {
-            let rendered = try LessonMarkdownRenderer.render(lesson.bodyMarkdown)
-            XCTAssertFalse(rendered.blocks.isEmpty, lesson.id)
-            XCTAssertTrue(rendered.blocks.contains { block in
-                if case .illustrationBrief = block { return true }
-                return false
-            }, lesson.id)
-        }
-    }
-
-    func testTableParserHandlesAlignmentEscapedPipesAndFencedCode() throws {
-        let markdown = """
-        ```text
-        | Not | A table |
-        |---|---|
-        ```
-
-        | Left | Centre | Right | Escaped |
-        |:-----|:------:|------:|-|
-        | a | b | c | d\\|e |
-        """
-        let rendered = try LessonMarkdownRenderer.render(markdown)
-        XCTAssertEqual(rendered.tables.count, 1)
-        let table = try XCTUnwrap(rendered.tables.first)
-        XCTAssertEqual(table.alignment, [.left, .center, .right, .none])
-        XCTAssertEqual(table.rows.first?.map(stringValue), ["a", "b", "c", "d|e"])
-    }
-
-    func testMarkdownInlineHandlingKeepsRawHTMLLiteralButPreservesCodeAndAutolinks() throws {
-        let rendered = try LessonMarkdownRenderer.render("Before <strong>raw HTML</strong> and `<em>code</em>` and <https://example.com/path> after")
-        let characters = String(rendered.attributedString.characters)
-        XCTAssertTrue(characters.contains("<strong>raw HTML</strong>"), characters)
-        XCTAssertTrue(characters.contains("<em>code</em>"), characters)
-        XCTAssertTrue(characters.contains("https://example.com/path"), characters)
-
-        let linkRanges = rendered.attributedString.runs.compactMap { run -> URL? in
-            if case let .some(link) = run.link {
-                return link
-            }
-            return nil
-        }
-        XCTAssertTrue(linkRanges.contains(URL(string: "https://example.com/path")!))
     }
 
     func testExplanationParserRejectsDuplicateAndCorrectSourceIndexNotes() throws {
@@ -293,7 +268,7 @@ final class ContentLibraryTests: XCTestCase {
     }
 }
 
-private func repoRootURL() throws -> URL {
+func repoRootURL() throws -> URL {
     var url = URL(fileURLWithPath: #filePath)
     while url.pathComponents.count > 1 {
         let candidate = url.appendingPathComponent("content", isDirectory: true)
@@ -314,33 +289,6 @@ private func quizIdsOnDisk() throws -> Set<String> {
         let quiz = try JSONDecoder().decode(LessonQuiz.self, from: data)
         return quiz.id
     })
-}
-
-private func XCTAssertBlock(_ block: LessonBlock, isHeadingLevel expectedLevel: Int, text expectedText: String, file: StaticString = #filePath, line: UInt = #line) {
-    guard case let .heading(level, text) = block else {
-        return XCTFail("expected heading", file: file, line: line)
-    }
-    XCTAssertEqual(level, expectedLevel, file: file, line: line)
-    XCTAssertEqual(stringValue(text), expectedText, file: file, line: line)
-}
-
-private func XCTAssertBlock(_ block: LessonBlock, isParagraphContaining expectedText: String, file: StaticString = #filePath, line: UInt = #line) {
-    guard case let .paragraph(text) = block else {
-        return XCTFail("expected paragraph", file: file, line: line)
-    }
-    XCTAssertTrue(stringValue(text).contains(expectedText), stringValue(text), file: file, line: line)
-}
-
-private func XCTAssertBlock(_ block: LessonBlock, isListOrdered expectedOrdered: Bool, itemCount expectedCount: Int, file: StaticString = #filePath, line: UInt = #line) {
-    guard case let .list(ordered, items) = block else {
-        return XCTFail("expected list", file: file, line: line)
-    }
-    XCTAssertEqual(ordered, expectedOrdered, file: file, line: line)
-    XCTAssertEqual(items.count, expectedCount, file: file, line: line)
-}
-
-private func stringValue(_ value: AttributedString) -> String {
-    String(value.characters)
 }
 
 private func withTemporaryContentFixture(includeLessons: Bool = true, run: (URL) throws -> Void) throws {

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-008-006",
+  "questionId": "B-007-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the skip-gap clues in the unusual-propagation section.",
+      "fr": "Revoyez les indices de zones de couverture inégale dans la section sur la propagation inhabituelle."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-03",
+    "sectionAnchor": "recognizing-the-clues"
+  },
+  "singleLevelReason": "Mode recall: a second hint would identify or eliminate the propagation mode; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

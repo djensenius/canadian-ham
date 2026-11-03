@@ -1,0 +1,153 @@
+{
+  "sourceCommit": "e69bfca9caed91b454dbb5223e33a51bb256efdd",
+  "ipaPath": "fastlane/builds/ios/202610251833/CanadianHam.ipa",
+  "ipaSHA256": "4f95fb7527f6b45103e33535e296f11c7223ee0898c595a4afa41c45af9f1ddc",
+  "phone": {
+    "CFBundleIdentifier": "org.davidjensenius.CanadianHam",
+    "CFBundleVersion": "202610251833",
+    "CFBundleShortVersionString": "1.0.0"
+  },
+  "watch": {
+    "CFBundleIdentifier": "org.davidjensenius.CanadianHam.watchkitapp",
+    "CFBundleVersion": "202610251833",
+    "CFBundleShortVersionString": "1.0.0",
+    "CFBundleSupportedPlatforms": [
+      "WatchOS"
+    ],
+    "MinimumOSVersion": "27.0",
+    "WKApplication": true,
+    "WKCompanionAppBundleIdentifier": "org.davidjensenius.CanadianHam",
+    "WKRunsIndependentlyOfCompanionApp": true,
+    "DTXcodeBuild": "27A9275",
+    "DTSDKName": "watchos27.0"
+  },
+  "privacy": {
+    "NSPrivacyTracking": false,
+    "NSPrivacyTrackingDomains": [],
+    "NSPrivacyCollectedDataTypes": [],
+    "NSPrivacyAccessedAPITypes": []
+  },
+  "privacySHA256": "521eb6ef8430773e5c010e1838fe9dd8fa5d62b7b76d1cea8d7d8daadcb144e2",
+  "signedEntitlements": {
+    "ios": {
+      "application-identifier": "9JALHNGRBQ.org.davidjensenius.CanadianHam",
+      "beta-reports-active": true,
+      "com.apple.developer.team-identifier": "9JALHNGRBQ",
+      "get-task-allow": false
+    },
+    "watch": {
+      "application-identifier": "9JALHNGRBQ.org.davidjensenius.CanadianHam.watchkitapp",
+      "beta-reports-active": true,
+      "com.apple.developer.team-identifier": "9JALHNGRBQ",
+      "get-task-allow": false
+    }
+  },
+  "watchProvisioning": {
+    "applicationIdentifier": "9JALHNGRBQ.org.davidjensenius.CanadianHam.watchkitapp",
+    "teamIdentifier": [
+      "9JALHNGRBQ"
+    ],
+    "expiration": "2027-10-10T16:51:06Z"
+  },
+  "appIconRenditions": [
+    {
+      "AssetType": "Icon Image",
+      "BitsPerComponent": 8,
+      "ColorModel": "RGB",
+      "Colorspace": "srgb",
+      "Compression": "lzfse",
+      "Encoding": "ARGB",
+      "Icon Index": 1,
+      "Idiom": "watch",
+      "Name": "AppIcon",
+      "NameIdentifier": 6849,
+      "Opaque": true,
+      "PixelHeight": 1024,
+      "PixelWidth": 1024,
+      "RenditionName": "watch-icon-1024.png",
+      "Scale": 1,
+      "SHA1Digest": "92DC200CED1ADC6A0C0972A04B3A8B1350A8BCAC291C5A0281CCC2CDF41F0BE0",
+      "SizeOnDisk": 136166
+    },
+    {
+      "AssetType": "MultiSized Image",
+      "Idiom": "watch",
+      "Name": "AppIcon",
+      "NameIdentifier": 6849,
+      "Scale": 1,
+      "SHA1Digest": "8E49D581FF1D34636A0ECFFD14AD9B1285DB705B1278A7F599E196C35454BDA3",
+      "SizeOnDisk": 236,
+      "Sizes": [
+        "1024x1024 index:1 idiom:watch"
+      ]
+    }
+  ],
+  "assetsCarBytes": 154392,
+  "resourceVerification": {
+    "basicQuestions": 984,
+    "explanations": 984,
+    "jsonFiles": 988,
+    "allJSONBytesIdenticalToSource": true,
+    "studyResourceBytes": 2360969,
+    "sortedPathsAndSHA256Digest": "9122182849a193f888a9979c58af8dca601b4466c83507fd914b9d655cc1f32b",
+    "allRegularFilesMatchExactAllowlist": true,
+    "nonStudyFiles": [
+      "Assets.car",
+      "CanadianHamWatch",
+      "Info.plist",
+      "PkgInfo",
+      "PrivacyInfo.xcprivacy",
+      "_CodeSignature/CodeResources",
+      "embedded.mobileprovision",
+      "en.lproj/InfoPlist.strings",
+      "en.lproj/Localizable.strings",
+      "en.lproj/Localizable.stringsdict",
+      "fr-CA.lproj/InfoPlist.strings",
+      "fr-CA.lproj/Localizable.strings",
+      "fr-CA.lproj/Localizable.stringsdict",
+      "fr.lproj/InfoPlist.strings",
+      "fr.lproj/Localizable.strings",
+      "fr.lproj/Localizable.stringsdict"
+    ],
+    "regularFileCount": 1004,
+    "bundleLogicalBytes": 4228159,
+    "embeddedFrameworks": [],
+    "iosContainerOfficialSheetPresent": true
+  },
+  "watchLinkedLibraries": [
+    "/System/Library/Frameworks/Foundation.framework/Foundation (compatibility version 300.0.0, current version 5027.0.69)",
+    "/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)",
+    "/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)",
+    "/System/Library/Frameworks/AVFAudio.framework/AVFAudio (compatibility version 1.0.0, current version 1.0.0)",
+    "/System/Library/Frameworks/Accessibility.framework/Accessibility (compatibility version 1.0.0, current version 1.0.0)",
+    "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation (compatibility version 150.0.0, current version 5027.0.69)",
+    "/System/Library/Frameworks/SwiftUI.framework/SwiftUI (compatibility version 1.0.0, current version 8.0.84)",
+    "/System/Library/Frameworks/UIKit.framework/UIKit (compatibility version 1.0.0, current version 9127.0.84, weak)",
+    "/System/Library/Frameworks/WatchKit.framework/WatchKit (compatibility version 1.0.0, current version 1.0.0)",
+    "/usr/lib/swift/libswiftAVFoundation.dylib (compatibility version 1.0.0, current version 2450.77.3, weak)",
+    "/usr/lib/swift/libswiftCore.dylib (compatibility version 0.0.0, current version 0.0.0)",
+    "/usr/lib/swift/libswiftCoreAudio.dylib (compatibility version 1.0.0, current version 482.102.0)",
+    "/usr/lib/swift/libswiftCoreFoundation.dylib (compatibility version 1.0.0, current version 120.100.0, weak)",
+    "/usr/lib/swift/libswiftCoreLocation.dylib (compatibility version 1.0.0, current version 57.0.0, weak)",
+    "/usr/lib/swift/libswiftDispatch.dylib (compatibility version 1.0.0, current version 1605.0.2, weak)",
+    "/usr/lib/swift/libswiftOSLog.dylib (compatibility version 1.0.0, current version 10.0.0, weak)",
+    "/usr/lib/swift/libswiftObjectiveC.dylib (compatibility version 1.0.0, current version 973.1.0, weak)",
+    "/usr/lib/swift/libswiftObservation.dylib (compatibility version 0.0.0, current version 0.0.0)",
+    "/usr/lib/swift/libswiftQuartzCore.dylib (compatibility version 1.0.0, current version 5.0.0, weak)",
+    "/usr/lib/swift/libswiftSceneKit.dylib (compatibility version 1.0.0, current version 1.2.0, weak)",
+    "/usr/lib/swift/libswiftSpatial.dylib (compatibility version 1.0.0, current version 1.0.0, weak)",
+    "/usr/lib/swift/libswiftSynchronization.dylib (compatibility version 0.0.0, current version 0.0.0)",
+    "/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib (compatibility version 1.0.0, current version 919.0.1, weak)",
+    "/usr/lib/swift/libswiftWatchKit.dylib (compatibility version 1.0.0, current version 9.0.0, weak)",
+    "/usr/lib/swift/libswiftXPC.dylib (compatibility version 1.0.0, current version 167.0.2, weak)",
+    "/usr/lib/swift/libswift_Builtin_float.dylib (compatibility version 0.0.0, current version 0.0.0, weak)",
+    "/usr/lib/swift/libswift_Concurrency.dylib (compatibility version 0.0.0, current version 0.0.0)",
+    "/usr/lib/swift/libswiftos.dylib (compatibility version 1.0.0, current version 1090.0.0)",
+    "/usr/lib/swift/libswiftsimd.dylib (compatibility version 1.0.0, current version 25.0.0, weak)"
+  ],
+  "signatureVerification": {
+    "ios": "$EVIDENCE/ipa/Payload/CanadianHam.app: valid on disk\n$EVIDENCE/ipa/Payload/CanadianHam.app: satisfies its Designated Requirement\n",
+    "watch": "$EVIDENCE/ipa/Payload/CanadianHam.app/Watch/CanadianHamWatch.app: valid on disk\n$EVIDENCE/ipa/Payload/CanadianHam.app/Watch/CanadianHamWatch.app: satisfies its Designated Requirement\n"
+  },
+  "result": "PASS"
+}

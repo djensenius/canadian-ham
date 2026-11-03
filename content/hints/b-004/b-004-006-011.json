@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-004-006-011",
+  "questionId": "B-004-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the colour-code method: first two colours form a two-digit number, and the third colour is the multiplier.",
+      "fr": "Utilisez la méthode du code de couleurs : les deux premières couleurs forment un nombre à deux chiffres, et la troisième est le multiplicateur."
+    },
+    {
+      "level": 2,
+      "en": "Put the first two colours in order as a two-digit number, append as many zeros as the third colour's number, then express the total with a suitable metric prefix.",
+      "fr": "Placez les deux premières couleurs dans l'ordre pour former un nombre à deux chiffres, ajoutez autant de zéros que la valeur de la troisième couleur, puis exprimez le total avec un préfixe métrique approprié."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "colour-digits-multipliers-and-tolerance"
+  },
+  "referenceSheetSection": "resistor-colour-code",
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-005-001",
+  "questionId": "B-006-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the plain-language meaning of the lowest SWR reading.",
+      "fr": "Revoyez le sens en langage simple de la lecture de ROS la plus basse."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "swr-in-plain-language"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-008-008",
+  "questionId": "B-005-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "First compare output power with input power as a ratio.",
+      "fr": "Comparez d'abord la puissance de sortie à la puissance d'entrée sous forme de rapport."
+    },
+    {
+      "level": 2,
+      "en": "Then convert that ratio to dB with the shortcut table.",
+      "fr": "Convertissez ensuite ce rapport en dB avec le tableau des raccourcis."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original"
+}

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-006-005.\n\nWhy the correct answer is right: The speech amplifier raises the audio voice signal that is to become the transmitted information.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Amplify one of the signal's two sidebands\": Sidebands are RF products after modulation; the speech amplifier acts before that stage on audio.\n- sourceIndex 2: \"Amplify the signal's carrier\": The carrier comes from an RF oscillator and is not the speech amplifier's signal.\n- sourceIndex 3: \"Amplify the signal's harmonic content\": Harmonic content is an RF output-cleanliness concern, not the purpose of the speech amplifier.",
+    "en": "Question B-003-006-005.\n\nWhy the correct answer is right: The speech amplifier raises the audio voice signal that is to become the transmitted information.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Amplify one of the signal's two sidebands\": Sidebands are radio-frequency (RF) products after modulation. The speech amplifier acts before that stage on audio.\n- sourceIndex 2: \"Amplify the signal's carrier\": The carrier comes from an RF oscillator and is not the speech amplifier's signal.\n- sourceIndex 3: \"Amplify the signal's harmonic content\": Harmonic content is an RF output-cleanliness concern, not the purpose of the speech amplifier.",
     "fr": null
   },
   "citations": [

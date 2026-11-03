@@ -1,0 +1,15 @@
+<svg id="power-triangle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Power triangle</title>
+  <desc>A memory triangle with P above I and E, separated by a horizontal bar.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M318 56 C302 100 257 164 211 238 C176 294 143 352 117 399 C170 388 237 386 319 386 C401 386 469 388 523 399 C497 352 464 294 429 238 C383 164 338 100 318 56 Z" stroke-width="18"/>
+    <path d="M186 267 C255 258 361 258 454 267" stroke-width="14"/>
+    <path d="M320 290 C316 315 316 345 320 375" stroke-width="10"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="320" y="230" font-size="68" font-weight="700">P</text>
+    <text x="248" y="350" font-size="64" font-weight="700">I</text>
+    <text x="392" y="350" font-size="64" font-weight="700">E</text>
+    <text x="320" y="442" font-size="26">P = I x E</text>
+  </g>
+</svg>

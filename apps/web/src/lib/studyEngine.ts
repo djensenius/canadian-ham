@@ -63,6 +63,7 @@ export function applyPracticeAnswer(
   selectedSourceIndex: number,
   now: string,
   bankId: string = basicBank.bankId,
+  answeredWithHelp = false,
 ): QuestionProgressRecord[] {
   const byQuestionId = new Map(records.map((record) => [record.questionId, record]));
   const updated = applyAnswer(byQuestionId.get(questionId), {
@@ -70,6 +71,7 @@ export function applyPracticeAnswer(
     bankId,
     isCorrect: selectedSourceIndex === 0,
     now,
+    answeredWithHelp,
   });
   byQuestionId.set(questionId, updated);
   return [...byQuestionId.values()].sort((a, b) => a.questionId.localeCompare(b.questionId));

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-004",
+  "questionId": "B-004-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the transceiver signal path that starts at the microphone input.",
+      "fr": "Revoyez le trajet du signal d’un émetteur-récepteur qui commence à l’entrée du microphone."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "amplifiers-raise-signal-level"
+  },
+  "singleLevelReason": "Block-diagram recall: a second hint would identify the stage type from the source of the signal.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

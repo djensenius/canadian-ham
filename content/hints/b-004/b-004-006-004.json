@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-004-006-004",
+  "questionId": "B-004-006-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the tolerance range method: allowed change = nominal value x tolerance fraction.",
+      "fr": "Utilisez la méthode de plage de tolérance : écart permis = valeur nominale x fraction de tolérance."
+    },
+    {
+      "level": 2,
+      "en": "Find 10% of 100 ohms, then subtract that amount once and add it once.",
+      "fr": "Trouvez 10 % de 100 ohms, puis soustrayez cette quantité une fois et ajoutez-la une fois."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "tolerance-ranges"
+  },
+  "referenceSheetSection": "resistor-colour-code",
+  "licenseClass": "original"
+}

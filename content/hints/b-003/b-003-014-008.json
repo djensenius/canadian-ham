@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-014-008",
+  "questionId": "B-003-014-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the receiver noise tool meant for brief high-amplitude pulses.",
+      "fr": "Revoyez l’outil de bruit du récepteur prévu pour les brèves impulsions de forte amplitude."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-06",
+    "sectionAnchor": "receiver-noise-controls"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-007-001",
+  "questionId": "B-005-007-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the AC quantity that counts complete repeats each second.",
+      "fr": "Revoyez la grandeur CA qui compte les répétitions complètes chaque seconde."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name the AC quantity being asked for.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

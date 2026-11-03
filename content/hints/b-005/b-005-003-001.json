@@ -1,0 +1,19 @@
+{
+  "id": "HINT-B-005-003-001",
+  "questionId": "B-005-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the quantity that compares how quickly electrical energy is converted or used.",
+      "fr": "Revoyez la grandeur qui compare la rapidité avec laquelle l'énergie électrique est convertie ou utilisée."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name or closely define the correct quantity.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

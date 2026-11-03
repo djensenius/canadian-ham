@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-005",
+  "questionId": "B-004-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why the two lettered bipolar families are not drop-in replacements.",
+      "fr": "Revoyez pourquoi les deux familles bipolaires désignées par des lettres ne sont pas interchangeables directement."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "npn-and-pnp-polarity"
+  },
+  "singleLevelReason": "Concept recall: a second hint would state the replacement problem directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
