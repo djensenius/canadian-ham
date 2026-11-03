@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T03:10:00Z'
+updated_date: '2026-11-03T03:35:00Z'
 labels:
   - apple
   - release
@@ -60,4 +60,14 @@ Other checks: local xbuild Release build of CanadianHam for generic/platform=mac
 Open: App Store Connect acceptance of a 12-digit Next Build Number is untested (Mac builds can't go below 202610271757); visionOS CI_PRODUCT_PLATFORM value is undocumented (scripts accept visionOS/xrOS and fail closed otherwise); Xcode Cloud internal builds never include the internal-only official sheet.
 
 AC2 checked on local criteria only (scripts, shellcheck, dry run, docs). The first real Xcode Cloud run for all four platforms is an owner gate and is not verified. Task left In Progress for coordinator review.
+
+Review round 2 fixes (commit a60a9c68; review of 58b49621 was APPROVE WITH NOTES):
+- A1: build-number-floor replaced by apps/apple/ci_scripts/build-number-floors (<platform> <version> <build>; ios 1.0.0 202610271751, macos 1.0.0 202610271753, tvos 1.0.0 202610271756, visionos 1.0.0 202610271757, read-only App Store Connect data). Platform comes from CI_PRODUCT_PLATFORM (xrOS maps to visionos; watchOS, unknown or missing fails). The version comes from plain MARKETING_VERSION lines in project.pbxproj (missing, conflicting, [sdk=] or non-numeric fails). macOS must beat the highest macOS floor of any version. iOS, tvOS and visionOS must beat only the floor for the version being built; a version without an entry may start small. A missing, empty or malformed floors file fails.
+- A2/B8/B9 docs (distribution.md, AGENTS.md, testflight.md, release-checklist.md): owner decision path (a) one sequence if App Store Connect accepts a Next Build Number above the floors; (b) if refused (int32 cap likely), iOS, iPadOS, tvOS and visionOS move to a new MARKETING_VERSION (for example 1.0.1) from small numbers, with no macOS archive action; (c) macOS stays on the Fastlane export path temporarily, or the owner asks Apple Developer Support. A CFBundleVersion override is labelled unverified and not recommended. Cites Apple's Setting the next build number page. Update build-number-floors in the same change as each Fastlane upload, and retire Fastlane uploads per platform once Xcode Cloud ships it. HOMEBREW_NO_AUTO_UPDATE is deliberately not set: on an image whose cached formula data predates node@26 it would fail the build. Documented in the script comment and the docs.
+- B3: ci_post_xcodebuild.sh skips only when CI_XCODEBUILD_EXIT_CODE is a set, non-zero integer. Unset or empty still scans; a non-integer fails.
+- B4: Fastfile beta_distribution_artifact? refuses uploads of distribution exports after File.realpath, so symlinked files, symlinked folders and case variants are caught.
+- B5: the environment scan names VAR (MARKER), never the value, and says that branch, tag and pull request names can trigger it.
+- B6: archive scan covers .app and .appex, including PlugIns and Extensions.
+- B7: harness adds the analyze action, real Homebrew-unavailable via sandbox-exec (verified to hide /opt/homebrew and /usr/local first, otherwise SKIP), floors and version cases, .appex, exit codes and branch, tag and PR names. Ruby tests now use temporary roots instead of the real fastlane/builds/appstore, and cover symlink and case-variant refusal and the export options plist reaching -exportOptionsPlist via the real archive_and_export with xbuild stubbed.
+Checks: pnpm test:xcode-cloud-scripts 98 passed, 0 failed (no SKIP); pnpm test:fastlane 12 runs, 340 assertions, 0 failures; shellcheck -x on ci_scripts and the harness clean; /bin/bash -n OK on all 5 scripts; ruby -c on the Fastfile and the Ruby test Syntax OK; pnpm check:links verified; git diff --check clean; node scripts/check-test-guard.mjs --base origin/main --head HEAD passed with no guarded changes. Mutation checks caught: macOS using the per-version floor (6 failures), unset exit code skipping (4), no appex scan (2), printing values (8), lexical-only Fastfile check (1), and the export plist ignored or swapped (1 and 2). No xbuild runs, uploads or App Store Connect writes this round.
 <!-- SECTION:NOTES:END -->
