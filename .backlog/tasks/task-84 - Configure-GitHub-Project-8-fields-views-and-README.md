@@ -1,11 +1,11 @@
 ---
 id: TASK-84
 title: 'Configure GitHub Project #8 fields, views and README'
-status: In Progress
+status: Done
 assignee:
   - '@coordinator'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T07:00:00Z'
+updated_date: '2026-11-03T07:01:00Z'
 labels:
   - tooling
   - github
@@ -24,10 +24,10 @@ Project #8 (https://github.com/users/djensenius/projects/8) mirrors the backlog 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Project #8 has single-select Priority (High, Medium, Low) and Backlog milestone (v1 release, Post-v1) fields plus text Task ID and Branch fields, and .backlog-sync.json maps them
-- [ ] #2 A backlog-sync dry run with the new mapping reports no missing fields or options, and a real run fills the fields on every canonical item
-- [ ] #3 The Project has a status board, an agent-ready table that excludes Done and owner-gate items, an owner-gates table, and a v1 release table
-- [ ] #4 The Project README and short description say Backlog.md is the source of truth, describe the sync and owner-gate label, and link AGENTS.md
+- [x] #1 Project #8 has single-select Priority (High, Medium, Low) and Backlog milestone (v1 release, Post-v1) fields plus text Task ID and Branch fields, and .backlog-sync.json maps them
+- [x] #2 A backlog-sync dry run with the new mapping reports no missing fields or options, and a real run fills the fields on every canonical item
+- [x] #3 The Project has a status board, an agent-ready table that excludes Done and owner-gate items, an owner-gates table, and a v1 release table
+- [x] #4 The Project README and short description say Backlog.md is the source of truth, describe the sync and owner-gate label, and link AGENTS.md
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -68,3 +68,9 @@ Set the Project README (fields, labels, views, sync rules, inbox and owner-gate 
 
 Note: until this config reaches main, the scheduled sync (main checkout config) neither writes nor clears these fields. After the merge it keeps them current, including clearing Branch when a worktree is removed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Set up GitHub Project #8 as a usable view of the Backlog.md mirror. Added the Priority and Backlog milestone single-select fields and the Task ID and Branch text fields, and mapped them in .backlog-sync.json. A dry run showed no missing fields or options. A real run then filled Task ID on all 195 items, and Priority, Backlog milestone and Branch wherever the task has a value, with 0 failed operations. Added Status board, Agent-ready, Owner gates and v1 release views, with filters checked against the REST items API (13, 10 and 40 items). Wrote the Project README and short description: Backlog.md is the source of truth, how the one-way sync works, the inbox, owner-gate and blocked:owner labels, and links to AGENTS.md and the owner-gates guide. Risk: the scheduled sync keeps these fields current only once this config change is on main. Views can't be renamed or deleted through the API, so the default 'View 1' stays.
+<!-- SECTION:FINAL_SUMMARY:END -->
