@@ -394,10 +394,18 @@ Every row below is from `watch-full.log` and the same result bundle; no exclusio
 **Not performed.** No TestFlight upload, processing, invitation, physical install,
 VoiceOver listening or tactile validation was done by this agent. Export-only
 build numbers above are **not processed TestFlight builds**. AC4 remains unchecked
-and TASK-14.6 In Progress. After review/merge approval, the coordinator uploads from
-main through the existing internal iOS lane; the owner records the processed
-build/commit, watch model/watchOS, installation method and pass/fail observations.
-No external groups, public link or App Store submission is authorized.
+and TASK-14.6 In Progress. Xcode Cloud is preferred: the owner connects/configures
+it and triggers the internal iOS build from main, embedding the watch. Agents do
+not automatically upload or trigger release workflows after merges, and do not
+trigger Xcode Cloud builds. Merge or review approval and internal tester
+eligibility do not authorize uploads or workflow triggers. Any agent-run upload
+requires separate explicit owner authorization and all existing gates; the
+existing internal Fastlane iOS lane is only a temporary fallback subject to the
+[build-number/platform restrictions](../release/distribution.md#build-numbers).
+Local inspection uses `fastlane ios beta export_only:true`, not an uploading
+command. The owner records the processed build/commit, watch model/watchOS,
+installation method and pass/fail observations. No external groups, public link
+or App Store submission is authorized.
 
 Follow the [installation and physical-watch checklist](../release/testflight.md#watchos-beta-entry-path-and-installation),
 including phone out of range, explicit radio-off/Airplane Mode, practice/Crown
@@ -410,7 +418,7 @@ accessibility audits cannot establish heard speech or fixed-preset fidelity.
 
 | Owner gate | Result |
 | --- | --- |
-| Approved upload / processed ASC version/build/commit | Pending post-merge |
+| Approved upload / processed ASC version/build/commit | Pending owner-triggered Xcode Cloud or separately authorized fallback |
 | Physical watch model/watchOS/install method/tester/date | Pending owner |
 | Practice, Morse, reference, EN/FR with phone absent and network off | Pending owner |
 | Same-session three-style haptics, Silent Mode, tone alignment/cancellation | Pending owner; TASK-14.3 AC2 still open |
