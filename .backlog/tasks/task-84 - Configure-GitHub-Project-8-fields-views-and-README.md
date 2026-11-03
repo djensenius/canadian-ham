@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@coordinator'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T07:01:00Z'
+updated_date: '2026-11-03T07:06:00Z'
 labels:
   - tooling
   - github
@@ -67,6 +67,8 @@ Views were created through the REST endpoint POST /users/djensenius/projectsV2/8
 Set the Project README (fields, labels, views, sync rules, inbox and owner-gate labels, link to AGENTS.md and owner-gates.md) and the short description through updateProjectV2. Project visibility is unchanged (private).
 
 Note: until this config reaches main, the scheduled sync (main checkout config) neither writes nor clears these fields. After the merge it keeps them current, including clearing Branch when a worktree is removed.
+
+Review (APPROVE WITH NOTES, all low): a separate test showed a negated comma label filter excludes items carrying any of the listed labels, so Agent-ready excludes owner-gate, blocked:owner and inbox items even though no item has the last two today. With managed labels '*', backlog-sync adds labels but never removes them, so a label removed in Backlog stays on the issue. The README now says to remove owner-gate, blocked:owner or inbox from the issue as well. AC #2 holds as written: Task ID is on all 195 items, and the other fields are set wherever the task has a value. The owner can rename or delete the default 'View 1' in the web UI if wanted.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
