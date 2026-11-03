@@ -1,10 +1,11 @@
 ---
 id: TASK-87
 title: Owner device-check guide for the remaining hardware gates
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-11-03T02:33:00Z'
-updated_date: '2026-11-03T02:39:00Z'
+updated_date: '2026-11-03T02:43:00Z'
 labels:
   - docs
   - testing
@@ -26,3 +27,15 @@ Several tasks wait only on the owner, real hardware or an owner decision: TASK-2
 - [ ] #2 The guide links the existing watch and Apple TV checklists instead of copying them, and adds step-by-step iPhone Duo steps with expected results taken from TASK-54 acceptance criteria without adding scope; TASK-63 is listed only as follow-on work
 - [ ] #3 Each listed task's notes link the guide, and the guide states the evidence format the coordinator needs to check off the criteria
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read every owner-gate task (TASK-1.1, 1.7, 1.8, 14.3, 14.5, 14.6, 29, 34, 54, 65; TASK-63/15 for context) and note unchecked ACs and required owner evidence.
+2. Read the existing watch, Apple TV, flake, licensing, release and iCloud checklists to link (not copy).
+3. Write docs/release/owner-gates.md: per-task/per-AC index, one sitting per device (Apple Watch, Apple TV, iPhone Duo, signed-device iCloud DebugCloudKit, owner decisions), iPhone Duo steps from TASK-54 ACs only, TASK-63 as follow-on, evidence format.
+4. Link the guide from docs/release/release-checklist.md near the manual gates.
+5. Append a note linking the guide to each listed task.
+6. Validate relative links/anchors; run pnpm check:links if it covers docs.
+7. Finalize TASK-87 (notes, ACs, summary, Done) and commit.
+<!-- SECTION:PLAN:END -->
