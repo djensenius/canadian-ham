@@ -1,10 +1,11 @@
 ---
 id: TASK-85
 title: Declare required-reason APIs in the Apple privacy manifests
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T02:39:00Z'
+updated_date: '2026-11-03T02:43:00Z'
 labels:
   - apple
   - privacy
@@ -29,3 +30,15 @@ TASK-81 found that the Apple apps now read and write UserDefaults (Morse setting
 - [ ] #3 An automated check run in CI fails when Apple app or package sources use a required-reason API spelling that the relevant manifest does not declare
 - [ ] #4 Release builds made with xbuild for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests, confirmed by inspecting the built products
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Fetch Apple's required-reason API docs; list categories and approved reason codes verbatim.
+2. Inventory required-reason API usage per shipped target (CanadianHam iOS/macOS, CanadianHamTV, CanadianHamVision, CanadianHamWatch) incl. linked local Swift packages, using project.yml target membership.
+3. Choose reason codes from actual behaviour; update the shared app manifest and watch manifest (propose per-target manifests + project.yml diff to coordinator if the shared manifest would over-declare).
+4. Add scripts/check-apple-required-reasons.mjs + self-test with fixtures; add package.json scripts; report CI steps to coordinator.
+5. Update docs/release/privacy-label-evidence.md with the completed review.
+6. Validate: check + self-test, pnpm typecheck/test, network/icloud checks, Release xbuild compile-only builds for iOS (with watch), macOS, tvOS, visionOS; inspect built manifests with plutil -p.
+7. Record evidence in notes, check verified ACs (AC3 waits for CI wiring), commit.
+<!-- SECTION:PLAN:END -->
