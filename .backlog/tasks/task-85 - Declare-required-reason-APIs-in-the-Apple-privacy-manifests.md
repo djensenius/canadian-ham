@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T04:43:00Z'
+updated_date: '2026-11-03T05:21:00Z'
 labels:
   - apple
   - privacy
@@ -103,6 +103,8 @@ PR #1064 review round 4b (commit 5f3d18d83b34eb89a3caef40ef4d4eeed2552dc6, from 
 - Each new check was mutation-tested: 5 of 5 mutations were killed.
 - Real-tree --verbose output is byte-identical to 4d60a844.
 - Checks: self-test passed; checker passed; pnpm check:links passed; git diff --check clean; test guard passed. No xbuild.
+
+PR #1064 review round 5 (commit c3b38cb6b7061da7a5ab1e243b1a25ed1f505f47, from 1f26dded): (1) folder references (type: folder) and buildPhase: none entries now must exist unless optional, may not be or contain symlinks, and are scanned whole (including asset catalogues, ignoring excludes) for prebuilt code by extension and Mach-O/universal/ar magic; their Swift files are not counted as compiled and nested PrivacyInfo.xcprivacy files are not taken as the target manifest. Real tree: 6 shipped content/ folder refs, 2,059 files (2,010 JSON, 49 Markdown), no prebuilt code, links or buildPhase: none entries. (2)+(3) replaced the manifest parser with a strict typed XML plist parser: data/date/integer/real values, wrong types for categories/reasons/tracking/arrays, duplicate keys, keys without values, unknown top-level or entry keys, empty or whitespace-padded codes, unknown entities, CDATA, comments inside text, processing instructions, attributes, other DOCTYPEs, missing root, trailing content, binary/JSON/non-UTF-8 plists and non-dict roots fail closed; equivalent forms Apple reads the same (BOM, no XML declaration, older Apple Computer DOCTYPE, comments between elements, character references, <false></false>, <array></array>) pass. Behaviour chosen from plutil -convert json probes. Fixtures added for each case; 23/23 mutations killed. Evidence doc: scope, manifest parsing, what-fails, bypass table (3 rows), limitations and evidence row updated. Checks: self-test passed; real-tree --verbose output byte-identical to 1f26dded; check passed (same 4 targets/categories); pnpm typecheck passed; pnpm test passed (vitest 23 + 283, node 250 + 127, 0 failed); check:links passed; check:shell passed (12 files); git diff --check clean; test guard passed. No xbuild. Final summary updated for folder refs and typed parser.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
@@ -117,11 +119,11 @@ Declares Apple required-reason API usage for every shipped target and enforces i
   - a table of bypass classes, each covered, failing closed or listed as a limitation;
   - verification that the walk matches the committed project and SwiftPM.
 - scripts/check-apple-required-reasons.mjs runs in CI with its self-test. It fails when shipped target or linked package sources use an undeclared required-reason spelling. It also fails closed on:
-  - C-family, assembly, module-map or prebuilt code;
-  - symbolic links;
+  - C-family, assembly, module-map or prebuilt code, including inside folder references and buildPhase: none entries;
+  - symbolic links and missing non-optional source or folder-reference paths;
   - XcodeGen or SwiftPM constructs that can add unscanned code (pre-build scripts, plugins, macros, header and linker settings, non -D flags);
   - unknown targets;
-  - manifests that are malformed or track.
+  - manifests that track, have unknown or duplicate keys, use the wrong plist value types or padded codes, or fall outside the XML plist subset Xcode writes (strict typed parser).
 - Matching covers module-qualified, multi-line and backtick-escaped spellings, key paths, aliases, API-name string literals, the whole word for C names, Swift 6 regex literals and comments.
 - Release xbuild products for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests.
 
