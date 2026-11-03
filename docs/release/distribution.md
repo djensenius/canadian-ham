@@ -35,7 +35,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CH
 - Exports use `ExportOptions-AppStore.plist` and **do not** add the internal-only official reference sheet (`-DOFFICIAL_REFERENCE_SHEET`).
 - Artifacts go to `fastlane/archives/appstore/<platform>/` and `fastlane/builds/appstore/<platform>/<build>/`, apart from internal exports. Both folders are gitignored; delete them after inspection.
 - The lane refuses `distribution:true` without `export_only:true`, and refuses to upload an `artifact_path` under `fastlane/builds/appstore/`. Lifting that refusal is part of the work that clears TASK-1.7 and TASK-85, not something to work around.
-- `pnpm test:fastlane` covers the option parsing and those refusals.
+- `pnpm test:fastlane` covers the option parsing and those refusals. It runs only locally on macOS (see [Release-tooling checks](#release-tooling-checks-github-ci-and-local)).
 
 Inspect each export before relying on it:
 
@@ -160,7 +160,20 @@ It runs the real guards against the repository and checks the real floors file. 
 - failing and missing guards;
 - Node discovery with a stub Homebrew, and with Homebrew hidden by `sandbox-exec` (skipped if the sandbox can't hide it);
 - unset, empty and invalid exit codes;
-- ad-hoc signed fake archives and app extensions, with and without push or iCloud entitlements. Run `shellcheck -x apps/apple/ci_scripts/*.sh scripts/test-xcode-cloud-ci-scripts.sh` after editing the scripts. This dry run is macOS-only, so it's not part of `pnpm test`.
+- ad-hoc signed fake archives and app extensions, with and without push or iCloud entitlements. Run `pnpm check:shell` after editing the scripts. This dry run is macOS-only, so it's not part of `pnpm test` or GitHub CI.
+
+## Release-tooling checks: GitHub CI and local
+
+GitHub CI runs on `ubuntu-latest`, so it runs only the checks that don't need macOS tools:
+
+| Check | Where it runs | Notes |
+| --- | --- | --- |
+| `pnpm check:shell` | GitHub CI and locally | `bash -n` and `shellcheck -x` on every tracked `*.sh` under `scripts/` and `apps/apple/ci_scripts/`. Fails if ShellCheck is missing or any script has a finding. |
+| `pnpm check:apple-network`, `pnpm test:apple-network`, `pnpm check:apple-icloud-gate`, `pnpm test:apple-icloud-gate` | GitHub CI, locally and in the Xcode Cloud scripts | The no-network and iCloud guards. |
+| `pnpm test:fastlane` | Locally on macOS only | Needs `plutil` and Ruby 3.0 or later. |
+| `pnpm test:xcode-cloud-scripts` | Locally on macOS only | Needs `codesign`, `xmllint`, `sandbox-exec` and Node 26. |
+
+Run the two macOS-only harnesses yourself after changing the Fastlane lanes, `ExportOptions*.plist`, `apps/apple/ci_scripts/` or the harnesses, and list their results in the pull request. Running them in GitHub CI needs a macOS runner; adding one is an owner decision (cost and policy).
 
 ## Differences from Fastlane
 
