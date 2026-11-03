@@ -1,9 +1,11 @@
 ---
 id: TASK-88
 title: Refresh stale Pages action version comments
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@coordinator'
 created_date: '2026-11-03T02:45:00Z'
+updated_date: '2026-11-03T02:45:00Z'
 labels:
   - chore
   - github
@@ -24,3 +26,11 @@ Dependabot PRs #147 (deploy-pages 5.0.1) and #148 (upload-pages-artifact 5.0.0) 
 - [ ] #2 The deploy-web.yml comment above actions/deploy-pages reads v5.0.1, matching pinned SHA 368f8252
 - [ ] #3 Every other pinned action comment in .github/workflows still matches the tag of its pinned SHA
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Update the two stale comments in deploy-web.yml.
+2. Verify all pinned SHAs against upstream tags with git ls-remote.
+3. Commit, review, PR.
+<!-- SECTION:PLAN:END -->
