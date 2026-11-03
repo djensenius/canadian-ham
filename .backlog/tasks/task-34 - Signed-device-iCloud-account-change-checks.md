@@ -3,11 +3,12 @@ id: TASK-34
 title: Signed-device iCloud account-change checks
 status: To Do
 assignee: []
-created_date: '2026-10-09 07:36'
-updated_date: '2026-10-11 10:10'
+created_date: 2026-10-09 07:36
+updated_date: '2026-11-03T02:33:00Z'
 labels:
   - apple
   - privacy
+  - owner-gate
 dependencies:
   - TASK-13.4
 ordinal: 72000
