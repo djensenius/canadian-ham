@@ -1,11 +1,11 @@
 ---
 id: TASK-85
 title: Declare required-reason APIs in the Apple privacy manifests
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T04:02:00Z'
+updated_date: '2026-11-03T04:07:00Z'
 labels:
   - apple
   - privacy
@@ -27,7 +27,7 @@ TASK-81 found that the Apple apps now read and write UserDefaults (Morse setting
 <!-- AC:BEGIN -->
 - [x] #1 Every required-reason API category used by each shipped target (CanadianHam for iOS/iPadOS/macOS, CanadianHamTV, CanadianHamVision, CanadianHamWatch), including linked local packages, is identified against Apple's current documentation, and the rationale is recorded in docs/release/privacy-label-evidence.md
 - [x] #2 Each shipped target's PrivacyInfo.xcprivacy declares those categories with Apple-approved reason codes that match the actual behaviour, and declares none the target does not use
-- [ ] #3 An automated check run in CI fails when Apple app or package sources use a required-reason API spelling that the relevant manifest does not declare
+- [x] #3 An automated check run in CI fails when Apple app or package sources use a required-reason API spelling that the relevant manifest does not declare
 - [x] #4 Release builds made with xbuild for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests, confirmed by inspecting the built products
 <!-- AC:END -->
 
@@ -83,4 +83,22 @@ Review fixes (commit 498a7272): (1) check-apple-required-reasons.mjs now fails c
 PR #1064 Copilot fixes (commit 32c31959): (1) Function references: fstat/lstat/fstatat, statfs/statvfs/fstatfs/fstatvfs and getattrlist family now match as word-bounded identifiers (no '(' needed), so 'let read = Darwin.fstat' counts; bare 'stat' matches only as a call, a C-module-qualified name (Darwin/Glibc/SwiftGlibc/Musl/Foundation/ucrt .stat) or the whole RHS of an assignment, so Swift vars named stat (e.g. morse-swift MorseCourse.swift) do not match. (2) Regex literals: comment stripper now keeps extended #/.../# (multi-line, escapes skipped) and bare /.../ literals following Swift 6 lexer behaviour verified with 'swiftc -swift-version 6 -dump-parse' probes (left-bound division incl. postfix !, keyword exception e.g. return/case, first unescaped / closes, / followed by / or * is a comment, no closing after whitespace). Fails closed on a comment marker straight after a backslash, an unterminated block comment, or an unterminated extended regex. (3) Added .hh/.hxx/.inl/.ipp/.s/.S to the non-Swift list. Self-test: 10 new failing fixtures plus stat-identifier and division/regex trailing-comment lines in the clean fixture; the HEAD (pre-fix) checker fails all 10 new fixtures, and 8 targeted mutations (loose stat, no left-bound, no keyword exception, no backslash guard, no unterminated report, no extended regex, no bare regex, old C list) each fail at least one fixture. Real-tree --verbose evidence is identical before/after (43 call-site lines). Checks: pnpm test:apple-required-reasons -> 'passed self-test fixtures.'; pnpm check:apple-required-reasons -> passed (CanadianHam 53 SystemBootTime [35F9.1], UserDefaults [CA92.1]; Watch 31 SystemBootTime [35F9.1]; TV 33 / Vision 32 UserDefaults [CA92.1]); pnpm check:links passed; git diff --check clean; test guard 'Test guard passed: no guarded changes found in 5abb6934...HEAD.' No xbuild run.
 
 PR #1064 Copilot round 3 (commit 1bf0a0a1a2739129d0bc6f4a61e7f253bb43933d). (1) Module-qualified bypass: the UserDefaults pattern '@AppStorage' missed '@SwiftUI.AppStorage'; it now matches the name AppStorage, covering @SwiftUI.AppStorage, a '@SwiftUI' qualifier with '.AppStorage' on the next line, and AppStorage(wrappedValue:_:) (swiftc -swift-version 6 accepts the qualified forms and rejects '@ AppStorage' and a '(' on the next line). Audit of the other patterns: Foundation.UserDefaults, Foundation.ProcessInfo...systemUptime, Darwin.mach_absolute_time, Foundation.FileAttributeKey.modificationDate, Foundation.URLResourceKey.volumeAvailableCapacity*Key and UIKit.UITextInputMode.activeInputModes were already matched (whole-word names); the only other gap was module-qualified stat with a line break before the '.', fixed below. swiftc rejects whitespace after '.', so no pattern needs it. (2) Multi-line: apiUsage now runs every pattern (flags gm) over the whole comment-stripped file and reports each usage on the line where the match starts (binary search over line offsets), once per spelling and line, sorted by line then pattern, so the evidence order is unchanged. Qualified stat allows whitespace or a line break before the '.', and lookbehinds keep the reported line on 'stat'. The comment/regex stripper is unchanged. Note: swiftc -dump-parse shows 'stat' followed by '(path, ptr)' on the next line is an unapplied reference plus a separate tuple, not a call; it is still matched conservatively. (3) Evidence doc: Scanning/Self-test text updated, and the Limitations now list the bare-stat value uses that are not flagged (apply(stat), return stat, [stat], x ?? stat). Fixtures: @SwiftUI.AppStorage (including the multi-line form); module-qualified spellings in all five categories (checks line order and per-line dedupe); multi-line stat spellings (stat then '(' on the next line, '=' then 'stat' on the next line, Darwin then '.stat', Glibc then '.statfs'); multi-line creationDate/systemUptime; a 'return stat' false-positive guard in the clean fixture. Mutations: the HEAD checker fails the four new or changed fixtures. Each of line-based matching, the qualified stat without a line break, @AppStorage-only, no line sort, no per-line dedupe, an off-by-one line number, and no m flag fails at least one fixture. The real-tree --verbose output is identical before and after (43 evidence lines). Checks: node scripts/test-check-apple-required-reasons.mjs -> 'passed self-test fixtures.'; node scripts/check-apple-required-reasons.mjs -> passed (CanadianHam 53 SystemBootTime [35F9.1], UserDefaults [CA92.1]; Watch 31 SystemBootTime [35F9.1]; TV 33 / Vision 32 UserDefaults [CA92.1]); pnpm typecheck exit 0; pnpm test exit 0 (Vitest 2 files / 23 tests and 18 files / 283 tests passed); pnpm check:links 'Markdown relative links verified.'; git diff --check clean; test guard 'Test guard passed: no guarded changes found in ae1449ad...HEAD.' No xbuild run; AC2-AC4 left to the coordinator.
+
+Coordinator 2026-11-03: AC #3 evidence. CI run 41574255809 on PR #1064 at e343e7c8 ran 'Test Apple required-reason checker' and 'Apple required-reason API check' in the 'Node and content checks' job; both succeeded. Delta review 3 (1bf0a0a1/fd395c79) was approved with notes. Two low notes were accepted without change: a variable named stat can be over-matched at end of line (for example 'return a == stat', or '= stat' followed by '.member' on the next line), and AppStorage matches inside string literals. Both can only add a failure, never hide a use, and nothing in the tree matches today. Merged origin/main 31420c0b (TASK-86, TASK-54 record) cleanly.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Declares Apple required-reason API usage for every shipped target and enforces it in CI.
+
+- PrivacyInfo.xcprivacy for CanadianHam (iOS/iPadOS/macOS), CanadianHamTV, CanadianHamVision and CanadianHamWatch declare only the categories each target uses: UserDefaults CA92.1 (app, TV, Vision) and SystemBootTime 35F9.1 (app, Watch). NSPrivacyTracking is false, with no tracking domains or collected data. Linked local packages are included.
+- docs/release/privacy-label-evidence.md records the per-target rationale against Apple's current required-reason list, how scanning works, what fails, and the limitations.
+- scripts/check-apple-required-reasons.mjs, run in CI with its self-test, fails when shipped target or linked package sources use an undeclared required-reason spelling. It also fails closed on C-family or assembly sources, on unknown targets, and on manifests that are malformed or track.
+  - Matching covers module-qualified and multi-line spellings, the whole word for C names, Swift 6 regex literals and comments.
+- Release xbuild products for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests.
+
+Verification: the self-test passes, as does the checker on the real tree (same categories before and after each round). pnpm typecheck, pnpm test, check:links and the test guard pass. CI ran both required-reason steps green.
+
+Owner follow-up: sign off on the AppleLanguages read under CA92.1 before App Store submission (noted on TASK-1.7).
+<!-- SECTION:FINAL_SUMMARY:END -->
