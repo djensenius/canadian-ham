@@ -1,11 +1,11 @@
 ---
 id: TASK-89
 title: Run shellcheck on repository shell scripts in CI
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T04:10:00Z'
-updated_date: '2026-11-03T04:23:00Z'
+updated_date: '2026-11-03T04:32:00Z'
 labels:
   - ci
   - release
@@ -24,7 +24,7 @@ TASK-86 added Xcode Cloud ci_scripts (apps/apple/ci_scripts/*.sh) and a shell te
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 CI runs shellcheck -x (and bash -n) on every tracked *.sh under scripts/ and apps/apple/ci_scripts/ and fails on findings
+- [x] #1 CI runs shellcheck -x (and bash -n) on every tracked *.sh under scripts/ and apps/apple/ci_scripts/ and fails on findings
 - [x] #2 Existing shellcheck findings are fixed, or suppressed with a narrow inline directive and a reason, without changing script behaviour
 - [x] #3 Docs that list release-tooling checks state which harnesses run in GitHub CI and which stay local because they need macOS, and that a macOS runner is an owner decision
 <!-- AC:END -->
@@ -52,4 +52,24 @@ Implemented in 401fc450:
 - Checks: pnpm check:shell passed (12 files); pnpm test:apple-network and check:apple-network passed; pnpm test:xcode-cloud-scripts 127 passed, 0 failed; pnpm typecheck, pnpm test, pnpm check:links passed; git diff --check clean; test guard passed.
 - AC #1 stays unchecked: the coordinator adds the pnpm check:shell step to the ci.yml 'Node and content checks' job, and CI must run it before AC #1 can be checked.
 - Out of scope: apps/apple/scripts/export_a11y_evidence.sh is a tracked *.sh outside the two directories in AC #1, so check:shell does not cover it (it passes shellcheck -x 0.11.0 today).
+
+Coordinator 2026-11-03: added the 'Shell script check' step (pnpm check:shell) to the 'Node and content checks' job in .github/workflows/ci.yml (28ac1ad1). AC #1 evidence: CI run 41578308158 on PR #1071 at 28ac1ad1 ran it successfully: 'check-shell-scripts: ShellCheck 0.9.0, bash 5.2.21(1)-release' and 'passed (12 files)'. Local review (APPROVE WITH NOTES) and Copilot review (no issues) are done. Low notes accepted without change: ShellCheck comes from the runner image (0.9.0 on 24.04, 0.11.0 on 26.04, both pass); a local ~/.shellcheckrc or SHELLCHECK_OPTS could relax local runs only; the checker has no self-test. Out of scope: the tracked apps/apple/scripts/export_a11y_evidence.sh, which passes shellcheck -x today.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Shell scripts are now checked in CI.
+
+- scripts/check-shell-scripts.sh, run with pnpm check:shell, runs bash -n and shellcheck -x on every tracked *.sh under scripts/ and apps/apple/ci_scripts/. It fails closed when shellcheck or git is missing, when no files are found, or on any finding.
+- The 'Node and content checks' job in ci.yml runs it on every PR that isn't Backlog-only, and on main.
+- The 3 existing SC1007 findings are fixed with CDPATH='' cd, so behaviour is unchanged and nothing is suppressed.
+- docs/release/distribution.md lists which release-tooling checks run in GitHub CI and which stay local on macOS (test:fastlane, test:xcode-cloud-scripts), and says that a macOS runner is an owner decision. testflight.md links to it.
+
+Verification:
+- pnpm check:shell passes locally with ShellCheck 0.9.0, 0.10.0 and 0.11.0, and in CI with 0.9.0 (run 41578308158).
+- The fail-closed cases were checked by hand.
+- typecheck, tests, check:links and the test guard pass.
+
+Follow-ups: none required. Pin ShellCheck if a future runner image adds warnings.
+<!-- SECTION:FINAL_SUMMARY:END -->
