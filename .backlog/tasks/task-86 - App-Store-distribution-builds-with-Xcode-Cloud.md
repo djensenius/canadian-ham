@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T03:35:00Z'
+updated_date: '2026-11-03T03:44:00Z'
 labels:
   - apple
   - release
@@ -70,4 +70,9 @@ Review round 2 fixes (commit a60a9c68; review of 58b49621 was APPROVE WITH NOTES
 - B6: archive scan covers .app and .appex, including PlugIns and Extensions.
 - B7: harness adds the analyze action, real Homebrew-unavailable via sandbox-exec (verified to hide /opt/homebrew and /usr/local first, otherwise SKIP), floors and version cases, .appex, exit codes and branch, tag and PR names. Ruby tests now use temporary roots instead of the real fastlane/builds/appstore, and cover symlink and case-variant refusal and the export options plist reaching -exportOptionsPlist via the real archive_and_export with xbuild stubbed.
 Checks: pnpm test:xcode-cloud-scripts 98 passed, 0 failed (no SKIP); pnpm test:fastlane 12 runs, 340 assertions, 0 failures; shellcheck -x on ci_scripts and the harness clean; /bin/bash -n OK on all 5 scripts; ruby -c on the Fastfile and the Ruby test Syntax OK; pnpm check:links verified; git diff --check clean; node scripts/check-test-guard.mjs --base origin/main --head HEAD passed with no guarded changes. Mutation checks caught: macOS using the per-version floor (6 failures), unset exit code skipping (4), no appex scan (2), printing values (8), lexical-only Fastfile check (1), and the export plist ignored or swapped (1 and 2). No xbuild runs, uploads or App Store Connect writes this round.
+
+Round 3 (delta review), AC #2 rationale (AC text unchanged): AC #2 is met under both build-number paths in docs/release/distribution.md#build-numbers. Option (a): the owner sets Next Build Number above the build-number-floors values, so every Xcode Cloud build number is higher than every uploaded timestamp build on all four platforms. Option (b) is Apple's documented fallback when (a) is impossible (for example an int32 cap): iOS, iPadOS, tvOS and visionOS need only a unique (CFBundleShortVersionString, CFBundleVersion) pair, so a new marketing version (for example 1.0.1) restarts at small Xcode Cloud numbers without colliding with any upload (https://developer.apple.com/documentation/xcode/setting-the-next-build-number-for-xcode-cloud-builds). In both cases ci_pre_xcodebuild.sh still enforces macOS above every recorded upload and non-Mac platforms above every Fastlane upload of the same marketing version, failing closed on a missing or unknown platform or version.
+Pointer (reviewer item 6): the round-2 per-platform build-number-floors evidence replaces the earlier single build-number-floor AC #2 evidence paragraph.
+Round 3 fixes (commit 7f8a732a): floors entries and MARKETING_VERSION must be exactly x.y.z (no leading zeros except a lone 0) and fail closed otherwise, documented in the floors header, with harness cases for two-part and leading-zero versions in both places (mutation check: the old 1-3 part pattern fails the 5 new cases). Under option (b), the coordinator stops Fastlane uploads for iOS, tvOS and visionOS from the version-bump merge onward (Mac continues), in distribution.md, AGENTS.md and testflight.md. 'In the same change' is now 'in a PR right after the upload, before the next Xcode Cloud archive'. No change to owner-gates.md (coordinator follow-up).
+Checks: pnpm test:xcode-cloud-scripts 103 passed, 0 failed; pnpm test:fastlane 12 runs, 340 assertions, 0 failures, 0 errors, 0 skips; shellcheck -x on ci_scripts and harness: no findings; /bin/bash -n OK (5 files); ruby -c fastlane/Fastfile Syntax OK; pnpm check:links verified; git diff --check clean; test guard passed (no guarded changes).
 <!-- SECTION:NOTES:END -->
