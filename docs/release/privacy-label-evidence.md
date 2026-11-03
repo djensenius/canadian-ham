@@ -105,10 +105,10 @@ Because the answer is **Data Not Collected**, no App Store privacy label purpose
 
 | Area | Answer | Supporting evidence |
 |---|---|---|
-| Privacy manifest included | Yes, a manifest is bundled in every application target | `apps/apple/CanadianHam/Resources/PrivacyInfo.xcprivacy` is shared by `CanadianHam`, `CanadianHamTV` and `CanadianHamVision`. `CanadianHamWatch` has its own equivalent `apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy`; see the TASK-14.6 export inspection below. |
+| Privacy manifest included | Yes, each application target bundles exactly one manifest of its own (TASK-85) | `CanadianHam` (iOS/iPadOS/macOS): `apps/apple/CanadianHam/Resources/PrivacyInfo.xcprivacy`. `CanadianHamTV`: `apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy`. `CanadianHamVision`: `apps/apple/Platforms/visionOS/Resources/PrivacyInfo.xcprivacy`. `CanadianHamWatch`: `apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy`. Until TASK-85, TV and Vision shared the `CanadianHam` manifest; see the [TASK-85 review](#required-reason-api-review-task-85-2026-11-03). |
 | Tracking domains in privacy manifest | None | `NSPrivacyTrackingDomains = []`. |
 | Collected data types in privacy manifest | None | `NSPrivacyCollectedDataTypes = []`. |
-| Required-reason API categories in privacy manifest | None declared currently | `NSPrivacyAccessedAPITypes = []`. Confirm against the current Apple required-reason API list during release; this snapshot found no `@AppStorage`/`UserDefaults` use in Apple Swift sources, and the no-network check passed. |
+| Required-reason API categories in privacy manifest | Declared per target (TASK-85) | `CanadianHam`: User defaults `CA92.1` and System boot time `35F9.1`. `CanadianHamTV` and `CanadianHamVision`: User defaults `CA92.1`. `CanadianHamWatch`: System boot time `35F9.1`. No target uses the File timestamp, Disk space or Active keyboards categories. `pnpm check:apple-required-reasons` enforces this mapping; rationale and evidence are in the [TASK-85 review](#required-reason-api-review-task-85-2026-11-03). The earlier "none declared" answer and its statement that no `@AppStorage`/`UserDefaults` use existed are superseded. |
 
 ## Web privacy summary evidence
 
@@ -282,30 +282,208 @@ resource memberships and preference-source memberships:
 These are source/project observations, not a fresh inspection of bundled or
 signed release manifests. The older watch export evidence remains historical.
 
-### Required-reason review: OPEN
+### Required-reason review: completed by TASK-85
 
-**Applicability, approved reasons and shipped-target coverage are unresolved.**
-The observed empty `NSPrivacyAccessedAPITypes` arrays alongside current defaults
-access require review against Apple's current required-reason API documentation
-(linked above). This inventory neither proves a violation nor grants compliance
-clearance. It supplies no invented Apple reason codes. **Data Not Collected** and
-no-network results address different questions; neither establishes that a
-required-reason declaration is unnecessary or sufficient.
-
-Before submission, the release owner must:
-
-- Review all applicable required-reason API categories on the actual release
-  revision, not just the preference spellings searched here, including linked
-  packages/framework use and each shipped platform.
-- Determine the applicable categories and Apple's currently approved reasons
-  from actual behavior (including reads and ungated local helper calls), record
-  the rationale, and reconcile that decision with shared versus watch-specific
-  manifest coverage. No reason has been selected or approved by this addendum.
-- If that review calls for code/manifest changes, track and implement a separate
-  remediation with validation; **none are made by TASK-81**. Inspect the final
-  bundled manifests for each shipped target and retain release-commit evidence
-  before closing this review.
+This subsection first recorded the required-reason review as **OPEN**. The
+inventory above found defaults access, but both source manifests declared an
+empty `NSPrivacyAccessedAPITypes`. TASK-81 selected no reason codes and changed
+no code or manifests. TASK-85 has now completed the review for every
+required-reason category, every shipped target and every linked local package.
+It updated the manifests and added an automated check; see
+[Required-reason API review (TASK-85, 2026-11-03)](#required-reason-api-review-task-85-2026-11-03).
+The preference inventory above remains a record of its audited revision.
 
 The existing ISED permission, device/offline/accessibility, privacy wording and
-release-candidate gates remain in force. This addendum does not complete
-TASK-1.2, reopen or re-complete TASK-1.5, or authorize distribution.
+release-candidate gates remain in force. Neither addendum completes TASK-1.2,
+reopens or re-completes TASK-1.5, or authorizes distribution.
+
+## Required-reason API review (TASK-85, 2026-11-03)
+
+Reviewed source revision: TASK-85 base
+**`bf7759402715ad00b241ca6ac31a145f8841b777`** plus the TASK-85 manifest and
+`apps/apple/project.yml` changes. On the release commit, re-run
+`pnpm check:apple-required-reasons` and inspect the built manifests. This review
+does not approve a release.
+
+### Apple sources
+
+Fetched from developer.apple.com on 2026-11-03 UTC:
+
+- [Describing use of required reason API](https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api)
+- [`NSPrivacyAccessedAPIType`](https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype)
+- [`NSPrivacyAccessedAPITypeReasons`](https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitypereasons)
+- [Privacy manifest files](https://developer.apple.com/documentation/bundleresources/privacy-manifest-files)
+
+Apple's requirement, quoted:
+
+- > Describe the reasons your app or third-party SDK on iOS, iPadOS, tvOS, visionOS, or watchOS uses these APIs, and check that your app or third-party SDK only uses the APIs for the expected reasons.
+- > Starting May 1, 2024, apps that don’t describe their use of required reason API in their privacy manifest file aren’t accepted by App Store Connect.
+- > If you use the API in your app’s code, then you need to report the API in your app’s privacy manifest file.
+
+macOS is not on that platform list. The `CanadianHam` target builds iOS,
+iPadOS and macOS from one multiplatform target, so the macOS bundle carries
+the same manifest. Its boot-time entry describes iOS-only code and is
+informational on macOS.
+
+### Categories, listed APIs and approved reasons
+
+| Category (`NSPrivacyAccessedAPIType`) | APIs Apple lists | Reasons an app may declare | Used by a shipped target? |
+|---|---|---|---|
+| File timestamp (`NSPrivacyAccessedAPICategoryFileTimestamp`) | `creationDate`, `modificationDate`, `fileModificationDate`, `contentModificationDateKey`, `creationDateKey`, `getattrlist`, `getattrlistbulk`, `fgetattrlist`, `stat`, `fstat`, `fstatat`, `lstat`, `getattrlistat` | `DDA9.1`, `C617.1`, `3B52.1` (`0A2A.1` is for third-party SDKs only) | No |
+| System boot time (`NSPrivacyAccessedAPICategorySystemBootTime`) | `systemUptime`, `mach_absolute_time()` | `35F9.1`, `8FFB.1`, `3D61.1` | Yes: `CanadianHam`, `CanadianHamWatch` |
+| Disk space (`NSPrivacyAccessedAPICategoryDiskSpace`) | `volumeAvailableCapacityKey`, `volumeAvailableCapacityForImportantUsageKey`, `volumeAvailableCapacityForOpportunisticUsageKey`, `volumeTotalCapacityKey`, `systemFreeSize`, `systemSize`, `statfs`, `statvfs`, `fstatfs`, `fstatvfs`, `getattrlist`, `fgetattrlist`, `getattrlistat` | `85F4.1`, `E174.1`, `7D9E.1`, `B728.1` | No |
+| Active keyboards (`NSPrivacyAccessedAPICategoryActiveKeyboards`) | `activeInputModes` | `3EC4.1`, `54BD.1` | No |
+| User defaults (`NSPrivacyAccessedAPICategoryUserDefaults`) | `UserDefaults` | `CA92.1`, `1C8F.1`, `AC6B.1` (`C56D.1` is for third-party SDKs only) | Yes: `CanadianHam`, `CanadianHamTV`, `CanadianHamVision` |
+
+Apple's wording for the reasons in the two used categories:
+
+- User defaults
+  - **`CA92.1` (declared):** “Declare this reason to access user defaults to read and write information that is only accessible to the app itself. This reason does not permit reading information that was written by other apps or the system, or writing information that can be accessed by other apps.”
+  - `1C8F.1`: “Declare this reason to access user defaults to read and write information that is only accessible to the apps, app extensions, and App Clips that are members of the same App Group as the app itself. This reason does not permit reading information that was written by apps, app extensions, or App Clips outside the same App Group or by the system. Your app is not responsible if the system provides information from the global domain because a key is not present in your requested domain while your app is attempting to read information that apps, app extensions, or App Clips in your app’s App Group write. This reason also does not permit writing information that can be accessed by apps, app extensions, or App Clips outside the same App Group.”
+  - `AC6B.1`: “Declare this reason to access user defaults to read the com.apple.configuration.managed key to retrieve the managed app configuration set by MDM, or to set the com.apple.feedback.managed key to store feedback information to be queried over MDM, as described in the Apple Mobile Device Management Protocol Reference documentation.”
+  - `C56D.1` (third-party SDKs only): “Declare this reason if your third-party SDK is providing a wrapper function around user defaults API(s) for the app to use, and you only access the user defaults APIs when the app calls your wrapper function. This reason may only be declared by third-party SDKs. …”
+- System boot time
+  - **`35F9.1` (declared):** “Declare this reason to access the system boot time in order to measure the amount of time that has elapsed between events that occurred within the app or to perform calculations to enable timers. Information accessed for this reason, or any derived information, may not be sent off-device. There is an exception for information about the amount of time that has elapsed between events that occurred within the app, which may be sent off-device.”
+  - `8FFB.1`: “Declare this reason to access the system boot time to calculate absolute timestamps for events that occurred within your app, such as events related to the UIKit or AVFAudio frameworks. Absolute timestamps for events that occurred within your app may be sent off-device. System boot time accessed for this reason, or any other information derived from system boot time, may not be sent off-device.”
+  - `3D61.1`: “Declare this reason to include system boot time information in an optional bug report that the person using the device chooses to submit. The system boot time information must be prominently displayed to the person as part of the report. …”
+
+The first sentence of each reason in the unused categories, for reference:
+
+- File timestamp:
+  - `DDA9.1` “Declare this reason to display file timestamps to the person using the device.”
+  - `C617.1` “Declare this reason to access the timestamps, size, or other metadata of files inside the app container, app group container, or the app’s CloudKit container.”
+  - `3B52.1` “Declare this reason to access the timestamps, size, or other metadata of files or directories that the user specifically granted access to, such as using a document picker view controller.”
+- Disk space:
+  - `85F4.1` “Declare this reason to display disk space information to the person using the device.”
+  - `E174.1` “Declare this reason to check whether there is sufficient disk space to write files, or to check whether the disk space is low so that the app can delete files when the disk space is low.”
+  - `7D9E.1` “Declare this reason to include disk space information in an optional bug report that the person using the device chooses to submit.”
+  - `B728.1` “Declare this reason if your app is a health research app, and you access this API category to detect and inform research participants about low disk space impacting the research data collection.”
+- Active keyboards:
+  - `3EC4.1` “Declare this reason if your app is a custom keyboard app, and you access this API category to determine the keyboards that are active on the device.”
+  - `54BD.1` “Declare this reason to access active keyboard information to present the correct customized user interface to the person using the device.”
+
+### Per-target usage and declarations
+
+Target membership comes from the `sources` and `excludes` of each target in
+`apps/apple/project.yml`, plus the `Sources` of every local Swift package the
+target links. Test bundles are not distributed and were excluded. Use inside
+Apple's own frameworks is Apple's to declare. The searches covered every
+spelling in the table above, plus `NSUserDefaults`, `@AppStorage`,
+`@SceneStorage`, `CFPreferences*`, `persistentDomain`, `mach_absolute_time`,
+`clock_gettime`/`CLOCK_UPTIME*`/`CLOCK_MONOTONIC*`, `kern.boottime`,
+`attributesOfItem`, `NSFile*Date`, `statfs`/`statvfs` and `activeInputModes`.
+
+| Shipped target (platforms) | Linked local packages | Required-reason API use (Release-relevant call sites) | Manifest | Declared |
+|---|---|---|---|---|
+| `CanadianHam` (iOS, iPadOS, macOS) | `engine-swift`, `content-swift`, `morse-swift`, `calculator-swift` | **User defaults:** `Services/ProgressStore.swift` covers several groups of keys. The `ICloudSyncSettings` keys hold the opt-in flag, a local device UUID and a pending-deletion flag; they are compiled outside `ICLOUD_SYNC` and stay on the device in v1. It also reads and writes `AppleLanguages` and its last-applied marker, the active bank ID, and the legacy language migration marker. `Morse/MorseTrainerSettings.swift` has `load`, `save` and `reset`. `Views/NativeSettingsView.swift:342` and `Views/StudyViews.swift:2183` pass a `UserDefaults` parameter into the Morse save path. **System boot time:** `Views/StudyViews.swift:758` (`#if os(iOS)`) stamps hinge-peek samples with `systemUptime`; `scheduleHingePeekDwellRecheck` then sleeps for `deadline - lastSampleTimestamp`, which is a timer. `Support/DuoPostureProvider.swift:296` stamps hinge samples when the SDK has the hinge API. Lines 361, 414, 419 and 432 measure debug-playback elapsed time inside `#if DEBUG`. | `CanadianHam/Resources/PrivacyInfo.xcprivacy` | User defaults `CA92.1`; System boot time `35F9.1` |
+| `CanadianHamTV` (tvOS) | `engine-swift`, `content-swift`, `morse-swift` | **User defaults only:** compiles the shared `MorseTrainerSettings.swift`, and `CanadianHamTVApp.swift:159` calls `MorseTrainerSettings.load()`. This is a read only; save and reset are never called. There is no boot-time, file-timestamp, disk-space or keyboard API. | `Platforms/tvOS/Resources/PrivacyInfo.xcprivacy` (new) | User defaults `CA92.1` |
+| `CanadianHamVision` (visionOS) | `engine-swift`, `content-swift`, `morse-swift` | **User defaults only:** compiles the shared `MorseTrainerSettings.swift`, and `CanadianHamVisionApp.swift:72` calls `MorseTrainerSettings.load()`, again read only. There are no other categories. | `Platforms/visionOS/Resources/PrivacyInfo.xcprivacy` (new) | User defaults `CA92.1` |
+| `CanadianHamWatch` (watchOS) | `engine-swift`, `content-swift`, `morse-swift` | **System boot time only:** `Platforms/watchOS/WatchMorsePlayback.swift:34` makes `WatchMorseLiveScheduler.now` return `ProcessInfo.processInfo.systemUptime`. It enforces minimum haptic spacing from `lastHapticAt` and computes scheduling delays (lines 90, 102, 145, 147). There is no user defaults access, because watch settings live only in memory. | `Platforms/watchOS/Resources/PrivacyInfo.xcprivacy` | System boot time `35F9.1` |
+
+No required-reason API appears in the `Sources` of any linked package.
+`content-swift` uses `.isRegularFileKey`, and `MorseSendingPracticeView` uses
+`ContinuousClock`; neither is a listed API. All four manifests keep
+`NSPrivacyTracking = false`, `NSPrivacyTrackingDomains = []` and
+`NSPrivacyCollectedDataTypes = []`.
+
+`CanadianHamTV` and `CanadianHamVision` used to list
+`CanadianHam/Resources/PrivacyInfo.xcprivacy` explicitly as a resource. With
+the iOS-only boot-time declaration in that manifest, they would have declared
+a category they never use. TASK-85 therefore removes those two explicit
+entries from `apps/apple/project.yml`. Each target now bundles its own manifest
+through its `Platforms/<platform>` source tree. The check fails if any shipped
+target bundles anything other than exactly one manifest.
+
+### Why these reasons
+
+- **User defaults → `CA92.1`.** Every defaults access uses
+  `UserDefaults.standard`, which is the app's own domain. The only exception
+  is a private `UserDefaults(suiteName:)` created by
+  `ProgressStoreService.inMemoryForTests`, a test-only factory. The app has no
+  App Group (so `1C8F.1` does not apply) and no MDM keys (so `AC6B.1` does not
+  apply). No defaults data is shared with other apps.
+- **`AppleLanguages` (needs care under `CA92.1`).** On iOS and macOS,
+  `ProgressStoreService.applyInterfaceLanguagePreference` sets or removes
+  `AppleLanguages` in the app's own standard domain. It does this when the
+  person picks English, French or System in the app's Settings, so that the
+  app's interface follows that choice. That write is visible only to this app.
+  - To read the value back, `persistentAppleLanguages` calls
+    `defaults.persistentDomain(forName: Bundle.main.bundleIdentifier)`. That
+    reads only this app's persistent domain. It deliberately skips the normal
+    defaults search list, so the device-wide `AppleLanguages` from the global
+    domain is never read.
+  - `adoptExternalInterfaceLanguageSelectionIfNeeded`, added in TASK-37 to
+    preserve system app-language overrides, uses that read to adopt a per-app
+    language. The person can choose a language for this app in iOS Settings or
+    in macOS System Settings, and the OS stores that choice in the app's own
+    domain. The legacy French migration also checks this value
+    (`persistentAppleLanguages(...) == nil`).
+  - This value is user-chosen configuration of this app, stored in this app's
+    domain and readable only by this app, comparable to Settings.bundle
+    preferences. It is not system or other-app information, and it reveals
+    nothing beyond the language the app is already displaying. No other
+    approved reason fits.
+  - **Residual risk:** Apple's text does not say whether the per-app language
+    entry that Settings writes counts as information “written by … the
+    system”. If App Review disagrees, there are two remedies. One is to drop
+    the external-selection adoption and the legacy French `nil` check, so the
+    app only writes `AppleLanguages` and reads its own keys. The other is to
+    request a new reason through Apple's
+    [privacy manifest reason request form](https://developer.apple.com/contact/request/privacy-manifest-reason/).
+    TASK-85 changes no app code; this is an owner decision point.
+- **System boot time → `35F9.1`.** Both uses measure time elapsed between
+  events inside the app or drive timers. On iOS, hinge-peek dwell rechecks
+  schedule a timer from sample timestamps. On watchOS, haptic spacing and
+  delays are computed from the scheduler's `now`. Neither value is ever sent
+  off the device: the app has no networking code, as `pnpm check:apple-network`
+  confirms. No absolute timestamps are derived (`8FFB.1`), and there is no bug
+  report (`3D61.1`).
+
+### Automated check
+
+`pnpm check:apple-required-reasons`
+([`scripts/check-apple-required-reasons.mjs`](../../scripts/check-apple-required-reasons.mjs))
+works as follows:
+
+- **Scope.** It parses `apps/apple/project.yml` and resolves each target's
+  compiled Swift files and bundled `PrivacyInfo.xcprivacy`, honouring
+  `sources`, `excludes`, `buildPhase` and folder references. Linked local
+  packages contribute their `Sources/**`. Test bundles count only for
+  coverage.
+- **Scanning.** It blanks Swift comments and scans the code for the spellings
+  of each category.
+- **What fails.** The check fails in any of these cases:
+  - a shipped target uses a category its own manifest does not declare;
+  - a manifest declares a category its target does not use;
+  - a reason is unknown, belongs to another category, is SDK-only, is empty
+    or is duplicated;
+  - a category is unknown or duplicated;
+  - a target bundles anything other than exactly one manifest;
+  - a Swift file under `apps/apple` is compiled by no target.
+- **Unsupported constructs.** It also fails on XcodeGen keys it does not
+  model, on remote, binary or dynamic packages, and on unknown target types.
+- **Self-test.** `pnpm test:apple-required-reasons` runs the fixtures. They
+  include comment-only mentions, a string containing `//` followed by real
+  code, excluded and test-only files, unlinked packages and package tests,
+  and `getattrlist` counting for both File timestamp and Disk space.
+- **Limitations.** The check does not evaluate `#if` (an API compiled out on
+  some platforms still counts for the target). It also scans inside string
+  literals, so it errs towards declaring a category. Binary inspection
+  (below) is the cross-check.
+
+### Evidence
+
+Run from the TASK-85 worktree on 2026-11-03 UTC:
+
+| Command | Result |
+|---|---|
+| `plutil -lint` on the four manifests | All `OK`. |
+| `rg` over non-test `*.swift` in `apps/apple` and `packages` for every spelling listed above | Matches in only six files: `MorseTrainerSettings.swift` (3 lines), `ProgressStore.swift` (27), `NativeSettingsView.swift` (1), `StudyViews.swift` (2), `DuoPostureProvider.swift` (5) and `WatchMorsePlayback.swift` (1). There are no matches in package `Sources`. |
+| `pnpm test:apple-required-reasons` | `required-reasons-test: passed self-test fixtures.` |
+| `pnpm check:apple-required-reasons` (with the `project.yml` change) | Passed. `CanadianHam`: 53 Swift files, `SystemBootTime [35F9.1], UserDefaults [CA92.1]`. `CanadianHamWatch`: 31, `SystemBootTime [35F9.1]`. `CanadianHamTV`: 33, `UserDefaults [CA92.1]`. `CanadianHamVision`: 32, `UserDefaults [CA92.1]`. |
+| `pnpm check:apple-network`, `pnpm check:apple-icloud-gate` | Passed. |
+| Release builds through `xbuild` (`-configuration Release`, generic simulator destinations, plus generic macOS, `CODE_SIGNING_ALLOWED=NO`), then `plutil -p` on each bundled `PrivacyInfo.xcprivacy` | All builds succeeded. Each bundle has exactly one manifest, byte-identical (`cmp`) to its source. iOS `CanadianHam.app` and macOS `CanadianHam.app/Contents/Resources` declare User defaults `CA92.1` and System boot time `35F9.1`. The embedded `CanadianHam.app/Watch/CanadianHamWatch.app` declares System boot time `35F9.1`. `CanadianHamTV.app` and `CanadianHamVision.app`, built from a regenerated project with the `project.yml` change, declare User defaults `CA92.1` only. |
+| `strings -a` / `nm -u` on the Release binaries, which include the statically linked package code | iOS app: `systemUptime`, `standardUserDefaults`, `persistentDomainForName`. Watch: `systemUptime` only. macOS: `standardUserDefaults` and `persistentDomainForName`, but no `systemUptime`, because those call sites are iOS-only. TV and Vision: `standardUserDefaults` only. No binary imports `stat`, `lstat`, `fstat`, `fstatat`, `statfs`, `statvfs`, `getattrlist` or `mach_absolute_time`, and none references the file-timestamp, disk-space or `activeInputModes` selectors. |
+
+These are unsigned local build products, not signed TestFlight or App Store
+artifacts. Repeat the bundle inspection on the release archive.
