@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T06:44:00Z'
+updated_date: '2026-11-03T06:48:00Z'
 labels:
   - apple
   - privacy
@@ -137,6 +137,8 @@ Round 7 (PR #1064, Copilot thread PRRT_kwDOUxZq_M6y_3uM plus a full parser sweep
 - Real tree: same parse structure. Only value types and the script text changed, and the checker reads none of them. --verbose output is byte-identical to round 6, at about 0.4–0.5 s.
 - The evidence doc has a parsing step, a parser row group in the bypass table and Limitations text.
 - Checks: self-test, checker, pnpm typecheck, pnpm test, check:links, check:shell, git diff --check and the test guard all pass.
+
+Round 7 follow-up, commit defd3273a2e1f55b1756ab78fc6bdabad3188b2b: added fixtures for anchors, tags and %TAG directives (fail), a plain key holding ': ' (fail), a quoted key holding ': ' (read as one key, then caught by the build-setting check) and a key starting with '-' (a plain key, as Yams reads it). 7 more mutations were all killed (72 in total for round 7). The self-test, checker, check:links, git diff --check and the test guard pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
