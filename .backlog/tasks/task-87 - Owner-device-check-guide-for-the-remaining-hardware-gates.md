@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:33:00Z'
-updated_date: '2026-11-03T02:43:00Z'
+updated_date: '2026-11-03T02:55:00Z'
 labels:
   - docs
   - testing
@@ -39,3 +39,9 @@ Several tasks wait only on the owner, real hardware or an owner decision: TASK-2
 6. Validate relative links/anchors; run pnpm check:links if it covers docs.
 7. Finalize TASK-87 (notes, ACs, summary, Done) and commit.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Evidence 2026-11-03: docs commit b83f7aa4 adds docs/release/owner-gates.md (at-a-glance table for all 10 owner-gate tasks from 'backlog task list -l owner-gate' with open ACs; reporting template; Sitting 1 decisions (TASK-1.7 repo already public, 1.1, 1.8, 65, TASK-34 AC6-8); Sitting 2 Apple Watch, which links the testflight.md owner checklist and the TASK-14.3/14.5/14.6 docs; Sitting 3 Apple TV, which links accessibility.md#owner-listening-check-tvos-voiceover; Sitting 4 iPhone Duo steps restating TASK-54 AC1-7, with implementation-note observations marked as not criteria; Sitting 5 DebugCloudKit-only iCloud steps for TASK-34; follow-on section listing TASK-63 only) and one link line under Gates in docs/release/release-checklist.md. Guide-link notes appended to TASK-1.1, 1.7, 1.8, 14.3, 14.5, 14.6, 29, 34, 54 and 65 (statuses unchanged). Checks: a throwaway node link/anchor check over both files reported 'checked 86 relative links, 0 problems' (not committed); pnpm check:links reported 'Markdown relative links verified.' (exit 0) and covers every repo .md file including anchors; git diff --check was clean. No code, builds or Apple tests. Open: the coordinator must supply the processed TestFlight build numbers; which result screen TASK-54 AC2 means is unclear, so the guide keeps it generic.
+<!-- SECTION:NOTES:END -->
