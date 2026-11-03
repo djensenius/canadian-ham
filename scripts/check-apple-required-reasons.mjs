@@ -12,6 +12,11 @@
 // new source folders are mapped automatically. Every Swift file under
 // apps/apple must belong to some project.yml target; XcodeGen constructs this
 // script does not understand fail the check rather than being skipped.
+//
+// Limitation: `#if` conditions are not evaluated, so an API compiled out on a
+// platform still counts for every target that compiles the file, and string
+// literals are scanned too. Both err towards declaring a category; binary
+// inspection of the built bundles is the cross-check.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join, normalize, relative, resolve, sep } from 'node:path';
 

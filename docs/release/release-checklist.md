@@ -40,7 +40,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 - [ ] Run `pnpm --filter @canadian-ham/web audit:urls` against the release build output and record whether only allowed same-origin/static URLs are present.
 - [ ] Confirm the web privacy summary and Apple privacy label evidence still match [`docs/privacy.md`](../privacy.md): no accounts, analytics, telemetry, ads, tracking, server-side progress storage, iCloud sync, push notifications, automatic diagnostics upload, third-party SDK collection, or Apple-app networking.
 - [ ] Confirm App Store Connect privacy answers are still **Data Not Collected** using [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md); if Apple wording or required-reason API requirements changed, update the evidence before submission.
-- [ ] Resolve the **OPEN** required-reason API applicability, approved-reason and target-coverage review in the [2026-10-28 inventory](privacy-label-evidence.md#current-preference-and-manifest-inventory-2026-10-28). Reconcile current preference API use with each shipped target's manifest on the release commit; no-network checks and **Data Not Collected** answers do not establish required-reason compliance.
+- [ ] Re-check the completed [TASK-85 required-reason API review](privacy-label-evidence.md#required-reason-api-review-task-85-2026-11-03) on the release commit: run `pnpm check:apple-required-reasons`, inspect each shipped target's bundled `PrivacyInfo.xcprivacy` in the release archive, and update the manifests and evidence if required-reason API use or Apple's approved reasons changed. No-network checks and **Data Not Collected** answers do not establish required-reason compliance.
 
 ## Accessibility
 

@@ -98,7 +98,7 @@ Because the answer is **Data Not Collected**, no App Store privacy label purpose
 
 | App Store Connect area | Answer | Supporting evidence |
 |---|---|---|
-| Third-party SDKs or partner code in the Apple app | No third-party runtime SDK collection; no remote third-party SDKs linked | `docs/privacy.md` forbids third-party SDKs in v1. `pnpm check:apple-network` passed and checks for remote Swift package references in `apps/apple/project.yml`, the generated Xcode project, Swift package manifests, and `Package.resolved`. Current Apple dependencies in `apps/apple/project.yml` are local packages `../../packages/engine-swift` and `../../packages/content-swift`. |
+| Third-party SDKs or partner code in the Apple app | No third-party runtime SDK collection; no remote third-party SDKs linked | `docs/privacy.md` forbids third-party SDKs in v1. `pnpm check:apple-network` passed and checks for remote Swift package references in `apps/apple/project.yml`, the generated Xcode project, Swift package manifests, and `Package.resolved`. Current Apple dependencies in `apps/apple/project.yml` are local packages `../../packages/engine-swift`, `../../packages/content-swift`, `../../packages/morse-swift` and `../../packages/calculator-swift`. `CanadianHam` links all four; `CanadianHamTV`, `CanadianHamVision` and `CanadianHamWatch` link `engine-swift`, `content-swift` and `morse-swift`. |
 | Apple frameworks/services collection | None by this app | `docs/privacy.md` forbids iCloud sync and network-dependent entitlements in v1. The quoted Apple wording from `docs/proposals/icloud-sync.md` says app developers disclose data they collect from Apple frameworks/services; this app currently collects none. |
 
 ### Privacy manifest and required-reason APIs
@@ -430,7 +430,11 @@ target bundles anything other than exactly one manifest.
     app only writes `AppleLanguages` and reads its own keys. The other is to
     request a new reason through Apple's
     [privacy manifest reason request form](https://developer.apple.com/contact/request/privacy-manifest-reason/).
-    TASK-85 changes no app code; this is an owner decision point.
+    TASK-85 changes no app code.
+  - **Decision (coordinator, 2026-11-02):** keep `CA92.1`. The app reads
+    only its own app-domain `AppleLanguages` key, which its language picker
+    also writes. The two remedies above stay as fallbacks if App Review
+    objects.
 - **System boot time → `35F9.1`.** Both uses measure time elapsed between
   events inside the app or drive timers. On iOS, hinge-peek dwell rechecks
   schedule a timer from sample timestamps. On watchOS, haptic spacing and
@@ -480,7 +484,7 @@ Run from the TASK-85 worktree on 2026-11-03 UTC:
 | `plutil -lint` on the four manifests | All `OK`. |
 | `rg` over non-test `*.swift` in `apps/apple` and `packages` for every spelling listed above | Matches in only six files: `MorseTrainerSettings.swift` (3 lines), `ProgressStore.swift` (27), `NativeSettingsView.swift` (1), `StudyViews.swift` (2), `DuoPostureProvider.swift` (5) and `WatchMorsePlayback.swift` (1). There are no matches in package `Sources`. |
 | `pnpm test:apple-required-reasons` | `required-reasons-test: passed self-test fixtures.` |
-| `pnpm check:apple-required-reasons` (with the `project.yml` change) | Passed. `CanadianHam`: 53 Swift files, `SystemBootTime [35F9.1], UserDefaults [CA92.1]`. `CanadianHamWatch`: 31, `SystemBootTime [35F9.1]`. `CanadianHamTV`: 33, `UserDefaults [CA92.1]`. `CanadianHamVision`: 32, `UserDefaults [CA92.1]`. |
+| `pnpm check:apple-required-reasons` (with the `project.yml` change, on the branch since `b7877c4d`) | Passed. `CanadianHam`: 53 Swift files, `SystemBootTime [35F9.1], UserDefaults [CA92.1]`. `CanadianHamWatch`: 31, `SystemBootTime [35F9.1]`. `CanadianHamTV`: 33, `UserDefaults [CA92.1]`. `CanadianHamVision`: 32, `UserDefaults [CA92.1]`. |
 | `pnpm check:apple-network`, `pnpm check:apple-icloud-gate` | Passed. |
 | Release builds through `xbuild` (`-configuration Release`, generic simulator destinations, plus generic macOS, `CODE_SIGNING_ALLOWED=NO`), then `plutil -p` on each bundled `PrivacyInfo.xcprivacy` | All builds succeeded. Each bundle has exactly one manifest, byte-identical (`cmp`) to its source. iOS `CanadianHam.app` and macOS `CanadianHam.app/Contents/Resources` declare User defaults `CA92.1` and System boot time `35F9.1`. The embedded `CanadianHam.app/Watch/CanadianHamWatch.app` declares System boot time `35F9.1`. `CanadianHamTV.app` and `CanadianHamVision.app`, built from a regenerated project with the `project.yml` change, declare User defaults `CA92.1` only. |
 | `strings -a` / `nm -u` on the Release binaries, which include the statically linked package code | iOS app: `systemUptime`, `standardUserDefaults`, `persistentDomainForName`. Watch: `systemUptime` only. macOS: `standardUserDefaults` and `persistentDomainForName`, but no `systemUptime`, because those call sites are iOS-only. TV and Vision: `standardUserDefaults` only. No binary imports `stat`, `lstat`, `fstat`, `fstatat`, `statfs`, `statvfs`, `getattrlist` or `mach_absolute_time`, and none references the file-timestamp, disk-space or `activeInputModes` selectors. |
