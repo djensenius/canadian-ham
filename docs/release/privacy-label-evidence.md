@@ -480,16 +480,16 @@ works as follows:
   | Point | Behaviour | Why it is safe |
   |---|---|---|
   | `.DS_Store` | Scanned like any file (no longer skipped). | A real Finder file starts with `00000001 Bud1` and passes; Xcode does not copy it. |
-  | `excludes` | Walked; excluded files count only for the prebuilt-code, link and special-file checks. Only `*`, `?` and `**` (as a whole path component) are modelled. Wildcards never match a leading dot, as in glob(3) without `GLOB_PERIOD`. Character classes, braces, escapes and `**` inside a name fail. | Excluded files are neither compiled nor copied. Matching less than XcodeGen only scans more, and binaries are found even when a glob differs. |
+  | `excludes` | Walked; excluded files count only for the prebuilt-code, link and special-file checks. Only `*`, `?` and `**` (as a whole path component) are modelled. Wildcards never match a leading dot, as in glob(3) without `GLOB_PERIOD`. Character classes, braces, escapes and `**` inside a name fail. Globs are matched with exact letter case. | Excluded files are neither compiled nor copied. Matching less than XcodeGen only scans more, and binaries are found even when a glob differs. If XcodeGen ignores case on a case-insensitive volume, it excludes more than the checker, which again only scans more. |
   | Resource catalogues (`.xcassets`, `.icon`, `.xcstrings`), in targets and packages | Walked; contents count only for the prebuilt-code, link and special-file checks. | `actool` and the string catalogue compiler process them; Swift inside is never compiled and a nested manifest is not at the bundle root. |
   | Extension filters | Every visited file gets the prebuilt-code check first. Then `.swift` counts as compiled Swift (sources or default phase only), C-family and similar files fail as unscanned sources (except in the resources phase, where they are copied as data), and `PrivacyInfo.xcprivacy` counts as the manifest only under the rule below. Other files are data. | Data files cannot call these APIs. |
   | `buildPhase` | `sources` and the default compile Swift. `resources` copies files to the bundle root. `headers` and `copyFiles` compile nothing and never supply the manifest. `none` and `type: folder` are references (above). Other phases fail. | XcodeGen's phases are exactly these; unknown ones fail closed. |
   | `type` | `file`, `group` and `folder` are modelled; anything else, such as `syncedFolder`, fails. A directory added as `type: file` is copied as one folder, so a manifest inside it is not the bundle's manifest. Its Swift still counts, which can only over-declare. | Unknown types fail closed. |
   | Bundle manifest rule | Only a manifest copied flat to the bundle root counts: from the default or resources phase, not excluded, not in a catalogue, and not below a directory whose name has an extension (`.lproj`, `.bundle` or another wrapper). | Manifests elsewhere are copied into subfolders, which Apple does not read as the app's manifest. Zero manifests fail the check. |
-  | `optional` | A missing optional path is skipped; an existing one is fully scanned. Missing non-optional compiled paths and references fail. | A missing path has nothing to copy or compile. |
+  | `optional` | A missing optional path is skipped; an existing one is fully scanned. Missing non-optional compiled paths and references fail. Every `sources` and package path must match the names on disk in letter case. | A missing path has nothing to copy or compile. The case check makes a wrong-case path fail on macOS and Linux alike, instead of being compiled on macOS and skipped as missing on Linux CI. |
   | Unmapped-file walk prunes `*.xcodeproj`, `DerivedData` and `build` | Only for finding Swift files under `apps/apple` that no target compiles; Swift in catalogues is not counted there either. | Target walks never prune, so a target entry inside one of those paths is still fully scanned. |
   | Test targets | Not checked for categories, non-Swift sources or prebuilt code. Their sources are still walked for coverage, so links, special files and unsupported entries fail there too. | Test bundles are not shipped. |
-  | Target `target:` and `sdk:` dependencies | Embedded app targets are checked as their own targets; SDK frameworks are Apple's. Any other dependency type, or a dependency naming more than one kind or a non-string, fails. | Apple's own use is not declared by the app. |
+  | Target `target:` and `sdk:` dependencies | Embedded app targets are checked as their own targets. A `target:` must be defined in `project.yml`, and a shipped target may depend only on shipped targets. An `sdk:` must be a bare `.framework` or `.tbd` name from the SDK. Any other dependency type or key, a dependency naming more than one kind or a non-string, a cross-project or undefined target, and an `sdk:` path fail. | Apple's own SDK code is not declared by the app, and test bundles never ship. |
   | Package root other than `Sources` | Not scanned. `Package.swift` must fit the strict grammar above and is checked for custom `path:` or `sources:`, binary, plugin, macro and system-library targets, `unsafeFlags`, package dependencies and `..`. `Package@swift-*.swift` manifests and the other SwiftPM source roots (`Source`, `src`, `srcs`) fail. | Only `Sources/<target>` is compiled or bundled when those are absent. |
   | Package `exclude:` and `resources:` | Ignored: all of `Sources` is scanned. | Over-scans. A `..` path, which could reach outside `Sources`, fails. |
 - **Native-code formats.** Prebuilt code is found by magic bytes where the
@@ -592,6 +592,63 @@ works as follows:
     `Package@swift-*.swift` manifest (which SwiftPM prefers) and the other
     SwiftPM source roots (`Source`, `src`, `srcs`, or `Sources` in another
     case) also fail.
+- **project.yml allowlist.** After parsing, `project.yml` is checked
+  against an allowlist (`PROJECT_SHAPE` and `TARGET_SHAPE` in the checker)
+  rather than a list of known-bad keys. The allowlist holds exactly the keys
+  the real file uses (plus the `sdk:` dependency, explained below), on every target including test targets, and gives
+  each one a value shape (string, list or mapping) where the checker relies
+  on it. Any other key fails with its `apps/apple/project.yml:<line>`. These
+  are the allowed keys:
+
+  | Where | Key | Why it is allowed |
+  |---|---|---|
+  | Top level | `name` | The project name. |
+  | Top level | `options` | Only the five keys below. |
+  | Top level | `configs` | Configuration names and their `debug` or `release` presets; their build settings are checked under `settings`. |
+  | Top level | `packages` | Each linked package is resolved as described above: a local `path`, with only `group` and `excludeFromProject` beside it, and its `Package.swift` and `Sources` checked. |
+  | Top level, target | `settings` | Only `base` and `configs` (a mapping of configuration names to build settings). The code-setting rules apply to the project and every shipped target. |
+  | Top level | `targets` | Each target against the target keys below. |
+  | Top level | `schemes` | Only `build.targets` (which targets each action builds) and `test` with `gatherCoverageData`, `testPlans` (`path`, `defaultPlan`) and `targets` (a list of names). These choose what to build and test; products still come from the targets. |
+  | `options` | `bundleIdPrefix`, `deploymentTarget`, `developmentLanguage`, `knownRegions`, `createIntermediateGroups` | Identifiers, minimum OS versions, the development region, localisations and navigator groups. None adds a file or a build phase. |
+  | Target | `type` | Must be a shipped (application or extension) or test type; other types fail. |
+  | Target | `platform`, `supportedDestinations`, `deploymentTarget` | One platform name (lists and `$platform` fail), the destinations that build the same sources, and the minimum OS version. |
+  | Target | `sources` | Every entry is modelled: its keys, `type`, `buildPhase`, `excludes` and `optional`, as above. |
+  | Target | `dependencies` | Each entry may hold only the dependency keys below. |
+  | Target | `postBuildScripts` | Each entry may hold only `name`, `script` (an inline string), `basedOnDependencyAnalysis`, `inputFiles` and `outputFiles`. XcodeGen adds these phases last, after the compile, link, copy and embed phases, so they cannot change compiled code. Their text is not inspected (a limitation below); script files (`path`) and other shells fail. |
+  | Dependency | `target` | Must name a target defined in `project.yml`; cross-project `Project/Target` names fail. A shipped target may depend only on shipped targets. An embedded app is checked as its own target. |
+  | Dependency | `package` | A local package whose `Sources` are scanned. |
+  | Dependency | `sdk` | Must be a bare `.framework` or `.tbd` name, which XcodeGen looks up in the SDK (Apple's own code). A path or any other file fails. The real file has no `sdk:` dependency. The key stays on the allowlist because this exact model can only link Apple's SDK code, whose required-reason use the app does not declare. |
+  | Dependency | `product`, `embed`, `destinationFilters` | Pick a library product of a scanned package, copy a target's product (checked as its own target), and narrow the platforms that link the dependency. |
+
+  Some keys are rejected because they are not on the allowlist. Each of
+  these has a fixture:
+  - top-level `include`, `projectReferences`, `targetTemplates`,
+    `schemeTemplates`, `aggregateTargets`, `fileGroups`, `localPackages`,
+    `configFiles`, `settingGroups`, `attributes` and `breakpoints`;
+  - `options.preGenCommand` and `options.postGenCommand`;
+  - target `templates`, `preBuildScripts`, `postCompileScripts`,
+    `configFiles`, `scheme`, `buildToolPlugins`, `buildRules`, `info`,
+    `entitlements`, `legacy` and `attributes`;
+  - dependency `link`, `weak`, `codeSign`, `copy` and `root`;
+  - settings `groups` and flat (unstructured) settings;
+  - scheme pre- and post-actions, `run`, `profile`, `analyze` and
+    `archive` actions, and build options.
+
+  The repository has no `.xcconfig` files, so `configFiles` fails closed
+  rather than being scanned. Pre-build and post-compile scripts fail,
+  because they run before or between the compile phases and could generate
+  or rewrite sources. **Maintenance:** when the real `project.yml` gains a
+  key, this check fails at that line. The maintainer then confirms that the
+  key cannot add code, link inputs or bundled files, or models it in the
+  checker with fixtures. They then add it to the allowlist, with a comment,
+  and to this table.
+- **Path letter case.** Every `sources` path and package path is compared
+  with the names on disk, one component at a time, and fails if it differs
+  only in letter case. macOS volumes usually ignore case and Linux CI does
+  not. Without this check, a wrong-case `optional` path would be found and
+  compiled by Xcode on macOS but skipped as missing on Linux, and a
+  non-optional one would pass on macOS and fail on Linux. A missing optional
+  path still passes on both.
 - **Scanning.** It blanks Swift comments and scans the code for the spellings
   of each category. String and regex literals are kept, following the Swift 6
   lexer for extended `#/.../#` and bare `/.../` regex literals, so a `/*` or
@@ -660,11 +717,14 @@ works as follows:
     `syncedFolder`), `buildPhase`s other than `sources`, `resources`,
     `headers`, `none` and a `copyFiles` mapping, and exclude globs with
     character classes, braces, escapes or `**` inside a name;
-  - shipped-target keys outside its allow-list, such as `preBuildScripts`,
-    `postCompileScripts`, `buildRules`, `buildToolPlugins`, `scheme` and
-    `configFiles`;
-  - top-level `include`, `targetTemplates`, `settingGroups` and
-    `configFiles`, and scheme `preActions`;
+  - any `project.yml` key outside the allowlist above, reported with its
+    file and line, and an allowlisted key whose value has the wrong shape;
+  - a `target:` dependency on a target that `project.yml` does not define
+    (including cross-project `Project/Target` names), a shipped target
+    depending on a test target, and an `sdk:` dependency that is not a bare
+    `.framework` or `.tbd` name;
+  - a `sources` or package path that differs only in letter case from the
+    names on disk;
   - project or shipped-target settings for bridging or prefix headers,
     header, library, framework or Swift include search paths, module map
     files, or linker and libtool flags;
@@ -704,7 +764,13 @@ works as follows:
   lists, and every rejected Package.swift construct. Pass fixtures cover
   the modelled YAML (with and without a byte order mark and CRLF), quoted
   commas in a flow sequence and a Package.swift with comments, backticks and
-  trailing commas.
+  trailing commas. Round 7b fixtures reject each key listed under the
+  allowlist at its file and line, including `__proto__`, `constructor` and
+  `toString`. They also reject non-string, non-list and non-mapping values;
+  undefined, cross-project and shipped-to-test target dependencies; `sdk:`
+  paths and non-SDK files; and wrong-case sources and package paths. Pass
+  fixtures use every allowlisted key, a test target that depends on a test
+  target, and a missing optional path.
 - **Bypass classes.** Each syntactic way a source could reach a listed API
   without the checker seeing it is covered or recorded here:
 
@@ -749,6 +815,9 @@ works as follows:
   | Package entries with remote keys beside `path` | Fail closed with a fixture. |
   | Package.swift syntax that could build, rename or hide targets (raw strings, escapes, interpolation, multi-line strings, `#if`, variables, helper functions, type-qualified members, `.map`, operators, extra imports or statements) | Fail closed with fixtures. Comments inside calls, backtick-escaped names and trailing commas pass with a fixture. |
   | Package manifests and source roots the checker does not read (`Package@swift-*.swift`, `Source`, `src`, `srcs`) | Fail closed with a fixture. |
+  | `project.yml` keys the checker does not model (`include`, `projectReferences`, `options.preGenCommand` and `postGenCommand`, target and scheme templates, `aggregateTargets`, `fileGroups`, `localPackages`, top-level and target `configFiles` (xcconfig), `settingGroups` and settings `groups`, scheme actions, target `scheme`, `buildToolPlugins`, `buildRules`, pre-build and post-compile scripts, script files, dependency `link`, `weak` and `root`) | Fail closed with fixtures. The allowlist reports each key with its file and line. Allowlisted keys with the wrong value shape also fail, and a pass fixture uses every allowlisted key. |
+  | Cross-project, undefined or test-target `target:` dependencies of shipped targets, and `sdk:` paths | Fail closed with fixtures. A test target depending on a test target passes. |
+  | Letter case of `sources` and package paths (macOS volumes usually ignore it; Linux CI does not) | Fail closed with fixtures on both. A missing optional path still passes. |
 - **Limitations.** The check does not evaluate `#if` (an API compiled out on
   some platforms still counts for the target). It also scans inside string
   and regex literals, so it errs towards declaring a category. An
@@ -781,7 +850,11 @@ works as follows:
   the checker. Plain booleans and numbers that the checker never needs as
   strings are kept rather than rejected, such as `YES` and `NO` settings,
   `CURRENT_PROJECT_VERSION: 1` and `SWIFT_VERSION: 6.0`. The text of
-  `script` blocks is not inspected (see post-build scripts above).
+  `script` blocks is not inspected (see post-build scripts above). The
+  `project.yml` allowlist holds only the keys the real file uses, so a new
+  XcodeGen key fails even when it is harmless; confirm it is inert and add
+  it (see the allowlist). Exclude globs are matched with exact letter case,
+  which can only scan more than XcodeGen.
 
 ### Evidence
 
@@ -798,6 +871,7 @@ Run from the TASK-85 worktree on 2026-11-03 UTC:
 | Folder references (PR #1064 round 5): the six shipped `content/` folder references scanned for prebuilt code and links, with the strict manifest parser applied to the four manifests | 2,059 files (2,010 JSON, 49 Markdown), no prebuilt code, no symbolic links or hidden entries, no `buildPhase: none` entries. The four manifests parse unchanged, and the checker output is byte-identical to the previous round. |
 | Pruning sweep (PR #1064 round 6): `project.yml` sources, excludes, types and build phases, and package `Sources`, re-read against the pruning-point table; resource catalogues under the scanned roots counted with `find` | Every exclude is a literal path (`CanadianHam` excludes `Resources/AppIcon.icon`, both asset catalogues and the CloudKit `Info.plist`), every type and build phase is modelled, and no package declares `resources:`, `exclude:` or `..`. The eight catalogues (`CanadianHam` `Assets`, `FigureAssets`, `AppIcon.icon` and `Localizable.xcstrings`; the watchOS `Assets` and `InfoPlist.xcstrings`; the tvOS and visionOS `Assets`) hold 141 files, now also scanned through the ordinary walks, with no prebuilt code, links, hidden or special files. Package `Sources` hold no catalogues. Each manifest sits at `<target>/Resources/PrivacyInfo.xcprivacy` with no extension-named directory on its path. The `--verbose` checker output is byte-identical to round 5 and the run takes about 0.4 s. |
 | YAML and Package.swift sweep (PR #1064 round 7): the real `project.yml` parsed with the round 6 and round 7 parsers and the trees compared; the four `Package.swift` files read with the new grammar; each new check mutation-tested against the self-test | Same structure. The only differences are value types and `script` text, none of which the checker reads: 99 `YES`, `NO`, `true` and `false` values are now booleans, `CURRENT_PROJECT_VERSION: 1` and `SWIFT_VERSION: 6.0` are numbers, and the nine `script` blocks lose their indentation. `${...}` appears only in `script` values, there are no tabs, non-ASCII characters, anchors, multi-line scalars or nested flow collections, and every dependency names one kind. All four manifests fit the grammar. The `--verbose` output is byte-identical to round 6 and the run takes about 0.4–0.5 s. All 72 mutations of the new checks fail the self-test. Two more survive only because another layer already covers them: own-key package lookup and the empty defaults for `packages` and `targets`, both made safe by mappings without a prototype. |
+| `project.yml` allowlist and path case (PR #1064 round 7b): the real file's keys listed with the checker's parser and compared with the allowlist; the allowlist, dependency and case checks run on the real tree; each new check mutation-tested against the self-test | The real file uses exactly the allowlisted keys. At the top level these are `name`, `options` (the five listed keys), `configs`, `packages`, `settings`, `targets` and `schemes`. Targets use `type`, `platform`, `supportedDestinations`, `deploymentTarget`, `sources`, `dependencies`, `settings` and `postBuildScripts`. Dependencies use `target`, `package`, `product`, `embed` and `destinationFilters`; settings use `base` and `configs`; schemes use `build.targets` and `test` with `gatherCoverageData`, `testPlans` and `targets`. The only `target:` dependency of a shipped target is `CanadianHam` on `CanadianHamWatch` (an application); test targets depend on app targets. There are no `sdk:` dependencies or `.xcconfig` files, and every sources and package path matches its on-disk case. The `--verbose` output is byte-identical to round 7 and the run takes about 0.4–0.5 s. All 41 mutations of the new checks fail the self-test: the allowlist lookup, the value-shape checks, key lines, widened and narrowed allowlist entries, the dependency and `sdk:` rules, and the case comparison, including a case check skipped for `optional` paths. |
 | Release builds through `xbuild` (`-configuration Release`, generic simulator destinations, plus generic macOS, `CODE_SIGNING_ALLOWED=NO`), then `plutil -p` on each bundled `PrivacyInfo.xcprivacy` | All builds succeeded. Each bundle has exactly one manifest, byte-identical (`cmp`) to its source. iOS `CanadianHam.app` and macOS `CanadianHam.app/Contents/Resources` declare User defaults `CA92.1` and System boot time `35F9.1`. The embedded `CanadianHam.app/Watch/CanadianHamWatch.app` declares System boot time `35F9.1`. `CanadianHamTV.app` and `CanadianHamVision.app`, built from a regenerated project with the `project.yml` change, declare User defaults `CA92.1` only. |
 | `strings -a` / `nm -u` on the Release binaries, which include the statically linked package code | iOS app: `systemUptime`, `standardUserDefaults`, `persistentDomainForName`. Watch: `systemUptime` only. macOS: `standardUserDefaults` and `persistentDomainForName`, but no `systemUptime`, because those call sites are iOS-only. TV and Vision: `standardUserDefaults` only. No binary imports `stat`, `lstat`, `fstat`, `fstatat`, `statfs`, `statvfs`, `getattrlist` or `mach_absolute_time`, and none references the file-timestamp, disk-space or `activeInputModes` selectors. |
 

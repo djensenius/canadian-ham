@@ -902,13 +902,15 @@ assertFail('package paths outside the package', {
   'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace('.target(name: "Engine")', '.target(name: "Engine", resources: [.copy("../Shared")])'),
 }, 'packages/engine-swift/Package.swift uses paths outside the target directory (..)');
 // Build scripts, scheme pre-actions, xcconfig files, headers, search paths and
-// compiler or linker flags can add code the checker does not scan.
+// compiler or linker flags can add code the checker does not scan. project.yml
+// keys outside the allowlist fail with their file:line.
+const ALLOWLIST = "is not in the checker's project.yml allowlist";
 assertFail('pre-build script on a shipped target', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('  TV:\n    type: application\n', '  TV:\n    type: application\n    preBuildScripts:\n      - name: Generate\n        script: ./generate.sh\n')) },
-  'TV: uses XcodeGen target keys the checker does not model (preBuildScripts)');
+  `apps/apple/project.yml:41: key targets.TV.preBuildScripts ${ALLOWLIST}`);
 assertFail('scheme pre-actions', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(`${PROJECT_YML}schemes:\n  App:\n    build:\n      targets:\n        App: all\n      preActions:\n        - script: ./generate.sh\n`) },
-  'project.yml schemes use preActions');
+  `apps/apple/project.yml:52: key schemes.App.build.preActions ${ALLOWLIST}`);
 assertFail('project config files', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('packages:\n', 'configFiles:\n  Debug: Debug.xcconfig\npackages:\n')) },
-  'project.yml uses top-level configFiles');
+  `apps/apple/project.yml:4: key configFiles ${ALLOWLIST}`);
 assertFail('bridging header and linker flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('    platform: watchOS\n', '    platform: watchOS\n    settings:\n      base:\n        SWIFT_OBJC_BRIDGING_HEADER: Shim.h\n      configs:\n        Release:\n          OTHER_LDFLAGS[sdk=watchos*]: $(inherited) -lvendor\n')) }, [
   'Watch: build setting SWIFT_OBJC_BRIDGING_HEADER can compile, import or link code the checker does not scan',
   'Watch: build setting OTHER_LDFLAGS[sdk=watchos*] can compile, import or link code the checker does not scan',
@@ -943,7 +945,7 @@ assertFail('package plugins, macros, system libraries and unsafe flags', {
   'packages/engine-swift/Package.swift uses unsafe compiler or linker flags',
 ]);
 assertFail('target templates', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('  Watch:\n    type: application\n', '  Watch:\n    templates: [Base]\n    type: application\n')) },
-  'Watch: target templates are not supported');
+  `apps/apple/project.yml:35: key targets.Watch.templates ${ALLOWLIST}`);
 assertFail('unsupported YAML', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('    platform: watchOS\n', '    platform: *watch\n')) },
   'anchors, aliases and tags are not supported');
 
@@ -1030,7 +1032,7 @@ assertFail('top level must be a mapping', { ...tvManifest(TV_WITH_PACKAGE), ...p
 assertFail('targets must be a mapping', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml('name: Fixture\ntargets: [App]\n') },
   'project.yml: packages and targets must be mappings.');
 assertFail('top-level include', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(`include: [base.yml]\n${PROJECT_YML}`) },
-  'project.yml uses top-level include');
+  `apps/apple/project.yml:1: key include ${ALLOWLIST}`);
 // Plain scalars keep their YAML 1.1 types, and consumers that need a string
 // or a real boolean fail closed on anything else.
 const appSource = (lines) => ({ ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('      - path: Shared/Settings.swift\n', `      - path: Shared/Settings.swift\n${lines}`)) });
@@ -1133,6 +1135,96 @@ assertFail('Package.swift version-specific manifest and other source directories
   'packages/engine-swift/Package@swift-6.0.swift is a version-specific manifest, which SwiftPM prefers over Package.swift',
   'packages/engine-swift/src is a SwiftPM source directory the checker does not scan (only Sources is)',
 ]);
+
+// project.yml is read against an allowlist of the keys the real file uses;
+// every other key fails at its file:line. `edited` throws when a fixture
+// edit does not apply, so no fixture silently tests the base project.
+const edited = (text, ...pairs) => {
+  let result = text;
+  for (let i = 0; i < pairs.length; i += 2) {
+    if (result.split(pairs[i]).length !== 2) throw new Error(`fixture edit does not apply once: ${JSON.stringify(pairs[i])}`);
+    result = result.replace(pairs[i], () => pairs[i + 1]);
+  }
+  return result;
+};
+const ymlFixture = (text, extra = {}) => ({ ...tvManifest(TV_WITH_PACKAGE), ...projectYml(text), ...extra });
+const notAllowed = (line, key) => `apps/apple/project.yml:${line}: key ${key} ${ALLOWLIST}`;
+for (const key of ['projectReferences', 'targetTemplates', 'schemeTemplates', 'aggregateTargets', 'fileGroups', 'localPackages', 'settingGroups', 'attributes', 'breakpoints', 'toString', 'constructor', '__proto__']) {
+  assertFail(`top-level ${key}`, ymlFixture(`${PROJECT_YML}${key}: {}\n`), notAllowed(47, key));
+}
+const OPTIONS_LINE = '  bundleIdPrefix: org.example # trailing comment\n';
+for (const key of ['preGenCommand', 'postGenCommand']) {
+  assertFail(`options.${key}`, ymlFixture(edited(PROJECT_YML, OPTIONS_LINE, `${OPTIONS_LINE}  ${key}: ./generate.sh\n`)), notAllowed(4, `options.${key}`));
+}
+const TV_HEAD = '  TV:\n    type: application\n';
+for (const key of ['postCompileScripts', 'configFiles', 'scheme', 'buildToolPlugins', 'buildRules', 'info', 'entitlements', 'legacy', 'attributes']) {
+  assertFail(`target ${key}`, ymlFixture(edited(PROJECT_YML, TV_HEAD, `${TV_HEAD}    ${key}: {}\n`)), notAllowed(41, `targets.TV.${key}`));
+}
+assertFail('unknown key on a test target', ymlFixture(edited(PROJECT_YML, '  AppTests:\n    type: bundle.unit-test\n', '  AppTests:\n    type: bundle.unit-test\n    preBuildScripts: {}\n')),
+  notAllowed(28, 'targets.AppTests.preBuildScripts'));
+const postBuild = (lines) => ymlFixture(edited(PROJECT_YML, TV_HEAD, `${TV_HEAD}    postBuildScripts:\n      - name: Copy\n${lines}`));
+assertFail('post-build script file', postBuild('        path: copy.sh\n'), notAllowed(43, 'targets.TV.postBuildScripts[0].path'));
+assertFail('post-build script shell', postBuild('        shell: /usr/bin/python3\n        script: print(1)\n'), notAllowed(43, 'targets.TV.postBuildScripts[0].shell'));
+assertFail('post-build script that is not a string', postBuild('        script: [cp, a, b]\n'),
+  'apps/apple/project.yml:43: targets.TV.postBuildScripts[0].script must be a string, found ["cp","a","b"].');
+assertFail('post-build scripts that are not a list', ymlFixture(edited(PROJECT_YML, TV_HEAD, `${TV_HEAD}    postBuildScripts: {}\n`)),
+  'apps/apple/project.yml:41: targets.TV.postBuildScripts must be a list.');
+// TV's package dependency is the last line of PROJECT_YML (line 46).
+for (const key of ['link', 'weak', 'codeSign', 'copy']) {
+  assertFail(`dependency ${key}`, ymlFixture(`${PROJECT_YML}        ${key}: false\n`), notAllowed(47, `targets.TV.dependencies[0].${key}`));
+}
+const APP_SDK = '      - sdk: AVFoundation.framework\n';
+assertFail('sdk dependency root', ymlFixture(edited(PROJECT_YML, APP_SDK, `${APP_SDK}        root: DEVELOPER_DIR\n`)), notAllowed(26, 'targets.App.dependencies[2].root'));
+for (const sdk of ['../vendor/libx.tbd', 'usr/lib/libx.tbd', 'Vendor.xcframework', 'libvendor.a', 'libvendor.dylib']) {
+  assertFail(`sdk dependency ${sdk}`, ymlFixture(edited(PROJECT_YML, APP_SDK, `      - sdk: ${sdk}\n`)),
+    `apps/apple/project.yml:25: App sdk dependency ${sdk} must be a bare .framework or .tbd name from the SDK`);
+}
+const APP_WATCH = '      - target: Watch\n';
+assertFail('cross-project target dependency', ymlFixture(edited(PROJECT_YML, APP_WATCH, '      - target: Other/Target\n')),
+  'apps/apple/project.yml:24: App depends on target Other/Target, which project.yml does not define; cross-project (Project/Target) dependencies are not modelled');
+assertFail('undefined target dependency', ymlFixture(edited(PROJECT_YML, APP_WATCH, '      - target: Missing\n')),
+  'apps/apple/project.yml:24: App depends on target Missing, which project.yml does not define');
+assertFail('shipped target depending on a test target', ymlFixture(`${PROJECT_YML}      - target: AppTests\n`),
+  'apps/apple/project.yml:47: TV depends on AppTests, which is not a shipped target, so its code would ship unchecked');
+assertPass('test target depending on a test target', ymlFixture(`${PROJECT_YML}  AppUITests:\n    type: bundle.ui-testing\n    platform: iOS\n    sources:\n      - AppTests\n    dependencies:\n      - target: AppTests\n`));
+const watchSettingsBlock = (lines) => ymlFixture(edited(PROJECT_YML, WATCH_PLATFORM, `${WATCH_PLATFORM}    settings:\n${lines}`));
+assertFail('settings groups', watchSettingsBlock('      groups: [Shared]\n'), notAllowed(38, 'targets.Watch.settings.groups'));
+assertFail('flat target settings', watchSettingsBlock('      OTHER_LDFLAGS: -lvendor\n'), notAllowed(38, 'targets.Watch.settings.OTHER_LDFLAGS'));
+assertFail('flat project settings', ymlFixture(edited(PROJECT_YML, 'targets:\n', 'settings:\n  SWIFT_VERSION: "6.0"\ntargets:\n')), notAllowed(10, 'settings.SWIFT_VERSION'));
+assertFail('configuration settings that are not a mapping', watchSettingsBlock('      configs:\n        Release: -lvendor\n'),
+  'apps/apple/project.yml:39: targets.Watch.settings.configs.Release must be a mapping.');
+assertFail('target that is not a mapping', ymlFixture(`${PROJECT_YML}  Kit: Shared\n`), 'apps/apple/project.yml:47: targets.Kit must be a mapping.');
+const SCHEMES = 'schemes:\n  App:\n    build:\n      targets:\n        App: all\n        AppTests: [test]\n    test:\n      gatherCoverageData: true\n      targets:\n        - AppTests\n      testPlans:\n        - path: App.xctestplan\n          defaultPlan: true\n';
+const COVERAGE = '      gatherCoverageData: true\n';
+assertFail('scheme post-actions', ymlFixture(`${PROJECT_YML}${edited(SCHEMES, COVERAGE, `${COVERAGE}      postActions:\n        - script: ./after.sh\n`)}`), notAllowed(55, 'schemes.App.test.postActions'));
+for (const action of ['run', 'profile', 'analyze', 'archive']) {
+  assertFail(`scheme ${action} action`, ymlFixture(`${PROJECT_YML}${SCHEMES}    ${action}:\n      config: Release\n`), notAllowed(60, `schemes.App.${action}`));
+}
+assertFail('scheme build options', ymlFixture(`${PROJECT_YML}${edited(SCHEMES, '        AppTests: [test]\n', '        AppTests: [test]\n      parallelizeBuild: false\n')}`), notAllowed(53, 'schemes.App.build.parallelizeBuild'));
+assertFail('extra test plan key', ymlFixture(`${PROJECT_YML}${SCHEMES}          extra: true\n`), notAllowed(60, 'schemes.App.test.testPlans[0].extra'));
+assertFail('scheme test target that is not a string', ymlFixture(`${PROJECT_YML}${edited(SCHEMES, '        - AppTests\n', '        - name: AppTests\n          parallelizable: true\n')}`),
+  'apps/apple/project.yml:55: schemes.App.test.targets[0] must be a string, found {"name":"AppTests","parallelizable":true}.');
+// Every allowlisted key, together, passes.
+const EVERY_KEY_YML = edited(PROJECT_YML,
+  OPTIONS_LINE, `${OPTIONS_LINE}  deploymentTarget:\n    iOS: "27.0"\n    watchOS: "27.0"\n  developmentLanguage: en\n  knownRegions: [en, fr]\n  createIntermediateGroups: true\nconfigs:\n  Debug: debug\n  Release: release\n`,
+  'targets:\n', 'settings:\n  base:\n    SWIFT_VERSION: "6.0"\n  configs:\n    Release:\n      SWIFT_COMPILATION_MODE: wholemodule\ntargets:\n',
+  '    platform: auto\n', '    platform: auto\n    deploymentTarget: "27.0"\n',
+  '      - package: EnginePkg\n      - target: Watch\n', '      - package: EnginePkg\n        product: Engine\n      - target: Watch\n        embed: true\n        destinationFilters: [iOS]\n',
+  APP_SDK, `${APP_SDK}      - sdk: libz.tbd\n`,
+  TV_HEAD, `${TV_HEAD}    settings:\n      base:\n        SWIFT_VERSION: "6.0"\n      configs:\n        Debug:\n          SWIFT_COMPILATION_MODE: singlefile\n    postBuildScripts:\n      - name: Copy\n        script: cp a b\n        basedOnDependencyAnalysis: false\n        inputFiles: [a]\n        outputFiles: [b]\n`);
+assertPass('every allowlisted project.yml key', ymlFixture(`${EVERY_KEY_YML}${SCHEMES}`), ['Apple required-reason API check passed']);
+// Paths are compared with their exact case: macOS volumes usually ignore
+// case and Linux CI does not, so an optional path in the wrong case would
+// otherwise be skipped on one and scanned on the other.
+const WATCH_SOURCES = '      - Platforms/watchOS\n';
+const caseFix = 'differs only in letter case from apps/apple/Platforms/watchOS on disk';
+assertFail('optional sources path in the wrong case', ymlFixture(edited(PROJECT_YML, WATCH_SOURCES, '      - path: Platforms/WatchOS\n        optional: true\n')),
+  `Watch: sources path Platforms/WatchOS ${caseFix}`);
+assertFail('sources path in the wrong case', ymlFixture(edited(PROJECT_YML, WATCH_SOURCES, '      - platforms/watchOS\n')),
+  'Watch: sources path platforms/watchOS differs only in letter case from apps/apple/Platforms on disk');
+assertFail('package path in the wrong case', ymlFixture(edited(PROJECT_YML, '    path: ../../packages/engine-swift\n', '    path: ../../packages/Engine-swift\n')),
+  'project.yml package EnginePkg path ../../packages/Engine-swift differs only in letter case from packages/engine-swift on disk');
+assertPass('missing optional sources path', ymlFixture(edited(PROJECT_YML, WATCH_SOURCES, `${WATCH_SOURCES}      - path: Platforms/watchOS/Generated\n        optional: true\n`)));
 
 if (failures !== 0) {
   console.error(`required-reasons-test: failed with ${failures} failure(s).`);

@@ -173,16 +173,91 @@ const SOURCE_TYPES = new Set(['file', 'group', 'folder']);
 const SOURCE_BUILD_PHASES = new Set(['sources', 'resources', 'headers', 'none']);
 // XcodeGen dependency kinds; a dependency names exactly one.
 const DEPENDENCY_KINDS = ['target', 'framework', 'carthage', 'sdk', 'package', 'bundle'];
-// XcodeGen target keys that cannot add compiled code. Anything else on a
-// shipped target (preBuildScripts, postCompileScripts, buildRules,
-// buildToolPlugins, scheme pre-actions, legacy, configFiles, ...) fails until
-// the checker models it.
-const KNOWN_TARGET_KEYS = new Set([
-  'type', 'platform', 'supportedDestinations', 'deploymentTarget', 'sources', 'dependencies', 'settings',
-  'info', 'entitlements', 'attributes', 'postBuildScripts', 'templates', 'templateAttributes',
-  'transitivelyLinkDependencies', 'directlyEmbedCarthageDependencies', 'requiresObjCLinking',
-  'onlyCopyFilesOnInstall', 'putResourcesBeforeSourcesBuildPhase',
-]);
+// project.yml allowlist: every key the checker accepts, with the shape its
+// value may take. ANY means the value is inert for code and link inputs, or
+// is modelled where the checker reads it; 'string' must be a string; { keys }
+// is a mapping whose keys must be listed; { values } is a mapping with any
+// keys whose values have the given shape; { items } is a list. The keys are
+// exactly those apps/apple/project.yml uses, plus the sdk dependency, which
+// is modelled as a bare SDK framework or stub name. Any other key fails with
+// its file:line, because XcodeGen keys such as include, projectReferences,
+// options.preGenCommand, targetTemplates and templates, aggregateTargets,
+// fileGroups, localPackages, configFiles, settingGroups and settings groups,
+// preBuildScripts, postCompileScripts, buildRules, buildToolPlugins, a
+// target scheme and scheme pre- and post-actions can add code, link inputs
+// or bundled files the checker does not scan. When the real project.yml
+// gains a key, the check fails; confirm the key is inert (or model it) and
+// add it here.
+const ANY = 'any';
+const SETTINGS_SHAPE = {
+  keys: {
+    base: { values: ANY }, // build settings, checked by checkBuildSettings
+    configs: { values: { values: ANY } }, // per-configuration build settings, also checked
+  },
+};
+const TARGET_SHAPE = {
+  keys: {
+    type: ANY, // must be a shipped or test target type (main)
+    platform: ANY, // must be one platform name (main)
+    supportedDestinations: ANY, // the destinations that build the same sources
+    deploymentTarget: ANY, // the minimum OS version
+    sources: ANY, // each entry is modelled by resolveTarget
+    dependencies: {
+      items: {
+        keys: {
+          target: ANY, // modelled by resolveTarget
+          package: ANY, // modelled by resolveTarget and resolvePackage
+          sdk: ANY, // modelled by resolveTarget
+          product: ANY, // picks a library product of a package whose Sources are all scanned
+          embed: ANY, // copies a target's product, which is checked as its own target
+          destinationFilters: ANY, // narrows the platforms that link the dependency
+        },
+      },
+    },
+    settings: SETTINGS_SHAPE,
+    // Post-build scripts run after the compile, link and copy phases; their
+    // text is not inspected (see the evidence doc's limitations).
+    postBuildScripts: {
+      items: {
+        keys: { name: ANY, script: 'string', basedOnDependencyAnalysis: ANY, inputFiles: ANY, outputFiles: ANY },
+      },
+    },
+  },
+};
+const PROJECT_SHAPE = {
+  keys: {
+    name: ANY, // the project name
+    options: {
+      keys: {
+        bundleIdPrefix: ANY, // bundle identifier prefix
+        deploymentTarget: ANY, // minimum OS versions
+        developmentLanguage: ANY, // the development region
+        knownRegions: ANY, // localisations
+        createIntermediateGroups: ANY, // navigator groups only
+      },
+    },
+    configs: { values: ANY }, // configuration names and their debug or release presets
+    packages: ANY, // each linked package is modelled by resolvePackage
+    settings: SETTINGS_SHAPE,
+    targets: { values: TARGET_SHAPE },
+    // Which targets each scheme builds and tests, test coverage and test
+    // plans; build products come from the targets themselves.
+    schemes: {
+      values: {
+        keys: {
+          build: { keys: { targets: { values: ANY } } },
+          test: {
+            keys: {
+              gatherCoverageData: ANY,
+              testPlans: { items: { keys: { path: ANY, defaultPlan: ANY } } },
+              targets: { items: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 // Build settings that would compile, import or link code outside the scanned
 // Swift files. OTHER_SWIFT_FLAGS may hold only $(inherited) and -D conditions.
 const CODE_BUILD_SETTING = /^(?:SWIFT_OBJC_BRIDGING_HEADER|GCC_PREFIX_HEADER|OTHER_LDFLAGS|OTHER_LIBTOOLFLAGS|SWIFT_INCLUDE_PATHS|(?:USER_|SYSTEM_)?HEADER_SEARCH_PATHS|LIBRARY_SEARCH_PATHS|(?:SYSTEM_)?FRAMEWORK_SEARCH_PATHS|MODULEMAP_FILE)$/;
@@ -237,6 +312,12 @@ function yamlNumber(text) {
   if (/^0[0-7]+$/.test(body)) return sign * parseInt(body.slice(1), 8);
   return sign * Number(body);
 }
+
+// The line of each key in every parsed mapping, so project.yml messages can
+// name file:line.
+const yamlKeyLines = new WeakMap();
+const keyLine = (mapping, key, fallback = 0) => yamlKeyLines.get(mapping)?.get(key) ?? fallback;
+const specAt = (line) => `${display(projectYmlPath)}:${line}`;
 
 function parseYamlSubset(text, label) {
   const syntaxError = (lineIndex, message) => {
@@ -453,10 +534,13 @@ function parseYamlSubset(text, label) {
 
   function mapping(indent) {
     const result = Object.create(null);
+    const keyLines = new Map();
+    yamlKeyLines.set(result, keyLines);
     for (let next = peek(); next && next.indent === indent && !isItem(next.content); next = peek()) {
       const parsed = entry(next.content, next.lineIndex);
       if (!parsed) syntaxError(next.lineIndex, `expected "key: value", found: ${next.content}`);
       if (Object.hasOwn(result, parsed.key)) syntaxError(next.lineIndex, `duplicate key ${JSON.stringify(parsed.key)}`);
+      keyLines.set(parsed.key, next.lineIndex + 1);
       index += 1;
       const value = inlineValue(parsed.rest, next.lineIndex, parsed.key);
       if (value.block) {
@@ -963,6 +1047,35 @@ function symlinkOnPath(absolutePath) {
   return false;
 }
 
+// macOS volumes usually ignore letter case and Linux CI's do not, so a spec
+// path whose case differs from the disk would resolve in Xcode but be missing
+// on CI (and silently skipped there when optional), or the reverse. Each
+// component below the repository root is compared exactly with its
+// directory's listing, and a component that matches only when case is
+// ignored is returned, so both systems fail the same way. The fold is broad
+// (Unicode upper then lower case), so it errs towards failing.
+const foldCase = (name) => name.toUpperCase().toLowerCase();
+function caseMismatch(absolutePath) {
+  const fromRoot = relative(root, absolutePath);
+  if (fromRoot === '..' || fromRoot.startsWith(`..${sep}`)) return null;
+  let directory = root;
+  for (const part of fromRoot.split(sep).filter(Boolean)) {
+    let names;
+    try {
+      names = readdirSync(directory);
+    } catch {
+      return null; // a missing or non-directory parent is left to the caller's checks
+    }
+    if (!names.includes(part)) {
+      const actual = names.find((name) => foldCase(name) === foldCase(part));
+      return actual === undefined ? null : join(directory, actual);
+    }
+    directory = join(directory, part);
+  }
+  return null;
+}
+const caseMessage = (what, actual) => `${what} differs only in letter case from ${display(actual)} on disk; macOS volumes usually ignore case and Linux CI does not, so Xcode and the checker could read different files. Use the exact case.`;
+
 // Asset, icon and string catalogues are compiled by actool or the string
 // catalogue compiler (SwiftPM processes them as resources), never as Swift
 // sources and never copied as the bundle's manifest, so their contents count
@@ -1003,7 +1116,7 @@ function inWrapperDirectory(entryPath, file) {
   return relative(dirname(entryPath), file).split(sep).slice(0, -1).some((part) => part.lastIndexOf('.') > 0);
 }
 
-function resolveTarget(name, target, packages) {
+function resolveTarget(name, target, packages, targets, shipped) {
   const swiftFiles = new Set();
   const nonSwiftFiles = new Set();
   const binaryFiles = new Set();
@@ -1067,6 +1180,11 @@ function resolveTarget(name, target, packages) {
     const copiesToRoot = !reference && (buildPhase === 'default' || buildPhase === 'resources');
     const absolutePath = normalize(join(appleDir, entry.path));
     if (symlinkOnPath(absolutePath)) continue;
+    const differentCase = caseMismatch(absolutePath);
+    if (differentCase) {
+      fail(caseMessage(`${name}: sources path ${entry.path}`, differentCase));
+      continue;
+    }
     if (!existsSync(absolutePath)) {
       // A missing source path would hide compiled Swift; missing resource files cannot.
       // XcodeGen reads optional as a YAML boolean (true, yes, on, ...); a
@@ -1115,10 +1233,23 @@ function resolveTarget(name, target, packages) {
         packageNames.push(dependency.package);
       }
     } else if (kind === 'target') {
-      // Embedded app targets are separate bundles, checked with their own manifest.
-      continue;
+      // Embedded app targets are separate bundles, checked with their own
+      // manifest. XcodeGen reads Project/Target as a target of another
+      // project, which the checker cannot see, and a shipped target that
+      // embeds or links a test bundle would ship code that is never checked.
+      const dependsOn = dependency.target;
+      if (!Object.hasOwn(targets, dependsOn)) {
+        fail(`${specAt(keyLine(dependency, 'target'))}: ${name} depends on target ${dependsOn}, which project.yml does not define; cross-project (Project/Target) dependencies are not modelled, so extend scripts/check-apple-required-reasons.mjs.`);
+      } else if (shipped && !SHIPPED_TARGET_TYPE.test(String(targets[dependsOn]?.type ?? ''))) {
+        fail(`${specAt(keyLine(dependency, 'target'))}: ${name} depends on ${dependsOn}, which is not a shipped target, so its code would ship unchecked; extend scripts/check-apple-required-reasons.mjs.`);
+      }
     } else if (kind === 'sdk') {
-      continue; // System frameworks: Apple's own use is not declared by the app.
+      // System frameworks: Apple's own use is not declared by the app.
+      // XcodeGen looks up a bare .framework or .tbd name in the SDK; a name
+      // with a slash is a path from the SDK root that could leave it.
+      if (!/^[A-Za-z0-9][A-Za-z0-9_+.-]*\.(?:framework|tbd)$/.test(dependency.sdk)) {
+        fail(`${specAt(keyLine(dependency, 'sdk'))}: ${name} sdk dependency ${dependency.sdk} must be a bare .framework or .tbd name from the SDK; paths and other files are not modelled, so extend scripts/check-apple-required-reasons.mjs.`);
+      }
     } else {
       fail(`${name}: unsupported dependency ${JSON.stringify(dependency)}; a dependency must name exactly one target, package or sdk as a string, and binary or third-party code needs its own required-reason review.`);
     }
@@ -1254,6 +1385,11 @@ function resolvePackage(name, spec) {
   const sourcesDir = join(packageDir, 'Sources');
   if (symlinkOnPath(sourcesDir)) return files;
   const manifestPath = join(packageDir, 'Package.swift');
+  const packageCase = caseMismatch(manifestPath);
+  if (packageCase) {
+    fail(caseMessage(`project.yml package ${name} path ${packagePath}`, packageCase));
+    return files;
+  }
   if (!existsSync(manifestPath)) {
     fail(`project.yml package ${name}: ${display(manifestPath)} does not exist.`);
     return files;
@@ -1442,6 +1578,38 @@ function checkBuildSettings(label, settings) {
   }
 }
 
+// Checks a parsed project.yml value against the allowlist shapes above.
+function checkShape(value, shape, path, line) {
+  if (shape === ANY) return;
+  const where = path || 'the top level';
+  if (shape === 'string') {
+    if (typeof value !== 'string') fail(`${specAt(line)}: ${where} must be a string, found ${JSON.stringify(value)}.`);
+    return;
+  }
+  if (shape.items) {
+    if (!Array.isArray(value)) {
+      fail(`${specAt(line)}: ${where} must be a list.`);
+      return;
+    }
+    value.forEach((item, index) => checkShape(item, shape.items, `${path}[${index}]`, line));
+    return;
+  }
+  if (!isDict(value)) {
+    fail(`${specAt(line)}: ${where} must be a mapping.`);
+    return;
+  }
+  for (const [key, child] of Object.entries(value)) {
+    const childPath = path ? `${path}.${key}` : key;
+    const childLine = keyLine(value, key, line);
+    const childShape = shape.values ?? (Object.hasOwn(shape.keys, key) ? shape.keys[key] : undefined);
+    if (childShape === undefined) {
+      fail(`${specAt(childLine)}: key ${childPath} is not in the checker's project.yml allowlist; XcodeGen keys outside it (scripts, templates, xcconfig files, plugins, scheme actions, setting groups, project references and others) can add code, link inputs or bundled files it does not scan. Confirm the key is inert or model it, then add it to the allowlist in scripts/check-apple-required-reasons.mjs.`);
+      continue;
+    }
+    checkShape(child, childShape, childPath, childLine);
+  }
+}
+
 function main() {
   let project;
   try {
@@ -1454,15 +1622,8 @@ function main() {
     fail('project.yml: the top level must be a mapping.');
     return;
   }
-  for (const unsupported of ['include', 'targetTemplates', 'settingGroups', 'configFiles']) {
-    if (project[unsupported] !== undefined) {
-      fail(`project.yml uses top-level ${unsupported}; extend scripts/check-apple-required-reasons.mjs.`);
-    }
-  }
+  checkShape(project, PROJECT_SHAPE, '', 1);
   checkBuildSettings('project.yml settings', project.settings);
-  if (JSON.stringify(project.schemes ?? {}).includes('"preActions"')) {
-    fail('project.yml schemes use preActions, which can generate code before compiling; extend scripts/check-apple-required-reasons.mjs.');
-  }
   // Parsed mappings have no prototype, so names such as toString or
   // __proto__ are only ever the spec's own keys.
   const packages = project.packages ?? Object.create(null);
@@ -1477,9 +1638,6 @@ function main() {
   const claimed = new Set();
   const results = [];
   for (const [name, target] of Object.entries(targets)) {
-    if (target?.templates !== undefined) {
-      fail(`${name}: target templates are not supported; extend scripts/check-apple-required-reasons.mjs.`);
-    }
     const type = String(target?.type ?? '');
     const shipped = SHIPPED_TARGET_TYPE.test(type);
     if (!shipped && !TEST_TARGET_TYPES.has(type)) {
@@ -1492,13 +1650,9 @@ function main() {
       fail(`${name}: platform must be one platform name, found ${JSON.stringify(target.platform ?? null)}; multi-platform targets are not modelled, so extend scripts/check-apple-required-reasons.mjs.`);
       continue;
     }
-    const resolved = resolveTarget(name, target, packages);
+    const resolved = resolveTarget(name, target, packages, targets, shipped);
     for (const file of resolved.swiftFiles) claimed.add(file);
     if (!shipped) continue;
-    const unknownTargetKeys = Object.keys(target).filter((key) => !KNOWN_TARGET_KEYS.has(key));
-    if (unknownTargetKeys.length > 0) {
-      fail(`${name}: uses XcodeGen target keys the checker does not model (${unknownTargetKeys.join(', ')}); build scripts, rules, plugins and xcconfig files can add code it does not scan, so extend scripts/check-apple-required-reasons.mjs.`);
-    }
     checkBuildSettings(name, target.settings);
     for (const file of resolved.nonSwiftFiles) fail(`${name}: ${display(file)} is not Swift; ${NON_SWIFT_MESSAGE}.`);
     for (const file of resolved.binaryFiles) fail(`${name}: ${display(file)} is prebuilt code; binary or third-party code needs its own required-reason review.`);
