@@ -25,10 +25,10 @@ Current Apple builds can only reach internal TestFlight: fastlane/ExportOptions.
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 An App Store distribution export (method app-store-connect without testFlightInternalTestingOnly) exists alongside the internal-only one, and an export-only run through xbuild produces signed artifacts for iOS with the embedded watch app, macOS, tvOS and visionOS without uploading
-- [ ] #2 Xcode Cloud ci_scripts (next to the Xcode project) run the Apple network and iCloud guards before archiving and never build DebugCloudKit, and the docs make Xcode Cloud build numbers higher than the latest uploaded timestamp build; shellcheck and a local dry run of the scripts pass
-- [ ] #3 docs/release documents the Xcode Cloud workflows (archive per platform, internal and external TestFlight, App Store submission), the owner-only App Store Connect setup steps, and the TASK-1.7 and TASK-85 gates; AGENTS.md and docs/release/testflight.md are updated to match
-- [ ] #4 Fastlane remains a working fallback until Xcode Cloud has archived all four platforms once, and the docs say when to retire it
+- [x] #1 An App Store distribution export (method app-store-connect without testFlightInternalTestingOnly) exists alongside the internal-only one, and an export-only run through xbuild produces signed artifacts for iOS with the embedded watch app, macOS, tvOS and visionOS without uploading
+- [x] #2 Xcode Cloud ci_scripts (next to the Xcode project) run the Apple network and iCloud guards before archiving and never build DebugCloudKit, and the docs make Xcode Cloud build numbers higher than the latest uploaded timestamp build; shellcheck and a local dry run of the scripts pass
+- [x] #3 docs/release documents the Xcode Cloud workflows (archive per platform, internal and external TestFlight, App Store submission), the owner-only App Store Connect setup steps, and the TASK-1.7 and TASK-85 gates; AGENTS.md and docs/release/testflight.md are updated to match
+- [x] #4 Fastlane remains a working fallback until Xcode Cloud has archived all four platforms once, and the docs say when to retire it
 <!-- AC:END -->
 
 ## Implementation Plan
