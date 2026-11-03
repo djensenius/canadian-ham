@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: 2026-10-02 08:06
-updated_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:54:00Z'
 labels:
   - apple
   - tvos
@@ -87,6 +87,8 @@ Skipped iOS/macOS/visionOS test suites because changed app/helper source and tes
 AC1/AC2 remain unchecked: structural verification done; listening check pending owner. Follow the exact EN/FR tvOS VoiceOver steps in docs/accessibility.md; verify title-only heading speech and an English voice for every attribution/disclaimer legal paragraph before checking those criteria. TASK-29 intentionally remains In Progress pending that human verification and review.
 
 Review notes applied (coordinator): legal paragraphs tagged en-CA via BankLanguage.english.accessibilityLanguageCode (matches the project's convention); the UI Header check is commented as evidence only (the baseline showed no Header either); listening steps now say a physical Apple TV is required (VoiceOver isn't in the tvOS Simulator), add the Back triple-click shortcut and the correct Language menu path, and give the expected speech plus what each outcome means. AC3 is unticked: the change was made pre-emptively (tvOS suite 26/26); whether VoiceOver honours the inline heading level is an untested bet that the owner's listening check settles. If no heading is spoken anywhere, the coordinator decides whether to add a separate heading element.
+
+TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 3: Apple TV; AC#1-#2 VoiceOver listening check). The guide restates and links these criteria without changing them.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary

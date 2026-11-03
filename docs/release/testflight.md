@@ -1,6 +1,6 @@
 # TestFlight runbook
 
-Status: internal TestFlight setup for Backlog `task-1.10`. Do not invite external testers or submit public/App Store builds until `task-1.7` and the release gates in [`release-checklist.md`](release-checklist.md) allow it.
+Status: internal TestFlight setup for Backlog `task-1.10`. Do not invite external testers or submit public/App Store builds until `task-1.7` and the release gates in [`release-checklist.md`](release-checklist.md) allow it. App Store distribution exports, Xcode Cloud setup and build-number continuity are in [`distribution.md`](distribution.md); those uploads are owner-gated and also wait for `task-85`.
 
 ## Scope and identifiers
 
@@ -91,6 +91,8 @@ fastlane appletvos beta # CanadianHamTV, generic/platform=tvOS, exports .ipa
 fastlane xros beta      # CanadianHamVision, generic/platform=visionOS, exports .ipa
 ```
 
+Under build-number option (b) in [distribution.md](distribution.md#owner-decision-before-the-first-xcode-cloud-build), from the merge that raises `MARKETING_VERSION` onward (including that merge), run only `fastlane mac beta` after merges. iOS, tvOS and visionOS then ship from Xcode Cloud; a Fastlane timestamp build at the new version would block their small Xcode Cloud build numbers.
+
 Do not call `gym`, `build_app`, or `xcodebuild` directly for these uploads. The Fastfile uses only `xbuild` for archive/export. Never wrap fastlane in `lockf`: each inner `xbuild` invocation owns the shared build lock; an outer lock can deadlock it. If another build owns the lock, wait; do not kill it.
 
 ### Archive/export without uploading
@@ -103,11 +105,17 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CH
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CHECK=1 fastlane mac beta export_only:true # no watch payload
 ```
 
-`export_only` accepts true/false (also yes/no, 1/0, any case). Any other value or an unknown option name stops the lane before archiving, so a typo never turns into an upload. `pnpm test:fastlane` runs the lane safety tests (`scripts/test-fastlane-export-only.rb`); it needs Ruby 3.0 or later (the mise Ruby fastlane uses), not macOS system Ruby 2.6.
+`export_only` accepts true/false (also yes/no, 1/0, any case). Any other value or an unknown option name stops the lane before archiving, so a typo never turns into an upload. `pnpm test:fastlane` runs the lane safety tests (`scripts/test-fastlane-export-only.rb`); it needs Ruby 3.0 or later (the mise Ruby fastlane uses), not macOS system Ruby 2.6. It also needs macOS `plutil`, so GitHub CI doesn't run it; run it locally (see [release-tooling checks](distribution.md#release-tooling-checks-github-ci-and-local)).
 
 This uses the same Release signing, dedicated keychain, API key and internal-only
 export options as a normal beta run. Omitting the option keeps upload behaviour
 unchanged.
+
+Add `distribution:true` (only together with `export_only:true`) to check an App
+Store distribution export instead: it uses `fastlane/ExportOptions-AppStore.plist`,
+leaves out the internal-only official reference sheet, writes under
+`fastlane/archives/appstore/` and `fastlane/builds/appstore/`, and never uploads.
+See [distribution.md](distribution.md#fastlane-distribution-export-fallback-and-local-check).
 
 ### watchOS beta entry path and installation
 
@@ -221,6 +229,7 @@ The Fastfile points fastlane's own Xcode lookup at `/Applications/Xcode.app` bec
 - `apps/apple/project.yml` sets `MARKETING_VERSION` to `1.0.0` and generated Info.plists read `CFBundleShortVersionString` from `$(MARKETING_VERSION)` and `CFBundleVersion` from `$(CURRENT_PROJECT_VERSION)`.
 - The beta lanes override `CURRENT_PROJECT_VERSION` at archive time with a timestamp build number in `%Y%m%d%H%M` format, matching the Telephone Booth convention. The override applies to the embedded watch too: its `CFBundleVersion` must equal the iOS container's in the exported IPA; marketing versions must match as well.
 - For a version change, update `MARKETING_VERSION` in `apps/apple/project.yml`, regenerate the Xcode project twice with XcodeGen, and verify the generated project is stable before archiving.
+- Xcode Cloud numbers builds with its own incrementing `CI_BUILD_NUMBER`. After every Fastlane upload, update that platform's line in `apps/apple/ci_scripts/build-number-floors` in a PR right after the upload, before the next Xcode Cloud archive. If Xcode Cloud uses one sequence for every platform, also raise its Next Build Number. Build numbers must never go backwards for a version, or ever for the Mac app. If App Store Connect refuses a timestamp-sized Next Build Number, iOS, tvOS and visionOS move to a new marketing version and the Mac app stays on Fastlane for now; see [distribution.md](distribution.md#build-numbers).
 
 ## Keeping DebugCloudKit out of uploads
 
@@ -256,10 +265,10 @@ Do not switch to `DebugCloudKit` or disable Release signing for uploads.
 
 ### Internal-only builds
 
-`fastlane/ExportOptions.plist` sets `testFlightInternalTestingOnly`, so App Store Connect only allows these builds for internal testing. Builds uploaded before that flag was added (2026-10-10, 13:06–13:16) aren't flagged; no external groups exist, so they stay internal. Remove the flag only as part of task-1.7.
+`fastlane/ExportOptions.plist` sets `testFlightInternalTestingOnly`, so App Store Connect only allows these builds for internal testing. Builds uploaded before that flag was added (2026-10-10, 13:06–13:16) aren't flagged; no external groups exist, so they stay internal. Keep the flag in this file; distribution builds use the separate `fastlane/ExportOptions-AppStore.plist` (export-only until task-1.7 and task-85) or an Xcode Cloud "TestFlight and App Store" workflow, as described in [distribution.md](distribution.md).
 
 ## Internal-only official reference sheet
 
 Owner decision 2026-10-12 (2A) permits the official English Basic exam reference sheet in **internal team-member TestFlight builds only**, pending ISED permission. All four `beta` lanes explicitly add `OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET` to their Release archive command. The iOS/iPadOS/macOS app copies the rendered pages and accessible text offline; tvOS/visionOS/watchOS have no official reference-sheet tool and do not bundle these assets. The watch target has separate Basic-bank/explanations-only study-resource membership even when the container's beta archive opts in; inspect the exported payload to confirm it stays that way. No upload is needed to enable the study fallback.
 
-Default Release builds do not opt in. A future App Store/public lane **must not copy this override** until permission covers the sheet; check that `official-basic-exam/` is absent from the public app bundle. For private web previews only, `OFFICIAL_REFERENCE_SHEET=YES pnpm build:web` opts in; default production builds exclude it. Never publicly deploy the preview. See [content licensing](../content-licensing.md#official-sheet-implementation-gate-task-444) and the [release checklist](release-checklist.md#official-reference-sheet-build-gate-task-444).
+Default Release builds do not opt in, and neither do `distribution:true` exports or Xcode Cloud archives ([distribution.md](distribution.md)). A future App Store/public lane **must not copy this override** until permission covers the sheet; check that `official-basic-exam/` is absent from the public app bundle. For private web previews only, `OFFICIAL_REFERENCE_SHEET=YES pnpm build:web` opts in; default production builds exclude it. Never publicly deploy the preview. See [content licensing](../content-licensing.md#official-sheet-implementation-gate-task-444) and the [release checklist](release-checklist.md#official-reference-sheet-build-gate-task-444).

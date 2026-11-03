@@ -6,6 +6,8 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 
 ## Gates
 
+Owner-only device checks and decisions (Apple Watch, Apple TV, iPhone Duo, signed-device iCloud, permission and visibility) are indexed in [owner gates](owner-gates.md).
+
 - [ ] Confirm the repository is still private before release work starts; public exposure remains blocked by [`docs/content-licensing.md` public-release gate](../content-licensing.md#public-release-gate).
 - [ ] Complete `task-1.1`: record the ISED written permission reference number, date, and exact scope in [`docs/content-licensing.md`](../content-licensing.md), including explicit permission to bundle verbatim EN/FR question text as web and Apple app data.
 - [ ] Confirm the permission scope covers every release artifact: generated question JSON, bundled Apple resources, web static assets/PWA cache, and any release notes or About text that mention ISED material.
@@ -72,6 +74,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 ## Store submission
 
 - [ ] Do not submit to TestFlight external testing or App Store until [`docs/content-licensing.md` public-release gate](../content-licensing.md#public-release-gate), `task-1.1`, `task-1.2`, `task-1.4`, and `task-1.6` are complete.
+- [ ] Confirm `task-85` (required-reason API declarations) is Done, then build distribution archives as described in [App Store distribution and Xcode Cloud](distribution.md): Release only, never `DebugCloudKit`, a valid build number (above every earlier upload of that version, and of any version for macOS; see [Build numbers](distribution.md#build-numbers)), and no internal-only flag or official reference sheet.
 - [ ] Use [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md) to fill App Store Connect privacy answers and confirm **Data Not Collected** is still accurate on the release commit.
 - [ ] Confirm Apple application targets include `PrivacyInfo.xcprivacy` (shared by the original targets; watch-specific for `CanadianHamWatch`) and no target links third-party runtime SDKs, using the `plutil -p` and `git grep` checks in [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md).
 - [ ] Confirm app metadata, screenshots, About/settings text, release notes, attribution, and disclaimer match the recorded ISED permission scope and do not claim affiliation, sponsorship, or endorsement.
