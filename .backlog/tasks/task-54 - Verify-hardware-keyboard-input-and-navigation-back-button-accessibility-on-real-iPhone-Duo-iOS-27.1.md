@@ -3,10 +3,11 @@ id: TASK-54
 title: >-
   Verify hardware keyboard input and navigation back-button accessibility on
   real iPhone Duo / iOS 27.1
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@coordinator'
 created_date: 2026-10-18 01:53
-updated_date: '2026-11-03T02:54:00Z'
+updated_date: '2026-11-03T03:49:00Z'
 labels:
   - apple
   - owner-gate
@@ -47,4 +48,6 @@ Coordinator 2026-11-03 (TASK-83 tracking pass): removed the TASK-15 dependency. 
 Correction (coordinator 2026-11-03): AC#5-7 test the hinge peek from TASK-15 part 2 (PR #292), not only part 1 (PR #286). Both merged on 2026-10-18, so removing the dependency still holds.
 
 TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 4: iPhone Duo; AC#1-#7 steps and expected results). The guide restates and links these criteria without changing them.
+
+Coordinator 2026-11-03: re-running the four AC #1 UI tests on the iPhone Duo simulator with the newer iOS 27.2 runtime (iPhone19-4 build 24B91016s) on branch task-54-duo-simulator-rerun; real-device AC #2 and #4-#7 stay owner-gated.
 <!-- SECTION:NOTES:END -->
