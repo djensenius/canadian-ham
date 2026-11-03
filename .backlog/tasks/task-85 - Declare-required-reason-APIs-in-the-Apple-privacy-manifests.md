@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T07:18:00Z'
+updated_date: '2026-11-03T08:01:00Z'
 labels:
   - apple
   - privacy
@@ -146,6 +146,12 @@ PR #1064 round 7b (afb8718b8498172bae173f81811678f577db4a9e): replaced the proje
 - Sources and package paths are compared component by component with on-disk names, so a wrong-case (optional) path fails on both macOS and Linux.
 - Docs: allowlist table with a justification per key, maintenance rule, pruning, bypass and Limitations rows, and a round 7b Evidence row.
 - Checks: self-test passes; 41/41 mutants killed. Real-tree --verbose output is byte-identical (about 0.4-0.5 s). pnpm typecheck, pnpm test (283 passed), check:links, check:shell, git diff --check and the test guard all pass.
+
+PR #1064 round 7c (reviewer REQUEST CHANGES on 9ec9afb6..96ac971b), commit 8fefd3027232d2929218f0715b91499d35d8a6b9:
+- Build settings in the project and shipped targets (base, every configs entry, [sdk=]/[arch=] variants matched on the base name) are now an exact-name allowlist of the 37 names the real project.yml uses, each with a value rule. INFOPLIST_FILE and CODE_SIGN_ENTITLEMENTS must be relative paths to existing regular .plist or .entitlements files with no link and the exact case; OTHER_SWIFT_FLAGS keeps the -D-only rule. Unknown settings and unmodelled key forms fail with file:line. Test-target settings stay unchecked (BUNDLE_LOADER and TEST_HOST appear only on CanadianHamTests).
+- Sweep: Package.swift labels, members and strings are allowlisted (the regex denylist is removed); shipped and package sources may hold only Swift and five inert data types (.json, .strings, .xcstrings, .entitlements, .xcprivacy) in every phase; the shipped target type is application only; sources and package paths must fit the modelled relative form; a missing non-optional path fails in every phase.
+- Doc: build-setting allowlist table, corrected post-build script wording (after link but before signing; reviewed by hand, binary inspection cross-checks), bypass rows, Limitations (working tree vs xcodeproj, clean-checkout releases) and a round 7c Evidence row.
+- Checks: self-test passed; real-tree --verbose byte-identical to 96ac971b (0.38 s); every allowlist entry, label, member and data type is needed by the real tree; 89/89 mutations killed (no-op control survives); pnpm typecheck, pnpm test (283 web tests plus packages), check:links, check:shell, git diff --check and the test guard passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
@@ -157,22 +163,23 @@ Declares Apple required-reason API usage for every shipped target and enforces i
 - docs/release/privacy-label-evidence.md records:
   - the per-target rationale against Apple's current required-reason list;
   - how scanning works and what fails;
-  - the project.yml allowlist, with a justification for each key and the maintenance rule;
+  - the project.yml key allowlist and the build-setting allowlist, with a justification and value rule for each entry and the maintenance rule;
   - a table of bypass classes, each covered, failing closed or listed as a limitation;
   - tables of every pruning point and every native-code format, with the formats left out and why;
   - verification that the walk matches the committed project and SwiftPM.
 - scripts/check-apple-required-reasons.mjs runs in CI with its self-test. It fails when shipped target or linked package sources use an undeclared required-reason spelling. It also fails closed on:
-  - C-family, assembly, module-map, prefix-header or LLVM IR sources, and prebuilt code (Mach-O, universal 32/64, ar and thin archives, LLVM bitcode, Swift modules and interfaces, text stubs, code bundles), including inside folder references, buildPhase: none entries, excluded paths and resource catalogues;
-  - symbolic links, special files, missing non-optional source or folder-reference paths, and sources or package paths that differ from the disk only in letter case;
-  - XcodeGen or SwiftPM constructs that can add unscanned code (header and linker settings, non -D flags, unmodelled source types, build phases or exclude globs, plugins, macros, `..` package paths);
-  - project.yml keys outside an allowlist of the keys the real file uses, reported with file:line (scripts other than post-build, templates, xcconfig files, scheme actions, setting groups, project references and others); cross-project, undefined or test-target dependencies of shipped targets; and sdk paths;
+  - file types outside an allowlist of Swift and five inert data types (so C-family, assembly, module maps, Metal, lex/yacc/MIG, Interface Builder, Core Data and similar fail), and prebuilt code (Mach-O, universal 32/64, ar and thin archives, LLVM bitcode, Swift modules and interfaces, text stubs, code bundles), including inside folder references, buildPhase: none entries, excluded paths and resource catalogues;
+  - symbolic links, special files, missing non-optional sources paths in any phase, sources or package paths outside the modelled relative form, and paths that differ from the disk only in letter case;
+  - project and shipped-target build settings outside an exact-name allowlist of the 37 names the real file uses, or with a value outside the entry's rule (linker, compiler, search-path, tool-path and plugin settings all fail; OTHER_SWIFT_FLAGS may hold only -D conditions);
+  - project.yml keys outside an allowlist of the keys the real file uses, reported with file:line (scripts other than post-build, templates, xcconfig files, scheme actions, setting groups, project references and others); target types other than application; cross-project, undefined or test-target dependencies of shipped targets; and sdk paths;
+  - Package.swift labels, members and strings outside an allowlist of what the real manifests use (custom paths, resources, excludes, C and linker settings, unsafe flags, plugins, macros, binary or system targets, dynamic products, package dependencies);
   - project.yml outside a strict YAML subset (unmodelled escapes, duplicate or prototype-style keys, anchors, merge keys, document markers, multi-line scalars, include, ${VAR} outside scripts, $platform and multi-platform targets), and Package.swift outside a strict grammar (raw, escaped, interpolated or multi-line strings, #if, variables, helpers, .map, version-specific manifests, other source roots);
   - unknown targets, and targets without exactly one manifest copied to the bundle root;
   - manifests that track, have unknown or duplicate keys, use the wrong plist value types or padded codes, or fall outside the XML plist subset Xcode writes (strict typed parser).
 - Matching covers module-qualified, multi-line and backtick-escaped spellings, key paths, aliases, API-name string literals, the whole word for C names, Swift 6 regex literals and comments.
 - Release xbuild products for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests.
 
-Verification: the self-test passes, as does the checker on the real tree (same categories before and after each round). pnpm typecheck, pnpm test, check:links and the test guard pass. CI ran both required-reason steps green.
+Verification: the self-test passes, as does the checker on the real tree (same categories before and after each round). Every new check is mutation-tested. pnpm typecheck, pnpm test, check:links, check:shell and the test guard pass. CI ran both required-reason steps green.
 
-Owner follow-up: sign off on the AppleLanguages read under CA92.1 before App Store submission (noted on TASK-1.7).
+Owner follow-up: sign off on the AppleLanguages read under CA92.1 before App Store submission (noted on TASK-1.7). Post-build script text is reviewed by hand, with binary inspection as the cross-check.
 <!-- SECTION:FINAL_SUMMARY:END -->
