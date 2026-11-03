@@ -31,3 +31,9 @@ Only after the ISED permission is recorded and the release candidate pass is com
 - [ ] #3 The owner has approved making the repository public
 - [ ] #4 The repository visibility is public
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Coordinator 2026-11-03 (TASK-83 tracking pass): GitHub already reports djensenius/canadian-ham as public (isPrivate false), but TASK-1.1 still records the ISED permission as pending and TASK-1.8 (history purge) is not done. The owner needs to reconcile this: either record the permission and the decision to publish early, or return the repository to private until the gates pass. Agents must not change visibility.
+<!-- SECTION:NOTES:END -->
