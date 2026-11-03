@@ -1,7 +1,7 @@
 ---
 id: TASK-87
 title: Owner device-check guide for the remaining hardware gates
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:33:00Z'
