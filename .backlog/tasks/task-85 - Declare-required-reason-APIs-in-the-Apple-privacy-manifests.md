@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T03:03:00Z'
+updated_date: '2026-11-03T03:08:00Z'
 labels:
   - apple
   - privacy
@@ -73,4 +73,6 @@ Worker evidence (2026-11-03 UTC, commit ff7d7c50):
 - Watch unit test testIndependentOfflineBundle now asserts the exact SystemBootTime [35F9.1] entry. The watch scheme passed build-for-testing; the targeted test was not run because simulator boots were not allowed.
 - AC2 and AC4 are left unchecked until the project.yml change lands and TV/Vision are rebuilt and re-inspected on the branch.
 - AC3 is left unchecked until CI runs pnpm test:apple-required-reasons and pnpm check:apple-required-reasons.
+
+Doc drift follow-up (commit dc67a2ea, after coordinator b7877c4d): release-checklist.md required-reason item now points to the completed TASK-85 review (re-run pnpm check:apple-required-reasons and inspect bundled manifests on the release commit). privacy-label-evidence.md: dependency row lists all four local packages (CanadianHam links engine/content/morse/calculator; TV, Vision, Watch link engine/content/morse, verified in apps/apple/project.yml); recorded coordinator decision 2026-11-02 to keep CA92.1 for the app-domain AppleLanguages read, fallbacks retained; check row notes it passes on the branch since b7877c4d. Checker header now states the #if/string-literal limitation (already in the evidence doc). Checks: pnpm check:links -> 'Markdown relative links verified.'; pnpm check:apple-required-reasons -> passed (CanadianHam 53 files SystemBootTime [35F9.1], UserDefaults [CA92.1]; Watch 31 SystemBootTime [35F9.1]; TV 33 and Vision 32 UserDefaults [CA92.1]); pnpm test:apple-required-reasons -> 'passed self-test fixtures.'; git diff --check clean. No xbuild run (coordinator owns TV/Vision Release rebuild and watch test). AC2/AC3/AC4 left for the coordinator.
 <!-- SECTION:NOTES:END -->
