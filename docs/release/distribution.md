@@ -61,7 +61,7 @@ Every Fastlane upload so far is version 1.0.0, and all of them are above 2,147,4
 
 ### Floors file
 
-`apps/apple/ci_scripts/build-number-floors` records the highest Fastlane upload for each platform and marketing version, one `<platform> <version> <build>` line each (`ios` covers iPad and the embedded watch app). The current entries come from App Store Connect:
+`apps/apple/ci_scripts/build-number-floors` records the highest Fastlane upload for each platform and marketing version, one `<platform> <version> <build>` line each (`ios` covers iPad and the embedded watch app). Versions must be exactly `x.y.z` (three numbers without leading zeros, such as `1.0.0`) here and in `MARKETING_VERSION`, so an entry like `1.0` can't silently miss `1.0.0`. The current entries come from App Store Connect:
 
 | Platform | Version | Highest Fastlane upload |
 | --- | --- | --- |
@@ -74,7 +74,7 @@ Every Fastlane upload so far is version 1.0.0, and all of them are above 2,147,4
 
 - **macOS:** `CI_BUILD_NUMBER` isn't above the highest `macos` entry of any version.
 - **iOS, tvOS, visionOS:** `CI_BUILD_NUMBER` isn't above the entry for the version being built. A version with no entry has no Fastlane uploads, so small numbers pass.
-- The platform is missing or unknown, the version is missing, conflicting or not numeric, or the floors file is missing or malformed.
+- The platform is missing or unknown, the version is missing, conflicting or not in `x.y.z` form, or the floors file is missing or malformed (including any version not in `x.y.z` form).
 
 The check only stops mistakes early; App Store Connect still enforces its own rules.
 
@@ -84,10 +84,10 @@ The owner prefers Xcode Cloud. In every option below, Fastlane is only a tempora
 
 - **(a) One sequence for every platform.** Set Next Build Number to a plain integer above every floor, for example `202610271758`; Xcode Cloud then counts up by 1 from it. If App Store Connect accepts it, all four platforms continue at 1.0.0 from that number and nothing else changes.
 - **(b) App Store Connect refuses it (probably the 32-bit limit).** iOS, iPadOS, tvOS and visionOS ship a new marketing version, for example 1.0.1, starting from small Xcode Cloud numbers:
-  1. The coordinator raises `MARKETING_VERSION` in `apps/apple/project.yml` (all targets share it, including the watch app), regenerates the project and merges it in a pull request.
-  2. The owner leaves Next Build Number at a small value that App Store Connect accepts.
-  3. The Xcode Cloud workflows archive iOS, tvOS and visionOS only. Leave out the macOS archive action; the floor check fails it anyway (see (c)).
-  4. Once Xcode Cloud ships one of those platforms, stop uploading it with Fastlane. A Fastlane timestamp at the new version would put that version out of Xcode Cloud's reach.
+  1. The coordinator raises `MARKETING_VERSION` in `apps/apple/project.yml` to a new `x.y.z` (all targets share it, including the watch app), regenerates the project and merges it in a pull request.
+  2. **From that version-bump merge onward, the coordinator stops Fastlane uploads for iOS, tvOS and visionOS.** The post-merge internal TestFlight upload, including the one for the version-bump merge itself, runs only `fastlane mac beta`; the Mac app continues on Fastlane under (c). A single Fastlane timestamp build of iOS, tvOS or visionOS at the new version would sit above every small Xcode Cloud number for that version and block them.
+  3. The owner leaves Next Build Number at a small value that App Store Connect accepts.
+  4. The Xcode Cloud workflows archive iOS, tvOS and visionOS only, and deliver their internal TestFlight builds from now on. Leave out the macOS archive action; the floor check fails it anyway (see (c)).
 - **(c) macOS under (b).** Mac build numbers never go back, so Xcode Cloud can't build the Mac app until App Store Connect accepts a Next Build Number above `202610271753`. The owner chooses:
   - keep the Mac app on the existing Fastlane export path for now (internal `fastlane mac beta`, and `distribution:true` exports once the gates clear), recording each upload in the floors file; or
   - ask Apple Developer Support whether App Store Connect can accept a higher Next Build Number for this app, or which Apple-supported route to use.
@@ -98,8 +98,8 @@ Record the decision and the Next Build Number used in TASK-86's notes.
 
 ### While Fastlane uploads continue
 
-- Each Fastlane upload raises the real floor for its platform and version. In the same change that records the upload, update that line of `build-number-floors` to the uploaded build number, before the next Xcode Cloud archive. Under (a), the owner also raises Next Build Number above that upload: Xcode Cloud adds only 1 per build, so a later Fastlane timestamp would otherwise jump ahead of it.
-- Retire Fastlane uploads for each platform as soon as Xcode Cloud ships it, so the floors stop moving (see [Retiring Fastlane](#retiring-fastlane)).
+- Each Fastlane upload raises the real floor for its platform and version. Update that line of `build-number-floors` to the uploaded build number in a PR right after the upload, before the next Xcode Cloud archive (uploads run from the main checkout, and `main` only takes pull requests). Under (a), the owner also raises Next Build Number above that upload: Xcode Cloud adds only 1 per build, so a later Fastlane timestamp would otherwise jump ahead of it.
+- Retire Fastlane uploads for each platform as soon as Xcode Cloud ships it, so the floors stop moving (see [Retiring Fastlane](#retiring-fastlane)). Under (b), iOS, tvOS and visionOS stop at the version-bump merge, before Xcode Cloud has shipped them.
 
 ## Xcode Cloud setup (owner only)
 
@@ -169,12 +169,12 @@ It runs the real guards against the repository and checks the real floors file. 
 
 ## Retiring Fastlane
 
-Fastlane is a temporary fallback. Keep the Fastlane `beta` lanes working until one Xcode Cloud build has archived and processed **all four platforms** (iOS with the watch, macOS, tvOS and visionOS) in TestFlight. Under [option (c)](#owner-decision-before-the-first-xcode-cloud-build), the Mac app stays on Fastlane until App Store Connect accepts a valid Mac build number. Stop Fastlane uploads for each platform as soon as Xcode Cloud ships it. Once all four are on Xcode Cloud, the owner decides how to retire the lanes:
+Fastlane is a temporary fallback. Keep the Fastlane `beta` lanes working until one Xcode Cloud build has archived and processed **all four platforms** (iOS with the watch, macOS, tvOS and visionOS) in TestFlight. Under [option (c)](#owner-decision-before-the-first-xcode-cloud-build), the Mac app stays on Fastlane until App Store Connect accepts a valid Mac build number. Stop Fastlane uploads for each platform as soon as Xcode Cloud ships it; under option (b), iOS, tvOS and visionOS stop at the version-bump merge. Once all four are on Xcode Cloud, the owner decides how to retire the lanes:
 
 - The coordinator stops uploading with Fastlane and starts the owner's internal Xcode Cloud workflow instead (or the owner starts it).
 - Internal builds then lose the official reference sheet (owner decision 2A); the owner accepts that or keeps Fastlane for it.
 - Removing the lanes, `ExportOptions*.plist` and the build keychain is a separate Backlog task. `asc_status`, `register_bundle_ids` and the signing lanes may stay for maintenance.
-- Until then, every Fastlane upload raises the floor: update `build-number-floors` in the same change (see [While Fastlane uploads continue](#while-fastlane-uploads-continue)).
+- Until then, every Fastlane upload raises the floor: update `build-number-floors` in a PR right after the upload, before the next Xcode Cloud archive (see [While Fastlane uploads continue](#while-fastlane-uploads-continue)).
 
 ## References
 

@@ -234,6 +234,8 @@ sdk_version=$(make_fixture sdk-version)
 perl -0pi -e 's/\n(\s*)MARKETING_VERSION = 1\.0\.0;/\n$1"MARKETING_VERSION[sdk=macosx*]" = 1.0.0;\n$1MARKETING_VERSION = 1.0.0;/' \
   "$sdk_version/$fixture_pbxproj"
 text_version=$(make_fixture text-version "" "" 1.0.0-beta)
+two_part_version=$(make_fixture two-part-version "" "" 1.0)
+leading_zero_version=$(make_fixture leading-zero-version "" "" 1.01.0)
 if ! grep -q 'MARKETING_VERSION = 1.0.2;' "$conflicting_version/$fixture_pbxproj" \
   || ! grep -q 'MARKETING_VERSION = 1.0.0;' "$conflicting_version/$fixture_pbxproj" \
   || ! grep -q 'MARKETING_VERSION\[sdk=macosx\*\]' "$sdk_version/$fixture_pbxproj"; then
@@ -257,6 +259,8 @@ long_floor=$(floors_with long-floor 'ios 1.0.1 5 extra')
 duplicate_floor=$(floors_with duplicate-floor 'ios 1.0.0 1')
 zero_floor=$(floors_with zero-floor 'tvos 1.0.1 0123')
 version_floor=$(floors_with version-floor 'tvos 1.0.0.0 5')
+two_part_floor=$(floors_with two-part-floor 'ios 1.0 202611010000')
+leading_zero_floor=$(floors_with leading-zero-floor 'tvos 1.0.00 5')
 
 # Calls ch_check_build_number on its own, after only ch_init, to show it fails
 # closed even if the scheme check did not run first.
@@ -421,8 +425,16 @@ run_case "conflicting MARKETING_VERSION values fail closed" fail "conflicting MA
   "fixture-guard" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$conflicting_version" "${ios_archive[@]}"
 run_case "SDK-conditional MARKETING_VERSION fails closed" fail "unsupported MARKETING_VERSION setting" "fixture-guard" \
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$sdk_version" "${ios_archive[@]}"
-run_case "non-numeric MARKETING_VERSION fails closed" fail "MARKETING_VERSION '1\.0\.0-beta' is not a version number" "fixture-guard" \
+run_case "non-numeric MARKETING_VERSION fails closed" fail "MARKETING_VERSION '1\.0\.0-beta' is not x\.y\.z" "fixture-guard" \
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$text_version" "${ios_archive[@]}"
+run_case "two-part MARKETING_VERSION fails closed" fail \
+  "MARKETING_VERSION '1\.0' is not x\.y\.z \(three numbers without leading zeros, such as 1\.0\.0\)" "fixture-guard" \
+  ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$two_part_version" "${ios_archive[@]}"
+run_case "two-part MARKETING_VERSION fails closed even without floors for it" fail "MARKETING_VERSION '1\.0' is not x\.y\.z" \
+  "fixture-guard|no Fastlane uploads" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$two_part_version" \
+  CI_XCODEBUILD_ACTION=archive CI_XCODE_SCHEME=CanadianHamTV CI_PRODUCT_PLATFORM=tvOS CI_BUILD_NUMBER=1
+run_case "leading-zero MARKETING_VERSION fails closed" fail "MARKETING_VERSION '1\.01\.0' is not x\.y\.z" "fixture-guard" \
+  ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$leading_zero_version" "${ios_archive[@]}"
 run_case "missing floors file fails closed" fail "missing .*/build-number-floors" "fixture-guard" \
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$no_floors" "${ios_archive[@]}"
 run_case "floors file without entries fails closed" fail "build-number-floors has no entries" "fixture-guard" \
@@ -439,6 +451,11 @@ run_case "invalid floors build number fails closed" fail "invalid build number '
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$zero_floor" "${ios_archive[@]}"
 run_case "invalid floors version fails closed" fail "invalid version '1\.0\.0\.0'" "fixture-guard" \
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$version_floor" "${ios_archive[@]}"
+run_case "two-part floors version fails closed instead of missing 1.0.0" fail \
+  "invalid version '1\.0'; use x\.y\.z \(three numbers without leading zeros" "fixture-guard|is above the ios floor" \
+  ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$two_part_floor" "${ios_archive[@]}"
+run_case "leading-zero floors version fails closed" fail "invalid version '1\.0\.00'" "fixture-guard" \
+  ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$leading_zero_floor" "${ios_archive[@]}"
 
 printf '== Non-archive actions\n'
 run_case "build action runs the guards without archive checks" pass "$all_guards" "uses Release" \

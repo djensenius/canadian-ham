@@ -25,8 +25,11 @@ CH_GUARD_SCRIPTS="check:apple-network test:apple-network check:apple-icloud-gate
 # archive of CanadianHam; CanadianHamWatch is never archived on its own.
 CH_ARCHIVE_SCHEMES="CanadianHam CanadianHamTV CanadianHamVision"
 CH_PROJECT_RELATIVE_PATH="apps/apple/CanadianHam.xcodeproj"
-# CFBundleShortVersionString form: one to three period-separated integers.
-CH_VERSION_PATTERN='^[0-9]+(\.[0-9]+){0,2}$'
+# Marketing versions must be exactly x.y.z (three numbers, no leading zeros
+# except a lone 0) in both the project and build-number-floors, so a floors
+# entry can never silently miss the version it means (1.0 vs 1.0.0).
+CH_VERSION_PATTERN='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
+CH_VERSION_FORMAT="x.y.z (three numbers without leading zeros, such as 1.0.0)"
 
 ch_log() {
   printf 'canadian-ham-ci: %s\n' "$*"
@@ -240,7 +243,7 @@ NAMES
 # Sets CH_MARKETING_VERSION from the checked-in Xcode project, which is what
 # Xcode Cloud builds: every MARKETING_VERSION assignment must be a plain
 # `MARKETING_VERSION = x.y.z;` line and all must agree. Conditional
-# (`MARKETING_VERSION[sdk=...]`), missing, conflicting or non-numeric values fail.
+# (`MARKETING_VERSION[sdk=...]`), missing, conflicting or non-x.y.z values fail.
 ch_read_marketing_version() {
   local pbxproj="$CH_REPO_ROOT/$CH_PROJECT_RELATIVE_PATH/project.pbxproj" line value version=""
   local assignment='^[[:space:]]*MARKETING_VERSION = "?([^";]*)"?;[[:space:]]*$'
@@ -258,7 +261,7 @@ $(grep 'MARKETING_VERSION' "$pbxproj" || true)
 LINES
   [[ -n "$version" ]] || ch_fail "no MARKETING_VERSION in $pbxproj"
   [[ "$version" =~ $CH_VERSION_PATTERN ]] \
-    || ch_fail "MARKETING_VERSION '$version' is not a version number like 1.0.0"
+    || ch_fail "MARKETING_VERSION '$version' is not $CH_VERSION_FORMAT"
   CH_MARKETING_VERSION=$version
 }
 
@@ -288,7 +291,7 @@ ch_check_build_number() {
       *) ch_fail "$floors_file: unknown platform '$entry_platform'" ;;
     esac
     [[ "$entry_version" =~ $CH_VERSION_PATTERN ]] \
-      || ch_fail "$floors_file: invalid version '$entry_version'"
+      || ch_fail "$floors_file: invalid version '$entry_version'; use $CH_VERSION_FORMAT"
     [[ "$entry_build" =~ ^[1-9][0-9]{0,17}$ ]] \
       || ch_fail "$floors_file: invalid build number '$entry_build'"
     case "$seen" in
