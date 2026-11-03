@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@copilot'
 created_date: '2026-11-03T04:10:00Z'
-updated_date: '2026-11-03T09:19:00Z'
+updated_date: '2026-11-03T09:31:00Z'
 labels:
   - apple
   - ci
@@ -45,6 +45,8 @@ TASK-85 adds scripts/check-apple-required-reasons.mjs (pnpm check:apple-required
 
 <!-- SECTION:NOTES:BEGIN -->
 Commit 4f3e27ecc7cfd8094f6bad5026b2c79783453a35. CH_GUARD_SCRIPTS in apps/apple/ci_scripts/canadian-ham-ci.sh now also lists check:apple-required-reasons and test:apple-required-reasons; ch_run_guards fails the action with 'Apple guard <script> failed; refusing to build'. Post-clone also runs them (shared list). Both scripts import only node: built-ins and passed via node --run in this worktree, which has no node_modules (check 0.6 s, self-test 25.3 s). Harness: fixture stubs and all_guards pattern updated; real-guard archive case now asserts the real required-reason check and self-test output; new fail cases 'failing required-reason check stops an archive' (self-test not run) and 'failing required-reason self-test stops an archive' both exit 1. Checks: pnpm test:xcode-cloud-scripts 129 passed, 0 failed (~93 s); pnpm check:shell passed (12 files); pnpm check:apple-required-reasons passed; pnpm test:apple-required-reasons passed; pnpm check:links verified; pnpm typecheck Done; git diff --check clean; check-test-guard passed (no guarded changes).
+
+Review follow-up (commit 8044e33d4555149eab1fb737d063ecdd82ed3da5): ch_run_guards now runs each guard in a subshell from CH_REPO_ROOT with CH_GUARD_ROOT_OVERRIDES (APPLE_NO_NETWORK_ROOT, ICLOUD_GATE_ROOT, REQUIRED_REASONS_ROOT; all three guards read one) unset, so workflow env vars cannot redirect a guard. Self-tests set their own child roots and still pass. New harness cases: real guards with all three overrides set to an empty dir pass against the repo; stub guards report roots=unset,unset,unset. Both fail (129 passed, 2 failed) with the unset reverted locally. Docs and canadian-ham-ci.sh comment record the ~50 s doubled self-test cost (post-clone + pre-xcodebuild) and why; ci_post_clone.sh header re-wrapped. Checks: test:xcode-cloud-scripts 131 passed, 0 failed; check:shell passed (12 files); check:links verified; git diff --check clean; test guard passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
