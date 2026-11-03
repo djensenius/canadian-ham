@@ -38,9 +38,11 @@
   `fastlane <platform> beta export_only:true distribution:true` to check a distribution export, but never upload one
   and never create or edit Xcode Cloud workflows or App Store Connect settings. Distribution uploads wait for task-1.7
   and task-85.
-- Once Xcode Cloud is set up, after every Fastlane upload the coordinator raises
-  `apps/apple/ci_scripts/build-number-floor` to the uploaded build number in a PR and asks the owner to raise the Xcode
-  Cloud Next Build Number above it. Fastlane stays the fallback until Xcode Cloud has archived all four platforms once.
+- After every Fastlane upload, the coordinator updates that platform's line in
+  `apps/apple/ci_scripts/build-number-floors` to the uploaded build number in the same change. If Xcode Cloud uses one
+  build-number sequence (option (a) in `docs/release/distribution.md#build-numbers`), the coordinator also asks the owner
+  to raise Next Build Number above it. Fastlane is only a temporary fallback: stop Fastlane uploads for each platform
+  once Xcode Cloud ships it. The Mac app may stay on Fastlane under option (c).
 
 ## Build and test rules (all agents)
 - Never call `xcodebuild` directly. Always use `xbuild` with the same arguments;

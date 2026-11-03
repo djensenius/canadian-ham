@@ -272,6 +272,16 @@ def beta_export_target(distribution)
   end
 end
 
+# True for anything under the App Store distribution export folder, compared as
+# written and after resolving symlinks (and letter case), so a symlink or alias
+# can't slip a distribution export through the internal upload path.
+def beta_distribution_artifact?(path)
+  return true if path.start_with?(DISTRIBUTION_BUILD_ROOT + File::SEPARATOR)
+  return false unless File.exist?(DISTRIBUTION_BUILD_ROOT)
+
+  File.realpath(path).start_with?(File.realpath(DISTRIBUTION_BUILD_ROOT) + File::SEPARATOR)
+end
+
 def upload_beta(platform_key, options = {})
   export_only = beta_export_only?(options)
   distribution = beta_distribution?(options)
@@ -285,7 +295,7 @@ def upload_beta(platform_key, options = {})
       config = BETA_PLATFORMS.fetch(platform_key)
       path = File.expand_path(options[:artifact_path])
       UI.user_error!("No artifact at #{path}") unless File.file?(path)
-      if !export_only && path.start_with?(DISTRIBUTION_BUILD_ROOT + File::SEPARATOR)
+      if !export_only && beta_distribution_artifact?(path)
         UI.user_error!("Refusing to upload App Store distribution export #{path}; distribution uploads wait for TASK-1.7 and TASK-85")
       end
       { artifact: config[:artifact], artifact_path: path, app_platform: config[:app_platform] }

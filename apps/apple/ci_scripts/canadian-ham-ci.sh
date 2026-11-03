@@ -25,6 +25,8 @@ CH_GUARD_SCRIPTS="check:apple-network test:apple-network check:apple-icloud-gate
 # archive of CanadianHam; CanadianHamWatch is never archived on its own.
 CH_ARCHIVE_SCHEMES="CanadianHam CanadianHamTV CanadianHamVision"
 CH_PROJECT_RELATIVE_PATH="apps/apple/CanadianHam.xcodeproj"
+# CFBundleShortVersionString form: one to three period-separated integers.
+CH_VERSION_PATTERN='^[0-9]+(\.[0-9]+){0,2}$'
 
 ch_log() {
   printf 'canadian-ham-ci: %s\n' "$*"
@@ -120,6 +122,10 @@ ch_ensure_node() {
     return 0
   fi
   ch_log "installing $CH_NODE_FORMULA with $brew"
+  # HOMEBREW_NO_AUTO_UPDATE is deliberately not set: on an image whose cached
+  # formula data predates node@26, skipping the update would make the install
+  # (and so the build) fail. The update only refreshes formula metadata; the
+  # result is still checked to be Node $CH_REQUIRED_NODE_MAJOR below.
   if ! HOMEBREW_NO_ANALYTICS=1 HOMEBREW_NO_ENV_HINTS=1 HOMEBREW_NO_INSTALL_CLEANUP=1 \
     "$brew" install "$CH_NODE_FORMULA"; then
     ch_fail "brew install $CH_NODE_FORMULA failed; cannot run the Apple guards"
@@ -152,22 +158,35 @@ ch_project_path() {
   fi
 }
 
+# Sets CH_PLATFORM_KEY (ios, macos, tvos or visionos) from Xcode Cloud's
+# CI_PRODUCT_PLATFORM. iOS covers iPadOS and the embedded watch app. Apple
+# documents iOS, macOS, tvOS and watchOS values; visionOS is accepted as
+# visionOS or xrOS. Anything else, or no value, fails the archive.
+ch_platform_key() {
+  local platform
+  platform=$(ch_lower "${CI_PRODUCT_PLATFORM:-}")
+  case "$platform" in
+    ios | macos | tvos | visionos) CH_PLATFORM_KEY=$platform ;;
+    xros) CH_PLATFORM_KEY=visionos ;;
+    watchos) ch_fail "archive the watch app through the iOS CanadianHam archive, not a watchOS archive" ;;
+    *) ch_fail "unsupported archive platform '${CI_PRODUCT_PLATFORM:-}'" ;;
+  esac
+}
+
 # Archives may only use an allow-listed shared scheme for its platform whose
 # Archive action builds Release, never DebugCloudKit or another configuration.
 ch_check_archive_scheme() {
-  local scheme=${CI_XCODE_SCHEME:-} platform expected project scheme_file configuration
+  local scheme=${CI_XCODE_SCHEME:-} expected project scheme_file configuration
   [[ -n "$scheme" ]] || ch_fail "CI_XCODE_SCHEME is not set for an archive action"
   case " $CH_ARCHIVE_SCHEMES " in
     *" $scheme "*) ;;
     *) ch_fail "Xcode Cloud may archive only $CH_ARCHIVE_SCHEMES, not '$scheme'" ;;
   esac
-  platform=$(ch_lower "${CI_PRODUCT_PLATFORM:-}")
-  case "$platform" in
+  ch_platform_key
+  case "$CH_PLATFORM_KEY" in
     ios | macos) expected=CanadianHam ;;
     tvos) expected=CanadianHamTV ;;
-    visionos | xros) expected=CanadianHamVision ;;
-    watchos) ch_fail "archive the watch app through the iOS CanadianHam archive, not a watchOS archive" ;;
-    *) ch_fail "unsupported archive platform '${CI_PRODUCT_PLATFORM:-}'" ;;
+    visionos) expected=CanadianHamVision ;;
   esac
   [[ "$scheme" == "$expected" ]] \
     || ch_fail "platform ${CI_PRODUCT_PLATFORM} must archive scheme $expected, not $scheme"
@@ -184,67 +203,146 @@ ch_check_archive_scheme() {
   fi
   [[ "$configuration" == "Release" ]] \
     || ch_fail "scheme $scheme archives '$configuration'; Xcode Cloud archives must use Release, never DebugCloudKit"
-  ch_log "archive scheme $scheme ($platform) uses Release"
+  ch_log "archive scheme $scheme ($CH_PLATFORM_KEY) uses Release"
 }
 
 # xcodebuild can read build settings from the environment, so workflow
 # variables must not smuggle in the iCloud gate or the internal-only official
-# reference sheet. Only variable names are printed; values may be secrets.
+# reference sheet. Xcode Cloud also exports branch, tag, pull request and
+# workflow names (CI_BRANCH, CI_TAG, CI_PULL_REQUEST_*, CI_WORKFLOW), so a
+# branch named after DebugCloudKit stops the archive too. The error names each
+# variable and the marker it contains, never the value (values may be secrets).
 ch_check_archive_environment() {
-  local name value names=""
+  local name value marker found=""
   while IFS= read -r name; do
     [[ -n "$name" ]] || continue
     value=$(printenv "$name" || true)
+    marker=""
     case "$name=$value" in
-      *ICLOUD_SYNC* | *DebugCloudKit* | *CloudKit.entitlements* | *CloudKit.Info.plist* | *OFFICIAL_REFERENCE_SHEET*)
-        names="$names $name"
-        ;;
+      *ICLOUD_SYNC*) marker=ICLOUD_SYNC ;;
+      *DebugCloudKit*) marker=DebugCloudKit ;;
+      *CloudKit.entitlements*) marker=CloudKit.entitlements ;;
+      *CloudKit.Info.plist*) marker=CloudKit.Info.plist ;;
+      *OFFICIAL_REFERENCE_SHEET*) marker=OFFICIAL_REFERENCE_SHEET ;;
     esac
+    [[ -z "$marker" ]] || found="$found $name ($marker)"
   done <<NAMES
 $(compgen -e)
 NAMES
-  [[ -z "$names" ]] || ch_fail "environment variables enable iCloud or the official reference sheet:$names"
+  if [[ -n "$found" ]]; then
+    ch_fail "environment variables mention iCloud or the official reference sheet in their name or value (values not printed):$found. Remove the workflow variable, or rename the branch, tag or pull request that contains the marker."
+  fi
   if [[ -n "${CONFIGURATION:-}" && "$CONFIGURATION" != "Release" ]]; then
     ch_fail "CONFIGURATION=$CONFIGURATION; Xcode Cloud archives must use Release"
   fi
 }
 
-# Xcode Cloud stamps CI_BUILD_NUMBER into uploaded builds. It must stay above
-# every build Fastlane already uploaded (12-digit %Y%m%d%H%M timestamps).
-ch_check_build_number() {
-  local number=${CI_BUILD_NUMBER:-} floor_file="$CH_CI_SCRIPTS_DIR/build-number-floor" floor
-  [[ "$number" =~ ^[1-9][0-9]{0,17}$ ]] \
-    || ch_fail "CI_BUILD_NUMBER '$number' is not a positive integer"
-  [[ -f "$floor_file" ]] || ch_fail "missing $floor_file"
-  floor=$(tr -d '[:space:]' <"$floor_file")
-  [[ "$floor" =~ ^[1-9][0-9]{11}$ ]] || ch_fail "$floor_file must hold one 12-digit build number"
-  if ((number <= floor)); then
-    ch_fail "CI_BUILD_NUMBER $number is not above the last Fastlane build $floor; set App Store Connect > Xcode Cloud > Settings > Build Number > Next Build Number above it (docs/release/distribution.md)"
-  fi
-  ch_log "build number $number is above the Fastlane floor $floor"
+# Sets CH_MARKETING_VERSION from the checked-in Xcode project, which is what
+# Xcode Cloud builds: every MARKETING_VERSION assignment must be a plain
+# `MARKETING_VERSION = x.y.z;` line and all must agree. Conditional
+# (`MARKETING_VERSION[sdk=...]`), missing, conflicting or non-numeric values fail.
+ch_read_marketing_version() {
+  local pbxproj="$CH_REPO_ROOT/$CH_PROJECT_RELATIVE_PATH/project.pbxproj" line value version=""
+  local assignment='^[[:space:]]*MARKETING_VERSION = "?([^";]*)"?;[[:space:]]*$'
+  [[ -f "$pbxproj" ]] || ch_fail "cannot read the marketing version: missing $pbxproj"
+  while IFS= read -r line; do
+    [[ -n "$line" ]] || continue
+    [[ "$line" =~ $assignment ]] \
+      || ch_fail "unsupported MARKETING_VERSION setting in $pbxproj: $line"
+    value=${BASH_REMATCH[1]}
+    [[ -z "$version" || "$version" == "$value" ]] \
+      || ch_fail "conflicting MARKETING_VERSION values in $pbxproj: $version and $value"
+    version=$value
+  done <<LINES
+$(grep 'MARKETING_VERSION' "$pbxproj" || true)
+LINES
+  [[ -n "$version" ]] || ch_fail "no MARKETING_VERSION in $pbxproj"
+  [[ "$version" =~ $CH_VERSION_PATTERN ]] \
+    || ch_fail "MARKETING_VERSION '$version' is not a version number like 1.0.0"
+  CH_MARKETING_VERSION=$version
 }
 
-# Signed entitlements of every app in an archive must not include iCloud,
-# CloudKit or push, and no app may bundle the official sheet.
+# Xcode Cloud stamps CI_BUILD_NUMBER into every build it distributes. App
+# Store Connect needs it above every build already uploaded for the same
+# platform and marketing version; Mac build numbers must also keep increasing
+# across versions (https://developer.apple.com/documentation/xcode/setting-the-next-build-number-for-xcode-cloud-builds).
+# build-number-floors records the highest Fastlane upload per platform and
+# version, so:
+#   macos: the number must exceed every macOS floor, whatever the version;
+#   ios, tvos, visionos: it must exceed the floor for the version being built,
+#     and a version with no Fastlane uploads may start from small numbers.
+ch_check_build_number() {
+  local number=${CI_BUILD_NUMBER:-} floors_file="$CH_REPO_ROOT/apps/apple/ci_scripts/build-number-floors"
+  local entry_platform entry_version entry_build extra seen=" " entries=0 floor="" floor_version=""
+  [[ "$number" =~ ^[1-9][0-9]{0,17}$ ]] \
+    || ch_fail "CI_BUILD_NUMBER '$number' is not a positive integer"
+  ch_platform_key
+  ch_read_marketing_version
+  [[ -f "$floors_file" ]] || ch_fail "missing $floors_file"
+  while read -r entry_platform entry_version entry_build extra || [[ -n "$entry_platform" ]]; do
+    [[ -z "$entry_platform" || "$entry_platform" == \#* ]] && continue
+    [[ -n "$entry_build" && -z "$extra" ]] \
+      || ch_fail "$floors_file: expected '<platform> <version> <build>', got '$entry_platform $entry_version $entry_build $extra'"
+    case "$entry_platform" in
+      ios | macos | tvos | visionos) ;;
+      *) ch_fail "$floors_file: unknown platform '$entry_platform'" ;;
+    esac
+    [[ "$entry_version" =~ $CH_VERSION_PATTERN ]] \
+      || ch_fail "$floors_file: invalid version '$entry_version'"
+    [[ "$entry_build" =~ ^[1-9][0-9]{0,17}$ ]] \
+      || ch_fail "$floors_file: invalid build number '$entry_build'"
+    case "$seen" in
+      *" $entry_platform@$entry_version "*) ch_fail "$floors_file: duplicate entry for $entry_platform $entry_version" ;;
+    esac
+    seen="$seen$entry_platform@$entry_version "
+    entries=$((entries + 1))
+    [[ "$entry_platform" == "$CH_PLATFORM_KEY" ]] || continue
+    if [[ "$CH_PLATFORM_KEY" == "macos" ]]; then
+      if [[ -z "$floor" ]] || ((entry_build > floor)); then
+        floor=$entry_build
+        floor_version=$entry_version
+      fi
+    elif [[ "$entry_version" == "$CH_MARKETING_VERSION" ]]; then
+      floor=$entry_build
+      floor_version=$entry_version
+    fi
+  done <"$floors_file"
+  ((entries > 0)) || ch_fail "$floors_file has no entries"
+  if [[ -z "$floor" ]]; then
+    ch_log "no Fastlane uploads recorded for $CH_PLATFORM_KEY $CH_MARKETING_VERSION; build number $number may start a new sequence"
+    return 0
+  fi
+  if ((number <= floor)); then
+    if [[ "$CH_PLATFORM_KEY" == "macos" ]]; then
+      ch_fail "CI_BUILD_NUMBER $number is not above the last macOS upload $floor (version $floor_version); Mac build numbers must keep increasing across versions. See docs/release/distribution.md#build-numbers"
+    fi
+    ch_fail "CI_BUILD_NUMBER $number is not above the last $CH_PLATFORM_KEY $CH_MARKETING_VERSION upload $floor; raise App Store Connect > Xcode Cloud > Settings > Build Number > Next Build Number, or build a new marketing version. See docs/release/distribution.md#build-numbers"
+  fi
+  ch_log "build number $number is above the $CH_PLATFORM_KEY floor $floor (version $floor_version); building version $CH_MARKETING_VERSION"
+}
+
+# Signed entitlements of every app and app extension in an archive (including
+# the embedded watch app and anything in PlugIns or Extensions) must not
+# include iCloud, CloudKit or push, and no bundle may contain the official sheet.
 ch_check_archive_contents() {
-  local archive=$1 apps app entitlements count=0
+  local archive=$1 bundles bundle entitlements count=0
   [[ -d "$archive/Products" ]] || ch_fail "archive has no Products directory: $archive"
-  apps=$(find "$archive/Products" -type d -name '*.app' -print | sort)
-  [[ -n "$apps" ]] || ch_fail "no .app bundles found in $archive"
-  while IFS= read -r app; do
-    [[ -n "$app" ]] || continue
+  bundles=$(find "$archive/Products" -type d \( -name '*.app' -o -name '*.appex' \) -print | sort)
+  [[ -n "$bundles" ]] || ch_fail "no .app bundles found in $archive"
+  while IFS= read -r bundle; do
+    [[ -n "$bundle" ]] || continue
     count=$((count + 1))
-    if ! entitlements=$(codesign -d --entitlements - --xml "$app" 2>/dev/null); then
-      ch_fail "cannot read signed entitlements of $app"
+    if ! entitlements=$(codesign -d --entitlements - --xml "$bundle" 2>/dev/null); then
+      ch_fail "cannot read signed entitlements of $bundle"
     fi
     if grep -E -q 'com\.apple\.developer\.(icloud|ubiquity)|aps-environment|CloudKit' <<<"$entitlements"; then
-      ch_fail "$app is signed with iCloud, CloudKit or push entitlements"
+      ch_fail "$bundle is signed with iCloud, CloudKit or push entitlements"
     fi
-    if [[ -n "$(find "$app" -path '*official-basic-exam*' -print -quit)" ]]; then
-      ch_fail "$app bundles the internal-only official reference sheet"
+    if [[ -n "$(find "$bundle" -path '*official-basic-exam*' -print -quit)" ]]; then
+      ch_fail "$bundle bundles the internal-only official reference sheet"
     fi
-  done <<APPS
-$apps
-APPS
-  ch_log "checked $count app bundle(s): no iCloud, CloudKit, push or official-sheet content"
+  done <<BUNDLES
+$bundles
+BUNDLES
+  ch_log "checked $count app and extension bundle(s): no iCloud, CloudKit, push or official-sheet content"
 }

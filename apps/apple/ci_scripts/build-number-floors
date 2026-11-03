@@ -1,0 +1,14 @@
+# Highest build number uploaded to App Store Connect outside Xcode Cloud (Fastlane
+# timestamps, %Y%m%d%H%M), per platform and marketing version
+# (CFBundleShortVersionString). ci_pre_xcodebuild.sh refuses Xcode Cloud archives
+# that would not be above these: macOS must beat every macOS entry whatever the
+# version; iOS, tvOS and visionOS must beat the entry for the version they build,
+# and a version without an entry may start from small Xcode Cloud numbers.
+# Record every later Fastlane upload here. See docs/release/distribution.md#build-numbers.
+#
+# Format: <platform> <marketing-version> <build-number>
+# platform: ios (iPhone, iPad and the embedded watch app), macos, tvos, visionos
+ios 1.0.0 202610271751
+macos 1.0.0 202610271753
+tvos 1.0.0 202610271756
+visionos 1.0.0 202610271757

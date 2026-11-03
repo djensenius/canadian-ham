@@ -3,6 +3,7 @@ require "fileutils"
 require "json"
 require "minitest/autorun"
 require "open3"
+require "tmpdir"
 
 # Evaluate the real Fastfile with only its lane-registration DSL stubbed. No
 # signing, API calls or uploads run; the upload_beta entry point is exercised.
@@ -25,6 +26,8 @@ class BetaLaneHarness
 
   fastfile = File.expand_path("../fastlane/Fastfile", __dir__)
   class_eval(File.read(fastfile), fastfile)
+  # The real method, for ExportArgsHarness; the stub below replaces it here.
+  alias_method :fastfile_archive_and_export, :archive_and_export
 
   attr_reader :archives, :uploads, :distributions
 
@@ -46,7 +49,34 @@ class BetaLaneHarness
   end
 end
 
+# Runs the Fastfile's real archive_and_export with the keychain and xbuild
+# stubbed: records each xbuild argument list and fakes the exported artifacts.
+class ExportArgsHarness < BetaLaneHarness
+  attr_reader :xbuild_calls
+
+  def initialize
+    super
+    @xbuild_calls = []
+  end
+
+  def archive_and_export(platform_key, official_reference_sheet:, distribution: false)
+    fastfile_archive_and_export(platform_key, official_reference_sheet: official_reference_sheet, distribution: distribution)
+  end
+
+  def unlock_build_keychain; end
+
+  def run_xbuild(args)
+    @xbuild_calls << args
+    return unless args.first == "-exportArchive"
+
+    export_path = args[args.index("-exportPath") + 1]
+    %w[ipa pkg].each { |extension| File.write(File.join(export_path, "CanadianHam.#{extension}"), "") }
+  end
+end
+
 class FastlaneExportOnlyTests < Minitest::Test
+  ROOT_CONSTANTS = %i[ARCHIVE_ROOT BUILD_ROOT DISTRIBUTION_ARCHIVE_ROOT DISTRIBUTION_BUILD_ROOT].freeze
+
   def test_export_only_archives_but_never_uploads_for_ios_and_mac
     [:ios, :mac].each do |platform|
       [true, "true"].each do |option|
@@ -136,24 +166,79 @@ class FastlaneExportOnlyTests < Minitest::Test
   end
 
   def test_distribution_artifacts_are_never_reuploaded_through_internal_path
-    # A real file is needed because upload_beta checks File.file?; the folder is
-    # gitignored and removed again.
-    dir = File.join(BetaLaneHarness::BUILD_ROOT, "appstore", "ios", "test-#{Process.pid}")
-    path = File.join(dir, "CanadianHam.ipa")
-    FileUtils.mkdir_p(dir)
-    File.write(path, "")
-    lane = BetaLaneHarness.new
-    error = assert_raises(RuntimeError) { lane.upload_beta(:ios, artifact_path: path) }
-    assert_match(/distribution/, error.message)
-    result = lane.upload_beta(:ios, artifact_path: path, export_only: true)
-    assert_equal path, result[:artifact_path]
-    assert_empty lane.archives
-    assert_empty lane.uploads
-  ensure
-    FileUtils.rm_rf(dir) if dir
-    [File.dirname(dir), File.dirname(dir, 2), File.dirname(dir, 3)].each do |parent|
-      Dir.rmdir(parent) if Dir.exist?(parent) && Dir.empty?(parent)
-    end if dir
+    with_temp_roots do |dir|
+      path = write_artifact(File.join(BetaLaneHarness::DISTRIBUTION_BUILD_ROOT, "ios", "202611020000"))
+      file_link = File.join(dir, "linked.ipa")
+      File.symlink(path, file_link)
+      folder_link = File.join(dir, "elsewhere")
+      File.symlink(BetaLaneHarness::DISTRIBUTION_BUILD_ROOT, folder_link)
+      aliases = [path, file_link, File.join(folder_link, "ios", "202611020000", "CanadianHam.ipa")]
+      case_variant = path.sub("/appstore/", "/AppStore/")
+      aliases << case_variant if File.file?(case_variant) # case-insensitive volumes only
+      aliases.each do |artifact|
+        lane = BetaLaneHarness.new
+        error = assert_raises(RuntimeError) { lane.upload_beta(:ios, artifact_path: artifact) }
+        assert_match(/Refusing to upload App Store distribution export/, error.message, artifact)
+        result = lane.upload_beta(:ios, artifact_path: artifact, export_only: true)
+        assert_equal File.expand_path(artifact), result[:artifact_path]
+        assert_empty lane.archives
+        assert_empty lane.uploads, "#{artifact} must never upload"
+      end
+    end
+  end
+
+  def test_internal_artifacts_still_upload_when_distribution_folder_exists_or_not
+    with_temp_roots do |dir|
+      path = write_artifact(File.join(BetaLaneHarness::BUILD_ROOT, "ios", "202611020000"))
+      link = File.join(dir, "internal-link.ipa")
+      File.symlink(path, link)
+      [path, link].each do |artifact|
+        lane = BetaLaneHarness.new
+        lane.upload_beta(:ios, artifact_path: artifact)
+        assert_equal [File.expand_path(artifact)], lane.uploads.map { |upload| upload[:ipa] }
+      end
+      write_artifact(File.join(BetaLaneHarness::DISTRIBUTION_BUILD_ROOT, "ios", "1"))
+      lane = BetaLaneHarness.new
+      lane.upload_beta(:ios, artifact_path: path)
+      assert_equal 1, lane.uploads.length
+    end
+  end
+
+  def test_export_options_plist_reaches_the_export_arguments
+    with_temp_roots do |dir|
+      [:ios, :mac, :appletvos, :xros].each do |platform|
+        [[{}, BetaLaneHarness::EXPORT_OPTIONS_PLIST, BetaLaneHarness::ARCHIVE_ROOT, BetaLaneHarness::BUILD_ROOT, true],
+         [{ distribution: true }, BetaLaneHarness::DISTRIBUTION_EXPORT_OPTIONS_PLIST,
+          BetaLaneHarness::DISTRIBUTION_ARCHIVE_ROOT, BetaLaneHarness::DISTRIBUTION_BUILD_ROOT, false]].each do |options, plist, archive_root, build_root, official|
+          lane = ExportArgsHarness.new
+          result = lane.upload_beta(platform, options.merge(export_only: true))
+          archive, export = lane.xbuild_calls
+          assert_equal 2, lane.xbuild_calls.length
+          assert_includes archive, "archive"
+          assert archive[archive.index("-archivePath") + 1].start_with?(File.join(archive_root, platform.to_s) + File::SEPARATOR)
+          assert_equal official, archive.any? { |arg| arg.include?("OFFICIAL_REFERENCE_SHEET") }, "#{platform} #{options.inspect}"
+          refute archive.any? { |arg| arg.include?("ICLOUD_SYNC") || arg.include?("DebugCloudKit") }
+          assert_includes archive, "-configuration"
+          assert_equal "Release", archive[archive.index("-configuration") + 1]
+          assert_equal "-exportArchive", export.first
+          assert_equal plist, export[export.index("-exportOptionsPlist") + 1], "#{platform} #{options.inspect}"
+          assert_equal archive[archive.index("-archivePath") + 1], export[export.index("-archivePath") + 1]
+          assert export[export.index("-exportPath") + 1].start_with?(File.join(build_root, platform.to_s) + File::SEPARATOR)
+          assert result[:artifact_path].start_with?(build_root + File::SEPARATOR)
+          assert_empty lane.uploads
+        end
+      end
+      assert Dir.exist?(File.join(dir, "builds")), "exports must stay in the temporary roots"
+    end
+  end
+
+  def test_distribution_archive_refuses_the_official_sheet
+    with_temp_roots do
+      lane = ExportArgsHarness.new
+      error = assert_raises(RuntimeError) { lane.fastfile_archive_and_export(:ios, official_reference_sheet: true, distribution: true) }
+      assert_match(/must not opt in to the internal-only official reference sheet/, error.message)
+      assert_empty lane.xbuild_calls
+    end
   end
 
   def test_export_options_plists_differ_only_by_internal_only_flag
@@ -166,6 +251,38 @@ class FastlaneExportOnlyTests < Minitest::Test
   end
 
   private
+
+  # Points the Fastfile's archive and export roots at a temporary folder, so no
+  # test writes to the real fastlane/archives or fastlane/builds.
+  def with_temp_roots
+    Dir.mktmpdir("fastlane-export-only-test") do |dir|
+      roots = {
+        ARCHIVE_ROOT: File.join(dir, "archives"),
+        BUILD_ROOT: File.join(dir, "builds"),
+        DISTRIBUTION_ARCHIVE_ROOT: File.join(dir, "archives", "appstore"),
+        DISTRIBUTION_BUILD_ROOT: File.join(dir, "builds", "appstore")
+      }
+      saved = ROOT_CONSTANTS.to_h { |name| [name, BetaLaneHarness.const_get(name)] }
+      begin
+        roots.each { |name, value| replace_constant(name, value) }
+        yield dir
+      ensure
+        saved.each { |name, value| replace_constant(name, value) }
+      end
+    end
+  end
+
+  def replace_constant(name, value)
+    BetaLaneHarness.send(:remove_const, name)
+    BetaLaneHarness.const_set(name, value)
+  end
+
+  def write_artifact(dir)
+    FileUtils.mkdir_p(dir)
+    path = File.join(dir, "CanadianHam.ipa")
+    File.write(path, "")
+    path
+  end
 
   def plist_json(path)
     output, status = Open3.capture2("plutil", "-convert", "json", "-o", "-", path)

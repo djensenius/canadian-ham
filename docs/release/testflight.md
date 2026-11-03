@@ -227,7 +227,7 @@ The Fastfile points fastlane's own Xcode lookup at `/Applications/Xcode.app` bec
 - `apps/apple/project.yml` sets `MARKETING_VERSION` to `1.0.0` and generated Info.plists read `CFBundleShortVersionString` from `$(MARKETING_VERSION)` and `CFBundleVersion` from `$(CURRENT_PROJECT_VERSION)`.
 - The beta lanes override `CURRENT_PROJECT_VERSION` at archive time with a timestamp build number in `%Y%m%d%H%M` format, matching the Telephone Booth convention. The override applies to the embedded watch too: its `CFBundleVersion` must equal the iOS container's in the exported IPA; marketing versions must match as well.
 - For a version change, update `MARKETING_VERSION` in `apps/apple/project.yml`, regenerate the Xcode project twice with XcodeGen, and verify the generated project is stable before archiving.
-- Xcode Cloud numbers builds with its own incrementing `CI_BUILD_NUMBER`. Once it is set up, raise `apps/apple/ci_scripts/build-number-floor` and the Xcode Cloud Next Build Number after every Fastlane upload so build numbers never go backwards; see [distribution.md](distribution.md#build-numbers).
+- Xcode Cloud numbers builds with its own incrementing `CI_BUILD_NUMBER`. After every Fastlane upload, update that platform's line in `apps/apple/ci_scripts/build-number-floors` in the same change. If Xcode Cloud uses one sequence for every platform, also raise its Next Build Number. Build numbers must never go backwards for a version, or ever for the Mac app. If App Store Connect refuses a timestamp-sized Next Build Number, iOS, tvOS and visionOS move to a new marketing version and the Mac app stays on Fastlane for now; see [distribution.md](distribution.md#build-numbers).
 
 ## Keeping DebugCloudKit out of uploads
 

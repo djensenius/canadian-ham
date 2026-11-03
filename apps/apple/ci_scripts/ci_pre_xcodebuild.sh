@@ -2,8 +2,9 @@
 # Xcode Cloud pre-xcodebuild script: runs before every xcodebuild command.
 # Archives must use an allow-listed shared scheme whose Archive action builds
 # Release (never DebugCloudKit), with no iCloud or official-sheet overrides and
-# a build number above every Fastlane timestamp build. Every action that builds
-# from source reruns the Apple network and iCloud guards. See
+# a build number above the Fastlane uploads in build-number-floors for its
+# platform and marketing version. Every action that builds from source reruns
+# the Apple network and iCloud guards. See
 # docs/release/distribution.md and
 # https://developer.apple.com/documentation/xcode/environment-variable-reference
 set -euo pipefail
