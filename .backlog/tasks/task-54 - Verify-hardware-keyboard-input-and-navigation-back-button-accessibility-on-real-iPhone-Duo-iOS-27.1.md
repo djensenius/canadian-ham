@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: 2026-10-18 01:53
-updated_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:39:00Z'
 labels:
   - apple
   - owner-gate
@@ -43,4 +43,6 @@ TASK-60 (2026-10-19): the Duo unfolded layout is now driven by system size class
 TASK-60 review follow-up (2026-10-19): because real unfolded Duo size-class reporting is now the source of truth, either hardware outcome can require follow-up. If unfolded portrait reports regular horizontal size class, verify whether split view plus inspector leaves a usable narrow exam column or create a product follow-up. If unfolded landscape reports compact horizontal size class, verify whether losing the inspector is acceptable or create a product follow-up.
 
 Coordinator 2026-11-03 (TASK-83 tracking pass): removed the TASK-15 dependency. TASK-54 needs only the merged TASK-15 part 1 (PR #286), while TASK-15 waits on this task's hardware evidence, so the dependency made both tasks wait on each other. Labelled owner-gate: the criteria need a real iPhone Duo.
+
+Correction (coordinator 2026-11-03): AC#5-7 test the hinge peek from TASK-15 part 2 (PR #292), not only part 1 (PR #286). Both merged on 2026-10-18, so removing the dependency still holds.
 <!-- SECTION:NOTES:END -->
