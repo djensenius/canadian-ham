@@ -4,7 +4,7 @@
 # Release (never DebugCloudKit), with no iCloud or official-sheet overrides and
 # a build number above the Fastlane uploads in build-number-floors for its
 # platform and marketing version. Every action that builds from source reruns
-# the Apple network and iCloud guards. See
+# the Apple network, iCloud and required-reason guards. See
 # docs/release/distribution.md and
 # https://developer.apple.com/documentation/xcode/environment-variable-reference
 set -euo pipefail

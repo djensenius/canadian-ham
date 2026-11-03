@@ -19,7 +19,9 @@ CH_NODE_FORMULA="node@${CH_REQUIRED_NODE_MAJOR}"
 
 # package.json guard scripts run before every action that builds from source.
 # The test:* self-tests prove each guard still rejects its leak fixtures.
-CH_GUARD_SCRIPTS="check:apple-network test:apple-network check:apple-icloud-gate test:apple-icloud-gate"
+# The required-reason check keeps the privacy manifests in step with the
+# sources; its self-test takes about 25 seconds.
+CH_GUARD_SCRIPTS="check:apple-network test:apple-network check:apple-icloud-gate test:apple-icloud-gate check:apple-required-reasons test:apple-required-reasons"
 
 # Shared schemes Xcode Cloud may archive. The watch app ships inside the iOS
 # archive of CanadianHam; CanadianHamWatch is never archived on its own.
@@ -138,8 +140,9 @@ ch_ensure_node() {
   fi
 }
 
-# Runs the Apple network and iCloud guards exactly as package.json defines
-# them. A missing script, a failing guard or a failing self-test stops the build.
+# Runs the Apple network, iCloud and required-reason guards exactly as
+# package.json defines them. A missing script, a failing guard or a failing
+# self-test stops the build.
 ch_run_guards() {
   local script
   ch_ensure_node
@@ -150,7 +153,7 @@ ch_run_guards() {
       ch_fail "Apple guard $script failed; refusing to build"
     fi
   done
-  ch_log "Apple network and iCloud guards passed"
+  ch_log "Apple network, iCloud and required-reason guards passed"
 }
 
 ch_project_path() {
