@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T04:34:00Z'
+updated_date: '2026-11-03T04:43:00Z'
 labels:
   - apple
   - privacy
@@ -95,6 +95,14 @@ PR #1064 review round 4 (commit 425681145d0b6a03d094db685f53c75fe55df3bf, from h
 - Real-tree --verbose output is byte-identical to d8333100.
 - Checks: node scripts/test-check-apple-required-reasons.mjs passed; node scripts/check-apple-required-reasons.mjs passed; pnpm typecheck passed; pnpm test passed; pnpm check:links passed; git diff --check is clean; the test guard passed. No xbuild (script and docs only).
 - Follow-up for the coordinator: apps/apple/ci_scripts/canadian-ham-ci.sh CH_GUARD_SCRIPTS (the Xcode Cloud guards) does not include check:apple-required-reasons or test:apple-required-reasons; this was left unchanged as out of scope.
+
+PR #1064 review round 4b (commit 5f3d18d83b34eb89a3caef40ef4d4eeed2552dc6, from 4d60a844):
+- project.yml sources paths, package directories and package Sources are now checked with lstat, including every directory between the repository root and them. Each fails closed with the same symbolic-link error the walk uses. Fixtures: symlinked package directory, symlinked package Sources, a symlinked sources path outside apps/apple, and a linked parent directory.
+- OTHER_SWIFT_FLAGS "-D FOO" is still rejected, now with a message to use the -DFOO form. Fixture: split -D condition.
+- docs/release/privacy-label-evidence.md: the Limitations section now notes that Codable or dictionary keys with a listed name are flagged (rename the key or justify an exception). The symbolic-link and Swift-flag bullets and the bypass table are updated to match.
+- Each new check was mutation-tested: 5 of 5 mutations were killed.
+- Real-tree --verbose output is byte-identical to 4d60a844.
+- Checks: self-test passed; checker passed; pnpm check:links passed; git diff --check clean; test guard passed. No xbuild.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
