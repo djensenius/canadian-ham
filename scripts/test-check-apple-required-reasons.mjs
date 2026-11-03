@@ -814,7 +814,7 @@ assertPass('resource catalogues, bundles and nested manifests that pass', {
   'apps/apple/Platforms/tvOS/Media.xcassets/Script.dataset/Probe.swift': 'let free = URLResourceKey.volumeAvailableCapacityKey\n',
   'apps/apple/Platforms/tvOS/Media.xcassets/Privacy.dataset/PrivacyInfo.xcprivacy': manifest([[DISK_SPACE, ['E174.1']]]),
   'apps/apple/Platforms/tvOS/Media.xcassets/Header.dataset/shim.h': '#include <sys/stat.h>\n',
-  'apps/apple/Platforms/tvOS/Settings.bundle/Root.plist': '<plist/>\n',
+  'apps/apple/Platforms/tvOS/Settings.bundle/en.lproj/Root.strings': '"Title" = "Settings";\n',
   'apps/apple/Platforms/tvOS/Settings.bundle/PrivacyInfo.xcprivacy': manifest([[DISK_SPACE, ['E174.1']]]),
   'apps/apple/Platforms/tvOS/Resources/en.lproj/PrivacyInfo.xcprivacy': manifest([[DISK_SPACE, ['E174.1']]]),
   'apps/apple/Platforms/tvOS/Resources/.DS_Store': Buffer.from('0000000142756431', 'hex'),
@@ -897,14 +897,23 @@ assertFail('special files', {
   'apps/apple/Platforms/tvOS/Resources/pipe is not a regular file, directory or symbolic link',
   'content/pipe is not a regular file, directory or symbolic link',
 ]);
+// Package.swift labels, members and strings are an allowlist of what the real
+// manifests use; anything else fails with its line.
+const PACKAGE_MANIFEST = 'packages/engine-swift/Package.swift';
+const PACKAGE_ALLOWLIST = "which is not in the checker's Package.swift allowlist";
 assertFail('package paths outside the package', {
   ...tvManifest(TV_WITH_PACKAGE),
   'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace('.target(name: "Engine")', '.target(name: "Engine", resources: [.copy("../Shared")])'),
-}, 'packages/engine-swift/Package.swift uses paths outside the target directory (..)');
+}, [
+  `${PACKAGE_MANIFEST}:8: uses the label resources:, ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:8: uses the member .copy, ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:8: uses the string "../Shared", ${PACKAGE_ALLOWLIST}`,
+]);
 // Build scripts, scheme pre-actions, xcconfig files, headers, search paths and
 // compiler or linker flags can add code the checker does not scan. project.yml
 // keys outside the allowlist fail with their file:line.
 const ALLOWLIST = "is not in the checker's project.yml allowlist";
+const SETTING_ALLOWLIST = "is not in the checker's build-setting allowlist";
 assertFail('pre-build script on a shipped target', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('  TV:\n    type: application\n', '  TV:\n    type: application\n    preBuildScripts:\n      - name: Generate\n        script: ./generate.sh\n')) },
   `apps/apple/project.yml:41: key targets.TV.preBuildScripts ${ALLOWLIST}`);
 assertFail('scheme pre-actions', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(`${PROJECT_YML}schemes:\n  App:\n    build:\n      targets:\n        App: all\n      preActions:\n        - script: ./generate.sh\n`) },
@@ -912,8 +921,8 @@ assertFail('scheme pre-actions', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml
 assertFail('project config files', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('packages:\n', 'configFiles:\n  Debug: Debug.xcconfig\npackages:\n')) },
   `apps/apple/project.yml:4: key configFiles ${ALLOWLIST}`);
 assertFail('bridging header and linker flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('    platform: watchOS\n', '    platform: watchOS\n    settings:\n      base:\n        SWIFT_OBJC_BRIDGING_HEADER: Shim.h\n      configs:\n        Release:\n          OTHER_LDFLAGS[sdk=watchos*]: $(inherited) -lvendor\n')) }, [
-  'Watch: build setting SWIFT_OBJC_BRIDGING_HEADER can compile, import or link code the checker does not scan',
-  'Watch: build setting OTHER_LDFLAGS[sdk=watchos*] can compile, import or link code the checker does not scan',
+  `apps/apple/project.yml:39: Watch: build setting SWIFT_OBJC_BRIDGING_HEADER ${SETTING_ALLOWLIST}`,
+  `apps/apple/project.yml:42: Watch: build setting OTHER_LDFLAGS[sdk=watchos*] ${SETTING_ALLOWLIST}`,
 ]);
 const SWIFT_FLAGS = 'settings:\n  configs:\n    Debug:\n      OTHER_SWIFT_FLAGS: $(inherited) -DDEBUG_MENU\n    Release:\n      OTHER_SWIFT_FLAGS: "$(inherited) -DOFFICIAL_REFERENCE_SHEET"\ntargets:\n';
 assertPass('-D conditions in Swift flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('targets:\n', SWIFT_FLAGS).replace('    platform: tvOS\n', '    platform: tvOS\n    settings:\n      base:\n        OTHER_SWIFT_FLAGS: ""\n')) });
@@ -934,15 +943,20 @@ assertFail('unsupported dependency', { ...tvManifest(TV_WITH_PACKAGE), ...projec
 assertFail('remote package', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('    path: ../../packages/engine-swift\n', '    url: https://example.com/engine.git\n    from: 1.0.0\n')) },
   'project.yml package EnginePkg is not a local path package');
 assertFail('package with custom paths', { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace('.target(name: "Engine")', '.target(name: "Engine", path: "Elsewhere")') },
-  'packages/engine-swift/Package.swift uses custom target paths');
+  `${PACKAGE_MANIFEST}:8: uses the label path:, ${PACKAGE_ALLOWLIST}`);
 assertFail('package plugins, macros, system libraries and unsafe flags', {
   ...tvManifest(TV_WITH_PACKAGE),
   'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace('.target(name: "Engine")', '.target(name: "Engine", swiftSettings: [.unsafeFlags(["-Xcc", "-include"])], plugins: ["Gen"]),\n        .plugin(name: "Gen", capability: .buildTool()),\n        .macro(name: "EngineMacros"),\n        .systemLibrary(name: "CShim")'),
 }, [
-  'packages/engine-swift/Package.swift uses plugins (build tool plugins generate code the checker cannot scan)',
-  'packages/engine-swift/Package.swift uses macro targets',
-  'packages/engine-swift/Package.swift uses system library targets',
-  'packages/engine-swift/Package.swift uses unsafe compiler or linker flags',
+  `${PACKAGE_MANIFEST}:8: uses the member .unsafeFlags, ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:8: uses the string "-Xcc", ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:8: uses the string "-include", ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:8: uses the label plugins:, ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:9: uses the member .plugin, ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:9: uses the label capability:, ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:9: uses the member .buildTool, ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:10: uses the member .macro, ${PACKAGE_ALLOWLIST}`,
+  `${PACKAGE_MANIFEST}:11: uses the member .systemLibrary, ${PACKAGE_ALLOWLIST}`,
 ]);
 assertFail('target templates', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('  Watch:\n    type: application\n', '  Watch:\n    templates: [Base]\n    type: application\n')) },
   `apps/apple/project.yml:35: key targets.Watch.templates ${ALLOWLIST}`);
@@ -958,8 +972,8 @@ const YAML_SUBSET = 'the checker reads a strict YAML subset';
 assertFail('escaped build-setting key', watchSettings('        "OTHER\\u005fLDFLAGS": -lvendor\n'),
   ['apps/apple/project.yml:39: double-quoted escape \\u is not supported (only \\\\ and \\" are decoded); write the character itself', YAML_SUBSET]);
 assertFail('quoted build-setting keys', watchSettings('        \'OTHER_LDFLAGS\': -lvendor\n        "HEADER_SEARCH_PATHS[sdk=watchos*]": vendor\n'), [
-  'Watch: build setting OTHER_LDFLAGS can compile, import or link code the checker does not scan',
-  'Watch: build setting HEADER_SEARCH_PATHS[sdk=watchos*] can compile, import or link code the checker does not scan',
+  `apps/apple/project.yml:39: Watch: build setting OTHER_LDFLAGS ${SETTING_ALLOWLIST}`,
+  `apps/apple/project.yml:40: Watch: build setting HEADER_SEARCH_PATHS[sdk=watchos*] ${SETTING_ALLOWLIST}`,
 ]);
 // Mappings have no prototype: a target named __proto__ is still checked, and
 // a package named toString is unknown rather than Object.prototype.toString.
@@ -974,10 +988,12 @@ assertFail('prototype keys', {
   'App: depends on unknown package toString.',
 ]);
 // Keys are matched as Yams reads them: a quoted key may hold ": ", and a key
-// starting with "-" (no space) is a plain key, not a sequence item.
+// starting with "-" (no space) is a plain key, not a sequence item. Neither
+// is a build-setting name or condition the checker models.
 assertFail('quoted key with ": "', watchSettings('        "OTHER_LDFLAGS[sdk=a: b]": -lvendor\n'),
-  'Watch: build setting OTHER_LDFLAGS[sdk=a: b] can compile, import or link code the checker does not scan');
-assertPass('key starting with -', watchSettings('        SWIFT_VERSION: "6.0"\n        -OTHER_LDFLAGS: x\n'), ['Apple required-reason API check passed']);
+  'apps/apple/project.yml:39: Watch: build setting key "OTHER_LDFLAGS[sdk=a: b]" is not NAME or NAME followed by [sdk=...] or [arch=...] conditions');
+assertFail('key starting with -', watchSettings('        SWIFT_VERSION: "6.0"\n        -OTHER_LDFLAGS: x\n'),
+  'apps/apple/project.yml:40: Watch: build setting key "-OTHER_LDFLAGS" is not NAME or NAME followed by [sdk=...] or [arch=...] conditions');
 assertFail('duplicate keys', watchYml(`${WATCH_PLATFORM}    settings:\n      base:\n        OTHER_LDFLAGS: -lvendor\n    settings: {}\n`),
   'apps/apple/project.yml:40: duplicate key "settings"');
 for (const [name, text, expected] of [
@@ -1207,11 +1223,11 @@ assertFail('scheme test target that is not a string', ymlFixture(`${PROJECT_YML}
 // Every allowlisted key, together, passes.
 const EVERY_KEY_YML = edited(PROJECT_YML,
   OPTIONS_LINE, `${OPTIONS_LINE}  deploymentTarget:\n    iOS: "27.0"\n    watchOS: "27.0"\n  developmentLanguage: en\n  knownRegions: [en, fr]\n  createIntermediateGroups: true\nconfigs:\n  Debug: debug\n  Release: release\n`,
-  'targets:\n', 'settings:\n  base:\n    SWIFT_VERSION: "6.0"\n  configs:\n    Release:\n      SWIFT_COMPILATION_MODE: wholemodule\ntargets:\n',
+  'targets:\n', 'settings:\n  base:\n    SWIFT_VERSION: "6.0"\n  configs:\n    Release:\n      SWIFT_STRICT_CONCURRENCY: complete\ntargets:\n',
   '    platform: auto\n', '    platform: auto\n    deploymentTarget: "27.0"\n',
   '      - package: EnginePkg\n      - target: Watch\n', '      - package: EnginePkg\n        product: Engine\n      - target: Watch\n        embed: true\n        destinationFilters: [iOS]\n',
   APP_SDK, `${APP_SDK}      - sdk: libz.tbd\n`,
-  TV_HEAD, `${TV_HEAD}    settings:\n      base:\n        SWIFT_VERSION: "6.0"\n      configs:\n        Debug:\n          SWIFT_COMPILATION_MODE: singlefile\n    postBuildScripts:\n      - name: Copy\n        script: cp a b\n        basedOnDependencyAnalysis: false\n        inputFiles: [a]\n        outputFiles: [b]\n`);
+  TV_HEAD, `${TV_HEAD}    settings:\n      base:\n        SWIFT_VERSION: "6.0"\n      configs:\n        Debug:\n          SWIFT_STRICT_CONCURRENCY: targeted\n    postBuildScripts:\n      - name: Copy\n        script: cp a b\n        basedOnDependencyAnalysis: false\n        inputFiles: [a]\n        outputFiles: [b]\n`);
 assertPass('every allowlisted project.yml key', ymlFixture(`${EVERY_KEY_YML}${SCHEMES}`), ['Apple required-reason API check passed']);
 // Paths are compared with their exact case: macOS volumes usually ignore
 // case and Linux CI does not, so an optional path in the wrong case would
@@ -1225,6 +1241,228 @@ assertFail('sources path in the wrong case', ymlFixture(edited(PROJECT_YML, WATC
 assertFail('package path in the wrong case', ymlFixture(edited(PROJECT_YML, '    path: ../../packages/engine-swift\n', '    path: ../../packages/Engine-swift\n')),
   'project.yml package EnginePkg path ../../packages/Engine-swift differs only in letter case from packages/engine-swift on disk');
 assertPass('missing optional sources path', ymlFixture(edited(PROJECT_YML, WATCH_SOURCES, `${WATCH_SOURCES}      - path: Platforms/watchOS/Generated\n        optional: true\n`)));
+
+// Build settings are an exact-name allowlist of what the real project.yml
+// sets at the project and shipped-target level, each with a value rule.
+// Everything else fails at its file:line, in base and configs, with or
+// without [sdk=...]/[arch=...] conditions.
+for (const [key, value] of [
+  ['WARNING_LDFLAGS', '-lvendor'],
+  ['PRELINK_LIBS', '/tmp/libvendor.a'],
+  ['LD', '/tmp/evil-ld'],
+  ['SWIFT_EXEC', '/tmp/evil-swiftc'],
+  ['SWIFT_PLUGIN_SERVER_PATH', '/tmp/x'],
+  ['SWIFT_INCLUDE_PATHS', 'vendor'],
+  ['HEADER_SEARCH_PATHS', 'vendor/include'],
+  ['FRAMEWORK_SEARCH_PATHS', 'vendor/Frameworks'],
+  ['LIBRARY_SEARCH_PATHS', 'vendor/lib'],
+  ['OTHER_CFLAGS', '-include shim.h'],
+  ['GCC_PREPROCESSOR_DEFINITIONS', 'VENDOR=1'],
+  ['SWIFT_OBJC_BRIDGING_HEADER', 'Shim.h'],
+  ['OTHER_LDFLAGS', '-lvendor'],
+  ['LDPLUSPLUS', '/tmp/evil-ld'],
+  ['GCC_PREFIX_HEADER', 'Shim.pch'],
+  ['EXCLUDED_SOURCE_FILE_NAMES', 'Settings.swift'],
+  ['SOME_FUTURE_SETTING', 'x'],
+  ['SWIFT', 'x'],
+  ['INFOPLIST_KEY_NSAppTransportSecurity', 'x'],
+  ['toString', 'x'],
+  ['constructor', 'x'],
+]) {
+  assertFail(`build setting ${key}`, watchSettings(`        ${key}: ${value}\n`), `apps/apple/project.yml:39: Watch: build setting ${key} ${SETTING_ALLOWLIST}`);
+}
+assertFail('build setting in project configs', ymlFixture(edited(PROJECT_YML, 'targets:\n', 'settings:\n  configs:\n    Release:\n      LD: /tmp/evil-ld\ntargets:\n')),
+  `apps/apple/project.yml:12: project.yml settings: build setting LD ${SETTING_ALLOWLIST}`);
+assertFail('conditional build setting in target configs', watchSettingsBlock('      configs:\n        Release:\n          PRELINK_LIBS[sdk=watchos*][arch=arm64]: /tmp/libvendor.a\n'),
+  `apps/apple/project.yml:40: Watch: build setting PRELINK_LIBS[sdk=watchos*][arch=arm64] ${SETTING_ALLOWLIST}`);
+assertFail('unmodelled build-setting condition', watchSettings('        CODE_SIGN_STYLE[config=Debug]: Automatic\n'),
+  'apps/apple/project.yml:39: Watch: build setting key "CODE_SIGN_STYLE[config=Debug]" is not NAME or NAME followed by [sdk=...] or [arch=...] conditions');
+assertFail('build-setting key with a space before its condition', watchSettings('        "CODE_SIGN_STYLE [sdk=watchos*]": Automatic\n'),
+  'apps/apple/project.yml:39: Watch: build setting key "CODE_SIGN_STYLE [sdk=watchos*]" is not NAME or NAME followed by [sdk=...] or [arch=...] conditions');
+// Allowlisted settings, also conditional ones, must have a value their rule accepts.
+const badValue = (key, rule, value) => `apps/apple/project.yml:39: Watch: build setting ${key} must be ${rule}, found ${JSON.stringify(value)}`;
+const ENTITLEMENTS_RULE = '"" or a path relative to apps/apple to a .entitlements file (no .., $, ~, hidden or absolute paths)';
+const PLIST_RULE = 'a path relative to apps/apple to a .plist file (no .., $, ~, hidden or absolute paths)';
+const CONDITIONS_RULE = '$(inherited) and condition names, as a string or list of strings';
+for (const [name, key, text, value, rule] of [
+  ['absolute entitlements', 'CODE_SIGN_ENTITLEMENTS[sdk=iphone*]', '/tmp/x.entitlements', '/tmp/x.entitlements', ENTITLEMENTS_RULE],
+  ['entitlements outside apps/apple', 'CODE_SIGN_ENTITLEMENTS', '../Elsewhere/x.entitlements', '../Elsewhere/x.entitlements', ENTITLEMENTS_RULE],
+  ['entitlements with a variable', 'CODE_SIGN_ENTITLEMENTS', '$(SRCROOT)/x.entitlements', '$(SRCROOT)/x.entitlements', ENTITLEMENTS_RULE],
+  ['entitlements of another type', 'CODE_SIGN_ENTITLEMENTS', 'Platforms/watchOS/WatchMain.swift', 'Platforms/watchOS/WatchMain.swift', ENTITLEMENTS_RULE],
+  ['hidden entitlements', 'CODE_SIGN_ENTITLEMENTS', 'Platforms/.x.entitlements', 'Platforms/.x.entitlements', ENTITLEMENTS_RULE],
+  ['empty Info.plist path', 'INFOPLIST_FILE', '""', '', PLIST_RULE],
+  ['Info.plist with ..', 'INFOPLIST_FILE[sdk=watchos*]', 'Config/../../Info.plist', 'Config/../../Info.plist', PLIST_RULE],
+  ['compiler flags as compilation conditions', 'SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=*]', '-Xcc', '-Xcc', CONDITIONS_RULE],
+  ['compilation condition list with a flag', 'SWIFT_ACTIVE_COMPILATION_CONDITIONS', '["$(inherited)", "-include x.h"]', ['$(inherited)', '-include x.h'], CONDITIONS_RULE],
+  ['compilation condition list with a number', 'SWIFT_ACTIVE_COMPILATION_CONDITIONS', '[A, 1]', ['A', 1], CONDITIONS_RULE],
+  ['setting reference as a version', 'SWIFT_VERSION', '$(SWIFT_EXEC)', '$(SWIFT_EXEC)', 'a version number such as 27.0'],
+  ['negative version', 'SWIFT_VERSION', '-6', -6, 'a version number such as 27.0'],
+  ['device family', 'TARGETED_DEVICE_FAMILY[sdk=watchos*]', '"4,8"', '4,8', 'device family numbers 1 to 7, comma-separated'],
+  ['device family number', 'TARGETED_DEVICE_FAMILY', '9', 9, 'device family numbers 1 to 7, comma-separated'],
+  ['bundle identifier', 'PRODUCT_BUNDLE_IDENTIFIER', '$(VENDOR_ID)', '$(VENDOR_ID)', 'a bundle identifier'],
+  ['product name', 'PRODUCT_NAME', '../Vendor', '../Vendor', 'a product name of letters, digits, _ and -'],
+  ['team', 'DEVELOPMENT_TEAM', 'team', 'team', 'a 10-character team ID'],
+  ['signing style', 'CODE_SIGN_STYLE', 'Vendor', 'Vendor', 'one of Automatic, Manual'],
+  ['strict concurrency', 'SWIFT_STRICT_CONCURRENCY', 'none', 'none', 'one of minimal, targeted, complete'],
+  ['boolean setting', 'ENABLE_USER_SCRIPT_SANDBOXING', 'maybe', 'maybe', 'YES, NO or a YAML boolean'],
+  ['icon name', 'ASSETCATALOG_COMPILER_APPICON_NAME', '../Icon', '../Icon', 'an asset name of letters, digits, spaces and &._-'],
+  ['display name', 'INFOPLIST_KEY_CFBundleDisplayName', '$(PRODUCT_NAME)', '$(PRODUCT_NAME)', 'a display name of letters, digits, spaces and &._-'],
+  ['app category', 'INFOPLIST_KEY_LSApplicationCategoryType', 'education', 'education', 'a public.app-category type'],
+  ['background modes as a list', 'INFOPLIST_KEY_UIBackgroundModes', '[remote-notification]', ['remote-notification'], 'space-separated background mode names'],
+  ['empty background modes', 'INFOPLIST_KEY_UIBackgroundModes', '""', '', 'space-separated background mode names'],
+  ['empty orientations', 'INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone', '""', '', 'space-separated UIInterfaceOrientation names'],
+  ['orientations', 'INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad[sdk=iphone*]', 'UIInterfaceOrientationPortrait Sideways', 'UIInterfaceOrientationPortrait Sideways', 'space-separated UIInterfaceOrientation names'],
+  ['companion bundle identifier', 'INFOPLIST_KEY_WKCompanionAppBundleIdentifier', 'app', 'app', 'a bundle identifier'],
+  ['Swift flags that are not strings', 'OTHER_SWIFT_FLAGS', '[-DX, 1]', ['-DX', 1], '$(inherited) and -DNAME conditions, as a string or list of strings'],
+]) {
+  assertFail(`build setting value: ${name}`, watchSettings(`        ${key}: ${text}\n`), badValue(key, rule, value));
+}
+assertFail('conditional Swift flags', watchSettings('        OTHER_SWIFT_FLAGS[arch=arm64]: -Xcc -include\n'),
+  'apps/apple/project.yml:39: Watch: OTHER_SWIFT_FLAGS[arch=arm64] -Xcc -include is not a -D condition');
+// Path settings must name an existing regular file, without links, in the case on disk.
+const WATCH_ENTITLEMENTS = 'apps/apple/Platforms/watchOS/Watch.entitlements';
+const ENTITLEMENTS_XML = '<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0">\n<dict/>\n</plist>\n';
+assertFail('missing entitlements file', watchSettings('        CODE_SIGN_ENTITLEMENTS: Platforms/watchOS/Missing.entitlements\n'),
+  'apps/apple/project.yml:39: Watch: build setting CODE_SIGN_ENTITLEMENTS path Platforms/watchOS/Missing.entitlements does not exist under apps/apple.');
+assertFail('entitlements directory', { ...watchSettings('        CODE_SIGN_ENTITLEMENTS: Platforms/watchOS/Dir.entitlements\n'), 'apps/apple/Platforms/watchOS/Dir.entitlements/Inner.entitlements': ENTITLEMENTS_XML },
+  'apps/apple/project.yml:39: Watch: build setting CODE_SIGN_ENTITLEMENTS path Platforms/watchOS/Dir.entitlements is not a regular file under apps/apple.');
+// The links sit under apps/apple/build, which the unmapped-Swift walk prunes,
+// so only the setting's own path check can report them.
+assertFail('entitlements symbolic link', { ...watchSettings('        CODE_SIGN_ENTITLEMENTS: build/Link.entitlements\n'), [WATCH_ENTITLEMENTS]: ENTITLEMENTS_XML, 'apps/apple/build/Link.entitlements': { symlink: '../Platforms/watchOS/Watch.entitlements' } },
+  'apps/apple/build/Link.entitlements is a symbolic link');
+assertFail('entitlements in the wrong case', { ...watchSettings('        CODE_SIGN_ENTITLEMENTS: Platforms/watchOS/watch.entitlements\n'), [WATCH_ENTITLEMENTS]: ENTITLEMENTS_XML },
+  `apps/apple/project.yml:39: Watch: build setting CODE_SIGN_ENTITLEMENTS path Platforms/watchOS/watch.entitlements differs only in letter case from ${WATCH_ENTITLEMENTS} on disk`);
+assertFail('Info.plist through a linked directory', {
+  ...watchSettings('        INFOPLIST_FILE: build/Linked/Watch.Info.plist\n'),
+  'apps/apple/Config/Watch.Info.plist': ENTITLEMENTS_XML,
+  'apps/apple/build/Linked': { symlink: '../Config' },
+}, 'apps/apple/build/Linked is a symbolic link');
+// Every allowlisted setting, with values like the real project.yml, passes.
+const EVERY_PROJECT_SETTING = 'settings:\n  base:\n    CURRENT_PROJECT_VERSION: 1\n    MARKETING_VERSION: 1.0.0\n    DEVELOPMENT_TEAM: ABCDE12345\n    SWIFT_VERSION: 6.0\n    SWIFT_STRICT_CONCURRENCY: complete\n'
+  + '    IPHONEOS_DEPLOYMENT_TARGET: "27.0"\n    MACOSX_DEPLOYMENT_TARGET: "27.0"\n    TVOS_DEPLOYMENT_TARGET: "27.0"\n    XROS_DEPLOYMENT_TARGET: "27.0"\n    TARGETED_DEVICE_FAMILY: "1,2"\n'
+  + '    SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO\n    SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: false\n    CODE_SIGN_STYLE: Automatic\n'
+  + '    SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=iphone*27.0*]: "$(inherited) NO_HINGE_API"\n    ENABLE_USER_SCRIPT_SANDBOXING: YES\n'
+  + '  configs:\n    Debug:\n      OTHER_SWIFT_FLAGS: $(inherited) -DDEBUG_MENU\n    DebugCloudKit:\n      OTHER_SWIFT_FLAGS: ["$(inherited)", -DICLOUD_SYNC]\ntargets:\n';
+const EVERY_TARGET_SETTING = '      base:\n        PRODUCT_BUNDLE_IDENTIFIER: org.example.app.watchkitapp\n        PRODUCT_NAME: Watch\n'
+  + '        ASSETCATALOG_COMPILER_APPICON_NAME: App Icon & Top Shelf Image\n        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor\n        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES\n'
+  + '        GENERATE_INFOPLIST_FILE: YES\n        INFOPLIST_KEY_CFBundleDisplayName: Canadian Ham\n        INFOPLIST_KEY_CFBundleIconName: AppIcon\n'
+  + '        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO\n        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education\n'
+  + '        INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphone*]: YES\n'
+  + '        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad[sdk=iphone*]: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"\n'
+  + '        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone[sdk=iphone*]: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft"\n'
+  + '        INFOPLIST_KEY_WKApplication: YES\n        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: org.example.app\n        INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp: NO\n'
+  + '        CODE_SIGN_ENTITLEMENTS: ""\n        SWIFT_EMIT_LOC_STRINGS: YES\n        LOCALIZATION_PREFERS_STRING_CATALOGS: YES\n        OTHER_SWIFT_FLAGS: ""\n'
+  + '        TARGETED_DEVICE_FAMILY: 4\n        ENABLE_USER_SCRIPT_SANDBOXING: NO\n'
+  + '      configs:\n        DebugCloudKit:\n          CODE_SIGN_ENTITLEMENTS[sdk=watchos*]: Platforms/watchOS/Watch.entitlements\n'
+  + '          GENERATE_INFOPLIST_FILE[sdk=watchos*]: NO\n          INFOPLIST_FILE[sdk=watchos*][arch=arm64]: Config/Watch.Info.plist\n'
+  + '          INFOPLIST_KEY_UIBackgroundModes: remote-notification\n          SWIFT_ACTIVE_COMPILATION_CONDITIONS:\n            - $(inherited)\n            - ICLOUD_SYNC\n          SWIFT_VERSION: "6.0"\n';
+assertPass('every allowlisted build setting', {
+  ...ymlFixture(edited(PROJECT_YML, 'targets:\n', EVERY_PROJECT_SETTING, WATCH_PLATFORM, `${WATCH_PLATFORM}    settings:\n${EVERY_TARGET_SETTING}`)),
+  [WATCH_ENTITLEMENTS]: ENTITLEMENTS_XML,
+  'apps/apple/Config/Watch.Info.plist': ENTITLEMENTS_XML,
+}, ['Apple required-reason API check passed']);
+// Test targets never ship, so their settings are not checked.
+assertPass('test-target settings are not checked', ymlFixture(edited(PROJECT_YML, '  AppTests:\n    type: bundle.unit-test\n',
+  '  AppTests:\n    type: bundle.unit-test\n    settings:\n      base:\n        BUNDLE_LOADER: $(TEST_HOST)\n        TEST_HOST: $(BUILT_PRODUCTS_DIR)/App.app/App\n        OTHER_LDFLAGS: -lvendor\n')));
+
+// Package.swift labels, members and strings outside the allowlist fail at their line.
+for (const [name, replacement, line, expected] of [
+  ['linker settings', '.target(name: "Engine", linkerSettings: [.linkedLibrary("z")])', 8, ['the label linkerSettings:', 'the member .linkedLibrary']],
+  ['define', '.target(name: "Engine", swiftSettings: [.define("VENDOR")])', 8, ['the member .define']],
+  ['C settings', '.target(name: "Engine", cSettings: [.headerSearchPath("include")])', 8, ['the label cSettings:', 'the member .headerSearchPath']],
+  ['exclude', '.target(name: "Engine", exclude: ["Generated"])', 8, ['the label exclude:']],
+  ['sources', '.target(name: "Engine", sources: ["Engine"])', 8, ['the label sources:']],
+  ['executable target', '.executableTarget(name: "Tool")', 8, ['the member .executableTarget']],
+  ['binary target', '.binaryTarget(name: "Vendor", path: "Vendor.xcframework")', 8, ['the member .binaryTarget', 'the label path:', 'the string "Vendor.xcframework"']],
+  ['product dependency', '.target(name: "Engine", dependencies: [.product(name: "Vendor", package: "vendor")])', 8, ['the member .product', 'the label package:']],
+  ['name with a slash', '.target(name: "Engine/Hidden")', 8, ['the string "Engine/Hidden"']],
+  ['empty name', '.target(name: "")', 8, ['the string ""']],
+]) {
+  assertFail(`Package.swift allowlist: ${name}`, { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Package.swift': edited(PACKAGE_SWIFT, ENGINE_TARGET, replacement) },
+    expected.map((what) => `${PACKAGE_MANIFEST}:${line}: uses ${what}, ${PACKAGE_ALLOWLIST}`));
+}
+assertFail('Package.swift allowlist: dynamic product', { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Package.swift': edited(PACKAGE_SWIFT, '.library(name: "Engine", targets: ["Engine"])', '.library(name: "Engine", type: .dynamic, targets: ["Engine"])') },
+  [`${PACKAGE_MANIFEST}:6: uses the label type:, ${PACKAGE_ALLOWLIST}`, `${PACKAGE_MANIFEST}:6: uses the member .dynamic, ${PACKAGE_ALLOWLIST}`]);
+assertFail('Package.swift allowlist: package dependency', { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Package.swift': edited(PACKAGE_SWIFT, '    name: "Engine",\n', '    name: "Engine",\n    dependencies: [.package(path: "../vendor")],\n') },
+  [`${PACKAGE_MANIFEST}:6: uses the member .package, ${PACKAGE_ALLOWLIST}`, `${PACKAGE_MANIFEST}:6: uses the label path:, ${PACKAGE_ALLOWLIST}`, `${PACKAGE_MANIFEST}:6: uses the string "../vendor", ${PACKAGE_ALLOWLIST}`]);
+// A manifest like the real ones passes.
+assertPass('Package.swift like the real manifests', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'packages/engine-swift/Package.swift': edited(PACKAGE_SWIFT,
+    '    name: "Engine",\n', '    name: "Engine",\n    platforms: [\n        .iOS(.v27),\n        .macOS(.v27),\n        .visionOS(.v27),\n        .tvOS(.v27),\n        .watchOS(.v27),\n    ],\n',
+    ENGINE_TARGET, '.target(\n            name: "Engine",\n            swiftSettings: [\n                .swiftLanguageMode(.v6),\n            ]\n        )',
+    '    ]\n)', '    ],\n    swiftLanguageModes: [.v6]\n)'),
+}, ['Apple required-reason API check passed']);
+
+// File types are an allowlist: a shipped target's files (outside folder
+// references, buildPhase none entries, excluded paths and catalogues, in any
+// phase and inside wrappers) must be Swift or listed inert data, and package
+// Sources may hold only Swift.
+const NOT_SWIFT = 'is not Swift; only Swift sources are scanned';
+assertFail('file types outside the allowlist', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(edited(PROJECT_YML, '      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n      - path: ../../content/scripts\n        buildPhase: resources\n      - path: ../../content/Kit.bundle\n        type: file\n        buildPhase: resources\n')),
+  'apps/apple/Platforms/tvOS/Shim/parse.y': '%%\n',
+  'apps/apple/Platforms/tvOS/Shim/scan.l': '%%\n',
+  'apps/apple/Platforms/tvOS/Shim/rpc.defs': 'subsystem rpc 100;\n',
+  'apps/apple/Platforms/tvOS/Shim/Kernel.metal': 'kernel void k() {}\n',
+  'apps/apple/Platforms/tvOS/Shim/gen.c++': 'int x;\n',
+  'apps/apple/Platforms/tvOS/Shim/README': 'notes\n',
+  'apps/apple/Platforms/tvOS/Shim/Upper.SWIFT': 'let shout = 1\n',
+  'apps/apple/Platforms/tvOS/Shim/Config.plist': '<plist/>\n',
+  'apps/apple/Platforms/tvOS/Shim/Main.storyboard': '<document/>\n',
+  'apps/apple/Platforms/tvOS/Shim/Prefs.xib': '<document/>\n',
+  'apps/apple/Platforms/tvOS/Shim/Classifier.mlmodel': 'model\n',
+  'apps/apple/Platforms/tvOS/Shim/Intents.intentdefinition': '<plist/>\n',
+  'apps/apple/Platforms/tvOS/Model.xcdatamodeld/Model.xcdatamodel/contents': '<model/>\n',
+  'apps/apple/Platforms/tvOS/Settings.bundle/Root.plist': '<plist/>\n',
+  'content/scripts/run.js': 'run()\n',
+  'content/Kit.bundle/Info.plist': '<plist/>\n',
+  'packages/engine-swift/Sources/Engine/Kernel.metal': 'kernel void k() {}\n',
+  'packages/engine-swift/Sources/Engine/data.json': '{}\n',
+}, [
+  ...['Shim/parse.y', 'Shim/scan.l', 'Shim/rpc.defs', 'Shim/Kernel.metal', 'Shim/gen.c++', 'Shim/README', 'Shim/Upper.SWIFT', 'Shim/Config.plist',
+    'Shim/Main.storyboard', 'Shim/Prefs.xib', 'Shim/Classifier.mlmodel', 'Shim/Intents.intentdefinition',
+    'Model.xcdatamodeld/Model.xcdatamodel/contents', 'Settings.bundle/Root.plist'].map((file) => `TV: apps/apple/Platforms/tvOS/${file} ${NOT_SWIFT}`),
+  `TV: content/scripts/run.js ${NOT_SWIFT}`,
+  `TV: content/Kit.bundle/Info.plist ${NOT_SWIFT}`,
+  `package EnginePkg: packages/engine-swift/Sources/Engine/Kernel.metal ${NOT_SWIFT}`,
+  `package EnginePkg: packages/engine-swift/Sources/Engine/data.json ${NOT_SWIFT}`,
+]);
+assertPass('inert data types, excluded files and folder references', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(edited(PROJECT_YML, '      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n        excludes:\n          - Resources/Info.plist\n      - path: ../../content/data\n        buildPhase: resources\n      - path: ../../content/site\n        type: folder\n')),
+  'apps/apple/Platforms/tvOS/Resources/en.lproj/Localizable.strings': '"A" = "B";\n',
+  'apps/apple/Platforms/tvOS/Resources/Strings.xcstrings': '{}\n',
+  'apps/apple/Platforms/tvOS/Resources/TV.entitlements': ENTITLEMENTS_XML,
+  'apps/apple/Platforms/tvOS/Resources/Info.plist': '<plist/>\n',
+  'content/data/course.json': '{}\n',
+  'content/site/app.js': 'run()\n',
+  'content/site/README': 'notes\n',
+}, [TV_SUMMARY]);
+
+// Shipped target types are exactly those the real project uses.
+for (const type of ['app-extension', 'application.watchapp2', 'application.on-demand-install-capable', 'framework.static']) {
+  assertFail(`target type ${type}`, ymlFixture(`${PROJECT_YML}  Kit:\n    type: ${type}\n    platform: iOS\n    sources:\n      - Shared\n`),
+    `Kit: target type "${type}" is not supported`);
+}
+
+// Spec paths are relative to apps/apple, with .. only at the start.
+const SPEC_PATH_RULE = 'is not a relative path the checker models';
+for (const path of ['/tmp/vendor', '~/vendor', 'Platforms/../Shared', './Shared', 'Shared/', 'Shared//Settings.swift', 'Shared/./Settings.swift']) {
+  assertFail(`sources path ${path}`, ymlFixture(edited(PROJECT_YML, '      - path: Platforms/tvOS\n', `      - path: Platforms/tvOS\n      - path: "${path}"\n`)),
+    `TV: sources path ${JSON.stringify(path)} ${SPEC_PATH_RULE}`);
+}
+for (const path of ['/tmp/engine-swift', '../../packages/../packages/engine-swift']) {
+  assertFail(`package path ${path}`, ymlFixture(edited(PROJECT_YML, '    path: ../../packages/engine-swift\n', `    path: ${path}\n`)),
+    `project.yml package EnginePkg path ${JSON.stringify(path)} ${SPEC_PATH_RULE}`);
+}
+// XcodeGen rejects any missing non-optional path, so a missing resources or
+// headers path fails too.
+for (const phase of ['resources', 'headers']) {
+  assertFail(`missing ${phase} path`, ymlFixture(edited(PROJECT_YML, '      - path: Platforms/tvOS\n', `      - path: Platforms/tvOS\n      - path: Resources/Missing.json\n        buildPhase: ${phase}\n`)),
+    'TV: sources path Resources/Missing.json does not exist.');
+}
 
 if (failures !== 0) {
   console.error(`required-reasons-test: failed with ${failures} failure(s).`);

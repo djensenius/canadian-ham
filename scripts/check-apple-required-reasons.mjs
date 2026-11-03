@@ -36,7 +36,7 @@
 // string) and wholesale attribute reads that never name a listed key are not
 // detected; docs/release/privacy-label-evidence.md lists every such class.
 import { closeSync, existsSync, lstatSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
-import { basename, dirname, join, normalize, relative, resolve, sep } from 'node:path';
+import { basename, dirname, extname, join, normalize, relative, resolve, sep } from 'node:path';
 
 const root = resolve(process.env.REQUIRED_REASONS_ROOT ?? process.cwd());
 const verbose = process.argv.includes('--verbose');
@@ -123,13 +123,31 @@ const CATEGORIES = {
   },
 };
 
-// Only Swift is scanned. C-family and assembly sources could call
-// required-reason APIs (stat, mach_absolute_time, NSUserDefaults, ...) with
-// other spellings, and module maps or API notes could import or rename them,
-// so any such file in a shipped target or linked package fails the check.
-// Prefix headers (.pch), LLVM IR (.ll) and legacy module.map files count too.
-const NON_SWIFT_SOURCE = /\.(?:c|m|mm|cpp|cc|cxx|h|hh|hpp|hxx|inl|ipp|pch|s|S|ll|modulemap|apinotes)$|\/module\.map$/;
-const NON_SWIFT_MESSAGE = 'only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly, module maps and API notes before shipping it';
+// Only Swift is scanned. Xcode and SwiftPM compile files, or generate code
+// from them, by type: C-family, assembly, LLVM IR, lex, yacc, MIG and Metal
+// sources, module maps, API notes and prefix headers, Core Data and Core ML
+// models, Intents definitions, Reality Composer projects and more. So file
+// types are an allowlist rather than a list of known source types: a file in
+// a shipped target (outside folder references, buildPhase none entries,
+// excluded paths and resource catalogues, in any build phase) must be Swift
+// or one of the inert data types below, which are exactly the types the real
+// targets hold there, and a linked package's Sources may hold only Swift.
+// Anything else fails, including files with no extension and extensions in
+// another letter case. .DS_Store is exempt: XcodeGen leaves it out and Finder
+// writes it. When a real target gains a data type, the check fails; confirm
+// the type is inert (Xcode neither compiles it nor generates code from it),
+// then add it here and to the evidence doc.
+const SOURCE_DATA_EXTENSIONS = new Set([
+  '.json', // copied as data (course and subsection data)
+  '.strings', // localized string tables, copied as data
+  '.xcstrings', // string catalogues, compiled to string tables
+  '.entitlements', // signing entitlements, never copied or compiled
+  '.xcprivacy', // privacy manifests, copied as data and checked below
+]);
+const sourceTypeAllowed = (file, dataAllowed) => basename(file) === '.DS_Store'
+  || extname(file) === '.swift'
+  || (dataAllowed && SOURCE_DATA_EXTENSIONS.has(extname(file)));
+const NON_SWIFT_MESSAGE = 'only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly, module maps and API notes, or other types Xcode compiles or generates code from, before shipping it (for an inert data type, add its extension to SOURCE_DATA_EXTENSIONS)';
 // Prebuilt code in a shipped target's sources is linked, embedded or loadable
 // without any Swift spelling to scan. Code bundles and prebuilt Swift modules
 // match by directory name; libraries, objects, text-based stubs and module
@@ -158,8 +176,23 @@ function isBinaryCode(file) {
   }
 }
 
-const SHIPPED_TARGET_TYPE = /^(?:application(?:\..+)?|app-extension(?:\..+)?|.*-extension)$/;
+// Target types are exactly those the real project.yml uses. Other types
+// (frameworks, libraries, app extensions, watch app containers, App Clips,
+// XPC services, ...) build or embed products the checker does not model, so
+// they fail.
+const SHIPPED_TARGET_TYPES = new Set(['application']);
 const TEST_TARGET_TYPES = new Set(['bundle.unit-test', 'bundle.ui-testing']);
+// project.yml paths (sources entries and package paths) are relative to
+// apps/apple: any leading ../ components, then one or more non-empty names
+// that are not . or .., hold no control characters and (for the first) do
+// not start with ~. XcodeGen (PathKit) uses an absolute path as is (joining
+// it to apps/apple would name another file), and it pops a leading .. off the
+// base path lexically but leaves a later .. to be resolved through symbolic
+// links, which could reach a different directory from the checker's; ~ and
+// empty, trailing-slash or . components are not modelled either, so all of
+// these fail. $ is rejected separately (XcodeGen variables).
+const SPEC_PATH = /^(?:\.\.\/)*(?!~)(?!\.\.?(?:\/|$))[^/\x00-\x1f\x7f]+(?:\/(?!\.\.?(?:\/|$))[^/\x00-\x1f\x7f]+)*$/;
+const specPathMessage = (what) => `${what} is not a relative path the checker models (leading ../ components, then non-empty names other than . and ..); absolute, ~, empty, trailing-slash, . and later .. components are not modelled, so extend scripts/check-apple-required-reasons.mjs.`;
 // XcodeGen sources keys the checker models. Per-file compilerFlags are left
 // out because they could pass import or include flags.
 const KNOWN_SOURCE_KEYS = new Set([
@@ -215,8 +248,10 @@ const TARGET_SHAPE = {
       },
     },
     settings: SETTINGS_SHAPE,
-    // Post-build scripts run after the compile, link and copy phases; their
-    // text is not inspected (see the evidence doc's limitations).
+    // Post-build scripts run after the compile, link and copy phases but
+    // before code signing, so they could still replace the executable or copy
+    // a dylib into the app; their inline text is reviewed by hand, with binary
+    // inspection as the cross-check (see the evidence doc's limitations).
     postBuildScripts: {
       items: {
         keys: { name: ANY, script: 'string', basedOnDependencyAnalysis: ANY, inputFiles: ANY, outputFiles: ANY },
@@ -258,9 +293,102 @@ const PROJECT_SHAPE = {
     },
   },
 };
-// Build settings that would compile, import or link code outside the scanned
-// Swift files. OTHER_SWIFT_FLAGS may hold only $(inherited) and -D conditions.
-const CODE_BUILD_SETTING = /^(?:SWIFT_OBJC_BRIDGING_HEADER|GCC_PREFIX_HEADER|OTHER_LDFLAGS|OTHER_LIBTOOLFLAGS|SWIFT_INCLUDE_PATHS|(?:USER_|SYSTEM_)?HEADER_SEARCH_PATHS|LIBRARY_SEARCH_PATHS|(?:SYSTEM_)?FRAMEWORK_SEARCH_PATHS|MODULEMAP_FILE)$/;
+// Build-setting allowlist. The project's settings and each shipped target's
+// settings (base and every configuration) may use only these exact setting
+// names, each with a rule for its value. A conditional variant NAME[sdk=...]
+// or NAME[arch=...] (one or more conditions) is matched on NAME and gets the
+// same value rule; any other key spelling or condition fails. The names are
+// exactly those apps/apple/project.yml sets at those levels, with no prefix
+// families, so linker, compiler, search-path, header, tool-path and plugin
+// settings (OTHER_LDFLAGS, WARNING_LDFLAGS, PRELINK_LIBS, LD, SWIFT_EXEC,
+// SWIFT_INCLUDE_PATHS, SWIFT_PLUGIN_SERVER_PATH, HEADER_SEARCH_PATHS,
+// OTHER_CFLAGS, GCC_PREPROCESSOR_DEFINITIONS, ...) and every other setting
+// fail with their file:line. Values may not refer to other settings ($(...)
+// or ${...}) except $(inherited) where a rule allows it. When the real
+// project.yml gains a setting, the check fails; confirm the setting is inert
+// for code and link inputs (or model its value), then add it here with a
+// value rule and to the evidence doc. Test-target settings are not checked,
+// because test bundles never ship; BUNDLE_LOADER and TEST_HOST appear only on
+// CanadianHamTests.
+const settingRule = (description, test, extra = {}) => ({ description, test, ...extra });
+const settingWords = (value) => (typeof value === 'string' ? value.split(' ').filter(Boolean) : null);
+const SETTING_IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/;
+const SETTING_BUNDLE_ID = /^[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
+const YES_NO = settingRule('YES, NO or a YAML boolean', (value) => typeof value === 'boolean' || value === 'YES' || value === 'NO');
+const VERSION = settingRule('a version number such as 27.0',
+  (value) => (typeof value === 'number' && Number.isFinite(value) && value >= 0) || (typeof value === 'string' && /^[0-9]+(?:\.[0-9]+){0,2}$/.test(value)));
+const settingMatch = (description, pattern) => settingRule(description, (value) => typeof value === 'string' && pattern.test(value));
+const settingOneOf = (...choices) => settingRule(`one of ${choices.join(', ')}`, (value) => choices.includes(value));
+const BUNDLE_ID = settingMatch('a bundle identifier', SETTING_BUNDLE_ID);
+const ASSET_NAME = settingMatch('an asset name of letters, digits, spaces and &._-', /^[A-Za-z0-9][A-Za-z0-9 &._-]*$/);
+const ORIENTATIONS = new Set(['UIInterfaceOrientationPortrait', 'UIInterfaceOrientationPortraitUpsideDown', 'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight']);
+const ORIENTATION_LIST = settingRule('space-separated UIInterfaceOrientation names',
+  (value) => settingWords(value)?.length > 0 && settingWords(value).every((word) => ORIENTATIONS.has(word)));
+// A path relative to apps/apple (SRCROOT) to an existing regular file of the
+// expected type: names of letters, digits and _.+- that do not start with a
+// dot, no .., $, ~ or leading /, no symbolic link on the way and the exact
+// letter case on disk.
+const SETTING_PATH = /^[A-Za-z0-9_][A-Za-z0-9_.+-]*(?:\/[A-Za-z0-9_][A-Za-z0-9_.+-]*)*$/;
+const settingPath = (extension, emptyAllowed) => settingRule(
+  `${emptyAllowed ? '"" or ' : ''}a path relative to apps/apple to a ${extension} file (no .., $, ~, hidden or absolute paths)`,
+  (value) => typeof value === 'string' && ((emptyAllowed && value === '') || (SETTING_PATH.test(value) && value.endsWith(extension))),
+  { file: true },
+);
+// Compilation conditions only select #if branches, and every branch is scanned.
+const CONDITIONS = settingRule('$(inherited) and condition names, as a string or list of strings',
+  (value) => [value].flat().every((item) => typeof item === 'string' && settingWords(item).every((word) => word === '$(inherited)' || SETTING_IDENTIFIER.test(word))));
+// OTHER_SWIFT_FLAGS may hold only $(inherited) and -DNAME conditions (checkSwiftFlags).
+const SWIFT_FLAGS = settingRule('$(inherited) and -DNAME conditions, as a string or list of strings',
+  (value) => [value].flat().every((item) => typeof item === 'string'), { swiftFlags: true });
+const BUILD_SETTINGS = new Map(Object.entries({
+  // Version, identity and signing metadata written to Info.plist or used to sign.
+  CURRENT_PROJECT_VERSION: VERSION, // build number
+  MARKETING_VERSION: VERSION, // version string
+  DEVELOPMENT_TEAM: settingMatch('a 10-character team ID', /^[A-Z0-9]{10}$/), // signing team
+  CODE_SIGN_STYLE: settingOneOf('Automatic', 'Manual'), // automatic or manual signing
+  CODE_SIGN_ENTITLEMENTS: settingPath('.entitlements', true), // capabilities, not code; the iCloud gate checks their content
+  PRODUCT_BUNDLE_IDENTIFIER: BUNDLE_ID, // bundle ID
+  PRODUCT_NAME: settingMatch('a product name of letters, digits, _ and -', /^[A-Za-z0-9_-]+$/), // product, executable and module name
+  // Language mode and platforms.
+  SWIFT_VERSION: VERSION, // Swift language mode
+  SWIFT_STRICT_CONCURRENCY: settingOneOf('minimal', 'targeted', 'complete'), // concurrency diagnostics
+  IPHONEOS_DEPLOYMENT_TARGET: VERSION, // minimum OS versions
+  MACOSX_DEPLOYMENT_TARGET: VERSION,
+  TVOS_DEPLOYMENT_TARGET: VERSION,
+  XROS_DEPLOYMENT_TARGET: VERSION,
+  TARGETED_DEVICE_FAMILY: settingRule('device family numbers 1 to 7, comma-separated', // device families
+    (value) => (Number.isInteger(value) && value >= 1 && value <= 7) || (typeof value === 'string' && /^[1-7](?:,[1-7])*$/.test(value))),
+  SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: YES_NO, // whether the iOS build runs on Mac or Vision as is
+  SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: YES_NO,
+  // Conditions: names for #if, never flags.
+  SWIFT_ACTIVE_COMPILATION_CONDITIONS: CONDITIONS,
+  OTHER_SWIFT_FLAGS: SWIFT_FLAGS,
+  // Build-process switches that add no inputs.
+  ENABLE_USER_SCRIPT_SANDBOXING: YES_NO, // sandboxes script phases, whose text is reviewed by hand
+  SWIFT_EMIT_LOC_STRINGS: YES_NO, // extracts localizable strings at compile time
+  LOCALIZATION_PREFERS_STRING_CATALOGS: YES_NO, // string catalogue export format
+  // Asset catalogue compiler: which icon and colour to use.
+  ASSETCATALOG_COMPILER_APPICON_NAME: ASSET_NAME,
+  ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: ASSET_NAME,
+  ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES_NO,
+  // Info.plist: generated from these keys or read from a plist file, data only.
+  GENERATE_INFOPLIST_FILE: YES_NO,
+  INFOPLIST_FILE: settingPath('.plist', false),
+  INFOPLIST_KEY_CFBundleDisplayName: settingMatch('a display name of letters, digits, spaces and &._-', /^[A-Za-z0-9][A-Za-z0-9 &._-]*$/),
+  INFOPLIST_KEY_CFBundleIconName: ASSET_NAME,
+  INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: YES_NO,
+  INFOPLIST_KEY_LSApplicationCategoryType: settingMatch('a public.app-category type', /^public\.app-category\.[a-z]+(?:-[a-z]+)*$/),
+  INFOPLIST_KEY_UIBackgroundModes: settingRule('space-separated background mode names', // the iCloud gate checks which modes
+    (value) => settingWords(value)?.length > 0 && settingWords(value).every((word) => /^[a-z]+(?:-[a-z]+)*$/.test(word))),
+  INFOPLIST_KEY_UILaunchScreen_Generation: YES_NO,
+  INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: ORIENTATION_LIST,
+  INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: ORIENTATION_LIST,
+  INFOPLIST_KEY_WKApplication: YES_NO,
+  INFOPLIST_KEY_WKCompanionAppBundleIdentifier: BUNDLE_ID,
+  INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp: YES_NO,
+}));
+// NAME, then any number of [sdk=...] or [arch=...] conditions.
+const SETTING_KEY = /^([A-Za-z_][A-Za-z0-9_]*)((?:\[(?:sdk|arch)=[A-Za-z0-9_.*-]+\])*)$/;
 
 const errors = [];
 const fail = (message) => {
@@ -1160,6 +1288,10 @@ function resolveTarget(name, target, packages, targets, shipped) {
       fail(`${name}: sources entry ${entry.path} uses $ in a path or exclude; XcodeGen variables such as $platform are not modelled, so extend scripts/check-apple-required-reasons.mjs.`);
       continue;
     }
+    if (!SPEC_PATH.test(entry.path)) {
+      fail(specPathMessage(`${name}: sources path ${JSON.stringify(entry.path)}`));
+      continue;
+    }
     let excludes = [];
     try {
       excludes = globs.map((glob) => globToRegExp(glob));
@@ -1186,10 +1318,12 @@ function resolveTarget(name, target, packages, targets, shipped) {
       continue;
     }
     if (!existsSync(absolutePath)) {
-      // A missing source path would hide compiled Swift; missing resource files cannot.
-      // XcodeGen reads optional as a YAML boolean (true, yes, on, ...); a
-      // quoted "true" is a string, not optional.
-      if ((compiles || reference) && entry.optional !== true) {
+      // XcodeGen rejects a missing path unless it is optional, in any build
+      // phase, so a missing resources path fails here too: it could hold
+      // prebuilt code on the machine that builds the release. XcodeGen reads
+      // optional as a YAML boolean (true, yes, on, ...); a quoted "true" is
+      // a string, not optional.
+      if (entry.optional !== true) {
         fail(`${name}: sources path ${entry.path} does not exist.`);
       }
       continue;
@@ -1202,10 +1336,11 @@ function resolveTarget(name, target, packages, targets, shipped) {
     // A directory added as `type: file` is copied as one folder, like a wrapper.
     const copiedAsFolder = stats.isDirectory() && entry.type === 'file';
     const record = (file, { excluded, container }) => {
-      if (isBinaryCode(file)) binaryFiles.add(file);
+      const binary = isBinaryCode(file);
+      if (binary) binaryFiles.add(file);
       if (reference || excluded || container) return;
       if (file.endsWith('.swift') && compiles) swiftFiles.add(file);
-      if (NON_SWIFT_SOURCE.test(file) && buildPhase !== 'resources') nonSwiftFiles.add(file);
+      if (!binary && !sourceTypeAllowed(file, true)) nonSwiftFiles.add(file);
       if (basename(file) === MANIFEST_NAME && copiesToRoot && !copiedAsFolder && !inWrapperDirectory(absolutePath, file)) manifests.add(file);
     };
     if (stats.isDirectory()) {
@@ -1240,7 +1375,7 @@ function resolveTarget(name, target, packages, targets, shipped) {
       const dependsOn = dependency.target;
       if (!Object.hasOwn(targets, dependsOn)) {
         fail(`${specAt(keyLine(dependency, 'target'))}: ${name} depends on target ${dependsOn}, which project.yml does not define; cross-project (Project/Target) dependencies are not modelled, so extend scripts/check-apple-required-reasons.mjs.`);
-      } else if (shipped && !SHIPPED_TARGET_TYPE.test(String(targets[dependsOn]?.type ?? ''))) {
+      } else if (shipped && !SHIPPED_TARGET_TYPES.has(String(targets[dependsOn]?.type ?? ''))) {
         fail(`${specAt(keyLine(dependency, 'target'))}: ${name} depends on ${dependsOn}, which is not a shipped target, so its code would ship unchecked; extend scripts/check-apple-required-reasons.mjs.`);
       }
     } else if (kind === 'sdk') {
@@ -1266,10 +1401,27 @@ function resolveTarget(name, target, packages, targets, shipped) {
 // member expressions `.name` or `.name(...)`. Variables, helper functions,
 // type-qualified or referenced members (Target.target, .map), operators,
 // closures, dictionaries, `#if` and every other construct throw.
+//
+// Within that grammar, labels, members and strings are an allowlist: the
+// labels and members are exactly those the real packages/*-swift manifests
+// use, and strings may only be target and product names. Everything else,
+// such as path:, sources:, resources:, exclude:, type:, plugins:, cSettings:
+// and linkerSettings:, or .package, .binaryTarget, .executableTarget,
+// .plugin, .macro, .systemLibrary, .unsafeFlags, .define, .linkedLibrary and
+// .dynamic, is returned with its line, because SwiftPM could then compile,
+// generate or link code from places the checker does not scan. When a real
+// manifest gains a label or member, the check fails; confirm it is inert (or
+// model it), then add it here and to the evidence doc.
+const PACKAGE_LABELS = new Set(['name', 'platforms', 'products', 'targets', 'dependencies', 'swiftSettings', 'swiftLanguageModes']);
+const PACKAGE_MEMBERS = new Set(['iOS', 'macOS', 'tvOS', 'visionOS', 'watchOS', 'v27', 'library', 'target', 'testTarget', 'swiftLanguageMode', 'v6']);
+const PACKAGE_STRING = /^[A-Za-z_][A-Za-z0-9_-]*$/;
 function checkPackageSyntax(source, label) {
+  const lineAt = (offset) => source.slice(0, offset).split('\n').length;
   const problem = (offset, what) => {
-    throw new Error(`${label}:${source.slice(0, offset).split('\n').length}: uses Swift the checker does not model (${what}); Package.swift may hold only import PackageDescription and one let package = Package(...) built from labels, simple string literals, arrays and .member(...) values`);
+    throw new Error(`${label}:${lineAt(offset)}: uses Swift the checker does not model (${what}); Package.swift may hold only import PackageDescription and one let package = Package(...) built from labels, simple string literals, arrays and .member(...) values`);
   };
+  const unmodelled = [];
+  const notAllowed = (offset, what) => unmodelled.push({ line: lineAt(offset), what });
   // Tokens are scanned on demand, so the first problem in source order is
   // the one reported.
   const tokens = [];
@@ -1331,6 +1483,7 @@ function checkPackageSyntax(source, label) {
   function value() {
     const token = at(position);
     if (token?.type === 'string') {
+      if (!PACKAGE_STRING.test(token.text)) notAllowed(token.offset, `the string ${JSON.stringify(token.text)}`);
       position += 1;
     } else if (token?.type === '[') {
       position += 1;
@@ -1339,6 +1492,7 @@ function checkPackageSyntax(source, label) {
       position += 1;
       const member = expect('name');
       if (member.offset !== token.offset + 1) problem(token.offset, 'whitespace after "."');
+      if (!PACKAGE_MEMBERS.has(member.text)) notAllowed(token.offset, `the member .${member.text}`);
       if (at(position)?.type === '(') {
         position += 1;
         list(')', argument);
@@ -1348,7 +1502,11 @@ function checkPackageSyntax(source, label) {
     }
   }
   function argument() {
-    if (at(position)?.type === 'name' && at(position + 1)?.type === ':') position += 2;
+    const token = at(position);
+    if (token?.type === 'name' && at(position + 1)?.type === ':') {
+      if (!PACKAGE_LABELS.has(token.text)) notAllowed(token.offset, `the label ${token.text}:`);
+      position += 2;
+    }
     value();
   }
   for (const text of ['import', 'PackageDescription', 'let', 'package']) expect('name', text);
@@ -1358,6 +1516,7 @@ function checkPackageSyntax(source, label) {
   list(')', argument);
   const extra = at(position);
   if (extra) problem(extra.offset, `${describe(extra)} after the Package(...) declaration`);
+  return unmodelled;
 }
 
 // SwiftPM also finds target sources in Source, src and srcs (and, on a
@@ -1379,6 +1538,10 @@ function resolvePackage(name, spec) {
   const packageKeys = isDict(spec) ? Object.keys(spec).filter((key) => !PACKAGE_SPEC_KEYS.has(key)) : [];
   if (packageKeys.length > 0 || packagePath.includes('$')) {
     fail(`project.yml package ${name} uses ${packageKeys.length > 0 ? `keys the checker does not model (${packageKeys.join(', ')})` : '$ in its path'}; extend scripts/check-apple-required-reasons.mjs.`);
+    return files;
+  }
+  if (!SPEC_PATH.test(packagePath)) {
+    fail(specPathMessage(`project.yml package ${name} path ${JSON.stringify(packagePath)}`));
     return files;
   }
   const packageDir = normalize(join(appleDir, packagePath));
@@ -1403,37 +1566,23 @@ function resolvePackage(name, spec) {
   }
   const manifest = stripSwiftComments(readFileSync(manifestPath, 'utf8'), display(manifestPath));
   try {
-    checkPackageSyntax(manifest, display(manifestPath));
+    for (const { line, what } of checkPackageSyntax(manifest, display(manifestPath))) {
+      fail(`${display(manifestPath)}:${line}: uses ${what}, which is not in the checker's Package.swift allowlist; labels, members and strings outside it (custom paths, sources, resources and excludes, package dependencies, binary, executable, plugin, macro and system library targets, C, linker and unsafe settings, dynamic products and others) can add code or link inputs the checker does not scan. Confirm it is inert or model it, then add it to the allowlist in scripts/check-apple-required-reasons.mjs before linking the package.`);
+    }
   } catch (error) {
     fail(`${error.message}; rewrite it or extend scripts/check-apple-required-reasons.mjs before linking it.`);
   }
-  for (const [pattern, reason] of [
-    [/\bpath\s*:/, 'custom target paths'],
-    [/\bsources\s*:/, 'custom source lists'],
-    [/\.package\s*\(/, 'package dependencies'],
-    [/\.binaryTarget\s*\(/, 'binary targets'],
-    [/\.dynamic\b/, 'dynamic library products (which need their own bundled manifest)'],
-    [/\.plugin\s*\(|\bplugins\s*:/, 'plugins (build tool plugins generate code the checker cannot scan)'],
-    [/\.macro\s*\(/, 'macro targets'],
-    [/\.systemLibrary\s*\(/, 'system library targets'],
-    [/\bunsafeFlags\b/, 'unsafe compiler or linker flags'],
-    // Resource and exclude paths are relative to the target directory under
-    // Sources, which is walked whole; a `..` could reach files outside it.
-    [/(?:^|[/"])\.\.(?:[/"]|$)/m, 'paths outside the target directory (..)'],
-  ]) {
-    if (pattern.test(manifest)) {
-      fail(`${display(manifestPath)} uses ${reason}; extend scripts/check-apple-required-reasons.mjs before linking it.`);
-    }
-  }
   if (existsSync(sourcesDir)) {
     // Package exclude and resources rules only narrow what SwiftPM compiles,
-    // so they are ignored: all of Sources is scanned. Resource catalogues are
-    // bundled as resources, so they count only for prebuilt code and links.
+    // and the allowlist above rejects them anyway, so all of Sources is
+    // scanned. Resource catalogues are bundled as resources, so they count
+    // only for prebuilt code and links; every other file must be Swift.
     walk(sourcesDir, (file, { container }) => {
-      if (isBinaryCode(file)) fail(`package ${name}: ${display(file)} is prebuilt code; binary or third-party code needs its own required-reason review.`);
+      const binary = isBinaryCode(file);
+      if (binary) fail(`package ${name}: ${display(file)} is prebuilt code; binary or third-party code needs its own required-reason review.`);
       if (container) return;
       if (file.endsWith('.swift')) files.add(file);
-      if (NON_SWIFT_SOURCE.test(file)) fail(`package ${name}: ${display(file)} is not Swift; ${NON_SWIFT_MESSAGE}.`);
+      if (!binary && !sourceTypeAllowed(file, false)) fail(`package ${name}: ${display(file)} is not Swift; ${NON_SWIFT_MESSAGE}.`);
     });
   }
   return files;
@@ -1550,30 +1699,69 @@ function declaredCategories(manifestPath, targetName) {
 // target's settings may not add bridging or prefix headers, search paths,
 // linker flags or Swift flags other than -D conditions. Settings maps (base,
 // configs, Debug, ...) are walked recursively; `KEY[sdk=...]` counts as KEY.
+// OTHER_SWIFT_FLAGS may hold only $(inherited) and single-token -DNAME conditions.
+function checkSwiftFlags(where, key, value) {
+  const flags = [value].flat().join(' ').split(/\s+/).filter(Boolean);
+  const unsupported = [];
+  for (let index = 0; index < flags.length; index += 1) {
+    const flag = flags[index];
+    if (flag === '-D' && SETTING_IDENTIFIER.test(flags[index + 1] ?? '')) {
+      // Still rejected (only single-token conditions are modelled), with a fix.
+      fail(`${where}: ${key} "-D ${flags[index + 1]}" splits the flag from its name; use the -D${flags[index + 1]} form.`);
+      index += 1;
+    } else if (flag !== '$(inherited)' && !/^-D[A-Za-z_][A-Za-z0-9_]*$/.test(flag)) {
+      unsupported.push(flag);
+    }
+  }
+  if (unsupported.length > 0) {
+    fail(`${where}: ${key} ${unsupported.join(' ')} is not a -D condition; compiler flags can import or link code the checker does not scan, so extend scripts/check-apple-required-reasons.mjs.`);
+  }
+}
+
+// A path setting must name an existing regular file under apps/apple, reached
+// without symbolic links and with the exact letter case on disk.
+function checkSettingFile(where, key, value) {
+  if (value === '') return;
+  const absolutePath = join(appleDir, value);
+  if (symlinkOnPath(absolutePath)) return;
+  const differentCase = caseMismatch(absolutePath);
+  if (differentCase) {
+    fail(caseMessage(`${where}: build setting ${key} path ${value}`, differentCase));
+    return;
+  }
+  const stats = lstatSync(absolutePath, { throwIfNoEntry: false });
+  if (!stats?.isFile()) {
+    fail(`${where}: build setting ${key} path ${value} ${stats ? 'is not a regular file' : 'does not exist'} under apps/apple.`);
+  }
+}
+
+// Checks the project's or a shipped target's settings against BUILD_SETTINGS:
+// settings.base and every settings.configs.<name> mapping (checkShape reports
+// any other shape).
 function checkBuildSettings(label, settings) {
-  if (!settings || typeof settings !== 'object' || Array.isArray(settings)) return;
-  for (const [key, value] of Object.entries(settings)) {
-    const setting = key.replace(/\[.*$/, '');
-    if (CODE_BUILD_SETTING.test(setting)) {
-      fail(`${label}: build setting ${key} can compile, import or link code the checker does not scan; extend scripts/check-apple-required-reasons.mjs.`);
-    } else if (setting === 'OTHER_SWIFT_FLAGS') {
-      const flags = [value].flat().join(' ').split(/\s+/).filter(Boolean);
-      const unsupported = [];
-      for (let index = 0; index < flags.length; index += 1) {
-        const flag = flags[index];
-        if (flag === '-D' && /^[A-Za-z_][A-Za-z0-9_]*$/.test(flags[index + 1] ?? '')) {
-          // Still rejected (only single-token conditions are modelled), with a fix.
-          fail(`${label}: OTHER_SWIFT_FLAGS "-D ${flags[index + 1]}" splits the flag from its name; use the -D${flags[index + 1]} form.`);
-          index += 1;
-        } else if (flag !== '$(inherited)' && !/^-D[A-Za-z_][A-Za-z0-9_]*$/.test(flag)) {
-          unsupported.push(flag);
-        }
+  if (!isDict(settings)) return;
+  const groups = [];
+  if (isDict(settings.base)) groups.push(settings.base);
+  if (isDict(settings.configs)) groups.push(...Object.values(settings.configs).filter(isDict));
+  for (const group of groups) {
+    for (const [key, value] of Object.entries(group)) {
+      const where = `${specAt(keyLine(group, key))}: ${label}`;
+      const match = SETTING_KEY.exec(key);
+      if (!match) {
+        fail(`${where}: build setting key ${JSON.stringify(key)} is not NAME or NAME followed by [sdk=...] or [arch=...] conditions; other conditions and spellings are not modelled, so extend scripts/check-apple-required-reasons.mjs.`);
+        continue;
       }
-      if (unsupported.length > 0) {
-        fail(`${label}: OTHER_SWIFT_FLAGS ${unsupported.join(' ')} is not a -D condition; compiler flags can import or link code the checker does not scan, so extend scripts/check-apple-required-reasons.mjs.`);
+      const rule = BUILD_SETTINGS.get(match[1]);
+      if (!rule) {
+        fail(`${where}: build setting ${key} is not in the checker's build-setting allowlist; settings outside it (linker, compiler, search-path, header, tool-path and plugin settings and others) can compile, import or link code it does not scan. Confirm the setting is inert or model its value, then add it to BUILD_SETTINGS in scripts/check-apple-required-reasons.mjs.`);
+        continue;
       }
-    } else if (value && typeof value === 'object' && !Array.isArray(value)) {
-      checkBuildSettings(label, value);
+      if (!rule.test(value)) {
+        fail(`${where}: build setting ${key} must be ${rule.description}, found ${JSON.stringify(value)}; extend scripts/check-apple-required-reasons.mjs if the new value is inert.`);
+        continue;
+      }
+      if (rule.swiftFlags) checkSwiftFlags(where, key, value);
+      if (rule.file) checkSettingFile(where, key, value);
     }
   }
 }
@@ -1639,7 +1827,7 @@ function main() {
   const results = [];
   for (const [name, target] of Object.entries(targets)) {
     const type = String(target?.type ?? '');
-    const shipped = SHIPPED_TARGET_TYPE.test(type);
+    const shipped = SHIPPED_TARGET_TYPES.has(type);
     if (!shipped && !TEST_TARGET_TYPES.has(type)) {
       fail(`${name}: target type ${JSON.stringify(type)} is not supported; extend scripts/check-apple-required-reasons.mjs.`);
       continue;
