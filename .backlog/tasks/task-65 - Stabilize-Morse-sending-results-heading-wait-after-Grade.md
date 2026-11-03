@@ -5,10 +5,11 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-20 06:58
-updated_date: '2026-10-27T21:43:00Z'
+updated_date: '2026-11-03T02:33:00Z'
 labels:
   - apple
   - testing
+  - owner-gate
 dependencies: []
 references:
   - docs/testing/task-33-ios-results.md
