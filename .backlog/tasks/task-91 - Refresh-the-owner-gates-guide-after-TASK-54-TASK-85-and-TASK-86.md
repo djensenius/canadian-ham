@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@copilot'
 created_date: '2026-11-03T04:10:00Z'
-updated_date: '2026-11-03T05:19:00Z'
+updated_date: '2026-11-03T05:21:00Z'
 labels:
   - docs
   - release
@@ -30,3 +30,15 @@ docs/release/owner-gates.md (TASK-87) predates three changes: TASK-86 added Xcod
 - [ ] #3 The TASK-54 Duo sitting reflects AC #1 being done on the iOS 27.2 simulator and asks the owner to check the back control's VoiceOver label and position for AC #2, and the open-gates table and coordinator upload wording match the Fastlane/Xcode Cloud state in distribution.md
 - [ ] #4 pnpm check:links passes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read owner-gates.md, distribution.md, privacy-label-evidence.md and the TASK-54, TASK-85, TASK-86 and TASK-1.7 notes (TASK-85 branch read-only for the CA92.1 wording).
+2. owner-gates.md intro and open-gates table: note the owner-only items beyond owner-gate tasks; mark TASK-54 AC #1 done; add rows for the TASK-85 CA92.1 sign-off and the Xcode Cloud / App Store Connect setup.
+3. Add a short section on where internal builds come from (Xcode Cloud release path, Fastlane temporary fallback per distribution.md) and use it in the Apple Watch, Apple TV and Duo sittings instead of the fixed Fastlane upload wording.
+4. Sitting 1: add a TASK-85 CA92.1 sign-off decision before App Store submission, linking privacy-label-evidence.md.
+5. Add a sitting for Xcode Cloud and App Store Connect setup linking distribution.md: try a Next Build Number above the highest recorded upload; if refused, choose option (b) and (c).
+6. Sitting 4: record AC #1 done on the iOS 27.2 simulator (Duo-only failures, controls passed); AC #2 asks for the back control's VoiceOver label and position; the device run now serves AC #3.
+7. Run pnpm check:links and git diff --check; finalize the task and commit.
+<!-- SECTION:PLAN:END -->
