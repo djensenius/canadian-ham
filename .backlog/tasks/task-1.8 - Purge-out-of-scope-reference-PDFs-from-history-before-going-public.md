@@ -3,10 +3,12 @@ id: TASK-1.8
 title: Purge out-of-scope reference PDFs from history before going public
 status: To Do
 assignee: []
-created_date: '2026-10-02 15:27'
+created_date: 2026-10-02 15:27
+updated_date: '2026-11-03T02:33:00Z'
 labels:
   - licensing
   - release
+  - owner-gate
 milestone: m-0
 dependencies:
   - TASK-1.1
