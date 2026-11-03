@@ -23,17 +23,19 @@ The sittings are independent and can be done in any order. Each one lists what t
 
 ## Reporting results
 
-Send results to the coordinator as a reply, or append them to the task with `backlog task edit <task-id> --append-notes "..."`. The coordinator copies them into the existing result tables ([TASK-14.3](../testing/task-14.3-watch-morse.md#hardware-observations-owner-to-fill-after-testing), [TASK-14.5](../testing/task-14.5-watch-a11y.md#owner-manual-checks--pending-do-not-mark-ac4-complete), [TASK-14.6](../testing/task-14.6-watch-release.md#owner-upload-and-physical-watch-results-pending), [tvOS listening check](../accessibility.md#owner-listening-check-tvos-voiceover), [permission record](../content-licensing.md#permission-record)), checks the criteria that passed, and files follow-up work for anything that failed.
+Send results to the coordinator as a reply. Any result that contains personal data (names, Apple Account emails, serial numbers, UDIDs, screenshots showing them, private correspondence) goes only as a reply. You can append a result without personal data to the task with `backlog task edit <task-id> --append-notes "..."`, but Backlog auto-commits that edit at once, and the repository is public. The coordinator copies results into the existing result tables ([TASK-14.3](../testing/task-14.3-watch-morse.md#hardware-observations-owner-to-fill-after-testing), [TASK-14.5](../testing/task-14.5-watch-a11y.md#owner-manual-checks--pending-do-not-mark-ac4-complete), [TASK-14.6](../testing/task-14.6-watch-release.md#owner-upload-and-physical-watch-results-pending), [tvOS listening check](../accessibility.md#owner-listening-check-tvos-voiceover), [permission record](../content-licensing.md#permission-record)), checks the criteria that passed, and files follow-up work for anything that failed.
 
 Give one block per acceptance criterion. If one step covers several criteria, list each AC with its own result.
 
 ```text
 Task and AC:    TASK-54 AC #4
 Date and time:  2026-11-05 19:30, with time zone
-Tester:         name
+Tester:         role or initials, e.g. owner
 Device:         model, e.g. iPhone Duo; for a watch, also the case size
 OS version:     from Settings > General > About, with the build if shown
-App build:      TestFlight version and build number, or commit SHA, plus install method
+Install method: TestFlight, or Xcode/development install
+App build:      TestFlight install: TestFlight version and build number (required).
+                Xcode/development install only: commit SHA and build configuration.
 Settings used:  whatever the checklist asks for: language, VoiceOver voice and rate,
                 text size, Reduce Motion, Silent Mode, haptic strength, network state
 Result:         PASS, FAIL, or NOT RUN (say why)
@@ -42,11 +44,12 @@ Observations:   what you did and what you saw, heard or felt; for a failure,
 Attachments:    screenshot or screen-recording file names
 ```
 
+- Refer to beta builds by TestFlight build number. Every result from a TestFlight install needs its TestFlight version and build number: TASK-14.6 AC #4, TASK-14.3 AC #2 and TASK-14.5 AC #4 when run from TestFlight, TASK-29 AC #1–#2, and TASK-54 AC #2 and #4–#7. A commit SHA alone is accepted only for Xcode/development installs: the `DebugCloudKit` build for TASK-34, the TASK-54 AC #1 device test run, and Debug seeded Morse rounds.
 - A PASS needs observations, not just "OK". Where a checklist asks for counts, angles, speeds, letters or confusions, include them.
 - Screen recordings help with timing (hinge dwell; VoiceOver speech before the first Morse tone) and with VoiceOver checks; record them with audio.
 - FAIL and partial results are still useful evidence. The criterion stays unchecked, and the coordinator escalates or files follow-up work as the task says.
 - For a decision, state the option chosen, the date and any conditions, e.g. "Owner decision 2026-11-05: ...". The coordinator records it in the task notes and the linked document.
-- The repository is public. Before anything is committed, the coordinator removes personal data from screenshots and notes: Apple Account emails, real names you don't want published, device serial numbers or UDIDs, and private correspondence such as ISED emails. Keep the originals in private owner records.
+- The repository is public. Before copying anything into the repository or Backlog, the coordinator removes personal data from screenshots and notes: Apple Account emails, names, device serial numbers or UDIDs, and private correspondence such as ISED emails. Keep the originals in private owner records.
 
 ## Sitting 1: owner decisions (no device)
 
@@ -65,7 +68,7 @@ Attachments:    screenshot or screen-recording file names
 
 ### TASK-1.8: purge out-of-scope reference PDFs
 
-- **Decide the method.** [Content licensing](../content-licensing.md#public-release-gate) recommends publishing from a fresh public repository whose history holds only in-scope files, and keeping the current repository private or archiving it privately. The alternative is `git filter-repo` plus force-pushing rewritten branches and tags; that doesn't remove copies in existing clones, forks or caches, and GitHub may keep cached commits and pull-request refs until GitHub Support purges them. Because the repository is already public, those caveats apply now.
+- **Decide the method.** For the case where permission is refused or narrower than requested, [content licensing](../content-licensing.md#public-release-gate) recommends publishing from a fresh public repository whose history holds only in-scope files, and keeping the current repository private or archiving it privately. TASK-1.8 needs one of the gate's two methods whatever ISED replies: the 2026-10-02 request deliberately left out the Basic reference PDFs, so they stay outside the recorded scope even if everything requested is granted (TASK-1.8 description). The alternative method is `git filter-repo` plus force-pushing rewritten branches and tags; that doesn't remove copies in existing clones, forks or caches, and GitHub may keep cached commits and pull-request refs until GitHub Support purges them. Because the repository is already public, those caveats apply now.
 - **Approve the change.** Agents don't rewrite history, force-push or create repositories without explicit approval. Name the method and who runs it.
 - **What the coordinator then verifies:** AC #1, a history scan showing the files are absent from every commit; AC #2, the source manifest, `SHA256SUMS` and docs no longer reference them, and `pnpm import:check`, `pnpm check:links` and the content checks pass; AC #3, the method and its verification are recorded in content licensing and the release checklist.
 - TASK-1.8 depends on TASK-1.1: the recorded permission scope decides what counts as out of scope.
@@ -98,7 +101,7 @@ Covers TASK-14.6 AC #4, TASK-14.3 AC #2 and TASK-14.5 AC #4.
 
 **Order.** Work through the [owner physical-watch checklist](testflight.md#owner-physical-watch-checklist-required-not-replaced-by-simulator-tests) from top to bottom. It links the detailed TASK-14.3 and TASK-14.5 checklists at the right points.
 
-1. **Install** with the runbook's [installation steps](testflight.md#watchos-beta-entry-path-and-installation) 1–3 and record the build, commit and install method. → TASK-14.6 AC #4.
+1. **Install** with the runbook's [installation steps](testflight.md#watchos-beta-entry-path-and-installation) 1–3 and record the TestFlight version and build number and the install method. → TASK-14.6 AC #4.
 2. **Offline launch:** the first checklist item (phone app not running, phone out of range, watch Airplane Mode with Wi-Fi, Bluetooth and cellular explicitly off). That item repeats practice, Morse and reference with no phone or network, so keep the watch offline for steps 3–5. → TASK-14.6 AC #4.
 3. **Quick practice:** the second item. → TASK-14.6 AC #4.
 4. **Morse:** the same-session three-style comparison in [TASK-14.3's owner hardware check](../testing/task-14.3-watch-morse.md#owner-hardware-check), steps 2–6: all three styles at 1, 1.5 and 2 WPM, the representative short, long and mixed letters, tone off with Silent Mode off and on, tone alone and with haptics, cancellation and the text alternative. → TASK-14.3 AC #2 and TASK-14.5 manual check 6.
@@ -129,7 +132,7 @@ AC #3 is not an owner step: if either check fails, the coordinator schedules the
 
 ## Sitting 4: iPhone Duo
 
-Covers TASK-54 AC #1–#7. No checklist existed for these, so the steps are below. Each expected result restates a TASK-54 criterion. Items marked "also note" come from TASK-54's implementation notes; they are observations to record if you can, not extra criteria.
+Covers TASK-54 AC #1–#7. No checklist existed for these, so the steps are below. Results marked **Expected (AC #n)** restate that TASK-54 criterion. Specific angles, hold times and repeat counts are a suggested procedure, not criteria. Items marked "also note" come from TASK-54's implementation notes; they are observations to record if you can, not extra criteria.
 
 **Before the sitting**
 
@@ -151,9 +154,9 @@ AC #2 also allows Accessibility Inspector on a connected Mac instead of VoiceOve
 
 Turn off rotation lock. In the app's Settings, set the practice mode to **Review later**, so a tapped answer stays selected without being graded (the automated fold/unfold tests use this mode).
 
-1. **Unfolded landscape** (about 951 × 669 pt): unfold, hold the phone in landscape, start Practice and open the calculator. **Expected:** the question and the exam-tools inspector appear side by side.
-2. **Unfolded portrait** (about 669 × 951 pt): rotate to portrait and open the calculator. **Expected:** the compact sheet, not the side-by-side layout.
-3. **Fold and unfold during practice:** on a question, tap an answer and enter a value in the calculator (for example `123`). Fold the phone, then unfold it; then repeat starting unfolded. **Expected:** after each change, the same question, the same selected answer and the same calculator value. The current app closes an open tool when the layout changes but keeps its value for reopening (TASK-63 description), so reopen the calculator to check the value. Note whether the calculator stayed open or closed; TASK-63 uses that.
+1. **Unfolded landscape** (about 951 × 669 pt): unfold, hold the phone in landscape, start Practice and open the calculator. **Expected (AC #4):** the question and the exam-tools inspector appear side by side.
+2. **Unfolded portrait** (about 669 × 951 pt): rotate to portrait and open the calculator. **Expected (AC #4):** the compact sheet, not the side-by-side layout.
+3. **Fold and unfold during practice:** on a question, tap an answer and enter a value in the calculator (for example `123`). Fold the phone, then unfold it; then repeat starting unfolded. **Expected (AC #4):** after each change, the same question, the same selected answer and the same calculator value. The current app closes an open tool when the layout changes but keeps its value for reopening (TASK-63 description), so reopen the calculator to check the value. Note whether the calculator stayed open or closed; TASK-63 uses that.
 4. **Also note:**
    - any brief flash of the compact layout before the side-by-side layout when launching while unfolded;
    - whether the calculator in the inspector scrolls and its keys are comfortably large (the notes ask for at least 44 pt);
@@ -168,24 +171,28 @@ How the peek works (TASK-15 design notes): a peek opens Hint 1 in the normal Hin
 
 Estimate angles by eye or with an angle guide such as a protractor, and say which method you used.
 
-**Angle band (AC #5).** The implemented band is 20–35° by default.
+**Angle band (AC #5).** The implemented slight-open band is 20–35° by default.
 
-1. From closed, open slowly to about 10° and hold for 2 seconds. Expected: no peek.
-2. Reset. Open to about 25–30° and hold for 2 seconds. Expected: Hint 1 peeks.
-3. Reset. Open quickly to about 45° (so you don't pause in the band) and hold for 2 seconds. Expected: no peek.
-4. Approach the band slowly from below and from above, and note the angles where the peek starts and stops happening.
-5. Record the angle range that feels comfortable for a deliberate peek. AC #5 asks for it.
+- **Expected (AC #5):** Hint 1 peeks only inside the implemented band, never below or above it. Record the angle range you find comfortable for a deliberate peek.
+- Suggested procedure (angles and repeat counts are not criteria):
+  1. From closed, open slowly to about 10° and hold for about 2 seconds (below the band).
+  2. Reset. Open to about 25–30° and hold for about 2 seconds (inside the band).
+  3. Reset. Open quickly to about 45° without pausing in the band and hold for about 2 seconds (above the band).
+  4. Approach the band slowly from below and from above, and note the angles where the peek starts and stops happening.
+  5. For each probe, record the approximate angle and whether Hint 1 peeked.
 
 **Dwell (AC #6).**
 
-1. From closed, move into the band and hold still. Expected: Hint 1 appears after about 0.7 seconds, not the moment you stop. Note roughly how long you held still before it appeared.
-2. Move into the band and back out within about half a second, several times. Expected: no peek.
-3. Hold near one edge of the band (about 20° or 35°) with small, natural hand wobble. Record whether and when it peeks, and whether a shown peek stays steady. Expected (AC #6): the peek waits for the stable dwell, including with small edge jitter. In the TASK-15 design, moving more than about 3° restarts the dwell, and small jitter only keeps an already-shown peek open.
+- **Expected (AC #6):** the phone must hold steady in the band for about 0.7 seconds before Hint 1 peeks, including with small jitter near the band edges. Record pass or fail with what you observed. In the TASK-15 design, moving more than about 3° restarts the dwell, and small jitter only keeps an already-shown peek open.
+- Suggested procedure (these hold times and positions are not criteria):
+  1. From closed, move into the band and hold still. Note roughly how long you held still before Hint 1 appeared.
+  2. Several times, move into the band and back out before about half a second has passed. Note any peek.
+  3. Hold near one edge of the band (about 20° or 35°) with small, natural hand wobble. Record whether and when it peeks, and whether a shown peek stays steady.
 
 **Normal unfold (AC #7).**
 
-1. From closed, unfold to fully open in one normal motion at your usual speed. Expected: Hint 1 never appears.
-2. Repeat several times (about 10) and record the count and any peek.
+- **Expected (AC #7):** a normal fold-to-unfold motion that passes quickly through the band never reveals Hint 1.
+- Suggested procedure (the repeat count is not a criterion): from closed, unfold to fully open in one normal motion at your usual speed, several times (for example 10). Record the number of tries and any peek.
 
 ### 4. Automated tests on the Duo (AC #1)
 
@@ -216,7 +223,7 @@ Covers TASK-34 AC #1–#6. AC #4 is met by recording what you see in every step.
 **Before the sitting**
 
 - Use a `DebugCloudKit` build only. Install it from Xcode: open `apps/apple/CanadianHam.xcodeproj`, choose the `CanadianHam` scheme, set Product > Scheme > Edit Scheme > Run > Build Configuration to `DebugCloudKit`, choose the physical iPhone or My Mac, use your development signing, then Product > Run. Never archive or upload this configuration; the TestFlight lanes always build Release ([Keeping DebugCloudKit out of uploads](testflight.md#keeping-debugcloudkit-out-of-uploads)). A development install may replace the TestFlight app on that device; reinstall from TestFlight afterwards.
-- The `iCloud.org.davidjensenius.CanadianHam` container is registered, with the iCloud (CloudKit) and Push Notifications capabilities the gated build needs ([TestFlight runbook, one-time setup](testflight.md#one-time-local-setup), step 3, names them). TASK-34 calls this "the registered iCloud container".
+- Confirm that the `iCloud.org.davidjensenius.CanadianHam` container is registered with iCloud (CloudKit) and Push Notifications (TASK-34's "registered iCloud container"). If it isn't, set it up first, as step 3 of the [TestFlight runbook's one-time setup](testflight.md#one-time-local-setup) describes.
 - Two Apple Accounts (A and B) and a device where signing out of iCloud is acceptable; it affects other apps too.
 - Access to CloudKit Console for the container. Don't export or keep CloudKit Console logs ([iCloud sync proposal](../proposals/icloud-sync.md)).
 - Before turning sync on, create some local progress: answer questions, open a lesson, finish a mock exam. Screenshot the progress screens as a baseline and compare after every step; that comparison is the AC #4 evidence.
