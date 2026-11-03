@@ -23,9 +23,9 @@ Several tasks wait only on the owner, real hardware or an owner decision: TASK-2
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A single owner-gate guide lists every open owner-gate task (TASK-1.1, 1.7, 1.8, 14.3, 14.5, 14.6, 29, 34, 54, 65) by task and acceptance criterion, says what the owner must do or decide, and orders the device checks so one session covers each device
-- [ ] #2 The guide links the existing watch and Apple TV checklists instead of copying them, and adds step-by-step iPhone Duo steps with expected results taken from TASK-54 acceptance criteria without adding scope; TASK-63 is listed only as follow-on work
-- [ ] #3 Each listed task's notes link the guide, and the guide states the evidence format the coordinator needs to check off the criteria
+- [x] #1 A single owner-gate guide lists every open owner-gate task (TASK-1.1, 1.7, 1.8, 14.3, 14.5, 14.6, 29, 34, 54, 65) by task and acceptance criterion, says what the owner must do or decide, and orders the device checks so one session covers each device
+- [x] #2 The guide links the existing watch and Apple TV checklists instead of copying them, and adds step-by-step iPhone Duo steps with expected results taken from TASK-54 acceptance criteria without adding scope; TASK-63 is listed only as follow-on work
+- [x] #3 Each listed task's notes link the guide, and the guide states the evidence format the coordinator needs to check off the criteria
 <!-- AC:END -->
 
 ## Implementation Plan
