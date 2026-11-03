@@ -5,11 +5,12 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: 2026-10-02 08:06
-updated_date: '2026-10-25T17:19:00Z'
+updated_date: '2026-11-03T02:33:00Z'
 labels:
   - apple
   - tvos
   - accessibility
+  - owner-gate
 milestone: m-0
 dependencies: []
 priority: low
