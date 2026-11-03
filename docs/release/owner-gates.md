@@ -1,8 +1,8 @@
 # Owner gates: device checks and decisions
 
-Status as of 2026-11-03 (UTC). This guide lists every open Backlog task labelled `owner-gate` and says what the owner must do or decide for each one. It groups the hardware checks so that one sitting per device covers them. Backlog is the source of truth: this guide restates and links each task's acceptance criteria (AC) without changing them. Where a step-by-step checklist already exists, follow that checklist; this guide says when to use it and which criteria it closes.
+Status as of 2026-11-03 (UTC). This guide lists every open Backlog task labelled `owner-gate` and says what the owner must do or decide for each one. It groups the hardware checks so that one sitting per device covers them. It also covers owner-only steps outside those tasks: the Xcode Cloud and App Store Connect setup that TASK-86 prepared, and the TASK-85 sign-off needed before App Store submission. Backlog is the source of truth: this guide restates and links each task's acceptance criteria (AC) without changing them. Where a step-by-step checklist already exists, follow that checklist; this guide says when to use it and which criteria it closes.
 
-For criteria that need manual device observations or owner decisions, simulator runs, structural UI tests and accessibility audits are no substitute: only the owner's recorded observations or decisions close them. Criteria that name an automated or coordinator check close on that check's evidence instead. These are TASK-54 AC #1 (the four named UI tests on a real iPhone Duo or a newer iOS 27.1+ simulator) and the coordinator steps named in each section, such as the TASK-1.8 verification, TASK-29 AC #3 and TASK-54 AC #3. Agents do not change repository visibility, rewrite history, distribute builds beyond internal TestFlight, or check an owner-gate criterion without the evidence described in [Reporting results](#reporting-results).
+For criteria that need manual device observations or owner decisions, simulator runs, structural UI tests and accessibility audits are no substitute: only the owner's recorded observations or decisions close them. Criteria that name an automated or coordinator check close on that check's evidence instead. These are TASK-54 AC #1 (the four named UI tests on a real iPhone Duo or a newer iOS 27.1+ simulator), now done on the iOS 27.2 simulator, and the coordinator steps named in each section, such as the TASK-1.8 verification, TASK-29 AC #3 and TASK-54 AC #3. Agents do not change repository visibility, rewrite history, distribute builds beyond internal TestFlight, submit or release to the App Store, change Xcode Cloud workflows or App Store Connect settings, or check an owner-gate criterion without the evidence described in [Reporting results](#reporting-results).
 
 ## Open gates at a glance
 
@@ -12,14 +12,24 @@ For criteria that need manual device observations or owner decisions, simulator 
 | TASK-1.7 Make the repository public | AC #1–#4 | The repository is already public while TASK-1.1 is pending. Decide whether to record the permission and a decision to publish early, or return the repository to private until the gates pass. Later, approve public visibility (AC #3). | [Decisions](#sitting-1-owner-decisions-no-device) |
 | TASK-1.8 Purge out-of-scope reference PDFs | AC #1–#3 | Choose the method (fresh public repository or `git filter-repo`) and approve the history change. | [Decisions](#sitting-1-owner-decisions-no-device) |
 | TASK-65 iOS heading-wait and figure-audit flakes | None (3/3 checked) | Answer the owner decision in its evidence file; the task stays In Progress until then. | [Decisions](#sitting-1-owner-decisions-no-device) |
+| TASK-85 required-reason APIs (Done; not an `owner-gate` task) | None for the owner; a sign-off, not a criterion | Before App Store submission, sign off the decision to declare the `AppleLanguages` read under User defaults reason `CA92.1`, or choose a fallback. | [Decisions](#task-85-sign-off-on-ca921-before-app-store-submission) |
 | TASK-14.6 watchOS internal TestFlight lane | AC #4 | Install the processed internal build on a physical watch and check practice, Morse, reference and EN/FR without the phone app or network. | [Apple Watch](#sitting-2-apple-watch) |
 | TASK-14.3 watchOS Morse haptics | AC #2 | Compare the three haptic styles on a physical watch and record whether short, long and mixed characters can be told apart. | [Apple Watch](#sitting-2-apple-watch) |
 | TASK-14.5 watchOS EN/FR and accessibility | AC #4 | VoiceOver and Reduce Motion checks and physical output observations, recorded with device and watchOS version. | [Apple Watch](#sitting-2-apple-watch) |
 | TASK-29 tvOS About cards and VoiceOver | AC #1, #2 (AC #3 follows from them) | VoiceOver listening check in English and French on a physical Apple TV. | [Apple TV](#sitting-3-apple-tv) |
-| TASK-54 iPhone Duo keyboard, back button, layout and hinge | AC #1–#7 | Back-button accessibility, unfolded layouts, fold/unfold state, hinge-peek angle, dwell and fast-unfold checks on a real iPhone Duo; connect it for the four UI tests. | [iPhone Duo](#sitting-4-iphone-duo) |
+| TASK-54 iPhone Duo keyboard, back button, layout and hinge | AC #2–#7 (AC #1 done on the iOS 27.2 simulator) | Back control's VoiceOver label and position, unfolded layouts, fold/unfold state, hinge-peek angle, dwell and fast-unfold checks on a real iPhone Duo; connect it for the four UI tests, the real-hardware evidence AC #3 needs. | [iPhone Duo](#sitting-4-iphone-duo) |
 | TASK-34 Signed-device iCloud account changes | AC #1–#8 | Sign-out, account switch, iCloud off, airplane mode, no-account and Reset checks on a signed device with a `DebugCloudKit` build; decisions for AC #6 and #7; privacy-answer re-check for AC #8. | [iCloud device](#sitting-5-signed-device-icloud-debugcloudkit-only) and [Decisions](#sitting-1-owner-decisions-no-device) |
+| Xcode Cloud and App Store Connect setup (TASK-86, Done) | None; owner-only setup | Create the internal Xcode Cloud workflow. Before the first build, try a Next Build Number above the highest recorded upload; if App Store Connect refuses it, choose the option (b) and (c) fallbacks. | [Xcode Cloud](#sitting-6-xcode-cloud-and-app-store-connect-setup-no-device) |
 
 The sittings are independent and can be done in any order. Each one lists what the coordinator must prepare first.
+
+## Internal builds for the sittings
+
+Sittings 2–4 need a processed internal TestFlight build from main, for the internal team group only: no external groups or public links. Xcode Cloud is the release path, and Fastlane is only a temporary fallback ([distribution](distribution.md)):
+
+- Once the owner's internal Xcode Cloud workflow ([Sitting 6](#sitting-6-xcode-cloud-and-app-store-connect-setup-no-device)) has shipped a platform, that platform's builds come from Xcode Cloud.
+- Until then, they come from the internal Fastlane fallback ([TestFlight runbook](testflight.md#internal-beta-lanes)), which stops for each platform once Xcode Cloud ships it. Under build-number [option (b)](distribution.md#owner-decision-before-the-first-xcode-cloud-build), Fastlane stops for iOS, tvOS and visionOS at the version-bump merge, so their builds then come only from Xcode Cloud.
+- Either way, the coordinator gives you the TestFlight version and build number and the commit. Distribution uploads, external testing, App Store submission and release stay owner-gated.
 
 ## Reporting results
 
@@ -44,7 +54,7 @@ Observations:   what you did and what you saw, heard or felt; for a failure,
 Attachments:    screenshot or screen-recording file names
 ```
 
-- Refer to beta builds by TestFlight build number. Every result from a TestFlight install needs its TestFlight version and build number: TASK-14.6 AC #4, TASK-14.3 AC #2 and TASK-14.5 AC #4 when run from TestFlight, TASK-29 AC #1–#2, and TASK-54 AC #2 and #4–#7. A commit SHA alone is accepted only for Xcode/development installs: the `DebugCloudKit` build for TASK-34, the TASK-54 AC #1 device test run, and Debug seeded Morse rounds.
+- Refer to beta builds by TestFlight build number. Every result from a TestFlight install needs its TestFlight version and build number: TASK-14.6 AC #4, TASK-14.3 AC #2 and TASK-14.5 AC #4 when run from TestFlight, TASK-29 AC #1–#2, and TASK-54 AC #2 and #4–#7. A commit SHA alone is accepted only for Xcode/development installs: the `DebugCloudKit` build for TASK-34, the TASK-54 device test run for AC #3, and Debug seeded Morse rounds.
 - A PASS needs observations, not just "OK". Where a checklist asks for counts, angles, speeds, letters or confusions, include them.
 - Screen recordings help with timing (hinge dwell; VoiceOver speech before the first Morse tone) and with VoiceOver checks; record them with audio.
 - FAIL and partial results are still useful evidence. The criterion stays unchecked, and the coordinator escalates or files follow-up work as the task says.
@@ -82,6 +92,14 @@ All three criteria are checked; the task stays In Progress until the owner answe
 
 The file also asks an open question: is the sending fixture's 120-second auto-grade too short for UI tests under heavy host load? A change to a shared audit helper trips the CI test guard, so date the decision; the pull request then cites it as `Test-guard-approved: owner decision YYYY-MM-DD`.
 
+### TASK-85: sign off on `CA92.1` before App Store submission
+
+This isn't a TASK-85 criterion, but App Store submission waits for it. TASK-85 is Done, so its gate on distribution uploads is met; TASK-1.7 still holds them ([distribution gates](distribution.md#gates)).
+
+- **Facts.** TASK-85 (PR #1064) declares the User defaults required-reason category with reason `CA92.1` for `CanadianHam`, `CanadianHamTV` and `CanadianHamVision`, and System boot time with `35F9.1` for `CanadianHam` and `CanadianHamWatch`. GitHub CI runs `pnpm check:apple-required-reasons`; TASK-90 adds it to the Xcode Cloud guards. `CA92.1` covers the app reading and writing its own settings in its own defaults domain. The open point is `AppleLanguages`: on iOS and macOS the app reads it back from its own domain, where it can hold the per-app language chosen in system Settings. Apple's `CA92.1` text excludes information written by the system and doesn't say whether that entry counts.
+- **Coordinator decision 2026-11-02:** keep `CA92.1`. If App Review objects, the fallbacks are to drop the adoption of the system per-app language and the legacy French migration check, so the app reads back only what it wrote, or to request a new reason from Apple.
+- **Decide** before App Store submission: sign off keeping `CA92.1`, or choose a fallback. The rationale is in [Why these reasons](privacy-label-evidence.md#why-these-reasons) in the privacy-label evidence. Reply with a dated decision; the coordinator records it on TASK-1.7 and in the [release checklist](release-checklist.md#privacy).
+
 ### TASK-34 decisions
 
 These can be made before or after [Sitting 5](#sitting-5-signed-device-icloud-debugcloudkit-only):
@@ -96,7 +114,7 @@ Covers TASK-14.6 AC #4, TASK-14.3 AC #2 and TASK-14.5 AC #4.
 
 **Before the sitting**
 
-- The coordinator uploads an internal-only iOS build from main with `fastlane ios beta` (it embeds the watch app), waits for processing and gives you the version, build number and commit. The build must include the TASK-14.6 merge (`f3394899`, PR #1037, 2026-10-25). No external groups or public links.
+- A processed internal iOS TestFlight build from main ([Internal builds](#internal-builds-for-the-sittings)); it embeds the watch app. The coordinator gives you the version, build number and commit. The build must include the TASK-14.6 merge (`f3394899`, PR #1037, 2026-10-25).
 - You need the paired iPhone with TestFlight signed in to your App Store Connect team-member account, and the watch. TASK-14.5 also asks for the smallest supported physical watch where possible.
 
 **Order.** Work through the [owner physical-watch checklist](testflight.md#owner-physical-watch-checklist-required-not-replaced-by-simulator-tests) from top to bottom. It links the detailed TASK-14.3 and TASK-14.5 checklists at the right points.
@@ -119,7 +137,7 @@ Covers TASK-29 AC #1 and #2.
 
 **Before the sitting**
 
-- The coordinator gives you the build number of a processed internal tvOS build (`fastlane appletvos beta`) from main that includes the TASK-29 merge (`0af1f08d`, PR #1030, 2026-10-25).
+- The coordinator gives you the build number of a processed internal tvOS TestFlight build from main ([Internal builds](#internal-builds-for-the-sittings)) that includes the TASK-29 merge (`0af1f08d`, PR #1030, 2026-10-25).
 - You need a physical Apple TV (VoiceOver isn't available in the tvOS Simulator) with English and French voices installed.
 
 **Steps.** Follow the [owner listening check (tvOS VoiceOver)](../accessibility.md#owner-listening-check-tvos-voiceover), steps 1–5.
@@ -132,21 +150,23 @@ AC #3 is not an owner step: if either check fails, the coordinator schedules the
 
 ## Sitting 4: iPhone Duo
 
-Covers TASK-54 AC #1–#7. No checklist existed for these, so the steps are below. Results marked **Expected (AC #n)** restate that TASK-54 criterion. Specific angles, hold times and repeat counts are a suggested procedure, not criteria. Items marked "also note" come from TASK-54's implementation notes; they are observations to record if you can, not extra criteria.
+Covers TASK-54 AC #2 and #4–#7, and the real-hardware test run that AC #3 needs. AC #1 is done ([step 4](#4-automated-tests-on-the-duo-ac-3)). No checklist existed for these, so the steps are below. Results marked **Expected (AC #n)** restate that TASK-54 criterion. Specific angles, hold times and repeat counts are a suggested procedure, not criteria. Items marked "also note" come from TASK-54's implementation notes; they are observations to record if you can, not extra criteria.
 
 **Before the sitting**
 
 - A real iPhone Duo on iOS 27.1 or later.
-- A processed internal iOS TestFlight build from current main; the coordinator gives you the build number. The Apple Watch sitting's build qualifies. Any build from main since 2026-10-19 contains the unfolded layout (TASK-15 part 1, PR #286, and TASK-60, PR #301) and the hinge peek (TASK-15 part 2, PR #292). It must be built with the iOS 27.1 or later SDK, because the hinge code is compiled out with the 27.0 SDK (TASK-15 AC #8).
+- A processed internal iOS TestFlight build from current main ([Internal builds](#internal-builds-for-the-sittings)); the coordinator gives you the build number. The Apple Watch sitting's build qualifies. Any build from main since 2026-10-19 contains the unfolded layout (TASK-15 part 1, PR #286, and TASK-60, PR #301) and the hinge peek (TASK-15 part 2, PR #292). It must be built with the iOS 27.1 or later SDK, because the hinge code is compiled out with the 27.0 SDK (TASK-15 AC #8).
 - Add Screen Recording to Control Centre. Recordings are the timing evidence for AC #6.
-- For AC #1 only: the coordinator needs the Duo connected to the build host, with Developer Mode on. Do that part last, because running UI tests installs a development build that may replace the TestFlight app.
+- For the AC #3 test run only: the coordinator needs the Duo connected to the build host, with Developer Mode on. Do that part last, because running UI tests installs a development build that may replace the TestFlight app.
 
 ### 1. Back button with VoiceOver (AC #2)
 
+On the iOS 27.2 Duo simulator, the lesson's back control is exposed only as an unlabelled Toolbar button with identifier `BackButton`, at `{{399, 179}, {38, 38}}` in a 466 × 678 pt window, near the right edge. In the accessibility tree it sits under the Toolbar element, not inside the NavigationBar element (TASK-54 notes). That is why `testHintToolLadderAndLessonLink` fails there.
+
 1. Turn on VoiceOver (Settings > Accessibility > VoiceOver). Note whether the phone is folded or unfolded.
 2. Start a Practice session and go to a question that shows a **Hint** button. Open Hint, reveal hints until **Review in lesson** appears, and activate it. This is the route the failing simulator test uses.
-3. On the lesson, swipe to the back button in the navigation bar. **Expected (AC #2):** VoiceOver reaches it and its label is correct. Record exactly what VoiceOver says, then activate it and note where it takes you.
-4. Repeat on a results screen reached by navigation (one with a back button in the navigation bar). Record which screen you used.
+3. On the lesson, find the back control by swiping and by touch. **Expected (AC #2):** VoiceOver reaches it and its label is correct. Record exactly what VoiceOver says; an unlabelled control may be read as just "button". Also note (TASK-54 notes) where it sits on screen, for example at the leading end of the navigation bar or near the right edge as in the simulator; a screenshot with the VoiceOver cursor on it helps. Then activate it and note where it takes you.
+4. Repeat on a results screen reached by navigation (one with a back button in the navigation bar), recording the same label and position. Record which screen you used.
 
 AC #2 also allows Accessibility Inspector on a connected Mac instead of VoiceOver.
 
@@ -194,9 +214,9 @@ Estimate angles by eye or with an angle guide such as a protractor, and say whic
 - **Expected (AC #7):** a normal fold-to-unfold motion that passes quickly through the band never reveals Hint 1.
 - Suggested procedure (the repeat count is not a criterion): from closed, unfold to fully open in one normal motion at your usual speed, several times (for example 10). Record the number of tries and any peek.
 
-### 4. Automated tests on the Duo (AC #1)
+### 4. Automated tests on the Duo (AC #3)
 
-The coordinator runs the four named tests with the Duo connected to the build host. A device run needs development signing (see the [dedicated signing keychain](testflight.md#dedicated-signing-keychain-build-host)), so leave out `CODE_SIGNING_ALLOWED=NO`:
+AC #1 is done. On 2026-11-03 the coordinator ran the four named tests on the iOS 27.2 simulator (TASK-54 notes): all four failed only on the iPhone Duo device type, with the same assertions as on iOS 27.1. The same build passed 4/4 on iPhone 18 Pro and 4/4 on iPad Air 11-inch (M4), both on iOS 27.2. AC #3 depends on whether the failures also happen on real hardware, so the coordinator runs the same selection with the Duo connected to the build host. A device run needs development signing (see the [dedicated signing keychain](testflight.md#dedicated-signing-keychain-build-host)), so leave out `CODE_SIGNING_ALLOWED=NO`:
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
@@ -209,7 +229,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
   test
 ```
 
-AC #1 also accepts a newer iOS 27.1+ simulator. If one becomes available, the coordinator can run the same selection on it without the owner. Record per-test results with the device or simulator, OS version and commit. Reinstall the TestFlight build afterwards.
+Record per-test results with the device, OS version and commit. Reinstall the TestFlight build afterwards.
 
 ### After the sitting
 
@@ -222,7 +242,7 @@ Covers TASK-34 AC #1–#6. AC #4 is met by recording what you see in every step.
 
 **Before the sitting**
 
-- Use a `DebugCloudKit` build only. Install it from Xcode: open `apps/apple/CanadianHam.xcodeproj`, choose the `CanadianHam` scheme, set Product > Scheme > Edit Scheme > Run > Build Configuration to `DebugCloudKit`, choose the physical iPhone or My Mac, use your development signing, then Product > Run. Never archive or upload this configuration; the TestFlight lanes always build Release ([Keeping DebugCloudKit out of uploads](testflight.md#keeping-debugcloudkit-out-of-uploads)). A development install may replace the TestFlight app on that device; reinstall from TestFlight afterwards.
+- Use a `DebugCloudKit` build only. Install it from Xcode: open `apps/apple/CanadianHam.xcodeproj`, choose the `CanadianHam` scheme, set Product > Scheme > Edit Scheme > Run > Build Configuration to `DebugCloudKit`, choose the physical iPhone or My Mac, use your development signing, then Product > Run. Never archive or upload this configuration; the TestFlight lanes and Xcode Cloud archives always build Release ([Keeping DebugCloudKit out of uploads](testflight.md#keeping-debugcloudkit-out-of-uploads)). A development install may replace the TestFlight app on that device; reinstall from TestFlight afterwards.
 - Confirm that the `iCloud.org.davidjensenius.CanadianHam` container is registered with iCloud (CloudKit) and Push Notifications (TASK-34's "registered iCloud container"). If it isn't, set it up first, as step 3 of the [TestFlight runbook's one-time setup](testflight.md#one-time-local-setup) describes.
 - Two Apple Accounts (A and B) and a device where signing out of iCloud is acceptable; it affects other apps too.
 - Access to CloudKit Console for the container. Don't export or keep CloudKit Console logs ([iCloud sync proposal](../proposals/icloud-sync.md)).
@@ -244,6 +264,26 @@ Covers TASK-34 AC #1–#6. AC #4 is met by recording what you see in every step.
 8. **Restore the device.** Sign back in to your usual account and reinstall from TestFlight.
 
 **AC #4:** for every step, record whether local progress disappeared or changed without a Reset, i.e. whether SwiftData or CloudKit purged mirrored local data. The coordinator records the findings for the TASK-13.5 merge and deletion work, as AC #4 asks.
+
+## Sitting 6: Xcode Cloud and App Store Connect setup (no device)
+
+Owner only: agents never create or edit Xcode Cloud workflows or App Store Connect settings. TASK-86 (Done) prepared the scripts and docs; [distribution](distribution.md) is the source of truth, and this sitting only orders its owner steps. Reply with the dates, settings and decisions; the coordinator adds them to TASK-86's notes.
+
+**Before the sitting**
+
+- An App Store Connect Admin or App Manager role (needed for Next Build Number) and the Xcode release named in [Xcode Cloud setup](distribution.md#xcode-cloud-setup-owner-only) step 1.
+- The current highest recorded uploads, from `apps/apple/ci_scripts/build-number-floors` on main ([floors file](distribution.md#floors-file)). Every Fastlane upload raises them, so ask the coordinator for the current lines. On 2026-11-03 all four were at version 1.0.0: iOS `202610271751`, macOS `202610271753`, tvOS `202610271756` and visionOS `202610271757`.
+
+**Steps**
+
+1. **Environment and repository:** [Xcode Cloud setup](distribution.md#xcode-cloud-setup-owner-only) steps 1–2.
+2. **Build number, before any build** ([Build numbers](distribution.md#build-numbers)). In App Store Connect → the app → Xcode Cloud → Settings → Build Number, try a Next Build Number above the highest recorded upload, for example `202610271758` (option (a)). Nobody has tried a number this large for this app; some developers report that App Store Connect refuses numbers above 2,147,483,647.
+   - **Accepted:** all four platforms continue at 1.0.0 from that number. While Fastlane uploads continue, raise Next Build Number above each one ([While Fastlane uploads continue](distribution.md#while-fastlane-uploads-continue)).
+   - **Refused:** choose the fallback in [the owner decision](distribution.md#owner-decision-before-the-first-xcode-cloud-build). Option (b): iOS, iPadOS, tvOS and visionOS move to a new marketing version (for example 1.0.1) from a small Next Build Number that App Store Connect accepts; the coordinator raises `MARKETING_VERSION` in a pull request, and from that merge on, including its own upload, Fastlane stops for those platforms. Option (c), for the Mac app under (b): keep it on the Fastlane fallback for now, or ask Apple Developer Support. Overriding `CFBundleVersion` in a script is unverified and not recommended; use it only with an owner decision and a test (see [distribution](distribution.md#owner-decision-before-the-first-xcode-cloud-build)).
+   - Reply with the option and the Next Build Number, e.g. "Owner decision 2026-11-05: option (a), Next Build Number 202610271758 accepted".
+3. **Internal workflow:** [Xcode Cloud setup](distribution.md#xcode-cloud-setup-owner-only) step 4, with **TestFlight (Internal Testing Only)** for the internal team group only. Under option (b), leave out the macOS archive action.
+4. **First run:** Xcode Cloud setup step 6. Give the coordinator each platform's TestFlight version and build number; that platform's internal builds then come from Xcode Cloud ([Internal builds](#internal-builds-for-the-sittings)). On the first macOS archive, confirm that it produces a native macOS app without the watch app, since Xcode Cloud can't pass the Fastlane mac lane's SDK overrides ([macOS SDK](distribution.md#differences-from-fastlane)). Xcode Cloud builds never include the internal-only official reference sheet.
+5. **Later:** once Xcode Cloud has shipped all four platforms, decide how to retire Fastlane ([Retiring Fastlane](distribution.md#retiring-fastlane)). Create the distribution workflow (Xcode Cloud setup step 5) only after TASK-1.7 is Done (TASK-85, its other gate, is Done); external TestFlight and App Store submission also wait for the [release checklist](release-checklist.md#store-submission) and the [`CA92.1` sign-off](#task-85-sign-off-on-ca921-before-app-store-submission).
 
 ## Follow-on work (not owner checks)
 
