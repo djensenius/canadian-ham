@@ -458,11 +458,17 @@ works as follows:
 - **Scanning.** It blanks Swift comments and scans the code for the spellings
   of each category. String and regex literals are kept, following the Swift 6
   lexer for extended `#/.../#` and bare `/.../` regex literals, so a `/*` or
-  `//` inside a literal does not hide later code. C functions such as
+  `//` inside a literal does not hide later code. The patterns run over the
+  whole file rather than line by line, so a spelling split across lines
+  still counts; each usage is reported on the line where its API name
+  starts. API names are matched with or without a module qualifier
+  (`Foundation.UserDefaults`, `Darwin.mach_absolute_time`), and `AppStorage`
+  counts in any form, including `@SwiftUI.AppStorage`. C functions such as
   `fstat`, `lstat`, `statfs` and `getattrlist` count as references as well
   as calls (for example `let read = Darwin.fstat`). Bare `stat` is also a
-  common Swift name, so it counts only as a call, a C-module-qualified name
-  (`Darwin.stat`) or the whole right-hand side of an assignment.
+  common Swift name, so it counts only as a call (including `stat` with the
+  `(` on the next line), a C-module-qualified name (`Darwin.stat`, also with
+  `.stat` on the next line) or the whole right-hand side of an assignment.
 - **What fails.** The check fails in any of these cases:
   - a shipped target uses a category its own manifest does not declare;
   - a manifest declares a category its target does not use;
@@ -484,14 +490,19 @@ works as follows:
   include comment-only mentions, a string containing `//` followed by real
   code, excluded and test-only files, unlinked packages and package tests,
   `getattrlist` counting for both File timestamp and Disk space, C-function
-  references, `stat`-named Swift identifiers that must not count, regex
-  literals containing comment markers, and the fail-closed cases above.
+  references, module-qualified spellings in every category including
+  `@SwiftUI.AppStorage`, spellings split across lines, `stat`-named Swift
+  identifiers that must not count, regex literals containing comment
+  markers, and the fail-closed cases above.
 - **Limitations.** The check does not evaluate `#if` (an API compiled out on
   some platforms still counts for the target). It also scans inside string
   and regex literals, so it errs towards declaring a category. An
-  unqualified bare `stat` passed as an argument (for example `apply(stat)`)
-  is not detected, to avoid matching Swift variables named `stat`. Binary
-  inspection (below) is the cross-check.
+  unqualified bare `stat` used as a value anywhere other than the whole
+  right-hand side of an assignment is not detected: for example passed as
+  an argument (`apply(stat)`), returned (`return stat`), placed in a
+  collection (`[stat]`) or used as an operand (`x ?? stat`). This avoids
+  matching Swift variables named `stat`. Binary inspection (below) is the
+  cross-check.
 
 ### Evidence
 

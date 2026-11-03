@@ -142,6 +142,10 @@ func accuracy(_ stat: Stat?) -> Double {
     guard let stat, stat.stat > 0 else { return 0 }
     return Double(stat.stat) / Double(stat.stats.count) // UserDefaults after division is a comment
 }
+func latest(_ stat: Stat?) -> Stat? {
+    guard let stat else { return nil }
+    return stat
+}
 let lstatus = Stat().status; let restat = Stat().stats; let half = lstatus/2 // statfs(note)
 let quotient = half/2; let path = "a/b" // UserDefaults after division and a string is a comment
 let forced = Optional(4)!/2; let other = "c/d" // NSUserDefaults after a postfix operator is a comment
@@ -249,7 +253,43 @@ assertFail('package usage undeclared', {}, [
 assertFail('app usage undeclared', { ...tvManifest(TV_WITH_PACKAGE), ...appManifest([[BOOT_TIME, ['35F9.1']], [FILE_TIMESTAMP, ['C617.1']]]) },
   'App: uses NSPrivacyAccessedAPICategoryUserDefaults (User defaults) but apps/apple/App/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: apps/apple/App/AppMain.swift:4 UserDefaults');
 assertFail('@AppStorage counts as user defaults', { ...tvManifest([[FILE_TIMESTAMP, ['C617.1']]]) },
-  'TV: uses NSPrivacyAccessedAPICategoryUserDefaults (User defaults) but apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: apps/apple/Shared/Settings.swift:3 @AppStorage');
+  'TV: uses NSPrivacyAccessedAPICategoryUserDefaults (User defaults) but apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: apps/apple/Shared/Settings.swift:3 AppStorage');
+// Swift accepts a module-qualified attribute, with a line break before the `.`.
+assertFail('@SwiftUI.AppStorage counts as user defaults', {
+  ...tvManifest([[FILE_TIMESTAMP, ['C617.1']]]),
+  'apps/apple/Shared/Settings.swift': `import SwiftUI
+struct SettingsView: View {
+    @SwiftUI.AppStorage("speed") private var speed = 20
+    @SwiftUI
+        .AppStorage("tone") private var tone = 600
+    var body: some View { Text("\\(speed) \\(tone)") }
+}
+`,
+}, 'TV: uses NSPrivacyAccessedAPICategoryUserDefaults (User defaults) but apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: apps/apple/Shared/Settings.swift:3 AppStorage; apps/apple/Shared/Settings.swift:5 AppStorage');
+// Module-qualified spellings in every category, including a line break before `.`.
+const TV_QUALIFIED = 'apps/apple/Platforms/tvOS/Qualified.swift';
+const tvUndeclared = (category, label) => `TV: uses ${category} (${label}) but apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: `;
+assertFail('module-qualified spellings', {
+  ...tvManifest([]),
+  [TV_QUALIFIED]: `import Foundation
+let info = Darwin
+    .stat
+let defaults = Foundation.UserDefaults.standard, suite = Foundation.UserDefaults(suiteName: nil)
+let uptime = Foundation.ProcessInfo.processInfo
+    .systemUptime
+let ticks = Darwin.mach_absolute_time()
+let modified = try? Foundation.FileManager.default.attributesOfItem(atPath: "/")[Foundation.FileAttributeKey.modificationDate]
+let free = Foundation.URLResourceKey.volumeAvailableCapacityForImportantUsageKey
+let modes = UIKit.UITextInputMode.activeInputModes
+`,
+}, [
+  // One usage per spelling and line, listed in line order.
+  `${tvUndeclared(USER_DEFAULTS, 'User defaults')}${TV_QUALIFIED}:4 UserDefaults; apps/apple/Shared/Settings.swift:3 AppStorage`,
+  `${tvUndeclared(BOOT_TIME, 'System boot time')}${TV_QUALIFIED}:6 systemUptime; ${TV_QUALIFIED}:7 mach_absolute_time`,
+  `${tvUndeclared(FILE_TIMESTAMP, 'File timestamp')}${TV_QUALIFIED}:3 stat; ${TV_QUALIFIED}:8 modificationDate; packages/engine-swift/Sources/Engine/Files.swift:3 contentModificationDateKey`,
+  `${tvUndeclared(DISK_SPACE, 'Disk space')}${TV_QUALIFIED}:9 volumeAvailableCapacity*`,
+  `${tvUndeclared('NSPrivacyAccessedAPICategoryActiveKeyboards', 'Active keyboards')}${TV_QUALIFIED}:10 activeInputModes`,
+]);
 assertFail('code after a string containing // is scanned', { ...tvManifest(TV_WITH_PACKAGE), ...appManifest([[USER_DEFAULTS, ['CA92.1']], [FILE_TIMESTAMP, ['C617.1']]]) },
   'Evidence: apps/apple/App/Timing.swift:2 systemUptime');
 assertFail('declared category unused', tvManifest([...TV_WITH_PACKAGE, [DISK_SPACE, ['E174.1']]]),
@@ -292,6 +332,43 @@ let attributeList = getattrlist
   'apps/apple/Platforms/watchOS/References.swift:3 statfs/statvfs/fstatfs/fstatvfs',
   'apps/apple/Platforms/watchOS/References.swift:4 getattrlist family',
   'Watch: uses NSPrivacyAccessedAPICategoryFileTimestamp (File timestamp)',
+]);
+
+// Whole-file matching: spellings split across lines count, reported on the API's line.
+// (swiftc parses a `(` at the start of a line as a new expression, not a call,
+// so `stat` then `(path, &buf)` is matched conservatively.)
+const WATCH_MULTI_LINE = 'apps/apple/Platforms/watchOS/MultiLine.swift';
+assertFail('multi-line stat spellings', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  [WATCH_MULTI_LINE]: `import Darwin
+func probe(_ path: String, _ buf: inout stat) {
+    stat
+    (path, &buf)
+    let assigned =
+        stat
+    let qualified = Darwin
+        .stat
+    let volume = Glibc
+        .statfs
+}
+`,
+}, [
+  `Watch: uses ${FILE_TIMESTAMP} (File timestamp) but apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: ${WATCH_MULTI_LINE}:3 stat; ${WATCH_MULTI_LINE}:6 stat; ${WATCH_MULTI_LINE}:8 stat`,
+  `Watch: uses ${DISK_SPACE} (Disk space) but apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: ${WATCH_MULTI_LINE}:10 statfs/statvfs/fstatfs/fstatvfs`,
+]);
+assertFail('multi-line spellings in other categories', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...appManifest([[USER_DEFAULTS, ['CA92.1']]]),
+  'apps/apple/App/Dates.swift': `import Foundation
+let attributes = try? FileManager.default.attributesOfItem(atPath: "/")[FileAttributeKey
+    .creationDate]
+let started = ProcessInfo
+    .processInfo
+    .systemUptime
+`,
+}, [
+  `App: uses ${FILE_TIMESTAMP} (File timestamp) but apps/apple/App/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: apps/apple/App/Dates.swift:3 creationDate`,
+  `App: uses ${BOOT_TIME} (System boot time) but apps/apple/App/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: apps/apple/App/Dates.swift:6 systemUptime; apps/apple/App/Timing.swift:2 systemUptime`,
 ]);
 
 // Regex literals: comment markers inside them must not hide later code.

@@ -47,10 +47,12 @@ const CATEGORIES = {
       // C functions are matched as identifiers, not only calls, so references
       // such as `let read = Darwin.fstat` count. Bare `stat` is also a common
       // Swift name, so it counts only as a call, a C-module-qualified name or the
-      // whole right-hand side of an assignment.
+      // whole right-hand side of an assignment. Patterns run over the whole
+      // file, so `\s*` also spans line breaks (Swift allows one before `.`, not
+      // after it), and lookbehinds keep the reported line on `stat` itself.
       [/\bf?getattrlist(?:bulk|at)?\b/, 'getattrlist family'],
       [/\b[fl]stat\b|\bfstatat\b/, 'fstat/lstat/fstatat'],
-      [/\bstat\s*\(|\b(?:Darwin|Glibc|SwiftGlibc|Musl|Foundation|ucrt)\.stat\b|=\s*stat\s*(?:;|$)/, 'stat'],
+      [/\bstat\s*\(|(?<=\b(?:Darwin|Glibc|SwiftGlibc|Musl|Foundation|ucrt)\s*\.)stat\b|(?<==\s*)stat(?=\s*(?:;|$))/, 'stat'],
     ],
   },
   NSPrivacyAccessedAPICategorySystemBootTime: {
@@ -91,7 +93,9 @@ const CATEGORIES = {
       [/\bUserDefaults\b/, 'UserDefaults'],
       [/\bNSUserDefaults\b|\bstandardUserDefaults\b/, 'NSUserDefaults'],
       // SwiftUI and Core Foundation front-ends to the same defaults store.
-      [/@AppStorage\b/, '@AppStorage'],
+      // `AppStorage` is matched as a name, so `@SwiftUI.AppStorage`, a
+      // qualifier on the line before, and `AppStorage(wrappedValue:_:)` count.
+      [/\bAppStorage\b/, 'AppStorage'],
       [/\bCFPreferences[A-Za-z]*\b/, 'CFPreferences'],
     ],
   },
@@ -513,18 +517,41 @@ function stripSwiftComments(source, label) {
   return out.join('');
 }
 
+// Patterns run over the whole comment-stripped file, not line by line, so API
+// spellings split across lines still count. Each usage is reported on the line
+// where its match starts, once per pattern and line, in line order.
+const MATCHERS = Object.entries(CATEGORIES).flatMap(([category, { patterns }]) =>
+  patterns.map(([pattern, spelling]) => ({ category, spelling, regex: new RegExp(pattern.source, `${pattern.flags.replace(/[gm]/g, '')}gm`) })));
+
 const usageCache = new Map();
 function apiUsage(file) {
   if (usageCache.has(file)) return usageCache.get(file);
-  const lines = stripSwiftComments(readFileSync(file, 'utf8'), display(file)).split('\n');
-  const usages = [];
-  lines.forEach((line, lineIndex) => {
-    for (const [category, { patterns }] of Object.entries(CATEGORIES)) {
-      for (const [pattern, spelling] of patterns) {
-        if (pattern.test(line)) usages.push({ category, spelling, file, line: lineIndex + 1 });
-      }
+  const code = stripSwiftComments(readFileSync(file, 'utf8'), display(file));
+  const lineStarts = [0];
+  for (let k = 0; k < code.length; k += 1) if (code[k] === '\n') lineStarts.push(k + 1);
+  const lineOf = (offset) => {
+    let low = 0;
+    let high = lineStarts.length - 1;
+    while (low < high) {
+      const middle = Math.ceil((low + high) / 2);
+      if (lineStarts[middle] <= offset) low = middle;
+      else high = middle - 1;
+    }
+    return low + 1;
+  };
+  const found = [];
+  MATCHERS.forEach(({ category, spelling, regex }, order) => {
+    const lines = new Set();
+    for (const match of code.matchAll(regex)) {
+      const line = lineOf(match.index);
+      if (lines.has(line)) continue;
+      lines.add(line);
+      found.push({ category, spelling, file, line, order });
     }
   });
+  const usages = found
+    .sort((a, b) => a.line - b.line || a.order - b.order)
+    .map(({ category, spelling, line }) => ({ category, spelling, file, line }));
   usageCache.set(file, usages);
   return usages;
 }
