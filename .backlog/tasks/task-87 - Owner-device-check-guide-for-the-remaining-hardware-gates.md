@@ -1,0 +1,28 @@
+---
+id: TASK-87
+title: Owner device-check guide for the remaining hardware gates
+status: To Do
+assignee: []
+created_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:39:00Z'
+labels:
+  - docs
+  - testing
+dependencies: []
+priority: medium
+type: docs
+ordinal: 170000
+---
+
+## Description
+
+<!-- SECTION:DESCRIPTION:BEGIN -->
+Several tasks wait only on the owner, real hardware or an owner decision: TASK-29 (Apple TV VoiceOver on About cards), TASK-14.3 and TASK-14.5 (watch Morse haptics and accessibility), TASK-14.6 (watch install from TestFlight), TASK-54 (iPhone Duo), TASK-34 (signed-device iCloud checks, DebugCloudKit builds only), and the owner decisions in TASK-65, TASK-1.1, TASK-1.7 and TASK-1.8. Step-by-step checklists already exist for the watch (docs/testing/task-14.3-watch-morse.md, task-14.5-watch-a11y.md, task-14.6-watch-release.md, docs/release/testflight.md) and Apple TV (docs/accessibility.md, Owner listening check (tvOS VoiceOver)); iPhone Duo has none. Write one guide that indexes every owner gate in order, so the owner can finish each device in one sitting, and add the missing iPhone Duo steps. TASK-63 is follow-on product work that depends on TASK-54 results, not an owner check.
+<!-- SECTION:DESCRIPTION:END -->
+
+## Acceptance Criteria
+<!-- AC:BEGIN -->
+- [ ] #1 A single owner-gate guide lists every open owner-gate task (TASK-1.1, 1.7, 1.8, 14.3, 14.5, 14.6, 29, 34, 54, 65) by task and acceptance criterion, says what the owner must do or decide, and orders the device checks so one session covers each device
+- [ ] #2 The guide links the existing watch and Apple TV checklists instead of copying them, and adds step-by-step iPhone Duo steps with expected results taken from TASK-54 acceptance criteria without adding scope; TASK-63 is listed only as follow-on work
+- [ ] #3 Each listed task's notes link the guide, and the guide states the evidence format the coordinator needs to check off the criteria
+<!-- AC:END -->

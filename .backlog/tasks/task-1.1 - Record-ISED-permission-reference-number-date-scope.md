@@ -1,15 +1,16 @@
 ---
 id: TASK-1.1
-title: 'Record ISED permission (reference number, date, scope)'
+title: Record ISED permission (reference number, date, scope)
 status: In Progress
 assignee:
   - '@djensenius'
-created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 15:27'
+created_date: 2026-10-01 02:27
+updated_date: '2026-11-03T02:33:00Z'
 labels:
   - release
   - blocked
-  - 'legacy:T-007'
+  - legacy:T-007
+  - owner-gate
 milestone: m-0
 dependencies: []
 parent_task_id: TASK-1

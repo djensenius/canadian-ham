@@ -5,11 +5,12 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-10-25T22:27:00Z'
+updated_date: '2026-11-03T02:33:00Z'
 labels:
   - apple
   - watchos
   - accessibility
+  - owner-gate
 milestone: m-1
 dependencies:
   - TASK-14.4
