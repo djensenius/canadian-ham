@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T08:48:00Z'
+updated_date: '2026-11-03T09:00:00Z'
 labels:
   - apple
   - privacy
@@ -156,6 +156,8 @@ PR #1064 round 7c (reviewer REQUEST CHANGES on 9ec9afb6..96ac971b), commit 8fefd
 PR #1064 round 7c follow-up (reviewer APPROVE WITH NOTES), commit f7bb6d17cefbd28d6bec923c2dcb4aaf30c9c8d2: rewrote the stale comment above checkSwiftFlags (exact-name allowlist with a value rule per setting, base and configs only, conditional keys matched on the name before [). Added a Limitations sentence: INFOPLIST_FILE and CODE_SIGN_ENTITLEMENTS are checked for path and file type, not contents (LSEnvironment DYLD_*, library-validation entitlements); a bundled library is still rejected as prebuilt code; the project does not set ENABLE_HARDENED_RUNTIME, so that is not relied on; the iCloud gate allowlists the CloudKit entitlements keys and checks the default macOS entitlements only for iCloud/push/background-mode keys, so other content is reviewed by hand. Checks: self-test passed; real-tree --verbose byte-identical to b2c359dc; check:links and git diff --check passed.
 
 Round 8 (Copilot PRRT_kwDOUxZq_M6zB6pw, PRRT_kwDOUxZq_M6zB6qM; commit e0b916eda813ae57513b54e6e25bb7c7dc613738): the Swift scanner now lexes as swiftc 6.4.2 does, verified with xcrun swiftc -typecheck and compiled probes. CR and CRLF become LF before lexing (comments end and file:line counts match Swift); a leading BOM is skipped; invalid UTF-8, VT/FF/NEL/U+2028/U+2029/NUL/DEL/C0 controls and non-ASCII code (NFD, KELVIN SIGN, zero-width, NBSP, stray BOM, backticks) fail closed. String literals are decoded (\u{1-8 hex}, \0 \\ \t \n \r \" \', raw-string delimiters, multi-line continuations and indentation), literal-only interpolations inlined and + joins of literals chained, then matched as well as the raw text; a decoded NUL ends an exact name and U+212A/U+037E/U+1FEF read as ASCII; unsupported escapes fail closed. Selector, key-path, #if and #sourceLocation forms were already covered (fixtures added). Names built from variables, calls, +=, joined() or non-literal interpolations stay a documented limitation. Checks: self-test passed; real-tree --verbose output byte-identical (48 lines, 0.38 s); 39 mutations, 38 killed after tightening two fixtures, 1 message-only survivor, no-op control passes; pnpm typecheck, pnpm test (one unrelated web test failed once, then passed on two reruns), check:links, check:shell, git diff --check and the test guard pass.
+
+Round 8 review note (docs only): the lexing step and the run-time-name limitation now name casts (`("system" as String) + "Uptime"`) and initialiser or other calls around the literal after the `+` (`"system" + String("Uptime")`), which end a literal join. A probe of the current lexer shows that the look-back skips a closing `)`, so `f("system") + "Uptime"` and `String("system") + "Uptime"` are joined and matched. This only adds matches for names matched anywhere in a string. It can hide one exact-name case: an escaped name as a call's last argument followed by `+` and a literal (`k("st\u{61}t") + "x"` is read as "statx"). The plain `k("stat") + "x"` is still matched by the raw scan. This is documented; the code is unchanged. pnpm check:links and git diff --check pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
