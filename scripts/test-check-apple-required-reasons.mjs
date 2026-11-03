@@ -947,6 +947,184 @@ assertFail('target templates', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(P
 assertFail('unsupported YAML', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('    platform: watchOS\n', '    platform: *watch\n')) },
   'anchors, aliases and tags are not supported');
 
+// project.yml is read as a strict YAML subset: what the parser models must
+// mean what Yams/XcodeGen read, and everything else fails.
+const WATCH_PLATFORM = '    platform: watchOS\n';
+const watchYml = (text) => ({ ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace(WATCH_PLATFORM, text)) });
+const watchSettings = (lines) => watchYml(`${WATCH_PLATFORM}    settings:\n      base:\n${lines}`);
+const YAML_SUBSET = 'the checker reads a strict YAML subset';
+assertFail('escaped build-setting key', watchSettings('        "OTHER\\u005fLDFLAGS": -lvendor\n'),
+  ['apps/apple/project.yml:39: double-quoted escape \\u is not supported (only \\\\ and \\" are decoded); write the character itself', YAML_SUBSET]);
+assertFail('quoted build-setting keys', watchSettings('        \'OTHER_LDFLAGS\': -lvendor\n        "HEADER_SEARCH_PATHS[sdk=watchos*]": vendor\n'), [
+  'Watch: build setting OTHER_LDFLAGS can compile, import or link code the checker does not scan',
+  'Watch: build setting HEADER_SEARCH_PATHS[sdk=watchos*] can compile, import or link code the checker does not scan',
+]);
+// Mappings have no prototype: a target named __proto__ is still checked, and
+// a package named toString is unknown rather than Object.prototype.toString.
+assertFail('prototype keys', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('      - target: Watch\n', '      - target: Watch\n      - package: toString\n')
+    .concat('  __proto__:\n    type: application\n    platform: tvOS\n    sources:\n      - Proto\n')),
+  'apps/apple/Proto/Uptime.swift': 'let protoUptime = ProcessInfo.processInfo.systemUptime\n',
+  'apps/apple/Proto/PrivacyInfo.xcprivacy': manifest([]),
+}, [
+  '__proto__: uses NSPrivacyAccessedAPICategorySystemBootTime',
+  'App: depends on unknown package toString.',
+]);
+assertFail('duplicate keys', watchYml(`${WATCH_PLATFORM}    settings:\n      base:\n        OTHER_LDFLAGS: -lvendor\n    settings: {}\n`),
+  'apps/apple/project.yml:40: duplicate key "settings"');
+for (const [name, text, expected] of [
+  ['merge key', '    <<: *base\n', 'merge keys (<<) are not supported'],
+  ['complex key', '    ? OTHER_LDFLAGS\n    : -lvendor\n', 'complex keys ("? ") are not supported'],
+  ['continuation line', '    platform: watch\n      OS\n', 'apps/apple/project.yml:37: a more-indented line after a scalar (a multi-line scalar or continuation line) is not supported'],
+  ['multi-line double-quoted scalar', '    platform: "watch\n      OS"\n', 'unterminated double-quoted scalar; quoted scalars must close on the same line'],
+  ['multi-line single-quoted scalar', "    platform: 'watch\n      OS'\n", 'unterminated single-quoted scalar; quoted scalars must close on the same line'],
+  ['nested flow sequence', '    platform: watchOS\n    supportedDestinations: [[watchOS], iOS]\n', 'nested flow collections are not supported'],
+  ['multi-line flow sequence', '    platform: watchOS\n    supportedDestinations: [watchOS,\n      iOS]\n', 'flow sequences must close on the same line'],
+  ['flow sequence trailing comma', '    platform: watchOS\n    supportedDestinations: [watchOS, ]\n', 'empty flow sequence item (or trailing comma)'],
+  ['flow mapping', '    platform: watchOS\n    info: {path: Info.plist}\n', 'flow mappings other than {} are not supported: {path: Info.plist}'],
+  ['block scalar indentation indicator', '    platform: watchOS\n    postBuildScripts:\n      - script: |2\n            echo hi\n', 'block scalar header |2 is not supported (indentation indicators are not modelled)'],
+  ['block scalar outside script', '    platform: |\n      watchOS\n', 'block scalars are only supported as a script value, not for platform'],
+  ['block scalar dedent', '    platform: watchOS\n    postBuildScripts:\n      - script: |\n            echo one\n          echo two\n', 'a block scalar line is indented less than its first line but more than its key'],
+  ['boolean key', '    platform: watchOS\n    settings:\n      NO: x\n', 'plain key "NO" is a boolean in YAML 1.1, not a string; quote it'],
+  ['number key', '    platform: watchOS\n    settings:\n      0x1F: x\n', 'plain key "0x1F" is a number in YAML 1.1, not a string; quote it'],
+  ['timestamp value', '    platform: 2024-01-02\n', '2024-01-02 is a YAML timestamp; quote it'],
+  ['": " in a plain value', '    platform: watchOS\n    settings:\n      OTHER_SWIFT_FLAGS: a: b\n', '": " inside a plain scalar is not supported; quote it: a: b'],
+  ['reserved indicator', '    platform: @watchOS\n', 'a plain scalar cannot start with "@"; quote it: @watchOS'],
+  ['text after a quoted scalar', "    platform: 'watch'OS\n", "unexpected text after a quoted scalar: OS"],
+  ['nested sequence on one line', '    platform: watchOS\n    sources:\n      - - Platforms/watchOS\n', 'nested sequences on one line ("- - item") are not supported'],
+  ['complex key in a sequence', '    platform: watchOS\n    dependencies:\n      - ? target\n        : App\n', 'complex keys ("? ") are not supported'],
+  ['flow sequence item with a colon', '    platform: watchOS\n    supportedDestinations: [watchOS:iOS]\n', 'flow sequence item watchOS:iOS holds [ ] { } # or :; quote it'],
+  ['text after a flow sequence', '    platform: watchOS\n    supportedDestinations: [watchOS] iOS\n', 'unexpected text after a flow sequence: iOS'],
+  ['block scalar leading blank line', '    platform: watchOS\n    postBuildScripts:\n      - script: |\n                \n            echo hi\n', 'a leading blank line of a block scalar is indented more than its first line'],
+  ['inconsistent indentation', '    platform: watchOS\n    settings:\n      base:\n        A: b\n       C: d\n', 'apps/apple/project.yml:40: unexpected indentation'],
+  ['comment before a colon', '    platform: watchOS\n    settings # note: here\n', 'expected "key: value", found: settings # note: here'],
+  ['tab', '    platform:\twatchOS\n', 'apps/apple/project.yml:36: a tab is not supported'],
+  ['lone carriage return', '    platform: watchOS\r    settings: {}\n', 'character U+000D is not supported'],
+  ['line separator', '    platform: watchOS\u2028\n', 'character U+2028 is not supported'],
+  ['byte order mark inside the file', '\uFEFF    platform: watchOS\n', 'character U+FEFF is not supported'],
+  ['environment variable in a value', '    platform: watchOS\n    sources:\n      - ${HOME}/Sources\n', 'XcodeGen environment variables (${...}) are only supported in script values: ${HOME}/Sources'],
+  ['environment variable in a key', '    platform: watchOS\n    settings:\n      ${SETTING}: x\n', 'XcodeGen environment variables (${...}) are not supported in keys: ${SETTING}'],
+]) {
+  assertFail(`unsupported YAML: ${name}`, watchYml(text), [expected, YAML_SUBSET]);
+}
+for (const [name, text, expected] of [
+  ['document start marker', `---\n${PROJECT_YML}`, 'apps/apple/project.yml:1: document markers (--- and ...) are not supported'],
+  ['document end marker', `${PROJECT_YML}...\n`, 'document markers (--- and ...) are not supported'],
+  ['directive', `%YAML 1.1\n${PROJECT_YML}`, 'directives (%YAML, %TAG) are not supported'],
+  ['content after the document', `${PROJECT_YML}- stray\n`, 'unexpected content after document'],
+]) {
+  assertFail(`unsupported YAML: ${name}`, { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(text) }, [expected, YAML_SUBSET]);
+}
+assertFail('top level must be a mapping', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml('- name: Fixture\n') },
+  'project.yml: the top level must be a mapping.');
+assertFail('targets must be a mapping', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml('name: Fixture\ntargets: [App]\n') },
+  'project.yml: packages and targets must be mappings.');
+assertFail('top-level include', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(`include: [base.yml]\n${PROJECT_YML}`) },
+  'project.yml uses top-level include');
+// Plain scalars keep their YAML 1.1 types, and consumers that need a string
+// or a real boolean fail closed on anything else.
+const appSource = (lines) => ({ ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('      - path: Shared/Settings.swift\n', `      - path: Shared/Settings.swift\n${lines}`)) });
+assertPass('optional: yes is a YAML boolean', appSource('      - path: Missing/Generated.swift\n        optional: yes\n'));
+assertFail('quoted optional is a string', appSource('      - path: Missing/Generated.swift\n        optional: "true"\n'),
+  'App: sources path Missing/Generated.swift does not exist.');
+assertFail('YAML types where strings are needed', appSource('      - path: 2024\n      - path: Shared\n        type: ~\n      - path: Platforms\n        excludes: [~, yes]\n'), [
+  'App: unsupported sources entry {"path":2024}',
+  'App: sources entry Shared uses unsupported type null',
+  'App: sources entry Platforms excludes must be a list of strings, found [null,true]',
+]);
+// YAML 1.1 numbers (sexagesimal 1:30 is 90, 017 is octal) are not strings.
+assertFail('YAML 1.1 numbers', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace(WATCH_PLATFORM, '    platform: 1:30\n')
+    .replace('      - path: Shared/Settings.swift\n', '      - path: Shared/Settings.swift\n      - path: Platforms\n        excludes: [017, 0o17, 0b11, -0x1F, 1_000, 6.0, .5]\n')),
+}, [
+  'Watch: platform must be one platform name, found 90',
+  'App: sources entry Platforms excludes must be a list of strings, found [15,15,3,-31,1000,6,0.5]',
+]);
+assertFail('dependencies name exactly one kind as a string', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('      - sdk: AVFoundation.framework\n', '      - sdk: AVFoundation.framework\n      - package: yes\n      - package: EnginePkg\n        framework: Vendor/Analytics.framework\n      - target: Watch\n        bundle: Vendor/Helper.bundle\n')),
+}, [
+  'App: unsupported dependency {"package":true}',
+  'App: unsupported dependency {"package":"EnginePkg","framework":"Vendor/Analytics.framework"}; a dependency must name exactly one target, package or sdk as a string',
+  'App: unsupported dependency {"target":"Watch","bundle":"Vendor/Helper.bundle"}',
+]);
+assertFail('package path must be a string', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('    path: ../../packages/unlinked-swift\n', '    path: yes\n').replace('      - target: Watch\n', '      - package: UnlinkedPkg\n      - target: Watch\n')),
+}, 'project.yml package UnlinkedPkg is not a local path package');
+// XcodeGen variables and multi-platform targets change which files compile.
+assertFail('XcodeGen variables and platform lists', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace(WATCH_PLATFORM, '    platform: [watchOS, tvOS]\n')
+    .replace('      - path: Platforms/tvOS\n', '      - path: Platforms/$platform\n        optional: true\n      - path: Platforms/tvOS\n')
+    .replace('    path: ../../packages/unlinked-swift\n', '    path: ../../packages/unlinked-swift\n    url: https://example.com/unlinked.git\n')
+    .replace('      - package: EnginePkg\n      - target: Watch\n', '      - package: EnginePkg\n      - package: UnlinkedPkg\n      - target: Watch\n')),
+}, [
+  'Watch: platform must be one platform name, found ["watchOS","tvOS"]; multi-platform targets are not modelled',
+  'TV: sources entry Platforms/$platform uses $ in a path or exclude',
+  'project.yml package UnlinkedPkg uses keys the checker does not model (url)',
+]);
+// Modelled constructs: quoted flow items with commas, quotes and # inside
+// quotes, '' and \\ \" decoding, comments after apostrophes, {}, script
+// blocks with ${...}, a leading byte order mark and CRLF line ends.
+const MODELLED_YAML = PROJECT_YML
+  .replace('    platform: watchOS\n    sources:\n', '    platform: watchOS\n    sources: # the watch sources\n')
+  .replace('          - "DebugOnly/**"\n', '          - "DebugOnly/**" # debug only\n')
+  .replace('    supportedDestinations: [iOS, macOS]\n', '    supportedDestinations: [ iOS , "mac,OS" , \'x\'\'y\' ]\n')
+  .replace('      - path: ../../content/lessons\n', '      - path: ../../content/Kid\'s notes # the lessons\' folder\n        type: folder\n      - path: ../../content/lessons\n')
+  .replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n      - path: "Shared/a \\"q\\" #1 \\\\x.swift" # quoted\n      - path: \'Shared/It\'\'s.swift\'\n      - path: "Shared/End\\\\" # ends in a backslash\n')
+  .replace('  TV:\n    type: application\n', '  TV:\n    type: application\n    settings: {} # none\n    postBuildScripts:\n      - name: Copy\n        script: |\n          cp "${SRCROOT}/a" "${TARGET_BUILD_DIR}/b"\n\n          # a comment line inside the script\n        basedOnDependencyAnalysis: false\n      - name: Run\n        script: bash "${SRCROOT}/run.sh"\n');
+const MODELLED_FILES = {
+  ...tvManifest(TV_WITH_PACKAGE),
+  "content/Kid's notes/a.md": '# Notes\n',
+  'apps/apple/Shared/a "q" #1 \\x.swift': 'let quotedName = "x"\n',
+  "apps/apple/Shared/It's.swift": 'let apostrophe = "y"\n',
+  'apps/apple/Shared/End\\/End.swift': 'let backslash = "z"\n',
+};
+const MODELLED_OUTPUT = ['App: 4 Swift files', 'TV: 6 Swift files', 'Apple required-reason API check passed'];
+assertPass('modelled YAML', { ...MODELLED_FILES, ...projectYml(MODELLED_YAML) }, MODELLED_OUTPUT);
+assertPass('modelled YAML with a byte order mark and CRLF', { ...MODELLED_FILES, ...projectYml(`\uFEFF${MODELLED_YAML.replace(/\n/g, '\r\n')}`) }, MODELLED_OUTPUT);
+// Excludes with quoted commas are read as one glob each.
+assertPass('quoted comma in a flow sequence', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('        excludes:\n          - "DebugOnly/**"\n', '        excludes: ["DebugOnly/**", "a,b/**"]\n').replace('      - path: App/DebugOnly\n', '      - path: App/DebugOnly\n      - path: "App/a,b"\n')),
+  'apps/apple/App/a,b/Disk.swift': 'var info = statfs(); let status = statfs("/", &info)\n',
+}, ['App: 4 Swift files']);
+
+// Package.swift is read as a strict Swift subset; anything that could build,
+// rename or hide targets fails.
+const packageFail = (name, text, expected) => assertFail(`Package.swift: ${name}`, { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Package.swift': text },
+  ['packages/engine-swift/Package.swift:', `uses Swift the checker does not model (${expected})`, 'extend scripts/check-apple-required-reasons.mjs before linking it']);
+const ENGINE_TARGET = '.target(name: "Engine")';
+packageFail('raw string', PACKAGE_SWIFT.replace(ENGINE_TARGET, '.target(name: #"Engine"#)'), 'a raw string or # directive');
+packageFail('unicode escape', PACKAGE_SWIFT.replace(ENGINE_TARGET, '.target(name: "Engin\\u{65}")'), 'a string escape or interpolation');
+packageFail('interpolation', PACKAGE_SWIFT.replace(ENGINE_TARGET, '.target(name: "\\(engine)")'), 'a string escape or interpolation');
+packageFail('multi-line string', PACKAGE_SWIFT.replace(ENGINE_TARGET, '.target(name: """\n    Engine\n    """)'), 'a multi-line string literal');
+packageFail('conditional compilation', PACKAGE_SWIFT.replace('    targets: [\n', '    targets: [\n#if os(macOS)\n        .target(name: "MacOnly"),\n#endif\n'), 'conditional compilation (#if)');
+packageFail('target built by a variable', PACKAGE_SWIFT.replace('let package', 'let hidden = Target.target(name: "Hidden", path: "Elsewhere")\nlet package'), '"hidden" where package was expected');
+packageFail('helper-built dependencies', PACKAGE_SWIFT.replace('let package', 'func deps() -> [Package.Dependency] { [] }\nlet package').replace('    name: "Engine",\n', '    name: "Engine",\n    dependencies: deps(),\n'), '"func" where let was expected');
+packageFail('variable argument', PACKAGE_SWIFT.replace('    name: "Engine",\n', '    name: "Engine",\n    dependencies: deps,\n'), '"deps" where a string, array or .member value was expected');
+packageFail('type-qualified member', PACKAGE_SWIFT.replace(ENGINE_TARGET, 'Target.target(name: "Engine")'), '"Target" where a string, array or .member value was expected');
+packageFail('map', PACKAGE_SWIFT.replace('    targets: [\n', '    targets: ["Engine"].map { .target(name: $0) } + [\n'), '"." where ) was expected');
+packageFail('operator', PACKAGE_SWIFT.replace('    ]\n)', '    ] + extraTargets\n)'), 'the character "+"');
+packageFail('whitespace after a dot', PACKAGE_SWIFT.replace(ENGINE_TARGET, '. target(name: "Engine")'), 'whitespace after "."');
+packageFail('extra import', PACKAGE_SWIFT.replace('import PackageDescription\n', 'import PackageDescription\nimport Foundation\n'), '"import" where let was expected');
+packageFail('statement after the package', `${PACKAGE_SWIFT}package.targets.append(.target(name: "Hidden"))\n`, '"package" after the Package(...) declaration');
+assertPass('Package.swift comments, backticks and trailing commas', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace(ENGINE_TARGET, '.`target`(\n            name: /* the module */ "Engine", // trailing comment\n            swiftSettings: [.swiftLanguageMode(.v6),],\n        )'),
+});
+assertFail('Package.swift version-specific manifest and other source directories', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'packages/engine-swift/Package@swift-6.0.swift': PACKAGE_SWIFT.replace(ENGINE_TARGET, '.target(name: "Engine", path: "Elsewhere")'),
+  'packages/engine-swift/src/Hidden/Hidden.swift': 'let hiddenUptime = ProcessInfo.processInfo.systemUptime\n',
+}, [
+  'packages/engine-swift/Package@swift-6.0.swift is a version-specific manifest, which SwiftPM prefers over Package.swift',
+  'packages/engine-swift/src is a SwiftPM source directory the checker does not scan (only Sources is)',
+]);
+
 if (failures !== 0) {
   console.error(`required-reasons-test: failed with ${failures} failure(s).`);
   process.exit(1);

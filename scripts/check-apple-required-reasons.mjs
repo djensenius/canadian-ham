@@ -23,7 +23,10 @@
 // types, build phases and exclude globs, and SwiftPM plugins, macros, system
 // libraries, unsafe flags and paths outside the package.
 // Manifests are read with a strict XML plist parser that keeps value types
-// and rejects anything Apple's parser could read differently.
+// and rejects anything Apple's parser could read differently. project.yml is
+// read with a strict YAML subset parser (see parseYamlSubset) and each linked
+// Package.swift with a strict Swift subset grammar (see checkPackageSyntax);
+// constructs either could read differently from XcodeGen or SwiftPM fail.
 //
 // Limitation: `#if` conditions are not evaluated, so an API compiled out on a
 // platform still counts for every target that compiles the file, and string
@@ -168,6 +171,8 @@ const KNOWN_SOURCE_KEYS = new Set([
 // phase is a mapping); anything else, such as syncedFolder, fails.
 const SOURCE_TYPES = new Set(['file', 'group', 'folder']);
 const SOURCE_BUILD_PHASES = new Set(['sources', 'resources', 'headers', 'none']);
+// XcodeGen dependency kinds; a dependency names exactly one.
+const DEPENDENCY_KINDS = ['target', 'framework', 'carthage', 'sdk', 'package', 'bundle'];
 // XcodeGen target keys that cannot add compiled code. Anything else on a
 // shipped target (preBuildScripts, postCompileScripts, buildRules,
 // buildToolPlugins, scheme pre-actions, legacy, configFiles, ...) fails until
@@ -189,94 +194,282 @@ const fail = (message) => {
 const display = (absolutePath) => relative(root, absolutePath).split(sep).join('/');
 
 // ---------------------------------------------------------------------------
-// Minimal YAML subset parser for the XcodeGen spec: block mappings, block
-// sequences, flow sequences, quoted/plain scalars, comments and block scalars.
-// Anything else (anchors, flow mappings, tabs) is an error, not a silent skip.
+// Strict YAML subset parser for the XcodeGen spec. XcodeGen loads the spec
+// with Yams (libyaml, YAML 1.1 implicit types) and then replaces ${NAME} with
+// environment variables in keys and string values. This parser models exactly
+// the subset the spec needs: one document of block mappings and sequences
+// indented with spaces, comments, plain, single-quoted and double-quoted
+// scalars on one line, one-line flow sequences of scalars, the empty flow
+// mapping `{}`, CRLF line ends, a leading byte order mark, and literal or
+// folded block scalars as a `script` value (whose text the checker never
+// reads). Anything it could read differently from Yams fails instead: tabs,
+// non-ASCII and control characters (libyaml reads NEL, LS, PS and lone CR as
+// line breaks and skips a byte order mark at the start of any line), document
+// markers, directives, anchors, aliases, tags, merge and complex keys,
+// multi-line scalars, nested or multi-line flow collections, non-empty flow
+// mappings, block scalar indentation indicators, double-quoted escapes other
+// than \\ and \", plain keys that YAML 1.1 reads as null, booleans, numbers or
+// timestamps, timestamp values, duplicate keys and ${...} outside a `script`
+// value. Mappings are null-prototype objects, so `__proto__`, `constructor`
+// and `prototype` are ordinary keys. Plain values keep their YAML 1.1 type
+// (null, true/false, or a number whose value the checker never reads), so a
+// consumer that needs a string fails closed on them.
+
+const YAML_NULL = /^(?:~|null|Null|NULL|)$/;
+const YAML_TRUE = /^(?:yes|Yes|YES|true|True|TRUE|on|On|ON)$/;
+const YAML_FALSE = /^(?:no|No|NO|false|False|FALSE|off|Off|OFF)$/;
+const YAML_INT = /^(?:[-+]?0b[0-1_]+|[-+]?0o?[0-7_]+|[-+]?(?:0|[1-9][0-9_]*)|[-+]?0x[0-9a-fA-F_]+|[-+]?[1-9][0-9_]*(?::[0-5]?[0-9])+)$/;
+const YAML_FLOAT = /^(?:[-+]?(?:[0-9][0-9_]*)(?:\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\.[0-9_]+(?:[eE][-+][0-9]+)?|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\.[0-9_]*|[-+]?\.(?:inf|Inf|INF)|\.(?:nan|NaN|NAN))$/;
+const YAML_TIMESTAMP = /^(?:[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]|[0-9][0-9][0-9][0-9]-[0-9][0-9]?-[0-9][0-9]?(?:[Tt]|[ \t]+)[0-9][0-9]?:[0-9][0-9]:[0-9][0-9](?:\.[0-9]*)?(?:[ \t]*(?:Z|[-+][0-9][0-9]?(?::[0-9][0-9])?))?)$/;
+
+// The value of a YAML 1.1 int or float (binary, octal with 0 or 0o, hex,
+// sexagesimal, underscores, .inf and .nan). Only error messages show it.
+function yamlNumber(text) {
+  const clean = text.replace(/_/g, '');
+  const sign = clean.startsWith('-') ? -1 : 1;
+  const body = clean.replace(/^[-+]/, '');
+  if (/^\.(?:inf|Inf|INF)$/.test(body)) return sign * Infinity;
+  if (/^\.(?:nan|NaN|NAN)$/.test(body)) return NaN;
+  if (body.includes(':')) return sign * body.split(':').reduce((total, part) => total * 60 + Number(part), 0);
+  if (body.startsWith('0b')) return sign * parseInt(body.slice(2), 2);
+  if (body.startsWith('0x')) return sign * parseInt(body.slice(2), 16);
+  if (body.startsWith('0o')) return sign * parseInt(body.slice(2), 8);
+  if (/^0[0-7]+$/.test(body)) return sign * parseInt(body.slice(1), 8);
+  return sign * Number(body);
+}
 
 function parseYamlSubset(text, label) {
-  const lines = text.split(/\r?\n/);
-  let index = 0;
   const syntaxError = (lineIndex, message) => {
     throw new Error(`${label}:${lineIndex + 1}: ${message}`);
   };
-
-  const significant = (lineIndex) => {
-    const line = lines[lineIndex];
-    return line.trim() !== '' && !/^\s*#/.test(line);
-  };
+  const lines = (text.startsWith('\uFEFF') ? text.slice(1) : text).split(/\r\n|\n/);
+  for (const [lineIndex, line] of lines.entries()) {
+    const bad = line.search(/[^\x20-\x7E]/);
+    if (bad !== -1) {
+      const code = line.codePointAt(bad);
+      const what = code === 9 ? 'a tab' : `character U+${code.toString(16).toUpperCase().padStart(4, '0')}`;
+      syntaxError(lineIndex, `${what} is not supported; the spec must be printable ASCII indented with spaces, because libyaml reads tabs, line breaks other than LF and CRLF, and byte order marks differently`);
+    }
+  }
+  let index = 0;
+  const isItem = (content) => /^-(?: |$)/.test(content);
+  const significant = (lineIndex) => !/^ *(?:#.*)?$/.test(lines[lineIndex]);
   const peek = () => {
     while (index < lines.length && !significant(index)) index += 1;
     if (index >= lines.length) return null;
     const line = lines[index];
-    if (/^\s*\t/.test(line)) syntaxError(index, 'tab indentation is not supported');
     const indent = line.length - line.trimStart().length;
-    return { indent, text: stripYamlComment(line.slice(indent)), lineIndex: index };
+    const content = line.slice(indent);
+    if (indent === 0 && /^(?:---|\.\.\.)(?: |$)/.test(content)) syntaxError(index, 'document markers (--- and ...) are not supported; the spec must be one document');
+    if (indent === 0 && content.startsWith('%')) syntaxError(index, 'directives (%YAML, %TAG) are not supported');
+    return { indent, content, lineIndex: index };
   };
-
-  function stripYamlComment(value) {
-    let single = false;
-    let double = false;
-    for (let i = 0; i < value.length; i += 1) {
-      const c = value[i];
-      if (c === "'" && !double) single = !single;
-      else if (c === '"' && !single && value[i - 1] !== '\\') double = !double;
-      else if (c === '#' && !single && !double && (i === 0 || /\s/.test(value[i - 1]))) {
-        return value.slice(0, i).trimEnd();
+  // After a complete token, only spaces and a comment may follow on the line.
+  const lineEnd = (rest, lineIndex, what) => {
+    if (!/^(?: *| +#.*)$/.test(rest)) syntaxError(lineIndex, `unexpected text after ${what}: ${rest.trim()}`);
+  };
+  const noContinuation = (indent) => {
+    const next = peek();
+    if (next && next.indent > indent) syntaxError(next.lineIndex, 'a more-indented line after a scalar (a multi-line scalar or continuation line) is not supported');
+  };
+  const checkEnv = (value, key, lineIndex) => {
+    if (key === 'script') return;
+    for (const item of [value].flat()) {
+      if (typeof item === 'string' && item.includes('${')) {
+        syntaxError(lineIndex, `XcodeGen environment variables (\${...}) are only supported in script values: ${item}`);
       }
     }
-    return value.trimEnd();
+  };
+
+  // Reads a quoted scalar starting at text[start]; it must close on the same
+  // line. Single quotes decode only ''; double quotes decode only \\ and \".
+  function quoted(text, start, lineIndex) {
+    const quote = text[start];
+    let value = '';
+    for (let i = start + 1; i < text.length; i += 1) {
+      const c = text[i];
+      if (quote === "'" && c === "'") {
+        if (text[i + 1] !== "'") return { value, end: i + 1 };
+        i += 1;
+      } else if (quote === '"' && c === '"') {
+        return { value, end: i + 1 };
+      } else if (quote === '"' && c === '\\') {
+        const next = text[i + 1];
+        if (next !== '\\' && next !== '"') {
+          syntaxError(lineIndex, `double-quoted escape ${next === undefined ? '\\ at the end of a line' : `\\${next}`} is not supported (only \\\\ and \\" are decoded); write the character itself`);
+        }
+        i += 1;
+        value += next;
+        continue;
+      }
+      value += c;
+    }
+    syntaxError(lineIndex, `unterminated ${quote === '"' ? 'double' : 'single'}-quoted scalar; quoted scalars must close on the same line`);
   }
 
-  function scalar(raw, lineIndex) {
+  // Resolves a plain scalar as YAML 1.1 (Yams) does. Keys must be strings.
+  function plain(raw, lineIndex, isKey) {
     const value = raw.trim();
     if (/^[&*!]/.test(value)) syntaxError(lineIndex, `anchors, aliases and tags are not supported: ${value}`);
-    if (value.startsWith('{')) {
-      if (value === '{}') return {};
-      syntaxError(lineIndex, `flow mappings are not supported: ${value}`);
-    }
-    if (value.startsWith('[')) {
-      if (!value.endsWith(']')) syntaxError(lineIndex, `unterminated flow sequence: ${value}`);
-      const inner = value.slice(1, -1).trim();
-      return inner === '' ? [] : inner.split(',').map((item) => scalar(item, lineIndex));
-    }
-    if (/^".*"$/.test(value)) return value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-    if (/^'.*'$/.test(value)) return value.slice(1, -1).replace(/''/g, "'");
-    return value;
+    if (/^(?:[,[\]{}#|>'"%@`?:]|-(?: |$))/.test(value)) syntaxError(lineIndex, `a plain scalar cannot start with ${JSON.stringify(value[0])}; quote it: ${value}`);
+    if (/: |:$/.test(value)) syntaxError(lineIndex, `": " inside a plain scalar is not supported; quote it: ${value}`);
+    if (value === '<<') syntaxError(lineIndex, 'merge keys (<<) are not supported');
+    if (value === '=') syntaxError(lineIndex, 'value keys (=) are not supported');
+    if (YAML_TIMESTAMP.test(value)) syntaxError(lineIndex, `${value} is a YAML timestamp; quote it`);
+    let type;
+    let resolved;
+    if (YAML_NULL.test(value)) [type, resolved] = ['null', null];
+    else if (YAML_TRUE.test(value)) [type, resolved] = ['a boolean', true];
+    else if (YAML_FALSE.test(value)) [type, resolved] = ['a boolean', false];
+    else if (YAML_INT.test(value) || YAML_FLOAT.test(value)) [type, resolved] = ['a number', yamlNumber(value)];
+    else return value;
+    if (isKey) syntaxError(lineIndex, `plain key ${JSON.stringify(value)} is ${type} in YAML 1.1, not a string; quote it`);
+    return resolved;
   }
 
-  const KEY_PATTERN = /^("[^"]*"|'[^']*'|[^\s'"\-?:][^:]*?|-[^\s:][^:]*?):(?:\s+(.*))?$/;
+  function flowSequence(text, lineIndex) {
+    const items = [];
+    let i = 1;
+    const spaces = () => {
+      while (text[i] === ' ') i += 1;
+    };
+    spaces();
+    if (text[i] === ']') {
+      i += 1;
+    } else {
+      for (;;) {
+        spaces();
+        if (i >= text.length) syntaxError(lineIndex, `unterminated or unsupported flow sequence; flow sequences must close on the same line: ${text}`);
+        if (text[i] === '"' || text[i] === "'") {
+          const item = quoted(text, i, lineIndex);
+          items.push(item.value);
+          i = item.end;
+        } else {
+          const start = i;
+          while (i < text.length && text[i] !== ',' && text[i] !== ']') i += 1;
+          const item = text.slice(start, i).trim();
+          if (item === '') syntaxError(lineIndex, `empty flow sequence item (or trailing comma): ${text}`);
+          if (/^[[{]/.test(item)) syntaxError(lineIndex, `nested flow collections are not supported: ${text}`);
+          if (/[[\]{}#:]/.test(item)) syntaxError(lineIndex, `flow sequence item ${item} holds [ ] { } # or :; quote it`);
+          items.push(plain(item, lineIndex, false));
+        }
+        spaces();
+        if (text[i] === ',') {
+          i += 1;
+          continue;
+        }
+        if (text[i] === ']') {
+          i += 1;
+          break;
+        }
+        syntaxError(lineIndex, `unterminated or unsupported flow sequence; flow sequences must close on the same line: ${text}`);
+      }
+    }
+    lineEnd(text.slice(i), lineIndex, 'a flow sequence');
+    return items;
+  }
 
+  // Splits "key: rest" (the key plain or quoted); returns null for a scalar.
+  function entry(content, lineIndex) {
+    if (/^\?(?: |$)/.test(content)) syntaxError(lineIndex, 'complex keys ("? ") are not supported');
+    let key;
+    let rest;
+    if (content[0] === '"' || content[0] === "'") {
+      const { value, end } = quoted(content, 0, lineIndex);
+      const colon = content.slice(end).match(/^ *:(?= |$)/);
+      if (!colon) return null;
+      key = value;
+      rest = content.slice(end + colon[0].length);
+    } else {
+      let end = -1;
+      for (let i = 0; i < content.length && end === -1; i += 1) {
+        if (content[i] === '#' && content[i - 1] === ' ') break;
+        if (content[i] === ':' && (i + 1 === content.length || content[i + 1] === ' ')) end = i;
+      }
+      if (end === -1) return null;
+      key = plain(content.slice(0, end), lineIndex, true);
+      rest = content.slice(end + 1);
+    }
+    if (key.includes('${')) syntaxError(lineIndex, `XcodeGen environment variables (\${...}) are not supported in keys: ${key}`);
+    return { key, rest };
+  }
+
+  // The value after "key:" or "- ": { empty } when it follows on later lines,
+  // { block } for a block scalar header, or { value }.
+  function inlineValue(rest, lineIndex, key) {
+    const text = rest.replace(/^ +/, '');
+    if (text === '' || text.startsWith('#')) return { empty: true };
+    if (/^[|>]/.test(text)) {
+      if (!/^[|>][-+]?(?: +#.*)?$/.test(text)) syntaxError(lineIndex, `block scalar header ${text} is not supported (indentation indicators are not modelled)`);
+      if (key !== 'script') syntaxError(lineIndex, `block scalars are only supported as a script value, not for ${key === null ? 'a sequence item' : key}`);
+      return { block: true };
+    }
+    let value;
+    if (text[0] === '[') {
+      value = flowSequence(text, lineIndex);
+    } else if (text[0] === '{') {
+      if (!/^\{\}(?: +#.*)?$/.test(text)) syntaxError(lineIndex, `flow mappings other than {} are not supported: ${text}`);
+      return { value: Object.create(null) };
+    } else if (text[0] === '"' || text[0] === "'") {
+      const scalar = quoted(text, 0, lineIndex);
+      lineEnd(text.slice(scalar.end), lineIndex, 'a quoted scalar');
+      value = scalar.value;
+    } else {
+      const comment = text.indexOf(' #');
+      value = plain(comment === -1 ? text : text.slice(0, comment), lineIndex, false);
+    }
+    checkEnv(value, key, lineIndex);
+    return { value };
+  }
+
+  // Literal or folded block scalar. Like libyaml, the first non-blank line
+  // sets the content indentation; the block ends at the first non-blank line
+  // indented less. Its text is kept only roughly: no consumer reads it.
   function blockScalar(parentIndent) {
     const collected = [];
-    while (index < lines.length) {
+    let contentIndent = null;
+    let longestBlank = 0;
+    for (; index < lines.length; index += 1) {
       const line = lines[index];
       const indent = line.length - line.trimStart().length;
-      if (line.trim() !== '' && indent <= parentIndent) break;
-      collected.push(line);
-      index += 1;
+      if (line.trim() === '') {
+        if (contentIndent === null) longestBlank = Math.max(longestBlank, line.length);
+        collected.push('');
+        continue;
+      }
+      if (contentIndent === null) {
+        if (indent <= parentIndent) break;
+        if (longestBlank > indent) syntaxError(index, 'a leading blank line of a block scalar is indented more than its first line');
+        contentIndent = indent;
+      }
+      if (indent < contentIndent) {
+        if (indent > parentIndent && !/^ *#/.test(line)) syntaxError(index, 'a block scalar line is indented less than its first line but more than its key');
+        break;
+      }
+      collected.push(line.slice(contentIndent));
     }
     return collected.join('\n');
   }
 
-  function valueAfterKey(rest, keyIndent, lineIndex) {
-    if (rest === undefined || rest === '') {
-      const next = peek();
-      if (next && next.indent > keyIndent) return node(next.indent);
-      if (next && next.indent === keyIndent && /^-(\s|$)/.test(next.text)) return sequence(keyIndent);
-      return null;
-    }
-    if (/^[|>][-+]?\d*$/.test(rest)) return blockScalar(keyIndent);
-    return scalar(rest, lineIndex);
-  }
-
   function mapping(indent) {
-    const result = {};
-    for (let next = peek(); next && next.indent === indent && !/^-(\s|$)/.test(next.text); next = peek()) {
-      const match = next.text.match(KEY_PATTERN);
-      if (!match) syntaxError(next.lineIndex, `expected "key: value", found: ${next.text}`);
+    const result = Object.create(null);
+    for (let next = peek(); next && next.indent === indent && !isItem(next.content); next = peek()) {
+      const parsed = entry(next.content, next.lineIndex);
+      if (!parsed) syntaxError(next.lineIndex, `expected "key: value", found: ${next.content}`);
+      if (Object.hasOwn(result, parsed.key)) syntaxError(next.lineIndex, `duplicate key ${JSON.stringify(parsed.key)}`);
       index += 1;
-      const key = scalar(match[1], next.lineIndex);
-      result[key] = valueAfterKey(match[2], indent, next.lineIndex);
+      const value = inlineValue(parsed.rest, next.lineIndex, parsed.key);
+      if (value.block) {
+        result[parsed.key] = blockScalar(indent);
+      } else if (value.empty) {
+        const child = peek();
+        if (child && child.indent > indent) result[parsed.key] = node(child.indent);
+        else if (child && child.indent === indent && isItem(child.content)) result[parsed.key] = sequence(indent);
+        else result[parsed.key] = null;
+      } else {
+        noContinuation(indent);
+        result[parsed.key] = value.value;
+      }
     }
     const after = peek();
     if (after && after.indent > indent) syntaxError(after.lineIndex, 'unexpected indentation');
@@ -285,21 +478,26 @@ function parseYamlSubset(text, label) {
 
   function sequence(indent) {
     const result = [];
-    for (let next = peek(); next && next.indent === indent && /^-(\s|$)/.test(next.text); next = peek()) {
-      const content = next.text.replace(/^-\s*/, '');
-      if (content === '') {
+    for (let next = peek(); next && next.indent === indent && isItem(next.content); next = peek()) {
+      const content = next.content.slice(1).replace(/^ +/, '');
+      if (content === '' || content.startsWith('#')) {
         index += 1;
         const child = peek();
         result.push(child && child.indent > indent ? node(child.indent) : null);
-      } else if (KEY_PATTERN.test(content)) {
+        continue;
+      }
+      if (isItem(content)) syntaxError(next.lineIndex, 'nested sequences on one line ("- - item") are not supported');
+      if (entry(content, next.lineIndex)) {
         // "- key: value" starts a mapping whose keys align with "key".
-        const childIndent = indent + (next.text.length - content.length);
+        const childIndent = indent + next.content.length - content.length;
         lines[next.lineIndex] = ' '.repeat(childIndent) + content;
         result.push(mapping(childIndent));
-      } else {
-        index += 1;
-        result.push(scalar(content, next.lineIndex));
+        continue;
       }
+      index += 1;
+      const item = inlineValue(content, next.lineIndex, null);
+      noContinuation(indent);
+      result.push(item.value);
     }
     return result;
   }
@@ -307,11 +505,11 @@ function parseYamlSubset(text, label) {
   function node(indent) {
     const next = peek();
     if (!next) return null;
-    return /^-(\s|$)/.test(next.text) ? sequence(indent) : mapping(indent);
+    return isItem(next.content) ? sequence(indent) : mapping(indent);
   }
 
   const first = peek();
-  const document = first ? node(first.indent) : {};
+  const document = first ? node(first.indent) : Object.create(null);
   const trailing = peek();
   if (trailing) syntaxError(trailing.lineIndex, 'unexpected content after document');
   return document;
@@ -837,9 +1035,21 @@ function resolveTarget(name, target, packages) {
       fail(`${name}: sources entry ${entry.path} uses unsupported type ${JSON.stringify(entry.type)}; extend scripts/check-apple-required-reasons.mjs.`);
       continue;
     }
+    const globs = entry.excludes ?? [];
+    if (!Array.isArray(globs) || globs.some((glob) => typeof glob !== 'string')) {
+      fail(`${name}: sources entry ${entry.path} excludes must be a list of strings, found ${JSON.stringify(globs)}; quote YAML null, boolean and number values.`);
+      continue;
+    }
+    // XcodeGen replaces $platform, ${platform}, $target_name and similar
+    // variables in target specs, so such a path names files the checker
+    // cannot resolve.
+    if ([entry.path, ...globs].some((path) => path.includes('$'))) {
+      fail(`${name}: sources entry ${entry.path} uses $ in a path or exclude; XcodeGen variables such as $platform are not modelled, so extend scripts/check-apple-required-reasons.mjs.`);
+      continue;
+    }
     let excludes = [];
     try {
-      excludes = (entry.excludes ?? []).map((glob) => globToRegExp(glob));
+      excludes = globs.map((glob) => globToRegExp(glob));
     } catch (error) {
       fail(`${name}: sources entry ${entry.path}: ${error.message}; extend scripts/check-apple-required-reasons.mjs.`);
       continue;
@@ -859,7 +1069,9 @@ function resolveTarget(name, target, packages) {
     if (symlinkOnPath(absolutePath)) continue;
     if (!existsSync(absolutePath)) {
       // A missing source path would hide compiled Swift; missing resource files cannot.
-      if ((compiles || reference) && entry.optional !== 'true' && entry.optional !== true) {
+      // XcodeGen reads optional as a YAML boolean (true, yes, on, ...); a
+      // quoted "true" is a string, not optional.
+      if ((compiles || reference) && entry.optional !== true) {
         fail(`${name}: sources path ${entry.path} does not exist.`);
       }
       continue;
@@ -885,30 +1097,157 @@ function resolveTarget(name, target, packages) {
     }
   }
 
-  for (const dependency of target.dependencies ?? []) {
-    if (dependency.package) {
-      if (!packages[dependency.package]) {
+  const dependencies = target.dependencies ?? [];
+  if (!Array.isArray(dependencies)) {
+    fail(`${name}: dependencies must be a list in project.yml.`);
+    return { swiftFiles, nonSwiftFiles, binaryFiles, manifests, packageNames };
+  }
+  for (const dependency of dependencies) {
+    // XcodeGen tries one kind key after another, so a dependency must name
+    // exactly one kind, as a string: with two, or a non-string value XcodeGen
+    // passes over, it could link something the checker never sees.
+    const kinds = isDict(dependency) ? DEPENDENCY_KINDS.filter((kind) => Object.hasOwn(dependency, kind)) : [];
+    const kind = kinds.length === 1 && typeof dependency[kinds[0]] === 'string' ? kinds[0] : null;
+    if (kind === 'package') {
+      if (!Object.hasOwn(packages, dependency.package)) {
         fail(`${name}: depends on unknown package ${dependency.package}.`);
       } else {
         packageNames.push(dependency.package);
       }
-    } else if (dependency.target) {
+    } else if (kind === 'target') {
       // Embedded app targets are separate bundles, checked with their own manifest.
       continue;
-    } else if (dependency.sdk) {
+    } else if (kind === 'sdk') {
       continue; // System frameworks: Apple's own use is not declared by the app.
     } else {
-      fail(`${name}: unsupported dependency ${JSON.stringify(dependency)}; binary or third-party code needs its own required-reason review.`);
+      fail(`${name}: unsupported dependency ${JSON.stringify(dependency)}; a dependency must name exactly one target, package or sdk as a string, and binary or third-party code needs its own required-reason review.`);
     }
   }
   return { swiftFiles, nonSwiftFiles, binaryFiles, manifests, packageNames };
 }
 
+// Package.swift is read as a strict subset of Swift, so every construct the
+// checks below look for is spelled out where they can see it. After comments
+// are removed (backtick-escaped names become plain names), the manifest must
+// be `import PackageDescription` and one `let package = Package(...)` whose
+// arguments use only `label:`, simple string literals (no escapes,
+// interpolation, raw or multi-line strings), array literals and implicit
+// member expressions `.name` or `.name(...)`. Variables, helper functions,
+// type-qualified or referenced members (Target.target, .map), operators,
+// closures, dictionaries, `#if` and every other construct throw.
+function checkPackageSyntax(source, label) {
+  const problem = (offset, what) => {
+    throw new Error(`${label}:${source.slice(0, offset).split('\n').length}: uses Swift the checker does not model (${what}); Package.swift may hold only import PackageDescription and one let package = Package(...) built from labels, simple string literals, arrays and .member(...) values`);
+  };
+  // Tokens are scanned on demand, so the first problem in source order is
+  // the one reported.
+  const tokens = [];
+  let scan = 0;
+  const scanToken = () => {
+    while (scan < source.length) {
+      const c = source[scan];
+      const word = /[A-Za-z_][A-Za-z0-9_]*/y;
+      word.lastIndex = scan;
+      const name = word.exec(source);
+      if (' \t\r\n'.includes(c)) {
+        scan += 1;
+      } else if (name) {
+        tokens.push({ type: 'name', text: name[0], offset: scan });
+        scan += name[0].length;
+        return;
+      } else if (c === '"') {
+        if (source.startsWith('"""', scan)) problem(scan, 'a multi-line string literal');
+        let end = scan + 1;
+        while (end < source.length && !'"\\\r\n'.includes(source[end])) end += 1;
+        if (source[end] === '\\') problem(end, 'a string escape or interpolation');
+        if (source[end] !== '"') problem(scan, 'an unterminated string literal');
+        tokens.push({ type: 'string', text: source.slice(scan + 1, end), offset: scan });
+        scan = end + 1;
+        return;
+      } else if ('()[],:.='.includes(c)) {
+        tokens.push({ type: c, text: c, offset: scan });
+        scan += 1;
+        return;
+      } else if (c === '#') {
+        problem(scan, source.startsWith('#if', scan) ? 'conditional compilation (#if)' : 'a raw string or # directive');
+      } else {
+        problem(scan, `the character ${JSON.stringify(c)}`);
+      }
+    }
+  };
+  const at = (index) => {
+    while (tokens.length <= index && scan < source.length) scanToken();
+    return tokens[index];
+  };
+  let position = 0;
+  const describe = (token) => (token ? JSON.stringify(token.text) : 'the end of the file');
+  const expect = (type, text) => {
+    const token = at(position);
+    if (!token || token.type !== type || (text !== undefined && token.text !== text)) {
+      problem(token ? token.offset : source.length, `${describe(token)} where ${text ?? type} was expected`);
+    }
+    position += 1;
+    return token;
+  };
+  const list = (close, item) => {
+    while (at(position)?.type !== close) {
+      item();
+      if (at(position)?.type !== ',') break;
+      position += 1;
+    }
+    expect(close);
+  };
+  function value() {
+    const token = at(position);
+    if (token?.type === 'string') {
+      position += 1;
+    } else if (token?.type === '[') {
+      position += 1;
+      list(']', value);
+    } else if (token?.type === '.') {
+      position += 1;
+      const member = expect('name');
+      if (member.offset !== token.offset + 1) problem(token.offset, 'whitespace after "."');
+      if (at(position)?.type === '(') {
+        position += 1;
+        list(')', argument);
+      }
+    } else {
+      problem(token ? token.offset : source.length, `${describe(token)} where a string, array or .member value was expected`);
+    }
+  }
+  function argument() {
+    if (at(position)?.type === 'name' && at(position + 1)?.type === ':') position += 2;
+    value();
+  }
+  for (const text of ['import', 'PackageDescription', 'let', 'package']) expect('name', text);
+  expect('=');
+  expect('name', 'Package');
+  expect('(');
+  list(')', argument);
+  const extra = at(position);
+  if (extra) problem(extra.offset, `${describe(extra)} after the Package(...) declaration`);
+}
+
+// SwiftPM also finds target sources in Source, src and srcs (and, on a
+// case-insensitive file system, any spelling of Sources), and prefers a
+// version-specific Package@swift-*.swift manifest; the checker reads only
+// Package.swift and Sources, so these fail.
+const OTHER_SOURCE_ROOT = /^(?:sources|source|src|srcs)$/i;
+const VERSIONED_MANIFEST = /^Package@swift-.*\.swift$/;
+// XcodeGen local package keys; url, from, branch and the like are remote.
+const PACKAGE_SPEC_KEYS = new Set(['path', 'group', 'excludeFromProject']);
+
 function resolvePackage(name, spec) {
   const files = new Set();
   const packagePath = typeof spec === 'string' ? spec : spec?.path;
-  if (!packagePath) {
+  if (typeof packagePath !== 'string' || packagePath === '') {
     fail(`project.yml package ${name} is not a local path package; remote packages are not allowed.`);
+    return files;
+  }
+  const packageKeys = isDict(spec) ? Object.keys(spec).filter((key) => !PACKAGE_SPEC_KEYS.has(key)) : [];
+  if (packageKeys.length > 0 || packagePath.includes('$')) {
+    fail(`project.yml package ${name} uses ${packageKeys.length > 0 ? `keys the checker does not model (${packageKeys.join(', ')})` : '$ in its path'}; extend scripts/check-apple-required-reasons.mjs.`);
     return files;
   }
   const packageDir = normalize(join(appleDir, packagePath));
@@ -919,7 +1258,19 @@ function resolvePackage(name, spec) {
     fail(`project.yml package ${name}: ${display(manifestPath)} does not exist.`);
     return files;
   }
+  for (const entry of readdirSync(packageDir)) {
+    if (VERSIONED_MANIFEST.test(entry)) {
+      fail(`${display(join(packageDir, entry))} is a version-specific manifest, which SwiftPM prefers over Package.swift; the checker reads only Package.swift, so remove it or extend scripts/check-apple-required-reasons.mjs.`);
+    } else if (OTHER_SOURCE_ROOT.test(entry) && entry !== 'Sources') {
+      fail(`${display(join(packageDir, entry))} is a SwiftPM source directory the checker does not scan (only Sources is); move its targets to Sources or extend scripts/check-apple-required-reasons.mjs.`);
+    }
+  }
   const manifest = stripSwiftComments(readFileSync(manifestPath, 'utf8'), display(manifestPath));
+  try {
+    checkPackageSyntax(manifest, display(manifestPath));
+  } catch (error) {
+    fail(`${error.message}; rewrite it or extend scripts/check-apple-required-reasons.mjs before linking it.`);
+  }
   for (const [pattern, reason] of [
     [/\bpath\s*:/, 'custom target paths'],
     [/\bsources\s*:/, 'custom source lists'],
@@ -1096,7 +1447,11 @@ function main() {
   try {
     project = parseYamlSubset(readFileSync(projectYmlPath, 'utf8'), display(projectYmlPath));
   } catch (error) {
-    fail(error.message);
+    fail(`${error.message} (the checker reads a strict YAML subset; rewrite project.yml or extend scripts/check-apple-required-reasons.mjs).`);
+    return;
+  }
+  if (!isDict(project)) {
+    fail('project.yml: the top level must be a mapping.');
     return;
   }
   for (const unsupported of ['include', 'targetTemplates', 'settingGroups', 'configFiles']) {
@@ -1108,8 +1463,14 @@ function main() {
   if (JSON.stringify(project.schemes ?? {}).includes('"preActions"')) {
     fail('project.yml schemes use preActions, which can generate code before compiling; extend scripts/check-apple-required-reasons.mjs.');
   }
-  const packages = project.packages ?? {};
-  const targets = project.targets ?? {};
+  // Parsed mappings have no prototype, so names such as toString or
+  // __proto__ are only ever the spec's own keys.
+  const packages = project.packages ?? Object.create(null);
+  const targets = project.targets ?? Object.create(null);
+  if (!isDict(packages) || !isDict(targets)) {
+    fail('project.yml: packages and targets must be mappings.');
+    return;
+  }
   if (Object.keys(targets).length === 0) fail('project.yml defines no targets.');
 
   const packageFiles = new Map();
@@ -1123,6 +1484,12 @@ function main() {
     const shipped = SHIPPED_TARGET_TYPE.test(type);
     if (!shipped && !TEST_TARGET_TYPES.has(type)) {
       fail(`${name}: target type ${JSON.stringify(type)} is not supported; extend scripts/check-apple-required-reasons.mjs.`);
+      continue;
+    }
+    // A platform list makes XcodeGen generate one target per platform
+    // (App_iOS, App_tvOS, ...) with $platform replaced in its sources.
+    if (typeof target.platform !== 'string') {
+      fail(`${name}: platform must be one platform name, found ${JSON.stringify(target.platform ?? null)}; multi-platform targets are not modelled, so extend scripts/check-apple-required-reasons.mjs.`);
       continue;
     }
     const resolved = resolveTarget(name, target, packages);

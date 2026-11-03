@@ -489,8 +489,8 @@ works as follows:
   | `optional` | A missing optional path is skipped; an existing one is fully scanned. Missing non-optional compiled paths and references fail. | A missing path has nothing to copy or compile. |
   | Unmapped-file walk prunes `*.xcodeproj`, `DerivedData` and `build` | Only for finding Swift files under `apps/apple` that no target compiles; Swift in catalogues is not counted there either. | Target walks never prune, so a target entry inside one of those paths is still fully scanned. |
   | Test targets | Not checked for categories, non-Swift sources or prebuilt code. Their sources are still walked for coverage, so links, special files and unsupported entries fail there too. | Test bundles are not shipped. |
-  | Target `target:` and `sdk:` dependencies | Embedded app targets are checked as their own targets; SDK frameworks are Apple's. Any other dependency type fails. | Apple's own use is not declared by the app. |
-  | Package root other than `Sources` | Not scanned; `Package.swift` is checked for custom `path:` or `sources:`, binary, plugin, macro and system-library targets, `unsafeFlags`, package dependencies and `..`. | Only `Sources/<target>` is compiled or bundled when those are absent. |
+  | Target `target:` and `sdk:` dependencies | Embedded app targets are checked as their own targets; SDK frameworks are Apple's. Any other dependency type, or a dependency naming more than one kind or a non-string, fails. | Apple's own use is not declared by the app. |
+  | Package root other than `Sources` | Not scanned. `Package.swift` must fit the strict grammar above and is checked for custom `path:` or `sources:`, binary, plugin, macro and system-library targets, `unsafeFlags`, package dependencies and `..`. `Package@swift-*.swift` manifests and the other SwiftPM source roots (`Source`, `src`, `srcs`) fail. | Only `Sources/<target>` is compiled or bundled when those are absent. |
   | Package `exclude:` and `resources:` | Ignored: all of `Sources` is scanned. | Over-scans. A `..` path, which could reach outside `Sources`, fails. |
 - **Native-code formats.** Prebuilt code is found by magic bytes where the
   format has them and by name otherwise:
@@ -534,6 +534,62 @@ works as follows:
   the older `Apple Computer` DOCTYPE, and `<false></false>` or
   `<array></array>` forms are accepted, because Apple reads them the same
   way.
+- **project.yml and Package.swift parsing.** XcodeGen reads `project.yml`
+  with Yams (libyaml, with YAML 1.1 types) and then replaces `${NAME}` with
+  environment variables. The checker reads a strict subset and fails on
+  anything Yams or XcodeGen could read differently:
+  - **Modelled exactly:** one document of block mappings and sequences
+    indented with spaces; comments after a space; plain, single-quoted
+    (`''`) and double-quoted scalars on one line, where double quotes decode
+    only `\\` and `\"`; one-line flow sequences of scalars, including quoted
+    items that contain commas; the empty flow mapping `{}`; CRLF line ends
+    and a leading byte order mark; and `|` or `>` block scalars (optionally
+    with `-` or `+`) as a `script` value.
+  - **Types:** plain values keep their YAML 1.1 types. `yes`, `no`, `on`,
+    `off`, `true` and `false` are booleans; `~` and `null` are null; numbers
+    include octal `017`, hex, binary and sexagesimal `1:30`. Wherever the
+    checker needs a string (a sources `path`, `type` or exclude, a
+    `platform`, a dependency or package path), any other type fails.
+    `optional` counts only as the boolean `true`, so a quoted `"true"` is
+    not optional. Mappings have no prototype, so `__proto__`, `constructor`
+    and `toString` are ordinary keys.
+  - **Fail closed:**
+    - double-quoted escapes other than `\\` and `\"` (such as `\u005f`);
+    - tabs, and characters outside printable ASCII, including a lone CR,
+      NEL, line and paragraph separators, and a byte order mark after the
+      start of the file;
+    - document markers (`---`, `...`) and directives (`%YAML`, `%TAG`);
+    - anchors, aliases, tags, merge keys (`<<`), value keys (`=`), complex
+      keys (`? `) and duplicate keys;
+    - multi-line plain or quoted scalars and continuation lines;
+    - flow collections that are multi-line or nested, have empty items or
+      trailing commas, or hold `[`, `]`, `{`, `}`, `#` or `:` in a plain
+      item; flow mappings other than `{}`;
+    - a plain scalar that starts with an indicator or contains `: `;
+    - block scalar indentation indicators, and block scalars outside
+      `script`;
+    - plain keys that YAML 1.1 reads as null, a boolean or a number (such as
+      `NO:`), and timestamp values;
+    - `${...}` in any key, or in a value other than `script`;
+    - `$` in a sources path or exclude (XcodeGen's `$platform` and
+      similar), and a `platform` list (multi-platform targets);
+    - a dependency that does not name exactly one of `target`, `package`
+      or `sdk` as a string;
+    - a package entry with keys other than `path`, `group` and
+      `excludeFromProject`.
+  - **Package.swift:** after comments are removed, each linked manifest
+    must be `import PackageDescription` and one `let package = Package(...)`
+    built only from argument labels, simple string literals, array
+    literals, and `.member` or `.member(...)` values. These fail: raw
+    strings (`#"..."#`), escapes and `\u{...}`, interpolation, multi-line
+    `"""` strings, `#if`, variables, helper functions, type-qualified
+    members (`Target.target`), `.map`, closures, operators, extra imports
+    and further statements. Comments inside calls, backtick-escaped names
+    and trailing commas are accepted. The checker reads only
+    `Package.swift` and `Sources`, so a version-specific
+    `Package@swift-*.swift` manifest (which SwiftPM prefers) and the other
+    SwiftPM source roots (`Source`, `src`, `srcs`, or `Sources` in another
+    case) also fail.
 - **Scanning.** It blanks Swift comments and scans the code for the spellings
   of each category. String and regex literals are kept, following the Swift 6
   lexer for extended `#/.../#` and bare `/.../` regex literals, so a `/*` or
@@ -616,7 +672,8 @@ works as follows:
 
   It also fails on remote, binary or dynamic packages, on Package.swift
   plugins, macros, system-library targets, `unsafeFlags` or `..` paths, and
-  on unknown target types.
+  on unknown target types. YAML and Swift syntax outside the parsers'
+  subsets fails as described under the parsing step above.
 - **Self-test.** `pnpm test:apple-required-reasons` runs the fixtures. They
   include comment-only mentions, a string containing `//` followed by real
   code, excluded and test-only files, unlinked packages and package tests,
@@ -637,7 +694,15 @@ works as follows:
   are not the bundle manifest (copyFiles, a `type: file` directory,
   `.lproj` and `.bundle`); hidden files that exclude wildcards do not
   match; unsupported globs, types and build phases; FIFOs inside a walk and
-  as an entry path; and `..` in Package.swift.
+  as an entry path; and `..` in Package.swift. Round 7 fixtures cover each
+  YAML and Package.swift case in the parsing step: an escaped build-setting
+  key, quoted keys that are still caught, a `__proto__` target and a
+  `toString` package, every fail-closed YAML construct, YAML 1.1 types where
+  strings are needed, multi-kind dependencies, `$platform` and platform
+  lists, and every rejected Package.swift construct. Pass fixtures cover
+  the modelled YAML (with and without a byte order mark and CRLF), quoted
+  commas in a flow sequence and a Package.swift with comments, backticks and
+  trailing commas.
 - **Bypass classes.** Each syntactic way a source could reach a listed API
   without the checker seeing it is covered or recorded here:
 
@@ -673,6 +738,15 @@ works as follows:
   | Interface Builder bindings (macOS `NSUserDefaultsController`) | Limitation: no Interface Builder files exist; adding one needs a manual review. |
   | Clocks not on Apple's list (`ContinuousClock`, `DispatchTime`, `CACurrentMediaTime`) | Out of scope: Apple does not list them, so no declaration is needed. |
   | SDK macros and Apple framework internals | Out of scope: Apple's own use is not declared by the app. Package macro targets fail closed. |
+  | **project.yml and Package.swift parsing** | |
+  | YAML that Yams reads differently from a simple parser (escapes such as `"OTHER\u005fLDFLAGS"`, anchors, aliases, tags, merge and complex keys, document markers, directives, multi-line scalars, multi-line or nested flow collections, flow mappings, block scalar indentation indicators, tabs, non-ASCII, a lone CR) | Fail closed with fixtures. Modelled forms (`''`, `\\` and `\"`, quoted commas, `#` inside quotes, `{}`, `script` blocks, a leading byte order mark, CRLF) pass with fixtures. |
+  | YAML 1.1 implicit types (`yes`, `no`, `on`, `off`, `~`, octal, sexagesimal, timestamps) | Covered by fixtures: values keep their types, so anything that needs a string fails; non-string plain keys and timestamp values fail. |
+  | Prototype and duplicate keys in `project.yml` | Covered by fixtures: mappings have no prototype and lookups use own keys; duplicate keys fail. |
+  | XcodeGen `include`, `${VAR}` and `$platform` expansion, multi-platform targets | Fail closed with fixtures. `${...}` is allowed only in `script` values, which run after compiling (see post-build scripts above). |
+  | Dependencies naming two kinds, or a kind that is not a string | Fail closed with fixtures. |
+  | Package entries with remote keys beside `path` | Fail closed with a fixture. |
+  | Package.swift syntax that could build, rename or hide targets (raw strings, escapes, interpolation, multi-line strings, `#if`, variables, helper functions, type-qualified members, `.map`, operators, extra imports or statements) | Fail closed with fixtures. Comments inside calls, backtick-escaped names and trailing commas pass with a fixture. |
+  | Package manifests and source roots the checker does not read (`Package@swift-*.swift`, `Source`, `src`, `srcs`) | Fail closed with a fixture. |
 - **Limitations.** The check does not evaluate `#if` (an API compiled out on
   some platforms still counts for the target). It also scans inside string
   and regex literals, so it errs towards declaring a category. An
@@ -697,7 +771,15 @@ works as follows:
   example `Platforms/tvOS.v2`) is treated as a wrapper, so a manifest below
   it is not counted and the check fails with zero manifests; rename the
   directory. Native formats left out of the prebuilt-code check are listed
-  in the native-code table with the reason.
+  in the native-code table with the reason. The `project.yml` parser and
+  the Package.swift grammar are also narrower than Yams and Swift: valid
+  YAML outside the subset (non-ASCII text, anchors, multi-line strings) and
+  valid manifests that use any other Swift fail, even when XcodeGen or
+  SwiftPM would read them as intended; rewrite them in the subset or extend
+  the checker. Plain booleans and numbers that the checker never needs as
+  strings are kept rather than rejected, such as `YES` and `NO` settings,
+  `CURRENT_PROJECT_VERSION: 1` and `SWIFT_VERSION: 6.0`. The text of
+  `script` blocks is not inspected (see post-build scripts above).
 
 ### Evidence
 
@@ -713,6 +795,7 @@ Run from the TASK-85 worktree on 2026-11-03 UTC:
 | Walk verification (PR #1064 round 4): the checker's per-target Swift lists compared with the `PBXSourcesBuildPhase` files in the committed `CanadianHam.xcodeproj` (`plutil -convert json`), and each package's `Sources` walk compared with `swift package describe --type json` | Identical. `CanadianHam` 32 app files, `CanadianHamWatch` 11, `CanadianHamTV` 13, `CanadianHamVision` 12, with no non-Swift sources and no build rules. Each package has one library target and one test target and no dependencies; non-test sources are `calculator-swift` 1, `content-swift` 8, `engine-swift` 10 and `morse-swift` 2. The project links only those four package products, and its shell script phases all run after the Sources phase. No symbolic links or hidden entries exist under the scanned roots. |
 | Folder references (PR #1064 round 5): the six shipped `content/` folder references scanned for prebuilt code and links, with the strict manifest parser applied to the four manifests | 2,059 files (2,010 JSON, 49 Markdown), no prebuilt code, no symbolic links or hidden entries, no `buildPhase: none` entries. The four manifests parse unchanged, and the checker output is byte-identical to the previous round. |
 | Pruning sweep (PR #1064 round 6): `project.yml` sources, excludes, types and build phases, and package `Sources`, re-read against the pruning-point table; resource catalogues under the scanned roots counted with `find` | Every exclude is a literal path (`CanadianHam` excludes `Resources/AppIcon.icon`, both asset catalogues and the CloudKit `Info.plist`), every type and build phase is modelled, and no package declares `resources:`, `exclude:` or `..`. The eight catalogues (`CanadianHam` `Assets`, `FigureAssets`, `AppIcon.icon` and `Localizable.xcstrings`; the watchOS `Assets` and `InfoPlist.xcstrings`; the tvOS and visionOS `Assets`) hold 141 files, now also scanned through the ordinary walks, with no prebuilt code, links, hidden or special files. Package `Sources` hold no catalogues. Each manifest sits at `<target>/Resources/PrivacyInfo.xcprivacy` with no extension-named directory on its path. The `--verbose` checker output is byte-identical to round 5 and the run takes about 0.4 s. |
+| YAML and Package.swift sweep (PR #1064 round 7): the real `project.yml` parsed with the round 6 and round 7 parsers and the trees compared; the four `Package.swift` files read with the new grammar; each new check mutation-tested against the self-test | Same structure. The only differences are value types and `script` text, none of which the checker reads: 99 `YES`, `NO`, `true` and `false` values are now booleans, `CURRENT_PROJECT_VERSION: 1` and `SWIFT_VERSION: 6.0` are numbers, and the nine `script` blocks lose their indentation. `${...}` appears only in `script` values, there are no tabs, non-ASCII characters, anchors, multi-line scalars or nested flow collections, and every dependency names one kind. All four manifests fit the grammar. The `--verbose` output is byte-identical to round 6 and the run takes about 0.4–0.5 s. All 65 mutations of the new checks fail the self-test. Two more survive only because another layer already covers them: own-key package lookup and the empty defaults for `packages` and `targets`, both made safe by mappings without a prototype. |
 | Release builds through `xbuild` (`-configuration Release`, generic simulator destinations, plus generic macOS, `CODE_SIGNING_ALLOWED=NO`), then `plutil -p` on each bundled `PrivacyInfo.xcprivacy` | All builds succeeded. Each bundle has exactly one manifest, byte-identical (`cmp`) to its source. iOS `CanadianHam.app` and macOS `CanadianHam.app/Contents/Resources` declare User defaults `CA92.1` and System boot time `35F9.1`. The embedded `CanadianHam.app/Watch/CanadianHamWatch.app` declares System boot time `35F9.1`. `CanadianHamTV.app` and `CanadianHamVision.app`, built from a regenerated project with the `project.yml` change, declare User defaults `CA92.1` only. |
 | `strings -a` / `nm -u` on the Release binaries, which include the statically linked package code | iOS app: `systemUptime`, `standardUserDefaults`, `persistentDomainForName`. Watch: `systemUptime` only. macOS: `standardUserDefaults` and `persistentDomainForName`, but no `systemUptime`, because those call sites are iOS-only. TV and Vision: `standardUserDefaults` only. No binary imports `stat`, `lstat`, `fstat`, `fstatat`, `statfs`, `statvfs`, `getattrlist` or `mach_absolute_time`, and none references the file-timestamp, disk-space or `activeInputModes` selectors. |
 
