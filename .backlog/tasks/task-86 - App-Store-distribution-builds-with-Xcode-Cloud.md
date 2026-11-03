@@ -1,10 +1,11 @@
 ---
 id: TASK-86
 title: App Store distribution builds with Xcode Cloud
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T02:39:00Z'
+updated_date: '2026-11-03T02:46:00Z'
 labels:
   - apple
   - release
