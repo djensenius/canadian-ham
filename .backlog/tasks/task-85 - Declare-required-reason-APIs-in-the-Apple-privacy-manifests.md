@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T05:54:00Z'
+updated_date: '2026-11-03T06:44:00Z'
 labels:
   - apple
   - privacy
@@ -129,6 +129,14 @@ PR #1064 round 6 (commit 0b444a41d0b175e7913730db54a660a0a75c9ae0), from ef18364
   - git diff --check was clean;
   - the test guard passed.
 - No xbuild was run.
+
+Round 7 (PR #1064, Copilot thread PRRT_kwDOUxZq_M6y_3uM plus a full parser sweep), commit 591c70fc76046c0c1ad61e19cf258d75782b4d5c:
+- Replaced the project.yml reader with a strict YAML subset. Double-quoted escapes other than \\ and \" fail, so "OTHER\u005fLDFLAGS" can no longer bypass checkBuildSettings. Mappings have no prototype. Duplicate keys, merge and complex keys, anchors, aliases, tags, document markers, directives, multi-line scalars, multi-line or nested flow collections, flow mappings other than {}, block scalar indicators, tabs, non-ASCII, a lone CR, include, ${VAR} outside script values, $ in sources paths, platform lists, dependencies with more than one kind and remote package keys all fail closed. Plain values keep their YAML 1.1 types; optional counts only as boolean true.
+- Each linked Package.swift is read with a strict grammar. These fail: raw, escaped, interpolated and multi-line strings, #if, variables, helpers, type-qualified members, .map, operators, extra imports and statements, Package@swift-*.swift manifests and other SwiftPM source roots.
+- Fixtures cover every case; the self-test passes. All 65 mutations of the new checks were killed (2 defence-in-depth survivors are already covered by mappings without a prototype).
+- Real tree: same parse structure. Only value types and the script text changed, and the checker reads none of them. --verbose output is byte-identical to round 6, at about 0.4–0.5 s.
+- The evidence doc has a parsing step, a parser row group in the bypass table and Limitations text.
+- Checks: self-test, checker, pnpm typecheck, pnpm test, check:links, check:shell, git diff --check and the test guard all pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
