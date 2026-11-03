@@ -1,9 +1,11 @@
 ---
 id: TASK-91
 title: Refresh the owner-gates guide after TASK-54, TASK-85 and TASK-86
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@copilot'
 created_date: '2026-11-03T04:10:00Z'
+updated_date: '2026-11-03T05:19:00Z'
 labels:
   - docs
   - release
