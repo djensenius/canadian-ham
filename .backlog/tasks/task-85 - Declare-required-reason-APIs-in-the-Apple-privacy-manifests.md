@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T05:21:00Z'
+updated_date: '2026-11-03T05:54:00Z'
 labels:
   - apple
   - privacy
@@ -105,6 +105,30 @@ PR #1064 review round 4b (commit 5f3d18d83b34eb89a3caef40ef4d4eeed2552dc6, from 
 - Checks: self-test passed; checker passed; pnpm check:links passed; git diff --check clean; test guard passed. No xbuild.
 
 PR #1064 review round 5 (commit c3b38cb6b7061da7a5ab1e243b1a25ed1f505f47, from 1f26dded): (1) folder references (type: folder) and buildPhase: none entries now must exist unless optional, may not be or contain symlinks, and are scanned whole (including asset catalogues, ignoring excludes) for prebuilt code by extension and Mach-O/universal/ar magic; their Swift files are not counted as compiled and nested PrivacyInfo.xcprivacy files are not taken as the target manifest. Real tree: 6 shipped content/ folder refs, 2,059 files (2,010 JSON, 49 Markdown), no prebuilt code, links or buildPhase: none entries. (2)+(3) replaced the manifest parser with a strict typed XML plist parser: data/date/integer/real values, wrong types for categories/reasons/tracking/arrays, duplicate keys, keys without values, unknown top-level or entry keys, empty or whitespace-padded codes, unknown entities, CDATA, comments inside text, processing instructions, attributes, other DOCTYPEs, missing root, trailing content, binary/JSON/non-UTF-8 plists and non-dict roots fail closed; equivalent forms Apple reads the same (BOM, no XML declaration, older Apple Computer DOCTYPE, comments between elements, character references, <false></false>, <array></array>) pass. Behaviour chosen from plutil -convert json probes. Fixtures added for each case; 23/23 mutations killed. Evidence doc: scope, manifest parsing, what-fails, bypass table (3 rows), limitations and evidence row updated. Checks: self-test passed; real-tree --verbose output byte-identical to 1f26dded; check passed (same 4 targets/categories); pnpm typecheck passed; pnpm test passed (vitest 23 + 283, node 250 + 127, 0 failed); check:links passed; check:shell passed (12 files); git diff --check clean; test guard passed. No xbuild. Final summary updated for folder refs and typed parser.
+
+PR #1064 round 6 (commit 0b444a41d0b175e7913730db54a660a0a75c9ae0), from ef183642:
+- Copilot PRRT_kwDOUxZq_M6y_bNx: BINARY_MAGIC adds cafebabf/bfbafeca (universal 64-bit), plus thin archives (!<thin>), LLVM bitcode (BC\xC0\xDE) and its wrapper (0x0B17C0DE), and binary .swiftmodule (e29ca80e). By name: .app bundles, .swiftmodule (file or directory), .tbd and .swiftinterface. .pch, .ll and module.map fail as unscanned sources. Fixtures cover all 13 magic values and every name.
+- Copilot PRRT_kwDOUxZq_M6y_bOM: ordinary target and package walks now traverse .xcassets/.icon/.xcstrings for prebuilt code, links and special files, without counting their Swift, headers or nested manifests. Fixtures cover target and package catalogues.
+- Pruning sweep:
+  - .DS_Store is no longer skipped.
+  - Excluded paths are still scanned for binaries and links; exclude wildcards never match a leading dot; unmodelled glob syntax fails.
+  - Source type and buildPhase are allow-listed (syncedFolder and frameworks fail).
+  - Only a manifest copied flat to the bundle root counts (not copyFiles, headers, type: file directories, .lproj or bundles).
+  - FIFOs and other special files fail inside walks and as entry paths (test harness timeout added).
+  - `..` in Package.swift fails.
+  - The unmapped walk ignores catalogue Swift.
+- The evidence doc has a pruning-point table, a native-format table (ELF, wasm, scripts, zip/tar, Metal, .pcm/.gch left out, with reasons), new bypass rows, limitations and a round 6 evidence row.
+- Mutation testing: 43/43 mutants killed.
+- Checks:
+  - node scripts/test-check-apple-required-reasons.mjs passed;
+  - node scripts/check-apple-required-reasons.mjs passed, with --verbose output byte-identical to ef183642 (about 0.5 s);
+  - pnpm typecheck passed;
+  - pnpm test passed (283 tests);
+  - pnpm check:links passed;
+  - pnpm check:shell passed (12 files);
+  - git diff --check was clean;
+  - the test guard passed.
+- No xbuild was run.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
@@ -117,12 +141,13 @@ Declares Apple required-reason API usage for every shipped target and enforces i
   - the per-target rationale against Apple's current required-reason list;
   - how scanning works and what fails;
   - a table of bypass classes, each covered, failing closed or listed as a limitation;
+  - tables of every pruning point and every native-code format, with the formats left out and why;
   - verification that the walk matches the committed project and SwiftPM.
 - scripts/check-apple-required-reasons.mjs runs in CI with its self-test. It fails when shipped target or linked package sources use an undeclared required-reason spelling. It also fails closed on:
-  - C-family, assembly, module-map or prebuilt code, including inside folder references and buildPhase: none entries;
-  - symbolic links and missing non-optional source or folder-reference paths;
-  - XcodeGen or SwiftPM constructs that can add unscanned code (pre-build scripts, plugins, macros, header and linker settings, non -D flags);
-  - unknown targets;
+  - C-family, assembly, module-map, prefix-header or LLVM IR sources, and prebuilt code (Mach-O, universal 32/64, ar and thin archives, LLVM bitcode, Swift modules and interfaces, text stubs, code bundles), including inside folder references, buildPhase: none entries, excluded paths and resource catalogues;
+  - symbolic links, special files and missing non-optional source or folder-reference paths;
+  - XcodeGen or SwiftPM constructs that can add unscanned code (pre-build scripts, plugins, macros, header and linker settings, non -D flags, unmodelled source types, build phases or exclude globs, `..` package paths);
+  - unknown targets, and targets without exactly one manifest copied to the bundle root;
   - manifests that track, have unknown or duplicate keys, use the wrong plist value types or padded codes, or fall outside the XML plist subset Xcode writes (strict typed parser).
 - Matching covers module-qualified, multi-line and backtick-escaped spellings, key paths, aliases, API-name string literals, the whole word for C names, Swift 6 regex literals and comments.
 - Release xbuild products for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests.
