@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@copilot'
 created_date: '2026-11-03T04:10:00Z'
-updated_date: '2026-11-03T05:26:00Z'
+updated_date: '2026-11-03T05:31:00Z'
 labels:
   - docs
   - release
@@ -52,6 +52,8 @@ AC2: Sitting 1 adds 'TASK-85: sign off on CA92.1 before App Store submission' (o
 AC3: Sitting 4 says AC #1 is done on the iOS 27.2 simulator (Duo-only failures; iPhone 18 Pro and iPad Air 11-inch (M4) 4/4) and the device run now serves AC #3; step 1 gives the unlabelled Toolbar 'BackButton' at {{399,179},{38,38}} in 466x678 pt and asks for the VoiceOver label and on-screen position for AC #2. Table row now AC #2-#7. New 'Internal builds for the sittings' section replaces the fixed 'fastlane ios beta'/'fastlane appletvos beta' wording in Sittings 2-4: Xcode Cloud once it ships a platform, Fastlane fallback until then, option (b) stops iOS/tvOS/visionOS Fastlane at the version-bump merge. Intro and reporting bullet updated.
 AC4: pnpm check:links -> 'Markdown relative links verified.'; git diff --check clean.
 Not changed (out of scope): distribution.md step 2 still says the repo stays private until TASK-1.7, but the repo is already public (TASK-1.7 notes). AGENTS.md/distribution.md say the coordinator uploads internal Fastlane builds; owner-gates.md uses neutral wording (builds come from the Fastlane fallback) to avoid contradicting either.
+
+Review follow-up (APPROVE WITH NOTES), commit 5d1c95d5: CFBundleVersion override now matches distribution.md (unverified, not recommended, only with an owner decision and a test); Duo BackButton described as under the Toolbar element, not inside the NavigationBar element in the accessibility tree; Sitting 6 step 4 asks the owner to confirm the macOS SDK on the first Xcode Cloud macOS archive (links distribution.md#differences-from-fastlane). The #why-these-reasons anchor is deferred until PR #1064 merges. pnpm check:links -> 'Markdown relative links verified.'; git diff --check clean.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
