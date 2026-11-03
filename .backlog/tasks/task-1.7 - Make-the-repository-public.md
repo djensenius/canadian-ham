@@ -4,7 +4,7 @@ title: Make the repository public
 status: To Do
 assignee: []
 created_date: 2026-10-01 02:27
-updated_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:54:00Z'
 labels:
   - release
   - legacy:T-009
@@ -36,4 +36,6 @@ Only after the ISED permission is recorded and the release candidate pass is com
 
 <!-- SECTION:NOTES:BEGIN -->
 Coordinator 2026-11-03 (TASK-83 tracking pass): GitHub already reports djensenius/canadian-ham as public (isPrivate false), but TASK-1.1 still records the ISED permission as pending and TASK-1.8 (history purge) is not done. The owner needs to reconcile this: either record the permission and the decision to publish early, or return the repository to private until the gates pass. Agents must not change visibility.
+
+TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 1: owner decisions; repository already public while TASK-1.1 is pending). The guide restates and links these criteria without changing them.
 <!-- SECTION:NOTES:END -->

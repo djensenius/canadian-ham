@@ -6,6 +6,8 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 
 ## Gates
 
+Owner-only device checks and decisions (Apple Watch, Apple TV, iPhone Duo, signed-device iCloud, permission and visibility) are indexed in [owner gates](owner-gates.md).
+
 - [ ] Confirm the repository is still private before release work starts; public exposure remains blocked by [`docs/content-licensing.md` public-release gate](../content-licensing.md#public-release-gate).
 - [ ] Complete `task-1.1`: record the ISED written permission reference number, date, and exact scope in [`docs/content-licensing.md`](../content-licensing.md), including explicit permission to bundle verbatim EN/FR question text as web and Apple app data.
 - [ ] Confirm the permission scope covers every release artifact: generated question JSON, bundled Apple resources, web static assets/PWA cache, and any release notes or About text that mention ISED material.

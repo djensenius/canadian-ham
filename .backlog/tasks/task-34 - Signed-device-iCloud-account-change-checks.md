@@ -4,7 +4,7 @@ title: Signed-device iCloud account-change checks
 status: To Do
 assignee: []
 created_date: 2026-10-09 07:36
-updated_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:54:00Z'
 labels:
   - apple
   - privacy
@@ -31,3 +31,9 @@ The opt-in iCloud gate can unit-test local handlers and default-build entitlemen
 - [ ] #7 Owner decision recorded: after an account switch, keep or remove the previous account's local progress (it would upload to the new account if sync is re-enabled)
 - [ ] #8 App Store Connect privacy answers re-checked for the gated iCloud build (no collected data; device id is a random per-install id stored locally and in the user's private CloudKit database only)
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 5: signed-device iCloud with DebugCloudKit only, plus Sitting 1 decisions for AC#6-#8). The guide restates and links these criteria without changing them.
+<!-- SECTION:NOTES:END -->

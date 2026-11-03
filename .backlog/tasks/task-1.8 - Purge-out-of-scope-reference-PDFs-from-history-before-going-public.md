@@ -4,7 +4,7 @@ title: Purge out-of-scope reference PDFs from history before going public
 status: To Do
 assignee: []
 created_date: 2026-10-02 15:27
-updated_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:54:00Z'
 labels:
   - licensing
   - release
@@ -29,3 +29,9 @@ Why: the ISED request submitted on 2026-10-02 deliberately left out the Basic re
 - [ ] #2 The source manifest, SHA256SUMS and docs no longer reference the removed files, and pnpm import:check, pnpm check:links and the content checks pass
 - [ ] #3 The chosen method (filter-repo or fresh repo) and its verification are recorded in docs/content-licensing.md and the release checklist
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 1: owner decisions; method choice and approval). The guide restates and links these criteria without changing them.
+<!-- SECTION:NOTES:END -->
