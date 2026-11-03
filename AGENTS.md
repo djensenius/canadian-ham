@@ -31,9 +31,19 @@
   dependent worker, then remove the task worktree with `git worktree remove`.
 
 ## Internal TestFlight builds
-- After a feature merges to main, the coordinator uploads internal TestFlight builds from the main checkout for all four platforms (`fastlane ios beta`, `mac beta`, `appletvos beta`, `xros beta`). Run the post-merge iOS/macOS checks first. Build numbers are timestamps.
+- After a feature merges to main, the coordinator uploads internal TestFlight builds from the main checkout for all four platforms (`fastlane ios beta`, `mac beta`, `appletvos beta`, `xros beta`). Run the post-merge iOS/macOS checks first. Build numbers are timestamps. Exception: under build-number option (b) in `docs/release/distribution.md#build-numbers`, from the merge that raises `MARKETING_VERSION` onward (including that merge), upload only `fastlane mac beta`; iOS, tvOS and visionOS then come from Xcode Cloud, and a Fastlane upload at the new version would block its small Xcode Cloud build numbers.
 - Signing uses the dedicated build keychain described in `docs/release/testflight.md`; never ask for or handle the login keychain password.
 - Internal testers only until task-1.7: no external groups, public links or App Store submission.
+- App Store distribution builds and Xcode Cloud are owner-gated (`docs/release/distribution.md`). Agents may run
+  `fastlane <platform> beta export_only:true distribution:true` to check a distribution export, but never upload one
+  and never create or edit Xcode Cloud workflows or App Store Connect settings. Distribution uploads wait for task-1.7
+  and task-85.
+- After every Fastlane upload, the coordinator updates that platform's line in
+  `apps/apple/ci_scripts/build-number-floors` to the uploaded build number in a PR right after the upload, before the
+  next Xcode Cloud archive. If Xcode Cloud uses one build-number sequence (option (a) in
+  `docs/release/distribution.md#build-numbers`), the coordinator also asks the owner to raise Next Build Number above
+  it. Fastlane is only a temporary fallback: stop Fastlane uploads for each platform once Xcode Cloud ships it (under
+  option (b), for iOS, tvOS and visionOS from the version-bump merge). The Mac app may stay on Fastlane under option (c).
 
 ## Build and test rules (all agents)
 - Never call `xcodebuild` directly. Always use `xbuild` with the same arguments;
