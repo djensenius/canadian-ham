@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:54:00Z'
 labels:
   - apple
   - watchos
@@ -61,6 +61,8 @@ Smallest SE 3 40mm / watchOS 27 targeted run: 1 new localization unit, both refe
 Automated implementation complete; evidence docs/testing/task-14.5-watch-a11y.md contains all watch full/fix per-test results, iOS localization 11/11, exact commands, smallest-watch screenshots and owner walkthrough; docs/testing/task-14.5-macos-unit-results.md records macOS 223/223. All 29 watch units and 27 UI tests have passing task evidence across full and targeted runs; all 16 EN/FR AX full default audits passed on Series 12 42mm and SE 3 40mm with no handler or skip. Final iOS build-for-testing, localization export/platform builds, text/network/iCloud checks, pnpm test/typecheck, alphabet self-test/parity and generated-project determinism passed. Initial pnpm test under concurrent Apple load had two unrelated web timing failures; unchanged idle rerun passed all tests. Test guard reports the new audit helper enclosing function: exits 0 with owner-authorized Test-guard-approved: task-14 marker; retain that line in eventual PR body. Blocked: owner manual check (AC4). Physical VoiceOver listening, Reduce Motion observations and tactile output/device OS record remain unperformed; AC4 stays unchecked and status In Progress. No PR or upload.
 
 Coordinator rerun at the final source: WatchAccessibilityUITests 19/19 on the SE 3 40mm and 19/19 on the Series 12 42mm, after a test-only reveal fix (lazy home list scrolled on Back). The review's listening points (double 'Selected', the title revisit after a language switch) are added to the owner walkthrough. AC4 is still pending the owner.
+
+TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 2: Apple Watch; AC#4 manual checks). The guide restates and links these criteria without changing them.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
