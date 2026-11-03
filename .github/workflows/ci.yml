@@ -247,6 +247,14 @@ jobs:
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:apple-icloud-gate
 
+      - name: Test Apple required-reason checker
+        if: needs.changes.outputs.full_checks == 'true'
+        run: pnpm test:apple-required-reasons
+
+      - name: Apple required-reason API check
+        if: needs.changes.outputs.full_checks == 'true'
+        run: pnpm check:apple-required-reasons
+
       # All four Swift packages, including the Swift engine-parity fixtures,
       # run in the Linux swift-packages job above. content-swift's loader,
       # models, validation, front-matter and explanation tests run there; its
