@@ -34,6 +34,13 @@
 - After a feature merges to main, the coordinator uploads internal TestFlight builds from the main checkout for all four platforms (`fastlane ios beta`, `mac beta`, `appletvos beta`, `xros beta`). Run the post-merge iOS/macOS checks first. Build numbers are timestamps.
 - Signing uses the dedicated build keychain described in `docs/release/testflight.md`; never ask for or handle the login keychain password.
 - Internal testers only until task-1.7: no external groups, public links or App Store submission.
+- App Store distribution builds and Xcode Cloud are owner-gated (`docs/release/distribution.md`). Agents may run
+  `fastlane <platform> beta export_only:true distribution:true` to check a distribution export, but never upload one
+  and never create or edit Xcode Cloud workflows or App Store Connect settings. Distribution uploads wait for task-1.7
+  and task-85.
+- Once Xcode Cloud is set up, after every Fastlane upload the coordinator raises
+  `apps/apple/ci_scripts/build-number-floor` to the uploaded build number in a PR and asks the owner to raise the Xcode
+  Cloud Next Build Number above it. Fastlane stays the fallback until Xcode Cloud has archived all four platforms once.
 
 ## Build and test rules (all agents)
 - Never call `xcodebuild` directly. Always use `xbuild` with the same arguments;

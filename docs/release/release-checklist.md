@@ -72,6 +72,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 ## Store submission
 
 - [ ] Do not submit to TestFlight external testing or App Store until [`docs/content-licensing.md` public-release gate](../content-licensing.md#public-release-gate), `task-1.1`, `task-1.2`, `task-1.4`, and `task-1.6` are complete.
+- [ ] Confirm `task-85` (required-reason API declarations) is Done, then build distribution archives as described in [App Store distribution and Xcode Cloud](distribution.md): Release only, never `DebugCloudKit`, a build number above every earlier upload, and no internal-only flag or official reference sheet.
 - [ ] Use [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md) to fill App Store Connect privacy answers and confirm **Data Not Collected** is still accurate on the release commit.
 - [ ] Confirm Apple application targets include `PrivacyInfo.xcprivacy` (shared by the original targets; watch-specific for `CanadianHamWatch`) and no target links third-party runtime SDKs, using the `plutil -p` and `git grep` checks in [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md).
 - [ ] Confirm app metadata, screenshots, About/settings text, release notes, attribution, and disclaimer match the recorded ISED permission scope and do not claim affiliation, sponsorship, or endorsement.
