@@ -176,6 +176,8 @@ var info = statfs(); let status = statfs("/", &info)
     // C-family files outside shipped targets and linked packages are not scanned and do not fail.
     'apps/apple/AppTests/AppTests-Bridging-Header.h': '#import <sys/stat.h>\n',
     'packages/unlinked-swift/Sources/Engine/shim.c': '#include <sys/stat.h>\n',
+    // The App target's folder reference: copied as data, never compiled.
+    'content/lessons/m1/lesson.md': '# Lesson\n',
   };
 }
 
@@ -494,6 +496,151 @@ assertFail('collected data type listed', tvManifestEdited(COLLECTED_EMPTY, '\t<k
 assertFail('collected data types key missing', tvManifestEdited(COLLECTED_EMPTY, ''),
   `${TV_MANIFEST_PATH} (TV): NSPrivacyCollectedDataTypes must be present and an empty array`);
 
+// Plist values keep their types, and only the XML subset Xcode writes is read.
+const TV_ITEM = `${TV_MANIFEST_PATH} (TV): NSPrivacyAccessedAPITypes item`;
+const tvSyntax = (line, text) => `${TV_MANIFEST_PATH}: invalid property list at line ${line}: ${text}`;
+const CA92 = '<string>CA92.1</string>';
+const USER_DEFAULTS_TYPE = `<string>${USER_DEFAULTS}</string>`;
+const API_TYPES_OPEN = '\t<key>NSPrivacyAccessedAPITypes</key>\n\t<array>\n';
+// Value types privacy manifests never use are rejected, not read as strings.
+for (const [element, value] of [['data', 'CA92.1'], ['date', '2026-11-03T00:00:00Z'], ['integer', '921'], ['real', '92.1']]) {
+  assertFail(`<${element}> reason`, tvManifestEdited(CA92, `<${element}>${value}</${element}>`),
+    tvSyntax(12, `<${element}> values are not supported; privacy manifests use only dict, array, string and boolean values`));
+}
+assertFail('<data> category', tvManifestEdited(USER_DEFAULTS_TYPE, `<data>${USER_DEFAULTS}</data>`), tvSyntax(9, '<data> values are not supported'));
+// Dictionaries, arrays and booleans where a string or array is expected.
+assertFail('non-string categories', {
+  ...tvManifestEdited(USER_DEFAULTS_TYPE, `<array>${USER_DEFAULTS_TYPE}</array>`),
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy': manifest(APP_MANIFEST).replace(USER_DEFAULTS_TYPE, '<true/>').replace(`<string>${BOOT_TIME}</string>`, '<dict/>'),
+}, [
+  `${TV_ITEM} 1: NSPrivacyAccessedAPIType must be a <string>, found <array> of 1 item.`,
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): NSPrivacyAccessedAPITypes item 1: NSPrivacyAccessedAPIType must be a <string>, found <true/>.',
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): NSPrivacyAccessedAPITypes item 2: NSPrivacyAccessedAPIType must be a <string>, found <dict>.',
+]);
+assertFail('reasons as a string', tvManifestEdited(`<array>\n\t\t\t\t${CA92}\n\t\t\t</array>`, CA92),
+  `${TV_MANIFEST_PATH} (TV): ${USER_DEFAULTS} NSPrivacyAccessedAPITypeReasons must be an <array> of <string> codes, found <string> "CA92.1".`);
+assertFail('non-string reasons', {
+  ...tvManifestEdited(CA92, `<array>${CA92}</array>`),
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy': manifest(APP_MANIFEST).replace(CA92, '<true/>').replace('<string>35F9.1</string>', '<dict><key>code</key><string>35F9.1</string></dict>'),
+}, [
+  `${TV_MANIFEST_PATH} (TV): ${USER_DEFAULTS} reasons must be <string> codes, found <array> of 1 item.`,
+  `apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): ${USER_DEFAULTS} reasons must be <string> codes, found <true/>.`,
+  `apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): ${BOOT_TIME} reasons must be <string> codes, found <dict>.`,
+]);
+assertFail('API type item not a dictionary', tvManifestEdited(API_TYPES_OPEN, `${API_TYPES_OPEN}\t\t${USER_DEFAULTS_TYPE}\n`),
+  `${TV_ITEM} 1 must be a <dict>, found <string> "${USER_DEFAULTS}".`);
+assertFail('API type item with an extra key', tvManifestEdited(`${CA92}\n\t\t\t</array>\n`, `${CA92}\n\t\t\t</array>\n\t\t\t<key>NSPrivacyAccessedAPITypeNote</key>\n\t\t\t<string>CA92.1</string>\n`),
+  `${TV_ITEM} 1 has unsupported keys "NSPrivacyAccessedAPITypeNote"; it may hold only NSPrivacyAccessedAPIType and NSPrivacyAccessedAPITypeReasons.`);
+assertFail('tracking and empty arrays of the wrong type', {
+  ...tvManifestEdited(TRACKING_FALSE, '\t<key>NSPrivacyTracking</key>\n\t<string>false</string>\n'),
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy': manifest(APP_MANIFEST).replace(TRACKING_DOMAINS_EMPTY, '\t<key>NSPrivacyTrackingDomains</key>\n\t<dict/>\n').replace(COLLECTED_EMPTY, '\t<key>NSPrivacyCollectedDataTypes</key>\n\t<string></string>\n'),
+  'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy': manifest(WATCH_MANIFEST).replace(/\t<key>NSPrivacyAccessedAPITypes<\/key>\n\t<array>\n[\s\S]*?\n\t<\/array>\n/, '\t<key>NSPrivacyAccessedAPITypes</key>\n\t<dict/>\n'),
+}, [
+  `${TV_MANIFEST_PATH} (TV): NSPrivacyTracking must be present and false (<false/>), found <string> "false"`,
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): NSPrivacyTrackingDomains must be present and an empty array (<array/>), found <dict>',
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): NSPrivacyCollectedDataTypes must be present and an empty array (<array/>), found <string> ""',
+  'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy (Watch): NSPrivacyAccessedAPITypes must be an <array>, found <dict>.',
+]);
+// Apple's parser keeps the last of duplicate keys, so duplicates are rejected.
+assertFail('duplicate top-level key', tvManifestEdited(TRACKING_FALSE, `${TRACKING_FALSE}\t<key>NSPrivacyTracking</key>\n\t<true/>\n`),
+  tvSyntax(28, 'duplicate key "NSPrivacyTracking"'));
+assertFail('duplicate key in an API type item', tvManifestEdited(`${USER_DEFAULTS_TYPE}\n`, `${USER_DEFAULTS_TYPE}\n\t\t\t<key>NSPrivacyAccessedAPIType</key>\n\t\t\t<string>${DISK_SPACE}</string>\n`),
+  tvSyntax(10, 'duplicate key "NSPrivacyAccessedAPIType"'));
+assertFail('key with no value', tvManifestEdited(TRACKING_DOMAINS_EMPTY, '\t<key>NSPrivacyTrackingDomains</key>\n'), tvSyntax(29, 'key "NSPrivacyTrackingDomains" has no value'));
+// Empty and whitespace-padded strings and keys: Apple compares them exactly.
+assertFail('empty strings and keys', {
+  ...tvManifestEdited(CA92, '<string/>'),
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy': manifest(APP_MANIFEST).replace(USER_DEFAULTS_TYPE, '<string></string>').replace(TRACKING_FALSE, `${TRACKING_FALSE}\t<key/>\n\t<false/>\n`),
+}, [
+  `${TV_MANIFEST_PATH} (TV): "" is not an approved reason for ${USER_DEFAULTS} (approved: CA92.1, 1C8F.1, AC6B.1).`,
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): unknown NSPrivacyAccessedAPIType "".',
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): unsupported top-level keys ""',
+]);
+assertFail('whitespace-padded values and keys', {
+  ...tvManifestEdited(CA92, '<string> CA92.1 </string>'),
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy': manifest(APP_MANIFEST).replace(`<string>${BOOT_TIME}</string>`, `<string>${BOOT_TIME}\n</string>`).replace('<key>NSPrivacyTracking</key>', '<key> NSPrivacyTracking</key>'),
+  'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy': manifest(WATCH_MANIFEST).replace('<string>35F9.1</string>', '<string>&#32;35F9.1</string>'),
+}, [
+  `${TV_MANIFEST_PATH} (TV): " CA92.1 " is not an approved reason for ${USER_DEFAULTS} (whitespace around a code is significant)`,
+  `apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): unknown NSPrivacyAccessedAPIType "${BOOT_TIME}\\n".`,
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): unsupported top-level keys " NSPrivacyTracking"',
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): NSPrivacyTracking must be present and false (<false/>), found nothing',
+  `apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy (Watch): " 35F9.1" is not an approved reason for ${BOOT_TIME} (whitespace around a code is significant)`,
+]);
+// A `__proto__` key is an ordinary unsupported key, never an inherited value.
+assertFail('__proto__ and Object.prototype names', {
+  ...tvManifestEdited(TRACKING_FALSE, '\t<key>__proto__</key>\n\t<dict>\n\t\t<key>NSPrivacyTracking</key>\n\t\t<false/>\n\t</dict>\n'),
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy': manifest(APP_MANIFEST).replace(USER_DEFAULTS_TYPE, '<string>constructor</string>').replace(`<string>${BOOT_TIME}</string>`, '<string>__proto__</string>'),
+}, [
+  `${TV_MANIFEST_PATH} (TV): unsupported top-level keys "__proto__"`,
+  `${TV_MANIFEST_PATH} (TV): NSPrivacyTracking must be present and false (<false/>), found nothing`,
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): unknown NSPrivacyAccessedAPIType "constructor".',
+  'apps/apple/App/Resources/PrivacyInfo.xcprivacy (App): unknown NSPrivacyAccessedAPIType "__proto__".',
+]);
+assertFail('unsupported top-level key', tvManifestEdited(TRACKING_FALSE, `${TRACKING_FALSE}\t<key>NSPrivacyAccessedAPITypesNote</key>\n\t<string>none</string>\n`),
+  `${TV_MANIFEST_PATH} (TV): unsupported top-level keys "NSPrivacyAccessedAPITypesNote"; a manifest may hold only NSPrivacyTracking, NSPrivacyTrackingDomains, NSPrivacyCollectedDataTypes, NSPrivacyAccessedAPITypes`);
+// Forms Apple's parser reads the same way are accepted: comments between
+// elements, a byte-order mark, no XML declaration, the older DOCTYPE,
+// open-and-close empty elements and entity or character references.
+assertPass('equivalent plist forms', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  [TV_MANIFEST_PATH]: `\uFEFF<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- privacy manifest -->
+<plist version="1.0">
+<dict>
+\t<!-- no tracking -->
+\t<key>NSPrivacyTracking</key>
+\t<false></false>
+\t<key>NSPrivacyTrackingDomains</key>
+\t<array></array>
+\t<key>NSPrivacyCollectedDataTypes</key>
+\t<array/>
+\t<key>NSPrivacyAccessedAPITypes</key>
+\t<array>
+\t\t<dict>
+\t\t\t<key>NSPrivacyAccessedAPIType</key>
+\t\t\t<string>NSPrivacyAccessedAPICategory&#85;ser&#x44;efaults</string>
+\t\t\t<key>NSPrivacyAccessedAPITypeReasons</key>
+\t\t\t<array><string>CA92&#46;1</string></array>
+\t\t</dict>
+\t\t<dict>
+\t\t\t<key>NSPrivacyAccessedAPIType</key>
+\t\t\t<string>${FILE_TIMESTAMP}</string>
+\t\t\t<key>NSPrivacyAccessedAPITypeReasons</key>
+\t\t\t<array><string>C617.1</string></array>
+\t\t</dict>
+\t</array>
+</dict>
+</plist>
+<!-- end -->
+`,
+}, ['TV: 3 Swift files; apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy; categories: FileTimestamp [C617.1], UserDefaults [CA92.1]']);
+// Everything else Apple's parser accepts or skips is rejected.
+for (const [name, from, to, line, text, ...more] of [
+  ['unknown entity', CA92, '<string>&reason;</string>', 12, 'unsupported entity or character reference "&reason;" in <string>'],
+  ['bare ampersand', CA92, '<string>CA92 & 1</string>', 12, 'unsupported entity or character reference "& 1" in <string>'],
+  ['comment inside a string', CA92, '<string>CA92<!-- x -->.1</string>', 12, 'expected </string>, found "<!-- x -->.1</string>', '(comments, CDATA and markup are not supported inside <string>)'],
+  ['CDATA', CA92, '<string><![CDATA[CA92.1]]></string>', 12, 'expected </string>, found "<![CDATA[CA92.1]]></stri"'],
+  ['comment inside a key', '<key>NSPrivacyTracking</key>', '<key>NSPrivacy<!-- x -->Tracking</key>', 26, 'expected </key>'],
+  ['processing instruction', TRACKING_FALSE, `<?generator xcode?>\n${TRACKING_FALSE}`, 26, 'expected <key> or </dict>, found "<?generator xcode?>'],
+  ['attribute on a value', CA92, '<string xml:space="preserve">CA92.1</string>', 12, 'expected a value element without attributes'],
+  ['DOCTYPE with an internal subset', '<!DOCTYPE plist PUBLIC', '<!DOCTYPE plist [ <!ENTITY reason "CA92.1"> ]>\n<!DOCTYPE plist PUBLIC', 2, 'only the standard Apple plist DOCTYPE is supported'],
+  ['missing plist root', /<plist version="1\.0">\n|<\/plist>\n/g, '', 3, 'expected <plist version="1.0">, found "<dict>'],
+  ['two root values', '</dict>\n</plist>', '</dict>\n<dict/>\n</plist>', 31, 'expected </plist> after one value'],
+  ['content after </plist>', '</plist>\n', '</plist>\n<dict/>\n', 32, 'unexpected content after </plist>'],
+  ['unknown element', TRACKING_FALSE, '\t<key>NSPrivacyTracking</key>\n\t<FALSE/>\n', 27, 'unsupported element <FALSE>'],
+]) {
+  assertFail(`plist ${name}`, { [TV_MANIFEST_PATH]: manifest(TV_WITH_PACKAGE).replace(from, to) }, [tvSyntax(line, text), ...more]);
+}
+assertFail('binary plist', { [TV_MANIFEST_PATH]: Buffer.concat([Buffer.from('bplist00'), Buffer.from('d10102', 'hex')]) },
+  `${TV_MANIFEST_PATH}: invalid property list: binary property lists are not read (convert it with plutil -convert xml1)`);
+assertFail('UTF-16 plist', { [TV_MANIFEST_PATH]: Buffer.from(`\uFEFF${manifest(TV_WITH_PACKAGE)}`, 'utf16le') },
+  `${TV_MANIFEST_PATH}: invalid property list: not valid UTF-8`);
+assertFail('JSON plist', { [TV_MANIFEST_PATH]: '{"NSPrivacyTracking": false}\n' },
+  tvSyntax(1, 'expected <plist version="1.0">, found "{\\"NSPrivacyTracking\\"'));
+assertFail('array root', { [TV_MANIFEST_PATH]: '<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0">\n<array/>\n</plist>\n' },
+  `${TV_MANIFEST_PATH} (TV): top level must be a <dict>, found <array> of 0 items.`);
+
 // Only Swift is scanned: C-family sources in shipped targets or linked packages fail closed.
 assertFail('Objective-C source in a shipped target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/tvOS/Legacy.m': '#import <Foundation/Foundation.h>\n' },
   'TV: apps/apple/Platforms/tvOS/Legacy.m is not Swift; only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs');
@@ -568,6 +715,54 @@ assertFail('prebuilt code in a shipped target', {
   'Watch: apps/apple/Platforms/watchOS/Vendor.framework/Info.plist is prebuilt code',
   'App: apps/apple/App/Resources/helper is prebuilt code',
   'package EnginePkg: packages/engine-swift/Sources/Engine/Resources/libHelper.dylib is prebuilt code',
+]);
+// Folder references and buildPhase none entries compile nothing and never
+// supply the manifest, but their paths are checked and their contents scanned
+// for prebuilt code (including inside asset catalogues) and symbolic links.
+const LESSONS_FOLDER = '      - path: ../../content/lessons\n        type: folder\n        buildPhase: resources\n';
+const withReferences = (extra = '') => projectYml(PROJECT_YML.replace(LESSONS_FOLDER, `${LESSONS_FOLDER}      - path: ../../content/drafts\n        buildPhase: none\n      - path: ../../content/optional-media\n        type: folder\n        optional: true\n${extra}`));
+const REFERENCE_DATA = {
+  'content/lessons/m1/quiz.json': '{"questions": []}\n',
+  'content/lessons/Media.xcassets/Contents.json': '{"info": {"version": 1}}\n',
+  // Disk space is not declared by App, and a nested manifest is not App's manifest.
+  'content/lessons/Notes.swift': 'let free = URLResourceKey.volumeAvailableCapacityKey\n',
+  'content/lessons/PrivacyInfo.xcprivacy': manifest([[DISK_SPACE, ['E174.1']]]),
+  'content/drafts/Draft.swift': 'let size = attributes[.systemFreeSize]\n',
+  'content/drafts/PrivacyInfo.xcprivacy': manifest([[DISK_SPACE, ['E174.1']]]),
+};
+assertPass('folder reference with plain data', { ...tvManifest(TV_WITH_PACKAGE), ...withReferences(), ...REFERENCE_DATA }, [
+  'App: 4 Swift files; apps/apple/App/Resources/PrivacyInfo.xcprivacy; categories: FileTimestamp [C617.1], SystemBootTime [35F9.1], UserDefaults [CA92.1]',
+]);
+assertFail('folder reference with prebuilt code', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...withReferences(),
+  ...REFERENCE_DATA,
+  'content/lessons/tools/helper': Buffer.from('cffaedfe0c000001', 'hex'),
+  'content/lessons/Media.xcassets/blob.dataset/blob': Buffer.from('cafebabe00000002', 'hex'),
+  'content/drafts/libVendor.dylib': 'not really a dylib\n',
+}, [
+  'App: content/lessons/tools/helper is prebuilt code',
+  'App: content/lessons/Media.xcassets/blob.dataset/blob is prebuilt code',
+  'App: content/drafts/libVendor.dylib is prebuilt code',
+]);
+assertFail('missing folder reference and buildPhase none paths', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...withReferences('      - path: ../../content/missing-drafts\n        buildPhase: none\n'),
+  'content/lessons/m1/lesson.md': null,
+}, [
+  'App: sources path ../../content/lessons does not exist.',
+  'App: sources path ../../content/drafts does not exist.',
+  'App: sources path ../../content/missing-drafts does not exist.',
+]);
+assertFail('symbolic links in and as folder references', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...withReferences('      - path: ../../content/linked-lessons\n        type: folder\n'),
+  ...REFERENCE_DATA,
+  'content/lessons/latest': { symlink: 'm1' },
+  'content/linked-lessons': { symlink: 'lessons' },
+}, [
+  'content/lessons/latest is a symbolic link; the checker does not follow links',
+  'content/linked-lessons is a symbolic link; the checker does not follow links',
 ]);
 // Build scripts, scheme pre-actions, xcconfig files, headers, search paths and
 // compiler or linker flags can add code the checker does not scan.

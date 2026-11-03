@@ -15,9 +15,12 @@
 // new source folders are mapped automatically. Every Swift file under
 // apps/apple must belong to some project.yml target; XcodeGen constructs this
 // script does not understand fail the check rather than being skipped, as do
-// symbolic links, prebuilt code, build scripts that run before compiling,
-// header/search-path/linker settings, non -D Swift flags, and SwiftPM plugins,
-// macros, system libraries and unsafe flags.
+// symbolic links, prebuilt code (also inside folder references and
+// buildPhase none entries, which are otherwise not compiled), build scripts
+// that run before compiling, header/search-path/linker settings, non -D Swift
+// flags, and SwiftPM plugins, macros, system libraries and unsafe flags.
+// Manifests are read with a strict XML plist parser that keeps value types
+// and rejects anything Apple's parser could read differently.
 //
 // Limitation: `#if` conditions are not evaluated, so an API compiled out on a
 // platform still counts for every target that compiles the file, and string
@@ -297,82 +300,131 @@ function parseYamlSubset(text, label) {
 }
 
 // ---------------------------------------------------------------------------
-// Minimal XML property list parser (dict, array, string, key, booleans, numbers).
+// Strict XML property list parser for privacy manifests. Values keep their
+// plist types: <dict> becomes a null-prototype object (so a `__proto__` key is
+// an ordinary key), <array> an array, <string> a string and <true/>/<false/>
+// a boolean. Privacy manifests use no other value types, so <integer>, <real>,
+// <date> and <data> are rejected rather than read as strings. Entity and
+// character references are decoded as Apple's parser decodes them, and string
+// and key text keeps its whitespace. Everything else Apple's parser would
+// accept or skip (binary, JSON or OpenStep plists, CDATA, comments inside a
+// key or string, processing instructions, attributes, other DOCTYPEs, a
+// missing <plist> root, duplicate keys and trailing content) is rejected, so
+// the checker never reads a value differently from Apple.
 
-function parsePlist(xml, label) {
-  const tokenPattern = /<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<!DOCTYPE[^>]*>|<(\/?)([A-Za-z]+)(?:\s[^>]*?)?(\/?)>|([^<]+)/g;
-  const tokens = [];
-  for (const match of xml.matchAll(tokenPattern)) {
-    if (match[2]) {
-      tokens.push({ kind: match[1] ? 'close' : match[3] ? 'empty' : 'open', name: match[2] });
-    } else if (match[4] !== undefined && match[4].trim() !== '') {
-      tokens.push({ kind: 'text', value: match[4] });
-    }
+const XML_DECLARATION = /<\?xml\s+version\s*=\s*(["'])1\.0\1(?:\s+encoding\s*=\s*(["'])(?:UTF-8|utf-8)\2)?\s*\?>/y;
+const PLIST_DOCTYPE = /<!DOCTYPE\s+plist\s+PUBLIC\s+"-\/\/Apple(?: Computer)?\/\/DTD PLIST 1\.0\/\/EN"\s+"http:\/\/www\.apple\.com\/DTDs\/PropertyList-1\.0\.dtd"\s*>/y;
+const PREDEFINED_ENTITIES = new Map([['lt', '<'], ['gt', '>'], ['amp', '&'], ['quot', '"'], ['apos', "'"]]);
+
+function parsePlist(bytes, label) {
+  const syntaxError = (message, offset) => {
+    const line = offset === undefined ? '' : ` at line ${text.slice(0, offset).split('\n').length}`;
+    throw new Error(`${label}: invalid property list${line}: ${message}; the checker reads only the XML plist subset Xcode writes, so rewrite the manifest or extend scripts/check-apple-required-reasons.mjs.`);
+  };
+  let text = '';
+  if (bytes.subarray(0, 6).toString('latin1') === 'bplist') {
+    syntaxError('binary property lists are not read (convert it with plutil -convert xml1)');
   }
-  let position = 0;
-  const syntaxError = (message) => {
-    throw new Error(`${label}: invalid property list: ${message}`);
+  try {
+    text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    syntaxError('not valid UTF-8');
+  }
+  let i = text.startsWith('\uFEFF') ? 1 : 0;
+  const at = (pattern) => {
+    pattern.lastIndex = i;
+    const match = pattern.exec(text);
+    if (match) i = pattern.lastIndex;
+    return match;
   };
-  const next = () => tokens[position++] ?? syntaxError('unexpected end of document');
-  const decode = (value) => value
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&');
-  const textUntilClose = (name) => {
-    let token = next();
-    let value = '';
-    if (token.kind === 'text') {
-      value = decode(token.value);
-      token = next();
-    }
-    if (token.kind !== 'close' || token.name !== name) syntaxError(`expected </${name}>`);
-    return value;
+  const found = () => (i >= text.length ? 'end of file' : JSON.stringify(text.slice(i, i + 24)));
+  // Whitespace and comments may separate elements, as in Apple's parser.
+  const skipMisc = () => {
+    while (at(/\s+/y) || at(/<!--[\s\S]*?-->/y));
   };
 
-  function value(token = next()) {
-    if (token.kind === 'empty') {
-      if (token.name === 'dict') return {};
-      if (token.name === 'array') return [];
-      if (token.name === 'string') return '';
-      if (token.name === 'true') return true;
-      if (token.name === 'false') return false;
-      syntaxError(`unsupported empty element <${token.name}/>`);
+  function decode(raw, name, start) {
+    return raw.replace(/&[^;]*;?/g, (reference) => {
+      const body = reference.slice(1, -1);
+      if (reference.endsWith(';') && PREDEFINED_ENTITIES.has(body)) return PREDEFINED_ENTITIES.get(body);
+      const numeric = reference.match(/^&#(?:([0-9]+)|x([0-9A-Fa-f]+));$/);
+      const codePoint = numeric ? Number.parseInt(numeric[1] ?? numeric[2], numeric[1] ? 10 : 16) : Number.NaN;
+      if (!(codePoint >= 1 && codePoint <= 0x10ffff) || (codePoint >= 0xd800 && codePoint <= 0xdfff)) {
+        syntaxError(`unsupported entity or character reference ${JSON.stringify(reference)} in <${name}>`, start);
+      }
+      return String.fromCodePoint(codePoint);
+    });
+  }
+
+  // Key and string text: character data only, then the closing tag.
+  function textUntilClose(name) {
+    const start = i;
+    const raw = at(/[^<]*/y)[0];
+    if (!at(new RegExp(`</${name}\\s*>`, 'y'))) {
+      syntaxError(`expected </${name}>, found ${found()} (comments, CDATA and markup are not supported inside <${name}>)`, i);
     }
-    if (token.kind !== 'open') syntaxError(`unexpected ${token.kind} ${token.name ?? token.value}`);
-    switch (token.name) {
+    return decode(raw, name, start);
+  }
+
+  function value() {
+    const start = i;
+    const tag = at(/<([A-Za-z]+)\s*(\/?)>/y);
+    if (!tag) syntaxError(`expected a value element without attributes, found ${found()}`, start);
+    const [, name, empty] = tag;
+    switch (name) {
       case 'dict': {
-        const result = {};
-        for (let item = next(); !(item.kind === 'close' && item.name === 'dict'); item = next()) {
-          if (item.kind !== 'open' || item.name !== 'key') syntaxError('expected <key> in <dict>');
-          const key = textUntilClose('key');
-          if (Object.hasOwn(result, key)) syntaxError(`duplicate key ${key}`);
+        const result = Object.create(null);
+        if (empty) return result;
+        for (;;) {
+          skipMisc();
+          if (at(/<\/dict\s*>/y)) return result;
+          const keyStart = i;
+          const keyTag = at(/<key\s*(\/?)>/y);
+          if (!keyTag) syntaxError(`expected <key> or </dict>, found ${found()}`, keyStart);
+          const key = keyTag[1] ? '' : textUntilClose('key');
+          // Apple's parser keeps the last value, so a duplicate could hide one.
+          if (Object.hasOwn(result, key)) syntaxError(`duplicate key ${JSON.stringify(key)}`, keyStart);
+          skipMisc();
+          if (text.startsWith('</dict', i)) syntaxError(`key ${JSON.stringify(key)} has no value`, i);
           result[key] = value();
         }
-        return result;
       }
       case 'array': {
         const result = [];
-        for (let item = next(); !(item.kind === 'close' && item.name === 'array'); item = next()) {
-          result.push(value(item));
+        if (empty) return result;
+        for (;;) {
+          skipMisc();
+          if (at(/<\/array\s*>/y)) return result;
+          result.push(value());
         }
-        return result;
       }
       case 'string':
-      case 'date':
-      case 'data':
-        return textUntilClose(token.name);
+        return empty ? '' : textUntilClose('string');
+      case 'true':
+      case 'false':
+        if (!empty && !at(new RegExp(`</${name}\\s*>`, 'y'))) syntaxError(`expected </${name}>, found ${found()}`, i);
+        return name === 'true';
       case 'integer':
       case 'real':
-        return Number(textUntilClose(token.name));
+      case 'date':
+      case 'data':
+        return syntaxError(`<${name}> values are not supported; privacy manifests use only dict, array, string and boolean values`, start);
       default:
-        return syntaxError(`unsupported element <${token.name}>`);
+        return syntaxError(`unsupported element <${name}>`, start);
     }
   }
 
-  const open = next();
-  if (open.kind !== 'open' || open.name !== 'plist') syntaxError('expected <plist>');
+  at(XML_DECLARATION);
+  skipMisc();
+  if (text.startsWith('<!DOCTYPE', i) && !at(PLIST_DOCTYPE)) syntaxError('only the standard Apple plist DOCTYPE is supported', i);
+  skipMisc();
+  if (!at(/<plist(?:\s+version\s*=\s*(["'])1\.0\1)?\s*>/y)) syntaxError(`expected <plist version="1.0">, found ${found()}`, i);
+  skipMisc();
   const result = value();
-  const close = next();
-  if (close.kind !== 'close' || close.name !== 'plist') syntaxError('expected </plist>');
-  if (position !== tokens.length) syntaxError('unexpected content after </plist>');
+  skipMisc();
+  if (!at(/<\/plist\s*>/y)) syntaxError(`expected </plist> after one value, found ${found()}`, i);
+  skipMisc();
+  if (i !== text.length) syntaxError(`unexpected content after </plist>: ${found()}`, i);
   return result;
 }
 
@@ -684,7 +736,9 @@ function symlinkOnPath(absolutePath) {
   return false;
 }
 
-function walk(directory, excludes, base, visit) {
+// Folder references are copied into the bundle as they are, so their walk
+// also descends into asset catalogue, icon and string catalogue directories.
+function walk(directory, excludes, base, visit, descendAll = false) {
   for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     if (entry.name === '.DS_Store') continue;
     const absolutePath = join(directory, entry.name);
@@ -692,8 +746,8 @@ function walk(directory, excludes, base, visit) {
     if (excludes.some((pattern) => pattern.test(relativePath))) continue;
     if (entry.isSymbolicLink()) {
       fail(symlinkMessage(absolutePath));
-    } else if (entry.isDirectory() && !/\.(?:xcassets|icon|xcstrings)$/.test(entry.name)) {
-      walk(absolutePath, excludes, base, visit);
+    } else if (entry.isDirectory() && (descendAll || !/\.(?:xcassets|icon|xcstrings)$/.test(entry.name))) {
+      walk(absolutePath, excludes, base, visit, descendAll);
     } else if (entry.isFile()) {
       visit(absolutePath);
     }
@@ -723,15 +777,29 @@ function resolveTarget(name, target, packages) {
       continue;
     }
     const buildPhase = entry.buildPhase ?? 'default';
-    if (buildPhase === 'none' || entry.type === 'folder') continue; // folder references keep their subpath
-    const compiles = buildPhase === 'default' || buildPhase === 'sources';
+    // Folder references (copied into the bundle as a whole, ignoring
+    // excludes) and buildPhase none entries (in the project but in no build
+    // phase) compile nothing and never supply the target's manifest, even when
+    // they hold Swift files or a nested PrivacyInfo.xcprivacy. Their paths are
+    // still checked like other entries, and everything in them is scanned for
+    // prebuilt code and symbolic links.
+    const reference = entry.type === 'folder' || buildPhase === 'none';
+    const compiles = !reference && (buildPhase === 'default' || buildPhase === 'sources');
     const absolutePath = normalize(join(appleDir, entry.path));
     if (symlinkOnPath(absolutePath)) continue;
     if (!existsSync(absolutePath)) {
       // A missing source path would hide compiled Swift; missing resource files cannot.
-      if (compiles && entry.optional !== 'true' && entry.optional !== true) {
+      if ((compiles || reference) && entry.optional !== 'true' && entry.optional !== true) {
         fail(`${name}: sources path ${entry.path} does not exist.`);
       }
+      continue;
+    }
+    if (reference) {
+      const scan = (file) => {
+        if (isBinaryCode(file)) binaryFiles.add(file);
+      };
+      if (statSync(absolutePath).isDirectory()) walk(absolutePath, [], absolutePath, scan, true);
+      else scan(absolutePath);
       continue;
     }
     const record = (file) => {
@@ -811,61 +879,104 @@ function resolvePackage(name, spec) {
 // ---------------------------------------------------------------------------
 // Manifest validation.
 
+// Privacy manifest keys the checker models; any other key fails until it does.
+const MANIFEST_KEYS = ['NSPrivacyTracking', 'NSPrivacyTrackingDomains', 'NSPrivacyCollectedDataTypes', 'NSPrivacyAccessedAPITypes'];
+const API_TYPE_KEYS = ['NSPrivacyAccessedAPIType', 'NSPrivacyAccessedAPITypeReasons'];
+const isDict = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
+const plistType = (value) => {
+  if (value === undefined) return 'nothing';
+  if (Array.isArray(value)) return `<array> of ${value.length} item${value.length === 1 ? '' : 's'}`;
+  if (isDict(value)) return '<dict>';
+  if (typeof value === 'boolean') return `<${value}/>`;
+  return `<string> ${JSON.stringify(value)}`;
+};
+const keyList = (keys) => keys.map((key) => JSON.stringify(key)).join(', ');
+
 function declaredCategories(manifestPath, targetName) {
   const label = display(manifestPath);
+  const where = `${label} (${targetName})`;
   let plist;
   try {
-    plist = parsePlist(readFileSync(manifestPath, 'utf8'), label);
+    plist = parsePlist(readFileSync(manifestPath), label);
   } catch (error) {
     fail(error.message);
     return null;
   }
-  if (!plist || typeof plist !== 'object' || Array.isArray(plist)) {
-    fail(`${label}: top level must be a dictionary.`);
+  if (!isDict(plist)) {
+    fail(`${where}: top level must be a <dict>, found ${plistType(plist)}.`);
     return null;
+  }
+  const unknownKeys = Object.keys(plist).filter((key) => !MANIFEST_KEYS.includes(key));
+  if (unknownKeys.length > 0) {
+    fail(`${where}: unsupported top-level keys ${keyList(unknownKeys)}; a manifest may hold only ${MANIFEST_KEYS.join(', ')}, so remove them or extend scripts/check-apple-required-reasons.mjs.`);
   }
   // The Apple app does no tracking and collects no data (AGENTS.md, docs/privacy.md).
   if (plist.NSPrivacyTracking !== false) {
-    fail(`${label} (${targetName}): NSPrivacyTracking must be present and false; the Apple app does no tracking.`);
+    fail(`${where}: NSPrivacyTracking must be present and false (<false/>), found ${plistType(plist.NSPrivacyTracking)}; the Apple app does no tracking.`);
   }
   for (const key of ['NSPrivacyTrackingDomains', 'NSPrivacyCollectedDataTypes']) {
     if (!Array.isArray(plist[key]) || plist[key].length !== 0) {
-      fail(`${label} (${targetName}): ${key} must be present and an empty array; the Apple app does no tracking and collects no data.`);
+      fail(`${where}: ${key} must be present and an empty array (<array/>), found ${plistType(plist[key])}; the Apple app does no tracking and collects no data.`);
     }
   }
   const entries = plist.NSPrivacyAccessedAPITypes ?? [];
   if (!Array.isArray(entries)) {
-    fail(`${label}: NSPrivacyAccessedAPITypes must be an array.`);
+    fail(`${where}: NSPrivacyAccessedAPITypes must be an <array>, found ${plistType(entries)}.`);
     return null;
   }
   const declared = new Map();
-  for (const entry of entries) {
-    const category = entry?.NSPrivacyAccessedAPIType;
-    const reasons = entry?.NSPrivacyAccessedAPITypeReasons;
-    if (typeof category !== 'string' || !CATEGORIES[category]) {
-      fail(`${label} (${targetName}): unknown NSPrivacyAccessedAPIType ${JSON.stringify(category)}.`);
+  for (const [index, entry] of entries.entries()) {
+    const item = `${where}: NSPrivacyAccessedAPITypes item ${index + 1}`;
+    if (!isDict(entry)) {
+      fail(`${item} must be a <dict>, found ${plistType(entry)}.`);
+      continue;
+    }
+    const unknownEntryKeys = Object.keys(entry).filter((key) => !API_TYPE_KEYS.includes(key));
+    if (unknownEntryKeys.length > 0) {
+      fail(`${item} has unsupported keys ${keyList(unknownEntryKeys)}; it may hold only ${API_TYPE_KEYS.join(' and ')}.`);
+    }
+    const category = entry.NSPrivacyAccessedAPIType;
+    const reasons = entry.NSPrivacyAccessedAPITypeReasons;
+    if (typeof category !== 'string') {
+      fail(`${item}: NSPrivacyAccessedAPIType must be a <string>, found ${plistType(category)}.`);
+      continue;
+    }
+    if (!Object.hasOwn(CATEGORIES, category)) {
+      fail(`${where}: unknown NSPrivacyAccessedAPIType ${JSON.stringify(category)}.`);
       continue;
     }
     if (declared.has(category)) {
-      fail(`${label} (${targetName}): ${category} is declared more than once.`);
+      fail(`${where}: ${category} is declared more than once.`);
       continue;
     }
-    if (!Array.isArray(reasons) || reasons.length === 0) {
-      fail(`${label} (${targetName}): ${category} must list at least one NSPrivacyAccessedAPITypeReasons code.`);
+    if (reasons === undefined || (Array.isArray(reasons) && reasons.length === 0)) {
+      fail(`${where}: ${category} must list at least one NSPrivacyAccessedAPITypeReasons code.`);
+      continue;
+    }
+    if (!Array.isArray(reasons)) {
+      fail(`${where}: ${category} NSPrivacyAccessedAPITypeReasons must be an <array> of <string> codes, found ${plistType(reasons)}.`);
       continue;
     }
     const { appReasons, sdkOnlyReasons } = CATEGORIES[category];
+    const codes = [];
     for (const reason of reasons) {
+      if (typeof reason !== 'string') {
+        fail(`${where}: ${category} reasons must be <string> codes, found ${plistType(reason)}.`);
+        continue;
+      }
+      codes.push(reason);
       if (sdkOnlyReasons.includes(reason)) {
-        fail(`${label} (${targetName}): ${reason} may only be declared by third-party SDKs, not by an app, for ${category}.`);
+        fail(`${where}: ${reason} may only be declared by third-party SDKs, not by an app, for ${category}.`);
       } else if (!appReasons.includes(reason)) {
-        fail(`${label} (${targetName}): ${JSON.stringify(reason)} is not an approved reason for ${category} (approved: ${appReasons.join(', ')}).`);
+        // Apple compares codes exactly, so surrounding whitespace makes a code unknown.
+        const padded = reason.trim() !== reason && appReasons.includes(reason.trim()) ? ' (whitespace around a code is significant)' : '';
+        fail(`${where}: ${JSON.stringify(reason)} is not an approved reason for ${category}${padded} (approved: ${appReasons.join(', ')}).`);
       }
     }
-    if (new Set(reasons).size !== reasons.length) {
-      fail(`${label} (${targetName}): ${category} lists a reason more than once.`);
+    if (new Set(codes).size !== codes.length) {
+      fail(`${where}: ${category} lists a reason more than once.`);
     }
-    declared.set(category, reasons);
+    declared.set(category, codes);
   }
   return declared;
 }

@@ -456,7 +456,37 @@ works as follows:
   packages contribute their `Sources/**`. Test bundles count only for
   coverage. Like XcodeGen, the walk includes hidden files and directories
   and skips only `.DS_Store`. SwiftPM ignores hidden files, so package walks
-  may scan more than SwiftPM compiles, which is the safe direction.
+  may scan more than SwiftPM compiles, which is the safe direction. Folder
+  references (`type: folder`) and `buildPhase: none` entries compile nothing
+  and never supply the target's manifest, even if they hold Swift files or a
+  nested `PrivacyInfo.xcprivacy`. Their paths must still exist unless
+  `optional`, and their whole contents are scanned for prebuilt code and
+  symbolic links, including inside asset catalogues and ignoring `excludes`,
+  because Xcode copies a folder reference as it is. In the real tree these
+  are the `content/lessons`, `quizzes`, `explanations`, `hints`,
+  `reference-sheet` and `generated/basic-2025-07-15` folders (Markdown and
+  JSON only) and the UI tests' `ContrastMeasurement` PNGs; there are no
+  `buildPhase: none` entries.
+- **Manifest parsing.** Manifests are read with a strict XML property list
+  parser that keeps plist value types, so each key must have its documented
+  type:
+  - `NSPrivacyTracking` must be the boolean `<false/>`;
+  - `NSPrivacyTrackingDomains` and `NSPrivacyCollectedDataTypes` must be
+    empty `<array>`s;
+  - `NSPrivacyAccessedAPITypes` must be an `<array>` of `<dict>`s;
+  - each category and each reason must be a `<string>`, and the reasons must
+    sit in an `<array>`.
+
+  Privacy manifests use no other value types, so `<integer>`, `<real>`,
+  `<date>` and `<data>` are rejected rather than read as strings. Only the
+  four documented top-level keys and the two keys of each accessed-API entry
+  are allowed. String and key text keeps its whitespace and is compared
+  exactly, as Apple compares it. The five predefined XML entities and numeric
+  character references are decoded, as Apple's parser decodes them.
+  Comments between elements, a byte-order mark, a missing XML declaration,
+  the older `Apple Computer` DOCTYPE, and `<false></false>` or
+  `<array></array>` forms are accepted, because Apple reads them the same
+  way.
 - **Scanning.** It blanks Swift comments and scans the code for the spellings
   of each category. String and regex literals are kept, following the Swift 6
   lexer for extended `#/.../#` and bare `/.../` regex literals, so a `/*` or
@@ -491,17 +521,27 @@ works as follows:
   - a target bundles anything other than exactly one manifest;
   - a manifest does not set `NSPrivacyTracking` to `false`, or does not have
     empty `NSPrivacyTrackingDomains` and `NSPrivacyCollectedDataTypes` arrays;
+  - a manifest value has the wrong plist type, or the manifest has an
+    unknown top-level or entry key, a duplicate key, a key with no value, an
+    unknown entity, or anything outside the XML subset above: a binary,
+    JSON, OpenStep or non-UTF-8 plist, a CDATA section, a comment inside a
+    key or string, a processing instruction other than the XML declaration,
+    an attribute on a value element, another DOCTYPE, a missing `<plist>`
+    root, or content after `</plist>`;
   - a shipped target or linked package contains C, Objective-C, C++ or
     assembly sources or headers, module maps or API notes, because only
     Swift is scanned;
-  - a shipped target's sources or a linked package's `Sources` contain
+  - a shipped target's sources, including its folder references and
+    `buildPhase: none` entries, or a linked package's `Sources` contain
     prebuilt code: a `.framework`, `.xcframework`, `.xpc` or `.appex`
     bundle, a `.a`, `.dylib`, `.so` or `.o` file, or any file that starts
     with Mach-O, universal-binary or `ar` magic;
-  - a symbolic link appears under a scanned directory, or is a `project.yml`
-    sources path, a package directory or its `Sources`, or any directory
-    between the repository root and one of those (the checker does not
-    follow links);
+  - a symbolic link appears under a scanned directory (including a folder
+    reference), or is a `project.yml` sources path, a package directory or
+    its `Sources`, or any directory between the repository root and one of
+    those (the checker does not follow links);
+  - a compiled sources path, folder reference or `buildPhase: none` path
+    does not exist and is not marked `optional`;
   - a Swift file under `apps/apple` is compiled by no target;
   - comment stripping could hide code: an unterminated block comment or
     extended regex literal, or a comment marker straight after `\` (an
@@ -533,8 +573,9 @@ works as follows:
   identifiers that must not count, and regex literals containing comment
   markers. Further fixtures cover backtick-escaped names in every category
   (with division after an escaped name), key paths, type aliases, string-based
-  access, hidden files and directories, symbolic links, and the fail-closed
-  cases above.
+  access, hidden files and directories, symbolic links, folder references
+  holding plain data (which pass) or prebuilt code (which fails), the plist
+  type and syntax cases in the table below, and the fail-closed cases above.
 - **Bypass classes.** Each syntactic way a source could reach a listed API
   without the checker seeing it is covered or recorded here:
 
@@ -552,6 +593,9 @@ works as follows:
   | `#if` branches | Not a bypass: `#if` is not evaluated, so every branch is scanned and counts (over-declaration). |
   | C, Objective-C, C++, assembly, module maps, API notes | Fail closed. |
   | Prebuilt code (frameworks, libraries, Mach-O files) in sources or package `Sources` | Fail closed. |
+  | Prebuilt code in folder references or `buildPhase: none` entries, which are copied or listed but not compiled | Fail closed with fixtures: the whole folder is scanned, including asset catalogues; a folder of plain data passes, and its Swift files and nested manifest are not counted. |
+  | Privacy manifest values of the wrong plist type (`<data>`, `<date>`, `<integer>` or `<real>` codes, a `<dict>` or `<array>` where a string is expected, a `<string>` where a boolean or array is expected) | Fail closed with fixtures: value types are kept and checked. |
+  | Privacy manifest XML that Apple's parser could read differently (duplicate keys, where Apple keeps the last; a `__proto__` key; entities; comments, CDATA or processing instructions; attributes; other DOCTYPEs; binary, JSON or OpenStep plists; a missing root or trailing content) | Fail closed with fixtures. Equivalent forms that Apple reads the same way (comments between elements, character references, open-and-close empty elements) are accepted, also with a fixture. |
   | Hidden files and directories | Covered by a fixture: scanned, as XcodeGen compiles them. |
   | Symbolic links | Fail closed with fixtures, both inside walked directories and on scan entry paths and their parent directories. No links exist under the scanned roots. |
   | Files compiled but outside the walk | Fail closed for unmodelled XcodeGen and Package.swift constructs. Verified against the committed project and SwiftPM; see the walk verification row under Evidence. |
@@ -574,7 +618,14 @@ works as follows:
   flagged even when no API is called; rename the key or justify an exception.
   API names built at run time, wholesale attribute reads, post-build scripts
   and Interface Builder bindings are also not detected (see the table
-  above). Binary inspection (below) is the cross-check.
+  above). Binary inspection (below) is the cross-check. The manifest parser
+  is deliberately narrower than Apple's: it rejects plists Apple would
+  accept (binary, JSON or OpenStep plists, CDATA, attributes, a missing
+  `<plist>` root, trailing content, duplicate keys), so such a manifest fails
+  the check even when Apple would read it correctly. Rewrite it in the plain
+  XML form Xcode writes. A Swift file inside a folder reference under
+  `apps/apple` is not compiled but still fails the unmapped-file check; keep
+  such data outside `apps/apple` or give it another extension.
 
 ### Evidence
 
@@ -588,6 +639,7 @@ Run from the TASK-85 worktree on 2026-11-03 UTC:
 | `pnpm check:apple-required-reasons` (with the `project.yml` change, on the branch since `b7877c4d`) | Passed. `CanadianHam`: 53 Swift files, `SystemBootTime [35F9.1], UserDefaults [CA92.1]`. `CanadianHamWatch`: 31, `SystemBootTime [35F9.1]`. `CanadianHamTV`: 33, `UserDefaults [CA92.1]`. `CanadianHamVision`: 32, `UserDefaults [CA92.1]`. |
 | `pnpm check:apple-network`, `pnpm check:apple-icloud-gate` | Passed. |
 | Walk verification (PR #1064 round 4): the checker's per-target Swift lists compared with the `PBXSourcesBuildPhase` files in the committed `CanadianHam.xcodeproj` (`plutil -convert json`), and each package's `Sources` walk compared with `swift package describe --type json` | Identical. `CanadianHam` 32 app files, `CanadianHamWatch` 11, `CanadianHamTV` 13, `CanadianHamVision` 12, with no non-Swift sources and no build rules. Each package has one library target and one test target and no dependencies; non-test sources are `calculator-swift` 1, `content-swift` 8, `engine-swift` 10 and `morse-swift` 2. The project links only those four package products, and its shell script phases all run after the Sources phase. No symbolic links or hidden entries exist under the scanned roots. |
+| Folder references (PR #1064 round 5): the six shipped `content/` folder references scanned for prebuilt code and links, with the strict manifest parser applied to the four manifests | 2,059 files (2,010 JSON, 49 Markdown), no prebuilt code, no symbolic links or hidden entries, no `buildPhase: none` entries. The four manifests parse unchanged, and the checker output is byte-identical to the previous round. |
 | Release builds through `xbuild` (`-configuration Release`, generic simulator destinations, plus generic macOS, `CODE_SIGNING_ALLOWED=NO`), then `plutil -p` on each bundled `PrivacyInfo.xcprivacy` | All builds succeeded. Each bundle has exactly one manifest, byte-identical (`cmp`) to its source. iOS `CanadianHam.app` and macOS `CanadianHam.app/Contents/Resources` declare User defaults `CA92.1` and System boot time `35F9.1`. The embedded `CanadianHam.app/Watch/CanadianHamWatch.app` declares System boot time `35F9.1`. `CanadianHamTV.app` and `CanadianHamVision.app`, built from a regenerated project with the `project.yml` change, declare User defaults `CA92.1` only. |
 | `strings -a` / `nm -u` on the Release binaries, which include the statically linked package code | iOS app: `systemUptime`, `standardUserDefaults`, `persistentDomainForName`. Watch: `systemUptime` only. macOS: `standardUserDefaults` and `persistentDomainForName`, but no `systemUptime`, because those call sites are iOS-only. TV and Vision: `standardUserDefaults` only. No binary imports `stat`, `lstat`, `fstat`, `fstatat`, `statfs`, `statvfs`, `getattrlist` or `mach_absolute_time`, and none references the file-timestamp, disk-space or `activeInputModes` selectors. |
 
