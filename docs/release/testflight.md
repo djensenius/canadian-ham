@@ -2,6 +2,8 @@
 
 Status: internal TestFlight setup for Backlog `task-1.10`. Do not invite external testers or submit public/App Store builds until `task-1.7` and the release gates in [`release-checklist.md`](release-checklist.md) allow it. App Store distribution exports, Xcode Cloud setup and build-number continuity are in [`distribution.md`](distribution.md); those uploads are owner-gated and also wait for `task-85`.
 
+Xcode Cloud is preferred: the owner connects/configures it and triggers builds from main. Agents may prepare delivery and run local export-only checks, but must not automatically upload or trigger release workflows, including after merges; agents do not trigger Xcode Cloud builds. Merge or review approval and internal tester eligibility do not authorize uploads or workflow triggers. Any agent-run upload requires separate explicit owner authorization and all existing gates. The upload commands below are only a temporary, separately authorized internal Fastlane fallback.
+
 ## Scope and identifiers
 
 - App name: **Canadian Ham**.
@@ -82,7 +84,7 @@ To revoke access, delete the keychain, remove it from the search list, and revok
 
 Each beta lane archives and exports a **Release** build through `xbuild` with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`, automatic signing, team `9JALHNGRBQ`, `fastlane/ExportOptions.plist` (`method=app-store-connect`), and App Store Connect API-key signing arguments. The lanes then upload the exported `.ipa` or `.pkg` with `upload_to_testflight(skip_waiting_for_build_processing: true)`.
 
-Run only after review/merge approval and only for internal TestFlight until `task-1.7` explicitly permits wider distribution:
+Run these uploading commands only with separate explicit owner authorization for the internal fallback, after review/merge approval and the post-merge iOS/macOS checks, from the main checkout. They are never automatic post-merge steps; only internal TestFlight is eligible until `task-1.7` explicitly permits wider distribution:
 
 ```sh
 fastlane ios beta       # CanadianHam, generic/platform=iOS, .ipa includes CanadianHamWatch
@@ -91,7 +93,7 @@ fastlane appletvos beta # CanadianHamTV, generic/platform=tvOS, exports .ipa
 fastlane xros beta      # CanadianHamVision, generic/platform=visionOS, exports .ipa
 ```
 
-Under build-number option (b) in [distribution.md](distribution.md#owner-decision-before-the-first-xcode-cloud-build), from the merge that raises `MARKETING_VERSION` onward (including that merge), run only `fastlane mac beta` after merges. iOS, tvOS and visionOS then ship from Xcode Cloud; a Fastlane timestamp build at the new version would block their small Xcode Cloud build numbers.
+Under build-number option (b) in [distribution.md](distribution.md#owner-decision-before-the-first-xcode-cloud-build), from the merge that raises `MARKETING_VERSION` onward (including that merge), stop Fastlane uploads for iOS, tvOS and visionOS. Never upload a new-version timestamp build for those platforms, including an inspection export; it would block their small Xcode Cloud build numbers. Their builds then come only from owner-triggered Xcode Cloud. The macOS fallback under option (c) is optional and still requires separate explicit owner authorization.
 
 Do not call `gym`, `build_app`, or `xcodebuild` directly for these uploads. The Fastfile uses only `xbuild` for archive/export. Never wrap fastlane in `lockf`: each inner `xbuild` invocation owns the shared build lock; an outer lock can deadlock it. If another build owns the lock, wait; do not kill it.
 
@@ -108,8 +110,8 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CH
 `export_only` accepts true/false (also yes/no, 1/0, any case). Any other value or an unknown option name stops the lane before archiving, so a typo never turns into an upload. `pnpm test:fastlane` runs the lane safety tests (`scripts/test-fastlane-export-only.rb`); it needs Ruby 3.0 or later (the mise Ruby fastlane uses), not macOS system Ruby 2.6. It also needs macOS `plutil`, so GitHub CI doesn't run it; run it locally (see [release-tooling checks](distribution.md#release-tooling-checks-github-ci-and-local)).
 
 This uses the same Release signing, dedicated keychain, API key and internal-only
-export options as a normal beta run. Omitting the option keeps upload behaviour
-unchanged.
+export options as a normal beta run. Omitting the option uploads, so always
+include `export_only:true` for inspection.
 
 Add `distribution:true` (only together with `export_only:true`) to check an App
 Store distribution export instead: it uses `fastlane/ExportOptions-AppStore.plist`,
@@ -119,14 +121,17 @@ See [distribution.md](distribution.md#fastlane-distribution-export-fallback-and-
 
 ### watchOS beta entry path and installation
 
-**Use `fastlane ios beta` for the watch**, after review/merge approval. There is no
+**Use the owner-triggered Xcode Cloud iOS archive for the watch** (scheme
+`CanadianHam`). For local inspection use `fastlane ios beta export_only:true`;
+`fastlane ios beta` uploads only as a separately authorized internal fallback,
+subject to the [platform restrictions above](#internal-beta-lanes). There is no
 separate watchOS App Store Connect platform/lane. The iOS archive embeds
 `Payload/CanadianHam.app/Watch/CanadianHamWatch.app` in the exported IPA; the
 macOS, tvOS and visionOS paths remain separate and do not embed it. Use
 `CanadianHamWatch` only for watch builds/tests, not as a separate upload scheme.
-The host needs the watchOS SDK in addition to iOS. Automatic signing provisions
-the watch's child bundle ID using the same API-key arguments, team and dedicated
-build keychain as the container; never use the login keychain or its password.
+The local fallback host needs the watchOS SDK in addition to iOS. Automatic signing
+provisions the watch's child bundle ID using the same API-key arguments, team and
+dedicated build keychain as the container; never use the login keychain or its password.
 
 The shipped watch payload contains the complete Basic 2025-07-15 bilingual bank
 and 984 original explanations, local Morse haptic/optional-tone practice, the
@@ -138,12 +143,14 @@ installation. Scores, language and output settings are in memory only, and reset
 on relaunch. Its separate privacy manifest declares **Data Not Collected**.
 
 Before an upload, follow [TASK-14.6 artifact inspection](../testing/task-14.6-watch-release.md):
-match phone/watch `CFBundleVersion` timestamps, verify the child/companion IDs,
-icon in `Assets.car`, privacy manifest, signatures/entitlements, linked frameworks
+match phone/watch `CFBundleVersion` values (Xcode Cloud integers or Fastlane
+timestamps), verify the child/companion IDs, icon in `Assets.car`, privacy manifest,
+signatures/entitlements, linked frameworks
 and exact Basic-only resources, and pass the network/iCloud guards. Export-only
 checks do not establish App Store Connect processing or physical installation.
 
-After an approved **internal-team-only** iOS upload has processed:
+After an **internal-team-only** iOS build has processed, from owner-triggered
+Xcode Cloud or a separately authorized Fastlane fallback:
 
 1. The owner records the processed iOS/watch version/build and commit, then opens
    TestFlight on the paired iPhone using an App Store Connect team-member account
@@ -209,13 +216,13 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild \
 ```
 
 [TASK-14.6](../testing/task-14.6-watch-release.md) records export inspection and
-per-test results. **AC4 stays unchecked / task In Progress** until the post-merge
-processed internal upload and owner physical installation/offline checks are
+per-test results. **AC4 stays unchecked / task In Progress** until the processed
+internal build from main and owner physical installation/offline checks are
 recorded. TASK-14.3's haptics and TASK-14.5's listening gates also remain explicit.
 
 ### Re-upload an existing export
 
-If archive and export succeeded but the upload step failed, upload the exported artifact without rebuilding:
+Only with separate explicit owner authorization for an internal fallback upload, and subject to the [platform restrictions above](#internal-beta-lanes): if archive and export succeeded but the upload step failed, upload the exported artifact without rebuilding. A failed attempt does not authorize a retry:
 
 ```sh
 fastlane ios beta artifact_path:$PWD/fastlane/builds/ios/<build-number>/CanadianHam.ipa
@@ -227,9 +234,9 @@ The Fastfile points fastlane's own Xcode lookup at `/Applications/Xcode.app` bec
 ## Versioning and build numbers
 
 - `apps/apple/project.yml` sets `MARKETING_VERSION` to `1.0.0` and generated Info.plists read `CFBundleShortVersionString` from `$(MARKETING_VERSION)` and `CFBundleVersion` from `$(CURRENT_PROJECT_VERSION)`.
-- The beta lanes override `CURRENT_PROJECT_VERSION` at archive time with a timestamp build number in `%Y%m%d%H%M` format, matching the Telephone Booth convention. The override applies to the embedded watch too: its `CFBundleVersion` must equal the iOS container's in the exported IPA; marketing versions must match as well.
+- The beta lanes override `CURRENT_PROJECT_VERSION` at archive time with a timestamp build number in `%Y%m%d%H%M` format, matching the Telephone Booth convention. The override applies to the embedded watch too. Whether using Fastlane timestamps or Xcode Cloud integers, the watch's `CFBundleVersion` must equal the iOS container's in the exported IPA; marketing versions must match as well.
 - For a version change, update `MARKETING_VERSION` in `apps/apple/project.yml`, regenerate the Xcode project twice with XcodeGen, and verify the generated project is stable before archiving.
-- Xcode Cloud numbers builds with its own incrementing `CI_BUILD_NUMBER`. After every Fastlane upload, update that platform's line in `apps/apple/ci_scripts/build-number-floors` in a PR right after the upload, before the next Xcode Cloud archive. If Xcode Cloud uses one sequence for every platform, also raise its Next Build Number. Build numbers must never go backwards for a version, or ever for the Mac app. If App Store Connect refuses a timestamp-sized Next Build Number, iOS, tvOS and visionOS move to a new marketing version and the Mac app stays on Fastlane for now; see [distribution.md](distribution.md#build-numbers).
+- Xcode Cloud numbers builds with its own incrementing `CI_BUILD_NUMBER`. After every separately authorized Fastlane fallback upload, update that platform's line in `apps/apple/ci_scripts/build-number-floors` in a PR right after the upload, before the next Xcode Cloud archive. If Xcode Cloud uses one sequence for every platform, the owner also raises its Next Build Number. Build numbers must never go backwards for a version, or ever for the Mac app. If App Store Connect refuses a timestamp-sized Next Build Number, iOS, tvOS and visionOS move to a new marketing version and the Mac app may use only the separately authorized Fastlane fallback for now; see [distribution.md](distribution.md#build-numbers).
 
 ## Keeping DebugCloudKit out of uploads
 
@@ -252,7 +259,7 @@ If any guard reports iCloud, push, remote-notification, networking, telemetry, o
 
 1. Confirm the keychain and password file exist (`ls -l ~/Library/Keychains/canadian-ham-build.keychain-db ~/.appstoreconnect/build-keychain.pw`) and that the keychain is in the search list (`security list-keychains -d user`).
 2. Confirm it holds the identities: `security find-identity -v ~/Library/Keychains/canadian-ham-build.keychain-db` should list Apple Development, Apple Distribution and 3rd Party Mac Developer Installer. If not, run `fastlane signing_certificates`.
-3. Reapply the key partition list, then rerun the lane:
+3. Reapply the key partition list, then rerun the lane with `export_only:true` for inspection, or only within separate explicit upload authorization:
 
    ```sh
    KC=~/Library/Keychains/canadian-ham-build.keychain-db

@@ -2,7 +2,9 @@
 
 Use this checklist on the release-candidate commit. It consolidates the release gates and manual checks that remain documented in [content licensing](../content-licensing.md), [privacy](../privacy.md), [accessibility](../accessibility.md), [Apple offline smoke test](../apple-offline-smoke-test.md), [App Store privacy-label evidence](privacy-label-evidence.md), and the source/content verification steps in [content update process](../content-update-process.md).
 
-Record the commit SHA, date, tester, and pass/fail notes for every checked item. Do not make the repository public, deploy the web app publicly, submit to external TestFlight/App Store, or otherwise distribute artifacts until every blocking gate below is satisfied. The existing TASK-1.10 exception permits only internal App Store Connect team-member TestFlight after review/merge approval, following the [TestFlight runbook](testflight.md); it does not permit external groups or public links.
+Record the commit SHA, date, tester, and pass/fail notes for every checked item. Do not make the repository public, deploy the web app publicly, submit to external TestFlight/App Store, or otherwise distribute artifacts until every blocking gate below is satisfied. The existing TASK-1.10 exception makes only internal App Store Connect team-member TestFlight eligible, following the [TestFlight runbook](testflight.md); it does not authorize an upload or permit external groups or public links.
+
+Xcode Cloud is preferred: the owner connects/configures it and triggers builds. Agents may prepare delivery and run local export-only checks, but must not automatically upload or trigger release workflows, including after merges; agents do not trigger Xcode Cloud builds. Merge or review approval and internal tester eligibility do not authorize uploads or workflow triggers. Any agent-run upload requires separate explicit owner authorization and all existing gates; Fastlane is only a temporary internal fallback subject to the [build-number/platform restrictions](distribution.md#build-numbers).
 
 ## Gates
 
@@ -103,15 +105,18 @@ or App Store submission. See the [watch beta/install runbook](testflight.md#watc
 and [TASK-14.6 evidence](../testing/task-14.6-watch-release.md). Record processed
 build/commit/device/tester and failures, not just checkmarks.
 
-- [ ] After review/merge approval, archive/export via **`fastlane ios beta`**
-  through xbuild and the dedicated build keychain, never a separate watch ASC
-  platform or login keychain. Use `export_only:true` for inspection without upload;
-  never wrap fastlane in `lockf`. Verify `testFlightInternalTestingOnly` remains on.
+- [ ] For local inspection without uploading, archive/export via
+  **`fastlane ios beta export_only:true`** through `xbuild` and the dedicated build
+  keychain, never a separate watch ASC platform or login keychain; never wrap
+  fastlane in `lockf`. Delivery uses the owner-triggered Xcode Cloud iOS archive
+  or a separately authorized internal fallback under the runbook's restrictions.
+  Verify `testFlightInternalTestingOnly` remains on.
 - [ ] Inspect `Payload/CanadianHam.app/Watch/CanadianHamWatch.app`: child bundle ID
   `org.davidjensenius.CanadianHam.watchkitapp`, companion ID matching the iOS
-  container, independent-operation flag, matching timestamp `CFBundleVersion` and
-  marketing version, valid distribution signatures/profiles, and AppIcon in
-  `Assets.car` without missing-icon/actool warnings. Review circular small sizes.
+  container, independent-operation flag, matching `CFBundleVersion` (Xcode Cloud
+  integer or Fastlane timestamp) and marketing version, valid distribution
+  signatures/profiles, and AppIcon in `Assets.car` without missing-icon/actool
+  warnings. Review circular small sizes.
 - [ ] Confirm the watch privacy manifest declares no collection/tracking and App
   Privacy remains **Data Not Collected**. Inspect signed entitlements/frameworks
   for no iCloud/push/aps-environment/App Groups, WatchConnectivity, network or

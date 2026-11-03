@@ -1,14 +1,14 @@
 # App Store distribution and Xcode Cloud
 
-Status: TASK-86 preparation. Nothing here has been uploaded. The owner sets up Xcode Cloud; the coordinator still uploads only internal TestFlight builds with Fastlane ([TestFlight runbook](testflight.md)). Use this with the [release checklist](release-checklist.md).
+Status: TASK-86 preparation. Nothing here has been uploaded. Xcode Cloud is preferred; the owner connects/configures it and triggers builds. Fastlane remains only a temporary, separately authorized internal fallback or local export-only check ([TestFlight runbook](testflight.md)). Use this with the [release checklist](release-checklist.md).
 
 ## Gates
 
-- Internal team-member TestFlight is the only delivery allowed now (TASK-1.10 exception).
+- Internal team-member TestFlight is the only eligible delivery now (TASK-1.10 exception), not upload authorization. Merge or review approval and internal tester eligibility do not authorize uploads or release-workflow triggers. Agents must not automatically upload or trigger workflows, including after merges; any agent-run upload requires separate explicit owner authorization and all existing gates.
 - External TestFlight testing, App Store submission and any upload of a distribution build (one without `testFlightInternalTestingOnly`) wait for both:
   - **TASK-1.7** and the release gates it depends on (ISED permission in TASK-1.1, the release-candidate pass in TASK-1.6 and the [release checklist](release-checklist.md#store-submission)); and
   - **TASK-85**: required-reason API declarations in every `PrivacyInfo.xcprivacy`. App Store Connect rejects uploads without them.
-- Only the owner creates or edits Xcode Cloud workflows, App Store Connect settings, testers and groups. Agents never do.
+- Only the owner creates or edits Xcode Cloud workflows, App Store Connect settings, testers and groups, and triggers Xcode Cloud builds. Agents never do.
 - Every archive, local or Xcode Cloud, uses the **Release** configuration. Never archive or distribute `DebugCloudKit`; v1 has no iCloud, CloudKit or push capability.
 
 ## What is in the repository
@@ -81,16 +81,16 @@ The check only stops mistakes early; App Store Connect still enforces its own ru
 
 ### Owner decision before the first Xcode Cloud build
 
-The owner prefers Xcode Cloud. In every option below, Fastlane is only a temporary fallback.
+The owner prefers Xcode Cloud. In every option below, Fastlane is only a temporary fallback whose internal uploads need separate explicit owner authorization.
 
 - **(a) One sequence for every platform.** Set Next Build Number to a plain integer above every floor, for example `202610271758`; Xcode Cloud then counts up by 1 from it. If App Store Connect accepts it, all four platforms continue at 1.0.0 from that number and nothing else changes.
 - **(b) App Store Connect refuses it (probably the 32-bit limit).** iOS, iPadOS, tvOS and visionOS ship a new marketing version, for example 1.0.1, starting from small Xcode Cloud numbers:
   1. The coordinator raises `MARKETING_VERSION` in `apps/apple/project.yml` to a new `x.y.z` (all targets share it, including the watch app), regenerates the project and merges it in a pull request.
-  2. **From that version-bump merge onward, the coordinator stops Fastlane uploads for iOS, tvOS and visionOS.** The post-merge internal TestFlight upload, including the one for the version-bump merge itself, runs only `fastlane mac beta`; the Mac app continues on Fastlane under (c). A single Fastlane timestamp build of iOS, tvOS or visionOS at the new version would sit above every small Xcode Cloud number for that version and block them.
+  2. **From that version-bump merge onward (including that merge), the coordinator stops Fastlane uploads for iOS, tvOS and visionOS.** Do not upload any Fastlane timestamp build of those platforms at the new version, even one exported earlier for inspection: it would sit above every small Xcode Cloud number for that version and block them. The merge authorizes no upload or workflow trigger. A macOS fallback under (c) is optional and separately authorized, not a post-merge step.
   3. The owner leaves Next Build Number at a small value that App Store Connect accepts.
-  4. The Xcode Cloud workflows archive iOS, tvOS and visionOS only, and deliver their internal TestFlight builds from now on. Leave out the macOS archive action; the floor check fails it anyway (see (c)).
+  4. The owner-triggered Xcode Cloud workflows archive iOS, tvOS and visionOS only, and deliver their internal TestFlight builds from now on. Leave out the macOS archive action; the floor check fails it anyway (see (c)).
 - **(c) macOS under (b).** Mac build numbers never go back, so Xcode Cloud can't build the Mac app until App Store Connect accepts a Next Build Number above `202610271753`. The owner chooses:
-  - keep the Mac app on the existing Fastlane export path for now (internal `fastlane mac beta`, and `distribution:true` exports once the gates clear), recording each upload in the floors file; or
+  - optionally keep the Mac app on the existing Fastlane export path for now (`fastlane mac beta export_only:true`, with `distribution:true` for a distribution inspection). Any internal `fastlane mac beta` upload needs separate explicit owner authorization and must be recorded in the floors file; distribution uploads remain gated; or
   - ask Apple Developer Support whether App Store Connect can accept a higher Next Build Number for this app, or which Apple-supported route to use.
 
   Overriding `CFBundleVersion` in a `ci_scripts` script is **unverified** and not recommended. Apple says App Store Connect uses the Xcode Cloud build number for builds it distributes, and nobody has tested whether an override survives Xcode Cloud's export. Don't use it without an owner decision and a test.
@@ -99,7 +99,7 @@ Record the decision and the Next Build Number used in TASK-86's notes.
 
 ### While Fastlane uploads continue
 
-- Each Fastlane upload raises the real floor for its platform and version. Update that line of `build-number-floors` to the uploaded build number in a PR right after the upload, before the next Xcode Cloud archive (uploads run from the main checkout, and `main` only takes pull requests). Under (a), the owner also raises Next Build Number above that upload: Xcode Cloud adds only 1 per build, so a later Fastlane timestamp would otherwise jump ahead of it.
+- Each separately authorized Fastlane fallback upload raises the real floor for its platform and version. Update that line of `build-number-floors` to the uploaded build number in a PR right after the upload, before the next Xcode Cloud archive (uploads run from the main checkout, and `main` only takes pull requests). Under (a), the owner also raises Next Build Number above that upload: Xcode Cloud adds only 1 per build, so a later Fastlane timestamp would otherwise jump ahead of it.
 - Retire Fastlane uploads for each platform as soon as Xcode Cloud ships it, so the floors stop moving (see [Retiring Fastlane](#retiring-fastlane)). Under (b), iOS, tvOS and visionOS stop at the version-bump merge, before Xcode Cloud has shipped them.
 
 ## Xcode Cloud setup (owner only)
@@ -128,7 +128,7 @@ Agents don't do these steps. Record the date and settings in TASK-86's notes.
    - General: **Restrict Editing** on (required for review-eligible builds).
    - Environment: **Clean** on, same Xcode.
    - The same four archive actions with **Deployment Preparation: TestFlight and App Store**.
-   - Start condition: manual or a `release` tag on `main`.
+   - Start condition: manual, triggered by the owner. A future `release`-tag start condition on `main` needs separate explicit owner authorization; it is not part of this setup.
    - Optional post-action: **TestFlight External Testing** (subject to beta app review).
    - Submit for App Store review in App Store Connect after the builds process; follow the [release checklist](release-checklist.md#store-submission).
 6. **First run.** Check each action's log for `canadian-ham-ci:` lines: the guards passed, the scheme uses Release, and the build number is above the floor (or, under option (b), the new version has no Fastlane uploads). Then confirm each platform's build processed in TestFlight. If the visionOS archive fails with `unsupported archive platform '<value>'`, Xcode Cloud reports a platform name the scripts don't know yet; add it to `ch_check_archive_scheme` in a pull request.
@@ -184,12 +184,12 @@ Run the two macOS-only harnesses yourself after changing the Fastlane lanes, `Ex
 
 ## Retiring Fastlane
 
-Fastlane is a temporary fallback. Keep the Fastlane `beta` lanes working until one Xcode Cloud build has archived and processed **all four platforms** (iOS with the watch, macOS, tvOS and visionOS) in TestFlight. Under [option (c)](#owner-decision-before-the-first-xcode-cloud-build), the Mac app stays on Fastlane until App Store Connect accepts a valid Mac build number. Stop Fastlane uploads for each platform as soon as Xcode Cloud ships it; under option (b), iOS, tvOS and visionOS stop at the version-bump merge. Once all four are on Xcode Cloud, the owner decides how to retire the lanes:
+Fastlane is a temporary fallback; keeping its lanes working does not authorize uploads. Keep the Fastlane `beta` lanes working until one Xcode Cloud build has archived and processed **all four platforms** (iOS with the watch, macOS, tvOS and visionOS) in TestFlight. Under [option (c)](#owner-decision-before-the-first-xcode-cloud-build), the Mac app may use the separately authorized fallback until App Store Connect accepts a valid Mac build number. Stop Fastlane uploads for each platform as soon as Xcode Cloud ships it; under option (b), iOS, tvOS and visionOS stop at the version-bump merge. Once all four are on Xcode Cloud, the owner decides how to retire the lanes:
 
-- The coordinator stops uploading with Fastlane and starts the owner's internal Xcode Cloud workflow instead (or the owner starts it).
-- Internal builds then lose the official reference sheet (owner decision 2A); the owner accepts that or keeps Fastlane for it.
+- The owner starts the internal Xcode Cloud workflow; the coordinator neither uploads nor triggers it automatically after merges.
+- Internal builds then lose the official reference sheet (owner decision 2A); the owner accepts that or keeps Fastlane for it, subject to separate upload authorization and the platform restrictions above.
 - Removing the lanes, `ExportOptions*.plist` and the build keychain is a separate Backlog task. `asc_status`, `register_bundle_ids` and the signing lanes may stay for maintenance.
-- Until then, every Fastlane upload raises the floor: update `build-number-floors` in a PR right after the upload, before the next Xcode Cloud archive (see [While Fastlane uploads continue](#while-fastlane-uploads-continue)).
+- Until then, every separately authorized Fastlane fallback upload raises the floor: update `build-number-floors` in a PR right after the upload, before the next Xcode Cloud archive (see [While Fastlane uploads continue](#while-fastlane-uploads-continue)).
 
 ## References
 
