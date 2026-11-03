@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T03:44:00Z'
+updated_date: '2026-11-03T04:00:00Z'
 labels:
   - apple
   - release
@@ -75,4 +75,7 @@ Round 3 (delta review), AC #2 rationale (AC text unchanged): AC #2 is met under 
 Pointer (reviewer item 6): the round-2 per-platform build-number-floors evidence replaces the earlier single build-number-floor AC #2 evidence paragraph.
 Round 3 fixes (commit 7f8a732a): floors entries and MARKETING_VERSION must be exactly x.y.z (no leading zeros except a lone 0) and fail closed otherwise, documented in the floors header, with harness cases for two-part and leading-zero versions in both places (mutation check: the old 1-3 part pattern fails the 5 new cases). Under option (b), the coordinator stops Fastlane uploads for iOS, tvOS and visionOS from the version-bump merge onward (Mac continues), in distribution.md, AGENTS.md and testflight.md. 'In the same change' is now 'in a PR right after the upload, before the next Xcode Cloud archive'. No change to owner-gates.md (coordinator follow-up).
 Checks: pnpm test:xcode-cloud-scripts 103 passed, 0 failed; pnpm test:fastlane 12 runs, 340 assertions, 0 failures, 0 errors, 0 skips; shellcheck -x on ci_scripts and harness: no findings; /bin/bash -n OK (5 files); ruby -c fastlane/Fastfile Syntax OK; pnpm check:links verified; git diff --check clean; test guard passed (no guarded changes).
+
+Round 4 (Copilot PR #1065 thread PRRT_kwDOUxZq_M6y-OXT, commit dd770897): ch_check_build_number accepted macOS CI_BUILD_NUMBER=1 when build-number-floors had other platforms but no macos entry (confirmed pre-fix in the harness). Fix: every platform must have at least one floors entry, because all four already have App Store Connect uploads; a platform with none fails closed ('has no <platform> entry'). The new-version restart applies only to iOS, tvOS and visionOS, with an explicit macOS guard on that path. Symmetric cases: (a) a missing, zero-byte or comment-only floors file already failed closed on every platform. An unreadable file failed only by accident (the redirect error was swallowed and it then reported 'has no entries'); it now fails with 'cannot read'. (b) A non-Mac platform with no entry at all now fails closed too, since a missing platform line means the record is incomplete. distribution.md and the floors header document the rule. The harness adds macOS without a macos entry (build 1, above every other floor, new version, helper alone), iOS above its floor when only macos is missing (passes), iOS/tvOS/xrOS without their entry (fail), and missing, zero-byte, comment-only and unreadable floors files at a new version for all four platforms. Before the fix, 11 of the new cases failed.
+Checks: pnpm test:xcode-cloud-scripts 127 passed, 0 failed; pnpm test:fastlane 12 runs, 340 assertions, 0 failures, 0 errors, 0 skips; shellcheck -x on ci_scripts and harness: no findings; /bin/bash -n OK (5 files); pnpm check:links verified; git diff --check clean; pnpm typecheck exit 0; pnpm test exit 0 (node tests 250/250 and 127/127, vitest 23/23 and 283/283); test guard passed (no guarded changes).
 <!-- SECTION:NOTES:END -->
