@@ -30,3 +30,13 @@ TASK-85 adds scripts/check-apple-required-reasons.mjs (pnpm check:apple-required
 - [ ] #2 scripts/test-xcode-cloud-ci-scripts.sh covers the new guards (pass and fail cases) and passes locally
 - [ ] #3 docs/release/distribution.md lists the required-reason check among the Xcode Cloud guards
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add check:apple-required-reasons and test:apple-required-reasons to CH_GUARD_SCRIPTS in apps/apple/ci_scripts/canadian-ham-ci.sh and update the guard log/comment wording.
+2. Mirror the new guards in scripts/test-xcode-cloud-ci-scripts.sh (fixture package.json stubs, all_guards pattern) and add pre-xcodebuild archive fail cases for a failing required-reason check and a failing self-test.
+3. Confirm both new scripts use only Node built-ins and run with node --run from a tree without node_modules.
+4. Update docs/release/distribution.md Xcode Cloud script table, dry-run notes and release-tooling table (self-test ~25 s).
+5. Run requested checks.
+<!-- SECTION:PLAN:END -->
