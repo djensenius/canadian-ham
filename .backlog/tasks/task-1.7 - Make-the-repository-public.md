@@ -3,11 +3,12 @@ id: TASK-1.7
 title: Make the repository public
 status: To Do
 assignee: []
-created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 15:27'
+created_date: 2026-10-01 02:27
+updated_date: '2026-11-03T02:33:00Z'
 labels:
   - release
-  - 'legacy:T-009'
+  - legacy:T-009
+  - owner-gate
 milestone: m-0
 dependencies:
   - TASK-1.1
