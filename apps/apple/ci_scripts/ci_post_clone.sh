@@ -1,8 +1,8 @@
 #!/bin/bash
 # Xcode Cloud post-clone script: runs right after Xcode Cloud clones the repo.
 # Installs or locates Node and runs the Apple network, iCloud and
-# required-reason guards so a
-# workflow fails before it resolves packages or builds. See
+# required-reason guards so a workflow fails before it resolves packages or
+# builds. See
 # docs/release/distribution.md and
 # https://developer.apple.com/documentation/xcode/writing-custom-build-scripts
 set -euo pipefail
