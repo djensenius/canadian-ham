@@ -454,7 +454,9 @@ works as follows:
   compiled Swift files and bundled `PrivacyInfo.xcprivacy`, honouring
   `sources`, `excludes`, `buildPhase` and folder references. Linked local
   packages contribute their `Sources/**`. Test bundles count only for
-  coverage.
+  coverage. Like XcodeGen, the walk includes hidden files and directories
+  and skips only `.DS_Store`. SwiftPM ignores hidden files, so package walks
+  may scan more than SwiftPM compiles, which is the safe direction.
 - **Scanning.** It blanks Swift comments and scans the code for the spellings
   of each category. String and regex literals are kept, following the Swift 6
   lexer for extended `#/.../#` and bare `/.../` regex literals, so a `/*` or
@@ -469,6 +471,17 @@ works as follows:
   common Swift name, so it counts only as a call (including `stat` with the
   `(` on the next line), a C-module-qualified name (`Darwin.stat`, also with
   `.stat` on the next line) or the whole right-hand side of an assignment.
+  A backtick-escaped identifier is lexed as one token, so a raw identifier
+  containing `//` does not start a comment. After lexing, each escaped plain
+  identifier is rewritten as the bare name, keeping offsets and line numbers.
+  So ``FileAttributeKey.`creationDate` ``, `` `UserDefaults`.standard ``,
+  `` `stat`(path, &buf) `` and ``.`systemFreeSize` `` match like their plain
+  spellings in every category. A string literal that holds exactly
+  `"creationDate"`, `"modificationDate"`, `"stat"`, `"systemFreeSize"` or
+  `"systemSize"` counts. The other listed names, such as `"systemUptime"`,
+  `"fstat"` and `"NSURLVolumeTotalCapacityKey"`, count anywhere in a string.
+  This covers key-value coding, selectors, `@_silgen_name` and
+  `URLResourceKey(rawValue:)`.
 - **What fails.** The check fails in any of these cases:
   - a shipped target uses a category its own manifest does not declare;
   - a manifest declares a category its target does not use;
@@ -479,21 +492,72 @@ works as follows:
   - a manifest does not set `NSPrivacyTracking` to `false`, or does not have
     empty `NSPrivacyTrackingDomains` and `NSPrivacyCollectedDataTypes` arrays;
   - a shipped target or linked package contains C, Objective-C, C++ or
-    assembly sources or headers, because only Swift is scanned;
+    assembly sources or headers, module maps or API notes, because only
+    Swift is scanned;
+  - a shipped target's sources or a linked package's `Sources` contain
+    prebuilt code: a `.framework`, `.xcframework`, `.xpc` or `.appex`
+    bundle, a `.a`, `.dylib`, `.so` or `.o` file, or any file that starts
+    with Mach-O, universal-binary or `ar` magic;
+  - a symbolic link appears under a scanned directory (the walk does not
+    follow links);
   - a Swift file under `apps/apple` is compiled by no target;
   - comment stripping could hide code: an unterminated block comment or
     extended regex literal, or a comment marker straight after `\` (an
     escaped slash in a regex literal the checker could not delimit).
-- **Unsupported constructs.** It also fails on XcodeGen keys it does not
-  model, on remote, binary or dynamic packages, and on unknown target types.
+- **Unsupported constructs.** It also fails on XcodeGen constructs that can
+  add code it does not scan:
+  - sources keys it does not model, including per-file `compilerFlags`;
+  - shipped-target keys outside its allow-list, such as `preBuildScripts`,
+    `postCompileScripts`, `buildRules`, `buildToolPlugins`, `scheme` and
+    `configFiles`;
+  - top-level `include`, `targetTemplates`, `settingGroups` and
+    `configFiles`, and scheme `preActions`;
+  - project or shipped-target settings for bridging or prefix headers,
+    header, library, framework or Swift include search paths, module map
+    files, or linker and libtool flags;
+  - `OTHER_SWIFT_FLAGS` other than `$(inherited)` and `-D` conditions.
+
+  It also fails on remote, binary or dynamic packages, on Package.swift
+  plugins, macros, system-library targets or `unsafeFlags`, and on unknown
+  target types.
 - **Self-test.** `pnpm test:apple-required-reasons` runs the fixtures. They
   include comment-only mentions, a string containing `//` followed by real
   code, excluded and test-only files, unlinked packages and package tests,
   `getattrlist` counting for both File timestamp and Disk space, C-function
   references, module-qualified spellings in every category including
   `@SwiftUI.AppStorage`, spellings split across lines, `stat`-named Swift
-  identifiers that must not count, regex literals containing comment
-  markers, and the fail-closed cases above.
+  identifiers that must not count, and regex literals containing comment
+  markers. Further fixtures cover backtick-escaped names in every category
+  (with division after an escaped name), key paths, type aliases, string-based
+  access, hidden files and directories, symbolic links, and the fail-closed
+  cases above.
+- **Bypass classes.** Each syntactic way a source could reach a listed API
+  without the checker seeing it is covered or recorded here:
+
+  | Class | Status |
+  |---|---|
+  | Comments, strings and regex literals hiding code | Covered by fixtures: comment-aware lexer, literals scanned; ambiguous cases fail. |
+  | Module qualification, attribute forms, line breaks between tokens | Covered by fixtures: whole-file matching with optional qualifiers. |
+  | Function references instead of calls (`Darwin.fstat`, `= statfs`) | Covered by fixtures. Bare `stat` as a value is a limitation (below). |
+  | Backtick-escaped identifiers | Covered by fixtures: normalised after lexing. |
+  | Key paths (`\URLResourceValues.creationDate`, `\.volumeAvailableCapacity`) | Covered by a fixture: the key path still names the member. |
+  | `typealias` or `let` aliases of a type or instance | Covered by a fixture: the alias declaration names the type, and members such as `.systemUptime` are matched by name. |
+  | String-based access with a literal name (KVC, `NSSelectorFromString`, `@_silgen_name`, `URLResourceKey(rawValue:)`) | Covered by a fixture: string literals are scanned. |
+  | String-based access with a name built at run time (`"NSUser" + "Defaults"`, computed KVC keys, `dlsym`, `perform` with a computed selector) | Limitation: not detectable by a source scan. Binary inspection is the cross-check. None exists in the tree. |
+  | Wholesale attribute reads that never name a listed key (iterating `attributesOfItem(atPath:)` or `attributesOfFileSystem(forPath:)` results, `resourceValues` with keys from a variable) | Limitation: `attributesOfItem(atPath:)` is not itself on Apple's list, so only the listed keys read from its result count. Review by hand. None exists in the tree. |
+  | `#if` branches | Not a bypass: `#if` is not evaluated, so every branch is scanned and counts (over-declaration). |
+  | C, Objective-C, C++, assembly, module maps, API notes | Fail closed. |
+  | Prebuilt code (frameworks, libraries, Mach-O files) in sources or package `Sources` | Fail closed. |
+  | Hidden files and directories | Covered by a fixture: scanned, as XcodeGen compiles them. |
+  | Symbolic links | Fail closed with a fixture. No links exist under the scanned roots. |
+  | Files compiled but outside the walk | Fail closed for unmodelled XcodeGen and Package.swift constructs. Verified against the committed project and SwiftPM; see the walk verification row under Evidence. |
+  | Pre-build scripts, build rules, plugins, macros, scheme pre-actions, xcconfig files, compiler and linker flags | Fail closed with fixtures. |
+  | Post-build scripts (`postBuildScripts`) | Limitation: allowed, because they run after compiling. They only copy JSON and the reference sheet and delete README files. Review by hand; binary inspection is the cross-check. |
+  | Xcode Cloud `ci_scripts` (`ci_post_clone.sh`, `ci_pre_xcodebuild.sh`) | Limitation: they run before compiling but are outside `project.yml`. Today they only install Node outside the repository and run guards and archive checks, writing no source files. Review by hand. |
+  | Generated or resource code (`.plist`, `.strings`, `.xcstrings`, asset catalogues, JSON) | Not a bypass: data only, cannot call these APIs. No `.metal`, `.xib`, `.storyboard`, `.xcdatamodeld`, `.intentdefinition`, `.mlmodel` or `.js` files exist. Their code generators cannot emit these APIs either. |
+  | Interface Builder bindings (macOS `NSUserDefaultsController`) | Limitation: no Interface Builder files exist; adding one needs a manual review. |
+  | Clocks not on Apple's list (`ContinuousClock`, `DispatchTime`, `CACurrentMediaTime`) | Out of scope: Apple does not list them, so no declaration is needed. |
+  | SDK macros and Apple framework internals | Out of scope: Apple's own use is not declared by the app. Package macro targets fail closed. |
 - **Limitations.** The check does not evaluate `#if` (an API compiled out on
   some platforms still counts for the target). It also scans inside string
   and regex literals, so it errs towards declaring a category. An
@@ -501,8 +565,10 @@ works as follows:
   right-hand side of an assignment is not detected: for example passed as
   an argument (`apply(stat)`), returned (`return stat`), placed in a
   collection (`[stat]`) or used as an operand (`x ?? stat`). This avoids
-  matching Swift variables named `stat`. Binary inspection (below) is the
-  cross-check.
+  matching Swift variables named `stat`. API names built at run time,
+  wholesale attribute reads, post-build scripts and Interface Builder
+  bindings are also not detected (see the table above). Binary inspection
+  (below) is the cross-check.
 
 ### Evidence
 
@@ -515,6 +581,7 @@ Run from the TASK-85 worktree on 2026-11-03 UTC:
 | `pnpm test:apple-required-reasons` | `required-reasons-test: passed self-test fixtures.` |
 | `pnpm check:apple-required-reasons` (with the `project.yml` change, on the branch since `b7877c4d`) | Passed. `CanadianHam`: 53 Swift files, `SystemBootTime [35F9.1], UserDefaults [CA92.1]`. `CanadianHamWatch`: 31, `SystemBootTime [35F9.1]`. `CanadianHamTV`: 33, `UserDefaults [CA92.1]`. `CanadianHamVision`: 32, `UserDefaults [CA92.1]`. |
 | `pnpm check:apple-network`, `pnpm check:apple-icloud-gate` | Passed. |
+| Walk verification (PR #1064 round 4): the checker's per-target Swift lists compared with the `PBXSourcesBuildPhase` files in the committed `CanadianHam.xcodeproj` (`plutil -convert json`), and each package's `Sources` walk compared with `swift package describe --type json` | Identical. `CanadianHam` 32 app files, `CanadianHamWatch` 11, `CanadianHamTV` 13, `CanadianHamVision` 12, with no non-Swift sources and no build rules. Each package has one library target and one test target and no dependencies; non-test sources are `calculator-swift` 1, `content-swift` 8, `engine-swift` 10 and `morse-swift` 2. The project links only those four package products, and its shell script phases all run after the Sources phase. No symbolic links or hidden entries exist under the scanned roots. |
 | Release builds through `xbuild` (`-configuration Release`, generic simulator destinations, plus generic macOS, `CODE_SIGNING_ALLOWED=NO`), then `plutil -p` on each bundled `PrivacyInfo.xcprivacy` | All builds succeeded. Each bundle has exactly one manifest, byte-identical (`cmp`) to its source. iOS `CanadianHam.app` and macOS `CanadianHam.app/Contents/Resources` declare User defaults `CA92.1` and System boot time `35F9.1`. The embedded `CanadianHam.app/Watch/CanadianHamWatch.app` declares System boot time `35F9.1`. `CanadianHamTV.app` and `CanadianHamVision.app`, built from a regenerated project with the `project.yml` change, declare User defaults `CA92.1` only. |
 | `strings -a` / `nm -u` on the Release binaries, which include the statically linked package code | iOS app: `systemUptime`, `standardUserDefaults`, `persistentDomainForName`. Watch: `systemUptime` only. macOS: `standardUserDefaults` and `persistentDomainForName`, but no `systemUptime`, because those call sites are iOS-only. TV and Vision: `standardUserDefaults` only. No binary imports `stat`, `lstat`, `fstat`, `fstatat`, `statfs`, `statvfs`, `getattrlist` or `mach_absolute_time`, and none references the file-timestamp, disk-space or `activeInputModes` selectors. |
 

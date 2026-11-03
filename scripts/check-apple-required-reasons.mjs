@@ -14,13 +14,19 @@
 // Target membership comes from apps/apple/project.yml (the XcodeGen spec), so
 // new source folders are mapped automatically. Every Swift file under
 // apps/apple must belong to some project.yml target; XcodeGen constructs this
-// script does not understand fail the check rather than being skipped.
+// script does not understand fail the check rather than being skipped, as do
+// symbolic links, prebuilt code, build scripts that run before compiling,
+// header/search-path/linker settings, non -D Swift flags, and SwiftPM plugins,
+// macros, system libraries and unsafe flags.
 //
 // Limitation: `#if` conditions are not evaluated, so an API compiled out on a
 // platform still counts for every target that compiles the file, and string
 // and regex literals are scanned too. Both err towards declaring a category;
-// binary inspection of the built bundles is the cross-check.
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+// binary inspection of the built bundles is the cross-check. API names built
+// at run time (computed KVC keys, dlsym, NSSelectorFromString with a computed
+// string) and wholesale attribute reads that never name a listed key are not
+// detected; docs/release/privacy-label-evidence.md lists every such class.
+import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
 import { basename, join, normalize, relative, resolve, sep } from 'node:path';
 
 const root = resolve(process.env.REQUIRED_REASONS_ROOT ?? process.cwd());
@@ -53,6 +59,10 @@ const CATEGORIES = {
       [/\bf?getattrlist(?:bulk|at)?\b/, 'getattrlist family'],
       [/\b[fl]stat\b|\bfstatat\b/, 'fstat/lstat/fstatat'],
       [/\bstat\s*\(|(?<=\b(?:Darwin|Glibc|SwiftGlibc|Musl|Foundation|ucrt)\s*\.)stat\b|(?<==\s*)stat(?=\s*(?:;|$))/, 'stat'],
+      // String literals are scanned, so other API names count inside them
+      // (key-value coding, selectors, `@_silgen_name`). These names are only
+      // matched after a `.` above, so a literal holding exactly one counts too.
+      [/"(?:creationDate|modificationDate|stat)"/, 'API name string literal'],
     ],
   },
   NSPrivacyAccessedAPICategorySystemBootTime: {
@@ -73,8 +83,11 @@ const CATEGORIES = {
     patterns: [
       [/\bvolumeAvailableCapacity(?:ForImportantUsage|ForOpportunisticUsage)?(?:Key)?\b/, 'volumeAvailableCapacity*'],
       [/\bvolumeTotalCapacity(?:Key)?\b/, 'volumeTotalCapacityKey'],
+      // Raw values for URLResourceKey(rawValue:).
+      [/\bNSURLVolume(?:AvailableCapacity(?:ForImportantUsage|ForOpportunisticUsage)?|TotalCapacity)Key\b/, 'NSURLVolume*CapacityKey'],
       [/\.systemFreeSize\b|\bNSFileSystemFreeSize\b/, 'systemFreeSize'],
       [/\.systemSize\b|\bNSFileSystemSize\b/, 'systemSize'],
+      [/"(?:systemFreeSize|systemSize)"/, 'API name string literal'],
       [/\bf?statv?fs\b/, 'statfs/statvfs/fstatfs/fstatvfs'],
       [/\bf?getattrlist(?:at)?\b/, 'getattrlist family'],
     ],
@@ -103,21 +116,55 @@ const CATEGORIES = {
 
 // Only Swift is scanned. C-family and assembly sources could call
 // required-reason APIs (stat, mach_absolute_time, NSUserDefaults, ...) with
-// other spellings, so any such file in a shipped target or linked package
-// fails the check.
-const NON_SWIFT_SOURCE = /\.(?:c|m|mm|cpp|cc|cxx|h|hh|hpp|hxx|inl|ipp|s|S)$/;
-const NON_SWIFT_MESSAGE = 'only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly before shipping it';
+// other spellings, and module maps or API notes could import or rename them,
+// so any such file in a shipped target or linked package fails the check.
+const NON_SWIFT_SOURCE = /\.(?:c|m|mm|cpp|cc|cxx|h|hh|hpp|hxx|inl|ipp|s|S|modulemap|apinotes)$/;
+const NON_SWIFT_MESSAGE = 'only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly, module maps and API notes before shipping it';
+// Prebuilt code in a shipped target's sources is linked, embedded or loadable
+// without any Swift spelling to scan: match bundle-like paths and libraries by
+// name, and any other file by its Mach-O, universal-binary or ar magic.
+const BINARY_CODE = /\.(?:framework|xcframework|xpc|appex)\/|\.(?:a|dylib|so|o)$/;
+const BINARY_MAGIC = ['feedface', 'feedfacf', 'cefaedfe', 'cffaedfe', 'cafebabe', 'bebafeca', '213c617263683e0a'];
+function isBinaryCode(file) {
+  if (BINARY_CODE.test(display(file))) return true;
+  const header = Buffer.alloc(8);
+  const fd = openSync(file, 'r');
+  try {
+    const length = readSync(fd, header, 0, 8, 0);
+    const hex = header.subarray(0, length).toString('hex');
+    return BINARY_MAGIC.some((magic) => hex.startsWith(magic));
+  } finally {
+    closeSync(fd);
+  }
+}
 
 const SHIPPED_TARGET_TYPE = /^(?:application(?:\..+)?|app-extension(?:\..+)?|.*-extension)$/;
 const TEST_TARGET_TYPES = new Set(['bundle.unit-test', 'bundle.ui-testing']);
+// XcodeGen sources keys the checker models. Per-file compilerFlags are left
+// out because they could pass import or include flags.
 const KNOWN_SOURCE_KEYS = new Set([
   'path', 'excludes', 'buildPhase', 'type', 'createIntermediateGroups', 'destinationFilters',
-  'inferDestinationFiltersByPath', 'group', 'name', 'optional', 'compilerFlags', 'attributes',
+  'inferDestinationFiltersByPath', 'group', 'name', 'optional', 'attributes',
   'resourceTags', 'headerVisibility',
 ]);
+// XcodeGen target keys that cannot add compiled code. Anything else on a
+// shipped target (preBuildScripts, postCompileScripts, buildRules,
+// buildToolPlugins, scheme pre-actions, legacy, configFiles, ...) fails until
+// the checker models it.
+const KNOWN_TARGET_KEYS = new Set([
+  'type', 'platform', 'supportedDestinations', 'deploymentTarget', 'sources', 'dependencies', 'settings',
+  'info', 'entitlements', 'attributes', 'postBuildScripts', 'templates', 'templateAttributes',
+  'transitivelyLinkDependencies', 'directlyEmbedCarthageDependencies', 'requiresObjCLinking',
+  'onlyCopyFilesOnInstall', 'putResourcesBeforeSourcesBuildPhase',
+]);
+// Build settings that would compile, import or link code outside the scanned
+// Swift files. OTHER_SWIFT_FLAGS may hold only $(inherited) and -D conditions.
+const CODE_BUILD_SETTING = /^(?:SWIFT_OBJC_BRIDGING_HEADER|GCC_PREFIX_HEADER|OTHER_LDFLAGS|OTHER_LIBTOOLFLAGS|SWIFT_INCLUDE_PATHS|(?:USER_|SYSTEM_)?HEADER_SEARCH_PATHS|LIBRARY_SEARCH_PATHS|(?:SYSTEM_)?FRAMEWORK_SEARCH_PATHS|MODULEMAP_FILE)$/;
 
 const errors = [];
-const fail = (message) => errors.push(message);
+const fail = (message) => {
+  if (!errors.includes(message)) errors.push(message);
+};
 const display = (absolutePath) => relative(root, absolutePath).split(sep).join('/');
 
 // ---------------------------------------------------------------------------
@@ -338,7 +385,12 @@ function parsePlist(xml, label) {
 // first unescaped `/` on the line, unless that `/` starts a comment or follows
 // whitespace. Anything that could hide code fails closed instead: a comment
 // marker straight after `\` (an undelimited regex) or an unterminated block
-// comment or extended regex.
+// comment or extended regex. A backtick-escaped identifier (`name`, also a
+// Swift 6 raw identifier) is one token, so comment and string markers inside
+// it are not lexed; once lexing is done, each escaped plain identifier is
+// rewritten as the bare name followed by two spaces, keeping offsets and line
+// numbers, so ``FileAttributeKey.`creationDate` `` matches like the plain
+// spelling. String and regex contents are never rewritten.
 
 const SWIFT_OPERATOR_CHARS = '=-+!*%<>&|^~?.';
 const EXPRESSION_KEYWORDS = new Set([
@@ -348,6 +400,7 @@ const EXPRESSION_KEYWORDS = new Set([
 
 function stripSwiftComments(source, label) {
   const out = [];
+  const escapedNames = [];
   let i = 0;
   const n = source.length;
   const problem = (index, message) => {
@@ -413,6 +466,14 @@ function stripSwiftComments(source, label) {
         if (source[j + 1] === '/' || source[j + 1] === '*' || /[ \t]/.test(source[j - 1])) return -1;
         return j + 1;
       }
+    }
+    return -1;
+  }
+
+  // Returns the end index of a backtick-escaped identifier starting at i, or -1.
+  function escapedIdentifierEnd() {
+    for (let j = i + 1; j < n && source[j] !== '\n'; j += 1) {
+      if (source[j] === '`') return j + 1;
     }
     return -1;
   }
@@ -484,6 +545,7 @@ function stripSwiftComments(source, label) {
     while (i < n) {
       const c = source[i];
       let regexEnd = -1;
+      let escapedEnd = -1;
       if (source.startsWith('//', i) || source.startsWith('/*', i)) {
         if (source[i - 1] === '\\') {
           problem(i, `comment marker ${source.slice(i, i + 2)} straight after "\\" looks like an escaped slash in a regex literal the checker could not delimit`);
@@ -497,6 +559,10 @@ function stripSwiftComments(source, label) {
       } else if (c === '/' && (regexEnd = bareRegexEnd()) !== -1) {
         out.push(source.slice(i, regexEnd));
         i = regexEnd;
+      } else if (c === '`' && (escapedEnd = escapedIdentifierEnd()) !== -1) {
+        if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(source.slice(i + 1, escapedEnd - 1))) escapedNames.push(i);
+        out.push(source.slice(i, escapedEnd));
+        i = escapedEnd;
       } else {
         if (inInterpolation && c === '(') depth += 1;
         if (inInterpolation && c === ')') {
@@ -514,7 +580,20 @@ function stripSwiftComments(source, label) {
   }
 
   code(false);
-  return out.join('');
+  const stripped = out.join('');
+  if (stripped.length !== n) {
+    fail(`${label}: internal error: comment stripping changed the file length; fix scripts/check-apple-required-reasons.mjs.`);
+  }
+  if (escapedNames.length === 0) return stripped;
+  const parts = [];
+  let cursor = 0;
+  for (const start of escapedNames) {
+    const end = stripped.indexOf('`', start + 1);
+    parts.push(stripped.slice(cursor, start), stripped.slice(start + 1, end), '  ');
+    cursor = end + 1;
+  }
+  parts.push(stripped.slice(cursor));
+  return parts.join('');
 }
 
 // Patterns run over the whole comment-stripped file, not line by line, so API
@@ -577,13 +656,18 @@ function globToRegExp(glob) {
   return new RegExp(`^${pattern.replace(/\/$/, '')}$`);
 }
 
+// XcodeGen compiles hidden files and follows symbolic links (SwiftPM skips
+// hidden files), so hidden entries are scanned, only .DS_Store is skipped, and
+// a symbolic link fails the check instead of being silently skipped.
 function walk(directory, excludes, base, visit) {
   for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
-    if (entry.name.startsWith('.')) continue;
+    if (entry.name === '.DS_Store') continue;
     const absolutePath = join(directory, entry.name);
     const relativePath = relative(base, absolutePath).split(sep).join('/');
     if (excludes.some((pattern) => pattern.test(relativePath))) continue;
-    if (entry.isDirectory() && !/\.(?:xcassets|icon|xcstrings)$/.test(entry.name)) {
+    if (entry.isSymbolicLink()) {
+      fail(`${display(absolutePath)} is a symbolic link; the checker does not follow links, so replace it with the real file or directory (or extend scripts/check-apple-required-reasons.mjs).`);
+    } else if (entry.isDirectory() && !/\.(?:xcassets|icon|xcstrings)$/.test(entry.name)) {
       walk(absolutePath, excludes, base, visit);
     } else if (entry.isFile()) {
       visit(absolutePath);
@@ -594,12 +678,13 @@ function walk(directory, excludes, base, visit) {
 function resolveTarget(name, target, packages) {
   const swiftFiles = new Set();
   const nonSwiftFiles = new Set();
+  const binaryFiles = new Set();
   const manifests = new Set();
   const packageNames = [];
   const sources = target.sources ?? [];
   if (!Array.isArray(sources)) {
     fail(`${name}: sources must be a list in project.yml.`);
-    return { swiftFiles, nonSwiftFiles, manifests, packageNames };
+    return { swiftFiles, nonSwiftFiles, binaryFiles, manifests, packageNames };
   }
   for (const rawEntry of sources) {
     const entry = typeof rawEntry === 'string' ? { path: rawEntry } : rawEntry;
@@ -626,6 +711,7 @@ function resolveTarget(name, target, packages) {
     const record = (file) => {
       if (file.endsWith('.swift') && compiles) swiftFiles.add(file);
       if (NON_SWIFT_SOURCE.test(file) && buildPhase !== 'resources') nonSwiftFiles.add(file);
+      if (isBinaryCode(file)) binaryFiles.add(file);
       if (basename(file) === MANIFEST_NAME && buildPhase !== 'sources') manifests.add(file);
     };
     if (statSync(absolutePath).isDirectory()) {
@@ -652,7 +738,7 @@ function resolveTarget(name, target, packages) {
       fail(`${name}: unsupported dependency ${JSON.stringify(dependency)}; binary or third-party code needs its own required-reason review.`);
     }
   }
-  return { swiftFiles, nonSwiftFiles, manifests, packageNames };
+  return { swiftFiles, nonSwiftFiles, binaryFiles, manifests, packageNames };
 }
 
 function resolvePackage(name, spec) {
@@ -675,6 +761,10 @@ function resolvePackage(name, spec) {
     [/\.package\s*\(/, 'package dependencies'],
     [/\.binaryTarget\s*\(/, 'binary targets'],
     [/\.dynamic\b/, 'dynamic library products (which need their own bundled manifest)'],
+    [/\.plugin\s*\(|\bplugins\s*:/, 'plugins (build tool plugins generate code the checker cannot scan)'],
+    [/\.macro\s*\(/, 'macro targets'],
+    [/\.systemLibrary\s*\(/, 'system library targets'],
+    [/\bunsafeFlags\b/, 'unsafe compiler or linker flags'],
   ]) {
     if (pattern.test(manifest)) {
       fail(`${display(manifestPath)} uses ${reason}; extend scripts/check-apple-required-reasons.mjs before linking it.`);
@@ -685,6 +775,7 @@ function resolvePackage(name, spec) {
     walk(sourcesDir, [], sourcesDir, (file) => {
       if (file.endsWith('.swift')) files.add(file);
       if (NON_SWIFT_SOURCE.test(file)) fail(`package ${name}: ${display(file)} is not Swift; ${NON_SWIFT_MESSAGE}.`);
+      if (isBinaryCode(file)) fail(`package ${name}: ${display(file)} is prebuilt code; binary or third-party code needs its own required-reason review.`);
     });
   }
   return files;
@@ -754,6 +845,28 @@ function declaredCategories(manifestPath, targetName) {
 
 // ---------------------------------------------------------------------------
 
+// Build settings apply to every target, so the project's and each shipped
+// target's settings may not add bridging or prefix headers, search paths,
+// linker flags or Swift flags other than -D conditions. Settings maps (base,
+// configs, Debug, ...) are walked recursively; `KEY[sdk=...]` counts as KEY.
+function checkBuildSettings(label, settings) {
+  if (!settings || typeof settings !== 'object' || Array.isArray(settings)) return;
+  for (const [key, value] of Object.entries(settings)) {
+    const setting = key.replace(/\[.*$/, '');
+    if (CODE_BUILD_SETTING.test(setting)) {
+      fail(`${label}: build setting ${key} can compile, import or link code the checker does not scan; extend scripts/check-apple-required-reasons.mjs.`);
+    } else if (setting === 'OTHER_SWIFT_FLAGS') {
+      const flags = [value].flat().join(' ').split(/\s+/).filter(Boolean);
+      const unsupported = flags.filter((flag) => flag !== '$(inherited)' && !/^-D[A-Za-z_][A-Za-z0-9_]*$/.test(flag));
+      if (unsupported.length > 0) {
+        fail(`${label}: OTHER_SWIFT_FLAGS ${unsupported.join(' ')} is not a -D condition; compiler flags can import or link code the checker does not scan, so extend scripts/check-apple-required-reasons.mjs.`);
+      }
+    } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+      checkBuildSettings(label, value);
+    }
+  }
+}
+
 function main() {
   let project;
   try {
@@ -762,10 +875,14 @@ function main() {
     fail(error.message);
     return;
   }
-  for (const unsupported of ['include', 'targetTemplates']) {
+  for (const unsupported of ['include', 'targetTemplates', 'settingGroups', 'configFiles']) {
     if (project[unsupported] !== undefined) {
       fail(`project.yml uses top-level ${unsupported}; extend scripts/check-apple-required-reasons.mjs.`);
     }
+  }
+  checkBuildSettings('project.yml settings', project.settings);
+  if (JSON.stringify(project.schemes ?? {}).includes('"preActions"')) {
+    fail('project.yml schemes use preActions, which can generate code before compiling; extend scripts/check-apple-required-reasons.mjs.');
   }
   const packages = project.packages ?? {};
   const targets = project.targets ?? {};
@@ -787,7 +904,13 @@ function main() {
     const resolved = resolveTarget(name, target, packages);
     for (const file of resolved.swiftFiles) claimed.add(file);
     if (!shipped) continue;
+    const unknownTargetKeys = Object.keys(target).filter((key) => !KNOWN_TARGET_KEYS.has(key));
+    if (unknownTargetKeys.length > 0) {
+      fail(`${name}: uses XcodeGen target keys the checker does not model (${unknownTargetKeys.join(', ')}); build scripts, rules, plugins and xcconfig files can add code it does not scan, so extend scripts/check-apple-required-reasons.mjs.`);
+    }
+    checkBuildSettings(name, target.settings);
     for (const file of resolved.nonSwiftFiles) fail(`${name}: ${display(file)} is not Swift; ${NON_SWIFT_MESSAGE}.`);
+    for (const file of resolved.binaryFiles) fail(`${name}: ${display(file)} is prebuilt code; binary or third-party code needs its own required-reason review.`);
 
     const files = [...resolved.swiftFiles];
     for (const packageName of resolved.packageNames) {

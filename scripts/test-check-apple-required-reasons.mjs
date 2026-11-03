@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
@@ -151,6 +151,7 @@ let quotient = half/2; let path = "a/b" // UserDefaults after division and a str
 let forced = Optional(4)!/2; let other = "c/d" // NSUserDefaults after a postfix operator is a comment
 let word = /[a-z]+/ // activeInputModes after a bare regex is a comment
 let escaped = /a\\/b/ ; let extended = #/[/*]/# // creationDateKey after an extended regex is a comment
+let ratio = \`half\`/2; let slashed = "e/f" // UserDefaults after an escaped identifier and division is a comment
 `,
     'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy': manifest(WATCH_MANIFEST),
     'apps/apple/Platforms/tvOS/TVMain.swift': `import Foundation
@@ -184,7 +185,11 @@ function writeFixture(changes = {}) {
   for (const [path, content] of Object.entries(files)) {
     if (content === null) continue;
     mkdirSync(dirname(join(root, path)), { recursive: true });
-    writeFileSync(join(root, path), content);
+    if (typeof content === 'object' && !Buffer.isBuffer(content)) {
+      symlinkSync(content.symlink, join(root, path));
+    } else {
+      writeFileSync(join(root, path), content);
+    }
   }
   return root;
 }
@@ -371,6 +376,60 @@ let started = ProcessInfo
   `App: uses ${BOOT_TIME} (System boot time) but apps/apple/App/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: apps/apple/App/Dates.swift:6 systemUptime; apps/apple/App/Timing.swift:2 systemUptime`,
 ]);
 
+// Backtick-escaped identifiers are normalised before matching, in every
+// category; a raw identifier containing `//` does not start a comment.
+const TV_ESCAPED = 'apps/apple/Platforms/tvOS/Escaped.swift';
+assertFail('backtick-escaped identifiers', {
+  ...tvManifest([]),
+  [TV_ESCAPED]: `import Foundation
+let created = attributes[FileAttributeKey.\`creationDate\`]
+let free = URLResourceKey.\`volumeAvailableCapacityKey\`, size = attributes[.\`systemFreeSize\`]
+let defaults = \`UserDefaults\`.standard
+func probe(_ path: String, _ buf: inout stat) -> Int32 { \`stat\`(path, &buf) }
+let \`a // b\` = ProcessInfo.processInfo.\`systemUptime\`
+let modes = UITextInputMode.\`activeInputModes\`
+`,
+}, [
+  `${tvUndeclared(USER_DEFAULTS, 'User defaults')}${TV_ESCAPED}:4 UserDefaults; apps/apple/Shared/Settings.swift:3 AppStorage`,
+  `${tvUndeclared(BOOT_TIME, 'System boot time')}${TV_ESCAPED}:6 systemUptime`,
+  `${tvUndeclared(FILE_TIMESTAMP, 'File timestamp')}${TV_ESCAPED}:2 creationDate; ${TV_ESCAPED}:5 stat; packages/engine-swift/Sources/Engine/Files.swift:3 contentModificationDateKey`,
+  `${tvUndeclared(DISK_SPACE, 'Disk space')}${TV_ESCAPED}:3 volumeAvailableCapacity*; ${TV_ESCAPED}:3 systemFreeSize`,
+  `${tvUndeclared('NSPrivacyAccessedAPICategoryActiveKeyboards', 'Active keyboards')}${TV_ESCAPED}:7 activeInputModes`,
+]);
+const WATCH_ESCAPED = 'apps/apple/Platforms/watchOS/EscapedStat.swift';
+assertFail('backtick-escaped stat references', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  [WATCH_ESCAPED]: `import Darwin
+let qualified = Darwin.\`stat\`, assigned = 0; let reference =
+    \`stat\`
+let call = \`stat\`
+    (path, &buf)
+`,
+}, `Watch: uses ${FILE_TIMESTAMP} (File timestamp) but apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: ${WATCH_ESCAPED}:2 stat; ${WATCH_ESCAPED}:3 stat; ${WATCH_ESCAPED}:4 stat`);
+
+// Key paths, type aliases and string-based access (key-value coding,
+// selectors, `@_silgen_name`, URLResourceKey raw values) still name the API.
+const TV_INDIRECT = 'apps/apple/Platforms/tvOS/Indirect.swift';
+assertFail('key paths, aliases and string-based access', {
+  ...tvManifest([]),
+  [TV_INDIRECT]: `import Foundation
+let created = \\URLResourceValues.creationDate
+let free: KeyPath<URLResourceValues, Int?> = \\.volumeAvailableCapacity
+typealias Defaults = UserDefaults
+let clock = ProcessInfo.processInfo; let uptimeReader = \\ProcessInfo.systemUptime
+let kvc = attributes.value(forKey: "modificationDate")
+@_silgen_name("stat") func rawStat(_ path: UnsafePointer<CChar>, _ buf: UnsafeMutableRawPointer) -> Int32
+let raw = URLResourceKey(rawValue: "NSURLVolumeTotalCapacityKey"); let fs = attributes.value(forKey: "systemFreeSize")
+let selector = NSSelectorFromString("activeInputModes")
+`,
+}, [
+  `${tvUndeclared(USER_DEFAULTS, 'User defaults')}${TV_INDIRECT}:4 UserDefaults; apps/apple/Shared/Settings.swift:3 AppStorage`,
+  `${tvUndeclared(BOOT_TIME, 'System boot time')}${TV_INDIRECT}:5 systemUptime`,
+  `${tvUndeclared(FILE_TIMESTAMP, 'File timestamp')}${TV_INDIRECT}:2 creationDate; ${TV_INDIRECT}:6 API name string literal; ${TV_INDIRECT}:7 API name string literal`,
+  `${tvUndeclared(DISK_SPACE, 'Disk space')}${TV_INDIRECT}:3 volumeAvailableCapacity*; ${TV_INDIRECT}:8 NSURLVolume*CapacityKey; ${TV_INDIRECT}:8 API name string literal`,
+  `${tvUndeclared('NSPrivacyAccessedAPICategoryActiveKeyboards', 'Active keyboards')}${TV_INDIRECT}:9 activeInputModes`,
+]);
+
 // Regex literals: comment markers inside them must not hide later code.
 const TV_REGEX = 'apps/apple/Platforms/tvOS/Patterns.swift';
 const TV_BOOT_TIME = `TV: uses ${BOOT_TIME} (System boot time) but apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy does not declare it.`;
@@ -462,10 +521,56 @@ assertFail('two manifests in one target', { ...tvManifest(TV_WITH_PACKAGE), ...p
 // Target and source mapping.
 assertFail('unmapped Swift file', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/NewFeature/Feature.swift': 'let feature = 1\n' },
   'apps/apple/NewFeature/Feature.swift is not compiled by any project.yml target');
+// XcodeGen compiles hidden files and directories, so they are scanned too.
+assertFail('hidden Swift sources in a target', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'apps/apple/Platforms/tvOS/.Hidden.swift': 'let started = ProcessInfo.processInfo.systemUptime\n',
+  'apps/apple/Platforms/tvOS/.generated/Inner.swift': 'let later = ProcessInfo.processInfo.systemUptime\n',
+}, [TV_BOOT_TIME, 'apps/apple/Platforms/tvOS/.Hidden.swift:1 systemUptime', 'apps/apple/Platforms/tvOS/.generated/Inner.swift:1 systemUptime']);
+// Symbolic links are not followed, so they fail instead of being skipped.
+assertFail('symlinked Swift file in a target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/tvOS/Linked.swift': { symlink: '../../Shared/Settings.swift' } },
+  'apps/apple/Platforms/tvOS/Linked.swift is a symbolic link; the checker does not follow links');
+assertFail('symlinked package source directory', { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Sources/Engine/Linked': { symlink: '../../../unlinked-swift/Sources/Engine' } },
+  'packages/engine-swift/Sources/Engine/Linked is a symbolic link');
+assertFail('symlink outside any target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Loose.swift': { symlink: 'Shared/Settings.swift' } },
+  'apps/apple/Loose.swift is a symbolic link');
+// Module maps and prebuilt code in a shipped target fail closed.
+assertFail('module map in a shipped target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/tvOS/module.modulemap': 'module Shim { header "shim.h" }\n' },
+  'TV: apps/apple/Platforms/tvOS/module.modulemap is not Swift; only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly, module maps and API notes');
+assertFail('prebuilt code in a shipped target', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'apps/apple/Platforms/tvOS/libVendor.a': '!<arch>\n',
+  'apps/apple/Platforms/watchOS/Vendor.framework/Info.plist': '<plist/>\n',
+  'apps/apple/App/Resources/helper': Buffer.from('cffaedfe0c000001', 'hex'),
+  'packages/engine-swift/Sources/Engine/Resources/libHelper.dylib': 'not really a dylib\n',
+}, [
+  'TV: apps/apple/Platforms/tvOS/libVendor.a is prebuilt code',
+  'Watch: apps/apple/Platforms/watchOS/Vendor.framework/Info.plist is prebuilt code',
+  'App: apps/apple/App/Resources/helper is prebuilt code',
+  'package EnginePkg: packages/engine-swift/Sources/Engine/Resources/libHelper.dylib is prebuilt code',
+]);
+// Build scripts, scheme pre-actions, xcconfig files, headers, search paths and
+// compiler or linker flags can add code the checker does not scan.
+assertFail('pre-build script on a shipped target', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('  TV:\n    type: application\n', '  TV:\n    type: application\n    preBuildScripts:\n      - name: Generate\n        script: ./generate.sh\n')) },
+  'TV: uses XcodeGen target keys the checker does not model (preBuildScripts)');
+assertFail('scheme pre-actions', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(`${PROJECT_YML}schemes:\n  App:\n    build:\n      targets:\n        App: all\n      preActions:\n        - script: ./generate.sh\n`) },
+  'project.yml schemes use preActions');
+assertFail('project config files', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('packages:\n', 'configFiles:\n  Debug: Debug.xcconfig\npackages:\n')) },
+  'project.yml uses top-level configFiles');
+assertFail('bridging header and linker flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('    platform: watchOS\n', '    platform: watchOS\n    settings:\n      base:\n        SWIFT_OBJC_BRIDGING_HEADER: Shim.h\n      configs:\n        Release:\n          OTHER_LDFLAGS[sdk=watchos*]: $(inherited) -lvendor\n')) }, [
+  'Watch: build setting SWIFT_OBJC_BRIDGING_HEADER can compile, import or link code the checker does not scan',
+  'Watch: build setting OTHER_LDFLAGS[sdk=watchos*] can compile, import or link code the checker does not scan',
+]);
+const SWIFT_FLAGS = 'settings:\n  configs:\n    Debug:\n      OTHER_SWIFT_FLAGS: $(inherited) -DDEBUG_MENU\n    Release:\n      OTHER_SWIFT_FLAGS: "$(inherited) -DOFFICIAL_REFERENCE_SHEET"\ntargets:\n';
+assertPass('-D conditions in Swift flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('targets:\n', SWIFT_FLAGS).replace('    platform: tvOS\n', '    platform: tvOS\n    settings:\n      base:\n        OTHER_SWIFT_FLAGS: ""\n')) });
+assertFail('other Swift flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('targets:\n', SWIFT_FLAGS.replace('-DDEBUG_MENU', '-DDEBUG_MENU -Xcc -include -Xcc shim.h'))) },
+  'project.yml settings: OTHER_SWIFT_FLAGS -Xcc -include -Xcc shim.h is not a -D condition');
 assertFail('missing compiled source path', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Shared/Settings.swift': null },
   'App: sources path Shared/Settings.swift does not exist.');
 assertFail('unsupported sources key', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('      - Platforms/watchOS\n', '      - path: Platforms/watchOS\n        includes:\n          - "*.swift"\n')) },
   'Watch: sources entry Platforms/watchOS uses unsupported XcodeGen keys (includes)');
+assertFail('per-file compiler flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n        compilerFlags: ["-Xcc", "-include"]\n')) },
+  'TV: sources entry Platforms/tvOS uses unsupported XcodeGen keys (compilerFlags)');
 assertFail('unsupported target type', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(`${PROJECT_YML}  Kit:\n    type: framework\n    platform: iOS\n    sources:\n      - Shared\n`) },
   'Kit: target type "framework" is not supported');
 assertFail('unsupported dependency', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('      - sdk: AVFoundation.framework\n', '      - framework: Vendor/Analytics.xcframework\n')) },
@@ -474,6 +579,15 @@ assertFail('remote package', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PRO
   'project.yml package EnginePkg is not a local path package');
 assertFail('package with custom paths', { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace('.target(name: "Engine")', '.target(name: "Engine", path: "Elsewhere")') },
   'packages/engine-swift/Package.swift uses custom target paths');
+assertFail('package plugins, macros, system libraries and unsafe flags', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace('.target(name: "Engine")', '.target(name: "Engine", swiftSettings: [.unsafeFlags(["-Xcc", "-include"])], plugins: ["Gen"]),\n        .plugin(name: "Gen", capability: .buildTool()),\n        .macro(name: "EngineMacros"),\n        .systemLibrary(name: "CShim")'),
+}, [
+  'packages/engine-swift/Package.swift uses plugins (build tool plugins generate code the checker cannot scan)',
+  'packages/engine-swift/Package.swift uses macro targets',
+  'packages/engine-swift/Package.swift uses system library targets',
+  'packages/engine-swift/Package.swift uses unsafe compiler or linker flags',
+]);
 assertFail('target templates', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('  Watch:\n    type: application\n', '  Watch:\n    templates: [Base]\n    type: application\n')) },
   'Watch: target templates are not supported');
 assertFail('unsupported YAML', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('    platform: watchOS\n', '    platform: *watch\n')) },
