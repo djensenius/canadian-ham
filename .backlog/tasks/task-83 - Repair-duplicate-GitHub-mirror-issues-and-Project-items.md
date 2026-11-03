@@ -4,6 +4,7 @@ title: Repair duplicate GitHub mirror issues and Project items
 status: To Do
 assignee: []
 created_date: '2026-11-03T02:32:00Z'
+updated_date: '2026-11-03T02:39:00Z'
 labels:
   - tooling
   - github
@@ -22,8 +23,9 @@ backlog-sync mirrors 186 Backlog tasks into 854 marked GitHub issues: 668 surplu
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [ ] #1 Each Backlog task maps to exactly one GitHub issue whose first line carries its `<!-- backlog:task-N -->` marker (the lowest-numbered existing copy); no other issue carries that marker
-- [ ] #2 Every open duplicate is closed as a duplicate with a comment linking its canonical issue; closed duplicates keep their comments and link to the canonical issue
-- [ ] #3 Project #8 has exactly one item per canonical task issue (plus legacy and inbox issues), and closed canonical issues show Done
-- [ ] #4 The duplicate root cause is recorded in the task notes, with a follow-up filed for a backlog-sync guard against mass recreation
-- [ ] #5 A backlog-sync run after the repair reports 0 created and logs no duplicate-marker warnings
+- [ ] #2 Before any write, a dry-run map of every task to its canonical and duplicate issues is saved, and the repair verifies the paginated issue count against an independent total and refuses to run if they differ
+- [ ] #3 Every open duplicate is closed as a duplicate with a comment linking its canonical issue; closed duplicates keep their comments and link to the canonical issue
+- [ ] #4 Project #8 has exactly one item per canonical task issue (plus legacy and inbox issues), and closed canonical issues show Done
+- [ ] #5 The duplicate root cause is recorded in the task notes, with a follow-up guard against mass recreation filed as an issue in djensenius/backlog-sync
+- [ ] #6 A backlog-sync run after the repair reports 0 created and logs no duplicate-marker warnings
 <!-- AC:END -->
