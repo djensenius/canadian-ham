@@ -155,6 +155,7 @@ Declares Apple required-reason API usage for every shipped target and enforces i
   - C-family, assembly, module-map, prefix-header or LLVM IR sources, and prebuilt code (Mach-O, universal 32/64, ar and thin archives, LLVM bitcode, Swift modules and interfaces, text stubs, code bundles), including inside folder references, buildPhase: none entries, excluded paths and resource catalogues;
   - symbolic links, special files and missing non-optional source or folder-reference paths;
   - XcodeGen or SwiftPM constructs that can add unscanned code (pre-build scripts, plugins, macros, header and linker settings, non -D flags, unmodelled source types, build phases or exclude globs, `..` package paths);
+  - project.yml outside a strict YAML subset (unmodelled escapes, duplicate or prototype-style keys, anchors, merge keys, document markers, multi-line scalars, include, ${VAR} outside scripts, $platform and multi-platform targets), and Package.swift outside a strict grammar (raw, escaped, interpolated or multi-line strings, #if, variables, helpers, .map, version-specific manifests, other source roots);
   - unknown targets, and targets without exactly one manifest copied to the bundle root;
   - manifests that track, have unknown or duplicate keys, use the wrong plist value types or padded codes, or fall outside the XML plist subset Xcode writes (strict typed parser).
 - Matching covers module-qualified, multi-line and backtick-escaped spellings, key paths, aliases, API-name string literals, the whole word for C names, Swift 6 regex literals and comments.
