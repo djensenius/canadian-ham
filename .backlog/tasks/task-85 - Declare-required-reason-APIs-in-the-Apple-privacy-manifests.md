@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T08:08:00Z'
+updated_date: '2026-11-03T08:48:00Z'
 labels:
   - apple
   - privacy
@@ -154,6 +154,8 @@ PR #1064 round 7c (reviewer REQUEST CHANGES on 9ec9afb6..96ac971b), commit 8fefd
 - Checks: self-test passed; real-tree --verbose byte-identical to 96ac971b (0.38 s); every allowlist entry, label, member and data type is needed by the real tree; 89/89 mutations killed (no-op control survives); pnpm typecheck, pnpm test (283 web tests plus packages), check:links, check:shell, git diff --check and the test guard passed.
 
 PR #1064 round 7c follow-up (reviewer APPROVE WITH NOTES), commit f7bb6d17cefbd28d6bec923c2dcb4aaf30c9c8d2: rewrote the stale comment above checkSwiftFlags (exact-name allowlist with a value rule per setting, base and configs only, conditional keys matched on the name before [). Added a Limitations sentence: INFOPLIST_FILE and CODE_SIGN_ENTITLEMENTS are checked for path and file type, not contents (LSEnvironment DYLD_*, library-validation entitlements); a bundled library is still rejected as prebuilt code; the project does not set ENABLE_HARDENED_RUNTIME, so that is not relied on; the iCloud gate allowlists the CloudKit entitlements keys and checks the default macOS entitlements only for iCloud/push/background-mode keys, so other content is reviewed by hand. Checks: self-test passed; real-tree --verbose byte-identical to b2c359dc; check:links and git diff --check passed.
+
+Round 8 (Copilot PRRT_kwDOUxZq_M6zB6pw, PRRT_kwDOUxZq_M6zB6qM; commit e0b916eda813ae57513b54e6e25bb7c7dc613738): the Swift scanner now lexes as swiftc 6.4.2 does, verified with xcrun swiftc -typecheck and compiled probes. CR and CRLF become LF before lexing (comments end and file:line counts match Swift); a leading BOM is skipped; invalid UTF-8, VT/FF/NEL/U+2028/U+2029/NUL/DEL/C0 controls and non-ASCII code (NFD, KELVIN SIGN, zero-width, NBSP, stray BOM, backticks) fail closed. String literals are decoded (\u{1-8 hex}, \0 \\ \t \n \r \" \', raw-string delimiters, multi-line continuations and indentation), literal-only interpolations inlined and + joins of literals chained, then matched as well as the raw text; a decoded NUL ends an exact name and U+212A/U+037E/U+1FEF read as ASCII; unsupported escapes fail closed. Selector, key-path, #if and #sourceLocation forms were already covered (fixtures added). Names built from variables, calls, +=, joined() or non-literal interpolations stay a documented limitation. Checks: self-test passed; real-tree --verbose output byte-identical (48 lines, 0.38 s); 39 mutations, 38 killed after tightening two fixtures, 1 message-only survivor, no-op control passes; pnpm typecheck, pnpm test (one unrelated web test failed once, then passed on two reruns), check:links, check:shell, git diff --check and the test guard pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
@@ -178,7 +180,7 @@ Declares Apple required-reason API usage for every shipped target and enforces i
   - project.yml outside a strict YAML subset (unmodelled escapes, duplicate or prototype-style keys, anchors, merge keys, document markers, multi-line scalars, include, ${VAR} outside scripts, $platform and multi-platform targets), and Package.swift outside a strict grammar (raw, escaped, interpolated or multi-line strings, #if, variables, helpers, .map, version-specific manifests, other source roots);
   - unknown targets, and targets without exactly one manifest copied to the bundle root;
   - manifests that track, have unknown or duplicate keys, use the wrong plist value types or padded codes, or fall outside the XML plist subset Xcode writes (strict typed parser).
-- Matching covers module-qualified, multi-line and backtick-escaped spellings, key paths, aliases, API-name string literals, the whole word for C names, Swift 6 regex literals and comments.
+- Matching covers module-qualified, multi-line and backtick-escaped spellings, key paths, selectors, aliases, API-name string literals, the whole word for C names, Swift 6 regex literals and comments. Swift files are read as swiftc reads them: CR, LF and CRLF line endings, a skipped leading BOM, and string literals decoded (Unicode and simple escapes, raw strings, multi-line continuations, literal-only interpolations and + joins of literals) and matched as well as the raw text. Invalid UTF-8, control and Unicode line-separator characters, non-ASCII code and unsupported escapes fail closed; names built at run time from variables or calls remain a documented limitation.
 - Release xbuild products for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests.
 
 Verification: the self-test passes, as does the checker on the real tree (same categories before and after each round). Every new check is mutation-tested. pnpm typecheck, pnpm test, check:links, check:shell and the test guard pass. CI ran both required-reason steps green.
