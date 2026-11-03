@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T02:51:00Z'
+updated_date: '2026-11-03T03:10:00Z'
 labels:
   - apple
   - release
@@ -40,3 +40,22 @@ Current Apple builds can only reach internal TestFlight: fastlane/ExportOptions.
 4. Docs: docs/release/distribution.md (Xcode Cloud workflows per platform, owner-only ASC setup, build numbers, TASK-1.7/TASK-85 gates, Fastlane retirement); update AGENTS.md TestFlight section, docs/release/testflight.md and release-checklist.md links.
 5. Validation: shellcheck, dry runs, pnpm typecheck, pnpm check:apple-network, pnpm check:apple-icloud-gate, pnpm test:fastlane, ruby -c, plutil -lint; record evidence in notes.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implementation commit acdc3998 (worker, 2026-11-02).
+
+AC1 evidence: fastlane/ExportOptions-AppStore.plist (app-store-connect, automatic, team 9JALHNGRBQ, manageAppVersionAndBuildNumber false, no testFlightInternalTestingOnly) + Fastfile beta option distribution:true (requires export_only:true; appstore/ archive+build folders; no OFFICIAL_REFERENCE_SHEET opt-in; refuses upload of fastlane/builds/appstore artifacts). Export-only runs via xbuild, one at a time, no upload:
+- iOS 202611022152: fastlane/builds/appstore/ios/202611022152/CanadianHam.ipa. App and Watch/CanadianHamWatch.app signed Apple Distribution: david jensenius (9JALHNGRBQ), codesign --verify --deep --strict OK, entitlements only application-identifier/team-identifier/beta-reports-active/get-task-allow=false, iOS Team Store profile without devices, CFBundleVersion 202611022152 on app and watch, PrivacyInfo.xcprivacy present, no official-basic-exam.
+- macOS 202611022154: CanadianHam.pkg signed 3rd Party Mac Developer Installer (9JALHNGRBQ); app Apple Distribution, Mac Team Store profile, entitlements app-sandbox + files.user-selected.read-write + application-identifier/team-identifier only, verify OK, no watch, no official sheet.
+- tvOS 202611022156: CanadianHamTV.ipa Apple Distribution, tvOS Team Store profile, entitlements as iOS, verify OK, privacy manifest present.
+- visionOS 202611022159: CanadianHamVision.ipa Apple Distribution, Team Store profile, entitlements as iOS, verify OK, privacy manifest present.
+All four exports' ExportOptions.plist show method app-store-connect, testFlightInternalTestingOnly => false; no iCloud/ubiquity/aps-environment entitlements anywhere.
+
+AC2 evidence: apps/apple/ci_scripts/{ci_post_clone,ci_pre_xcodebuild,ci_post_xcodebuild}.sh + canadian-ham-ci.sh + build-number-floor (202610271757, newest Fastlane upload found in local worktrees). shellcheck 0.11.0 -x clean; /bin/bash 3.2 -n OK. pnpm test:xcode-cloud-scripts: 48 passed, 0 failed (real guards on repo; archive iOS/macOS/tvOS/visionOS/xrOS; DebugCloudKit scheme and CONFIGURATION rejection; watch scheme/platform mismatch; ICLOUD_SYNC/CloudKit entitlements/OFFICIAL_REFERENCE_SHEET env overrides; build numbers 1, floor, non-integer, missing; failing and missing guards; Node discovery via stub brew only; ad-hoc signed fake archives with push/iCloud/official sheet/unsigned). Mutation check: disabling the floor and Release checks made 3 cases fail. ci_post_xcodebuild.sh passes on all four real distribution archives (iOS checked 2 apps incl. watch). Build numbers: docs/release/distribution.md has the owner set Xcode Cloud Next Build Number to date +%Y%m%d%H%M or later, and raise it plus the floor after Fastlane uploads. Real Xcode Cloud run remains an owner gate.
+
+Other checks: local xbuild Release build of CanadianHam for generic/platform=macOS without SDKROOT/SUPPORTED_PLATFORMS overrides (CODE_SIGNING_ALLOWED=NO, -derivedDataPath /tmp/ch-task86-dd) BUILD SUCCEEDED, product platform MACOS minos 27.0, no watch app; so Xcode Cloud macOS archives should not need project changes. pnpm typecheck OK; pnpm test OK; pnpm check:links OK; pnpm check:apple-network/test:apple-network/check:apple-icloud-gate/test:apple-icloud-gate OK; pnpm test:fastlane 9 runs, 179 assertions, 0 failures; ruby -c Fastfile Syntax OK; plutil -lint both plists OK; node scripts/check-test-guard.mjs --base 4067a86c passed.
+
+Open: App Store Connect acceptance of a 12-digit Next Build Number is untested (Mac builds can't go below 202610271757); visionOS CI_PRODUCT_PLATFORM value is undocumented (scripts accept visionOS/xrOS and fail closed otherwise); Xcode Cloud internal builds never include the internal-only official sheet.
+<!-- SECTION:NOTES:END -->
