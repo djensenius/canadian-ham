@@ -743,6 +743,45 @@ works as follows:
   `"fstat"` and `"NSURLVolumeTotalCapacityKey"`, count anywhere in a string.
   This covers key-value coding, selectors, `@_silgen_name` and
   `URLResourceKey(rawValue:)`.
+- **Lexing (PR #1064 round 8).** Swift sources are read as swiftc reads
+  them, checked against swiftc 6.4.2 (`xcrun swiftc -typecheck` and
+  compiled probes):
+  - The file must be valid UTF-8, as swiftc requires even inside comments.
+    A leading byte order mark is skipped.
+  - CR, LF and CRLF each end one line, so a `//` comment ends at a lone CR
+    and diagnostics count lines as Swift does. Swift does not end a line,
+    or a `//` comment, at VT, FF, NEL, U+2028 or U+2029. Those, NUL, DEL and
+    the other C0 controls (everything except tab, LF and CR) fail closed
+    anywhere in the file; write them as `\u{...}` escapes in a string.
+  - Outside comments, string literals and regex literals only printable
+    ASCII is accepted, including inside backticks. Swift does not normalise
+    identifiers: an NFD spelling, a KELVIN SIGN `K` or a zero-width
+    character makes a different identifier, so such code cannot name an
+    API, but failing closed keeps the lexer's whitespace and operator rules
+    exact. The real tree has no non-ASCII code.
+  - String literals are also decoded and matched a second time. The decoded
+    escapes are `\0`, `\\`, `\t`, `\n`, `\r`, `\"`, `\'` and `\u{...}` with
+    1 to 8 hex digits (a Unicode scalar, not a surrogate), after the escape
+    delimiter of the literal (`\` plus as many `#` as a raw string has, so
+    in `#"...\u{55}..."#` the escape stays literal and `\#u{55}` is
+    decoded). A `\` before a line break in a `"""` literal joins the lines.
+    Any other escape fails closed, as swiftc rejects it.
+  - Multi-line literals drop the first and last line break and the leading
+    blanks of each line, which may strip more than Swift does but never
+    less.
+  - An interpolation that holds only string literals, `+`, parentheses and
+    whitespace is inlined (`"system\("Uptime")"`). Any other interpolation
+    becomes a boundary no name can span.
+  - String literals joined by `+`, with parentheses, whitespace or comments
+    between them, are matched as one string (`"system" + "Uptime"`), and the
+    exact-name rule applies to the whole chain (`"creation" + "Date"`). A decoded
+    NUL ends the string for the exact-name rule, as C strings do
+    (`dlsym(handle, "stat\0")`).
+  - The three characters whose canonical decomposition is ASCII (U+212A
+    KELVIN SIGN, U+037E and U+1FEF) count as `K`, `;` and `` ` `` inside
+    strings, because Swift's `String` `==` treats them as equal.
+  - Decoded matches are added to the raw matches and reported on the line
+    of their first character.
 - **What fails.** The check fails in any of these cases:
   - a shipped target uses a category its own manifest does not declare;
   - a manifest declares a category its target does not use;
@@ -781,7 +820,11 @@ works as follows:
   - a Swift file under `apps/apple` is compiled by no target;
   - comment stripping could hide code: an unterminated block comment or
     extended regex literal, or a comment marker straight after `\` (an
-    escaped slash in a regex literal the checker could not delimit).
+    escaped slash in a regex literal the checker could not delimit);
+  - a Swift file or `Package.swift` is not valid UTF-8, holds a control
+    character other than tab, LF and CR, or a NEL, U+2028 or U+2029, has
+    non-ASCII outside comments, string literals and regex literals, or uses
+    a string escape the lexing step above does not decode.
 - **Unsupported constructs.** It also fails on XcodeGen constructs that can
   add code it does not scan:
   - sources keys it does not model, including per-file `compilerFlags`;
@@ -863,7 +906,20 @@ works as follows:
   spec paths outside the modelled form and missing resources and headers
   paths. Pass fixtures use every allowlisted build setting, unchecked
   test-target settings, a real-style Package.swift, and the inert data
-  types beside excluded files and folder references.
+  types beside excluded files and folder references. Round 8 fixtures cover
+  the lexing step: CR-only, CRLF and mixed line endings (including a
+  CR-only Package.swift), a leading byte order mark, each control and
+  line-separator character, invalid UTF-8, non-ASCII code (a zero-width
+  character, an NFD name, a KELVIN SIGN, NBSP, a stray byte order mark and
+  backticks), `\u{...}` escapes in plain and raw strings, a literal KELVIN
+  SIGN in a key, literal interpolations, `+` joins, multi-line continuations
+  (with `##` delimiters and trailing blanks), exact names built by escapes,
+  joins, `\0`, multi-line literals and interpolations, every unsupported
+  escape, and selector, key-path, `#if` and `#sourceLocation` forms. Pass
+  fixtures cover non-ASCII comments, strings and regex literals, raw
+  strings that keep `\u{55}` literal, non-literal interpolations, and
+  blanks that Swift keeps before an exact name (in a single-line literal,
+  escaped, or after an interpolation).
 - **Bypass classes.** Each syntactic way a source could reach a listed API
   without the checker seeing it is covered or recorded here:
 
@@ -876,7 +932,7 @@ works as follows:
   | Key paths (`\URLResourceValues.creationDate`, `\.volumeAvailableCapacity`) | Covered by a fixture: the key path still names the member. |
   | `typealias` or `let` aliases of a type or instance | Covered by a fixture: the alias declaration names the type, and members such as `.systemUptime` are matched by name. |
   | String-based access with a literal name (KVC, `NSSelectorFromString`, `@_silgen_name`, `URLResourceKey(rawValue:)`) | Covered by a fixture: string literals are scanned. |
-  | String-based access with a name built at run time (`"NSUser" + "Defaults"`, computed KVC keys, `dlsym`, `perform` with a computed selector) | Limitation: not detectable by a source scan. Binary inspection is the cross-check. None exists in the tree. |
+  | String-based access with a name built at run time (`let p = "NSUser"; p + "Defaults"`, `+=`, `joined()`, `String(format:)`, an interpolation of a variable or call, computed KVC keys, `dlsym`, `perform` with a computed selector) | Limitation: the value depends on code the scanner does not evaluate. Binary inspection is the cross-check. None exists in the tree. Joins of literals only are detected (see the Swift lexing rows below). |
   | Wholesale attribute reads that never name a listed key (iterating `attributesOfItem(atPath:)` or `attributesOfFileSystem(forPath:)` results, `resourceValues` with keys from a variable) | Limitation: `attributesOfItem(atPath:)` is not itself on Apple's list, so only the listed keys read from its result count. Review by hand. None exists in the tree. |
   | `#if` branches | Not a bypass: `#if` is not evaluated, so every branch is scanned and counts (over-declaration). |
   | C, Objective-C, C++, assembly, module maps, API notes | Fail closed. |
@@ -916,6 +972,19 @@ works as follows:
   | `project.yml` keys the checker does not model (`include`, `projectReferences`, `options.preGenCommand` and `postGenCommand`, target and scheme templates, `aggregateTargets`, `fileGroups`, `localPackages`, top-level and target `configFiles` (xcconfig), `settingGroups` and settings `groups`, scheme actions, target `scheme`, `buildToolPlugins`, `buildRules`, pre-build and post-compile scripts, script files, dependency `link`, `weak` and `root`) | Fail closed with fixtures. The allowlist reports each key with its file and line. Allowlisted keys with the wrong value shape also fail, and a pass fixture uses every allowlisted key. |
   | Cross-project, undefined or test-target `target:` dependencies of shipped targets, and `sdk:` paths | Fail closed with fixtures. A test target depending on a test target passes. |
   | Letter case of `sources` and package paths (macOS volumes usually ignore it; Linux CI does not) | Fail closed with fixtures on both. A missing optional path still passes. |
+  | **Swift lexing and literal matching (round 8)** | |
+  | Line endings: CR-only and CRLF files (a `//` comment ending at a lone CR), mixed endings | Covered by fixtures: CR and CRLF become LF before lexing, as Swift ends a line at each, and file:line counts match Swift's. Package.swift is read the same way. |
+  | Characters Swift does not treat as line ends (VT, FF, NEL, U+2028, U+2029), NUL, DEL and other controls | Fail closed with fixtures for each, anywhere in the file. Swift runs a `//` comment on past the five separators and treats NUL as whitespace, while editors may show a line break, so the code a reviewer reads and the code Swift compiles could differ. The real tree has none. |
+  | Byte order mark and encoding | A leading byte order mark is skipped, as swiftc does (fixtures for pass and fail). A byte order mark elsewhere in code and invalid UTF-8 fail closed with fixtures. |
+  | Identifiers that look like an API name but are not (NFC and NFD forms, KELVIN SIGN, zero-width characters, NBSP, in plain code or backticks) | Fail closed with fixtures: only printable ASCII is read outside comments, strings and regex literals. Swift does not normalise identifiers, so these never name the API; failing keeps the lexer exact. The real tree has none. |
+  | String escapes (`\u{...}` with 1 to 8 hex digits, `\0 \\ \t \n \r \" \'`) | Decoded, with fixtures: decoded literals are matched as well as the raw text. Escapes Swift rejects or the checker does not model fail closed with fixtures. |
+  | Raw strings with any number of `#` | Decoded, with fixtures: only `\` plus the literal's own `#` count is an escape; `#"\u{55}"#` stays literal and passes. |
+  | Multi-line literals and `\` line continuations, with or without trailing blanks | Decoded, with fixtures: continuations join lines, and each line's leading blanks are dropped (an escaped `\t` is kept). |
+  | Interpolation of literals (`"system\("Uptime")"`, nested) and `+` joins of literals, across lines, parentheses and comments | Decoded, with fixtures: inlined or joined before matching. A non-literal interpolation is a boundary; names built from it are the run-time limitation above. |
+  | Exact-name strings built by escapes, joins, interpolation, multi-line literals, or a C string ending in `\0` | Decoded, with fixtures: the decoded chain is quoted, and a decoded NUL ends the quoted string. |
+  | Canonically equivalent characters inside strings (`"\u{212A}"` or a literal KELVIN SIGN for `K`) | Decoded, with fixtures: the three characters that decompose to ASCII are read as that ASCII, since Swift's `String` `==` treats them as equal. Other look-alikes are different strings in Swift too. |
+  | Selector and key forms (`#selector`, `Selector(("..."))`, `NSSelectorFromString`, `#keyPath`, `\.systemUptime`, `\ProcessInfo.systemUptime`, `value(forKey:)`, `value(forKeyPath:)`) | Covered by fixtures: they name the member or hold it in a string, including escaped raw strings. Key paths and `#keyPath` were already covered. |
+  | Lexer states that could hide code (nested block comments, `#if`, `#sourceLocation`, regex literals such as `/a//`, backticks) | Covered by fixtures: nested comments, regex literals and backticks were already modelled (ambiguous forms fail closed), `#if` branches are all scanned, and `#sourceLocation` changes no lexing. |
 - **Limitations.** The check does not evaluate `#if` (an API compiled out on
   some platforms still counts for the target). It also scans inside string
   and regex literals, so it errs towards declaring a category. An
@@ -927,8 +996,18 @@ works as follows:
   listed name (`case creationDate = "creationDate"`, `["stat": 1]`) is
   flagged even when no API is called; rename the key or justify an exception.
   API names built at run time, wholesale attribute reads and post-build
-  scripts are also not detected (see the table
-  above). Binary inspection (below) is the cross-check. The manifest parser
+  scripts are also not detected (see the table above). String literals
+  joined only by `+`, or inlined through literal-only interpolations, are
+  decoded and matched, but a name built from a variable, a call, `+=`,
+  `joined()`, `String(format:)` or a non-literal interpolation is not,
+  because its value is computed at run time. Binary inspection (below) is
+  the cross-check. Decoding drops every leading blank of each line in a
+  multi-line literal, more than Swift's indentation stripping, which can
+  only add matches. The Swift lexer is narrower than swiftc: a file with
+  non-ASCII code, a control character (even one swiftc accepts, such as
+  NUL, VT or FF in a comment), NEL, U+2028 or U+2029 fails even when swiftc
+  compiles it; rewrite the character as a `\u{...}` escape in a string or
+  remove it. The manifest parser
   is deliberately narrower than Apple's: it rejects plists Apple would
   accept (binary, JSON or OpenStep plists, CDATA, attributes, a missing
   `<plist>` root, trailing content, duplicate keys), so such a manifest fails
@@ -995,6 +1074,7 @@ Run from the TASK-85 worktree on 2026-11-03 UTC:
 | YAML and Package.swift sweep (PR #1064 round 7): the real `project.yml` parsed with the round 6 and round 7 parsers and the trees compared; the four `Package.swift` files read with the new grammar; each new check mutation-tested against the self-test | Same structure. The only differences are value types and `script` text, none of which the checker reads: 99 `YES`, `NO`, `true` and `false` values are now booleans, `CURRENT_PROJECT_VERSION: 1` and `SWIFT_VERSION: 6.0` are numbers, and the nine `script` blocks lose their indentation. `${...}` appears only in `script` values, there are no tabs, non-ASCII characters, anchors, multi-line scalars or nested flow collections, and every dependency names one kind. All four manifests fit the grammar. The `--verbose` output is byte-identical to round 6 and the run takes about 0.4–0.5 s. All 72 mutations of the new checks fail the self-test. Two more survive only because another layer already covers them: own-key package lookup and the empty defaults for `packages` and `targets`, both made safe by mappings without a prototype. |
 | `project.yml` allowlist and path case (PR #1064 round 7b): the real file's keys listed with the checker's parser and compared with the allowlist; the allowlist, dependency and case checks run on the real tree; each new check mutation-tested against the self-test | The real file uses exactly the allowlisted keys. At the top level these are `name`, `options` (the five listed keys), `configs`, `packages`, `settings`, `targets` and `schemes`. Targets use `type`, `platform`, `supportedDestinations`, `deploymentTarget`, `sources`, `dependencies`, `settings` and `postBuildScripts`. Dependencies use `target`, `package`, `product`, `embed` and `destinationFilters`; settings use `base` and `configs`; schemes use `build.targets` and `test` with `gatherCoverageData`, `testPlans` and `targets`. The only `target:` dependency of a shipped target is `CanadianHam` on `CanadianHamWatch` (an application); test targets depend on app targets. There are no `sdk:` dependencies or `.xcconfig` files, and every sources and package path matches its on-disk case. The `--verbose` output is byte-identical to round 7 and the run takes about 0.4–0.5 s. All 41 mutations of the new checks fail the self-test: the allowlist lookup, the value-shape checks, key lines, widened and narrowed allowlist entries, the dependency and `sdk:` rules, and the case comparison, including a case check skipped for `optional` paths. |
 | Build-setting, Package.swift and file-type allowlists (PR #1064 round 7c): the real file's project and shipped-target settings listed with the checker's parser; each allowlist entry, Package.swift label and member, and data type dropped one at a time and the checker rerun on the real tree; each new check mutation-tested against the self-test | The project and the four shipped targets set 79 build settings with 37 distinct names, exactly the build-setting allowlist. Dropping any one entry fails the real tree, so none is unused. Every value matches its rule; the only path-valued settings are `CODE_SIGN_ENTITLEMENTS` (five values: three existing `.entitlements` files and two `""`) and the `DebugCloudKit` iOS `INFOPLIST_FILE` of `CanadianHam`. `BUNDLE_LOADER` and `TEST_HOST` appear only on `CanadianHamTests`. Dropping any Package.swift label or member fails all four real manifests at its first use, and dropping any of the five data types fails the real tree (`.json` for the copied `content/subsection-titles.json`, `.strings` for the `InfoPlist.strings` tables, `.xcstrings` for `Localizable.xcstrings`, `.entitlements` and `.xcprivacy`). The only shipped target type is `application`, and every sources and package path fits the modelled form. The `--verbose` output is byte-identical to round 7b and the run takes about 0.4 s. All 89 mutations of the new checks fail the self-test, and a no-op control mutation passes. The mutations cover key parsing, base and configs walks, each value rule, the path-file checks, widened and narrowed allowlists, each Package.swift set and string rule, each data type, the phase, wrapper, package and folder handling of the file-type check, the target types, each spec-path rule and the missing-path rule. |
+| Swift lexing sweep (PR #1064 round 8): swiftc 6.4.2 (`xcrun swiftc -typecheck`, and compiled probes printing literal values) run on scratch files for each line terminator, control character, byte order mark position, invalid UTF-8, identifier normalisation and string escape form; the round 8 lexer run over all 110 tracked Swift files; each new check mutation-tested against the self-test | swiftc ends lines and `//` comments at CR, LF and CRLF only; VT, FF, NEL, U+2028 and U+2029 do not end a comment, U+2028 in code is an error, and NUL and NBSP are warnings read as whitespace. It skips a leading byte order mark, rejects invalid UTF-8 even in comments, and does not normalise identifiers (NFD `café` and a KELVIN SIGN make different names), while `String` `==` treats U+212A, U+037E and U+1FEF as their ASCII equivalents. Compiled probes confirm that `"system\u{55}ptime"`, `#"system\#u{55}ptime"#`, `"system\("Uptime")"` and a `"""` `\` continuation (also with trailing blanks and `##` delimiters) all equal `systemUptime`, that raw `#"\u{55}"#` stays literal and that `\u{}`, nine hex digits, surrogates and a single-line `\` before a line break are errors. All 110 tracked Swift files lex without errors: none has CR line endings, a byte order mark, a control character or non-ASCII code (38 have non-ASCII comments or strings); 8 use `\u{...}`, 6 multi-line literals, 72 interpolation and 2 `+` between string literals. Decoded matching adds no usage, so the `--verbose` output is byte-identical to round 7c and the run takes about 0.4 s. Of 39 mutations of the new checks, 38 fail the self-test after two fixtures were tightened (a nine-digit `\u{000000055}`, and an escaped `\t` before an exact name), and a no-op control passes. The survivor only adds a second message for a NEL, U+2028 or U+2029 in code, which already fails. The mutations cover CR and CRLF normalisation, the byte order mark skip, each control range, the ASCII-code rule (also in backticks), fatal UTF-8 decoding, the scalar, surrogate, digit-count and simple-escape rules, continuations, indentation stripping, the first and last line breaks, literal-only interpolation, the boundary marker, `+` joins, the quote wrapper, ASCII equivalents, the NUL boundary, decoded matching and offsets, and diagnostic line numbers. |
 | Release builds through `xbuild` (`-configuration Release`, generic simulator destinations, plus generic macOS, `CODE_SIGNING_ALLOWED=NO`), then `plutil -p` on each bundled `PrivacyInfo.xcprivacy` | All builds succeeded. Each bundle has exactly one manifest, byte-identical (`cmp`) to its source. iOS `CanadianHam.app` and macOS `CanadianHam.app/Contents/Resources` declare User defaults `CA92.1` and System boot time `35F9.1`. The embedded `CanadianHam.app/Watch/CanadianHamWatch.app` declares System boot time `35F9.1`. `CanadianHamTV.app` and `CanadianHamVision.app`, built from a regenerated project with the `project.yml` change, declare User defaults `CA92.1` only. |
 | `strings -a` / `nm -u` on the Release binaries, which include the statically linked package code | iOS app: `systemUptime`, `standardUserDefaults`, `persistentDomainForName`. Watch: `systemUptime` only. macOS: `standardUserDefaults` and `persistentDomainForName`, but no `systemUptime`, because those call sites are iOS-only. TV and Vision: `standardUserDefaults` only. No binary imports `stat`, `lstat`, `fstat`, `fstatat`, `statfs`, `statvfs`, `getattrlist` or `mach_absolute_time`, and none references the file-timestamp, disk-space or `activeInputModes` selectors. |
 

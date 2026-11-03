@@ -871,20 +871,87 @@ function parsePlist(bytes, label) {
 // rewritten as the bare name followed by two spaces, keeping offsets and line
 // numbers, so ``FileAttributeKey.`creationDate` `` matches like the plain
 // spelling. String and regex contents are never rewritten.
+//
+// Files are read as swiftc reads them: invalid UTF-8 fails (swiftc rejects
+// it), a leading byte order mark is skipped, and CR, LF and CRLF each end one
+// line, so CR and CRLF become LF before lexing (multi-line string literals
+// hold LF in Swift too). Comments then end, and file:line counts, as in
+// Swift. Swift does not end a line at VT, FF, NEL, U+2028 or U+2029, so they
+// and the other control characters (NUL, DEL, C0) fail closed anywhere in a
+// file. Outside comments, string literals and regex literals only printable
+// ASCII is read: Swift does not normalise identifiers (an NFD name, a KELVIN
+// SIGN or a zero-width character makes a different identifier), so such
+// code cannot spell an API name, but failing closed keeps the lexer's
+// whitespace and operator rules exact.
+//
+// String literals are also decoded as Swift decodes them and matched a
+// second time: \0 \\ \t \n \r \" \' and \u{1 to 8 hex digits} after the
+// literal's escape delimiter (a backslash plus as many # as a raw string
+// has), and a backslash before a line break in a multi-line literal (a line
+// continuation, which joins the lines). Any other escape fails closed.
+// Multi-line literals drop the line break after the opening delimiter, the
+// one before the closing delimiter and the leading blanks of every line, a
+// superset of Swift's indentation stripping. An interpolation holding only
+// string literals, `+`, parentheses and whitespace is inlined (its value is
+// their concatenation); any other interpolation becomes a boundary no name
+// can span. Literals separated only by one `+` (plus parentheses, whitespace
+// and comments) are joined into one chain, since `"system" + "Uptime"` is
+// one name at run time. Each chain is wrapped in quotes, so exact-name
+// patterns such as `"stat"` apply; a decoded NUL also ends and starts a
+// quoted literal, since C strings end there. The three characters
+// canonically equivalent to ASCII (U+212A KELVIN SIGN, U+037E, U+1FEF;
+// Swift's String == treats them as K, ; and `) are read as that ASCII.
+// Decoded matches are added to the raw ones and reported on the line of
+// their first character.
+// Names assembled at run time from variables, calls, `+=` or `joined()`
+// are not followed (see the evidence doc's limitations).
 
 const SWIFT_OPERATOR_CHARS = '=-+!*%<>&|^~?.';
 const EXPRESSION_KEYWORDS = new Set([
   'return', 'throw', 'case', 'in', 'where', 'if', 'guard', 'while', 'try', 'await', 'switch',
   'yield', 'else', 'do', 'repeat', 'catch', 'is', 'as', 'some', 'any', 'then', 'consume', 'copy',
 ]);
+// Controls (other than tab and LF) and Unicode line separators Swift does not
+// end a line at; CR is already normalised to LF.
+const SUSPECT_CHARACTER = /[\x00-\x08\x0B-\x1F\x7F\x85\u2028\u2029]/;
+const SIMPLE_ESCAPES = new Map([['0', '\0'], ['\\', '\\'], ['t', '\t'], ['n', '\n'], ['r', '\r'], ['"', '"'], ["'", "'"]]);
+// The only characters whose canonical decomposition is ASCII.
+const ASCII_EQUIVALENTS = new Map([['\u212A', 'K'], ['\u037E', ';'], ['\u1FEF', '`']]);
+const unicodeName = (text, index = 0) => `U+${text.codePointAt(index).toString(16).toUpperCase().padStart(4, '0')}`;
 
-function stripSwiftComments(source, label) {
+function readSwiftSource(file) {
+  const bytes = readFileSync(file);
+  try {
+    return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+  } catch {
+    fail(`${display(file)}: is not valid UTF-8, which swiftc rejects; fix the file encoding.`);
+    return '';
+  }
+}
+
+function stripSwiftComments(text, label) {
+  return lexSwift(text, label).code;
+}
+
+function lexSwift(text, label) {
+  const source = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
   const out = [];
   const escapedNames = [];
+  const literals = [];
   let i = 0;
   const n = source.length;
   const problem = (index, message) => {
     fail(`${label}:${source.slice(0, index).split('\n').length}: ${message}; rewrite it or extend scripts/check-apple-required-reasons.mjs.`);
+  };
+  const suspect = SUSPECT_CHARACTER.exec(source);
+  if (suspect) {
+    problem(suspect.index, `${unicodeName(suspect[0])} is a control or Unicode line-separator character, and Swift ends lines only at LF, CR and CRLF; write it as a \\u{...} escape in a string literal`);
+  }
+  let nonAsciiReported = false;
+  const nonAscii = (index) => {
+    if (nonAsciiReported || SUSPECT_CHARACTER.test(source[index])) return;
+    nonAsciiReported = true;
+    problem(index, `${unicodeName(source, index)} is not ASCII; outside comments, string literals and regex literals the checker reads only ASCII Swift`);
   };
 
   const blank = (end) => {
@@ -983,7 +1050,16 @@ function stripSwiftComments(source, label) {
     problem(start, 'unterminated extended regex literal');
   }
 
+  // Copies the literal verbatim to out and records its decoded parts:
+  // { char, at } (at is the source offset, the backslash for an escape),
+  // { interpolation: [from, to] } and { continuation: true }.
   function stringLiteral() {
+    const record = { start: i, end: n, parts: [], multiLine: false };
+    literals.push(record);
+    const keep = (end) => {
+      out.push(source.slice(i, end));
+      i = end;
+    };
     let hashes = 0;
     while (source[i] === '#') {
       out.push('#');
@@ -991,32 +1067,51 @@ function stripSwiftComments(source, label) {
       i += 1;
     }
     const quote = source.startsWith('"""', i) ? '"""' : '"';
-    out.push(quote);
-    i += quote.length;
+    record.multiLine = quote === '"""';
+    keep(i + quote.length);
     const terminator = quote + '#'.repeat(hashes);
     const escape = '\\' + '#'.repeat(hashes);
     while (i < n) {
       if (source.startsWith(terminator, i)) {
-        out.push(terminator);
-        i += terminator.length;
+        keep(i + terminator.length);
+        record.end = i;
         return;
       }
       if (source.startsWith(escape, i)) {
-        out.push(escape);
-        i += escape.length;
+        const at = i;
+        keep(i + escape.length);
+        const unicode = /u\{([0-9A-Fa-f]{1,8})\}/y;
+        unicode.lastIndex = i;
+        const scalar = unicode.exec(source);
+        const value = scalar ? Number.parseInt(scalar[1], 16) : -1;
+        const continuation = /[ \t]*\n/y;
+        continuation.lastIndex = i;
         if (source[i] === '(') {
-          out.push('(');
-          i += 1;
+          keep(i + 1);
+          const from = i;
           code(true);
-        } else if (i < n) {
-          out.push(source[i]);
-          i += 1;
+          record.parts.push({ interpolation: [from, i - 1] });
+        } else if (scalar && value <= 0x10FFFF && (value < 0xD800 || value > 0xDFFF)) {
+          keep(unicode.lastIndex);
+          record.parts.push({ char: String.fromCodePoint(value), at });
+        } else if (SIMPLE_ESCAPES.has(source[i])) {
+          record.parts.push({ char: SIMPLE_ESCAPES.get(source[i]), at });
+          keep(i + 1);
+        } else if (record.multiLine && continuation.test(source)) {
+          keep(continuation.lastIndex);
+          record.parts.push({ continuation: true });
+        } else {
+          problem(at, `string escape ${escape} followed by ${i < n ? JSON.stringify(source[i]) : 'the end of the file'} is not one Swift decodes or the checker models (\\0, \\\\, \\t, \\n, \\r, \\", \\', \\u{1 to 8 hex digits}, interpolation, or a line continuation in a multi-line literal)`);
+          if (i < n) keep(i + 1);
         }
         continue;
       }
-      if (quote === '"' && source[i] === '\n') return;
-      out.push(source[i]);
-      i += 1;
+      if (quote === '"' && source[i] === '\n') {
+        record.end = i;
+        return;
+      }
+      record.parts.push({ char: source[i], at: i });
+      keep(i + 1);
     }
   }
 
@@ -1040,10 +1135,14 @@ function stripSwiftComments(source, label) {
         out.push(source.slice(i, regexEnd));
         i = regexEnd;
       } else if (c === '`' && (escapedEnd = escapedIdentifierEnd()) !== -1) {
-        if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(source.slice(i + 1, escapedEnd - 1))) escapedNames.push(i);
+        const name = source.slice(i + 1, escapedEnd - 1);
+        const unread = /[^\x20-\x7E\t]/.exec(name);
+        if (unread) nonAscii(i + 1 + unread.index);
+        if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) escapedNames.push(i);
         out.push(source.slice(i, escapedEnd));
         i = escapedEnd;
       } else {
+        if (c > '\x7E') nonAscii(i);
         if (inInterpolation && c === '(') depth += 1;
         if (inInterpolation && c === ')') {
           if (depth === 0) {
@@ -1064,7 +1163,99 @@ function stripSwiftComments(source, label) {
   if (stripped.length !== n) {
     fail(`${label}: internal error: comment stripping changed the file length; fix scripts/check-apple-required-reasons.mjs.`);
   }
-  if (escapedNames.length === 0) return stripped;
+
+  // Decoded literal text: [char, source offset] pairs per literal.
+  const decodedParts = new Map();
+  const isBlank = (char) => char === ' ' || char === '\t';
+  // The literals directly inside [from, to) (skipping nested ones), or null
+  // unless everything else there is whitespace, parentheses or `+`.
+  function literalExpression(from, to, firstIndex) {
+    const members = [];
+    let cursor = from;
+    let rest = '';
+    for (let k = firstIndex; k < literals.length && literals[k].start < to; k += 1) {
+      const record = literals[k];
+      if (record.start < cursor) continue;
+      rest += stripped.slice(cursor, record.start);
+      members.push(k);
+      cursor = record.end;
+    }
+    rest += stripped.slice(cursor, to);
+    return members.length > 0 && /^[\s()+]*$/.test(rest) ? members : null;
+  }
+  function decodeLiteral(index) {
+    if (decodedParts.has(index)) return decodedParts.get(index);
+    const record = literals[index];
+    const chars = [];
+    let lineStart = false;
+    for (const part of record.parts) {
+      if (part.interpolation) {
+        lineStart = false;
+        const [from, to] = part.interpolation;
+        const members = literalExpression(from, to, index + 1);
+        if (members) chars.push(...members.flatMap((member) => decodeLiteral(member)));
+        else chars.push(['\uFFFF', from]);
+      } else if (part.continuation) {
+        lineStart = true;
+      } else {
+        const literal = source[part.at] === part.char;
+        if (lineStart && literal && isBlank(part.char)) continue;
+        lineStart = record.multiLine && literal && part.char === '\n';
+        chars.push([part.char, part.at]);
+      }
+    }
+    if (record.multiLine) {
+      const sourceBreak = (pair) => pair && pair[0] === '\n' && source[pair[1]] === '\n';
+      if (sourceBreak(chars[0])) chars.shift();
+      if (sourceBreak(chars.at(-1))) chars.pop();
+    }
+    decodedParts.set(index, chars);
+    return chars;
+  }
+  // Chains of literals joined by one `+`, each wrapped in quotes.
+  const chains = [];
+  const chainByEnd = new Map();
+  literals.forEach((record, index) => {
+    let j = record.start - 1;
+    while (j >= 0 && /[\s()]/.test(stripped[j])) j -= 1;
+    let chain = null;
+    if (stripped[j] === '+') {
+      j -= 1;
+      while (j >= 0 && /[\s()]/.test(stripped[j])) j -= 1;
+      chain = chainByEnd.get(j + 1) ?? null;
+    }
+    if (!chain) {
+      chain = [];
+      chains.push(chain);
+    }
+    chain.push(index);
+    chainByEnd.set(record.end, chain);
+  });
+  const decodedText = [];
+  const decodedAt = [];
+  const push = (char, at) => {
+    for (const unit of (ASCII_EQUIVALENTS.get(char) ?? char).split('')) {
+      decodedText.push(unit);
+      decodedAt.push(at);
+    }
+  };
+  for (const chain of chains) {
+    push('"', literals[chain[0]].start);
+    for (const index of chain) {
+      for (const [char, at] of decodeLiteral(index)) {
+        // A C string ends at NUL (as in `dlsym(handle, "stat\0")`), so each
+        // side of a NUL is matched as a whole literal too.
+        if (char === '\0') for (const unit of '"\n"') push(unit, at);
+        else push(char, at);
+      }
+    }
+    const last = literals[chain.at(-1)].end - 1;
+    push('"', last);
+    push('\n', last);
+  }
+  const decoded = { text: decodedText.join(''), at: decodedAt };
+
+  if (escapedNames.length === 0) return { code: stripped, decoded };
   const parts = [];
   let cursor = 0;
   for (const start of escapedNames) {
@@ -1073,19 +1264,20 @@ function stripSwiftComments(source, label) {
     cursor = end + 1;
   }
   parts.push(stripped.slice(cursor));
-  return parts.join('');
+  return { code: parts.join(''), decoded };
 }
 
 // Patterns run over the whole comment-stripped file, not line by line, so API
-// spellings split across lines still count. Each usage is reported on the line
-// where its match starts, once per pattern and line, in line order.
+// spellings split across lines still count, and again over the decoded string
+// literal chains. Each usage is reported on the line where its match starts,
+// once per pattern and line, in line order.
 const MATCHERS = Object.entries(CATEGORIES).flatMap(([category, { patterns }]) =>
   patterns.map(([pattern, spelling]) => ({ category, spelling, regex: new RegExp(pattern.source, `${pattern.flags.replace(/[gm]/g, '')}gm`) })));
 
 const usageCache = new Map();
 function apiUsage(file) {
   if (usageCache.has(file)) return usageCache.get(file);
-  const code = stripSwiftComments(readFileSync(file, 'utf8'), display(file));
+  const { code, decoded } = lexSwift(readSwiftSource(file), display(file));
   const lineStarts = [0];
   for (let k = 0; k < code.length; k += 1) if (code[k] === '\n') lineStarts.push(k + 1);
   const lineOf = (offset) => {
@@ -1101,12 +1293,14 @@ function apiUsage(file) {
   const found = [];
   MATCHERS.forEach(({ category, spelling, regex }, order) => {
     const lines = new Set();
-    for (const match of code.matchAll(regex)) {
-      const line = lineOf(match.index);
-      if (lines.has(line)) continue;
+    const add = (offset) => {
+      const line = lineOf(offset);
+      if (lines.has(line)) return;
       lines.add(line);
       found.push({ category, spelling, file, line, order });
-    }
+    };
+    for (const match of code.matchAll(regex)) add(match.index);
+    for (const match of decoded.text.matchAll(regex)) add(decoded.at[match.index]);
   });
   const usages = found
     .sort((a, b) => a.line - b.line || a.order - b.order)
@@ -1564,7 +1758,7 @@ function resolvePackage(name, spec) {
       fail(`${display(join(packageDir, entry))} is a SwiftPM source directory the checker does not scan (only Sources is); move its targets to Sources or extend scripts/check-apple-required-reasons.mjs.`);
     }
   }
-  const manifest = stripSwiftComments(readFileSync(manifestPath, 'utf8'), display(manifestPath));
+  const manifest = stripSwiftComments(readSwiftSource(manifestPath), display(manifestPath));
   try {
     for (const { line, what } of checkPackageSyntax(manifest, display(manifestPath))) {
       fail(`${display(manifestPath)}:${line}: uses ${what}, which is not in the checker's Package.swift allowlist; labels, members and strings outside it (custom paths, sources, resources and excludes, package dependencies, binary, executable, plugin, macro and system library targets, C, linker and unsafe settings, dynamic products and others) can add code or link inputs the checker does not scan. Confirm it is inert or model it, then add it to the allowlist in scripts/check-apple-required-reasons.mjs before linking the package.`);

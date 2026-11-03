@@ -1464,6 +1464,131 @@ for (const phase of ['resources', 'headers']) {
     'TV: sources path Resources/Missing.json does not exist.');
 }
 
+// Swift sources are lexed as swiftc lexes them. CR, LF and CRLF each end one
+// line (a // comment too), and file:line counts them the same way.
+const TV_LEXED = 'apps/apple/Platforms/tvOS/Lexed.swift';
+const UPTIME = 'let started = ProcessInfo.processInfo.systemUptime';
+const tvLexed = (content) => ({ ...tvManifest(TV_WITH_PACKAGE), [TV_LEXED]: content });
+const tvBootEvidence = (lines) => `${tvUndeclared(BOOT_TIME, 'System boot time')}${lines.map((line) => `${TV_LEXED}:${line} systemUptime`).join('; ')}\n`;
+assertFail('CR-only line endings end comments', tvLexed(`// note\r${UPTIME}\r`), tvBootEvidence([2]));
+assertFail('CRLF and mixed line endings keep line numbers', tvLexed(`// a\r\n// b\r// c\n${UPTIME}\r\n/* d\r*/ ${UPTIME}\n`), tvBootEvidence([4, 6]));
+assertFail('Package.swift with CR-only line endings', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace(ENGINE_TARGET, '.target(name: #"Engine"#)').replace(/\n/g, '\r'),
+}, 'packages/engine-swift/Package.swift:8: uses Swift the checker does not model (a raw string or # directive)');
+// swiftc skips a leading byte order mark; anywhere else it is code.
+assertFail('leading byte order mark', tvLexed(`\uFEFF// note\n${UPTIME}\n`), tvBootEvidence([2]));
+assertPass('leading byte order mark is skipped', tvLexed('\uFEFFlet value = 1\n'));
+// Swift ends no line at VT, FF, NEL, U+2028 or U+2029 (a // comment runs on),
+// and rejects or warns about the other controls: all fail closed.
+const SUSPECTS = [['0000', '\0'], ['000B', '\v'], ['000C', '\f'], ['001B', '\x1B'], ['007F', '\x7F'], ['0085', '\u0085'], ['2028', '\u2028'], ['2029', '\u2029']];
+assertFail('control and line-separator characters fail closed', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...Object.fromEntries(SUSPECTS.map(([code, char]) => [`apps/apple/Platforms/tvOS/Suspect${code}.swift`, `let a = 1\n// note${char}${UPTIME}\n`])),
+}, SUSPECTS.map(([code]) => `apps/apple/Platforms/tvOS/Suspect${code}.swift:2: U+${code} is a control or Unicode line-separator character`));
+assertFail('invalid UTF-8 fails closed', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  [TV_LEXED]: Buffer.concat([Buffer.from('// a '), Buffer.from([0xE2, 0x0A]), Buffer.from(`${UPTIME}\n`)]),
+}, `${TV_LEXED}: is not valid UTF-8, which swiftc rejects`);
+// Swift does not normalise identifiers, and only ASCII code is read: NFD
+// forms, a KELVIN SIGN, zero-width characters, NBSP and a stray BOM fail
+// closed, in backticks too. Comments, strings and regex literals may hold any.
+const NON_ASCII = {
+  ZeroWidth: ['let info = ProcessInfo.processInfo\nlet started = info.system\u200BUptime\n', 2, '200B'],
+  Decomposed: ['let cafe\u0301 = 1\n', 1, '0301'],
+  Kelvin: ['let \u212AERN_BOOTTIME = 1\n', 1, '212A'],
+  Space: ['let a\u00A0= ProcessInfo.processInfo\n', 1, '00A0'],
+  Bom: ['let a = 1\n\uFEFFlet b = 2\n', 2, 'FEFF'],
+  Backticks: ['let b = ProcessInfo.processInfo.`system\u200BUptime`\n', 1, '200B'],
+};
+assertFail('non-ASCII code fails closed', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...Object.fromEntries(Object.entries(NON_ASCII).map(([name, [content]]) => [`apps/apple/Platforms/tvOS/${name}.swift`, content])),
+}, Object.entries(NON_ASCII).map(([name, [, line, code]]) => `apps/apple/Platforms/tvOS/${name}.swift:${line}: U+${code} is not ASCII`));
+assertPass('non-ASCII comments, strings and regex literals', tvLexed('// caf\u00E9 \u2019\nlet s = "caf\u00E9 \u2022 \u00B2 \u{1F600}"\nlet r = /\u00E9/\n'));
+
+// String literals are decoded: \u{...} and the simple escapes, raw-string
+// escape delimiters, multi-line continuations, literal interpolations and
+// `+` joins all name the API as Swift sees it.
+// Evidence lists at most three usages, so each fixture pins three or fewer.
+assertFail('Unicode escapes in string literals', tvLexed(`import Foundation
+let a = ProcessInfo.processInfo.value(forKey: "system\\u{55}ptime")
+let b = NSSelectorFromString("system\\u{0055}ptime")
+let c = #"system\\#u{55}ptime"#
+let d = URLResourceKey(rawValue: "NSURLVolumeTotalCapacity\\u{212A}ey")
+let e = URLResourceKey(rawValue: "NSURLVolumeAvailableCapacity\u212Aey")
+`), [tvBootEvidence([2, 3, 4]), `${tvUndeclared(DISK_SPACE, 'Disk space')}${TV_LEXED}:5 NSURLVolume*CapacityKey; ${TV_LEXED}:6 NSURLVolume*CapacityKey\n`]);
+assertFail('joined and interpolated names', tvLexed(`import Foundation
+let a = NSSelectorFromString("system" /* joined */ +
+    "Uptime")
+let b = ProcessInfo.processInfo.value(forKey: ("sys" + "tem") + ("Up" + "time"))
+let c = ProcessInfo.processInfo.value(forKey: "system\\("Uptime")")
+`), tvBootEvidence([2, 4, 5]));
+assertFail('nested interpolation and multi-line names', tvLexed(`import Foundation
+let d = ProcessInfo.processInfo.value(forKey: "\\("sys" + ("tem"))Uptime")
+let e = ProcessInfo.processInfo.value(forKey: """
+    system\\
+    Uptime
+    """)
+let f = ProcessInfo.processInfo.value(forKey: ##"""
+    system\\##\x20\x20
+    Uptime
+    """##)
+`), tvBootEvidence([2, 4, 8]));
+const WATCH_LEXED = 'apps/apple/Platforms/watchOS/Lexed.swift';
+const watchTimestampEvidence = (lines) => `Watch: uses ${FILE_TIMESTAMP} (File timestamp) but apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy does not declare it. Evidence: ${lines.map((line) => `${WATCH_LEXED}:${line} API name string literal`).join('; ')}\n`;
+assertFail('escaped and joined exact API names', { ...tvManifest(TV_WITH_PACKAGE), [WATCH_LEXED]: `import Foundation
+let a = attributes.value(forKey: "creation" + "Date")
+let b = attributes.value(forKey: "modification\\u{44}ate")
+let c = dlsym(handle, "stat\\0")
+` }, watchTimestampEvidence([2, 3, 4]));
+assertFail('multi-line and interpolated exact API names', { ...tvManifest(TV_WITH_PACKAGE), [WATCH_LEXED]: `import Foundation
+let d = attributes.value(forKey: """
+    creationDate
+    """)
+let e = attributes.value(forKey: "st\\("a")t")
+` }, watchTimestampEvidence([2, 5]));
+// Raw strings keep undelimited backslashes, and a non-literal interpolation
+// is a boundary (the name is then built at run time).
+assertPass('raw strings and non-literal interpolations', tvLexed(`let escapes = "\\0 \\\\ \\t \\n \\r \\" \\' \\u{1} \\u{10FFFF}"
+let raw = #"system\\u{55}ptime \\q"# + ##"system\\#u{55}ptime"##
+let suffix = "x"; let key = "system\\(suffix)Uptime", partly = "system\\(suffix + "Up")time", unit = "system\\(())Uptime"
+let tabbed = """
+    \\tsystemSize
+    """
+let padded = "  systemSize", afterInterpolation = """
+    \\("")  systemSize
+    """
+`));
+assertFail('unsupported string escapes fail closed', {
+  ...tvLexed('let a = "\\q"\nlet b = "\\u{D800}"\nlet c = "\\u{110000}"\nlet d = "\\u{000000055}"\nlet e = "\\u{}"\nlet f = #"\\#q"#\nlet g = "a\\\nb"\n'),
+  'apps/apple/Platforms/tvOS/LexedCR.swift': 'let a = 1\rlet b = "\\q"\r',
+}, [
+  'apps/apple/Platforms/tvOS/LexedCR.swift:2: string escape \\ followed by "q" is not one Swift decodes',
+  `${TV_LEXED}:1: string escape \\ followed by "q" is not one Swift decodes`,
+  ...[2, 3, 4, 5].map((line) => `${TV_LEXED}:${line}: string escape \\ followed by "u" is not one Swift decodes`),
+  `${TV_LEXED}:6: string escape \\# followed by "q" is not one Swift decodes`,
+  `${TV_LEXED}:7: string escape \\ followed by "\\n" is not one Swift decodes`,
+]);
+// Selector and key-path forms name the API too, and every #if branch and
+// code after #sourceLocation is scanned.
+assertFail('selector forms', tvLexed(`import Foundation
+let a = #selector(getter: ProcessInfo.systemUptime)
+let b = Selector(("systemUptime"))
+let c = Selector((##"system\\##u{55}ptime"##))
+`), tvBootEvidence([2, 3, 4]));
+assertFail('key-path forms', tvLexed(`import Foundation
+let c = #keyPath(ProcessInfo.systemUptime)
+let d = ProcessInfo.processInfo.value(forKeyPath: "processInfo.systemUptime")
+`), tvBootEvidence([2, 3]));
+assertFail('#if branches and #sourceLocation', tvLexed(`#if false
+${UPTIME}
+#endif
+#sourceLocation(file: "Elsewhere.swift", line: 100)
+${UPTIME}
+#sourceLocation()
+`), tvBootEvidence([2, 5]));
+
 if (failures !== 0) {
   console.error(`required-reasons-test: failed with ${failures} failure(s).`);
   process.exit(1);
