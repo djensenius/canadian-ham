@@ -534,6 +534,26 @@ assertFail('symlinked package source directory', { ...tvManifest(TV_WITH_PACKAGE
   'packages/engine-swift/Sources/Engine/Linked is a symbolic link');
 assertFail('symlink outside any target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Loose.swift': { symlink: 'Shared/Settings.swift' } },
   'apps/apple/Loose.swift is a symbolic link');
+// Scan entry paths are checked with lstat too, including every directory
+// between the repository root and them, outside the apps/apple walk.
+const ENGINE_PATH = '    path: ../../packages/engine-swift\n';
+assertFail('symlinked package directory', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace(ENGINE_PATH, '    path: ../../packages/linked-swift\n')),
+  'packages/linked-swift': { symlink: 'engine-swift' },
+}, 'packages/linked-swift is a symbolic link; the checker does not follow links');
+assertFail('symlinked package Sources', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace(ENGINE_PATH, '    path: ../../packages/shim-swift\n')),
+  'packages/shim-swift/Package.swift': PACKAGE_SWIFT,
+  'packages/shim-swift/Sources': { symlink: '../engine-swift/Sources' },
+}, 'packages/shim-swift/Sources is a symbolic link');
+assertFail('symlinked sources path and parent directory', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n      - path: ../../shared-link\n      - path: ../../linked-parent/Settings.swift\n')),
+  'shared-link': { symlink: 'apps/apple/Shared' },
+  'linked-parent': { symlink: 'apps/apple/Shared' },
+}, ['shared-link is a symbolic link', 'linked-parent is a symbolic link']);
 // Module maps and prebuilt code in a shipped target fail closed.
 assertFail('module map in a shipped target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/tvOS/module.modulemap': 'module Shim { header "shim.h" }\n' },
   'TV: apps/apple/Platforms/tvOS/module.modulemap is not Swift; only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly, module maps and API notes');
@@ -565,6 +585,8 @@ const SWIFT_FLAGS = 'settings:\n  configs:\n    Debug:\n      OTHER_SWIFT_FLAGS:
 assertPass('-D conditions in Swift flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('targets:\n', SWIFT_FLAGS).replace('    platform: tvOS\n', '    platform: tvOS\n    settings:\n      base:\n        OTHER_SWIFT_FLAGS: ""\n')) });
 assertFail('other Swift flags', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('targets:\n', SWIFT_FLAGS.replace('-DDEBUG_MENU', '-DDEBUG_MENU -Xcc -include -Xcc shim.h'))) },
   'project.yml settings: OTHER_SWIFT_FLAGS -Xcc -include -Xcc shim.h is not a -D condition');
+assertFail('split -D condition', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('targets:\n', SWIFT_FLAGS.replace('-DDEBUG_MENU', '-D DEBUG_MENU'))) },
+  'project.yml settings: OTHER_SWIFT_FLAGS "-D DEBUG_MENU" splits the flag from its name; use the -DDEBUG_MENU form.');
 assertFail('missing compiled source path', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Shared/Settings.swift': null },
   'App: sources path Shared/Settings.swift does not exist.');
 assertFail('unsupported sources key', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('      - Platforms/watchOS\n', '      - path: Platforms/watchOS\n        includes:\n          - "*.swift"\n')) },

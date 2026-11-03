@@ -498,7 +498,9 @@ works as follows:
     prebuilt code: a `.framework`, `.xcframework`, `.xpc` or `.appex`
     bundle, a `.a`, `.dylib`, `.so` or `.o` file, or any file that starts
     with Mach-O, universal-binary or `ar` magic;
-  - a symbolic link appears under a scanned directory (the walk does not
+  - a symbolic link appears under a scanned directory, or is a `project.yml`
+    sources path, a package directory or its `Sources`, or any directory
+    between the repository root and one of those (the checker does not
     follow links);
   - a Swift file under `apps/apple` is compiled by no target;
   - comment stripping could hide code: an unterminated block comment or
@@ -515,7 +517,9 @@ works as follows:
   - project or shipped-target settings for bridging or prefix headers,
     header, library, framework or Swift include search paths, module map
     files, or linker and libtool flags;
-  - `OTHER_SWIFT_FLAGS` other than `$(inherited)` and `-D` conditions.
+  - `OTHER_SWIFT_FLAGS` other than `$(inherited)` and `-D` conditions. A
+    condition split from its name (`-D FOO`) is rejected with a message to
+    use the `-DFOO` form.
 
   It also fails on remote, binary or dynamic packages, on Package.swift
   plugins, macros, system-library targets or `unsafeFlags`, and on unknown
@@ -549,7 +553,7 @@ works as follows:
   | C, Objective-C, C++, assembly, module maps, API notes | Fail closed. |
   | Prebuilt code (frameworks, libraries, Mach-O files) in sources or package `Sources` | Fail closed. |
   | Hidden files and directories | Covered by a fixture: scanned, as XcodeGen compiles them. |
-  | Symbolic links | Fail closed with a fixture. No links exist under the scanned roots. |
+  | Symbolic links | Fail closed with fixtures, both inside walked directories and on scan entry paths and their parent directories. No links exist under the scanned roots. |
   | Files compiled but outside the walk | Fail closed for unmodelled XcodeGen and Package.swift constructs. Verified against the committed project and SwiftPM; see the walk verification row under Evidence. |
   | Pre-build scripts, build rules, plugins, macros, scheme pre-actions, xcconfig files, compiler and linker flags | Fail closed with fixtures. |
   | Post-build scripts (`postBuildScripts`) | Limitation: allowed, because they run after compiling. They only copy JSON and the reference sheet and delete README files. Review by hand; binary inspection is the cross-check. |
@@ -565,10 +569,12 @@ works as follows:
   right-hand side of an assignment is not detected: for example passed as
   an argument (`apply(stat)`), returned (`return stat`), placed in a
   collection (`[stat]`) or used as an operand (`x ?? stat`). This avoids
-  matching Swift variables named `stat`. API names built at run time,
-  wholesale attribute reads, post-build scripts and Interface Builder
-  bindings are also not detected (see the table above). Binary inspection
-  (below) is the cross-check.
+  matching Swift variables named `stat`. A Codable or dictionary key with a
+  listed name (`case creationDate = "creationDate"`, `["stat": 1]`) is
+  flagged even when no API is called; rename the key or justify an exception.
+  API names built at run time, wholesale attribute reads, post-build scripts
+  and Interface Builder bindings are also not detected (see the table
+  above). Binary inspection (below) is the cross-check.
 
 ### Evidence
 

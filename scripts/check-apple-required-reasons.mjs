@@ -26,7 +26,7 @@
 // at run time (computed KVC keys, dlsym, NSSelectorFromString with a computed
 // string) and wholesale attribute reads that never name a listed key are not
 // detected; docs/release/privacy-label-evidence.md lists every such class.
-import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
+import { closeSync, existsSync, lstatSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
 import { basename, join, normalize, relative, resolve, sep } from 'node:path';
 
 const root = resolve(process.env.REQUIRED_REASONS_ROOT ?? process.cwd());
@@ -659,6 +659,31 @@ function globToRegExp(glob) {
 // XcodeGen compiles hidden files and follows symbolic links (SwiftPM skips
 // hidden files), so hidden entries are scanned, only .DS_Store is skipped, and
 // a symbolic link fails the check instead of being silently skipped.
+const symlinkMessage = (absolutePath) => `${display(absolutePath)} is a symbolic link; the checker does not follow links, so replace it with the real file or directory (or extend scripts/check-apple-required-reasons.mjs).`;
+
+// Scan entry paths (project.yml sources, package directories and their
+// Sources) would be followed by statSync/readdirSync, so the path itself and
+// every directory between the repository root and it are checked with lstat.
+// Returns true after failing when one is a symbolic link; a missing component
+// is left to the caller's existence check.
+function symlinkOnPath(absolutePath) {
+  const fromRoot = relative(root, absolutePath);
+  const outsideRoot = fromRoot === '..' || fromRoot.startsWith(`..${sep}`);
+  const parts = outsideRoot ? [] : fromRoot.split(sep).filter(Boolean);
+  const candidates = parts.length > 0
+    ? parts.map((_, index) => join(root, ...parts.slice(0, index + 1)))
+    : [absolutePath];
+  for (const candidate of candidates) {
+    const stats = lstatSync(candidate, { throwIfNoEntry: false });
+    if (!stats) return false;
+    if (stats.isSymbolicLink()) {
+      fail(symlinkMessage(candidate));
+      return true;
+    }
+  }
+  return false;
+}
+
 function walk(directory, excludes, base, visit) {
   for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     if (entry.name === '.DS_Store') continue;
@@ -666,7 +691,7 @@ function walk(directory, excludes, base, visit) {
     const relativePath = relative(base, absolutePath).split(sep).join('/');
     if (excludes.some((pattern) => pattern.test(relativePath))) continue;
     if (entry.isSymbolicLink()) {
-      fail(`${display(absolutePath)} is a symbolic link; the checker does not follow links, so replace it with the real file or directory (or extend scripts/check-apple-required-reasons.mjs).`);
+      fail(symlinkMessage(absolutePath));
     } else if (entry.isDirectory() && !/\.(?:xcassets|icon|xcstrings)$/.test(entry.name)) {
       walk(absolutePath, excludes, base, visit);
     } else if (entry.isFile()) {
@@ -701,6 +726,7 @@ function resolveTarget(name, target, packages) {
     if (buildPhase === 'none' || entry.type === 'folder') continue; // folder references keep their subpath
     const compiles = buildPhase === 'default' || buildPhase === 'sources';
     const absolutePath = normalize(join(appleDir, entry.path));
+    if (symlinkOnPath(absolutePath)) continue;
     if (!existsSync(absolutePath)) {
       // A missing source path would hide compiled Swift; missing resource files cannot.
       if (compiles && entry.optional !== 'true' && entry.optional !== true) {
@@ -749,6 +775,8 @@ function resolvePackage(name, spec) {
     return files;
   }
   const packageDir = normalize(join(appleDir, packagePath));
+  const sourcesDir = join(packageDir, 'Sources');
+  if (symlinkOnPath(sourcesDir)) return files;
   const manifestPath = join(packageDir, 'Package.swift');
   if (!existsSync(manifestPath)) {
     fail(`project.yml package ${name}: ${display(manifestPath)} does not exist.`);
@@ -770,7 +798,6 @@ function resolvePackage(name, spec) {
       fail(`${display(manifestPath)} uses ${reason}; extend scripts/check-apple-required-reasons.mjs before linking it.`);
     }
   }
-  const sourcesDir = join(packageDir, 'Sources');
   if (existsSync(sourcesDir)) {
     walk(sourcesDir, [], sourcesDir, (file) => {
       if (file.endsWith('.swift')) files.add(file);
@@ -857,7 +884,17 @@ function checkBuildSettings(label, settings) {
       fail(`${label}: build setting ${key} can compile, import or link code the checker does not scan; extend scripts/check-apple-required-reasons.mjs.`);
     } else if (setting === 'OTHER_SWIFT_FLAGS') {
       const flags = [value].flat().join(' ').split(/\s+/).filter(Boolean);
-      const unsupported = flags.filter((flag) => flag !== '$(inherited)' && !/^-D[A-Za-z_][A-Za-z0-9_]*$/.test(flag));
+      const unsupported = [];
+      for (let index = 0; index < flags.length; index += 1) {
+        const flag = flags[index];
+        if (flag === '-D' && /^[A-Za-z_][A-Za-z0-9_]*$/.test(flags[index + 1] ?? '')) {
+          // Still rejected (only single-token conditions are modelled), with a fix.
+          fail(`${label}: OTHER_SWIFT_FLAGS "-D ${flags[index + 1]}" splits the flag from its name; use the -D${flags[index + 1]} form.`);
+          index += 1;
+        } else if (flag !== '$(inherited)' && !/^-D[A-Za-z_][A-Za-z0-9_]*$/.test(flag)) {
+          unsupported.push(flag);
+        }
+      }
       if (unsupported.length > 0) {
         fail(`${label}: OTHER_SWIFT_FLAGS ${unsupported.join(' ')} is not a -D condition; compiler flags can import or link code the checker does not scan, so extend scripts/check-apple-required-reasons.mjs.`);
       }
