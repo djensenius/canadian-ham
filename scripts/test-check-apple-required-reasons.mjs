@@ -1548,6 +1548,21 @@ let d = attributes.value(forKey: """
     """)
 let e = attributes.value(forKey: "st\\("a")t")
 ` }, watchTimestampEvidence([2, 5]));
+// The join's look-back skips a closing `)`, so a call's last argument can
+// start a chain; each literal is matched on its own too, whatever its form.
+assertFail('exact API names as a call argument before a join', { ...tvManifest(TV_WITH_PACKAGE), [WATCH_LEXED]: `import Foundation
+let a = key("st\\u{61}t") + "x"
+let b = key(#"st\\#u{61}t"#) + "x"
+let c = key("""
+    stat
+    """) + "x"
+` }, watchTimestampEvidence([2, 3, 4]));
+assertFail('API name as a call argument before a join', tvLexed(`import Foundation
+let a = key("system\\u{55}ptime") + "x"
+`), tvBootEvidence([2]));
+// A literal holding only part of an exact name does not count on its own.
+assertPass('partial exact names in joins', { ...tvManifest(TV_WITH_PACKAGE), [WATCH_LEXED]: `let a = "sta" + "tus", b = "st" + "at" + "us", c = "creation" + "Dates"
+` });
 // Raw strings keep undelimited backslashes, and a non-literal interpolation
 // is a boundary (the name is then built at run time).
 assertPass('raw strings and non-literal interpolations', tvLexed(`let escapes = "\\0 \\\\ \\t \\n \\r \\" \\' \\u{1} \\u{10FFFF}"

@@ -896,9 +896,12 @@ function parsePlist(bytes, label) {
 // their concatenation); any other interpolation becomes a boundary no name
 // can span. Literals separated only by one `+` (plus parentheses, whitespace
 // and comments) are joined into one chain, since `"system" + "Uptime"` is
-// one name at run time. Each chain is wrapped in quotes, so exact-name
-// patterns such as `"stat"` apply; a decoded NUL also ends and starts a
-// quoted literal, since C strings end there. The three characters
+// one name at run time. The join's look-back also skips a call's closing
+// `)`, so `k("st\u{61}t") + "x"` joins the argument too; every literal is
+// therefore also matched on its own, and a join can only add matches. Each
+// literal and chain is wrapped in quotes, so exact-name patterns such as
+// `"stat"` apply; a decoded NUL also ends and starts a quoted literal, since
+// C strings end there. The three characters
 // canonically equivalent to ASCII (U+212A KELVIN SIGN, U+037E, U+1FEF;
 // Swift's String == treats them as K, ; and `) are read as that ASCII.
 // Decoded matches are added to the raw ones and reported on the line of
@@ -1239,7 +1242,11 @@ function lexSwift(text, label) {
       decodedAt.push(at);
     }
   };
-  for (const chain of chains) {
+  // Every literal on its own, then every chain of two or more. The look-back
+  // above skips a closing `)`, so a chain can start with a call's last
+  // argument (`k("st\u{61}t") + "x"`), which is matched here alone too.
+  const runs = [...literals.map((_, index) => [index]), ...chains.filter((chain) => chain.length > 1)];
+  for (const chain of runs) {
     push('"', literals[chain[0]].start);
     for (const index of chain) {
       for (const [char, at] of decodeLiteral(index)) {
